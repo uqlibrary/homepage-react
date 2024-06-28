@@ -39,6 +39,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import {
     convertFileSizeToKb,
+    convertSnakeCaseToKebabCase,
     getDlorViewPageUrl,
     getTotalSecondsFromMinutesAndSecond,
     isPreviewableUrl,
@@ -213,7 +214,7 @@ export const DlorForm = ({
                     color: '#504e4e',
                     fontSize: '0.8em',
                 }}
-                data-testid={`input-characters-remaining-${fieldName}`}
+                data-testid={`input-characters-remaining-${convertSnakeCaseToKebabCase(fieldName)}`}
             >
                 {numCharsCurrent > 0 && missingCharCount > 0
                     ? `at least ${missingCharCount} more ${pluraliseWord('character', missingCharCount)} needed`
@@ -462,7 +463,7 @@ export const DlorForm = ({
                     <InputLabel htmlFor="object_publishing_user">Publishing user *</InputLabel>
                     <Input
                         id="object_publishing_user"
-                        data-testid="object_publishing_user"
+                        data-testid="object-publishing-user"
                         required
                         value={formValues?.object_publishing_user || ''}
                         onChange={handleChange('object_publishing_user')}
@@ -478,7 +479,7 @@ export const DlorForm = ({
                         This must be the person's UQ username
                     </Box>
                     {!isValidUsername(formValues?.object_publishing_user) && (
-                        <StyledErrorMessageBox data-testid={'error-message-object_publishing_user'}>
+                        <StyledErrorMessageBox data-testid="dlor-form-error-message-object-publishing-user">
                             This username is not valid.
                         </StyledErrorMessageBox>
                     )}
@@ -490,7 +491,7 @@ export const DlorForm = ({
                     variant="standard"
                     labelId="object_owning_team_label"
                     id="object_owning_team"
-                    data-testid="object_owning_team"
+                    data-testid="object-owning-team"
                     value={teamSelectRef.current ?? 1}
                     onChange={handleChange('object_owning_team_id')}
                     sx={{ minWidth: '20em' }}
@@ -501,7 +502,7 @@ export const DlorForm = ({
                                 key={t.team_id}
                                 value={t.team_id}
                                 selected={t.team_id === teamSelectRef.current}
-                                data-testid={`object_owning_team-${t.team_id}`}
+                                data-testid={`object-owning-team-${t.team_id}`}
                                 divider={index === dlorTeamList.length - 1}
                             >
                                 {t.team_name}
@@ -533,7 +534,7 @@ export const DlorForm = ({
                         <InputLabel htmlFor="team_name_new">Name of new Team *</InputLabel>
                         <Input
                             id="team_name_new"
-                            data-testid="team_name_new"
+                            data-testid="dlor-form-team-name-new"
                             value={formValues?.team_name_new || ''}
                             onChange={handleChange('team_name_new')}
                         />
@@ -542,7 +543,7 @@ export const DlorForm = ({
                         <InputLabel htmlFor="team_manager_new">Name of Team manager *</InputLabel>
                         <Input
                             id="team_manager_new"
-                            data-testid="team_manager_new"
+                            data-testid="dlor-form-team-manager-new"
                             required
                             value={formValues?.team_manager_new || ''}
                             onChange={handleChange('team_manager_new')}
@@ -552,7 +553,7 @@ export const DlorForm = ({
                         <InputLabel htmlFor="team_email_new">Team email *</InputLabel>
                         <Input
                             id="team_email_new"
-                            data-testid="team_email_new"
+                            data-testid="dlor-form-team-email-new"
                             required
                             value={formValues?.team_email_new || ''}
                             onChange={handleChange('team_email_new')}
@@ -560,7 +561,7 @@ export const DlorForm = ({
                             error={!isValidEmail(formValues?.team_email_new)}
                         />
                         {!isValidEmail(formValues?.team_email_new) && (
-                            <StyledErrorMessageBox data-testid="error-message-team_email_new">
+                            <StyledErrorMessageBox data-testid="error-message-team-email-new">
                                 This email address is not valid.
                             </StyledErrorMessageBox>
                         )}
@@ -581,7 +582,7 @@ export const DlorForm = ({
                         <InputLabel htmlFor="team_manager_edit">Name of Team manager *</InputLabel>
                         <Input
                             id="team_manager_edit"
-                            data-testid="team_manager_edit"
+                            data-testid="dlor-form-team-manager-edit"
                             required
                             value={formValues?.team_manager_edit || /* istanbul ignore next */ ''}
                             onChange={handleChange('team_manager_edit')}
@@ -591,7 +592,7 @@ export const DlorForm = ({
                         <InputLabel htmlFor="team_email_edit">Team email *</InputLabel>
                         <Input
                             id="team_email_edit"
-                            data-testid="team_email_edit"
+                            data-testid="dlor-form-team-email-edit"
                             required
                             value={formValues?.team_email_edit || ''}
                             onChange={handleChange('team_email_edit')}
@@ -599,7 +600,7 @@ export const DlorForm = ({
                             error={!isValidEmail(formValues?.team_email_edit)}
                         />
                         {!isValidEmail(formValues?.team_email_edit) && (
-                            <StyledErrorMessageBox data-testid="error-message-team_email_edit">
+                            <StyledErrorMessageBox data-testid="error-message-team-email-edit">
                                 This email address is not valid.
                             </StyledErrorMessageBox>
                         )}
@@ -679,7 +680,7 @@ export const DlorForm = ({
                     <InputLabel htmlFor="object_title">Object title *</InputLabel>
                     <Input
                         id="object_title"
-                        data-testid="object_title"
+                        data-testid="object-title"
                         required
                         value={formValues?.object_title || ''}
                         onChange={handleChange('object_title')}
@@ -693,7 +694,7 @@ export const DlorForm = ({
                     <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
                     <CKEditor
                         id="object_description"
-                        data-testid="object_description"
+                        data-testid="object-description"
                         sx={{ width: '100%' }}
                         editor={ClassicEditor}
                         config={editorConfig}
@@ -721,7 +722,7 @@ export const DlorForm = ({
                     <InputLabel htmlFor="object_summary">Summary of Object *</InputLabel>
                     <Input
                         id="object_summary"
-                        data-testid="object_summary"
+                        data-testid="object-summary"
                         multiline
                         required
                         rows={2}
@@ -796,7 +797,7 @@ export const DlorForm = ({
                 <InputLabel>
                     <Checkbox
                         checked={!!formValues?.object_is_featured}
-                        data-testid="object_is_featured"
+                        data-testid="object-is-featured"
                         onChange={handleChange('object_is_featured')}
                         sx={{ paddingLeft: 0 }}
                     />
@@ -808,7 +809,7 @@ export const DlorForm = ({
                 <InputLabel>
                     <Checkbox
                         checked={!!formValues?.object_cultural_advice}
-                        data-testid="object_cultural_advice"
+                        data-testid="object-cultural-advice"
                         onChange={handleChange('object_cultural_advice')}
                         sx={{ paddingLeft: 0 }}
                     />
@@ -837,7 +838,7 @@ export const DlorForm = ({
                     <InputLabel htmlFor="object_link_url">Web address *</InputLabel>
                     <Input
                         id="object_link_url"
-                        data-testid="object_link_url"
+                        data-testid="object-link-url"
                         required
                         value={formValues?.object_link_url || ''}
                         onChange={handleChange('object_link_url')}
@@ -849,7 +850,7 @@ export const DlorForm = ({
                     />
                     {formValues?.object_link_url?.length > 'http://ab.co'.length &&
                         !isValidUrl(formValues?.object_link_url) && (
-                            <StyledErrorMessageBox data-testid={'error-message-object_link_url'}>
+                            <StyledErrorMessageBox data-testid="dlor-form-error-message-object-link-url">
                                 This web address is not valid.
                             </StyledErrorMessageBox>
                         )}
@@ -857,7 +858,7 @@ export const DlorForm = ({
                         isPreviewableUrl(formValues?.object_link_url) !== false && (
                             <Box
                                 sx={{ display: 'flex', alignItems: 'center', marginBlock: '6px' }}
-                                data-testid="object_link_url_preview"
+                                data-testid="object-link-url-preview"
                             >
                                 <DoneIcon color="success" />
                                 <span>A preview will show on the View page.</span>
@@ -877,28 +878,28 @@ export const DlorForm = ({
                                 variant="standard"
                                 labelId="object_link_interaction_type-label"
                                 id="object_link_interaction_type"
-                                data-testid="object_link_interaction_type"
+                                data-testid="object-link-interaction-type"
                                 value={linkInteractionTypeSelectRef.current}
                                 onChange={handleChange('object_link_interaction_type')}
                                 sx={{ width: '100%' }}
                             >
                                 <MenuItem
                                     value={linkInteractionTypeDOWNLOAD}
-                                    data-testid="object_link_interaction_type-download"
+                                    data-testid="object-link-interaction-type-download"
                                     selected={linkInteractionTypeSelectRef.current === linkInteractionTypeDOWNLOAD}
                                 >
                                     can Download
                                 </MenuItem>
                                 <MenuItem
                                     value={linkInteractionTypeVIEW}
-                                    data-testid="object_link_interaction_type-view"
+                                    data-testid="object-link-interaction-type-view"
                                     selected={linkInteractionTypeSelectRef.current === linkInteractionTypeVIEW}
                                 >
                                     can View
                                 </MenuItem>
                                 <MenuItem
                                     value={linkInteractionTypeNONE}
-                                    data-testid="object_link_interaction_type-none"
+                                    data-testid="object-link-interaction-type-none"
                                     selected={
                                         ![linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
                                             linkInteractionTypeSelectRef.current,
@@ -921,7 +922,7 @@ export const DlorForm = ({
                                         variant="standard"
                                         labelId="object_link_file_type"
                                         id="object_link_file_type"
-                                        data-testid="object_link_file_type"
+                                        data-testid="object-link-file-type"
                                         value={linkFileTypeSelectRef.current}
                                         onChange={handleChange('object_link_file_type')}
                                         sx={{ width: '100%', marginTop: '20px' }}
@@ -929,7 +930,9 @@ export const DlorForm = ({
                                         {getFileTypeList.map(type => (
                                             <MenuItem
                                                 key={type.object_link_file_type}
-                                                data-testid={`object_link_file_type-${type.object_link_file_type}`}
+                                                data-testid={`object-link-file-type-${convertSnakeCaseToKebabCase(
+                                                    type.object_link_file_type,
+                                                )}`}
                                                 value={type.object_link_file_type}
                                                 selected={type.object_link_file_type === linkFileTypeSelectRef.current}
                                             >
@@ -937,7 +940,7 @@ export const DlorForm = ({
                                             </MenuItem>
                                         ))}
                                         <MenuItem
-                                            data-testid={'object_link_file_type-new'}
+                                            data-testid={'object-link-file-type-new'}
                                             value="new"
                                             selected={linkFileTypeSelectRef.current === 'new'}
                                         >
@@ -950,7 +953,7 @@ export const DlorForm = ({
                                                 <InputLabel htmlFor="new_file_type">New File Type (abbrev)</InputLabel>
                                                 <Input
                                                     id="new_file_type"
-                                                    data-testid="new_file_type"
+                                                    data-testid="dlor-admin-form-new-file-type"
                                                     value={formValues?.new_file_type || ''}
                                                     onChange={handleChange('new_file_type')}
                                                 />
@@ -971,7 +974,7 @@ export const DlorForm = ({
                                             <Input
                                                 id="object_link_duration_minutes"
                                                 aria-labelledby="object_link_duration-label object_link_duration_minutes"
-                                                data-testid="object_link_duration_minutes"
+                                                data-testid="object-link-duration-minutes"
                                                 required
                                                 value={formValues?.object_link_duration_minutes || ''}
                                                 onChange={handleChange('object_link_duration_minutes')}
@@ -985,7 +988,7 @@ export const DlorForm = ({
                                             <Input
                                                 id="object_link_duration_seconds"
                                                 aria-labelledby="object_link_duration-label object_link_duration_seconds-label"
-                                                data-testid="object_link_duration_seconds"
+                                                data-testid="object-link-duration-seconds"
                                                 required
                                                 value={formValues?.object_link_duration_seconds || ''}
                                                 onChange={handleChange('object_link_duration_seconds')}
@@ -1003,7 +1006,7 @@ export const DlorForm = ({
                                             <Input
                                                 id="object_link_size_amount"
                                                 aria-labelledby="object_link_file_size-label"
-                                                data-testid="object_link_size_amount"
+                                                data-testid="object-link-size-amount"
                                                 required
                                                 value={formValues?.object_link_size_amount || ''}
                                                 onChange={handleChange('object_link_size_amount')}
@@ -1014,7 +1017,7 @@ export const DlorForm = ({
                                                 variant="standard"
                                                 labelId="object_link_size_units"
                                                 id="object_link_size_units"
-                                                data-testid="object_link_size_units"
+                                                data-testid="object-link-size-units"
                                                 value={formValues?.object_link_size_units}
                                                 onChange={handleChange('object_link_size_units')}
                                             >
@@ -1022,7 +1025,7 @@ export const DlorForm = ({
                                                     <MenuItem
                                                         key={unit}
                                                         id={`object_link_size_units-${unit}`}
-                                                        data-testid={`object_link_size_units-${unit}`}
+                                                        data-testid={`object-link-size-units-${unit}`}
                                                         value={unit}
                                                         selected={unit === formValues?.object_link_size_units}
                                                     >
@@ -1084,9 +1087,9 @@ export const DlorForm = ({
                                 <Checkbox
                                     onChange={handleFacetChange(thisfacet.facet_id)}
                                     id={`filter-${thisfacet.facet_id}`}
-                                    data-testid={`filter-${filterItem.facet_type_slug}-${slugifyName(
-                                        thisfacet.facet_name,
-                                    )}`}
+                                    data-testid={`filter-${convertSnakeCaseToKebabCase(
+                                        filterItem.facet_type_slug,
+                                    )}-${slugifyName(thisfacet.facet_name)}`}
                                     checked={facetIsSet(thisfacet?.facet_id, formValues?.facets)}
                                 />
                             }
@@ -1109,9 +1112,9 @@ export const DlorForm = ({
                                 key={thisfacet.facet_id}
                                 control={<Radio checked={facetIsSet(thisfacet?.facet_id, formValues?.facets)} />}
                                 value={thisfacet.facet_id}
-                                data-testid={`filter-${filterItem.facet_type_slug}-${slugifyName(
-                                    thisfacet.facet_name,
-                                )}`}
+                                data-testid={`filter-${convertSnakeCaseToKebabCase(
+                                    filterItem.facet_type_slug,
+                                )}-${slugifyName(thisfacet.facet_name)}`}
                                 label={thisfacet.facet_name}
                             />
                         );
@@ -1152,7 +1155,7 @@ export const DlorForm = ({
                             item
                             xs={4}
                             key={filterItem.facet_type_slug}
-                            data-testid={`filter-group_${filterItem.facet_type_slug}`}
+                            data-testid={`filter-group-${convertSnakeCaseToKebabCase(filterItem.facet_type_slug)}`}
                         >
                             <Typography
                                 component={'h3'}
@@ -1173,7 +1176,7 @@ export const DlorForm = ({
                     </InputLabel>
                     <Input
                         id="object_keywords"
-                        data-testid="object_keywords"
+                        data-testid="object-keywords"
                         multiline
                         required
                         rows={2}

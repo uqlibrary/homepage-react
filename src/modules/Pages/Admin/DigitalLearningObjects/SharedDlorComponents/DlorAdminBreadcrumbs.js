@@ -30,32 +30,41 @@ export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
             <Grid item xs={11}>
                 <StyledTitleBox>
                     <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
-                        <a data-testid="dlor-breadcrumb--admin-homelink" href={dlorAdminLink()}>
+                        <a data-testid="dlor-breadcrumb-admin-homelink" href={dlorAdminLink()}>
                             Digital Learning Hub admin
                         </a>
                         {breadCrumbList.map((b, index) => {
                             const entryId = !!b.id
-                                ? `dlor-breadcrumb--${b.id}`
-                                : `dlor-breadcrumb-${
+                                ? `dlor-breadcrumb-${b.id}`
+                                : `dlor-breadcrumb${
                                       typeof b.title === 'string'
                                           ? `-${b.title
+                                                .trim()
+                                                .replace(/  /g, '-')
                                                 .replace(/ /g, '-')
+                                                .replace(/_/g, '-')
                                                 .replace(/"/g, "'")
                                                 .replace(/"/g, ':')
                                                 .toLowerCase()}`
                                           : /* istanbul ignore next */ ''
                                   }`;
+                            const getDataTestid = thetype => {
+                                const shortType = thetype === '' ? /* istanbul ignore next */ '' : `-${thetype}`;
+                                return `${entryId}${shortType}-${index}`;
+                            };
                             return (
-                                <span key={`breadcrumb-${index}`}>
+                                <>
                                     <ArrowForwardIcon sx={{ height: '15px' }} />
-                                    {!!b.link ? (
-                                        <a data-testid={`${entryId}-link-${index}`} href={b.link}>
-                                            {b.title}
-                                        </a>
-                                    ) : (
-                                        <span data-testid={`${entryId}-label-${index}`}>{b.title}</span>
-                                    )}
-                                </span>
+                                    <span key={`breadcrumb-${index}`} key={`${entryId}-span`}>
+                                        {!!b.link ? (
+                                            <a data-testid={getDataTestid('link')} href={b.link}>
+                                                {b.title}
+                                            </a>
+                                        ) : (
+                                            <span data-testid={getDataTestid('label')}>{b.title}</span>
+                                        )}
+                                    </span>
+                                </>
                             );
                         })}
                     </Typography>

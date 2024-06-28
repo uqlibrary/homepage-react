@@ -36,7 +36,11 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import HeroCard from 'modules/Pages/DigitalLearningObjects/SharedComponents/HeroCard';
-import { getDlorViewPageUrl, slugifyName } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import {
+    convertSnakeCaseToKebabCase,
+    getDlorViewPageUrl,
+    slugifyName,
+} from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const StyledSkipLinkButton = styled(Button)(({ theme }) => ({
     // hidden when not focused
@@ -716,7 +720,7 @@ export const DLOList = ({
                                                     aria-label="View facet help"
                                                     onClick={() => openHelpText(facetType)}
                                                     data-testid={sidebarElementId(
-                                                        facetType?.facet_type_slug,
+                                                        convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
                                                         'panel-help-icon',
                                                     )}
                                                 >
@@ -730,7 +734,7 @@ export const DLOList = ({
                                         >
                                             <button
                                                 data-testid={sidebarElementId(
-                                                    facetType?.facet_type_slug,
+                                                    convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
                                                     'panel-help-close',
                                                 )}
                                                 onClick={
@@ -752,7 +756,7 @@ export const DLOList = ({
                                                     : filterMaximiseButtonLabel
                                             }
                                             data-testid={sidebarElementId(
-                                                facetType?.facet_type_slug,
+                                                convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
                                                 'panel-minimisation-icon',
                                             )}
                                             onClick={() => showHidePanel(facetType?.facet_type_id)}
@@ -760,7 +764,7 @@ export const DLOList = ({
                                             <KeyboardArrowUpIcon
                                                 id={sidebarElementId(facetType?.facet_type_id, 'panel-uparrow')}
                                                 data-testid={sidebarElementId(
-                                                    facetType?.facet_type_slug,
+                                                    convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
                                                     'panel-uparrow',
                                                 )}
                                                 sx={
@@ -777,7 +781,7 @@ export const DLOList = ({
                                             <KeyboardArrowDownIcon
                                                 id={sidebarElementId(facetType?.facet_type_id, 'panel-downarrow')}
                                                 data-testid={sidebarElementId(
-                                                    facetType?.facet_type_slug,
+                                                    convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
                                                     'panel-downarrow',
                                                 )}
                                                 sx={
@@ -796,7 +800,9 @@ export const DLOList = ({
                                 </StyledSidebarFilterTypeHeadingGrid>
                                 <Box
                                     id={sidebarElementId(facetType?.facet_type_id)}
-                                    data-testid={sidebarElementId(facetType?.facet_type_slug)}
+                                    data-testid={sidebarElementId(
+                                        convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
+                                    )}
                                     sx={
                                         openPanelListContains(facetType?.facet_type_id)
                                             ? {}
@@ -816,9 +822,9 @@ export const DLOList = ({
                                                             onChange={handleCheckboxAction(checkBoxid)}
                                                             aria-label={'Include'}
                                                             value={facet?.facet_id}
-                                                            data-testid={`checkbox-${
-                                                                facetType?.facet_type_slug
-                                                            }-${slugifyName(facet?.facet_name)}`}
+                                                            data-testid={`checkbox-${convertSnakeCaseToKebabCase(
+                                                                facetType?.facet_type_slug,
+                                                            )}-${slugifyName(facet?.facet_name)}`}
                                                             ref={checkBoxArrayRef.current[checkBoxidShort]}
                                                             checked={
                                                                 !!checkBoxArrayRef.current?.includes(checkBoxidShort)
@@ -922,7 +928,7 @@ export const DLOList = ({
                     paddingTop: '0 !important',
                 }}
                 key={object?.object_id}
-                data-testid={`dlor-homepage-panel-${object?.object_public_uuid}`}
+                data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(object?.object_public_uuid)}`}
             >
                 <StyledArticleCard
                     onClick={() => navigateToDetailPage(object?.object_public_uuid)}
@@ -954,7 +960,9 @@ export const DLOList = ({
                                                     sx={{ fill: '#51247A', marginRight: '2px', width: '20px' }}
                                                 />
                                                 <StyledTagLabel
-                                                    data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-featured`}
+                                                    data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                        object?.object_public_uuid,
+                                                    )}-featured`}
                                                     sx={{ marginLeft: '-2px' }}
                                                 >
                                                     Featured
@@ -965,7 +973,9 @@ export const DLOList = ({
                                             <>
                                                 <InfoIcon sx={{ fill: '#2377CB', marginRight: '2px', width: '20px' }} />
                                                 <StyledTagLabel
-                                                    data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-cultural-advice`}
+                                                    data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                        object?.object_public_uuid,
+                                                    )}-cultural-advice`}
                                                 >
                                                     Cultural advice
                                                 </StyledTagLabel>
@@ -977,7 +987,9 @@ export const DLOList = ({
                                                     sx={{ fill: '#4aa74e', marginRight: '2px', width: '24px' }}
                                                 />
                                                 <StyledTagLabel
-                                                    data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-object_series_name`}
+                                                    data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                        object?.object_public_uuid,
+                                                    )}-object-series-name`}
                                                 >
                                                     Series: {object?.object_series_name}
                                                 </StyledTagLabel>
@@ -995,7 +1007,11 @@ export const DLOList = ({
                             {!!hasTopicFacet('item_type') && (
                                 <>
                                     {getFacetTypeIcon('item_type')}
-                                    <span data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-type`}>
+                                    <span
+                                        data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                            object?.object_public_uuid,
+                                        )}-footer-type`}
+                                    >
                                         {getConcatenatedFilterLabels('item_type')}
                                     </span>
                                 </>
@@ -1004,7 +1020,9 @@ export const DLOList = ({
                                 <>
                                     {getFacetTypeIcon('media_format')}
                                     <span
-                                        data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-media`}
+                                        data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                            object?.object_public_uuid,
+                                        )}-footer-media`}
                                     >
                                         {getConcatenatedFilterLabels('media_format')}
                                     </span>
@@ -1014,7 +1032,9 @@ export const DLOList = ({
                                 <>
                                     {getFacetTypeIcon('topic')}
                                     <span
-                                        data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-topic`}
+                                        data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                            object?.object_public_uuid,
+                                        )}-footer-topic`}
                                     >
                                         {getConcatenatedFilterLabels('topic')}
                                     </span>

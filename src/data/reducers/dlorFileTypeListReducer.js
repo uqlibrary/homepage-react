@@ -33,7 +33,5 @@ export default function dlorFileTypeListReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-    const handler1 = handler(state, action);
-    console.log('reducer dlorFileTypeListReducer:', action.type, handler1);
-    return handler1;
+    return handler(state, action);
 }

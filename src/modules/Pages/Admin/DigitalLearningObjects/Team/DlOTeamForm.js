@@ -171,7 +171,7 @@ export const DLOTeamForm = ({
                                                 <InputLabel htmlFor="team_name">Team name *</InputLabel>
                                                 <Input
                                                     id="team_name"
-                                                    data-testid="team_name"
+                                                    data-testid="admin-dlor-team-form-team-name"
                                                     required
                                                     value={formValues?.team_name || ''}
                                                     onChange={handleChange('team_name')}
@@ -185,7 +185,7 @@ export const DLOTeamForm = ({
                                                         fontSize: '0.8em',
                                                         marginTop: 2,
                                                     }}
-                                                    data-testid="error-message-team_name"
+                                                    data-testid="admin-dlor-team-form-error-message-team-name"
                                                 >
                                                     This team name is not valid.
                                                 </Box>
@@ -196,7 +196,7 @@ export const DLOTeamForm = ({
                                                 <InputLabel htmlFor="team_manager">Name of Team Manager</InputLabel>
                                                 <Input
                                                     id="team_manager"
-                                                    data-testid="team_manager"
+                                                    data-testid="admin-dlor-team-form-team-manager"
                                                     value={formValues?.team_manager || ''}
                                                     onChange={handleChange('team_manager')}
                                                 />
@@ -209,7 +209,7 @@ export const DLOTeamForm = ({
                                                 </InputLabel>
                                                 <Input
                                                     id="team_email"
-                                                    data-testid="team_email"
+                                                    data-testid="admin-dlor-team-form-team-email"
                                                     value={formValues?.team_email || ''}
                                                     onChange={handleChange('team_email')}
                                                     error={!isValidEmailLocal(formValues?.team_email)}
@@ -221,7 +221,7 @@ export const DLOTeamForm = ({
                                                             fontSize: '0.8em',
                                                             marginTop: 2,
                                                         }}
-                                                        data-testid="error-message-team_email"
+                                                        data-testid="admin-dlor-team-form-error-message-team-email"
                                                     >
                                                         This email address is not valid.
                                                     </Box>

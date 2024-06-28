@@ -39,6 +39,7 @@ import {
     getDlorViewPageUrl,
     getPathRoot,
     toTitleCase,
+    convertSnakeCaseToKebabCase,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -495,7 +496,7 @@ export const DLOView = ({
                                                     sx={{ fill: '#4aa74e', marginRight: '2px', width: 24 }}
                                                 />
                                                 <StyledTagLabelSpan
-                                                    data-testid={'dlor-detailpage-object_series_name-custom-indicator'}
+                                                    data-testid={'dlor-detailpage-object-series-name-custom-indicator'}
                                                 >
                                                     Series: {dlorItem?.object_series_name}
                                                 </StyledTagLabelSpan>
@@ -657,7 +658,9 @@ export const DLOView = ({
                                                 return (
                                                     <li
                                                         key={`dlor-view-series-item-${s.series_object_uuid}`}
-                                                        data-testid={`dlor-view-series-item-${s.series_object_uuid}-order-${index}`}
+                                                        data-testid={`dlor-view-series-item-${convertSnakeCaseToKebabCase(
+                                                            s.series_object_uuid,
+                                                        )}-order-${index}`}
                                                     >
                                                         {s.series_object_uuid === dlorItem?.object_public_uuid ? (
                                                             <span>
@@ -704,7 +707,9 @@ export const DLOView = ({
                                         return (
                                             <div
                                                 key={filter?.filter_key}
-                                                data-testid={`detailpage-filter-${filter?.filter_key}`}
+                                                data-testid={`detailpage-filter-${convertSnakeCaseToKebabCase(
+                                                    filter?.filter_key,
+                                                )}`}
                                             >
                                                 <StyledTitleTypography component={'h3'} variant={'h6'}>
                                                     {deslugify(filter?.filter_key)}

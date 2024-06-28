@@ -22,14 +22,15 @@ import InfoIcon from '@mui/icons-material/Info';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import SearchIcon from '@mui/icons-material/Search';
 
+import { useConfirmationState } from 'hooks';
+
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
-import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
+import { convertSnakeCaseToKebabCase } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects/SharedDlorComponents/VisitHomepage';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-
-import { useConfirmationState } from 'hooks';
 
 const StyledPageListItemGridContainer = styled(Grid)(() => ({
     paddingTop: '10px',
@@ -402,7 +403,9 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                                                     <StyleObjectDetailGridItem
                                                         item
                                                         xs={7}
-                                                        data-testid={`dlor-homepage-panel-${o?.object_public_uuid}`}
+                                                        data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                            o?.object_public_uuid,
+                                                        )}`}
                                                     >
                                                         <div>
                                                             <Typography component={'h2'} variant={'h6'}>

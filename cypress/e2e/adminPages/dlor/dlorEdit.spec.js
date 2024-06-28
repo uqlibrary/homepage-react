@@ -49,7 +49,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 // open the "edit a team dialog"
                 cy.waitUntil(() => cy.get('[data-testid="object-form-teamid-change"]').should('exist'));
                 cy.get('[data-testid="object-form-teamid-change"]').click();
-                cy.waitUntil(() => cy.get('[data-testid="team_manager_edit"]').should('exist'));
+                cy.waitUntil(() => cy.get('[data-testid="dlor-form-team-manager-edit"]').should('exist'));
                 cy.checkA11y('[data-testid="StandardPage"]', {
                     reportName: 'edit dlor Panel 1 with team dialog open',
                     scopeName: 'Panel 1 with team dialog',
@@ -60,7 +60,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
-                cy.waitUntil(() => cy.get('[data-testid="object_title"] input').should('exist'));
+                cy.waitUntil(() => cy.get('[data-testid="object-title"] input').should('exist'));
                 cy.checkA11y('[data-testid="StandardPage"]', {
                     reportName: 'edit dlor Panel 2',
                     scopeName: 'Panel 2',
@@ -71,7 +71,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
-                cy.waitUntil(() => cy.get('[data-testid="object_link_url"] input').should('exist'));
+                cy.waitUntil(() => cy.get('[data-testid="object-link-url"] input').should('exist'));
                 cy.checkA11y('[data-testid="StandardPage"]', {
                     reportName: 'edit dlor Panel 3',
                     scopeName: 'Panel 3',
@@ -82,7 +82,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
-                cy.waitUntil(() => cy.get('[data-testid="object_keywords"] textarea:first-child').should('exist'));
+                cy.waitUntil(() => cy.get('[data-testid="object-keywords"] textarea:first-child').should('exist'));
                 cy.checkA11y('[data-testid="StandardPage"]', {
                     reportName: 'edit dlor Panel 4',
                     scopeName: 'Panel 4',
@@ -93,7 +93,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="choose-notify"] input')
                     .should('exist')
                     .check();
-                cy.waitUntil(() => cy.get('[data-testid="object_keywords"] textarea:first-child').should('exist'));
+                cy.waitUntil(() => cy.get('[data-testid="object-keywords"] textarea:first-child').should('exist'));
                 cy.checkA11y('[data-testid="StandardPage"]', {
                     reportName: 'edit dlor notification lightbox',
                     scopeName: 'Panel 4',
@@ -104,14 +104,14 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
                 cy.viewport(1300, 1000);
 
-                cy.waitUntil(() => cy.get('[data-testid="object_publishing_user"] input').should('exist'));
-                cy.get('[data-testid="object_publishing_user"] input').should('have.value', 'uqjsmith');
-                cy.get('[data-testid="error-message-object_publishing_user"]').should('not.exist');
+                cy.waitUntil(() => cy.get('[data-testid="object-publishing-user"] input').should('exist'));
+                cy.get('[data-testid="object-publishing-user"] input').should('have.value', 'uqjsmith');
+                cy.get('[data-testid="dlor-form-team-message-object-publishing-user"]').should('not.exist');
 
-                cy.get('a[data-testid="dlor-breadcrumb--admin-homelink"]')
+                cy.get('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                     .contains('Digital Learning Hub admin')
                     .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
-                cy.get('[data-testid="dlor-breadcrumb--edit-object-label-0"]').contains(
+                cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]').contains(
                     'Edit object: Advanced literature searching',
                 );
 
@@ -122,42 +122,42 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('exist')
                     .contains('Update contact');
                 // swap to "team 1"
-                cy.waitUntil(() => cy.get('[data-testid="object_owning_team"]').should('exist'));
-                cy.get('[data-testid="object_owning_team"]').click();
-                cy.get('[data-testid="object_owning_team-1"]')
+                cy.waitUntil(() => cy.get('[data-testid="object-owning-team"]').should('exist'));
+                cy.get('[data-testid="object-owning-team"]').click();
+                cy.get('[data-testid="object-owning-team-1"]')
                     .should('exist')
                     .click();
-                cy.get('[data-testid="object_owning_team"]').contains('LIB DX Digital Content');
+                cy.get('[data-testid="object-owning-team"]').contains('LIB DX Digital Content');
                 cy.get('[data-testid="object-form-teamid-change"]').should('not.exist'); // button missing
                 // swap to "team 3"
-                cy.get('[data-testid="object_owning_team"]').click();
-                cy.get('[data-testid="object_owning_team-3"]')
+                cy.get('[data-testid="object-owning-team"]').click();
+                cy.get('[data-testid="object-owning-team-3"]')
                     .should('exist')
                     .click();
-                cy.get('[data-testid="object_owning_team"]').contains('Library Indigenous Enquiries');
+                cy.get('[data-testid="object-owning-team"]').contains('Library Indigenous Enquiries');
                 cy.get('[data-testid="object-form-teamid-change"]').should('not.exist'); // button missing
 
                 // back to "team 2", current Team
-                cy.get('[data-testid="object_owning_team"]').click();
-                cy.get('[data-testid="object_owning_team-2"]')
+                cy.get('[data-testid="object-owning-team"]').click();
+                cy.get('[data-testid="object-owning-team-2"]')
                     .should('exist')
                     .click();
 
                 // can open the editor for this team
-                cy.get('[data-testid="team_manager_edit"]').should('not.exist');
-                cy.get('[data-testid="team_email_edit"]').should('not.exist');
+                cy.get('[data-testid="dlor-form-team-manager-edit"]').should('not.exist');
+                cy.get('[data-testid="dlor-form-team-email-edit"]').should('not.exist');
                 cy.get('[data-testid="object-form-teamid-change"]')
                     .should('exist')
                     .click();
-                cy.waitUntil(() => cy.get('[data-testid="team_manager_edit"]').should('exist'));
-                cy.get('[data-testid="team_email_edit"]').should('exist');
+                cy.waitUntil(() => cy.get('[data-testid="dlor-form-team-manager-edit"]').should('exist'));
+                cy.get('[data-testid="dlor-form-team-email-edit"]').should('exist');
 
                 // check the Close button works
                 cy.get('[data-testid="object-form-teamid-change"]')
                     .should('exist')
                     .click();
-                cy.get('[data-testid="team_manager_edit"]').should('not.exist');
-                cy.get('[data-testid="team_email_edit"]').should('not.exist');
+                cy.get('[data-testid="dlor-form-team-manager-edit"]').should('not.exist');
+                cy.get('[data-testid="dlor-form-team-email-edit"]').should('not.exist');
 
                 // ok, good - now reclick button to reopen edit team dialog so we can test the form itself
                 cy.get('[data-testid="object-form-teamid-change"]')
@@ -165,60 +165,60 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .click();
 
                 // cy.get('[data-testid="dlor-panel-validity-indicator-0"] span').should('not.exist');
-                cy.get('[data-testid="team_manager_edit"]').type('111');
-                cy.get('[data-testid="team_email_edit"]')
+                cy.get('[data-testid="dlor-form-team-manager-edit"]').type('111');
+                cy.get('[data-testid="dlor-form-team-email-edit"]')
                     .clear()
                     .type('lea');
-                cy.get('[data-testid="team_email_edit"]').type('@example.com');
+                cy.get('[data-testid="dlor-form-team-email-edit"]').type('@example.com');
 
                 // the user realises they actually want a new team and choose 'new' from the Owning team drop down
-                cy.get('[data-testid="object_owning_team"]').click();
+                cy.get('[data-testid="object-owning-team"]').click();
                 cy.get('[data-testid="object-form-teamid-new"]')
                     .should('exist')
                     .click();
                 // the fields _do not inherit_ from what the user types
-                cy.get('[data-testid="team_name_new"] input')
+                cy.get('[data-testid="dlor-form-team-name-new"] input')
                     .should('exist')
                     .should('have.value', '')
                     .type('new team');
-                cy.get('[data-testid="team_manager_new"] input')
+                cy.get('[data-testid="dlor-form-team-manager-new"] input')
                     .should('exist')
                     .should('have.value', '')
                     .type('new name');
-                cy.get('[data-testid="team_email_new"] input')
+                cy.get('[data-testid="dlor-form-team-email-new"] input')
                     .should('exist')
                     .should('have.value', '')
                     .type('new@example.com');
 
                 // back to current team, team 2, so we can check those values are still there
-                cy.get('[data-testid="object_owning_team"]').click();
-                cy.get('[data-testid="object_owning_team-2"]')
+                cy.get('[data-testid="object-owning-team"]').click();
+                cy.get('[data-testid="object-owning-team-2"]')
                     .should('exist')
                     .click();
                 cy.get('[data-testid="object-form-teamid-change"]') // click button to open dialog
                     .should('exist')
                     .click();
-                // cy.get('[data-testid="team_name_edit"]').should('not.exist');
-                cy.get('[data-testid="team_manager_edit"] input')
+                // cy.get('[data-testid="dlor-form-team-name-edit"]').should('not.exist');
+                cy.get('[data-testid="dlor-form-team-manager-edit"] input')
                     .should('exist')
                     .should('have.value', 'Jane Green111');
-                cy.get('[data-testid="team_email_edit"] input')
+                cy.get('[data-testid="dlor-form-team-email-edit"] input')
                     .should('exist')
                     .should('have.value', 'lea@example.com');
 
-                // and then if we go back to the new form )again_ it has held the previous values we entered
-                cy.get('[data-testid="object_owning_team"]').click();
+                // and then if we go back to the new form _again_ it has held the previous values we entered
+                cy.get('[data-testid="object-owning-team"]').click();
                 cy.get('[data-testid="object-form-teamid-new"]')
                     .should('exist')
                     .click();
                 // the fields _do not inherit_ from what the user types on the edit-current form
-                cy.get('[data-testid="team_name_new"] input')
+                cy.get('[data-testid="dlor-form-team-name-new"] input')
                     .should('exist')
                     .should('have.value', 'new team');
-                cy.get('[data-testid="team_manager_new"] input')
+                cy.get('[data-testid="dlor-form-team-manager-new"] input')
                     .should('exist')
                     .should('have.value', 'new name');
-                cy.get('[data-testid="team_email_new"] input')
+                cy.get('[data-testid="dlor-form-team-email-new"] input')
                     .should('exist')
                     .should('have.value', 'new@example.com');
 
@@ -226,20 +226,20 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
-                cy.waitUntil(() => cy.get('[data-testid="object_title"] input').should('exist'));
-                cy.get('[data-testid="object_title"] input').should('have.value', 'Advanced literature searching');
+                cy.waitUntil(() => cy.get('[data-testid="object-title"] input').should('exist'));
+                cy.get('[data-testid="object-title"] input').should('have.value', 'Advanced literature searching');
                 CheckCKEditor(
                     'This tutorial covers the advanced searching techniques that can be used for all topics when conducting a scoping',
                 );
-                cy.get('[data-testid="object_summary"] textarea:first-child')
+                cy.get('[data-testid="object-summary"] textarea:first-child')
                     .should('exist')
                     .should('have.value', 'Using advanced searching techniques.');
 
-                cy.get('[data-testid="object_is_featured"] input')
+                cy.get('[data-testid="object-is-featured"] input')
                     .should('exist')
                     .should('not.be.checked');
 
-                cy.get('[data-testid="object_cultural_advice"] input')
+                cy.get('[data-testid="object-cultural-advice"] input')
                     .should('exist')
                     .should('not.be.checked');
 
@@ -247,86 +247,83 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
-                cy.waitUntil(() => cy.get('[data-testid="object_link_url"] input').should('exist'));
-                cy.get('[data-testid="object_link_url"] input').should(
+                cy.waitUntil(() => cy.get('[data-testid="object-link-url"] input').should('exist'));
+                cy.get('[data-testid="object-link-url"] input').should(
                     'have.value',
                     'https://uq.h5p.com/content/1291624605868350759',
                 );
 
                 // accessible link message is "no message"
-                cy.get('[data-testid="object_link_interaction_type"]')
+                cy.get('[data-testid="object-link-interaction-type"]')
                     .should('exist')
                     .contains('No message');
-                cy.get('[data-testid="object_link_file_type"]').should('not.exist');
-                cy.get('[data-testid="object_link_duration"]').should('not.exist');
-                cy.get('[data-testid="object_link_file_size"]').should('not.exist');
+                cy.get('[data-testid="object-link-file-type"]').should('not.exist');
+                cy.get('[data-testid="object-link-duration"]').should('not.exist');
+                cy.get('[data-testid="object-link-file-size"]').should('not.exist');
 
-                // cy.get('[data-testid="object_download_instructions"] textarea:first-child')
-                //     .should('exist')
-                //     .contains('some download instructions');
                 CheckCKEditor('some download instructions');
                 // go to panel 4
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
-                cy.waitUntil(() => cy.get('[data-testid="object_keywords"] textarea:first-child').should('exist'));
-                cy.get('[data-testid="object_keywords"] textarea:first-child').should(
+                cy.waitUntil(() => cy.get('[data-testid="object-keywords"] textarea:first-child').should('exist'));
+                cy.get('[data-testid="object-keywords"] textarea:first-child').should(
                     'have.value',
                     'search, evaluate, literature, strategy',
                 );
 
                 const checkboxStatus = {
-                    'topic-aboriginal_and_torres_strait_islander': false,
+                    'topic-aboriginal-and-torres-strait-islander': false,
                     'topic-assignments': true,
-                    'topic-digital_skills': false,
+                    'topic-digital-skills': false,
                     'topic-employability': false,
-                    'topic-information_literacy': false,
+                    'topic-information-literacy': false,
                     'topic-referencing': false,
                     'topic-research': true,
                     'topic-software': false,
                     'topic-other': false,
-                    'graduate_attributes-accomplished_scholars': true,
-                    'graduate_attributes-connected_citizens': false,
-                    'graduate_attributes-courageous_thinkers': false,
-                    'graduate_attributes-culturally_capable': false,
-                    'graduate_attributes-influential_communicators': true,
-                    'graduate_attributes-respectful_leaders': false,
-                    'item_type-guide': true,
-                    'item_type-interactive': false,
-                    'item_type-module': false,
-                    'item_type-presentation': false,
-                    'item_type-training_recording': false,
-                    'item_type-other': false,
-                    'media_format-audio': false,
-                    'media_format-dataset': false,
-                    'media_format-h5p': false,
-                    'media_format-image': false,
-                    'media_format-powerpoint': false,
-                    'media_format-pressbook': true,
-                    'media_format-pdf': false,
-                    'media_format-spreadsheet': false,
-                    'media_format-video': false,
-                    'media_format-webpage': false,
-                    'media_format-word_document': false,
-                    'media_format-other': false,
-                    'subject-cross_disciplinary': true,
-                    'subject-business_economics': false,
-                    'subject-engineering_architecture_information_technology': false,
-                    'subject-health_behavioural_sciences': false,
-                    'subject-humanities_arts': false,
+                    'graduate-attributes-accomplished-scholars': true,
+                    'graduate-attributes-connected-citizens': false,
+                    'graduate-attributes-courageous-thinkers': false,
+                    'graduate-attributes-culturally-capable': false,
+                    'graduate-attributes-influential-communicators': true,
+                    'graduate-attributes-respectful-leaders': false,
+                    'item-type-guide': true,
+                    'item-type-interactive': false,
+                    'item-type-module': false,
+                    'item-type-presentation': false,
+                    'item-type-training-recording': false,
+                    'item-type-other': false,
+                    'media-format-audio': false,
+                    'media-format-dataset': false,
+                    'media-format-h5p': false,
+                    'media-format-image': false,
+                    'media-format-powerpoint': false,
+                    'media-format-pressbook': true,
+                    'media-format-pdf': false,
+                    'media-format-spreadsheet': false,
+                    'media-format-video': false,
+                    'media-format-webpage': false,
+                    'media-format-word-document': false,
+                    'media-format-other': false,
+                    'subject-cross-disciplinary': true,
+                    'subject-business-economics': false,
+                    'subject-engineering-architecture-information-technology': false,
+                    'subject-health-behavioural-sciences': false,
+                    'subject-humanities-arts': false,
                     'subject-law': false,
-                    'subject-medicine_biomedical_sciences': false,
+                    'subject-medicine-biomedical-sciences': false,
                     'subject-science': false,
-                    'subject-social_sciences': false,
+                    'subject-social-sciences': false,
                     'subject-other': false,
-                    'licence-cc_by_attribution': false,
-                    'licence-cc_by_nc_attribution_noncommercial': false,
-                    'licence-cc_by_nc_nd_attribution_noncommercial_no_derivatives': true,
-                    'licence-cc_by_nc_sa_attribution_noncommercial_share_alike': false,
-                    'licence-cc_by_nd_attribution_no_derivatives': false,
-                    'licence-cc_by_sa_attribution_share_alike': false,
-                    'licence-cc0public_domain': false,
-                    'licence-uq_copyright': false,
+                    'licence-cc-by-attribution': false,
+                    'licence-cc-by-nc-attribution-noncommercial': false,
+                    'licence-cc-by-nc-nd-attribution-noncommercial-no-derivatives': true,
+                    'licence-cc-by-nc-sa-attribution-noncommercial-share-alike': false,
+                    'licence-cc-by-nd-attribution-no-derivatives': false,
+                    'licence-cc-by-sa-attribution-share-alike': false,
+                    'licence-cc0public-domain': false,
+                    'licence-uq-copyright': false,
                 };
                 Object.entries(checkboxStatus).forEach(([slug, isChecked]) => {
                     cy.log(`check checkbox/radio ${slug} - "${isChecked}"`);
@@ -342,22 +339,22 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 });
 
                 // no extra filters
-                cy.get('[data-testid="filter-group_topic"]')
+                cy.get('[data-testid="filter-group-topic"]')
                     .children()
                     .should('have.length', 9 + 1);
-                cy.get('[data-testid="filter-group_media_format"]')
+                cy.get('[data-testid="filter-group-media-format"]')
                     .children()
                     .should('have.length', 12 + 1);
-                cy.get('[data-testid="filter-group_graduate_attributes"]')
+                cy.get('[data-testid="filter-group-graduate-attributes"]')
                     .children()
                     .should('have.length', 6 + 1);
-                cy.get('[data-testid="filter-group_subject"]')
+                cy.get('[data-testid="filter-group-subject"]')
                     .children()
                     .should('have.length', 10 + 1);
-                cy.get('[data-testid="filter-group_item_type"] div') // radio group has different structure
+                cy.get('[data-testid="filter-group-item-type"] div') // radio group has different structure
                     .children()
                     .should('have.length', 6);
-                cy.get('[data-testid="filter-group_licence"] div')
+                cy.get('[data-testid="filter-group-licence"] div')
                     .children()
                     .should('have.length', 8);
             });
@@ -376,34 +373,34 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .click();
 
                 // accessible link message is "no message"
-                cy.get('[data-testid="object_link_interaction_type"]')
+                cy.get('[data-testid="object-link-interaction-type"]')
                     .should('exist')
                     .contains('can Download');
-                cy.get('[data-testid="object_link_file_type"]')
+                cy.get('[data-testid="object-link-file-type"]')
                     .should('exist')
                     .contains('XLS');
-                cy.get('[data-testid="object_link_size_amount"] input')
+                cy.get('[data-testid="object-link-size-amount"] input')
                     .should('exist')
                     .should('have.value', '3.4');
-                cy.get('[data-testid="object_link_size_units"]')
+                cy.get('[data-testid="object-link-size-units"]')
                     .should('exist')
                     .contains('GB');
-                cy.get('[data-testid="object_link_duration_minutes"]').should('not.exist');
-                cy.get('[data-testid="object_link_duration_seconds"]').should('not.exist');
+                cy.get('[data-testid="object-link-duration-minutes"]').should('not.exist');
+                cy.get('[data-testid="object-link-duration-seconds"]').should('not.exist');
 
-                cy.get('[data-testid="object_link_file_type"]').click();
-                cy.get('[data-testid="object_link_file_type-PPT"]')
+                cy.get('[data-testid="object-link-file-type"]').click();
+                cy.get('[data-testid="object-link-file-type-PPT"]')
                     .should('exist')
                     .click();
-                cy.get('[data-testid="object_link_size_amount"]')
+                cy.get('[data-testid="object-link-size-amount"]')
                     .should('exist')
                     .type('33');
-                cy.get('[data-testid="object_link_size_units"]').click();
-                cy.get('[data-testid="object_link_size_units-MB"]')
+                cy.get('[data-testid="object-link-size-units"]').click();
+                cy.get('[data-testid="object-link-size-units-MB"]')
                     .should('exist')
                     .click();
 
-                // next panel
+                // go to panel 4
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
@@ -452,35 +449,35 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .click();
 
                 // accessible link message is "no message"
-                cy.get('[data-testid="object_link_interaction_type"]')
+                cy.get('[data-testid="object-link-interaction-type"]')
                     .should('exist')
                     .contains('can View');
-                cy.get('[data-testid="object_link_file_type"]')
+                cy.get('[data-testid="object-link-file-type"]')
                     .should('exist')
                     .contains('video');
-                cy.get('[data-testid="object_link_duration_minutes"] input')
+                cy.get('[data-testid="object-link-duration-minutes"] input')
                     .should('exist')
                     .should('have.value', '47');
-                cy.get('[data-testid="object_link_duration_seconds"] input')
+                cy.get('[data-testid="object-link-duration-seconds"] input')
                     .should('exist')
                     .should('have.value', '44');
-                cy.get('[data-testid="object_link_size_amount"]').should('not.exist');
-                cy.get('[data-testid="object_link_size_units"]').should('not.exist');
+                cy.get('[data-testid="object-link-size-amount"]').should('not.exist');
+                cy.get('[data-testid="object-link-size-units"]').should('not.exist');
 
-                cy.get('[data-testid="object_link_file_type"]').click();
-                cy.get('[data-testid="object_link_file_type-something"]')
+                cy.get('[data-testid="object-link-file-type"]').click();
+                cy.get('[data-testid="object-link-file-type-something"]')
                     .should('exist')
                     .click();
 
-                cy.get('[data-testid="object_link_duration_minutes"]')
+                cy.get('[data-testid="object-link-duration-minutes"]')
                     .should('exist')
                     // .clear()
                     .type('3');
-                cy.get('[data-testid="object_link_duration_seconds"]')
+                cy.get('[data-testid="object-link-duration-seconds"]')
                     .should('exist')
                     .type('1');
 
-                // next panel
+                // go to panel 4
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
@@ -542,20 +539,20 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 });
 
                 // open teams drop down
-                cy.waitUntil(() => cy.get('[data-testid="object_owning_team"]').should('exist'));
-                cy.get('[data-testid="object_owning_team"]').click();
+                cy.waitUntil(() => cy.get('[data-testid="object-owning-team"]').should('exist'));
+                cy.get('[data-testid="object-owning-team"]').click();
                 cy.get('[data-testid="object-form-teamid-new"]')
                     .should('exist')
                     .click();
 
                 // enter a new team
-                cy.get('[data-testid="team_name_new"]')
+                cy.get('[data-testid="dlor-form-team-name-new"]')
                     .should('exist')
                     .type('new team name');
-                cy.get('[data-testid="team_manager_new"]')
+                cy.get('[data-testid="dlor-form-team-manager-new"]')
                     .should('exist')
                     .type('john Manager');
-                cy.get('[data-testid="team_email_new"]')
+                cy.get('[data-testid="dlor-form-team-email-new"]')
                     .should('exist')
                     .type('john@example.com');
 
@@ -564,57 +561,57 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('exist')
                     .click();
 
-                cy.get('[data-testid="object_title"] input')
+                cy.get('[data-testid="object-title"] input')
                     .should('exist')
                     .type('xx');
                 TypeCKEditor('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
-                cy.get('[data-testid="object_summary"] textarea:first-child')
+                cy.get('[data-testid="object-summary"] textarea:first-child')
                     .should('exist')
                     .type('xx');
 
-                cy.get('[data-testid="object_is_featured"] input')
+                cy.get('[data-testid="object-is-featured"] input')
                     .should('exist')
                     .should('not.be.checked');
-                cy.get('[data-testid="object_is_featured"] input').check();
+                cy.get('[data-testid="object-is-featured"] input').check();
 
-                cy.get('[data-testid="object_cultural_advice"] input')
+                cy.get('[data-testid="object-cultural-advice"] input')
                     .should('exist')
                     .should('not.be.checked');
-                cy.get('[data-testid="object_cultural_advice"] input').check();
+                cy.get('[data-testid="object-cultural-advice"] input').check();
 
                 // go to the third panel, Link
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
 
-                cy.get('[data-testid="object_link_url"] input')
+                cy.get('[data-testid="object-link-url"] input')
                     .should('exist')
                     .type('/page');
 
                 // select download as the url interaction type
-                cy.waitUntil(() => cy.get('[data-testid="object_link_interaction_type"]').should('exist'));
-                cy.get('[data-testid="object_link_file_type"]').should('not.exist');
-                cy.get('[data-testid="object_link_duration_minutes"]').should('not.exist');
-                cy.get('[data-testid="object_link_duration_seconds"]').should('not.exist');
-                cy.get('[data-testid="object_link_size_units"]').should('not.exist');
-                cy.get('[data-testid="object_link_size_amount"]').should('not.exist');
-                cy.get('[data-testid="object_link_interaction_type"]').click();
-                cy.get('[data-testid="object_link_interaction_type-download"]')
+                cy.waitUntil(() => cy.get('[data-testid="object-link-interaction-type"]').should('exist'));
+                cy.get('[data-testid="object-link-file-type"]').should('not.exist');
+                cy.get('[data-testid="object-link-duration-minutes"]').should('not.exist');
+                cy.get('[data-testid="object-link-duration-seconds"]').should('not.exist');
+                cy.get('[data-testid="object-link-size-units"]').should('not.exist');
+                cy.get('[data-testid="object-link-size-amount"]').should('not.exist');
+                cy.get('[data-testid="object-link-interaction-type"]').click();
+                cy.get('[data-testid="object-link-interaction-type-download"]')
                     .should('exist')
                     .click();
-                cy.get('[data-testid="object_link_file_type"]').should('exist');
-                cy.get('[data-testid="object_link_size_amount"]').should('exist');
-                cy.get('[data-testid="object_link_size_units"]').should('exist');
-                cy.get('[data-testid="object_link_duration_minutes"]').should('not.exist');
-                cy.get('[data-testid="object_link_duration_seconds"]').should('not.exist');
+                cy.get('[data-testid="object-link-file-type"]').should('exist');
+                cy.get('[data-testid="object-link-size-amount"]').should('exist');
+                cy.get('[data-testid="object-link-size-units"]').should('exist');
+                cy.get('[data-testid="object-link-duration-minutes"]').should('not.exist');
+                cy.get('[data-testid="object-link-duration-seconds"]').should('not.exist');
                 // shows an error because they havent chosen a file type and a file size
                 cy.get('[data-testid="dlor-panel-validity-indicator-2"] span')
                     .should('exist')
                     .should('contain', 2); // panel invalidity count present
 
                 // choose file type
-                cy.waitUntil(() => cy.get('[data-testid="object_link_file_type"]').should('exist'));
-                cy.get('[data-testid="object_link_file_type"]').click();
+                cy.waitUntil(() => cy.get('[data-testid="object-link-file-type"]').should('exist'));
+                cy.get('[data-testid="object-link-file-type"]').click();
                 cy.get('[data-value="XLS"]')
                     .should('exist')
                     .click();
@@ -624,11 +621,11 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('contain', 1); // panel invalidity count present
 
                 // enter file size
-                cy.get('[data-testid="object_link_size_amount"] input')
+                cy.get('[data-testid="object-link-size-amount"] input')
                     .should('exist')
                     .type('36');
-                cy.waitUntil(() => cy.get('[data-testid="object_link_size_units"]').should('exist'));
-                cy.get('[data-testid="object_link_size_units"]').click();
+                cy.waitUntil(() => cy.get('[data-testid="object-link-size-units"]').should('exist'));
+                cy.get('[data-testid="object-link-size-units"]').click();
                 cy.get('[data-value="MB"]')
                     .should('exist')
                     .click();
@@ -645,20 +642,20 @@ describe('Edit an object on the Digital Learning Hub', () => {
 
                 cy.get('[data-testid="filter-topic-assignments"] input').uncheck();
                 cy.get('[data-testid="filter-topic-research"] input').uncheck();
-                cy.get('[data-testid="filter-topic-aboriginal_and_torres_strait_islander"] input').check();
+                cy.get('[data-testid="filter-topic-aboriginal-and-torres-strait-islander"] input').check();
 
-                cy.get('[data-testid="filter-media_format-audio"] input').check();
-                cy.get('[data-testid="filter-media_format-h5p"] input').check();
-                cy.get('[data-testid="filter-media_format-pressbook"] input').uncheck();
+                cy.get('[data-testid="filter-media-format-audio"] input').check();
+                cy.get('[data-testid="filter-media-format-h5p"] input').check();
+                cy.get('[data-testid="filter-media-format-pressbook"] input').uncheck();
 
-                cy.get('[data-testid="filter-subject-business_economics"] input').check();
-                cy.get('[data-testid="filter-subject-cross_disciplinary"] input').uncheck();
+                cy.get('[data-testid="filter-subject-business-economics"] input').check();
+                cy.get('[data-testid="filter-subject-cross-disciplinary"] input').uncheck();
 
-                cy.get('[data-testid="filter-item_type-interactive"] input').check();
+                cy.get('[data-testid="filter-item-type-interactive"] input').check();
 
-                cy.get('[data-testid="filter-licence-cc_by_nc_attribution_noncommercial"] input').check();
+                cy.get('[data-testid="filter-licence-cc-by-nc-attribution-noncommercial"] input').check();
 
-                cy.get('[data-testid="object_keywords"] textarea:first-child')
+                cy.get('[data-testid="object-keywords"] textarea:first-child')
                     .should('exist')
                     .clear()
                     .type('cat, dog');
@@ -792,17 +789,17 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="object-form-teamid-change"]')
                     .should('exist')
                     .click();
-                cy.get('[data-testid="team_manager_edit"]')
+                cy.get('[data-testid="dlor-form-team-manager-edit"]')
                     .should('exist')
                     .type('manager name');
-                cy.get('[data-testid="team_email_edit"]')
+                cy.get('[data-testid="dlor-form-team-email-edit"]')
                     .should('exist')
                     .clear()
                     .type('lea@example.com');
 
                 // and then change your mind and change teams instead
-                cy.waitUntil(() => cy.get('[data-testid="object_owning_team"]').should('exist'));
-                cy.get('[data-testid="object_owning_team"]').click();
+                cy.waitUntil(() => cy.get('[data-testid="object-owning-team"]').should('exist'));
+                cy.get('[data-testid="object-owning-team"]').click();
                 cy.get('[data-value="3"]')
                     .should('exist')
                     .click();
@@ -812,11 +809,11 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('exist')
                     .click();
 
-                cy.get('[data-testid="object_title"] input')
+                cy.get('[data-testid="object-title"] input')
                     .should('exist')
                     .type('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
                 TypeCKEditor('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
-                cy.get('[data-testid="object_summary"] textarea:first-child')
+                cy.get('[data-testid="object-summary"] textarea:first-child')
                     .should('exist')
                     .type('xxx');
 
@@ -826,36 +823,36 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .click();
                 const downloadInstructionText = 'updated download instructions';
 
-                cy.get('[data-testid="object_link_url"] input')
+                cy.get('[data-testid="object-link-url"] input')
                     .should('exist')
                     .clear()
                     .type('http://example.com');
 
                 // select download as the url interaction type
-                cy.waitUntil(() => cy.get('[data-testid="object_link_interaction_type"]').should('exist'));
-                cy.get('[data-testid="object_link_file_type"]').should('not.exist');
-                cy.get('[data-testid="object_link_duration_minutes"]').should('not.exist');
-                cy.get('[data-testid="object_link_duration_seconds"]').should('not.exist');
-                cy.get('[data-testid="object_link_size_units"]').should('not.exist');
-                cy.get('[data-testid="object_link_size_amount"]').should('not.exist');
+                cy.waitUntil(() => cy.get('[data-testid="object-link-interaction-type"]').should('exist'));
+                cy.get('[data-testid="object-link-file-type"]').should('not.exist');
+                cy.get('[data-testid="object-link-duration-minutes"]').should('not.exist');
+                cy.get('[data-testid="object-link-duration-seconds"]').should('not.exist');
+                cy.get('[data-testid="object-link-size-units"]').should('not.exist');
+                cy.get('[data-testid="object-link-size-amount"]').should('not.exist');
 
-                cy.get('[data-testid="object_link_interaction_type"]').click();
-                cy.get('[data-testid="object_link_interaction_type-view"]')
+                cy.get('[data-testid="object-link-interaction-type"]').click();
+                cy.get('[data-testid="object-link-interaction-type-view"]')
                     .should('exist')
                     .click();
-                cy.get('[data-testid="object_link_file_type"]').should('exist');
-                cy.get('[data-testid="object_link_size_amount"]').should('not.exist');
-                cy.get('[data-testid="object_link_size_units"]').should('not.exist');
-                cy.get('[data-testid="object_link_duration_minutes"]').should('exist');
-                cy.get('[data-testid="object_link_duration_seconds"]').should('exist');
+                cy.get('[data-testid="object-link-file-type"]').should('exist');
+                cy.get('[data-testid="object-link-size-amount"]').should('not.exist');
+                cy.get('[data-testid="object-link-size-units"]').should('not.exist');
+                cy.get('[data-testid="object-link-duration-minutes"]').should('exist');
+                cy.get('[data-testid="object-link-duration-seconds"]').should('exist');
                 // shows an error because they havent chosen a file type and a duration
                 cy.get('[data-testid="dlor-panel-validity-indicator-2"] span')
                     .should('exist')
                     .should('contain', 2); // panel invalidity count present
 
                 // choose file type
-                cy.waitUntil(() => cy.get('[data-testid="object_link_file_type"]').should('exist'));
-                cy.get('[data-testid="object_link_file_type"]').click();
+                cy.waitUntil(() => cy.get('[data-testid="object-link-file-type"]').should('exist'));
+                cy.get('[data-testid="object-link-file-type"]').click();
                 cy.get('[data-value="video"]')
                     .should('exist')
                     .click();
@@ -865,10 +862,10 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('contain', 1); // panel invalidity count present
 
                 // enter file size
-                cy.get('[data-testid="object_link_duration_minutes"] input')
+                cy.get('[data-testid="object-link-duration-minutes"] input')
                     .should('exist')
                     .type('6');
-                cy.get('[data-testid="object_link_duration_seconds"] input')
+                cy.get('[data-testid="object-link-duration-seconds"] input')
                     .should('exist')
                     .type('30');
 
@@ -881,20 +878,20 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('exist')
                     .click();
 
-                cy.get('[data-testid="filter-topic-digital_skills"] input').check(); // digital_skills
-                cy.get('[data-testid="filter-topic-employability"] input').check(); // employability
-                cy.get('[data-testid="filter-media_format-dataset"] input').check(); // media_dataset
-                cy.get('[data-testid="filter-subject-engineering_architecture_information_technology"] input').check(); // engineering_architecture_information_technology
+                cy.get('[data-testid="filter-topic-digital-skills"] input').check();
+                cy.get('[data-testid="filter-topic-employability"] input').check();
+                cy.get('[data-testid="filter-media-format-dataset"] input').check();
+                cy.get('[data-testid="filter-subject-engineering-architecture-information-technology"] input').check();
 
-                cy.get('[data-testid="filter-subject-medicine_biomedical_sciences"] input').check(); // medicine_biomedical_sciences
+                cy.get('[data-testid="filter-subject-medicine-biomedical-sciences"] input').check();
 
-                cy.get('[data-testid="filter-item_type-module"] input').check(); // module
-                cy.get('[data-testid="filter-licence-cc0public_domain"] input').check(); // cco_public_domain
-                cy.get('[data-testid="filter-graduate_attributes-connected_citizens"] input').check(); // connected_citizens
+                cy.get('[data-testid="filter-item-type-module"] input').check();
+                cy.get('[data-testid="filter-licence-cc0public-domain"] input').check();
+                cy.get('[data-testid="filter-graduate-attributes-connected-citizens"] input').check();
 
-                cy.get('[data-testid="filter-subject-medicine_biomedical_sciences"] input').uncheck(); // medicine_biomedical_sciences - coverage and confirm it doesnt end up in the "sent to server"
+                cy.get('[data-testid="filter-subject-medicine-biomedical-sciences"] input').uncheck(); // coverage and confirm it doesnt end up in the "sent to server"
 
-                cy.get('[data-testid="object_keywords"] textarea:first-child')
+                cy.get('[data-testid="object-keywords"] textarea:first-child')
                     .should('exist')
                     .type('cat, dog');
 
@@ -992,7 +989,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="cancel-dlor-save-outcome"]')
                     .should('contain', 'Re-edit Object')
                     .click();
-                cy.waitUntil(() => cy.get('[data-testid="object_publishing_user"] input').should('exist'));
+                cy.waitUntil(() => cy.get('[data-testid="object-publishing-user"] input').should('exist'));
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
@@ -1015,10 +1012,10 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('exist')
                     .click();
 
-                cy.get('[data-testid="object_is_featured"] input')
+                cy.get('[data-testid="object-is-featured"] input')
                     .should('exist')
                     .should('be.checked');
-                cy.get('[data-testid="object_is_featured"] input').uncheck();
+                cy.get('[data-testid="object-is-featured"] input').uncheck();
 
                 // go to the third panel, Link
                 cy.get('[data-testid="dlor-form-next-button"]')
@@ -1026,9 +1023,9 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .click();
 
                 // choose file type
-                cy.waitUntil(() => cy.get('[data-testid="object_link_file_type"]').should('exist'));
-                cy.get('[data-testid="object_link_file_type"]').click();
-                cy.get('[data-testid="object_link_file_type-new"]')
+                cy.waitUntil(() => cy.get('[data-testid="object-link-file-type"]').should('exist'));
+                cy.get('[data-testid="object-link-file-type"]').click();
+                cy.get('[data-testid="object-link-file-type-new"]')
                     .should('exist')
                     .click();
 
@@ -1036,7 +1033,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('exist')
                     .should('contain', 1); // panel invalidity count present
 
-                cy.get('[data-testid="new_file_type"]')
+                cy.get('[data-testid="dlor-admin-form-new-file-type"]')
                     .should('exist')
                     .type('docx');
 
@@ -1220,7 +1217,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="cancel-dlor-save-outcome"]')
                     .should('contain', 'Re-edit Object')
                     .click();
-                cy.waitUntil(() => cy.get('[data-testid="object_publishing_user"] input').should('exist'));
+                cy.waitUntil(() => cy.get('[data-testid="object-publishing-user"] input').should('exist'));
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
                     .click();
