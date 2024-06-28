@@ -121,7 +121,6 @@
         "@mui/icons-material": "^5.15.3",
         "@mui/lab": "^5.0.0-alpha.159",
         "@mui/material": "^5.15.20",
-        "@mui/styles": "^5.15.20",
         "@mui/x-data-grid": "^5.17.26",
         "@mui/x-date-pickers": "^5.0.20",
         "@sentry/browser": "^8.7.0",
