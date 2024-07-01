@@ -223,7 +223,7 @@ describe('Digital Learning Hub View page', () => {
             cy.url().should('eq', 'http://localhost:2020/exams');
         });
 
-        it.only('subscription requires you to enter an email address', () => {
+        it('subscription requires you to enter an email address', () => {
             cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597?user=s2222222');
             cy.viewport(1300, 1000);
 
