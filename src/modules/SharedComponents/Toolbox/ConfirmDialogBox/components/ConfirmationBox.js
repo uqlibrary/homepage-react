@@ -6,17 +6,15 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogContent from '@mui/material/DialogContent';
-import makeStyles from '@mui/styles/makeStyles';
 import Grid from '@mui/material/Grid';
 import Hidden from '@mui/material/Hidden';
+import { styled } from '@mui/material/styles';
 
-export const useStyles = makeStyles(theme => ({
-    alternateActionButtonClass: {
-        color: theme.palette.white.main,
-        backgroundColor: theme.palette.warning.main,
-        '&:hover': {
-            backgroundColor: theme.palette.warning.dark,
-        },
+const StyledAlternateButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.white.main,
+    backgroundColor: theme.palette.warning.main,
+    '&:hover': {
+        backgroundColor: theme.palette.warning.dark,
     },
 }));
 
@@ -45,8 +43,6 @@ export const ConfirmationBox = ({
     altActionProps = {},
     cancelProps = {},
 }) => {
-    const classes = useStyles();
-
     const _onAction = () => {
         onClose?.();
         onAction?.(actionProps);
@@ -100,9 +96,8 @@ export const ConfirmationBox = ({
                     {showAlternateActionButton && (
                         // an optional middle button that will display in a warning colour
                         <Grid item xs={12} sm={'auto'}>
-                            <Button
+                            <StyledAlternateButton
                                 variant={'contained'}
-                                className={classes.alternateActionButtonClass}
                                 children={locale.alternateActionButtonLabel}
                                 fullWidth
                                 onClick={_onAlternateAction}

@@ -4,58 +4,19 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid';
-import makeStyles from '@mui/styles/makeStyles';
 import parse from 'html-react-parser';
 import Button from '@mui/material/Button';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
-const useStyles = makeStyles(theme => ({
-    contentBox: {
-        minWidth: '90%',
-        paddingTop: 20,
-        '& img': {
-            maxWidth: 800,
-            height: 800,
-            border: '1px solid grey',
-            textAlign: 'center',
-        },
-        '& li': {
-            marginBottom: 10,
-            padding: 10,
-            '&:hover': {
-                backgroundColor: theme.palette.secondary.main,
-                transition: 'background-color 1s ease',
-            },
-            '& p': {
-                marginBottom: 0,
-                marginTop: 1,
-            },
-        },
-        '& [aria-labelledby="lightboxTitle"]': {
-            color: 'blue',
-        },
-    },
-    dialogPaper: {
-        // make the block take up more of the page
-        width: 400,
-    },
-    link: {
-        marginBottom: 10,
-        marginRight: 10,
-        cursor: 'pointer',
-    },
-}));
 export const PromoPanelPreview = props => {
-    const classes = useStyles();
-
     return (
         <React.Fragment>
             <Dialog
                 onClose={props.handlePreviewClose}
                 open={props.isPreviewOpen}
                 aria-labelledby="promopanel-preview-title"
-                PaperProps={{ classes: { root: classes.dialogPaper } }}
+                PaperProps={{ style: { width: 400 } }}
             >
                 <DialogTitle
                     id="promopanel-preview-title"

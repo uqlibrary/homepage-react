@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
-import makeStyles from '@mui/styles/makeStyles';
 import Chip from '@mui/material/Chip';
 import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
@@ -27,69 +26,69 @@ import { default as locale } from '../alertsadmin.locale';
 import AlertSplitButton from './AlertSplitButton';
 import { systemList } from '../alerthelpers';
 import { scrollToTopOfPage } from 'helpers/general';
+import {styled} from "@mui/material/styles";
 
 const moment = require('moment');
 
 // original based on https://codesandbox.io/s/hier2
 // per https://material-ui.com/components/tables/#custom-pagination-actions
 
-const useStyles2 = makeStyles(
-    theme => ({
-        table: {
-            minWidth: 500,
+const StyledHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    padding: '0 0.5rem',
+    '&.headerRowHighlighted': {
+        backgroundColor: theme.palette.primary.main,
+        color: '#fff',
+    },
+    '& .iconHighlighted': {
+        color: '#fff',
+    },
+}));
+
+const StyledTable = styled(Table)(({ theme }) => ({
+    '&.table': {
+        minWidth: 500,
+    },
+    '& .startDate': {
+        whiteSpace: 'pre', // makes moment format able to take a carriage return
+    },
+    '& .endDate': {
+        whiteSpace: 'pre',
+    },
+    '& .chipblock': {
+        '&>div': {
+            marginBottom: 4,
         },
-        startDate: {
-            whiteSpace: 'pre', // makes moment format able to take a carriage return
+        '&>div>div': {
+            marginBottom: 4,
         },
-        endDate: {
-            whiteSpace: 'pre',
+    },
+    '& .urgent': {
+        backgroundColor: theme.palette.warning.light,
+        color: '#000',
+    },
+    '& .extreme': {
+        backgroundColor: theme.palette.error.main,
+        color: '#fff',
+    },
+    '& .system': {
+        backgroundColor: '#666666',
+        color: '#fff',
+    },
+    '& .checkboxCell': {
+        '& input[type="checkbox"]:checked + svg': {
+            fill: '#595959',
         },
-        headerRow: {
-            display: 'flex',
-            padding: '0 0.5rem',
-        },
-        headerRowHighlighted: {
-            backgroundColor: theme.palette.primary.main,
-            color: '#fff',
-        },
-        iconHighlighted: {
-            color: '#fff',
-        },
-        chipblock: {
-            '&>div': {
-                marginBottom: 4,
-            },
-            '&>div>div': {
-                marginBottom: 4,
-            },
-        },
-        urgent: {
-            backgroundColor: theme.palette.warning.light,
-            color: '#000',
-        },
-        extreme: {
-            backgroundColor: theme.palette.error.main,
-            color: '#fff',
-        },
-        system: {
-            backgroundColor: '#666666',
-            color: '#fff',
-        },
-        checkboxCell: {
-            '& input[type="checkbox"]:checked + svg': {
-                fill: '#595959',
-            },
-        },
-        removedChip: {
-            textDecoration: 'line-through',
-        },
-        screenreader: {
-            position: 'absolute',
-            left: -9999,
-        },
-    }),
-    { withTheme: true },
-);
+    },
+    '& .removedChip': {
+        textDecoration: 'line-through',
+    },
+    '& .screenreader': {
+        position: 'absolute',
+        left: -9999,
+    },
+}));
+
 export const AlertsListAsTable = ({
     rows,
     headertag,
@@ -100,7 +99,6 @@ export const AlertsListAsTable = ({
     footerDisplayMinLength,
     alertOrder,
 }) => {
-    const classes = useStyles2();
     const [page, setPage] = useState(0);
     const [deleteActive, setDeleteActive] = useState(false);
     const [alertNotice, setAlertNotice] = useState('');
@@ -322,11 +320,9 @@ export const AlertsListAsTable = ({
                 isOpen={isDeleteFailureConfirmationOpen}
                 locale={locale.listPage.deleteError}
             />
-            <div
+            <StyledHeader
                 data-testid={`headerRow-${tableType}`}
-                className={`${classes.headerRow} ${
-                    !!deleteActive ? /* istanbul ignore next */ classes.headerRowHighlighted : ''
-                }`}
+                className={`${!!deleteActive ? /* istanbul ignore next */ 'headerRowHighlighted' : ''}`}
             >
                 <div>
                     <h3 style={{ marginBottom: 6 }}>
@@ -356,7 +352,7 @@ export const AlertsListAsTable = ({
                             <DeleteIcon
                                 className={`${
                                     !!deleteActive
-                                        ? /* istanbul ignore next */ classes.iconHighlighted
+                                        ? /* istanbul ignore next */ 'iconHighlighted'
                                         : /* istanbul ignore next */ ''
                                 }`}
                             />
@@ -365,7 +361,7 @@ export const AlertsListAsTable = ({
                             onClick={clearAllCheckboxes}
                             aria-label="Deselect all"
                             data-testid={`alert-list-${tableType}-deselect-button`}
-                            className={classes.iconHighlighted}
+                            className={'iconHighlighted'}
                             title="Deselect all"
                             size="large"
                         >
@@ -373,13 +369,13 @@ export const AlertsListAsTable = ({
                         </IconButton>
                     </span>
                 )}
-            </div>
+            </StyledHeader>
             <TableContainer id={`alert-list-${tableType}`} data-testid={`alert-list-${tableType}`} component={Paper}>
-                <Table className={classes.table} aria-label="custom pagination table" style={{ minHeight: 200 }}>
+                <StyledTable className={'table'} aria-label="custom pagination table" style={{ minHeight: 200 }}>
                     <TableHead>
                         <TableRow md-row="" className="md-row">
                             <TableCell component="th" scope="row" align="center">
-                                <span className={classes.screenreader}>Select</span>
+                                <span className={'screenreader'}>Select</span>
                             </TableCell>
                             <TableCell component="th" scope="row">
                                 Alert
@@ -391,7 +387,7 @@ export const AlertsListAsTable = ({
                                 Unpublish date
                             </TableCell>
                             <TableCell component="th" scope="row" align="center">
-                                <span className={classes.screenreader}>Actions</span>
+                                <span className={'screenreader'}>Actions</span>
                             </TableCell>
                         </TableRow>
                     </TableHead>
@@ -406,7 +402,7 @@ export const AlertsListAsTable = ({
                                         data-testid={`alert-list-row-${alert.id}`}
                                         className="alert-data-row"
                                     >
-                                        <TableCell component="td" className={classes.checkboxCell}>
+                                        <TableCell component="td" className={'checkboxCell'}>
                                             <Checkbox
                                                 id={`alert-list-item-checkbox-${alert.id}`}
                                                 inputProps={{
@@ -423,13 +419,13 @@ export const AlertsListAsTable = ({
                                                 id={`alert-list-item-title-${alert.id}`}
                                             >{`${alert.title}`}</h4>{' '}
                                             {`${alert.message.replace('[permanent]', '')}`}
-                                            <div className={classes.chipblock}>
+                                            <div className={'chipblock'}>
                                                 {!!alert && alert.priority_type === 'urgent' && (
                                                     <Chip
                                                         data-testid={`alert-list-urgent-chip-${alert.id}`}
                                                         label="Urgent"
                                                         title={locale.form.tooltips.priority.level.urgent}
-                                                        className={classes.urgent}
+                                                        className={'urgent'}
                                                     />
                                                 )}{' '}
                                                 {!!alert && alert.priority_type === 'extreme' && (
@@ -437,7 +433,7 @@ export const AlertsListAsTable = ({
                                                         data-testid={`alert-list-urgent-chip-${alert.id}`}
                                                         label="Extreme"
                                                         title={locale.form.tooltips.priority.level.extreme}
-                                                        className={classes.extreme}
+                                                        className={'extreme'}
                                                     />
                                                 )}{' '}
                                                 {alert.body.includes('](') && (
@@ -474,18 +470,18 @@ export const AlertsListAsTable = ({
                                                                     title={`This alert is restricted to the ${ss?.title ||
                                                                         /* istanbul ignore next */ ss?.slug ||
                                                                         /* istanbul ignore next */ 'Unrecognised'} system`}
-                                                                    className={`${classes.system} ${!!ss?.removed &&
-                                                                        /* istanbul ignore next */ classes.removedChip}`}
+                                                                    className={`system ${!!ss?.removed &&
+                                                                        /* istanbul ignore next */ 'removedChip'}`}
                                                                 />
                                                             </div>
                                                         );
                                                     })}
                                             </div>
                                         </TableCell>
-                                        <TableCell component="td" align="center" className={classes.startDate}>
+                                        <TableCell component="td" align="center" className={'startDate'}>
                                             <span title={alert.startDateLong}>{alert.startDateDisplay}</span>
                                         </TableCell>
-                                        <TableCell component="td" align="center" className={classes.endDate}>
+                                        <TableCell component="td" align="center" className={'endDate'}>
                                             <span title={alert.endDateLong}>{alert.endDateDisplay}</span>
                                         </TableCell>
                                         <TableCell
@@ -541,7 +537,7 @@ export const AlertsListAsTable = ({
                             </TableRow>
                         </TableFooter>
                     )}
-                </Table>
+                </StyledTable>
             </TableContainer>
         </React.Fragment>
     );

@@ -63,11 +63,11 @@ const AssetTypeSelector = ({
     );
 
     return (
-        <FormControl variant="standard" className={classNames.formControl} fullWidth>
+        <FormControl variant="standard" className={classNames?.formControl} fullWidth>
             <Autocomplete
                 id={`${componentId}`}
                 data-testid={`${componentId}`}
-                className={classNames.autocomplete}
+                className={classNames?.autocomplete}
                 fullWidth
                 options={_assetTypeList ?? /* istanbul ignore next */ []}
                 value={_assetTypeList?.find(assetType => assetType.asset_type_id === _value) ?? null}

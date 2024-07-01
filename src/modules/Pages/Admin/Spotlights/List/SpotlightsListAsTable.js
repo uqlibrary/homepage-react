@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
-import makeStyles from '@mui/styles/makeStyles';
 import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -43,95 +42,93 @@ import {
     navigateToView,
 } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import { formatDate, getTimeMondayComing } from 'modules/Pages/Admin/dateTimeHelper';
+import { styled } from '@mui/material/styles';
 
 // original based on https://codesandbox.io/s/hier2
 // per https://material-ui.com/components/tables/#custom-pagination-actions
 
-const useStyles = makeStyles(
-    theme => ({
-        tableCell: {
-            padding: 0,
-        },
-        tableHeader: {
-            width: 50,
-            padding: 0,
-            textAlign: 'center',
-            color: '#666',
-            borderColor: '#fff',
-        },
-        scheduledIconCell: {
-            padding: 0,
-        },
-        startDate: {
-            whiteSpace: 'pre', // makes moment format able to take a carriage return
-            padding: 0,
-        },
-        endDate: {
-            whiteSpace: 'pre',
-            padding: 0,
-        },
-        thisWeekNotify: {
-            fontWeight: 'bold',
-            color: theme.palette.warning.main,
-        },
-        headerRow: {
-            display: 'flex',
-            padding: '0 0.5rem',
-        },
-        headerRowHighlighted: {
-            backgroundColor: theme.palette.primary.main,
-            color: '#fff',
-        },
-        tableHeading: {
-            marginBottom: -6,
-            textAlign: 'left',
-            fontSize: '1.5em',
-            marginTop: '0.9em',
-            marginLeft: 6,
-            '& span': {
-                fontSize: '0.8em',
-                fontWeight: 300,
-            },
-        },
-        iconHighlighted: {
-            color: '#fff',
-        },
-        checkboxCell: {
-            '& input[type="checkbox"]:checked + svg': {
-                fill: '#595959',
-            },
-            padding: 0,
-        },
-        toggle: {
-            whiteSpace: 'nowrap',
-        },
-        publishedCell: {
-            padding: 0,
-            textAlign: 'center',
-            '& .MuiTouchRipple-root': {
-                color: theme.palette.primary.main,
-            },
-        },
-        h4: {
-            paddingTop: 10,
-            paddingRight: 10,
-            verticalAlign: 'top',
-            '& h4': {
-                fontWeight: '300',
-                display: 'inline',
-            },
-        },
-        reorderWarning: {
-            fontStyle: 'italic',
+const StyledTable = styled(Table)(({ theme }) => ({
+    '& .tableCell': {
+        padding: 0,
+    },
+    '& .tableHeader': {
+        width: 50,
+        padding: 0,
+        textAlign: 'center',
+        color: '#666',
+        borderColor: '#fff',
+    },
+    '& .scheduledIconCell': {
+        padding: 0,
+    },
+    '& .startDate': {
+        whiteSpace: 'pre', // makes moment format able to take a carriage return
+        padding: 0,
+    },
+    '& .endDate': {
+        whiteSpace: 'pre',
+        padding: 0,
+    },
+    '& .thisWeekNotify': {
+        fontWeight: 'bold',
+        color: theme.palette.warning.main,
+    },
+    '& .headerRow': {
+        display: 'flex',
+        padding: '0 0.5rem',
+    },
+    '& .headerRowHighlighted': {
+        backgroundColor: theme.palette.primary.main,
+        color: '#fff',
+    },
+    '& .tableHeading': {
+        marginBottom: -6,
+        textAlign: 'left',
+        fontSize: '1.5em',
+        marginTop: '0.9em',
+        marginLeft: 6,
+        '& span': {
             fontSize: '0.8em',
+            fontWeight: 300,
         },
-        screenreader: {
-            position: 'absolute',
-            left: -9999,
+    },
+    '& .iconHighlighted': {
+        color: '#fff',
+    },
+    '& .checkboxCell': {
+        '& input[type="checkbox"]:checked + svg': {
+            fill: '#595959',
         },
-    }),
-    { withTheme: true },
-);
+        padding: 0,
+    },
+    '& .toggle': {
+        whiteSpace: 'nowrap',
+    },
+    '& .publishedCell': {
+        padding: 0,
+        textAlign: 'center',
+        '& .MuiTouchRipple-root': {
+            color: theme.palette.primary.main,
+        },
+    },
+    '& .h4': {
+        paddingTop: 10,
+        paddingRight: 10,
+        verticalAlign: 'top',
+        '& h4': {
+            fontWeight: '300',
+            display: 'inline',
+        },
+    },
+    '& .reorderWarning': {
+        fontStyle: 'italic',
+        fontSize: '0.8em',
+    },
+    '& .screenreader': {
+        position: 'absolute',
+        left: -9999,
+    },
+}));
 
 export const SpotlightsListAsTable = ({
     rows,
@@ -148,8 +145,6 @@ export const SpotlightsListAsTable = ({
     canTextFilter,
     showViewByHistoryLightbox,
 }) => {
-    const classes = useStyles();
-
     const ORDERBY_WEIGHT = 'weight';
     const ORDERBY_STARTDATE = 'start';
     const ORDERBY_END_DATE = 'end';
@@ -707,19 +702,17 @@ export const SpotlightsListAsTable = ({
                     component={Paper}
                     style={{ marginTop: 20 }}
                 >
-                    <Table className={classes.table} aria-label="custom pagination table" style={{ minHeight: 200 }}>
+                    <StyledTable className={'table'} aria-label="custom pagination table" style={{ minHeight: 200 }}>
                         <TableHead>
                             <TableRow md-row="" className="md-row">
-                                <TableCell component="th" scope="row" className={classes.tableHeader} colSpan="8">
+                                <TableCell component="th" scope="row" className={'tableHeader'} colSpan="8">
                                     <Grid
                                         data-testid={`headerRow-${tableType}`}
-                                        className={`${classes.headerRow} ${
-                                            !!deleteActive ? classes.headerRowHighlighted : ''
-                                        }`}
+                                        className={`headerRow ${!!deleteActive ? 'headerRowHighlighted' : ''}`}
                                         container
                                     >
                                         <Grid item xs={12} md={!!deleteActive ? 5 : 12}>
-                                            <h3 className={classes.tableHeading}>
+                                            <h3 className={'tableHeading'}>
                                                 {headertag}
                                                 <span data-testid={`headerRow-count-${tableType}`}>
                                                     {headerCountIndicator}
@@ -745,7 +738,7 @@ export const SpotlightsListAsTable = ({
                                                         <DeleteIcon
                                                             className={`${
                                                                 !!deleteActive
-                                                                    ? classes.iconHighlighted
+                                                                    ? 'iconHighlighted'
                                                                     : /* istanbul ignore next */ ''
                                                             }`}
                                                         />
@@ -756,7 +749,7 @@ export const SpotlightsListAsTable = ({
                                                             locale.listPage.tooltips.clearSelectedSpotlightsButton
                                                         }
                                                         data-testid={`spotlight-list-${tableType}-deselect-button`}
-                                                        className={classes.iconHighlighted}
+                                                        className={'iconHighlighted'}
                                                         title={locale.listPage.tooltips.clearSelectedSpotlightsButton}
                                                         size="large"
                                                     >
@@ -774,7 +767,7 @@ export const SpotlightsListAsTable = ({
                                     scope="row"
                                     style={{ width: 50, padding: 0, textAlign: 'center', color: '#666' }}
                                 >
-                                    <span className={classes.screenreader}>Select</span>
+                                    <span className={'screenreader'}>Select</span>
                                     <DeleteOutlinedIcon />
                                 </TableCell>
                                 {tableType === 'current' && (
@@ -798,7 +791,7 @@ export const SpotlightsListAsTable = ({
                                     Spotlight
                                 </TableCell>
                                 <TableCell component="th" scope="row" style={{ width: 260 }}>
-                                    <span className={classes.screenreader}>Title</span>
+                                    <span className={'screenreader'}>Title</span>
                                     {!!canTextFilter && (
                                         <div style={{ position: 'relative' }}>
                                             <TextField
@@ -859,7 +852,7 @@ export const SpotlightsListAsTable = ({
                                     </TableCell>
                                 )}
                                 <TableCell component="th" scope="row">
-                                    <span className={classes.screenreader}>Actions</span>
+                                    <span className={'screenreader'}>Actions</span>
                                 </TableCell>
                             </TableRow>
                         </TableHead>
@@ -895,7 +888,7 @@ export const SpotlightsListAsTable = ({
                                                                 >
                                                                     <TableCell
                                                                         component="td"
-                                                                        className={`markForDeletion ${classes.checkboxCell}`}
+                                                                        className={'markForDeletion checkboxCell'}
                                                                         style={{ width: 50, padding: 0 }}
                                                                     >
                                                                         <Checkbox
@@ -911,7 +904,7 @@ export const SpotlightsListAsTable = ({
                                                                     {tableType === 'current' && (
                                                                         <TableCell
                                                                             component="td"
-                                                                            className={`order ${classes.tableCell}`}
+                                                                            className={'order tableCell'}
                                                                             style={{ textAlign: 'center' }}
                                                                         >
                                                                             {spotlight.weight / 10}
@@ -920,7 +913,7 @@ export const SpotlightsListAsTable = ({
                                                                     )}
                                                                     <TableCell
                                                                         component="td"
-                                                                        className={classes.tableCell}
+                                                                        className={'tableCell'}
                                                                         style={{ width: 200 }}
                                                                     >
                                                                         <img
@@ -932,7 +925,7 @@ export const SpotlightsListAsTable = ({
                                                                     </TableCell>
                                                                     <TableCell
                                                                         component="td"
-                                                                        className={`${classes.tableCell} ${classes.h4}`}
+                                                                        className={'tableCell h4'}
                                                                     >
                                                                         <h4
                                                                             id={`spotlight-list-item-title-${spotlight.id}`}
@@ -945,7 +938,7 @@ export const SpotlightsListAsTable = ({
                                                                     </TableCell>
                                                                     <TableCell
                                                                         component="td"
-                                                                        className={classes.startDate}
+                                                                        className={'startDate'}
                                                                         style={{ padding: 0 }}
                                                                     >
                                                                         <span title={spotlight.startDateMouseover}>
@@ -954,10 +947,9 @@ export const SpotlightsListAsTable = ({
                                                                     </TableCell>
                                                                     <TableCell
                                                                         component="td"
-                                                                        className={`${classes.endDate} ${tableType !==
-                                                                            'past' &&
+                                                                        className={`endDate ${tableType !== 'past' &&
                                                                             !!endsThisWeek(spotlight) &&
-                                                                            classes.thisWeekNotify}`}
+                                                                            'thisWeekNotify'}`}
                                                                         style={{ padding: 8 }}
                                                                     >
                                                                         <span
@@ -974,7 +966,7 @@ export const SpotlightsListAsTable = ({
                                                                     {!!canUnpublish && (
                                                                         <TableCell
                                                                             component="td"
-                                                                            className={`${classes.publishedCell} ${classes.checkboxCell}`}
+                                                                            className={'publishedCell checkboxCell'}
                                                                             style={{ width: 50, padding: 8 }}
                                                                         >
                                                                             <Checkbox
@@ -992,7 +984,7 @@ export const SpotlightsListAsTable = ({
                                                                         component="td"
                                                                         id={`spotlight-list-action-block-${spotlight.id}`}
                                                                         data-testid={`spotlight-list-action-block-${spotlight.id}`}
-                                                                        className={classes.tableCell}
+                                                                        className={'tableCell'}
                                                                         style={{ paddingRight: 10 }}
                                                                     >
                                                                         <SpotlightSplitButton
@@ -1072,7 +1064,7 @@ export const SpotlightsListAsTable = ({
                                 </TableRow>
                             </TableFooter>
                         )}
-                    </Table>
+                    </StyledTable>
                 </TableContainer>
             </DragDropContext>
         </Fragment>

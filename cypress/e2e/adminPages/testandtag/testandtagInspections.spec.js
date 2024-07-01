@@ -499,7 +499,7 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.wait(2000);
                 cy.get('[data-testid="message-title"] > .MuiTypography-root');
                 cy.data('message-title').contains('Asset saved');
-                cy.get('.makeStyles-dialogBarcode-32 > [data-testid="saved-asset-id"]');
+                cy.get('.dialogBarcode > [data-testid="saved-asset-id"]');
                 cy.data('saved-asset-id').contains('UQL000298');
                 cy.data('confirm-inspection-save-success').click();
 

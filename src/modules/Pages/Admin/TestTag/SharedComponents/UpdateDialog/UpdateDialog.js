@@ -1,5 +1,5 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
@@ -18,28 +18,13 @@ import { filterComponentProps } from './utils';
 
 const rootId = 'update_dialog';
 
-export const useStyles = makeStyles(theme => ({
-    alternateActionButtonClass: {
-        color: theme.palette.white.main,
-        backgroundColor: theme.palette.warning.main,
-        '&:hover': {
-            backgroundColor: theme.palette.warning.dark,
-        },
-    },
-    alertPanel: {
-        marginTop: 10,
-    },
-    actionButtons: {
-        marginTop: 10,
-    },
-    dialogPaper: {
-        minHeight: '30vh',
-        maxHeight: '50vh',
-    },
-    footerActions: {
+const StyledDialog = styled(Dialog)(({ theme }) => ({
+    padding: '6px',
+    '& .MuiDialog-paper': { minHeight: '30vh', maxHeight: '50vh' },
+    '& .footerActions': {
         padding: '8px 16px',
     },
-    footerMobileMargin: {
+    '& .footerMobileMargin': {
         [theme.breakpoints.only('xs')]: {
             marginTop: theme.spacing(2),
         },
@@ -65,7 +50,7 @@ export const UpdateDialogue = ({
     isBusy = false,
 }) => {
     const componentId = `${rootId}-${id}`;
-    const classes = useStyles();
+
     const [dataColumns, setDataColumns] = React.useState({});
     const [dataFields, setDataFields] = React.useState({});
     const [editableFields, setEditableFields] = React.useState([]);
@@ -125,13 +110,7 @@ export const UpdateDialogue = ({
     };
 
     return (
-        <Dialog
-            classes={{ paper: classes.dialogPaper }}
-            style={{ padding: 6 }}
-            open={isOpen}
-            id={`${componentId}`}
-            data-testid={`${componentId}`}
-        >
+        <StyledDialog open={isOpen} id={`${componentId}`} data-testid={`${componentId}`}>
             <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
                 {title}
             </DialogTitle>
@@ -207,7 +186,7 @@ export const UpdateDialogue = ({
             </DialogContent>
             {(!hideCancelButton || !hideActionButton) && (
                 <DialogActions id={`${rootId}-actions`} data-testid={`${rootId}-actions`}>
-                    <Grid container className={classes.footerActions}>
+                    <Grid container className={'footerActions'}>
                         {!hideCancelButton && (
                             <Grid item xs={12} sm={6}>
                                 <Box justifyContent="flex-start" display={'flex'}>
@@ -226,7 +205,7 @@ export const UpdateDialogue = ({
                         )}
                         {!hideActionButton && (
                             <Grid item xs={12} sm={6}>
-                                <Box justifyContent="flex-end" display={'flex'} className={classes.footerMobileMargin}>
+                                <Box justifyContent="flex-end" display={'flex'} className={'footerMobileMargin'}>
                                     <Button
                                         variant="contained"
                                         autoFocus
@@ -254,7 +233,7 @@ export const UpdateDialogue = ({
                     </Grid>
                 </DialogActions>
             )}
-        </Dialog>
+        </StyledDialog>
     );
 };
 

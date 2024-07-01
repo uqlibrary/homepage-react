@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Grid';
-import { makeStyles } from '@mui/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -14,35 +13,29 @@ import moment from 'moment';
 import { isPastSpotlight, isScheduledSpotlight } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import SpotlightViewHistory from './SpotlightViewHistory';
 import { scrollToTopOfPage } from 'helpers/general';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(
-    theme => ({
-        pageLayout: {
-            marginBottom: 24,
-            paddingLeft: 24,
-            paddingRight: 24,
-            minHeight: '10em',
-            minWidth: '80%',
-        },
-        mobileOnly: {
-            [theme.breakpoints.up('sm')]: {
-                display: 'none',
-            },
-            '& p': {
-                backgroundColor: theme.palette.warning.light,
-                color: '#000',
-                fontWeight: 'bold',
-                padding: 6,
-                textAlign: 'center',
-            },
-        },
-    }),
-    { withTheme: true },
-);
+const StyledPageLayout = styled(Grid)(() => ({
+    marginBottom: 24,
+    paddingLeft: 24,
+    paddingRight: 24,
+    minHeight: '10em',
+    minWidth: '80%',
+}));
+const StyledMobileView = styled(Grid)(({ theme }) => ({
+    [theme.breakpoints.up('sm')]: {
+        display: 'none',
+    },
+    '& p': {
+        backgroundColor: theme.palette.warning.light,
+        color: '#000',
+        fontWeight: 'bold',
+        padding: 6,
+        textAlign: 'center',
+    },
+}));
 
 export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlightsError, history }) => {
-    const classes = useStyles();
-
     const [currentSpotlights, setCurrentSpotlights] = useState([]);
     const [scheduledSpotlights, setScheduledSpotlights] = useState([]);
     const [pastSpotlights, setPastSpotlights] = useState([]);
@@ -130,12 +123,12 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                 <section aria-live="assertive">
                     <StandardCard title="System temporarily unavailable" noPadding>
                         <Grid container>
-                            <Grid item xs={12} data-testid="admin-spotlights-list-error" className={classes.pageLayout}>
+                            <StyledPageLayout item xs={12} data-testid="admin-spotlights-list-error">
                                 <p>
                                     We're working on the issue and will have service restored as soon as possible.
                                     Please try again later.
                                 </p>
-                            </Grid>
+                            </StyledPageLayout>
                         </Grid>
                     </StandardCard>
                 </section>
@@ -147,9 +140,9 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         <StandardPage title="Spotlights Management">
             <section aria-live="assertive">
                 <Grid container>
-                    <Grid item xs={12} className={classes.mobileOnly}>
+                    <StyledMobileView item xs={12}>
                         <p>Mobile? You might want to turn your phone sideways!</p>
-                    </Grid>
+                    </StyledMobileView>
                 </Grid>
                 <SpotlightsUtilityArea
                     actions={actions}
@@ -162,12 +155,11 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                 />
                 <StandardCard title="All spotlights" noPadding customBackgroundColor="#F7F7F7">
                     <Grid container>
-                        <Grid
+                        <StyledPageLayout
                             item
                             xs={12}
                             id="admin-spotlights-list"
                             data-testid="admin-spotlights-list"
-                            className={classes.pageLayout}
                         >
                             <div
                                 id="admin-spotlights-list-current-list"
@@ -218,7 +210,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     showViewByHistoryLightbox={showViewByHistoryLightbox}
                                 />
                             </div>
-                        </Grid>
+                        </StyledPageLayout>
                     </Grid>
                 </StandardCard>
                 {isViewByHistoryLightboxOpen && (

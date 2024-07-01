@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
+import { styled, useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 
 import FirstPageIcon from '@mui/icons-material/FirstPage';
@@ -12,16 +11,13 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 // original based on https://codesandbox.io/s/hier2
 // per https://material-ui.com/components/tables/#custom-pagination-actions
 
-const useStyles1 = makeStyles(theme => ({
-    root: {
-        flexShrink: 0,
-        marginLeft: theme.spacing(2.5),
-    },
+const StyledWrapper = styled('div')(({ theme }) => ({
+    flexShrink: 0,
+    marginLeft: theme.spacing(2.5),
 }));
 
 /* istanbul ignore next */
 export function TablePaginationActions(props) {
-    const classes = useStyles1();
     const theme = useTheme();
     const { count, page, rowsPerPage, onPageChange } = props;
 
@@ -42,7 +38,7 @@ export function TablePaginationActions(props) {
     };
 
     return (
-        <div className={classes.root}>
+        <StyledWrapper>
             <IconButton onClick={handleFirstPageButtonClick} disabled={page === 0} aria-label="first page" size="large">
                 {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
             </IconButton>
@@ -65,7 +61,7 @@ export function TablePaginationActions(props) {
             >
                 {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
             </IconButton>
-        </div>
+        </StyledWrapper>
     );
 }
 

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
 import Chip from '@mui/material/Chip';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -20,110 +19,58 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { useConfirmationState } from 'hooks';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
 import { scrollToTopOfPage } from 'helpers/general';
+import { styled } from '@mui/material/styles';
 
 const moment = require('moment');
 
-const useStyles2 = makeStyles(
-    theme => ({
-        cellGroupRowOdd: {
-            backgroundColor: '#eee',
+const StyledTableCell = styled(TableCell)(() => ({
+    marginTop: 0,
+    marginBottom: 0,
+    paddingTop: 5,
+    paddingBottom: 0,
+    fontWeight: 400,
+    borderBottom: 'none',
+    borderTop: '1px solid #aaa',
+    '& .ellipsis': {
+        maxWidth: 500, // percentage also works
+        display: 'inline-block',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+    },
+}));
+
+const StyledChip = styled(Chip)(({ theme }) => ({
+    '&.defaultChip': {
+        backgroundColor: theme.palette.primary.main,
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+}));
+
+/*
+const useStyles2 = makeStyles(theme => ({
+    table: {
+        minWidth: 500,
+    },
+    headerRow: {
+        display: 'flex',
+        padding: '0 0.5rem',
+    },
+    headerRowHighlighted: {
+        backgroundColor: theme.palette.primary.main,
+        color: '#fff',
+    },
+    iconHighlighted: {
+        color: '#fff',
+    },
+    checkboxCell: {
+        '& input[type="checkbox"]:checked + svg': {
+            fill: '#222',
         },
-        cellGroupRowEven: {
-            backgroundColor: 'none',
-        },
-        ellipsis: {
-            maxWidth: 500, // percentage also works
-            display: 'inline-block',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-        },
-        cellGroupName: {
-            marginTop: 0,
-            marginBottom: 0,
-            paddingTop: 5,
-            paddingBottom: 0,
-            fontWeight: 400,
-            borderBottom: 'none',
-            borderTop: '1px solid #aaa',
-        },
-        cellGroupDetails: {
-            marginTop: 0,
-            marginBottom: 0,
-            paddingTop: 0,
-            paddingBottom: 5,
-            fontWeight: 400,
-            borderBottom: 'none',
-        },
-        cellGroupDetailsLast: {
-            marginTop: 0,
-            marginBottom: 0,
-            paddingTop: 0,
-            paddingBottom: 20,
-            fontWeight: 400,
-            borderBottom: 'none',
-        },
-        table: {
-            minWidth: 500,
-        },
-        startDate: {
-            whiteSpace: 'pre', // makes moment format able to take a carriage return
-        },
-        endDate: {
-            whiteSpace: 'pre',
-        },
-        headerRow: {
-            display: 'flex',
-            padding: '0 0.5rem',
-        },
-        headerRowHighlighted: {
-            backgroundColor: theme.palette.primary.main,
-            color: '#fff',
-        },
-        headerRowHidden: {
-            backgroundColor: theme.palette.primary.main,
-            color: '#fff',
-        },
-        iconHighlighted: {
-            color: '#fff',
-        },
-        chipblock: {
-            '&>div': {
-                marginBottom: 4,
-            },
-            '&>div>div': {
-                marginBottom: 4,
-            },
-        },
-        defaultChip: {
-            backgroundColor: theme.palette.primary.main,
-            color: '#fff',
-            fontWeight: 'bold',
-        },
-        urgent: {
-            backgroundColor: theme.palette.warning.light,
-            color: '#000',
-        },
-        extreme: {
-            backgroundColor: theme.palette.error.main,
-            color: '#fff',
-        },
-        system: {
-            backgroundColor: '#666666',
-            color: '#fff',
-        },
-        checkboxCell: {
-            '& input[type="checkbox"]:checked + svg': {
-                fill: '#222',
-            },
-            borderBottom: 'none',
-        },
-        removedChip: {
-            textDecoration: 'line-through',
-        },
-    }),
-    { withTheme: true },
-);
+        borderBottom: 'none',
+    },
+}));*/
 export const PromoPanelListPanels = ({
     actions,
     isLoading,
@@ -173,7 +120,6 @@ export const PromoPanelListPanels = ({
 
     React.useEffect(() => {}, [filteredPanels]);
 
-    const classes = useStyles2();
     const regex = /(<([^>]+)>)/gi;
     // *** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS ***
     // const clearAllCheckboxes = () => {
@@ -470,7 +416,7 @@ export const PromoPanelListPanels = ({
                                     item.default_panels_for.length > 0 ? item.default_panels_for : item.panel_schedule;
                                 return (
                                     <React.Fragment key={item.panel_id}>
-                                        <TableRow className={`promoPanel-data-row ${classes.cellGroupRow}`}>
+                                        <TableRow className={'promoPanel-data-row cellGroupRow'}>
                                             {
                                                 // ** COMMENTED OUT PENDING FEEDBACK RE: BULK ACTIONS ***
                                                 // showBulkDelete && (
@@ -490,21 +436,21 @@ export const PromoPanelListPanels = ({
                                                 // </TableCell>
                                                 // )
                                             }
-                                            <TableCell component="td" className={classes.cellGroupName}>
+                                            <StyledTableCell component="td">
                                                 <Typography variant="body1">{item.panel_title}</Typography>
-                                            </TableCell>
-                                            <TableCell component="td" className={classes.cellGroupName}>
-                                                <Typography variant="body1" className={classes.ellipsis}>
+                                            </StyledTableCell>
+                                            <StyledTableCell component="td">
+                                                <Typography variant="body1" className={'ellipsis'}>
                                                     {(!!item.panel_content && item.panel_content.replace(regex, ' ')) ||
                                                         /* istanbul ignore next */ ' '}
                                                 </Typography>
-                                            </TableCell>
-                                            <TableCell component="td" className={classes.cellGroupName}>
+                                            </StyledTableCell>
+                                            <StyledTableCell component="td">
                                                 <Typography variant="body1">
                                                     {moment(item.panel_created_at).format('ddd D MMM YYYY h:mma')}
                                                 </Typography>
-                                            </TableCell>
-                                            <TableCell component="td" className={classes.cellGroupName}>
+                                            </StyledTableCell>
+                                            <StyledTableCell component="td">
                                                 <PromoPanelSplitButton
                                                     align="flex-end"
                                                     alertId={alert.id}
@@ -521,7 +467,7 @@ export const PromoPanelListPanels = ({
                                                     // navigateToView={navigateToView}
                                                     confirmDeleteLocale={confirmDeleteLocale}
                                                 />
-                                            </TableCell>
+                                            </StyledTableCell>
                                         </TableRow>
                                         <TableRow>
                                             <TableCell />
@@ -529,14 +475,14 @@ export const PromoPanelListPanels = ({
                                                 {typeList &&
                                                     typeList.map(type => {
                                                         return (
-                                                            <Chip
+                                                            <StyledChip
                                                                 key={type.usergroup_group}
                                                                 data-testid={'alert-list-urgent-chip-'}
                                                                 label={`${isDefaultPanel ? 'Default: ' : ''} ${
                                                                     type.usergroup_group_name
                                                                 }`}
                                                                 title={type.usergroup_group_name}
-                                                                className={isDefaultPanel ? classes.defaultChip : ''}
+                                                                className={isDefaultPanel ? 'defaultChip' : ''}
                                                             />
                                                         );
                                                     })}

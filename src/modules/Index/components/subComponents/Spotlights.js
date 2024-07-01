@@ -15,8 +15,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
-// import Fade from '@mui/material/Fade';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
 import ContentLoader from 'react-content-loader';
 const MyLoader = props => (
@@ -34,60 +33,26 @@ const MyLoader = props => (
     </ContentLoader>
 );
 
-const useStyles = makeStyles(() => ({
-    loading: {
-        height: '100%',
-        position: 'relative',
-        flexGrow: 1,
-        borderRadius: 4,
-        overflow: 'hidden',
-    },
-    playButtonWrapper: {
-        width: 36,
-        position: 'absolute',
-        top: 4,
-        left: 32,
-        zIndex: 3,
-    },
-    nextButtonWrapper: {
-        width: 36,
-        height: '100%',
-        position: 'absolute',
-        top: 4,
-        right: 0,
-        zIndex: 2,
-    },
-    backButtonWrapper: {
-        width: 36,
-        height: '100%',
-        position: 'absolute',
-        top: 4,
-        left: 4,
-        zIndex: 2,
-    },
-    topBlock: { height: '100%', position: 'relative', borderRadius: 4, overflow: 'hidden' },
-    chipStyles: {
-        width: 200,
-        marginLeft: -100,
-        position: 'absolute',
-        top: 0,
-        left: '50%',
-        zIndex: 3,
-        textAlign: 'center',
-        '& button': {
-            margin: '0 1px',
-        },
+const ChipStyle = styled('div')(() => ({
+    width: 200,
+    marginLeft: -100,
+    position: 'absolute',
+    top: 0,
+    left: '50%',
+    zIndex: 3,
+    textAlign: 'center',
+    '& button': {
+        margin: '0 1px',
     },
 }));
 
 const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
-    const classes = useStyles();
     const totalSlides = spotlights && spotlights.length;
     if (spotlightsLoading || !totalSlides || totalSlides === 0) {
         return (
             <div
                 data-testid="spotlights"
-                className={`${classes.loading}`}
+                style={{ height: '100%', position: 'relative', flexGrow: 1, borderRadius: 4, overflow: 'hidden' }}
                 role="region"
                 aria-label="UQ Spotlights carousel loading"
             >
@@ -134,7 +99,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
     return (
         <div
             data-testid="spotlights"
-            className={`${classes.topBlock}`}
+            style={{ height: '100%', position: 'relative', borderRadius: 4, overflow: 'hidden' }}
             role="region"
             aria-label="UQ Spotlights carousel"
         >
@@ -152,7 +117,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                 data-testid="spotlights-carousel"
             >
                 {totalSlides > 1 && (
-                    <div className={`${classes.backButtonWrapper}`}>
+                    <div style={{ width: 36, height: '100%', position: 'absolute', top: 4, left: 4, zIndex: 2 }}>
                         <ButtonBack
                             aria-label="Previous slide"
                             id="spotlights-previous-button"
@@ -164,7 +129,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                     </div>
                 )}
                 {totalSlides > 1 && (
-                    <div className={`${classes.nextButtonWrapper}`}>
+                    <div style={{ width: 36, height: '100%', position: 'absolute', top: 4, right: 0, zIndex: 2 }}>
                         <ButtonNext
                             aria-label="Next slide"
                             id="spotlights-next-button"
@@ -176,7 +141,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                     </div>
                 )}
                 {totalSlides > 1 && (
-                    <div className={`${classes.playButtonWrapper}`}>
+                    <div style={{ width: 36, position: 'absolute', top: 4, left: 32, zIndex: 3 }}>
                         <ButtonPlay
                             childrenPlaying={<PauseIcon />}
                             childrenPaused={<PlayArrowIcon />}
@@ -188,9 +153,9 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                     </div>
                 )}
                 {totalSlides > 1 && (
-                    <div className={`${classes.chipStyles}`}>
+                    <ChipStyle>
                         <DotGroup showAsSelectedForCurrentSlideOnly renderDots={renderDots} />
-                    </div>
+                    </ChipStyle>
                 )}
                 <div
                     style={{

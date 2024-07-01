@@ -11,26 +11,6 @@ export const getPathRoot = () => {
     return fullPath;
 };
 
-/* istanbul ignore next */
-export const displayDownloadInstructions = (downloadInstructions, theClass) => {
-    function addRelnoopenerNoreferrer(htmlString) {
-        // Use regular expression to find all anchor tags (<a>)
-        const regex = /<a([^>]+)>/g;
-        return htmlString.replace(regex, (match, attributes) => {
-            // Add the rel="noopener noreferrer" attribute
-            return `<a ${attributes} rel="noopener noreferrer">`;
-        });
-    }
-
-    const content = addRelnoopenerNoreferrer(downloadInstructions);
-
-    return (
-        <div data-testid="dlor-massaged-download-instructions" className={theClass}>
-            {parse(content)}
-        </div>
-    );
-};
-
 export const getYoutubeUrlForPreviewEmbed = testUrlIn => {
     let testUrl;
     try {

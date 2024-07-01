@@ -4,7 +4,6 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
-import { makeStyles } from '@mui/styles';
 
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 import {
@@ -12,18 +11,19 @@ import {
     moveItemInArray,
     getWeightAfterDrag,
 } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(() => ({
-    reorderableThumb: {
+const StyledWrapper = styled('div')(() => ({
+    '& .reorderableThumb': {
         height: 60,
         marginRight: 5,
         maxWidth: 144,
     },
-    hasBorder: {
+    '& .hasBorder': {
         height: 50,
         border: '5px solid #1e72c6', // uq info blue, dark
     },
-    reorderableOrderNumber: {
+    '& .reorderableOrderNumber': {
         color: 'white',
         backgroundColor: 'rgb(128, 128, 128, 0.7)',
         textAlign: 'center',
@@ -37,7 +37,7 @@ const useStyles = makeStyles(() => ({
         paddingRight: 1,
         fontWeight: 'bold',
     },
-    currentReorderableOrderNumber: {
+    '& .currentReorderableOrderNumber': {
         backgroundColor: 'rgb(35, 119, 203, 0.6)', // uqblue, translucent
     },
 }));
@@ -51,8 +51,6 @@ export const SpotlightFormReorderableThumbs = ({
     tableType,
     originalValues,
 }) => {
-    const classes = useStyles();
-
     const placeholderThumbnailId = 'placeholder-thumbnail';
     // this is an image we have uploaded for use as a placeholder in the list of thumbs - its a simple grey box
     const imgUrlPlaceholder =
@@ -223,7 +221,7 @@ export const SpotlightFormReorderableThumbs = ({
                         ? locale.form.reorderThumbs.usesPlaceholder
                         : locale.form.reorderThumbs.usesCurrentImage}
                 </p>
-                <div style={{ maxWidth: '100%', overflow: 'auto', whiteSpace: 'nowrap' }}>
+                <StyledWrapper style={{ maxWidth: '100%', overflow: 'auto', whiteSpace: 'nowrap' }}>
                     <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="spotlights-thumbs-reorder" direction="horizontal">
                             {droppableProvided => (
@@ -237,6 +235,7 @@ export const SpotlightFormReorderableThumbs = ({
                                             tableType === 'edit'
                                                 ? s?.id === currentValues.id
                                                 : s?.id === placeholderThumbnailId;
+
                                         return (
                                             <Draggable
                                                 draggableId={s.id}
@@ -252,16 +251,16 @@ export const SpotlightFormReorderableThumbs = ({
                                                             alt={`${isThisImage ? currentValues.img_alt : s.img_alt}`}
                                                             src={getCurrentImage(isThisImage, s)}
                                                             title={isThisImage ? currentValues.img_alt : s.img_alt}
-                                                            className={`${classes.reorderableThumb} ${
-                                                                isThisImage ? classes.hasBorder : ''
+                                                            className={`reorderableThumb ${
+                                                                isThisImage ? 'hasBorder' : ''
                                                             }`}
                                                             {...draggableProvided.draggableProps}
                                                             {...draggableProvided.dragHandleProps}
                                                             ref={draggableProvided.innerRef}
                                                         />
                                                         <span
-                                                            className={`${classes.reorderableOrderNumber} ${
-                                                                isThisImage ? classes.currentReorderableOrderNumber : ''
+                                                            className={`reorderableOrderNumber ${
+                                                                isThisImage ? 'currentReorderableOrderNumber' : ''
                                                             }`}
                                                         >
                                                             {s.order}
@@ -276,7 +275,7 @@ export const SpotlightFormReorderableThumbs = ({
                             )}
                         </Droppable>
                     </DragDropContext>
-                </div>
+                </StyledWrapper>
             </Grid>
         );
     }

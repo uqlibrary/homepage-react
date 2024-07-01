@@ -5,20 +5,9 @@ import { useSelector } from 'react-redux';
 import LocationPicker from './LocationPicker';
 
 const AutoLocationPicker = ({ hasAllOption = false, locale, location, ...props }) => {
-    const {
-        siteList,
-        siteListLoading,
-        // siteListError,
-        // buildingList,
-        // buildingListLoading,
-        // buildingListError,
-        floorList,
-        floorListLoading,
-        // floorListError,
-        roomList,
-        roomListLoading,
-        // roomListError,
-    } = useSelector(state => state.get?.('testTagLocationReducer'));
+    const { siteList, siteListLoading, floorList, floorListLoading, roomList, roomListLoading } = useSelector(state =>
+        state.get?.('testTagLocationReducer'),
+    );
 
     const fullSiteList = React.useMemo(
         () =>

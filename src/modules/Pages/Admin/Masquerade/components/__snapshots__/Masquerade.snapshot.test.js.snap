@@ -11,10 +11,10 @@ exports[`Component Masquerade Should render form as expected 1`] = `
       id="StandardPage"
     >
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-title-4 css-1vd824g-MuiGrid-root"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true title css-1irzh4c-MuiGrid-root"
       >
         <h1
-          class="MuiTypography-root MuiTypography-h4 makeStyles-layoutTitle-3 css-v0z470-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 layoutTitle css-v0z470-MuiTypography-root"
           data-testid="StandardPage-title"
         >
           Masquerade
@@ -24,7 +24,7 @@ exports[`Component Masquerade Should render form as expected 1`] = `
         class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
       >
         <div
-          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root Cards-card-6 StandardCard  css-bhp9pd-MuiPaper-root-MuiCard-root"
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-bddc4y-MuiPaper-root-MuiCard-root"
           data-analyticsid="standard-card"
           data-testid="standard-card"
           id="standard-card"
@@ -120,10 +120,10 @@ exports[`Component Masquerade Should render readonly description 1`] = `
       id="StandardPage"
     >
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true makeStyles-title-14 css-1vd824g-MuiGrid-root"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true title css-1irzh4c-MuiGrid-root"
       >
         <h1
-          class="MuiTypography-root MuiTypography-h4 makeStyles-layoutTitle-13 css-v0z470-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 layoutTitle css-v0z470-MuiTypography-root"
           data-testid="StandardPage-title"
         >
           Masquerade
@@ -133,7 +133,7 @@ exports[`Component Masquerade Should render readonly description 1`] = `
         class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
       >
         <div
-          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root Cards-card-16 StandardCard  css-bhp9pd-MuiPaper-root-MuiCard-root"
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-bddc4y-MuiPaper-root-MuiCard-root"
           data-analyticsid="standard-card"
           data-testid="standard-card"
           id="standard-card"

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
-import { makeStyles } from '@mui/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@mui/material/Grid';
 import { useCookies } from 'react-cookie';
@@ -17,9 +16,37 @@ import Button from '@mui/material/Button';
 import ContentLoader from 'react-content-loader';
 import { obfusticateUsername } from 'helpers/general';
 import { LOCATION_COOKIE_NAME } from 'config/general';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(theme => ({
-    scrollArea: {
+const StyledWrapper = styled('div')(({ theme }) => ({
+    ['&.flexWrapper']: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+    },
+    ['&.componentHeight']: {
+        [theme.breakpoints.down('md')]: {
+            height: '100%',
+        },
+        [theme.breakpoints.up('md')]: {
+            height: 300,
+        },
+        [theme.breakpoints.up('lg')]: {
+            height: 300,
+        },
+    },
+    ['&.componentHeightPublic']: {
+        [theme.breakpoints.down('md')]: {
+            height: '100%',
+        },
+        [theme.breakpoints.up('md')]: {
+            height: 232,
+        },
+        [theme.breakpoints.up('lg')]: {
+            height: 232,
+        },
+    },
+    ['& .scrollArea']: {
         overflowX: 'hidden',
         overflowY: 'auto',
         marginRight: 0,
@@ -30,31 +57,16 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.secondary.dark,
         height: '100%',
     },
-    row: {
+    ['& .row']: {
         borderBottom: '1px solid #EEE',
         padding: '8px 0 0 0',
     },
-    locationIcon: {
+    ['& .locationIcon']: {
         color: theme.palette.white.main,
         marginTop: 6,
         marginBottom: -6,
     },
-    badge: {
-        backgroundColor: theme.palette.success.main,
-        padding: 0,
-        height: 12,
-        width: 12,
-        maxWidth: 12,
-        minWidth: 12,
-        right: 4,
-        top: 2,
-    },
-    badgeIcon: {
-        height: 10,
-        width: 10,
-        color: theme.palette.white.main,
-    },
-    listHeader: {
+    ['& .listHeader']: {
         backgroundColor: '#EEE',
         width: '100%',
         margin: 0,
@@ -65,31 +77,26 @@ const useStyles = makeStyles(theme => ({
         fontSize: 14,
         color: theme.palette.secondary.light,
     },
-    actionButtonsLeft: {
+    ['& .actionButtonsLeft']: {
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
         borderBottomRightRadius: 0,
         backgroundColor: theme.palette.secondary.light,
         color: '#fff',
     },
-    actionButtonsRight: {
+    ['& .actionButtonsRight']: {
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
         borderBottomLeftRadius: 0,
     },
-    selectedCampus: {
+    ['& .selectedCampus']: {
         fontWeight: 500,
     },
-    flexWrapper: {
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-    },
-    flexHeader: {
+    ['& .flexHeader']: {
         height: 'auto',
         whiteSpace: 'nowrap',
     },
-    flexContent: {
+    ['& .flexContent']: {
         flexGrow: 1,
         overflowY: 'auto',
         overflowX: 'hidden',
@@ -98,36 +105,31 @@ const useStyles = makeStyles(theme => ({
             overflowY: 'hidden',
         },
     },
-    flexFooter: {
+    ['& .flexFooter']: {
         height: 'auto',
     },
-    componentHeight: {
-        [theme.breakpoints.down('md')]: {
-            height: '100%',
-        },
-        [theme.breakpoints.up('md')]: {
-            height: 300,
-        },
-        [theme.breakpoints.up('lg')]: {
-            height: 300,
-        },
-    },
-
-    componentHeightPublic: {
-        [theme.breakpoints.down('md')]: {
-            height: '100%',
-        },
-        [theme.breakpoints.up('md')]: {
-            height: 232,
-        },
-        [theme.breakpoints.up('lg')]: {
-            height: 232,
-        },
-    },
-    loaderContent: {
+    ['& .loaderContent']: {
         flexGrow: 1,
         overflowY: 'hidden',
         overflowX: 'hidden',
+    },
+}));
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    ['& .badge']: {
+        backgroundColor: theme.palette.success.main,
+        padding: 0,
+        height: 12,
+        width: 12,
+        maxWidth: 12,
+        minWidth: 12,
+        right: 4,
+        top: 2,
+    },
+    ['& .badgeIcon']: {
+        height: 10,
+        width: 10,
+        color: theme.palette.white.main,
     },
 }));
 
@@ -213,7 +215,6 @@ export const hasDepartments = item => {
 };
 
 const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
-    const classes = useStyles();
     const [cookies] = useCookies();
     const [preferredLocation, setPreferredLocation] = React.useState(undefined);
     const [showIcon, setShowIcon] = React.useState(false);
@@ -296,13 +297,13 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                     placement="bottom"
                                     TransitionProps={{ timeout: 300 }}
                                 >
-                                    <Badge
-                                        classes={{ badge: classes.badge }}
+                                    <StyledBadge
+                                        classes={{ badge: 'badge' }}
                                         color="primary"
-                                        badgeContent={<CheckIcon size="small" className={classes.badgeIcon} />}
+                                        badgeContent={<CheckIcon size="small" className={'badgeIcon'} />}
                                     >
                                         <RoomIcon data-testid="hours-wiggler" />
-                                    </Badge>
+                                    </StyledBadge>
                                 </Tooltip>
                             </Fade>
                         )}
@@ -311,15 +312,13 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
             }
             noPadding
         >
-            <div
-                className={`${classes.flexWrapper} ${
-                    !!account && !!account.id ? classes.componentHeight : classes.componentHeightPublic
-                }`}
+            <StyledWrapper
+                className={`flexWrapper ${!!account && !!account.id ? 'componentHeight' : 'componentHeightPublic'}`}
             >
                 {!libHoursError && (
-                    <div className={classes.flexHeader}>
+                    <div className={'flexHeader'}>
                         {/* Header */}
-                        <Grid container spacing={1} className={classes.listHeader}>
+                        <Grid container spacing={1} className={'listHeader'}>
                             {hoursLocale.header.map((item, index) => {
                                 return (
                                     <Grid item xs={item.width} key={index}>
@@ -332,14 +331,14 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                 )}
                 {!!libHoursError && (
                     /* istanbul ignore next */ <Fade in={!libHoursLoading} timeout={1000}>
-                        <div className={classes.flexContent}>
+                        <div className={'flexContent'}>
                             <Typography style={{ padding: '1rem' }}>{hoursLocale.unavailable}</Typography>
                         </div>
                     </Fade>
                 )}
                 {!libHoursError && !!libHours && !libHoursLoading && (
                     <Fade in={!libHoursLoading} timeout={1000}>
-                        <div className={classes.flexContent}>
+                        <div className={'flexContent'}>
                             {/* Scrollable area */}
                             {!!sortedHours &&
                                 sortedHours.length > 1 &&
@@ -350,7 +349,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                             data-testid={`hours-item-${index}`}
                                             spacing={1}
                                             key={index}
-                                            className={classes.row}
+                                            className={'row'}
                                             alignItems={'flex-start'}
                                             style={{ marginLeft: 8, width: '98%' }}
                                         >
@@ -360,8 +359,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                     data-analyticsid={`hours-item-${index}`}
                                                     href={item.url}
                                                     className={
-                                                        (preferredLocation === item.campus && classes.selectedCampus) ||
-                                                        ''
+                                                        (preferredLocation === item.campus && 'selectedCampus') || ''
                                                     }
                                                 >
                                                     {item.name}
@@ -390,16 +388,16 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                     </Fade>
                 )}
                 {!libHoursError && !(!!libHours && !libHoursLoading) && (
-                    <div className={classes.loaderContent}>
+                    <div className={'loaderContent'}>
                         <MyLoader id="hours-loader" data-testid="hours-loader" aria-label="Hours data is laoding" />
                     </div>
                 )}
-                <div className={classes.flexFooter}>
+                <div className={'flexFooter'}>
                     {/* Buttons */}
                     <Grid container spacing={0}>
                         <Grid item xs>
                             <Button
-                                classes={{ root: classes.actionButtonsLeft }}
+                                classes={{ root: 'actionButtonsLeft' }}
                                 data-testid="homepage-hours-weeklyhours-link"
                                 data-analyticsid={'hours-item-weeklyhours-link'}
                                 size="small"
@@ -414,7 +412,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         </Grid>
                         <Grid item xs>
                             <Button
-                                classes={{ root: classes.actionButtonsRight }}
+                                classes={{ root: 'actionButtonsRight' }}
                                 data-testid="homepage-hours-bookit-link"
                                 data-analyticsid={'hours-item-bookit-link'}
                                 size="small"
@@ -429,7 +427,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         </Grid>
                     </Grid>
                 </div>
-            </div>
+            </StyledWrapper>
         </StandardCard>
     );
 };

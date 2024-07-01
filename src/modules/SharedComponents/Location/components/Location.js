@@ -5,40 +5,37 @@ import Button from '@mui/material/Button';
 import RoomIcon from '@mui/icons-material/Room';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { makeStyles } from '@mui/styles';
 import { useCookies } from 'react-cookie';
 import { locale } from './locale';
 import { obfusticateUsername } from 'helpers/general';
 import { LOCATION_COOKIE_NAME } from 'config/general';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(theme => ({
-    selectedItem: {
-        color: theme.palette.primary.main,
-        opacity: '1 !important',
-        fontWeight: 'bold',
-    },
-    iconButton: {
+const StyledLocation = styled('div')(({ theme }) => ({
+    '& .iconButton': {
         marginTop: -5,
         marginLeft: 0,
         color: theme.palette.secondary.light,
         textTransform: 'none',
         fontSize: 14,
+        '& .icon': {
+            color: theme.palette.primary.main,
+            marginLeft: 0,
+            marginBottom: -2,
+            marginRight: 0,
+            marginTop: -2,
+            height: 14,
+            width: 14,
+        },
     },
-    icon: {
-        marginLeft: 0,
-        marginBottom: -2,
-        marginRight: 0,
-        marginTop: -2,
-        height: 14,
-        width: 14,
-    },
-    '@keyframes wiggle': {
+
+    '@keyframes wiggler': {
         from: { transform: 'rotate(-14deg)', transformOrigin: '50% 100%' },
         to: { transform: 'rotate(7deg)', transformOrigin: '50% 100%' },
     },
-    wiggler: {
+    '& .wiggler': {
         color: theme.palette.primary.main,
-        animationName: '$wiggle',
+        animationName: 'wiggler',
         animationDuration: '0.3s',
         animationIterationCount: 30,
         animationDirection: 'alternate',
@@ -47,7 +44,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const Location = ({ idLabel, account }) => {
-    const classes = useStyles();
     const [cookies, setCookie, removeCookie] = useCookies();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -117,8 +113,9 @@ export const Location = ({ idLabel, account }) => {
         const locationSuffix = !!tag ? '-' + tag : '';
         return `location${locationPrefix}${locationSuffix}`;
     };
+
     return (
-        <div id={getTagId()} data-testid={getTagId()}>
+        <StyledLocation id={getTagId()} data-testid={getTagId()}>
             <Tooltip
                 id={getTagId('tooltip')}
                 title={locale.tooltip.replace('[currentLocation]', thisLocation)}
@@ -128,17 +125,15 @@ export const Location = ({ idLabel, account }) => {
                 <Button
                     size={'small'}
                     variant={'text'}
-                    className={classes.iconButton}
+                    className={'iconButton'}
                     onClick={handleLocationClick}
                     id={getTagId('button')}
                     data-testid={getTagId('button')}
                     data-analyticsid={getTagId('button')}
                 >
                     <RoomIcon
-                        className={`${classes.icon} ${
-                            !cookies[LOCATION_COOKIE_NAME] || cookies[LOCATION_COOKIE_NAME] === 'null'
-                                ? classes.wiggler
-                                : ''
+                        className={`icon ${
+                            !cookies[LOCATION_COOKIE_NAME] || cookies[LOCATION_COOKIE_NAME] === 'null' ? 'wiggler' : ''
                         }`}
                     />{' '}
                     {thisLocation.replace(locale.noLocationSet, locale.noLocationSetLabel)}
@@ -163,7 +158,12 @@ export const Location = ({ idLabel, account }) => {
                         key={index}
                         onClick={handleLocationClose(item.value)}
                         disabled={thisLocation === item.value}
-                        className={thisLocation === item.value ? classes.selectedItem : ''}
+                        className={thisLocation === item.value ? 'selectedItem' : ''}
+                        sx={
+                            thisLocation === item.value
+                                ? { color: 'primary.main', opacity: '1 !important', fontWeight: 'bold' }
+                                : {}
+                        }
                         data-testid={getTagId(`option-${index}`)}
                         data-analyticsid={getTagId(`option-${index}`)}
                         id={getTagId(`option-${index}`)}
@@ -173,7 +173,7 @@ export const Location = ({ idLabel, account }) => {
                     </MenuItem>
                 ))}
             </Menu>
-        </div>
+        </StyledLocation>
     );
 };
 

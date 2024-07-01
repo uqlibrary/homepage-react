@@ -7,7 +7,7 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
     });
     const zeroPad = (num, places) => String(num).padStart(places, '0');
 
-    const getFieldValue = (dataField, rowIndex, colIndex) =>
+    const getFieldValue = (dataField, rowIndex) =>
         // cy.get(`[data-field='${dataField}'][data-rowindex='${rowIndex}'][data-colindex='${colIndex}']`);
         cy.get(`div[data-rowindex='${rowIndex}'] > div[data-field='${dataField}']`);
 

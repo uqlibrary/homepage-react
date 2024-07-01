@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
-import { makeStyles } from '@mui/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@mui/material/Grid';
 import { useCookies } from 'react-cookie';
@@ -21,6 +20,7 @@ import { locale as locationLocale } from 'modules/SharedComponents/Location/comp
 import ContentLoader from 'react-content-loader';
 import { obfusticateUsername } from 'helpers/general';
 import { LOCATION_COOKIE_NAME } from 'config/general';
+import { styled } from '@mui/material/styles';
 
 const MyLoader = props => (
     <ContentLoader
@@ -63,8 +63,32 @@ const MyLoader = props => (
     </ContentLoader>
 );
 
-const useStyles = makeStyles(theme => ({
-    scrollArea: {
+const StyledWrapper = styled('div')(({ theme }) => ({
+    ['&.flexWrapper']: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+    },
+    ['&.componentHeight']: {
+        [theme.breakpoints.down('md')]: {
+            height: '100%',
+        },
+        [theme.breakpoints.up('md')]: {
+            height: 300,
+        },
+    },
+    ['&.componentHeightPublic']: {
+        [theme.breakpoints.down('md')]: {
+            height: '100%',
+        },
+        [theme.breakpoints.up('md')]: {
+            height: 232,
+        },
+        [theme.breakpoints.up('lg')]: {
+            height: 232,
+        },
+    },
+    ['& .scrollArea']: {
         overflowX: 'hidden',
         overflowY: 'auto',
         marginRight: 0,
@@ -74,59 +98,22 @@ const useStyles = makeStyles(theme => ({
         padding: 8,
         color: theme.palette.secondary.dark,
     },
-    row: {
+    ['& .row']: {
         borderBottom: '1px solid #EEE',
         padding: '8px 0 0 0',
     },
-    locationIcon: {
+    ['& .locationIcon']: {
         color: theme.palette.white.main,
         marginTop: 6,
         marginBottom: -6,
     },
-    badge: {
-        backgroundColor: theme.palette.success.main,
-        padding: 0,
-        height: 12,
-        width: 12,
-        maxWidth: 12,
-        minWidth: 12,
-        right: 4,
-        top: 2,
-    },
-    badgeIcon: {
-        height: 10,
-        width: 10,
-        color: theme.palette.white.main,
-    },
-    linkButton: {
-        padding: 2,
-        minWidth: 0,
-        marginTop: -2,
-        marginBottom: -2,
-        textAlign: 'left',
-        fontWeight: 300,
-        textTransform: 'none',
-    },
-    linkButtonLabel: {
-        textTransform: 'none',
-        textAlign: 'left',
-        fontSize: 16,
-        lineHeight: 1.1,
-        color: '#3872a8', // theme.palette.accent.dark,
-        fontWeight: 300,
-    },
-    selectedCampus: {
+    ['& .selectedCampus']: {
         fontWeight: 500,
     },
-    flexWrapper: {
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-    },
-    flexHeader: {
+    ['& .flexHeader']: {
         height: 'auto',
     },
-    flexContent: {
+    ['& .flexContent']: {
         flexGrow: 1,
         overflowY: 'auto',
         overflowX: 'hidden',
@@ -135,23 +122,32 @@ const useStyles = makeStyles(theme => ({
             overflowY: 'hidden',
         },
     },
-    flexLoaderContent: {
+    ['& .flexFooter']: {
+        height: 'auto',
+    },
+    ['& .flexLoaderContent']: {
         flexGrow: 1,
         overflowY: 'hidden',
         overflowX: 'hidden',
     },
-    flexFooter: {
-        height: 'auto',
+    ['& .linkButton']: {
+        padding: 2,
+        minWidth: 0,
+        marginTop: -2,
+        marginBottom: -2,
+        textAlign: 'left',
+        fontWeight: 300,
+        textTransform: 'none',
     },
-    componentHeight: {
-        [theme.breakpoints.down('md')]: {
-            height: '100%',
-        },
-        [theme.breakpoints.up('md')]: {
-            height: 300,
-        },
+    ['& .linkButtonLabel']: {
+        textTransform: 'none',
+        textAlign: 'left',
+        fontSize: 16,
+        lineHeight: 1.1,
+        color: '#3872a8', // theme.palette.accent.dark,
+        fontWeight: 300,
     },
-    mapAvailSwatch: {
+    ['& .mapAvailSwatch']: {
         display: 'inline-block',
         height: 12,
         width: 12,
@@ -159,7 +155,7 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: '#00FF00',
         border: '1px solid #FFFFFF',
     },
-    mapOccupSwatch: {
+    ['& .mapOccupSwatch']: {
         display: 'inline-block',
         height: 12,
         width: 12,
@@ -169,8 +165,25 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    ['& .badge']: {
+        backgroundColor: theme.palette.success.main,
+        padding: 0,
+        height: 12,
+        width: 12,
+        maxWidth: 12,
+        minWidth: 12,
+        right: 4,
+        top: 2,
+    },
+    ['& .badgeIcon']: {
+        height: 10,
+        width: 10,
+        color: theme.palette.white.main,
+    },
+}));
+
 const Computers = ({ computerAvailability, computerAvailabilityLoading, computerAvailabilityError, account }) => {
-    const classes = useStyles();
     const [cookies] = useCookies();
     const [preferredLocation, setPreferredLocation] = React.useState(undefined);
     const [showIcon, setShowIcon] = React.useState(false);
@@ -342,10 +355,10 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                             <Grid container spacing={2}>
                                 <Grid item xs />
                                 <Grid item xs={'auto'}>
-                                    <div className={classes.mapAvailSwatch} /> Available
+                                    <div className={'mapAvailSwatch'} /> Available
                                 </Grid>
                                 <Grid item xs={'auto'}>
-                                    <div className={classes.mapOccupSwatch} /> Occupied
+                                    <div className={'mapOccupSwatch'} /> Occupied
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -372,13 +385,13 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                     placement="bottom"
                                     TransitionProps={{ timeout: 300 }}
                                 >
-                                    <Badge
-                                        classes={{ badge: classes.badge }}
+                                    <StyledBadge
+                                        classes={{ badge: 'badge' }}
                                         color="primary"
-                                        badgeContent={<CheckIcon size="small" className={classes.badgeIcon} />}
+                                        badgeContent={<CheckIcon size="small" className={'badgeIcon'} />}
                                     >
                                         <RoomIcon data-testid="computers-wiggler" />
-                                    </Badge>
+                                    </StyledBadge>
                                 </Tooltip>
                             </Fade>
                         )}
@@ -388,17 +401,17 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
             noPadding
         >
             <MapPopup />
-            <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
+            <StyledWrapper className={'flexWrapper componentHeight'}>
                 {!!computerAvailabilityError && (
                     /* istanbul ignore next */ <Fade in={!computerAvailabilityLoading} timeout={1000}>
-                        <div className={classes.flexContent}>
+                        <div className={'flexContent'}>
                             <Typography style={{ padding: '1rem' }}>{computersLocale.unavailable}</Typography>
                         </div>
                     </Fade>
                 )}
                 {!computerAvailabilityError && computerAvailability && !computerAvailabilityLoading && (
                     <Fade in={!computerAvailabilityLoading} timeout={1000}>
-                        <div className={classes.flexContent} id="computers-library-content">
+                        <div className={'flexContent'} id="computers-library-content">
                             {!!sortedComputers &&
                                 sortedComputers.length > 1 &&
                                 sortedComputers.map((item, index) => {
@@ -414,7 +427,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                 container
                                                 data-testid={`computer-row-${index}`}
                                                 spacing={1}
-                                                className={classes.row}
+                                                className={'row'}
                                                 justifyContent="center"
                                                 alignItems="center"
                                             >
@@ -423,14 +436,14 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                         onClick={() => handleCollapse(index)}
                                                         aria-expanded={!!collapse[index]}
                                                         classes={{
-                                                            root: `${classes.linkButton} ${
+                                                            root: `linkButton ${
                                                                 item.campus && preferredLocation === item.campus
-                                                                    ? classes.selectedCampus
+                                                                    ? 'selectedCampu'
                                                                     : ''
                                                             }`,
-                                                            label: `${classes.linkButtonLabel} ${
+                                                            label: `linkButtonLabel ${
                                                                 item.campus && preferredLocation === item.campus
-                                                                    ? classes.selectedCampus
+                                                                    ? 'selectedCampus'
                                                                     : ''
                                                             }`,
                                                         }}
@@ -466,7 +479,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                                 role="region"
                                                                 container
                                                                 spacing={1}
-                                                                className={classes.row}
+                                                                className={'row'}
                                                                 justifyContent="center"
                                                                 alignItems="center"
                                                             >
@@ -489,10 +502,10 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                                             )
                                                                         }
                                                                         classes={{
-                                                                            root: classes.linkButton,
-                                                                            label: `${classes.linkButtonLabel} ${
+                                                                            root: 'linkButton',
+                                                                            label: `linkButtonLabel ${
                                                                                 preferredLocation === item.campus
-                                                                                    ? classes.selectedCampus
+                                                                                    ? 'selectedCampus'
                                                                                     : ''
                                                                             }`,
                                                                         }}
@@ -519,11 +532,11 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                     </Fade>
                 )}
                 {!computerAvailabilityError && !(computerAvailability && !computerAvailabilityLoading) && (
-                    <div className={classes.flexLoaderContent}>
+                    <div className={'flexLoaderContent'}>
                         <MyLoader />
                     </div>
                 )}
-            </div>
+            </StyledWrapper>
         </StandardCard>
     );
 };

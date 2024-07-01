@@ -7,7 +7,6 @@ import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 import { scrollToTopOfPage } from 'helpers/general';
 import { PromoPanelSaveConfirmation } from './PromoPanelSaveConfirmation';
@@ -22,59 +21,28 @@ import PromoPanelFormConfirmation from './PromoPanelFormConfirmation';
 import { addSchedule, initLists, saveGroupDate } from '../promoPanelHelpers';
 import PromoPanelContentButtons from './PromoPanelContentButtons';
 import PromoPanelFormSchedules from './PromoPanelFormSchedules';
+import { styled } from '@mui/material/styles';
 
 const moment = require('moment');
 
-const useStyles = makeStyles(() => ({
-    contentRequired: {
-        color: '#990000',
+const StyledTypingArea = styled(FormControl)(() => ({
+    '& textarea ': {
+        backgroundColor: 'rgb(236, 236, 236, 0.5)',
+        borderRadius: 4,
+        padding: 10,
+    },
+    '& label': {
+        color: '#000',
+        paddingLeft: 10,
         paddingTop: 10,
-        display: 'block',
-        fontSize: 14,
     },
-    saveButton: {
-        '&:disabled': {
-            color: 'rgba(0, 0, 0, 0.26)',
-            boxShadow: 'none',
-            backgroundColor: 'rgba(0, 0, 0, 0.12)',
-        },
-    },
-    previewButton: {
-        marginRight: 10,
-    },
-    checkbox: {
-        paddingLeft: 0,
-        '&.Mui-checked': {
-            color: 'black',
-        },
-    },
-    promoPanelForm: {
-        '& label': {
-            minHeight: '1.1em',
-        },
-    },
-    errorStyle: {
-        color: '#c80000',
-        marginTop: 3,
-        fontSize: '0.75rem',
-    },
-    typingArea: {
-        '& textarea ': {
-            backgroundColor: 'rgb(236, 236, 236, 0.5)',
-            borderRadius: 4,
-            padding: 10,
-        },
-        '& label': {
-            color: '#000',
-            paddingLeft: 10,
-            paddingTop: 10,
-        },
-    },
-    charactersRemaining: {
-        textAlign: 'right',
-        color: '#504e4e',
-        fontSize: '0.8em',
-    },
+}));
+
+const StyledContentRequiredBox = styled('span')(() => ({
+    color: '#990000',
+    paddingTop: 10,
+    display: 'block',
+    fontSize: 14,
 }));
 
 export const PromoPanelForm = ({
@@ -94,8 +62,6 @@ export const PromoPanelForm = ({
     queueLength,
     // promoPanelActionError,
 }) => {
-    const classes = useStyles();
-
     const [selectorGroupNames, setSelectorGroupNames] = React.useState(scheduledGroupNames);
     const [scheduleChangeIndex, setScheduleChangeIndex] = useState(null);
     const [scheduleGroupIndex, setScheduleGroupIndex] = useState(null);
@@ -376,19 +342,14 @@ export const PromoPanelForm = ({
     return (
         <>
             <StandardCard title={locale.editPage.Title(isEdit, isClone)}>
-                <form className={classes.spotlightForm}>
+                <form className={'spotlightForm'}>
                     {/* Confirmation Boxes here */}
                     <Typography style={{ fontWeight: 'bold', fontSize: 22 }}>
                         {locale.form.labels.adminNotesLabel}
                     </Typography>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <FormControl
-                                variant="standard"
-                                className={classes.typingArea}
-                                fullWidth
-                                title={locale.form.tooltips.adminNotesField}
-                            >
+                            <StyledTypingArea variant="standard" fullWidth title={locale.form.tooltips.adminNotesField}>
                                 <InputLabel htmlFor="promoPanelAdminNote">
                                     {locale.form.labels.adminNotesField}
                                 </InputLabel>
@@ -400,19 +361,14 @@ export const PromoPanelForm = ({
                                     rows={2}
                                     value={values.admin_notes}
                                 />
-                            </FormControl>
+                            </StyledTypingArea>
                         </Grid>
 
                         <Grid item xs={12}>
                             <Typography style={{ fontWeight: 'bold', fontSize: 22 }}>
                                 {locale.form.labels.titleLabel}
                             </Typography>
-                            <FormControl
-                                variant="standard"
-                                className={classes.typingArea}
-                                fullWidth
-                                title={locale.form.tooltips.titleField}
-                            >
+                            <StyledTypingArea variant="standard" fullWidth title={locale.form.tooltips.titleField}>
                                 <InputLabel htmlFor="promoPanelTitle">{locale.form.labels.titleField}</InputLabel>
                                 <Input
                                     id="promoPanelTitle"
@@ -423,7 +379,7 @@ export const PromoPanelForm = ({
                                     rows={1}
                                     value={values.title}
                                 />
-                            </FormControl>
+                            </StyledTypingArea>
                         </Grid>
                         <Grid item xs={12}>
                             <Typography style={{ fontWeight: 'bold', fontSize: 22 }}>
@@ -445,7 +401,7 @@ export const PromoPanelForm = ({
                                 }}
                             />
                             {!!!values.content && (
-                                <span className={classes.contentRequired}>* This content is required</span>
+                                <StyledContentRequiredBox>* This content is required</StyledContentRequiredBox>
                             )}
                         </Grid>
                     </Grid>

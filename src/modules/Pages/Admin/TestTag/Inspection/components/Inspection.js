@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
+import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import CircularProgress from '@mui/material/CircularProgress';
-import clsx from 'clsx';
 import { InView } from 'react-intersection-observer';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -35,27 +34,11 @@ const componentId = 'inspection';
 const moment = require('moment');
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
-const useStyles = makeStyles(theme => ({
-    formControl: {
-        minWidth: 120,
-    },
-    formSelect: {
-        minWidth: 120,
-    },
-    expand: {
-        transform: 'rotate(0deg)',
-        marginLeft: 'auto',
-        transition: theme.transitions.create('transform', {
-            duration: theme.transitions.duration.shortest,
-        }),
-    },
-    expandOpen: {
-        transform: 'rotate(180deg)',
-    },
-    toggleButtonMobile: {
+const StyledWrapper = styled('div')(({ theme }) => ({
+    '& .toggleButtonMobile': {
         flex: 1,
     },
-    toolbar: {
+    '& .toolbar': {
         [theme.breakpoints.down('sm')]: {
             flexDirection: 'column',
             alignContent: 'space-between',
@@ -69,15 +52,15 @@ const useStyles = makeStyles(theme => ({
             },
         },
     },
-    appbarWrapper: {
+    '& .appbarWrapper': {
         marginTop: theme.spacing(2),
     },
-    appbarPositionVisible: {
+    '& .appbarPositionVisible': {
         position: 'relative',
         backgroundColor: 'white',
         boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)',
     },
-    appbarPositionClipped: {
+    '& .appbarPositionClipped': {
         position: 'fixed',
         left: '1rem',
         right: '1rem',
@@ -86,21 +69,21 @@ const useStyles = makeStyles(theme => ({
         minHeight: '64px',
         width: 'auto',
     },
-    dialogContainer: {
+    '& .dialogContainer': {
         borderRadius: '6px',
         borderWidth: '1px',
         borderStyle: 'solid',
         color: 'black',
     },
-    dialogPassedContainer: {
+    '& .dialogPassedContainer': {
         backgroundColor: '#69B400',
         borderColor: '#69B400',
     },
-    dialogFailedContainer: {
+    '& .dialogFailedContainer': {
         backgroundColor: '#ef000c',
         borderColor: '#ef000c',
     },
-    dialogTitle: {
+    '& .dialogTitle': {
         textAlign: 'center',
         padding: '8px',
         '& >p': {
@@ -108,14 +91,14 @@ const useStyles = makeStyles(theme => ({
             fontFamily: 'monospace, monospace',
         },
     },
-    dialogFailedTitle: {
+    '& .dialogFailedTitle': {
         '& >h4': {
             fontWeight: '700',
             fontFamily: 'monospace, monospace',
             textDecoration: 'underline',
         },
     },
-    dialogFailedAssetStatus: {
+    '& .dialogFailedAssetStatus': {
         textAlign: 'center',
         padding: '8px',
         '& >h5': {
@@ -123,7 +106,7 @@ const useStyles = makeStyles(theme => ({
             fontFamily: 'monospace, monospace',
         },
     },
-    dialogBarcode: {
+    '& .dialogBarcode': {
         backgroundColor: 'white',
         padding: '8px',
         textAlign: 'center',
@@ -131,7 +114,7 @@ const useStyles = makeStyles(theme => ({
             fontFamily: 'monospace, monospace',
         },
     },
-    dialogSuccessLineItems: {
+    '& .dialogSuccessLineItems': {
         padding: '8px',
         [theme.breakpoints.down('sm')]: {
             textAlign: 'center',
@@ -141,7 +124,7 @@ const useStyles = makeStyles(theme => ({
             fontFamily: 'monospace, monospace',
         },
     },
-    dialogFailedLineItems: {
+    '& .dialogFailedLineItems': {
         padding: '8px',
         textAlign: 'center',
         '& >p': {
@@ -149,10 +132,10 @@ const useStyles = makeStyles(theme => ({
             fontFamily: 'monospace, monospace',
         },
     },
-    addNewLabel: {
+    '& .addNewLabel': {
         width: '100%',
     },
-    buttonWhite: {
+    '& .buttonWhite': {
         color: 'white',
         border: '1px solid white',
     },
@@ -165,8 +148,6 @@ const Inspection = ({
     defaultNextTestDateValue,
     assetsListError,
     inspectionConfig,
-    // inspectionConfigLoading,
-    // inspectionConfigLoaded,
     inspectionConfigError,
     floorListError,
     roomListError,
@@ -176,7 +157,6 @@ const Inspection = ({
     saveAssetTypeSaving,
     saveAssetTypeError,
 }) => {
-    const classes = useStyles();
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
     const inspectionLocale = locale.pages.inspect;
@@ -280,8 +260,7 @@ const Inspection = ({
         }
     };
 
-    const successDialog = React.useMemo(() => getSuccessDialog(saveInspectionSuccess, classes, inspectionLocale), [
-        classes,
+    const successDialog = React.useMemo(() => getSuccessDialog(saveInspectionSuccess, inspectionLocale), [
         inspectionLocale,
         saveInspectionSuccess,
     ]);
@@ -292,110 +271,106 @@ const Inspection = ({
             locale={inspectionLocale}
             requiredPermissions={[PERMISSIONS.can_inspect]}
         >
-            <ConfirmationBox
-                actionButtonColor="secondary"
-                actionButtonVariant="contained"
-                confirmationBoxId={`${componentId}-save-success`}
-                hideCancelButton
-                onAction={hideSuccessMessage}
-                onClose={hideSuccessMessage}
-                isOpen={isSaveSuccessOpen}
-                locale={successDialog}
-                noMinContentWidth
-            />
-            <EventPanel
-                id={componentId}
-                actions={actions}
-                location={location}
-                setLocation={setLocation}
-                actionDate={formValues?.action_date ?? /* istanbul ignore next */ ''}
-                handleChange={handleChange}
-                classes={classes}
-                hasInspection
-                isMobileView={isMobileView}
-            />
-            <AssetPanel
-                id={componentId}
-                actions={actions}
-                location={location}
-                resetForm={() => resetForm()}
-                formValues={formValues}
-                selectedAsset={selectedAsset}
-                assignCurrentAsset={assignCurrentAsset}
-                handleChange={handleChange}
-                classes={classes}
-                setSelectedAsset={setSelectedAsset}
-                defaultNextTestDateValue={defaultNextTestDateValue}
-                saveAssetTypeSaving={saveAssetTypeSaving}
-                isMobileView={isMobileView}
-                canAddAssetType
-                confirmationAlert={confirmationAlert}
-                openConfirmationAlert={openConfirmationAlert}
-                closeConfirmationAlert={closeConfirmationAlert}
-            />
-            <InView
-                as="div"
-                className={classes.appbarWrapper}
-                onChange={setInView}
-                rootMargin="200% 0px 0px 0px"
-                threshold={0}
-            >
-                <AppBar
-                    component={'div'}
-                    className={clsx({
-                        [classes.appbarPositionVisible]: inView,
-                        [classes.appbarPositionClipped]: !inView,
-                        'layout-card': !inView && !isMobileView,
-                    })}
-                    id={`${componentId}-app-bar`}
-                    data-testid={`${componentId}-app-bar`}
+            <StyledWrapper>
+                <ConfirmationBox
+                    actionButtonColor="secondary"
+                    actionButtonVariant="contained"
+                    confirmationBoxId={`${componentId}-save-success`}
+                    hideCancelButton
+                    onAction={hideSuccessMessage}
+                    onClose={hideSuccessMessage}
+                    isOpen={isSaveSuccessOpen}
+                    locale={successDialog}
+                    noMinContentWidth
+                />
+                <EventPanel
+                    id={componentId}
+                    actions={actions}
+                    location={location}
+                    setLocation={setLocation}
+                    actionDate={formValues?.action_date ?? /* istanbul ignore next */ ''}
+                    handleChange={handleChange}
+                    hasInspection
+                    isMobileView={isMobileView}
+                />
+                <AssetPanel
+                    id={componentId}
+                    actions={actions}
+                    location={location}
+                    resetForm={() => resetForm()}
+                    formValues={formValues}
+                    selectedAsset={selectedAsset}
+                    assignCurrentAsset={assignCurrentAsset}
+                    handleChange={handleChange}
+                    setSelectedAsset={setSelectedAsset}
+                    defaultNextTestDateValue={defaultNextTestDateValue}
+                    saveAssetTypeSaving={saveAssetTypeSaving}
+                    isMobileView={isMobileView}
+                    canAddAssetType
+                    confirmationAlert={confirmationAlert}
+                    openConfirmationAlert={openConfirmationAlert}
+                    closeConfirmationAlert={closeConfirmationAlert}
+                />
+                <InView
+                    as="div"
+                    className={'appbarWrapper'}
+                    onChange={setInView}
+                    rootMargin="200% 0px 0px 0px"
+                    threshold={0}
                 >
-                    <Toolbar className={classes.toolbar}>
-                        <Button
-                            variant="outlined"
-                            onClick={resetForm}
-                            fullWidth={isMobileView}
-                            id={`${componentId}-reset-button`}
-                            data-testid={`${componentId}-reset-button`}
-                            color={inView ? 'primary' : 'secondary'}
-                            className={clsx({
-                                [classes.buttonWhite]: !inView,
-                            })}
-                        >
-                            {inspectionLocale.form.buttons.reset}
-                        </Button>
-                        <Box style={{ flexGrow: 1 }} />
+                    <AppBar
+                        component={'div'}
+                        className={`${inView ? 'appbarPositionVisible' : 'appbarPositionClipped'}${
+                            !inView && !isMobileView ? ' layout-card' : ''
+                        }`}
+                        id={`${componentId}-app-bar`}
+                        data-testid={`${componentId}-app-bar`}
+                    >
+                        <Toolbar className={'toolbar'}>
+                            <Button
+                                variant="outlined"
+                                onClick={resetForm}
+                                fullWidth={isMobileView}
+                                id={`${componentId}-reset-button`}
+                                data-testid={`${componentId}-reset-button`}
+                                color={inView ? 'primary' : 'secondary'}
+                                className={!inView ? 'buttonWhite' : ''}
+                            >
+                                {inspectionLocale.form.buttons.reset}
+                            </Button>
+                            <Box style={{ flexGrow: 1 }} />
 
-                        <Button
-                            variant="contained"
-                            color={inView ? 'primary' : 'secondary'}
-                            disabled={!isValid || saveInspectionSaving}
-                            onClick={saveForm}
-                            fullWidth={isMobileView}
-                            id={`${componentId}-save-button`}
-                            data-testid={`${componentId}-save-button`}
-                        >
-                            {saveInspectionSaving ? (
-                                <CircularProgress
-                                    color="inherit"
-                                    size={25}
-                                    id={`${componentId}-progress`}
-                                    data-testid={`${componentId}-progress`}
-                                />
-                            ) : (
-                                inspectionLocale.form.buttons.save
-                            )}
-                        </Button>
-                    </Toolbar>
-                </AppBar>
-            </InView>
-            <ConfirmationAlert
-                isOpen={confirmationAlert.visible}
-                message={confirmationAlert.message}
-                type={confirmationAlert.type}
-                closeAlert={closeConfirmationAlert}
-                autoHideDuration={confirmationAlert.autoHideDuration}
-            />
+                            <Button
+                                variant="contained"
+                                color={inView ? 'primary' : 'secondary'}
+                                disabled={!isValid || saveInspectionSaving}
+                                onClick={saveForm}
+                                fullWidth={isMobileView}
+                                id={`${componentId}-save-button`}
+                                data-testid={`${componentId}-save-button`}
+                            >
+                                {saveInspectionSaving ? (
+                                    <CircularProgress
+                                        color="inherit"
+                                        size={25}
+                                        id={`${componentId}-progress`}
+                                        data-testid={`${componentId}-progress`}
+                                    />
+                                ) : (
+                                    inspectionLocale.form.buttons.save
+                                )}
+                            </Button>
+                        </Toolbar>
+                    </AppBar>
+                </InView>
+                <ConfirmationAlert
+                    isOpen={confirmationAlert.visible}
+                    message={confirmationAlert.message}
+                    type={confirmationAlert.type}
+                    closeAlert={closeConfirmationAlert}
+                    autoHideDuration={confirmationAlert.autoHideDuration}
+                />
+            </StyledWrapper>
         </StandardAuthPage>
     );
 };

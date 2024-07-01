@@ -3,7 +3,6 @@ import { PropTypes } from 'prop-types';
 import ContentLoader from 'react-content-loader';
 import moment from 'moment-timezone';
 
-import { makeStyles } from '@mui/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -17,6 +16,7 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 import { trainingLocale } from './Training.locale';
+import { styled } from '@mui/material/styles';
 
 const MyLoader = props => (
     <ContentLoader
@@ -51,61 +51,14 @@ const MyLoader = props => (
     </ContentLoader>
 );
 
-const useStyles = makeStyles(theme => ({
-    scrollArea: {
-        overflowX: 'hidden',
-        overflowY: 'auto',
-        marginRight: 0,
-        marginTop: 0,
-        marginBottom: 0,
-        marginLeft: 0,
-        padding: 8,
-        color: theme.palette.secondary.dark,
-    },
-    row: {
-        borderBottom: '1px solid #EEE',
-        padding: 8,
-    },
-    linkButton: {
-        padding: 4,
-        minWidth: 0,
-        textTransform: 'none',
-    },
-    linkButtonLabel: {
-        textTransform: 'none',
-        textAlign: 'left',
-        fontSize: 16,
-        color: '#3872a8',
-        fontWeight: 300,
-        lineHeight: 1.25,
-    },
-    flexWrapper: {
+const StyledWrapper = styled('div')(({ theme }) => ({
+    ['&.flexWrapper']: {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
         overflow: 'hidden',
     },
-    flexHeader: {
-        height: 'auto',
-    },
-    flexContent: {
-        flexGrow: 1,
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        [theme.breakpoints.down('md')]: {
-            overflowX: 'hidden',
-            overflowY: 'hidden',
-        },
-    },
-    flexLoader: {
-        flexGrow: 1,
-        overflowX: 'hidden',
-        overflowY: 'hidden',
-    },
-    flexFooter: {
-        height: 'auto',
-    },
-    componentHeight: {
+    ['&.componentHeight']: {
         [theme.breakpoints.down('md')]: {
             height: '100%',
         },
@@ -113,21 +66,34 @@ const useStyles = makeStyles(theme => ({
             height: 300,
         },
     },
-    eventName: {
+    ['& .linkButton']: {
+        padding: 4,
+        minWidth: 0,
+        textTransform: 'none',
+    },
+    ['& .linkButtonLabel']: {
+        textTransform: 'none',
+        textAlign: 'left',
+        fontSize: 16,
+        color: '#3872a8',
+        fontWeight: 300,
+        lineHeight: 1.25,
+    },
+    ['& .eventName']: {
         fontWeight: 400,
     },
-    eventSummary: {
+    ['& .eventSummary']: {
         marginTop: 0,
         fontSize: 14,
         fontWeight: 300,
         textAlign: 'left',
     },
-    actionButtons: {
+    ['& .actionButtons']: {
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
         width: '100%',
     },
-    actionButtonBlock: {
+    ['& .actionButtonBlock']: {
         '& a': {
             borderBottomLeftRadius: 4,
             borderBottomRightRadius: 4,
@@ -145,41 +111,76 @@ const useStyles = makeStyles(theme => ({
             },
         },
     },
-    moreActionButton: {
+    ['& .moreActionButton']: {
         backgroundColor: theme.palette.secondary.light,
         '&:hover': {
             backgroundColor: theme.palette.secondary.dark,
         },
     },
-    bookActionButton: {
+    ['& .bookActionButton']: {
         backgroundColor: theme.palette.primary.main,
         '&:hover': {
             backgroundColor: theme.palette.primary.dark,
         },
     },
-    detailHeader: {
+    ['& .detailHeader']: {
         backgroundColor: theme.palette.primary.dark,
         color: theme.palette.white.main,
     },
-    detailIcon: {
+    ['& .detailIcon']: {
         color: theme.palette.white.main,
     },
-    detailTitle: {
+    ['& .detailTitle']: {
         paddingTop: 12,
         paddingBottom: 8,
         paddingRight: 16,
         lineHeight: 1.2,
     },
-    detailSummary: {
+    ['& .detailSummary']: {
         padding: '16px 20px !important',
     },
-    detailMeta: {
+    ['& .detailMeta']: {
         padding: '4px 20px !important',
+    },
+    ['& .scrollArea']: {
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        marginRight: 0,
+        marginTop: 0,
+        marginBottom: 0,
+        marginLeft: 0,
+        padding: 8,
+        color: theme.palette.secondary.dark,
+        height: '100%',
+    },
+    ['& .row']: {
+        borderBottom: '1px solid #EEE',
+        padding: '8px 0 0 0',
+    },
+    ['& .flexHeader']: {
+        height: 'auto',
+        whiteSpace: 'nowrap',
+    },
+    ['& .flexContent']: {
+        flexGrow: 1,
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        [theme.breakpoints.down('md')]: {
+            overflowX: 'hidden',
+            overflowY: 'hidden',
+        },
+    },
+    ['& .flexFooter']: {
+        height: 'auto',
+    },
+    ['& .flexLoader']: {
+        flexGrow: 1,
+        overflowY: 'hidden',
+        overflowX: 'hidden',
     },
 }));
 
 const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }) => {
-    const classes = useStyles();
     const [eventDetail, setEventDetail] = React.useState(null);
     const handleEventDetail = event => {
         setEventDetail(event);
@@ -226,7 +227,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
             : trainingEvents;
     return (
         <StandardCard primaryHeader title={trainingLocale.title} noPadding>
-            <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
+            <StyledWrapper className={'flexWrapper componentHeight'}>
                 {!!trainingEventsError && (
                     /* istanbul ignore next */ <Fade
                         direction="right"
@@ -235,7 +236,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                         mountOnEnter
                         unmountOnExit
                     >
-                        <div className={classes.flexContent} role="region">
+                        <div className={'flexContent'} role="region">
                             <Typography style={{ padding: '1rem' }}>{trainingLocale.unavailable}</Typography>
                         </div>
                     </Fade>
@@ -246,26 +247,26 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                     !trainingEventsLoading &&
                     !eventDetail && (
                         <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
-                            <div className={classes.flexContent} role="region" aria-label="UQ training Events list">
+                            <div className={'flexContent'} role="region" aria-label="UQ training Events list">
                                 {standardisedTrainingEvents &&
                                     standardisedTrainingEvents.length > 0 &&
                                     standardisedTrainingEvents.map((event, index) => {
                                         return (
-                                            <Grid container spacing={0} className={classes.row} key={index}>
+                                            <Grid container spacing={0} className={'row'} key={index}>
                                                 <Grid item xs={12}>
                                                     <Button
                                                         id={`training-event-detail-button-${event.entityId}`}
                                                         data-testid={`training-event-detail-button-${index}`}
                                                         data-analyticsid={`training-event-detail-button-${index}`}
                                                         onClick={() => handleEventDetail(event)}
-                                                        classes={{ root: classes.linkButton }}
+                                                        classes={{ root: 'linkButton' }}
                                                         fullWidth
                                                     >
                                                         <Grid container spacing={0} direction="column">
-                                                            <Grid item className={classes.linkButtonLabel}>
+                                                            <Grid item className={'linkButtonLabel'}>
                                                                 {event.name}
                                                             </Grid>
-                                                            <Grid item className={classes.eventSummary}>
+                                                            <Grid item className={'eventSummary'}>
                                                                 {eventTime(event.start)}
                                                                 {event.campus
                                                                     ? ` - ${event.campus}`
@@ -281,7 +282,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                         </Fade>
                     )}
                 {!trainingEventsError && (!trainingEvents || trainingEventsLoading) && !eventDetail && (
-                    <div className={classes.flexLoader} aria-label="UQ training Events loading">
+                    <div className={'flexLoader'} aria-label="UQ training Events loading">
                         <MyLoader />
                     </div>
                 )}
@@ -294,7 +295,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                 >
                     {!!eventDetail ? (
                         <div
-                            className={classes.flexContent}
+                            className={'flexContent'}
                             role="region"
                             aria-label={`UQ Library training event detail for ${eventDetail.name}`}
                             autoFocus
@@ -302,7 +303,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                         >
                             <Grid container spacing={1} direction="column">
                                 <Grid item xs={12}>
-                                    <Grid container spacing={1} className={classes.detailHeader}>
+                                    <Grid container spacing={1} className={'detailHeader'}>
                                         <Grid item xs={'auto'}>
                                             <IconButton
                                                 onClick={() => closeEvent(eventDetail.entityId)}
@@ -311,28 +312,28 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                 data-testid="training-event-detail-close-button"
                                                 size="large"
                                             >
-                                                <CloseIcon fontSize="small" className={classes.detailIcon} />
+                                                <CloseIcon fontSize="small" className={'detailIcon'} />
                                             </IconButton>
                                         </Grid>
                                         <Grid item xs>
-                                            <Typography className={classes.detailTitle} variant={'h6'} component={'h3'}>
+                                            <Typography className={'detailTitle'} variant={'h6'} component={'h3'}>
                                                 {eventDetail.name}
                                             </Typography>
                                         </Grid>
                                     </Grid>
                                     <Grid container spacing={1}>
-                                        <Grid item xs={12} className={classes.detailSummary}>
+                                        <Grid item xs={12} className={'detailSummary'}>
                                             <div dangerouslySetInnerHTML={{ __html: eventDetail.summary }} />
                                         </Grid>
-                                        <Grid item xs={1} className={classes.detailMeta}>
+                                        <Grid item xs={1} className={'detailMeta'}>
                                             <Tooltip title="Date" placement="right" TransitionProps={{ timeout: 300 }}>
                                                 <EventIcon />
                                             </Tooltip>
                                         </Grid>
-                                        <Grid item xs={10} className={classes.detailMeta}>
+                                        <Grid item xs={10} className={'detailMeta'}>
                                             {eventTime(eventDetail.start)}
                                         </Grid>
-                                        <Grid item xs={1} className={classes.detailMeta}>
+                                        <Grid item xs={1} className={'detailMeta'}>
                                             <Tooltip
                                                 title="Location"
                                                 placement="right"
@@ -341,12 +342,12 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                 <LocationOnIcon />
                                             </Tooltip>
                                         </Grid>
-                                        <Grid item xs={10} className={classes.detailMeta}>
+                                        <Grid item xs={10} className={'detailMeta'}>
                                             {eventDetail.location ||
                                                 eventDetail.venue ||
                                                 /* istanbul ignore next */ eventDetail.offCampusVenue}
                                         </Grid>
-                                        <Grid item xs={1} className={classes.detailMeta}>
+                                        <Grid item xs={1} className={'detailMeta'}>
                                             <Tooltip
                                                 title="Location"
                                                 placement="right"
@@ -355,7 +356,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                 <EventAvailableIcon />
                                             </Tooltip>
                                         </Grid>
-                                        <Grid item xs={10} className={classes.detailMeta}>
+                                        <Grid item xs={10} className={'detailMeta'}>
                                             {bookingText(eventDetail)}
                                         </Grid>
                                     </Grid>
@@ -366,13 +367,13 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                         <div />
                     )}
                 </Fade>
-                <div className={classes.flexFooter}>
+                <div className={'flexFooter'}>
                     {/* Buttons */}
                     <Grid container spacing={0}>
-                        <Grid item xs={12} className={classes.actionButtonBlock}>
+                        <Grid item xs={12} className={'actionButtonBlock'}>
                             {!eventDetail ? (
                                 <a
-                                    className={classes.moreActionButton}
+                                    className={'moreActionButton'}
                                     href="https://web.library.uq.edu.au/library-services/training"
                                     id="training-event-detail-more-training-button"
                                     data-testid="training-event-detail-more-training-button"
@@ -382,7 +383,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                 </a>
                             ) : (
                                 <a
-                                    className={classes.bookActionButton}
+                                    className={'bookActionButton'}
                                     href={`https://studenthub.uq.edu.au/students/events/detail/${eventDetail.entityId}`}
                                     id="training-event-detail-training-login-button"
                                     data-testid="training-event-detail-training-login-button"
@@ -394,7 +395,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                         </Grid>
                     </Grid>
                 </div>
-            </div>
+            </StyledWrapper>
         </StandardCard>
     );
 };
