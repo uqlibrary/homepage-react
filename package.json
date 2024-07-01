@@ -102,7 +102,7 @@
         "sass": "^1.71.0",
         "sass-loader": "^13.3.3",
         "snapshot-diff": "^0.10.0",
-        "start-server-and-test": "^1.9.1",
+        "start-server-and-test": "^2.0.4",
         "string-to-arraybuffer": "^1.0.0",
         "style-loader": "^3.3.4",
         "terser-webpack-plugin": "^5.3.10",
