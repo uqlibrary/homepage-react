@@ -30,7 +30,7 @@ fi
 
 # Not running code coverage check for feature branches.
 CODE_COVERAGE_REQUIRED=false
-if [[ ($CI_BRANCH == "master" || $CI_BRANCH == "staging" || $CI_BRANCH == "production" || $CI_BRANCH == "codebuild" || $CI_BRANCH == *"coverage"*) ]]; then
+if [[ ($CI_BRANCH == "master" || $CI_BRANCH == "staging" || $CI_BRANCH == "production" || $CI_BRANCH == "codebuild" || $CI_BRANCH == *"coverage"* || $CI_BRANCH == "feature-react-18") ]]; then
     # (Putting * around the test-string gives a test for inclusion of the substring rather than exact match)
     CODE_COVERAGE_REQUIRED=true
 fi

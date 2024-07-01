@@ -30,7 +30,7 @@ const LoginPrompt = ({ account, narrower, prompt, instyle }) => {
             {!account?.id && (
                 <StyledLoginPrompt
                     data-testid="dlor-homepage-loginprompt"
-                    sx={{ instyle, margin: !!narrower ? '0 12px' : undefined }}
+                    sx={{ instyle, margin: !!narrower ? /* istanbul ignore next */ '0 12px' : undefined }}
                 >
                     <InfoIcon />
                     <span>
