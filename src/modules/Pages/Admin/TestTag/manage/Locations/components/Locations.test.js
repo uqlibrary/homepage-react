@@ -190,7 +190,7 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('site_id_displayed-input'), ' update');
             await userEvent.type(getByTestId('site_name-input'), ' update');
 
-            act(() => userEvent.click(getByTestId('update_dialog-action-button')));
+            userEvent.click(getByTestId('update_dialog-action-button'));
             await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
             expect(updateLocationFn).toHaveBeenCalledWith({
@@ -235,7 +235,7 @@ describe('Locations', () => {
                 timeout: 3000,
             });
 
-            act(() => userEvent.click(getByTestId('confirm-locations')));
+            userEvent.click(getByTestId('confirm-locations'));
             await waitForElementToBeRemoved(() => queryByTestId('dialogbox-locations'));
 
             expect(deleteLocationFn).toHaveBeenCalledWith({
@@ -360,7 +360,7 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('building_id_displayed-input'), ' update');
             await userEvent.type(getByTestId('building_name-input'), ' update');
 
-            act(() => userEvent.click(getByTestId('update_dialog-action-button')));
+            userEvent.click(getByTestId('update_dialog-action-button'));
             await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
             expect(updateLocationFn).toHaveBeenCalledWith({
@@ -411,7 +411,7 @@ describe('Locations', () => {
                 timeout: 3000,
             });
 
-            act(() => userEvent.click(getByTestId('confirm-locations')));
+            userEvent.click(getByTestId('confirm-locations'));
             await waitForElementToBeRemoved(() => queryByTestId('dialogbox-locations'));
 
             expect(deleteLocationFn).toHaveBeenCalledWith({
@@ -578,7 +578,7 @@ describe('Locations', () => {
 
             await userEvent.type(getByTestId('floor_id_displayed-input'), ' update');
 
-            act(() => userEvent.click(getByTestId('update_dialog-action-button')));
+            userEvent.click(getByTestId('update_dialog-action-button'));
             await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
             expect(updateLocationFn).toHaveBeenCalledWith({
@@ -639,7 +639,7 @@ describe('Locations', () => {
                 timeout: 3000,
             });
 
-            act(() => userEvent.click(getByTestId('confirm-locations')));
+            userEvent.click(getByTestId('confirm-locations'));
             await waitForElementToBeRemoved(() => queryByTestId('dialogbox-locations'));
 
             expect(deleteLocationFn).toHaveBeenCalledWith({
@@ -828,7 +828,7 @@ describe('Locations', () => {
             expect(getByTestId('room_description-input')).toHaveAttribute('value', 'Library Facilities');
             await userEvent.type(getByTestId('room_description-input'), ' update');
 
-            act(() => userEvent.click(getByTestId('update_dialog-action-button')));
+            userEvent.click(getByTestId('update_dialog-action-button'));
             await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
             expect(updateLocationFn).toHaveBeenCalledWith({
@@ -897,7 +897,7 @@ describe('Locations', () => {
                 timeout: 3000,
             });
 
-            act(() => userEvent.click(getByTestId('confirm-locations')));
+            userEvent.click(getByTestId('confirm-locations'));
             await waitForElementToBeRemoved(() => queryByTestId('dialogbox-locations'));
 
             expect(deleteLocationFn).toHaveBeenCalledWith({
@@ -986,7 +986,7 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('site_id_displayed-input'), ' update');
             await userEvent.type(getByTestId('site_name-input'), ' update');
 
-            act(() => userEvent.click(getByTestId('update_dialog-action-button')));
+            userEvent.click(getByTestId('update_dialog-action-button'));
 
             await findByTestId('confirmation_alert-error');
             expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent('Unable to update the location');
@@ -1019,7 +1019,7 @@ describe('Locations', () => {
                 timeout: 3000,
             });
 
-            act(() => userEvent.click(getByTestId('confirm-locations')));
+            userEvent.click(getByTestId('confirm-locations'));
 
             await findByTestId('confirmation_alert-error');
             expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent('Unable to delete the location');
