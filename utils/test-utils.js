@@ -20,13 +20,6 @@ import { createMemoryHistory } from 'history';
 const domTestingLib = require('@testing-library/dom');
 const reactTestingLib = require('@testing-library/react');
 
-const { configure } = domTestingLib;
-
-configure(config => ({
-    ...config,
-    testIdAttribute: 'id',
-}));
-
 const AllTheProviders = props => {
     return (
         <MuiThemeProvider theme={mui1theme}>

@@ -3,10 +3,8 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { connectRouter } from 'connected-react-router/immutable';
-import { AppContainer } from 'react-hot-loader';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // pick utils
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
@@ -28,15 +26,14 @@ if (process.env.BRANCH !== 'production' && process.env.USE_MOCK) {
 }
 
 const render = () => {
-    ReactDOM.render(
+    const root = createRoot(document.getElementById('react-root'));
+    root.render(
         <AppErrorBoundary>
-            <AppContainer>
-                <Provider store={store}>
-                    <LocalizationProvider dateAdapter={AdapterMoment}>
-                        <Root history={history} />
-                    </LocalizationProvider>
-                </Provider>
-            </AppContainer>
+            <Provider store={store}>
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <Root history={history} />
+                </LocalizationProvider>
+            </Provider>
         </AppErrorBoundary>,
         document.getElementById('react-root'),
     );
@@ -53,6 +50,6 @@ if (module.hot) {
 
     // Reload reducers
     module.hot.accept('./reducer', () => {
-        store.replaceReducer(connectRouter(history)(rootReducer));
+        store.replaceReducer(rootReducer);
     });
 }
