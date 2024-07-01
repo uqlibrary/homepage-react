@@ -593,13 +593,10 @@ export const DLOView = ({
                                                         onChange={handleChange('userEmail')}
                                                     />
                                                     {!isValidEmail(formValues?.userEmail) && (
-                                                    <div
-                                                        className={classes.errorMessage}
-                                                        data-testid="dlor-form-error-message-object-publishing-user"
-                                                    >
-                                                        This email address is not valid.
-                                                    </div>
-                                                )}
+                                                        <div data-testid="dlor-form-error-message-object-publishing-user">
+                                                            This email address is not valid.
+                                                        </div>
+                                                    )}
                                                 </FormControl>
                                             </>
                                         )}
@@ -610,7 +607,9 @@ export const DLOView = ({
                                                     aria-label="Click to access the object"
                                                     onClick={() => saveAndNavigate(dlorItem)}
                                                     data-testid="detailpage-clicklink"
-                                                    disabled={formValues?.notify && !isValidEmail(formValues?.userEmail)}
+                                                    disabled={
+                                                        formValues?.notify && !isValidEmail(formValues?.userEmail)
+                                                    }
                                                 >
                                                     {getItButtonLabel(dlorItem)}
                                                 </Button>
