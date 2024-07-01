@@ -41,7 +41,7 @@ import {
     toTitleCase,
     convertSnakeCaseToKebabCase,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
-import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
 const StyledUQActionButton = styled('div')(({ theme }) => ({
@@ -584,13 +584,19 @@ export const DLOView = ({
                                                     />
                                                 </FormControl>
                                                 <FormControl variant="standard" fullWidth>
-                                                    <InputLabel htmlFor="emailAddress">Your email address</InputLabel>
+                                                    <InputLabel htmlFor="emailAddress">Your email address *</InputLabel>
                                                     <Input
                                                         id="userEmail"
+                                                        required
                                                         data-testid="view-notify-userEmail"
                                                         value={formValues?.userEmail}
                                                         onChange={handleChange('userEmail')}
                                                     />
+                                                    {!isValidEmail(formValues?.userEmail) && (
+                                                        <div data-testid="dlor-form-error-message-object-publishing-user">
+                                                            This email address is not valid.
+                                                        </div>
+                                                    )}
                                                 </FormControl>
                                             </>
                                         )}
@@ -601,6 +607,9 @@ export const DLOView = ({
                                                     aria-label="Click to access the object"
                                                     onClick={() => saveAndNavigate(dlorItem)}
                                                     data-testid="detailpage-clicklink"
+                                                    disabled={
+                                                        formValues?.notify && !isValidEmail(formValues?.userEmail)
+                                                    }
                                                 >
                                                     {getItButtonLabel(dlorItem)}
                                                 </Button>
