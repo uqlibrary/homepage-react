@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -17,6 +18,10 @@ import { pluraliseWord } from 'modules/Pages/DigitalLearningObjects/dlorHelpers'
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/ObjectListItem';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
+
+const StyledObjectDetails = styled('details')(() => ({
+    marginLeft: '20px',
+}));
 
 export const DLOTeamList = ({
     actions,
@@ -153,8 +158,8 @@ export const DLOTeamList = ({
                     },
                 ]}
             />
-            <Grid container spacing={2} style={{ marginBottom: 25 }}>
-                <Grid item xs={12} style={{ textAlign: 'right' }}>
+            <Grid container spacing={2} sx={{ marginBottom: '25px' }}>
+                <Grid item xs={12} sx={{ textAlign: 'right' }}>
                     <Button
                         children="Add team"
                         color="primary"
@@ -168,15 +173,15 @@ export const DLOTeamList = ({
                 {(() => {
                     if (!!dlorTeamListLoading || !!dlorTeamDeleting) {
                         return (
-                            <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
-                                <div style={{ minHeight: 600 }}>
+                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                                <div sx={{ minHeight: '600px' }}>
                                     <InlineLoader message="Loading" />
                                 </div>
                             </Grid>
                         );
                     } else if (!!dlorTeamListError) {
                         return (
-                            <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
+                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
                                 <Typography variant="body1" data-testid="dlor-teamlist-error">
                                     {dlorTeamListError}
                                 </Typography>
@@ -184,7 +189,7 @@ export const DLOTeamList = ({
                         );
                     } else if (!dlorTeamList || dlorTeamList.length === 0) {
                         return (
-                            <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
+                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
                                 <Typography variant="body1" data-testid="dlor-teamlist-noresult">
                                     We did not find any entries in the system - please try again later.
                                 </Typography>
@@ -193,7 +198,7 @@ export const DLOTeamList = ({
                     } else {
                         return (
                             <>
-                                <Grid item style={{ width: '100%' }} data-testid="dlor-teamlist-list">
+                                <Grid item sx={{ width: '100%' }} data-testid="dlor-teamlist-list">
                                     {dlorTeamList?.length > 0 &&
                                         dlorTeamList.map(team => {
                                             return (
@@ -210,7 +215,7 @@ export const DLOTeamList = ({
                                                             {team?.objects_count === 0 && (
                                                                 <IconButton
                                                                     data-testid={`dlor-teamlist-delete-${team?.team_id}`}
-                                                                    style={{ height: 40 }}
+                                                                    sx={{ height: '40px' }}
                                                                     onClick={() => confirmDelete(team?.team_id)}
                                                                     // disabled={team?.object_status === 'deleted'}
                                                                 >
@@ -228,15 +233,14 @@ export const DLOTeamList = ({
                                                         </Grid>
                                                     </Grid>
                                                     <Grid container>
-                                                        <Grid item xs={12} style={{ marginBottom: 24 }}>
+                                                        <Grid item xs={12} sx={{ marginBottom: '24px' }}>
                                                             {!dlorTeamListLoading &&
                                                                 !dlorListError &&
                                                                 !!dlorList &&
                                                                 dlorList.filter(
                                                                     d => d?.object_owning_team_id === team?.team_id,
                                                                 ).length > 0 && (
-                                                                    <details
-                                                                        style={{ marginLeft: 20 }}
+                                                                    <StyledObjectDetails
                                                                         data-testid={`dlor-team-object-list-${team?.team_id}`}
                                                                     >
                                                                         <summary>
@@ -258,7 +262,7 @@ export const DLOTeamList = ({
                                                                                         object={o}
                                                                                     />
                                                                                 ))}
-                                                                    </details>
+                                                                    </StyledObjectDetails>
                                                                 )}
                                                         </Grid>
                                                     </Grid>

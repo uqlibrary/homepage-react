@@ -28,59 +28,59 @@ describe('Digital Learning Hub admin Edit Team', () => {
                 .should('be.visible')
                 .contains('Digital Learning Hub - Edit Team');
 
-            cy.get('[data-testid="team_name"] input')
+            cy.get('[data-testid="admin-dlor-team-form-team-name"] input')
                 .should('exist')
                 .should('be.visible')
                 .should('have.value', 'Lib train Library Corporate Services');
-            cy.get('[data-testid="team_manager"] input')
+            cy.get('[data-testid="admin-dlor-team-form-team-manager"] input')
                 .should('exist')
                 .should('be.visible')
                 .should('have.value', 'Jane Green');
-            cy.get('[data-testid="team_email"] input')
+            cy.get('[data-testid="admin-dlor-team-form-team-email"] input')
                 .should('exist')
                 .should('be.visible')
                 .should('have.value', 'train@library.uq.edu');
 
-            cy.get('[data-testid="error-message-team_name"]').should('not.exist');
-            cy.get('[data-testid="error-message-team_email"]').should('not.exist');
+            cy.get('[data-testid="admin-dlor-team-form-error-message-team-name"]').should('not.exist');
+            cy.get('[data-testid="admin-dlor-team-form-error-message-team-email"]').should('not.exist');
             cy.get('[data-testid="admin-dlor-team-form-save-button"]')
                 .should('exist')
                 .should('be.disabled');
 
-            cy.get('a[data-testid="dlor-breadcrumb--admin-homelink"]')
+            cy.get('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                 .contains('Digital Learning Hub admin')
                 .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
-            cy.get('a[data-testid="dlor-breadcrumb--team-management-link-0"]')
+            cy.get('a[data-testid="dlor-breadcrumb-team-management-link-0"]')
                 .contains('Team management')
                 .should('have.attr', 'href', `http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
         });
         it('validates correctly', () => {
             // initially, save button is disabled - the form is invalid, but no errors appear
-            cy.get('[data-testid="team_name"] input')
+            cy.get('[data-testid="admin-dlor-team-form-team-name"] input')
                 .should('exist')
                 .clear();
-            cy.get('[data-testid="error-message-team_name"]')
+            cy.get('[data-testid="admin-dlor-team-form-error-message-team-name"]')
                 .contains('This team name is not valid.')
                 .should('have.css', 'color', 'rgb(214, 41, 41)'); // #d62929
-            cy.get('[data-testid="error-message-team_email"]').should('not.exist');
+            cy.get('[data-testid="admin-dlor-team-form-error-message-team-email"]').should('not.exist');
             cy.get('[data-testid="admin-dlor-team-form-save-button"]')
                 .should('exist')
                 .should('be.disabled');
 
-            cy.get('[data-testid="team_name"] input').type('something');
-            cy.get('[data-testid="error-message-team_name"]').should('not.exist');
-            cy.get('[data-testid="error-message-team_email"]').should('not.exist');
+            cy.get('[data-testid="admin-dlor-team-form-team-name"] input').type('something');
+            cy.get('[data-testid="admin-dlor-team-form-error-message-team-name"]').should('not.exist');
+            cy.get('[data-testid="admin-dlor-team-form-error-message-team-email"]').should('not.exist');
             cy.get('[data-testid="admin-dlor-team-form-save-button"]')
                 .should('exist')
                 .should('not.be.disabled');
 
             // enter a partial email - invalid because not valid
-            cy.get('[data-testid="team_email"] input')
+            cy.get('[data-testid="admin-dlor-team-form-team-email"] input')
                 .should('exist')
                 .clear()
                 .type('lea');
-            cy.get('[data-testid="error-message-team_name"]').should('not.exist');
-            cy.get('[data-testid="error-message-team_email"]')
+            cy.get('[data-testid="admin-dlor-team-form-error-message-team-name"]').should('not.exist');
+            cy.get('[data-testid="admin-dlor-team-form-error-message-team-email"]')
                 .should('exist')
                 .contains('This email address is not valid.')
                 .should('have.css', 'color', 'rgb(214, 41, 41)'); // #d62929;
@@ -89,31 +89,31 @@ describe('Digital Learning Hub admin Edit Team', () => {
                 .should('be.disabled');
 
             // complete email - now valid
-            cy.get('[data-testid="team_email"] input')
+            cy.get('[data-testid="admin-dlor-team-form-team-email"] input')
                 .should('exist')
                 .type('@example.com');
-            cy.get('[data-testid="error-message-team_name"]').should('not.exist');
-            cy.get('[data-testid="error-message-team_email"]').should('not.exist');
+            cy.get('[data-testid="admin-dlor-team-form-error-message-team-name"]').should('not.exist');
+            cy.get('[data-testid="admin-dlor-team-form-error-message-team-email"]').should('not.exist');
             cy.get('[data-testid="admin-dlor-team-form-save-button"]')
                 .should('exist')
                 .should('not.be.disabled');
 
             // enter a manager, validity unaffected
-            cy.get('[data-testid="team_manager"] input')
+            cy.get('[data-testid="admin-dlor-team-form-team-manager"] input')
                 .should('exist')
                 .type('valid team manager');
-            cy.get('[data-testid="error-message-team_name"]').should('not.exist');
-            cy.get('[data-testid="error-message-team_email"]').should('not.exist');
+            cy.get('[data-testid="admin-dlor-team-form-error-message-team-name"]').should('not.exist');
+            cy.get('[data-testid="admin-dlor-team-form-error-message-team-email"]').should('not.exist');
             cy.get('[data-testid="admin-dlor-team-form-save-button"]')
                 .should('exist')
                 .should('not.be.disabled');
 
             // wipe team name - form invalid
-            cy.get('[data-testid="team_name"] input')
+            cy.get('[data-testid="admin-dlor-team-form-team-name"] input')
                 .should('exist')
                 .clear();
-            cy.get('[data-testid="error-message-team_name"]').should('exist');
-            cy.get('[data-testid="error-message-team_email"]').should('not.exist');
+            cy.get('[data-testid="admin-dlor-team-form-error-message-team-name"]').should('exist');
+            cy.get('[data-testid="admin-dlor-team-form-error-message-team-email"]').should('not.exist');
             cy.get('[data-testid="admin-dlor-team-form-save-button"]')
                 .should('exist')
                 .should('be.disabled');
@@ -137,13 +137,13 @@ describe('Digital Learning Hub admin Edit Team', () => {
             cy.viewport(1300, 1000);
         });
         it('saves correctly', () => {
-            cy.get('[data-testid="team_name"] input')
+            cy.get('[data-testid="admin-dlor-team-form-team-name"] input')
                 .should('exist')
                 .type(' changed');
-            cy.get('[data-testid="team_manager"] input')
+            cy.get('[data-testid="admin-dlor-team-form-team-manager"] input')
                 .should('exist')
                 .type(' changed');
-            cy.get('[data-testid="team_email"] input')
+            cy.get('[data-testid="admin-dlor-team-form-team-email"] input')
                 .should('exist')
                 .type('.au');
             cy.get('[data-testid="admin-dlor-team-form-save-button"]')

@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -18,6 +20,10 @@ import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//Shar
 import { useConfirmationState } from 'hooks';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 import { pluraliseWord } from '../../../DigitalLearningObjects/dlorHelpers';
+
+const StyledObjectDetails = styled('details')(() => ({
+    marginLeft: '20px',
+}));
 
 export const DLOSeriesList = ({
     actions,
@@ -161,15 +167,15 @@ export const DLOSeriesList = ({
                 {(() => {
                     if (!!dlorSeriesListLoading || !!dlorSeriesDeleting) {
                         return (
-                            <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
-                                <div style={{ minHeight: 600 }}>
+                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                                <Box sx={{ minHeight: '600px' }}>
                                     <InlineLoader message="Loading" />
-                                </div>
+                                </Box>
                             </Grid>
                         );
                     } else if (!!dlorSeriesListError) {
                         return (
-                            <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
+                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
                                 <Typography variant="body1" data-testid="dlor-serieslist-error">
                                     {dlorSeriesListError}
                                 </Typography>
@@ -177,7 +183,7 @@ export const DLOSeriesList = ({
                         );
                     } else if (!dlorSeriesList || dlorSeriesList.length === 0) {
                         return (
-                            <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
+                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
                                 <Typography variant="body1" data-testid="dlor-serieslist-noresult">
                                     We did not find any entries in the system - please try again later.
                                 </Typography>
@@ -186,7 +192,7 @@ export const DLOSeriesList = ({
                     } else {
                         return (
                             <>
-                                <Grid item style={{ width: '100%' }} data-testid="dlor-serieslist-list">
+                                <Grid item sx={{ width: '100%' }} data-testid="dlor-serieslist-list">
                                     {dlorSeriesList?.length > 0 &&
                                         dlorSeriesList.map(series => {
                                             const summarylabelCount = (
@@ -215,7 +221,7 @@ export const DLOSeriesList = ({
                                                             {!series?.objects_count && series?.series_id !== null && (
                                                                 <IconButton
                                                                     data-testid={`dlor-serieslist-delete-${series?.series_id}`}
-                                                                    style={{ height: 40 }}
+                                                                    sx={{ height: '40px' }}
                                                                     onClick={() =>
                                                                         requestUserToConfirmDelete(series?.series_id)
                                                                     }
@@ -240,9 +246,8 @@ export const DLOSeriesList = ({
                                                     </Grid>
                                                     {(series?.objects_count > 0 || series.series_id === null) && (
                                                         <Grid container>
-                                                            <Grid item xs={12} style={{ marginBottom: 24 }}>
-                                                                <details
-                                                                    style={{ marginLeft: 20 }}
+                                                            <Grid item xs={12} sx={{ marginBottom: '24px' }}>
+                                                                <StyledObjectDetails
                                                                     data-testid={`dlor-series-object-list-${series?.series_id}`}
                                                                 >
                                                                     <summary>{summarylabelCount}</summary>
@@ -261,7 +266,7 @@ export const DLOSeriesList = ({
                                                                                     listParentName="series"
                                                                                 />
                                                                             ))}
-                                                                </details>
+                                                                </StyledObjectDetails>
                                                             </Grid>
                                                         </Grid>
                                                     )}

@@ -11,7 +11,7 @@ const VisitHomepage = () => {
             title="Visit public pages"
             data-testid="dlor-admin-public-homepage-link"
         >
-            <VisibilityIcon style={{ color: 'black' }} />
+            <VisibilityIcon sx={{ color: 'black' }} />
         </a>
     );
 };

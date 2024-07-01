@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
@@ -34,7 +35,7 @@ export const ObjectListItem = ({ object, listParentName = 'team' }) => {
                     data-testid={`dlor-${listParentName}-object-list-item-view-${object?.object_id}`}
                     href={getDlorViewPageUrl(object?.object_public_uuid)}
                 >
-                    <VisibilityIcon style={{ color: 'black', marginTop: 8 }} />
+                    <VisibilityIcon sx={{ color: 'black', marginTop: '8px' }} />
                 </a>
             </Grid>
             <Grid item xs={1}>
@@ -49,4 +50,9 @@ export const ObjectListItem = ({ object, listParentName = 'team' }) => {
             <Grid item xs={1} />
         </Grid>
     );
+};
+
+ObjectListItem.propTypes = {
+    object: PropTypes.object,
+    listParentName: PropTypes.string,
 };

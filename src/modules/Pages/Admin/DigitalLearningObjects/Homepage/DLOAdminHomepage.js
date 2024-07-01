@@ -1,14 +1,15 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
-import { makeStyles } from '@mui/styles';
 import { Pagination } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
@@ -21,62 +22,47 @@ import InfoIcon from '@mui/icons-material/Info';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import SearchIcon from '@mui/icons-material/Search';
 
+import { useConfirmationState } from 'hooks';
+
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
-import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
+import { convertSnakeCaseToKebabCase } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects/SharedDlorComponents/VisitHomepage';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 
-import { useConfirmationState } from 'hooks';
-
-const useStyles = makeStyles(theme => ({
-    sidebyside: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        [theme.breakpoints.up('lg')]: {
-            marginLeft: -50,
-            marginRight: 50,
-        },
+const StyledPageListItemGridContainer = styled(Grid)(() => ({
+    paddingTop: '10px',
+    paddingLeft: '6px',
+    '&:hover': {
+        backgroundColor: 'rgba(0, 0, 0, 0.1)',
     },
-    listItem: {
-        paddingTop: 10,
-        paddingLeft: 6,
-        '&:hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.1)',
-        },
+}));
+const StyledPagination = styled(Pagination)(() => ({
+    width: '100%',
+    '& ul': {
+        justifyContent: 'center',
     },
-    dlorPagination: {
-        width: '100%',
-        '& ul': {
-            justifyContent: 'center',
-        },
-    },
-    keywordSearchPanel: {
-        width: 'calc(100%)',
-        marginLeft: 20,
-        marginRight: 30,
-    },
-    featuredObject: {
-        textTransform: 'uppercase',
-        backgroundColor: theme.palette.success.main,
-        color: theme.palette.white.main,
-        fontSize: '14px',
-        padding: 6,
-    },
-    tagLabel: {
-        fontVariant: 'small-caps',
-        textTransform: 'lowercase',
-        fontWeight: 'bold',
-        fontSize: 16,
-        color: '#333',
-        marginRight: 9,
+}));
+const StyledTagLabelSpan = styled('span')(() => ({
+    fontVariant: 'small-caps',
+    textTransform: 'lowercase',
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#333',
+    marginRight: '9px',
+}));
+const StyleObjectDetailGridItem = styled(Grid)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    [theme.breakpoints.up('lg')]: {
+        marginLeft: '-50px',
+        marginRight: '50px',
     },
 }));
 
 export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListError, dlorItemDeleteError }) => {
-    const classes = useStyles();
-
     const statusTypes = [
         {
             type: 'new',
@@ -289,8 +275,8 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                     confirmButtonLabel: 'OK',
                 }}
             />
-            <Grid container spacing={2} style={{ marginBottom: 25 }}>
-                <Grid item xs={12} style={{ textAlign: 'right' }}>
+            <Grid container spacing={2} sx={{ marginBottom: '25px' }}>
+                <Grid item xs={12} sx={{ textAlign: 'right' }}>
                     <Button
                         children="Manage series"
                         color="primary"
@@ -311,7 +297,7 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                         data-testid="admin-dlor-visit-add-button"
                         onClick={() => navigateToAddPage()}
                         variant="contained"
-                        style={{ marginRight: 6 }}
+                        sx={{ marginRight: '6px' }}
                     />
                     <VisitHomepage />
                 </Grid>
@@ -320,15 +306,15 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                 {(() => {
                     if (!!dlorListLoading) {
                         return (
-                            <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
-                                <div style={{ minHeight: 600 }}>
+                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                                <Box sx={{ minHeight: '600px' }}>
                                     <InlineLoader message="Loading" />
-                                </div>
+                                </Box>
                             </Grid>
                         );
                     } else if (!!dlorListError) {
                         return (
-                            <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
+                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
                                 <Typography variant="body1" data-testid="dlor-homepage-error">
                                     {dlorListError}
                                 </Typography>
@@ -336,7 +322,7 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                         );
                     } else if (!dlorList || dlorList.length === 0) {
                         return (
-                            <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
+                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
                                 <Typography variant="body1" data-testid="dlor-homepage-noresult">
                                     We did not find any entries in the system - please try again later.
                                 </Typography>
@@ -357,7 +343,6 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                                             return (
                                                 <FormControlLabel
                                                     key={`statustype-checkox-${objectStatus.type}`}
-                                                    // className={classes.filterSidebarCheckboxControl}
                                                     control={
                                                         <Checkbox
                                                             onChange={handleStatusTypeChange(objectStatus.type)}
@@ -374,49 +359,53 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                                             );
                                         })}
                                 </Grid>
-                                <TextField
-                                    className={classes.keywordSearchPanel}
-                                    data-testid="dlor-homepage-keyword"
-                                    label="Search by keyword"
-                                    onChange={handleKeywordSearch}
-                                    InputProps={{
-                                        endAdornment: (
-                                            <InputAdornment position="end">
-                                                <IconButton onClick={clearKeywordField}>
-                                                    {keyWordSearchRef.current?.value === '' ? (
-                                                        <SearchIcon />
-                                                    ) : (
-                                                        <CloseIcon data-testid="keyword-clear" />
-                                                    )}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                    inputRef={keyWordSearchRef}
-                                />{' '}
-                                <Grid item style={{ width: '100%' }} data-testid="dlor-homepage-list">
+                                <Grid item xs={12}>
+                                    <TextField
+                                        sx={{
+                                            width: '100%',
+                                        }}
+                                        data-testid="dlor-homepage-keyword"
+                                        label="Search by keyword"
+                                        onChange={handleKeywordSearch}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton onClick={clearKeywordField}>
+                                                        {keyWordSearchRef.current?.value === '' ? (
+                                                            <SearchIcon />
+                                                        ) : (
+                                                            <CloseIcon data-testid="keyword-clear" />
+                                                        )}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        inputRef={keyWordSearchRef}
+                                    />
+                                </Grid>
+                                <Grid item sx={{ width: '100%' }} data-testid="dlor-homepage-list">
                                     {paginatedList?.length > 0 &&
                                         paginatedList.map(o => {
                                             return (
-                                                <Grid
+                                                <StyledPageListItemGridContainer
                                                     container
-                                                    className={classes.listItem}
                                                     key={`list-dlor-${o?.object_id}`}
                                                 >
-                                                    <Grid item xs={1} style={{ marginTop: 4 }}>
+                                                    <Grid item xs={1} sx={{ marginTop: '4px' }}>
                                                         {o?.object_is_featured === 1 && (
                                                             <DoneIcon
                                                                 data-testid={`dlor-homepage-featured-${o?.object_public_uuid}`}
                                                                 title="This object is Featured"
-                                                                style={{ color: 'green' }}
+                                                                sx={{ color: 'green' }}
                                                             />
                                                         )}
                                                     </Grid>
-                                                    <Grid
+                                                    <StyleObjectDetailGridItem
                                                         item
                                                         xs={7}
-                                                        className={classes.sidebyside}
-                                                        data-testid={`dlor-homepage-panel-${o?.object_public_uuid}`}
+                                                        data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                            o?.object_public_uuid,
+                                                        )}`}
                                                     >
                                                         <div>
                                                             <Typography component={'h2'} variant={'h6'}>
@@ -428,70 +417,67 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                                                                     !!o?.object_series_name) && (
                                                                     <Typography
                                                                         component={'p'}
-                                                                        style={{
+                                                                        sx={{
                                                                             display: 'flex',
                                                                             alignItems: 'center',
-                                                                            marginLeft: -4,
-                                                                            marginTop: -4,
-                                                                            marginBottom: 6,
+                                                                            marginLeft: '-4px',
+                                                                            marginTop: '-4px',
+                                                                            marginBottom: '6px',
                                                                         }}
                                                                     >
                                                                         {!!o?.object_is_featured && (
                                                                             <>
                                                                                 <BookmarkIcon
-                                                                                    style={{
+                                                                                    sx={{
                                                                                         fill: '#51247A',
-                                                                                        marginRight: 2,
-                                                                                        width: 20,
+                                                                                        marginRight: '2px',
+                                                                                        width: '20px',
                                                                                     }}
                                                                                 />
-                                                                                <span
-                                                                                    className={classes.tagLabel}
+                                                                                <StyledTagLabelSpan
                                                                                     data-testid={
                                                                                         'dlor-detailpage-featured-custom-indicator'
                                                                                     }
-                                                                                    style={{ marginLeft: -2 }}
+                                                                                    sx={{ marginLeft: '-2px' }}
                                                                                 >
                                                                                     Featured
-                                                                                </span>
+                                                                                </StyledTagLabelSpan>
                                                                             </>
                                                                         )}
                                                                         {!!o?.object_cultural_advice && (
                                                                             <>
                                                                                 <InfoIcon
-                                                                                    style={{
+                                                                                    sx={{
                                                                                         fill: '#2377CB',
-                                                                                        marginRight: 2,
-                                                                                        width: 20,
+                                                                                        marginRight: '2px',
+                                                                                        width: '20px',
                                                                                     }}
                                                                                 />
-                                                                                <span
-                                                                                    className={classes.tagLabel}
+                                                                                <StyledTagLabelSpan
                                                                                     data-testid={
                                                                                         'dlor-detailpage-cultural-advice-custom-indicator'
                                                                                     }
                                                                                 >
                                                                                     Cultural advice
-                                                                                </span>
+                                                                                </StyledTagLabelSpan>
                                                                             </>
                                                                         )}
                                                                         {!!o?.object_series_name && (
                                                                             <>
                                                                                 <PlaylistAddCheckIcon
-                                                                                    style={{
+                                                                                    sx={{
                                                                                         fill: '#4aa74e',
-                                                                                        marginRight: 2,
-                                                                                        width: 24,
+                                                                                        marginRight: '2px',
+                                                                                        width: '24px',
                                                                                     }}
                                                                                 />
-                                                                                <span
-                                                                                    className={classes.tagLabel}
+                                                                                <StyledTagLabelSpan
                                                                                     data-testid={
                                                                                         'dlor-detailpage-object_series_name-custom-indicator'
                                                                                     }
                                                                                 >
                                                                                     Series: {o?.object_series_name}
-                                                                                </span>
+                                                                                </StyledTagLabelSpan>
                                                                             </>
                                                                         )}
                                                                     </Typography>
@@ -499,14 +485,14 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                                                             </>
                                                             <Typography component={'p'}>{o?.object_summary}</Typography>
                                                         </div>
-                                                    </Grid>
+                                                    </StyleObjectDetailGridItem>
                                                     <Grid item xs={2}>
                                                         <Typography component={'p'}>
                                                             {o?.owner?.publishing_user_username}
                                                         </Typography>
                                                         <Typography
                                                             component={'p'}
-                                                            style={{ textIndent: -12, paddingLeft: 12 }}
+                                                            sx={{ textIndent: '-12px', paddingLeft: '12px' }}
                                                         >
                                                             {o?.owner?.team_name}
                                                         </Typography>
@@ -523,24 +509,23 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                                                     <Grid item xs={1}>
                                                         <IconButton
                                                             data-testid={`dlor-homepage-delete-${o?.object_public_uuid}`}
-                                                            style={{ height: 40 }}
+                                                            sx={{ height: '40px' }}
                                                             onClick={() => confirmDelete(o?.object_public_uuid)}
                                                             disabled={o?.object_status === 'deleted'}
                                                         >
                                                             <DeleteForeverIcon />
                                                         </IconButton>
                                                     </Grid>
-                                                </Grid>
+                                                </StyledPageListItemGridContainer>
                                             );
                                         })}
                                     {!!paginationCount && paginationCount > 0 && (
-                                        <Pagination
+                                        <StyledPagination
                                             count={paginationCount}
                                             showFirstButton
                                             showLastButton
                                             onChange={handlePaginationChange}
                                             page={paginationPage}
-                                            className={classes.dlorPagination}
                                         />
                                     )}
                                 </Grid>

@@ -10,25 +10,18 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(
-    () => ({
-        learningResourceLineItem: {
-            borderTop: '1px solid #e8e8e8',
-            padding: '15px 0',
-            '& a': {
-                display: 'flex',
-                alignItems: 'center',
-            },
-        },
-    }),
-    { withTheme: true },
-);
+const StyledItem = styled(Grid)(() => ({
+    borderTop: '1px solid #e8e8e8',
+    padding: '15px 0',
+    '& a': {
+        display: 'flex',
+        alignItems: 'center',
+    },
+}));
 
 export const PastExamPapers = ({ examList, examListLoading, examListError, headingLevel }) => {
-    const classes = useStyles();
-
     const subject = !!examList && examList.coursecode;
 
     const _extractExtension = url => {
@@ -73,15 +66,15 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
 
                 {!examListError && !examListLoading && (!listOfExams || listOfExams.length === 0) && (
                     <React.Fragment>
-                        <Grid item xs={12} className={classes.learningResourceLineItem}>
+                        <StyledItem item xs={12}>
                             <Typography data-testid="no-exam-papers">{locale.myCourses.examPapers.none}</Typography>
-                        </Grid>
-                        <Grid item xs={12} className={classes.learningResourceLineItem}>
+                        </StyledItem>
+                        <StyledItem item xs={12}>
                             <a href={locale.myCourses.examPapers.footer.noPastExams.linkOut}>
                                 <SpacedArrowForwardIcon />
                                 {locale.myCourses.examPapers.footer.noPastExams.linkLabel}
                             </a>
-                        </Grid>
+                        </StyledItem>
                     </React.Fragment>
                 )}
                 {!examListError &&
@@ -90,7 +83,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                     listOfExams.length > 0 &&
                     listOfExams.map((paper, index) => {
                         return (
-                            <Grid item xs={12} key={`examPapers-${index}`} className={classes.learningResourceLineItem}>
+                            <StyledItem item xs={12} key={`examPapers-${index}`}>
                                 <a
                                     aria-label={examAriaLabel(paper)}
                                     className="exam-paper-item"
@@ -101,18 +94,18 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                                 >
                                     {paper.period} ({_extractExtension(paper.url)})
                                 </a>
-                            </Grid>
+                            </StyledItem>
                         );
                     })}
                 {!examListError && !examListLoading && !!numberExcessExams && numberExcessExams > 0 && (
-                    <Grid item xs={12} data-testid="exam-more-link" className={classes.learningResourceLineItem}>
+                    <StyledItem item xs={12} data-testid="exam-more-link">
                         <a href={_courseLink(subject, locale.myCourses.examPapers.footer.morePastExams.linkOutPattern)}>
                             <SpacedArrowForwardIcon />
                             {locale.myCourses.examPapers.footer.morePastExams.linkLabel
                                 .replace('[numberExcessExams]', numberExcessExams)
                                 .replace('[examNumber]', _pluralise('paper', numberExcessExams))}
                         </a>
-                    </Grid>
+                    </StyledItem>
                 )}
             </Grid>
         </StandardCard>

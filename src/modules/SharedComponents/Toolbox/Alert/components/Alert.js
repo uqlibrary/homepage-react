@@ -15,235 +15,230 @@ import HelpOutline from '@mui/icons-material/HelpOutline';
 import Done from '@mui/icons-material/Done';
 import Grid from '@mui/material/Grid';
 import Hidden from '@mui/material/Hidden';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
-const classNames = require('classnames');
-
-const useStyles = makeStyles(
-    theme => ({
-        common: {
-            borderRadius: 0,
-            paddingTop: 8,
-            paddingBottom: 8,
+const StyledAlert = styled('div')(({ theme }) => ({
+    '&.common': {
+        borderRadius: 0,
+        paddingTop: 8,
+        paddingBottom: 8,
+    },
+    '@keyframes wiggle': {
+        from: { transform: 'rotate(-30deg)', transformOrigin: '40% 50%' },
+        to: { transform: 'rotate(15deg)', transformOrigin: '40% 50%' },
+    },
+    '& .wiggler': {
+        animationName: '$wiggle',
+        animationDuration: '0.3s',
+        animationIterationCount: 20,
+        animationDirection: 'alternate',
+        animationTimingFunction: 'ease-in-out',
+    },
+    '& .icon': {
+        '& .icon': {
+            fontSize: 28,
+            marginRight: 12,
+            marginBottom: -6,
+            marginLeft: -6,
         },
-        '@keyframes wiggle': {
-            from: { transform: 'rotate(-30deg)', transformOrigin: '40% 50%' },
-            to: { transform: 'rotate(15deg)', transformOrigin: '40% 50%' },
+        '& .spinner': {
+            margin: '8px 24px 0 6px',
         },
-        wiggler: {
-            animationName: '$wiggle',
-            animationDuration: '0.3s',
-            animationIterationCount: 20,
-            animationDirection: 'alternate',
-            animationTimingFunction: 'ease-in-out',
-        },
-        icon: {
-            '& .icon': {
-                fontSize: 28,
+    },
+    '& .text': {
+        alignSelf: 'center',
+        padding: '4px 0',
+        textShadow: '1px 1px 1px rgba(0, 0, 0, 0.2)',
+        verticalAlign: 'middle',
+    },
+    '& .actionButton': {
+        marginRight: -4,
+        '& .action': {
+            [theme.breakpoints.down('sm')]: {
                 marginRight: 12,
-                marginBottom: -6,
-                marginLeft: -6,
-            },
-            '& .spinner': {
-                margin: '8px 24px 0 6px',
             },
         },
-        text: {
-            alignSelf: 'center',
-            padding: '4px 0',
-            textShadow: '1px 1px 1px rgba(0, 0, 0, 0.2)',
-            verticalAlign: 'middle',
+    },
+    '& .dismissButton': {
+        marginLeft: -8,
+        marginRight: -19,
+        marginTop: -12,
+        marginBottom: -12,
+    },
+    '& .linked': {
+        '&:hover': {
+            cursor: 'pointer',
         },
-        actionButton: {
-            marginRight: -4,
-            '& .action': {
-                [theme.breakpoints.down('sm')]: {
-                    marginRight: 12,
-                },
-            },
-        },
-        dismissButton: {
-            marginLeft: -8,
-            marginRight: -19,
-            marginTop: -12,
-            marginBottom: -12,
-        },
-        linked: {
-            '&:hover': {
-                cursor: 'pointer',
-            },
-        },
-        error: {
+    },
+    '&.error': {
+        color: theme.palette.white.main,
+        backgroundColor: theme.palette.error.main,
+        '& a:link, & a:hover, & a:visited': {
             color: theme.palette.white.main,
-            backgroundColor: theme.palette.error.main,
-            '& a:link, & a:hover, & a:visited': {
-                color: theme.palette.white.main,
-                textDecoration: 'underline',
-            },
-            '& .spinner': {
-                color: theme.palette.error.dark,
-            },
-            '& .icon': {
-                color: theme.palette.error.dark,
-            },
-            '& .dismiss': {
-                color: theme.palette.error.dark,
-            },
-            '& .action': {
-                color: theme.palette.white.main,
-                backgroundColor: theme.palette.error.dark,
-            },
+            textDecoration: 'underline',
         },
-        error_outline: {
+        '& .spinner': {
+            color: theme.palette.error.dark,
+        },
+        '& .icon': {
+            color: theme.palette.error.dark,
+        },
+        '& .dismiss': {
+            color: theme.palette.error.dark,
+        },
+        '& .action': {
             color: theme.palette.white.main,
-            backgroundColor: theme.palette.error.main,
-            '& a:link, & a:hover, & a:visited': {
-                color: theme.palette.white.main,
-                textDecoration: 'underline',
-            },
-            '& .spinner': {
-                color: theme.palette.error.dark,
-            },
-            '& .icon': {
-                color: theme.palette.error.dark,
-            },
-            '& .dismiss': {
-                color: theme.palette.error.dark,
-            },
-            '& .action': {
-                color: theme.palette.white.main,
-                backgroundColor: theme.palette.error.dark,
-            },
+            backgroundColor: theme.palette.error.dark,
         },
-        warning: {
+    },
+    '&.error_outline': {
+        color: theme.palette.white.main,
+        backgroundColor: theme.palette.error.main,
+        '& a:link, & a:hover, & a:visited': {
             color: theme.palette.white.main,
-            backgroundColor: theme.palette.warning.main,
-            '& a:link, & a:hover, & a:visited': {
-                color: theme.palette.white.main,
-                textDecoration: 'underline',
-            },
-            '& .spinner': {
-                color: theme.palette.warning.dark,
-            },
-            '& .icon': {
-                color: theme.palette.warning.dark,
-            },
-            '& .dismiss': {
-                color: theme.palette.warning.dark,
-            },
-            '& .action': {
-                color: theme.palette.white.main,
-                backgroundColor: theme.palette.warning.dark,
-            },
+            textDecoration: 'underline',
         },
-        help: {
+        '& .spinner': {
+            color: theme.palette.error.dark,
+        },
+        '& .icon': {
+            color: theme.palette.error.dark,
+        },
+        '& .dismiss': {
+            color: theme.palette.error.dark,
+        },
+        '& .action': {
             color: theme.palette.white.main,
-            backgroundColor: theme.palette.secondary.light,
-            '& a:link, & a:hover, & a:visited': {
-                color: theme.palette.white.main,
-                textDecoration: 'underline',
-            },
-            '& .spinner': {
-                color: theme.palette.secondary.dark,
-            },
-            '& .icon': {
-                color: theme.palette.secondary.dark,
-            },
-            '& .dismiss': {
-                color: theme.palette.secondary.dark,
-            },
-            '& .action': {
-                color: theme.palette.white.main,
-                backgroundColor: theme.palette.secondary.dark,
-            },
+            backgroundColor: theme.palette.error.dark,
         },
-        help_outline: {
+    },
+    '&.warning': {
+        color: theme.palette.white.main,
+        backgroundColor: theme.palette.warning.main,
+        '& a:link, & a:hover, & a:visited': {
             color: theme.palette.white.main,
-            backgroundColor: theme.palette.secondary.light,
-            '& a:link, & a:hover, & a:visited': {
-                color: theme.palette.white.main,
-                textDecoration: 'underline',
-            },
-            '& .spinner': {
-                color: theme.palette.secondary.dark,
-            },
-            '& .icon': {
-                color: theme.palette.secondary.dark,
-            },
-            '& .dismiss': {
-                color: theme.palette.secondary.dark,
-            },
-            '& .action': {
-                color: theme.palette.white.main,
-                backgroundColor: theme.palette.secondary.dark,
-            },
+            textDecoration: 'underline',
         },
-        info: {
+        '& .spinner': {
+            color: theme.palette.warning.dark,
+        },
+        '& .icon': {
+            color: theme.palette.warning.dark,
+        },
+        '& .dismiss': {
+            color: theme.palette.warning.dark,
+        },
+        '& .action': {
             color: theme.palette.white.main,
-            backgroundColor: theme.palette.primary.main,
-            '& a:link, & a:hover, & a:visited': {
-                color: theme.palette.white.main,
-                textDecoration: 'underline',
-            },
-            '& .spinner': {
-                color: theme.palette.accent.dark,
-            },
-            '& .icon': {
-                color: theme.palette.accent.dark,
-            },
-            '& .dismiss': {
-                color: theme.palette.accent.dark,
-            },
-            '& .action': {
-                color: theme.palette.white.main,
-                backgroundColor: theme.palette.accent.dark,
-            },
+            backgroundColor: theme.palette.warning.dark,
         },
-        info_outline: {
+    },
+    '&.help': {
+        color: theme.palette.white.main,
+        backgroundColor: theme.palette.secondary.light,
+        '& a:link, & a:hover, & a:visited': {
             color: theme.palette.white.main,
-            backgroundColor: theme.palette.primary.main,
-            '& a:link, & a:hover, & a:visited': {
-                color: theme.palette.white.main,
-                textDecoration: 'underline',
-            },
-            '& .spinner': {
-                color: theme.palette.accent.dark,
-            },
-            '& .icon': {
-                color: theme.palette.accent.dark,
-            },
-            '& .dismiss': {
-                color: theme.palette.accent.dark,
-            },
-            '& .action': {
-                color: theme.palette.white.main,
-                backgroundColor: theme.palette.accent.dark,
-            },
+            textDecoration: 'underline',
         },
-        done: {
+        '& .spinner': {
+            color: theme.palette.secondary.dark,
+        },
+        '& .icon': {
+            color: theme.palette.secondary.dark,
+        },
+        '& .dismiss': {
+            color: theme.palette.secondary.dark,
+        },
+        '& .action': {
             color: theme.palette.white.main,
-            backgroundColor: theme.palette.success.light,
-            '& a:link, & a:hover, & a:visited': {
-                color: theme.palette.white.main,
-                textDecoration: 'underline',
-            },
-            '& .spinner': {
-                color: theme.palette.success.dark,
-            },
-            '& .icon': {
-                color: theme.palette.success.dark,
-            },
-            '& .dismiss': {
-                color: theme.palette.success.dark,
-            },
-            '& .action': {
-                color: theme.palette.white.main,
-                backgroundColor: theme.palette.success.dark,
-            },
+            backgroundColor: theme.palette.secondary.dark,
         },
-    }),
-    { withTheme: true },
-);
+    },
+    '&.help_outline': {
+        color: theme.palette.white.main,
+        backgroundColor: theme.palette.secondary.light,
+        '& a:link, & a:hover, & a:visited': {
+            color: theme.palette.white.main,
+            textDecoration: 'underline',
+        },
+        '& .spinner': {
+            color: theme.palette.secondary.dark,
+        },
+        '& .icon': {
+            color: theme.palette.secondary.dark,
+        },
+        '& .dismiss': {
+            color: theme.palette.secondary.dark,
+        },
+        '& .action': {
+            color: theme.palette.white.main,
+            backgroundColor: theme.palette.secondary.dark,
+        },
+    },
+    '&.info': {
+        color: theme.palette.white.main,
+        backgroundColor: theme.palette.primary.main,
+        '& a:link, & a:hover, & a:visited': {
+            color: theme.palette.white.main,
+            textDecoration: 'underline',
+        },
+        '& .spinner': {
+            color: theme.palette.accent.dark,
+        },
+        '& .icon': {
+            color: theme.palette.accent.dark,
+        },
+        '& .dismiss': {
+            color: theme.palette.accent.dark,
+        },
+        '& .action': {
+            color: theme.palette.white.main,
+            backgroundColor: theme.palette.accent.dark,
+        },
+    },
+    '&.info_outline': {
+        color: theme.palette.white.main,
+        backgroundColor: theme.palette.primary.main,
+        '& a:link, & a:hover, & a:visited': {
+            color: theme.palette.white.main,
+            textDecoration: 'underline',
+        },
+        '& .spinner': {
+            color: theme.palette.accent.dark,
+        },
+        '& .icon': {
+            color: theme.palette.accent.dark,
+        },
+        '& .dismiss': {
+            color: theme.palette.accent.dark,
+        },
+        '& .action': {
+            color: theme.palette.white.main,
+            backgroundColor: theme.palette.accent.dark,
+        },
+    },
+    '& .done': {
+        color: theme.palette.white.main,
+        backgroundColor: theme.palette.success.light,
+        '& a:link, & a:hover, & a:visited': {
+            color: theme.palette.white.main,
+            textDecoration: 'underline',
+        },
+        '& .spinner': {
+            color: theme.palette.success.dark,
+        },
+        '& .icon': {
+            color: theme.palette.success.dark,
+        },
+        '& .dismiss': {
+            color: theme.palette.success.dark,
+        },
+        '& .action': {
+            color: theme.palette.white.main,
+            backgroundColor: theme.palette.success.dark,
+        },
+    },
+}));
 
 export const Alert = ({
     action,
@@ -262,7 +257,6 @@ export const Alert = ({
     wiggle,
     canHide,
 }) => {
-    const classes = useStyles();
     const [hideAlert, setHideAlert] = useState(false);
     const renderIcon = type => {
         switch (type) {
@@ -377,18 +371,14 @@ export const Alert = ({
         return null;
     } else {
         return (
-            <div
-                className={classNames(classes[!!customIcon ? customType : type], classes.common)}
-                data-testid={alertId}
-                id={alertId}
-            >
+            <StyledAlert className={`common ${!!customIcon ? customType : type}`} data-testid={alertId} id={alertId}>
                 <div className="layout-card">
                     <Grid container spacing={1} justifyContent="center" alignItems="center" alignContent="center">
-                        <Grid item xs={12} sm className={action && !disableAlertClick && classes.linked}>
+                        <Grid item xs={12} sm className={action && !disableAlertClick && 'linked'}>
                             <Grid container justifyContent="center" alignItems="center" alignContent="center">
                                 <Grid
                                     item
-                                    className={`${classes.icon} alert-icon ${wiggle ? classes.wiggler : ''}`}
+                                    className={`icon alert-icon ${wiggle ? 'wiggler' : ''}`}
                                     onClick={!disableAlertClick && action}
                                     onKeyDown={!disableAlertClick && action}
                                     id={`${alertId}-action-icon-button`}
@@ -410,7 +400,7 @@ export const Alert = ({
                                 <Grid
                                     item
                                     xs
-                                    className={`${classes.text} alert-text`}
+                                    className={'text alert-text'}
                                     onClick={!disableAlertClick && action}
                                     onKeyDown={!disableAlertClick && action}
                                     id={`${alertId}-action-message-button`}
@@ -422,7 +412,7 @@ export const Alert = ({
                                 </Grid>
                                 {allowDismiss && dismissAction && (
                                     <Hidden smUp>
-                                        <Grid item className={classes.dismissButton}>
+                                        <Grid item className={'dismissButton'}>
                                             <IconButton
                                                 onClick={dismissAction}
                                                 aria-label={dismissTitle}
@@ -437,7 +427,7 @@ export const Alert = ({
                                 )}
                                 {canHide && (
                                     <Hidden smUp>
-                                        <Grid item className={classes.dismissButton}>
+                                        <Grid item className={'dismissButton'}>
                                             <IconButton
                                                 onClick={hideThisAlert}
                                                 aria-label={dismissTitle}
@@ -453,7 +443,7 @@ export const Alert = ({
                             </Grid>
                         </Grid>
                         {action && actionButtonLabel && (
-                            <Grid item xs sm="auto" className={classes.actionButton}>
+                            <Grid item xs sm="auto" className={'actionButton'}>
                                 <Button
                                     variant="text"
                                     children={actionButtonLabel}
@@ -467,7 +457,7 @@ export const Alert = ({
                         )}
                         {allowDismiss && dismissAction && (
                             <Hidden smDown>
-                                <Grid item className={classes.dismissButton}>
+                                <Grid item className={'dismissButton'}>
                                     <IconButton
                                         onClick={dismissAction}
                                         aria-label={dismissTitle}
@@ -482,7 +472,7 @@ export const Alert = ({
                         )}
                         {!!canHide && (
                             <Hidden smDown>
-                                <Grid item className={classes.dismissButton}>
+                                <Grid item className={'dismissButton'}>
                                     <IconButton
                                         onClick={hideThisAlert}
                                         aria-label={dismissTitle}
@@ -497,7 +487,7 @@ export const Alert = ({
                         )}
                     </Grid>
                 </div>
-            </div>
+            </StyledAlert>
         );
     }
 };

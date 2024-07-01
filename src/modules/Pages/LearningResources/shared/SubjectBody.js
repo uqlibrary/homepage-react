@@ -9,34 +9,30 @@ import { SubjectLinks } from '../panels/SubjectLinks';
 
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { makeStyles } from '@mui/styles';
 import { unescapeString } from 'helpers/general';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(
-    theme => ({
-        panelGap: {
-            [theme.breakpoints.up('md')]: {
-                paddingLeft: 16,
-            },
-            [theme.breakpoints.down('md')]: {
-                paddingTop: 16,
-            },
+const StyledContentBlock = styled(Grid)(({ theme }) => ({
+    '&.contentBlock': {
+        paddingLeft: 12,
+        paddingRight: 12,
+        marginBlock: 6,
+    },
+    '& .panelGap': {
+        [theme.breakpoints.up('md')]: {
+            paddingLeft: 16,
         },
-        header: {
-            color: theme.palette.primary.light,
-            textAlign: 'center',
+        [theme.breakpoints.down('md')]: {
+            paddingTop: 16,
         },
-        contentBlock: {
-            paddingLeft: 12,
-            paddingRight: 12,
-            marginBlock: 6,
-        },
-    }),
-    { withTheme: true },
-);
+    },
+}));
+const StyledHeader = styled(Typography)(({ theme }) => ({
+    color: theme.palette.primary.light,
+    textAlign: 'center',
+}));
 
 export const SubjectBody = ({ subject, examList, guideList, readingList, subjectHeaderLevel, panelHeadingLevel }) => {
-    const classes = useStyles();
     const coursecode = subject.classnumber || /* istanbul ignore next */ null;
     const subjectHeading = course => {
         // we have titles like "FREN3310 - French&gt;English Translation". unescapeString fixes them
@@ -56,23 +52,18 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
         subject.classnumber === readingList.coursecode ? /* istanbul ignore next */ readingList.error : null;
     return (
         <React.Fragment>
-            <Typography
-                className={classes.header}
-                component={subjectHeaderLevel}
-                variant={'h5'}
-                data-testid="learning-resource-subject-title"
-            >
+            <StyledHeader component={subjectHeaderLevel} variant={'h5'} data-testid="learning-resource-subject-title">
                 {subjectHeading(subject)}
                 <br />
-            </Typography>
+            </StyledHeader>
 
-            <Grid
+            <StyledContentBlock
                 container
                 spacing={3}
-                className={classes.contentBlock}
+                className={'contentBlock'}
                 data-testid="learning-resource-subject-reading-list"
             >
-                <Grid item xs={12} md={6} className={classes.panelGap}>
+                <Grid item xs={12} md={6} className={'panelGap'}>
                     <ReadingLists
                         courseCode={coursecode}
                         readingList={readingList.list[coursecode]}
@@ -81,7 +72,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                         headingLevel={panelHeadingLevel}
                     />
                 </Grid>
-                <Grid item xs={12} md={6} data-testid="learning-resource-subject-exams" className={classes.panelGap}>
+                <Grid item xs={12} md={6} data-testid="learning-resource-subject-exams" className={'panelGap'}>
                     <PastExamPapers
                         examList={examList.list[coursecode]}
                         examListLoading={examList.loading}
@@ -100,7 +91,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                 <Grid item xs={12} md={6}>
                     <SubjectLinks subject={subject} headingLevel={panelHeadingLevel} />
                 </Grid>
-            </Grid>
+            </StyledContentBlock>
         </React.Fragment>
     );
 };

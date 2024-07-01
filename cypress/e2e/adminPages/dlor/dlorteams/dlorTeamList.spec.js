@@ -23,10 +23,10 @@ describe('Digital Learning Hub admin Teams management', () => {
             });
         });
         it('loads as expected', () => {
-            cy.get('a[data-testid="dlor-breadcrumb--admin-homelink"]')
+            cy.get('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                 .contains('Digital Learning Hub admin')
                 .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
-            cy.get('[data-testid="dlor-breadcrumb--team-management-label-0"]').contains('Team management');
+            cy.get('[data-testid="dlor-breadcrumb-team-management-label-0"]').contains('Team management');
 
             // team name shows correctly
             cy.get('[data-testid="dlor-teamlist-panel-1"]')

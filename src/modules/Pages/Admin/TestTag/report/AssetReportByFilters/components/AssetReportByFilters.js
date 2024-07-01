@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 
-// import Grid from '@mui/material/Grid';
 import Grid from '@mui/material/Unstable_Grid2';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import TextField from '@mui/material/TextField';
@@ -26,18 +25,16 @@ const moment = require('moment');
 const componentId = 'assets-inspected';
 const componentIdLower = 'assets_inspected';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
-    tableMarginTop: {
+const StyledWrapper = styled('div')(({ theme }) => ({
+    flexGrow: 1,
+    '& .tableMarginTop': {
         marginTop: theme.spacing(2),
     },
-    inspectionOverdue: {
+    '& .inspectionOverdue': {
         backgroundColor: theme.palette.error.main,
         color: 'white',
     },
-    datePickerRoot: {
+    '& .datePickerRoot': {
         marginTop: 0,
     },
 }));
@@ -58,7 +55,6 @@ const AssetReportByFilters = ({
 
     const today = moment().format(locale.config.format.dateFormatNoTime);
 
-    const classes = useStyles();
     /* State */
     const [taggedBuildingName, setTaggedBuildingName] = React.useState(-1);
     const [selectedStartDate, setSelectedStartDate] = React.useState({ date: null, error: null });
@@ -188,7 +184,7 @@ const AssetReportByFilters = ({
             locale={pageLocale}
             requiredPermissions={[PERMISSIONS.can_see_reports]}
         >
-            <div className={classes.root}>
+            <StyledWrapper>
                 <StandardCard title={pageLocale.form.title} id={componentId}>
                     <Grid container spacing={1}>
                         <Grid item xs={12} md={6} lg={3}>
@@ -270,7 +266,7 @@ const AssetReportByFilters = ({
                                 }}
                                 inputFormat={locale.config.format.dateFormatNoTime}
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
-                                classes={{ root: classes.datePickerRoot }}
+                                classes={{ root: 'datePickerRoot' }}
                                 disableToolbar
                                 variant="inline"
                                 margin="normal"
@@ -302,7 +298,7 @@ const AssetReportByFilters = ({
                         </Grid>
                     </Grid>
 
-                    <Grid container spacing={3} className={classes.tableMarginTop}>
+                    <Grid container spacing={3} className={'tableMarginTop'}>
                         <Grid item style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
@@ -313,7 +309,7 @@ const AssetReportByFilters = ({
                                 loading={!!assetListLoading}
                                 getCellClassName={params =>
                                     params.field === 'asset_next_test_due_date' && params.value <= today
-                                        ? classes.inspectionOverdue
+                                        ? 'inspectionOverdue'
                                         : ''
                                 }
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
@@ -328,7 +324,7 @@ const AssetReportByFilters = ({
                         autoHideDuration={confirmationAlert.autoHideDuration}
                     />
                 </StandardCard>
-            </div>
+            </StyledWrapper>
         </StandardAuthPage>
     );
 };

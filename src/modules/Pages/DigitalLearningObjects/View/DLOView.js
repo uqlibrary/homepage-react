@@ -4,6 +4,7 @@ import { useParams } from 'react-router';
 import parse from 'html-react-parser';
 import { useCookies } from 'react-cookie';
 
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
@@ -11,7 +12,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
@@ -31,7 +32,6 @@ import { useAccountContext } from 'context';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import {
-    displayDownloadInstructions,
     getDurationString,
     getFileSizeString,
     getYoutubeUrlForPreviewEmbed,
@@ -39,145 +39,156 @@ import {
     getDlorViewPageUrl,
     getPathRoot,
     toTitleCase,
+    convertSnakeCaseToKebabCase,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
-const useStyles = makeStyles(theme => ({
-    filterDisplayList: {
-        listStyleType: 'none',
-        paddingLeft: 0,
-        '& li': {
-            listStyleType: 'none',
-            paddingBottom: 6,
+const StyledUQActionButton = styled('div')(({ theme }) => ({
+    marginBlock: '32px',
+    '& button, & a': {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.white.main,
+        borderColor: theme.palette.primary.main,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderRadius: '6px',
+        padding: '8px 12px',
+        fontWeight: 400,
+        '&:hover': {
+            backgroundColor: theme.palette.white.main,
+            color: theme.palette.primary.main,
+            textDecoration: 'none',
         },
     },
-    uqActionButton: {
-        marginBlock: 32,
-        '& button, & a': {
-            backgroundColor: theme.palette.primary.main,
-            color: theme.palette.white.main,
-            borderColor: theme.palette.primary.main,
-            borderWidth: 1,
-            borderStyle: 'solid',
-            borderRadius: 6,
-            padding: '8px 12px',
-            fontWeight: 400,
-            '&:hover': {
-                backgroundColor: theme.palette.white.main,
-                color: theme.palette.primary.main,
-                textDecoration: 'none',
-            },
-        },
-        '&:has(button)': {
-            display: 'flex',
-            justifyContent: 'flex-end',
-            marginTop: 12,
-        },
-    },
-    metaHeader: {
+    '&:has(button)': {
         display: 'flex',
-        alignItems: 'center',
-        marginBottom: 12,
-        '& svg': {
-            width: 30,
-            paddingRight: 6,
-        },
+        justifyContent: 'flex-end',
+        marginTop: '12px',
     },
-    highlighted: {
-        color: theme.palette.primary.light,
+}));
+const StyledTitleTypography = styled(Typography)(({ theme }) => ({
+    color: theme.palette.primary.light,
+}));
+const StyledContentGrid = styled(Grid)(() => ({
+    marginTop: '6px',
+    '& > div.MuiGrid-item': {
+        paddingTop: '6px',
     },
-    viewContent: {
-        marginTop: 6,
-        '& > div.MuiGrid-item': {
-            paddingTop: 6,
-        },
-    },
-    titleBlock: {
-        display: 'flex',
-        alignItems: 'center',
-        '& p:first-child': {
-            padding: 0,
-            fontSize: 16,
-            '& a': {
-                color: 'rgba(0, 0, 0, 0.87)',
-            },
-        },
-        '& svg': {
-            width: 10,
-            marginInline: 6,
-        },
-        '& > p:nth-child(2)': {
-            padding: 0,
-        },
-    },
-    // dlorEntry: {
-    //     '& div': {
-    //         paddingTop: 0,
-    //     },
-    // },
-    headerBlock: {
-        '& p': {
-            margin: 0,
-            fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-            fontWight: 300,
-            fontSize: '1rem',
-            lineHeight: 1.5,
-            letterSpacing: '0.00938em',
-        },
-    },
-    downloadInstructions: {
-        lineHeight: 1.5,
-    },
-    videoResponsive: {
-        overflow: 'hidden',
-        paddingBottom: '56.25%',
-        position: 'relative',
-        height: 0,
-        '& iframe': {
-            left: 0,
-            top: 0,
-            height: '100%',
-            width: '100%',
-            position: 'absolute',
-        },
-    },
-    seriesList: {
-        paddingInlineStart: 0,
-        marginInlineStart: 0,
-        '& li': {
-            display: 'flex',
-            marginBottom: '0.5em',
-            '& a': {
-                backgroundColor: '#d1d0d2', // $grey-300
-                color: '#000',
-            },
-            '& a, & > span': {
-                display: 'flex',
-                alignItems: 'center',
-                width: '100%',
-                padding: 10,
-                textDecoration: 'none',
-                border: '1px solid #d1d0d2', // $grey-300
-            },
-            '& a:hover': {
-                backgroundColor: '#a3a1a4', // $grey-500
-            },
-        },
-    },
-    gatherDemographicsClass: {
-        padding: '1em',
-        marginTop: 24,
-        borderRadius: 10,
-    },
-    caWrapper: { display: 'flex', alignItems: 'center', marginTop: 4 },
-    tagLabel: {
-        fontVariant: 'small-caps',
-        textTransform: 'lowercase',
-        fontWeight: 'bold',
+}));
+const StyledTitleBlockDiv = styled('div')(() => ({
+    display: 'flex',
+    alignItems: 'center',
+    '& p:first-child': {
+        padding: 0,
         fontSize: 16,
-        color: '#333',
-        marginRight: 10,
+        '& a': {
+            color: 'rgba(0, 0, 0, 0.87)',
+        },
+    },
+    '& svg': {
+        width: 10,
+        marginInline: '6px',
+    },
+    '& > p:nth-child(2)': {
+        padding: 0,
+    },
+}));
+const StyledHeaderDiv = styled(Typography)(() => ({
+    backgroundColor: 'white',
+    padding: '12px',
+    '& p': {
+        margin: 0,
+        fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+        fontWight: 300,
+        fontSize: '1rem',
+        lineHeight: 1.5,
+        letterSpacing: '0.00938em',
+    },
+}));
+const StyledIframe = styled('iframe')(() => ({
+    left: 0,
+    top: 0,
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+}));
+const StyledTagLabelSpan = styled('span')(() => ({
+    fontVariant: 'small-caps',
+    textTransform: 'lowercase',
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#333',
+    marginRight: '10px',
+}));
+const StyledSeriesList = styled('ol')(() => ({
+    paddingInlineStart: 0,
+    marginInlineStart: 0,
+    '& li': {
+        display: 'flex',
+        marginBottom: '0.5em',
+        '& a': {
+            backgroundColor: '#d1d0d2', // $grey-300
+            color: '#000',
+        },
+        '& a, & > span': {
+            display: 'flex',
+            alignItems: 'center',
+            width: '100%',
+            padding: 10,
+            textDecoration: 'none',
+            border: '1px solid #d1d0d2', // $grey-300
+        },
+        '& a:hover': {
+            backgroundColor: '#a3a1a4', // $grey-500
+        },
+    },
+}));
+const StyledDemographicsBox = styled(Box)(() => ({
+    padding: '1em',
+    marginTop: '24px',
+    borderRadius: '10px',
+    backgroundColor: 'white',
+    '& p': { marginLeft: '-8px' },
+    '& form': { margin: '-8px', '& p': { marginBlock: '3em 0', marginLeft: '2px' } },
+}));
+const StyledLayoutBox = styled(Box)(() => ({
+    backgroundColor: 'white',
+    padding: '12px',
+    marginTop: '24px',
+}));
+const StyledKeywordList = styled('ul')(() => ({
+    listStyleType: 'none',
+    paddingLeft: 0,
+    '& li': {
+        display: 'flex',
+        alignItems: 'center',
+        listStyleType: 'none',
+        paddingBottom: '6px',
+    },
+}));
+const StyledSidebarList = styled('ul')(() => ({
+    listStyleType: 'none',
+    paddingLeft: 0,
+    '& li': {
+        display: 'flex',
+        alignItems: 'center',
+        listStyleType: 'none',
+        paddingBottom: '6px',
+        '& a': {
+            color: '#333',
+            marginTop: '2px',
+            marginLeft: '3px',
+        },
+    },
+}));
+const StyledSidebarHeadingTypography = styled(Typography)(() => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '12px',
+    '& svg': {
+        width: 30,
+        paddingRight: '6px',
     },
 }));
 
@@ -194,7 +205,6 @@ export const DLOView = ({
 }) => {
     const { account } = useAccountContext();
     const { dlorId } = useParams();
-    const classes = useStyles();
     const [cookies, setCookie] = useCookies();
     const [confirmationOpen, setConfirmationOpen] = React.useState(false);
 
@@ -229,7 +239,6 @@ export const DLOView = ({
         const newValues = { ...formValues, [prop]: theNewValue };
         console.log('handleChange', prop, theNewValue, newValues);
 
-        // setFormValidity(validateValues(newValues));
         setFormValues(newValues);
     };
 
@@ -266,15 +275,40 @@ export const DLOView = ({
 
     function getTitleBlock(detailTitle = 'View an object') {
         return (
-            <div className={classes.titleBlock}>
+            <StyledTitleBlockDiv>
                 <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
                     <a href={`${getPathRoot()}/digital-learning-hub`}>Find a digital learning object</a>
                 </Typography>
                 <ArrowForwardIcon />
                 <Typography>{detailTitle}</Typography>
-            </div>
+            </StyledTitleBlockDiv>
         );
     }
+
+    /* istanbul ignore next */
+    const displayDownloadInstructions = downloadInstructions => {
+        function addRelnoopenerNoreferrer(htmlString) {
+            // Use regular expression to find all anchor tags (<a>)
+            const regex = /<a([^>]+)>/g;
+            return htmlString.replace(regex, (match, attributes) => {
+                // Add the rel="noopener noreferrer" attribute
+                return `<a ${attributes} rel="noopener noreferrer">`;
+            });
+        }
+
+        const content = addRelnoopenerNoreferrer(downloadInstructions);
+
+        return (
+            <Box
+                data-testid="dlor-massaged-download-instructions"
+                sx={{
+                    lineHeight: 1.5,
+                }}
+            >
+                {parse(content)}
+            </Box>
+        );
+    };
 
     const navigateToEditPage = uuid => {
         window.location.href = dlorAdminLink(`/edit/${uuid}`);
@@ -366,16 +400,16 @@ export const DLOView = ({
 
     if (!!dlorItemLoading || dlorItemLoading === null || !!dlorItemUpdating) {
         return (
-            <div style={{ minHeight: 600 }}>
+            <Box sx={{ minHeight: 600 }}>
                 <InlineLoader message="Loading" />
-            </div>
+            </Box>
         );
     }
 
     if (!!dlorItemError) {
         return (
             <StandardPage>
-                <StandardCard className={classes.dlorEntry}>
+                <StandardCard>
                     {getTitleBlock()}
                     <Typography variant="body1" data-testid="dlor-detailpage-error">
                         {dlorItemError}
@@ -388,7 +422,7 @@ export const DLOView = ({
     if (!dlorItem || Object.keys(dlorItem)?.length === 0) {
         return (
             <StandardPage>
-                <StandardCard className={classes.dlorEntry}>
+                <StandardCard>
                     {getTitleBlock()}
                     <Typography variant="body1" data-testid="dlor-detailpage-empty">
                         We could not find the requested entry - please check the web address.
@@ -411,111 +445,100 @@ export const DLOView = ({
                     isOpen={confirmationOpen}
                     locale={subscriptionResponseLocale}
                 />
-                <div className={classes.dlorEntry}>
+                <div>
                     {getTitleBlock()}
-                    <Grid container spacing={4} data-testid="dlor-detailpage" className={classes.viewContent}>
+                    <StyledContentGrid container spacing={4} data-testid="dlor-detailpage">
                         <Grid item xs={12} md={9}>
-                            <LoginPrompt account={account} instyle={{ marginBottom: 12 }} />
-                            <div style={{ marginBottom: 12 }}>
-                                <Typography className={classes.highlighted} component={'h1'} variant={'h4'}>
+                            <LoginPrompt account={account} instyle={{ marginBottom: '12px' }} />
+                            <Box sx={{ marginBottom: '12px' }}>
+                                <StyledTitleTypography component={'h1'} variant={'h4'}>
                                     {dlorItem?.object_title}
-                                </Typography>
-                            </div>
+                                </StyledTitleTypography>
+                            </Box>
                             <>
                                 {(!!dlorItem?.object_cultural_advice ||
                                     !!dlorItem?.object_is_featured ||
                                     !!dlorItem?.object_series_name) && (
                                     <Typography
                                         component={'p'}
-                                        style={{
+                                        sx={{
                                             display: 'flex',
                                             alignItems: 'center',
-                                            marginLeft: -4,
-                                            marginTop: -4,
-                                            marginBottom: 6,
+                                            marginLeft: '-4px',
+                                            marginTop: '-4px',
+                                            marginBottom: '6px',
                                         }}
                                     >
                                         {!!dlorItem?.object_is_featured && (
                                             <>
-                                                <BookmarkIcon style={{ fill: '#51247A', marginRight: 2, width: 20 }} />
-                                                <span
-                                                    className={classes.tagLabel}
+                                                <BookmarkIcon sx={{ fill: '#51247A', marginRight: '2px', width: 20 }} />
+                                                <StyledTagLabelSpan
                                                     data-testid={'dlor-detailpage-featured-custom-indicator'}
-                                                    style={{ marginLeft: -2 }}
+                                                    sx={{ marginLeft: '-2px' }}
                                                 >
                                                     Featured
-                                                </span>
+                                                </StyledTagLabelSpan>
                                             </>
                                         )}
                                         {!!dlorItem?.object_cultural_advice && (
                                             <>
-                                                <InfoIcon style={{ fill: '#2377CB', marginRight: 2, width: 20 }} />
-                                                <span
-                                                    className={classes.tagLabel}
+                                                <InfoIcon sx={{ fill: '#2377CB', marginRight: '2px', width: 20 }} />
+                                                <StyledTagLabelSpan
                                                     data-testid={'dlor-detailpage-cultural-advice-custom-indicator'}
                                                 >
                                                     Cultural advice
-                                                </span>
+                                                </StyledTagLabelSpan>
                                             </>
                                         )}
                                         {!!dlorItem?.object_series_name && dlorItem?.object_series?.length > 1 && (
                                             <>
                                                 <PlaylistAddCheckIcon
-                                                    style={{ fill: '#4aa74e', marginRight: 2, width: 24 }}
+                                                    sx={{ fill: '#4aa74e', marginRight: '2px', width: 24 }}
                                                 />
-                                                <span
-                                                    className={classes.tagLabel}
-                                                    data-testid={'dlor-detailpage-object_series_name-custom-indicator'}
+                                                <StyledTagLabelSpan
+                                                    data-testid={'dlor-detailpage-object-series-name-custom-indicator'}
                                                 >
                                                     Series: {dlorItem?.object_series_name}
-                                                </span>
+                                                </StyledTagLabelSpan>
                                             </>
                                         )}
                                     </Typography>
                                 )}
                             </>
                             {!!dlorItem?.object_cultural_advice && (
-                                <p
+                                <Box
                                     data-testid="dlor-detailpage-cultural-advice"
-                                    style={{
+                                    sx={{
                                         padding: '1em',
                                         borderColor: 'rgb(187, 216, 245)',
                                         color: 'rgb(0, 0, 0)',
                                         backgroundColor: 'rgb(187, 216, 245)',
-                                        borderRadius: 3,
+                                        borderRadius: '3px',
                                     }}
                                 >
                                     Aboriginal and Torres Strait Islander peoples are warned that this resource may
                                     contain images, transcripts or names of Aboriginal and Torres Strait Islander
                                     peoples now deceased. It may also contain historically and culturally sensitive
                                     words, terms, and descriptions.
-                                </p>
+                                </Box>
                             )}
-                            <div
-                                data-testid="dlor-detailpage-description"
-                                style={{ backgroundColor: 'white', padding: 12 }}
-                                className={classes.headerBlock}
-                            >
+                            <StyledHeaderDiv data-testid="dlor-detailpage-description">
                                 {!!dlorItem?.object_description && parse(dlorItem.object_description)}
-                            </div>
+                            </StyledHeaderDiv>
 
                             {/* until we can implement a captcha, we can only take input from loggedin users :( */}
                             {dlorItem?.object_link_url?.startsWith('http') && !account?.id && (
-                                <div className={classes.uqActionButton} data-testid="detailpage-getit-button">
+                                <StyledUQActionButton data-testid="detailpage-getit-button">
                                     <a href={dlorItem.object_link_url}>{getItButtonLabel(dlorItem)}</a>
-                                </div>
+                                </StyledUQActionButton>
                             )}
                             {dlorItem?.object_link_url?.startsWith('http') && account?.id && (
-                                <div
+                                <StyledDemographicsBox
                                     id="gatherDemographics"
-                                    className={classes.gatherDemographicsClass}
-                                    style={{ backgroundColor: 'white' }}
                                     data-testid="detailpage-getit-and demographics"
                                 >
-                                    <p style={{ marginLeft: -8 }}>
-                                        (Optional) Help us understand how you will use this object. Please tell us:{' '}
-                                    </p>
-                                    <form style={{ margin: -8 }}>
+                                    <p>(Optional) Help us understand how you will use this object. Please tell us: </p>
+                                    <form>
                                         <FormControl variant="standard" fullWidth>
                                             <InputLabel htmlFor="subjectCode">
                                                 Your relevant course, program or session
@@ -527,7 +550,7 @@ export const DLOView = ({
                                                 onChange={handleChange('subjectCode')}
                                             />
                                         </FormControl>
-                                        <FormControl variant="standard" fullWidth style={{ marginTop: 10 }}>
+                                        <FormControl variant="standard" fullWidth sx={{ marginTop: '10px' }}>
                                             <InputLabel htmlFor="schoolName">Your school, faculty or unit</InputLabel>
                                             <Input
                                                 id="schoolName"
@@ -537,11 +560,8 @@ export const DLOView = ({
                                             />
                                         </FormControl>
 
-                                        <p style={{ marginBlock: '3em 0' }}>
-                                            Would you like notifications when updates are made to this object?
-                                        </p>
+                                        <p>Would you like notifications when updates are made to this object?</p>
                                         <FormControlLabel
-                                            // className={classes.filterSidebarCheckboxControl}
                                             control={
                                                 <Checkbox
                                                     onChange={handleChange('notify')}
@@ -576,7 +596,7 @@ export const DLOView = ({
                                         )}
 
                                         <div>
-                                            <div className={classes.uqActionButton}>
+                                            <StyledUQActionButton>
                                                 <Button
                                                     aria-label="Click to access the object"
                                                     onClick={() => saveAndNavigate(dlorItem)}
@@ -584,20 +604,27 @@ export const DLOView = ({
                                                 >
                                                     {getItButtonLabel(dlorItem)}
                                                 </Button>
-                                            </div>
+                                            </StyledUQActionButton>
                                         </div>
                                     </form>
-                                </div>
+                                </StyledDemographicsBox>
                             )}
 
                             {isPreviewableUrl(dlorItem.object_link_url) !== false && (
                                 <div data-testid="detailpage-preview">
-                                    <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
+                                    <StyledTitleTypography component={'h2'} variant={'h6'}>
                                         Preview
-                                    </Typography>
-                                    <div className={classes.videoResponsive}>
+                                    </StyledTitleTypography>
+                                    <Box
+                                        sx={{
+                                            overflow: 'hidden',
+                                            paddingBottom: '56.25%',
+                                            position: 'relative',
+                                            height: 0,
+                                        }}
+                                    >
                                         {!!getYoutubeEmbeddableUrl(dlorItem.object_link_url) !== false && (
-                                            <iframe
+                                            <StyledIframe
                                                 width="853"
                                                 height="480"
                                                 src={getYoutubeEmbeddableUrl(dlorItem.object_link_url)}
@@ -607,34 +634,33 @@ export const DLOView = ({
                                                 title="Embedded youtube"
                                             />
                                         )}
-                                    </div>
+                                    </Box>
                                 </div>
                             )}
                             {!!dlorItem?.object_download_instructions && (
-                                <div style={{ backgroundColor: 'white', padding: 12, marginTop: 24 }}>
-                                    <Typography className={classes.highlighted} component={'h2'} variant={'h6'}>
+                                <StyledLayoutBox>
+                                    <StyledTitleTypography component={'h2'} variant={'h6'}>
                                         How to use this object
-                                    </Typography>
+                                    </StyledTitleTypography>
                                     {!!dlorItem?.object_download_instructions &&
-                                        displayDownloadInstructions(
-                                            dlorItem.object_download_instructions,
-                                            classes.downloadInstructions,
-                                        )}
-                                </div>
+                                        displayDownloadInstructions(dlorItem.object_download_instructions)}
+                                </StyledLayoutBox>
                             )}
                             {!!dlorItem?.object_series_name && dlorItem?.object_series?.length > 1 && (
-                                <div style={{ backgroundColor: 'white', padding: 12, marginTop: 24 }}>
-                                    <Typography className={classes.highlighted} component="h2" variant="h6">
+                                <StyledLayoutBox>
+                                    <StyledTitleTypography component="h2" variant="h6">
                                         Part of a series: {dlorItem.object_series_name}
-                                    </Typography>
-                                    <ol className={classes.seriesList}>
+                                    </StyledTitleTypography>
+                                    <StyledSeriesList>
                                         {dlorItem?.object_series
                                             ?.sort((a, b) => a.series_object_order - b.series_object_order)
                                             .map((s, index) => {
                                                 return (
                                                     <li
                                                         key={`dlor-view-series-item-${s.series_object_uuid}`}
-                                                        data-testid={`dlor-view-series-item-${s.series_object_uuid}-order-${index}`}
+                                                        data-testid={`dlor-view-series-item-${convertSnakeCaseToKebabCase(
+                                                            s.series_object_uuid,
+                                                        )}-order-${index}`}
                                                     >
                                                         {s.series_object_uuid === dlorItem?.object_public_uuid ? (
                                                             <span>
@@ -652,8 +678,8 @@ export const DLOView = ({
                                                     </li>
                                                 );
                                             })}
-                                    </ol>
-                                </div>
+                                    </StyledSeriesList>
+                                </StyledLayoutBox>
                             )}
                         </Grid>
                         <Grid item xs={12} md={3} data-testid="detailpage-metadata">
@@ -663,52 +689,42 @@ export const DLOView = ({
                                         <Button
                                             onClick={() => navigateToEditPage(dlorItem?.object_public_uuid)}
                                             data-testid="detailpage-admin-edit-button"
-                                            style={{
+                                            sx={{
                                                 backgroundColor: '#2377cb',
                                                 color: '#fff',
-                                                marginBottom: 6,
-                                                paddingInline: 24,
+                                                marginBottom: '6px',
+                                                paddingInline: '24px',
                                             }}
                                         >
                                             <EditIcon /> &nbsp; Edit
                                         </Button>
                                     )}
-                                    <Typography component={'h2'} variant={'h6'} className={classes.metaHeader}>
+                                    <StyledSidebarHeadingTypography component={'h2'} variant={'h6'}>
                                         <BookmarksIcon />
                                         Details
-                                    </Typography>
+                                    </StyledSidebarHeadingTypography>
                                     {dlorItem?.object_filters?.map(filter => {
                                         return (
                                             <div
                                                 key={filter?.filter_key}
-                                                data-testid={`detailpage-filter-${filter?.filter_key}`}
+                                                data-testid={`detailpage-filter-${convertSnakeCaseToKebabCase(
+                                                    filter?.filter_key,
+                                                )}`}
                                             >
-                                                <Typography
-                                                    className={classes.highlighted}
-                                                    component={'h3'}
-                                                    variant={'h6'}
-                                                >
+                                                <StyledTitleTypography component={'h3'} variant={'h6'}>
                                                     {deslugify(filter?.filter_key)}
-                                                </Typography>
-                                                <ul className={classes.filterDisplayList}>
+                                                </StyledTitleTypography>
+                                                <StyledSidebarList>
                                                     {!!filter.filter_values &&
                                                         filter.filter_values.map((value, subIndex) => {
                                                             return (
-                                                                <li
-                                                                    key={subIndex}
-                                                                    style={{ display: 'flex', alignItems: 'center' }}
-                                                                >
+                                                                <li key={subIndex}>
                                                                     {value.name}
                                                                     {!!value?.help && value?.help.startsWith('http') && (
                                                                         <a
                                                                             href={value.help}
                                                                             target="_blank"
                                                                             title="View the help for this filter"
-                                                                            style={{
-                                                                                color: '#333',
-                                                                                marginTop: 2,
-                                                                                marginLeft: 3,
-                                                                            }}
                                                                         >
                                                                             <HelpOutlineIcon size="small" />
                                                                         </a>
@@ -716,16 +732,16 @@ export const DLOView = ({
                                                                 </li>
                                                             );
                                                         })}
-                                                </ul>
+                                                </StyledSidebarList>
                                             </div>
                                         );
                                     })}
                                     {!!dlorItem?.object_keywords && (
                                         <div data-testid="detailpage-metadata-keywords">
-                                            <Typography className={classes.highlighted} component={'h3'} variant={'h6'}>
+                                            <StyledTitleTypography component={'h3'} variant={'h6'}>
                                                 Keywords
-                                            </Typography>
-                                            <ul className={classes.filterDisplayList}>
+                                            </StyledTitleTypography>
+                                            <StyledKeywordList>
                                                 {dlorItem.object_keywords.map((keyword, index) => {
                                                     return (
                                                         <li key={index}>
@@ -733,13 +749,13 @@ export const DLOView = ({
                                                         </li>
                                                     );
                                                 })}
-                                            </ul>
+                                            </StyledKeywordList>
                                         </div>
                                     )}
                                 </>
                             )}
                         </Grid>
-                    </Grid>
+                    </StyledContentGrid>
                 </div>
             </>
         </StandardPage>

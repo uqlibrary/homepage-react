@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
+
 import { useSelector } from 'react-redux';
 
 import Grid from '@mui/material/Unstable_Grid2';
@@ -10,6 +11,7 @@ import Checkbox from '@mui/material/Checkbox';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
+
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
@@ -36,18 +38,13 @@ import { useForm, useObjectList, useConfirmationAlert } from '../../../helpers/h
 import { transformRow, transformRequest } from './utils';
 import AuthWrapper from '../../../SharedComponents/AuthWrapper/AuthWrapper';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
-    tableMarginTop: {
+const StyledWrapper = styled('div')(({ theme }) => ({
+    flexGrow: 1,
+    '& .actionButtons': {
         marginTop: theme.spacing(2),
     },
-    actionButtons: {
-        marginTop: theme.spacing(2),
-    },
-    centredGrid: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
-    centredGridNoJustify: {
+    '& .centredGrid': { display: 'flex', alignItems: 'center', justifyContent: 'center' },
+    '& .centredGridNoJustify': {
         display: 'flex',
         alignItems: 'center',
     },
@@ -60,7 +57,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const pageLocale = locale.pages.manage.bulkassetupdate;
     const stepOneLocale = pageLocale.form.step.one;
     const stepTwoLocale = pageLocale.form.step.two;
-    const classes = useStyles();
+
     const list = useObjectList([], transformRow, { key: 'asset_id' });
     const [step, setStep] = useState(1);
     const assignAssetDefaults = () => ({ ...defaultFormValues });
@@ -241,7 +238,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
             requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter]}
             inclusive={false}
         >
-            <div className={classes.root}>
+            <StyledWrapper>
                 <ConfirmationBox
                     actionButtonColor="primary"
                     actionButtonVariant="contained"
@@ -277,7 +274,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     id={componentId}
                                     locale={stepOneLocale}
                                     user={user}
-                                    classNames={{ formControl: classes.formControl }}
+                                    classNames={{ formControl: 'formControl' }}
                                     onChange={handleSearchAssetIdChange}
                                     validateAssetId={isValidAssetId}
                                     canAddNew={false}
@@ -286,10 +283,10 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     filter={{ status: { discarded: false } }}
                                 />
                             </Grid>
-                            <Grid item xs={12} md={2} className={classes.centredGrid}>
+                            <Grid item xs={12} md={2} className={'centredGrid'}>
                                 or
                             </Grid>
-                            <Grid item xs={12} md={6} className={classes.centredGridNoJustify}>
+                            <Grid item xs={12} md={6} className={'centredGridNoJustify'}>
                                 <Button
                                     variant="outlined"
                                     id={`${componentIdLower}-feature-button`}
@@ -316,7 +313,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                             </Grid>
                         )}
                         <Grid container spacing={3}>
-                            <Grid item style={{ flex: 1 }}>
+                            <Grid item sx={{ flex: 1 }}>
                                 <DataTable
                                     id={componentId}
                                     rows={list.data}
@@ -332,7 +329,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             onAltClick: resetForm,
                                             onActionClick: handleNextStepButton,
                                             nextButtonProps: { disabled: list.data.length === 0 },
-                                            className: classes.actionButtons,
+                                            className: 'actionButtons',
                                         },
                                     }}
                                     {...(config.form.sort ?? /* istanbul ignore next */ {})}
@@ -546,7 +543,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                 />
                             </Grid>
                         </Grid>
-                        <Grid container spacing={4} className={classes.actionButtons}>
+                        <Grid container spacing={4} className={'actionButtons'}>
                             <Grid item xs={12} sm={6} container justifyContent="flex-start">
                                 <Button
                                     variant="outlined"
@@ -574,7 +571,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                         </Grid>
                     </StandardCard>
                 )}
-            </div>
+            </StyledWrapper>
             <ConfirmationAlert
                 isOpen={confirmationAlert.visible}
                 message={confirmationAlert.message}

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import makeStyles from '@mui/styles/makeStyles';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -21,29 +20,28 @@ import {
     navigateToEditForm,
     navigateToView,
 } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(theme => ({
-    viewHistoryLightboxStyle: {
-        display: 'flex',
-        flexDirection: 'column',
-        m: 'auto',
-        width: 'fit-content',
-        '& img': {
-            maxWidth: 800,
-            border: '1px solid grey',
-            textAlign: 'center',
-        },
-        '& li': {
-            marginBottom: 10,
-            padding: 10,
-            '& p': {
-                marginBottom: 0,
-                marginTop: 1,
-            },
-            listStyle: 'none',
-        },
+const StyledBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    m: 'auto',
+    width: 'fit-content',
+    '& img': {
+        maxWidth: 800,
+        border: '1px solid grey',
+        textAlign: 'center',
     },
-    entry: {
+    '& li': {
+        marginBottom: 10,
+        padding: 10,
+        '& p': {
+            marginBottom: 0,
+            marginTop: 1,
+        },
+        listStyle: 'none',
+    },
+    '& .entry': {
         '& strong': {
             fontWeight: 900,
         },
@@ -52,7 +50,7 @@ const useStyles = makeStyles(theme => ({
             transition: 'background-color 1s ease',
         },
     },
-    thisEntry: {
+    '& .thisEntry': {
         backgroundColor: 'rgba(0,0,0,.65)',
         color: '#f7f6f5',
         '& strong': {
@@ -70,8 +68,6 @@ export const SpotlightViewHistory = ({
     spotlights,
     history,
 }) => {
-    const classes = useStyles();
-
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
 
     const openHelpLightbox = () => {
@@ -113,7 +109,7 @@ export const SpotlightViewHistory = ({
                     </p>
                 </DialogTitle>
                 <DialogContent>
-                    <Box className={classes.viewHistoryLightboxStyle}>
+                    <StyledBox>
                         <a
                             aria-label={focussedElement.title}
                             href={focussedElement.url}
@@ -151,8 +147,8 @@ export const SpotlightViewHistory = ({
                                             key={`${s.id}-viewhistory-lightbox`}
                                             className={`${
                                                 spotlights.length > 1 && focussedElement.id === s.id
-                                                    ? classes.thisEntry
-                                                    : classes.entry
+                                                    ? 'thisEntry'
+                                                    : 'entry'
                                             }`}
                                         >
                                             <strong>{locale.viewByHistory.linkTitle}</strong>: {s.title}
@@ -171,7 +167,7 @@ export const SpotlightViewHistory = ({
                                                         data-testid={`spotlight-viewhistory-button-view-${s.id}`}
                                                         id={`spotlight-list-item-view-${s.id}`}
                                                         onClick={() => navigateToView(s.id, history)}
-                                                        className={classes.editButton}
+                                                        className={'editButton'}
                                                         variant="contained"
                                                         style={{ float: 'right', width: '5.5em' }}
                                                     />
@@ -182,7 +178,7 @@ export const SpotlightViewHistory = ({
                                                         data-testid={`spotlight-viewhistory-button-edit-${s.id}`}
                                                         id={`spotlight-viewhistory-button-edit-${s.id}`}
                                                         onClick={() => navigateToEditForm(s.id, history)}
-                                                        className={classes.editButton}
+                                                        className={'editButton'}
                                                         variant="contained"
                                                         style={{ float: 'right', width: '5.5em' }}
                                                     />
@@ -215,7 +211,7 @@ export const SpotlightViewHistory = ({
                                     );
                                 })}
                         </ul>
-                    </Box>
+                    </StyledBox>
                 </DialogContent>
             </Dialog>
             <SpotlightsHelpDrawer

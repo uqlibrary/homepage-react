@@ -590,7 +590,6 @@ function getSpecificTeam(teamId) {
     );
 }
 function getSpecificDlorObject(dlorId) {
-    console.log('getSpecificDlorObject', dlorId);
     const arrayOfOneRecord = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
     const singleRecord = arrayOfOneRecord.length > 0 ? arrayOfOneRecord.pop() : null;
     !!singleRecord && (singleRecord.object_link_types = dlor_file_type_list.data);
@@ -656,7 +655,6 @@ mock.onGet(/dlor\/public\/find\/.*/)
                 delete newObj.object_series; // Delete the 'series' property
                 return newObj;
             });
-            console.log('dlor currentRecords', currentRecords);
             return [200, { data: currentRecords }];
         }
     })
@@ -674,7 +672,6 @@ mock.onGet(/dlor\/public\/find\/.*/)
                     return newObj;
                 })
                 .filter(o => o.object_status === 'current');
-            console.log('dlor currentRecords', currentRecords);
             return [200, { data: currentRecords }];
         }
     })
@@ -692,22 +689,6 @@ mock.onGet(/dlor\/public\/find\/.*/)
     })
     .onGet('dlor/public/teams/list')
     .reply(() => {
-        console.log('get mock dlor/public/teams/list', dlor_team_list);
-
-        // function getTeamList() {
-        //     console.log('getTeamList', dlor_team_list.data);
-        //     return dlor_team_list.data.map(team => {
-        //         const newVar = {
-        //             objects_count: dlor_all.filter(d => {
-        //                 d.object_owning_team_id === team.team_id;
-        //             }).length,
-        //             ...team,
-        //         };
-        //         console.log('newVar=', newVar);
-        //         return newVar;
-        //     });
-        // }
-
         if (responseType === 'teamsLoadError') {
             return [500, { error: 'Teams api did not load' }];
         } else if (responseType === 'emptyResult') {
@@ -785,7 +766,6 @@ mock.onGet(/dlor\/public\/find\/.*/)
             // } else if (responseType === 'object_404') {
             //     return [404, { status: 'error', message: 'No records found' }];
         } else {
-            console.log('mock: dlorFileTypeList=', dlor_file_type_list);
             return [200, dlor_file_type_list];
         }
     })
@@ -875,10 +855,8 @@ mock.onGet(/dlor\/public\/find\/.*/)
         const urlparts = config.url.split('/');
         const confirmationId = urlparts[2];
         if (confirmationId === 'unsubscribeError') {
-            console.log('unsubscribe got error');
             return [500, {}];
         } else {
-            console.log('unsubscribe got 200');
             return [200, { data: { response: 'ok' } }];
         }
     })

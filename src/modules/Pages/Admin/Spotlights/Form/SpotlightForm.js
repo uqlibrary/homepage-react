@@ -7,7 +7,6 @@ import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
-import { makeStyles } from '@mui/styles';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import TextField from '@mui/material/TextField';
 
@@ -20,35 +19,34 @@ import { scrollToTopOfPage } from 'helpers/general';
 
 import { useConfirmationState } from 'hooks';
 import SpotlightFormReorderableThumbs from './SpotlightFormReorderableThumbs';
+import { styled } from '@mui/material/styles';
 
 const moment = require('moment');
 
-const useStyles = makeStyles(() => ({
-    saveButton: {
+const StyledForm = styled('form')(() => ({
+    '& label': {
+        minHeight: '1.1em',
+    },
+    '& .saveButton': {
         '&:disabled': {
             color: 'rgba(0, 0, 0, 0.26)',
             boxShadow: 'none',
             backgroundColor: 'rgba(0, 0, 0, 0.12)',
         },
     },
-    checkboxCell: {
+    '& .checkboxCell': {
         '& input[type="checkbox"]:checked + svg': {
             fill: '#595959',
         },
         padding: 0,
         color: 'rgba(0, 0, 0, 0.87)',
     },
-    spotlightForm: {
-        '& label': {
-            minHeight: '1.1em',
-        },
-    },
-    errorStyle: {
+    '& .errorStyle': {
         color: '#c80000',
         marginTop: 3,
         fontSize: '0.75rem',
     },
-    typingArea: {
+    '& .typingArea': {
         '& textarea ': {
             backgroundColor: 'rgb(236, 236, 236, 0.5)',
             borderRadius: 4,
@@ -60,7 +58,7 @@ const useStyles = makeStyles(() => ({
             paddingTop: 10,
         },
     },
-    charactersRemaining: {
+    '& .charactersRemaining': {
         textAlign: 'right',
         color: '#504e4e',
         fontSize: '0.8em',
@@ -107,8 +105,6 @@ export const SpotlightForm = ({
     spotlights,
     spotlightsLoading,
 }) => {
-    const classes = useStyles();
-
     // we cant just use the Current Spotlights api because it doesnt return unpublished records :(
     const currentSpotlights =
         !spotlightsLoading &&
@@ -405,13 +401,13 @@ export const SpotlightForm = ({
 
     // display a count of the remaining characters for the field
     const characterCount = (numCharsCurrent, numCharsMax) => (
-        <div className={classes.charactersRemaining}>
+        <div className={'charactersRemaining'}>
             {numCharsCurrent > 0 && `${numCharsMax - numCharsCurrent} characters left`}
         </div>
     );
     return (
         <Fragment>
-            <form className={classes.spotlightForm}>
+            <StyledForm>
                 <ConfirmationBox
                     actionButtonColor="primary"
                     actionButtonVariant="contained"
@@ -470,7 +466,7 @@ export const SpotlightForm = ({
                     <Grid item xs={12}>
                         <FormControl
                             variant="standard"
-                            className={classes.typingArea}
+                            className={'typingArea'}
                             fullWidth
                             title={locale.form.tooltips.adminNotesField}
                         >
@@ -490,7 +486,7 @@ export const SpotlightForm = ({
                     <Grid item xs={12}>
                         <FormControl
                             variant="standard"
-                            className={classes.typingArea}
+                            className={'typingArea'}
                             fullWidth
                             title={locale.form.tooltips.linkDescAriaField}
                         >
@@ -514,7 +510,7 @@ export const SpotlightForm = ({
                     <Grid item xs={12}>
                         <FormControl
                             variant="standard"
-                            className={classes.typingArea}
+                            className={'typingArea'}
                             fullWidth
                             title={locale.form.tooltips.imgAltField}
                         >
@@ -539,7 +535,7 @@ export const SpotlightForm = ({
                             variant="standard"
                             fullWidth
                             title={locale.form.tooltips.linkField}
-                            className={classes.typingArea}
+                            className={'typingArea'}
                         >
                             <InputLabel htmlFor="linkUrl">{locale.form.labels.linkField}</InputLabel>
                             <Input
@@ -588,7 +584,7 @@ export const SpotlightForm = ({
                             )}
                         />
                         {moment(values.start).isBefore(moment().subtract(1, 'minutes')) && (
-                            <div className={classes.errorStyle}>This date is in the past.</div>
+                            <div className={'errorStyle'}>This date is in the past.</div>
                         )}
                     </Grid>
                     <Grid item md={5} xs={12}>
@@ -661,15 +657,12 @@ export const SpotlightForm = ({
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                     <Grid item xs={7} md={10} />
                     <Grid item xs={5} md={2} align="right">
-                        <InputLabel
-                            title={locale.form.tooltips.publishedCheckbox}
-                            className={`${classes.checkboxCell}`}
-                        >
+                        <InputLabel title={locale.form.tooltips.publishedCheckbox} className={'checkboxCell'}>
                             <Checkbox
                                 checked={values.active === 1}
                                 data-testid="admin-spotlights-form-checkbox-published"
                                 onChange={handleChange('active')}
-                                className={classes.checkbox}
+                                className={'checkbox'}
                             />
                             {locale.form.labels.publishedCheckbox}
                         </InputLabel>
@@ -693,11 +686,11 @@ export const SpotlightForm = ({
                             children={defaults.type === 'edit' ? 'Save' : 'Create'}
                             disabled={!isFormValid}
                             onClick={saveSpotlight}
-                            className={classes.saveButton}
+                            className={'saveButton'}
                         />
                     </Grid>
                 </Grid>
-            </form>
+            </StyledForm>
         </Fragment>
     );
 };

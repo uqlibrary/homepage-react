@@ -11,26 +11,6 @@ export const getPathRoot = () => {
     return fullPath;
 };
 
-/* istanbul ignore next */
-export const displayDownloadInstructions = (downloadInstructions, theClass) => {
-    function addRelnoopenerNoreferrer(htmlString) {
-        // Use regular expression to find all anchor tags (<a>)
-        const regex = /<a([^>]+)>/g;
-        return htmlString.replace(regex, (match, attributes) => {
-            // Add the rel="noopener noreferrer" attribute
-            return `<a ${attributes} rel="noopener noreferrer">`;
-        });
-    }
-
-    const content = addRelnoopenerNoreferrer(downloadInstructions);
-
-    return (
-        <div data-testid="dlor-massaged-download-instructions" className={theClass}>
-            {parse(content)}
-        </div>
-    );
-};
-
 export const getYoutubeUrlForPreviewEmbed = testUrlIn => {
     let testUrl;
     try {
@@ -212,15 +192,21 @@ export const pluraliseWord = (singularWord, count, pluralWordSpecial = null) => 
 };
 
 export const slugifyName = text => {
-    // Trim hyphens from the end of the text
-    return text
-        .toString() // Ensure the input is a string
-        .toLowerCase() // Convert the string to lowercase
-        .replace(/\s+/g, '_') // Replace spaces with hyphens
-        .replace(/-/g, '_') // Replace spaces with hyphens
-        .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for hyphens
-        .replace(/\-\-+/g, '_') // Replace multiple hyphens with a single hyphen
-        .replace(/^-+/, '') // Trim hyphens from the start of the text
-        .replace(/\//, '') // Trim slashes
-        .replace(/-+$/, '');
+    return (
+        text
+            .toString() // Ensure the input is a string
+            .toLowerCase() // Convert the string to lowercase
+            .replace(/\s+/g, '-') // Replace spaces with hyphens
+            // .replace(/-/g, '_') // Replace spaces with hyphens
+            .replace(/_/g, '-') // Replace spaces with hyphens
+            .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for hyphens
+            .replace(/\-\-+/g, '-') // Replace multiple hyphens with a single hyphen
+            .replace(/^-+/, '') // Trim hyphens from the start of the text
+            .replace(/\//, '') // Trim slashes
+            .replace(/-+$/, '')
+    );
 };
+
+export function convertSnakeCaseToKebabCase(snakeCaseString) {
+    return snakeCaseString.replace(/_/g, '-');
+}

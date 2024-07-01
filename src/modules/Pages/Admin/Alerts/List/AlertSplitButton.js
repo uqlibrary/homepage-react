@@ -9,7 +9,6 @@ import Grid from '@mui/material/Grid';
 import Grow from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
-import makeStyles from '@mui/styles/makeStyles';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 
@@ -18,16 +17,6 @@ import { useConfirmationState } from 'hooks';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
 // based on https://material-ui.com/components/button-group/ "Split button"
-
-const useStyles = makeStyles(() => ({
-    parent: {
-        position: 'relative',
-        minHeight: 50,
-    },
-    menuWrapper: {
-        marginTop: -50,
-    },
-}));
 export const AlertSplitButton = ({
     alertId,
     deleteAlertById,
@@ -37,7 +26,6 @@ export const AlertSplitButton = ({
     navigateToView,
     confirmDeleteLocale,
 }) => {
-    const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
@@ -68,7 +56,7 @@ export const AlertSplitButton = ({
                 locale={confirmDeleteLocale(1)}
             />
             <Grid container direction="column" alignItems="center">
-                <Grid item xs={12} className={classes.parent}>
+                <Grid item xs={12} sx={{ position: 'relative', minHeight: 50 }}>
                     <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
                         <Button
                             children={mainButtonLabel}
@@ -106,7 +94,7 @@ export const AlertSplitButton = ({
                                     zIndex: 1,
                                 }}
                             >
-                                <Paper className={classes.menuWrapper}>
+                                <Paper sx={{ marginTop: '-50px' }}>
                                     <ClickAwayListener onClickAway={handleClose}>
                                         <MenuList id="split-button-menu">
                                             <MenuItem

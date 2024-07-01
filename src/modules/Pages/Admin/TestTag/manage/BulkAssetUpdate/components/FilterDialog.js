@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
-import makeStyles from '@mui/styles/makeStyles';
 import Grid from '@mui/material/Unstable_Grid2';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -27,13 +26,6 @@ import { useConfirmationAlert } from '../../../helpers/hooks';
 const rootId = 'filter-dialog';
 const rootIdLower = 'filter_dialog';
 
-const useStyles = makeStyles(() => ({
-    dialogPaper: {
-        minHeight: '30vh',
-        maxWidth: '100%',
-    },
-}));
-
 const FilterDialog = ({
     id,
     actions,
@@ -50,7 +42,6 @@ const FilterDialog = ({
     onAction,
 }) => {
     const componentId = `${rootIdLower}-${id}`;
-    const classes = useStyles();
     const { row, setRow } = useDataTableRow([], transformFilterRow);
     const [assetTypeId, setAssetTypeId] = useState('');
     const [searchNotes, setSearchNotes] = useState('');
@@ -132,8 +123,7 @@ const FilterDialog = ({
     return (
         <>
             <Dialog
-                classes={{ paper: classes.dialogPaper }}
-                style={{ padding: 6 }}
+                sx={{ padding: '6px', '& .MuiDialog-paper': { minHeight: '30vh', maxWidth: '100%' } }}
                 open={isOpen}
                 id={`${componentId}`}
                 data-testid={`${componentId}`}
@@ -205,7 +195,7 @@ const FilterDialog = ({
                         </Grid>
                     </Grid>
                     <Grid container spacing={3}>
-                        <Grid item style={{ flex: 1 }}>
+                        <Grid item sx={{ flex: 1 }}>
                             <DataTable
                                 id={rootId}
                                 rows={row}
@@ -220,7 +210,7 @@ const FilterDialog = ({
                             />
                         </Grid>
                     </Grid>
-                    <Grid container spacing={4} className={classes.actionButtons}>
+                    <Grid container spacing={4} className={'actionButtons'}>
                         <Grid item xs={12} sm={6} container justifyContent="flex-start">
                             <Button
                                 variant="outlined"

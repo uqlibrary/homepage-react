@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,40 +10,15 @@ import Paper from '@mui/material/Paper';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
+import { styled } from '@mui/material/styles';
 
 const moment = require('moment');
 
-const useStyles = makeStyles(() => ({
-    cellEmpty: {
-        borderBottom: 'none',
-    },
-    table: {
-        minWidth: 500,
-    },
-    startDate: {
-        whiteSpace: 'pre', // makes moment format able to take a carriage return
-    },
-    endDate: {
-        whiteSpace: 'pre',
-    },
-    headerRow: {
-        display: 'flex',
-        padding: '0 0.5rem',
-    },
-    headerCell: {
-        fontWeight: 'bold',
-    },
-    tableRow: {
-        borderBottom: '1px solid #bbb',
-    },
-    tableRowGroup: {
-        backgroundColor: '#333',
-        color: '#fff',
-        borderBottom: 'none',
-    },
+const StyledHeaderCell = styled(Typography)(() => ({
+    fontWeight: 'bold',
 }));
+
 export const PromoPanelListActive = ({ panelList, title, isLoading }) => {
-    const classes = useStyles();
     return (
         <React.Fragment>
             <StandardCard title={title} customBackgroundColor="#F7F7F7">
@@ -53,24 +27,16 @@ export const PromoPanelListActive = ({ panelList, title, isLoading }) => {
                         <TableHead>
                             <TableRow>
                                 <TableCell component="th" scope="row">
-                                    <Typography variant="body1" className={classes.headerCell}>
-                                        Group Name
-                                    </Typography>
+                                    <StyledHeaderCell variant="body1">Group Name</StyledHeaderCell>
                                 </TableCell>
                                 <TableCell component="th" scope="row">
-                                    <Typography variant="body1" className={classes.headerCell}>
-                                        Panel Name
-                                    </Typography>
+                                    <StyledHeaderCell variant="body1">Panel Name</StyledHeaderCell>
                                 </TableCell>
                                 <TableCell component="th" scope="row">
-                                    <Typography variant="body1" className={classes.headerCell}>
-                                        Default / Scheduled
-                                    </Typography>
+                                    <StyledHeaderCell variant="body1">Default / Scheduled</StyledHeaderCell>
                                 </TableCell>
                                 <TableCell component="th" scope="row">
-                                    <Typography variant="body1" className={classes.headerCell}>
-                                        Ending
-                                    </Typography>
+                                    <StyledHeaderCell variant="body1">Ending</StyledHeaderCell>
                                 </TableCell>
                             </TableRow>
                         </TableHead>

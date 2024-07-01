@@ -2,14 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
 
+import Box from '@mui/material/Box';
 import { Grid, Pagination } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import InputAdornment from '@mui/material/InputAdornment';
+import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
 
 import DescriptionIcon from '@mui/icons-material/Description';
 import LaptopIcon from '@mui/icons-material/Laptop';
@@ -33,261 +36,230 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import HeroCard from 'modules/Pages/DigitalLearningObjects/SharedComponents/HeroCard';
-import { getDlorViewPageUrl, slugifyName } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import {
+    convertSnakeCaseToKebabCase,
+    getDlorViewPageUrl,
+    slugifyName,
+} from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
-const useStyles = makeStyles(theme => ({
-    panelGap: {
-        paddingLeft: 16,
-        paddingBottom: 16,
-        paddingTop: '0 !important',
-    },
-    panelGrid: {
-        paddingLeft: 12,
-        paddingRight: 12,
-        marginBlock: 6,
-        display: 'flex',
-        alignItems: 'stretch', // panels fill the screen with equal width
-    },
-    highlighted: {
-        color: theme.palette.primary.light,
-        fontWeight: 400,
-        marginLeft: 4,
-    },
-    dlorCard: {
-        backgroundColor: '#fff',
-        borderColor: 'transparent',
-        fontFamily: 'Roboto, sans-serif',
-        // height: '100%',
-        paddingInline: 0,
-        textAlign: 'left',
-        width: '100%',
-        '&:hover': {
-            cursor: 'pointer',
-            textDecoration: 'none',
-            borderTopColor: '#f2f2f2',
-            borderLeftColor: '#f2f2f2',
-            '& > article': {
-                backgroundColor: '#f2f2f2',
-            },
-        },
-        '& article': {
-            padding: '12px',
-            '& header': {
-                '& h2': {
-                    lineHeight: 1.2,
-                    marginBlock: 7,
-                    display: 'flex',
-                    alignItems: 'center',
-                },
-            },
-            '& > div': {
-                maxHeight: 180,
-                overflowY: 'auto',
-                overflowX: 'hidden',
-                fontWeight: 300,
-            },
-            '& > div p': {
-                marginBottom: '0.2em',
-                marginTop: '0.2em',
-                fontSize: 16,
-            },
-            '& > div p:first-child': {
-                marginTop: 0,
-            },
-            '& footer': {
-                color: theme.palette.primary.light,
-                fontWeight: 400,
-                marginTop: 6,
-                display: 'flex',
-                alignItems: 'center', // horizontally, align icon and label at the center
-                '& > svg:not(:first-child)': {
-                    paddingLeft: 12,
-                },
-                '& svg': {
-                    width: 20,
-                    '& > path': {
-                        fill: theme.palette.primary.light,
-                    },
-                },
-                '& span': {
-                    paddingLeft: 2,
-                },
-            },
-        },
-    },
-    panelBody: {
-        paddingTop: 0,
-    },
-    filterSidebar: {
-        fontSize: 10,
-        paddingTop: 0,
-        marginTop: 12,
-        [theme.breakpoints.down('md')]: {
-            display: 'none',
-        },
-    },
-    filterSidebarBody: {
-        marginTop: 0,
-    },
-    showFilterSidebarIcon: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            display: 'none',
-        },
-    },
-    hideFilterSidebarIcon: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            display: 'none',
-        },
-    },
-    filterSidebarHeading: {
-        [theme.breakpoints.up('md')]: {
-            paddingRight: 20,
-        },
-    },
-    filterSidebarType: {
-        width: '100%',
-        borderBottom: '1px solid #e1e1e1',
-        paddingTop: '0!important',
-        paddingBottom: 16,
-        // marginTop: 16,
-        paddingLeft: '0!important',
-        marginLeft: 24,
-        paddingRight: 8,
-    },
-    filterSidebarTypeHeading: {
-        display: 'flex',
-        paddingLeft: 0,
-        justifyContent: 'space-between',
-        paddingTop: 16,
-        '& h3': {
-            color: theme.palette.secondary.dark,
-            display: 'flex',
-            alignItems: 'flex-start',
-            fontWeight: 500,
-        },
-        '& button': {
-            borderColor: 'transparent',
-            backgroundColor: '#f7f7f7',
-        },
-    },
-    filterSidebarFacetHelpPopup: {
-        position: 'absolute',
-        top: 35,
-        left: 0,
-        backgroundColor: '#fff',
-        border: '1px solid #ccc',
-        padding: 14,
-        lineHeight: 1.4,
-        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-        zIndex: 1000,
-        fontSize: 16,
-        '& span': {
-            display: 'block',
-            marginTop: 40,
-        },
-        '& button': {
-            marginTop: 10,
-            position: 'absolute',
-            top: 10,
-            right: 10,
-            float: 'right',
-            width: '6em',
-        },
-    },
-    facetPanelControl: {
-        '& button': {
-            padding: 0,
-        },
-    },
-    filterSidebarCheckboxWrapper: {
-        '& label': {
-            display: 'flex',
-            alignItems: 'flex-start', // align items vertically at the top
-        },
-    },
-    filterSidebarCheckboxControl: {
-        display: 'block',
-        '& span:first-child': {
-            paddingBlock: 0,
-        },
-        paddingBottom: 5,
-        '& .MuiFormControlLabel-label': {
-            fontSize: '0.9rem',
-        },
-    },
-    skipLink: {
-        // hidden when not focused
-        position: 'absolute',
-        left: -1000,
+const StyledSkipLinkButton = styled(Button)(({ theme }) => ({
+    // hidden when not focused
+    position: 'absolute',
+    left: -1000,
+
+    // uqActionButton layout
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.white.main,
+    borderColor: theme.palette.primary.main,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderRadius: 6,
+    padding: '8px 12px',
+    fontWeight: 400,
+
+    marginLeft: 10,
+    '&:focus': {
+        left: 'auto',
 
         // uqActionButton layout
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.white.main,
-        borderColor: theme.palette.primary.main,
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderRadius: 6,
-        padding: '8px 12px',
-        fontWeight: 400,
-
-        marginLeft: 10,
-        '&:focus': {
-            left: 'auto',
-
-            // uqActionButton layout
-            backgroundColor: theme.palette.white.main,
-            color: theme.palette.primary.main,
-            textDecoration: 'none',
+        backgroundColor: theme.palette.white.main,
+        color: theme.palette.primary.main,
+        textDecoration: 'none',
+    },
+}));
+const UQActionButton = styled(Grid)(({ theme }) => ({
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.white.main,
+    cursor: 'pointer',
+    borderColor: theme.palette.primary.main,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderRadius: 6,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    padding: '8px 12px',
+    fontWeight: 400,
+    '&:hover': {
+        backgroundColor: theme.palette.white.main,
+        color: theme.palette.primary.main,
+        textDecoration: 'none',
+    },
+    fontSize: '13px',
+}));
+const UqActionLink = styled(Link)(({ theme }) => ({
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.white.main,
+    borderColor: theme.palette.primary.main,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderRadius: 6,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    padding: '8px 12px',
+    fontWeight: 400,
+    '&:hover': {
+        backgroundColor: theme.palette.white.main,
+        color: theme.palette.primary.main,
+        textDecoration: 'none',
+    },
+}));
+const StyledPanelGrid = styled(Grid)(() => ({
+    paddingLeft: 12,
+    paddingRight: 12,
+    marginBlock: 6,
+    display: 'flex',
+    alignItems: 'stretch', // panels fill the screen with equal width
+}));
+const StyledFilterSidebarIconBox = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+        display: 'none',
+    },
+}));
+const StyledPagination = styled(Pagination)(() => ({
+    width: '100%',
+    '& ul': {
+        justifyContent: 'center',
+    },
+}));
+const StyledFilterSidebarGrid = styled(Grid)(({ theme }) => ({
+    fontSize: 10,
+    paddingTop: 0,
+    marginTop: 12,
+    [theme.breakpoints.down('md')]: {
+        display: 'none',
+    },
+}));
+const StyledArticleCard = styled('button')(({ theme }) => ({
+    backgroundColor: '#fff',
+    borderColor: 'transparent',
+    fontFamily: 'Roboto, sans-serif',
+    paddingInline: 0,
+    textAlign: 'left',
+    width: '100%',
+    '&:hover': {
+        cursor: 'pointer',
+        textDecoration: 'none',
+        borderTopColor: '#f2f2f2',
+        borderLeftColor: '#f2f2f2',
+        '& > article': {
+            backgroundColor: '#f2f2f2',
         },
     },
-    keywordSearchPanel: {
-        width: 'calc(100% - 24px)',
-        marginBottom: 18,
-        marginLeft: 12,
-        marginRight: 12,
-    },
-    dlorPagination: {
-        width: '100%',
-        '& ul': {
-            justifyContent: 'center',
+    '& article': {
+        padding: '12px',
+        '& header': {
+            '& h2': {
+                lineHeight: 1.2,
+                marginBlock: 7,
+                display: 'flex',
+                alignItems: 'center',
+            },
+        },
+        '& > div': {
+            maxHeight: 180,
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            fontWeight: 300,
+        },
+        '& > div p': {
+            marginBottom: '0.2em',
+            marginTop: '0.2em',
+            fontSize: 16,
+        },
+        '& > div p:first-child': {
+            marginTop: 0,
+        },
+        '& footer': {
+            color: theme.palette.primary.light,
+            fontWeight: 400,
+            marginTop: 6,
+            display: 'flex',
+            alignItems: 'center', // horizontally, align icon and label at the center
+            '& > svg:not(:first-child)': {
+                paddingLeft: 12,
+            },
+            '& svg': {
+                width: 20,
+                '& > path': {
+                    fill: theme.palette.primary.light,
+                },
+            },
+            '& span': {
+                paddingLeft: 2,
+            },
         },
     },
-    uqActionButton: {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.white.main,
-        borderColor: theme.palette.primary.main,
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderRadius: 6,
+}));
+const StyledSidebarFilterIcon = styled('span')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+        display: 'none',
+    },
+}));
+const StyledSidebarFilterTypeHeadingGrid = styled(Grid)(({ theme }) => ({
+    display: 'flex',
+    paddingLeft: 0,
+    justifyContent: 'space-between',
+    paddingTop: 16,
+    '& h3': {
+        color: theme.palette.secondary.dark,
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-around',
-        padding: '8px 12px',
-        fontWeight: 400,
-        '&:hover': {
-            backgroundColor: theme.palette.white.main,
-            color: theme.palette.primary.main,
-            textDecoration: 'none',
-        },
+        alignItems: 'flex-start',
+        fontWeight: 500,
     },
-    resetButtonBlock: {
-        '& button:hover': {
-            cursor: 'pointer',
-        },
+    '& button': {
+        borderColor: 'transparent',
+        backgroundColor: '#f7f7f7',
     },
-    tagLabel: {
-        fontVariant: 'small-caps',
-        textTransform: 'lowercase',
-        fontWeight: 'bold',
-        marginRight: 10,
-        color: '#333',
+}));
+const StyledSidebarFilterFacetHelpPopupBox = styled(Box)(() => ({
+    position: 'absolute',
+    top: 35,
+    left: 0,
+    backgroundColor: '#fff',
+    border: '1px solid #ccc',
+    padding: 14,
+    lineHeight: 1.4,
+    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+    zIndex: 1000,
+    fontSize: 16,
+    '& span': {
+        display: 'block',
+        marginTop: 40,
     },
+    '& button': {
+        marginTop: 10,
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        float: 'right',
+        width: '6em',
+    },
+}));
+const StyledFormControlLabel = styled(FormControlLabel)(() => ({
+    display: 'flex',
+    alignItems: 'flex-start',
+    '& span:first-child': {
+        paddingBlock: 0,
+    },
+    paddingBottom: 5,
+    '& .MuiFormControlLabel-label': {
+        fontSize: '0.9rem',
+    },
+}));
+const StyledTagLabel = styled('span')(() => ({
+    fontVariant: 'small-caps',
+    textTransform: 'lowercase',
+    fontWeight: 'bold',
+    marginRight: 10,
+    color: '#333',
 }));
 
 export const DLOList = ({
@@ -300,8 +272,6 @@ export const DLOList = ({
     dlorFilterListError,
     account,
 }) => {
-    const classes = useStyles();
-
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [filterListTrimmed, setFilterListTrimmed] = useState([]);
     const checkBoxArrayRef = useRef([]);
@@ -391,7 +361,6 @@ export const DLOList = ({
         }
 
         keyWordSearchRef.current.value = keyword;
-        // keyWordSearchRef.current = keyword;
         updateUrl('keyword');
     };
 
@@ -696,45 +665,53 @@ export const DLOList = ({
     function displayFilterSidebarContents() {
         return (
             <>
-                <Grid container className={classes.filterSidebarHeading} data-testid="sidebar-panel-heading">
-                    <Grid item xs={10} md={9}>
+                <Grid container data-testid="sidebar-panel-heading">
+                    <Grid item xs={10} md={8}>
                         <Typography component={'h2'} variant={'h6'}>
                             Filters
                         </Typography>
                     </Grid>
                     <Grid item xs={2} md={1}>
-                        <span
-                            id="filterIconHideId"
-                            data-testid="sidebar-filter-icon-hide-id"
-                            className={classes.hideFilterSidebarIcon}
-                        >
+                        <StyledSidebarFilterIcon id="filterIconHideId" data-testid="sidebar-filter-icon-hide-id">
                             <IconButton aria-label="hide the filters" onClick={() => hideFilters()}>
                                 <CloseIcon />
                             </IconButton>
-                        </span>
+                        </StyledSidebarFilterIcon>
                     </Grid>
-                    <Grid item xs={12} md={2} className={classes.resetButtonBlock}>
-                        <button
+                    <Grid item xs={12} md={3}>
+                        <UQActionButton
                             data-testid="sidebar-filter-reset-button"
-                            className={classes.uqActionButton}
                             onClick={() => handleResetClick()}
                             aria-label="Reset filter to default"
+                            sx={{ textTransform: 'none' }}
                         >
                             Reset
-                        </button>
+                        </UQActionButton>
                     </Grid>
                 </Grid>
-                <Grid container spacing={3} className={classes.filterSidebarBody}>
+                <Grid container spacing={3} sx={{ marginTop: 0 }}>
                     {filterListTrimmed?.map(facetType => {
                         return (
-                            <Grid item key={facetType?.facet_type_slug} className={classes.filterSidebarType}>
-                                <Grid container className={classes.filterSidebarTypeHeading}>
-                                    <Grid item md={11} style={{ position: 'relative' }}>
+                            <Grid
+                                item
+                                key={facetType?.facet_type_slug}
+                                sx={{
+                                    width: '100%',
+                                    borderBottom: '1px solid #e1e1e1',
+                                    paddingTop: '0!important',
+                                    paddingBottom: '16px',
+                                    paddingLeft: '0!important',
+                                    marginLeft: '24px',
+                                    paddingRight: '8px',
+                                }}
+                            >
+                                <StyledSidebarFilterTypeHeadingGrid container>
+                                    <Grid item md={10} sx={{ position: 'relative' }}>
                                         <Typography
                                             component={'h3'}
                                             variant="subtitle1"
-                                            style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} // Add cursor pointer for better UX
-                                            onClick={() => showHidePanel(facetType?.facet_type_id)} // Move onClick here
+                                            sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                                            onClick={() => showHidePanel(facetType?.facet_type_id)}
                                         >
                                             {getFacetTypeIcon(facetType?.facet_type_slug)} &nbsp;{' '}
                                             {facetType?.facet_type_name}{' '}
@@ -743,7 +720,7 @@ export const DLOList = ({
                                                     aria-label="View facet help"
                                                     onClick={() => openHelpText(facetType)}
                                                     data-testid={sidebarElementId(
-                                                        facetType?.facet_type_slug,
+                                                        convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
                                                         'panel-help-icon',
                                                     )}
                                                 >
@@ -751,14 +728,13 @@ export const DLOList = ({
                                                 </IconButton>
                                             )}
                                         </Typography>
-                                        <div
+                                        <StyledSidebarFilterFacetHelpPopupBox
                                             id={getPopupId(facetType)}
-                                            className={classes.filterSidebarFacetHelpPopup}
-                                            style={{ display: 'none' }}
+                                            sx={{ display: 'none' }}
                                         >
                                             <button
                                                 data-testid={sidebarElementId(
-                                                    facetType?.facet_type_slug,
+                                                    convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
                                                     'panel-help-close',
                                                 )}
                                                 onClick={
@@ -770,9 +746,9 @@ export const DLOList = ({
                                             </button>
                                             {!!facetType?.facet_type_help_public &&
                                                 parse(facetType.facet_type_help_public)}
-                                        </div>
+                                        </StyledSidebarFilterFacetHelpPopupBox>
                                     </Grid>
-                                    <Grid item md={1} className={classes.facetPanelControl}>
+                                    <Grid item md={2}>
                                         <IconButton
                                             aria-label={
                                                 openPanelListContains(facetType?.facet_type_id)
@@ -780,7 +756,7 @@ export const DLOList = ({
                                                     : filterMaximiseButtonLabel
                                             }
                                             data-testid={sidebarElementId(
-                                                facetType?.facet_type_slug,
+                                                convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
                                                 'panel-minimisation-icon',
                                             )}
                                             onClick={() => showHidePanel(facetType?.facet_type_id)}
@@ -788,10 +764,10 @@ export const DLOList = ({
                                             <KeyboardArrowUpIcon
                                                 id={sidebarElementId(facetType?.facet_type_id, 'panel-uparrow')}
                                                 data-testid={sidebarElementId(
-                                                    facetType?.facet_type_slug,
+                                                    convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
                                                     'panel-uparrow',
                                                 )}
-                                                style={
+                                                sx={
                                                     openPanelListContains(facetType?.facet_type_id)
                                                         ? {}
                                                         : {
@@ -805,10 +781,10 @@ export const DLOList = ({
                                             <KeyboardArrowDownIcon
                                                 id={sidebarElementId(facetType?.facet_type_id, 'panel-downarrow')}
                                                 data-testid={sidebarElementId(
-                                                    facetType?.facet_type_slug,
+                                                    convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
                                                     'panel-downarrow',
                                                 )}
-                                                style={
+                                                sx={
                                                     openPanelListContains(facetType?.facet_type_id)
                                                         ? {
                                                               display: 'none',
@@ -821,12 +797,13 @@ export const DLOList = ({
                                             />
                                         </IconButton>
                                     </Grid>
-                                </Grid>
-                                <div
-                                    className={classes.filterSidebarCheckboxWrapper}
+                                </StyledSidebarFilterTypeHeadingGrid>
+                                <Box
                                     id={sidebarElementId(facetType?.facet_type_id)}
-                                    data-testid={sidebarElementId(facetType?.facet_type_slug)}
-                                    style={
+                                    data-testid={sidebarElementId(
+                                        convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
+                                    )}
+                                    sx={
                                         openPanelListContains(facetType?.facet_type_id)
                                             ? {}
                                             : { display: 'none', visibility: 'hidden', opacity: 0, height: 0 }
@@ -838,17 +815,16 @@ export const DLOList = ({
                                             const checkBoxid = `checkbox-${facetType?.facet_type_slug}`;
                                             const checkBoxidShort = `${facetType?.facet_type_slug}-${facet?.facet_id}`;
                                             return (
-                                                <FormControlLabel
+                                                <StyledFormControlLabel
                                                     key={`${facetType?.facet_type_slug}-${facet?.facet_id}`}
-                                                    className={classes.filterSidebarCheckboxControl}
                                                     control={
                                                         <Checkbox
                                                             onChange={handleCheckboxAction(checkBoxid)}
                                                             aria-label={'Include'}
                                                             value={facet?.facet_id}
-                                                            data-testid={`checkbox-${
-                                                                facetType?.facet_type_slug
-                                                            }-${slugifyName(facet?.facet_name)}`}
+                                                            data-testid={`checkbox-${convertSnakeCaseToKebabCase(
+                                                                facetType?.facet_type_slug,
+                                                            )}-${slugifyName(facet?.facet_name)}`}
                                                             ref={checkBoxArrayRef.current[checkBoxidShort]}
                                                             checked={
                                                                 !!checkBoxArrayRef.current?.includes(checkBoxidShort)
@@ -859,7 +835,7 @@ export const DLOList = ({
                                                 />
                                             );
                                         })}
-                                </div>
+                                </Box>
                             </Grid>
                         );
                     })}
@@ -946,12 +922,15 @@ export const DLOList = ({
             <Grid
                 item
                 xs={12}
-                className={classes.panelGap}
+                sx={{
+                    paddingLeft: '16px',
+                    paddingBottom: '16px',
+                    paddingTop: '0 !important',
+                }}
                 key={object?.object_id}
-                data-testid={`dlor-homepage-panel-${object?.object_public_uuid}`}
+                data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(object?.object_public_uuid)}`}
             >
-                <button
-                    className={classes.dlorCard}
+                <StyledArticleCard
                     onClick={() => navigateToDetailPage(object?.object_public_uuid)}
                     aria-label={`Click for more details on ${object.object_title}`}
                     id={index === 0 ? 'first-panel-button' : null}
@@ -967,48 +946,53 @@ export const DLOList = ({
                                     !!object?.object_series_name) && (
                                     <Typography
                                         component={'p'}
-                                        style={{
+                                        sx={{
                                             display: 'flex',
                                             alignItems: 'center',
-                                            marginLeft: -4,
-                                            marginTop: -4,
-                                            marginBottom: 6,
+                                            marginLeft: '-4px',
+                                            marginTop: '-4px',
+                                            marginBottom: '6px',
                                         }}
                                     >
                                         {!!object?.object_is_featured && (
                                             <>
-                                                <BookmarkIcon style={{ fill: '#51247A', marginRight: 2, width: 20 }} />
-                                                <span
-                                                    className={classes.tagLabel}
-                                                    data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-featured`}
-                                                    style={{ marginLeft: -2 }}
+                                                <BookmarkIcon
+                                                    sx={{ fill: '#51247A', marginRight: '2px', width: '20px' }}
+                                                />
+                                                <StyledTagLabel
+                                                    data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                        object?.object_public_uuid,
+                                                    )}-featured`}
+                                                    sx={{ marginLeft: '-2px' }}
                                                 >
                                                     Featured
-                                                </span>
+                                                </StyledTagLabel>
                                             </>
                                         )}
                                         {!!object?.object_cultural_advice && (
                                             <>
-                                                <InfoIcon style={{ fill: '#2377CB', marginRight: 2, width: 20 }} />
-                                                <span
-                                                    className={classes.tagLabel}
-                                                    data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-cultural-advice`}
+                                                <InfoIcon sx={{ fill: '#2377CB', marginRight: '2px', width: '20px' }} />
+                                                <StyledTagLabel
+                                                    data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                        object?.object_public_uuid,
+                                                    )}-cultural-advice`}
                                                 >
                                                     Cultural advice
-                                                </span>
+                                                </StyledTagLabel>
                                             </>
                                         )}
                                         {!!object?.object_series_name && (
                                             <>
                                                 <PlaylistAddCheckIcon
-                                                    style={{ fill: '#4aa74e', marginRight: 2, width: 24 }}
+                                                    sx={{ fill: '#4aa74e', marginRight: '2px', width: '24px' }}
                                                 />
-                                                <span
-                                                    className={classes.tagLabel}
-                                                    data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-object_series_name`}
+                                                <StyledTagLabel
+                                                    data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                        object?.object_public_uuid,
+                                                    )}-object-series-name`}
                                                 >
                                                     Series: {object?.object_series_name}
-                                                </span>
+                                                </StyledTagLabel>
                                             </>
                                         )}
                                     </Typography>
@@ -1023,7 +1007,11 @@ export const DLOList = ({
                             {!!hasTopicFacet('item_type') && (
                                 <>
                                     {getFacetTypeIcon('item_type')}
-                                    <span data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-type`}>
+                                    <span
+                                        data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                            object?.object_public_uuid,
+                                        )}-footer-type`}
+                                    >
                                         {getConcatenatedFilterLabels('item_type')}
                                     </span>
                                 </>
@@ -1032,7 +1020,9 @@ export const DLOList = ({
                                 <>
                                     {getFacetTypeIcon('media_format')}
                                     <span
-                                        data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-media`}
+                                        data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                            object?.object_public_uuid,
+                                        )}-footer-media`}
                                     >
                                         {getConcatenatedFilterLabels('media_format')}
                                     </span>
@@ -1042,7 +1032,9 @@ export const DLOList = ({
                                 <>
                                     {getFacetTypeIcon('topic')}
                                     <span
-                                        data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-topic`}
+                                        data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                            object?.object_public_uuid,
+                                        )}-footer-topic`}
                                     >
                                         {getConcatenatedFilterLabels('topic')}
                                     </span>
@@ -1050,7 +1042,7 @@ export const DLOList = ({
                             )}
                         </footer>
                     </article>
-                </button>
+                </StyledArticleCard>
             </Grid>
         );
     }
@@ -1066,9 +1058,9 @@ export const DLOList = ({
                 <StandardPage>
                     <Grid container spacing={2}>
                         <Grid item md={12}>
-                            <div style={{ minHeight: 600 }}>
+                            <Box sx={{ minHeight: '600px' }}>
                                 <InlineLoader message="Loading" />
-                            </div>
+                            </Box>
                         </Grid>
                     </Grid>
                 </StandardPage>
@@ -1097,52 +1089,43 @@ export const DLOList = ({
                 <Grid
                     container
                     id="topOfBody"
-                    style={{ marginBlock: '2em 1em' }}
                     alignItems="center"
                     justifyContent="space-between"
+                    sx={{ marginBlock: '2em 1em' }}
                 >
                     <Grid item xs={12} md="auto">
-                        <Typography component={'p'} style={{ fontSize: '1.2em', fontWeight: 400 }}>
+                        <Typography component={'p'} sx={{ fontSize: '1.2em', fontWeight: 400 }}>
                             Find out{' '}
                             <a href="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects">
                                 how to use our digital learning objects
                             </a>
                             .
-                            <button
-                                className={classes.skipLink}
+                            <StyledSkipLinkButton
                                 id="skip-filters"
                                 onClick={/* istanbul ignore next */ () => /* istanbul ignore next */ skipToElement()}
                             >
                                 Skip facet selection to view Digital Learning Hub entries
-                            </button>
+                            </StyledSkipLinkButton>
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} md="auto">
-                        <a
+                    <Grid item xs={12} md="auto" sx={{ textAlign: 'right' }}>
+                        <UqActionLink
                             data-testid="dlor-homepage-contact"
-                            className={classes.uqActionButton}
                             href={contactFormLink}
                             target="_blank"
                             title="Load a contact form, in a new window"
-                            style={{ fontSize: '1.2em', maxWidth: '8em', display: 'flex', alignItems: 'center' }}
+                            sx={{ fontSize: '1.2em', maxWidth: '8em', display: 'flex', alignItems: 'center' }}
                         >
-                            Contact us
+                            Contact us&nbsp;
                             <OpenInNewIcon />
-                        </a>
+                        </UqActionLink>
                     </Grid>
-                    <Grid item xs={12} style={{ marginTop: 20 }}>
+                    <Grid item xs={12} sx={{ marginTop: '20px' }}>
                         <LoginPrompt account={account} />
                     </Grid>
                 </Grid>
                 <Grid container>
-                    <Grid
-                        item
-                        xs={12}
-                        md={3}
-                        className={classes.filterSidebar}
-                        id="filterSidebar"
-                        data-testid="filter-sidebar"
-                    >
+                    <StyledFilterSidebarGrid item xs={12} md={3} id="filterSidebar" data-testid="filter-sidebar">
                         {(() => {
                             if (!!dlorFilterListError || !filterListTrimmed || filterListTrimmed.length === 0) {
                                 return (
@@ -1154,10 +1137,14 @@ export const DLOList = ({
                                 return displayFilterSidebarContents();
                             }
                         })()}
-                    </Grid>
-                    <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
+                    </StyledFilterSidebarGrid>
+                    <Grid item xs={12} md={9}>
                         <TextField
-                            className={classes.keywordSearchPanel}
+                            sx={{
+                                width: 'calc(100% - 24px)',
+                                marginBottom: '18px',
+                                marginLeft: '12px',
+                            }}
                             data-testid="dlor-homepage-keyword"
                             label="Search our digital objects by keyword"
                             onChange={handleKeywordEntry}
@@ -1226,41 +1213,33 @@ export const DLOList = ({
                                     );
                                 } else {
                                     return (
-                                        <div className={classes.panelBody}>
-                                            <Grid
-                                                container
-                                                spacing={3}
-                                                className={classes.panelGrid}
-                                                data-testid="dlor-homepage-list"
-                                                id="dlor-homepage-list"
+                                        <StyledPanelGrid
+                                            container
+                                            spacing={3}
+                                            data-testid="dlor-homepage-list"
+                                            id="dlor-homepage-list"
+                                        >
+                                            <StyledFilterSidebarIconBox
+                                                id="filterIconShowId"
+                                                data-testid="sidebar-filter-icon"
                                             >
-                                                <div
-                                                    id="filterIconShowId"
-                                                    data-testid="sidebar-filter-icon"
-                                                    className={classes.showFilterSidebarIcon}
-                                                >
-                                                    <IconButton
-                                                        aria-label="Show the filters"
-                                                        onClick={() => showFilters()}
-                                                    >
-                                                        <FilterAltIcon />
-                                                    </IconButton>
-                                                </div>
-                                                {!!dlorData &&
-                                                    dlorData.length > 0 &&
-                                                    dlorData.map((o, index) => displayItemPanel(o, index))}
-                                                {!!dlorData && dlorData.length > 0 && (
-                                                    <Pagination
-                                                        count={paginationCount}
-                                                        showFirstButton
-                                                        showLastButton
-                                                        onChange={handlePaginationChange}
-                                                        page={paginationPage}
-                                                        className={classes.dlorPagination}
-                                                    />
-                                                )}
-                                            </Grid>
-                                        </div>
+                                                <IconButton aria-label="Show the filters" onClick={() => showFilters()}>
+                                                    <FilterAltIcon />
+                                                </IconButton>
+                                            </StyledFilterSidebarIconBox>
+                                            {!!dlorData &&
+                                                dlorData.length > 0 &&
+                                                dlorData.map((o, index) => displayItemPanel(o, index))}
+                                            {!!dlorData && dlorData.length > 0 && (
+                                                <StyledPagination
+                                                    count={paginationCount}
+                                                    showFirstButton
+                                                    showLastButton
+                                                    onChange={handlePaginationChange}
+                                                    page={paginationPage}
+                                                />
+                                            )}
+                                        </StyledPanelGrid>
                                     );
                                 }
                             }
@@ -1283,5 +1262,4 @@ DLOList.propTypes = {
     account: PropTypes.object,
 };
 
-// export default React.memo(DLOList);
 export default DLOList;

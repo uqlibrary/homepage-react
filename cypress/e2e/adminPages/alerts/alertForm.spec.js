@@ -7,9 +7,7 @@ const EXTREME_COLOUR = 'rgb(149, 17, 38)'; // #951126
 
 function selectPriorityType(type) {
     // open the select
-    cy.get('[data-testid="admin-alerts-form-select-prioritytype"]')
-        .parent()
-        .click();
+    cy.get('[data-testid="admin-alerts-form-select-prioritytype"]').click();
     // choose urgent
     cy.get(`[data-testid="admin-alerts-form-option-${type}"]`).click();
     cy.get('[data-testid="admin-alerts-form-prioritytype-input"]').should('have.value', type);

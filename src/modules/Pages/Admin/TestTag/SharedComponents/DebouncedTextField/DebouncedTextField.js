@@ -38,7 +38,8 @@ const DebouncedTextField = ({ id, onChange, value, interval = DEBOUNCE_INTERVAL,
                 ...rest.inputProps,
                 'data-testid': `${componentId}-input`,
                 'data-fieldtype': rootId,
-            }} />
+            }}
+        />
     );
 };
 

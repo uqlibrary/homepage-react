@@ -15,7 +15,6 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
-import { makeStyles } from '@mui/styles';
 import MenuItem from '@mui/material/MenuItem';
 import Modal from '@mui/material/Modal';
 import Radio from '@mui/material/Radio';
@@ -24,6 +23,7 @@ import Select from '@mui/material/Select';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import CloseIcon from '@mui/icons-material/Close';
@@ -39,6 +39,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import {
     convertFileSizeToKb,
+    convertSnakeCaseToKebabCase,
     getDlorViewPageUrl,
     getTotalSecondsFromMinutesAndSecond,
     isPreviewableUrl,
@@ -54,70 +55,53 @@ import {
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
-const useStyles = makeStyles(theme => ({
-    charactersRemaining: {
-        textAlign: 'right',
-        color: '#504e4e',
-        fontSize: '0.8em',
+const StyledErrorCountBadge = styled(Badge)(() => ({
+    '& span': {
+        right: -12,
     },
-    errorCount: {
-        '& span': {
-            right: -12,
-        },
+}));
+const StyledErrorMessageBox = styled(Box)(({ theme }) => ({
+    color: theme.palette.error.light,
+    fontSize: '0.8em',
+    marginTop: '2px',
+}));
+const StyledFacetFormControlLabel = styled(FormControlLabel)(() => ({
+    display: 'flex',
+    alignItems: 'flex-start',
+    width: '100%',
+    '& span:first-of-type': {
+        paddingBlock: 0,
     },
-    fieldUseTip: {
-        fontSize: '0.9em',
-        marginTop: 4,
+    '& .MuiFormControlLabel-label': {
+        fontSize: '0.9rem',
     },
-    errorMessage: {
-        color: theme.palette.error.light,
-        fontSize: '0.8em',
-        marginTop: 2,
-    },
-    fieldNote: {
-        fontSize: '0.8em',
-    },
-    facetControl: {
+}));
+const StyledViewDurationBox = styled(Box)(() => ({
+    '& > div': {
         display: 'flex',
-        alignItems: 'flex-start',
-        width: '100%',
-        '& span:first-child': {
-            paddingBlock: 0,
-        },
-        '& .MuiFormControlLabel-label': {
-            fontSize: '0.9rem',
-        },
-        // '& span:nth-child(2)': {
-        //     color: '#333',
-        //     textOverflow: 'initial',
-        // },
+        alignItems: 'center',
     },
-    facetRadioControl: {
-        display: 'block',
-        '& span:first-child': {
-            paddingBlock: 0,
-        },
+    '& input': {
+        maxWidth: '3em',
     },
-    viewDuration: {
-        '& > div': {
-            display: 'flex',
-            alignItems: 'center',
-        },
-        '& input': {
-            maxWidth: '3em',
-        },
+}));
+const StyledLightboxHeaderBox = styled(Box)(({ theme }) => ({
+    backgroundColor: theme.palette.primary.light,
+    color: 'white',
+    padding: '80px 0 20px 20px',
+    '& h2': {
+        fontSize: '2rem',
     },
-    lightroomHeader: {
-        backgroundColor: theme.palette.primary.light,
-        color: 'white',
-        padding: '80px 0 20px 20px',
-        '& h2': {
-            fontSize: '2rem',
-        },
-        '& p': {
-            fontSize: '1rem',
-        },
+    '& p': {
+        fontSize: '1rem',
     },
+}));
+const StyledLinkAppearanceSpan = styled('span')(() => ({
+    color: '#3872a8',
+    textDecoration: 'none',
+}));
+const StyledDurationSpan = styled('span')(() => ({
+    paddingRight: '6px',
 }));
 
 export const DlorForm = ({
@@ -139,7 +123,6 @@ export const DlorForm = ({
     formDefaults,
     mode,
 }) => {
-    const classes = useStyles();
     const [cookies, setCookie] = useCookies();
 
     const [confirmationOpen, setConfirmationOpen] = useState(false);
@@ -148,8 +131,6 @@ export const DlorForm = ({
 
     // show-hide the File Type creation fields
     const [showFileTypeCreationForm, setShowFileTypeCreationForm] = useState(false);
-
-    // const [isLinkFileTypeError, setIsLinkFileTypeError] = useState(false);
 
     const linkInteractionTypeDOWNLOAD = 'download';
     const linkInteractionTypeVIEW = 'view';
@@ -227,11 +208,18 @@ export const DlorForm = ({
     const characterCount = (numCharsCurrent, numCharsMin, fieldName) => {
         const missingCharCount = numCharsMin - numCharsCurrent;
         return (
-            <div className={classes.charactersRemaining} data-testid={`input-characters-remaining-${fieldName}`}>
+            <Box
+                sx={{
+                    textAlign: 'right',
+                    color: '#504e4e',
+                    fontSize: '0.8em',
+                }}
+                data-testid={`input-characters-remaining-${convertSnakeCaseToKebabCase(fieldName)}`}
+            >
                 {numCharsCurrent > 0 && missingCharCount > 0
                     ? `at least ${missingCharCount} more ${pluraliseWord('character', missingCharCount)} needed`
                     : ''}
-            </div>
+            </Box>
         );
     };
 
@@ -322,8 +310,8 @@ export const DlorForm = ({
             thirdPanelErrorCount++;
 
         currentValues.object_link_interaction_type === linkInteractionTypeDOWNLOAD &&
-        !isValidNumber(currentValues?.object_link_size_amount) &&
-        !currentValues?.object_link_size_unit && // needs valid check here?
+            !isValidNumber(currentValues?.object_link_size_amount) &&
+            !currentValues?.object_link_size_unit &&
             thirdPanelErrorCount++;
         return thirdPanelErrorCount;
     }
@@ -428,7 +416,6 @@ export const DlorForm = ({
         }
         if (prop === 'object_link_interaction_type') {
             setInteractionTypeDisplays(theNewValue);
-            // valid?
             if (mode === 'add') {
                 linkFileTypeSelectRef.current = 'new';
             }
@@ -476,34 +463,38 @@ export const DlorForm = ({
                     <InputLabel htmlFor="object_publishing_user">Publishing user *</InputLabel>
                     <Input
                         id="object_publishing_user"
-                        data-testid="object_publishing_user"
+                        data-testid="object-publishing-user"
                         required
                         value={formValues?.object_publishing_user || ''}
                         onChange={handleChange('object_publishing_user')}
-                        style={{ width: '20em' }}
+                        sx={{ width: '20em' }}
                         error={!isValidUsername(formValues?.object_publishing_user)}
                     />
-                    <div className={classes.fieldUseTip}>This must be the person's UQ username</div>
+                    <Box
+                        sx={{
+                            fontSize: '0.9em',
+                            marginTop: '4px',
+                        }}
+                    >
+                        This must be the person's UQ username
+                    </Box>
                     {!isValidUsername(formValues?.object_publishing_user) && (
-                        <div className={classes.errorMessage} data-testid={'error-message-object_publishing_user'}>
+                        <StyledErrorMessageBox data-testid="dlor-form-error-message-object-publishing-user">
                             This username is not valid.
-                        </div>
+                        </StyledErrorMessageBox>
                     )}
                 </FormControl>
             </Grid>
-            <Grid item xs={12} style={{ minHeight: 95 }}>
+            <Grid item xs={12} sx={{ minHeight: '95px' }}>
                 <InputLabel id="object_owning_team_label">Owning Team</InputLabel>
                 <Select
                     variant="standard"
                     labelId="object_owning_team_label"
                     id="object_owning_team"
-                    data-testid="object_owning_team"
+                    data-testid="object-owning-team"
                     value={teamSelectRef.current ?? 1}
-                    // defaultValue={formValues?.object_owning_team_id}
-                    // value={teamSelectRef.current}
                     onChange={handleChange('object_owning_team_id')}
-                    // aria-labelledby="object_owning_team_label"
-                    style={{ minWidth: '20em' }}
+                    sx={{ minWidth: '20em' }}
                 >
                     {dlorTeamList?.map((t, index) => {
                         return (
@@ -511,7 +502,7 @@ export const DlorForm = ({
                                 key={t.team_id}
                                 value={t.team_id}
                                 selected={t.team_id === teamSelectRef.current}
-                                data-testid={`object_owning_team-${t.team_id}`}
+                                data-testid={`object-owning-team-${t.team_id}`}
                                 divider={index === dlorTeamList.length - 1}
                             >
                                 {t.team_name}
@@ -530,7 +521,7 @@ export const DlorForm = ({
                 {mode === 'edit' && formDefaults?.object_owning_team_id === teamSelectRef.current && (
                     <Button
                         onClick={() => controlEditTeamDialog()}
-                        style={{ marginLeft: '10px' }}
+                        sx={{ marginLeft: '10px' }}
                         data-testid="object-form-teamid-change"
                     >
                         {showTeamForm === false ? 'Update contact' : 'Close'}
@@ -543,7 +534,7 @@ export const DlorForm = ({
                         <InputLabel htmlFor="team_name_new">Name of new Team *</InputLabel>
                         <Input
                             id="team_name_new"
-                            data-testid="team_name_new"
+                            data-testid="dlor-form-team-name-new"
                             value={formValues?.team_name_new || ''}
                             onChange={handleChange('team_name_new')}
                         />
@@ -552,7 +543,7 @@ export const DlorForm = ({
                         <InputLabel htmlFor="team_manager_new">Name of Team manager *</InputLabel>
                         <Input
                             id="team_manager_new"
-                            data-testid="team_manager_new"
+                            data-testid="dlor-form-team-manager-new"
                             required
                             value={formValues?.team_manager_new || ''}
                             onChange={handleChange('team_manager_new')}
@@ -562,7 +553,7 @@ export const DlorForm = ({
                         <InputLabel htmlFor="team_email_new">Team email *</InputLabel>
                         <Input
                             id="team_email_new"
-                            data-testid="team_email_new"
+                            data-testid="dlor-form-team-email-new"
                             required
                             value={formValues?.team_email_new || ''}
                             onChange={handleChange('team_email_new')}
@@ -570,28 +561,28 @@ export const DlorForm = ({
                             error={!isValidEmail(formValues?.team_email_new)}
                         />
                         {!isValidEmail(formValues?.team_email_new) && (
-                            <div className={classes.errorMessage} data-testid="error-message-team_email_new">
+                            <StyledErrorMessageBox data-testid="error-message-team-email-new">
                                 This email address is not valid.
-                            </div>
+                            </StyledErrorMessageBox>
                         )}
                     </FormControl>
                 </Grid>
             )}
             {showTeamForm !== false && teamSelectRef.current !== 'new' && (
                 <Grid item xs={5}>
-                    <p style={{ fontStyle: 'italic', marginTop: -16 }}>
+                    <Box sx={{ fontStyle: 'italic', marginBlock: '-16px 16px' }}>
                         A change here will affect all Objects for this team.
                         <br />
                         You can also{' '}
                         <a target="_blank" href={dlorAdminLink('/team/manage')}>
                             Manage Teams
                         </a>
-                    </p>
+                    </Box>
                     <FormControl variant="standard" fullWidth>
                         <InputLabel htmlFor="team_manager_edit">Name of Team manager *</InputLabel>
                         <Input
                             id="team_manager_edit"
-                            data-testid="team_manager_edit"
+                            data-testid="dlor-form-team-manager-edit"
                             required
                             value={formValues?.team_manager_edit || /* istanbul ignore next */ ''}
                             onChange={handleChange('team_manager_edit')}
@@ -601,7 +592,7 @@ export const DlorForm = ({
                         <InputLabel htmlFor="team_email_edit">Team email *</InputLabel>
                         <Input
                             id="team_email_edit"
-                            data-testid="team_email_edit"
+                            data-testid="dlor-form-team-email-edit"
                             required
                             value={formValues?.team_email_edit || ''}
                             onChange={handleChange('team_email_edit')}
@@ -609,9 +600,9 @@ export const DlorForm = ({
                             error={!isValidEmail(formValues?.team_email_edit)}
                         />
                         {!isValidEmail(formValues?.team_email_edit) && (
-                            <div className={classes.errorMessage} data-testid="error-message-team_email_edit">
+                            <StyledErrorMessageBox data-testid="error-message-team-email-edit">
                                 This email address is not valid.
-                            </div>
+                            </StyledErrorMessageBox>
                         )}
                     </FormControl>
                 </Grid>
@@ -689,8 +680,7 @@ export const DlorForm = ({
                     <InputLabel htmlFor="object_title">Object title *</InputLabel>
                     <Input
                         id="object_title"
-                        data-testid="object_title"
-                        // error={}
+                        data-testid="object-title"
                         required
                         value={formValues?.object_title || ''}
                         onChange={handleChange('object_title')}
@@ -700,27 +690,16 @@ export const DlorForm = ({
                 </FormControl>
             </Grid>
             <Grid item xs={12}>
-                <FormControl variant="standard" fullWidth style={{ paddingTop: 50 }}>
+                <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
-                    {/* <Input
-                        id="object_description"
-                        data-testid="object_description"
-                        multiline
-                        required
-                        rows={6}
-                        value={formValues?.object_description || ''}
-                        onChange={handleChange('object_description')}
-                    /> */}
                     <CKEditor
                         id="object_description"
-                        data-testid="object_description"
-                        style={{ width: '100%' }}
-                        className={classes.CKEditor}
+                        data-testid="object-description"
+                        sx={{ width: '100%' }}
                         editor={ClassicEditor}
                         config={editorConfig}
                         data={formValues?.object_description || ''}
                         onReady={editor => {
-                            // You can store the "editor" and use when it is needed.
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
                             });
@@ -743,7 +722,7 @@ export const DlorForm = ({
                     <InputLabel htmlFor="object_summary">Summary of Object *</InputLabel>
                     <Input
                         id="object_summary"
-                        data-testid="object_summary"
+                        data-testid="object-summary"
                         multiline
                         required
                         rows={2}
@@ -753,7 +732,7 @@ export const DlorForm = ({
                     <SummaryCharCountPrompt />
                     {!!summarySuggestionOpen && (
                         <div data-testid="admin-dlor-suggest-summary">
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Typography component={'h2'} variant={'p'}>
                                     Suggestion for summary:
                                 </Typography>
@@ -766,10 +745,10 @@ export const DlorForm = ({
                                 >
                                     <CloseIcon fontSize="small" />
                                 </IconButton>
-                            </div>
+                            </Box>
                             <Typography
                                 component={'p'}
-                                style={{ marginBlock: 10 }}
+                                sx={{ marginBlock: '10px' }}
                                 data-testid="admin-dlor-suggest-summary-content"
                             >
                                 {suggestSummary(formValues?.object_description)}
@@ -778,7 +757,7 @@ export const DlorForm = ({
                                 color="primary"
                                 data-testid="admin-dlor-suggest-summary-button"
                                 data-analyticsid="admin-dlor-suggest-summary-button"
-                                style={{ display: 'block' }}
+                                sx={{ display: 'block' }}
                                 variant="contained"
                                 children="Use Suggestion"
                                 onClick={useSuggestion}
@@ -818,9 +797,9 @@ export const DlorForm = ({
                 <InputLabel>
                     <Checkbox
                         checked={!!formValues?.object_is_featured}
-                        data-testid="object_is_featured"
+                        data-testid="object-is-featured"
                         onChange={handleChange('object_is_featured')}
-                        style={{ paddingLeft: 0 }}
+                        sx={{ paddingLeft: 0 }}
                     />
                     Feature this Object at the top of the list page
                 </InputLabel>
@@ -830,9 +809,9 @@ export const DlorForm = ({
                 <InputLabel>
                     <Checkbox
                         checked={!!formValues?.object_cultural_advice}
-                        data-testid="object_cultural_advice"
+                        data-testid="object-cultural-advice"
                         onChange={handleChange('object_cultural_advice')}
-                        style={{ paddingLeft: 0 }}
+                        sx={{ paddingLeft: 0 }}
                     />
                     Display the standard Cultural advice against this item
                 </InputLabel>
@@ -859,7 +838,7 @@ export const DlorForm = ({
                     <InputLabel htmlFor="object_link_url">Web address *</InputLabel>
                     <Input
                         id="object_link_url"
-                        data-testid="object_link_url"
+                        data-testid="object-link-url"
                         required
                         value={formValues?.object_link_url || ''}
                         onChange={handleChange('object_link_url')}
@@ -871,16 +850,19 @@ export const DlorForm = ({
                     />
                     {formValues?.object_link_url?.length > 'http://ab.co'.length &&
                         !isValidUrl(formValues?.object_link_url) && (
-                            <div className={classes.errorMessage} data-testid={'error-message-object_link_url'}>
+                            <StyledErrorMessageBox data-testid="dlor-form-error-message-object-link-url">
                                 This web address is not valid.
-                            </div>
+                            </StyledErrorMessageBox>
                         )}
                     {formValues?.object_link_url?.length > 'http://ab.co'.length &&
                         isPreviewableUrl(formValues?.object_link_url) !== false && (
-                            <p style={{ display: 'flex', alignItems: 'center' }} data-testid="object_link_url_preview">
+                            <Box
+                                sx={{ display: 'flex', alignItems: 'center', marginBlock: '6px' }}
+                                data-testid="object-link-url-preview"
+                            >
                                 <DoneIcon color="success" />
                                 <span>A preview will show on the View page.</span>
-                            </p>
+                            </Box>
                         )}
                 </FormControl>
             </Grid>
@@ -896,28 +878,28 @@ export const DlorForm = ({
                                 variant="standard"
                                 labelId="object_link_interaction_type-label"
                                 id="object_link_interaction_type"
-                                data-testid="object_link_interaction_type"
+                                data-testid="object-link-interaction-type"
                                 value={linkInteractionTypeSelectRef.current}
                                 onChange={handleChange('object_link_interaction_type')}
-                                style={{ width: '100%' }}
+                                sx={{ width: '100%' }}
                             >
                                 <MenuItem
                                     value={linkInteractionTypeDOWNLOAD}
-                                    data-testid="object_link_interaction_type-download"
+                                    data-testid="object-link-interaction-type-download"
                                     selected={linkInteractionTypeSelectRef.current === linkInteractionTypeDOWNLOAD}
                                 >
                                     can Download
                                 </MenuItem>
                                 <MenuItem
                                     value={linkInteractionTypeVIEW}
-                                    data-testid="object_link_interaction_type-view"
+                                    data-testid="object-link-interaction-type-view"
                                     selected={linkInteractionTypeSelectRef.current === linkInteractionTypeVIEW}
                                 >
                                     can View
                                 </MenuItem>
                                 <MenuItem
                                     value={linkInteractionTypeNONE}
-                                    data-testid="object_link_interaction_type-none"
+                                    data-testid="object-link-interaction-type-none"
                                     selected={
                                         ![linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
                                             linkInteractionTypeSelectRef.current,
@@ -930,7 +912,7 @@ export const DlorForm = ({
                         </FormControl>
                     </Grid>
                     <Grid item xs={4}>
-                        <FormControl style={{ minWidth: '10em' }}>
+                        <FormControl sx={{ minWidth: '10em' }}>
                             {[linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
                                 linkInteractionTypeSelectRef.current,
                             ) && (
@@ -940,15 +922,17 @@ export const DlorForm = ({
                                         variant="standard"
                                         labelId="object_link_file_type"
                                         id="object_link_file_type"
-                                        data-testid="object_link_file_type"
+                                        data-testid="object-link-file-type"
                                         value={linkFileTypeSelectRef.current}
                                         onChange={handleChange('object_link_file_type')}
-                                        style={{ width: '100%', marginTop: 20 }}
+                                        sx={{ width: '100%', marginTop: '20px' }}
                                     >
                                         {getFileTypeList.map(type => (
                                             <MenuItem
                                                 key={type.object_link_file_type}
-                                                data-testid={`object_link_file_type-${type.object_link_file_type}`}
+                                                data-testid={`object-link-file-type-${convertSnakeCaseToKebabCase(
+                                                    type.object_link_file_type,
+                                                )}`}
                                                 value={type.object_link_file_type}
                                                 selected={type.object_link_file_type === linkFileTypeSelectRef.current}
                                             >
@@ -956,7 +940,7 @@ export const DlorForm = ({
                                             </MenuItem>
                                         ))}
                                         <MenuItem
-                                            data-testid={'object_link_file_type-new'}
+                                            data-testid={'object-link-file-type-new'}
                                             value="new"
                                             selected={linkFileTypeSelectRef.current === 'new'}
                                         >
@@ -969,7 +953,7 @@ export const DlorForm = ({
                                                 <InputLabel htmlFor="new_file_type">New File Type (abbrev)</InputLabel>
                                                 <Input
                                                     id="new_file_type"
-                                                    data-testid="new_file_type"
+                                                    data-testid="dlor-admin-form-new-file-type"
                                                     value={formValues?.new_file_type || ''}
                                                     onChange={handleChange('new_file_type')}
                                                 />
@@ -981,7 +965,7 @@ export const DlorForm = ({
                         </FormControl>
                     </Grid>
                     <Grid item xs={4}>
-                        <div className={classes.viewDuration}>
+                        <StyledViewDurationBox>
                             {!!showLinkTimeForm && (
                                 <>
                                     <InputLabel id="object_link_duration-label">Run time *</InputLabel>
@@ -990,21 +974,21 @@ export const DlorForm = ({
                                             <Input
                                                 id="object_link_duration_minutes"
                                                 aria-labelledby="object_link_duration-label object_link_duration_minutes"
-                                                data-testid="object_link_duration_minutes"
+                                                data-testid="object-link-duration-minutes"
                                                 required
                                                 value={formValues?.object_link_duration_minutes || ''}
                                                 onChange={handleChange('object_link_duration_minutes')}
                                             />
                                         </FormControl>
-                                        <span id="object_link_duration_minutes-label" style={{ paddingRight: 6 }}>
-                                            minutes{' '}
-                                        </span>
-                                        <span style={{ paddingRight: 6 }}>and </span>
+                                        <StyledDurationSpan id="object_link_duration_minutes-label">
+                                            minutes
+                                        </StyledDurationSpan>
+                                        <StyledDurationSpan> and </StyledDurationSpan>
                                         <FormControl>
                                             <Input
                                                 id="object_link_duration_seconds"
                                                 aria-labelledby="object_link_duration-label object_link_duration_seconds-label"
-                                                data-testid="object_link_duration_seconds"
+                                                data-testid="object-link-duration-seconds"
                                                 required
                                                 value={formValues?.object_link_duration_seconds || ''}
                                                 onChange={handleChange('object_link_duration_seconds')}
@@ -1022,7 +1006,7 @@ export const DlorForm = ({
                                             <Input
                                                 id="object_link_size_amount"
                                                 aria-labelledby="object_link_file_size-label"
-                                                data-testid="object_link_size_amount"
+                                                data-testid="object-link-size-amount"
                                                 required
                                                 value={formValues?.object_link_size_amount || ''}
                                                 onChange={handleChange('object_link_size_amount')}
@@ -1033,16 +1017,15 @@ export const DlorForm = ({
                                                 variant="standard"
                                                 labelId="object_link_size_units"
                                                 id="object_link_size_units"
-                                                data-testid="object_link_size_units"
+                                                data-testid="object-link-size-units"
                                                 value={formValues?.object_link_size_units}
-                                                // value={linkFileTypeSelectRef.current}
-                                                onChange={handleChange('object_link_size_units')} // needs ref?
+                                                onChange={handleChange('object_link_size_units')}
                                             >
                                                 {validFileSizeUnits.map(unit => (
                                                     <MenuItem
                                                         key={unit}
                                                         id={`object_link_size_units-${unit}`}
-                                                        data-testid={`object_link_size_units-${unit}`}
+                                                        data-testid={`object-link-size-units-${unit}`}
                                                         value={unit}
                                                         selected={unit === formValues?.object_link_size_units}
                                                     >
@@ -1054,21 +1037,20 @@ export const DlorForm = ({
                                     </div>
                                 </>
                             )}
-                        </div>
+                        </StyledViewDurationBox>
                     </Grid>
                 </Grid>
             </Grid>
             <Grid item xs={12}>
-                <FormControl variant="standard" fullWidth style={{ paddingTop: 50 }}>
+                <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     {/* yes, this looks too big locally, but looks correct live. No, I dont know why */}
-                    <InputLabel htmlFor="object_download_instructions" style={{ fontSize: 20 }}>
+                    <InputLabel htmlFor="object_download_instructions" sx={{ fontSize: 20 }}>
                         Download Instructions
                     </InputLabel>
                     <CKEditor
                         id="download_instructions"
                         data-testid="download_instructions"
-                        style={{ width: '100%' }}
-                        className={classes.CKEditor}
+                        sx={{ width: '100%' }}
                         editor={ClassicEditor}
                         config={editorConfig}
                         data={formValues?.object_download_instructions || ''}
@@ -1090,7 +1072,6 @@ export const DlorForm = ({
     function displayControlByFacetType(filterItem) {
         const facetIsSet = findId => {
             return checkBoxArrayRef.current.includes(findId);
-            // return facets?.some(ff => ff?.filter_values?.some(value => value?.id === findId));
         };
 
         let result = <></>;
@@ -1100,16 +1081,15 @@ export const DlorForm = ({
                 !!filterItem.facet_list &&
                 filterItem.facet_list.map(thisfacet => {
                     return (
-                        <FormControlLabel
+                        <StyledFacetFormControlLabel
                             key={`${filterItem.facet_type_slug}-${thisfacet.facet_id}`}
-                            className={classes.facetControl}
                             control={
                                 <Checkbox
                                     onChange={handleFacetChange(thisfacet.facet_id)}
                                     id={`filter-${thisfacet.facet_id}`}
-                                    data-testid={`filter-${filterItem.facet_type_slug}-${slugifyName(
-                                        thisfacet.facet_name,
-                                    )}`}
+                                    data-testid={`filter-${convertSnakeCaseToKebabCase(
+                                        filterItem.facet_type_slug,
+                                    )}-${slugifyName(thisfacet.facet_name)}`}
                                     checked={facetIsSet(thisfacet?.facet_id, formValues?.facets)}
                                 />
                             }
@@ -1128,14 +1108,13 @@ export const DlorForm = ({
                 >
                     {filterItem?.facet_list?.map(thisfacet => {
                         return (
-                            <FormControlLabel
+                            <StyledFacetFormControlLabel
                                 key={thisfacet.facet_id}
-                                className={classes.facetControl}
                                 control={<Radio checked={facetIsSet(thisfacet?.facet_id, formValues?.facets)} />}
                                 value={thisfacet.facet_id}
-                                data-testid={`filter-${filterItem.facet_type_slug}-${slugifyName(
-                                    thisfacet.facet_name,
-                                )}`}
+                                data-testid={`filter-${convertSnakeCaseToKebabCase(
+                                    filterItem.facet_type_slug,
+                                )}-${slugifyName(thisfacet.facet_name)}`}
                                 label={thisfacet.facet_name}
                             />
                         );
@@ -1160,10 +1139,6 @@ export const DlorForm = ({
         e.preventDefault();
         setIsNotifying(!!e.target.checked);
         !!e.target.checked && openNotifyLightbox();
-        // if (!e.target.checked) {
-        //     const newValues = { ...formValues, notificationText: '' };
-        //     setFormValues(newValues);
-        // }
     };
 
     const stepPanelContentFilters = (
@@ -1180,7 +1155,7 @@ export const DlorForm = ({
                             item
                             xs={4}
                             key={filterItem.facet_type_slug}
-                            data-testid={`filter-group_${filterItem.facet_type_slug}`}
+                            data-testid={`filter-group-${convertSnakeCaseToKebabCase(filterItem.facet_type_slug)}`}
                         >
                             <Typography
                                 component={'h3'}
@@ -1188,7 +1163,7 @@ export const DlorForm = ({
                                 id={`demo-radio-object_${filterItem.facet_type_slug}_label-group-label`}
                             >
                                 {!!filterItem.facet_type_name && filterItem.facet_type_name}{' '}
-                                {filterItem?.facet_type_required && <span className={classes.required}>*</span>}
+                                {filterItem?.facet_type_required && <span title="Required field">*</span>}
                             </Typography>
                             {displayControlByFacetType(filterItem)}
                         </Grid>
@@ -1201,7 +1176,7 @@ export const DlorForm = ({
                     </InputLabel>
                     <Input
                         id="object_keywords"
-                        data-testid="object_keywords"
+                        data-testid="object-keywords"
                         multiline
                         required
                         rows={2}
@@ -1214,10 +1189,15 @@ export const DlorForm = ({
                             keywordMinimumLength,
                             'object_keywords_string',
                         )}
-                    <p className={classes.fieldNote}>
+                    <Box
+                        sx={{
+                            fontSize: '0.8em',
+                            marginBlock: '12px',
+                        }}
+                    >
                         If you need a keyword with a comma within it, surround the keyword with double quotes, like:
                         cat, "dog, dog", mouse
-                    </p>
+                    </Box>
                 </FormControl>
             </Grid>
             {mode === 'edit' && (
@@ -1242,106 +1222,99 @@ export const DlorForm = ({
                     </Box>
                 </Grid>
             )}
-            {!!isNotificationLightboxOpen && (
-                <Modal
-                    open={open}
-                    onClose={closeNotifyLightbox}
-                    aria-labelledby="notify-lightbox-title"
-                    aria-describedby="notify-lightbox-description"
-                    data-testid="notify-lightbox-modal"
-                    style={{ zIndex: 1000 }}
+
+            <Modal
+                open={isNotificationLightboxOpen}
+                onClose={closeNotifyLightbox}
+                aria-labelledby="notify-lightbox-title"
+                aria-describedby="notify-lightbox-description"
+                data-testid="notify-lightbox-modal"
+                sx={{ zIndex: 1000 }}
+            >
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '80%',
+                        bgcolor: 'background.paper',
+                        boxShadow: 24,
+                        p: 4,
+                    }}
                 >
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            width: '80%',
-                            bgcolor: 'background.paper',
-                            // border: '2px solid #000',
-                            boxShadow: 24,
-                            p: 4,
+                    <StyledLightboxHeaderBox id="notify-lightbox-title">
+                        <Typography variant="h6" component="h2" data-testid="notify-lightbox-title">
+                            Object change notification
+                        </Typography>
+                        <Typography variant="h6" component="p">
+                            {dlorItem?.object_title}
+                        </Typography>
+                    </StyledLightboxHeaderBox>
+                    <Typography id="notify-lightbox-description" sx={{ mt: '2px' }}>
+                        We have updated{' '}
+                        <b>
+                            <a href={getDlorViewPageUrl(dlorItem?.object_public_uuid)}>{dlorItem?.object_title}</a>
+                        </b>
+                    </Typography>
+                    <Typography sx={{ mt: '2px' }}>Here is what is new:</Typography>
+                    <Typography sx={{ mt: '2px', color: 'grey', fontSize: '0.8em' }}>
+                        Enter the notification details the user will see here:
+                    </Typography>
+                    <CKEditor
+                        id="notificationText"
+                        sx={{ width: '100%' }}
+                        editor={ClassicEditor}
+                        config={editorConfig}
+                        data={formValues?.notificationText || ''}
+                        onReady={editor => {
+                            editor.editing.view.change(writer => {
+                                writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
+                            });
                         }}
-                    >
-                        <Box className={classes.lightroomHeader} id="notify-lightbox-title">
-                            <Typography variant="h6" component="h2" data-testid="notify-lightbox-title">
-                                Object change notification
-                            </Typography>
-                            <Typography variant="h6" component="p">
-                                {dlorItem.object_title}
-                            </Typography>
-                        </Box>
-                        <Typography id="notify-lightbox-description" sx={{ mt: 2 }}>
-                            We have updated{' '}
-                            <b>
-                                <a href={getDlorViewPageUrl(dlorItem.object_public_uuid)}>{dlorItem.object_title}</a>
-                            </b>
-                        </Typography>
-                        <Typography sx={{ mt: 2 }}>Here is what is new:</Typography>
-                        <Typography sx={{ mt: 2 }} style={{ color: 'grey', fontSize: '0.8em' }}>
-                            Enter the notification details the user will see here:
-                        </Typography>
-                        <CKEditor
-                            id="notificationText"
-                            style={{ width: '100%' }}
-                            className={classes.CKEditor}
-                            editor={ClassicEditor}
-                            config={editorConfig}
-                            data={formValues?.notificationText || ''}
-                            onReady={editor => {
-                                editor.editing.view.change(writer => {
-                                    writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
-                                });
-                            }}
-                            onChange={(event, editor) => {
-                                const htmlData = editor.getData();
-                                handleEditorChange('notificationText', htmlData);
-                            }}
-                        />
-                        <Typography sx={{ mt: 2 }}>
-                            You can <span style={{ color: '#3872a8', textDecoration: 'none' }}>unsubscribe</span> from
-                            notifications about this object.
-                        </Typography>
-                        <Typography sx={{ mt: 2 }}>
-                            Please email{' '}
-                            <span style={{ color: '#3872a8', textDecoration: 'none' }}>
-                                digital-learning-hub@library.uq.edu.au
-                            </span>{' '}
-                            if you have any questions.
-                        </Typography>
-                        <Typography sx={{ mt: 2 }}>
-                            <small>
-                                <strong>
-                                    Please do not reply directly to this email. This mailbox is not monitored, and you
-                                    will not receive a response.
-                                </strong>
-                            </small>
-                        </Typography>
-                        <Typography sx={{ mt: 2 }}>
-                            <small>
-                                e.{' '}
-                                <span style={{ color: '#3872a8', textDecoration: 'none' }}>
-                                    digital-learning-hub@library.uq.edu.au
-                                </span>{' '}
-                                | w. <a href="http://www.library.uq.edu.au">www.library.uq.edu.au</a>
-                            </small>
-                        </Typography>
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                disabled={formValues?.notificationText === ''}
-                                data-testid="notify-lightbox-close-button"
-                                onClick={closeNotifyLightbox}
-                                sx={{ mt: 2 }}
-                            >
-                                Close
-                            </Button>
-                        </Box>
+                        onChange={(event, editor) => {
+                            const htmlData = editor.getData();
+                            handleEditorChange('notificationText', htmlData);
+                        }}
+                    />
+                    <Typography sx={{ mt: '2px' }}>
+                        You can <StyledLinkAppearanceSpan>unsubscribe</StyledLinkAppearanceSpan> from notifications
+                        about this object.
+                    </Typography>
+                    <Typography sx={{ mt: '2px' }}>
+                        Please email{' '}
+                        <StyledLinkAppearanceSpan>digital-learning-hub@library.uq.edu.au</StyledLinkAppearanceSpan> if
+                        you have any questions.
+                    </Typography>
+                    <Typography sx={{ mt: '2px' }}>
+                        <small>
+                            <strong>
+                                Please do not reply directly to this email. This mailbox is not monitored, and you will
+                                not receive a response.
+                            </strong>
+                        </small>
+                    </Typography>
+                    <Typography sx={{ mt: '2px' }}>
+                        <small>
+                            e.{' '}
+                            <StyledLinkAppearanceSpan>digital-learning-hub@library.uq.edu.au</StyledLinkAppearanceSpan>{' '}
+                            | w. <a href="http://www.library.uq.edu.au">www.library.uq.edu.au</a>
+                        </small>
+                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: '2px' }}>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            disabled={formValues?.notificationText === ''}
+                            data-testid="notify-lightbox-close-button"
+                            onClick={closeNotifyLightbox}
+                            sx={{ mt: '2px' }}
+                        >
+                            Close
+                        </Button>
                     </Box>
-                </Modal>
-            )}
+                </Box>
+            </Modal>
         </>
     );
     const steps = [
@@ -1477,7 +1450,7 @@ export const DlorForm = ({
 
         return mode === 'add'
             ? actions.createDlor(valuesToSend)
-            : actions.updateDlor(dlorItem.object_public_uuid, valuesToSend);
+            : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend);
     };
 
     const locale = {
@@ -1583,19 +1556,18 @@ export const DlorForm = ({
                                     optional: null,
                                 };
                                 return (
-                                    <Step key={step.label} {...stepProps} style={{ paddingRight: 25 }}>
+                                    <Step key={step.label} {...stepProps} sx={{ paddingRight: '25px' }}>
                                         <StepLabel {...labelProps}>
                                             {panelErrorCount(index) === 0 ? (
                                                 <span>{step.label}</span>
                                             ) : (
-                                                <Badge
+                                                <StyledErrorCountBadge
                                                     color="error"
                                                     badgeContent={panelErrorCount(index)}
-                                                    className={classes.errorCount}
                                                     data-testid={`dlor-panel-validity-indicator-${index}`}
                                                 >
                                                     {step.label}
-                                                </Badge>
+                                                </StyledErrorCountBadge>
                                             )}
                                         </StepLabel>
                                     </Step>
@@ -1629,7 +1601,6 @@ export const DlorForm = ({
                                         validatePanelFiltering(formValues) > 0
                                     }
                                     onClick={saveDlor}
-                                    // className={classes.saveButton}
                                 />
                             ) : (
                                 <Button onClick={handleNext} data-testid="dlor-form-next-button">
@@ -1640,7 +1611,7 @@ export const DlorForm = ({
                     </Grid>
                 </Grid>
             </form>
-            <Grid container spacing={2} style={{ marginTop: 32 }}>
+            <Grid container spacing={2} sx={{ marginTop: '32px' }}>
                 <Grid item xs={3} align="left">
                     <Button
                         color="secondary"
