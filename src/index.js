@@ -35,7 +35,6 @@ const render = () => {
                 </LocalizationProvider>
             </Provider>
         </AppErrorBoundary>,
-        document.getElementById('react-root'),
     );
 };
 
