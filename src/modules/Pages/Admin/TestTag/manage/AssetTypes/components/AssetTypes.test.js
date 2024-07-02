@@ -332,6 +332,37 @@ describe('AssetTypes', () => {
             new_asset_type_id: 1,
             old_asset_type_id: 2,
         });
+    });
+
+    it('Delete and Reassign Asset Type functions error correctly', async () => {
+        const mockTypes = [
+            {
+                asset_type_id: 1,
+                asset_type_name: 'Test 1',
+                asset_type_class: 'Class 1',
+                asset_type_power_rating: 'Rating 1',
+                asset_type: 'Type 1',
+                asset_type_notes: 'Notes 1',
+                asset_count: 0,
+            },
+            {
+                asset_type_id: 2,
+                asset_type_name: 'Test 2',
+                asset_type_class: 'Class 2',
+                asset_type_power_rating: 'Rating 2',
+                asset_type: 'Type 2',
+                asset_type_notes: 'Notes 2',
+                asset_count: 2,
+            },
+        ];
+        actions.loadAssetTypes = jest.fn(() => {
+            return Promise.resolve(mockTypes);
+        });
+        const { getByTestId, getByRole } = setup({
+            disableVirtualization: true,
+            actions: actions,
+            assetTypesList: mockTypes,
+        });
 
         // Simulate a reassign error
         actions.deleteAndReassignAssetType = jest.fn(() => Promise.reject('DAR ERROR TEST'));
