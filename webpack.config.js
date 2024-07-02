@@ -84,7 +84,7 @@ module.exports = {
                         plugins: [
                             '@babel/plugin-proposal-export-default-from',
                             enableFastRefresh && 'react-refresh/babel',
-                        ],
+                        ].filter(Boolean),
                     },
                 },
             },
