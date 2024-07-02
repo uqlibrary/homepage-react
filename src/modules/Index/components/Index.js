@@ -135,11 +135,20 @@ export const Index = ({
     }, [accountLoading, account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
     return (
         <React.Suspense fallback={<ContentLoader message="Loading" />}>
+            <div id="search-portal-container" data-testid="search-portal-container" style={{
+                paddingTop: 25,
+                paddingBottom: 25,
+                backgroundColor: '#51247a',
+                }}>
+                    <StandardPage><search-portal /></StandardPage>
+
+            </div>
             <StandardPage>
+
                 <Grid container spacing={4}>
                     {/* Search */}
                     <Grid item xs={12} style={{ marginTop: 12 }}>
-                        <search-portal />
+                        {/* <search-portal /> */}
                     </Grid>
                     {accountLoading === false && !!account && (
                         <Hidden mdUp>
