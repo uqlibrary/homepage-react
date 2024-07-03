@@ -92,14 +92,14 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
         // Add an end date
         cy.data('user_inspections-tagged-start-input').should('have.value', `${currentYear}-${currentMonth}-11`);
         cy.get('[data-testid="user_inspections-tagged-end"] button').click();
-        cy.get('.MuiPickersDay-root')
+        cy.get('.MuiPaper-root[style*="opacity: 1"] .MuiPickersDay-root')
             .contains('12')
             .click();
         cy.get('body').click();
         cy.data('user_inspections-tagged-end-input').should('have.value', `${currentYear}-${currentMonth}-12`);
         // Set up an incorrect date for the end.
         cy.get('[data-testid="user_inspections-tagged-end"] button').click();
-        cy.get('.MuiPickersDay-root')
+        cy.get('.MuiPaper-root[style*="opacity: 1"] .MuiPickersDay-root')
             .contains('10')
             .click();
         cy.get('body').click();

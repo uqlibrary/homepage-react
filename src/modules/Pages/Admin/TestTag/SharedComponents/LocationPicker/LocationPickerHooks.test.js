@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 import { useLocation, useSelectLocation } from './LocationPickerHooks';
 
 const defaultLocation = { site: -1, building: -1, floor: -1, room: -1 };

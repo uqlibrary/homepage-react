@@ -1016,6 +1016,14 @@ describe('Digital Learning Hub', () => {
             cy.visit('digital-learning-hub');
             cy.viewport(800, 900);
 
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="hero-card-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Find a digital learning object'),
+            );
+
             // tablet/phone hero images should be full width
             let bodyWidth;
             cy.get('body').should($elem => {
