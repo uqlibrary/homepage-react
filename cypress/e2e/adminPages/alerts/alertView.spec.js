@@ -89,7 +89,16 @@ describe('Alerts Admin View Page', () => {
         // hasAWorkingHelpButton();
     });
     it('can show a preview of an urgent-priority permanent alert with link', () => {
-        cy.get('uq-alert[id="alert-preview"]').should('exist');
+        cy.waitUntil(() =>
+            cy
+                .get('uq-alert[id="alert-preview"]')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="alert-alert-preview"]')
+                        .should('exist')
+                        .should('be.visible');
+                }),
+        );
         cy.get('uq-alert[id="alert-preview"]')
             .shadow()
             .within(() => {
@@ -110,7 +119,16 @@ describe('Alerts Admin View Page - other page tests', () => {
     it('can show a preview of a info-priority non-permanent alert without link', () => {
         cy.visit('http://localhost:2020/admin/alerts/view/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
         cy.viewport(1300, 1000);
-        cy.get('uq-alert[id="alert-preview"]').should('exist');
+        cy.waitUntil(() =>
+            cy
+                .get('uq-alert[id="alert-preview"]')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="alert-alert-preview"]')
+                        .should('exist')
+                        .should('be.visible');
+                }),
+        );
         cy.get('uq-alert[id="alert-preview"]')
             .shadow()
             .within(() => {
@@ -127,7 +145,16 @@ describe('Alerts Admin View Page - other page tests', () => {
     });
     it('can show a preview of an extreme-priority permanent alert with link', () => {
         cy.visit('http://localhost:2020/admin/alerts/view/d23f2e10-d7d6-11eb-a928-71f3ef9d35d9?user=uqstaff');
-        cy.get('uq-alert[id="alert-preview"]').should('exist');
+        cy.waitUntil(() =>
+            cy
+                .get('uq-alert[id="alert-preview"]')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="alert-alert-preview"]')
+                        .should('exist')
+                        .should('be.visible');
+                }),
+        );
         cy.get('uq-alert[id="alert-preview"]')
             .shadow()
             .within(() => {
