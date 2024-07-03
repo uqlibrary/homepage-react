@@ -4,7 +4,10 @@ const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const enableFastRefresh =
+    process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'cc' && process.env.NODE_ENV !== 'production';
 const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
 
 const port = 2020;
@@ -18,7 +21,6 @@ module.exports = {
     devtool: 'source-map',
     entry: {
         browserUpdate: join(__dirname, 'public', 'browser-update.js'),
-        patch: 'react-hot-loader/patch',
         webpackDevClient: `webpack-dev-server/client?http://${url}:${port}`,
         webPackDevServer: 'webpack/hot/only-dev-server',
         index: join(__dirname, 'src', 'index.js'),
@@ -79,7 +81,10 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        plugins: ['@babel/plugin-proposal-export-default-from'],
+                        plugins: [
+                            '@babel/plugin-proposal-export-default-from',
+                            enableFastRefresh && 'react-refresh/babel',
+                        ].filter(Boolean),
                     },
                 },
             },
@@ -107,8 +112,8 @@ module.exports = {
         new HtmlWebpackPlugin({
             favicon: join(__dirname, 'public', 'favicon.ico'),
             filename: 'index.html',
-            reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
-            // reusablejs: 'http://localhost:8080/uq-lib-reusable.min.js',
+            // reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
+            reusablejs: 'http://localhost:8080/uq-lib-reusable.min.js',
             inject: true,
             template: join(__dirname, 'public', 'index.html'),
         }),
@@ -118,6 +123,7 @@ module.exports = {
             )} (It took :elapsed seconds to build)\n`,
             clear: false,
         }),
+        enableFastRefresh && new ReactRefreshWebpackPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         // new webpack.NamedModulesPlugin(),

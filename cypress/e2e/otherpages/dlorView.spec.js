@@ -222,6 +222,42 @@ describe('Digital Learning Hub View page', () => {
 
             cy.url().should('eq', 'http://localhost:2020/exams');
         });
+
+        it('subscription requires you to enter an email address', () => {
+            cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597?user=s2222222');
+            cy.viewport(1300, 1000);
+
+            // enter a subject so that something is sent even thoiught they uncheck notify
+            cy.get('[data-testid="view-demographics-subject-code"] input')
+                .should('exist')
+                .type('a subject');
+
+            // reveal the notify fields
+            cy.get('[data-testid="checkbox-notify"] input')
+                .should('exist')
+                .should('not.be.checked')
+                .check();
+
+            cy.get('[data-testid="detailpage-clicklink"]').should('not.have.attr', 'disabled');
+
+            cy.wait(1000);
+            cy.get('#userEmail')
+                .should('exist')
+                .clear();
+
+            cy.get('[data-testid="detailpage-clicklink"]').should('have.attr', 'disabled');
+
+            cy.get('#userEmail').type('joe');
+
+            cy.get('[data-testid="detailpage-clicklink"]').should('have.attr', 'disabled');
+
+            cy.get('[data-testid="checkbox-notify"] input')
+                .should('exist')
+                .should('be.checked')
+                .uncheck();
+
+            cy.get('[data-testid="detailpage-clicklink"]').should('not.have.attr', 'disabled');
+        });
         it('sends a demographic without notify properly', () => {
             cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597');
             cy.viewport(1300, 1000);
