@@ -76,7 +76,7 @@ export const App = ({ account, actions }) => {
                         <auth-button />
                     </span>
                 </uq-site-header>
-                <div role="region" aria-label="UQ Library Alerts">
+                <div role="region" aria-label="UQ Library Alerts" style={{ marginBottom: -16 }}>
                     <alert-list system="homepage" />
                 </div>
                 <div style={{ flexGrow: 1, marginTop: 16 }}>
