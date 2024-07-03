@@ -89,26 +89,55 @@ describe('Alerts Admin View Page', () => {
         // hasAWorkingHelpButton();
     });
     it('can show a preview of an urgent-priority permanent alert with link', () => {
+        cy.waitUntil(() =>
+            cy
+                .get('uq-alert[id="alert-preview"]')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="alert-alert-preview"]')
+                        .should('exist')
+                        .should('be.visible');
+                }),
+        );
         cy.get('uq-alert[id="alert-preview"]')
-            .should('exist')
-            .should('have.attr', 'alerttitle', 'Example alert:')
-            .should('have.attr', 'prioritytype', 'urgent')
-            .should(
-                'have.attr',
-                'alertmessage',
-                'This alert can be edited in mock.[UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
-            );
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="alert-alert-preview"]').should('have.attr', 'aria-label', 'Important alert.');
+                cy.get('[data-testid="alert-title"]').should('have.text', 'Example alert:');
+                cy.get('[data-testid="alert-message"]').should('have.text', 'This alert can be edited in mock.');
+                cy.get('[data-testid="alert-close"]').should('not.exist');
+                cy.get('[data-testid="alert-alert-preview-action-button"]').should(
+                    'have.attr',
+                    'title',
+                    'On the live website, this button will visit https://about.uq.edu.au/coronavirus when clicked',
+                );
+                cy.get('[data-testid="alert-alert-preview"]').should('have.attr', 'aria-label', 'Important alert.');
+            });
     });
 });
 describe('Alerts Admin View Page - other page tests', () => {
     it('can show a preview of a info-priority non-permanent alert without link', () => {
         cy.visit('http://localhost:2020/admin/alerts/view/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
         cy.viewport(1300, 1000);
+        cy.waitUntil(() =>
+            cy
+                .get('uq-alert[id="alert-preview"]')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="alert-alert-preview"]')
+                        .should('exist')
+                        .should('be.visible');
+                }),
+        );
         cy.get('uq-alert[id="alert-preview"]')
-            .should('exist')
-            .should('have.attr', 'alerttitle', 'Sample alert 2:')
-            .should('have.attr', 'prioritytype', 'info')
-            .should('have.attr', 'alertmessage', 'Has mock data.');
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="alert-alert-preview"]').should('have.attr', 'aria-label', 'Alert.');
+                cy.get('[data-testid="alert-title"]').should('have.text', 'Sample alert 2:');
+                cy.get('[data-testid="alert-message"]').should('have.text', 'Has mock data.');
+                cy.get('[data-testid="alert-close"]').should('exist');
+                cy.get('[data-testid="alert-alert-preview-action-button"]').should('not.exist');
+            });
 
         // the editing user displays correctly
         cy.get('[data-testid="admin-alerts-view-created-by"]').should('not.exist');
@@ -116,15 +145,41 @@ describe('Alerts Admin View Page - other page tests', () => {
     });
     it('can show a preview of an extreme-priority permanent alert with link', () => {
         cy.visit('http://localhost:2020/admin/alerts/view/d23f2e10-d7d6-11eb-a928-71f3ef9d35d9?user=uqstaff');
+        cy.waitUntil(() =>
+            cy
+                .get('uq-alert[id="alert-preview"]')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="alert-alert-preview"]')
+                        .should('exist')
+                        .should('be.visible');
+                }),
+        );
         cy.get('uq-alert[id="alert-preview"]')
-            .should('exist')
-            .should('have.attr', 'alerttitle', 'Face masks in the Library:')
-            .should('have.attr', 'prioritytype', 'extreme')
-            .should(
-                'have.attr',
-                'alertmessage',
-                'Test Extreme alert with a longish body content.[UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
-            );
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="alert-alert-preview"]').should(
+                    'have.attr',
+                    'aria-label',
+                    'Very important alert.',
+                );
+                cy.get('[data-testid="alert-title"]').should('have.text', 'Face masks in the Library:');
+                cy.get('[data-testid="alert-message"]').should(
+                    'have.text',
+                    'Test Extreme alert with a longish body content.',
+                );
+                cy.get('[data-testid="alert-close"]').should('not.exist');
+                cy.get('[data-testid="alert-alert-preview-action-button"]').should(
+                    'have.attr',
+                    'title',
+                    'On the live website, this button will visit https://about.uq.edu.au/coronavirus when clicked',
+                );
+                cy.get('[data-testid="alert-alert-preview"]').should(
+                    'have.attr',
+                    'aria-label',
+                    'Very important alert.',
+                );
+            });
 
         // the editing user displays correctly
         cy.get('[data-testid="admin-alerts-view-created-by"]').should('not.exist');
