@@ -39,6 +39,8 @@ import HeroCard from 'modules/Pages/DigitalLearningObjects/SharedComponents/Hero
 import {
     convertSnakeCaseToKebabCase,
     getDlorViewPageUrl,
+    isEscapeKeyPressed,
+    isReturnKeyPressed,
     slugifyName,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
@@ -171,7 +173,7 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
             marginTop: '0.2em',
             fontSize: 16,
         },
-        '& > div p:first-child': {
+        '& > div p:first-of-type': {
             marginTop: 0,
         },
         '& footer': {
@@ -180,7 +182,7 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
             marginTop: 6,
             display: 'flex',
             alignItems: 'center', // horizontally, align icon and label at the center
-            '& > svg:not(:first-child)': {
+            '& > svg:not(:first-of-type)': {
                 paddingLeft: 12,
             },
             '& svg': {
@@ -246,7 +248,7 @@ const StyledSidebarFilterFacetHelpPopupBox = styled(Box)(() => ({
 const StyledFormControlLabel = styled(FormControlLabel)(() => ({
     display: 'flex',
     alignItems: 'flex-start',
-    '& span:first-child': {
+    '& span:first-of-type': {
         paddingBlock: 0,
     },
     paddingBottom: 5,
@@ -300,11 +302,6 @@ export const DLOList = ({
         }
     }, [dlorList, dlorFilterList, dlorListError, dlorListLoading, dlorFilterListError, dlorFilterListLoading, actions]);
 
-    function keywordIsSearchable(keyword) {
-        // don't filter on something terribly short
-        return keyword?.length > 1;
-    }
-
     const updateUrl = itemType => {
         const url = new URL(document.URL);
         const rawsearchparams = !!url && url.searchParams;
@@ -347,21 +344,39 @@ export const DLOList = ({
         updateUrl('keyword');
     };
 
-    const handleKeywordEntry = e => {
-        const keyword = e?.target?.value;
+    function keywordIsSearchable(keyword) {
+        // don't filter on something terribly short
+        return keyword?.length > 1;
+    }
 
+    // search icon pressed or loaded from url
+    const handleKeywordChange = () => {
+        const keyword = keyWordSearchRef.current.value;
+
+        /* istanbul ignore else */
         if (keywordIsSearchable(keyword)) {
             setKeywordSearch(keyword);
             setPaginationPage(1);
-        } else if (
-            !keyword ||
-            keyword.length === 0 // they've cleared it
-        ) {
+        }
+    };
+
+    // search icon pressed or loaded from url
+    const handleSearchIconPressed = () => {
+        handleKeywordChange();
+        updateUrl('keyword');
+    };
+
+    const handleKeywordCharacterEntry = e => {
+        const keyword = e.target.value;
+        if (isReturnKeyPressed(e)) {
+            if (keywordIsSearchable(keyword)) {
+                setKeywordSearch(keyword);
+                setPaginationPage(1);
+                updateUrl('keyword');
+            }
+        } else if (isEscapeKeyPressed(e) || keyword === '') {
             clearKeywordField();
         }
-
-        keyWordSearchRef.current.value = keyword;
-        updateUrl('keyword');
     };
 
     function hideElement(element, displayproperty = null) {
@@ -442,12 +457,9 @@ export const DLOList = ({
         const params = !!rawsearchparams && new URLSearchParams(rawsearchparams);
 
         if (params.has('keyword') && params.get('keyword').length > 0) {
-            const keyword = {
-                target: {
-                    value: params.get('keyword'),
-                },
-            };
-            handleKeywordEntry(keyword);
+            const rawKeyword = params.get('keyword');
+            keyWordSearchRef.current.value = rawKeyword;
+            handleKeywordChange();
         }
         const openPanels = [];
         if (params.has('filters') && params.get('filters').length > 0) {
@@ -885,7 +897,9 @@ export const DLOList = ({
         return sortedList?.filter(d => {
             const passesCheckboxFilter = filterDlor(d, groupedFilters);
             const passesKeyWordFilter =
-                !keywordSearch || !keywordIsSearchable(keywordSearch) || !!keywordFoundIn(d, keywordSearch);
+                !keywordSearch || // keyword not supplied - don't block
+                !keywordIsSearchable(keywordSearch) || // keyword too short to be useful - don't block
+                !!keywordFoundIn(d, keywordSearch); // DO block the Object by keyword
             return passesCheckboxFilter && passesKeyWordFilter;
         });
     }
@@ -1147,16 +1161,17 @@ export const DLOList = ({
                             }}
                             data-testid="dlor-homepage-keyword"
                             label="Search our digital objects by keyword"
-                            onChange={handleKeywordEntry}
+                            onKeyUp={handleKeywordCharacterEntry}
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        <IconButton onClick={clearKeywordField} aria-label="search by keyword">
-                                            {keyWordSearchRef.current?.value === '' ? (
-                                                <SearchIcon />
-                                            ) : (
+                                        {keyWordSearchRef.current?.value !== '' && (
+                                            <IconButton onClick={clearKeywordField} aria-label="clear keyword">
                                                 <CloseIcon data-testid="keyword-clear" />
-                                            )}
+                                            </IconButton>
+                                        )}
+                                        <IconButton onClick={handleSearchIconPressed} aria-label="search by keyword">
+                                            <SearchIcon data-testid="keyword-submit" />
                                         </IconButton>
                                     </InputAdornment>
                                 ),

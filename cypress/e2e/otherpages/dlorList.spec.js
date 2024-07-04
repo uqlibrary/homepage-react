@@ -344,7 +344,9 @@ describe('Digital Learning Hub', () => {
                 .children()
                 .should('have.length', itemsPerPage + extraRowCount);
 
-            cy.get('[data-testid="dlor-homepage-keyword"]').type('a');
+            cy.get('[data-testid="dlor-homepage-keyword"]')
+                .type('a')
+                .type('{enter}');
             // a single character does nothing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
@@ -352,7 +354,9 @@ describe('Digital Learning Hub', () => {
                 .should('have.length', itemsPerPage + extraRowCount);
 
             // one more char
-            cy.get('[data-testid="dlor-homepage-keyword"]').type('c');
+            cy.get('[data-testid="dlor-homepage-keyword"]')
+                .type('c')
+                .type('{enter}');
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
@@ -382,7 +386,9 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .children()
                 .should('have.length', itemsPerPage + extraRowCount);
-            cy.get('[data-testid="dlor-homepage-keyword"]').type('digital');
+            cy.get('[data-testid="dlor-homepage-keyword"]')
+                .type('digital')
+                .type('{enter}');
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
@@ -391,7 +397,9 @@ describe('Digital Learning Hub', () => {
         context('keyword search bar filters correctly', () => {
             it('keyword filters on description', () => {
                 // "involved" is found only in the description of "Artificial Intelligence - Digital Essentials"
-                cy.get('[data-testid="dlor-homepage-keyword"]').type('involved');
+                cy.get('[data-testid="dlor-homepage-keyword"]')
+                    .type('involved')
+                    .type('{enter}');
                 // now only one panel
                 cy.get('[data-testid="dlor-homepage-list"]')
                     .should('exist')
@@ -401,10 +409,13 @@ describe('Digital Learning Hub', () => {
                     .should('exist')
                     .should('be.visible')
                     .should('contain', 'Artificial Intelligence - Digital Essentials');
+                cy.url().should('eq', 'http://localhost:2020/digital-learning-hub?keyword=involved');
             });
             it('keyword filters on title', () => {
                 // "Digital security" is found only in the title of "Digital security  - Digital Essentials"
-                cy.get('[data-testid="dlor-homepage-keyword"]').type('Digital security');
+                cy.get('[data-testid="dlor-homepage-keyword"]')
+                    .type('Digital security')
+                    .type('{enter}');
                 // now only one panel
                 cy.get('[data-testid="dlor-homepage-list"]')
                     .should('exist')
@@ -414,10 +425,15 @@ describe('Digital Learning Hub', () => {
                     .should('exist')
                     .should('be.visible')
                     .should('contain', 'Digital security - Digital Essentials');
+                cy.url().should('eq', 'http://localhost:2020/digital-learning-hub?keyword=Digital+security');
             });
             it('keyword filters on summary', () => {
                 // "freeware tools" is found only in the summary of "Choose the right tool - Digital Essentials"
                 cy.get('[data-testid="dlor-homepage-keyword"]').type('freeware tools');
+                cy.get('[data-testid="keyword-submit"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .click();
                 // now only one panels
                 cy.get('[data-testid="dlor-homepage-list"]')
                     .should('exist')
@@ -427,10 +443,15 @@ describe('Digital Learning Hub', () => {
                     .should('exist')
                     .should('be.visible')
                     .should('contain', 'Choose the right tool - Digital Essentials');
+                cy.url().should('eq', 'http://localhost:2020/digital-learning-hub?keyword=freeware+tools');
             });
             it('keyword filters on keywords', () => {
                 // "study hacks" is found only in the keywords of "Accessibility - Digital Essentials"
                 cy.get('[data-testid="dlor-homepage-keyword"]').type('study hacks');
+                cy.get('[data-testid="keyword-submit"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .click();
                 // now only one panel
                 cy.get('[data-testid="dlor-homepage-list"]')
                     .should('exist')
@@ -440,10 +461,13 @@ describe('Digital Learning Hub', () => {
                     .should('exist')
                     .should('be.visible')
                     .should('contain', 'Accessibility - Digital Essentials (has Youtube link)');
+                cy.url().should('eq', 'http://localhost:2020/digital-learning-hub?keyword=study+hacks');
             });
             it('keyword clear button clears form', () => {
                 // given a search is loaded
-                cy.get('[data-testid="dlor-homepage-keyword"]').type('Implications');
+                cy.get('[data-testid="dlor-homepage-keyword"]')
+                    .type('Implications')
+                    .type('{enter}');
                 // num pages reduced
                 cy.get('[data-testid="dlor-homepage-list"]')
                     .should('exist')
@@ -460,15 +484,19 @@ describe('Digital Learning Hub', () => {
                     .should('have.length', itemsPerPage + extraRowCount);
                 cy.get('[data-testid="dlor-homepage-keyword"]').should('have.value', '');
             });
-            it('can manually clear the keyword field', () => {
+            it('keyboard delete clears the keyword field', () => {
                 // given something is searched for
-                cy.get('[data-testid="dlor-homepage-keyword"]').type('acc');
+                cy.get('[data-testid="dlor-homepage-keyword"]')
+                    .type('acc')
+                    .type('{enter}');
                 cy.get('[data-testid="dlor-homepage-list"]')
                     .should('exist')
                     .children()
                     .should('have.length', 2 + extraRowCount);
                 // when the user manually clears the keyword field
-                cy.get('[data-testid="dlor-homepage-keyword"]').type('{selectall}{backspace}');
+                cy.get('[data-testid="dlor-homepage-keyword"]')
+                    .type('{selectall}{backspace}')
+                    .type('{enter}');
                 // then all panels showing again & keyword search field empty
                 cy.get('[data-testid="dlor-homepage-list"]')
                     .should('exist')
@@ -478,7 +506,9 @@ describe('Digital Learning Hub', () => {
             });
             it('searching again returns to first page of pagination', () => {
                 // performa search that returns more than one page of results
-                cy.get('[data-testid="dlor-homepage-keyword"]').type('dummy');
+                cy.get('[data-testid="dlor-homepage-keyword"]')
+                    .type('dummy')
+                    .type('{enter}');
                 cy.get('[data-testid="dlor-homepage-list"]')
                     .should('exist')
                     .children()
@@ -498,7 +528,8 @@ describe('Digital Learning Hub', () => {
                 // when we change the search term...
                 cy.get('[data-testid="dlor-homepage-keyword"]')
                     .clear()
-                    .type('acc');
+                    .type('acc')
+                    .type('{enter}');
                 // we are on first page of pagination
                 cy.get('nav[aria-label="pagination navigation"] li:nth-child(3) button')
                     .should('exist')
@@ -745,7 +776,9 @@ describe('Digital Learning Hub', () => {
                 .click();
 
             // when we filter the content the number of pagination page buttons changes
-            cy.get('[data-testid="dlor-homepage-keyword"]').type('digital');
+            cy.get('[data-testid="dlor-homepage-keyword"]')
+                .type('digital')
+                .type('{enter}');
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()
