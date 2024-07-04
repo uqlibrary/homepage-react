@@ -1128,7 +1128,7 @@ export const DLOList = ({
                             href={contactFormLink}
                             target="_blank"
                             title="Load a contact form, in a new window"
-                            sx={{ fontSize: '1.2em', maxWidth: '8em', display: 'flex', alignItems: 'center' }}
+                            sx={{ maxWidth: '8em', display: 'flex', alignItems: 'center' }}
                         >
                             Contact us&nbsp;
                             <OpenInNewIcon />
@@ -1170,8 +1170,21 @@ export const DLOList = ({
                                                 <CloseIcon data-testid="keyword-clear" />
                                             </IconButton>
                                         )}
-                                        <IconButton onClick={handleSearchIconPressed} aria-label="search by keyword">
-                                            <SearchIcon data-testid="keyword-submit" />
+                                        <IconButton
+                                            onClick={handleSearchIconPressed}
+                                            aria-label="Perform your search"
+                                            title="Perform your search"
+                                            sx={{
+                                                backgroundColor: '#2377CB',
+                                                color: 'white',
+                                                borderRadius: '5px',
+                                                marginLeft: '2px',
+                                                '&:hover': {
+                                                    backgroundColor: '#195794',
+                                                },
+                                            }}
+                                        >
+                                            <SearchIcon data-testid="keyword-submit" sx={{ fill: 'white' }} />
                                         </IconButton>
                                     </InputAdornment>
                                 ),
