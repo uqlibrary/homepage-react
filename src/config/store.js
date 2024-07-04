@@ -1,10 +1,8 @@
 import { applyMiddleware, compose, createStore } from 'redux';
-import { routerMiddleware } from 'connected-react-router/immutable';
 import Immutable from 'immutable';
 import thunk from 'redux-thunk';
 import { saveReducerOnSessionExpired } from 'middleware';
 import rootReducer from '../reducer';
-import { history } from './history';
 
 export const getStore = (initialState = Immutable.Map()) => {
     const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -12,7 +10,7 @@ export const getStore = (initialState = Immutable.Map()) => {
     const store = createStore(
         rootReducer,
         initialState,
-        composeEnhancer(applyMiddleware(routerMiddleware(history), thunk, saveReducerOnSessionExpired)),
+        composeEnhancer(applyMiddleware(thunk, saveReducerOnSessionExpired)),
     );
 
     if (window.Cypress) {

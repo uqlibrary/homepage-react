@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 import { useValidation, actionReducer } from './hooks';
 
 describe('Tests custom hooks', () => {

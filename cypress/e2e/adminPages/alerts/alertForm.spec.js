@@ -593,12 +593,12 @@ describe('Alerts Admin Form Pages', () => {
         it('the "add a date set button" works', () => {
             cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('exist');
             cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('exist');
-            clickPlusButton('0');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').click();
 
             cy.get('[data-testid="admin-alerts-form-start-date-1"] input').should('exist');
             cy.get('[data-testid="admin-alerts-form-end-date-1"] input').should('exist');
             cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').should('not.exist');
-            clickPlusButton('1');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').click();
 
             cy.get('[data-testid="admin-alerts-form-start-date-2"] input').should('exist');
             cy.get('[data-testid="admin-alerts-form-end-date-2"] input').should('exist');
