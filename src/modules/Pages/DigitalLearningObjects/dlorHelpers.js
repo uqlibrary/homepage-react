@@ -27,7 +27,7 @@ export const getYoutubeUrlForPreviewEmbed = testUrlIn => {
         return false;
     }
     const params = new URLSearchParams(testUrl.search);
-    // remove any params that arent the video id
+    // remove any params that aren't the video id
     for (const key of params.keys()) {
         if (key !== 'v') {
             params.delete(key);
