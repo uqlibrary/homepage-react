@@ -278,6 +278,7 @@ export const DLOList = ({
     const [filterListTrimmed, setFilterListTrimmed] = useState([]);
     const checkBoxArrayRef = useRef([]);
     const [keywordSearch, setKeywordSearch] = useState('');
+    const [isKeywordClearable, setIsKeywordClearable] = useState(false);
     const keyWordSearchRef = useRef('');
 
     const [paginationPage, setPaginationPage] = React.useState(1);
@@ -342,6 +343,7 @@ export const DLOList = ({
         keyWordSearchRef.current.value = '';
         setPaginationPage(1); // set pagination back to page 1
         updateUrl('keyword');
+        setIsKeywordClearable(false);
     };
 
     function keywordIsSearchable(keyword) {
@@ -368,6 +370,7 @@ export const DLOList = ({
 
     const handleKeywordCharacterEntry = e => {
         const keyword = e.target.value;
+        setIsKeywordClearable(true);
         if (isReturnKeyPressed(e)) {
             if (keywordIsSearchable(keyword)) {
                 setKeywordSearch(keyword);
@@ -460,6 +463,7 @@ export const DLOList = ({
             const rawKeyword = params.get('keyword');
             keyWordSearchRef.current.value = rawKeyword;
             handleKeywordChange();
+            setIsKeywordClearable(true);
         }
         const openPanels = [];
         if (params.has('filters') && params.get('filters').length > 0) {
@@ -1165,7 +1169,7 @@ export const DLOList = ({
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        {keyWordSearchRef.current?.value !== '' && (
+                                        {!!isKeywordClearable && (
                                             <IconButton onClick={clearKeywordField} aria-label="clear keyword">
                                                 <CloseIcon data-testid="keyword-clear" />
                                             </IconButton>
