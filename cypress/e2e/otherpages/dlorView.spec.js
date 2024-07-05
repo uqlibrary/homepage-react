@@ -16,6 +16,14 @@ describe('Digital Learning Hub View page', () => {
                 'contain',
                 'Artificial Intelligence - Digital Essentials',
             );
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Digital learning hub');
+                });
 
             cy.get('[data-testid="dlor-detailpage-cultural-advice-custom-indicator"]').should('not.exist');
             cy.get('[data-testid="dlor-detailpage-featured-custom-indicator"]').should('not.exist');

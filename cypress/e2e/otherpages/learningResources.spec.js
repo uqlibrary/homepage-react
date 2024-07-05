@@ -354,6 +354,15 @@ context('The Learning Resources Page', () => {
         cy.visit('/learning-resources?user=s1111111');
         cy.viewport(1300, 1000);
 
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Learning resources');
+            });
+
         // FREN1010_loads_properly_for_s111111_user();
         cy.get('[data-testid="learning-resource-subject-title"]').contains('FREN1010 - Introductory French 1');
 

@@ -42,6 +42,14 @@ describe('Spotlight Admin View page', () => {
     //         .should('have.length', numberCurrentPublishedSpotlights + numRowsHiddenAsNoDatainfo);
     // });
     it('has a Help button on the spotlight View page', () => {
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Spotlights admin');
+            });
         cy.get('[data-testid="admin-spotlights-help-button"]').should('exist');
     });
     it('the view page displays the correct data', () => {

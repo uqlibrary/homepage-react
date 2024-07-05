@@ -18,6 +18,14 @@ describe('Alerts Admin View Page', () => {
         });
     });
     it('can view an alert without being able to edit any fields', () => {
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Alerts admin');
+            });
         cy.get('h2').should('be.visible');
         cy.get('h2').contains('View alert');
         cy.get('[data-testid="admin-alerts-view-title"] input').should('have.value', 'Example alert:');

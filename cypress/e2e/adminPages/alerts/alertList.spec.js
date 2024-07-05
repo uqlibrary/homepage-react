@@ -18,6 +18,14 @@ describe('Alert Admin List page', () => {
                     .then(elements => elements.length === 1 + numRowsHiddenAsNoDatainfo),
             { timeout: 10000, interval: 500 },
         );
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Alerts admin');
+            });
         cy.get('[data-testid="headerRow-count-current"]').contains('1 alert');
 
         // this alert has all 3 chips

@@ -31,6 +31,14 @@ describe('Digital Learning Hub', () => {
         });
         it('appears as expected', () => {
             cy.waitUntil(() => cy.get('h1').should('exist'));
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Digital learning hub');
+                });
             cy.get('h1').should('contain', 'Find a digital learning object');
             cy.get('[data-testid="dlor-homepage-list"')
                 .should('exist')

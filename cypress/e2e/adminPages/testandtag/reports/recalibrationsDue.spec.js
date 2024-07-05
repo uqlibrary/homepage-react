@@ -32,6 +32,14 @@ describe('Test and Tag Report - RecalibrationsDue due', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
         );
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Test and tag');
+            });
     });
     it('sorting works as expected, and indicates overdue', () => {
         cy.viewport(1300, 1000);

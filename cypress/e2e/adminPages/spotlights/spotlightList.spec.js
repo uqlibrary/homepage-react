@@ -62,6 +62,15 @@ describe('Spotlights Admin List Page', () => {
         });
     });
     it('the footer paginator shows max links when max is selected', () => {
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Spotlights admin');
+            });
+
         const highestDisplayCount = '100';
         cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(totalCountPastRecords));
         cy.get(

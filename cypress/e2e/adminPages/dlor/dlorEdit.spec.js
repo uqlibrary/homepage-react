@@ -104,6 +104,14 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
                 cy.viewport(1300, 1000);
 
+                cy.get('uq-site-header')
+                    .shadow()
+                    .within(() => {
+                        cy.get('[data-testid="subsite-title"]')
+                            .should('exist')
+                            .should('be.visible')
+                            .contains('Digital learning hub admin');
+                    });
                 cy.waitUntil(() => cy.get('[data-testid="object-publishing-user"] input').should('exist'));
                 cy.get('[data-testid="object-publishing-user"] input').should('have.value', 'uqjsmith');
                 cy.get('[data-testid="dlor-form-team-message-object-publishing-user"]').should('not.exist');

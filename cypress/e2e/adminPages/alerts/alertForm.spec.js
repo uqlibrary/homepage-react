@@ -182,6 +182,15 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('[data-testid="admin-alerts-form-link-url"]').should('not.have.class', 'Mui-error');
         });
         it('can save an alert (simple)', () => {
+            // breadcrumb appears
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Alerts admin');
+                });
             cy.get('[data-testid="admin-alerts-form-title"]').type('alert title 3');
             cy.get('[data-testid="admin-alerts-form-body"]').type('body 3');
             cy.get('button[data-testid="admin-alerts-form-button-preview"]').click();
@@ -328,6 +337,14 @@ describe('Alerts Admin Form Pages', () => {
             });
         });
         it('the edit form presets the correct data', () => {
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Alerts admin');
+                });
             cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.get('[data-testid="admin-alerts-form-title"] input').should('have.value', 'Example alert:');
             cy.get('[data-testid="admin-alerts-form-body"]').contains('This alert can be edited in mock.');
@@ -488,6 +505,14 @@ describe('Alerts Admin Form Pages', () => {
             });
         });
         it('can clone an alert and return to list', () => {
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Alerts admin');
+                });
             cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.get('h2').should('be.visible');
             cy.get('h2').contains('Clone alert');

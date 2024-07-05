@@ -33,6 +33,14 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
         );
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Test and tag');
+            });
     });
     it('UI Dropdown for Status and building function correctly', () => {
         cy.get('h1').contains(locale.pages.general.pageTitle);
