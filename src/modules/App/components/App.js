@@ -67,25 +67,23 @@ export const App = ({ account, actions }) => {
     let secondLevelTitle = null;
     let secondLevelUrl = null;
 
-    function extractPortion(str, startMarker, endMarkerOptional) {
+    function extractPathFromHash(str) {
+        const startMarker = '#/';
+        const endMarker = '?';
+
         const start = str.indexOf(startMarker); // Find the starting position of the substring
-        const end = str.indexOf(endMarkerOptional); // Find the ending position of the substring
+        const end = str.indexOf(endMarker); // Find the ending position of the substring
 
-        // If '?' is not present, use the end of the string
-        const result =
-            end === -1
-                ? str.slice(start + 2) // Adding 2 to skip past '#/'
-                : str.slice(start, end);
-
-        return result;
+        return end === -1 // If '?' is not present, use the end of the string
+            ? str.slice(start + 1) // Adding 1 to skip past '#'
+            : str.slice(start, end);
     }
     function pageIsSubsystem(item) {
         let hasPath = window.location.pathname.startsWith(item.pathname);
-        // when on a feature branch we have to check the hash not the path
         /* istanbul ignore next */
         if (!hasPath && window.location.hash.startsWith('#/')) {
-            // we're on a feature branch
-            const pathName = extractPortion(window.location.hash, '#/', '?');
+            // we're on a feature branch - check the hash, not the path
+            const pathName = extractPathFromHash(window.location.hash);
             hasPath = pathName.startsWith(item.pathname);
         }
         return hasPath;
