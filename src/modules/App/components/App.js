@@ -67,26 +67,10 @@ export const App = ({ account, actions }) => {
     let secondLevelTitle = null;
     let secondLevelUrl = null;
 
-    function extractPathFromHash(str) {
-        const startMarker = '#/';
-        const endMarker = '?';
-
-        const start = str.indexOf(startMarker); // Find the starting position of the substring
-        const end = str.indexOf(endMarker); // Find the ending position of the substring
-
-        return end === -1 // If '?' is not present, use the end of the string
-            ? str.slice(start + 1) // Adding 1 to skip past '#'
-            : str.slice(start, end);
-    }
     function pageIsSubsystem(item) {
-        let hasPath = window.location.pathname.startsWith(item.pathname);
-        /* istanbul ignore next */
-        if (!hasPath && window.location.hash.startsWith('#/')) {
-            // we're on a feature branch - check the hash, not the path
-            const pathName = extractPathFromHash(window.location.hash);
-            hasPath = pathName.startsWith(item.pathname);
-        }
-        return hasPath;
+        return (
+            window.location.pathname.startsWith(item.pathname) || window.location.hash.startsWith(`#${item.pathname}`)
+        );
     }
 
     for (const item of breadcrumbLabels) {
