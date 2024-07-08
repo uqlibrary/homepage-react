@@ -74,6 +74,14 @@ describe('Test and Tag Admin Inspection page', () => {
                     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
                 },
             );
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Test and tag');
+                });
         });
         describe('Event panel functionality', () => {
             const today = moment();

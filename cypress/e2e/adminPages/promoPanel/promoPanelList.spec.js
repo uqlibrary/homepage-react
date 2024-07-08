@@ -18,6 +18,14 @@ describe('Promo Panel List', () => {
         it('can navigate to a panel from admin page', () => {
             cy.visit('http://localhost:2020/admin/promopanel?user=uqstaff');
             cy.viewport(1000, 1800);
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Promo panel admin');
+                });
             cy.get('h1').should('be.visible');
             cy.get('h1').contains('Promo panel management');
             testId('panel-list-arrowicon-1-student').click();

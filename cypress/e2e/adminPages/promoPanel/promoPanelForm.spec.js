@@ -21,6 +21,14 @@ describe('Promopanel Admin Form Pages', () => {
             });
         });
         it('can enter new data into form fields for non-assigned panel', () => {
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Promo panel admin');
+                });
             testId('admin-promoPanel-help-button').click();
             testId('help-drawer-title').should('exist');
             testId('promopanel-helpdrawer-close-button').click();

@@ -23,6 +23,14 @@ describe('Digital Learning Hub admin Edit Team', () => {
             });
         });
         it('appears as expected', () => {
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Digital learning hub admin');
+                });
             cy.get('[data-testid="StandardPage-title"]')
                 .should('exist')
                 .should('be.visible')

@@ -24,6 +24,14 @@ describe('Past Exam Papers Pages', () => {
         });
         it('when I type a valid course code fragment in the search bar, appropriate suggestions load', () => {
             cy.visit('/exams');
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Past exam papers');
+                });
             cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('fren1');
             // suggestions load
             cy.get('.MuiAutocomplete-listbox')
@@ -142,6 +150,14 @@ describe('Past Exam Papers Pages', () => {
         });
         it('the past exam paper result desktop page is correct', () => {
             cy.visit('/exams/course/fren');
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Past exam papers');
+                });
             cy.get('div[id="content-container"]').contains('Past Exam Papers from 2017 to 2022 for "FREN"');
             cy.get('[data-testid="exampaper-results-table-header"]')
                 .children()
@@ -172,6 +188,14 @@ describe('Past Exam Papers Pages', () => {
     context('search errors', () => {
         it('a search with no results shows a message', () => {
             cy.visit('/exams/course/empt');
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Past exam papers');
+                });
             cy.get('div[id="content-container"]').contains('Past Exam Papers from 2017 to 2022 for "EMPT"');
             cy.get('div[data-testid="past-exam-paper-missing"]').contains(
                 'We have not found any past exams for this course "EMPT" because either',

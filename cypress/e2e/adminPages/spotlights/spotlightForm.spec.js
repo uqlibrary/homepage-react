@@ -56,6 +56,14 @@ describe('Spotlights Admin Form Pages', () => {
         });
 
         it('Entering the fields on the add form works', () => {
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Spotlights admin');
+                });
             saveButtonisDisabled();
             cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 3');
             cy.get('[data-testid="admin-spotlights-form-title"] textarea').should('have.value', 'spotlight title 3');

@@ -41,6 +41,14 @@ describe('Test and Tag manage inspection devices', () => {
         );
     });
     it('Add and Edit Inspection Device functions correctly', () => {
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Test and tag');
+            });
         cy.injectAxe();
         checkBaseline();
         // Adding an Inspection Device

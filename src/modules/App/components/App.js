@@ -51,6 +51,54 @@ export const App = ({ account, actions }) => {
         homepageLabel = 'Library Local';
     }
 
+    const breadcrumbLabels = [
+        { pathname: '/admin/alerts', title: 'Alerts admin' },
+        { pathname: '/admin/dlor', title: 'Digital learning hub admin' },
+        { pathname: '/admin/promopanel', title: 'Promo panel admin' },
+        { pathname: '/admin/spotlights', title: 'Spotlights admin' },
+        { pathname: '/admin/testntag', title: 'Test and tag' },
+        { pathname: '/book-exam-booth', title: 'Book an Exam booth' },
+        { pathname: '/digital-learning-hub', title: 'Digital learning hub' },
+        { pathname: '/exams', title: 'Past exam papers' },
+        { pathname: '/learning-resources', title: 'Learning resources' },
+        { pathname: '/payment-receipt', title: 'Payment receipt' },
+    ];
+
+    let secondLevelTitle = null;
+    let secondLevelUrl = null;
+
+    function extractPortion(str, startMarker, endMarkerOptional) {
+        const start = str.indexOf(startMarker); // Find the starting position of the substring
+        const end = str.indexOf(endMarkerOptional); // Find the ending position of the substring
+
+        // If '?' is not present, use the end of the string
+        const result =
+            end === -1
+                ? str.slice(start + 2) // Adding 2 to skip past '#/'
+                : str.slice(start, end);
+
+        return result;
+    }
+    function pageIsSubsystem(item) {
+        let hasPath = window.location.pathname.startsWith(item.pathname);
+        // when on a feature branch we have to check the hash not the path
+        /* istanbul ignore next */
+        if (!hasPath && window.location.hash.startsWith('#/')) {
+            // we're on a feature branch
+            const pathName = extractPortion(window.location.hash, '#/', '?');
+            hasPath = pathName.startsWith(item.pathname);
+        }
+        return hasPath;
+    }
+
+    for (const item of breadcrumbLabels) {
+        if (pageIsSubsystem(item)) {
+            secondLevelTitle = item.title;
+            secondLevelUrl = window.location.pathname;
+            break; // Exit the loop once a match is found
+        }
+    }
+
     return (
         <Grid
             container
@@ -68,7 +116,13 @@ export const App = ({ account, actions }) => {
                 <uq-header hidelibrarymenuitem="true" />
                 {!hideForAdmin() && <cultural-advice-popup />}
 
-                <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink} showmenu>
+                <uq-site-header
+                    sitetitle={homepageLabel}
+                    siteurl={homepagelink}
+                    secondleveltitle={secondLevelTitle}
+                    secondlevelurl={secondLevelUrl}
+                    showmenu
+                >
                     <span slot="site-utilities">
                         <askus-button />
                     </span>

@@ -63,6 +63,14 @@ describe('Digital Learning Hub admin homepage', () => {
             );
         });
         it('shows a list of objects to manage', () => {
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Digital learning hub admin');
+                });
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
                 .children()

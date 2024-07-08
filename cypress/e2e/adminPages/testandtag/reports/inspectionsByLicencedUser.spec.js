@@ -40,6 +40,14 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
         );
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Test and tag');
+            });
     });
     it('Inspector selection works as intended', () => {
         cy.viewport(1300, 1000);

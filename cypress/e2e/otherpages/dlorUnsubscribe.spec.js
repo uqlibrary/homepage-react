@@ -65,6 +65,14 @@ describe('Digital Learning Hub', () => {
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Digital learning hub');
+                });
         });
         it('an expired unsubscription appears as expected', () => {
             cy.visit('digital-learning-hub/confirm/unsubscribe/unsubscribeExpired');
