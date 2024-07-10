@@ -4,7 +4,7 @@ describe('Digital Learning Hub', () => {
         cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
     });
 
-    const itemsPerPage = 10; // matches value in DLOList
+    const itemsPerPage = 10; // matches value in DLOList.
     const extraRowCount = 2; // pagination row + hidden mobile filter icon
     context('desktop homepage visits', () => {
         beforeEach(() => {
