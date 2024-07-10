@@ -643,7 +643,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
             return getSpecificDlorObject(dlorId);
         }
     })
-    .onGet('dlor/public/list/full')
+    .onGet('dlor/admin/list/full')
     .reply(() => {
         if (responseType === 'fullListError') {
             return [500, {}];
