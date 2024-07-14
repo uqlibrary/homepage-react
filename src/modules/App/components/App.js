@@ -76,6 +76,7 @@ export const App = ({ account, actions }) => {
                         <auth-button />
                     </span>
                 </uq-site-header>
+                {!hideForAdmin() && <proactive-chat />}
                 <div role="region" aria-label="UQ Library Alerts">
                     <alert-list system="homepage" />
                 </div>
@@ -100,7 +101,6 @@ export const App = ({ account, actions }) => {
                 <div id="full-footer-block">
                     <connect-footer />
                     <uq-footer />
-                    {!hideForAdmin() && <proactive-chat />}
                 </div>
             </div>
         </Grid>
