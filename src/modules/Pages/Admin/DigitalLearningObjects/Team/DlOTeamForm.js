@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 import { useCookies } from 'react-cookie';
 
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -17,24 +18,8 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { scrollToTopOfPage } from 'helpers/general';
 
-const useStyles = makeStyles(() => ({
-    titleBlock: {
-        '& p:first-child': {
-            display: 'flex',
-            alignItems: 'center',
-            padding: 0,
-            fontSize: 16,
-            '& a': {
-                color: 'rgba(0, 0, 0, 0.87)',
-                textDecoration: 'underline',
-            },
-        },
-    },
-    errorMessage: {
-        color: '#d62929', // uq $error-500
-        fontSize: '0.8em',
-        marginTop: 2,
-    },
+const StyledForm = styled('form')(() => ({
+    width: '100%',
 }));
 
 export const DLOTeamForm = ({
@@ -49,7 +34,6 @@ export const DLOTeamForm = ({
     mode,
 }) => {
     const { dlorTeamId } = useParams();
-    const classes = useStyles();
     const [cookies, setCookie] = useCookies();
 
     const [formValues, setFormValues] = useState({
@@ -80,8 +64,6 @@ export const DLOTeamForm = ({
     }
 
     const navigateToTeamManagementHomePage = () => {
-        // TODO also want to clear form here too before nav, so back button gives clear form?
-
         closeConfirmationBox();
         window.location.href = dlorAdminLink('/team/manage');
         scrollToTopOfPage();
@@ -145,15 +127,15 @@ export const DLOTeamForm = ({
                 /* istanbul ignore else */
                 if ((!!dlorTeamLoading || !!dlorTeamSaving || (!dlorTeamError && !formDefaults)) && mode === 'edit') {
                     return (
-                        <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
-                            <div style={{ minHeight: 600 }}>
+                        <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                            <Box sx={{ minHeight: '600px' }}>
                                 <InlineLoader message="Loading" />
-                            </div>
+                            </Box>
                         </Grid>
                     );
                 } else if (!!dlorTeamError) {
                     return (
-                        <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
+                        <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
                             <Typography variant="body1" data-testid="dlor-teamItem-error">
                                 {dlorTeamError}
                             </Typography>
@@ -183,13 +165,13 @@ export const DLOTeamForm = ({
                                         locale={!!dlorSavedTeamError ? locale.errorMessage : locale.successMessage}
                                     />
 
-                                    <form id="dlor-editTeam-form" style={{ width: '100%' }}>
+                                    <StyledForm id="dlor-editTeam-form">
                                         <Grid item xs={12}>
                                             <FormControl variant="standard" fullWidth>
                                                 <InputLabel htmlFor="team_name">Team name *</InputLabel>
                                                 <Input
                                                     id="team_name"
-                                                    data-testid="team_name"
+                                                    data-testid="admin-dlor-team-form-team-name"
                                                     required
                                                     value={formValues?.team_name || ''}
                                                     onChange={handleChange('team_name')}
@@ -197,12 +179,16 @@ export const DLOTeamForm = ({
                                                 />
                                             </FormControl>
                                             {!isValidTeamName(formValues?.team_name) && (
-                                                <div
-                                                    className={classes.errorMessage}
-                                                    data-testid="error-message-team_name"
+                                                <Box
+                                                    sx={{
+                                                        color: '#d62929', // uq $error-500
+                                                        fontSize: '0.8em',
+                                                        marginTop: 2,
+                                                    }}
+                                                    data-testid="admin-dlor-team-form-error-message-team-name"
                                                 >
                                                     This team name is not valid.
-                                                </div>
+                                                </Box>
                                             )}
                                         </Grid>
                                         <Grid item xs={12}>
@@ -210,7 +196,7 @@ export const DLOTeamForm = ({
                                                 <InputLabel htmlFor="team_manager">Name of Team Manager</InputLabel>
                                                 <Input
                                                     id="team_manager"
-                                                    data-testid="team_manager"
+                                                    data-testid="admin-dlor-team-form-team-manager"
                                                     value={formValues?.team_manager || ''}
                                                     onChange={handleChange('team_manager')}
                                                 />
@@ -223,22 +209,26 @@ export const DLOTeamForm = ({
                                                 </InputLabel>
                                                 <Input
                                                     id="team_email"
-                                                    data-testid="team_email"
+                                                    data-testid="admin-dlor-team-form-team-email"
                                                     value={formValues?.team_email || ''}
                                                     onChange={handleChange('team_email')}
                                                     error={!isValidEmailLocal(formValues?.team_email)}
                                                 />
                                                 {!isValidEmailLocal(formValues?.team_email) && (
-                                                    <div
-                                                        className={classes.errorMessage}
-                                                        data-testid="error-message-team_email"
+                                                    <Box
+                                                        sx={{
+                                                            color: '#d62929', // uq $error-500
+                                                            fontSize: '0.8em',
+                                                            marginTop: 2,
+                                                        }}
+                                                        data-testid="admin-dlor-team-form-error-message-team-email"
                                                     >
                                                         This email address is not valid.
-                                                    </div>
+                                                    </Box>
                                                 )}
                                             </FormControl>
                                         </Grid>
-                                    </form>
+                                    </StyledForm>
                                 </Grid>
                             </Grid>
 
@@ -259,7 +249,6 @@ export const DLOTeamForm = ({
                                     children="Save"
                                     disabled={!isFormValid}
                                     onClick={saveChanges}
-                                    // className={classes.saveButton}
                                 />
                             </Grid>
                         </>

@@ -131,7 +131,7 @@ export const PromoPanelSplitButton = ({
                                     zIndex: 9999,
                                 }}
                             >
-                                <Paper sx={{ marginTop: '-50' }}>
+                                <Paper sx={{ marginTop: '-50px' }}>
                                     <ClickAwayListener onClickAway={handleClose}>
                                         <MenuList id="split-button-menu">
                                             {!!canEdit && (

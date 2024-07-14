@@ -73,9 +73,11 @@ describe('Digital Learning Hub admin homepage', () => {
                 .should('exist')
                 .should('be.visible')
                 .should('contain', 'Accessibility - Digital Essentials');
-            cy.get('[data-testid="dlor-homepage-list"] > div:first-child svg')
-                .should('exist')
-                .should('have.attr', 'style', 'color: green;'); // has green tick
+            cy.get('[data-testid="dlor-homepage-list"] > div:first-child svg path').should(
+                'have.attr',
+                'd',
+                'M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z',
+            ); // has green tick
             cy.get('[data-testid="dlor-homepage-list"] > div:first-child div:nth-child(3) p:first-child').contains(
                 'uqldegro',
             );
@@ -86,9 +88,11 @@ describe('Digital Learning Hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) h2')
                 .should('exist')
                 .should('contain', 'UQ has a Blak History');
-            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) svg')
-                .should('exist')
-                .should('have.attr', 'style', 'color: green;'); // has green tick
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) svg path').should(
+                'have.attr',
+                'd',
+                'M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z',
+            ); // has green tick
             cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) div:nth-child(3) p:first-child').contains(
                 'uquser1',
             );

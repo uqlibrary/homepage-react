@@ -36,7 +36,13 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import HeroCard from 'modules/Pages/DigitalLearningObjects/SharedComponents/HeroCard';
-import { getDlorViewPageUrl, slugifyName } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import {
+    convertSnakeCaseToKebabCase,
+    getDlorViewPageUrl,
+    isEscapeKeyPressed,
+    isReturnKeyPressed,
+    slugifyName,
+} from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const StyledSkipLinkButton = styled(Button)(({ theme }) => ({
     // hidden when not focused
@@ -167,7 +173,7 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
             marginTop: '0.2em',
             fontSize: 16,
         },
-        '& > div p:first-child': {
+        '& > div p:first-of-type': {
             marginTop: 0,
         },
         '& footer': {
@@ -176,7 +182,7 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
             marginTop: 6,
             display: 'flex',
             alignItems: 'center', // horizontally, align icon and label at the center
-            '& > svg:not(:first-child)': {
+            '& > svg:not(:first-of-type)': {
                 paddingLeft: 12,
             },
             '& svg': {
@@ -242,7 +248,7 @@ const StyledSidebarFilterFacetHelpPopupBox = styled(Box)(() => ({
 const StyledFormControlLabel = styled(FormControlLabel)(() => ({
     display: 'flex',
     alignItems: 'flex-start',
-    '& span:first-child': {
+    '& span:first-of-type': {
         paddingBlock: 0,
     },
     paddingBottom: 5,
@@ -272,6 +278,7 @@ export const DLOList = ({
     const [filterListTrimmed, setFilterListTrimmed] = useState([]);
     const checkBoxArrayRef = useRef([]);
     const [keywordSearch, setKeywordSearch] = useState('');
+    const [isKeywordClearable, setIsKeywordClearable] = useState(false);
     const keyWordSearchRef = useRef('');
 
     const [paginationPage, setPaginationPage] = React.useState(1);
@@ -295,11 +302,6 @@ export const DLOList = ({
             actions.loadAllFilters();
         }
     }, [dlorList, dlorFilterList, dlorListError, dlorListLoading, dlorFilterListError, dlorFilterListLoading, actions]);
-
-    function keywordIsSearchable(keyword) {
-        // don't filter on something terribly short
-        return keyword?.length > 1;
-    }
 
     const updateUrl = itemType => {
         const url = new URL(document.URL);
@@ -341,23 +343,43 @@ export const DLOList = ({
         keyWordSearchRef.current.value = '';
         setPaginationPage(1); // set pagination back to page 1
         updateUrl('keyword');
+        setIsKeywordClearable(false);
     };
 
-    const handleKeywordEntry = e => {
-        const keyword = e?.target?.value;
+    function keywordIsSearchable(keyword) {
+        // don't filter on something terribly short
+        return keyword?.length > 1;
+    }
 
+    // search icon pressed or loaded from url
+    const handleKeywordChange = () => {
+        const keyword = keyWordSearchRef.current.value;
+
+        /* istanbul ignore else */
         if (keywordIsSearchable(keyword)) {
             setKeywordSearch(keyword);
             setPaginationPage(1);
-        } else if (
-            !keyword ||
-            keyword.length === 0 // they've cleared it
-        ) {
+        }
+    };
+
+    // search icon pressed or loaded from url
+    const handleSearchIconPressed = () => {
+        handleKeywordChange();
+        updateUrl('keyword');
+    };
+
+    const handleKeywordCharacterEntry = e => {
+        const keyword = e.target.value;
+        setIsKeywordClearable(true);
+        if (isReturnKeyPressed(e)) {
+            if (keywordIsSearchable(keyword)) {
+                setKeywordSearch(keyword);
+                setPaginationPage(1);
+                updateUrl('keyword');
+            }
+        } else if (isEscapeKeyPressed(e) || keyword === '') {
             clearKeywordField();
         }
-
-        keyWordSearchRef.current.value = keyword;
-        updateUrl('keyword');
     };
 
     function hideElement(element, displayproperty = null) {
@@ -438,12 +460,10 @@ export const DLOList = ({
         const params = !!rawsearchparams && new URLSearchParams(rawsearchparams);
 
         if (params.has('keyword') && params.get('keyword').length > 0) {
-            const keyword = {
-                target: {
-                    value: params.get('keyword'),
-                },
-            };
-            handleKeywordEntry(keyword);
+            const rawKeyword = params.get('keyword');
+            keyWordSearchRef.current.value = rawKeyword;
+            handleKeywordChange();
+            setIsKeywordClearable(true);
         }
         const openPanels = [];
         if (params.has('filters') && params.get('filters').length > 0) {
@@ -716,7 +736,7 @@ export const DLOList = ({
                                                     aria-label="View facet help"
                                                     onClick={() => openHelpText(facetType)}
                                                     data-testid={sidebarElementId(
-                                                        facetType?.facet_type_slug,
+                                                        convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
                                                         'panel-help-icon',
                                                     )}
                                                 >
@@ -730,7 +750,7 @@ export const DLOList = ({
                                         >
                                             <button
                                                 data-testid={sidebarElementId(
-                                                    facetType?.facet_type_slug,
+                                                    convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
                                                     'panel-help-close',
                                                 )}
                                                 onClick={
@@ -752,7 +772,7 @@ export const DLOList = ({
                                                     : filterMaximiseButtonLabel
                                             }
                                             data-testid={sidebarElementId(
-                                                facetType?.facet_type_slug,
+                                                convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
                                                 'panel-minimisation-icon',
                                             )}
                                             onClick={() => showHidePanel(facetType?.facet_type_id)}
@@ -760,7 +780,7 @@ export const DLOList = ({
                                             <KeyboardArrowUpIcon
                                                 id={sidebarElementId(facetType?.facet_type_id, 'panel-uparrow')}
                                                 data-testid={sidebarElementId(
-                                                    facetType?.facet_type_slug,
+                                                    convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
                                                     'panel-uparrow',
                                                 )}
                                                 sx={
@@ -777,7 +797,7 @@ export const DLOList = ({
                                             <KeyboardArrowDownIcon
                                                 id={sidebarElementId(facetType?.facet_type_id, 'panel-downarrow')}
                                                 data-testid={sidebarElementId(
-                                                    facetType?.facet_type_slug,
+                                                    convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
                                                     'panel-downarrow',
                                                 )}
                                                 sx={
@@ -796,7 +816,9 @@ export const DLOList = ({
                                 </StyledSidebarFilterTypeHeadingGrid>
                                 <Box
                                     id={sidebarElementId(facetType?.facet_type_id)}
-                                    data-testid={sidebarElementId(facetType?.facet_type_slug)}
+                                    data-testid={sidebarElementId(
+                                        convertSnakeCaseToKebabCase(facetType?.facet_type_slug),
+                                    )}
                                     sx={
                                         openPanelListContains(facetType?.facet_type_id)
                                             ? {}
@@ -816,9 +838,9 @@ export const DLOList = ({
                                                             onChange={handleCheckboxAction(checkBoxid)}
                                                             aria-label={'Include'}
                                                             value={facet?.facet_id}
-                                                            data-testid={`checkbox-${
-                                                                facetType?.facet_type_slug
-                                                            }-${slugifyName(facet?.facet_name)}`}
+                                                            data-testid={`checkbox-${convertSnakeCaseToKebabCase(
+                                                                facetType?.facet_type_slug,
+                                                            )}-${slugifyName(facet?.facet_name)}`}
                                                             ref={checkBoxArrayRef.current[checkBoxidShort]}
                                                             checked={
                                                                 !!checkBoxArrayRef.current?.includes(checkBoxidShort)
@@ -879,7 +901,9 @@ export const DLOList = ({
         return sortedList?.filter(d => {
             const passesCheckboxFilter = filterDlor(d, groupedFilters);
             const passesKeyWordFilter =
-                !keywordSearch || !keywordIsSearchable(keywordSearch) || !!keywordFoundIn(d, keywordSearch);
+                !keywordSearch || // keyword not supplied - don't block
+                !keywordIsSearchable(keywordSearch) || // keyword too short to be useful - don't block
+                !!keywordFoundIn(d, keywordSearch); // DO block the Object by keyword
             return passesCheckboxFilter && passesKeyWordFilter;
         });
     }
@@ -922,7 +946,7 @@ export const DLOList = ({
                     paddingTop: '0 !important',
                 }}
                 key={object?.object_id}
-                data-testid={`dlor-homepage-panel-${object?.object_public_uuid}`}
+                data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(object?.object_public_uuid)}`}
             >
                 <StyledArticleCard
                     onClick={() => navigateToDetailPage(object?.object_public_uuid)}
@@ -954,7 +978,9 @@ export const DLOList = ({
                                                     sx={{ fill: '#51247A', marginRight: '2px', width: '20px' }}
                                                 />
                                                 <StyledTagLabel
-                                                    data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-featured`}
+                                                    data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                        object?.object_public_uuid,
+                                                    )}-featured`}
                                                     sx={{ marginLeft: '-2px' }}
                                                 >
                                                     Featured
@@ -965,7 +991,9 @@ export const DLOList = ({
                                             <>
                                                 <InfoIcon sx={{ fill: '#2377CB', marginRight: '2px', width: '20px' }} />
                                                 <StyledTagLabel
-                                                    data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-cultural-advice`}
+                                                    data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                        object?.object_public_uuid,
+                                                    )}-cultural-advice`}
                                                 >
                                                     Cultural advice
                                                 </StyledTagLabel>
@@ -977,7 +1005,9 @@ export const DLOList = ({
                                                     sx={{ fill: '#4aa74e', marginRight: '2px', width: '24px' }}
                                                 />
                                                 <StyledTagLabel
-                                                    data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-object_series_name`}
+                                                    data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                        object?.object_public_uuid,
+                                                    )}-object-series-name`}
                                                 >
                                                     Series: {object?.object_series_name}
                                                 </StyledTagLabel>
@@ -995,7 +1025,11 @@ export const DLOList = ({
                             {!!hasTopicFacet('item_type') && (
                                 <>
                                     {getFacetTypeIcon('item_type')}
-                                    <span data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-type`}>
+                                    <span
+                                        data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                            object?.object_public_uuid,
+                                        )}-footer-type`}
+                                    >
                                         {getConcatenatedFilterLabels('item_type')}
                                     </span>
                                 </>
@@ -1004,7 +1038,9 @@ export const DLOList = ({
                                 <>
                                     {getFacetTypeIcon('media_format')}
                                     <span
-                                        data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-media`}
+                                        data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                            object?.object_public_uuid,
+                                        )}-footer-media`}
                                     >
                                         {getConcatenatedFilterLabels('media_format')}
                                     </span>
@@ -1014,7 +1050,9 @@ export const DLOList = ({
                                 <>
                                     {getFacetTypeIcon('topic')}
                                     <span
-                                        data-testid={`dlor-homepage-panel-${object?.object_public_uuid}-footer-topic`}
+                                        data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                            object?.object_public_uuid,
+                                        )}-footer-topic`}
                                     >
                                         {getConcatenatedFilterLabels('topic')}
                                     </span>
@@ -1094,7 +1132,7 @@ export const DLOList = ({
                             href={contactFormLink}
                             target="_blank"
                             title="Load a contact form, in a new window"
-                            sx={{ fontSize: '1.2em', maxWidth: '8em', display: 'flex', alignItems: 'center' }}
+                            sx={{ maxWidth: '8em', display: 'flex', alignItems: 'center' }}
                         >
                             Contact us&nbsp;
                             <OpenInNewIcon />
@@ -1127,16 +1165,30 @@ export const DLOList = ({
                             }}
                             data-testid="dlor-homepage-keyword"
                             label="Search our digital objects by keyword"
-                            onChange={handleKeywordEntry}
+                            onKeyUp={handleKeywordCharacterEntry}
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        <IconButton onClick={clearKeywordField} aria-label="search by keyword">
-                                            {keyWordSearchRef.current?.value === '' ? (
-                                                <SearchIcon />
-                                            ) : (
+                                        {!!isKeywordClearable && (
+                                            <IconButton onClick={clearKeywordField} aria-label="clear keyword">
                                                 <CloseIcon data-testid="keyword-clear" />
-                                            )}
+                                            </IconButton>
+                                        )}
+                                        <IconButton
+                                            onClick={handleSearchIconPressed}
+                                            aria-label="Perform your search"
+                                            title="Perform your search"
+                                            sx={{
+                                                backgroundColor: '#2377CB',
+                                                color: 'white',
+                                                borderRadius: '5px',
+                                                marginLeft: '2px',
+                                                '&:hover': {
+                                                    backgroundColor: '#195794',
+                                                },
+                                            }}
+                                        >
+                                            <SearchIcon data-testid="keyword-submit" sx={{ fill: 'white' }} />
                                         </IconButton>
                                     </InputAdornment>
                                 ),
