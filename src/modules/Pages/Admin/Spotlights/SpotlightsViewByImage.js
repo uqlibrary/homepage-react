@@ -58,10 +58,10 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 export const SpotlightsViewByImage = ({
     isLightboxOpen,
     handleLightboxClose,
-    spotlights,
+    spotlights = [],
     showViewByHistoryLightbox,
-    helpButtonLabel,
-    helpContent,
+    helpButtonLabel = 'Help',
+    helpContent = locale.viewByImage.help,
 }) => {
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
     const openHelpLightbox = () => setHelpLightboxOpen(true);
@@ -199,12 +199,6 @@ SpotlightsViewByImage.propTypes = {
     showViewByHistoryLightbox: PropTypes.func,
     spotlightImageUrl: PropTypes.string,
     spotlights: PropTypes.array,
-};
-
-SpotlightsViewByImage.defaultProps = {
-    helpButtonLabel: 'Help',
-    helpContent: locale.viewByImage.help,
-    spotlights: [],
 };
 
 export default React.memo(SpotlightsViewByImage);

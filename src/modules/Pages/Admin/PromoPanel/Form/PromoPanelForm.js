@@ -57,7 +57,7 @@ export const PromoPanelForm = ({
     defaults,
     actions,
     history,
-    isDefaultPanel,
+    isDefaultPanel = false,
     panelUpdated,
     queueLength,
     // promoPanelActionError,
@@ -506,11 +506,6 @@ PromoPanelForm.propTypes = {
     promoPanelSaving: PropTypes.bool,
     queueLength: PropTypes.number,
     promoPanelActionError: PropTypes.string,
-};
-
-PromoPanelForm.defaultProps = {
-    isDefaultPanel: false,
-    promoPanelList: [],
 };
 
 export default PromoPanelForm;

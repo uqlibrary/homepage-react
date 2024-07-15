@@ -26,6 +26,4 @@ LibraryServices.propTypes = {
     account: PropTypes.object,
 };
 
-LibraryServices.defaultProps = {};
-
 export default LibraryServices;

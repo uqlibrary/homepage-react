@@ -21,14 +21,14 @@ import { isPastSpotlight, navigateToEditForm } from 'modules/Pages/Admin/Spotlig
 // based on https://material-ui.com/components/button-group/ "Split button"
 export const SpotlightSplitButton = ({
     deleteSpotlightById,
-    mainButtonLabel,
+    mainButtonLabel = 'Edit',
     navigateToCloneForm,
     navigateToView,
-    confirmDeleteLocale,
+    confirmDeleteLocale = false,
     showViewByHistoryOption,
     spotlight,
     history,
-    allowedArrowActions,
+    allowedArrowActions = [],
 }) => {
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
@@ -229,12 +229,6 @@ SpotlightSplitButton.propTypes = {
     showViewByHistoryOption: PropTypes.func,
     history: PropTypes.any,
     allowedArrowActions: PropTypes.array,
-};
-
-SpotlightSplitButton.defaultProps = {
-    mainButtonLabel: 'Edit',
-    confirmDeleteLocale: false,
-    allowedArrowActions: [],
 };
 
 export default SpotlightSplitButton;

@@ -15,7 +15,7 @@ export const navigateToAddPage = history => {
     history.push('/admin/promopanel/add');
 };
 
-export const PromoPanelUtilityArea = ({ helpButtonLabel, helpContent, history, showAddButton }) => {
+export const PromoPanelUtilityArea = ({ helpButtonLabel = 'Help', helpContent, history, showAddButton = false }) => {
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
 
     const openHelpLightbox = () => setHelpLightboxOpen(true);
@@ -62,9 +62,4 @@ PromoPanelUtilityArea.propTypes = {
     helpButtonLabel: PropTypes.string,
     history: PropTypes.object,
     showAddButton: PropTypes.bool,
-};
-
-PromoPanelUtilityArea.defaultProps = {
-    helpButtonLabel: 'Help',
-    showAddButton: false,
 };

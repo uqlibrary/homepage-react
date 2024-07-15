@@ -243,19 +243,19 @@ const StyledAlert = styled('div')(({ theme }) => ({
 export const Alert = ({
     action,
     actionButtonLabel,
-    allowDismiss,
-    customIcon,
-    customType,
-    disableAlertClick,
+    allowDismiss = true,
+    customIcon = null,
+    customType = null,
+    disableAlertClick = false,
     dismissAction,
-    dismissTitle,
-    message,
-    showLoader,
+    dismissTitle = 'Click to dismiss this alert',
+    message = 'Some items on your page have not loaded properly and may not work as expected. This issue has been automatically reported.',
+    showLoader = false,
     alertId,
     title,
-    type,
-    wiggle,
-    canHide,
+    type = 'error',
+    wiggle = null,
+    canHide = true,
 }) => {
     const [hideAlert, setHideAlert] = useState(false);
     const renderIcon = type => {
@@ -529,20 +529,6 @@ Alert.propTypes = {
         'custom',
     ]),
     wiggle: PropTypes.bool,
-};
-
-Alert.defaultProps = {
-    allowDismiss: true,
-    canHide: true,
-    customIcon: null,
-    customType: null,
-    disableAlertClick: false,
-    dismissTitle: 'Click to dismiss this alert',
-    message:
-        'Some items on your page have not loaded properly and may not work as expected. This issue has been automatically reported.',
-    showLoader: false,
-    type: 'error',
-    wiggle: null,
 };
 
 export default Alert;
