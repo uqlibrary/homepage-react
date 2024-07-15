@@ -151,6 +151,4 @@ App.propTypes = {
     isSessionExpired: PropTypes.any,
 };
 
-App.defaultProps = {};
-
 export default App;

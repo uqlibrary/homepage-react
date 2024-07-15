@@ -79,6 +79,7 @@ const StyledContentGrid = styled(Grid)(() => ({
 const StyledTitleBlockDiv = styled('div')(() => ({
     display: 'flex',
     alignItems: 'center',
+    marginTop: '16px',
     '& p:first-child': {
         padding: 0,
         fontSize: 16,

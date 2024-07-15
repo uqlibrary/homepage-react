@@ -23,9 +23,11 @@ const MenuProps = {
     },
 };
 export const PromoPanelAddNewDefault = ({
-    isAddingDefault,
+    /* istanbul ignore next */
+    isAddingDefault = false,
     groupName,
-    promoPanelList,
+    /* istanbul ignore next */
+    promoPanelList = [],
     handleAddGroupDefault,
     handleCloseGroupDefault,
 }) => {
@@ -128,12 +130,6 @@ PromoPanelAddNewDefault.propTypes = {
     promoPanelList: PropTypes.array,
     handleAddGroupDefault: PropTypes.func,
     handleCloseGroupDefault: PropTypes.func,
-};
-
-PromoPanelAddNewDefault.defaultProps = {
-    isAddingDefault: false,
-    userPanelList: [],
-    promoPanelList: [],
 };
 
 export default PromoPanelAddNewDefault;

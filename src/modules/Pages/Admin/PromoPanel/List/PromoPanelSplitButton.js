@@ -19,7 +19,8 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 // based on https://material-ui.com/components/button-group/ "Split button"
 export const PromoPanelSplitButton = ({
     canEdit,
-    align,
+    /* istanbul ignore next */
+    align = '',
     row,
     group,
     item,
@@ -189,11 +190,6 @@ PromoPanelSplitButton.propTypes = {
     navigateToCloneForm: PropTypes.func,
     navigateToEditForm: PropTypes.func,
     confirmDeleteLocale: PropTypes.func,
-};
-
-PromoPanelSplitButton.defaultProps = {
-    mainButtonLabel: 'Edit',
-    align: '',
 };
 
 export default PromoPanelSplitButton;

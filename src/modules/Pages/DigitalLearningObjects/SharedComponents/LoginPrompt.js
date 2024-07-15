@@ -23,7 +23,7 @@ const StyledLoginPrompt = styled(Box)(() => ({
     },
 }));
 
-const LoginPrompt = ({ account, narrower, prompt, instyle }) => {
+const LoginPrompt = ({ account, narrower = false, prompt = 'for extra features', instyle }) => {
     const loginLink = `https://auth.library.uq.edu.au/login?return=${window.btoa(window.location.href)}`;
     return (
         <>
@@ -57,10 +57,6 @@ LoginPrompt.propTypes = {
     narrower: PropTypes.bool,
     prompt: PropTypes.string,
     instyle: PropTypes.any,
-};
-LoginPrompt.defaultProps = {
-    narrower: false,
-    prompt: 'for extra features',
 };
 
 export default LoginPrompt;

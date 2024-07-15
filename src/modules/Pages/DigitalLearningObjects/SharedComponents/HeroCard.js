@@ -46,12 +46,7 @@ const StyledHeroParent = styled(Grid)(({ theme }) => ({
 
 const HeroCard = ({ heroTitle, heroDescription, heroBackgroundImage }) => {
     return (
-        <Box
-            sx={{
-                backgroundColor: '#4b2271',
-                marginTop: '-16px',
-            }}
-        >
+        <Box sx={{ backgroundColor: '#4b2271' }}>
             <StyledHeroParent container direction={{ xs: 'column', md: 'row' }}>
                 <Grid item xs={12} md={6}>
                     <StyledHeroImage

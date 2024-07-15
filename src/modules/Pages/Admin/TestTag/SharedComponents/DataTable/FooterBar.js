@@ -7,8 +7,10 @@ const rootId = 'footer_bar';
 
 const FooterBar = ({
     id,
-    actionLabel,
-    altLabel,
+    /* istanbul ignore next */
+    actionLabel = '',
+    /* istanbul ignore next */
+    altLabel = '',
     onAltClick,
     onActionClick,
     cancelButtonProps,
@@ -54,9 +56,5 @@ const FooterBar = ({
             )}
         </GridFooterContainer>
     );
-};
-FooterBar.defaultProps = {
-    actionLabel: '',
-    altLabel: '',
 };
 export default React.memo(FooterBar);

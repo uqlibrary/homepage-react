@@ -439,6 +439,4 @@ Hours.propTypes = {
     libHoursError: PropTypes.bool,
 };
 
-Hours.defaultProps = {};
-
 export default Hours;

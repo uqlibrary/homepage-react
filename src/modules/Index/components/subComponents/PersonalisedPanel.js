@@ -183,7 +183,8 @@ const PersonalisedPanel = ({
     author,
     loans,
     printBalance,
-    isNextToSpotlights,
+    /* istanbul ignore next */
+    isNextToSpotlights = false,
     possibleRecords,
     incompleteNTRORecords,
 }) => {
@@ -574,10 +575,6 @@ PersonalisedPanel.propTypes = {
     incompleteNTRORecords: PropTypes.object,
     possibleRecords: PropTypes.number,
     isNextToSpotlights: PropTypes.bool,
-};
-
-PersonalisedPanel.defaultProps = {
-    isNextToSpotlights: false,
 };
 
 export default PersonalisedPanel;

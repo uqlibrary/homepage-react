@@ -11,25 +11,6 @@ import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.loc
 
 const moment = require('moment');
 
-// export const handleChange = (event, startDate, endDate, setSaveEnabled, setStartDate, setEndDate) => value => {
-//     console.log('Datelist The value is ', value, event, startDate);
-//     if (event === 'start') {
-//         if (moment(value.format('YYYY-MM-DD HH:mm')).isAfter(moment(endDate))) {
-//             setSaveEnabled(false);
-//         } else {
-//             setSaveEnabled(true);
-//         }
-//         setStartDate(value);
-//     } else {
-//         if (moment(startDate).isAfter(value.format('YYYY-MM-DD HH:mm'))) {
-//             setSaveEnabled(false);
-//         } else {
-//             setSaveEnabled(true);
-//         }
-//         setEndDate(value);
-//     }
-// };
-
 export const handleGroupDateSave = (
     displayList,
     fullPromoPanelUserTypeList,
@@ -118,8 +99,10 @@ export const PromoPanelGroupDateSelector = ({
     defaultEndDate,
     handleCloseGroupDate,
     handleSaveGroupDate,
-    scheduleChangeIndex,
-    scheduleGroupIndex,
+    /* istanbul ignore next */
+    scheduleChangeIndex = null,
+    /* istanbul ignore next */
+    scheduleGroupIndex = null,
     fullPromoPanelUserTypeList,
     setConfirmationMessage,
     setIsConfirmOpen,
@@ -312,15 +295,6 @@ PromoPanelGroupDateSelector.propTypes = {
     setConfirmationMode: PropTypes.func,
     panelScheduleId: PropTypes.number,
     displayList: PropTypes.array,
-};
-
-PromoPanelGroupDateSelector.defaultProps = {
-    previewGroup: [],
-    previewContent: '',
-    helpButtonLabel: 'Help',
-    helpContent: 'test',
-    scheduleChangeIndex: null,
-    scheduleGroupIndex: null,
 };
 
 export default PromoPanelGroupDateSelector;
