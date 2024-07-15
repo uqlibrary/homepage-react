@@ -22,13 +22,13 @@ import { useNavigate } from 'react-router-dom';
 // based on https://material-ui.com/components/button-group/ "Split button"
 export const SpotlightSplitButton = ({
     deleteSpotlightById,
-    mainButtonLabel,
+    mainButtonLabel = 'Edit',
     navigateToCloneForm,
     navigateToView,
-    confirmDeleteLocale,
+    confirmDeleteLocale = false,
     showViewByHistoryOption,
     spotlight,
-    allowedArrowActions,
+    allowedArrowActions = [],
 }) => {
     const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
@@ -229,12 +229,6 @@ SpotlightSplitButton.propTypes = {
     confirmDeleteLocale: PropTypes.any,
     showViewByHistoryOption: PropTypes.func,
     allowedArrowActions: PropTypes.array,
-};
-
-SpotlightSplitButton.defaultProps = {
-    mainButtonLabel: 'Edit',
-    confirmDeleteLocale: false,
-    allowedArrowActions: [],
 };
 
 export default SpotlightSplitButton;

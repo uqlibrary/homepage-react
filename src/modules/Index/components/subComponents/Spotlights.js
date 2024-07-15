@@ -46,7 +46,7 @@ const ChipStyle = styled('div')(() => ({
     },
 }));
 
-const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
+const Spotlights = ({ spotlights, spotlightsLoading = false, account }) => {
     const totalSlides = spotlights && spotlights.length;
     if (spotlightsLoading || !totalSlides || totalSlides === 0) {
         return (
@@ -196,10 +196,6 @@ Spotlights.propTypes = {
     spotlights: PropTypes.array,
     spotlightsLoading: PropTypes.bool,
     account: PropTypes.object,
-};
-
-Spotlights.defaultProps = {
-    spotlightsLoading: false,
 };
 
 export default Spotlights;

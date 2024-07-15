@@ -32,7 +32,14 @@ const StyledHeader = styled(Typography)(({ theme }) => ({
     textAlign: 'center',
 }));
 
-export const SubjectBody = ({ subject, examList, guideList, readingList, subjectHeaderLevel, panelHeadingLevel }) => {
+export const SubjectBody = ({
+    subject,
+    examList,
+    guideList,
+    readingList,
+    subjectHeaderLevel = 'h2',
+    panelHeadingLevel = 'h3',
+}) => {
     const coursecode = subject.classnumber || /* istanbul ignore next */ null;
     const subjectHeading = course => {
         // we have titles like "FREN3310 - French&gt;English Translation". unescapeString fixes them
@@ -103,11 +110,6 @@ SubjectBody.propTypes = {
     panelHeadingLevel: PropTypes.string,
     subjectHeaderLevel: PropTypes.string,
     subject: PropTypes.any,
-};
-
-SubjectBody.defaultProps = {
-    panelHeadingLevel: 'h3',
-    subjectHeaderLevel: 'h2',
 };
 
 export default SubjectBody;

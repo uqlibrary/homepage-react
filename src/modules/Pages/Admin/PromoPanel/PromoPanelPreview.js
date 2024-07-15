@@ -46,7 +46,7 @@ export const PromoPanelPreview = props => {
                     >
                         <Grid container spacing={1}>
                             <Grid item xs>
-                                {parse(props.previewContent)}
+                                {parse(props.previewContent || '')}
                             </Grid>
                         </Grid>
                     </StandardCard>
@@ -73,13 +73,6 @@ PromoPanelPreview.propTypes = {
     previewTitle: PropTypes.string,
     previewContent: PropTypes.string,
     handlePreviewClose: PropTypes.func,
-};
-
-PromoPanelPreview.defaultProps = {
-    previewGroup: [],
-    previewContent: '',
-    helpButtonLabel: 'Help',
-    helpContent: 'test',
 };
 
 export default React.memo(PromoPanelPreview);

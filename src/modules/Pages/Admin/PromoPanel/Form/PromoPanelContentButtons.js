@@ -81,6 +81,4 @@ PromoPanelContentButtons.propTypes = {
     savePromoPanel: PropTypes.func,
 };
 
-PromoPanelContentButtons.defaultProps = {};
-
 export default PromoPanelContentButtons;

@@ -62,11 +62,11 @@ const StyledBox = styled(Box)(({ theme }) => ({
 
 export const SpotlightViewHistory = ({
     focussedElement,
-    helpButtonLabel,
+    helpButtonLabel = 'Help',
     helpContent,
     isViewHistoryLightboxOpen,
     handleViewHistoryLightboxClose,
-    spotlights,
+    spotlights = [],
 }) => {
     const navigate = useNavigate();
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
@@ -230,11 +230,6 @@ SpotlightViewHistory.propTypes = {
     isViewHistoryLightboxOpen: PropTypes.bool,
     handleViewHistoryLightboxClose: PropTypes.func,
     spotlights: PropTypes.array,
-};
-
-SpotlightViewHistory.defaultProps = {
-    spotlights: [],
-    helpButtonLabel: 'Help',
 };
 
 export default React.memo(SpotlightViewHistory);

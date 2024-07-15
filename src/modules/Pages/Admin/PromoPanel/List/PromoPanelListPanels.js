@@ -75,18 +75,15 @@ const useStyles2 = makeStyles(theme => ({
 export const PromoPanelListPanels = ({
     actions,
     isLoading,
-    panelList,
-    // knownGroups,
-    // showBulkDelete,
-    // showFilter,
+    panelList = [],
     isPastPanels,
     title,
     canEdit,
     canClone,
     canDelete,
     panelError,
-    showPast,
-    hideAlloc,
+    showPast = true,
+    hideAlloc = false,
 }) => {
     // *** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS ***
     // const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
@@ -528,13 +525,6 @@ PromoPanelListPanels.propTypes = {
     panelError: PropTypes.string,
     showPast: PropTypes.bool,
     hideAlloc: PropTypes.bool,
-};
-
-PromoPanelListPanels.defaultProps = {
-    panelList: [],
-    showCurrent: true,
-    showPast: true,
-    hideAlloc: false,
 };
 
 export default PromoPanelListPanels;

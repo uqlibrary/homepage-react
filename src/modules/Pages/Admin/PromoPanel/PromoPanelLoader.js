@@ -39,6 +39,4 @@ const PromoPanelLoader = /* istanbul ignore next */ () => {
 
 PromoPanelLoader.propTypes = {};
 
-PromoPanelLoader.defaultProps = {};
-
 export default PromoPanelLoader;

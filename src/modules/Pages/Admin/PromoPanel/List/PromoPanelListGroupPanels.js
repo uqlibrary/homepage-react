@@ -80,7 +80,7 @@ export const PromoPanelListGroupPanels = ({
     promoPanelList,
     canEdit,
     canClone,
-    panelError,
+    panelError = '',
     knownGroups,
     promoPanelSaving,
 }) => {
@@ -578,10 +578,6 @@ PromoPanelListGroupPanels.propTypes = {
     panelError: PropTypes.string,
     knownGroups: PropTypes.array,
     promoPanelSaving: PropTypes.bool,
-};
-
-PromoPanelListGroupPanels.defaultProps = {
-    panelError: '',
 };
 
 export default PromoPanelListGroupPanels;

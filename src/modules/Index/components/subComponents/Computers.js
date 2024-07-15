@@ -548,6 +548,4 @@ Computers.propTypes = {
     account: PropTypes.object,
 };
 
-Computers.defaultProps = {};
-
 export default Computers;
