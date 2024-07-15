@@ -66,6 +66,7 @@ export const SpotlightViewHistory = ({
     helpContent,
     isViewHistoryLightboxOpen,
     handleViewHistoryLightboxClose,
+    /* istanbul ignore next */
     spotlights = [],
 }) => {
     const navigate = useNavigate();

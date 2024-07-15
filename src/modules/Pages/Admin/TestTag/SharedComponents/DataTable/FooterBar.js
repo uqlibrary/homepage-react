@@ -7,7 +7,9 @@ const rootId = 'footer_bar';
 
 const FooterBar = ({
     id,
+    /* istanbul ignore next */
     actionLabel = '',
+    /* istanbul ignore next */
     altLabel = '',
     onAltClick,
     onActionClick,

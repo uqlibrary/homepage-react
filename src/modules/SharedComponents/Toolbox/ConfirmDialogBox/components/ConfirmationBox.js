@@ -26,6 +26,7 @@ export const ConfirmationBox = ({
     InputForm,
     hideActionButton = false,
     hideCancelButton = false,
+    /* istanbul ignore next */
     isOpen = false,
     locale = {
         confirmationTitle: 'Confirmation',

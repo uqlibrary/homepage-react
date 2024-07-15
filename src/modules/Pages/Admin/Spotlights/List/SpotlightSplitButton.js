@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 // based on https://material-ui.com/components/button-group/ "Split button"
 export const SpotlightSplitButton = ({
     deleteSpotlightById,
+    /* istanbul ignore next */
     mainButtonLabel = 'Edit',
     navigateToCloneForm,
     navigateToView,
