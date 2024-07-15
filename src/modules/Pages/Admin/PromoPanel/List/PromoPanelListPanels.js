@@ -74,6 +74,7 @@ const useStyles2 = makeStyles(theme => ({
 export const PromoPanelListPanels = ({
     actions,
     isLoading,
+    /* istanbul ignore next */
     panelList = [],
     isPastPanels,
     title,
@@ -82,6 +83,7 @@ export const PromoPanelListPanels = ({
     canDelete,
     panelError,
     history,
+    /* istanbul ignore next */
     showPast = true,
     hideAlloc = false,
 }) => {

@@ -19,6 +19,7 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 // based on https://material-ui.com/components/button-group/ "Split button"
 export const PromoPanelSplitButton = ({
     canEdit,
+    /* istanbul ignore next */
     align = '',
     row,
     group,

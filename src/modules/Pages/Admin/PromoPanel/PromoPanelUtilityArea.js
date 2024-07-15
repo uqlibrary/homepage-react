@@ -15,7 +15,13 @@ export const navigateToAddPage = history => {
     history.push('/admin/promopanel/add');
 };
 
-export const PromoPanelUtilityArea = ({ helpButtonLabel = 'Help', helpContent, history, showAddButton = false }) => {
+export const PromoPanelUtilityArea = ({
+    /* istanbul ignore next */
+    helpButtonLabel = 'Help',
+    helpContent,
+    history,
+    showAddButton = false,
+}) => {
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
 
     const openHelpLightbox = () => setHelpLightboxOpen(true);

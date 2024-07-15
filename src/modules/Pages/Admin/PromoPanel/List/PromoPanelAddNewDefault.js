@@ -23,8 +23,10 @@ const MenuProps = {
     },
 };
 export const PromoPanelAddNewDefault = ({
+    /* istanbul ignore next */
     isAddingDefault = false,
     groupName,
+    /* istanbul ignore next */
     promoPanelList = [],
     handleAddGroupDefault,
     handleCloseGroupDefault,

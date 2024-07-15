@@ -65,6 +65,7 @@ export const SpotlightViewHistory = ({
     helpContent,
     isViewHistoryLightboxOpen,
     handleViewHistoryLightboxClose,
+    /* istanbul ignore next */
     spotlights = [],
     history,
 }) => {

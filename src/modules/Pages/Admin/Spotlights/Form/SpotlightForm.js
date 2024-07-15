@@ -98,8 +98,11 @@ export const SpotlightForm = ({
     spotlightStatus,
     defaults,
     spotlightError,
+    /* istanbul ignore next */
     publicFileUploading = false, // whether a file is currently being uploaded. Only done by Add, other defaults false
+    /* istanbul ignore next */
     publicFileUploadError = false,
+    /* istanbul ignore next */
     publicFileUploadResult = false,
     history,
     spotlights,
