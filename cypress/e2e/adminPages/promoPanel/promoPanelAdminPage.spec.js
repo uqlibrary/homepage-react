@@ -42,6 +42,14 @@ describe('Promopanel Admin Form Pages', () => {
 
         it('Filter works correctly', () => {
             cy.viewport(1300, 1400);
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Promo panel admin');
+                });
             cy.get('h2')
                 .should('be.visible')
                 .contains('panel');

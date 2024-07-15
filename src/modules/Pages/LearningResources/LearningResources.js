@@ -19,7 +19,7 @@ import AppBar from '@mui/material/AppBar';
 import Grid from '@mui/material/Grid';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
 // lecturers are now maintaining their own courses (it used to be the Library learning Resource team)
 // the Talis screen is just a text field, in which they are supposed to put the course ID
@@ -74,15 +74,13 @@ export const isValidInput = params => {
     return valid;
 };
 
-const useStyles = makeStyles(theme => ({
-    appbar: {
-        backgroundColor: theme.palette.primary.light,
-    },
-    TabSelected: {
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+    backgroundColor: theme.palette.primary.light,
+    '& .TabSelected': {
         color: 'white !important',
         opacity: 1,
     },
-    TabUnselected: {
+    '& .TabUnselected': {
         color: 'white !important',
         opacity: 0.5,
     },
@@ -129,7 +127,6 @@ export const LearningResources = ({
      * These sections are displayed as 2 tabs across the top
      */
 
-    const classes = useStyles();
     const { account } = useAccountContext();
     const location = useLocation();
 
@@ -348,33 +345,28 @@ export const LearningResources = ({
                 <StandardCard noPadding noHeader>
                     <Grid container>
                         <Grid item xs={12} data-testid="learning-resources" style={{ marginBottom: 24 }}>
-                            <AppBar
+                            <StyledAppBar
                                 data-analyticsid="learning-resource-top-menu"
                                 data-testid="learning-resource-top-menu"
                                 id="learning-resource-top-menu"
                                 position="static"
                                 component="div"
-                                className={classes.appbar}
                             >
                                 <Tabs centered onChange={handleTopTabChange} value={topmenu}>
                                     <Tab
-                                        className={
-                                            topmenu === 'mycoursestab' ? classes.TabSelected : classes.TabUnselected
-                                        }
+                                        className={topmenu === 'mycoursestab' ? 'TabSelected' : 'TabUnselected'}
                                         value="mycoursestab"
                                         label={locale.myCourses.title}
                                         {...a11yProps('0')}
                                     />
                                     <Tab
                                         value="searchtab"
-                                        className={
-                                            topmenu === 'searchtab' ? classes.TabSelected : classes.TabUnselected
-                                        }
+                                        className={topmenu === 'searchtab' ? 'TabSelected' : 'TabUnselected'}
                                         label={locale.search.title}
                                         {...a11yProps('1')}
                                     />
                                 </Tabs>
-                            </AppBar>
+                            </StyledAppBar>
 
                             <TabPanel
                                 value={topmenu}

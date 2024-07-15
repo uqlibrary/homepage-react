@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
 import Skeleton from '@mui/material/Skeleton';
@@ -10,7 +10,6 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import clsx from 'clsx';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -28,17 +27,15 @@ import { useConfirmationAlert } from '../../helpers/hooks';
 
 const componentId = 'dashboard';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
-    flexParent: {
+const StyledWrapper = styled('div')(({ theme }) => ({
+    flexGrow: 1,
+    '& .flexParent': {
         display: 'flex',
     },
-    card: {
+    '& .card': {
         flex: 1,
     },
-    centreAlignParent: {
+    '& .centreAlignParent': {
         display: 'flex',
         flexDirection: 'column',
         [theme.breakpoints.down('md')]: {
@@ -46,30 +43,25 @@ const useStyles = makeStyles(theme => ({
             height: '100%',
         },
     },
-    centreAlign: {
+    '& .centreAlign': {
         display: 'flex',
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: '-30px',
     },
-    overDueText: {
+    '& .overDueText': {
         color: theme.palette.error.main,
         textAlign: 'center',
     },
-    dueText: {
+    '& .dueText': {
         textAlign: 'center',
-    },
-    testButton: {
-        textAlign: 'center',
-        width: '100%',
     },
 }));
 
 const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, dashboardConfigError }) => {
     const theme = useTheme();
     const pageLocale = locale.pages.dashboard;
-    const classes = useStyles();
 
     const onCloseConfirmationAlert = () => actions.clearDashboardError();
     const { confirmationAlert, closeConfirmationAlert } = useConfirmationAlert({
@@ -83,8 +75,8 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const retestClass = dashboardConfig?.retest?.overdue > 0 ? classes.overDueText : classes.dueText;
-    const recalibrationClass = dashboardConfig?.recalibration?.overdue > 0 ? classes.overDueText : classes.dueText;
+    const retestClass = dashboardConfig?.retest?.overdue > 0 ? 'overDueText' : 'dueText';
+    const recalibrationClass = dashboardConfig?.recalibration?.overdue > 0 ? 'overDueText' : 'dueText';
 
     return (
         <StandardAuthPage
@@ -93,10 +85,10 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
             requiredPermissions={ROLES.all}
             inclusive={false}
         >
-            <div className={classes.root}>
+            <StyledWrapper>
                 <Grid container spacing={3} sx={{ paddingBottom: 1.5 }}>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
-                        <Grid item xs={12} sm className={classes.flexParent}>
+                        <Grid item xs={12} sm className={'flexParent'}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton
                                     animation="wave"
@@ -118,8 +110,8 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                     }}
                                     smallTitle
                                     subCard
-                                    className={clsx([classes.card, classes.centreAlignParent])}
-                                    contentProps={{ className: classes.centreAlign }}
+                                    className={'card centreAlignParent'}
+                                    contentProps={{ className: 'centreAlign' }}
                                     standardCardId={`${componentId}-${pageLocale.panel.inspections.id}-panel`}
                                 >
                                     <Link
@@ -133,7 +125,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                             )}
                         </Grid>
                     </AuthWrapper>
-                    <Grid item xs={12} md className={classes.flexParent}>
+                    <Grid item xs={12} md className={'flexParent'}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
                             <Skeleton
                                 animation="wave"
@@ -155,7 +147,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                         </Avatar>
                                     ),
                                 }}
-                                className={classes.card}
+                                className={'card'}
                                 standardCardId={`${componentId}-${pageLocale.panel.assets.id}-panel`}
                             >
                                 <Grid container style={{ marginBottom: 5 }}>
@@ -164,7 +156,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                             <Typography
                                                 component={'div'}
                                                 variant={'h4'}
-                                                className={classes.dueText}
+                                                className={'dueText'}
                                                 data-testid={`${componentId}-${pageLocale.panel.assets.id}-upcoming-amount`}
                                             >
                                                 {`${dashboardConfig?.retest?.soon}`}
@@ -172,7 +164,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                             <Typography
                                                 component={'div'}
                                                 variant={'h6'}
-                                                className={classes.dueText}
+                                                className={'dueText'}
                                                 data-testid={`${componentId}-${pageLocale.panel.assets.id}-upcoming-text`}
                                             >
                                                 {pageLocale.panel.assets.upcomingText}
@@ -231,7 +223,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                             </StandardCard>
                         )}
                     </Grid>
-                    <Grid item xs={12} md className={classes.flexParent}>
+                    <Grid item xs={12} md className={'flexParent'}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
                             <Skeleton
                                 animation="wave"
@@ -253,7 +245,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                         </Avatar>
                                     ),
                                 }}
-                                className={classes.card}
+                                className={'card'}
                                 standardCardId={`${componentId}-${pageLocale.panel.inspectionDevices.id}-panel`}
                             >
                                 <Grid container style={{ marginBottom: 5 }}>
@@ -262,7 +254,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                             <Typography
                                                 component={'div'}
                                                 variant={'h4'}
-                                                className={classes.dueText}
+                                                className={'dueText'}
                                                 data-testid={`${componentId}-${pageLocale.panel.inspectionDevices.id}-upcoming-amount`}
                                             >
                                                 {`${dashboardConfig?.recalibration?.soon}`}
@@ -270,7 +262,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                             <Typography
                                                 component={'div'}
                                                 variant={'h6'}
-                                                className={classes.dueText}
+                                                className={'dueText'}
                                                 data-testid={`${componentId}-${pageLocale.panel.inspectionDevices.id}-upcoming-text`}
                                             >
                                                 {pageLocale.panel.inspectionDevices.upcomingText}
@@ -332,7 +324,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                 </Grid>
                 <Grid container spacing={3}>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_see_reports]}>
-                        <Grid item xs={12} md className={classes.flexParent}>
+                        <Grid item xs={12} md className={'flexParent'}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton
                                     animation="wave"
@@ -346,7 +338,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                     title={pageLocale.panel.reporting.title}
                                     smallTitle
                                     subCard
-                                    className={classes.card}
+                                    className={'card'}
                                     primaryHeader
                                     standardCardId={`${componentId}-${pageLocale.panel.reporting.id}-panel`}
                                 >
@@ -393,7 +385,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                         requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter, PERMISSIONS.can_admin]}
                         inclusive={false}
                     >
-                        <Grid item xs={12} md className={classes.flexParent}>
+                        <Grid item xs={12} md className={'flexParent'}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton
                                     animation="wave"
@@ -407,7 +399,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                     title={pageLocale.panel.management.title}
                                     smallTitle
                                     subCard
-                                    className={classes.card}
+                                    className={'card'}
                                     primaryHeader
                                     standardCardId={`${componentId}-${pageLocale.panel.management.id}-panel`}
                                 >
@@ -451,7 +443,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                         </Grid>
                     </AuthWrapper>
                 </Grid>
-            </div>
+            </StyledWrapper>
             <ConfirmationAlert
                 isOpen={confirmationAlert.visible}
                 message={confirmationAlert.message}

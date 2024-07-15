@@ -31,6 +31,14 @@ describe('Digital Learning Hub', () => {
         });
         it('appears as expected', () => {
             cy.waitUntil(() => cy.get('h1').should('exist'));
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Digital learning hub');
+                });
             cy.get('h1').should('contain', 'Find a digital learning object');
             cy.get('[data-testid="dlor-homepage-list"')
                 .should('exist')
@@ -226,7 +234,6 @@ describe('Digital Learning Hub', () => {
                 .children()
                 .should('have.length', 4 + extraRowCount);
 
-            // check can reduce with mutiple per "filter type
             // open the Licence type panel
             cy.get('[data-testid="panel-minimisation-icon-licence"]')
                 .should('exist')
@@ -235,6 +242,7 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .should('be.visible')
                 .click();
+            cy.get('[data-testid="panel-downarrow-licence"]').click(); // DEBUG ONLY
             // check UQ copyright
             cy.get('[data-testid="checkbox-licence-uq-copyright"] input[type=checkbox]')
                 .should('exist')
@@ -279,6 +287,7 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .should('be.visible')
                 .click();
+            cy.get('[data-testid="panel-downarrow-item-type"]').click(); // DEBUG ONLY
             cy.get('[data-testid="panel-minimisation-icon-item-type"]')
                 .should('exist')
                 .should('have.attr', 'aria-label', 'Close this filter section');
@@ -533,6 +542,7 @@ describe('Digital Learning Hub', () => {
                 .should('not.be.visible');
             // expand a filter panel
             cy.get('[data-testid="panel-downarrow-item-type"]').click();
+            cy.get('[data-testid="panel-downarrow-item-type"]').click(); // DEBUG ONLY
             // now the element appears
             cy.get('[data-testid="checkbox-item-type-interactive"]')
                 .should('exist')
@@ -1013,6 +1023,14 @@ describe('Digital Learning Hub', () => {
         it('mobile page works as expected', () => {
             cy.visit('digital-learning-hub');
             cy.viewport(800, 900);
+
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="hero-card-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Find a digital learning object'),
+            );
 
             // tablet/phone hero images should be full width
             let bodyWidth;

@@ -2,24 +2,20 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
-import { makeStyles } from '@mui/styles';
 import { PromoPanelHelpDrawer } from './PromoPanelHelpDrawer';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(() => ({
-    actionButtonPlacer: {
-        float: 'right',
-        marginTop: 16,
-        marginRight: 16,
-    },
+const StyledActionButtonPlacer = styled('div')(() => ({
+    float: 'right',
+    marginTop: 16,
+    marginRight: 16,
 }));
 
 export const navigateToAddPage = history => {
     history.push('/admin/promopanel/add');
 };
 
-export const PromoPanelUtilityArea = ({ helpButtonLabel, helpContent, history, showAddButton }) => {
-    const classes = useStyles();
-
+export const PromoPanelUtilityArea = ({ helpButtonLabel = 'Help', helpContent, history, showAddButton = false }) => {
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
 
     const openHelpLightbox = () => setHelpLightboxOpen(true);
@@ -28,7 +24,7 @@ export const PromoPanelUtilityArea = ({ helpButtonLabel, helpContent, history, s
     return (
         <Fragment>
             {!!helpContent && (
-                <div className={classes.actionButtonPlacer}>
+                <StyledActionButtonPlacer>
                     <Button
                         children={helpButtonLabel}
                         color="secondary"
@@ -37,10 +33,10 @@ export const PromoPanelUtilityArea = ({ helpButtonLabel, helpContent, history, s
                         onClick={openHelpLightbox}
                         variant="contained"
                     />
-                </div>
+                </StyledActionButtonPlacer>
             )}
             {!!showAddButton && (
-                <div className={classes.actionButtonPlacer}>
+                <StyledActionButtonPlacer>
                     <Button
                         children="Add panel"
                         color="primary"
@@ -49,7 +45,7 @@ export const PromoPanelUtilityArea = ({ helpButtonLabel, helpContent, history, s
                         onClick={() => navigateToAddPage(history)}
                         variant="contained"
                     />
-                </div>
+                </StyledActionButtonPlacer>
             )}
 
             <PromoPanelHelpDrawer
@@ -66,9 +62,4 @@ PromoPanelUtilityArea.propTypes = {
     helpButtonLabel: PropTypes.string,
     history: PropTypes.object,
     showAddButton: PropTypes.bool,
-};
-
-PromoPanelUtilityArea.defaultProps = {
-    helpButtonLabel: 'Help',
-    showAddButton: false,
 };

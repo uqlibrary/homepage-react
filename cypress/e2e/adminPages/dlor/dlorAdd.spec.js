@@ -93,6 +93,14 @@ describe('Add an object to the Digital Learning Hub', () => {
                 });
             });
             it('loads as expected', () => {
+                cy.get('uq-site-header')
+                    .shadow()
+                    .within(() => {
+                        cy.get('[data-testid="subsite-title"]')
+                            .should('exist')
+                            .should('be.visible')
+                            .contains('Digital learning hub admin');
+                    });
                 cy.get('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                     .contains('Digital Learning Hub admin')
                     .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
@@ -160,8 +168,8 @@ describe('Add an object to the Digital Learning Hub', () => {
                 cy.get('[data-testid="object-link-url"] input')
                     .should('exist')
                     .type('asdasdasdsadd');
-                cy.waitUntil(() => cy.get('[data-testid="dlor-form-error-message-object_link_url"]').should('exist'));
-                cy.get('[data-testid="dlor-form-error-message-object_link_url"]').should(
+                cy.waitUntil(() => cy.get('[data-testid="dlor-form-error-message-object-link-url"]').should('exist'));
+                cy.get('[data-testid="dlor-form-error-message-object-link-url"]').should(
                     'contain',
                     'This web address is not valid.',
                 );

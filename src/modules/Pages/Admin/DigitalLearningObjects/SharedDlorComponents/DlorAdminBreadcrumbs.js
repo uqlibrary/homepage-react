@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useCookies } from 'react-cookie';
 
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
@@ -11,28 +11,24 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/VisitHomepage';
 
-const useStyles = makeStyles(() => ({
-    titleBlock: {
-        '& p:first-child': {
-            display: 'flex',
-            alignItems: 'center',
-            padding: 0,
-            fontSize: 16,
-            '& a': {
-                color: 'rgba(0, 0, 0, 0.87)',
-                textDecoration: 'underline',
-            },
+const StyledTitleBox = styled(Box)(() => ({
+    '& p:first-child': {
+        display: 'flex',
+        alignItems: 'center',
+        padding: 0,
+        fontSize: 16,
+        '& a': {
+            color: 'rgba(0, 0, 0, 0.87)',
+            textDecoration: 'underline',
         },
     },
 }));
 
 export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
-    const classes = useStyles();
-
     return (
-        <Grid container spacing={2} style={{ marginBottom: 25 }}>
+        <Grid container spacing={2} sx={{ marginBottom: '25px' }}>
             <Grid item xs={11}>
-                <div className={classes.titleBlock}>
+                <StyledTitleBox>
                     <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
                         <a data-testid="dlor-breadcrumb-admin-homelink" href={dlorAdminLink()}>
                             Digital Learning Hub admin
@@ -58,7 +54,7 @@ export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
                             };
                             return (
                                 <>
-                                    <ArrowForwardIcon style={{ height: 15 }} key={`${entryId}-icon`} />
+                                    <ArrowForwardIcon sx={{ height: '15px' }} />
                                     <span key={`breadcrumb-${index}`} key={`${entryId}-span`}>
                                         {!!b.link ? (
                                             <a data-testid={getDataTestid('link')} href={b.link}>
@@ -72,7 +68,7 @@ export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
                             );
                         })}
                     </Typography>
-                </div>
+                </StyledTitleBox>
             </Grid>
             <Grid item xs={1}>
                 <VisitHomepage />

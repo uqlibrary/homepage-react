@@ -31,6 +31,14 @@ describe('Test and Tag Manage Users', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
         );
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Test and tag');
+            });
     });
     it('base page edit controls function correctly', () => {
         cy.injectAxe();

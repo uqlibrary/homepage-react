@@ -8,25 +8,18 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(
-    () => ({
-        learningResourceLineItem: {
-            borderTop: '1px solid #e8e8e8',
-            padding: '15px 0',
-            '& a': {
-                display: 'flex',
-                alignItems: 'center',
-            },
-        },
-    }),
-    { withTheme: true },
-);
+const StyledItem = styled(Grid)(() => ({
+    borderTop: '1px solid #e8e8e8',
+    padding: '15px 0',
+    '& a': {
+        display: 'flex',
+        alignItems: 'center',
+    },
+}));
 
 export const SubjectLinks = ({ subject, headingLevel }) => {
-    const classes = useStyles();
-
     // on the first render, add Legal Research Essentials to the Course Links for LAWS subjects
     /* istanbul ignore next */
     !locale.myCourses.courseLinks.links.find(i => i.id === 'legalResearchEssentials') &&
@@ -48,12 +41,7 @@ export const SubjectLinks = ({ subject, headingLevel }) => {
                         return (
                             item.linkOutPattern &&
                             item.linkLabel && (
-                                <Grid
-                                    item
-                                    className={classes.learningResourceLineItem}
-                                    key={`studylink-${index}`}
-                                    xs={12}
-                                >
+                                <StyledItem item key={`studylink-${index}`} xs={12}>
                                     <a
                                         data-testid={dataTestid}
                                         id={dataTestid}
@@ -62,7 +50,7 @@ export const SubjectLinks = ({ subject, headingLevel }) => {
                                         {!!item.icon && item.icon}
                                         {item.linkLabel}
                                     </a>
-                                </Grid>
+                                </StyledItem>
                             )
                         );
                     })}

@@ -7,7 +7,6 @@ import { AccountContext } from 'context';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import * as pages from 'modules/App/components/pages';
 import Grid from '@mui/material/Grid';
-import makeStyles from '@mui/styles/makeStyles';
 import { getHomepageLink } from 'helpers/access';
 
 browserUpdate({
@@ -26,55 +25,6 @@ browserUpdate({
     shift_page_down: true,
 });
 
-const useStyles = makeStyles(theme => ({
-    appBG: {
-        ...theme.palette.primary.main,
-    },
-    layoutCard: {
-        width: '100%',
-        padding: 0,
-        [theme.breakpoints.down('md')]: {
-            margin: '0 auto 24px auto',
-        },
-    },
-    layoutFill: {
-        position: 'relative',
-        display: 'flex',
-        flexFlow: 'column',
-        margin: 0,
-        padding: 0,
-        maxHeight: '100%',
-        height: '100%',
-    },
-    titleLink: {
-        textOverflow: 'ellipsis',
-        overflow: 'hidden',
-        color: theme.palette.common.white,
-        '& a': {
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-            textDecoration: 'none',
-            '&:hover': {
-                textDecoration: 'underline',
-            },
-        },
-    },
-    nowrap: {
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-    },
-    connectFooter: {
-        marginTop: 50,
-        backgroundColor: theme.hexToRGBA(theme.palette.secondary.light, 0.15),
-    },
-    minimalFooter: {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.white.main,
-        backgroundImage: 'linear-gradient(90deg,#51247a,87%,#962a8b)',
-    },
-}));
-
 const hideForAdmin = () => {
     return window.location.href.includes('/admin/');
 };
@@ -85,7 +35,6 @@ export const App = ({ account, actions }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const classes = useStyles();
     const routesConfig = routes.getRoutesConfig({
         components: pages,
         account: account,
@@ -102,13 +51,60 @@ export const App = ({ account, actions }) => {
         homepageLabel = 'Library Local';
     }
 
+    const breadcrumbLabels = [
+        { pathname: '/admin/alerts', title: 'Alerts admin' },
+        { pathname: '/admin/dlor', title: 'Digital learning hub admin' },
+        { pathname: '/admin/promopanel', title: 'Promo panel admin' },
+        { pathname: '/admin/spotlights', title: 'Spotlights admin' },
+        { pathname: '/admin/testntag', title: 'Test and tag' },
+        { pathname: '/book-exam-booth', title: 'Book an Exam booth' },
+        { pathname: '/digital-learning-hub', title: 'Digital learning hub' },
+        { pathname: '/exams', title: 'Past exam papers' },
+        { pathname: '/learning-resources', title: 'Learning resources' },
+        { pathname: '/payment-receipt', title: 'Payment receipt' },
+    ];
+
+    let secondLevelTitle = null;
+    let secondLevelUrl = null;
+
+    function pageIsSubsystem(item) {
+        return (
+            window.location.pathname.startsWith(item.pathname) || window.location.hash.startsWith(`#${item.pathname}`)
+        );
+    }
+
+    for (const item of breadcrumbLabels) {
+        if (pageIsSubsystem(item)) {
+            secondLevelTitle = item.title;
+            secondLevelUrl = window.location.pathname;
+            break; // Exit the loop once a match is found
+        }
+    }
+
     return (
-        <Grid container className={classes.layoutFill}>
+        <Grid
+            container
+            sx={{
+                position: 'relative',
+                display: 'flex',
+                flexFlow: 'column',
+                margin: 0,
+                padding: 0,
+                maxHeight: '100%',
+                height: '100%',
+            }}
+        >
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
                 <uq-header hidelibrarymenuitem="true" />
                 {!hideForAdmin() && <cultural-advice-popup />}
 
-                <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink} showmenu>
+                <uq-site-header
+                    sitetitle={homepageLabel}
+                    siteurl={homepagelink}
+                    secondleveltitle={secondLevelTitle}
+                    secondlevelurl={secondLevelUrl}
+                    showmenu
+                >
                     <span slot="site-utilities">
                         <askus-button />
                     </span>
@@ -116,7 +112,7 @@ export const App = ({ account, actions }) => {
                         <auth-button />
                     </span>
                 </uq-site-header>
-                <div role="region" aria-label="UQ Library Alerts">
+                <div role="region" aria-label="UQ Library Alerts" style={{ marginBottom: -16 }}>
                     <alert-list system="homepage" />
                 </div>
                 <div style={{ flexGrow: 1, marginTop: 16 }}>
@@ -154,7 +150,5 @@ App.propTypes = {
     chatStatus: PropTypes.object,
     isSessionExpired: PropTypes.any,
 };
-
-App.defaultProps = {};
 
 export default App;

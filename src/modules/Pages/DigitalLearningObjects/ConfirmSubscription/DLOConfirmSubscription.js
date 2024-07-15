@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
@@ -12,6 +14,10 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { getDlorViewPageUrl, getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+
+const StyledInstructionList = styled('ul')(() => ({
+    marginTop: 0,
+}));
 
 export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdating, dlorUpdatedItemError }) => {
     const { confirmationId } = useParams();
@@ -26,18 +32,18 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
     function pageContents(dlorItemUpdating, dlorUpdatedItemError, dlorUpdatedItem) {
         if (!!dlorItemUpdating || dlorItemUpdating === null) {
             return (
-                <div style={{ minHeight: 600 }}>
+                <Box sx={{ minHeight: '600px' }}>
                     <InlineLoader message="Loading" />
-                </div>
+                </Box>
             );
         } else if (!!dlorUpdatedItemError) {
             return (
                 <Typography
                     variant={'body1'}
                     data-testid="dlor-confirm-error"
-                    style={{ display: 'flex', alignItems: 'center', marginBlock: 6 }}
+                    sx={{ display: 'flex', alignItems: 'center', marginBlock: '6px' }}
                 >
-                    <ErrorOutlineIcon style={{ fill: '#d62929', marginRight: 6 }} />
+                    <ErrorOutlineIcon sx={{ fill: '#d62929', marginRight: '6px' }} />
                     <span>{dlorUpdatedItemError}</span>
                 </Typography>
             );
@@ -107,9 +113,9 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
                 <Typography
                     variant={'body1'}
                     data-testid="dlor-confirm-error"
-                    style={{ display: 'flex', alignItems: 'center', marginBlock: 6 }}
+                    sx={{ display: 'flex', alignItems: 'center', marginBlock: '6px' }}
                 >
-                    <ErrorOutlineIcon style={{ fill: '#d62929', marginRight: 6 }} />
+                    <ErrorOutlineIcon sx={{ fill: '#d62929', marginRight: '6px' }} />
                     <span>Something seems to have gone wrong - please check your email and try again.</span>
                 </Typography>
             );
@@ -123,21 +129,21 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
                     <Typography
                         component={'p'}
                         data-testid="dlor-confirm-line-2"
-                        style={{ display: 'flex', alignItems: 'center', marginBlock: 6 }}
+                        sx={{ display: 'flex', alignItems: 'center', marginBlock: '6px' }}
                     >
-                        <ErrorOutlineIcon style={{ fill: '#d62929', marginRight: 6 }} />
+                        <ErrorOutlineIcon sx={{ fill: '#d62929', marginRight: '6px' }} />
                         <span>Unfortunately, your confirmation code isn't one that is currently available.</span>
                     </Typography>
                     <Typography component={'p'} data-testid="dlor-confirm-line-3">
                         You could:
                     </Typography>
-                    <ul style={{ marginTop: 0 }}>
+                    <StyledInstructionList sx={{ marginTop: 0 }}>
                         <li data-testid="dlor-confirm-line-3">check your email and try again</li>
                         <li data-testid="dlor-confirm-line-3">
                             visit <a href={`${getPathRoot()}/digital-learning-hub`}>our Digital learning hub</a> to view
                             available objects.
                         </li>
-                    </ul>
+                    </StyledInstructionList>
                 </>
             );
         }

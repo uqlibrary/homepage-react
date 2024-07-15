@@ -7,26 +7,19 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(
-    () => ({
-        learningResourceLineItem: {
-            borderTop: '1px solid #e8e8e8',
-            padding: '15px 0',
-            '& a': {
-                display: 'flex',
-                alignItems: 'center',
-            },
-        },
-    }),
-    { withTheme: true },
-);
+const StyledItem = styled(Grid)(() => ({
+    borderTop: '1px solid #e8e8e8',
+    padding: '15px 0',
+    '& a': {
+        display: 'flex',
+        alignItems: 'center',
+    },
+}));
 
 export const Guides = ({ headingLevel, guideList, guideListLoading, guideListError }) => {
-    const classes = useStyles();
-
     const coursecode = !!guideList && !!guideList.length > 0 && guideList[0].coursecode;
     return (
         <StandardCard fullHeight noHeader standardCardId={`guides-${coursecode}`}>
@@ -58,9 +51,9 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                     </Grid>
                 )}
                 {!guideListError && !guideListLoading && (!guideList || guideList.length === 0) && (
-                    <Grid item xs={12} data-testid="no-guides" className={classes.learningResourceLineItem}>
+                    <StyledItem item xs={12} data-testid="no-guides">
                         <Typography>{locale.myCourses.guides.none}</Typography>
-                    </Grid>
+                    </StyledItem>
                 )}
                 {!guideListError &&
                     !guideListLoading &&
@@ -68,7 +61,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                     guideList.length > 0 &&
                     guideList.slice(0, locale.myCourses.guides.visibleItemsCount).map((guide, index) => {
                         return (
-                            <Grid item xs={12} className={classes.learningResourceLineItem} key={`guides-${index}`}>
+                            <StyledItem item xs={12} key={`guides-${index}`}>
                                 <a
                                     aria-label={`library guide for ${guide.title}`}
                                     className="library-guide-item"
@@ -79,7 +72,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                                 >
                                     {guide.title}
                                 </a>
-                            </Grid>
+                            </StyledItem>
                         );
                     })}
                 {/* guides doesnt display a 'view N more' link because Guides doesnt have a search-by-course-code fn*/}
@@ -90,17 +83,12 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                         return (
                             item.linkTo &&
                             item.linkLabel && (
-                                <Grid
-                                    item
-                                    className={classes.learningResourceLineItem}
-                                    key={`studylink-${index}`}
-                                    xs={12}
-                                >
+                                <StyledItem item key={`studylink-${index}`} xs={12}>
                                     <a data-testid={dataTestId} id={dataTestId} href={item.linkTo}>
                                         {!!item.icon && item.icon}
                                         {item.linkLabel}
                                     </a>
-                                </Grid>
+                                </StyledItem>
                             )
                         );
                     })}

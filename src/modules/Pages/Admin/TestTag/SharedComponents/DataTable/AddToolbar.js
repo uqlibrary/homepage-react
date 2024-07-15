@@ -16,7 +16,7 @@ const AddToolbar = ({ id, label, onClick, startIcon = <AddIcon /> }) => {
         <GridToolbarContainer
             id={`${componentId}`}
             data-testid={`${componentId}`}
-            style={{ marginBottom: theme.spacing(2) }}
+            sx={{ marginBottom: theme.spacing(2) }}
         >
             <Button
                 color="primary"

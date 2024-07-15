@@ -50,6 +50,14 @@ describe('Test and Tag bulk asset update', () => {
         );
     });
     it('Asset id search functions correctly', () => {
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Test and tag');
+            });
         checkBaseline();
         // Search for an asset
         cy.data('asset_selector-bulk-asset-update-input').type('5');

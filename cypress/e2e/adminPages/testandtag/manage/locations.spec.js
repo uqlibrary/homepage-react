@@ -35,6 +35,14 @@ describe('Test and Tag Manage Locations', () => {
         );
     });
     it('Add location functions correctly', () => {
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Test and tag');
+            });
         cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('h1').contains(locale.pages.general.pageTitle);

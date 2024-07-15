@@ -22,6 +22,14 @@ describe('Promopanel Admin Form Pages', () => {
             testId('admin-promopanel-form-button-cancel').click();
         });
         it('can update data into form fields for a default panel', () => {
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Promo panel admin');
+                });
             testId('admin-promoPanel-help-button').click();
             testId('help-drawer-title').should('exist');
             testId('promopanel-helpdrawer-close-button').click();

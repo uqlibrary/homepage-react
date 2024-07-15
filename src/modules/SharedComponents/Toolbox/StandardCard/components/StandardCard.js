@@ -4,20 +4,20 @@ import PropTypes from 'prop-types';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import withStyles from '@mui/styles/withStyles';
+import { styled } from '@mui/material/styles';
 
-export const styles = theme => ({
-    card: {
+const StyledCard = styled(Card)(({ theme }) => ({
+    '&.card': {
         overflow: 'unset',
         fontWeight: theme.typography.fontWeightRegular,
     },
-    cardContentNoPadding: {
+    '& .cardContentNoPadding': {
         paddingTop: '0px !important',
         paddingBottom: '0px !important',
         paddingLeft: '0px !important',
         paddingRight: '0px !important',
     },
-    cardHeaderPrimary: {
+    '& .cardHeaderPrimary': {
         color: theme.palette.white.main,
         overflow: 'hidden',
         whiteSpace: 'nowrap',
@@ -26,7 +26,7 @@ export const styles = theme => ({
         borderRadius: '4px 4px 0px 0px',
         padding: '12px 24px',
     },
-    cardHeaderAccent: {
+    '& .cardHeaderAccent': {
         color: theme.palette.white.main,
         overflow: 'hidden',
         whiteSpace: 'nowrap',
@@ -35,12 +35,9 @@ export const styles = theme => ({
         borderRadius: '4px 4px 0px 0px',
         padding: '12px 24px',
     },
-    fullHeight: {
-        height: '100%',
-    },
-});
+}));
 
-export class Cards extends Component {
+export class StandardCard extends Component {
     static propTypes = {
         title: PropTypes.any,
         primaryHeader: PropTypes.bool,
@@ -49,7 +46,6 @@ export class Cards extends Component {
         noPadding: PropTypes.bool,
         noHeader: PropTypes.bool,
         children: PropTypes.any,
-        classes: PropTypes.object.isRequired,
         customBackgroundColor: PropTypes.any,
         customTitleColor: PropTypes.any,
         customTitleBgColor: PropTypes.any,
@@ -68,7 +64,6 @@ export class Cards extends Component {
 
     render() {
         const {
-            classes,
             title,
             children,
             primaryHeader,
@@ -104,11 +99,11 @@ export class Cards extends Component {
               }`;
         const cardHeaderAction = !!headerAction ? headerAction : <></>;
         return (
-            <Card
+            <StyledCard
                 data-testid={standardCardId}
                 data-analyticsid={standardCardId}
                 id={standardCardId}
-                className={`${classes.card} StandardCard ${className}`}
+                className={`card StandardCard ${className}`}
                 style={{ ...customBG, ...fullHeight, ...style }}
                 variant={variant ?? 'elevation'}
             >
@@ -123,9 +118,7 @@ export class Cards extends Component {
                             'data-testid': `${standardCardId}-header`,
                         }}
                         classes={{
-                            root:
-                                (primaryHeader && classes.cardHeaderPrimary) ||
-                                (accentHeader && classes.cardHeaderAccent),
+                            root: (primaryHeader && 'cardHeaderPrimary') || (accentHeader && 'cardHeaderAccent'),
                         }}
                         action={cardHeaderAction}
                         {...this.props.headerProps}
@@ -133,18 +126,16 @@ export class Cards extends Component {
                 )}
                 <CardContent
                     data-testid={`${standardCardId}-content`}
-                    className={`${(this.props.noPadding && classes.cardContentNoPadding) || ''}${
+                    className={`${(this.props.noPadding && 'cardContentNoPadding') || ''}${
                         this.props?.contentProps?.className ? ` ${this.props?.contentProps?.className}` : ''
                     }`}
                     style={{ ...customText }}
                 >
                     {children}
                 </CardContent>
-            </Card>
+            </StyledCard>
         );
     }
 }
 
-const StyledCard = withStyles(styles, { withTheme: true })(Cards);
-export const StandardCard = props => <StyledCard {...props} />;
 export default StandardCard;

@@ -33,6 +33,15 @@ describe('Test and Tag Manage Inspection Notes', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
         );
+
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Test and tag');
+            });
     });
     it('allows wildcard searching of assets', () => {
         checkBaseline();

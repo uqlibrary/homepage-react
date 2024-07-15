@@ -2,10 +2,10 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
-import { makeStyles } from '@mui/styles';
 import { SpotlightsHelpDrawer } from './SpotlightsHelpDrawer';
 import { SpotlightsViewByImage } from './SpotlightsViewByImage';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
+import { styled } from '@mui/material/styles';
 
 /**
  * a block that shows:
@@ -14,25 +14,21 @@ import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmi
  * - the help drawer
  */
 
-const useStyles = makeStyles(() => ({
-    actionButtonPlacer: {
-        float: 'right',
-        marginTop: 16,
-        marginRight: 16,
-    },
+const StyledActionButtonPlacer = styled('div')(() => ({
+    float: 'right',
+    marginTop: 16,
+    marginRight: 16,
 }));
 export const SpotlightsUtilityArea = ({
     actions,
-    helpButtonLabel,
+    helpButtonLabel = 'Help',
     helpContent,
     history,
-    showAddButton,
-    showViewByImageButton,
+    showAddButton = false,
+    showViewByImageButton = false,
     spotlights,
     showViewByHistoryLightbox,
 }) => {
-    const classes = useStyles();
-
     const [isViewByImageLightboxOpen, setViewByImageLightboxOpen] = React.useState(false);
     const handleViewByImageLightboxOpen = () => setViewByImageLightboxOpen(true);
     const handleViewByImageLightboxClose = () => setViewByImageLightboxOpen(false);
@@ -49,7 +45,7 @@ export const SpotlightsUtilityArea = ({
     return (
         <Fragment>
             {!!helpContent && (
-                <div className={classes.actionButtonPlacer}>
+                <StyledActionButtonPlacer>
                     <Button
                         children={helpButtonLabel}
                         color="secondary"
@@ -58,10 +54,10 @@ export const SpotlightsUtilityArea = ({
                         onClick={openHelpLightbox}
                         variant="contained"
                     />
-                </div>
+                </StyledActionButtonPlacer>
             )}
             {!!showViewByImageButton && (
-                <div className={classes.actionButtonPlacer}>
+                <StyledActionButtonPlacer>
                     <Button
                         children={locale.viewByImage.title}
                         color="primary"
@@ -69,10 +65,10 @@ export const SpotlightsUtilityArea = ({
                         onClick={() => handleViewByImageLightboxOpen()}
                         variant="contained"
                     />
-                </div>
+                </StyledActionButtonPlacer>
             )}
             {!!showAddButton && (
-                <div className={classes.actionButtonPlacer}>
+                <StyledActionButtonPlacer>
                     <Button
                         children="Add spotlight"
                         color="primary"
@@ -80,7 +76,7 @@ export const SpotlightsUtilityArea = ({
                         onClick={() => navigateToAddPage()}
                         variant="contained"
                     />
-                </div>
+                </StyledActionButtonPlacer>
             )}
             <SpotlightsHelpDrawer
                 helpContent={helpContent}
@@ -108,10 +104,4 @@ SpotlightsUtilityArea.propTypes = {
     showViewByImageButton: PropTypes.bool,
     spotlights: PropTypes.any,
     showViewByHistoryLightbox: PropTypes.any,
-};
-
-SpotlightsUtilityArea.defaultProps = {
-    helpButtonLabel: 'Help',
-    showAddButton: false,
-    showViewByImageButton: false,
 };

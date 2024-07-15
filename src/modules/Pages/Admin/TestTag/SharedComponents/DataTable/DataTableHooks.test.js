@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 import { rtlRender } from 'test-utils';
 import { useDataTableRow, useDataTableColumns } from './DataTableHooks';
 import EditIcon from '@mui/icons-material/Edit';
@@ -87,7 +87,7 @@ describe('DataTableHooks', () => {
                     field: 'actions',
                     filterable: false,
                     headerAlign: 'center',
-                    headerClassName: 'makeStyles-a11yHidden-1',
+                    headerClassName: 'a11yHidden',
                     renderCell: expect.anything(),
                     renderInUpdate: false,
                     sortable: false,
@@ -177,7 +177,7 @@ describe('DataTableHooks', () => {
                     field: 'actions',
                     filterable: false,
                     headerAlign: 'center',
-                    headerClassName: 'makeStyles-a11yHidden-3',
+                    headerClassName: 'a11yHidden',
                     renderCell: expect.anything(),
                     renderInUpdate: false,
                     sortable: false,

@@ -30,8 +30,9 @@ exports[`Promo Panel Group Date Selector Should render correctly 1`] = `
       >
         <div
           aria-labelledby="lightboxTitle"
-          class="MuiPaper-root makeStyles-dialogPaper-2 MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation24 MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthSm css-1t1j96h-MuiPaper-root-MuiDialog-paper"
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation24 MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthSm css-1t1j96h-MuiPaper-root-MuiDialog-paper"
           role="dialog"
+          style="width: 500px;"
         >
           <h2
             class="MuiTypography-root MuiTypography-h6 MuiDialogTitle-root css-1qg91f3-MuiTypography-root-MuiDialogTitle-root"

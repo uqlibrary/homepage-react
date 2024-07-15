@@ -27,23 +27,22 @@ env:
 phases:
   install:
     runtime-versions:
-      java: corretto11
-      nodejs: 14
+      java: corretto17
+      nodejs: 20
     commands:
-      - n 18
-      # - command
+      - n 20
+      - set
+      - sysctl fs.inotify.max_user_watches
+      - sysctl fs.inotify.max_user_watches=524288
+      - sysctl fs.inotify.max_user_watches
   pre_build:
     commands:
-      sysctl fs.inotify.max_user_watches &&
-      sysctl fs.inotify.max_user_watches=524288 &&
-      sysctl fs.inotify.max_user_watches &&
-      chmod a+x -R bin/* scripts/*.sh &&
-      bin/codebuild-git-wrapper.sh https://github.com/uqlibrary/homepage-react.git $CI_BRANCH &&
-      bin/codebuild-setup.sh
+      - chmod a+x -R bin/* scripts/*.sh
+      - bin/codebuild-setup.sh
   build:
     commands:
-      set &&
-      bin/codebuild-test.sh
+      - set
+      - bin/codebuild-test.sh
   #post_build:
     #commands:
       # - command

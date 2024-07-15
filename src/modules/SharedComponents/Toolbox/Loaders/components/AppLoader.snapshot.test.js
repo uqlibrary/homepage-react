@@ -3,28 +3,7 @@ import AppLoader from './AppLoader';
 import { rtlRender } from 'test-utils';
 
 function setup(testProps = {}) {
-    const props = {
-        ...testProps,
-        classes: {
-            appLoader: {
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'red',
-                width: '100%',
-                height: '100%',
-                textAlign: 'center !important',
-            },
-            white: {
-                color: 'white',
-                fontWeight: 200,
-            },
-            spaceBetween: {
-                margin: '16px 0',
-            },
-        },
-    };
-    return rtlRender(<AppLoader {...props} />);
+    return rtlRender(<AppLoader {...testProps} />);
 }
 
 describe('Component AppLoader', () => {

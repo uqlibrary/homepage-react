@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import { createTheme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
@@ -11,23 +9,18 @@ import Tooltip from '@mui/material/Tooltip';
 
 import { getDataFieldParams } from './utils';
 
-const defaultTheme = createTheme();
 const rootId = 'action_cell';
 
-const useStyles = makeStyles(
-    theme => ({
-        root: {
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: theme.spacing(1),
-            color: theme.palette.text.secondary,
-        },
-        textPrimary: {
-            color: theme.palette.text.primary,
-        },
-    }),
-    { defaultTheme },
-);
+const StyledWrapper = styled('div')(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    color: theme.palette.text.secondary,
+
+    '& .textPrimary': {
+        color: theme.palette.text.primary,
+    },
+}));
 
 const defaultEditIcon = <EditIcon fontSize="small" />;
 const defaultDeleteIcon = <DeleteIcon fontSize="small" />;
@@ -45,7 +38,6 @@ const ActionCell = ({
     tooltips,
 }) => {
     const componentId = `${rootId}-${id}`;
-    const classes = useStyles();
 
     const { dataFieldName, dataFieldValue } = getDataFieldParams(api.getRow(id), dataFieldKeys);
 
@@ -66,7 +58,7 @@ const ActionCell = ({
             {...(!!dataFieldValue ? { ['data-field']: dataFieldName, ['data-value']: dataFieldValue } : {})}
             data-action="edit"
             color="inherit"
-            className={classes.textPrimary}
+            className={'textPrimary'}
             size="small"
             aria-label="edit"
             disabled={disableEdit}
@@ -93,7 +85,7 @@ const ActionCell = ({
     );
 
     return (
-        <div className={classes.root}>
+        <StyledWrapper>
             {!!handleEditClick && (
                 <>
                     {!!tooltips && !!tooltips?.edit && (
@@ -130,7 +122,7 @@ const ActionCell = ({
                     {(!!!tooltips || !!!tooltips?.delete) && deleteButton}
                 </>
             )}
-        </div>
+        </StyledWrapper>
     );
 };
 

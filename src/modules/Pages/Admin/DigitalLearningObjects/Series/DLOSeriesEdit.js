@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 import { useCookies } from 'react-cookie';
 
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { styled } from '@mui/material/styles';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -26,32 +27,26 @@ import {
     toTitleCase,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
-const useStyles = makeStyles(theme => ({
-    titleBlock: {
-        '& p:first-child': {
-            display: 'flex',
-            alignItems: 'center',
-            padding: 0,
-            fontSize: 16,
-            '& a': {
-                color: 'rgba(0, 0, 0, 0.87)',
-                textDecoration: 'underline',
-            },
-        },
+const StyledDraggableListItem = styled('li')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    [theme.breakpoints.up('lg')]: {
+        marginLeft: '-50px',
+        marginRight: '50px',
     },
-    errorMessage: {
-        color: theme.palette.error.light,
-        fontSize: '0.8em',
-        marginTop: 2,
-    },
-    draggableItem: {
-        minHeight: '2em',
-        backgroundColor: '#e7f0fa', // $utility-50
-        marginBottom: '0.5em',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingInline: '1.5em',
+}));
+const StyledSeriesEditForm = styled('form')(() => ({
+    width: '100%',
+}));
+const StyledSeriesList = styled('ul')(() => ({
+    listStyleType: 'none',
+}));
+const StyledErrorMessageBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    [theme.breakpoints.up('lg')]: {
+        marginLeft: '-50px',
+        marginRight: '50px',
     },
 }));
 
@@ -67,7 +62,6 @@ export const DLOSeriesEdit = ({
     dlorListError,
 }) => {
     const { dlorSeriesId } = useParams();
-    const classes = useStyles();
     const [cookies, setCookie] = useCookies();
 
     const [originalSeriesDetails, setOriginalSeriesDetails] = useState({
@@ -253,15 +247,15 @@ export const DLOSeriesEdit = ({
                     /* istanbul ignore else */
                     if (!!dlorItemUpdating || !!dlorListLoading) {
                         return (
-                            <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
-                                <div style={{ minHeight: 600 }}>
+                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                                <Box sx={{ minHeight: '600sx=' }}>
                                     <InlineLoader message="Loading" />
-                                </div>
+                                </Box>
                             </Grid>
                         );
                     } else if (!!dlorListError) {
                         return (
-                            <Grid item xs={12} md={9} style={{ marginTop: 12 }}>
+                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
                                 <Typography variant="body1" data-testid="dlor-seriesItem-error">
                                     {dlorListError}
                                 </Typography>
@@ -293,7 +287,7 @@ export const DLOSeriesEdit = ({
                                             }
                                         />
 
-                                        <form id="dlor-editSeries-form" style={{ width: '100%' }}>
+                                        <StyledSeriesEditForm id="dlor-editSeries-form">
                                             <Grid item xs={12}>
                                                 <FormControl variant="standard" fullWidth>
                                                     <InputLabel htmlFor="series_name">Series name *</InputLabel>
@@ -308,15 +302,12 @@ export const DLOSeriesEdit = ({
                                                 </FormControl>
                                                 {/* dlorList to stop it flashing an error */}
                                                 {!!dlorList && !isValidSeriesName(formValues?.series_name) && (
-                                                    <div
-                                                        className={classes.errorMessage}
-                                                        data-testid="error-message-series-name"
-                                                    >
+                                                    <StyledErrorMessageBox data-testid="error-message-series-name">
                                                         This series name is not valid.
-                                                    </div>
+                                                    </StyledErrorMessageBox>
                                                 )}
                                             </Grid>
-                                        </form>
+                                        </StyledSeriesEditForm>
                                     </Grid>
                                 </Grid>
 
@@ -324,12 +315,15 @@ export const DLOSeriesEdit = ({
                                     <h2>Objects in this series</h2>
                                     <div id="dragLandingAarea">
                                         {formValues?.object_list_linked?.length === 0 && <p>(None yet)</p>}
-                                        <ul style={{ listStyleType: 'none' }}>
+                                        <StyledSeriesList>
                                             {formValues?.object_list_linked
                                                 ?.sort((a, b) => a.object_series_order - b.object_series_order)
                                                 .map(f => {
                                                     return (
-                                                        <li key={f.object_id} className={classes.draggableItem}>
+                                                        <StyledDraggableListItem
+                                                            key={f.object_id}
+                                                            // className={classes.draggableItem}
+                                                        >
                                                             <span
                                                                 data-testid={`dlor-series-edit-draggable-title-${f?.object_public_uuid}`}
                                                             >
@@ -350,20 +344,20 @@ export const DLOSeriesEdit = ({
                                                                     onChange={handleChange(
                                                                         `linked_object_series_order-${f.object_public_uuid}`,
                                                                     )}
-                                                                    style={{ marginRight: 10 }}
+                                                                    sx={{ marginRight: '10px' }}
                                                                 />
                                                                 <a
                                                                     href={getDlorViewPageUrl(f?.object_public_uuid)}
                                                                     data-testid={`dlor-series-edit-view-${f.object_id}`}
                                                                     target="_blank"
                                                                 >
-                                                                    <VisibilityIcon style={{ color: 'black' }} />
+                                                                    <VisibilityIcon sx={{ color: 'black' }} />
                                                                 </a>
                                                             </div>
-                                                        </li>
+                                                        </StyledDraggableListItem>
                                                     );
                                                 })}
-                                        </ul>
+                                        </StyledSeriesList>
                                     </div>
                                 </Grid>
 
@@ -371,7 +365,7 @@ export const DLOSeriesEdit = ({
                                     <details>
                                         <Typography
                                             component={'summary'}
-                                            style={{
+                                            sx={{
                                                 fontSize: '1.3em',
                                                 fontWeight: 'bold',
                                             }}
@@ -379,11 +373,14 @@ export const DLOSeriesEdit = ({
                                         >
                                             Objects available to add to this series
                                         </Typography>
-                                        <ul style={{ listStyleType: 'none' }}>
+                                        <StyledSeriesList>
                                             {formValues?.object_list_unassigned?.map(f => {
                                                 // console.log('dragLandingAarea 2 f=', f);
                                                 return (
-                                                    <li key={f.object_id} className={classes.draggableItem}>
+                                                    <StyledDraggableListItem
+                                                        key={f.object_id}
+                                                        // className={classes.draggableItem}
+                                                    >
                                                         <span
                                                             data-testid={`dlor-series-edit-draggable-title-${convertSnakeCaseToKebabCase(
                                                                 f?.object_public_uuid,
@@ -405,16 +402,16 @@ export const DLOSeriesEdit = ({
                                                                 onChange={handleChange(
                                                                     `unassigned_object_series_order-${f.object_public_uuid}`,
                                                                 )}
-                                                                style={{ marginRight: 10 }}
+                                                                sx={{ marginRight: '10px' }}
                                                             />
                                                             <a href={getDlorViewPageUrl(f?.object_public_uuid)}>
-                                                                <VisibilityIcon style={{ color: 'black' }} />
+                                                                <VisibilityIcon sx={{ color: 'black' }} />
                                                             </a>
                                                         </div>
-                                                    </li>
+                                                    </StyledDraggableListItem>
                                                 );
                                             })}
-                                        </ul>
+                                        </StyledSeriesList>
                                     </details>
                                 </Grid>
 

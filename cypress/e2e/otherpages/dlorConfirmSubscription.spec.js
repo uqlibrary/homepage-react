@@ -39,6 +39,14 @@ describe('Digital Learning Hub', () => {
                         'Thank you for your interest in following Artificial Intelligence - Digital Essentials.',
                     ),
             );
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Digital learning hub');
+                });
             cy.get('[data-testid="dlor-confirm-line-2"]')
                 .should('exist')
                 .should('be.visible')

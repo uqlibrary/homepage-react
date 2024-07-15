@@ -14,7 +14,7 @@ exports[`Component InlineLoader should render as expected 1`] = `
       >
         <span
           aria-labelledby="loading-icon"
-          class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-a0wk1a-MuiCircularProgress-root"
+          class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1u7zxmb-MuiCircularProgress-root"
           role="progressbar"
           style="width: 18px; height: 18px;"
         >
@@ -38,7 +38,7 @@ exports[`Component InlineLoader should render as expected 1`] = `
         style="text-align: center;"
       >
         <span
-          class="MuiTypography-root MuiTypography-h5 css-19cmg10-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-cay52f-MuiTypography-root"
           id="loading-icon"
         >
           InlineLoader Test
@@ -63,7 +63,7 @@ exports[`Component InlineLoader should render with styles 1`] = `
       >
         <span
           aria-labelledby="loading-icon"
-          class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary InlineLoader-circular-1 css-a0wk1a-MuiCircularProgress-root"
+          class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1u7zxmb-MuiCircularProgress-root"
           role="progressbar"
           style="width: 18px; height: 18px;"
         >
@@ -87,7 +87,7 @@ exports[`Component InlineLoader should render with styles 1`] = `
         style="text-align: center;"
       >
         <span
-          class="MuiTypography-root MuiTypography-h5 InlineLoader-message-2 css-19cmg10-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-cay52f-MuiTypography-root"
           id="loading-icon"
         >
           InlineLoader Styled Test
