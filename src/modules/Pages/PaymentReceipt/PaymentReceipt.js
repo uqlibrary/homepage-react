@@ -20,38 +20,36 @@ export const PaymentReceipt = () => {
     if (querystring.has('Success') && querystring.get('Success') !== '1') {
         return (
             <StandardPage standardPageId="payment-receipt" title={locale.failed.title}>
-                <section className="layout-card">
+                <StandardCard noHeader>
                     <b>{locale.failed.message}</b>
-                </section>
+                </StandardCard>
             </StandardPage>
         );
     }
     if (!amountPaid || !receiptValue || !successful) {
         return (
             <StandardPage standardPageId="payment-receipt" title={locale.error.title}>
-                <section className="layout-card">
+                <StandardCard noHeader>
                     <b>{locale.error.message}</b>
-                </section>
+                </StandardCard>
             </StandardPage>
         );
     }
     return (
         <StandardPage standardPageId="payment-receipt" title={locale.title}>
-            <section className="layout-card">
-                <StandardCard noHeader>
-                    <p>
-                        <strong>{locale.thanks}</strong>
-                    </p>
-                    <p>{locale.transaction.replace('[AmountPaid]', amountPaid).replace('[Success]', successStatus)}</p>
-                    <p>{locale.check.replace('[Receipt]', receipt)}</p>
-                    <sub>{locale.maintenance}</sub>
-                </StandardCard>
-                <Grid container style={{ marginTop: 16 }}>
-                    <Grid item xs>
-                        <a href={pathConfig.index}>Return to the Library homepage</a>
-                    </Grid>
+            <StandardCard noHeader>
+                <p>
+                    <strong>{locale.thanks}</strong>
+                </p>
+                <p>{locale.transaction.replace('[AmountPaid]', amountPaid).replace('[Success]', successStatus)}</p>
+                <p>{locale.check.replace('[Receipt]', receipt)}</p>
+                <sub>{locale.maintenance}</sub>
+            </StandardCard>
+            <Grid container style={{ marginTop: 16 }}>
+                <Grid item xs>
+                    <a href={pathConfig.index}>Return to the Library homepage</a>
                 </Grid>
-            </section>
+            </Grid>
         </StandardPage>
     );
 };
