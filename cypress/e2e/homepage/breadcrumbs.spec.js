@@ -73,4 +73,55 @@ describe('header', () => {
                 });
         });
     });
+    it('changes on mobile correctly', () => {
+        // again, ideally this would be tested in reusable, but we dont have a page there that shows it own breadcrumb
+        cy.visit('http://localhost:2020/learning-resources?user=s1111111');
+        cy.waitUntil(() => cy.get('[data-testid="StandardPage-title"]'))
+            .should('exist')
+            .contains('Learning resources');
+        // and the correct breadcrumbs are present
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="root-link"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('UQ home')
+                    .should('have.attr', 'href')
+                    .and('include', 'https://uq.edu.au/');
+                cy.get('[data-testid="site-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Library Local')
+                    .should('have.attr', 'href')
+                    .and('include', 'http://localhost:2020/?user=s1111111');
+                cy.get('[data-testid="secondlevel-site-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Learning resource')
+                    .should('have.attr', 'href')
+                    .and('include', '/learning-resources');
+            });
+
+        // on the mobile view
+        cy.viewport(590, 1024);
+
+        // we only see the library homepage link
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="root-link"]')
+                    .should('exist')
+                    .should('not.be.visible');
+                cy.get('[data-testid="site-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Library Local')
+                    .should('have.attr', 'href')
+                    .and('include', 'http://localhost:2020/?user=s1111111');
+                cy.get('[data-testid="secondlevel-site-title"]')
+                    .should('exist')
+                    .should('not.be.visible');
+            });
+    });
 });
