@@ -1,5 +1,16 @@
+import { getHomepageLink } from 'helpers/access';
+
 export const _courseLink = (courseCode, url) => {
-    return url.replace('[courseCode]', courseCode);
+    let _url = url;
+    if (document.location.host !== 'www.library.uq.edu.au' && _url.startsWith('https://www.library.uq.edu.au/')) {
+        let homepageLink = getHomepageLink();
+        let params = '';
+        const tempUrl = new URL(homepageLink);
+        params = tempUrl.search;
+        homepageLink = homepageLink.replace(params, '');
+        _url = _url.replace('https://www.library.uq.edu.au/', homepageLink) + params;
+    }
+    return _url.replace('[courseCode]', courseCode);
 };
 
 export const _pluralise = (word, num) => {

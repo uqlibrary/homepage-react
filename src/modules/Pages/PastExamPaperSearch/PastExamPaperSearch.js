@@ -121,8 +121,8 @@ export const PastExamPaperSearch = ({
     };
 
     return (
-        <StandardPage>
-            <StandardCard title="Search for a past exam paper">
+        <StandardPage title="Search for a past exam paper" style={{ marginTop: '16px' }}>
+            <StandardCard>
                 <Grid container alignItems={'flex-end'}>
                     <StyledAboutBlock item xs={12} sm>
                         <p>

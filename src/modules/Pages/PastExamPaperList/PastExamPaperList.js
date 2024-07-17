@@ -90,8 +90,8 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
     const isNon404Error = !!examSearchListError && examSearchListError !== MESSAGE_EXAMCODE_404;
 
     return (
-        <StandardPage>
-            <StandardCard title={listTitle}>
+        <StandardPage title={listTitle}>
+            <StandardCard>
                 {!!examSearchListLoading && (
                     <Grid container>
                         <Grid item xs={'auto'}>
