@@ -3,6 +3,7 @@ import {
     _pluralise,
     a11yProps,
     extractSubjectCodeFromName,
+    getHomepageLink,
     reverseA11yProps,
 } from './learningResourcesHelpers';
 import { getQueryParams, isValidInput } from '../LearningResources';
@@ -149,5 +150,57 @@ describe('filterProps helper', () => {
             semester: 'Yearlong 2023',
         };
         expect(getQueryParams(input)).toEqual(expected);
+    });
+    function expectHomePageOfLinkIs(currentUrl, expectedHomepage) {
+        const currentUrlParts = new URL(currentUrl);
+        const loggedoutHomepageLink = getHomepageLink(
+            currentUrlParts.hostname,
+            currentUrlParts.protocol,
+            currentUrlParts.port,
+            currentUrlParts.pathname,
+            currentUrlParts.search,
+        );
+        expect(loggedoutHomepageLink).toEqual(expectedHomepage);
+    }
+
+    it('should generate the correct homepage links', () => {
+        expectHomePageOfLinkIs('https://www.library.uq.edu.au/', 'https://www.library.uq.edu.au');
+
+        expectHomePageOfLinkIs(
+            'https://www.library.uq.edu.au/learning-resources?coursecode=PHYS1001&campus=St%20Lucia&semester=Semester%201%202023',
+            'https://www.library.uq.edu.au',
+        );
+
+        expectHomePageOfLinkIs(
+            'https://homepage-development.library.uq.edu.au/master/#/',
+            'https://homepage-development.library.uq.edu.au/master/#/',
+        );
+
+        expectHomePageOfLinkIs(
+            'https://homepage-development.library.uq.edu.au/master/#/admin/masquerade',
+            'https://homepage-development.library.uq.edu.au/master/#/',
+        );
+
+        expectHomePageOfLinkIs(
+            'https://homepage-staging.library.uq.edu.au/learning-resources?coursecode=FREN1020&campus=St%20Lucia&semester=Semester%202%202023',
+            'https://homepage-staging.library.uq.edu.au',
+        );
+
+        expectHomePageOfLinkIs(
+            'https://homepage-staging.library.uq.edu.au/',
+            'https://homepage-staging.library.uq.edu.au',
+        );
+
+        expectHomePageOfLinkIs('https://app.library.uq.edu.au/#/', 'https://app.library.uq.edu.au');
+
+        expectHomePageOfLinkIs('https://app.library.uq.edu.au/#/membership/admin', 'https://app.library.uq.edu.au');
+
+        expectHomePageOfLinkIs(
+            'http://localhost:2020/admin/spotlights?user=uqstaff',
+            'http://localhost:2020/?user=uqstaff',
+        );
+
+        // and do a test without param, for completeness (jest thinks its on staging with no https, that's so cute! ;) )
+        expect(getHomepageLink()).toEqual('http://homepage-staging.library.uq.edu.au');
     });
 });
