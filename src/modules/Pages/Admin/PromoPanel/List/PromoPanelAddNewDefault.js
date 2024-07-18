@@ -23,11 +23,9 @@ const MenuProps = {
     },
 };
 export const PromoPanelAddNewDefault = ({
-    /* istanbul ignore next */
-    isAddingDefault = false,
+    isAddingDefault = /* istanbul ignore next */ false,
     groupName,
-    /* istanbul ignore next */
-    promoPanelList = [],
+    promoPanelList = /* istanbul ignore next */ [],
     handleAddGroupDefault,
     handleCloseGroupDefault,
 }) => {

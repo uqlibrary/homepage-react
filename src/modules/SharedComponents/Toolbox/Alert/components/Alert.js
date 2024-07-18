@@ -243,20 +243,17 @@ const StyledAlert = styled('div')(({ theme }) => ({
 export const Alert = ({
     action,
     actionButtonLabel,
-    /* istanbul ignore next */
-    allowDismiss = true,
+    allowDismiss = /* istanbul ignore next */ true,
     customIcon = null,
     customType = null,
     disableAlertClick = false,
     dismissAction,
     dismissTitle = 'Click to dismiss this alert',
-    /* istanbul ignore next */
-    message = 'Some items on your page have not loaded properly and may not work as expected. This issue has been automatically reported.',
+    message = /* istanbul ignore next */ 'Some items on your page have not loaded properly and may not work as expected. This issue has been automatically reported.',
     showLoader = false,
     alertId,
     title,
-    /* istanbul ignore next */
-    type = 'error',
+    type = /* istanbul ignore next */ 'error',
     wiggle = null,
     canHide = true,
 }) => {

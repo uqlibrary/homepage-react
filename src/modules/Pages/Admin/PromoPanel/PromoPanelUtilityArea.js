@@ -16,8 +16,7 @@ export const navigateToAddPage = history => {
 };
 
 export const PromoPanelUtilityArea = ({
-    /* istanbul ignore next */
-    helpButtonLabel = 'Help',
+    helpButtonLabel = /* istanbul ignore next */ 'Help',
     helpContent,
     history,
     showAddButton = false,
