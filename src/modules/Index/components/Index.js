@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import Grid from '@mui/material/Grid';
-import Hidden from '@mui/material/Hidden';
 
 import { useDispatch } from 'react-redux';
 import {
@@ -11,7 +10,6 @@ import {
     loadLoans,
     searcheSpacePossiblePublications,
     searcheSpaceIncompleteNTROPublications,
-    loadCurrentSpotlights,
     loadLibHours,
     loadCompAvail,
     loadTrainingEvents,
@@ -30,31 +28,12 @@ const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/
 const LibraryServices = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LibraryServices')));
 const PersonalisedPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/PersonalisedPanel')));
 const PromoPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/PromoPanel')));
-const Spotlights = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Spotlights')));
 const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
-
-/* istanbul ignore next */
-const MyLoader = props => (
-    <ContentLoader
-        uniqueKey="personalisation-panel-or-hours"
-        speed={2}
-        width={'100%'}
-        height={'100%'}
-        viewBox="0 0 320 245"
-        backgroundColor="#f3f3f3"
-        foregroundColor="#e2e2e2"
-        {...props}
-    >
-        <rect x="0" y="0" rx="5" ry="5" width="100%" height="100%" />
-    </ContentLoader>
-);
 
 export const Index = ({
     account,
     accountLoading,
     author,
-    spotlightsCurrent,
-    spotlightsCurrentLoading,
     libHours,
     libHoursLoading,
     libHoursError,
@@ -80,7 +59,6 @@ export const Index = ({
     // Load homepage data requirements
     useEffect(() => {
         if (accountLoading === false) {
-            dispatch(loadCurrentSpotlights());
             dispatch(loadLibHours());
             dispatch(loadCompAvail());
         }
@@ -150,62 +128,16 @@ export const Index = ({
                     <Grid item xs={12} style={{ marginTop: 12 }}>
                         {/* <search-portal /> */}
                     </Grid>
-                    {accountLoading === false && !!account && (
-                        <Hidden mdUp>
-                            <Grid item xs={12} lg={4} id="personalisedPanel" data-testid="personalisedPanel">
-                                <PersonalisedPanel
-                                    account={account}
-                                    author={author}
-                                    loans={loans}
-                                    printBalance={printBalance}
-                                    possibleRecords={possibleRecords && possibleRecords.total}
-                                    incompleteNTRORecords={incompleteNTRO}
-                                />
-                            </Grid>
-                        </Hidden>
-                    )}
-                    <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
-                        <Spotlights
-                            spotlights={spotlightsCurrent}
-                            spotlightsLoading={spotlightsCurrentLoading}
+                    {/* Hours panel, logged out */}
+                    <Grid item xs={12} md={4} data-testid="library-hours-panel">
+                        <Hours
+                            libHours={libHours}
+                            libHoursLoading={libHoursLoading}
+                            libHoursError={libHoursError}
                             account={account}
                         />
                     </Grid>
-                    {/* Personalisation panel or hours */}
-                    {!!accountLoading && (
-                        /* istanbul ignore next */
-                        <Grid item xs={12} md={4}>
-                            <MyLoader />
-                        </Grid>
-                    )}
-                    {/* Personalisation panel, desktop */}
-                    {accountLoading === false && !!account && (
-                        <Hidden mdDown>
-                            <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
-                                <PersonalisedPanel
-                                    account={account}
-                                    author={author}
-                                    loans={loans}
-                                    printBalance={printBalance}
-                                    possibleRecords={possibleRecords && possibleRecords.total}
-                                    incompleteNTRORecords={incompleteNTRO}
-                                    isNextToSpotlights
-                                />
-                            </Grid>
-                        </Hidden>
-                    )}
-                    {/* Hours panel, logged out */}
-                    {accountLoading === false && !account && (
-                        <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <Hours
-                                libHours={libHours}
-                                libHoursLoading={libHoursLoading}
-                                libHoursError={libHoursError}
-                                account={account}
-                            />
-                        </Grid>
-                    )}
-                    <Grid item xs={12} md={4} data-testid="computer-availability-panel">
+                    <Grid item xs={12} md={8} data-testid="computer-availability-panel">
                         <Computers
                             computerAvailability={computerAvailability}
                             computerAvailabilityLoading={computerAvailabilityLoading}
@@ -213,17 +145,21 @@ export const Index = ({
                             account={account}
                         />
                     </Grid>
+
+                    {/* Personalisation panel, desktop */}
                     {accountLoading === false && !!account && (
-                        <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <Hours
-                                libHours={libHours}
-                                libHoursLoading={libHoursLoading}
-                                libHoursError={libHoursError}
+                        <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
+                            <PersonalisedPanel
                                 account={account}
+                                author={author}
+                                loans={loans}
+                                printBalance={printBalance}
+                                possibleRecords={possibleRecords && possibleRecords.total}
+                                incompleteNTRORecords={incompleteNTRO}
+                                isNextToSpotlights
                             />
                         </Grid>
                     )}
-
                     {canSeeLearningResources(account) && (
                         <Grid item xs={12} md={4} data-testid="learning-resources-panel">
                             <LearningResourcesPanel account={account} history={history} />
@@ -258,9 +194,6 @@ Index.propTypes = {
     accountLoading: PropTypes.bool,
     author: PropTypes.object,
     actions: PropTypes.any,
-    spotlightsCurrent: PropTypes.any,
-    // spotlightsCurrentError: PropTypes.any,
-    spotlightsCurrentLoading: PropTypes.bool,
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
     libHoursError: PropTypes.bool,

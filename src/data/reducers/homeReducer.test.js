@@ -10,43 +10,6 @@ describe('account reducer', () => {
         };
     });
 
-    it('should set Spotlights values when successfully loaded', () => {
-        const test = homeReducer(emptyState, {
-            type: actions.SPOTLIGHTS_HOMEPAGE_LOADED,
-            payload: [],
-        });
-        expect(test).toEqual({
-            ...emptyState,
-            spotlightsCurrent: [],
-            spotlightsCurrentError: null,
-            spotlightsCurrentLoading: false,
-        });
-    });
-
-    it('should set Spotlights Status flags to loading when loading', () => {
-        const test = homeReducer(emptyState, {
-            type: actions.SPOTLIGHTS_HOMEPAGE_LOADING,
-        });
-        expect(test).toEqual({
-            ...emptyState,
-            spotlightsCurrent: null,
-            spotlightsCurrentError: null,
-            spotlightsCurrentLoading: true,
-        });
-    });
-
-    it('should handle a failing Spotlights API call', () => {
-        const test = homeReducer(emptyState, {
-            type: actions.SPOTLIGHTS_HOMEPAGE_FAILED,
-            payload: 'failed!',
-        });
-        expect(test).toEqual({
-            ...emptyState,
-            spotlightsCurrentLoading: false,
-            spotlightsCurrentError: 'failed!',
-        });
-    });
-
     it('should set Print balance values when successfully loaded', () => {
         const test = homeReducer(emptyState, {
             type: actions.PRINT_BALANCE_LOADED,
