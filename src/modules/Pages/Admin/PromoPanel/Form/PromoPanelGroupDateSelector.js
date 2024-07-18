@@ -99,10 +99,8 @@ export const PromoPanelGroupDateSelector = ({
     defaultEndDate,
     handleCloseGroupDate,
     handleSaveGroupDate,
-    /* istanbul ignore next */
-    scheduleChangeIndex = null,
-    /* istanbul ignore next */
-    scheduleGroupIndex = null,
+    scheduleChangeIndex = /* istanbul ignore next */ null,
+    scheduleGroupIndex = /* istanbul ignore next */ null,
     fullPromoPanelUserTypeList,
     setConfirmationMessage,
     setIsConfirmOpen,

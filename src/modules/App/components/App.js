@@ -79,7 +79,7 @@ export const App = ({ account, actions }) => {
     for (const item of breadcrumbLabels) {
         if (pageIsSubsystem(item)) {
             secondLevelTitle = item.title;
-            secondLevelUrl = window.location.pathname;
+            secondLevelUrl = item.pathname;
             break; // Exit the loop once a match is found
         }
     }

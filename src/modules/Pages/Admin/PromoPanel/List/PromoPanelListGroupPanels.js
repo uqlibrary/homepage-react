@@ -80,8 +80,7 @@ export const PromoPanelListGroupPanels = ({
     history,
     canEdit,
     canClone,
-    /* istanbul ignore next */
-    panelError = '',
+    panelError = /* istanbul ignore next */ '',
     knownGroups,
     promoPanelSaving,
 }) => {

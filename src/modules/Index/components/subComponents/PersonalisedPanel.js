@@ -183,8 +183,7 @@ const PersonalisedPanel = ({
     author,
     loans,
     printBalance,
-    /* istanbul ignore next */
-    isNextToSpotlights = false,
+    isNextToSpotlights = /* istanbul ignore next */ false,
     possibleRecords,
     incompleteNTRORecords,
 }) => {
