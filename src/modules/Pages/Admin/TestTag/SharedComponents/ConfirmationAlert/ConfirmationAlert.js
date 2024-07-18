@@ -6,10 +6,8 @@ import Snackbar from '@mui/material/Snackbar';
 const rootId = 'confirmation_alert';
 
 const ConfirmationAlert = ({
-    /* istanbul ignore next */
-    isOpen = false,
-    /* istanbul ignore next */
-    message = '',
+    isOpen = /* istanbul ignore next */ false,
+    message = /* istanbul ignore next */ '',
     type = 'info',
     closeAlert,
     ...props

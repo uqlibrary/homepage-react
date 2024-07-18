@@ -75,16 +75,14 @@ const useStyles2 = makeStyles(theme => ({
 export const PromoPanelListPanels = ({
     actions,
     isLoading,
-    /* istanbul ignore next */
-    panelList = [],
+    panelList = /* istanbul ignore next */ [],
     isPastPanels,
     title,
     canEdit,
     canClone,
     canDelete,
     panelError,
-    /* istanbul ignore next */
-    showPast = true,
+    showPast = /* istanbul ignore next */ true,
     hideAlloc = false,
 }) => {
     // *** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS ***

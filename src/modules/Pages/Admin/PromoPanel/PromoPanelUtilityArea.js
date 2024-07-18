@@ -17,8 +17,7 @@ export const navigateToAddPage = navigate => {
 };
 
 export const PromoPanelUtilityArea = ({
-    /* istanbul ignore next */
-    helpButtonLabel = 'Help',
+    helpButtonLabel = /* istanbul ignore next */ 'Help',
     helpContent,
     showAddButton = false,
 }) => {
