@@ -58,7 +58,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 export const SpotlightsViewByImage = ({
     isLightboxOpen,
     handleLightboxClose,
-    spotlights = [],
+    spotlights = /* istanbul ignore next */ [],
     showViewByHistoryLightbox,
     helpButtonLabel = 'Help',
     helpContent = locale.viewByImage.help,

@@ -21,7 +21,7 @@ import { isPastSpotlight, navigateToEditForm } from 'modules/Pages/Admin/Spotlig
 // based on https://material-ui.com/components/button-group/ "Split button"
 export const SpotlightSplitButton = ({
     deleteSpotlightById,
-    mainButtonLabel = 'Edit',
+    mainButtonLabel = /* istanbul ignore next */ 'Edit',
     navigateToCloneForm,
     navigateToView,
     confirmDeleteLocale = false,

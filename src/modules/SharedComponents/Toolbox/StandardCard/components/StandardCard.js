@@ -104,7 +104,7 @@ export class StandardCard extends Component {
                 data-analyticsid={standardCardId}
                 id={standardCardId}
                 className={`card StandardCard ${className}`}
-                style={{ ...customBG, ...fullHeight, ...style }}
+                sx={{ ...customBG, ...fullHeight, ...style }}
                 variant={variant ?? 'elevation'}
             >
                 {!this.props.noHeader && (

@@ -55,11 +55,10 @@ exports[`Component PromoPanel Preview should render correctly 1`] = `
             class="MuiDialogContent-root css-ypiqx9-MuiDialogContent-root"
           >
             <div
-              class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-bddc4y-MuiPaper-root-MuiCard-root"
+              class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-1s4e3eo-MuiPaper-root-MuiCard-root"
               data-analyticsid="promo-panel"
               data-testid="promo-panel"
               id="promo-panel"
-              style="height: 100%;"
             >
               <div
                 class="MuiCardHeader-root cardHeaderPrimary css-185gdzj-MuiCardHeader-root"

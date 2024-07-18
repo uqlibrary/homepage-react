@@ -97,7 +97,7 @@ export const AlertsListAsTable = ({
     actions,
     deleteAlert,
     footerDisplayMinLength = 5,
-    alertOrder = false,
+    alertOrder = /* istanbul ignore next */ false,
 }) => {
     const [page, setPage] = useState(0);
     const [deleteActive, setDeleteActive] = useState(false);

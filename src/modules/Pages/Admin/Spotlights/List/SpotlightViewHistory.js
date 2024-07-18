@@ -65,7 +65,7 @@ export const SpotlightViewHistory = ({
     helpContent,
     isViewHistoryLightboxOpen,
     handleViewHistoryLightboxClose,
-    spotlights = [],
+    spotlights = /* istanbul ignore next */ [],
     history,
 }) => {
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);

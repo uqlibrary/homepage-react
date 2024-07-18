@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch } from 'react-router';
-import { routes } from 'config';
 import browserUpdate from 'browser-update';
-import { AccountContext } from 'context';
-import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import * as pages from 'modules/App/components/pages';
+
 import Grid from '@mui/material/Grid';
-import { getHomepageLink } from 'helpers/access';
+
+import { AccountContext } from 'context';
+import { routes } from 'config';
+
+import * as pages from 'modules/App/components/pages';
+import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import { getHomepageLink } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
 
 browserUpdate({
     required: {
@@ -76,7 +79,7 @@ export const App = ({ account, actions }) => {
     for (const item of breadcrumbLabels) {
         if (pageIsSubsystem(item)) {
             secondLevelTitle = item.title;
-            secondLevelUrl = window.location.pathname;
+            secondLevelUrl = item.pathname;
             break; // Exit the loop once a match is found
         }
     }
