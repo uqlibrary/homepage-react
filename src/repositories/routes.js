@@ -107,59 +107,6 @@ export const ALERT_SAVE_API = ({ id }) => ({ apiUrl: `alert/${id}` });
 
 export const ALERT_DELETE_API = ({ id }) => ({ apiUrl: `alert/${id}` });
 
-// spotlights
-
-// used on spotlights admin
-export const SPOTLIGHTS_ALL_API = () => ({ apiUrl: 'spotlights?noCache=1' });
-/*
-returns array of
-{
-    "id": "1e1b0e10-c400-11e6-a8f0-47525a49f469",
-    "start": "2016-12-17 12:24:00",
-    "end": "2017-01-30 00:00:00",
-    "title": "Feedback on library services",
-    "url": "https:\/\/web.library.uq.edu.au\/blog\/2016\/12\/your-feedback-july-september-2016",
-    "img_url": "https:\/\/app.library.uq.edu.au\/file\/public\/17c26e10-c400-11e6-9509-e31d0c6d416e.jpg",
-    "img_alt": "Feedback on library services",
-    "weight": 0,
-    "active": 0
-}
- */
-
-export const SPOTLIGHT_GET_BY_ID_API = ({ id }) => ({ apiUrl: `spotlight/${id}?noCache=1` });
-/*
-returns:
-{
-    "id": "ca7d3e70-516f-11eb-880b-1d4a9f408ccb",
-    "start": "2021-01-08 15:05:00",
-    "end": "2021-01-18 18:00:00",
-    "title": "08\/01\/21 Spaces & collections closed temporarily test",
-    "url": "https:\/\/web.library.uq.edu.au\/library-services\/covid-19",
-    "img_url": "https:\/\/app.library.uq.edu.au\/file\/public\/4d2dce40-5175-11eb-8aa1-fbc04f4f5310.jpg",
-    "img_alt": "Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates.",
-    "weight": 0,
-    "active": 0
-}
- */
-
-export const SPOTLIGHT_CREATE_API = () => ({ apiUrl: 'spotlight' });
-/*
-send payload:
-{
-    active: 0
-    end: "2021-08-12 11:25:51"
-    img_alt: "test"
-    img_url: "https://app.library.uq.edu.au/file/public/20d834a0-f58c-11eb-a4cd-611585dc0de4.jpg"
-    start: "2021-08-05 11:25:51"
-    title: "test LdG"
-    url: "http://example.com"
-}
- */
-
-export const SPOTLIGHT_SAVE_API = ({ id }) => ({ apiUrl: `spotlight/${id}` });
-
-export const SPOTLIGHT_DELETE_BULK_API = () => ({ apiUrl: 'spotlight/bulk' });
-
 // Promo Panel Admin
 
 export const PROMOPANEL_CREATE_API = () => ({ apiUrl: 'promo_panel/panel' });
