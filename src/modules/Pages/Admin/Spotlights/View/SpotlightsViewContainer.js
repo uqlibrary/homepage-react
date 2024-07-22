@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import SpotlightsView from './SpotlightsView';
@@ -17,7 +16,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let SpotlightsViewContainer = connect(mapStateToProps, mapDispatchToProps)(SpotlightsView);
-SpotlightsViewContainer = withRouter(SpotlightsViewContainer);
+const SpotlightsViewContainer = connect(mapStateToProps, mapDispatchToProps)(SpotlightsView);
 
 export default SpotlightsViewContainer;

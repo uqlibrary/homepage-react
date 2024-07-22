@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import Inspection from '../components/Inspection';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 import { withUser } from '../../helpers/withUser';
 
@@ -47,7 +46,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 let InspectionContainer = connect(mapStateToProps, mapDispatchToProps)(Inspection);
-InspectionContainer = withRouter(InspectionContainer);
 InspectionContainer = withUser(InspectionContainer);
 
 export default InspectionContainer;

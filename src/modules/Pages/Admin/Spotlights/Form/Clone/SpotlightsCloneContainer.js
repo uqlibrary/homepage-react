@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import SpotlightsClone from './SpotlightsClone';
@@ -19,7 +18,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let SpotlightsCloneContainer = connect(mapStateToProps, mapDispatchToProps)(SpotlightsClone);
-SpotlightsCloneContainer = withRouter(SpotlightsCloneContainer);
+const SpotlightsCloneContainer = connect(mapStateToProps, mapDispatchToProps)(SpotlightsClone);
 
 export default SpotlightsCloneContainer;

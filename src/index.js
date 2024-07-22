@@ -15,7 +15,6 @@ import AppErrorBoundary from './AppErrorBoundary';
 import rootReducer from './reducer';
 import 'sass/index.scss';
 import { store } from 'config/store';
-import { history } from 'config/history';
 
 // Increase default (10) event listeners to 30
 require('events').EventEmitter.prototype._maxListeners = 30;
@@ -31,7 +30,7 @@ const render = () => {
         <AppErrorBoundary>
             <Provider store={store}>
                 <LocalizationProvider dateAdapter={AdapterMoment}>
-                    <Root history={history} />
+                    <Root />
                 </LocalizationProvider>
             </Provider>
         </AppErrorBoundary>,

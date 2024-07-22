@@ -14,7 +14,6 @@ export const PromoPanelAdd = ({
     promoPanelUserTypesLoading,
     promoPanelUserTypeList,
     promoPanelSaving,
-    history,
     panelUpdated,
     queueLength,
     promoPanelListError,
@@ -101,7 +100,6 @@ export const PromoPanelAdd = ({
                         fullPromoPanelUserTypeList={promoPanelUserTypeList}
                         defaults={defaults}
                         actions={actions}
-                        history={history}
                         knownGroups={knownGroups}
                         panelUpdated={panelUpdated}
                         queueLength={queueLength}
@@ -120,7 +118,6 @@ PromoPanelAdd.propTypes = {
     promoPanelListLoading: PropTypes.bool,
     promoPanelUserTypesLoading: PropTypes.bool,
     promoPanelUserTypeList: PropTypes.array,
-    history: PropTypes.object,
     queueLength: PropTypes.number,
     promoPanelListError: PropTypes.string,
     promoPanelUserTypesError: PropTypes.string,

@@ -20,7 +20,6 @@ export const PromoPanelList = ({
     promoPanelUserTypesError,
     promoPanelActiveListError,
     promoPanelActivePanelsLoading,
-    history,
     panelUpdated,
     promoPanelSaving,
 }) => {
@@ -97,7 +96,6 @@ export const PromoPanelList = ({
             <PromoPanelUtilityArea
                 actions={actions}
                 helpContent={locale.listPage.help}
-                history={history}
                 showAddButton
             />
 
@@ -107,7 +105,6 @@ export const PromoPanelList = ({
                 isLoading={promoPanelUserTypesLoading}
                 userPanelList={promoPanelUserTypeList}
                 promoPanelList={promoPanelList}
-                history={history}
                 canEdit
                 canClone
                 canDelete
@@ -121,7 +118,6 @@ export const PromoPanelList = ({
             <PromoPanelListPanels
                 actions={actions}
                 isLoading={promoPanelListLoading}
-                history={history}
                 panelList={promoPanelList}
                 title="Unallocated panels"
                 canEdit
@@ -140,7 +136,6 @@ export const PromoPanelList = ({
             <PromoPanelListPanels
                 actions={actions}
                 isLoading={promoPanelListLoading}
-                history={history}
                 panelList={promoPanelList}
                 title="Past panels"
                 canClone
@@ -171,7 +166,6 @@ PromoPanelList.propTypes = {
     promoPanelActivePanelsLoading: PropTypes.bool,
     promoPanelUserTypesError: PropTypes.string,
     promoPanelSaving: PropTypes.bool,
-    history: PropTypes.object,
 };
 
 export default PromoPanelList;

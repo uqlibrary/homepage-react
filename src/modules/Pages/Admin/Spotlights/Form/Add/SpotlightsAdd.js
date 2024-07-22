@@ -18,7 +18,6 @@ export const SpotlightsAdd = ({
     spotlight,
     spotlightError,
     spotlightStatus,
-    history,
     publicFileUploading,
     publicFileUploadError,
     publicFileUploadResult,
@@ -51,7 +50,7 @@ export const SpotlightsAdd = ({
     return (
         <StandardPage title="Spotlights Management">
             <section aria-live="assertive">
-                <SpotlightsUtilityArea actions={actions} history={history} helpContent={locale.form.help} />
+                <SpotlightsUtilityArea actions={actions} helpContent={locale.form.help} />
                 <StandardCard title="Create a new spotlight">
                     <SpotlightForm
                         actions={actions}
@@ -60,7 +59,6 @@ export const SpotlightsAdd = ({
                         spotlightStatus={spotlightStatus}
                         spotlights={spotlights}
                         spotlightsLoading={spotlightsLoading}
-                        history={history}
                         defaults={defaults}
                         publicFileUploading={publicFileUploading}
                         publicFileUploadError={publicFileUploadError}
@@ -77,7 +75,6 @@ SpotlightsAdd.propTypes = {
     spotlight: PropTypes.any,
     spotlightError: PropTypes.any,
     spotlightStatus: PropTypes.any,
-    history: PropTypes.object,
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
