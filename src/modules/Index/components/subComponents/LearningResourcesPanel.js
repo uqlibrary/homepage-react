@@ -25,7 +25,7 @@ export const getUrlForLearningResourceSpecificTab = (
     const prefix = `${includeFullPath ? fullPath : ''}/learning-resources`;
     const url =
         !!pageLocation.search && pageLocation.search.indexOf('?') === 0
-            ? `${prefix}${pageLocation.search}&${learningResourceParams}` // eg include ?user=s111111
+            ? `${prefix}${pageLocation.search}&${learningResourceParams}` // eg include ?user=s1111111
             : `${prefix}?${learningResourceParams}`;
     return url;
 };

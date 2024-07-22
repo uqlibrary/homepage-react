@@ -4,7 +4,6 @@ import {
     isAlertsAdminUser,
     isDlorAdminUser,
     isPromoPanelAdminUser,
-    isSpotlightsAdminUser,
     isTestTagAdminUser,
 } from 'helpers/access';
 import { pathConfig } from './pathConfig';
@@ -27,8 +26,6 @@ export const flattedPathConfigExact = [
     '/admin/dlor/team/add',
     '/admin/masquerade',
     '/admin/masquerade/',
-    '/admin/spotlights/add',
-    '/admin/spotlights',
     '/admin/promopanel/add',
     '/admin/promopanel',
     '/admin/testntag',
@@ -55,9 +52,6 @@ export const flattedPathConfig = [
     '/admin/dlor/edit',
     '/admin/dlor/series/edit',
     '/admin/dlor/team/edit',
-    '/admin/spotlights/edit',
-    '/admin/spotlights/view',
-    '/admin/spotlights/clone',
     '/admin/promopanel/edit',
     '/admin/promopanel/view',
     '/admin/promopanel/clone',
@@ -204,37 +198,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    const spotlightid = `:spotlightid(${standardRegExp})`;
-    const spotlightsDisplay = [
-        {
-            path: pathConfig.admin.spotlights,
-            component: components.SpotlightsList,
-            exact: true,
-            pageTitle: locale.pages.admin.spotlights.title,
-        },
-        {
-            path: pathConfig.admin.spotlightsadd,
-            component: components.SpotlightsAdd,
-            exact: true,
-            pageTitle: locale.pages.admin.spotlights.form.add.title,
-        },
-        {
-            path: pathConfig.admin.spotlightsedit(spotlightid),
-            component: components.SpotlightsEdit,
-            pageTitle: locale.pages.admin.spotlights.form.edit.title,
-        },
-        {
-            path: pathConfig.admin.spotlightsclone(spotlightid),
-            component: components.SpotlightsClone,
-            pageTitle: locale.pages.admin.spotlights.form.clone.title,
-        },
-        {
-            path: pathConfig.admin.spotlightsview(spotlightid),
-            component: components.SpotlightsView,
-            pageTitle: locale.pages.admin.spotlights.form.view.title,
-        },
-    ];
-
     const dlorTeamId = `:dlorTeamId(${standardRegExp})`;
     const dlorSeriesId = `:dlorSeriesId(${standardRegExp})`;
     const dlorAdminDisplay = [
@@ -369,7 +332,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isAlertsAdminUser(account) ? alertsDisplay : []),
         ...(account && isDlorAdminUser(account) ? dlorAdminDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
-        ...(account && isSpotlightsAdminUser(account) ? spotlightsDisplay : []),
         ...(account && isPromoPanelAdminUser(account) ? promoPanelDisplay : []),
         ...(account && isTestTagAdminUser(account) ? testntagDisplay : []),
         {

@@ -148,9 +148,6 @@ export const canSeeLibraryServices = account => {
 const userHasAdGroup = (ADGroupName, account) =>
     !!account && !!account.groups && !!account.groups.find(group => group.includes(ADGroupName));
 
-export const isSpotlightsAdminUser = account =>
-    isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
-
 export const isTestTagAdminUser = account =>
     isLoggedInUser(account) && userHasAdGroup('lib_libapi_TestTagUsers', account);
 
