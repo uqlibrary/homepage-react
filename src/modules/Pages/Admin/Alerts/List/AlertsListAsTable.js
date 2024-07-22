@@ -26,7 +26,8 @@ import { default as locale } from '../alertsadmin.locale';
 import AlertSplitButton from './AlertSplitButton';
 import { systemList } from '../alerthelpers';
 import { scrollToTopOfPage } from 'helpers/general';
-import {styled} from "@mui/material/styles";
+import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 const moment = require('moment');
 
@@ -93,12 +94,12 @@ export const AlertsListAsTable = ({
     rows,
     headertag,
     alertsLoading,
-    history,
     actions,
     deleteAlert,
     footerDisplayMinLength,
     alertOrder,
 }) => {
+    const navigate = useNavigate();
     const [page, setPage] = useState(0);
     const [deleteActive, setDeleteActive] = useState(false);
     const [alertNotice, setAlertNotice] = useState('');
@@ -187,17 +188,17 @@ export const AlertsListAsTable = ({
     }
 
     const navigateToEditForm = alertid => {
-        history.push(`/admin/alerts/edit/${alertid}`);
+        navigate(`/admin/alerts/edit/${alertid}`);
         scrollToTopOfPage();
     };
 
     const navigateToCloneForm = alertid => {
-        history.push(`/admin/alerts/clone/${alertid}`);
+        navigate(`/admin/alerts/clone/${alertid}`);
         scrollToTopOfPage();
     };
 
     const navigateToView = alertid => {
-        history.push(`/admin/alerts/view/${alertid}`);
+        navigate(`/admin/alerts/view/${alertid}`);
         scrollToTopOfPage();
     };
 
@@ -547,7 +548,6 @@ AlertsListAsTable.propTypes = {
     rows: PropTypes.array,
     headertag: PropTypes.string,
     alertsLoading: PropTypes.any,
-    history: PropTypes.object,
     actions: PropTypes.any,
     deleteAlert: PropTypes.any,
     footerDisplayMinLength: PropTypes.number,

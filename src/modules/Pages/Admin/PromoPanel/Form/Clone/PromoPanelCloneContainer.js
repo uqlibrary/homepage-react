@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import PromoPanelClone from './PromoPanelClone';
@@ -17,7 +16,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let PromoPanelCloneContainer = connect(mapStateToProps, mapDispatchToProps)(PromoPanelClone);
-PromoPanelCloneContainer = withRouter(PromoPanelCloneContainer);
+const PromoPanelCloneContainer = connect(mapStateToProps, mapDispatchToProps)(PromoPanelClone);
 
 export default PromoPanelCloneContainer;

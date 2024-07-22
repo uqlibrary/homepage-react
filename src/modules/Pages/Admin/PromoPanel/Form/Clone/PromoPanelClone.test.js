@@ -9,7 +9,6 @@ function setup(testProps = {}) {
         promoPanelListLoading: false,
         promoPanelUserTypesLoading: false,
         promoPanelUserTypeList: [],
-        history: { push: jest.fn() },
         panelUpdated: false,
         queueLength: 0,
         promoPanelListError: null,

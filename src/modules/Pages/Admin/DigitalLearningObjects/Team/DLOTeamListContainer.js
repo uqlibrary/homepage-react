@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import DLOTeamList from 'modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamList';
@@ -20,7 +19,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let DLOTeamListContainer = connect(mapStateToProps, mapDispatchToProps)(DLOTeamList);
-DLOTeamListContainer = withRouter(DLOTeamListContainer);
+const DLOTeamListContainer = connect(mapStateToProps, mapDispatchToProps)(DLOTeamList);
 
 export default DLOTeamListContainer;

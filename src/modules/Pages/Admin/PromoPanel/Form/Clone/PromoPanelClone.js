@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import PromoPanelHelpDrawer from '../../PromoPanelHelpDrawer';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/Form/PromoPanelForm';
 import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/dateTimeHelper';
@@ -14,7 +14,6 @@ export const PromoPanelClone = ({
     promoPanelListLoading,
     promoPanelUserTypesLoading,
     promoPanelUserTypeList,
-    history,
     panelUpdated,
     queueLength,
     promoPanelListError,
@@ -156,7 +155,6 @@ export const PromoPanelClone = ({
                         knownGroups={knownGroups}
                         defaults={defaults}
                         actions={actions}
-                        history={history}
                         isEdit={false}
                         isClone
                         isDefaultPanel={false}
@@ -175,7 +173,6 @@ PromoPanelClone.propTypes = {
     promoPanelUserTypesLoading: PropTypes.bool,
     promoPanelList: PropTypes.array,
     promoPanelUserTypeList: PropTypes.array,
-    history: PropTypes.object,
     panelUpdated: PropTypes.bool,
     queueLength: PropTypes.number,
     promoPanelListError: PropTypes.string,

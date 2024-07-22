@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import InspectionDevices from '../components/InspectionDevices';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 import locale from '../../../testTag.locale';
 import config from '../components/config';
@@ -29,7 +28,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 let InspectionDevicesContainer = connect(mapStateToProps, mapDispatchToProps)(InspectionDevices);
-InspectionDevicesContainer = withRouter(InspectionDevicesContainer);
 InspectionDevicesContainer = withUser(InspectionDevicesContainer);
 
 export default InspectionDevicesContainer;

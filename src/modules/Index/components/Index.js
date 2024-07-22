@@ -217,7 +217,7 @@ export const Index = ({
 
                     {canSeeLearningResources(account) && (
                         <Grid item xs={12} md={4} data-testid="learning-resources-panel">
-                            <LearningResourcesPanel account={account} history={history} />
+                            <LearningResourcesPanel account={account} />
                         </Grid>
                     )}
 

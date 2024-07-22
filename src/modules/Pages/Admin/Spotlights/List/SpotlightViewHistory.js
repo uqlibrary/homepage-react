@@ -21,6 +21,7 @@ import {
     navigateToView,
 } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -66,8 +67,8 @@ export const SpotlightViewHistory = ({
     isViewHistoryLightboxOpen,
     handleViewHistoryLightboxClose,
     spotlights,
-    history,
 }) => {
+    const navigate = useNavigate();
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
 
     const openHelpLightbox = () => {
@@ -158,7 +159,6 @@ export const SpotlightViewHistory = ({
                                                     navigateToCloneForm={navigateToCloneForm}
                                                     navigateToView={navigateToView}
                                                     spotlight={s}
-                                                    history={history}
                                                 />
                                                 {isPastSpotlight(s) ? (
                                                     <Button
@@ -166,7 +166,7 @@ export const SpotlightViewHistory = ({
                                                         color="secondary"
                                                         data-testid={`spotlight-viewhistory-button-view-${s.id}`}
                                                         id={`spotlight-list-item-view-${s.id}`}
-                                                        onClick={() => navigateToView(s.id, history)}
+                                                        onClick={() => navigateToView(s.id, navigate)}
                                                         className={'editButton'}
                                                         variant="contained"
                                                         style={{ float: 'right', width: '5.5em' }}
@@ -177,7 +177,7 @@ export const SpotlightViewHistory = ({
                                                         color="secondary"
                                                         data-testid={`spotlight-viewhistory-button-edit-${s.id}`}
                                                         id={`spotlight-viewhistory-button-edit-${s.id}`}
-                                                        onClick={() => navigateToEditForm(s.id, history)}
+                                                        onClick={() => navigateToEditForm(s.id, navigate)}
                                                         className={'editButton'}
                                                         variant="contained"
                                                         style={{ float: 'right', width: '5.5em' }}
@@ -230,7 +230,6 @@ SpotlightViewHistory.propTypes = {
     isViewHistoryLightboxOpen: PropTypes.bool,
     handleViewHistoryLightboxClose: PropTypes.func,
     spotlights: PropTypes.array,
-    history: PropTypes.any,
 };
 
 SpotlightViewHistory.defaultProps = {

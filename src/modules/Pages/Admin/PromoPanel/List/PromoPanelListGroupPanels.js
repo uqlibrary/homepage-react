@@ -32,6 +32,7 @@ import { filterPanelList } from '../promoPanelHelpers';
 import PromoPanelAddSchedule from './PromoPanelAddSchedule';
 import PromoPanelAddNewDefault from './PromoPanelAddNewDefault';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 const moment = require('moment');
 
@@ -77,13 +78,13 @@ export const PromoPanelListGroupPanels = ({
     isLoading,
     userPanelList,
     promoPanelList,
-    history,
     canEdit,
     canClone,
     panelError,
     knownGroups,
     promoPanelSaving,
 }) => {
+    const navigate = useNavigate();
     // eslint-disable-next-line no-unused-vars
     const [isUnscheduleConfirmOpen, showUnscheduleConfirmation, hideUnscheduleConfirmation] = useConfirmationState();
     const [
@@ -216,12 +217,12 @@ export const PromoPanelListGroupPanels = ({
     // };
     const navigateToEditForm = alertid => {
         actions.updateScheduleQueuelength(0);
-        history.push(`/admin/promopanel/edit/${alertid}`);
+        navigate(`/admin/promopanel/edit/${alertid}`);
         scrollToTopOfPage();
     };
     const navigateToCloneForm = panelId => {
         actions.updateScheduleQueuelength(0);
-        history.push(`/admin/promopanel/clone/${panelId}`);
+        navigate(`/admin/promopanel/clone/${panelId}`);
         scrollToTopOfPage();
     };
 
@@ -570,7 +571,6 @@ PromoPanelListGroupPanels.propTypes = {
     rows: PropTypes.array,
     headertag: PropTypes.string,
     alertsLoading: PropTypes.any,
-    history: PropTypes.object,
     actions: PropTypes.any,
     deletePanel: PropTypes.any,
     footerDisplayMinLength: PropTypes.number,

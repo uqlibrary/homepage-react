@@ -35,7 +35,7 @@ const StyledMobileView = styled(Grid)(({ theme }) => ({
     },
 }));
 
-export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlightsError, history }) => {
+export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlightsError }) => {
     const [currentSpotlights, setCurrentSpotlights] = useState([]);
     const [scheduledSpotlights, setScheduledSpotlights] = useState([]);
     const [pastSpotlights, setPastSpotlights] = useState([]);
@@ -147,7 +147,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                 <SpotlightsUtilityArea
                     actions={actions}
                     helpContent={locale.listPage.help}
-                    history={history}
                     showAddButton
                     showViewByImageButton
                     spotlights={spotlights}
@@ -155,12 +154,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                 />
                 <StandardCard title="All spotlights" noPadding customBackgroundColor="#F7F7F7">
                     <Grid container>
-                        <StyledPageLayout
-                            item
-                            xs={12}
-                            id="admin-spotlights-list"
-                            data-testid="admin-spotlights-list"
-                        >
+                        <StyledPageLayout item xs={12} id="admin-spotlights-list" data-testid="admin-spotlights-list">
                             <div
                                 id="admin-spotlights-list-current-list"
                                 data-testid="admin-spotlights-list-current-list"
@@ -170,7 +164,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     headertag="Current spotlights"
                                     tableType="current"
                                     spotlightsLoading={spotlightsLoading}
-                                    history={history}
                                     spotlightsError={spotlightsError}
                                     saveSpotlightChange={saveSpotlightChange}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
@@ -188,7 +181,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     headertag="Scheduled spotlights"
                                     tableType="scheduled"
                                     spotlightsLoading={spotlightsLoading}
-                                    history={history}
                                     spotlightsError={spotlightsError}
                                     saveSpotlightChange={saveSpotlightChange}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
@@ -202,7 +194,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     tableType="past"
                                     headertag="Past spotlights"
                                     spotlightsLoading={spotlightsLoading}
-                                    history={history}
                                     spotlightsError={spotlightsError}
                                     saveSpotlightChange={saveSpotlightChange}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
@@ -223,7 +214,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                         setViewByHistoryLightBoxFocus={setViewByHistoryLightBoxFocus}
                         setViewByHistoryLightBoxEntries={setViewByHistoryLightBoxEntries}
                         handleViewByHistoryLightboxOpen={handleViewByHistoryLightboxOpen}
-                        history={history}
                     />
                 )}
             </section>
@@ -236,7 +226,6 @@ SpotlightsList.propTypes = {
     spotlights: PropTypes.array,
     spotlightsLoading: PropTypes.any,
     spotlightsError: PropTypes.any,
-    history: PropTypes.object,
 };
 
 export default React.memo(SpotlightsList);

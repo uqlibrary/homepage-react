@@ -17,6 +17,7 @@ import { useConfirmationState } from 'hooks';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 import { isPastSpotlight, navigateToEditForm } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { useNavigate } from 'react-router-dom';
 
 // based on https://material-ui.com/components/button-group/ "Split button"
 export const SpotlightSplitButton = ({
@@ -27,9 +28,9 @@ export const SpotlightSplitButton = ({
     confirmDeleteLocale,
     showViewByHistoryOption,
     spotlight,
-    history,
     allowedArrowActions,
 }) => {
+    const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
@@ -85,7 +86,7 @@ export const SpotlightSplitButton = ({
                                 color="primary"
                                 data-testid={`spotlight-list-item-edit-${spotlight.id}`}
                                 id={`spotlight-list-item-edit-${spotlight.id}`}
-                                onClick={() => navigateToEditForm(spotlight.id, history)}
+                                onClick={() => navigateToEditForm(spotlight.id, navigate)}
                                 className={'editButton'}
                                 variant="contained"
                             />
@@ -96,7 +97,7 @@ export const SpotlightSplitButton = ({
                                 color="primary"
                                 data-testid={`spotlight-list-item-view-${spotlight.id}`}
                                 id={`spotlight-list-item-view-${spotlight.id}`}
-                                onClick={() => navigateToView(spotlight.id, history)}
+                                onClick={() => navigateToView(spotlight.id, navigate)}
                                 className={'editButton'}
                                 variant="contained"
                             />
@@ -107,7 +108,7 @@ export const SpotlightSplitButton = ({
                                 color="primary"
                                 data-testid={`spotlight-list-item-clone-${spotlight.id}`}
                                 id={`spotlight-list-item-clone-${spotlight.id}`}
-                                onClick={() => navigateToCloneForm(spotlight.id, history)}
+                                onClick={() => navigateToCloneForm(spotlight.id, navigate)}
                                 className={'editButton'}
                                 variant="contained"
                             />
@@ -149,7 +150,7 @@ export const SpotlightSplitButton = ({
                                                 <MenuItem
                                                     data-testid={`${spotlight.id}-clone-button`}
                                                     key={`${spotlight.id}-clone-button`}
-                                                    onClick={() => navigateToCloneForm(spotlight.id, history)}
+                                                    onClick={() => navigateToCloneForm(spotlight.id, navigate)}
                                                 >
                                                     {locale.form.splitButton.labels.clone}
                                                 </MenuItem>
@@ -183,7 +184,7 @@ export const SpotlightSplitButton = ({
                                                         onClick={
                                                             /* istanbul ignore next */ () =>
                                                                 /* istanbul ignore next */
-                                                                navigateToEditForm(spotlight.id, history)
+                                                                navigateToEditForm(spotlight.id, navigate)
                                                         }
                                                     >
                                                         {locale.form.splitButton.labels.edit}
@@ -199,7 +200,7 @@ export const SpotlightSplitButton = ({
                                                             /* istanbul ignore next */ () =>
                                                                 /* istanbul ignore next */ navigateToView(
                                                                     spotlight.id,
-                                                                    history,
+                                                                    navigate,
                                                                 )
                                                         }
                                                     >
@@ -227,7 +228,6 @@ SpotlightSplitButton.propTypes = {
     navigateToMainFunction: PropTypes.func,
     confirmDeleteLocale: PropTypes.any,
     showViewByHistoryOption: PropTypes.func,
-    history: PropTypes.any,
     allowedArrowActions: PropTypes.array,
 };
 

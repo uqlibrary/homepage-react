@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 import { throttle } from 'throttle-debounce';
 
 import locale from './shared/learningResources.locale';

@@ -135,7 +135,6 @@ export const SpotlightsListAsTable = ({
     headertag,
     tableType,
     spotlightsLoading,
-    history,
     spotlightsError,
     saveSpotlightChange,
     deleteSpotlightBulk,
@@ -299,14 +298,14 @@ export const SpotlightsListAsTable = ({
         .replace('[N]', userows.length)
         .replace('[s]', userows.length > 1 ? 's' : '');
 
-    const setFilterAndNavigateToCloneForm = (spotlightid, history) => {
+    const setFilterAndNavigateToCloneForm = (spotlightid, navigate) => {
         !!canTextFilter && setFilterTermToSession(textSearch);
-        navigateToCloneForm(spotlightid, history);
+        navigateToCloneForm(spotlightid, navigate);
     };
 
-    const setFilterAndNavigateToView = (spotlightid, history) => {
+    const setFilterAndNavigateToView = (spotlightid, navigate) => {
         setFilterTermToSession(textSearch);
-        navigateToView(spotlightid, history);
+        navigateToView(spotlightid, navigate);
     };
 
     const reEnableAllCheckboxes = () => {
@@ -1003,7 +1002,6 @@ export const SpotlightsListAsTable = ({
                                                                                 showViewByHistoryLightbox
                                                                             }
                                                                             spotlight={spotlight}
-                                                                            history={history}
                                                                             allowedArrowActions={[
                                                                                 'edit',
                                                                                 'view',
@@ -1076,7 +1074,6 @@ SpotlightsListAsTable.propTypes = {
     headertag: PropTypes.string,
     tableType: PropTypes.string,
     spotlightsLoading: PropTypes.any,
-    history: PropTypes.object,
     spotlightsError: PropTypes.any,
     saveSpotlightChange: PropTypes.any,
     deleteSpotlightBulk: PropTypes.any,

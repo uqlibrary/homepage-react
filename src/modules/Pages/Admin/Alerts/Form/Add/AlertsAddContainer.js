@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import AlertsAdd from 'modules/Pages/Admin/Alerts/Form/Add/AlertsAdd';
@@ -17,7 +16,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let AlertsAddContainer = connect(mapStateToProps, mapDispatchToProps)(AlertsAdd);
-AlertsAddContainer = withRouter(AlertsAddContainer);
+const AlertsAddContainer = connect(mapStateToProps, mapDispatchToProps)(AlertsAdd);
 
 export default AlertsAddContainer;

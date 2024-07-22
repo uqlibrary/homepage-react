@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import AlertsClone from 'modules/Pages/Admin/Alerts/Form/Clone/AlertsClone';
@@ -17,7 +16,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let AlertsCloneContainer = connect(mapStateToProps, mapDispatchToProps)(AlertsClone);
-AlertsCloneContainer = withRouter(AlertsCloneContainer);
+const AlertsCloneContainer = connect(mapStateToProps, mapDispatchToProps)(AlertsClone);
 
 export default AlertsCloneContainer;

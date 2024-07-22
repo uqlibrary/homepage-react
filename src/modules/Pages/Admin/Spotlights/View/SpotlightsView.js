@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
@@ -17,9 +17,9 @@ import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmi
 import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage } from 'helpers/general';
 
-export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history }) => {
+export const SpotlightsView = ({ actions, spotlight, spotlightStatus }) => {
     const { spotlightid } = useParams();
-
+    const navigate = useNavigate();
     React.useEffect(() => {
         /* istanbul ignore else */
         if (!!spotlightid) {
@@ -41,14 +41,14 @@ export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history })
     const navigateToListPage = () => {
         actions.clearASpotlight(); // make the form clear for the next use
 
-        history.push('/admin/spotlights');
+        navigate('/admin/spotlights');
 
         scrollToTopOfPage();
     };
 
     /* istanbul ignore next */
     const navigateToCloneForm = () => {
-        history.push(`/admin/spotlights/clone/${spotlightid}`);
+        navigate(`/admin/spotlights/clone/${spotlightid}`);
 
         scrollToTopOfPage();
     };
@@ -80,7 +80,7 @@ export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history })
         <Fragment>
             <StandardPage title="Spotlights Management">
                 <section aria-live="assertive">
-                    <SpotlightsUtilityArea actions={actions} helpContent={locale.viewPage.help} history={history} />
+                    <SpotlightsUtilityArea actions={actions} helpContent={locale.viewPage.help} />
                     <StandardCard title="View spotlight">
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -234,7 +234,6 @@ SpotlightsView.propTypes = {
     actions: PropTypes.any,
     spotlight: PropTypes.any,
     spotlightStatus: PropTypes.any,
-    history: PropTypes.object,
 };
 
 export default SpotlightsView;

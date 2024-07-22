@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -16,7 +16,6 @@ export const SpotlightsClone = ({
     spotlight,
     spotlightError,
     spotlightStatus,
-    history,
     publicFileUploading,
     publicFileUploadError,
     publicFileUploadResult,
@@ -75,7 +74,7 @@ export const SpotlightsClone = ({
     return (
         <StandardPage title="Spotlights Management">
             <section aria-live="assertive">
-                <SpotlightsUtilityArea actions={actions} helpContent={locale.form.help} history={history} />
+                <SpotlightsUtilityArea actions={actions} helpContent={locale.form.help} />
                 <StandardCard title="Clone spotlight">
                     <SpotlightForm
                         actions={actions}
@@ -84,7 +83,6 @@ export const SpotlightsClone = ({
                         spotlightStatus={spotlightStatus}
                         spotlights={spotlights}
                         spotlightsLoading={spotlightsLoading}
-                        history={history}
                         defaults={defaults}
                         publicFileUploading={publicFileUploading}
                         publicFileUploadError={publicFileUploadError}
@@ -101,7 +99,6 @@ SpotlightsClone.propTypes = {
     spotlight: PropTypes.any,
     spotlightError: PropTypes.any,
     spotlightStatus: PropTypes.any,
-    history: PropTypes.object,
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,

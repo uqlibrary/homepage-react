@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import { PromoPanelHelpDrawer } from './PromoPanelHelpDrawer';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 const StyledActionButtonPlacer = styled('div')(() => ({
     float: 'right',
@@ -11,11 +12,12 @@ const StyledActionButtonPlacer = styled('div')(() => ({
     marginRight: 16,
 }));
 
-export const navigateToAddPage = history => {
-    history.push('/admin/promopanel/add');
+export const navigateToAddPage = navigate => {
+    navigate('/admin/promopanel/add');
 };
 
-export const PromoPanelUtilityArea = ({ helpButtonLabel, helpContent, history, showAddButton }) => {
+export const PromoPanelUtilityArea = ({ helpButtonLabel, helpContent, showAddButton }) => {
+    const navigate = useNavigate();
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
 
     const openHelpLightbox = () => setHelpLightboxOpen(true);
@@ -42,7 +44,7 @@ export const PromoPanelUtilityArea = ({ helpButtonLabel, helpContent, history, s
                         color="primary"
                         data-testid="admin-promopanel-add-display-button"
                         id="admin-promopanel-add-display-button"
-                        onClick={() => navigateToAddPage(history)}
+                        onClick={() => navigateToAddPage(navigate)}
                         variant="contained"
                     />
                 </StyledActionButtonPlacer>
@@ -60,7 +62,6 @@ export const PromoPanelUtilityArea = ({ helpButtonLabel, helpContent, history, s
 PromoPanelUtilityArea.propTypes = {
     helpContent: PropTypes.any,
     helpButtonLabel: PropTypes.string,
-    history: PropTypes.object,
     showAddButton: PropTypes.bool,
 };
 
