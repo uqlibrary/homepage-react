@@ -183,7 +183,7 @@ const PersonalisedPanel = ({
     author,
     loans,
     printBalance,
-    isNextToSpotlights = /* istanbul ignore next */ false,
+    isNextToSpotlights = false,
     possibleRecords,
     incompleteNTRORecords,
 }) => {
@@ -484,7 +484,7 @@ const PersonalisedPanel = ({
     return (
         <Fade in={!!account}>
             <StyledWrapper
-                className={`flexWrapper ${!!isNextToSpotlights && 'isNextToSpotlights'}`}
+                className={`flexWrapper${!!isNextToSpotlights ? ' isNextToSpotlights' : ''}`}
                 id="personalised-panel"
                 data-testid="personalised-panel"
             >

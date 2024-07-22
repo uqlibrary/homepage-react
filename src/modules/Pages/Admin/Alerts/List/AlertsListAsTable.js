@@ -97,7 +97,7 @@ export const AlertsListAsTable = ({
     actions,
     deleteAlert,
     footerDisplayMinLength = 5,
-    alertOrder = /* istanbul ignore next */ false,
+    alertOrder = false,
 }) => {
     const navigate = useNavigate();
     const [page, setPage] = useState(0);
