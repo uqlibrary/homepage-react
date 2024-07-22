@@ -151,8 +151,6 @@ mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl).reply(() => {
     return [404, {}];
 });
 
-mock.onGet(routes.SPOTLIGHTS_API_CURRENT().apiUrl).reply(withDelay([200, [...spotlightsHomepage]]));
-
 mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898' }).apiUrl).reply(
     withDelay([
         500,

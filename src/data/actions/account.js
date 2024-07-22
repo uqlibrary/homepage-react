@@ -10,7 +10,6 @@ import {
     POSSIBLE_RECORDS_API,
     PRINTING_API,
     TRAINING_API,
-    SPOTLIGHTS_API_CURRENT,
 } from 'repositories/routes';
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
 import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME } from 'config/general';
@@ -200,29 +199,6 @@ export function loadCurrentAccount() {
                     }
                 });
         }
-    };
-}
-
-/**
- * Loads the spotlight data
- * @returns {function(*)}
- */
-export function loadCurrentSpotlights() {
-    return dispatch => {
-        dispatch({ type: actions.SPOTLIGHTS_HOMEPAGE_LOADING });
-        return get(SPOTLIGHTS_API_CURRENT())
-            .then(spotlightsResponse => {
-                dispatch({
-                    type: actions.SPOTLIGHTS_HOMEPAGE_LOADED,
-                    payload: spotlightsResponse,
-                });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.SPOTLIGHTS_HOMEPAGE_FAILED,
-                    payload: error.message,
-                });
-            });
     };
 }
 

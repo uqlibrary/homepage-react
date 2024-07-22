@@ -55,7 +55,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         },
     },
     '&.isNextToSpotlights': {
-        borderLeft: '1px solid' + theme.palette.secondary.light,
+        // borderLeft: '1px solid' + theme.palette.secondary.light,
         paddingLeft: 16,
     },
     '& .greeting': {

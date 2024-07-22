@@ -109,9 +109,6 @@ export const ALERT_DELETE_API = ({ id }) => ({ apiUrl: `alert/${id}` });
 
 // spotlights
 
-// used on homepage
-export const SPOTLIGHTS_API_CURRENT = () => ({ apiUrl: 'spotlights/current' });
-
 // used on spotlights admin
 export const SPOTLIGHTS_ALL_API = () => ({ apiUrl: 'spotlights?noCache=1' });
 /*
