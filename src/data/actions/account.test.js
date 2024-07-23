@@ -9,7 +9,6 @@ import {
     loadLibHours,
     loadLoans,
     loadPrintBalance,
-    loadCurrentSpotlights,
     loadTrainingEvents,
     searcheSpaceIncompleteNTROPublications,
     searcheSpacePossiblePublications,
@@ -258,24 +257,6 @@ describe('Account action creators', () => {
         const expectedActions = [actions.CLEAR_CURRENT_ACCOUNT_SESSION_FLAG];
 
         await mockActionsStore.dispatch(accountActions.clearSessionExpiredFlag());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when loading spotlights fails', async () => {
-        mockApi.onGet(repositories.routes.SPOTLIGHTS_API_CURRENT().apiUrl).reply(500);
-
-        const expectedActions = [actions.SPOTLIGHTS_HOMEPAGE_LOADING, actions.SPOTLIGHTS_HOMEPAGE_FAILED];
-
-        await mockActionsStore.dispatch(loadCurrentSpotlights());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when loading spotlights succeeds', async () => {
-        mockApi.onGet(repositories.routes.SPOTLIGHTS_API_CURRENT().apiUrl).reply(200, []);
-
-        const expectedActions = [actions.SPOTLIGHTS_HOMEPAGE_LOADING, actions.SPOTLIGHTS_HOMEPAGE_LOADED];
-
-        await mockActionsStore.dispatch(loadCurrentSpotlights());
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 

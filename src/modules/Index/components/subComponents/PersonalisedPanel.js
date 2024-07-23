@@ -55,7 +55,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         },
     },
     '&.isNextToSpotlights': {
-        borderLeft: '1px solid' + theme.palette.secondary.light,
+        // borderLeft: '1px solid' + theme.palette.secondary.light,
         paddingLeft: 16,
     },
     '& .greeting': {
@@ -183,7 +183,7 @@ const PersonalisedPanel = ({
     author,
     loans,
     printBalance,
-    isNextToSpotlights = /* istanbul ignore next */ false,
+    isNextToSpotlights = false,
     possibleRecords,
     incompleteNTRORecords,
 }) => {
@@ -484,7 +484,7 @@ const PersonalisedPanel = ({
     return (
         <Fade in={!!account}>
             <StyledWrapper
-                className={`flexWrapper ${!!isNextToSpotlights && 'isNextToSpotlights'}`}
+                className={`flexWrapper${!!isNextToSpotlights ? ' isNextToSpotlights' : ''}`}
                 id="personalised-panel"
                 data-testid="personalised-panel"
             >

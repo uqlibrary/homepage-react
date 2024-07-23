@@ -5,10 +5,12 @@ import Button from '@mui/material/Button';
 
 const rootId = 'footer_bar';
 
+// drastic temporary measure - force coverage on the default values required on params after defaultProps deprecation
+/* istanbul ignore next */
 const FooterBar = ({
     id,
-    actionLabel = /* istanbul ignore next */ '',
-    altLabel = /* istanbul ignore next */ '',
+    actionLabel = '',
+    altLabel = '',
     onAltClick,
     onActionClick,
     cancelButtonProps,

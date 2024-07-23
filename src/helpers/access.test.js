@@ -3,12 +3,10 @@ import {
     canSeeLibraryServices,
     canSeeLoans,
     canSeePrintBalance,
-    getHomepageLink,
     getUserServices,
     isAlertsAdminUser,
     isEspaceAuthor,
     isHdrStudent,
-    isSpotlightsAdminUser,
 } from './access';
 import { accounts } from 'data/mock/data';
 
@@ -89,26 +87,6 @@ describe('access', () => {
         expect(canSeeLibraryServices({})).toEqual(false);
         expect(canSeeLibraryServices({ id: 's123456', user_group: 'UG' })).toEqual(true);
         expect(canSeeLibraryServices({ id: 's123456', user_group: 'a different one' })).toEqual(false);
-    });
-
-    it('spotlights pages are limited to appropriate users', () => {
-        expect(isSpotlightsAdminUser({})).toEqual(false);
-        expect(
-            isSpotlightsAdminUser({
-                id: 'uqstaff',
-                groups: [
-                    'CN=lib_libapi_SpotlightAdmins,OU=lib-libapi-groups,OU=LIB-groups,OU=University of Queensland Library,OU=Deputy Vice-Chancellor (Academic),OU=Vice-Chancellor,DC=uq,DC=edu,DC=au',
-                ],
-                user_group: 'LIBRARYSTAFFB',
-            }),
-        ).toEqual(true);
-        expect(
-            isSpotlightsAdminUser({
-                id: 'uqstaffnonpriv',
-                groups: ['DC=uq', 'DC=edu', 'DC=au'],
-                user_group: 'LIBRARYSTAFFB',
-            }),
-        ).toEqual(false);
     });
 
     it('alerts pages are limited to appropriate users', () => {

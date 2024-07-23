@@ -195,11 +195,6 @@ describe('filterProps helper', () => {
 
         expectHomePageOfLinkIs('https://app.library.uq.edu.au/#/membership/admin', 'https://app.library.uq.edu.au');
 
-        expectHomePageOfLinkIs(
-            'http://localhost:2020/admin/spotlights?user=uqstaff',
-            'http://localhost:2020/?user=uqstaff',
-        );
-
         // and do a test without param, for completeness (jest thinks its on staging with no https, that's so cute! ;) )
         expect(getHomepageLink()).toEqual('http://homepage-staging.library.uq.edu.au');
     });

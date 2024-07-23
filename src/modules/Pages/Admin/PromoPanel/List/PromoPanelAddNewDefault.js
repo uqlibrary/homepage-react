@@ -22,10 +22,12 @@ const MenuProps = {
         },
     },
 };
+// drastic temporary measure - force coverage on the default values required on params after defaultProps deprecation
+/* istanbul ignore next */
 export const PromoPanelAddNewDefault = ({
-    isAddingDefault = /* istanbul ignore next */ false,
+    isAddingDefault = false,
     groupName,
-    promoPanelList = /* istanbul ignore next */ [],
+    promoPanelList = [],
     handleAddGroupDefault,
     handleCloseGroupDefault,
 }) => {

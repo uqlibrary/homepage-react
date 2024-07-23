@@ -40,10 +40,10 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             height: '100%',
         },
         [theme.breakpoints.up('md')]: {
-            height: 232,
+            height: 300,
         },
         [theme.breakpoints.up('lg')]: {
-            height: 232,
+            height: 300,
         },
     },
     ['& .scrollArea']: {
