@@ -1,0 +1,168 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PersonalisedPanel default values render correctly 1`] = `
+<div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-f9bzv-MuiPaper-root-MuiCard-root"
+    data-analyticsid="standard-card-default-and-scheduled-panels"
+    data-testid="standard-card-default-and-scheduled-panels"
+    id="standard-card-default-and-scheduled-panels"
+  >
+    <div
+      class="MuiCardHeader-root css-185gdzj-MuiCardHeader-root"
+      style="border-top-left-radius: 4px; border-top-right-radius: 4px;"
+    >
+      <div
+        class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
+      >
+        <h2
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1hzv55z-MuiTypography-root"
+          data-testid="standard-card-default-and-scheduled-panels-header"
+        >
+          Default and scheduled panels
+        </h2>
+      </div>
+      <div
+        class="MuiCardHeader-action css-sgoict-MuiCardHeader-action"
+      />
+    </div>
+    <div
+      class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
+      data-testid="standard-card-default-and-scheduled-panels-content"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-container css-19sicoy-MuiGrid-root"
+        style="margin-bottom: 10px;"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 css-u78q51-MuiGrid-root"
+          style="padding-bottom: 5px;"
+        >
+          Filter By:
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4 css-gj1fbr-MuiGrid-root"
+        >
+          <div
+            class="MuiFormControl-root MuiFormControl-fullWidth dropdown css-q8hpuo-MuiFormControl-root"
+          >
+            <label
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard css-14c9fi4-MuiFormLabel-root-MuiInputLabel-root"
+              data-shrink="false"
+              id="group-selector"
+            >
+              Filter by group
+            </label>
+            <div
+              class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl  css-13ufmwe-MuiInputBase-root-MuiInput-root-MuiSelect-root"
+              data-testid="group-filter"
+            >
+              <div
+                aria-controls=":r1:"
+                aria-expanded="false"
+                aria-haspopup="listbox"
+                aria-labelledby="group-selector group-filter"
+                class="MuiSelect-select MuiSelect-standard MuiSelect-multiple MuiInputBase-input MuiInput-input css-1rxz5jq-MuiSelect-select-MuiInputBase-input-MuiInput-input"
+                id="group-filter"
+                role="combobox"
+                tabindex="0"
+              >
+                <span
+                  class="notranslate"
+                >
+                  ​
+                </span>
+              </div>
+              <input
+                aria-hidden="true"
+                aria-invalid="false"
+                class="MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput"
+                placeholder="Filter by group"
+                tabindex="-1"
+                value=""
+              />
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconStandard css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon"
+                data-testid="ArrowDropDownIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M7 10l5 5 5-5z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiTableContainer-root css-11xur9t-MuiPaper-root-MuiTableContainer-root"
+      >
+        <table
+          aria-label="a dense table"
+          class="MuiTable-root css-1ln08kx-MuiTable-root"
+          id="admin-promoPanel-table"
+        >
+          <thead
+            class="MuiTableHead-root css-15wwp11-MuiTableHead-root"
+          >
+            <tr
+              class="MuiTableRow-root MuiTableRow-head css-1h2y1iv-MuiTableRow-root"
+            >
+              <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeSmall css-1rcp7ct-MuiTableCell-root"
+                scope="col"
+              />
+              <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeSmall css-1rcp7ct-MuiTableCell-root"
+                scope="col"
+              >
+                <p
+                  class="MuiTypography-root MuiTypography-body1 css-u1nwny-MuiTypography-root"
+                >
+                  Panel Name
+                </p>
+              </th>
+              <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeSmall css-1rcp7ct-MuiTableCell-root"
+                scope="col"
+              >
+                <p
+                  class="MuiTypography-root MuiTypography-body1 css-u1nwny-MuiTypography-root"
+                >
+                  From
+                </p>
+              </th>
+              <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeSmall css-1rcp7ct-MuiTableCell-root"
+                scope="col"
+              >
+                <p
+                  class="MuiTypography-root MuiTypography-body1 css-u1nwny-MuiTypography-root"
+                >
+                  To
+                </p>
+              </th>
+              <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-alignRight MuiTableCell-sizeSmall css-t60n8a-MuiTableCell-root"
+                scope="col"
+                style="padding-right: 25px;"
+              >
+                <p
+                  class="MuiTypography-root MuiTypography-body1 css-u1nwny-MuiTypography-root"
+                >
+                  Actions
+                </p>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class="MuiTableBody-root css-apqrd9-MuiTableBody-root"
+          />
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+`;
