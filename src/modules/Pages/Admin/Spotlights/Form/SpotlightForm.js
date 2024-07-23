@@ -20,6 +20,7 @@ import { scrollToTopOfPage } from 'helpers/general';
 import { useConfirmationState } from 'hooks';
 import SpotlightFormReorderableThumbs from './SpotlightFormReorderableThumbs';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 const moment = require('moment');
 
@@ -101,7 +102,6 @@ export const SpotlightForm = ({
     publicFileUploading,
     publicFileUploadError,
     publicFileUploadResult,
-    history,
     spotlights,
     spotlightsLoading,
 }) => {
@@ -112,6 +112,8 @@ export const SpotlightForm = ({
         spotlights
             .filter(s => moment(s.start).isBefore(moment()) && moment(s.end).isAfter(moment()))
             .sort((a, b) => a.weight - b.weight);
+
+    const navigate = useNavigate();
 
     const [isErrorOpen, showErrorConfirmation, hideErrorConfirmation] = useConfirmationState();
     const [isAddOpen, showAddConfirmation, hideAddConfirmation] = useConfirmationState();
@@ -248,7 +250,7 @@ export const SpotlightForm = ({
 
         actions.clearASpotlight(); // make the form clear for the next use
 
-        history.push('/admin/spotlights');
+        navigate('/admin/spotlights');
 
         scrollToTopOfPage();
     };
@@ -704,7 +706,6 @@ SpotlightForm.propTypes = {
     spotlightError: PropTypes.any,
     spotlightStatus: PropTypes.any,
     defaults: PropTypes.object,
-    history: PropTypes.object,
     spotlights: PropTypes.any,
     spotlightsLoading: PropTypes.any,
 };

@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 import LearningResourceSearch from './LearningResourceSearch';
 
@@ -16,7 +15,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-let LearningResourceSearchContainer = connect(mapStateToProps, mapDispatchToProps)(LearningResourceSearch);
-LearningResourceSearchContainer = withRouter(LearningResourceSearchContainer);
+const LearningResourceSearchContainer = connect(mapStateToProps, mapDispatchToProps)(LearningResourceSearch);
 
 export default LearningResourceSearchContainer;

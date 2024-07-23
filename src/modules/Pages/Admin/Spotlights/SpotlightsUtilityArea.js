@@ -6,6 +6,7 @@ import { SpotlightsHelpDrawer } from './SpotlightsHelpDrawer';
 import { SpotlightsViewByImage } from './SpotlightsViewByImage';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * a block that shows:
@@ -23,12 +24,12 @@ export const SpotlightsUtilityArea = ({
     actions,
     helpButtonLabel,
     helpContent,
-    history,
     showAddButton,
     showViewByImageButton,
     spotlights,
     showViewByHistoryLightbox,
 }) => {
+    const navigate = useNavigate();
     const [isViewByImageLightboxOpen, setViewByImageLightboxOpen] = React.useState(false);
     const handleViewByImageLightboxOpen = () => setViewByImageLightboxOpen(true);
     const handleViewByImageLightboxClose = () => setViewByImageLightboxOpen(false);
@@ -39,7 +40,7 @@ export const SpotlightsUtilityArea = ({
 
     const navigateToAddPage = () => {
         actions.clearASpotlight();
-        history.push('/admin/spotlights/add');
+        navigate('/admin/spotlights/add');
     };
 
     return (
@@ -99,7 +100,6 @@ SpotlightsUtilityArea.propTypes = {
     actions: PropTypes.any,
     helpContent: PropTypes.any,
     helpButtonLabel: PropTypes.string,
-    history: PropTypes.object,
     showAddButton: PropTypes.bool,
     showViewByImageButton: PropTypes.bool,
     spotlights: PropTypes.any,

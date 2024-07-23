@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import DLOAdd from './DLOAdd';
@@ -22,7 +21,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let DLOAddContainer = connect(mapStateToProps, mapDispatchToProps)(DLOAdd);
-DLOAddContainer = withRouter(DLOAddContainer);
+const DLOAddContainer = connect(mapStateToProps, mapDispatchToProps)(DLOAdd);
 
 export default DLOAddContainer;

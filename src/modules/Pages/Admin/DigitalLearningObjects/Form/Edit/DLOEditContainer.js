@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import DLOEdit from './DLOEdit';
@@ -20,7 +19,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let DLOEditContainer = connect(mapStateToProps, mapDispatchToProps)(DLOEdit);
-DLOEditContainer = withRouter(DLOEditContainer);
+const DLOEditContainer = connect(mapStateToProps, mapDispatchToProps)(DLOEdit);
 
 export default DLOEditContainer;

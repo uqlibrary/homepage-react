@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 import Index from '../components/Index';
 
@@ -18,7 +17,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-let IndexContainer = connect(mapStateToProps, mapDispatchToProps)(Index);
-IndexContainer = withRouter(IndexContainer);
+const IndexContainer = connect(mapStateToProps, mapDispatchToProps)(Index);
 
 export default IndexContainer;

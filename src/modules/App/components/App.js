@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Route, Switch } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 import { routes } from 'config';
 import browserUpdate from 'browser-update';
 import { AccountContext } from 'context';
@@ -89,11 +89,11 @@ export const App = ({ account, actions }) => {
                         }}
                     >
                         <React.Suspense fallback={<ContentLoader message="Loading" />}>
-                            <Switch>
+                            <Routes>
                                 {routesConfig.map((route, index) => (
                                     <Route key={`route_${index}`} {...route} />
                                 ))}
-                            </Switch>
+                            </Routes>
                         </React.Suspense>
                     </AccountContext.Provider>
                 </div>
@@ -110,7 +110,6 @@ export const App = ({ account, actions }) => {
 App.propTypes = {
     account: PropTypes.object,
     actions: PropTypes.any,
-    history: PropTypes.any,
     chatStatus: PropTypes.object,
     isSessionExpired: PropTypes.any,
 };

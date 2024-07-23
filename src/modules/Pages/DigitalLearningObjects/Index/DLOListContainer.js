@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import DLOList from './DLOList';
@@ -19,7 +18,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let DLOListContainer = connect(mapStateToProps, mapDispatchToProps)(DLOList);
-DLOListContainer = withRouter(DLOListContainer);
+const DLOListContainer = connect(mapStateToProps, mapDispatchToProps)(DLOList);
 
 export default DLOListContainer;

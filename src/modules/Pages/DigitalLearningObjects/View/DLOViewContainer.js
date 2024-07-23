@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import DLOView from './DLOView';
@@ -18,7 +17,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let DLOViewContainer = connect(mapStateToProps, mapDispatchToProps)(DLOView);
-DLOViewContainer = withRouter(DLOViewContainer);
+const DLOViewContainer = connect(mapStateToProps, mapDispatchToProps)(DLOView);
 
 export default DLOViewContainer;

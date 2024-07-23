@@ -22,6 +22,7 @@ import { addSchedule, initLists, saveGroupDate } from '../promoPanelHelpers';
 import PromoPanelContentButtons from './PromoPanelContentButtons';
 import PromoPanelFormSchedules from './PromoPanelFormSchedules';
 import { styled } from '@mui/material/styles';
+import { useNavigate} from 'react-router-dom';
 
 const moment = require('moment');
 
@@ -56,12 +57,12 @@ export const PromoPanelForm = ({
     knownGroups,
     defaults,
     actions,
-    history,
     isDefaultPanel,
     panelUpdated,
     queueLength,
     // promoPanelActionError,
 }) => {
+    const navigate = useNavigate();
     const [selectorGroupNames, setSelectorGroupNames] = React.useState(scheduledGroupNames);
     const [scheduleChangeIndex, setScheduleChangeIndex] = useState(null);
     const [scheduleGroupIndex, setScheduleGroupIndex] = useState(null);
@@ -111,7 +112,7 @@ export const PromoPanelForm = ({
     const navigateToListPage = () => {
         actions.clearCurrentPanel(); // force the list page to reload after save
 
-        history.push('/admin/promopanel');
+        navigate('/admin/promopanel');
         scrollToTopOfPage();
     };
 
@@ -498,7 +499,6 @@ PromoPanelForm.propTypes = {
     scheduledGroupNames: PropTypes.array,
     currentPanel: PropTypes.object,
     defaults: PropTypes.object,
-    history: PropTypes.object,
     isDefaultPanel: PropTypes.bool,
     isEdit: PropTypes.bool,
     isClone: PropTypes.bool,

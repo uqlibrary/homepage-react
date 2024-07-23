@@ -30,6 +30,7 @@ import {
 import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage } from 'helpers/general';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 const moment = require('moment');
 
@@ -95,7 +96,8 @@ export const isValidUrl = testurl => {
     return true;
 };
 
-export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, defaults, alertError, history }) => {
+export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, defaults, alertError }) => {
+    const navigate = useNavigate();
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
@@ -200,7 +202,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
         actions.clearAnAlert(); // make the form clear for the next use
 
-        history.push('/admin/alerts');
+        navigate('/admin/alerts');
         scrollToTopOfPage();
     };
 
@@ -806,7 +808,6 @@ AlertForm.propTypes = {
     alertLoading: PropTypes.any,
     alertStatus: PropTypes.any,
     defaults: PropTypes.object,
-    history: PropTypes.object,
 };
 
 export default AlertForm;

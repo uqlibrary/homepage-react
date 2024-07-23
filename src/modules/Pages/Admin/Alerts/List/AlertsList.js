@@ -33,7 +33,7 @@ const StyledMobileView = styled(Grid)(({ theme }) => ({
     },
 }));
 
-export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, history }) => {
+export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
     const [currentAlerts, setCurrentAlerts] = useState([]);
     const [futureAlerts, setFutureAlerts] = useState([]);
     const [pastAlerts, setPastAlerts] = useState([]);
@@ -129,7 +129,6 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                 <AlertsUtilityArea
                     actions={actions}
                     helpContent={locale.listPage.help}
-                    history={history}
                     showAddButton
                 />
                 <StandardCard title="All alerts" noPadding>
@@ -140,7 +139,6 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                                     rows={currentAlerts}
                                     headertag="Current alerts"
                                     alertsLoading={alertsLoading}
-                                    history={history}
                                     actions={actions}
                                     deleteAlert={deleteAlert}
                                     alertOrder="forwardEnd"
@@ -151,7 +149,6 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                                     rows={futureAlerts}
                                     headertag="Scheduled alerts"
                                     alertsLoading={alertsLoading}
-                                    history={history}
                                     actions={actions}
                                     deleteAlert={deleteAlert}
                                     alertOrder="forwardStart"
@@ -162,7 +159,6 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                                     rows={pastAlerts}
                                     headertag="Past alerts"
                                     alertsLoading={alertsLoading}
-                                    history={history}
                                     actions={actions}
                                     deleteAlert={deleteAlert}
                                     alertOrder="reverseEnd"
@@ -181,7 +177,6 @@ AlertsList.propTypes = {
     alerts: PropTypes.array,
     alertsLoading: PropTypes.any,
     alertsError: PropTypes.any,
-    history: PropTypes.object,
 };
 
 export default React.memo(AlertsList);

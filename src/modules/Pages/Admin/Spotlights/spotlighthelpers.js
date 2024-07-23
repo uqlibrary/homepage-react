@@ -44,18 +44,18 @@ export const getWeightAfterDrag = (destination, tableType, originalWeight) => {
     return destination * 10 + addToWeight;
 };
 
-export const navigateToEditForm = (spotlightid, history) => {
-    history.push(`/admin/spotlights/edit/${spotlightid}`);
+export const navigateToEditForm = (spotlightid, navigate) => {
+    navigate(`/admin/spotlights/edit/${spotlightid}`);
     scrollToTopOfPage();
 };
 
-export const navigateToCloneForm = (spotlightid, history) => {
-    history.push(`/admin/spotlights/clone/${spotlightid}`);
+export const navigateToCloneForm = (spotlightid, navigate) => {
+    navigate(`/admin/spotlights/clone/${spotlightid}`);
     scrollToTopOfPage();
 };
 
-export const navigateToView = (spotlightid, history) => {
-    history.push(`/admin/spotlights/view/${spotlightid}`);
+export const navigateToView = (spotlightid, navigate) => {
+    navigate(`/admin/spotlights/view/${spotlightid}`);
     scrollToTopOfPage();
 };
 
