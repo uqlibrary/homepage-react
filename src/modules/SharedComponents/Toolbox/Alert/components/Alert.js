@@ -249,7 +249,7 @@ export const Alert = ({
     disableAlertClick = false,
     dismissAction,
     dismissTitle = 'Click to dismiss this alert',
-    message = 'Some items on your page have not loaded properly and may not work as expected. This issue has been automatically reported.',
+    message,
     showLoader = false,
     alertId,
     title,
