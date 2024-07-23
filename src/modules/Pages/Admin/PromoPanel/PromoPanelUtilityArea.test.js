@@ -6,7 +6,6 @@ import { rtlRender, fireEvent } from '../../../../../utils/test-utils';
 const props = {
     helpContent: { title: 'Test help content', text: 'Help content text' },
     history: { push: jest.fn() },
-    showAddButton: true,
 };
 
 function setupRender(testProps = {}) {
@@ -15,6 +14,10 @@ function setupRender(testProps = {}) {
 
 describe('Utility Tests', () => {
     it('renders the utility area correctly', () => {
+        const wrapper = setupRender({ helpButtonLabel: 'Help', showAddButton: true });
+        expect(wrapper).toMatchSnapshot();
+    });
+    it('renders the default utility area correctly', () => {
         const wrapper = setupRender();
         expect(wrapper).toMatchSnapshot();
     });
@@ -26,7 +29,7 @@ describe('Utility Tests', () => {
     });
     it('Buttons function as expected', () => {
         const historyMock = jest.fn();
-        const { getByTestId } = setupRender({ history: { push: historyMock } });
+        const { getByTestId } = setupRender({ history: { push: historyMock }, showAddButton: true });
 
         fireEvent.click(getByTestId('admin-promopanel-add-display-button'));
         expect(historyMock).toBeCalled();
