@@ -16,11 +16,7 @@ export const navigateToAddPage = navigate => {
     navigate('/admin/promopanel/add');
 };
 
-export const PromoPanelUtilityArea = ({
-    helpButtonLabel = /* istanbul ignore next */ 'Help',
-    helpContent,
-    showAddButton = false,
-}) => {
+export const PromoPanelUtilityArea = ({ helpButtonLabel = 'Help', helpContent, history, showAddButton = false }) => {
     const navigate = useNavigate();
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
 

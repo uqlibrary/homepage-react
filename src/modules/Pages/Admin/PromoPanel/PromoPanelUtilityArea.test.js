@@ -11,7 +11,6 @@ jest.mock('react-router-dom', () => ({
 }));
 
 const props = {
-    helpButtonLabel: 'Help',
     helpContent: { title: 'Test help content', text: 'Help content text' },
     showAddButton: true,
 };
