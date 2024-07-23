@@ -917,7 +917,7 @@ exports[`Alert should render default view 1`] = `
                 Title
               </strong>
                
-              Message
+              Some items on your page have not loaded properly and may not work as expected. This issue has been automatically reported.
             </div>
           </div>
         </div>

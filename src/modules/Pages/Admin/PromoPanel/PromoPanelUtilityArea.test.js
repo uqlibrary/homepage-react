@@ -4,7 +4,6 @@ import React from 'react';
 import { rtlRender, fireEvent } from '../../../../../utils/test-utils';
 
 const props = {
-    helpButtonLabel: 'Help',
     helpContent: { title: 'Test help content', text: 'Help content text' },
     history: { push: jest.fn() },
     showAddButton: true,

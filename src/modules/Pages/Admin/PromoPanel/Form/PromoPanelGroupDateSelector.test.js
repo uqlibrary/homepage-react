@@ -33,8 +33,6 @@ function setup(testProps = {}) {
         defaultEndDate: '2000/01/02 23:59:00',
         handleCloseGroupDate: jest.fn(),
         handleSaveGroupDate: jest.fn(),
-        scheduleChangeIndex: 0,
-        scheduleGroupIndex: 'student',
         setConfirmationMessage: jest.fn(),
         setIsConfirmOpen: jest.fn(),
         setConfirmationMode: jest.fn(),
@@ -48,6 +46,10 @@ describe('Promo Panel Group Date Selector', () => {
     it('Should render correctly', () => {
         const wrapper = setup();
         expect(wrapper).toMatchSnapshot();
+    });
+    it('default values render correctly', () => {
+        const { container } = setup();
+        expect(container).toMatchSnapshot();
     });
     it('Should render date warnings', () => {
         const { getByTestId } = setup();
@@ -98,6 +100,8 @@ describe('Promo Panel Group Date Selector', () => {
             defaultStartDate: '2040/01/01 00:00:00',
             defaultEndDate: '2040/01/02 23:59:00',
             fullPromoPanelUserTypeList: ConflictList,
+            scheduleChangeIndex: 0,
+            scheduleGroupIndex: 'student',
         });
         expect(queryByTestId('start-date-warning')).not.toBeInTheDocument();
         expect(queryByTestId('end-date-warning')).not.toBeInTheDocument();

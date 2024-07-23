@@ -7,9 +7,7 @@ function setup(testProps = {}) {
         <Alert
             alertId="1"
             title="Title"
-            message="Message"
             type="warning"
-            allowDismiss
             dismissAction={jest.fn()}
             action={jest.fn()}
             actionButtonLabel="button"
@@ -32,9 +30,12 @@ describe('Alert', () => {
     });
 
     it('should render default view', () => {
+        const defaultMessage =
+            'Some items on your page have not loaded properly and may not work as expected. This issue has been automatically reported.';
+
         const { container, getByText, getByTestId } = setup();
         expect(getByText(/Title*/)).toBeInTheDocument();
-        expect(getByText('Message')).toBeInTheDocument();
+        expect(getByText(defaultMessage)).toBeInTheDocument();
         expect(getByTestId('warning-icon')).toBeInTheDocument();
         expect(container).toMatchSnapshot();
     });
@@ -169,6 +170,7 @@ describe('Alert', () => {
         const { container, getByTestId } = setup({
             dismissAction: dismissfn,
             type: null,
+            message: 'Message',
         });
 
         fireEvent.click(getByTestId('1-dismiss-button'));
@@ -178,7 +180,9 @@ describe('Alert', () => {
 
     it('should display dismiss button for smaller screen size', () => {
         window.matchMedia = createMatchMedia(256);
-        const { container, getByTestId } = setup();
+        const { container, getByTestId } = setup({
+            message: 'Message',
+        });
         expect(getByTestId('1-dismiss-button-mobile')).toBeInTheDocument();
         expect(container).toMatchSnapshot();
     });
@@ -194,6 +198,7 @@ describe('Alert', () => {
     it('should display loader', () => {
         const { container, getByTestId } = setup({
             showLoader: true,
+            message: 'Message',
         });
 
         expect(getByTestId('spinner')).toBeInTheDocument();
