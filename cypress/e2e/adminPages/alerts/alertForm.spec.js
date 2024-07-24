@@ -530,10 +530,6 @@ describe('Alerts Admin Form Pages', () => {
             cy.waitUntil(() => cy.get('[data-testid="confirm-alert-clone-save-succeeded"]').should('exist'));
             cy.get('.MuiDialog-container').contains('The alert has been cloned');
         });
-        it('has a working Help button on the Clone page', () => {
-            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-help-button"]').should('exist'));
-            hasAWorkingHelpButton();
-        });
 
         function clickPlusButton(buttonId) {
             cy.waitUntil(() =>
@@ -575,6 +571,11 @@ describe('Alerts Admin Form Pages', () => {
             clickButton('button[data-testid="admin-alerts-form-button-save"]', 'Create');
             cy.waitUntil(() => cy.get('[data-testid="confirm-alert-clone-save-succeeded"]').should('exist'));
             cy.get('.MuiDialog-container').contains('2 alerts have been cloned'); // we dont display 3 again when this time we only saved 2
+        });
+
+        it('has a working Help button on the Clone page', () => {
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-help-button"]').should('exist'));
+            hasAWorkingHelpButton();
         });
 
         it('tells the user which systems the alert will appear on', () => {
