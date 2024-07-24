@@ -27,15 +27,15 @@ const MenuProps = {
 };
 
 export const PromoPanelAddSchedule = ({
-    isAddingSchedule = false,
-    defaultStartDate = getTimeMondayMidnightNext(),
-    defaultEndDate = getTimeSundayNextFormatted(),
+    isAddingSchedule = /* istanbul ignore next */ false,
     groupName,
     handleAddGroupSchedule,
     handleCloseGroupSchedule,
-    userPanelList = [],
-    promoPanelList = [],
+    userPanelList,
+    promoPanelList,
 }) => {
+    const defaultStartDate = getTimeMondayMidnightNext();
+    const defaultEndDate = getTimeSundayNextFormatted();
     const [selectedPanel, setSelectedPanel] = useState('');
     const [AvailablePanels, setAvailablePanels] = useState(promoPanelList);
     const [showError, setShowError] = useState(false);
@@ -291,8 +291,6 @@ export const PromoPanelAddSchedule = ({
 PromoPanelAddSchedule.propTypes = {
     isAddingSchedule: PropTypes.bool,
     groupName: PropTypes.string,
-    defaultStartDate: PropTypes.any,
-    defaultEndDate: PropTypes.any,
     userPanelList: PropTypes.array,
     promoPanelList: PropTypes.array,
     handleAddGroupSchedule: PropTypes.func,

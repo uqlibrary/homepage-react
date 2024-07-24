@@ -1,0 +1,92 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Spotlights default values render correctly 1`] = `
+<div>
+  <div
+    aria-label="UQ Spotlights carousel loading"
+    data-testid="spotlights"
+    role="region"
+    style="height: 100%; position: relative; flex-grow: 1; border-radius: 4px; overflow: hidden;"
+  >
+    <svg
+      aria-labelledby="personalisation-panel-or-hours-aria"
+      height="100%"
+      role="img"
+      viewBox="0 0 1500 528"
+      width="100%"
+    >
+      <title
+        id="personalisation-panel-or-hours-aria"
+      >
+        Loading...
+      </title>
+      <rect
+        clip-path="url(#personalisation-panel-or-hours-diff)"
+        height="100%"
+        role="presentation"
+        style="fill: url(#personalisation-panel-or-hours-animated-diff);"
+        width="100%"
+        x="0"
+        y="0"
+      />
+      <defs>
+        <clippath
+          id="personalisation-panel-or-hours-diff"
+        >
+          <rect
+            height="721"
+            rx="5"
+            ry="5"
+            width="1967"
+            x="0"
+            y="0"
+          />
+        </clippath>
+        <lineargradient
+          id="personalisation-panel-or-hours-animated-diff"
+        >
+          <stop
+            offset="0%"
+            stop-color="#f3f3f3"
+            stop-opacity="1"
+          >
+            <animate
+              attributeName="offset"
+              dur="2s"
+              keyTimes="0; 0.25; 1"
+              repeatCount="indefinite"
+              values="-2; -2; 1"
+            />
+          </stop>
+          <stop
+            offset="50%"
+            stop-color="#e2e2e2"
+            stop-opacity="1"
+          >
+            <animate
+              attributeName="offset"
+              dur="2s"
+              keyTimes="0; 0.25; 1"
+              repeatCount="indefinite"
+              values="-1; -1; 2"
+            />
+          </stop>
+          <stop
+            offset="100%"
+            stop-color="#f3f3f3"
+            stop-opacity="1"
+          >
+            <animate
+              attributeName="offset"
+              dur="2s"
+              keyTimes="0; 0.25; 1"
+              repeatCount="indefinite"
+              values="0; 0; 3"
+            />
+          </stop>
+        </lineargradient>
+      </defs>
+    </svg>
+  </div>
+</div>
+`;

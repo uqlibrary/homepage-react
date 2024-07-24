@@ -62,11 +62,11 @@ const StyledBox = styled(Box)(({ theme }) => ({
 
 export const SpotlightViewHistory = ({
     focussedElement,
-    helpButtonLabel = 'Help',
+    helpButtonLabel,
     helpContent,
     isViewHistoryLightboxOpen,
     handleViewHistoryLightboxClose,
-    spotlights = /* istanbul ignore next */ [],
+    spotlights,
 }) => {
     const navigate = useNavigate();
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);

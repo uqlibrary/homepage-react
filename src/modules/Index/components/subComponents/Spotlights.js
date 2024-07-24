@@ -46,7 +46,7 @@ const ChipStyle = styled('div')(() => ({
     },
 }));
 
-const Spotlights = ({ spotlights, spotlightsLoading = /* istanbul ignore next */ false, account }) => {
+const Spotlights = ({ spotlights, spotlightsLoading = false, account }) => {
     const totalSlides = spotlights && spotlights.length;
     if (spotlightsLoading || !totalSlides || totalSlides === 0) {
         return (

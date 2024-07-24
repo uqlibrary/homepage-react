@@ -58,11 +58,12 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 export const SpotlightsViewByImage = ({
     isLightboxOpen,
     handleLightboxClose,
-    spotlights = /* istanbul ignore next */ [],
+    spotlights,
     showViewByHistoryLightbox,
-    helpButtonLabel = 'Help',
-    helpContent = locale.viewByImage.help,
 }) => {
+    const helpButtonLabel = 'Help';
+    const helpContent = locale.viewByImage.help;
+
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
     const openHelpLightbox = () => setHelpLightboxOpen(true);
     const closeHelpLightbox = () => setHelpLightboxOpen(false);
@@ -193,8 +194,6 @@ export const SpotlightsViewByImage = ({
 
 SpotlightsViewByImage.propTypes = {
     handleLightboxClose: PropTypes.func,
-    helpButtonLabel: PropTypes.string,
-    helpContent: PropTypes.any,
     isLightboxOpen: PropTypes.bool,
     showViewByHistoryLightbox: PropTypes.func,
     spotlightImageUrl: PropTypes.string,
