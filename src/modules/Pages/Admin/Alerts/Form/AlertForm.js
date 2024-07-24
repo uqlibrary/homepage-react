@@ -157,6 +157,9 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         if (!!defaults && defaults.type === 'clone') {
             setFormValidity(validateValues(defaults));
         }
+        return () => {
+            setSuccessCount(0);
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
