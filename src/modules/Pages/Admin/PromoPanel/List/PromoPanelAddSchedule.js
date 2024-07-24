@@ -27,7 +27,7 @@ const MenuProps = {
 };
 
 export const PromoPanelAddSchedule = ({
-    isAddingSchedule = /* istanbul ignore next */ false,
+    isAddingSchedule,
     groupName,
     handleAddGroupSchedule,
     handleCloseGroupSchedule,
@@ -289,7 +289,7 @@ export const PromoPanelAddSchedule = ({
 };
 
 PromoPanelAddSchedule.propTypes = {
-    isAddingSchedule: PropTypes.bool,
+    isAddingSchedule: PropTypes.oneOf([true, false]),
     groupName: PropTypes.string,
     userPanelList: PropTypes.array,
     promoPanelList: PropTypes.array,
