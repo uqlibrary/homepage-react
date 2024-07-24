@@ -134,7 +134,7 @@ export const Index = ({
                             <LearningResourcesPanel account={account} history={history} />
                         </Grid>
                     )}
-
+                    {accountLoading === false && !!account && (
                     <Grid item xs={12} md={4} data-testid="training-panel">
                         <Training
                             trainingEvents={trainingEvents}
@@ -142,6 +142,7 @@ export const Index = ({
                             trainingEventsError={trainingEventsError}
                         />
                     </Grid>
+                        )}
                 </Grid>
             </StandardPage>
         </React.Suspense>
