@@ -18,12 +18,11 @@ import ContentLoader from 'react-content-loader';
 import { lazy } from 'react';
 import { lazyRetry } from 'helpers/general';
 
-import { canSeeLearningResources, canSeeLibraryServices } from 'helpers/access';
+import { canSeeLearningResources } from 'helpers/access';
 
 const Computers = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Computers')));
 const Hours = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Hours')));
 const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
-const LibraryServices = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LibraryServices')));
 const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
 
 export const Index = ({
@@ -143,12 +142,6 @@ export const Index = ({
                             trainingEventsError={trainingEventsError}
                         />
                     </Grid>
-
-                    {canSeeLibraryServices(account) && (
-                        <Grid item xs={12} md={4} data-testid="library-services-panel">
-                            <LibraryServices account={account} />
-                        </Grid>
-                    )}
                 </Grid>
             </StandardPage>
         </React.Suspense>

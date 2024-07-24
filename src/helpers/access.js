@@ -1,5 +1,3 @@
-import { default as locale } from 'modules/Index/components/locale';
-
 /**
  Making changes? User settings need to be also created in repo reusable_webcomponents
 
@@ -30,84 +28,30 @@ import { default as locale } from 'modules/Index/components/locale';
  */
 const UNDERGRADUATE_GENERAL = 'UG';
 const UNDERGRADUATE_REMOTE = 'REMUG';
-const UNDERGRADUATE_TESOL = 'ICTE';
-const UNDERGRADUATE_VOCATIONAL = 'VET';
+// const UNDERGRADUATE_TESOL = 'ICTE';
+// const UNDERGRADUATE_VOCATIONAL = 'VET';
 const SHORT_FORM_CREDENTIAL_COURSE = 'SFC';
 const SHORT_FORM_CREDENTIAL_COURSE_REMOTE = 'REMSFC';
 
 const POSTGRAD_COURSEWORK = 'CWPG';
 const POSTGRAD_COURSEWORK_REMOTE = 'REMCWPG';
-const POSTGRAD_RESEARCH_REMOTE = 'REMRHD';
-const POSTGRAD_RESEARCH = 'RHD';
+// const POSTGRAD_RESEARCH_REMOTE = 'REMRHD';
+// const POSTGRAD_RESEARCH = 'RHD';
 
 const LIBRARY_STAFF = 'LIBRARYSTAFFB';
 const OTHER_STAFF = 'STAFF';
-const STAFF_AWAITING_AURION = 'AURION';
+// const STAFF_AWAITING_AURION = 'AURION';
 
-const EXTRAMURAL_COMMUNITY_PAID = 'COMMU';
-const EXTRAMURAL_ALUMNI = 'ALUMNI';
+// const EXTRAMURAL_COMMUNITY_PAID = 'COMMU';
+// const EXTRAMURAL_ALUMNI = 'ALUMNI';
 const EXTRAMURAL_HOSPITAL = 'HOSP';
-const EXTRAMURAL_ASSOCIATE = 'ASSOCIATE';
-const EXTRAMURAL_FRYER = 'FRYVISITOR';
+// const EXTRAMURAL_ASSOCIATE = 'ASSOCIATE';
+// const EXTRAMURAL_FRYER = 'FRYVISITOR';
 const EXTRAMURAL_HONORARY = 'HON';
-const EXTRAMURAL_PROXY = 'PROXY';
+// const EXTRAMURAL_PROXY = 'PROXY';
 
 export const TRAINING_FILTER_GENERAL = 104;
 export const TRAINING_FILTER_HOSPITAL = 360;
-
-// what is displayed in the User Services panel on the homepage, determined per group
-const userGroupServices = {
-    [UNDERGRADUATE_GENERAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [UNDERGRADUATE_REMOTE]: ['servicesforstudents', 'servicesforexternal', 'ithelp', 'digitalessentials'],
-    [UNDERGRADUATE_TESOL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [UNDERGRADUATE_VOCATIONAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [POSTGRAD_COURSEWORK]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [POSTGRAD_COURSEWORK_REMOTE]: ['servicesforstudents', 'ithelp', 'digitalessentials', 'servicesforexternal'],
-    [POSTGRAD_RESEARCH]: ['servicesforhdrs', 'ithelp'],
-    [POSTGRAD_RESEARCH_REMOTE]: ['servicesforhdrs', 'ithelp', 'servicesforexternal'],
-    [SHORT_FORM_CREDENTIAL_COURSE]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [SHORT_FORM_CREDENTIAL_COURSE_REMOTE]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-
-    [LIBRARY_STAFF]: [
-        'servicesforstudents',
-        'servicesforhdrs',
-        'servicesforcommunity',
-        'servicesforhospital',
-        'servicesforprofessional',
-        'servicesforresearchers',
-        'servicesforsecondary',
-        'servicesforteaching',
-        'servicesforalumni',
-        'servicesforexternal',
-    ],
-    [OTHER_STAFF]: ['servicesforprofessional', 'servicesforresearchers', 'servicesforteaching'],
-    [STAFF_AWAITING_AURION]: ['servicesforprofessional', 'servicesforresearchers', 'servicesforteaching'],
-
-    [EXTRAMURAL_COMMUNITY_PAID]: ['servicesforcommunity'],
-    [EXTRAMURAL_ALUMNI]: ['servicesforalumni'],
-    [EXTRAMURAL_HOSPITAL]: ['servicesforhospital', 'requestliteraturesearch'],
-    [EXTRAMURAL_ASSOCIATE]: ['servicesforcommunity'],
-    [EXTRAMURAL_FRYER]: ['servicesforcommunity'],
-    [EXTRAMURAL_HONORARY]: ['servicesforcommunity'],
-    [EXTRAMURAL_PROXY]: ['servicesforcommunity'],
-};
-
-export const getUserServices = (account, serviceLocale = null) => {
-    const thislocale = serviceLocale === null ? locale : serviceLocale;
-    const allLibraryServices = thislocale.LibraryServices?.links || [];
-    if (allLibraryServices.length === 0) {
-        return [];
-    }
-
-    if (!account || !account.user_group) {
-        return [];
-    }
-
-    const userGroupService = userGroupServices[account.user_group] || [];
-    return userGroupService
-        .map(service => allLibraryServices.find(i => (i.id || '') === service))
-        .filter(i => i !== undefined);
-};
 
 const isLoggedInUser = account => !!account && !!account.id;
 
@@ -134,16 +78,6 @@ export const canSeeLearningResources = account => {
 export const canSeeLoans = account => isLoggedInUser(account);
 
 export const canSeePrintBalance = account => isLoggedInUser(account);
-
-export const canSeeLibraryServices = account => {
-    if (!isLoggedInUser(account)) {
-        return false;
-    }
-    const userServices = getUserServices(account);
-    // if the user has no services (should only be a brand new group we havent configured yet)
-    // then don't display the panel
-    return !!userServices && userServices.length > 0;
-};
 
 const userHasAdGroup = (ADGroupName, account) =>
     !!account && !!account.groups && !!account.groups.find(group => group.includes(ADGroupName));
