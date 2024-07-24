@@ -24,7 +24,6 @@ const Computers = lazy(() => lazyRetry(() => import('modules/Index/components/su
 const Hours = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Hours')));
 const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
 const LibraryServices = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LibraryServices')));
-const PersonalisedPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/PersonalisedPanel')));
 const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
 
 export const Index = ({
@@ -131,21 +130,6 @@ export const Index = ({
                             account={account}
                         />
                     </Grid>
-
-                    {/* Personalisation panel, desktop */}
-                    {accountLoading === false && !!account && (
-                        <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
-                            <PersonalisedPanel
-                                account={account}
-                                author={author}
-                                loans={loans}
-                                printBalance={printBalance}
-                                possibleRecords={possibleRecords && possibleRecords.total}
-                                incompleteNTRORecords={incompleteNTRO}
-                                isNextToSpotlights
-                            />
-                        </Grid>
-                    )}
                     {canSeeLearningResources(account) && (
                         <Grid item xs={12} md={4} data-testid="learning-resources-panel">
                             <LearningResourcesPanel account={account} history={history} />
