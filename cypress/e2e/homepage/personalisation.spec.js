@@ -1,9 +1,4 @@
-import {
-    expectUserToDisplayCorrectFirstName,
-    hasPanels,
-    hasPersonalisedPanelOptions,
-    promoPanelIsForRightUser,
-} from '../../support/access';
+import { expectUserToDisplayCorrectFirstName, hasPanels, hasPersonalisedPanelOptions } from '../../support/access';
 
 // Note: the Mylibrary Button is supplied by reusable-webcomponents. Testing is done over there.
 
@@ -14,16 +9,7 @@ context('Personalised Homepage', () => {
         expectUserToDisplayCorrectFirstName('s1111111', 'Michael');
 
         // this type of user will see the following panels:
-        hasPanels([
-            'computer-availability',
-            'learning-resources',
-            'library-hours',
-            'library-services',
-            'promo',
-            'training',
-        ]);
-
-        promoPanelIsForRightUser('s1111111');
+        hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'library-services', 'training']);
 
         // this type of user will see these lines in the Personalisation Panel
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
@@ -37,9 +23,7 @@ context('Personalised Homepage', () => {
     it('Renders an RHD home page correctly', () => {
         expectUserToDisplayCorrectFirstName('s2222222', 'Jane');
 
-        hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
-
-        promoPanelIsForRightUser('s2222222');
+        hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
 
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
     });
@@ -47,16 +31,7 @@ context('Personalised Homepage', () => {
     it('Renders a remote undergraduate home page correctly', () => {
         expectUserToDisplayCorrectFirstName('s3333333', 'Juno');
 
-        hasPanels([
-            'computer-availability',
-            'learning-resources',
-            'library-hours',
-            'library-services',
-            'promo',
-            'training',
-        ]);
-
-        promoPanelIsForRightUser('s3333333');
+        hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'library-services', 'training']);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -64,16 +39,7 @@ context('Personalised Homepage', () => {
     it('Renders a researcher home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqresearcher', 'John');
 
-        hasPanels([
-            'computer-availability',
-            'learning-resources',
-            'library-hours',
-            'library-services',
-            'promo',
-            'training',
-        ]);
-
-        promoPanelIsForRightUser('uqresearcher');
+        hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'library-services', 'training']);
 
         hasPersonalisedPanelOptions(['espace-possible', 'espace-orcid', 'espace-ntro', 'fines', 'loans', 'papercut']);
     });
@@ -81,16 +47,7 @@ context('Personalised Homepage', () => {
     it('Renders a library staff administrator home page correctly', () => {
         expectUserToDisplayCorrectFirstName('digiteamMember', 'Caroline');
 
-        hasPanels([
-            'computer-availability',
-            'learning-resources',
-            'library-hours',
-            'library-services',
-            'promo',
-            'training',
-        ]);
-
-        promoPanelIsForRightUser('digiteamMember');
+        hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'library-services', 'training']);
 
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
     });
@@ -98,16 +55,7 @@ context('Personalised Homepage', () => {
     it('Renders a Library staff member (without admin privs) home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqstaffnonpriv', 'UQ');
 
-        hasPanels([
-            'computer-availability',
-            'learning-resources',
-            'library-hours',
-            'library-services',
-            'promo',
-            'training',
-        ]);
-
-        promoPanelIsForRightUser('uqstaffnonpriv');
+        hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'library-services', 'training']);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -115,16 +63,7 @@ context('Personalised Homepage', () => {
     it('Renders a non-library staff member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqpkopit', 'Peter');
 
-        hasPanels([
-            'computer-availability',
-            'learning-resources',
-            'library-hours',
-            'library-services',
-            'promo',
-            'training',
-        ]);
-
-        promoPanelIsForRightUser('uqpkopit');
+        hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'library-services', 'training']);
 
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
     });
@@ -132,9 +71,7 @@ context('Personalised Homepage', () => {
     it('Renders a paid Community EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emcommunity', 'Community');
 
-        hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
-
-        promoPanelIsForRightUser('emcommunity');
+        hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -142,9 +79,7 @@ context('Personalised Homepage', () => {
     it('Renders an Alumni (first year or paid) EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emalumni', 'Alumni');
 
-        hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
-
-        promoPanelIsForRightUser('emalumni');
+        hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -152,9 +87,7 @@ context('Personalised Homepage', () => {
     it('Renders a Hospital EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emhospital', 'Hospital');
 
-        hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
-
-        promoPanelIsForRightUser('emhospital');
+        hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -162,9 +95,7 @@ context('Personalised Homepage', () => {
     it('Renders an Associate EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emassociate', 'Associate');
 
-        hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
-
-        promoPanelIsForRightUser('emassociate');
+        hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -172,9 +103,7 @@ context('Personalised Homepage', () => {
     it('Renders a Fryer Library EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emfryer', 'Fryer');
 
-        hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
-
-        promoPanelIsForRightUser('emfryer');
+        hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -182,16 +111,7 @@ context('Personalised Homepage', () => {
     it('Renders an Honorary EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emhonorary', 'Honorary');
 
-        hasPanels([
-            'computer-availability',
-            'learning-resources',
-            'library-hours',
-            'library-services',
-            'promo',
-            'training',
-        ]);
-
-        promoPanelIsForRightUser('emhonorary');
+        hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'library-services', 'training']);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -199,16 +119,7 @@ context('Personalised Homepage', () => {
     it('Renders a Short Form Credential course student home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqsfc', 'SFC');
 
-        hasPanels([
-            'computer-availability',
-            'learning-resources',
-            'library-hours',
-            'library-services',
-            'promo',
-            'training',
-        ]);
-
-        promoPanelIsForRightUser('uqsfc');
+        hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'library-services', 'training']);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -216,9 +127,7 @@ context('Personalised Homepage', () => {
     it('Renders a new user group home page correctly', () => {
         expectUserToDisplayCorrectFirstName('newUserGroup', 'New');
 
-        hasPanels(['computer-availability', 'library-hours', 'promo', 'training']);
-
-        promoPanelIsForRightUser('newUserGroup');
+        hasPanels(['computer-availability', 'library-hours', 'training']);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });

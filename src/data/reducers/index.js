@@ -8,7 +8,6 @@ export { default as guidesReducer } from './guidesReducer';
 export { default as readingListReducer } from './readingListReducer';
 export { default as examLearningResourceReducer } from './examLearningResourceReducer';
 export { default as publicFileUploadReducer } from './publicFileUploadReducer';
-export { default as promoPanelReducer } from './promoPanelReducer';
 export { default as examSearchReducer } from './examSearchReducer';
 export { default as examSuggestionReducer } from './examSuggestionReducer';
 export { default as testTagUserReducer } from './testTagUserReducer';

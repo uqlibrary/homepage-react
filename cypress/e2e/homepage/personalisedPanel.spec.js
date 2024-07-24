@@ -4,12 +4,12 @@ context('Personalised panel accessibility', () => {
         cy.injectAxe();
         cy.wait(2000);
         cy.viewport(1300, 1000);
-        cy.waitUntil(() => cy.get('div[data-testid="promo-panel"]').should('exist'));
+        cy.waitUntil(() => cy.get('[data-testid="standard-card-computers-header"]').should('exist'));
         cy.get('div[data-testid="personalised-panel"]').contains('John');
         cy.get('div[data-testid="personalised-panel"]').contains('Claim 18 UQ eSpace records');
         cy.get('div[data-testid="personalised-panel"]').contains('Link ORCiD account to UQ eSpace');
         cy.get('div[data-testid="personalised-panel"]').contains('Complete 18 NTRO records in UQ eSpace');
-        cy.log('Personalised panel as loaded');
+        cy.log('Personalised panel has loaded');
         cy.wait(500);
         cy.checkA11y('div[data-testid="personalised-panel"]', {
             reportName: 'Personalised panel',

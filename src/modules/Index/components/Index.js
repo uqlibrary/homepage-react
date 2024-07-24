@@ -13,8 +13,6 @@ import {
     loadLibHours,
     loadCompAvail,
     loadTrainingEvents,
-    getAssignedPromoPanel,
-    getAnonPromoPanel,
 } from 'data/actions';
 import ContentLoader from 'react-content-loader';
 import { lazy } from 'react';
@@ -27,7 +25,6 @@ const Hours = lazy(() => lazyRetry(() => import('modules/Index/components/subCom
 const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
 const LibraryServices = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LibraryServices')));
 const PersonalisedPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/PersonalisedPanel')));
-const PromoPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/PromoPanel')));
 const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
 
 export const Index = ({
@@ -51,9 +48,6 @@ export const Index = ({
     possibleRecordsLoading,
     incompleteNTRO,
     incompleteNTROLoading,
-    currentPromoPanel,
-    promoPanelActionError,
-    promoPanelLoading,
 }) => {
     const dispatch = useDispatch();
     // Load homepage data requirements
@@ -67,14 +61,6 @@ export const Index = ({
     useEffect(() => {
         if (accountLoading === false) {
             dispatch(loadTrainingEvents(account));
-            // Grab the relevant promo panel here.
-            if (!!!account) {
-                // load anonymous panel
-                dispatch(getAnonPromoPanel());
-            } else {
-                // load specific panel.
-                dispatch(getAssignedPromoPanel());
-            }
         }
     }, [account, accountLoading, dispatch]);
     useEffect(() => {
@@ -179,10 +165,6 @@ export const Index = ({
                             <LibraryServices account={account} />
                         </Grid>
                     )}
-
-                    <Grid item xs={12} md={4}>
-                        <PromoPanel useAPI promoPanelLoading={promoPanelLoading} account={account} accountLoading={accountLoading} promoPanelActionError={promoPanelActionError} currentPromoPanel={currentPromoPanel} />
-                    </Grid>
                 </Grid>
             </StandardPage>
         </React.Suspense>
@@ -211,9 +193,6 @@ Index.propTypes = {
     possibleRecordsLoading: PropTypes.bool,
     incompleteNTRO: PropTypes.object,
     incompleteNTROLoading: PropTypes.bool,
-    currentPromoPanel: PropTypes.object,
-    promoPanelActionError: PropTypes.string,
-    promoPanelLoading: PropTypes.bool,
 };
 
 export default Index;

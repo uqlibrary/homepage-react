@@ -154,9 +154,6 @@ export const isTestTagAdminUser = account =>
 export const isAlertsAdminUser = account =>
     isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
 
-export const isPromoPanelAdminUser = account =>
-    isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
-
 export const isDlorAdminUser = account => isLoggedInUser(account) && userHasAdGroup('lib_dlor_admins', account);
 
 export const isHospitalUser = account =>

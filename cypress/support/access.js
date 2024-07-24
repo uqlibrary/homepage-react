@@ -1,6 +1,3 @@
-import { promoPanel } from '../../src/modules/Index/components/subComponents/promoPanel.locale';
-import { panelTitleOther, panelTitles } from '../../src/data/mock/data/promoPanelsLong';
-
 export const expectUserToDisplayCorrectFirstName = (username, firstname) => {
     cy.visit(`/?user=${username}`);
     cy.viewport(1300, 1000);
@@ -17,7 +14,6 @@ export const hasPanels = (optionsTheUserShouldSee, loggedin = true) => {
     availableOptions.set('library-hours', { title: 'Library hours', content: 'Study space' });
     availableOptions.set('library-services', { title: 'Library services', content: 'Services for' });
     availableOptions.set('training', { title: 'Training', content: 'Online' });
-    availableOptions.set('promo', 'n/a');
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
@@ -27,44 +23,28 @@ export const hasPanels = (optionsTheUserShouldSee, loggedin = true) => {
         ).to.be.true;
     });
 
-    // promo panel title is currently set in locale by end user
-    // (there is a plan to make it api driven, then we can use mock here)
-    const title = loggedin ? promoPanel.loggedin.title : promoPanel.loggedout.title;
-    expect(typeof title).to.equal('string');
-    expect(title.length).to.be.greaterThan(0);
-
     // eslint-disable-next-line guard-for-in
     for (const [key, value] of availableOptions) {
         expect(typeof key).to.equal('string');
         expect(key.length).to.be.greaterThan(0);
-        if (key !== 'promo') {
-            expect(typeof value.title).to.equal('string');
-            expect(value.title.length).to.be.greaterThan(0);
-            expect(typeof value.content).to.equal('string');
-            expect(value.content.length).to.be.greaterThan(0);
-        }
+        expect(typeof value.title).to.equal('string');
+        expect(value.title.length).to.be.greaterThan(0);
+        expect(typeof value.content).to.equal('string');
+        expect(value.content.length).to.be.greaterThan(0);
 
         const panelname = `${key}-panel`;
         const titleSelector = `div[data-testid="${panelname}"] h2`;
         if (!!optionsTheUserShouldSee.includes(key)) {
-            if (key === 'promo') {
-                const titleCheck = loggedin ? 'Authenticated Panel' : 'General default';
-                cy.get(titleSelector).should('exist');
-                // .contains(titleCheck);
-            } else {
-                cy.log(`checking panel ${panelname} contains ${value.title}`);
-                cy.get(titleSelector).contains(value.title);
-            }
+            cy.log(`checking panel ${panelname} contains ${value.title}`);
+            cy.get(titleSelector).contains(value.title);
         } else {
             cy.log(`checking panel ${panelname} is missing`);
             cy.get(titleSelector).should('not.exist');
         }
         const contentSelector = `div[data-testid="${panelname}"]`;
         if (!!optionsTheUserShouldSee.includes(key)) {
-            if (key !== 'promo') {
-                cy.log(`checking panel ${panelname} contains ${value.content}`);
-                cy.get(contentSelector).contains(value.content);
-            }
+            cy.log(`checking panel ${panelname} contains ${value.content}`);
+            cy.get(contentSelector).contains(value.content);
         }
     }
 
@@ -75,11 +55,6 @@ export const hasPanels = (optionsTheUserShouldSee, loggedin = true) => {
             .children()
             .length.to.be.greaterThan(0);
     }
-};
-export const promoPanelIsForRightUser = userId => {
-    const expectedString = !!panelTitles[userId] ? panelTitles[userId] : panelTitleOther;
-    const contentSelector = 'div[data-testid="promo-panel"] h2';
-    cy.get(contentSelector).contains(expectedString);
 };
 export const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
     const availableOptions = new Map();

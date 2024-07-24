@@ -53,15 +53,6 @@ import test_tag_assets_report_assets from './data/records/testAndTag/test_tag_as
 import test_tag_assets_mine from './data/records/testAndTag/test_tag_assets_mine';
 import test_tag_user_list from './data/records/testAndTag/test_tag_user_list';
 
-import {
-    activePanels,
-    currentPanels,
-    mockAuthenticatedPanel,
-    mockPublicPanel,
-    mockScheduleReturn,
-    promoPanelMocks,
-    userListPanels,
-} from './data/promoPanelsLong';
 import dlor_all from './data/records/dlor/dlor_all';
 import dlor_filter_list from './data/records/dlor/dlor_filter_list';
 import dlor_team_list from './data/records/dlor/dlor_team_list';
@@ -1203,93 +1194,6 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ]),
     )
-    // PROMO PANEL API
-    .onPost(routes.PROMOPANEL_CREATE_API().apiUrl)
-    .reply(withDelay([200, {}]))
-    .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_API({ id: '.*' }).apiUrl)))
-    .reply(withDelay([200, { status: 'OK' }]))
-    .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_SCHEDULE_API({ id: '.*', usergroup: '.*' }).apiUrl)))
-    .reply(
-        withDelay([
-            201,
-            {
-                status: 'OK',
-            },
-        ]),
-    )
-    .onGet(routes.PROMOPANEL_LIST_API().apiUrl)
-    .reply(() => {
-        return [200, currentPanels];
-    })
-    .onGet(routes.PROMOPANEL_LIST_USERTYPES_API().apiUrl)
-    .reply(() => {
-        return [200, userListPanels];
-    })
-
-    // Handle Delete of any panel that does NOT start with a 2 (2 configured to throw error)
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({ id: '[^2]' }).apiUrl)))
-    .reply(() => {
-        return [200, { status: 'ok' }];
-    })
-    // Specific case to throw error for Delete panel 2.
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({ id: 2 }).apiUrl)))
-    .reply(() => {
-        return [
-            400,
-            {
-                status: 'error',
-                message: '2 is not a valid panel id',
-            },
-        ];
-    })
-    // Handle Unschedule of any panel that is NOT schedule ID 11 (11 configured to throw error)
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({ id: '(?!11).*' }).apiUrl)))
-    .reply(() => {
-        return [200, { status: 'ok' }];
-    })
-    // Specific case to throw error for Delete on schedule 11
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({ id: 11 }).apiUrl)))
-    .reply(() => {
-        return [
-            400,
-            {
-                status: 'error',
-                message: '11 is not a valid schedule id',
-            },
-        ];
-    })
-    .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_ADD_SCHEDULE_API({ id: '.*', usergroup: '.*' }).apiUrl)))
-    .reply(() => {
-        return [200, mockScheduleReturn];
-    })
-    .onGet(routes.PROMOPANEL_LIST_ACTIVE_PANELS_API().apiUrl)
-    .reply(() => {
-        if (user === 'uqmasquerade') {
-            return [500, ['an api error occurred']];
-        } else {
-            return [200, activePanels];
-        }
-    })
-    .onGet(routes.PROMOPANEL_GET_CURRENT_API().apiUrl)
-    .reply(() => {
-        if (user === 'uqstaff') {
-            return [200, promoPanelMocks.uqstaff];
-        } else if (user === 's1111111') {
-            return [200, promoPanelMocks.s1111111];
-        } else if (user === 'uqpkopit') {
-            return [200, promoPanelMocks.uqpkopit];
-        } else {
-            return [200, mockAuthenticatedPanel];
-        }
-    })
-    .onGet(routes.PROMOPANEL_GET_ANON_API().apiUrl)
-    .reply(() => {
-        return [200, mockPublicPanel];
-    })
-    .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_USERTYPE_DEFAULT({ id: '.*', usergroup: '.*' }).apiUrl)))
-    .reply(() => {
-        return [200, ''];
-    })
     .onAny()
     .reply(function(config) {
         console.log('url not mocked...', config.url);
