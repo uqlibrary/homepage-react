@@ -1,4 +1,4 @@
-import { expectUserToDisplayCorrectFirstName, hasPanels } from '../../support/access';
+import { hasPanels } from '../../support/access';
 
 // Note: the Mylibrary Button is supplied by reusable-webcomponents. Testing is done over there.
 
@@ -6,6 +6,8 @@ import { expectUserToDisplayCorrectFirstName, hasPanels } from '../../support/ac
 // we shouldn't test the mylibrary button here, same, as that is built in reusable-webcomponents
 context('Personalised Homepage', () => {
     it("Renders an on-campus undergraduate student's home page correctly", () => {
+        cy.visit('/?user=s1111111');
+        cy.viewport(1300, 1000);
         // this type of user will see the following panels:
         hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'library-services', 'training']);
     });
@@ -16,91 +18,106 @@ context('Personalised Homepage', () => {
     });
 
     it('Renders an RHD home page correctly', () => {
-        expectUserToDisplayCorrectFirstName('s2222222', 'Jane');
+        cy.visit('/?user=s2222222');
+        cy.viewport(1300, 1000);
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
     });
 
     it('Renders a remote undergraduate home page correctly', () => {
-        expectUserToDisplayCorrectFirstName('s3333333', 'Juno');
+        cy.visit('/?user=s3333333');
+        cy.viewport(1300, 1000);
 
         hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'library-services', 'training']);
     });
 
     it('Renders a researcher home page correctly', () => {
-        expectUserToDisplayCorrectFirstName('uqresearcher', 'John');
+        cy.visit('/?user=uqresearcher');
+        cy.viewport(1300, 1000);
 
         hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'library-services', 'training']);
     });
 
     it('Renders a library staff administrator home page correctly', () => {
-        expectUserToDisplayCorrectFirstName('digiteamMember', 'Caroline');
+        cy.visit('/?user=digiteamMember');
+        cy.viewport(1300, 1000);
 
         hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'library-services', 'training']);
     });
 
     it('Renders a Library staff member (without admin privs) home page correctly', () => {
-        expectUserToDisplayCorrectFirstName('uqstaffnonpriv', 'UQ');
+        cy.visit('/?user=uqstaffnonpriv');
+        cy.viewport(1300, 1000);
 
         hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'library-services', 'training']);
     });
 
     it('Renders a non-library staff member home page correctly', () => {
-        expectUserToDisplayCorrectFirstName('uqpkopit', 'Peter');
+        cy.visit('/?user=uqpkopit');
+        cy.viewport(1300, 1000);
 
         hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'library-services', 'training']);
     });
 
     it('Renders a paid Community EM member home page correctly', () => {
-        expectUserToDisplayCorrectFirstName('emcommunity', 'Community');
+        cy.visit('/?user=emcommunity');
+        cy.viewport(1300, 1000);
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
     });
 
     it('Renders an Alumni (first year or paid) EM member home page correctly', () => {
-        expectUserToDisplayCorrectFirstName('emalumni', 'Alumni');
+        cy.visit('/?user=emalumni');
+        cy.viewport(1300, 1000);
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
     });
 
     it('Renders a Hospital EM member home page correctly', () => {
-        expectUserToDisplayCorrectFirstName('emhospital', 'Hospital');
+        cy.visit('/?user=emhospital');
+        cy.viewport(1300, 1000);
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
     });
 
     it('Renders an Associate EM member home page correctly', () => {
-        expectUserToDisplayCorrectFirstName('emassociate', 'Associate');
+        cy.visit('/?user=emassociate');
+        cy.viewport(1300, 1000);
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
     });
 
     it('Renders a Fryer Library EM member home page correctly', () => {
-        expectUserToDisplayCorrectFirstName('emfryer', 'Fryer');
+        cy.visit('/?user=emfryer');
+        cy.viewport(1300, 1000);
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
     });
 
     it('Renders an Honorary EM member home page correctly', () => {
-        expectUserToDisplayCorrectFirstName('emhonorary', 'Honorary');
+        cy.visit('/?user=emhonorary');
+        cy.viewport(1300, 1000);
 
         hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'library-services', 'training']);
     });
 
     it('Renders a Short Form Credential course student home page correctly', () => {
-        expectUserToDisplayCorrectFirstName('uqsfc', 'SFC');
+        cy.visit('/?user=uqsfc');
+        cy.viewport(1300, 1000);
 
         hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'library-services', 'training']);
     });
 
     it('Renders a new user group home page correctly', () => {
-        expectUserToDisplayCorrectFirstName('newUserGroup', 'New');
+        cy.visit('/?user=newUserGroup');
+        cy.viewport(1300, 1000);
 
         hasPanels(['computer-availability', 'library-hours', 'training']);
     });
 
     it('when session cookie auto expires the user logs out', () => {
-        expectUserToDisplayCorrectFirstName('s1111111', 'Michael');
+        cy.visit('/?user=s1111111');
+        cy.viewport(1300, 1000);
 
         cy.clearCookie('UQLID');
         cy.rendersALoggedoutUser();

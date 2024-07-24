@@ -13,7 +13,7 @@ function setup(testProps = {}) {
     return rtlRender(<AlertsListAsTable {...props} {...testProps} />);
 }
 
-describe('defaults', () => {
+describe('AlertsListAsTable', () => {
     it('default values render correctly', () => {
         const { container } = setup();
         expect(container).toMatchSnapshot();
