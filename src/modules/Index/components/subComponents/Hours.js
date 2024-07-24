@@ -1,21 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { PropTypes } from 'prop-types';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@mui/material/Grid';
-import { useCookies } from 'react-cookie';
 import matchSorter from 'match-sorter';
-import RoomIcon from '@mui/icons-material/Room';
 import Fade from '@mui/material/Fade';
-import Badge from '@mui/material/Badge';
-import CheckIcon from '@mui/icons-material/Check';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { hoursLocale } from './Hours.locale';
-import { locale as locationLocale } from 'modules/SharedComponents/Location/components/locale';
+import { locale as locationLocale } from 'config/locale';
 import Button from '@mui/material/Button';
 import ContentLoader from 'react-content-loader';
-import { obfusticateUsername } from 'helpers/general';
-import { LOCATION_COOKIE_NAME } from 'config/general';
 import { styled } from '@mui/material/styles';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
@@ -115,24 +108,6 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
-    ['& .badge']: {
-        backgroundColor: theme.palette.success.main,
-        padding: 0,
-        height: 12,
-        width: 12,
-        maxWidth: 12,
-        minWidth: 12,
-        right: 4,
-        top: 2,
-    },
-    ['& .badgeIcon']: {
-        height: 10,
-        width: 10,
-        color: theme.palette.white.main,
-    },
-}));
-
 const MyLoader = props => (
     <ContentLoader
         uniqueKey="hours"
@@ -215,26 +190,6 @@ export const hasDepartments = item => {
 };
 
 const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
-    const [cookies] = useCookies();
-    const [preferredLocation, setPreferredLocation] = React.useState(undefined);
-    const [showIcon, setShowIcon] = React.useState(false);
-    useEffect(() => {
-        const locationCookie = cookies.hasOwnProperty(LOCATION_COOKIE_NAME) ? cookies[LOCATION_COOKIE_NAME] : {};
-        if (!!account) {
-            const username = obfusticateUsername(account);
-            setPreferredLocation(
-                locationCookie.hasOwnProperty(username) ? locationCookie[username] : locationLocale.noLocationSet,
-            );
-        }
-    }, [cookies, account]);
-    useEffect(() => {
-        if (preferredLocation !== undefined && preferredLocation !== locationLocale.noLocationSet) {
-            setShowIcon(true);
-            setTimeout(() => {
-                setShowIcon(false);
-            }, 5000);
-        }
-    }, [preferredLocation, cookies]);
     const cleanedHours =
         (!libHoursError &&
             !!libHours &&
@@ -272,7 +227,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
         });
     const sortedHours =
         !!account && !!account.id
-            ? matchSorter(alphaHours, preferredLocation, {
+            ? matchSorter(alphaHours, {
                   keys: ['campus'],
                   threshold: matchSorter.rankings.NO_MATCH,
               })
@@ -289,25 +244,6 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         {hoursLocale.title}
                     </Grid>
                     <Grid item xs />
-                    <Grid item xs={'auto'}>
-                        {showIcon && (
-                            <Fade in={!!showIcon} timeout={500}>
-                                <Tooltip
-                                    title={hoursLocale.locationTooltip}
-                                    placement="bottom"
-                                    TransitionProps={{ timeout: 300 }}
-                                >
-                                    <StyledBadge
-                                        classes={{ badge: 'badge' }}
-                                        color="primary"
-                                        badgeContent={<CheckIcon size="small" className={'badgeIcon'} />}
-                                    >
-                                        <RoomIcon data-testid="hours-wiggler" />
-                                    </StyledBadge>
-                                </Tooltip>
-                            </Fade>
-                        )}
-                    </Grid>
                 </Grid>
             }
             noPadding
@@ -358,9 +294,6 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                     aria-label={ariaLabelForLocation(item)}
                                                     data-analyticsid={`hours-item-${index}`}
                                                     href={item.url}
-                                                    className={
-                                                        (preferredLocation === item.campus && 'selectedCampus') || ''
-                                                    }
                                                 >
                                                     {item.name}
                                                 </a>

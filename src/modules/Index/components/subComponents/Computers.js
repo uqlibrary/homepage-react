@@ -1,14 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { PropTypes } from 'prop-types';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@mui/material/Grid';
-import { useCookies } from 'react-cookie';
 import matchSorter from 'match-sorter';
-import RoomIcon from '@mui/icons-material/Room';
 import Fade from '@mui/material/Fade';
-import Badge from '@mui/material/Badge';
-import CheckIcon from '@mui/icons-material/Check';
-import Tooltip from '@mui/material/Tooltip';
 import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import Dialog from '@mui/material/Dialog';
@@ -16,10 +11,8 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { computersLocale } from './Computers.locale';
-import { locale as locationLocale } from 'modules/SharedComponents/Location/components/locale';
+import { locale as locationLocale } from 'config/locale';
 import ContentLoader from 'react-content-loader';
-import { obfusticateUsername } from 'helpers/general';
-import { LOCATION_COOKIE_NAME } from 'config/general';
 import { styled } from '@mui/material/styles';
 
 const MyLoader = props => (
@@ -165,47 +158,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
-    ['& .badge']: {
-        backgroundColor: theme.palette.success.main,
-        padding: 0,
-        height: 12,
-        width: 12,
-        maxWidth: 12,
-        minWidth: 12,
-        right: 4,
-        top: 2,
-    },
-    ['& .badgeIcon']: {
-        height: 10,
-        width: 10,
-        color: theme.palette.white.main,
-    },
-}));
-
 const Computers = ({ computerAvailability, computerAvailabilityLoading, computerAvailabilityError, account }) => {
-    const [cookies] = useCookies();
-    const [preferredLocation, setPreferredLocation] = React.useState(undefined);
-    const [showIcon, setShowIcon] = React.useState(false);
     const [collapse, setCollapse] = React.useState({});
     const [mapSrc, setMapSrc] = React.useState(null);
-    useEffect(() => {
-        const locationCookie = cookies.hasOwnProperty(LOCATION_COOKIE_NAME) ? cookies[LOCATION_COOKIE_NAME] : {};
-        if (!!account) {
-            const username = obfusticateUsername(account);
-            setPreferredLocation(
-                locationCookie.hasOwnProperty(username) ? locationCookie[username] : locationLocale.noLocationSet,
-            );
-        }
-    }, [cookies, account]);
-    useEffect(() => {
-        if (preferredLocation !== undefined && preferredLocation !== locationLocale.noLocationSet) {
-            setShowIcon(true);
-            setTimeout(() => {
-                setShowIcon(false);
-            }, 5000);
-        }
-    }, [preferredLocation, cookies]);
     const cleanedAvailability =
         computerAvailability &&
         computerAvailability.map(item => {
@@ -248,7 +203,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
     const sortedComputers =
         !!account && !!account.id
             ? alphaAvailability &&
-              matchSorter(alphaAvailability, preferredLocation, {
+              matchSorter(alphaAvailability, {
                   keys: ['campus'],
                   threshold: matchSorter.rankings.NO_MATCH,
               })
@@ -377,25 +332,6 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                     <Grid item xs={11} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {computersLocale.title}
                     </Grid>
-                    <Grid item xs={1}>
-                        {showIcon && (
-                            <Fade in={showIcon} timeout={500}>
-                                <Tooltip
-                                    title={computersLocale.locationTooltip}
-                                    placement="bottom"
-                                    TransitionProps={{ timeout: 300 }}
-                                >
-                                    <StyledBadge
-                                        classes={{ badge: 'badge' }}
-                                        color="primary"
-                                        badgeContent={<CheckIcon size="small" className={'badgeIcon'} />}
-                                    >
-                                        <RoomIcon data-testid="computers-wiggler" />
-                                    </StyledBadge>
-                                </Tooltip>
-                            </Fade>
-                        )}
-                    </Grid>
                 </Grid>
             }
             noPadding
@@ -436,16 +372,8 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                         onClick={() => handleCollapse(index)}
                                                         aria-expanded={!!collapse[index]}
                                                         classes={{
-                                                            root: `linkButton ${
-                                                                item.campus && preferredLocation === item.campus
-                                                                    ? 'selectedCampu'
-                                                                    : ''
-                                                            }`,
-                                                            label: `linkButtonLabel ${
-                                                                item.campus && preferredLocation === item.campus
-                                                                    ? 'selectedCampus'
-                                                                    : ''
-                                                            }`,
+                                                            root: 'linkButton',
+                                                            label: 'linkButtonLabel',
                                                         }}
                                                         aria-label={ariaLabel}
                                                         id={`computers-library-button-${index}`}
@@ -503,11 +431,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                                         }
                                                                         classes={{
                                                                             root: 'linkButton',
-                                                                            label: `linkButtonLabel ${
-                                                                                preferredLocation === item.campus
-                                                                                    ? 'selectedCampus'
-                                                                                    : ''
-                                                                            }`,
+                                                                            label: 'linkButtonLabel',
                                                                         }}
                                                                     >
                                                                         Level {level.level}
