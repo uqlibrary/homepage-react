@@ -3,10 +3,11 @@
 exports[`PersonalisedPanel default values render correctly 1`] = `
 <div>
   <div
-    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-f9bzv-MuiPaper-root-MuiCard-root"
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-bddc4y-MuiPaper-root-MuiCard-root"
     data-analyticsid="standard-card-default-and-scheduled-panels"
     data-testid="standard-card-default-and-scheduled-panels"
     id="standard-card-default-and-scheduled-panels"
+    style="background-color: rgb(247, 247, 247);"
   >
     <div
       class="MuiCardHeader-root css-185gdzj-MuiCardHeader-root"
