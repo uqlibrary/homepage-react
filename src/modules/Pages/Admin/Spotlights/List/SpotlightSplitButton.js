@@ -28,7 +28,7 @@ export const SpotlightSplitButton = ({
     confirmDeleteLocale,
     showViewByHistoryOption,
     spotlight,
-    allowedArrowActions,
+    allowedArrowActions = [],
 }) => {
     const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
