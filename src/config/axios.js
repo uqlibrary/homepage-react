@@ -9,7 +9,7 @@ import locale from 'locale/global';
 
 import * as Sentry from '@sentry/browser';
 
-import { COMP_AVAIL_API, LIB_HOURS_API, LOANS_API, PRINTING_API, TRAINING_API } from '../repositories/routes';
+import { COMP_AVAIL_API, LIB_HOURS_API, TRAINING_API } from '../repositories/routes';
 
 let apiClient = axios.create({
     baseURL: API_URL,
@@ -121,9 +121,7 @@ function alertDisplayAllowed(error) {
     const handlesErrorUrls =
         responseURL.startsWith(`${urlRoot}/${TRAINING_API().apiUrl}`) ||
         responseURL.startsWith(`${urlRoot}/${COMP_AVAIL_API().apiUrl}`) ||
-        responseURL.startsWith(`${urlRoot}/${LIB_HOURS_API().apiUrl}`) ||
-        responseURL.startsWith(`${urlRoot}/${PRINTING_API().apiUrl}`) ||
-        responseURL.startsWith(`${urlRoot}/${LOANS_API().apiUrl}`);
+        responseURL.startsWith(`${urlRoot}/${LIB_HOURS_API().apiUrl}`);
 
     return !handlesErrorUrls;
 }

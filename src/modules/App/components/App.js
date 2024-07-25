@@ -57,7 +57,6 @@ export const App = ({ account, actions }) => {
     const breadcrumbLabels = [
         { pathname: '/admin/alerts', title: 'Alerts admin' },
         { pathname: '/admin/dlor', title: 'Digital learning hub admin' },
-        { pathname: '/admin/promopanel', title: 'Promo panel admin' },
         { pathname: '/admin/testntag', title: 'Test and tag' },
         { pathname: '/book-exam-booth', title: 'Book an Exam booth' },
         { pathname: '/digital-learning-hub', title: 'Digital learning hub' },

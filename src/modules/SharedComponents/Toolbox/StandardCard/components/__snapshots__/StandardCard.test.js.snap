@@ -3,7 +3,7 @@
 exports[`Cards component renders given ID for standar card 1`] = `
 <div>
   <div
-    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-bddc4y-MuiPaper-root-MuiCard-root"
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-58d8y1-MuiPaper-root-MuiCard-root"
     data-analyticsid="test-card"
     data-testid="test-card"
     id="test-card"
@@ -37,7 +37,7 @@ exports[`Cards component renders given ID for standar card 1`] = `
 exports[`Cards component renders with custom colours and full height 1`] = `
 <div>
   <div
-    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-1wj3oak-MuiPaper-root-MuiCard-root"
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-j01xz-MuiPaper-root-MuiCard-root"
     data-analyticsid="standard-card-card-title"
     data-testid="standard-card-card-title"
     id="standard-card-card-title"
@@ -71,7 +71,7 @@ exports[`Cards component renders with custom colours and full height 1`] = `
 exports[`Cards component renders with custom content classname 1`] = `
 <div>
   <div
-    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-bddc4y-MuiPaper-root-MuiCard-root"
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-58d8y1-MuiPaper-root-MuiCard-root"
     data-analyticsid="standard-card-card-title"
     data-testid="standard-card-card-title"
     id="standard-card-card-title"
@@ -105,7 +105,7 @@ exports[`Cards component renders with custom content classname 1`] = `
 exports[`Cards component renders with header action 1`] = `
 <div>
   <div
-    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-bddc4y-MuiPaper-root-MuiCard-root"
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-58d8y1-MuiPaper-root-MuiCard-root"
     data-analyticsid="standard-card-card-title"
     data-testid="standard-card-card-title"
     id="standard-card-card-title"
@@ -139,7 +139,7 @@ exports[`Cards component renders with header action 1`] = `
 exports[`Cards component renders with small title and as a subcard 1`] = `
 <div>
   <div
-    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-bddc4y-MuiPaper-root-MuiCard-root"
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-58d8y1-MuiPaper-root-MuiCard-root"
     data-analyticsid="standard-card-card-title"
     data-testid="standard-card-card-title"
     id="standard-card-card-title"
@@ -173,7 +173,7 @@ exports[`Cards component renders with small title and as a subcard 1`] = `
 exports[`Cards component renders with square top and accent header 1`] = `
 <div>
   <div
-    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-bddc4y-MuiPaper-root-MuiCard-root"
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-58d8y1-MuiPaper-root-MuiCard-root"
     data-analyticsid="standard-card-card-title"
     data-testid="standard-card-card-title"
     id="standard-card-card-title"
@@ -207,7 +207,7 @@ exports[`Cards component renders with square top and accent header 1`] = `
 exports[`Cards component renders with title and help button 1`] = `
 <div>
   <div
-    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-bddc4y-MuiPaper-root-MuiCard-root"
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-58d8y1-MuiPaper-root-MuiCard-root"
     data-analyticsid="standard-card-card-title"
     data-testid="standard-card-card-title"
     id="standard-card-card-title"
@@ -241,7 +241,7 @@ exports[`Cards component renders with title and help button 1`] = `
 exports[`Cards component renders with title and no help icon 1`] = `
 <div>
   <div
-    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-bddc4y-MuiPaper-root-MuiCard-root"
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-58d8y1-MuiPaper-root-MuiCard-root"
     data-analyticsid="standard-card-card-title"
     data-testid="standard-card-card-title"
     id="standard-card-card-title"
@@ -275,7 +275,7 @@ exports[`Cards component renders with title and no help icon 1`] = `
 exports[`StandardCard component should render StyledCard with same props 1`] = `
 <div>
   <div
-    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-bddc4y-MuiPaper-root-MuiCard-root"
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-58d8y1-MuiPaper-root-MuiCard-root"
     data-analyticsid="standard-card-card-title"
     data-testid="standard-card-card-title"
     id="standard-card-card-title"

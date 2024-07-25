@@ -1,11 +1,5 @@
 import { locale } from 'locale';
-import {
-    canSeeLearningResources,
-    isAlertsAdminUser,
-    isDlorAdminUser,
-    isPromoPanelAdminUser,
-    isTestTagAdminUser,
-} from 'helpers/access';
+import { canSeeLearningResources, isAlertsAdminUser, isDlorAdminUser, isTestTagAdminUser } from 'helpers/access';
 import { pathConfig } from './pathConfig';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
@@ -26,8 +20,6 @@ export const flattedPathConfigExact = [
     '/admin/dlor/team/add',
     '/admin/masquerade',
     '/admin/masquerade/',
-    '/admin/promopanel/add',
-    '/admin/promopanel',
     '/admin/testntag',
     '/admin/testntag/manage/users',
     '/admin/testntag/manage/assettypes',
@@ -52,9 +44,6 @@ export const flattedPathConfig = [
     '/admin/dlor/edit',
     '/admin/dlor/series/edit',
     '/admin/dlor/team/edit',
-    '/admin/promopanel/edit',
-    '/admin/promopanel/view',
-    '/admin/promopanel/clone',
     '/digital-learning-hub/view',
     '/digital-learning-hub/confirm/subscribe',
     '/digital-learning-hub/confirm/unsubscribe',
@@ -169,32 +158,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.Masquerade,
             exact: true,
             pageTitle: locale.pages.admin.masquerade.title,
-        },
-    ];
-
-    const promopanelid = `:promopanelid(${standardRegExp})`;
-    const promoPanelDisplay = [
-        {
-            path: pathConfig.admin.promopanel,
-            component: components.PromoPanelList,
-            exact: true,
-            pageTitle: locale.pages.admin.promopanel.title,
-        },
-        {
-            path: pathConfig.admin.promopaneladd,
-            component: components.PromoPanelAdd,
-            exact: true,
-            pageTitle: locale.pages.admin.promopanel.form.add.title,
-        },
-        {
-            path: pathConfig.admin.promopaneledit(promopanelid),
-            component: components.PromoPanelEdit,
-            pageTitle: locale.pages.admin.promopanel.form.edit.title,
-        },
-        {
-            path: pathConfig.admin.promopanelclone(promopanelid),
-            component: components.PromoPanelClone,
-            pageTitle: locale.pages.admin.promopanel.form.clone.title,
         },
     ];
 
@@ -332,7 +295,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isAlertsAdminUser(account) ? alertsDisplay : []),
         ...(account && isDlorAdminUser(account) ? dlorAdminDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
-        ...(account && isPromoPanelAdminUser(account) ? promoPanelDisplay : []),
         ...(account && isTestTagAdminUser(account) ? testntagDisplay : []),
         {
             component: components.NotFound,

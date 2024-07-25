@@ -5,7 +5,6 @@ import { rtlRender, fireEvent } from 'test-utils';
 function setup(testProps = {}, renderer = rtlRender) {
     const props = {
         hideCancelButton: false,
-        isOpen: false,
         locale: {
             confirmationTitle: 'Confirmation',
             confirmationMessage: 'Are you sure?',
@@ -33,6 +32,10 @@ describe('ConfirmationBox component', () => {
         expect(getByText('Are you sure?')).toBeInTheDocument();
         expect(getByTestId('confirm-confirmation-box')).toBeInTheDocument();
         expect(getByTestId('cancel-confirmation-box')).toBeInTheDocument();
+    });
+    it('default values render correctly', () => {
+        const { container } = setup();
+        expect(container).toMatchSnapshot();
     });
     it('should render confirmation box with additional information', () => {
         const { getByTestId, getByText } = setup({

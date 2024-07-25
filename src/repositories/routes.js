@@ -15,50 +15,6 @@ export const TRAINING_API = (numEvents = 6, filterId = 104) => ({
     options: { params: { take: numEvents, 'filterIds[]': filterId, ts: `${new Date().getTime()}` } },
 });
 
-// Papercut balance API
-export const PRINTING_API = () => ({
-    apiUrl: 'papercut/balance',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-
-// Loans API
-export const LOANS_API = () => ({
-    apiUrl: 'account/loans',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-
-// eSpace Possible records
-export const POSSIBLE_RECORDS_API = () => ({
-    apiUrl: 'records/search',
-    options: {
-        params: {
-            rule: 'possible',
-            export_to: '',
-            page: 1,
-            per_page: 20,
-            sort: 'score',
-            order_by: 'desc',
-            'filters[stats_only]': true,
-        },
-    },
-});
-
-// eSpace NTRO records Incomplete (user is prompted to update them)
-export const INCOMPLETE_NTRO_RECORDS_API = () => ({
-    apiUrl: 'records/search',
-    options: {
-        params: {
-            rule: 'incomplete',
-            export_to: '',
-            page: 1,
-            per_page: 20,
-            sort: 'score',
-            order_by: 'desc',
-            'filters[stats_only]': true,
-        },
-    },
-});
-
 export const LEARNING_RESOURCES_COURSE_SUGGESTIONS_API = ({ keyword }) => ({
     apiUrl: API_URL + 'learning_resources/suggestions?hint=' + keyword,
 });
@@ -107,45 +63,6 @@ export const ALERT_SAVE_API = ({ id }) => ({ apiUrl: `alert/${id}` });
 
 export const ALERT_DELETE_API = ({ id }) => ({ apiUrl: `alert/${id}` });
 
-// Promo Panel Admin
-
-export const PROMOPANEL_CREATE_API = () => ({ apiUrl: 'promo_panel/panel' });
-export const PROMOPANEL_UPDATE_API = ({ id }) => ({ apiUrl: `promo_panel/panel/${id}` });
-export const PROMOPANEL_LIST_USERTYPES_API = () => ({
-    apiUrl: 'promo_panel/groups',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-export const PROMOPANEL_LIST_ACTIVE_PANELS_API = () => ({
-    apiUrl: 'promo_panel/groups/active',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-export const PROMOPANEL_LIST_API = () => ({
-    apiUrl: 'promo_panel/panels',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-export const PROMOPANEL_GET_CURRENT_API = () => ({
-    apiUrl: 'promo_panel',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-export const PROMOPANEL_GET_ANON_API = () => ({
-    apiUrl: 'promo_panel/loggedout',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-export const PROMOPANEL_ADD_SCHEDULE_API = ({ id, usergroup }) => ({
-    apiUrl: `promo_panel/group/${usergroup}/panel/${id}/schedule`,
-});
-export const PROMOPANEL_UPDATE_SCHEDULE_API = ({ id, usergroup }) => ({
-    apiUrl: `promo_panel/group/${usergroup}/schedule/${id}`,
-});
-export const PROMOPANEL_UPDATE_USERTYPE_DEFAULT = ({ id, usergroup }) => ({
-    apiUrl: `promo_panel/group/${usergroup}/panel/${id}/default`,
-});
-
-export const PROMOPANEL_DELETE_API = ({ id }) => ({ apiUrl: `promo_panel/panel/${id}` });
-
-export const PROMOPANEL_UNSCHEDULE_API = ({ id }) => ({
-    apiUrl: `promo_panel/schedule/${id}`,
-});
 /** TEST AND TAG **/
 export const TEST_TAG_USER_API = () => ({ apiUrl: 'test-and-tag/user' });
 export const TEST_TAG_ONLOAD_DASHBOARD_API = () => ({ apiUrl: 'test-and-tag/onload/dashboard' });

@@ -5,5 +5,4 @@ export * from './learningResourceActions';
 export * from './alertsActions';
 export * from './examSearchActions';
 export * from './examSuggestionActions';
-export * from './promoPanelActions';
 export * from './testTagActions';

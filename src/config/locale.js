@@ -4,10 +4,6 @@ const CAMPUS_HERSTON = 'Herston';
 const CAMPUS_DUTTON_PARK = 'Dutton Park';
 
 export const locale = {
-    tooltip: 'Click to update your preferred campus, currently [currentLocation]',
-    noLocationSet: 'not set',
-    noLocationSetLabel: 'Set a preferred campus',
-    menuTitle: 'Select a preferred location',
     locations: [
         {
             displayName: 'No preference',

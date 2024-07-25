@@ -10,7 +10,8 @@ describe('Computer availability', () => {
             cy.viewport(1300, 1000);
 
             cy.log('Computers list');
-            cy.waitUntil(() => cy.get('div[data-testid="computer-availability-panel"]').should('exist'));
+            cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+            cy.get('[data-testid="hours-accordion-open"]').click();
             cy.get('button[data-testid="computers-library-button-0"]').should(
                 'have.text',
                 'Architecture & Music Library',
@@ -43,6 +44,9 @@ describe('Computer availability', () => {
             });
         });
         it('aria-labels make sense', () => {
+            cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+            cy.get('[data-testid="hours-accordion-open"]').click();
+
             cy.get('button[data-testid="computers-library-button-1"]').contains('Biological Sciences Library');
             cy.get('button[data-testid="computers-library-button-1"]')
                 .should('have.attr', 'aria-label')
@@ -63,6 +67,9 @@ describe('Computer availability', () => {
     });
     context('Minor functionality works', () => {
         it('the display label has the correct number of computers free', () => {
+            cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+            cy.get('[data-testid="hours-accordion-open"]').click();
+
             cy.get('button[data-testid="computers-library-button-1"]').contains('Biological Sciences Library');
             cy.get('button[data-testid="computers-library-button-1"]').click();
 
@@ -74,6 +81,9 @@ describe('Computer availability', () => {
                 .contains('72 free of 110');
         });
         it('close options for map and levels works', () => {
+            cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+            cy.get('[data-testid="hours-accordion-open"]').click();
+
             cy.get('button[data-testid="computers-library-button-1"]')
                 .should('exist')
                 .contains('Biological Sciences Library')

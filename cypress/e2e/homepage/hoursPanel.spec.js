@@ -5,7 +5,8 @@ context('Library Opening Hours Homepage Panel', () => {
         cy.viewport(1300, 1000);
 
         cy.log('Hours');
-        cy.waitUntil(() => cy.get('div[data-testid="library-hours-panel"]').should('exist'));
+        cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+        cy.get('[data-testid="hours-accordion-open"]').click();
 
         // the expected content is found on the page
         cy.get('[data-testid="hours-item-0"]').contains('Arch Music');
@@ -23,6 +24,8 @@ context('Library Opening Hours Homepage Panel', () => {
         });
         cy.visit('/');
         cy.viewport(1300, 1000);
+        cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+        cy.get('[data-testid="hours-accordion-open"]').click();
 
         cy.get('[data-testid="hours-item-0"]')
             .find('a')
@@ -37,6 +40,8 @@ context('Library Opening Hours Homepage Panel', () => {
         });
         cy.visit('/');
         cy.viewport(1300, 1000);
+        cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+        cy.get('[data-testid="hours-accordion-open"]').click();
 
         cy.get('[data-testid="homepage-hours-weeklyhours-link"]')
             .should('contain', 'Weekly hours')
@@ -47,6 +52,8 @@ context('Library Opening Hours Homepage Panel', () => {
         cy.intercept(/uqbookit/, 'user has navigated to Bookit page');
         cy.visit('/');
         cy.viewport(1300, 1000);
+        cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+        cy.get('[data-testid="hours-accordion-open"]').click();
 
         cy.get('[data-testid="homepage-hours-bookit-link"]')
             .should('contain', 'Book a room')
@@ -56,6 +63,8 @@ context('Library Opening Hours Homepage Panel', () => {
     it('shows the expected values in hours', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
+        cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+        cy.get('[data-testid="hours-accordion-open"]').click();
 
         cy.log('Architecture has study space hours but not askus hours');
         cy.get('[data-testid="hours-item-0"] div:first-child').contains('Arch Music');

@@ -5,11 +5,9 @@ import mediaQuery from 'css-mediaquery';
 function setup(testProps = {}) {
     return rtlRender(
         <Alert
+            message="Message"
             alertId="1"
             title="Title"
-            message="Message"
-            type="warning"
-            allowDismiss
             dismissAction={jest.fn()}
             action={jest.fn()}
             actionButtonLabel="button"
@@ -32,7 +30,7 @@ describe('Alert', () => {
     });
 
     it('should render default view', () => {
-        const { container, getByText, getByTestId } = setup();
+        const { container, getByText, getByTestId } = setup({ type: 'warning' });
         expect(getByText(/Title*/)).toBeInTheDocument();
         expect(getByText('Message')).toBeInTheDocument();
         expect(getByTestId('warning-icon')).toBeInTheDocument();
@@ -169,6 +167,7 @@ describe('Alert', () => {
         const { container, getByTestId } = setup({
             dismissAction: dismissfn,
             type: null,
+            message: 'Message',
         });
 
         fireEvent.click(getByTestId('1-dismiss-button'));
@@ -178,7 +177,10 @@ describe('Alert', () => {
 
     it('should display dismiss button for smaller screen size', () => {
         window.matchMedia = createMatchMedia(256);
-        const { container, getByTestId } = setup();
+        const { container, getByTestId } = setup({
+            message: 'Message',
+            type: 'warning',
+        });
         expect(getByTestId('1-dismiss-button-mobile')).toBeInTheDocument();
         expect(container).toMatchSnapshot();
     });
@@ -194,6 +196,8 @@ describe('Alert', () => {
     it('should display loader', () => {
         const { container, getByTestId } = setup({
             showLoader: true,
+            message: 'Message',
+            type: 'warning',
         });
 
         expect(getByTestId('spinner')).toBeInTheDocument();
@@ -205,6 +209,7 @@ describe('Alert', () => {
         const { container, getByText } = setup({
             message: 'Click me',
             action: actionFn,
+            type: 'warning',
         });
 
         fireEvent.click(getByText(/Click me/));
@@ -217,6 +222,7 @@ describe('Alert', () => {
         const { container, getByText } = setup({
             message: 'Click me',
             action: null,
+            type: 'warning',
         });
 
         fireEvent.click(getByText(/Click me/));
