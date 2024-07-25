@@ -15,50 +15,6 @@ export const TRAINING_API = (numEvents = 6, filterId = 104) => ({
     options: { params: { take: numEvents, 'filterIds[]': filterId, ts: `${new Date().getTime()}` } },
 });
 
-// Papercut balance API
-export const PRINTING_API = () => ({
-    apiUrl: 'papercut/balance',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-
-// Loans API
-export const LOANS_API = () => ({
-    apiUrl: 'account/loans',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-
-// eSpace Possible records
-export const POSSIBLE_RECORDS_API = () => ({
-    apiUrl: 'records/search',
-    options: {
-        params: {
-            rule: 'possible',
-            export_to: '',
-            page: 1,
-            per_page: 20,
-            sort: 'score',
-            order_by: 'desc',
-            'filters[stats_only]': true,
-        },
-    },
-});
-
-// eSpace NTRO records Incomplete (user is prompted to update them)
-export const INCOMPLETE_NTRO_RECORDS_API = () => ({
-    apiUrl: 'records/search',
-    options: {
-        params: {
-            rule: 'incomplete',
-            export_to: '',
-            page: 1,
-            per_page: 20,
-            sort: 'score',
-            order_by: 'desc',
-            'filters[stats_only]': true,
-        },
-    },
-});
-
 export const LEARNING_RESOURCES_COURSE_SUGGESTIONS_API = ({ keyword }) => ({
     apiUrl: API_URL + 'learning_resources/suggestions?hint=' + keyword,
 });

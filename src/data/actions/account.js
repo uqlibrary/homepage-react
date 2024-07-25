@@ -4,11 +4,7 @@ import {
     COMP_AVAIL_API,
     CURRENT_ACCOUNT_API,
     CURRENT_AUTHOR_API,
-    INCOMPLETE_NTRO_RECORDS_API,
     LIB_HOURS_API,
-    LOANS_API,
-    POSSIBLE_RECORDS_API,
-    PRINTING_API,
     TRAINING_API,
 } from 'repositories/routes';
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
@@ -203,70 +199,6 @@ export function loadCurrentAccount() {
 }
 
 /**
- * Loads the papercut print balance data
- * @returns {function(*)}
- */
-export function loadPrintBalance() {
-    if (!!getSessionCookie()) {
-        return dispatch => {
-            dispatch({ type: actions.PRINT_BALANCE_LOADING });
-            return get(PRINTING_API())
-                .then(papercutResponse => {
-                    dispatch({
-                        type: actions.PRINT_BALANCE_LOADED,
-                        payload: papercutResponse,
-                    });
-                })
-                .catch(error => {
-                    dispatch({
-                        type: actions.PRINT_BALANCE_FAILED,
-                        payload: error.message,
-                    });
-                });
-        };
-    } else {
-        return dispatch => {
-            dispatch({
-                type: actions.PRINT_BALANCE_FAILED,
-                payload: 'not logged in',
-            });
-        };
-    }
-}
-
-/**
- * Loads the loans data
- * @returns {function(*)}
- */
-export function loadLoans() {
-    if (!!getSessionCookie()) {
-        return dispatch => {
-            dispatch({ type: actions.LOANS_LOADING });
-            return get(LOANS_API())
-                .then(loanResponse => {
-                    dispatch({
-                        type: actions.LOANS_LOADED,
-                        payload: loanResponse,
-                    });
-                })
-                .catch(error => {
-                    dispatch({
-                        type: actions.LOANS_FAILED,
-                        payload: error.message,
-                    });
-                });
-        };
-    } else {
-        return dispatch => {
-            dispatch({
-                type: actions.LOANS_FAILED,
-                payload: 'not logged in',
-            });
-        };
-    }
-}
-
-/**
  * Loads the training events data
  * @returns {function(*)}
  */
@@ -289,72 +221,6 @@ export function loadTrainingEvents(account) {
                 });
             });
     };
-}
-
-/**
- * Search publications from eSpace which are fuzzy matched to currently logged in username
- * @param {object} activeFacets - optional list of facets
- * @returns {action}
- */
-export function searcheSpacePossiblePublications() {
-    if (!!getSessionCookie()) {
-        return dispatch => {
-            dispatch({ type: actions.POSSIBLY_YOUR_PUBLICATIONS_LOADING });
-            return get(POSSIBLE_RECORDS_API())
-                .then(response => {
-                    dispatch({
-                        type: actions.POSSIBLY_YOUR_PUBLICATIONS_LOADED,
-                        payload: response,
-                    });
-                })
-                .catch(error => {
-                    dispatch({
-                        type: actions.POSSIBLY_YOUR_PUBLICATIONS_FAILED,
-                        payload: error.message,
-                    });
-                });
-        };
-    } else {
-        return dispatch => {
-            dispatch({
-                type: actions.POSSIBLY_YOUR_PUBLICATIONS_FAILED,
-                payload: 'not logged in',
-            });
-        };
-    }
-}
-
-/**
- * Search NTRO publications from eSpace which are incomplete for the current user
- * @param {object} activeFacets - optional list of facets
- * @returns {action}
- */
-export function searcheSpaceIncompleteNTROPublications() {
-    if (!!getSessionCookie()) {
-        return dispatch => {
-            dispatch({ type: actions.INCOMPLETE_NTRO_PUBLICATIONS_LOADING });
-            return get(INCOMPLETE_NTRO_RECORDS_API())
-                .then(response => {
-                    dispatch({
-                        type: actions.INCOMPLETE_NTRO_PUBLICATIONS_LOADED,
-                        payload: response,
-                    });
-                })
-                .catch(error => {
-                    dispatch({
-                        type: actions.INCOMPLETE_NTRO_PUBLICATIONS_FAILED,
-                        payload: error.message,
-                    });
-                });
-        };
-    } else {
-        return dispatch => {
-            dispatch({
-                type: actions.INCOMPLETE_NTRO_PUBLICATIONS_FAILED,
-                payload: 'not logged in',
-            });
-        };
-    }
 }
 
 export function clearSessionExpiredFlag() {

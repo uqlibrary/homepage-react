@@ -1,23 +1,19 @@
 /* eslint max-len: 0 */
 import React, { useEffect } from 'react';
+import ContentLoader from 'react-content-loader';
+import { lazy } from 'react';
 import { PropTypes } from 'prop-types';
-import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+import { useDispatch } from 'react-redux';
 import Grid from '@mui/material/Grid';
 
-import { useDispatch } from 'react-redux';
+import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+import { lazyRetry } from 'helpers/general';
+
 import {
-    loadPrintBalance,
-    loadLoans,
-    searcheSpacePossiblePublications,
-    searcheSpaceIncompleteNTROPublications,
     loadLibHours,
     loadCompAvail,
     loadTrainingEvents,
 } from 'data/actions';
-import ContentLoader from 'react-content-loader';
-import { lazy } from 'react';
-import { lazyRetry } from 'helpers/general';
-
 import { canSeeLearningResources } from 'helpers/access';
 
 const Computers = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Computers')));
@@ -28,7 +24,6 @@ const Training = lazy(() => lazyRetry(() => import('modules/Index/components/sub
 export const Index = ({
     account,
     accountLoading,
-    author,
     libHours,
     libHoursLoading,
     libHoursError,
@@ -38,14 +33,6 @@ export const Index = ({
     trainingEvents,
     trainingEventsLoading,
     trainingEventsError,
-    printBalance,
-    printBalanceLoading,
-    loans,
-    loansLoading,
-    possibleRecords,
-    possibleRecordsLoading,
-    incompleteNTRO,
-    incompleteNTROLoading,
 }) => {
     const dispatch = useDispatch();
     // Load homepage data requirements
@@ -61,40 +48,6 @@ export const Index = ({
             dispatch(loadTrainingEvents(account));
         }
     }, [account, accountLoading, dispatch]);
-    useEffect(() => {
-        if (accountLoading === false && !!account && !printBalance && printBalanceLoading === null) {
-            dispatch(loadPrintBalance());
-        }
-    }, [accountLoading, account, printBalance, printBalanceLoading, dispatch]);
-    useEffect(() => {
-        if (accountLoading === false && !!account && !loans && loansLoading === null) {
-            dispatch(loadLoans());
-        }
-    }, [accountLoading, account, loans, loansLoading, dispatch]);
-    useEffect(() => {
-        if (
-            accountLoading === false &&
-            !!account &&
-            !!author &&
-            !!author.aut_id &&
-            !possibleRecords &&
-            possibleRecordsLoading === null
-        ) {
-            dispatch(searcheSpacePossiblePublications());
-        }
-    }, [accountLoading, account, author, possibleRecords, possibleRecordsLoading, dispatch]);
-    useEffect(() => {
-        if (
-            accountLoading === false &&
-            !!account &&
-            !!author &&
-            !!author.aut_id &&
-            !incompleteNTRO &&
-            incompleteNTROLoading === null
-        ) {
-            dispatch(searcheSpaceIncompleteNTROPublications());
-        }
-    }, [accountLoading, account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
     return (
         <React.Suspense fallback={<ContentLoader message="Loading" />}>
             <div id="search-portal-container" data-testid="search-portal-container" style={{
@@ -152,7 +105,6 @@ export const Index = ({
 Index.propTypes = {
     account: PropTypes.object,
     accountLoading: PropTypes.bool,
-    author: PropTypes.object,
     actions: PropTypes.any,
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
@@ -163,14 +115,6 @@ Index.propTypes = {
     trainingEvents: PropTypes.any,
     trainingEventsLoading: PropTypes.bool,
     trainingEventsError: PropTypes.bool,
-    printBalance: PropTypes.object,
-    printBalanceLoading: PropTypes.bool,
-    loans: PropTypes.object,
-    loansLoading: PropTypes.bool,
-    possibleRecords: PropTypes.object,
-    possibleRecordsLoading: PropTypes.bool,
-    incompleteNTRO: PropTypes.object,
-    incompleteNTROLoading: PropTypes.bool,
 };
 
 export default Index;
