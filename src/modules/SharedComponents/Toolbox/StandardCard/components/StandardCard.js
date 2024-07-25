@@ -7,6 +7,8 @@ import CardHeader from '@mui/material/CardHeader';
 import { styled } from '@mui/material/styles';
 
 const StyledCard = styled(Card)(({ theme }) => ({
+    boxShadow: 'none',
+    border: '1px solid #d1d0d2' /* grey-300 */,
     '&.card': {
         overflow: 'unset',
         fontWeight: theme.typography.fontWeightRegular,
