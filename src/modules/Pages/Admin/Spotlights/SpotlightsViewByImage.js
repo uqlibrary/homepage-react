@@ -60,9 +60,10 @@ export const SpotlightsViewByImage = ({
     handleLightboxClose,
     spotlights,
     showViewByHistoryLightbox,
-    helpButtonLabel,
-    helpContent,
 }) => {
+    const helpButtonLabel = 'Help';
+    const helpContent = locale.viewByImage.help;
+
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
     const openHelpLightbox = () => setHelpLightboxOpen(true);
     const closeHelpLightbox = () => setHelpLightboxOpen(false);
@@ -193,18 +194,10 @@ export const SpotlightsViewByImage = ({
 
 SpotlightsViewByImage.propTypes = {
     handleLightboxClose: PropTypes.func,
-    helpButtonLabel: PropTypes.string,
-    helpContent: PropTypes.any,
     isLightboxOpen: PropTypes.bool,
     showViewByHistoryLightbox: PropTypes.func,
     spotlightImageUrl: PropTypes.string,
     spotlights: PropTypes.array,
-};
-
-SpotlightsViewByImage.defaultProps = {
-    helpButtonLabel: 'Help',
-    helpContent: locale.viewByImage.help,
-    spotlights: [],
 };
 
 export default React.memo(SpotlightsViewByImage);

@@ -28,7 +28,7 @@ export const SpotlightSplitButton = ({
     confirmDeleteLocale,
     showViewByHistoryOption,
     spotlight,
-    allowedArrowActions,
+    allowedArrowActions = [],
 }) => {
     const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
@@ -221,7 +221,7 @@ export const SpotlightSplitButton = ({
 
 SpotlightSplitButton.propTypes = {
     spotlight: PropTypes.any,
-    mainButtonLabel: PropTypes.string,
+    mainButtonLabel: PropTypes.oneOf(['View', 'Edit', 'Clone']),
     deleteSpotlightById: PropTypes.func,
     navigateToCloneForm: PropTypes.func,
     navigateToView: PropTypes.func,
@@ -229,12 +229,6 @@ SpotlightSplitButton.propTypes = {
     confirmDeleteLocale: PropTypes.any,
     showViewByHistoryOption: PropTypes.func,
     allowedArrowActions: PropTypes.array,
-};
-
-SpotlightSplitButton.defaultProps = {
-    mainButtonLabel: 'Edit',
-    confirmDeleteLocale: false,
-    allowedArrowActions: [],
 };
 
 export default SpotlightSplitButton;

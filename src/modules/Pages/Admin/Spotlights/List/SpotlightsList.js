@@ -208,6 +208,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                     <SpotlightViewHistory
                         focussedElement={viewByHistoryLightBoxFocus}
                         handleViewHistoryLightboxClose={handleViewByHistoryLightboxClose}
+                        helpButtonLabel={'Help'}
                         helpContent={locale.viewByHistory.help}
                         isViewHistoryLightboxOpen={isViewByHistoryLightboxOpen}
                         spotlights={viewByHistoryLightBoxRows}

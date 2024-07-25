@@ -96,8 +96,8 @@ export const AlertsListAsTable = ({
     alertsLoading,
     actions,
     deleteAlert,
-    footerDisplayMinLength,
-    alertOrder,
+    footerDisplayMinLength = 5,
+    alertOrder = false,
 }) => {
     const navigate = useNavigate();
     const [page, setPage] = useState(0);
@@ -552,11 +552,6 @@ AlertsListAsTable.propTypes = {
     deleteAlert: PropTypes.any,
     footerDisplayMinLength: PropTypes.number,
     alertOrder: PropTypes.any,
-};
-
-AlertsListAsTable.defaultProps = {
-    footerDisplayMinLength: 5, // the number of records required in the alert list before we display the paginator
-    alertOrder: false, // what order should we sort the alerts in? false means unspecified
 };
 
 export default AlertsListAsTable;

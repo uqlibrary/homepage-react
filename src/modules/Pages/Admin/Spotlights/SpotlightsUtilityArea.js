@@ -22,10 +22,10 @@ const StyledActionButtonPlacer = styled('div')(() => ({
 }));
 export const SpotlightsUtilityArea = ({
     actions,
-    helpButtonLabel,
+    helpButtonLabel = 'Help',
     helpContent,
-    showAddButton,
-    showViewByImageButton,
+    showAddButton = false,
+    showViewByImageButton = false,
     spotlights,
     showViewByHistoryLightbox,
 }) => {
@@ -104,10 +104,4 @@ SpotlightsUtilityArea.propTypes = {
     showViewByImageButton: PropTypes.bool,
     spotlights: PropTypes.any,
     showViewByHistoryLightbox: PropTypes.any,
-};
-
-SpotlightsUtilityArea.defaultProps = {
-    helpButtonLabel: 'Help',
-    showAddButton: false,
-    showViewByImageButton: false,
 };

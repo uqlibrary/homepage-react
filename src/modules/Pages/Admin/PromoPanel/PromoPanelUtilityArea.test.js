@@ -11,9 +11,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 const props = {
-    helpButtonLabel: 'Help',
     helpContent: { title: 'Test help content', text: 'Help content text' },
-    showAddButton: true,
 };
 
 function setupRender(testProps = {}) {
@@ -25,6 +23,10 @@ describe('Utility Tests', () => {
         mockUseNavigate.mockClear();
     });
     it('renders the utility area correctly', () => {
+        const wrapper = setupRender({ helpButtonLabel: 'Help', showAddButton: true });
+        expect(wrapper).toMatchSnapshot();
+    });
+    it('renders the default utility area correctly', () => {
         const wrapper = setupRender();
         expect(wrapper).toMatchSnapshot();
     });
@@ -33,7 +35,7 @@ describe('Utility Tests', () => {
         expect(mockUseNavigate).toBeCalled();
     });
     it('Buttons function as expected', () => {
-        const { getByTestId } = setupRender();
+        const { getByTestId } = setupRender({ showAddButton: true });
 
         fireEvent.click(getByTestId('admin-promopanel-add-display-button'));
         expect(mockUseNavigate).toBeCalled();

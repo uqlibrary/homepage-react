@@ -138,10 +138,10 @@ export const SpotlightsListAsTable = ({
     spotlightsError,
     saveSpotlightChange,
     deleteSpotlightBulk,
-    footerDisplayMinLength,
-    canDragRows,
-    canUnpublish,
-    canTextFilter,
+    footerDisplayMinLength = 5, // the number of records required in the spotlight list before we display the paginator
+    canDragRows = false, // does this section allow drag and drop
+    canUnpublish = false, // does this section allow the user to have a publish/unpublish checbox?
+    canTextFilter = false, // show the 'text filter' input field
     showViewByHistoryLightbox,
 }) => {
     const ORDERBY_WEIGHT = 'weight';
@@ -1082,13 +1082,6 @@ SpotlightsListAsTable.propTypes = {
     canUnpublish: PropTypes.bool,
     canTextFilter: PropTypes.bool,
     showViewByHistoryLightbox: PropTypes.any,
-};
-
-SpotlightsListAsTable.defaultProps = {
-    footerDisplayMinLength: 5, // the number of records required in the spotlight list before we display the paginator
-    canDragRows: false, // does this section allow drag and drop
-    canUnpublish: false, // does this section allow the user to have a publish/unpublish checbox?
-    canTextFilter: false, // show the 'text filter' input field
 };
 
 export default React.memo(SpotlightsListAsTable);

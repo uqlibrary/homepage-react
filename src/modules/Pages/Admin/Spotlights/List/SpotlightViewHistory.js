@@ -232,9 +232,4 @@ SpotlightViewHistory.propTypes = {
     spotlights: PropTypes.array,
 };
 
-SpotlightViewHistory.defaultProps = {
-    spotlights: [],
-    helpButtonLabel: 'Help',
-};
-
 export default React.memo(SpotlightViewHistory);

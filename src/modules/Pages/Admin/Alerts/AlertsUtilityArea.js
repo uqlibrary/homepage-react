@@ -44,7 +44,7 @@ const StyledActionButtonPlacer = styled('div')(({ theme }) => ({
     marginRight: 16,
 }));
 
-export const AlertsUtilityArea = ({ actions, helpButtonLabel, helpContent, showAddButton }) => {
+export const AlertsUtilityArea = ({ actions, helpButtonLabel = 'Help', helpContent, showAddButton = false }) => {
     const navigate = useNavigate();
     const [lightboxOpen, setLightboxOpen] = useState(false);
 
@@ -121,9 +121,4 @@ AlertsUtilityArea.propTypes = {
     helpContent: PropTypes.any,
     helpButtonLabel: PropTypes.string,
     showAddButton: PropTypes.bool,
-};
-
-AlertsUtilityArea.defaultProps = {
-    helpButtonLabel: 'Help',
-    showAddButton: false,
 };
