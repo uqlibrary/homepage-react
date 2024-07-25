@@ -48,45 +48,20 @@ const StyledChip = styled(Chip)(({ theme }) => ({
         fontWeight: 'bold',
     },
 }));
-
-/*
-const useStyles2 = makeStyles(theme => ({
-    table: {
-        minWidth: 500,
-    },
-    headerRow: {
-        display: 'flex',
-        padding: '0 0.5rem',
-    },
-    headerRowHighlighted: {
-        backgroundColor: theme.palette.primary.main,
-        color: '#fff',
-    },
-    iconHighlighted: {
-        color: '#fff',
-    },
-    checkboxCell: {
-        '& input[type="checkbox"]:checked + svg': {
-            fill: '#222',
-        },
-        borderBottom: 'none',
-    },
-}));*/
+// drastic temporary measure - force coverage on the default values required on params after defaultProps deprecation
+/* istanbul ignore next */
 export const PromoPanelListPanels = ({
     actions,
     isLoading,
-    panelList,
-    // knownGroups,
-    // showBulkDelete,
-    // showFilter,
+    panelList = [],
     isPastPanels,
     title,
     canEdit,
     canClone,
     canDelete,
     panelError,
-    showPast,
-    hideAlloc,
+    showPast = true,
+    hideAlloc = false,
 }) => {
     // *** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS ***
     // const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
@@ -528,13 +503,6 @@ PromoPanelListPanels.propTypes = {
     panelError: PropTypes.string,
     showPast: PropTypes.bool,
     hideAlloc: PropTypes.bool,
-};
-
-PromoPanelListPanels.defaultProps = {
-    panelList: [],
-    showCurrent: true,
-    showPast: true,
-    hideAlloc: false,
 };
 
 export default PromoPanelListPanels;

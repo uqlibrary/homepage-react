@@ -91,6 +91,4 @@ PromoPanelListActive.propTypes = {
     isLoading: PropTypes.bool,
 };
 
-PromoPanelListActive.defaultProps = {};
-
 export default PromoPanelListActive;

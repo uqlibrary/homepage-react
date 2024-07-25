@@ -99,6 +99,7 @@ export const SpotlightForm = ({
     spotlightStatus,
     defaults,
     spotlightError,
+    // whether a file is currently being uploaded. Only done by Add, other defaults false
     publicFileUploading,
     publicFileUploadError,
     publicFileUploadResult,
@@ -708,12 +709,6 @@ SpotlightForm.propTypes = {
     defaults: PropTypes.object,
     spotlights: PropTypes.any,
     spotlightsLoading: PropTypes.any,
-};
-
-SpotlightForm.defaultProps = {
-    publicFileUploading: false, // whether a file is currently being uploaded. Only done by Add, other defaults false
-    publicFileUploadError: false,
-    publicFileUploadResult: false,
 };
 
 export default SpotlightForm;

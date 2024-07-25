@@ -406,6 +406,4 @@ Training.propTypes = {
     trainingEventsError: PropTypes.bool,
 };
 
-Training.defaultProps = {};
-
 export default Training;

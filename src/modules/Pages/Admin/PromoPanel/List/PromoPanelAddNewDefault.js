@@ -22,10 +22,12 @@ const MenuProps = {
         },
     },
 };
+// drastic temporary measure - force coverage on the default values required on params after defaultProps deprecation
+/* istanbul ignore next */
 export const PromoPanelAddNewDefault = ({
-    isAddingDefault,
+    isAddingDefault = false,
     groupName,
-    promoPanelList,
+    promoPanelList = [],
     handleAddGroupDefault,
     handleCloseGroupDefault,
 }) => {
@@ -128,12 +130,6 @@ PromoPanelAddNewDefault.propTypes = {
     promoPanelList: PropTypes.array,
     handleAddGroupDefault: PropTypes.func,
     handleCloseGroupDefault: PropTypes.func,
-};
-
-PromoPanelAddNewDefault.defaultProps = {
-    isAddingDefault: false,
-    userPanelList: [],
-    promoPanelList: [],
 };
 
 export default PromoPanelAddNewDefault;

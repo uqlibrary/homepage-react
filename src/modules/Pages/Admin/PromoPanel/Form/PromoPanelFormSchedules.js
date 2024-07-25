@@ -292,9 +292,4 @@ PromoPanelFormSchedules.propTypes = {
     handleGroupChange: PropTypes.func,
 };
 
-PromoPanelFormSchedules.defaultProps = {
-    isDefaultPanel: false,
-    promoPanelList: [],
-};
-
 export default PromoPanelFormSchedules;

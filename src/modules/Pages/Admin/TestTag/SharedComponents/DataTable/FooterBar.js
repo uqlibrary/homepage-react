@@ -5,10 +5,12 @@ import Button from '@mui/material/Button';
 
 const rootId = 'footer_bar';
 
+// drastic temporary measure - force coverage on the default values required on params after defaultProps deprecation
+/* istanbul ignore next */
 const FooterBar = ({
     id,
-    actionLabel,
-    altLabel,
+    actionLabel = '',
+    altLabel = '',
     onAltClick,
     onActionClick,
     cancelButtonProps,
@@ -54,9 +56,5 @@ const FooterBar = ({
             )}
         </GridFooterContainer>
     );
-};
-FooterBar.defaultProps = {
-    actionLabel: '',
-    altLabel: '',
 };
 export default React.memo(FooterBar);

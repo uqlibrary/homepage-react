@@ -274,6 +274,4 @@ Index.propTypes = {
     promoPanelLoading: PropTypes.bool,
 };
 
-Index.defaultProps = {};
-
 export default Index;

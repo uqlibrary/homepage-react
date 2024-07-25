@@ -1,0 +1,103 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PersonalisedPanel default values render correctly 1`] = `
+<div>
+  <div
+    class=" css-jfcehw"
+    data-testid="headerRow-current"
+  >
+    <div>
+      <h3
+        style="margin-bottom: 6px;"
+      >
+        Current alerts
+        <span
+          data-testid="headerRow-count-current"
+          style="font-size: 0.9em; font-weight: 300;"
+        >
+           
+          - 
+          0 alert
+        </span>
+      </h3>
+    </div>
+  </div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiTableContainer-root css-11xur9t-MuiPaper-root-MuiTableContainer-root"
+    data-testid="alert-list-current"
+    id="alert-list-current"
+  >
+    <table
+      aria-label="custom pagination table"
+      class="MuiTable-root table css-i991eq-MuiTable-root"
+      style="min-height: 200px;"
+    >
+      <thead
+        class="MuiTableHead-root css-15wwp11-MuiTableHead-root"
+      >
+        <tr
+          class="MuiTableRow-root MuiTableRow-head md-row css-1h2y1iv-MuiTableRow-root"
+          md-row=""
+        >
+          <th
+            class="MuiTableCell-root MuiTableCell-head MuiTableCell-alignCenter MuiTableCell-sizeMedium css-1c9afxo-MuiTableCell-root"
+            scope="row"
+          >
+            <span
+              class="screenreader"
+            >
+              Select
+            </span>
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1qewcd6-MuiTableCell-root"
+            scope="row"
+          >
+            Alert
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head MuiTableCell-alignCenter MuiTableCell-sizeMedium css-1c9afxo-MuiTableCell-root"
+            scope="row"
+          >
+            Publish date
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head MuiTableCell-alignCenter MuiTableCell-sizeMedium css-1c9afxo-MuiTableCell-root"
+            scope="row"
+          >
+            Unpublish date
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head MuiTableCell-alignCenter MuiTableCell-sizeMedium css-1c9afxo-MuiTableCell-root"
+            scope="row"
+          >
+            <span
+              class="screenreader"
+            >
+              Actions
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        class="MuiTableBody-root css-apqrd9-MuiTableBody-root"
+      >
+        <tr
+          class="MuiTableRow-root css-1h2y1iv-MuiTableRow-root"
+          data-testid="alert-list-no-alerts-current"
+          id="alert-list-no-alerts-current"
+          style="display: table-row;"
+        >
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-1xwnbnq-MuiTableCell-root"
+          >
+            <p>
+              No alerts
+            </p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
