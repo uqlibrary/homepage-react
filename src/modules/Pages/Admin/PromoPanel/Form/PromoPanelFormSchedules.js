@@ -68,7 +68,7 @@ export const PromoPanelFormSchedules = ({
                             <StyledCheckbox
                                 checked={values.is_default_panel === 1}
                                 data-testid="admin-promopanel-form-default-panel"
-                                onChange={handleChange('is_default_panel')}
+                                onChange={e => handleChange('is_default_panel', e)}
                                 disabled={isEdit && scheduledList.length > 0}
                             />
                             {locale.form.labels.defaultPanelCheckbox}
@@ -114,8 +114,8 @@ export const PromoPanelFormSchedules = ({
                                     width: '100%',
                                 }}
                                 label={locale.form.labels.startDate}
-                                value={moment.utc(values.start)}
-                                onChange={handleChange('start')}
+                                value={moment.utc(new Date(values.start))}
+                                onChange={e => handleChange('start', e)}
                                 minDate={moment.utc(defaults.minimumDate)}
                                 inputFormat="ddd D MMM YYYY h:mm a"
                                 inputProps={{
@@ -143,7 +143,7 @@ export const PromoPanelFormSchedules = ({
                                     />
                                 )}
                             />
-                            {moment(values.start).isBefore(moment().subtract(1, 'minutes')) && (
+                            {moment.utc(new Date(values.start)).isBefore(moment().subtract(1, 'minutes')) && (
                                 <StyledError data-testid="admin-promopanel-startdate-past">
                                     This date is in the past.
                                 </StyledError>
@@ -153,9 +153,9 @@ export const PromoPanelFormSchedules = ({
                             <DateTimePicker
                                 label={locale.form.labels.endDate}
                                 // variant="inline"
-                                onChange={handleChange('end')}
-                                value={moment.utc(values.end)}
-                                minDateTime={moment.utc(values.start)}
+                                onChange={e => handleChange('end', e)}
+                                value={moment.utc(new Date(values.end))}
+                                minDateTime={moment.utc(new Date(values.start))}
                                 inputProps={{
                                     id: 'admin-promopanel-form-end-date',
                                     'data-testid': 'admin-promopanel-form-end-date',
@@ -238,12 +238,12 @@ export const PromoPanelFormSchedules = ({
                                             </Grid>
                                             <Grid item xs={3} style={{ padding: '10px 0 10px' }}>
                                                 {(!values.is_default_panel &&
-                                                    moment(item.startDate).format('ddd D MMM YYYY h:mma')) ||
+                                                    moment(new Date(item.startDate)).format('ddd D MMM YYYY h:mma')) ||
                                                     'DEFAULT'}
                                             </Grid>
                                             <Grid item xs={3} style={{ padding: '10px 0 10px' }}>
                                                 {!values.is_default_panel &&
-                                                    moment(item.endDate).format('ddd D MMM YYYY h:mma')}
+                                                    moment(new Date(item.endDate)).format('ddd D MMM YYYY h:mma')}
                                             </Grid>
                                             <Grid item xs={4} style={{ textAlign: 'right' }}>
                                                 {!!!values.is_default_panel && (

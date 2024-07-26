@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
+import Box from '@mui/material/Box';
 
 const moment = require('moment');
 
@@ -24,8 +25,8 @@ export const handleGroupDateSave = (
     setConfirmationMode,
     setIsConfirmOpen,
 ) => {
-    const capturedStartDate = moment(moment(startDate).format('YYYY-MM-DD HH:mm:ss'));
-    const capturedEndDate = moment(moment(endDate).format('YYYY-MM-DD HH:mm:ss'));
+    const capturedStartDate = moment(moment(new Date(startDate)).format('YYYY-MM-DD HH:mm:ss'));
+    const capturedEndDate = moment(moment(new Date(endDate)).format('YYYY-MM-DD HH:mm:ss'));
     const dateFormat = 'YYYY-MM-DD HH:mm:ss';
     let isValid = true;
     // Check against existing schedules already saved
@@ -38,10 +39,10 @@ export const handleGroupDateSave = (
                     if (isValid && schedule.panel_schedule_id !== panelScheduleId) {
                         /* istanbul ignore else */
                         if (
-                            (capturedStartDate.isSameOrAfter(moment(schedule.panel_schedule_start_time)) &&
-                                capturedStartDate.isBefore(moment(schedule.panel_schedule_end_time))) ||
-                            (moment(schedule.panel_schedule_start_time).isSameOrAfter(capturedStartDate) &&
-                                moment(schedule.panel_schedule_start_time).isBefore(capturedEndDate))
+                            (capturedStartDate.isSameOrAfter(moment(new Date(schedule.panel_schedule_start_time))) &&
+                                capturedStartDate.isBefore(moment(new Date(schedule.panel_schedule_end_time)))) ||
+                            (moment(new Date(schedule.panel_schedule_start_time)).isSameOrAfter(capturedStartDate) &&
+                                moment(new Date(schedule.panel_schedule_start_time)).isBefore(capturedEndDate))
                         ) {
                             isValid = false;
                             setConfirmationMessage(
@@ -124,7 +125,7 @@ export const PromoPanelGroupDateSelector = ({
     };
 
     React.useEffect(() => {
-        if (moment(startDate).isAfter(moment(endDate))) {
+        if (moment(new Date(startDate)).isAfter(moment(new Date(endDate)))) {
             setSaveEnabled(false);
         } else {
             setSaveEnabled(true);
@@ -138,13 +139,17 @@ export const PromoPanelGroupDateSelector = ({
                     id="lightboxTitle"
                     data-testid="panel-edit-date-title"
                     style={{ position: 'relative', borderBottom: '1px solid #d7d1cc', fontSize: 12 }}
-                    children={<h2 style={{ lineHeight: 1, margin: 0 }}>{'Edit Schedule Dates'}</h2>}
+                    children={
+                        <Box style={{ fontSize: '1.5em', fontWeight: 'bold', lineHeight: 1, margin: 0 }}>
+                            {'Edit Schedule Dates'}
+                        </Box>
+                    }
                 />
                 <DialogContent>
                     <Grid container spacing={1}>
                         <Grid item xs>
                             <DateTimePicker
-                                value={startDate}
+                                value={new Date(startDate)}
                                 label="Start date"
                                 // onChange={handleChange(
                                 //     'start',
@@ -181,7 +186,7 @@ export const PromoPanelGroupDateSelector = ({
                                     />
                                 )}
                             />
-                            {moment(startDate).isBefore(moment().subtract(1, 'minutes')) && (
+                            {moment(new Date(startDate)).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div id="start-date-warning" data-testid="start-date-warning">
                                     This date is in the past.
                                 </div>
@@ -189,7 +194,7 @@ export const PromoPanelGroupDateSelector = ({
                         </Grid>
                         <Grid item xs align="left">
                             <DateTimePicker
-                                value={endDate}
+                                value={new Date(endDate)}
                                 label="End date"
                                 // onChange={handleChange(
                                 //     'end',
@@ -226,14 +231,14 @@ export const PromoPanelGroupDateSelector = ({
                                     />
                                 )}
                             />
-                            {moment(endDate).isBefore(moment().subtract(1, 'minutes')) && (
+                            {moment(new Date(endDate)).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div id="end-date-warning" data-testid="end-date-warning">
                                     This date is in the past.
                                 </div>
                             )}
                         </Grid>
                         <Grid item xs={12}>
-                            {moment(endDate).isBefore(moment(startDate)) && (
+                            {moment(new Date(endDate)).isBefore(moment(new Date(startDate))) && (
                                 <span data-testid="panel-start-date-warning">Start Date cannot be after End Date.</span>
                             )}
                         </Grid>
