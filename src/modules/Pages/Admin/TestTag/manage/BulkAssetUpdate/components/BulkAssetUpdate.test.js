@@ -138,15 +138,15 @@ describe('BulkAssetUpdate', () => {
         });
 
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-        userEvent.click(getByTestId('bulk_asset_update-feature-button'));
+        await userEvent.click(getByTestId('bulk_asset_update-feature-button'));
         expect(getByTestId('footer_bar-bulk-asset-update-action-button')).toHaveAttribute('disabled');
 
         await findByTestId('filter_dialog-bulk-asset-update');
 
         const frow1 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[1];
-        userEvent.click(within(frow1).getByLabelText('Select row'));
+        await userEvent.click(within(frow1).getByLabelText('Select row'));
         const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
-        userEvent.click(within(frow2).getByLabelText('Select row'));
+        await userEvent.click(within(frow2).getByLabelText('Select row'));
 
         await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
 
@@ -172,7 +172,7 @@ describe('BulkAssetUpdate', () => {
         expect(row2.getByText('CURRENT')).toBeInTheDocument();
 
         // delete 1 item from the list
-        userEvent.click(getByTestId('action_cell-2-delete-button'));
+        await userEvent.click(getByTestId('action_cell-2-delete-button'));
 
         await waitFor(() => expect(getAllByRole('row').length).toBe(2), { timeout: 2000 }); // header and 1 row
 
@@ -200,15 +200,15 @@ describe('BulkAssetUpdate', () => {
         });
 
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-        userEvent.click(getByTestId('bulk_asset_update-feature-button'));
+        await userEvent.click(getByTestId('bulk_asset_update-feature-button'));
         expect(getByTestId('footer_bar-bulk-asset-update-action-button')).toHaveAttribute('disabled');
 
         await findByTestId('filter_dialog-bulk-asset-update');
 
         const frow1 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[1];
-        userEvent.click(within(frow1).getByLabelText('Select row'));
+        await userEvent.click(within(frow1).getByLabelText('Select row'));
         const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
-        userEvent.click(within(frow2).getByLabelText('Select row'));
+        await userEvent.click(within(frow2).getByLabelText('Select row'));
 
         await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
 
@@ -267,15 +267,15 @@ describe('BulkAssetUpdate', () => {
         });
 
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-        userEvent.click(getByTestId('bulk_asset_update-feature-button'));
+        await userEvent.click(getByTestId('bulk_asset_update-feature-button'));
         expect(getByTestId('footer_bar-bulk-asset-update-action-button')).toHaveAttribute('disabled');
 
         await findByTestId('filter_dialog-bulk-asset-update');
 
         const frow1 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[1];
-        userEvent.click(within(frow1).getByLabelText('Select row'));
+        await userEvent.click(within(frow1).getByLabelText('Select row'));
         const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
-        userEvent.click(within(frow2).getByLabelText('Select row'));
+        await userEvent.click(within(frow2).getByLabelText('Select row'));
 
         await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
 
@@ -294,7 +294,7 @@ describe('BulkAssetUpdate', () => {
 
         // check state of UI elements
         // location
-        userEvent.click(getByTestId('bulk_asset_update-location-checkbox'));
+        await userEvent.click(getByTestId('bulk_asset_update-location-checkbox'));
 
         await userEvent.click(getByTestId('location_picker-bulk-asset-update-site-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'St Lucia');
@@ -308,7 +308,7 @@ describe('BulkAssetUpdate', () => {
         expect(getByTestId('bulk_asset_update-status-checkbox')).toHaveClass('Mui-disabled');
 
         // asset type
-        userEvent.click(getByTestId('bulk_asset_update-asset-type-checkbox'));
+        await userEvent.click(getByTestId('bulk_asset_update-asset-type-checkbox'));
         await userEvent.click(getByTestId('asset_type_selector-bulk-asset-update-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'PowerBoard');
 
@@ -365,15 +365,15 @@ describe('BulkAssetUpdate', () => {
         });
 
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-        userEvent.click(getByTestId('bulk_asset_update-feature-button'));
+        await userEvent.click(getByTestId('bulk_asset_update-feature-button'));
         expect(getByTestId('footer_bar-bulk-asset-update-action-button')).toHaveAttribute('disabled');
 
         await findByTestId('filter_dialog-bulk-asset-update');
 
         const frow1 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[1];
-        userEvent.click(within(frow1).getByLabelText('Select row'));
+        await userEvent.click(within(frow1).getByLabelText('Select row'));
         const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
-        userEvent.click(within(frow2).getByLabelText('Select row'));
+        await userEvent.click(within(frow2).getByLabelText('Select row'));
 
         await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
 

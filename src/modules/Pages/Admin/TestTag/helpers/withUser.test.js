@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, WithReduxStore } from 'test-utils';
+import { render, WithReduxStore, act } from 'test-utils';
 import Immutable from 'immutable';
 
 import * as actions from '../../../../../data/actions/actionTypes';
@@ -113,7 +113,7 @@ describe('withUser', () => {
 
             const expectedActions = [actions.TESTTAG_USER_LOADING, actions.TESTTAG_USER_LOADED];
 
-            await mockActionsStore.dispatch(tntActions.loadUser());
+            await act(() => mockActionsStore.dispatch(tntActions.loadUser()));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });
