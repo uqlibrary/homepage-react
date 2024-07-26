@@ -13,6 +13,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/dateTimeHelper';
+import Box from '@mui/material/Box';
 
 const moment = require('moment');
 const ITEM_HEIGHT = 48;
@@ -159,7 +160,9 @@ export const PromoPanelAddSchedule = ({
                     data-testid="panel-edit-date-title"
                     style={{ position: 'relative', borderBottom: '1px solid #d7d1cc', fontSize: 12 }}
                     children={
-                        <h2 style={{ lineHeight: 1, margin: 0 }}>{`Add a new scheduled panel for ${groupName}`}</h2>
+                        <Box
+                            style={{ fontSize: '1.5em', fontWeight: 'bold', lineHeight: 1, margin: 0 }}
+                        >{`Add a new scheduled panel for ${groupName}`}</Box>
                     }
                 />
                 <DialogContent>

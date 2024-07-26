@@ -8,6 +8,7 @@ import parse from 'html-react-parser';
 import Button from '@mui/material/Button';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import Box from '@mui/material/Box';
 
 export const PromoPanelPreview = props => {
     return (
@@ -24,7 +25,9 @@ export const PromoPanelPreview = props => {
                     style={{ position: 'relative', borderBottom: '1px solid #d7d1cc', fontSize: 12 }}
                     children={
                         <>
-                            <h2 style={{ lineHeight: 1, margin: 0 }}>{'Preview'}</h2>
+                            <Box style={{ fontSize: '1.5em', fontWeight: 'bold', lineHeight: 1, margin: 0 }}>
+                                {'Preview'}
+                            </Box>
                             <p style={{ fontSize: 14, fontWeight: 100, lineHeight: 1, margin: 0 }}>
                                 {props.previewName}
                             </p>
