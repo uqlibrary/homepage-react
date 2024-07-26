@@ -42,8 +42,12 @@ const StyledAccordionSummary = styled(AccordionSummary)(() => ({
     width: 'auto',
     minWidth: 0,
     paddingLeft: 0,
+    minHeight: '48px !important',
     '& .MuiAccordionSummary-content': {
-        margin: 0,
+        margin: '0 !important',
+    },
+    '& .MuiAccordionSummary-contentGutters': {
+        margin: '0 !important',
     },
 }));
 
@@ -52,12 +56,17 @@ const StyleWrapper = styled('div')(() => ({
 }));
 
 const StyledLink = styled(Link)(() => ({
-    position: 'absolute',
-    top: '14px',
-    right: '10px',
-    zIndex: 10,
     color: 'black',
     fontWeight: 400,
+    '& div': {
+        paddingTop: '14px',
+    },
+    '@media (min-width: 640px)': {
+        position: 'absolute',
+        top: 0,
+        right: '10px',
+        zIndex: 10,
+    },
 }));
 
 const StyledSummary = styled('span')(({ theme }) => ({
@@ -106,7 +115,9 @@ export const Index = ({
                 <div className="layout-card">
                     <StyleWrapper>
                         <StyledLink href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb" underline="hover">
-                            Make a booking
+                            <div>
+                                Make a booking
+                            </div>
                         </StyledLink>
                         <StyledAccordion>
                             <StyledAccordionSummary
@@ -115,7 +126,7 @@ export const Index = ({
                                 id="panel1a-header"
                                 data-testid="hours-accordion-open"
                             >
-                                <StyledSummary>Opening hours and computer availability (interim)</StyledSummary>
+                                <StyledSummary>Opening hours and computer availability</StyledSummary>
                             </StyledAccordionSummary>
                             <AccordionDetails>
                                 <p>(temporary display while FE design agreed)</p>
