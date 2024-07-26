@@ -356,10 +356,10 @@ export const PromoPanelListGroupPanels = ({
                             )}
                             {!isLoading &&
                                 !promoPanelSaving &&
-                                filteredPanels.map((item, id) => {
+                                filteredPanels.map(item => {
                                     rowMarker = 0;
                                     return (
-                                        <React.Fragment key={id}>
+                                        <React.Fragment key={item.usergroup_group}>
                                             <StyledTableRowGroup>
                                                 <TableCell colSpan={3} component="td" className={'cellGroupName'}>
                                                     <Typography
@@ -392,21 +392,20 @@ export const PromoPanelListGroupPanels = ({
                                             </StyledTableRowGroup>
 
                                             {item.scheduled_panels.length > 0 &&
-                                                item.scheduled_panels.map((row, id) => {
+                                                item.scheduled_panels.map(row => {
                                                     if (
                                                         row.panel_schedule_end_time &&
                                                         moment(row.panel_schedule_end_time).toDate() > new moment()
                                                     ) {
                                                         rowMarker++;
                                                         return (
-                                                            <>
+                                                            <React.Fragment key={row.panel_schedule_id}>
                                                                 <StyledTableRow
                                                                     className={`promoPanel-data-row ${
                                                                         rowMarker % 2 === 0
                                                                             ? 'cellGroupRowEven'
                                                                             : 'cellGroupRowOdd'
                                                                     }`}
-                                                                    key={id}
                                                                 >
                                                                     <TableCell className={'cellEmpty'} />
 
@@ -462,7 +461,7 @@ export const PromoPanelListGroupPanels = ({
                                                                         />
                                                                     </TableCell>
                                                                 </StyledTableRow>
-                                                            </>
+                                                            </React.Fragment>
                                                         );
                                                     } else {
                                                         return null;
@@ -477,7 +476,7 @@ export const PromoPanelListGroupPanels = ({
                                                                 ? 'cellGroupRowEven'
                                                                 : /* istanbul ignore next */ 'cellGroupRowOdd'
                                                         }`}
-                                                        key={id}
+                                                        key={`${item.usergroup_group}-default-panel`}
                                                     >
                                                         <TableCell className={'cellEmpty'} />
 
