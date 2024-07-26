@@ -307,7 +307,7 @@ const ManageLocations = ({ actions }) => {
                         />
                     </Grid>
                     <Grid container spacing={3} className={'tableMarginTop'}>
-                        <Grid item style={{ flex: 1 }}>
+                        <Grid style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
                                 rows={row}

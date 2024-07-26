@@ -174,7 +174,7 @@ const InspectionsByLicencedUser = ({
             <StyledWrapper>
                 <StandardCard title={pageLocale.form.title}>
                     <Grid container spacing={3}>
-                        <Grid item xs={12} md={4}>
+                        <Grid xs={12} md={4}>
                             {/* Date Pickers go here */}
                             <FormControl variant="standard" fullWidth className={'formControl'}>
                                 <InputLabel>Inspector Name</InputLabel>
@@ -232,7 +232,7 @@ const InspectionsByLicencedUser = ({
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12} md={4}>
+                        <Grid xs={12} md={4}>
                             {/* Start Date */}
                             <DatePicker
                                 inputProps={{
@@ -269,7 +269,7 @@ const InspectionsByLicencedUser = ({
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} md={4}>
+                        <Grid xs={12} md={4}>
                             {/* End Date */}
                             <DatePicker
                                 inputProps={{
@@ -307,7 +307,7 @@ const InspectionsByLicencedUser = ({
                         </Grid>
                     </Grid>
                     <Grid container spacing={3} className={'tableMarginTop'}>
-                        <Grid item sx={{ flex: 1 }}>
+                        <Grid sx={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
                                 rows={row}
