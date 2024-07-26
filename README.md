@@ -409,4 +409,4 @@ GTM is very flexible and easy to configure to track required events. See more de
 - get the values of your cookies, UQLID and UQLID_USER_GROUP, from library.uq.edu.au and set them in localhost:2020
 - I think thats everything
 
-Remember to change the .env back after! (NB: You will need to restart `npm run start` for a change in .env to take effect).
+Remember to change the .env back after! (NB: You will need to restart `npm run start` for a change in .env to take effect)
