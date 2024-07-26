@@ -104,7 +104,7 @@ const LocationPicker = ({
                             options={siteList}
                             value={
                                 !hasAllOption && location.site === -1
-                                    ? ''
+                                    ? null
                                     : siteList?.find(site => site.site_id === location.site) ?? siteList?.[0]
                             }
                             onChange={(_, newValue) => {
@@ -171,7 +171,7 @@ const LocationPicker = ({
                             options={buildingList}
                             value={
                                 buildingList?.length === 0 || (!hasAllOption && location.building === -1)
-                                    ? ''
+                                    ? null
                                     : buildingList?.find(building => building.building_id === location.building)
                             }
                             onChange={(_, newValue) => {
@@ -244,7 +244,7 @@ const LocationPicker = ({
                             options={floorList}
                             value={
                                 !hasAllOption && location.floor === -1
-                                    ? ''
+                                    ? null
                                     : floorList?.find(floor => floor.floor_id === location.floor)
                             }
                             onChange={(_, newValue) => {
@@ -307,7 +307,7 @@ const LocationPicker = ({
                             options={roomList}
                             value={
                                 !hasAllOption && location.room === -1
-                                    ? ''
+                                    ? null
                                     : roomList?.find(room => room.room_id === location.room)
                             }
                             onChange={(_, newValue) => {
