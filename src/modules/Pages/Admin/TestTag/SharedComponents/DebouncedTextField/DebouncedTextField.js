@@ -18,7 +18,7 @@ const DebouncedTextField = ({ id, onChange, value, interval = DEBOUNCE_INTERVAL,
     }, []);
 
     useEffect(() => {
-        if (internalValue !== value) {
+        if (typeof value !== 'undefined' && internalValue !== value) {
             // form being reset
             setInternalValue(value);
         }
