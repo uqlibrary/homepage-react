@@ -60,6 +60,7 @@ export const LearningResourcesPanel = ({ account }) => {
 
     return (
         <StandardCard
+            style={{ border: '1px solid #d1d0d2' }}
             fullHeight
             primaryHeader
             noPadding

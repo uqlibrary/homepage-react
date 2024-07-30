@@ -15,8 +15,8 @@ exports[`AlertSplitButton default values render correctly 1`] = `
       >
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedContained MuiButtonGroup-groupedContainedHorizontal MuiButtonGroup-groupedContainedPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedContained MuiButtonGroup-groupedContainedHorizontal MuiButtonGroup-groupedContainedPrimary MuiButtonGroup-firstButton css-t41e4y-MuiButtonBase-root-MuiButton-root"
-          data-testid="alert-list-item-edit-undefined"
-          id="alert-list-item-edit-undefined"
+          data-testid="alert-list-item-edit-1"
+          id="alert-list-item-edit-1"
           tabindex="0"
           type="button"
         >
@@ -29,7 +29,7 @@ exports[`AlertSplitButton default values render correctly 1`] = `
           aria-haspopup="menu"
           aria-label="More actions"
           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-colorPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedContained MuiButtonGroup-groupedContainedHorizontal MuiButtonGroup-groupedContainedPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-colorPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedContained MuiButtonGroup-groupedContainedHorizontal MuiButtonGroup-groupedContainedPrimary MuiButtonGroup-lastButton css-1h3n7i7-MuiButtonBase-root-MuiButton-root"
-          data-testid="alert-list-arrowicon-undefined"
+          data-testid="alert-list-arrowicon-1"
           tabindex="0"
           title="More actions"
           type="button"

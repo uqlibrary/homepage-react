@@ -185,22 +185,22 @@ export const Index = ({
                         </Typography>
                     </Grid>
                     <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard>Find and borrow</StandardCard>
+                        <StandardCard style={{ border: '1px solid #d1d0d2' /* grey-300 */ }}>Find and borrow</StandardCard>
                     </Grid>
                     <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard>Study and learning support</StandardCard>
+                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>Study and learning support</StandardCard>
                     </Grid>
                     <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard>Visit</StandardCard>
+                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>Visit</StandardCard>
                     </Grid>
                     <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard>Research and publish</StandardCard>
+                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>Research and publish</StandardCard>
                     </Grid>
                     <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard>AskUs and student IT Support</StandardCard>
+                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>AskUs and student IT Support</StandardCard>
                     </Grid>
                     <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard>About</StandardCard>
+                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>About</StandardCard>
                     </Grid>
                 </Grid>
             </StandardPage>
@@ -213,16 +213,16 @@ export const Index = ({
                         </Typography>
                     </Grid>
                     <Grid item xs={12} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard>wide item</StandardCard>
+                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>wide item</StandardCard>
                     </Grid>
                     <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard>item 2</StandardCard>
+                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>item 2</StandardCard>
                     </Grid>
                     <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard>item 3</StandardCard>
+                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>item 3</StandardCard>
                     </Grid>
                     <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard>item 4</StandardCard>
+                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>item 4</StandardCard>
                     </Grid>
                 </Grid>
             </StandardPage>

@@ -226,7 +226,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
               })
             : trainingEvents;
     return (
-        <StandardCard primaryHeader title={trainingLocale.title} noPadding>
+        <StandardCard style={{ border: '1px solid #d1d0d2' }} primaryHeader title={trainingLocale.title} noPadding>
             <StyledWrapper className={'flexWrapper componentHeight'}>
                 {!!trainingEventsError && (
                     /* istanbul ignore next */ <Fade
