@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
 import Box from '@mui/material/Box';

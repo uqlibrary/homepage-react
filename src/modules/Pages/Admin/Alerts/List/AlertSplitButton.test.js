@@ -1,6 +1,7 @@
 import React from 'react';
 import { rtlRender } from 'test-utils';
 import AlertSplitButton from './AlertSplitButton';
+
 function setup(testProps = {}) {
     const props = {
         alertId: '1',
@@ -14,7 +15,7 @@ function setup(testProps = {}) {
     return rtlRender(<AlertSplitButton {...props} {...testProps} />);
 }
 
-describe('defaults', () => {
+describe('AlertSplitButton', () => {
     it('default values render correctly', () => {
         const { container } = setup();
         expect(container).toMatchSnapshot();

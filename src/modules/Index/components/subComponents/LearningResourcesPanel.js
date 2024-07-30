@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router';
-import { withRouter } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { getCampusByCode } from 'helpers/general';
 import { fullPath } from 'config/routes';
@@ -30,15 +28,16 @@ export const getUrlForLearningResourceSpecificTab = (
     return url;
 };
 
-export const LearningResourcesPanel = ({ account, history }) => {
+export const LearningResourcesPanel = ({ account }) => {
     const pageLocation = useLocation();
+    const navigate = useNavigate();
 
     const [searchUrl, setSearchUrl] = React.useState('');
     const loadSearchResult = React.useCallback(
         searchUrl => {
-            searchUrl !== '' && history.push(searchUrl);
+            searchUrl !== '' && navigate(searchUrl);
         },
-        [history],
+        [pageLocation],
     );
     React.useEffect(() => {
         loadSearchResult(searchUrl);
@@ -135,7 +134,6 @@ export const LearningResourcesPanel = ({ account, history }) => {
 
 LearningResourcesPanel.propTypes = {
     account: PropTypes.object,
-    history: PropTypes.object,
 };
 
-export default withRouter(LearningResourcesPanel);
+export default LearningResourcesPanel;

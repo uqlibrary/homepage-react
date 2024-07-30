@@ -1,26 +1,27 @@
 import React from 'react';
-import { Router, Route, Switch } from 'react-router';
-import PropTypes from 'prop-types';
+import { RouterProvider, Outlet } from 'react-router-dom';
+import { createRouter } from 'config/router';
 import { mui1theme } from 'config';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { App } from 'modules/App/components';
 
-const Root = ({ history }) => {
-    return (
-        <Router history={history}>
+const router = createRouter([
+    {
+        path: '*',
+        element: (
             <StyledEngineProvider injectFirst>
                 <ThemeProvider theme={mui1theme}>
-                    <Switch>
-                        <Route component={App} />
-                    </Switch>
+                    <App>
+                        <Outlet />
+                    </App>
                 </ThemeProvider>
             </StyledEngineProvider>
-        </Router>
-    );
-};
+        ),
+    },
+]);
 
-Root.propTypes = {
-    history: PropTypes.object,
+const Root = () => {
+    return <RouterProvider router={router} />;
 };
 
 export default Root;

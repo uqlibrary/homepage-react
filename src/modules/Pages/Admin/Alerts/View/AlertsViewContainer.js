@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import AlertsView from 'modules/Pages/Admin/Alerts/View/AlertsView';
@@ -17,7 +16,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let AlertsViewContainer = connect(mapStateToProps, mapDispatchToProps)(AlertsView);
-AlertsViewContainer = withRouter(AlertsViewContainer);
+const AlertsViewContainer = connect(mapStateToProps, mapDispatchToProps)(AlertsView);
 
 export default AlertsViewContainer;

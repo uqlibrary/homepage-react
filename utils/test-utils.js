@@ -2,8 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { render } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { Route } from 'react-router';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { mui1theme } from 'config/theme';
 import { Provider } from 'react-redux';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
@@ -15,7 +14,6 @@ import userEvent from '@testing-library/user-event';
 
 import { getStore } from '../src/config/store';
 import Immutable from 'immutable';
-import { createMemoryHistory } from 'history';
 
 const domTestingLib = require('@testing-library/dom');
 const reactTestingLib = require('@testing-library/react');
@@ -34,17 +32,10 @@ AllTheProviders.propTypes = {
 
 export const rtlRender = (ui, options) => render(ui, { wrapper: AllTheProviders, ...options });
 
-export const WithRouter = ({
-    children,
-    route = '/',
-    path = '/',
-    history = createMemoryHistory({ initialEntries: [route] }),
-}) => {
-    return (
-        <Router history={history}>
-            <Route path={path} children={children} />
-        </Router>
-    );
+export const WithRouter = ({ children, route = '/', initialEntries = [route] }) => {
+    const routes = [{ path: route, element: children }];
+    const router = createMemoryRouter(routes, { initialEntries: initialEntries });
+    return <RouterProvider router={router} />;
 };
 
 export const WithReduxStore = ({ initialState = Immutable.Map(), children }) => (

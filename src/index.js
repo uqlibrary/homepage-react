@@ -2,7 +2,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-import React from 'react';
+import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -15,7 +15,6 @@ import AppErrorBoundary from './AppErrorBoundary';
 import rootReducer from './reducer';
 import 'sass/index.scss';
 import { store } from 'config/store';
-import { history } from 'config/history';
 
 // Increase default (10) event listeners to 30
 require('events').EventEmitter.prototype._maxListeners = 30;
@@ -28,13 +27,15 @@ if (process.env.BRANCH !== 'production' && process.env.USE_MOCK) {
 const render = () => {
     const root = createRoot(document.getElementById('react-root'));
     root.render(
-        <AppErrorBoundary>
-            <Provider store={store}>
-                <LocalizationProvider dateAdapter={AdapterMoment}>
-                    <Root history={history} />
-                </LocalizationProvider>
-            </Provider>
-        </AppErrorBoundary>,
+        <StrictMode>
+            <AppErrorBoundary>
+                <Provider store={store}>
+                    <LocalizationProvider dateAdapter={AdapterMoment}>
+                        <Root />
+                    </LocalizationProvider>
+                </Provider>
+            </AppErrorBoundary>
+        </StrictMode>,
     );
 };
 

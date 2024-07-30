@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import DLOConfirmSubscription from './DLOConfirmSubscription';
@@ -18,7 +17,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let DLOConfirmSubscriptionContainer = connect(mapStateToProps, mapDispatchToProps)(DLOConfirmSubscription);
-DLOConfirmSubscriptionContainer = withRouter(DLOConfirmSubscriptionContainer);
+const DLOConfirmSubscriptionContainer = connect(mapStateToProps, mapDispatchToProps)(DLOConfirmSubscription);
 
 export default DLOConfirmSubscriptionContainer;

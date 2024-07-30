@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import Locations from '../components/Locations';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 import { withUser } from '../../../helpers/withUser';
 
@@ -18,7 +17,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 let LocationsContainer = connect(mapStateToProps, mapDispatchToProps)(Locations);
-LocationsContainer = withRouter(LocationsContainer);
 LocationsContainer = withUser(LocationsContainer);
 
 export default LocationsContainer;

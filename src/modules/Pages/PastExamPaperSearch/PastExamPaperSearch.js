@@ -16,6 +16,7 @@ import locale from './pastExamPaperSearch.locale';
 import { isRepeatingString } from 'helpers/general';
 import { noResultsFoundBlock } from './pastExamPapers.helpers';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 const StyledAboutLink = styled('p')(() => ({
     marginTop: '4em',
@@ -40,11 +41,11 @@ export const PastExamPaperSearch = ({
     examSuggestionListError,
     examSuggestionList,
     examSuggestionListLoading,
-    history,
 }) => {
     useTitle('Search for a past exam paper - Library - The University of Queensland');
     const filter = createFilterOptions();
     const MAX_LENGTH_COURSE_CODE = 9;
+    const navigate = useNavigate();
 
     const [isOpen, setOpen] = React.useState(false);
     const [searchTerm, setSearchTerm] = React.useState('');
@@ -117,7 +118,7 @@ export const PastExamPaperSearch = ({
 
     const gotoSearchResultPage = (event, value) => {
         const searchUrl = `/exams/course/${value.name.toUpperCase()}`;
-        history.push(searchUrl);
+        navigate(searchUrl);
     };
 
     return (
@@ -228,7 +229,6 @@ PastExamPaperSearch.propTypes = {
     examSuggestionListError: PropTypes.any,
     examSuggestionList: PropTypes.array,
     examSuggestionListLoading: PropTypes.bool,
-    history: PropTypes.object,
 };
 
 export default PastExamPaperSearch;
