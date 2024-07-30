@@ -101,7 +101,7 @@ const LocationPicker = ({
                             id={`${componentId}-site`}
                             data-testid={`${componentId}-site`}
                             fullWidth
-                            options={siteList}
+                            options={siteList ?? []}
                             value={
                                 !hasAllOption && location.site === -1
                                     ? null
