@@ -49,7 +49,7 @@ export default {
             alert: (group, panelTitle, panelStart, panelEnd) => (
              <div style={{ width: '100%' }}>
                  <p>{`${group}`} has a conflict with the following panel</p>
-                 <p><strong>{`${panelTitle}`}</strong><br /> scheduled to run between <br />{`${moment(panelStart).format('dddd DD/MM/YYYY HH:mm a')}`}<br /> and<br /> {`${moment(panelEnd).format('dddd DD/MM/YYYY HH:mm a')}`}</p>
+                 <p><strong>{`${panelTitle}`}</strong><br /> scheduled to run between <br />{`${moment(new Date(panelStart)).format('dddd DD/MM/YYYY HH:mm a')}`}<br /> and<br /> {`${moment(new Date(panelEnd)).format('dddd DD/MM/YYYY HH:mm a')}`}</p>
                  <p>
                  Please resolve this conflict.
                  </p>

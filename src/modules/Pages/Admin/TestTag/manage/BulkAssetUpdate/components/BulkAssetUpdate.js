@@ -269,7 +269,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                 {step === 1 && (
                     <StandardCard title={stepOneLocale.title} standardCardId={`standard_card-${componentId}-step-1`}>
                         <Grid container spacing={3}>
-                            <Grid item xs={12} md={4}>
+                            <Grid xs={12} md={4}>
                                 <AssetSelector
                                     id={componentId}
                                     locale={stepOneLocale}
@@ -283,10 +283,10 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     filter={{ status: { discarded: false } }}
                                 />
                             </Grid>
-                            <Grid item xs={12} md={2} className={'centredGrid'}>
+                            <Grid xs={12} md={2} className={'centredGrid'}>
                                 or
                             </Grid>
-                            <Grid item xs={12} md={6} className={'centredGridNoJustify'}>
+                            <Grid xs={12} md={6} className={'centredGridNoJustify'}>
                                 <Button
                                     variant="outlined"
                                     id={`${componentIdLower}-feature-button`}
@@ -301,7 +301,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                         </Grid>
                         {list.data.length > 0 && (
                             <Grid container spacing={3}>
-                                <Grid item xs={12}>
+                                <Grid xs={12}>
                                     <Alert
                                         severity="info"
                                         id={`${componentIdLower}-count-alert`}
@@ -313,7 +313,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                             </Grid>
                         )}
                         <Grid container spacing={3}>
-                            <Grid item sx={{ flex: 1 }}>
+                            <Grid sx={{ flex: 1 }}>
                                 <DataTable
                                     id={componentId}
                                     rows={list.data}
@@ -356,7 +356,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                 {step === 2 && (
                     <StandardCard title={stepTwoLocale.title} standardCardId={`standard_card-${componentId}-step-2`}>
                         <Grid container spacing={3}>
-                            <Grid item xs={12}>
+                            <Grid xs={12}>
                                 <Alert
                                     severity="warning"
                                     id={`${componentIdLower}-summary-alert`}
@@ -368,11 +368,11 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                         </Grid>
 
                         <Grid container spacing={3}>
-                            <Grid item xs={12}>
+                            <Grid xs={12}>
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            checked={formValues.hasLocation && !formValues.hasDiscardStatus}
+                                            checked={!!formValues.hasLocation && !formValues.hasDiscardStatus}
                                             onChange={handleCheckboxChange}
                                             name="hasLocation"
                                             id={`${componentIdLower}-location-checkbox`}
@@ -432,14 +432,14 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
 
                         <Grid container spacing={3}>
                             <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
-                                <Grid item xs={12} sm={6}>
+                                <Grid xs={12} sm={6}>
                                     <Grid container spacing={3}>
-                                        <Grid item xs={12}>
+                                        <Grid xs={12}>
                                             <FormControlLabel
                                                 control={
                                                     <Checkbox
                                                         checked={
-                                                            formValues.hasAssetType && !formValues.hasDiscardStatus
+                                                            !!formValues.hasAssetType && !formValues.hasDiscardStatus
                                                         }
                                                         onChange={handleCheckboxChange}
                                                         name="hasAssetType"
@@ -452,7 +452,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                                 label={stepTwoLocale.checkbox.assetType}
                                             />
                                         </Grid>
-                                        <Grid item xs={12}>
+                                        <Grid xs={12}>
                                             <AssetTypeSelector
                                                 id={componentId}
                                                 locale={pageLocale.form.assetType}
@@ -467,14 +467,14 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     </Grid>
                                 </Grid>
                             </AuthWrapper>
-                            <Grid item xs={12} sm={6}>
+                            <Grid xs={12} sm={6}>
                                 <Grid container spacing={3}>
-                                    <Grid item xs={12}>
+                                    <Grid xs={12}>
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
                                                     checked={
-                                                        formValues.hasDiscardStatus &&
+                                                        !!formValues.hasDiscardStatus &&
                                                         !formValues.hasAssetType &&
                                                         !formValues.hasLocation &&
                                                         !formValues.hasClearNotes
@@ -494,7 +494,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             label={stepTwoLocale.checkbox.status}
                                         />
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid xs={12}>
                                         <TextField
                                             {...stepTwoLocale.discardReason}
                                             required={formValues.hasDiscardStatus}
@@ -526,11 +526,11 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                             </Grid>
                         </Grid>
                         <Grid container spacing={3}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid xs={12} sm={6}>
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            checked={!formValues.hasDiscardStatus && formValues.hasClearNotes}
+                                            checked={!formValues.hasDiscardStatus && !!formValues.hasClearNotes}
                                             disabled={formValues.hasDiscardStatus}
                                             onChange={handleCheckboxChange}
                                             name="hasClearNotes"
@@ -544,7 +544,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                             </Grid>
                         </Grid>
                         <Grid container spacing={4} className={'actionButtons'}>
-                            <Grid item xs={12} sm={6} container justifyContent="flex-start">
+                            <Grid xs={12} sm={6} container justifyContent="flex-start">
                                 <Button
                                     variant="outlined"
                                     onClick={handlePrevStepButton}
@@ -555,7 +555,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     {stepTwoLocale.button.previous}
                                 </Button>
                             </Grid>
-                            <Grid item xs={12} sm={6} container justifyContent="flex-end">
+                            <Grid xs={12} sm={6} container justifyContent="flex-end">
                                 <Button
                                     variant="contained"
                                     color="primary"

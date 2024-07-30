@@ -74,7 +74,7 @@ describe('Cards component', () => {
     });
 
     it('renders with header action', () => {
-        const { container } = setup({ headerAction: jest.fn() });
+        const { container } = setup({ headerAction: <></> });
         expect(container).toMatchSnapshot();
     });
 

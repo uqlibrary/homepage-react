@@ -82,7 +82,7 @@ const EventPanel = ({
         >
             <Collapse in={eventExpanded} timeout="auto">
                 <Grid container spacing={3}>
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid xs={12} sm={6} md={3}>
                         <DatePicker
                             {...pageLocale.form.event.date}
                             inputProps={{
@@ -118,7 +118,7 @@ const EventPanel = ({
                             InputAdornmentProps={{ 'data-testid': `${componentIdLower}-event-date-button` }}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={12}>
+                    <Grid xs={12} sm={12}>
                         <Typography component={'h3'} variant={'h6'}>
                             {pageLocale.form.event.location.title}
                         </Typography>

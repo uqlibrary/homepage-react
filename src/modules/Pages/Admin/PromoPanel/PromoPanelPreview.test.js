@@ -1,6 +1,6 @@
 import { PromoPanelPreview } from './PromoPanelPreview';
 import React from 'react';
-import { rtlRender, fireEvent } from '../../../../../utils/test-utils';
+import { rtlRender, fireEvent } from 'test-utils';
 
 function setup(testProps = {}) {
     const props = {

@@ -264,7 +264,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                     />
 
                     <Grid container spacing={3}>
-                        <Grid item style={{ flex: 1 }}>
+                        <Grid style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
                                 rows={row}
