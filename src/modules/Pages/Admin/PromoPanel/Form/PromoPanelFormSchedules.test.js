@@ -17,7 +17,7 @@ function setup(testProps = {}) {
         editPanelGroupSchedule: jest.fn(),
         selectorGroupNames: ['student'],
         handleAddSchedule: jest.fn(),
-        handleChange: jest.fn(),
+        handleChange: () => jest.fn(),
         handleGroupChange: jest.fn(),
     };
     return rtlRender(<PromoPanelFormSchedules {...props} {...testProps} />);

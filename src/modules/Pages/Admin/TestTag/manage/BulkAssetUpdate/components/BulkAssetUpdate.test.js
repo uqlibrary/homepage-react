@@ -484,23 +484,23 @@ describe('BulkAssetUpdate', () => {
             });
 
             expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-            userEvent.click(getByTestId('bulk_asset_update-feature-button'));
+            await userEvent.click(getByTestId('bulk_asset_update-feature-button'));
 
             await findByTestId('filter_dialog-bulk-asset-update');
 
             // click cancel button
-            userEvent.click(getByTestId('filter_dialog-bulk-asset-update-cancel-button'));
+            await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-cancel-button'));
 
             await waitForElementToBeRemoved(() => queryByTestId('filter_dialog-bulk-asset-update'));
 
             // reopen filter so we can test things in step 2
-            userEvent.click(getByTestId('bulk_asset_update-feature-button'));
+            await userEvent.click(getByTestId('bulk_asset_update-feature-button'));
 
             await findByTestId('filter_dialog-bulk-asset-update');
             const frow1 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[1];
-            userEvent.click(within(frow1).getByLabelText('Select row'));
+            await userEvent.click(within(frow1).getByLabelText('Select row'));
             const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
-            userEvent.click(within(frow2).getByLabelText('Select row'));
+            await userEvent.click(within(frow2).getByLabelText('Select row'));
 
             await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
 
@@ -523,7 +523,7 @@ describe('BulkAssetUpdate', () => {
             // submit button
             expect(getByTestId('bulk_asset_update-submit-button')).not.toHaveAttribute('disabled');
 
-            userEvent.click(getByTestId('bulk_asset_update-submit-button'));
+            await userEvent.click(getByTestId('bulk_asset_update-submit-button'));
 
             // confirmation panel
             await findByTestId('dialogbox-bulk-asset-update');
@@ -543,12 +543,12 @@ describe('BulkAssetUpdate', () => {
                 'Operation failed: Unable to bulk update Assets',
             );
 
-            userEvent.click(getByTitle('Close'));
+            await userEvent.click(getByTitle('Close'));
 
             await waitForElementToBeRemoved(() => queryByTestId('confirmation_alert-error-alert'));
 
             // cancel & close dialog
-            userEvent.click(getByTestId('cancel-bulk-asset-update'));
+            await userEvent.click(getByTestId('cancel-bulk-asset-update'));
 
             await waitForElementToBeRemoved(() => queryByTestId('dialogbox-bulk-asset-update'));
         });
