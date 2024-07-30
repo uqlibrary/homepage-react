@@ -114,7 +114,7 @@ export const App = ({ account, actions }) => {
                 <div role="region" aria-label="UQ Library Alerts">
                     <alert-list system="homepage" />
                 </div>
-                <div style={{ flexGrow: 1, marginTop: 16 }}>
+                <div style={{ flexGrow: 1 }}>
                     <a name="content" />
                     <AccountContext.Provider
                         value={{
