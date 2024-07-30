@@ -52,9 +52,6 @@ const MyLoader = props => (
 export const Index = ({
     account,
     accountLoading,
-    author,
-    spotlightsCurrent,
-    spotlightsCurrentLoading,
     libHours,
     libHoursLoading,
     libHoursError,
@@ -64,23 +61,11 @@ export const Index = ({
     trainingEvents,
     trainingEventsLoading,
     trainingEventsError,
-    printBalance,
-    printBalanceLoading,
-    loans,
-    loansLoading,
-    possibleRecords,
-    possibleRecordsLoading,
-    incompleteNTRO,
-    incompleteNTROLoading,
-    currentPromoPanel,
-    promoPanelActionError,
-    promoPanelLoading,
 }) => {
     const dispatch = useDispatch();
-    // Load homepage data requirements
+
     useEffect(() => {
         if (accountLoading === false) {
-            dispatch(loadCurrentSpotlights());
             dispatch(loadLibHours());
             dispatch(loadCompAvail());
         }
@@ -89,50 +74,8 @@ export const Index = ({
     useEffect(() => {
         if (accountLoading === false) {
             dispatch(loadTrainingEvents(account));
-            // Grab the relevant promo panel here.
-            if (!!!account) {
-                // load anonymous panel
-                dispatch(getAnonPromoPanel());
-            } else {
-                // load specific panel.
-                dispatch(getAssignedPromoPanel());
-            }
         }
     }, [account, accountLoading, dispatch]);
-    useEffect(() => {
-        if (accountLoading === false && !!account && !printBalance && printBalanceLoading === null) {
-            dispatch(loadPrintBalance());
-        }
-    }, [accountLoading, account, printBalance, printBalanceLoading, dispatch]);
-    useEffect(() => {
-        if (accountLoading === false && !!account && !loans && loansLoading === null) {
-            dispatch(loadLoans());
-        }
-    }, [accountLoading, account, loans, loansLoading, dispatch]);
-    useEffect(() => {
-        if (
-            accountLoading === false &&
-            !!account &&
-            !!author &&
-            !!author.aut_id &&
-            !possibleRecords &&
-            possibleRecordsLoading === null
-        ) {
-            dispatch(searcheSpacePossiblePublications());
-        }
-    }, [accountLoading, account, author, possibleRecords, possibleRecordsLoading, dispatch]);
-    useEffect(() => {
-        if (
-            accountLoading === false &&
-            !!account &&
-            !!author &&
-            !!author.aut_id &&
-            !incompleteNTRO &&
-            incompleteNTROLoading === null
-        ) {
-            dispatch(searcheSpaceIncompleteNTROPublications());
-        }
-    }, [accountLoading, account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
     return (
         <React.Suspense fallback={<ContentLoader message="Loading" />}>
             <StandardPage>
@@ -141,49 +84,12 @@ export const Index = ({
                     <Grid item xs={12} style={{ marginTop: 12 }}>
                         <search-portal />
                     </Grid>
-                    {accountLoading === false && !!account && (
-                        <Hidden mdUp>
-                            <Grid item xs={12} lg={4} id="personalisedPanel" data-testid="personalisedPanel">
-                                <PersonalisedPanel
-                                    account={account}
-                                    author={author}
-                                    loans={loans}
-                                    printBalance={printBalance}
-                                    possibleRecords={possibleRecords && possibleRecords.total}
-                                    incompleteNTRORecords={incompleteNTRO}
-                                />
-                            </Grid>
-                        </Hidden>
-                    )}
-                    <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
-                        <Spotlights
-                            spotlights={spotlightsCurrent}
-                            spotlightsLoading={spotlightsCurrentLoading}
-                            account={account}
-                        />
-                    </Grid>
                     {/* Personalisation panel or hours */}
                     {!!accountLoading && (
                         /* istanbul ignore next */
                         <Grid item xs={12} md={4}>
                             <MyLoader />
                         </Grid>
-                    )}
-                    {/* Personalisation panel, desktop */}
-                    {accountLoading === false && !!account && (
-                        <Hidden mdDown>
-                            <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
-                                <PersonalisedPanel
-                                    account={account}
-                                    author={author}
-                                    loans={loans}
-                                    printBalance={printBalance}
-                                    possibleRecords={possibleRecords && possibleRecords.total}
-                                    incompleteNTRORecords={incompleteNTRO}
-                                    isNextToSpotlights
-                                />
-                            </Grid>
-                        </Hidden>
                     )}
                     {/* Hours panel, logged out */}
                     {accountLoading === false && !account && (
@@ -228,16 +134,6 @@ export const Index = ({
                             trainingEventsError={trainingEventsError}
                         />
                     </Grid>
-
-                    {canSeeLibraryServices(account) && (
-                        <Grid item xs={12} md={4} data-testid="library-services-panel">
-                            <LibraryServices account={account} />
-                        </Grid>
-                    )}
-
-                    <Grid item xs={12} md={4}>
-                        <PromoPanel useAPI promoPanelLoading={promoPanelLoading} account={account} accountLoading={accountLoading} promoPanelActionError={promoPanelActionError} currentPromoPanel={currentPromoPanel} />
-                    </Grid>
                 </Grid>
             </StandardPage>
         </React.Suspense>
@@ -247,11 +143,7 @@ export const Index = ({
 Index.propTypes = {
     account: PropTypes.object,
     accountLoading: PropTypes.bool,
-    author: PropTypes.object,
     actions: PropTypes.any,
-    spotlightsCurrent: PropTypes.any,
-    // spotlightsCurrentError: PropTypes.any,
-    spotlightsCurrentLoading: PropTypes.bool,
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
     libHoursError: PropTypes.bool,
@@ -261,17 +153,6 @@ Index.propTypes = {
     trainingEvents: PropTypes.any,
     trainingEventsLoading: PropTypes.bool,
     trainingEventsError: PropTypes.bool,
-    printBalance: PropTypes.object,
-    printBalanceLoading: PropTypes.bool,
-    loans: PropTypes.object,
-    loansLoading: PropTypes.bool,
-    possibleRecords: PropTypes.object,
-    possibleRecordsLoading: PropTypes.bool,
-    incompleteNTRO: PropTypes.object,
-    incompleteNTROLoading: PropTypes.bool,
-    currentPromoPanel: PropTypes.object,
-    promoPanelActionError: PropTypes.string,
-    promoPanelLoading: PropTypes.bool,
 };
 
 export default Index;
