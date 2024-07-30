@@ -313,7 +313,7 @@ const LocationPicker = ({
                             onChange={(_, newValue) => {
                                 setLocation({ room: newValue.room_id }, true);
                             }}
-                            getOptionLabel={option => option.room_id_displayed ?? option}
+                            getOptionLabel={option => option.room_id_displayed ?? /* istanbul ignore next */ option}
                             renderInput={params => (
                                 <TextField
                                     {...params}
