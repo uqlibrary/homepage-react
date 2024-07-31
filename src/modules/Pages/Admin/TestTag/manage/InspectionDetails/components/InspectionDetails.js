@@ -120,7 +120,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                         isBusy={dialogueBusy}
                     />
                     <Grid container spacing={3}>
-                        <Grid item xs={12} md={4} style={{ flex: 1 }}>
+                        <Grid xs={12} md={4} style={{ flex: 1 }}>
                             <AssetSelector
                                 id={componentId}
                                 locale={pageLocale.form}
@@ -141,7 +141,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                             marginTop: theme.spacing(0);
                         }}
                     >
-                        <Grid item style={{ flex: 1 }}>
+                        <Grid style={{ flex: 1 }}>
                             <DataTable
                                 rows={row}
                                 columns={columns}

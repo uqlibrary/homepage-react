@@ -1,6 +1,6 @@
 import React from 'react';
 import PromoPanelFormSchedules from './PromoPanelFormSchedules';
-import { rtlRender, fireEvent } from '../../../../../../utils/test-utils';
+import { rtlRender, fireEvent } from 'test-utils';
 
 function setup(testProps = {}) {
     const props = {
@@ -17,7 +17,7 @@ function setup(testProps = {}) {
         editPanelGroupSchedule: jest.fn(),
         selectorGroupNames: ['student'],
         handleAddSchedule: jest.fn(),
-        handleChange: jest.fn(),
+        handleChange: () => jest.fn(),
         handleGroupChange: jest.fn(),
     };
     return rtlRender(<PromoPanelFormSchedules {...props} {...testProps} />);

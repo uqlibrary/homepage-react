@@ -145,7 +145,7 @@ const FilterDialog = ({
                         />
                     </Grid>
                     <Grid container spacing={3}>
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid xs={12} sm={6} md={4}>
                             <AssetTypeSelector
                                 id={rootId}
                                 locale={assetTypeLocale}
@@ -161,7 +161,7 @@ const FilterDialog = ({
                                 disableClearable={false}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
+                        <Grid xs={12} sm={6} md={4}>
                             <DebouncedTextField
                                 id={`${componentId}-search-notes`}
                                 inputProps={{
@@ -195,7 +195,7 @@ const FilterDialog = ({
                         </Grid>
                     </Grid>
                     <Grid container spacing={3}>
-                        <Grid item sx={{ flex: 1 }}>
+                        <Grid sx={{ flex: 1 }}>
                             <DataTable
                                 id={rootId}
                                 rows={row}
@@ -211,7 +211,7 @@ const FilterDialog = ({
                         </Grid>
                     </Grid>
                     <Grid container spacing={4} className={'actionButtons'}>
-                        <Grid item xs={12} sm={6} container justifyContent="flex-start">
+                        <Grid xs={12} sm={6} container justifyContent="flex-start">
                             <Button
                                 variant="outlined"
                                 onClick={handleCancelAction}
@@ -222,7 +222,7 @@ const FilterDialog = ({
                                 {locale.button.cancel}
                             </Button>
                         </Grid>
-                        <Grid item xs={12} sm={6} container justifyContent="flex-end">
+                        <Grid xs={12} sm={6} container justifyContent="flex-end">
                             <Button
                                 variant="contained"
                                 color="primary"

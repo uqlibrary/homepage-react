@@ -187,7 +187,7 @@ const AssetReportByFilters = ({
             <StyledWrapper>
                 <StandardCard title={pageLocale.form.title} id={componentId}>
                     <Grid container spacing={1}>
-                        <Grid item xs={12} md={6} lg={3}>
+                        <Grid xs={12} md={6} lg={3}>
                             {/* Status Picker */}
                             <AssetStatusSelector
                                 id={componentId}
@@ -198,7 +198,7 @@ const AssetReportByFilters = ({
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
                             />
                         </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
+                        <Grid xs={12} md={6} lg={3}>
                             {/* Building Picker */}
                             <LocationPicker
                                 id={componentIdLower}
@@ -215,7 +215,7 @@ const AssetReportByFilters = ({
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
                             />
                         </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
+                        <Grid xs={12} md={6} lg={3}>
                             {/* Start Date */}
                             <DatePicker
                                 inputProps={{
@@ -257,7 +257,7 @@ const AssetReportByFilters = ({
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
+                        <Grid xs={12} md={6} lg={3}>
                             <DatePicker
                                 inputProps={{
                                     id: `${componentIdLower}-tagged-end-input`,
@@ -299,7 +299,7 @@ const AssetReportByFilters = ({
                     </Grid>
 
                     <Grid container spacing={3} className={'tableMarginTop'}>
-                        <Grid item style={{ flex: 1 }}>
+                        <Grid style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
                                 rows={row}

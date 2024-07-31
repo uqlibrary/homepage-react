@@ -234,7 +234,7 @@ describe('InspectionsByLicencedUser', () => {
                 licencedUsersError: 'Test licencedUsersError error',
             });
             expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent('Test licencedUsersError error');
-            userEvent.click(getByTitle('Close'));
+            await userEvent.click(getByTitle('Close'));
 
             await waitFor(() => expect(queryByTestId('confirmation_alert-error-alert')).not.toBeInTheDocument());
             expect(clearLicencedUsersErrorFn).toHaveBeenCalled();
@@ -250,7 +250,7 @@ describe('InspectionsByLicencedUser', () => {
                 userInspectionsError: 'Test userInspectionsError error',
             });
             expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent('Test userInspectionsError error');
-            userEvent.click(getByTitle('Close'));
+            await userEvent.click(getByTitle('Close'));
 
             await waitFor(() => expect(queryByTestId('confirmation_alert-error-alert')).not.toBeInTheDocument());
             expect(clearInspectionsErrorFn).toHaveBeenCalled();
