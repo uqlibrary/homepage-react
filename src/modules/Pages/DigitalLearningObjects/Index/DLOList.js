@@ -138,7 +138,7 @@ const StyledFilterSidebarGrid = styled(Grid)(({ theme }) => ({
 }));
 const StyledArticleCard = styled('button')(({ theme }) => ({
     backgroundColor: '#fff',
-    borderColor: 'transparent',
+    border: 'thin solid #d1d0d2',
     fontFamily: 'Roboto, sans-serif',
     paddingInline: 0,
     textAlign: 'left',
@@ -146,8 +146,6 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
     '&:hover': {
         cursor: 'pointer',
         textDecoration: 'none',
-        borderTopColor: '#f2f2f2',
-        borderLeftColor: '#f2f2f2',
         '& > article': {
             backgroundColor: '#f2f2f2',
         },

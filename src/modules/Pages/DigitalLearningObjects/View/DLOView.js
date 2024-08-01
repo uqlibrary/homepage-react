@@ -98,6 +98,8 @@ const StyledTitleBlockDiv = styled('div')(() => ({
 const StyledHeaderDiv = styled(Typography)(() => ({
     backgroundColor: 'white',
     padding: '12px',
+    border: 'thin solid #d1d0d2',
+    marginTop: '12px',
     '& p': {
         margin: 0,
         fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
@@ -146,15 +148,16 @@ const StyledSeriesList = styled('ol')(() => ({
     },
 }));
 const StyledDemographicsBox = styled(Box)(() => ({
-    padding: '1em',
-    marginTop: '24px',
-    borderRadius: '10px',
+    border: 'thin solid #d1d0d2',
     backgroundColor: 'white',
+    marginTop: '24px',
+    padding: '1em',
     '& p': { marginLeft: '-8px' },
     '& form': { margin: '-8px', '& p': { marginBlock: '3em 0', marginLeft: '2px' } },
 }));
 const StyledLayoutBox = styled(Box)(() => ({
     backgroundColor: 'white',
+    border: 'thin solid #d1d0d2',
     padding: '12px',
     marginTop: '24px',
 }));
