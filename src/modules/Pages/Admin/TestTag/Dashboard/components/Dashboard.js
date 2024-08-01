@@ -34,6 +34,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
     '& .card': {
         flex: 1,
+        border: 'thin solid #d1d0d2',
     },
     '& .centreAlignParent': {
         display: 'flex',

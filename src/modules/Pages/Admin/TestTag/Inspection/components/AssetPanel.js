@@ -103,7 +103,11 @@ const AssetPanel = ({
     };
 
     return (
-        <StandardCard standardCardId={componentIdLower} title={pageLocale.title} style={{ marginTop: '30px' }}>
+        <StandardCard
+            standardCardId={componentIdLower}
+            title={pageLocale.title}
+            style={{ marginTop: '30px', border: 'thin solid #d1d0d2' }}
+        >
             <UpdateDialog
                 title={actionState.title}
                 action="add"
