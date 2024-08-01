@@ -562,6 +562,8 @@ describe('Alerts Admin Form Pages', () => {
             );
             clickSVGButton('[data-testid="admin-alerts-form-another-date-button-' + buttonId + '"]');
         }
+        // this test seems to be flakey now
+        // will have to figure out how much of it is really needed
         it('the "add a date set button" works', () => {
             cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('exist');
             cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('exist');
