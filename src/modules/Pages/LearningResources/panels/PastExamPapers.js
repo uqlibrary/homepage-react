@@ -14,7 +14,7 @@ import { styled } from '@mui/material/styles';
 
 const StyledItem = styled(Grid)(() => ({
     borderTop: '1px solid #e8e8e8',
-    padding: '15px 0',
+    paddingBlock: '15px',
     '& a': {
         display: 'flex',
         alignItems: 'center',
@@ -54,7 +54,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                 )}
 
                 {!examListError && !!examListLoading && (
-                    <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
+                    <Grid item xs={'auto'} style={{ width: 80, opacity: 0.3 }}>
                         <CircularProgress
                             color="primary"
                             size={20}
