@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 import { useLocation } from 'react-router-dom';
@@ -20,6 +20,7 @@ import Grid from '@mui/material/Grid';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { styled } from '@mui/material/styles';
+import { breadcrumbs } from 'config/routes';
 
 // lecturers are now maintaining their own courses (it used to be the Library learning Resource team)
 // the Talis screen is just a text field, in which they are supposed to put the course ID
@@ -130,6 +131,12 @@ export const LearningResources = ({
     const { account } = useAccountContext();
     const location = useLocation();
 
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.learningresources.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.learningresources.pathname);
+    }, []);
+
     // store a list of the Guides that have been loaded, by subject
     const [currentGuidesList, updateGuidesList] = useState([]);
 
@@ -167,7 +174,7 @@ export const LearningResources = ({
     );
 
     const params = getQueryParams(location.search);
-    React.useEffect(() => {
+    useEffect(() => {
         if (!!params.coursecode && !!params.campus && !!params.semester) {
             if (!currentReadingLists[params.coursecode]) {
                 loadNewSubject(params.coursecode, params.campus, params.semester);

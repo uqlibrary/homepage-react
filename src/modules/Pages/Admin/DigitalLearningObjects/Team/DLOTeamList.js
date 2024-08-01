@@ -18,6 +18,7 @@ import { pluraliseWord } from 'modules/Pages/DigitalLearningObjects/dlorHelpers'
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/ObjectListItem';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
+import { breadcrumbs } from 'config/routes';
 
 const StyledObjectDetails = styled('details')(() => ({
     marginLeft: '20px',
@@ -42,6 +43,12 @@ export const DLOTeamList = ({
     const [teamToDelete, setObjectToDelete] = React.useState(null);
     const [deleteStep, setDeleteStep] = React.useState(DELETION_STEP_NULL);
     const [confirmationOpen, setConfirmationOpen] = useState(false);
+
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dloradmin.pathname);
+    }, []);
 
     useEffect(() => {
         if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {

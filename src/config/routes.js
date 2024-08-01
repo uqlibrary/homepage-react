@@ -302,3 +302,16 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 };
+
+// the top level link that appears in the page breadcrumb
+// call with use effect on eveyer page that should have a 3rd level breadcrumb
+export const breadcrumbs = {
+    alertsadmin: { pathname: '/admin/alerts', title: 'Alerts admin' },
+    dloradmin: { pathname: '/admin/dlor', title: 'Digital learning hub admin' },
+    testntag: { pathname: '/admin/testntag', title: 'Test and tag' },
+    bookexambooth: { pathname: '/book-exam-booth', title: 'Book an Exam booth' },
+    dlor: { pathname: '/digital-learning-hub', title: 'Digital learning hub' },
+    exampapers: { pathname: '/exams', title: 'Past exam papers' },
+    learningresources: { pathname: '/learning-resources', title: 'Learning resources' },
+    paymentreceipt: { pathname: '/payment-receipt', title: 'Payment receipt' },
+};

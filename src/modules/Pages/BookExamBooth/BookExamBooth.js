@@ -14,6 +14,7 @@ import { useTitle } from 'hooks';
 
 import locale from './bookExamBooth.locale';
 import { getMapLabel } from './bookExamBoothHelper';
+import { breadcrumbs } from 'config/routes';
 
 const StyledStandardCard = styled(StandardCard)(() => ({
     border: 'thin solid #d1d0d2',
@@ -28,6 +29,12 @@ const BookExamBooth = ({
     startTimeHoursListByExamLength,
 }) => {
     useTitle(locale.title);
+
+    React.useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookexambooth.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookexambooth.pathname);
+    }, []);
 
     const dateFormat = 'DD/MM/YYYY';
     const defaultHour = 8;

@@ -25,6 +25,7 @@ import { getNameStyles, transformRow } from './utils';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 
 import FooterRow from './FooterRow';
+import { breadcrumbs } from 'config/routes';
 
 const componentId = 'user-inspections';
 const componentIdLower = 'user_inspections';
@@ -161,6 +162,10 @@ const InspectionsByLicencedUser = ({
     }, [licencedUsers, licencedUsersLoaded]);
 
     useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
+
         actions.getInspectionsByLicencedUser({ startDate: null, endDate: null, userRange: null });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

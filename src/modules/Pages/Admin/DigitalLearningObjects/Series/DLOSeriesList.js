@@ -20,6 +20,7 @@ import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//Shar
 import { useConfirmationState } from 'hooks';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 import { pluraliseWord } from '../../../DigitalLearningObjects/dlorHelpers';
+import { breadcrumbs } from 'config/routes';
 
 const StyledObjectDetails = styled('details')(() => ({
     marginLeft: '20px',
@@ -44,6 +45,12 @@ export const DLOSeriesList = ({
     const [seriesToDelete, setObjectToDelete] = React.useState(null);
     const [deleteStep, setDeleteStep] = React.useState(DELETION_STEP_NULL);
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
+
+    React.useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dloradmin.pathname);
+    }, []);
 
     useEffect(() => {
         if (!dlorSeriesListError && !dlorSeriesListLoading && !dlorSeriesList) {

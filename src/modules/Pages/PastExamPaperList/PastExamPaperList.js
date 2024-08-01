@@ -20,6 +20,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { noResultsFoundBlock, MESSAGE_EXAMCODE_404 } from 'modules/Pages/PastExamPaperSearch/pastExamPapers.helpers';
 import { styled } from '@mui/material/styles';
+import { breadcrumbs } from 'config/routes';
 
 const StyledTableCell = styled(TableCell)(() => ({
     textAlign: 'center',
@@ -62,6 +63,12 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
             : /* istanbul ignore next */ 'Past Exam Papers by Subject';
 
     useTitle(`${listTitle} - Library - The University of Queensland`);
+
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.exampapers.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.exampapers.pathname);
+    }, []);
 
     useEffect(() => {
         /* istanbul ignore else */

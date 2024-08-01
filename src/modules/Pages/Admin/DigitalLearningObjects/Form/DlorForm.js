@@ -54,6 +54,7 @@ import {
     splitStringToArrayOnComma,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { breadcrumbs } from 'config/routes';
 
 const StyledErrorCountBadge = styled(Badge)(() => ({
     '& span': {
@@ -157,6 +158,12 @@ export const DlorForm = ({
 
         return facetType?.facet_list?.map(facet => facet.facet_id) || /* istanbul ignore next */ [];
     }
+
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dloradmin.pathname);
+    }, []);
 
     useEffect(() => {
         console.log(

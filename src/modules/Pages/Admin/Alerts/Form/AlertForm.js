@@ -12,6 +12,7 @@ import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
@@ -29,8 +30,8 @@ import {
 } from '../alerthelpers';
 import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage } from 'helpers/general';
-import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { breadcrumbs } from 'config/routes';
 
 const moment = require('moment');
 
@@ -154,6 +155,10 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     };
 
     useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.alertsadmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.alertsadmin.pathname);
+
         if (!!defaults && defaults.type === 'clone') {
             setFormValidity(validateValues(defaults));
         }
