@@ -15,9 +15,15 @@ import { styled } from '@mui/material/styles';
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.white.main,
     color: theme.palette.secondary.dark,
-    marginTop: '24px',
+    boxShadow: 'none',
+    border: '1px solid rgba(0, 0, 0, 0.2)',
 }));
 
+const StyledTabPanel = styled(TabPanel)(() => ({
+    '& >div': {
+        padding: 0,
+    },
+}));
 export const isEnrolledInSubject = (subject, account) => {
     return (
         (!!account &&
@@ -142,14 +148,13 @@ export const CourseSearch = ({
                     subjectList.length > 0 &&
                     subjectList.map((subjectCode, index) => {
                         return (
-                            <TabPanel
+                            <StyledTabPanel
                                 data-testid={`classpanel-${index}`}
                                 index={`${subjectTabLabel}-${index}`} // must match 'value' in Tabs
                                 label="classpanel"
                                 key={`classpanel-${index}`}
                                 tabId={searchTab}
                                 value={searchTab}
-                                sx={{ backgroundColor: 'rgb(247, 247, 247)', margin: 0 }}
                                 {...reverseA11yProps(index, subjectTabLabel)}
                             >
                                 <SubjectBody
@@ -160,7 +165,7 @@ export const CourseSearch = ({
                                     panelHeadingLevel="h4"
                                     subjectHeaderLevel="h3"
                                 />
-                            </TabPanel>
+                            </StyledTabPanel>
                         );
                     })}
             </Fragment>
@@ -240,12 +245,7 @@ export const CourseSearch = ({
             </Grid>
             {!!listSearchedSubjects && listSearchedSubjects.length > 0 && (
                 <Grid item xs={12} role="region" aria-live="assertive" aria-label="Learning Resource Search Results">
-                    <Typography
-                        component="h2"
-                        variant="h6"
-                        style={{ marginLeft: '1.2rem' }}
-                        id="learning-resource-search-results"
-                    >
+                    <Typography component="h2" variant="h6" id="learning-resource-search-results">
                         {locale.searchResultsTitle}
                     </Typography>
                     {renderSearchResults(listSearchedSubjects)}

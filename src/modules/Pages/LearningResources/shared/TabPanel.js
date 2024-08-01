@@ -15,11 +15,7 @@ export const TabPanel = props => {
             aria-labelledby={tabId || `${label}-${index}`}
             {...other}
         >
-            {value === index && (
-                <Box p={3} style={{ paddingLeft: 0, paddingRight: 0, paddingBottom: 0 }}>
-                    {children}
-                </Box>
-            )}
+            {value === index && <Box p={3}>{children}</Box>}
         </Grid>
     );
 };

@@ -12,24 +12,22 @@ import Typography from '@mui/material/Typography';
 import { unescapeString } from 'helpers/general';
 import { styled } from '@mui/material/styles';
 
-const StyledContentBlock = styled(Grid)(({ theme }) => ({
-    '&.contentBlock': {
-        paddingLeft: 12,
-        paddingRight: 12,
-        marginBlock: 6,
-    },
-    '& .panelGap': {
-        [theme.breakpoints.up('md')]: {
-            paddingLeft: 16,
-        },
-        [theme.breakpoints.down('md')]: {
-            paddingTop: 16,
+const StyledGridContainer = styled(Grid)(() => ({
+    paddingTop: '32px',
+    marginTop: 'initial',
+    '& >div': {
+        padding: '0 !important',
+        marginBottom: '13px',
+        '& >div': {
+            marginRight: '10px',
+            border: '1px solid #d1d0d2',
         },
     },
 }));
 const StyledHeader = styled(Typography)(({ theme }) => ({
     color: theme.palette.primary.light,
     textAlign: 'center',
+    marginTop: '12px',
 }));
 
 export const SubjectBody = ({
@@ -58,19 +56,14 @@ export const SubjectBody = ({
     const readingListError =
         subject.classnumber === readingList.coursecode ? /* istanbul ignore next */ readingList.error : null;
     return (
-        <React.Fragment>
+        <>
             <StyledHeader component={subjectHeaderLevel} variant={'h5'} data-testid="learning-resource-subject-title">
                 {subjectHeading(subject)}
                 <br />
             </StyledHeader>
 
-            <StyledContentBlock
-                container
-                spacing={3}
-                className={'contentBlock'}
-                data-testid="learning-resource-subject-reading-list"
-            >
-                <Grid item xs={12} md={6} className={'panelGap'}>
+            <StyledGridContainer container data-testid="learning-resource-subject-reading-list">
+                <Grid item xs={12} md={6}>
                     <ReadingLists
                         courseCode={coursecode}
                         readingList={readingList.list[coursecode]}
@@ -79,7 +72,7 @@ export const SubjectBody = ({
                         headingLevel={panelHeadingLevel}
                     />
                 </Grid>
-                <Grid item xs={12} md={6} data-testid="learning-resource-subject-exams" className={'panelGap'}>
+                <Grid item xs={12} md={6} data-testid="learning-resource-subject-exams">
                     <PastExamPapers
                         examList={examList.list[coursecode]}
                         examListLoading={examList.loading}
@@ -98,8 +91,8 @@ export const SubjectBody = ({
                 <Grid item xs={12} md={6}>
                     <SubjectLinks subject={subject} headingLevel={panelHeadingLevel} />
                 </Grid>
-            </StyledContentBlock>
-        </React.Fragment>
+            </StyledGridContainer>
+        </>
     );
 };
 

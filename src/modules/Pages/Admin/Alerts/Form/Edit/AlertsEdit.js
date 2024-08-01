@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -13,7 +13,7 @@ import { getTimeNowFormatted, extractFieldsFromBody } from '../../alerthelpers';
 import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { default as locale } from '../../alertsadmin.locale';
 
-export const AlertsEdit = ({ actions, alert, alertError, alertLoading, alertStatus, history }) => {
+export const AlertsEdit = ({ actions, alert, alertError, alertLoading, alertStatus }) => {
     const { alertid } = useParams();
 
     React.useEffect(() => {
@@ -74,7 +74,6 @@ export const AlertsEdit = ({ actions, alert, alertError, alertLoading, alertStat
                     <AlertsUtilityArea
                         actions={actions}
                         helpContent={locale.form.help}
-                        history={history}
                         // showCloneButton
                     />
                     <StandardCard title="Edit alert">
@@ -85,7 +84,6 @@ export const AlertsEdit = ({ actions, alert, alertError, alertLoading, alertStat
                             alertError={alertError}
                             alertStatus={alertStatus}
                             defaults={defaults}
-                            history={history}
                         />
                     </StandardCard>
                 </section>
@@ -100,7 +98,6 @@ AlertsEdit.propTypes = {
     alertError: PropTypes.any,
     alertLoading: PropTypes.any,
     alertStatus: PropTypes.any,
-    history: PropTypes.object,
 };
 
 export default AlertsEdit;

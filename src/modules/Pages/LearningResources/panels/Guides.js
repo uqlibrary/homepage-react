@@ -32,16 +32,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                     <Typography>{locale.myCourses.guides.unavailable}</Typography>
                 )}
                 {!guideListError && !!guideListLoading && (
-                    <Grid
-                        item
-                        xs={12}
-                        style={{
-                            width: 80,
-                            marginRight: 20,
-                            marginBottom: 6,
-                            opacity: 0.3,
-                        }}
-                    >
+                    <Grid item xs={12} style={{ width: 80, opacity: 0.3 }}>
                         <CircularProgress
                             color="primary"
                             size={20}

@@ -210,3 +210,15 @@ export const slugifyName = text => {
 export function convertSnakeCaseToKebabCase(snakeCaseString) {
     return snakeCaseString.replace(/_/g, '-');
 }
+
+export function isKeyPressed(e, charKeyInput, numericKeyInput) {
+    const keyNumeric = e.charCode || e.keyCode;
+    const keyChar = e.key || /* istanbul ignore next */ e.code;
+    return keyChar === charKeyInput || keyNumeric === numericKeyInput;
+}
+export function isReturnKeyPressed(e) {
+    return isKeyPressed(e, 'Enter', 13);
+}
+export function isEscapeKeyPressed(e) {
+    return isKeyPressed(e, 'Escape', 27);
+}

@@ -14,15 +14,8 @@ import { default as locale } from 'modules/Pages/LearningResources/shared/learni
 import { styled } from '@mui/material/styles';
 
 const StyledSearchPanel = styled(Grid)(() => ({
-    '&.searchPanel': {
-        paddingTop: 12,
-        paddingRight: 20,
-        paddingBottom: 0,
-        paddingLeft: 20,
-    },
     '& .searchPanelInfo': {
         color: 'red',
-        paddingLeft: '2em',
     },
     '& .selectInput': {
         fontWeight: 300,
@@ -30,16 +23,10 @@ const StyledSearchPanel = styled(Grid)(() => ({
         overflow: 'hidden !important',
         whiteSpace: 'nowrap !important',
         '&::placeholder': {
-            paddingRight: 50,
             textOverflow: 'ellipsis !important',
             overflow: 'hidden !important',
             whiteSpace: 'nowrap !important',
         },
-    },
-    '& .searchTitle': {
-        marginBlockStart: '0.5rem',
-        marginBlockEnd: '0.5rem',
-        marginLeft: '1rem',
     },
 }));
 
@@ -109,16 +96,11 @@ export const LearningResourceSearch = ({
     }
 
     // we group them all together to place a header at the top of the search results
-    const renderGroup = params => [
-        <h3 className={'searchTitle'} key={params.key}>
-            {locale.search.autocompleteResultsTitle}
-        </h3>,
-        params.children,
-    ];
+    const renderGroup = params => [<h3 key={params.key}>{locale.search.autocompleteResultsTitle}</h3>, params.children];
 
     return (
         <form>
-            <StyledSearchPanel container spacing={1} className={'searchPanel'} alignItems={'flex-end'}>
+            <StyledSearchPanel container spacing={1} alignItems={'flex-end'}>
                 <Grid item xs={12} sm>
                     <Autocomplete
                         filterOptions={options => {

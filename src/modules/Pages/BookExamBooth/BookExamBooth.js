@@ -6,6 +6,7 @@ import { Button, FormControl, FormControlLabel, Grid, MenuItem, Radio, RadioGrou
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import TextField from '@mui/material/TextField';
 import MapIcon from '@mui/icons-material/Map';
+import { styled } from '@mui/material/styles';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -13,6 +14,10 @@ import { useTitle } from 'hooks';
 
 import locale from './bookExamBooth.locale';
 import { getMapLabel } from './bookExamBoothHelper';
+
+const StyledStandardCard = styled(StandardCard)(() => ({
+    border: 'thin solid #d1d0d2',
+}));
 
 const BookExamBooth = ({
     getBookingUrl,
@@ -121,7 +126,7 @@ const BookExamBooth = ({
                     {locale.intro}
                 </Grid>
                 <Grid item xs={12}>
-                    <StandardCard title={locale.displayDecider.heading}>
+                    <StyledStandardCard title={locale.displayDecider.heading}>
                         <div className="displayDecider">
                             <label htmlFor="displayDecider">{locale.displayDecider.label}</label>
                             <br />
@@ -147,12 +152,12 @@ const BookExamBooth = ({
                                 </RadioGroup>
                             </FormControl>
                         </div>
-                    </StandardCard>
+                    </StyledStandardCard>
                 </Grid>
 
                 {isProctorU === 'yes' && (
                     <Grid item xs={12}>
-                        <StandardCard title={locale.locationDecider.heading}>
+                        <StyledStandardCard title={locale.locationDecider.heading}>
                             <div>
                                 <FormControl variant="standard" component="fieldset" required>
                                     <RadioGroup
@@ -190,21 +195,21 @@ const BookExamBooth = ({
                                     </RadioGroup>
                                 </FormControl>
                             </div>
-                        </StandardCard>
+                        </StyledStandardCard>
                     </Grid>
                 )}
 
                 {isProctorU === 'no' && (
                     <Grid item xs={12}>
-                        <StandardCard title={locale.noBookingMessage.title} standardCardId="no-booking-necessary">
+                        <StyledStandardCard title={locale.noBookingMessage.title} standardCardId="no-booking-necessary">
                             {locale.noBookingMessage.message}
-                        </StandardCard>
+                        </StyledStandardCard>
                     </Grid>
                 )}
 
                 {isProctorU === 'yes' && chosenLocationCode !== 'unset' && (
                     <Grid item xs={12}>
-                        <StandardCard title={locale.detailsSectionHeading} standardCardId="booking-details">
+                        <StyledStandardCard title={locale.detailsSectionHeading} standardCardId="booking-details">
                             <Grid container spacing={3}>
                                 <Grid item xs={12}>
                                     <label htmlFor="examType">{locale.examType.label}</label>
@@ -347,7 +352,7 @@ const BookExamBooth = ({
                                     </fieldset>
                                 </Grid>
                             </Grid>
-                        </StandardCard>
+                        </StyledStandardCard>
                     </Grid>
                 )}
             </Grid>

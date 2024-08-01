@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import DLOAdminHomepage from 'modules/Pages/Admin/DigitalLearningObjects/Homepage/DLOAdminHomepage';
@@ -19,7 +18,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let DLOAdminHomepageContainer = connect(mapStateToProps, mapDispatchToProps)(DLOAdminHomepage);
-DLOAdminHomepageContainer = withRouter(DLOAdminHomepageContainer);
+const DLOAdminHomepageContainer = connect(mapStateToProps, mapDispatchToProps)(DLOAdminHomepage);
 
 export default DLOAdminHomepageContainer;
