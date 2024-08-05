@@ -78,7 +78,7 @@ describe('Promopanel Admin Form Pages', () => {
             testId('promo-panel-header').should('not.exist');
         });
 
-        it('List Scheduler works correctly', () => {
+        it.only('List Scheduler works correctly', () => {
             cy.viewport(1300, 1400);
             cy.get('h2')
                 .should('be.visible')
@@ -89,7 +89,9 @@ describe('Promopanel Admin Form Pages', () => {
             cy.get('.MuiDayCalendar-weekContainer:first-of-type > button:first-of-type').click();
             cy.get('body').type('{esc}');
             cy.get('[data-testid="admin-promopanel-group-end-date-button"]').click();
-            cy.get('.MuiDayCalendar-weekContainer:last-of-type > button:first-of-type').click();
+            cy.get(
+                '.MuiPaper-root[style*="opacity: 1"] .MuiDayCalendar-weekContainer:last-of-type > button:first-of-type',
+            ).click();
             cy.get('body').type('{esc}');
 
             cy.get('#group-selector').click({ force: true });
