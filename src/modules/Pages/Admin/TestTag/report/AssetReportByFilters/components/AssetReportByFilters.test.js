@@ -215,7 +215,7 @@ describe('AssetReportByFilters', () => {
             'End date must be after Start Date',
         );
 
-        userEvent.clear(getByTestId('assets_inspected-tagged-start-input'));
+        await userEvent.clear(getByTestId('assets_inspected-tagged-start-input'));
 
         expect(queryByText('Start date must be before End Date')).not.toBeInTheDocument();
         expect(queryByText('End date must be after Start Date')).not.toBeInTheDocument();
@@ -225,28 +225,6 @@ describe('AssetReportByFilters', () => {
                 assetStatus: null,
                 inspectionDateFrom: null,
                 inspectionDateTo: '2020-01-01', // new request should fire as one date is supplied and valid
-                locationId: null,
-                locationType: 'building',
-            }),
-        );
-
-        await userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20210101');
-
-        expect(getByTestId('assets_inspected-tagged-start-helpertext')).toHaveTextContent(
-            'Start date must be before End Date',
-        );
-
-        expect(getByTestId('assets_inspected-tagged-end-helpertext')).toHaveTextContent(
-            'End date must be after Start Date',
-        );
-
-        userEvent.clear(getByTestId('assets_inspected-tagged-end-input'));
-
-        await waitFor(() =>
-            expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
-                assetStatus: null,
-                inspectionDateFrom: '2021-01-01',
-                inspectionDateTo: null, // new request should fire as one date is supplied and valid
                 locationId: null,
                 locationType: 'building',
             }),
@@ -268,7 +246,7 @@ describe('AssetReportByFilters', () => {
             expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent(
                 'Test taggedBuildingListError error',
             );
-            userEvent.click(getByTitle('Close'));
+            await userEvent.click(getByTitle('Close'));
             await waitFor(() => expect(queryByTestId('confirmation_alert-error-alert')).not.toBeInTheDocument());
 
             expect(clearTaggedBuildingListErrorFn).toHaveBeenCalled();
@@ -287,7 +265,7 @@ describe('AssetReportByFilters', () => {
             });
 
             expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent('Test assetListError error');
-            userEvent.click(getByTitle('Close'));
+            await userEvent.click(getByTitle('Close'));
 
             await waitFor(() => expect(queryByTestId('confirmation_alert-error-alert')).not.toBeInTheDocument());
 

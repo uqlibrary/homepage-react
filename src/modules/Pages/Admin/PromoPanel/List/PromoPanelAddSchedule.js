@@ -220,7 +220,7 @@ export const PromoPanelAddSchedule = ({
                                 label="End date"
                                 onChange={handleDateChange('end')}
                                 format="ddd D MMM YYYY h:mm a"
-                                minDate={startDate}
+                                minDate={moment(new Date(startDate))}
                                 slotProps={{
                                     textField: {
                                         variant: 'standard',
