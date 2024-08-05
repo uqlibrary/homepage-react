@@ -92,7 +92,6 @@ const EventPanel = ({
                             }}
                             InputLabelProps={{ shrink: true }}
                             format={pageLocale.config.dateFormatDisplay}
-                            rifmFormatter={val => val.replace(/[^a-zA-Z0-9\s]+/gi, '')}
                             refuse={/[^a-zA-Z0-9\s]+/gi}
                             minDate={moment(startDate)}
                             autoOk
