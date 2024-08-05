@@ -265,16 +265,22 @@ const BookExamBooth = ({
                                     <label htmlFor="startDate">{locale.startDate.label}</label>
                                     <br />
                                     <DatePicker
-                                        inputFormat={dateFormat}
+                                        format={dateFormat}
                                         id="startDate"
                                         minDate={moment(yesterday, 'DD/MM/YYYY')}
                                         name="startDate"
                                         onChange={_handleStartDateChange}
                                         type="date"
                                         value={moment(startDate, 'DD/MM/YYYY')}
-                                        renderInput={params => (
-                                            <TextField data-testid="start-date" variant="standard" {...params} />
-                                        )}
+                                        slotProps={{
+                                            textField: {
+                                                variant: 'standard',
+                                                inputProps: { 'data-testid': 'start-date' },
+                                            },
+                                            openPickerButton: {
+                                                'data-testid': 'start-date-button',
+                                            },
+                                        }}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>

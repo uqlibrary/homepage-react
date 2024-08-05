@@ -76,9 +76,9 @@ describe('AssetReportByFilters', () => {
             'value',
             'All - All buildings',
         );
-        expect(getByTestId('assets_inspected-tagged-start')).toBeInTheDocument();
+        expect(getByTestId('assets_inspected-tagged-start-input')).toBeInTheDocument();
         expect(getByTestId('assets_inspected-tagged-start-input')).toHaveAttribute('value', '');
-        expect(getByTestId('assets_inspected-tagged-end')).toBeInTheDocument();
+        expect(getByTestId('assets_inspected-tagged-end-input')).toBeInTheDocument();
         expect(getByTestId('assets_inspected-tagged-end-input')).toHaveAttribute('value', '');
         expect(getByTestId('data_table-assets-inspected')).toBeInTheDocument();
 

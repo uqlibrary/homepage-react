@@ -91,16 +91,16 @@ describe('Promopanel Admin Form Pages', () => {
             // cy.get('#new-scheduled-panel-for-group').click();
             cy.get('body').type('{esc}');
             // Create first date range
-            cy.get('[data-testid="admin-promopanel-form-start-date-container"] button').click();
+            cy.get('[data-testid="admin-promopanel-form-start-date-button"]').click();
             cy.contains(new Date().getFullYear()).click();
-            cy.get('.MuiYearPicker-root')
+            cy.get('.MuiPickersYear-root')
                 .contains('2050')
                 .click({ force: true });
             cy.get('body').type('{esc}');
 
-            cy.get('[data-testid="admin-promopanel-form-end-date-container"] button').click();
+            cy.get('[data-testid="admin-promopanel-form-end-date-button"]').click();
             cy.contains(new Date().getFullYear()).click();
-            cy.get('.MuiYearPicker-root')
+            cy.get('.MuiPickersYear-root')
                 .contains('2052')
                 .click({ force: true });
             cy.get('body').type('{esc}');
@@ -112,18 +112,18 @@ describe('Promopanel Admin Form Pages', () => {
             cy.get('[data-value="hdr"]').click();
             cy.get('body').type('{esc}');
             // Create second date range
-            cy.get('[data-testid="admin-promopanel-form-start-date-container"] button').click();
+            cy.get('[data-testid="admin-promopanel-form-start-date-button"]').click();
             cy.get('.MuiPickersCalendarHeader-labelContainer > .MuiButtonBase-root').click();
 
-            cy.get('.MuiYearPicker-root')
+            cy.get('.MuiPickersYear-root')
                 .contains('2049')
                 .click({ force: true });
             cy.get('body').type('{esc}');
 
             cy.wait(200); // allow time for the previous calendar to be fully removed from the dom, or it gets confused
-            cy.get('[data-testid="admin-promopanel-form-end-date-container"] button').click();
+            cy.get('[data-testid="admin-promopanel-form-end-date-button"]').click();
             cy.get('.MuiPickersCalendarHeader-labelContainer > .MuiButtonBase-root').click();
-            cy.get('.MuiYearPicker-root')
+            cy.get('.MuiPickersYear-root')
                 .contains('2051')
                 .click({ force: true });
             cy.get('body').type('{esc}');
@@ -174,18 +174,18 @@ describe('Promopanel Admin Form Pages', () => {
             cy.get('body').type('{esc}');
             cy.wait(100);
             // Start Date
-            cy.get('[data-testid="admin-promopanel-form-start-date-container"] button').click();
+            cy.get('[data-testid="admin-promopanel-form-start-date-button"]').click();
             cy.get('.MuiPickersCalendarHeader-label').click();
-            cy.get('.MuiYearPicker-root')
+            cy.get('.MuiPickersYear-root')
                 .contains(pass === 1 ? '2060' : '2071')
                 .click({ force: true });
             cy.get('body').type('{esc}');
 
             // End Date
             cy.wait(200); // allow time for the previous calendar to be fully removed from the dom, or it gets confused
-            cy.get('[data-testid="admin-promopanel-form-end-date-container"] button').click();
+            cy.get('[data-testid="admin-promopanel-form-end-date-button"]').click();
             cy.get('.MuiPickersCalendarHeader-label').click();
-            cy.get('.MuiYearPicker-root')
+            cy.get('.MuiPickersYear-root')
                 .contains(pass === 1 ? '2070' : '2081')
                 .click({ force: true });
             cy.get('body').type('{esc}');
@@ -214,9 +214,9 @@ describe('Promopanel Admin Form Pages', () => {
             createGroupConflict(2);
             // Now cause the list conflict, start date inside schedule
             cy.data('admin-promopanel-form-button-editSchedule-1').click();
-            cy.get('[data-testid="admin-promopanel-form-start-date-edit-container"] .MuiButtonBase-root').click();
+            cy.get('[data-testid="admin-promopanel-group-start-date-button"]').click();
             cy.get('.MuiPickersCalendarHeader-labelContainer').click();
-            cy.get('.MuiYearPicker-root')
+            cy.get('.MuiPickersYear-root')
                 .contains('2062')
                 .click({ force: true });
             cy.get('body').type('{esc}');
@@ -226,17 +226,17 @@ describe('Promopanel Admin Form Pages', () => {
                 .should('be.visible');
             cy.get('[data-testid="admin-promopanel-group-button-cancel"]:last-of-type').click();
             // Fix the start
-            cy.get('[data-testid="admin-promopanel-form-start-date-edit-container"] .MuiButtonBase-root').click();
+            cy.get('[data-testid="admin-promopanel-group-start-date-button"]').click();
             cy.get('.MuiPickersCalendarHeader-labelContainer').click();
-            cy.get('.MuiYearPicker-root')
+            cy.get('.MuiPickersYear-root')
                 .contains('2059')
                 .click({ force: true });
             cy.get('body').type('{esc}');
             // Error the end date
             cy.wait(200); // allow time for the previous calendar to be fully removed from the dom, or it gets confused
-            cy.get('[data-testid="admin-promopanel-form-end-date-edit-container"] .MuiButtonBase-root').click();
+            cy.get('[data-testid="admin-promopanel-group-end-date-button"]').click();
             cy.get('.MuiPickersCalendarHeader-labelContainer').click();
-            cy.get('.MuiYearPicker-root')
+            cy.get('.MuiPickersYear-root')
                 .contains('2069')
                 .click({ force: true });
             cy.get('body').type('{esc}');

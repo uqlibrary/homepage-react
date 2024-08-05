@@ -48,9 +48,10 @@ const EventPanel = ({
     };
 
     const updateEventDate = newDate => {
-        console.log('Test change', newDate);
-        const manualDate = moment(newDate).isBefore(moment(), 'day');
-        handleChange('action_date')(newDate);
+        const manualDate = newDate.isBefore(moment(), 'day');
+        if (newDate.isValid()) {
+            handleChange('action_date')(newDate);
+        }
         handleChange('isManualDate')(manualDate);
     };
 
@@ -85,37 +86,41 @@ const EventPanel = ({
                     <Grid xs={12} sm={6} md={3}>
                         <DatePicker
                             {...pageLocale.form.event.date}
-                            inputProps={{
-                                ...pageLocale.form.event.date.inputProps,
-                                id: `${componentIdLower}-event-date-input`,
-                                'data-testid': `${componentIdLower}-event-date-input`,
-                            }}
                             DialogProps={{
                                 id: `${componentIdLower}-event-date-dialog`,
                                 'data-testid': `${componentIdLower}-event-date-dialog`,
                             }}
-                            InputLabelProps={{ shrink: true, htmlFor: `${componentIdLower}-event-date-input` }}
-                            inputFormat={pageLocale.config.dateFormatDisplay}
+                            InputLabelProps={{ shrink: true }}
+                            format={pageLocale.config.dateFormatDisplay}
                             rifmFormatter={val => val.replace(/[^a-zA-Z0-9\s]+/gi, '')}
                             refuse={/[^a-zA-Z0-9\s]+/gi}
-                            minDate={startDate}
+                            minDate={moment(startDate)}
                             autoOk
                             disableFuture
                             showTodayButton
-                            value={actionDate}
+                            value={moment(actionDate, 'YYYY-MM-DD HH:mm')}
                             onChange={updateEventDate}
                             required
-                            renderInput={params => (
-                                <TextField
-                                    fullWidth={isMobileView}
-                                    variant="standard"
-                                    id={`${componentIdLower}-event-date`}
-                                    data-testid={`${componentIdLower}-event-date`}
-                                    {...params}
-                                    helperText={params.error ? pageLocale.form.event.date.maxDateMessage : null}
-                                />
-                            )}
-                            InputAdornmentProps={{ 'data-testid': `${componentIdLower}-event-date-button` }}
+                            slotProps={{
+                                textField: params => {
+                                    return {
+                                        variant: 'standard',
+                                        fullWidth: isMobileView,
+                                        id: `${componentIdLower}-event-date-input`,
+                                        inputProps: {
+                                            ...pageLocale.form.event.date.inputProps,
+                                            'data-testid': `${componentIdLower}-event-date-input`,
+                                        },
+                                        helperText:
+                                            params.value && params.value.isAfter(moment())
+                                                ? pageLocale.form.event.date.maxDateMessage
+                                                : null,
+                                    };
+                                },
+                                openPickerButton: {
+                                    'data-testid': `${componentIdLower}-event-date-button`,
+                                },
+                            }}
                         />
                     </Grid>
                     <Grid xs={12} sm={12}>
