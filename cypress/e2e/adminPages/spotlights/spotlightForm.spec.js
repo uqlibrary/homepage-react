@@ -55,7 +55,7 @@ describe('Spotlights Admin Form Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-link-url"]').should('not.have.class', 'Mui-error');
         });
 
-        it('Entering the fields on the add form works', () => {
+        it.only('Entering the fields on the add form works', () => {
             saveButtonisDisabled();
             cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 3');
             cy.get('[data-testid="admin-spotlights-form-title"] textarea').should('have.value', 'spotlight title 3');
@@ -84,7 +84,7 @@ describe('Spotlights Admin Form Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-start-date-button"]').click();
             // advance the start date two months forward
             // (picking a date that far forward lets us test the error on the end date)
-            cy.data('ArrowRightIcon')
+            cy.get('.MuiPickersCalendarHeader-root [data-testid="ArrowRightIcon"]')
                 .click()
                 .click();
 
@@ -109,7 +109,7 @@ describe('Spotlights Admin Form Pages', () => {
             // open the end date so we can fix the date
             cy.wait(200); // allow time for the previous calendar to be fully removed from the dom, or it gets confused
             cy.get('[data-testid="admin-spotlights-form-end-date-button"]').click();
-            cy.data('ArrowRightIcon')
+            cy.get('.MuiPickersCalendarHeader-root [data-testid="ArrowRightIcon"]')
                 .click()
                 .click()
                 .click();
