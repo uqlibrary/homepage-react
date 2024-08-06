@@ -78,7 +78,7 @@ describe('Promopanel Admin Form Pages', () => {
             testId('promo-panel-header').should('not.exist');
         });
 
-        it.only('List Scheduler works correctly', () => {
+        it('List Scheduler works correctly', () => {
             cy.viewport(1300, 1400);
             cy.get('h2')
                 .should('be.visible')

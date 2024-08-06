@@ -55,7 +55,7 @@ describe('Spotlights Admin Form Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-link-url"]').should('not.have.class', 'Mui-error');
         });
 
-        it.only('Entering the fields on the add form works', () => {
+        it('Entering the fields on the add form works', () => {
             saveButtonisDisabled();
             cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 3');
             cy.get('[data-testid="admin-spotlights-form-title"] textarea').should('have.value', 'spotlight title 3');
