@@ -229,6 +229,18 @@ describe('AssetReportByFilters', () => {
                 locationType: 'building',
             }),
         );
+
+        await userEvent.clear(getByTestId('assets_inspected-tagged-end-input'));
+
+        await waitFor(() =>
+            expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
+                assetStatus: null,
+                inspectionDateFrom: null,
+                inspectionDateTo: null,
+                locationId: null,
+                locationType: 'building',
+            }),
+        );
     });
 
     describe('coverage', () => {
