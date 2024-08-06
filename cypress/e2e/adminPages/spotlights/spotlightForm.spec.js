@@ -15,7 +15,7 @@ import {
 import { clickButton, waitUntilSpotlightListPageHasLoaded } from '../../../support/helpers';
 
 function setDateToNow() {
-    cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
+    cy.get('[data-testid="admin-spotlights-form-start-date-button"]').click();
     cy.get('[data-testid="spotlight-start-today"] button:first-of-type').click();
     cy.get('[data-testid="admin-spotlights-form-start-date"]')
         .parent()
@@ -81,15 +81,15 @@ describe('Spotlights Admin Form Pages', () => {
 
             // cant test end or start date initial value here - would just be reimplementing the algorithm.
             // Tested in Jest
-            cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
+            cy.get('[data-testid="admin-spotlights-form-start-date-button"]').click();
             // advance the start date two months forward
             // (picking a date that far forward lets us test the error on the end date)
-            cy.data('ArrowRightIcon')
+            cy.get('.MuiPickersCalendarHeader-root [data-testid="ArrowRightIcon"]')
                 .click()
                 .click();
 
             // and pick the first of the month
-            cy.get('.MuiDayPicker-weekContainer:first-of-type button:first-of-type')
+            cy.get('.MuiDayCalendar-weekContainer:first-of-type button:first-of-type')
                 .contains(1)
                 .click();
             // // the time dialog loads, but lets just ok out
@@ -98,7 +98,7 @@ describe('Spotlights Admin Form Pages', () => {
             // 2 Month logic covered in jest - disabling due to potential flakey results
 
             cy.get('[data-testid="admin-spotlights-form-start-date"]')
-                .parent()
+                .parents('.MuiTextField-root')
                 .should('not.contain', 'This date is in the past.');
             // and the end date field now has an error, so the submit button is disabled
             saveButtonisDisabled();
@@ -108,14 +108,14 @@ describe('Spotlights Admin Form Pages', () => {
                 .and('contain', 'Should not be before Date published');
             // open the end date so we can fix the date
             cy.wait(200); // allow time for the previous calendar to be fully removed from the dom, or it gets confused
-            cy.get('[data-testid="admin-spotlights-form-end-date"] button').click();
-            cy.data('ArrowRightIcon')
+            cy.get('[data-testid="admin-spotlights-form-end-date-button"]').click();
+            cy.get('.MuiPickersCalendarHeader-root [data-testid="ArrowRightIcon"]')
                 .click()
                 .click()
                 .click();
 
             // and pick the last of the month
-            cy.get('.MuiDayPicker-weekContainer:first-of-type button:first-of-type')
+            cy.get('.MuiDayCalendar-weekContainer:first-of-type button:first-of-type')
                 .contains(1)
                 .click();
 
@@ -325,7 +325,8 @@ describe('Spotlights Admin Form Pages', () => {
         it('can make changes to spotlight fields on the edit form', () => {
             cy.waitUntil(() => cy.get('[data-testid="dropzone-dimension-warning"]').should('exist'));
             cy.get('[data-testid="admin-spotlights-form-start-date"]')
-                .parent()
+                .parents('.MuiTextField-root')
+                .next()
                 .should('contain', 'This date is in the past.');
             cy.get('#spotlightTitle')
                 .clear()
@@ -385,14 +386,12 @@ describe('Spotlights Admin Form Pages', () => {
                 'have.value',
                 'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
             );
-            cy.get('[data-testid="admin-spotlights-form-start-date"] input').should(
-                'have.value',
-                '15/03/2021 00:02 am',
-            );
+            cy.get('[data-testid="admin-spotlights-form-start-date"]').should('have.value', '15/03/2021 00:02 am');
             cy.get('[data-testid="admin-spotlights-form-start-date"]')
+                .parents('.MuiTextField-root')
                 .next()
                 .should('contain', 'This date is in the past.');
-            cy.get('[data-testid="admin-spotlights-form-end-date"] input').should('have.value', '21/03/2099 23:59 pm');
+            cy.get('[data-testid="admin-spotlights-form-end-date"]').should('have.value', '21/03/2099 23:59 pm');
             cy.get('[data-testid="spotlights-form-upload-dropzone"] img').should(
                 'have.attr',
                 'src',

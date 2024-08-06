@@ -5,7 +5,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
 import Box from '@mui/material/Box';
@@ -149,7 +148,8 @@ export const PromoPanelGroupDateSelector = ({
                     <Grid container spacing={1}>
                         <Grid item xs>
                             <DateTimePicker
-                                value={new Date(startDate)}
+                                sx={{ width: '65%' }}
+                                value={moment(new Date(startDate))}
                                 label="Start date"
                                 // onChange={handleChange(
                                 //     'start',
@@ -160,15 +160,7 @@ export const PromoPanelGroupDateSelector = ({
                                 //     setEndDate,
                                 // )}
                                 onChange={newValue => setStartDate(newValue)}
-                                inputFormat="ddd D MMM YYYY h:mm a"
-                                inputProps={{
-                                    id: 'admin-promopanel-group-start-date',
-                                    'data-testid': 'admin-promopanel-group-start-date',
-                                    style: {
-                                        width: '100%',
-                                        marginRight: 25,
-                                    },
-                                }}
+                                format="ddd D MMM YYYY h:mm a"
                                 showTodayButton
                                 todayLabel={'Today'}
                                 autoOk
@@ -177,14 +169,16 @@ export const PromoPanelGroupDateSelector = ({
                                     'data-testid': 'start-date-calendar',
                                     id: 'start-date-calendar',
                                 }}
-                                renderInput={params => (
-                                    <TextField
-                                        variant="standard"
-                                        {...params}
-                                        id="admin-promopanel-form-start-date-edit-container"
-                                        data-testid="admin-promopanel-form-start-date-edit-container"
-                                    />
-                                )}
+                                slotProps={{
+                                    textField: {
+                                        variant: 'standard',
+                                        id: 'admin-promopanel-group-start-date',
+                                        inputProps: { 'data-testid': 'admin-promopanel-group-start-date' },
+                                    },
+                                    openPickerButton: {
+                                        'data-testid': 'admin-promopanel-group-start-date-button',
+                                    },
+                                }}
                             />
                             {moment(new Date(startDate)).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div id="start-date-warning" data-testid="start-date-warning">
@@ -194,7 +188,8 @@ export const PromoPanelGroupDateSelector = ({
                         </Grid>
                         <Grid item xs align="left">
                             <DateTimePicker
-                                value={new Date(endDate)}
+                                sx={{ width: '65%' }}
+                                value={moment(new Date(endDate))}
                                 label="End date"
                                 // onChange={handleChange(
                                 //     'end',
@@ -205,15 +200,7 @@ export const PromoPanelGroupDateSelector = ({
                                 //     setEndDate,
                                 // )}
                                 onChange={newValue => setEndDate(newValue)}
-                                inputFormat="ddd D MMM YYYY h:mm a"
-                                inputProps={{
-                                    id: 'admin-promopanel-group-end-date',
-                                    'data-testid': 'admin-promopanel-group-end-date',
-                                    style: {
-                                        width: '100%',
-                                        marginRight: 25,
-                                    },
-                                }}
+                                format="ddd D MMM YYYY h:mm a"
                                 showTodayButton
                                 todayLabel={'Today'}
                                 autoOk
@@ -222,14 +209,16 @@ export const PromoPanelGroupDateSelector = ({
                                     'data-testid': 'end-date-calendar',
                                     id: 'end-date-calendar',
                                 }}
-                                renderInput={params => (
-                                    <TextField
-                                        {...params}
-                                        variant="standard"
-                                        id="admin-promopanel-form-end-date-edit-container"
-                                        data-testid="admin-promopanel-form-end-date-edit-container"
-                                    />
-                                )}
+                                slotProps={{
+                                    textField: {
+                                        variant: 'standard',
+                                        id: 'admin-promopanel-group-end-date',
+                                        inputProps: { 'data-testid': 'admin-promopanel-group-end-date' },
+                                    },
+                                    openPickerButton: {
+                                        'data-testid': 'admin-promopanel-group-end-date-button',
+                                    },
+                                }}
                             />
                             {moment(new Date(endDate)).isBefore(moment().subtract(1, 'minutes')) && (
                                 <div id="end-date-warning" data-testid="end-date-warning">

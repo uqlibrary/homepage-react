@@ -8,7 +8,6 @@ import Grid from '@mui/material/Grid';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import TextField from '@mui/material/TextField';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -555,36 +554,31 @@ export const SpotlightForm = ({
                         </FormControl>
                     </Grid>
                 </Grid>
-                {console.log(values.start)}
                 <Grid container spacing={2} style={{ marginTop: 12 }}>
                     <Grid item md={5} xs={12}>
                         <DateTimePicker
                             label={locale.form.labels.publishDate}
-                            value={values.start}
+                            value={moment(new Date(values.start))}
                             onChange={handleChange('start')}
-                            minDate={defaults.minimumDate}
-                            inputFormat="DD/MM/YYYY HH:mm a"
-                            inputProps={{
-                                label: locale.form.labels.publishDate,
-                                'aria-label': locale.form.labels.publishDate,
-                            }}
-                            componentsProps={{
+                            minDate={moment(defaults.minimumDate)}
+                            format="DD/MM/YYYY HH:mm a"
+                            // KeyboardButtonProps={{
+                            //     'aria-label': locale.form.tooltips.publishDate,
+                            // }}
+                            slotProps={{
+                                textField: {
+                                    variant: 'standard',
+                                    id: 'admin-spotlights-form-start-date',
+                                    inputProps: { 'data-testid': 'admin-spotlights-form-start-date' },
+                                },
+                                openPickerButton: {
+                                    'data-testid': 'admin-spotlights-form-start-date-button',
+                                },
                                 actionBar: {
                                     actions: ['today', 'accept'],
                                     'data-testid': 'spotlight-start-today',
                                 },
                             }}
-                            // KeyboardButtonProps={{
-                            //     'aria-label': locale.form.tooltips.publishDate,
-                            // }}
-                            renderInput={params => (
-                                <TextField
-                                    variant="standard"
-                                    {...params}
-                                    id="admin-spotlights-form-start-date"
-                                    data-testid="admin-spotlights-form-start-date"
-                                />
-                            )}
                         />
                         {moment(values.start).isBefore(moment().subtract(1, 'minutes')) && (
                             <div className={'errorStyle'}>This date is in the past.</div>
@@ -593,41 +587,34 @@ export const SpotlightForm = ({
                     <Grid item md={5} xs={12}>
                         <DateTimePicker
                             data-testid="admin-spotlights-form-end-date"
-                            value={values.end}
+                            value={moment(new Date(values.end))}
                             label={locale.form.labels.unpublishDate}
                             onChange={handleChange('end')}
-                            minDate={values.start}
-                            inputFormat="DD/MM/YYYY HH:mm a"
-                            inputProps={{
-                                id: 'admin-spotlights-form-end-date',
-                                'data-testid': 'admin-spotlights-form-end-date',
-                                label: locale.form.labels.unpublishDate,
-                                'aria-label': locale.form.labels.unpublishDate,
-                            }}
+                            minDate={moment(values.start)}
+                            format="DD/MM/YYYY HH:mm a"
                             // KeyboardButtonProps={{
                             //     'aria-label': locale.form.tooltips.unpublishDate,
                             // }}
-                            componentsProps={{
+                            minDateMessage="Should not be before Date published"
+                            slotProps={{
+                                textField: {
+                                    variant: 'standard',
+                                    id: 'admin-spotlights-form-end-date',
+                                    inputProps: { 'data-testid': 'admin-spotlights-form-end-date' },
+                                    helperText:
+                                        values.end && values.end < values.start
+                                            ? 'Should not be before Date published.'
+                                            : '',
+                                    error: values.end && values.end < values.start,
+                                },
+                                openPickerButton: {
+                                    'data-testid': 'admin-spotlights-form-end-date-button',
+                                },
                                 actionBar: {
                                     actions: ['today', 'accept'],
                                     'data-testid': 'spotlight-end-today',
                                 },
                             }}
-                            minDateMessage="Should not be before Date published"
-                            renderInput={props => (
-                                <TextField
-                                    variant="standard"
-                                    {...props}
-                                    helperText={
-                                        values.end && values.end < values.start
-                                            ? 'Should not be before Date published.'
-                                            : ''
-                                    }
-                                    error={values.end && values.end < values.start}
-                                    id="admin-spotlights-form-end-date"
-                                    data-testid="admin-spotlights-form-end-date"
-                                />
-                            )}
                         />
                     </Grid>
                 </Grid>

@@ -9,7 +9,6 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import TextField from '@mui/material/TextField';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -25,6 +24,7 @@ import { getNameStyles, transformRow } from './utils';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 
 import FooterRow from './FooterRow';
+const moment = require('moment');
 
 const componentId = 'user-inspections';
 const componentIdLower = 'user_inspections';
@@ -235,19 +235,14 @@ const InspectionsByLicencedUser = ({
                         <Grid xs={12} md={4}>
                             {/* Start Date */}
                             <DatePicker
-                                inputProps={{
-                                    id: `${componentIdLower}-tagged-start-input`,
-                                    'data-testid': `${componentIdLower}-tagged-start-input`,
-                                    'aria-labelledby': `${componentIdLower}-tagged-start-label`,
-                                }}
-                                inputFormat={locale.config.format.dateFormatNoTime}
+                                format={locale.config.format.dateFormatNoTime}
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                 classes={{ root: 'datePickerRoot' }}
                                 disableToolbar
                                 variant="inline"
                                 margin="normal"
                                 label={pageLocale.form.keyboardDatePicker.startDateLabel}
-                                value={selectedStartDate.date}
+                                value={selectedStartDate.date ? moment(new Date(selectedStartDate.date)) : null}
                                 onChange={startDate =>
                                     (!!!startDate || (!!startDate && startDate.isValid())) &&
                                     handleStartDateChange(startDate)
@@ -256,35 +251,34 @@ const InspectionsByLicencedUser = ({
                                     'aria-label': pageLocale.form.keyboardDatePicker.startDateAriaLabel,
                                 }}
                                 autoOk
-                                renderInput={params => (
-                                    <TextField
-                                        fullWidth
-                                        variant="standard"
-                                        {...params}
-                                        error={startDateError.error}
-                                        helperText={startDateError.error && startDateError.message}
-                                        id={`${componentIdLower}-tagged-start`}
-                                        data-testid={`${componentIdLower}-tagged-start`}
-                                    />
-                                )}
+                                slotProps={{
+                                    textField: {
+                                        variant: 'standard',
+                                        fullWidth: true,
+                                        id: `${componentIdLower}-tagged-start-input`,
+                                        inputProps: {
+                                            'data-testid': `${componentIdLower}-tagged-start-input`,
+                                        },
+                                        error: !!startDateError.error,
+                                        helperText: !!startDateError.error && startDateError.message,
+                                    },
+                                    openPickerButton: {
+                                        'data-testid': `${componentIdLower}-tagged-start-button`,
+                                    },
+                                }}
                             />
                         </Grid>
                         <Grid xs={12} md={4}>
                             {/* End Date */}
                             <DatePicker
-                                inputProps={{
-                                    id: `${componentIdLower}-tagged-end-input`,
-                                    'data-testid': `${componentIdLower}-tagged-end-input`,
-                                    'aria-labelledby': `${componentIdLower}-tagged-start-label`,
-                                }}
-                                inputFormat={locale.config.format.dateFormatNoTime}
+                                format={locale.config.format.dateFormatNoTime}
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
                                 classes={{ root: 'datePickerRoot' }}
                                 disableToolbar
                                 variant="inline"
                                 margin="normal"
                                 label={pageLocale.form.keyboardDatePicker.endDateLabel}
-                                value={selectedEndDate.date}
+                                value={selectedEndDate.date ? moment(new Date(selectedEndDate.date)) : null}
                                 onChange={endDate =>
                                     (!!!endDate || (!!endDate && endDate.isValid())) && handleEndDateChange(endDate)
                                 }
@@ -292,17 +286,21 @@ const InspectionsByLicencedUser = ({
                                     'aria-label': pageLocale.form.keyboardDatePicker.endDateAriaLabel,
                                 }}
                                 autoOk
-                                renderInput={params => (
-                                    <TextField
-                                        fullWidth
-                                        variant="standard"
-                                        {...params}
-                                        helperText={endDateError.error && endDateError.message}
-                                        error={endDateError.error}
-                                        id={`${componentIdLower}-tagged-end`}
-                                        data-testid={`${componentIdLower}-tagged-end`}
-                                    />
-                                )}
+                                slotProps={{
+                                    textField: {
+                                        variant: 'standard',
+                                        fullWidth: true,
+                                        id: `${componentIdLower}-tagged-end-input`,
+                                        inputProps: {
+                                            'data-testid': `${componentIdLower}-tagged-end-input`,
+                                        },
+                                        error: !!endDateError.error,
+                                        helperText: !!endDateError.error && endDateError.message,
+                                    },
+                                    openPickerButton: {
+                                        'data-testid': `${componentIdLower}-tagged-end-button`,
+                                    },
+                                }}
                             />
                         </Grid>
                     </Grid>

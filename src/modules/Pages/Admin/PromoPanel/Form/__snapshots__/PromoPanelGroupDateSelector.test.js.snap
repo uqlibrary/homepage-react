@@ -57,14 +57,13 @@ exports[`Promo Panel Group Date Selector Should render correctly 1`] = `
                 class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true css-1vd824g-MuiGrid-root"
               >
                 <div
-                  class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
-                  data-testid="admin-promopanel-form-start-date-edit-container"
+                  class="MuiFormControl-root MuiTextField-root css-uh0g7b-MuiFormControl-root-MuiTextField-root"
                 >
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard css-1875xhu-MuiFormLabel-root-MuiInputLabel-root"
                     data-shrink="true"
-                    for="admin-promopanel-form-start-date-edit-container"
-                    id="admin-promopanel-form-start-date-edit-container-label"
+                    for="admin-promopanel-group-start-date"
+                    id="admin-promopanel-group-start-date-label"
                   >
                     Start date
                   </label>
@@ -73,13 +72,14 @@ exports[`Promo Panel Group Date Selector Should render correctly 1`] = `
                   >
                     <input
                       aria-invalid="false"
+                      autocomplete="off"
                       class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd css-1x51dt5-MuiInputBase-input-MuiInput-input"
                       data-testid="admin-promopanel-group-start-date"
                       id="admin-promopanel-group-start-date"
-                      placeholder="ddd d mmm yyyy h:mm (a|p)m"
-                      style="width: 100%; margin-right: 25px;"
+                      inputmode="text"
+                      placeholder="EEEE DD MMMM YYYY hh:mm aa"
                       type="text"
-                      value="Sat 1 Jan 2000 12:00 am"
+                      value="Sat 01 Jan 2000 12:00 am"
                     />
                     <div
                       class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
@@ -87,6 +87,7 @@ exports[`Promo Panel Group Date Selector Should render correctly 1`] = `
                       <button
                         aria-label="Choose date, selected date is Jan 1, 2000"
                         class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-1yq5fb3-MuiButtonBase-root-MuiIconButton-root"
+                        data-testid="admin-promopanel-group-start-date-button"
                         tabindex="0"
                         type="button"
                       >
@@ -120,14 +121,13 @@ exports[`Promo Panel Group Date Selector Should render correctly 1`] = `
                 class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true css-1vd824g-MuiGrid-root"
               >
                 <div
-                  class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
-                  data-testid="admin-promopanel-form-end-date-edit-container"
+                  class="MuiFormControl-root MuiTextField-root css-uh0g7b-MuiFormControl-root-MuiTextField-root"
                 >
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard css-1875xhu-MuiFormLabel-root-MuiInputLabel-root"
                     data-shrink="true"
-                    for="admin-promopanel-form-end-date-edit-container"
-                    id="admin-promopanel-form-end-date-edit-container-label"
+                    for="admin-promopanel-group-end-date"
+                    id="admin-promopanel-group-end-date-label"
                   >
                     End date
                   </label>
@@ -136,13 +136,14 @@ exports[`Promo Panel Group Date Selector Should render correctly 1`] = `
                   >
                     <input
                       aria-invalid="false"
+                      autocomplete="off"
                       class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd css-1x51dt5-MuiInputBase-input-MuiInput-input"
                       data-testid="admin-promopanel-group-end-date"
                       id="admin-promopanel-group-end-date"
-                      placeholder="ddd d mmm yyyy h:mm (a|p)m"
-                      style="width: 100%; margin-right: 25px;"
+                      inputmode="text"
+                      placeholder="EEEE DD MMMM YYYY hh:mm aa"
                       type="text"
-                      value="Sun 2 Jan 2000 11:59 pm"
+                      value="Sun 02 Jan 2000 11:59 pm"
                     />
                     <div
                       class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
@@ -150,6 +151,7 @@ exports[`Promo Panel Group Date Selector Should render correctly 1`] = `
                       <button
                         aria-label="Choose date, selected date is Jan 2, 2000"
                         class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-1yq5fb3-MuiButtonBase-root-MuiIconButton-root"
+                        data-testid="admin-promopanel-group-end-date-button"
                         tabindex="0"
                         type="button"
                       >

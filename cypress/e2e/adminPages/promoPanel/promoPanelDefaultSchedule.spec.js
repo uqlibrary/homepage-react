@@ -31,9 +31,9 @@ describe('Promo Panel List Default or Schedule', () => {
             cy.get('#new-scheduled-panel-for-group').click();
             cy.get('[data-value="2"').click();
             // Enter start date.
-            cy.get('[data-testid="admin-promopanel-group-start-date-container"] button').click();
+            cy.get('[data-testid="admin-promopanel-group-start-date-button"]').click();
             cy.contains(new Date().getFullYear()).click();
-            cy.get('.MuiYearPicker-root')
+            cy.get('.MuiPickersYear-root')
                 .contains('2091')
                 .click({ force: true });
             cy.get('body').type('{esc}');
@@ -41,10 +41,10 @@ describe('Promo Panel List Default or Schedule', () => {
                 .invoke('attr', 'aria-invalid')
                 .should('eq', 'true');
             // Enter end date.
-            cy.get('[data-testid="admin-promopanel-group-end-date-container"] button').click();
+            cy.get('[data-testid="admin-promopanel-group-end-date-button"]').click();
             cy.wait(100);
             cy.contains(new Date().getFullYear()).click();
-            cy.get('.MuiYearPicker-root')
+            cy.get('.MuiPickersYear-root')
                 .contains('2091')
                 .click({ force: true });
             cy.get('body').type('{esc}');

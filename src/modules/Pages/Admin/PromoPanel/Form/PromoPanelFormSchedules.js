@@ -9,7 +9,6 @@ import ListItemText from '@mui/material/ListItemText';
 import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
@@ -110,40 +109,32 @@ export const PromoPanelFormSchedules = ({
                     <>
                         <Grid item xs={4} align={'right'}>
                             <DateTimePicker
-                                sx={{
-                                    width: '100%',
-                                }}
+                                sx={{ width: '65%' }}
                                 label={locale.form.labels.startDate}
-                                value={moment.utc(new Date(values.start))}
+                                value={moment(new Date(values.start)).utc()}
                                 onChange={handleChange('start')}
-                                minDate={moment.utc(defaults.minimumDate)}
-                                inputFormat="ddd D MMM YYYY h:mm a"
-                                inputProps={{
-                                    id: 'admin-promopanel-form-start-date',
-                                    'data-testid': 'admin-promopanel-form-start-date',
-                                    label: locale.form.labels.startDate,
-                                    // style: {
-                                    //     width: '100%',
-                                    //     marginRight: 25,
-                                    // },
-                                    readOnly: true,
-                                }}
+                                minDate={moment(defaults.minimumDate).utc()}
+                                format="ddd D MMM YYYY h:mm a"
                                 todayLabel={locale.form.labels.datePopupNowButton}
                                 InputLabelProps={{ style: { textAlign: 'left' } }}
                                 autoOk
                                 KeyboardButtonProps={{
                                     'aria-label': locale.form.labels.startDate,
                                 }}
-                                renderInput={params => (
-                                    <TextField
-                                        {...params}
-                                        variant="standard"
-                                        id="admin-promopanel-form-start-date-container"
-                                        data-testid="admin-promopanel-form-start-date-container"
-                                    />
-                                )}
+                                slotProps={{
+                                    textField: {
+                                        variant: 'standard',
+                                        id: 'admin-promopanel-form-start-date',
+                                        inputProps: { 'data-testid': 'admin-promopanel-form-start-date' },
+                                    },
+                                    openPickerButton: {
+                                        'data-testid': 'admin-promopanel-form-start-date-button',
+                                    },
+                                }}
                             />
-                            {moment.utc(new Date(values.start)).isBefore(moment().subtract(1, 'minutes')) && (
+                            {moment(new Date(values.start))
+                                .utc()
+                                .isBefore(moment().subtract(1, 'minutes')) && (
                                 <StyledError data-testid="admin-promopanel-startdate-past">
                                     This date is in the past.
                                 </StyledError>
@@ -151,44 +142,42 @@ export const PromoPanelFormSchedules = ({
                         </Grid>
                         <Grid item xs={4} align={'right'}>
                             <DateTimePicker
+                                sx={{ width: '65%' }}
                                 label={locale.form.labels.endDate}
                                 // variant="inline"
                                 onChange={handleChange('end')}
-                                value={moment.utc(new Date(values.end))}
-                                minDateTime={moment.utc(new Date(values.start))}
-                                inputProps={{
-                                    id: 'admin-promopanel-form-end-date',
-                                    'data-testid': 'admin-promopanel-form-end-date',
-                                    label: locale.form.labels.endDate,
-
-                                    style: {
-                                        width: '100%',
-                                        marginRight: 25,
-                                    },
-                                    readOnly: true,
-                                }}
-                                inputFormat="ddd D MMM YYYY h:mm a"
+                                value={moment(new Date(values.end)).utc()}
+                                minDateTime={moment(new Date(values.start)).utc()}
+                                format="ddd D MMM YYYY h:mm a"
                                 autoOk
                                 InputLabelProps={{ style: { textAlign: 'left' } }}
                                 KeyboardButtonProps={{
                                     'aria-label': locale.form.labels.endDate,
                                 }}
-                                renderInput={params => {
-                                    const value = params.inputProps.value ?? /* istanbul ignore next */ null;
-                                    return (
-                                        <TextField
-                                            {...params}
-                                            variant="standard"
-                                            helperText={
-                                                !value || moment.utc(value).isBefore(moment.utc(values.start))
+                                slotProps={{
+                                    textField: params => {
+                                        const value = params.value ?? /* istanbul ignore next */ null;
+                                        return {
+                                            variant: 'standard',
+                                            id: 'admin-promopanel-form-end-date',
+                                            inputProps: { 'data-testid': 'admin-promopanel-form-end-date' },
+                                            helperText:
+                                                !value ||
+                                                moment(new Date(value))
+                                                    .utc()
+                                                    .isBefore(moment(new Date(values.start)).utc())
                                                     ? 'Should not be before Date published.'
-                                                    : ''
-                                            }
-                                            error={!value || moment.utc(value).isBefore(moment.utc(values.start))}
-                                            id="admin-promopanel-form-end-date-container"
-                                            data-testid="admin-promopanel-form-end-date-container"
-                                        />
-                                    );
+                                                    : '',
+                                            error:
+                                                !value ||
+                                                moment(new Date(value))
+                                                    .utc()
+                                                    .isBefore(moment(new Date(values.start)).utc()),
+                                        };
+                                    },
+                                    openPickerButton: {
+                                        'data-testid': 'admin-promopanel-form-end-date-button',
+                                    },
                                 }}
                             />
                         </Grid>

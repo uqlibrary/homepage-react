@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 import { orange, red } from '@mui/material/colors';
+import { renderTimeViewClock } from '@mui/x-date-pickers';
 
 const palette = {
     primary: {
@@ -53,6 +54,26 @@ const palette = {
 
 export const mui1theme = createTheme({
     palette: palette,
+    components: {
+        MuiDesktopTimePicker: {
+            defaultProps: {
+                viewRenderers: {
+                    hours: renderTimeViewClock,
+                    minutes: renderTimeViewClock,
+                    seconds: renderTimeViewClock,
+                },
+            },
+        },
+        MuiDesktopDateTimePicker: {
+            defaultProps: {
+                viewRenderers: {
+                    hours: renderTimeViewClock,
+                    minutes: renderTimeViewClock,
+                    seconds: renderTimeViewClock,
+                },
+            },
+        },
+    },
     status: {
         danger: red[500],
         warning: orange[500],
