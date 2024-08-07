@@ -113,9 +113,9 @@ module.exports = {
             favicon: join(__dirname, 'public', 'favicon.ico'),
             filename: 'index.html',
             // reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
-            // reusablejs:
-            //     'https://assets.library.uq.edu.au/reusable-webcomponents-development/webpresence-working/uq-lib-reusable.min.js',
-            reusablejs: 'http://localhost:8080/uq-lib-reusable.min.js',
+            reusablejs:
+                'https://assets.library.uq.edu.au/reusable-webcomponents-development/webpresence-working/uq-lib-reusable.min.js',
+            // reusablejs: 'http://localhost:8080/uq-lib-reusable.min.js',
             inject: true,
             template: join(__dirname, 'public', 'index.html'),
         }),
