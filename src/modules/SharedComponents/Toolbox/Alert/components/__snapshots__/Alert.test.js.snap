@@ -3,7 +3,7 @@
 exports[`Alert should dismiss alert 1`] = `
 <div>
   <div
-    class="common null css-cj8mqh"
+    class="common null css-16cz4vo"
     data-testid="1"
     id="1"
   >
@@ -130,7 +130,7 @@ exports[`Alert should dismiss alert 1`] = `
 exports[`Alert should display dismiss button for smaller screen size 1`] = `
 <div>
   <div
-    class="common warning css-cj8mqh"
+    class="common warning css-16cz4vo"
     data-testid="1"
     id="1"
   >
@@ -257,7 +257,7 @@ exports[`Alert should display dismiss button for smaller screen size 1`] = `
 exports[`Alert should display loader 1`] = `
 <div>
   <div
-    class="common warning css-cj8mqh"
+    class="common warning css-16cz4vo"
     data-testid="1"
     id="1"
   >
@@ -393,7 +393,7 @@ exports[`Alert should display loader 1`] = `
 exports[`Alert should fire an action when user clicks on the message text 1`] = `
 <div>
   <div
-    class="common warning css-cj8mqh"
+    class="common warning css-16cz4vo"
     data-testid="1"
     id="1"
   >
@@ -520,7 +520,7 @@ exports[`Alert should fire an action when user clicks on the message text 1`] = 
 exports[`Alert should not fire an action when user clicks on the message text and no action is assigned 1`] = `
 <div>
   <div
-    class="common warning css-cj8mqh"
+    class="common warning css-16cz4vo"
     data-testid="1"
     id="1"
   >
@@ -631,7 +631,7 @@ exports[`Alert should not fire an action when user clicks on the message text an
 exports[`Alert should render clickable action button 1`] = `
 <div>
   <div
-    class="common error css-cj8mqh"
+    class="common error css-16cz4vo"
     data-testid="1"
     id="1"
   >
@@ -758,7 +758,7 @@ exports[`Alert should render clickable action button 1`] = `
 exports[`Alert should render custom alert 1`] = `
 <div>
   <div
-    class="common error css-cj8mqh"
+    class="common error css-16cz4vo"
     data-testid="1"
     id="1"
   >
@@ -873,7 +873,7 @@ exports[`Alert should render custom alert 1`] = `
 exports[`Alert should render default view 1`] = `
 <div>
   <div
-    class="common warning css-cj8mqh"
+    class="common warning css-16cz4vo"
     data-testid="1"
     id="1"
   >
@@ -1000,7 +1000,7 @@ exports[`Alert should render default view 1`] = `
 exports[`Alert should render done type of alert 1`] = `
 <div>
   <div
-    class="common done css-cj8mqh"
+    class="common done css-16cz4vo"
     data-testid="1"
     id="1"
   >
@@ -1127,7 +1127,7 @@ exports[`Alert should render done type of alert 1`] = `
 exports[`Alert should render error outline type of alert 1`] = `
 <div>
   <div
-    class="common error_outline css-cj8mqh"
+    class="common error_outline css-16cz4vo"
     data-testid="1"
     id="1"
   >
@@ -1254,7 +1254,7 @@ exports[`Alert should render error outline type of alert 1`] = `
 exports[`Alert should render error type of alert 1`] = `
 <div>
   <div
-    class="common error css-cj8mqh"
+    class="common error css-16cz4vo"
     data-testid="1"
     id="1"
   >
@@ -1381,7 +1381,7 @@ exports[`Alert should render error type of alert 1`] = `
 exports[`Alert should render help outline type of alert 1`] = `
 <div>
   <div
-    class="common help_outline css-cj8mqh"
+    class="common help_outline css-16cz4vo"
     data-testid="1"
     id="1"
   >
@@ -1508,7 +1508,7 @@ exports[`Alert should render help outline type of alert 1`] = `
 exports[`Alert should render help type of alert 1`] = `
 <div>
   <div
-    class="common help css-cj8mqh"
+    class="common help css-16cz4vo"
     data-testid="1"
     id="1"
   >
@@ -1635,7 +1635,7 @@ exports[`Alert should render help type of alert 1`] = `
 exports[`Alert should render info outline type of alert 1`] = `
 <div>
   <div
-    class="common info_outline css-cj8mqh"
+    class="common info_outline css-16cz4vo"
     data-testid="1"
     id="1"
   >
@@ -1762,7 +1762,7 @@ exports[`Alert should render info outline type of alert 1`] = `
 exports[`Alert should render info type of alert 1`] = `
 <div>
   <div
-    class="common info css-cj8mqh"
+    class="common info css-16cz4vo"
     data-testid="1"
     id="1"
   >
