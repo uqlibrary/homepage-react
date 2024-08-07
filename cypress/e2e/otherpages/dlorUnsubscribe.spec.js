@@ -60,6 +60,9 @@ describe('Digital Learning Hub', () => {
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
+        });
+        it('has breadcrumbs', () => {
+            cy.visit('digital-learning-hub/confirm/unsubscribe/unsubscribeExpired');
             cy.get('uq-site-header')
                 .shadow()
                 .within(() => {

@@ -32,7 +32,8 @@ describe('Test and Tag Manage Inspection Notes', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
         );
-
+    });
+    it('has breadcrumbs', () => {
         cy.get('uq-site-header')
             .shadow()
             .within(() => {

@@ -87,7 +87,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
                 });
             });
-            it('loads as expected', () => {
+            it('has breadcrumb', () => {
                 cy.get('uq-site-header')
                     .shadow()
                     .within(() => {
@@ -96,6 +96,8 @@ describe('Add an object to the Digital Learning Hub', () => {
                             .should('be.visible')
                             .contains('Digital learning hub admin');
                     });
+            });
+            it('loads as expected', () => {
                 cy.get('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                     .contains('Digital Learning Hub admin')
                     .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);

@@ -30,6 +30,8 @@ describe('Test and Tag Manage Users', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
         );
+    });
+    it('has breadcrumbs', () => {
         cy.get('uq-site-header')
             .shadow()
             .within(() => {

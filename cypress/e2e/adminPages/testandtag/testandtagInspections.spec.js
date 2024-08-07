@@ -73,6 +73,8 @@ describe('Test and Tag Admin Inspection page', () => {
                     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
                 },
             );
+        });
+        it('has breadcrumb', () => {
             cy.get('uq-site-header')
                 .shadow()
                 .within(() => {

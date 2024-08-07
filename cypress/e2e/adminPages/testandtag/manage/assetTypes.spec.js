@@ -35,7 +35,7 @@ describe('Test and Tag Manage Asset Types', () => {
             },
         );
     });
-    it('Page Pagination functions correctly', () => {
+    it('has breadcrumbs', () => {
         cy.get('uq-site-header')
             .shadow()
             .within(() => {
@@ -44,6 +44,8 @@ describe('Test and Tag Manage Asset Types', () => {
                     .should('be.visible')
                     .contains('Test and tag');
             });
+    });
+    it('Page Pagination functions correctly', () => {
         cy.viewport(1300, 1000);
         cy.get('h1').contains(locale.pages.general.pageTitle);
         cy.get('h2').contains(locale.pages.manage.assetTypes.header.pageSubtitle('Library'));

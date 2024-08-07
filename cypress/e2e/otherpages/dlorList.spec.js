@@ -24,7 +24,7 @@ describe('Digital Learning Hub', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it('appears as expected', () => {
+        it('has breadcrumbs', () => {
             cy.waitUntil(() => cy.get('h1').should('exist'));
             cy.get('uq-site-header')
                 .shadow()
@@ -34,6 +34,9 @@ describe('Digital Learning Hub', () => {
                         .should('be.visible')
                         .contains('Digital learning hub');
                 });
+        });
+        it('appears as expected', () => {
+            cy.waitUntil(() => cy.get('h1').should('exist'));
             cy.get('h1').should('contain', 'Find a digital learning object');
             cy.get('[data-testid="dlor-homepage-list"')
                 .should('exist')

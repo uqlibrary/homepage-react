@@ -39,7 +39,7 @@ describe('Test and Tag manage inspection devices', () => {
             },
         );
     });
-    it('Add and Edit Inspection Device functions correctly', () => {
+    it('has breadcrumbs', () => {
         cy.get('uq-site-header')
             .shadow()
             .within(() => {
@@ -48,6 +48,8 @@ describe('Test and Tag manage inspection devices', () => {
                     .should('be.visible')
                     .contains('Test and tag');
             });
+    });
+    it('Add and Edit Inspection Device functions correctly', () => {
         cy.injectAxe();
         checkBaseline();
         // Adding an Inspection Device

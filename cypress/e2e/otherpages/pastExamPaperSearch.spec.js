@@ -22,7 +22,7 @@ describe('Past Exam Papers Pages', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it('when I type a valid course code fragment in the search bar, appropriate suggestions load', () => {
+        it('has breadcrumbs', () => {
             cy.visit('/exams');
             cy.get('uq-site-header')
                 .shadow()
@@ -32,6 +32,9 @@ describe('Past Exam Papers Pages', () => {
                         .should('be.visible')
                         .contains('Past exam papers');
                 });
+        });
+        it('when I type a valid course code fragment in the search bar, appropriate suggestions load', () => {
+            cy.visit('/exams');
             cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('fren1');
             // suggestions load
             cy.get('.MuiAutocomplete-listbox')
@@ -186,7 +189,7 @@ describe('Past Exam Papers Pages', () => {
         });
     });
     context('search errors', () => {
-        it('a search with no results shows a message', () => {
+        it('has breadcrumbs', () => {
             cy.visit('/exams/course/empt');
             cy.get('uq-site-header')
                 .shadow()
@@ -196,6 +199,9 @@ describe('Past Exam Papers Pages', () => {
                         .should('be.visible')
                         .contains('Past exam papers');
                 });
+        });
+        it('a search with no results shows a message', () => {
+            cy.visit('/exams/course/empt');
             cy.get('div[id="content-container"]').contains('Past Exam Papers from 2017 to 2022 for "EMPT"');
             cy.get('div[data-testid="past-exam-paper-missing"]').contains(
                 'We have not found any past exams for this course "EMPT" because either',

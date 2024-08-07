@@ -48,7 +48,7 @@ describe('Test and Tag bulk asset update', () => {
             },
         );
     });
-    it('Asset id search functions correctly', () => {
+    it('has breadcrumbs', () => {
         cy.get('uq-site-header')
             .shadow()
             .within(() => {
@@ -57,6 +57,8 @@ describe('Test and Tag bulk asset update', () => {
                     .should('be.visible')
                     .contains('Test and tag');
             });
+    });
+    it('Asset id search functions correctly', () => {
         checkBaseline();
         // Search for an asset
         cy.data('asset_selector-bulk-asset-update-input').type('5');
