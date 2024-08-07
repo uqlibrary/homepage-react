@@ -1,11 +1,6 @@
 import { DLOR_ADMIN_USER } from '../../../support/constants';
 
 describe('Digital Learning Hub admin homepage', () => {
-    beforeEach(() => {
-        cy.clearCookies();
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
-    });
-
     const itemsPerPage = 10; // matches value in DLOAdminHomepage
     const gridFromExpectedRowCount = (expected = 23) => (expected > itemsPerPage ? itemsPerPage : expected) + 1;
 

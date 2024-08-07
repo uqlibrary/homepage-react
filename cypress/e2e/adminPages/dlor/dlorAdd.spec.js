@@ -6,11 +6,6 @@ const REQUIRED_LENGTH_DESCRIPTION = 100;
 const REQUIRED_LENGTH_SUMMARY = 20;
 const REQUIRED_LENGTH_KEYWORDS = 4;
 describe('Add an object to the Digital Learning Hub', () => {
-    beforeEach(() => {
-        cy.clearCookies();
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
-    });
-
     function TypeCKEditor(content, keepExisting = false) {
         return cy
             .get('.ck-content')

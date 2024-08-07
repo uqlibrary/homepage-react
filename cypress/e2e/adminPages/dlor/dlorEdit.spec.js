@@ -4,11 +4,6 @@ import { DLOR_ADMIN_USER } from '../../../support/constants';
 const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
 describe('Edit an object on the Digital Learning Hub', () => {
-    beforeEach(() => {
-        cy.clearCookies();
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
-    });
-
     function TypeCKEditor(content, keepExisting = false) {
         return cy
             .get('.ck-content')

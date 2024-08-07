@@ -3,7 +3,6 @@ import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/t
 
 describe('Test and Tag Admin Inspection page', () => {
     beforeEach(() => {
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
         cy.visit('http://localhost:2020/admin/testntag/inspect?user=uqtesttag');
         cy.waitUntil(() => cy.focused().should('have.attr', 'value', 'St Lucia'));
     });

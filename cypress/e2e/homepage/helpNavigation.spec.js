@@ -1,10 +1,4 @@
 describe('header', () => {
-    // really this ought to be in reusable
-    // but we are testing how it appears _in_ homepage so we need homepage available
-    // so it has to be here :(
-    beforeEach(() => {
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
-    });
     context('Big 6 Nav', () => {
         it('displays correctly', () => {
             cy.visit('http://localhost:2020/?user=s1111111');

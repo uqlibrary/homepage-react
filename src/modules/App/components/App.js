@@ -66,8 +66,6 @@ export const App = ({ account, actions }) => {
         >
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
                 <uq-header hidelibrarymenuitem="true" />
-                {!hideForAdmin() && <cultural-advice-popup />}
-
                 <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink} showmenu>
                     <span slot="site-utilities">
                         <askus-button />

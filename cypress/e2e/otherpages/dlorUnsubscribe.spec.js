@@ -1,9 +1,4 @@
 describe('Digital Learning Hub', () => {
-    beforeEach(() => {
-        cy.clearCookies();
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
-    });
-
     context('desktop homepage visits', () => {
         it('a successful unsubscribe appears as expected', () => {
             cy.visit('digital-learning-hub/confirm/unsubscribe/fdsgsgsdgsd');

@@ -2,7 +2,6 @@ import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTa
 
 describe('Test and Tag Report - Asset inspection by filters', () => {
     beforeEach(() => {
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
         cy.visit('http://localhost:2020/admin/testntag/report/assetsbyfilter?user=uqtesttag');
     });
     const zeroPad = (num, places) => String(num).padStart(places, '0');

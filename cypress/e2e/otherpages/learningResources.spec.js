@@ -299,9 +299,6 @@ context('Learning Resources Access', () => {
     });
 });
 
-beforeEach(() => {
-    cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
-});
 context('The Learning Resources Page', () => {
     // NOTE: purely for coverage, this test is duplicated into cypress/adminPages/learning-resources
     it('User with classes sees their classes', () => {

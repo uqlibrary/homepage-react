@@ -2,7 +2,6 @@ import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTa
 
 describe('Test and Tag manage inspection devices', () => {
     beforeEach(() => {
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
         cy.visit('http://localhost:2020/admin/testntag/manage/inspectiondevices?user=uqtesttag');
     });
     const getFieldValue = (dataField, rowIndex, colIndex) =>

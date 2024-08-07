@@ -1,9 +1,4 @@
 describe('Digital Learning Hub View page', () => {
-    beforeEach(() => {
-        cy.clearCookies();
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
-    });
-
     context('details page', () => {
         it('appears as expected', () => {
             cy.intercept('GET', /uq.h5p.com/, {
