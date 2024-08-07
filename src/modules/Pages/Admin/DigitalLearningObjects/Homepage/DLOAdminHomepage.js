@@ -109,7 +109,7 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
 
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
-        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.pathname);
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dloradmin.pathname);
     }, []);
 

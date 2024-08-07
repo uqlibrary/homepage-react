@@ -26,6 +26,7 @@ import {
     loadTrainingEvents,
 } from 'data/actions';
 import { canSeeLearningResources } from 'helpers/access';
+import { breadcrumbs } from '../../../config/routes';
 
 const Computers = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Computers')));
 const Hours = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Hours')));
@@ -111,6 +112,12 @@ export const Index = ({
         }
     }, []);
 
+
+    React.useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.removeAttribute('secondleveltitle');
+        !!siteHeader && siteHeader.removeAttribute('secondLevelUrl');
+    }, []);
 
     useEffect(() => {
         if (accountLoading === false) {
