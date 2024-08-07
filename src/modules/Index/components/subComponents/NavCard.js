@@ -55,6 +55,7 @@ const NavCard = ({ cardLabel, landingUrl, onWrappedChange }) => {
 
     React.useEffect(() => {
         const checkHeight = () => {
+            /* istanbul ignore else */
             if (divRef.current) {
                 const height = divRef.current.getBoundingClientRect().height;
                 const displayedTextGreaterThanOneLine = height > 30;
