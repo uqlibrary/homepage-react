@@ -132,7 +132,7 @@ context('Book Exam Booth page', () => {
         const bookingDate = moment()
             .add(1, 'month')
             .date(intendedDate);
-        cy.get('[data-testid="start-date"] input')
+        cy.get('input[data-testid="start-date"]')
             .as('date-input')
             .should($input => {
                 const defaultDate = $input.val();
@@ -140,7 +140,7 @@ context('Book Exam Booth page', () => {
                 expect(defaultDate).to.equal(yesterday.format('DD/MM/YYYY'));
             });
 
-        cy.get('[data-testid="start-date"] button').click();
+        cy.get('[data-testid="start-date-button"]').click();
 
         cy.data('ArrowRightIcon')
             .as('next-month-button')

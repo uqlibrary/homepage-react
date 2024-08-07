@@ -85,11 +85,13 @@ describe('Promopanel Admin Form Pages', () => {
                 .contains('panel');
             cy.waitUntil(() => testId('admin-promopanel-help-button').should('exist'));
             testId('schedule-panel-hdr').click();
-            cy.get('[data-testid="admin-promopanel-group-start-date-container"] button').click();
-            cy.get('.MuiDayPicker-weekContainer:first-of-type > button:first-of-type').click();
+            cy.get('[data-testid="admin-promopanel-group-start-date-button"]').click();
+            cy.get('.MuiDayCalendar-weekContainer:first-of-type > button:first-of-type').click();
             cy.get('body').type('{esc}');
-            cy.get('[data-testid="admin-promopanel-group-end-date-container"] button').click();
-            cy.get('.MuiDayPicker-weekContainer:last-of-type > button:first-of-type').click();
+            cy.get('[data-testid="admin-promopanel-group-end-date-button"]').click();
+            cy.get(
+                '.MuiPaper-root[style*="opacity: 1"] .MuiDayCalendar-weekContainer:last-of-type > button:first-of-type',
+            ).click();
             cy.get('body').type('{esc}');
 
             cy.get('#group-selector').click({ force: true });
@@ -134,17 +136,17 @@ describe('Promopanel Admin Form Pages', () => {
                 .contains('panel');
             cy.waitUntil(() => testId('admin-promopanel-help-button').should('exist'));
             testId('schedule-panel-hdr').click();
-            cy.get('[data-testid="admin-promopanel-group-start-date-container"] button').click();
+            cy.get('[data-testid="admin-promopanel-group-start-date-button"]').click();
             cy.contains(new Date().getFullYear()).click();
-            cy.get('.MuiYearPicker-root')
+            cy.get('.MuiPickersYear-root')
                 .contains('1999')
                 .click({ force: true });
             cy.get('body').type('{esc}');
             testId('start-date-error').should('contain', 'This date is in the past');
 
-            cy.get('[data-testid="admin-promopanel-group-end-date-container"] button').click();
+            cy.get('[data-testid="admin-promopanel-group-end-date-button"]').click();
             cy.contains(new Date().getFullYear()).click();
-            cy.get('.MuiYearPicker-root')
+            cy.get('.MuiPickersYear-root')
                 .contains('1999')
                 .click({ force: true });
             cy.get('body').type('{esc}');
