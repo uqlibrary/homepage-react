@@ -10,7 +10,6 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
@@ -19,6 +18,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { lazyRetry } from 'helpers/general';
 
+import LibraryUpdates from 'modules/Index/components/subComponents/LibraryUpdates';
 import NavPanelBlock from 'modules/Index/components/subComponents/NavPanelBlock';
 import {
     loadLibHours,
@@ -115,7 +115,9 @@ export const Index = ({
                 paddingBottom: 25,
                 backgroundColor: '#51247a',
             }}>
-                <StandardPage><search-portal theme="dark"/></StandardPage>
+                <StandardPage>
+                    <search-portal theme="dark"/>
+                </StandardPage>
 
             </div>
             <div style={{ borderBottom: '1px solid #d1d0d2' /* grey-300 */ }}>
@@ -186,29 +188,9 @@ export const Index = ({
                 </StandardPage>
             )}
 
-            <NavPanelBlock />
+            <NavPanelBlock/>
 
-            <StandardPage>
-                <Grid container spacing={4}>
-                    <Grid item xs={12}>
-                        <Typography component={'h2'} sx={{ marginTop: '1em', fontSize: '24px', fontWeight: 500 }}>
-                            Library updates
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12} sx={{ paddingTop: '0px' }}>
-                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>wide item</StandardCard>
-                    </Grid>
-                    <Grid item xs={12} md={4} sx={{ paddingTop: '0px' }}>
-                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>item 2</StandardCard>
-                    </Grid>
-                    <Grid item xs={12} md={4} sx={{ paddingTop: '0px' }}>
-                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>item 3</StandardCard>
-                    </Grid>
-                    <Grid item xs={12} md={4} sx={{ paddingTop: '0px' }}>
-                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>item 4</StandardCard>
-                    </Grid>
-                </Grid>
-            </StandardPage>
+            <LibraryUpdates />
         </React.Suspense>
     );
 };
