@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Library chatbot</title>
+    <title>Library Chatbot</title>
     <!--
            This styling is for the Web Chat demonstration purposes.
            It is recommended that style is moved to a separate file for organization in larger projects.
@@ -17,7 +17,7 @@
         }
         h1 {
             color: whitesmoke;
-            font-family: Segoe UI;
+            font-family: Montserrat, Helvetica, Arial, sans-serif;
             font-size: 16px;
             line-height: 20px;
             margin: 0;
@@ -61,7 +61,8 @@
         };
         // Specifies the token endpoint URL.
         // To get this value, visit Copilot Studio > Settings > Channels > Mobile app page.
-        const tokenEndpointURL = new URL('https://2a892934221ceaa49f1a4790000854.ca.environment.api.powerplatform.com/powervirtualagents/botsbyschema/cr546_uqAssistGenAiChatBot/directline/token?api-version=2022-03-01-preview');
+        const tokenEndpointHost = new URL('https://2a892934221ceaa49f1a4790000854.ca.environment.api.powerplatform.com/');
+        const tokenEndpointURL = new URL(`${tokenEndpointHost}powervirtualagents/botsbyschema/cr546_uqAssistGenAiChatBot/directline/token?api-version=2022-03-01-preview`);
         // Specifies the language the copilot and Web Chat should display in:
         // - (Recommended) To match the page language, set it to document.documentElement.lang
         // - To use current user language, set it to navigator.language with a fallback language
@@ -72,8 +73,9 @@
         // const locale = navigator.language || 'ja-JP'; // Uses user preferred language and fallback to Japanese.
         // const locale = 'zh-HAnt'; // Always use Chinese (Traditional).
         const apiVersion = tokenEndpointURL.searchParams.get('api-version');
+        const regionalChannelSettingsURL = new URL(`${tokenEndpointHost}powervirtualagents/regionalchannelsettings?api-version=${apiVersion}`);
         const [directLineURL, token] = await Promise.all([
-            fetch(new URL(`/powervirtualagents/regionalchannelsettings?api-version=${apiVersion}`, tokenEndpointURL))
+            fetch(new URL(regionalChannelSettingsURL, tokenEndpointURL))
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Failed to retrieve regional channel settings.');
