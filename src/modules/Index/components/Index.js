@@ -210,40 +210,28 @@ export const Index = ({
             <StandardPage>
                 <nav>
                     <StyledGridContainer container component="ul" spacing={4} isanywrapped={isanywrapped} data-testid="help-navigation-panel">
-                        <Grid item component="li" xs={12} md={4}>
                             <NavCard cardLabel="Find and borrow"
-                                     landingUrl="https://web.library.uq.edu.au/find-and-borrow"
-                                     onWrappedChange={handleWrappedText}
+                                 landingUrl="https://web.library.uq.edu.au/find-and-borrow"
+                                 onWrappedChange={handleWrappedText}
                             />
-                        </Grid>
-                        <Grid item component="li" xs={12} md={4}>
                             <NavCard cardLabel="Study and learning support"
-                                     landingUrl="https://web.library.uq.edu.au/study-and-learning-support"
-                                     onWrappedChange={handleWrappedText}
+                                 landingUrl="https://web.library.uq.edu.au/study-and-learning-support"
+                                 onWrappedChange={handleWrappedText}
                             />
-                        </Grid>
-                        <Grid item component="li" xs={12} md={4}>
                             <NavCard cardLabel="Visit" landingUrl="https://web.library.uq.edu.au/visit"
-                                     onWrappedChange={handleWrappedText}
+                                 onWrappedChange={handleWrappedText}
                             />
-                        </Grid>
-                        <Grid item component="li" xs={12} md={4}>
                             <NavCard cardLabel="Research and publish"
-                                     landingUrl="https://web.library.uq.edu.au/research-and-publish"
-                                     onWrappedChange={handleWrappedText}
+                                 landingUrl="https://web.library.uq.edu.au/research-and-publish"
+                                 onWrappedChange={handleWrappedText}
                             />
-                        </Grid>
-                        <Grid item component="li" xs={12} md={4}>
                             <NavCard cardLabel="AskUs and student IT Support"
-                                     landingUrl="https://web.library.uq.edu.au/askus-and-it-support"
-                                     onWrappedChange={handleWrappedText}
+                                 landingUrl="https://web.library.uq.edu.au/askus-and-it-support"
+                                 onWrappedChange={handleWrappedText}
                             />
-                        </Grid>
-                        <Grid item component="li" xs={12} md={4}>
                             <NavCard cardLabel="About" landingUrl="https://web.library.uq.edu.au/about-us"
-                                     onWrappedChange={handleWrappedText}
+                                 onWrappedChange={handleWrappedText}
                             />
-                        </Grid>
                     </StyledGridContainer>
                 </nav>
             </StandardPage>

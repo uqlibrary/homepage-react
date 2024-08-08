@@ -3,6 +3,7 @@ import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -23,7 +24,6 @@ const StyledBox = styled(Box)(({ theme }) => ({
         letterSpacing: '0.16px',
         '& svg': {
             display: 'block',
-            // marginTop: '40px',
         },
     },
     '&:hover': {
@@ -53,6 +53,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 const NavCard = ({ cardLabel, landingUrl, onWrappedChange }) => {
     const divRef = React.useRef(null);
 
+    // when the text label of one box gets bigger, we have to change the height of all the boxes
     React.useEffect(() => {
         const checkHeight = () => {
             /* istanbul ignore else */
@@ -73,14 +74,16 @@ const NavCard = ({ cardLabel, landingUrl, onWrappedChange }) => {
         };
     }, [cardLabel, onWrappedChange]);
     return (
-        <StyledBox border={1} p={2}>
-            <h2>
-                <Link to={landingUrl}>
-                    <span ref={divRef}>{cardLabel}</span>
-                    <ArrowForwardIcon />
-                </Link>
-            </h2>
-        </StyledBox>
+        <Grid item component="li" xs={12} md={6} lg={4}>
+            <StyledBox border={1} p={2}>
+                <h2>
+                    <Link to={landingUrl}>
+                        <span ref={divRef}>{cardLabel}</span>
+                        <ArrowForwardIcon sx={{ color: '#51247A' }} />
+                    </Link>
+                </h2>
+            </StyledBox>
+        </Grid>
     );
 };
 
