@@ -43,7 +43,7 @@ const StyledLocation = styled('div')(({ theme }) => ({
     },
 }));
 
-export const Location = ({ idLabel, account }) => {
+export const Location = ({ idLabel = null, account }) => {
     const [cookies, setCookie, removeCookie] = useCookies();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -180,10 +180,6 @@ export const Location = ({ idLabel, account }) => {
 Location.propTypes = {
     idLabel: PropTypes.string,
     account: PropTypes.object,
-};
-
-Location.defaultProps = {
-    idLabel: null,
 };
 
 export default Location;

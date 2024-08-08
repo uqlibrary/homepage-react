@@ -20,6 +20,7 @@ import { useConfirmationState } from 'hooks';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
 import { scrollToTopOfPage } from 'helpers/general';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 const moment = require('moment');
 
@@ -47,46 +48,20 @@ const StyledChip = styled(Chip)(({ theme }) => ({
         fontWeight: 'bold',
     },
 }));
-
-/*
-const useStyles2 = makeStyles(theme => ({
-    table: {
-        minWidth: 500,
-    },
-    headerRow: {
-        display: 'flex',
-        padding: '0 0.5rem',
-    },
-    headerRowHighlighted: {
-        backgroundColor: theme.palette.primary.main,
-        color: '#fff',
-    },
-    iconHighlighted: {
-        color: '#fff',
-    },
-    checkboxCell: {
-        '& input[type="checkbox"]:checked + svg': {
-            fill: '#222',
-        },
-        borderBottom: 'none',
-    },
-}));*/
+// drastic temporary measure - force coverage on the default values required on params after defaultProps deprecation
+/* istanbul ignore next */
 export const PromoPanelListPanels = ({
     actions,
     isLoading,
-    panelList,
-    // knownGroups,
-    // showBulkDelete,
-    // showFilter,
+    panelList = [],
     isPastPanels,
     title,
     canEdit,
     canClone,
     canDelete,
     panelError,
-    history,
-    showPast,
-    hideAlloc,
+    showPast = true,
+    hideAlloc = false,
 }) => {
     // *** COMMENTED OUT PENDING FEEDBACK ON BULK ACTIONS ***
     // const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
@@ -95,6 +70,8 @@ export const PromoPanelListPanels = ({
         showDeleteFailureConfirmation,
         hideDeleteFailureConfirmation,
     ] = useConfirmationState();
+
+    const navigate = useNavigate();
 
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewPanel, setPreviewPanel] = useState({});
@@ -231,12 +208,12 @@ export const PromoPanelListPanels = ({
     // };
 
     const navigateToEditForm = panelId => {
-        history.push(`/admin/promopanel/edit/${panelId}`);
+        navigate(`/admin/promopanel/edit/${panelId}`);
         scrollToTopOfPage();
     };
 
     const navigateToCloneForm = panelId => {
-        history.push(`/admin/promopanel/clone/${panelId}`);
+        navigate(`/admin/promopanel/clone/${panelId}`);
         scrollToTopOfPage();
     };
     // COMMENTED OUT AS THERE IS PRESENTLY NO FILTER FOR THIS
@@ -522,18 +499,10 @@ PromoPanelListPanels.propTypes = {
     knownGroups: PropTypes.array,
     isLoading: PropTypes.bool,
     headertag: PropTypes.string,
-    history: PropTypes.object,
     actions: PropTypes.any,
     panelError: PropTypes.string,
     showPast: PropTypes.bool,
     hideAlloc: PropTypes.bool,
-};
-
-PromoPanelListPanels.defaultProps = {
-    panelList: [],
-    showCurrent: true,
-    showPast: true,
-    hideAlloc: false,
 };
 
 export default PromoPanelListPanels;

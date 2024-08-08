@@ -5,7 +5,7 @@ import Snackbar from '@mui/material/Snackbar';
 
 const rootId = 'confirmation_alert';
 
-const ConfirmationAlert = ({ isOpen, message, type, closeAlert, ...props }) => {
+const ConfirmationAlert = ({ isOpen = false, message = '', type = 'info', closeAlert, ...props }) => {
     const componentId = `${rootId}-${type}`;
     return (
         <Snackbar
@@ -37,12 +37,6 @@ ConfirmationAlert.propTypes = {
     message: PropTypes.string,
     type: PropTypes.string,
     closeAlert: PropTypes.func,
-};
-
-ConfirmationAlert.defaultProps = {
-    isOpen: false,
-    message: '',
-    type: 'info',
 };
 
 export default React.memo(ConfirmationAlert);

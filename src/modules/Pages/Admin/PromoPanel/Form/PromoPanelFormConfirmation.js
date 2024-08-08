@@ -84,6 +84,4 @@ PromoPanelFormConfirmation.propTypes = {
     confirmationMessage: PropTypes.any,
 };
 
-PromoPanelFormConfirmation.defaultProps = {};
-
 export default PromoPanelFormConfirmation;

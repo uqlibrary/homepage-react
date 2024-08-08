@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import DLOConfirmUnsubscription from './DLOConfirmUnsubscription';
@@ -18,7 +17,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let DLOConfirmUnsubscriptionContainer = connect(mapStateToProps, mapDispatchToProps)(DLOConfirmUnsubscription);
-DLOConfirmUnsubscriptionContainer = withRouter(DLOConfirmUnsubscriptionContainer);
+const DLOConfirmUnsubscriptionContainer = connect(mapStateToProps, mapDispatchToProps)(DLOConfirmUnsubscription);
 
 export default DLOConfirmUnsubscriptionContainer;

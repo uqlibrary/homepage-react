@@ -217,7 +217,7 @@ export const Index = ({
 
                     {canSeeLearningResources(account) && (
                         <Grid item xs={12} md={4} data-testid="learning-resources-panel">
-                            <LearningResourcesPanel account={account} history={history} />
+                            <LearningResourcesPanel account={account} />
                         </Grid>
                     )}
 
@@ -273,7 +273,5 @@ Index.propTypes = {
     promoPanelActionError: PropTypes.string,
     promoPanelLoading: PropTypes.bool,
 };
-
-Index.defaultProps = {};
 
 export default Index;

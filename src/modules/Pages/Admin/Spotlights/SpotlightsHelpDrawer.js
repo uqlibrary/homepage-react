@@ -65,17 +65,8 @@ export const SpotlightsHelpDrawer = ({ open, helpContent, closeHelpLightbox }) =
 };
 
 SpotlightsHelpDrawer.propTypes = {
-    // actions: PropTypes.any,
     helpContent: PropTypes.any,
-    // helpButtonLabel: PropTypes.string,
-    // history: PropTypes.object,
-    // showAddButton: PropTypes.bool,
     open: PropTypes.any,
     setHelpLightboxOpen: PropTypes.any,
     closeHelpLightbox: PropTypes.any,
 };
-
-// SpotlightsHelpDrawer.defaultProps = {
-//     helpButtonLabel: 'Help',
-//     showAddButton: false,
-// };

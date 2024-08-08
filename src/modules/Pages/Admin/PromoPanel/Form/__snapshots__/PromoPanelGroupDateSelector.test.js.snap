@@ -275,3 +275,9 @@ exports[`Promo Panel Group Date Selector Should render correctly 1`] = `
   "unmount": [Function],
 }
 `;
+
+exports[`Promo Panel Group Date Selector default values render correctly 1`] = `
+<div
+  aria-hidden="true"
+/>
+`;

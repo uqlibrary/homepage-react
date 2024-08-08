@@ -45,7 +45,8 @@ const StyledSearchPanel = styled(Grid)(() => ({
 
 export const LearningResourceSearch = ({
     actions,
-    displayType, // default: 'full'; values: 'full', 'compact'
+    displayType,
+    // default: 'full'; values: 'full', 'compact'
     // 'full' for learning resources page search
     // 'compact' for Learning Resource search in homepage panel
     elementId,
@@ -225,10 +226,6 @@ LearningResourceSearch.propTypes = {
     actions: PropTypes.any,
     loadCourseAndSelectTab: PropTypes.any,
     navigateToLearningResourcePage: PropTypes.any,
-};
-
-LearningResourceSearch.defaultProps = {
-    displayType: 'all',
 };
 
 export default LearningResourceSearch;

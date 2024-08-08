@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import PromoPanelHelpDrawer from '../../PromoPanelHelpDrawer';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopanel.locale';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/Form/PromoPanelForm';
@@ -17,7 +17,6 @@ export const PromoPanelEdit = ({
     promoPanelUserTypesLoading,
     promoPanelUserTypeList,
     promoPanelSaving,
-    history,
     panelUpdated,
     queueLength,
     promoPanelListError,
@@ -140,7 +139,6 @@ export const PromoPanelEdit = ({
                         knownGroups={knownGroups}
                         defaults={defaults}
                         actions={actions}
-                        history={history}
                         isEdit
                         promoPanelSaving={promoPanelSaving}
                         isDefaultPanel={isDefault}
@@ -168,7 +166,6 @@ PromoPanelEdit.propTypes = {
     promoPanelUserTypeList: PropTypes.array,
     panelUpdated: PropTypes.bool,
     promoPanelSaving: PropTypes.bool,
-    history: PropTypes.object,
     queueLength: PropTypes.number,
     promoPanelListError: PropTypes.string,
     promoPanelUserTypesError: PropTypes.string,

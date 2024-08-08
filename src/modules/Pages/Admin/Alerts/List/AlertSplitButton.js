@@ -20,7 +20,7 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 export const AlertSplitButton = ({
     alertId,
     deleteAlertById,
-    mainButtonLabel,
+    mainButtonLabel = 'Edit',
     navigateToCloneForm,
     navigateToEditForm,
     navigateToView,
@@ -132,10 +132,6 @@ AlertSplitButton.propTypes = {
     navigateToView: PropTypes.func,
     navigateToMainFunction: PropTypes.func,
     confirmDeleteLocale: PropTypes.func,
-};
-
-AlertSplitButton.defaultProps = {
-    mainButtonLabel: 'Edit',
 };
 
 export default AlertSplitButton;

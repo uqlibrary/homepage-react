@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import InspectionDevices from '../../../manage/InspectionDevices/components/InspectionDevices';
-import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import * as actions from 'data/actions';
 import locale from '../../../testTag.locale';
@@ -30,7 +29,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 let RecalibrationsDue = connect(mapStateToProps, mapDispatchToProps)(InspectionDevices);
-RecalibrationsDue = withRouter(RecalibrationsDue);
 RecalibrationsDue = withUser(RecalibrationsDue);
 
 export default RecalibrationsDue;

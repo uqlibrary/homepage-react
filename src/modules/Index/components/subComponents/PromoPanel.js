@@ -71,6 +71,4 @@ PromoPanel.propTypes = {
     promoPanelLoading: PropTypes.bool,
 };
 
-PromoPanel.defaultProps = {};
-
 export default PromoPanel;

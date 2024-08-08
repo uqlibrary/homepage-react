@@ -67,6 +67,4 @@ PromoPanelSaveConfirmation.propTypes = {
     secondaryText: PropTypes.string,
 };
 
-PromoPanelSaveConfirmation.defaultProps = {};
-
 export default PromoPanelSaveConfirmation;
