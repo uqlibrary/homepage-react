@@ -19,14 +19,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { lazyRetry } from 'helpers/general';
 
-import NavCard from 'modules/Index/components/subComponents/NavCard';
+import NavPanelBlock from 'modules/Index/components/subComponents/NavPanelBlock';
 import {
     loadLibHours,
     loadCompAvail,
     loadTrainingEvents,
 } from 'data/actions';
 import { canSeeLearningResources } from 'helpers/access';
-import { breadcrumbs } from '../../../config/routes';
 
 const Computers = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Computers')));
 const Hours = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Hours')));
@@ -76,18 +75,6 @@ const StyledSummary = styled('span')(({ theme }) => ({
     textDecoration: 'underline',
 }));
 
-const StyledGridContainer = styled(Grid)(() => ({
-    '& li': {
-        listStyleType: 'none',
-        height: '6em',
-        marginBottom: '32px',
-        paddingLeft: '24px !important',
-        paddingTop: '24px !important',
-    },
-    paddingLeft: 0,
-    marginTop: '1em',
-}));
-
 export const Index = ({
     account,
     accountLoading,
@@ -122,26 +109,30 @@ export const Index = ({
         }
     }, [account, accountLoading, dispatch]);
     return (
-        <React.Suspense fallback={<ContentLoader message="Loading" />}>
+        <React.Suspense fallback={<ContentLoader message="Loading"/>}>
             <div id="search-portal-container" data-testid="search-portal-container" style={{
                 paddingTop: 25,
                 paddingBottom: 25,
                 backgroundColor: '#51247a',
             }}>
-                <StandardPage><search-portal /></StandardPage>
+                <StandardPage>
+                    <search-portal/>
+                </StandardPage>
 
             </div>
             <div style={{ borderBottom: '1px solid #d1d0d2' /* grey-300 */ }}>
                 <div className="layout-card">
                     <StyleWrapper>
-                        <StyledLink href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb" underline="hover">
+                        <StyledLink
+                            href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
+                            underline="hover">
                             <div>
                                 Make a booking
                             </div>
                         </StyledLink>
                         <StyledAccordion>
                             <StyledAccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
+                                expandIcon={<ExpandMoreIcon/>}
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
                                 data-testid="hours-accordion-open"
@@ -190,37 +181,14 @@ export const Index = ({
                         </Grid>
                         {canSeeLearningResources(account) && (
                             <Grid item xs={12} md={4} data-testid="learning-resources-panel" sx={{ paddingTop: '0px' }}>
-                                <LearningResourcesPanel account={account} history={history} />
+                                <LearningResourcesPanel account={account} history={history}/>
                             </Grid>
                         )}
                     </Grid>
                 </StandardPage>
             )}
 
-            <StandardPage>
-                <nav>
-                    <StyledGridContainer container component="ul" spacing={4} data-testid="help-navigation-panel">
-                        <NavCard
-                            cardLabel="Find and borrow"
-                            landingUrl="https://web.library.uq.edu.au/find-and-borrow"
-                        />
-                        <NavCard
-                            cardLabel="Study and learning support"
-                            landingUrl="https://web.library.uq.edu.au/study-and-learning-support"
-                        />
-                        <NavCard cardLabel="Visit" landingUrl="https://web.library.uq.edu.au/visit" />
-                        <NavCard
-                            cardLabel="Research and publish"
-                            landingUrl="https://web.library.uq.edu.au/research-and-publish"
-                        />
-                        <NavCard
-                            cardLabel="AskUs and student IT support"
-                            landingUrl="https://web.library.uq.edu.au/askus-and-it-support"
-                        />
-                        <NavCard cardLabel="About" landingUrl="https://web.library.uq.edu.au/about-us" />
-                    </StyledGridContainer>
-                </nav>
-            </StandardPage>
+            <NavPanelBlock />
 
             <StandardPage>
                 <Grid container spacing={4}>
