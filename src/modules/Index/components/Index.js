@@ -138,7 +138,7 @@ export const Index = ({
                 paddingBottom: 25,
                 backgroundColor: '#51247a',
             }}>
-                <StandardPage><search-portal /></StandardPage>
+                <StandardPage><search-portal theme="dark"/></StandardPage>
 
             </div>
             <div style={{ borderBottom: '1px solid #d1d0d2' /* grey-300 */ }}>
