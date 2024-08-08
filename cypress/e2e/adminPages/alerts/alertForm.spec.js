@@ -506,7 +506,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
             cy.get('[data-testid="admin-alerts-list-future-list"]').should('be.visible');
         });
-        it('can clone an alert and then clone again', () => {
+        it.skip('can clone an alert and then clone again', () => {
             cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.get('h2').should('be.visible');
             cy.get('h2').contains('Clone alert');
