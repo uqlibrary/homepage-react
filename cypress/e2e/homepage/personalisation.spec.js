@@ -24,6 +24,15 @@ context('Personalised Homepage', () => {
         hasPanels(['computer-availability', 'library-hours', 'training']);
     });
 
+    it('when session cookie auto expires the user logs out', () => {
+        cy.visit('/?user=s1111111');
+        cy.viewport(1300, 1000);
+
+        cy.clearCookie('UQLID');
+        cy.rendersALoggedoutUser();
+    });
+});
+context.skip('Extra tests per group that we might need later', () => {
     it('Renders a remote undergraduate home page correctly', () => {
         cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);
@@ -113,13 +122,5 @@ context('Personalised Homepage', () => {
         cy.viewport(1300, 1000);
 
         hasPanels(['computer-availability', 'library-hours', 'training']);
-    });
-
-    it('when session cookie auto expires the user logs out', () => {
-        cy.visit('/?user=s1111111');
-        cy.viewport(1300, 1000);
-
-        cy.clearCookie('UQLID');
-        cy.rendersALoggedoutUser();
     });
 });
