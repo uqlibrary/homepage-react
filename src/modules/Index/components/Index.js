@@ -76,14 +76,13 @@ const StyledSummary = styled('span')(({ theme }) => ({
     textDecoration: 'underline',
 }));
 
-const StyledGridContainer = styled(Grid)(({ isanywrapped = false }) => ({
+const StyledGridContainer = styled(Grid)(() => ({
     '& li': {
         listStyleType: 'none',
-        height: !!isanywrapped ? '8em' : '6.5em',
+        height: '6em',
         marginBottom: '32px',
-        '@media (max-width: 800px)': {
-            height: '6.5em',
-        },
+        paddingLeft: '24px !important',
+        paddingTop: '24px !important',
     },
     paddingLeft: 0,
     marginTop: '1em',
@@ -103,15 +102,6 @@ export const Index = ({
     trainingEventsError,
 }) => {
     const dispatch = useDispatch();
-    const [isanywrapped, setIsAnyWrapped] = React.useState(false);
-
-    const handleWrappedText = React.useCallback((isWrapped) => {
-        console.log('isWrapped', isWrapped);
-        if (isWrapped) {
-            setIsAnyWrapped(true);
-        }
-    }, []);
-
 
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -209,29 +199,25 @@ export const Index = ({
 
             <StandardPage>
                 <nav>
-                    <StyledGridContainer container component="ul" spacing={4} isanywrapped={isanywrapped} data-testid="help-navigation-panel">
-                            <NavCard cardLabel="Find and borrow"
-                                 landingUrl="https://web.library.uq.edu.au/find-and-borrow"
-                                 onWrappedChange={handleWrappedText}
-                            />
-                            <NavCard cardLabel="Study and learning support"
-                                 landingUrl="https://web.library.uq.edu.au/study-and-learning-support"
-                                 onWrappedChange={handleWrappedText}
-                            />
-                            <NavCard cardLabel="Visit" landingUrl="https://web.library.uq.edu.au/visit"
-                                 onWrappedChange={handleWrappedText}
-                            />
-                            <NavCard cardLabel="Research and publish"
-                                 landingUrl="https://web.library.uq.edu.au/research-and-publish"
-                                 onWrappedChange={handleWrappedText}
-                            />
-                            <NavCard cardLabel="AskUs and student IT Support"
-                                 landingUrl="https://web.library.uq.edu.au/askus-and-it-support"
-                                 onWrappedChange={handleWrappedText}
-                            />
-                            <NavCard cardLabel="About" landingUrl="https://web.library.uq.edu.au/about-us"
-                                 onWrappedChange={handleWrappedText}
-                            />
+                    <StyledGridContainer container component="ul" spacing={4} data-testid="help-navigation-panel">
+                        <NavCard
+                            cardLabel="Find and borrow"
+                            landingUrl="https://web.library.uq.edu.au/find-and-borrow"
+                        />
+                        <NavCard
+                            cardLabel="Study and learning support"
+                            landingUrl="https://web.library.uq.edu.au/study-and-learning-support"
+                        />
+                        <NavCard cardLabel="Visit" landingUrl="https://web.library.uq.edu.au/visit" />
+                        <NavCard
+                            cardLabel="Research and publish"
+                            landingUrl="https://web.library.uq.edu.au/research-and-publish"
+                        />
+                        <NavCard
+                            cardLabel="AskUs and student IT support"
+                            landingUrl="https://web.library.uq.edu.au/askus-and-it-support"
+                        />
+                        <NavCard cardLabel="About" landingUrl="https://web.library.uq.edu.au/about-us" />
                     </StyledGridContainer>
                 </nav>
             </StandardPage>

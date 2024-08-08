@@ -9,22 +9,33 @@ import { styled } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const StyledBox = styled(Box)(({ theme }) => ({
-    borderColor: theme.palette.secondary.main,
+    borderColor: 'hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
+    background: '#FFFFFF',
+    boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
     height: '100%',
     position: 'relative',
     cursor: 'pointer',
-    '& h2': {
-        marginTop: '10px',
+    h2: {
+        marginTop: '5px',
     },
     a: {
         color: theme.palette.secondary.dark,
         fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
         fontSize: '20px',
         fontWeight: 500,
-        letterSpacing: '0.16px',
+        padding: '24px 24px 24px 8px',
         '& svg': {
             display: 'block',
         },
+    },
+    '& svg': {
+        '@media (prefers-reduced-motion: no-preference)': {
+            transition: 'margin-left 200ms ease-in-out',
+        },
+        position: 'absolute',
+        bottom: '16px',
+        left: '24px',
     },
     '&:hover': {
         '@media (prefers-reduced-motion: no-preference)': {
@@ -40,45 +51,15 @@ const StyledBox = styled(Box)(({ theme }) => ({
             },
         },
     },
-    '& svg': {
-        '@media (prefers-reduced-motion: no-preference)': {
-            transition: 'margin-left 200ms ease-in-out',
-        },
-        position: 'absolute',
-        bottom: '15px',
-        left: '20px',
-    },
 }));
 
-const NavCard = ({ cardLabel, landingUrl, onWrappedChange }) => {
-    const divRef = React.useRef(null);
-
-    // when the text label of one box gets bigger, we have to change the height of all the boxes
-    React.useEffect(() => {
-        const checkHeight = () => {
-            /* istanbul ignore else */
-            if (divRef.current) {
-                const height = divRef.current.getBoundingClientRect().height;
-                const displayedTextGreaterThanOneLine = height > 30;
-                onWrappedChange(displayedTextGreaterThanOneLine);
-            }
-        };
-
-        // Initial check
-        checkHeight();
-
-        // listenfor resize, so the height can change dynamically
-        window.addEventListener('resize', checkHeight);
-        return () => {
-            window.removeEventListener('resize', checkHeight);
-        };
-    }, [cardLabel, onWrappedChange]);
+const NavCard = ({ cardLabel, landingUrl }) => {
     return (
         <Grid item component="li" xs={12} md={6} lg={4}>
             <StyledBox border={1} p={2}>
                 <h2>
                     <Link to={landingUrl}>
-                        <span ref={divRef}>{cardLabel}</span>
+                        <span>{cardLabel}</span>
                         <ArrowForwardIcon sx={{ color: '#51247A' }} />
                     </Link>
                 </h2>
@@ -90,7 +71,6 @@ const NavCard = ({ cardLabel, landingUrl, onWrappedChange }) => {
 NavCard.propTypes = {
     cardLabel: PropTypes.string,
     landingUrl: PropTypes.string,
-    onWrappedChange: PropTypes.func,
 };
 
 export default NavCard;
