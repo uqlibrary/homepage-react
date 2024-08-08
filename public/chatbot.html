@@ -14,18 +14,19 @@
         }
         body {
             margin: 0;
+            font-family: Roboto;
         }
         h1 {
-            color: whitesmoke;
-            font-family: Montserrat, Helvetica, Arial, sans-serif;
-            font-size: 16px;
+            color: #51247A;
+            font-family: Roboto, sans-serif;
+            font-size: 24px;
             line-height: 20px;
             margin: 0;
             padding: 0 20px;
         }
         #banner {
             align-items: center;
-            background-color: #51247A;
+            background-color: #fff;
             display: flex;
             height: 50px;
         }
@@ -41,7 +42,7 @@
 <body>
 <div>
     <div id="banner">
-        <h1>Library chatbot</h1>
+        <h1>Library Chatbot</h1>
     </div>
     <div id="webchat" role="main"></div>
 </div>
@@ -78,7 +79,7 @@
             fetch(new URL(regionalChannelSettingsURL, tokenEndpointURL))
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Failed to retrieve regional channel settings.');
+                        throw new Error('Sorry, Chatbot unavailable - please try again later! (Failed to retrieve regional channel settings)');
                     }
                     return response.json();
                 })
@@ -86,7 +87,7 @@
             fetch(tokenEndpointURL)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Failed to retrieve Direct Line token.');
+                        throw new Error('Sorry, Chatbot unavailable - please try again later! (Failed to retrieve Direct Line token.)');
                     }
                     return response.json();
                 })
@@ -117,12 +118,15 @@
         // Set  the CSS rules.
         const styleSet = window.WebChat.createStyleSet({
             bubbleBackground: 'white',
+            bubbleBorderRadius: 10,
             bubbleFromUserBackground: '#51247A',
+            bubbleFromUserBorderRadius: 10,
             bubbleFromUserTextColor: 'white',
-            backgroundColor: 'white'
+            backgroundColor: 'white',
+            primaryFont: 'Roboto'
         });
         console.log({ styleSet });
-        WebChat.renderWebChat({ directLine, locale, styleSet}, document.getElementById('webchat'));
+        WebChat.renderWebChat({ directLine, locale, styleSet, styleOptions}, document.getElementById('webchat'));
     })();
 </script>
 </body>
