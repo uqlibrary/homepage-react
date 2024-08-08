@@ -36,13 +36,13 @@ const StyledBox = styled(Box)(({ theme }) => ({
         '& svg': {
             '@media (prefers-reduced-motion: no-preference)': {
                 marginLeft: '5px',
-                transition: 'margin-left 0.3s ease-in-out',
+                transition: 'margin-left 200ms ease-in-out',
             },
         },
     },
     '& svg': {
         '@media (prefers-reduced-motion: no-preference)': {
-            transition: 'margin-left 0.3s ease-in-out',
+            transition: 'margin-left 200ms ease-in-out',
         },
         position: 'absolute',
         bottom: '15px',
