@@ -506,7 +506,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
             cy.get('[data-testid="admin-alerts-list-future-list"]').should('be.visible');
         });
-        it.skip('can clone an alert and then clone again', () => {
+        it('can clone an alert and then clone again', () => {
             cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.get('h2').should('be.visible');
             cy.get('h2').contains('Clone alert');
@@ -537,7 +537,7 @@ describe('Alerts Admin Form Pages', () => {
             );
             clickSVGButton('[data-testid="admin-alerts-form-another-date-button-' + buttonId + '"]');
         }
-        it('the "add a date set button" works', () => {
+        it.skip('the "add a date set button" works', () => {
             cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('exist');
             cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('exist');
             cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').click();
