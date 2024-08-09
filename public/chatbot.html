@@ -49,6 +49,10 @@
    In this sample, the latest version of Web Chat is being used.
    In production environment, the version number should be pinned and version bump should be done frequently.
    Please visit https://github.com/microsoft/BotFramework-WebChat/tree/main/CHANGELOG.md for changelog.
+
+   this calls
+   wss://directline.botframework.com
+   if this host or protocol changes then Library CSP headers must also be updated on the server
  -->
 <script crossorigin="anonymous" src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 <script>
@@ -60,6 +64,7 @@
         };
         // Specifies the token endpoint URL.
         // To get this value, visit Copilot Studio > Settings > Channels > Mobile app page.
+        // if this changes then Library CSP headers must also be updated on the server
         const tokenEndpointHost = new URL('https://2a892934221ceaa49f1a4790000854.ca.environment.api.powerplatform.com/');
         const tokenEndpointURL = new URL(`${tokenEndpointHost}powervirtualagents/botsbyschema/cr546_uqAssistGenAiChatBot/directline/token?api-version=2022-03-01-preview`);
         // Specifies the language the copilot and Web Chat should display in:
