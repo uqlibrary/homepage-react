@@ -17,19 +17,6 @@
             margin: 0;
             font-family: Roboto, sans-serif;
         }
-        h1 {
-            color: #51247A;
-            font-size: 24px;
-            line-height: 20px;
-            margin: 0;
-            padding: 0 20px;
-        }
-        .banner {
-            align-items: center;
-            background-color: #fff;
-            display: flex;
-            height: 50px;
-        }
         .webchat {
             height: calc(100% - 50px);
             overflow: hidden;
@@ -37,13 +24,16 @@
             top: 50px;
             width: 100%;
         }
+        .webchat__text-content {
+            color: #ffffff;
+        }
+        .webchat__render-markdown--message-activity {
+            color: #3b383e; /* grey=900, body copy */
+        }
     </style>
 </head>
 <body>
 <div>
-    <div class="banner">
-        <h1>Library Chatbot</h1>
-    </div>
     <div id="webchat" class="webchat" role="main"></div>
 </div>
 <!--
@@ -51,9 +41,7 @@
    In production environment, the version number should be pinned and version bump should be done frequently.
    Please visit https://github.com/microsoft/BotFramework-WebChat/tree/main/CHANGELOG.md for changelog.
 
-   this calls
-   wss://directline.botframework.com
-   if this host or protocol changes then Library CSP headers must also be updated on the server
+  Ensure `wss://directline.botframework.com` is not blocked by csp.
  -->
 <script crossorigin="anonymous" src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 <script>
@@ -127,7 +115,8 @@
             bubbleFromUserBorderRadius: 10,
             bubbleFromUserTextColor: 'white',
             backgroundColor: 'white',
-            primaryFont: 'Roboto'
+            primaryFont: 'Roboto',
+            sendBoxTextColor: '#3b383e',
         });
         console.log({ styleSet });
         WebChat.renderWebChat({ directLine, locale, styleSet, styleOptions}, document.getElementById('webchat'));
