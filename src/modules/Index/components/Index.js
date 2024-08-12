@@ -52,6 +52,14 @@ const StyledAccordionSummary = styled(AccordionSummary)(() => ({
     },
 }));
 
+const StyledH1 = styled('h1')(({ theme }) => ({
+    marginTop: '-10px',
+    paddingBottom: '20px',
+    backgroundColor: theme.palette.primary.light,
+    color: '#fff',
+    fontFamily: 'Montserrat, Helvetica, Arial, sans-serif',
+}));
+
 const StyleWrapper = styled('div')(() => ({
     position: 'relative',
 }));
@@ -116,7 +124,8 @@ export const Index = ({
                 backgroundColor: '#51247a',
             }}>
                 <StandardPage>
-                    <search-portal theme="dark"/>
+                    <StyledH1>Library</StyledH1>
+                    <search-portal theme="dark" />
                 </StandardPage>
 
             </div>
