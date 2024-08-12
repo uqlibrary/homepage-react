@@ -22,7 +22,7 @@ describe('Digital Learning Hub admin Edit Team', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it('appears as expected', () => {
+        it('has breadcrumbs', () => {
             cy.get('uq-site-header')
                 .shadow()
                 .within(() => {
@@ -31,6 +31,8 @@ describe('Digital Learning Hub admin Edit Team', () => {
                         .should('be.visible')
                         .contains('Digital learning hub admin');
                 });
+        });
+        it('appears as expected', () => {
             cy.get('[data-testid="StandardPage-title"]')
                 .should('exist')
                 .should('be.visible')

@@ -4,11 +4,6 @@ import { DLOR_ADMIN_USER } from '../../../support/constants';
 const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
 describe('Edit an object on the Digital Learning Hub', () => {
-    beforeEach(() => {
-        cy.clearCookies();
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
-    });
-
     function TypeCKEditor(content, keepExisting = false) {
         return cy
             .get('.ck-content')
@@ -100,7 +95,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
                 });
             });
-            it('loads fields correctly', () => {
+            it('has breadcrumbs', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
                 cy.viewport(1300, 1000);
 
@@ -112,6 +107,11 @@ describe('Edit an object on the Digital Learning Hub', () => {
                             .should('be.visible')
                             .contains('Digital learning hub admin');
                     });
+            });
+            it('loads fields correctly', () => {
+                cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
+                cy.viewport(1300, 1000);
+
                 cy.waitUntil(() => cy.get('[data-testid="object-publishing-user"] input').should('exist'));
                 cy.get('[data-testid="object-publishing-user"] input').should('have.value', 'uqjsmith');
                 cy.get('[data-testid="dlor-form-team-message-object-publishing-user"]').should('not.exist');

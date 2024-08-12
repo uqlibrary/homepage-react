@@ -51,34 +51,6 @@ export const App = ({ account, actions }) => {
         homepageLabel = 'Library Local';
     }
 
-    const breadcrumbLabels = [
-        { pathname: '/admin/alerts', title: 'Alerts admin' },
-        { pathname: '/admin/dlor', title: 'Digital learning hub admin' },
-        { pathname: '/admin/testntag', title: 'Test and tag' },
-        { pathname: '/book-exam-booth', title: 'Book an Exam booth' },
-        { pathname: '/digital-learning-hub', title: 'Digital learning hub' },
-        { pathname: '/exams', title: 'Past exam papers' },
-        { pathname: '/learning-resources', title: 'Learning resources' },
-        { pathname: '/payment-receipt', title: 'Payment receipt' },
-    ];
-
-    let secondLevelTitle = null;
-    let secondLevelUrl = null;
-
-    function pageIsSubsystem(item) {
-        return (
-            window.location.pathname.startsWith(item.pathname) || window.location.hash.startsWith(`#${item.pathname}`)
-        );
-    }
-
-    for (const item of breadcrumbLabels) {
-        if (pageIsSubsystem(item)) {
-            secondLevelTitle = item.title;
-            secondLevelUrl = item.pathname;
-            break; // Exit the loop once a match is found
-        }
-    }
-
     return (
         <Grid
             container
@@ -94,15 +66,7 @@ export const App = ({ account, actions }) => {
         >
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
                 <uq-header hidelibrarymenuitem="true" />
-                {!hideForAdmin() && <cultural-advice-popup />}
-
-                <uq-site-header
-                    sitetitle={homepageLabel}
-                    siteurl={homepagelink}
-                    secondleveltitle={secondLevelTitle}
-                    secondlevelurl={secondLevelUrl}
-                    showmenu
-                >
+                <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink} showmenu>
                     <span slot="site-utilities">
                         <askus-button />
                     </span>

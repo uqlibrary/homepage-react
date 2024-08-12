@@ -19,6 +19,7 @@ import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/
 import locale from '../../../testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
+import { breadcrumbs } from 'config/routes';
 
 const moment = require('moment');
 
@@ -145,6 +146,10 @@ const AssetReportByFilters = ({
 
     /* EFFECTS */
     useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
+
         actions.loadTaggedBuildingList();
         buildPayload();
         // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -14,12 +14,19 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import { breadcrumbs } from 'config/routes';
 
 export const DLOConfirmUnsubscription = ({ actions, dlorUpdatedItem, dlorItemUpdating, dlorUpdatedItemError }) => {
     const { confirmationId } = useParams();
     console.log('confirmationId=', confirmationId);
 
     const [checkBoxChecked, setCheckBoxChecked] = React.useState(false);
+
+    React.useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dlor.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dlor.pathname);
+    }, []);
 
     React.useEffect(() => {
         /* istanbul ignore else */

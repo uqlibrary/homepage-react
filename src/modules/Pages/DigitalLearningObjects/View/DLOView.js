@@ -43,6 +43,7 @@ import {
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import { breadcrumbs } from 'config/routes';
 
 const StyledUQActionButton = styled('div')(({ theme }) => ({
     marginBlock: '32px',
@@ -222,6 +223,13 @@ export const DLOView = ({
         preferredName: '',
         userEmail: '',
     });
+
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dlor.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dlor.pathname);
+    }, []);
+
     useEffect(() => {
         if (!!account?.id) {
             const tempForm = {

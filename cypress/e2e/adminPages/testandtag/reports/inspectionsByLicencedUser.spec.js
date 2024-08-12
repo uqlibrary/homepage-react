@@ -2,7 +2,6 @@ import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTa
 
 describe('Test and Tag Report - Inspections by Licenced User', () => {
     beforeEach(() => {
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
         cy.visit('http://localhost:2020/admin/testntag/report/inspectionsbylicenceduser?user=uqtesttag');
     });
     const zeroPad = (num, places) => String(num).padStart(places, '0');
@@ -40,6 +39,8 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
         );
+    });
+    it('has breadcrumbs', () => {
         cy.get('uq-site-header')
             .shadow()
             .within(() => {

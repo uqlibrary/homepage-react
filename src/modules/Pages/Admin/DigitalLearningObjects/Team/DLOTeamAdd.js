@@ -6,6 +6,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import DlOTeamForm from 'modules/Pages/Admin/DigitalLearningObjects/Team/DlOTeamForm';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
+import { breadcrumbs } from 'config/routes';
 
 export const DLOTeamAdd = ({ actions, dlorItemCreating, dlorCreatedItemError, dlorCreatedItem }) => {
     const formDefaults = {
@@ -13,6 +14,12 @@ export const DLOTeamAdd = ({ actions, dlorItemCreating, dlorCreatedItemError, dl
         team_email: '',
         team_manager: '',
     };
+
+    React.useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dloradmin.pathname);
+    }, []);
 
     return (
         <StandardPage title="Digital Learning Hub - Add a new Team">

@@ -9,8 +9,10 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import AlertsListAsTable from './AlertsListAsTable';
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
+
 import { default as locale } from '../alertsadmin.locale';
 import { styled } from '@mui/material/styles';
+import { breadcrumbs } from 'config/routes';
 
 const StyledPageLayout = styled(Grid)(() => ({
     marginBottom: 24,
@@ -39,6 +41,10 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
     const [pastAlerts, setPastAlerts] = useState([]);
 
     React.useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.alertsadmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.alertsadmin.pathname);
+
         /* istanbul ignore else */
         if (!alertsError && !alertsLoading && !alerts) {
             actions.loadAllAlerts();

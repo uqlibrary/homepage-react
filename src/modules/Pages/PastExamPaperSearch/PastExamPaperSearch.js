@@ -17,6 +17,7 @@ import { isRepeatingString } from 'helpers/general';
 import { noResultsFoundBlock } from './pastExamPapers.helpers';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { breadcrumbs } from 'config/routes';
 
 const StyledAboutLink = styled('p')(() => ({
     marginTop: '4em',
@@ -52,6 +53,13 @@ export const PastExamPaperSearch = ({
 
     const noOptionsTextTooShort = 'Type more characters to search';
     const [noOptionsText, setNoOptionsText] = React.useState(null);
+
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.exampapers.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.exampapers.pathname);
+    }, []);
+
     useEffect(() => {
         const noOptionsTextNoResultsFoundPanel = () => {
             return (

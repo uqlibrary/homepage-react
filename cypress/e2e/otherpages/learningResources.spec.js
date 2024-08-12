@@ -299,15 +299,11 @@ context('Learning Resources Access', () => {
     });
 });
 
-beforeEach(() => {
-    cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
-});
 context('The Learning Resources Page', () => {
     // NOTE: purely for coverage, this test is duplicated into cypress/adminPages/learning-resources
-    it('User with classes sees their classes', () => {
+    it('has breadcrumbs', () => {
         cy.visit('/learning-resources?user=s1111111');
         cy.viewport(1300, 1000);
-
         cy.get('uq-site-header')
             .shadow()
             .within(() => {
@@ -316,6 +312,10 @@ context('The Learning Resources Page', () => {
                     .should('be.visible')
                     .contains('Learning resources');
             });
+    });
+    it('User with classes sees their classes', () => {
+        cy.visit('/learning-resources?user=s1111111');
+        cy.viewport(1300, 1000);
 
         // FREN1010_loads_properly_for_s111111_user();
         cy.get('[data-testid="learning-resource-subject-title"]').contains('FREN1010 - Introductory French 1');

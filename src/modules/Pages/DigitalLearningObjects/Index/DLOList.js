@@ -43,6 +43,7 @@ import {
     isReturnKeyPressed,
     slugifyName,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { breadcrumbs } from 'config/routes';
 
 const StyledSkipLinkButton = styled(Button)(({ theme }) => ({
     // hidden when not focused
@@ -291,6 +292,12 @@ export const DLOList = ({
     const heroDescriptionDlor =
         'Use the Digital Learning Hub to find modules, videos and guides for teaching and study.';
     const heroBackgroundImageDlor = require('../../../../../public/images/digital-learning-hub-hero-shot-wide.png');
+
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dlor.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dlor.pathname);
+    }, []);
 
     useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {

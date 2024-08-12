@@ -21,7 +21,7 @@ import locale from '../../../testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { transformRow } from './utils';
-
+import { breadcrumbs } from 'config/routes';
 const moment = require('moment');
 
 const componentId = 'inspections-due';
@@ -71,6 +71,12 @@ const InspectionsDue = ({
         errorMessage: inspectionsDueError,
         errorMessageFormatter: locale.config.alerts.error,
     });
+
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
+    }, []);
 
     useEffect(() => {
         const locationId = location[lastSelectedLocation];

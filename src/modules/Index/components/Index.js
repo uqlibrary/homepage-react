@@ -10,7 +10,6 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
@@ -19,6 +18,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { lazyRetry } from 'helpers/general';
 
+import LibraryUpdates from 'modules/Index/components/subComponents/LibraryUpdates';
+import NavPanelBlock from 'modules/Index/components/subComponents/NavPanelBlock';
 import {
     loadLibHours,
     loadCompAvail,
@@ -89,6 +90,12 @@ export const Index = ({
 }) => {
     const dispatch = useDispatch();
 
+    React.useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.removeAttribute('secondleveltitle');
+        !!siteHeader && siteHeader.removeAttribute('secondLevelUrl');
+    }, []);
+
     useEffect(() => {
         if (accountLoading === false) {
             dispatch(loadLibHours());
@@ -102,26 +109,30 @@ export const Index = ({
         }
     }, [account, accountLoading, dispatch]);
     return (
-        <React.Suspense fallback={<ContentLoader message="Loading" />}>
+        <React.Suspense fallback={<ContentLoader message="Loading"/>}>
             <div id="search-portal-container" data-testid="search-portal-container" style={{
                 paddingTop: 25,
                 paddingBottom: 25,
                 backgroundColor: '#51247a',
             }}>
-                <StandardPage><search-portal /></StandardPage>
+                <StandardPage>
+                    <search-portal theme="dark"/>
+                </StandardPage>
 
             </div>
             <div style={{ borderBottom: '1px solid #d1d0d2' /* grey-300 */ }}>
                 <div className="layout-card">
                     <StyleWrapper>
-                        <StyledLink href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb" underline="hover">
+                        <StyledLink
+                            href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
+                            underline="hover">
                             <div>
                                 Make a booking
                             </div>
                         </StyledLink>
                         <StyledAccordion>
                             <StyledAccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
+                                expandIcon={<ExpandMoreIcon/>}
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
                                 data-testid="hours-accordion-open"
@@ -170,62 +181,16 @@ export const Index = ({
                         </Grid>
                         {canSeeLearningResources(account) && (
                             <Grid item xs={12} md={4} data-testid="learning-resources-panel" sx={{ paddingTop: '0px' }}>
-                                <LearningResourcesPanel account={account} history={history} />
+                                <LearningResourcesPanel account={account} history={history}/>
                             </Grid>
                         )}
                     </Grid>
                 </StandardPage>
             )}
 
-            <StandardPage>
-                <Grid container spacing={4} style={{ paddingBottom: '1em' }}>
-                    <Grid item xs={12}>
-                        <Typography component={'h2'} sx={{ marginTop: '1em', fontSize: '24px', fontWeight: 500 }}>
-                            Explore our Library
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard style={{ border: '1px solid #d1d0d2' /* grey-300 */ }}>Find and borrow</StandardCard>
-                    </Grid>
-                    <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>Study and learning support</StandardCard>
-                    </Grid>
-                    <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>Visit</StandardCard>
-                    </Grid>
-                    <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>Research and publish</StandardCard>
-                    </Grid>
-                    <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>AskUs and student IT Support</StandardCard>
-                    </Grid>
-                    <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>About</StandardCard>
-                    </Grid>
-                </Grid>
-            </StandardPage>
+            <NavPanelBlock/>
 
-            <StandardPage>
-                <Grid container spacing={4} style={{ paddingBottom: '1em' }}>
-                    <Grid item xs={12}>
-                        <Typography component={'h2'} sx={{ marginTop: '1em', fontSize: '24px', fontWeight: 500 }}>
-                            Library updates
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>wide item</StandardCard>
-                    </Grid>
-                    <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>item 2</StandardCard>
-                    </Grid>
-                    <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>item 3</StandardCard>
-                    </Grid>
-                    <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                        <StandardCard style={{ border: '1px solid #d1d0d2' }}>item 4</StandardCard>
-                    </Grid>
-                </Grid>
-            </StandardPage>
+            <LibraryUpdates />
         </React.Suspense>
     );
 };

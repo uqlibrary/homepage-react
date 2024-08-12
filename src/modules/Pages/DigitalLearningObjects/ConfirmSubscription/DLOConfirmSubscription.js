@@ -14,6 +14,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { getDlorViewPageUrl, getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { breadcrumbs } from 'config/routes';
 
 const StyledInstructionList = styled('ul')(() => ({
     marginTop: 0,
@@ -21,6 +22,12 @@ const StyledInstructionList = styled('ul')(() => ({
 
 export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdating, dlorUpdatedItemError }) => {
     const { confirmationId } = useParams();
+
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dlor.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dlor.pathname);
+    }, []);
 
     useEffect(() => {
         /* istanbul ignore else */
