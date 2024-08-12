@@ -49,7 +49,7 @@
         // Specifies style options to customize the Web Chat canvas.
         // Please visit https://microsoft.github.io/BotFramework-WebChat for customization samples.
         const styleOptions = {
-            hideUploadButton: true // Hide upload button.
+            hideUploadButton: true
         };
         // Specifies the token endpoint URL.
         // To get this value, visit Copilot Studio > Settings > Channels > Mobile app page.
@@ -66,9 +66,9 @@
         // const locale = navigator.language || 'ja-JP'; // Uses user preferred language and fallback to Japanese.
         // const locale = 'zh-HAnt'; // Always use Chinese (Traditional).
         const apiVersion = tokenEndpointURL.searchParams.get('api-version');
-        const regionalChannelSettingsURL = new URL(`${tokenEndpointHost}powervirtualagents/regionalchannelsettings?api-version=${apiVersion}`);
+        const regionalChannelSettingsURL = new URL(`/powervirtualagents/regionalchannelsettings?api-version=${apiVersion}`, tokenEndpointURL);
         const [directLineURL, token] = await Promise.all([
-            fetch(new URL(regionalChannelSettingsURL, tokenEndpointURL))
+            fetch(regionalChannelSettingsURL)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Sorry, Chatbot unavailable - please try again later! (Failed to retrieve regional channel settings)');
