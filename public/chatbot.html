@@ -52,7 +52,7 @@
         const prodId = '7dd3d6ed-ec25-eff0-8ff2-b38b699e89c0';
 
         let endpointUrlId = prodId;
-        if (window.location.pathname === '/chatbot-testenv/') {
+        if (window.location.pathname.startsWith('/chatbot-testenv/')) {
             // ITS asked for a third env for testing
             endpointUrlId = devId;
         } else if (
