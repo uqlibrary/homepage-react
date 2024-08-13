@@ -45,6 +45,29 @@
  -->
 <script crossorigin="anonymous" src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 <script>
+    function getEnvironmentUrl() {
+        const stagingId = '2a892934221ceaa49f1a4790000854';
+        const devId = 'tba';
+        const prodId = '7dd3d6ed-ec25-eff0-8ff2-b38b699e89c0';
+
+        let endpointUrlId = prodId;
+        if (
+            window.location.hostname === 'homepage-staging.library.uq.edu.au' ||
+            window.location.hostname === 'homepage-development.library.uq.edu.au' ||
+            window.location.hostname === 'web-staging.library.uq.edu.au' ||
+            window.location.hostname === 'sandbox-fryer.library.uq.edu.au' ||
+            window.location.hostname === 'app-testing.library.uq.edu.au' ||
+            window.location.hostname === 'localhost' ||
+            window.location.pathname === '/feature-leadegroot-1/' // temp? uses staging env
+        ) {
+            endpointUrlId = stagingId;
+        } else if (window.location.pathname === '/chatbot-testenv/') {
+            // ITS asked for a third env for testing
+            endpointUrlId = devId;
+        }
+        return 'https://' + endpointUrlId + '.ca.environment.api.powerplatform.com/';
+    }
+
     (async function () {
         // Specifies style options to customize the Web Chat canvas.
         // Please visit https://microsoft.github.io/BotFramework-WebChat for customization samples.
@@ -54,7 +77,8 @@
         // Specifies the token endpoint URL.
         // To get this value, visit Copilot Studio > Settings > Channels > Mobile app page.
         // if this changes then Library CSP headers must also be updated on the server
-        const tokenEndpointHost = new URL('https://2a892934221ceaa49f1a4790000854.ca.environment.api.powerplatform.com/');
+        const endpointUrl = getEnvironmentUrl();
+        const tokenEndpointHost = new URL(endpointUrl);
         const tokenEndpointURL = new URL(`${tokenEndpointHost}powervirtualagents/botsbyschema/cr546_uqAssistGenAiChatBot/directline/token?api-version=2022-03-01-preview`);
         // Specifies the language the copilot and Web Chat should display in:
         // - (Recommended) To match the page language, set it to document.documentElement.lang
