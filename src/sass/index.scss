@@ -91,24 +91,10 @@ a {
         margin-right: 3.25rem;
         max-width: none;
     }
-    @media (min-width: 69.25rem) {
+    @media (min-width: 64rem) {
         margin-left: auto;
         margin-right: auto;
-        max-width: 61.5rem;
-    }
-    @media (min-width: 80rem) {
-        margin-left: 8.375rem;
-        margin-right: 8.375rem;
-        max-width: none;
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
-    @media (min-width: 90rem) {
-        margin-left: auto;
-        margin-right: auto;
-        max-width: 71rem;
-        padding-left: 1rem;
-        padding-right: 1rem;
+        max-width: 71em;
     }
 }
 
