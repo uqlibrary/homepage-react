@@ -7,13 +7,6 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import NavCard from './NavCard';
 
 const StyledGridContainer = styled(Grid)(() => ({
-    '& li': {
-        listStyleType: 'none',
-        height: '6em',
-        marginBottom: '32px',
-        paddingLeft: '24px !important',
-        paddingTop: '24px !important',
-    },
     paddingRight: '8px',
     paddingLeft: 0,
     marginTop: '1em',

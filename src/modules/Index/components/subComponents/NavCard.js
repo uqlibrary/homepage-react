@@ -8,6 +8,24 @@ import { styled } from '@mui/material/styles';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
+const StyledGridItem = styled(Grid)(() => ({
+    listStyleType: 'none',
+    marginBottom: '32px',
+    paddingLeft: '24px !important',
+    '@media (min-width: 56em)': {
+        height: '6em',
+        paddingTop: '24px !important',
+    },
+    '@media (max-width: 56em)': {
+        // height: '4em',
+        paddingTop: '24px !important',
+        marginBottom: 0,
+        h2: {
+            paddingBlock: '18px',
+            paddingLeft: '18px',
+        },
+    },
+}));
 const StyledBox = styled(Box)(({ theme }) => ({
     borderColor: 'hsla(203, 50%, 30%, 0.15)',
     borderRadius: '4px',
@@ -29,13 +47,27 @@ const StyledBox = styled(Box)(({ theme }) => ({
             display: 'block',
         },
     },
-    '& svg': {
-        '@media (prefers-reduced-motion: no-preference)': {
-            transition: 'margin-left 200ms ease-in-out',
+    '@media (max-width: 56em)': {
+        padding: 0,
+        a: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingBlock: 0,
         },
-        position: 'absolute',
-        bottom: '16px',
-        left: '24px',
+        h2: {
+            marginBlock: 0,
+        },
+    },
+    '@media (min-width: 56em)': {
+        '& svg': {
+            '@media (prefers-reduced-motion: no-preference)': {
+                transition: 'margin-left 200ms ease-in-out',
+            },
+            position: 'absolute',
+            bottom: '16px',
+            left: '24px',
+        },
     },
     '&:hover': {
         '@media (prefers-reduced-motion: no-preference)': {
@@ -55,7 +87,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 
 const NavCard = ({ cardLabel, landingUrl }) => {
     return (
-        <Grid item component="li" xs={12} md={6} lg={4}>
+        <StyledGridItem item component="li" xs={12} md={6} lg={4}>
             <StyledBox border={1} p={2}>
                 <h2>
                     <Link to={landingUrl}>
@@ -64,7 +96,7 @@ const NavCard = ({ cardLabel, landingUrl }) => {
                     </Link>
                 </h2>
             </StyledBox>
-        </Grid>
+        </StyledGridItem>
     );
 };
 
