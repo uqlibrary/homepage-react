@@ -114,7 +114,7 @@ module.exports = {
             filename: 'index.html',
             // reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
             reusablejs:
-                'https://assets.library.uq.edu.au/reusable-webcomponents-development/feature-leadegroot/uq-lib-reusable.min.js',
+                'https://assets.library.uq.edu.au/reusable-webcomponents-development/chatbot-testenv/uq-lib-reusable.min.js',
             // reusablejs: 'http://localhost:8080/uq-lib-reusable.min.js',
             inject: true,
             template: join(__dirname, 'public', 'index.html'),
