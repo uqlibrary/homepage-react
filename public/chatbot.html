@@ -46,6 +46,7 @@
 <script crossorigin="anonymous" src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 <script>
     function getEnvironmentUrl() {
+        // the url that generate from these must be allowed in CSP - see Dan
         const stagingId = '2a892934221ceaa49f1a4790000854';
         const devId = 'tba';
         const prodId = '7dd3d6ed-ec25-eff0-8ff2-b38b699e89c0';
@@ -58,7 +59,7 @@
             window.location.hostname === 'sandbox-fryer.library.uq.edu.au' ||
             window.location.hostname === 'app-testing.library.uq.edu.au' ||
             window.location.hostname === 'localhost' ||
-            window.location.pathname === '/feature-leadegroot-1/' // temp? uses staging env
+            window.location.pathname === '/feature-leadegroot-1/' // temporary? uses staging env
         ) {
             endpointUrlId = stagingId;
         } else if (window.location.pathname === '/chatbot-testenv/') {
