@@ -52,19 +52,18 @@
         const prodId = '7dd3d6ed-ec25-eff0-8ff2-b38b699e89c0';
 
         let endpointUrlId = prodId;
-        if (
+        if (window.location.pathname === '/chatbot-testenv/') {
+            // ITS asked for a third env for testing
+            endpointUrlId = devId;
+        } else if (
             window.location.hostname === 'homepage-staging.library.uq.edu.au' ||
             window.location.hostname === 'homepage-development.library.uq.edu.au' ||
             window.location.hostname === 'web-staging.library.uq.edu.au' ||
             window.location.hostname === 'sandbox-fryer.library.uq.edu.au' ||
             window.location.hostname === 'app-testing.library.uq.edu.au' ||
-            window.location.hostname === 'localhost' ||
-            window.location.pathname === '/feature-leadegroot-1/' // temporary? uses staging env
+            window.location.hostname === 'localhost'
         ) {
             endpointUrlId = stagingId;
-        } else if (window.location.pathname === '/chatbot-testenv/') {
-            // ITS asked for a third env for testing
-            endpointUrlId = devId;
         }
         return 'https://' + endpointUrlId + '.ca.environment.api.powerplatform.com/';
     }
