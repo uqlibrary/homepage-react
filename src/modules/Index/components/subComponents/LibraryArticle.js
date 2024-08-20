@@ -62,7 +62,7 @@ const RenderTextblock = (articleIndex, article) => {
                 </Typography>
                 <Typography
                     component={'h2'}
-                    sx={{ marginTop: '0', fontSize: '24px', fontWeight: 500, color: 'black !imporant' }}
+                    sx={{ marginTop: '0', fontSize: '24px', fontWeight: 500 }}
                     data-testid={`article-${articleIndex + 1}-title`}
                 >
                     {article.title}
