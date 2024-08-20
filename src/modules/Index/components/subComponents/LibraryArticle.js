@@ -4,10 +4,32 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { PropTypes } from 'prop-types';
 
+import { styled } from '@mui/material/styles';
+
 import { Link } from 'react-router-dom';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { useMediaQuery, useTheme } from '@mui/material';
+
+const StyledGridItem = styled(Grid)(() => ({
+    a: {
+        textDecoration: 'none',
+        '&:hover > h2': {
+            textDecoration: 'underline',
+        },
+    },
+
+    'a .ArticleDescription': {
+        color: 'black',
+    },
+    h2: {
+        color: 'black',
+        textDecoration: 'none',
+        '&:hover': {
+            textDecoration: 'none',
+        },
+    },
+}));
 
 const RenderImage = (articleIndex, article) => {
     return (
@@ -49,6 +71,7 @@ const RenderTextblock = (articleIndex, article) => {
             >
                 <Typography
                     component={'p'}
+                    className={'ArticleCategory ArticleCategoryText'}
                     sx={{
                         marginTop: '0.5em',
                         marginBottom: '0',
@@ -73,6 +96,7 @@ const RenderTextblock = (articleIndex, article) => {
                         marginTop: '0.5em',
                         fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
                     }}
+                    className={'ArticleDescription'}
                 >
                     {articleIndex === 0 && article.description}
                 </Typography>
@@ -85,7 +109,7 @@ const LibraryArticle = ({ article, articleIndex }) => {
     const theme = useTheme();
     const isMd = useMediaQuery(theme.breakpoints.down('md'));
     return (
-        <Grid item xs={12} md={articleIndex === 0 ? 12 : 4} sx={{ paddingTop: '0px' }}>
+        <StyledGridItem item xs={12} md={articleIndex === 0 ? 12 : 4} sx={{ paddingTop: '0px' }}>
             <StandardCard style={{ border: '1px solid #d1d0d2' }} noPadding noHeader>
                 <Link to={article.canonical_url}>
                     {/* Example Wide item - to componentise */}
@@ -100,7 +124,7 @@ const LibraryArticle = ({ article, articleIndex }) => {
                     </Grid>
                 </Link>
             </StandardCard>
-        </Grid>
+        </StyledGridItem>
         // <Grid item xs={12} md={4} sx={{ paddingTop: '0px' }}>
         //     <StandardCard style={{ border: '1px solid #d1d0d2' }} noPadding noHeader>
         //         <Grid container>

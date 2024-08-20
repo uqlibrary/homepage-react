@@ -215,13 +215,11 @@ export const DLOR_SERIES_CREATE_API = () => ({ apiUrl: 'dlor/admin/series' });
 export const DRUPAL_ARTICLE_API = () => {
     if (process.env.BRANCH === 'production') {
         return {
-            apiUrl:
-                'https://uql-reusable-webcomponents-production-api-public.s3.ap-southeast-2.amazonaws.com/homepage/articles.json',
+            apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage/articles.json',
         };
     } else {
         return {
-            apiUrl:
-                'https://uql-reusable-webcomponents-staging-api-public.s3.ap-southeast-2.amazonaws.com/homepage/articles.json',
+            apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json',
         };
     }
 };
