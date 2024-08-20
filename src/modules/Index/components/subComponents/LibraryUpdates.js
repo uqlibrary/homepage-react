@@ -19,8 +19,12 @@ const LibraryUpdates = drupalArticleList => {
                 </Grid>
                 {drupalArticleList && Array.isArray(drupalArticleList.drupalArticleList) ? (
                     drupalArticleList.drupalArticleList.map((article, index) => {
-                        console.log('THE INDEX IS', index);
-                        return <LibraryArticle article={article} articleIndex={index} />;
+                        if (index <= 3) {
+                            console.log('THE INDEX IS', index);
+                            return <LibraryArticle article={article} articleIndex={index} />;
+                        } else {
+                            return null;
+                        }
                     })
                 ) : (
                     <p>No articles found</p>
