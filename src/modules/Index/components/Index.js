@@ -24,6 +24,7 @@ import {
     loadLibHours,
     loadCompAvail,
     loadTrainingEvents,
+    loadDrupalArticles,
 } from 'data/actions';
 import { canSeeLearningResources } from 'helpers/access';
 
@@ -95,7 +96,11 @@ export const Index = ({
     trainingEvents,
     trainingEventsLoading,
     trainingEventsError,
+    drupalArticleList,
+    drupalArticlesLoading,
+    drupalArticlesError,
 }) => {
+    console.log('drupal article list in index feeder,', drupalArticleList);
     const dispatch = useDispatch();
 
     React.useEffect(() => {
@@ -103,6 +108,16 @@ export const Index = ({
         !!siteHeader && siteHeader.removeAttribute('secondleveltitle');
         !!siteHeader && siteHeader.removeAttribute('secondLevelUrl');
     }, []);
+
+
+    // drupal article stuff here.
+
+    useEffect(() => {
+        if (!drupalArticleList || drupalArticleList?.length < 1) {
+            // console.log('dispatching', drupalArticleList);
+            dispatch(loadDrupalArticles());
+        }
+    }, [drupalArticleList, dispatch]);
 
     useEffect(() => {
         if (accountLoading === false) {
@@ -199,7 +214,7 @@ export const Index = ({
 
             <NavPanelBlock/>
 
-            <LibraryUpdates />
+            <LibraryUpdates drupalArticleList={drupalArticleList} />
         </React.Suspense>
     );
 };
@@ -217,6 +232,9 @@ Index.propTypes = {
     trainingEvents: PropTypes.any,
     trainingEventsLoading: PropTypes.bool,
     trainingEventsError: PropTypes.bool,
+    drupalArticleList: PropTypes.array,
+    drupalArticlesLoading: PropTypes.bool,
+    drupalArticlesError: PropTypes.bool,
 };
 
 export default Index;

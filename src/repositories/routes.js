@@ -210,3 +210,18 @@ export const DLOR_FILE_TYPE_LIST_API = () => ({ apiUrl: 'dlor/admin/file_types/l
 export const DLOR_SERIES_DELETE_API = id => ({ apiUrl: `dlor/admin/series/${id}` });
 export const DLOR_SERIES_UPDATE_API = id => ({ apiUrl: `dlor/admin/series/${id}` });
 export const DLOR_SERIES_CREATE_API = () => ({ apiUrl: 'dlor/admin/series' });
+
+// will need to be changed based on the alias in cloudfront
+export const DRUPAL_ARTICLE_API = () => {
+    if (process.env.BRANCH === 'production') {
+        return {
+            apiUrl:
+                'https://uql-reusable-webcomponents-production-api-public.s3.ap-southeast-2.amazonaws.com/homepage/articles.json',
+        };
+    } else {
+        return {
+            apiUrl:
+                'https://uql-reusable-webcomponents-staging-api-public.s3.ap-southeast-2.amazonaws.com/homepage/articles.json',
+        };
+    }
+};

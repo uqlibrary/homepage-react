@@ -58,6 +58,7 @@ import dlor_filter_list from './data/records/dlor/dlor_filter_list';
 import dlor_team_list from './data/records/dlor/dlor_team_list';
 import dlor_file_type_list from './data/records/dlor/dlor_file_type_list';
 import dlor_series_all from './data/records/dlor/dlor_series_all';
+import { drupalArticles } from './data/drupalArticles';
 
 const moment = require('moment');
 
@@ -1186,6 +1187,8 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ]),
     )
+    .onGet("https://uql-reusable-webcomponents-staging-api-public.s3.ap-southeast-2.amazonaws.com/homepage/articles.json")
+    .reply(() => [200, drupalArticles])
     .onAny()
     .reply(function(config) {
         console.log('url not mocked...', config.url);
