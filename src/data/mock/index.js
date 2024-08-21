@@ -1187,7 +1187,7 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ]),
     )
-    .onGet("https://uql-reusable-webcomponents-staging-api-public.s3.ap-southeast-2.amazonaws.com/homepage/articles.json")
+    .onGet("https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json")
     .reply(() => [200, drupalArticles])
     .onAny()
     .reply(function(config) {
