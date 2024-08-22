@@ -14,7 +14,10 @@ import { useMediaQuery, useTheme } from '@mui/material';
 const StyledGridItem = styled(Grid)(() => ({
     a: {
         textDecoration: 'none',
-        '&:hover > h2': {
+        '&:hover': {
+            textDecoration: 'none',
+        },
+        '&:hover h2': {
             textDecoration: 'underline',
         },
     },
@@ -31,17 +34,24 @@ const StyledGridItem = styled(Grid)(() => ({
     },
 }));
 
-const RenderImage = (articleIndex, article) => {
+const RenderImage = (articleIndex, article, theme, isSm) => {
     return (
-        <Grid item xs={12} md={articleIndex === 0 ? 6 : 12}>
-            <div style={{ width: '100%', height: 0, position: 'relative', paddingBottom: '66.667%' }}>
+        <Grid item xs={articleIndex === 0 ? 12 : 3} md={articleIndex === 0 ? 6 : 12}>
+            <div
+                style={{
+                    width: isSm && articleIndex !== 0 ? '120px' : '100%',
+                    height: 0,
+                    position: 'relative',
+                    paddingBottom: isSm && articleIndex !== 0 ? '91.534%' : '66.667%',
+                }}
+            >
                 <img
                     // src="/images/Rae-George-Hammer.jpg"
                     src={article.image}
                     style={{
                         position: 'absolute',
                         top: 0,
-                        left: 0,
+                        left: isSm && articleIndex !== 0 ? -10 : 0,
                         height: '100%',
                         width: '100%',
                         objectFit: 'cover',
@@ -54,10 +64,15 @@ const RenderImage = (articleIndex, article) => {
     );
 };
 
-const RenderTextblock = (articleIndex, article) => {
+const RenderTextblock = (articleIndex, article, theme, isSm) => {
     console.log(article);
     return (
-        <Grid item xs={12} md={articleIndex === 0 ? 6 : 12} sx={{ minHeight: '190px' }}>
+        <Grid
+            item
+            xs={articleIndex === 0 ? 12 : 9}
+            md={articleIndex === 0 ? 6 : 12}
+            sx={{ minHeight: isSm ? '145px' : '160px' }}
+        >
             <div
                 style={{
                     display: 'flex',
@@ -65,15 +80,15 @@ const RenderTextblock = (articleIndex, article) => {
                     alignItems: 'left',
                     height: '100%',
                     justifyContent: articleIndex === 0 ? 'center' : 'top',
-                    paddingLeft: 20,
-                    paddingRight: 20,
+                    paddingLeft: articleIndex !== 0 && theme.breakpoints.down('sm') ? 0 : 20,
+                    paddingRight: articleIndex !== 0 && theme.breakpoints.down('sm') ? 0 : 20,
                 }}
             >
                 <Typography
                     component={'p'}
-                    className={'ArticleCategory ArticleCategoryText'}
+                    className={'ArticleCategory'}
                     sx={{
-                        marginTop: '0.5em',
+                        marginTop: isSm ? '0' : '0.5em',
                         marginBottom: '0',
                         fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
                         color: '#666 !important',
@@ -85,7 +100,12 @@ const RenderTextblock = (articleIndex, article) => {
                 </Typography>
                 <Typography
                     component={'h2'}
-                    sx={{ marginTop: '0', fontSize: '24px', fontWeight: 500 }}
+                    sx={{
+                        marginTop: '0',
+                        fontSize: isSm ? '22px' : '24px',
+                        fontWeight: 500,
+                        marginRight: isSm ? '16px' : '0px',
+                    }}
                     data-testid={`article-${articleIndex + 1}-title`}
                 >
                     {article.title}
@@ -107,20 +127,25 @@ const RenderTextblock = (articleIndex, article) => {
 
 const LibraryArticle = ({ article, articleIndex }) => {
     const theme = useTheme();
-    const isMd = useMediaQuery(theme.breakpoints.down('md'));
+    const isMd = useMediaQuery(theme.breakpoints.up('md'));
+    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     return (
         <StyledGridItem item xs={12} md={articleIndex === 0 ? 12 : 4} sx={{ paddingTop: '0px' }}>
-            <StandardCard style={{ border: '1px solid #d1d0d2' }} noPadding noHeader>
+            <StandardCard
+                style={{ border: theme.breakpoints.down('sm') && articleIndex !== 0 ? 'none' : '1px solid #d1d0d2' }}
+                noPadding
+                noHeader
+            >
                 <Link to={article.canonical_url}>
                     {/* Example Wide item - to componentise */}
-                    <Grid container>
-                        {articleIndex === 0 && !isMd
-                            ? RenderTextblock(articleIndex, article)
-                            : RenderImage(articleIndex, article)}
+                    <Grid container sx={{ borderBottom: isSm ? '1px solid #ddd' : 'none' }}>
+                        {(articleIndex === 0 && isMd) || (articleIndex !== 0 && isSm)
+                            ? RenderTextblock(articleIndex, article, theme, isSm)
+                            : RenderImage(articleIndex, article, theme, isSm)}
                         {/* Image Location */}
-                        {articleIndex === 0 && !isMd
-                            ? RenderImage(articleIndex, article)
-                            : RenderTextblock(articleIndex, article)}
+                        {(articleIndex === 0 && isMd) || (articleIndex !== 0 && isSm)
+                            ? RenderImage(articleIndex, article, theme, isSm)
+                            : RenderTextblock(articleIndex, article, theme, isSm)}
                     </Grid>
                 </Link>
             </StandardCard>
