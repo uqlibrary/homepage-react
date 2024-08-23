@@ -5,7 +5,7 @@ describe('Alerts Admin View Page', () => {
         cy.visit('http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
         cy.viewport(1300, 1000);
     });
-    it.only('is accessible', () => {
+    it('is accessible', () => {
         cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('h2').should('be.visible');
