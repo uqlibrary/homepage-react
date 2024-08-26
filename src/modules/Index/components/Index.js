@@ -133,6 +133,14 @@ export const Index = ({
     }, [account, accountLoading, dispatch]);
     return (
         <React.Suspense fallback={<ContentLoader message="Loading"/>}>
+            { /* TEMP WORKS - USED AS A PLACEHOLDER FOR NOW */ }
+            <div style = {{ backgroundColor: '#231430', height: '50px' }}>
+                <StandardPage>
+                    <p style={{ letterSpacing: '.01rem', fontWeight: '400', fontFamily: 'Roboto, Helvetica, Arial, sans-serif', color: 'white', margin: 0, border: 0, lineHeight: '50px' }}>Aboriginal and Torres Strait Islander peoples &nbsp;&nbsp;<a style={{
+                        color: 'white', textDecoration: 'underline',
+                    }} href="#">Culturally sensitive collections</a></p>
+                </StandardPage>
+            </div>
             <div id="search-portal-container" data-testid="search-portal-container" style={{
                 paddingTop: 25,
                 paddingBottom: 25,

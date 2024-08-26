@@ -90,10 +90,8 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                     sx={{
                         marginTop: isSm ? '0' : '0.5em',
                         marginBottom: '0',
-                        fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
+                        fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
                         color: '#666 !important',
-                        fontWeight: 500,
-                        textDecoration: 'none !important',
                     }}
                 >
                     {article.categories[0]}
@@ -115,6 +113,9 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                     sx={{
                         marginTop: '0.5em',
                         fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
+                        fontWeight: '300 !important',
+                        letterSpacing: '.01rem !important',
+                        textDecoration: 'none !important',
                     }}
                     className={'ArticleDescription'}
                 >
