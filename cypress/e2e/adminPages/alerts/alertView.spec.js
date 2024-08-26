@@ -10,7 +10,7 @@ describe('Alerts Admin View Page', () => {
         cy.viewport(1300, 1000);
         cy.get('h2').should('be.visible');
         cy.get('h2').contains('View alert');
-        cy.wait(500);
+        cy.wait(1500);
         cy.checkA11y('[data-testid="StandardPage"]', {
             reportName: 'Alerts Admin View',
             scopeName: 'Content',
