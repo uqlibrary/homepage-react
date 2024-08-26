@@ -9,7 +9,7 @@ import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { useMediaQuery, useTheme } from '@mui/material';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 
 const StyledGridItem = styled(Grid)(() => ({
     a: {
@@ -36,7 +36,15 @@ const StyledGridItem = styled(Grid)(() => ({
 
 const RenderImage = (articleIndex, article, theme, isSm) => {
     return (
-        <Grid item xs={articleIndex === 0 ? 12 : 3} md={articleIndex === 0 ? 6 : 12}>
+        // <Grid item xs={articleIndex === 0 ? 12 : 3} md={articleIndex === 0 ? 6 : 12}>
+        <Box
+            sx={{
+                width: {
+                    xs: articleIndex === 0 ? '100%' : '120px',
+                    md: articleIndex === 0 ? '50%' : '100%',
+                },
+            }}
+        >
             <div
                 style={{
                     width: isSm && articleIndex !== 0 ? '120px' : '100%',
@@ -51,7 +59,7 @@ const RenderImage = (articleIndex, article, theme, isSm) => {
                     style={{
                         position: 'absolute',
                         top: 0,
-                        left: isSm && articleIndex !== 0 ? -10 : 0,
+                        left: isSm && articleIndex !== 0 ? 0 : 0,
                         height: '100%',
                         width: '100%',
                         objectFit: 'cover',
@@ -60,18 +68,28 @@ const RenderImage = (articleIndex, article, theme, isSm) => {
                     alt={article.title}
                 />
             </div>
-        </Grid>
+        </Box>
+        // </Grid>
     );
 };
 
 const RenderTextblock = (articleIndex, article, theme, isSm) => {
     console.log(article);
     return (
-        <Grid
-            item
-            xs={articleIndex === 0 ? 12 : 9}
-            md={articleIndex === 0 ? 6 : 12}
-            sx={{ minHeight: isSm ? '145px' : '160px' }}
+        // <Grid
+        //     item
+        //     xs={articleIndex === 0 ? 12 : 9}
+        //     md={articleIndex === 0 ? 6 : 12}
+        //     sx={{ minHeight: isSm ? '145px' : '160px' }}
+        // >
+        <Box
+            sx={{
+                width: {
+                    xs: articleIndex === 0 ? '100%' : 'calc(100% - 120px)',
+                    md: articleIndex === 0 ? '50%' : '100%',
+                },
+                minHeight: isSm ? '145px' : '160px',
+            }}
         >
             <div
                 style={{
@@ -115,13 +133,18 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                     sx={{
                         marginTop: '0.5em',
                         fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
+                        fontWeight: '300 !important',
+                        letterSpacing: '.01rem !important',
+                        textDecoration: 'none !important',
+                        marginBottom: '20px',
                     }}
                     className={'ArticleDescription'}
                 >
                     {articleIndex === 0 && article.description}
                 </Typography>
             </div>
-        </Grid>
+            {/* </Grid> */}
+        </Box>
     );
 };
 
