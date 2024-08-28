@@ -833,8 +833,14 @@ export const DLOList = ({
                                             return (
                                                 <StyledFormControlLabel
                                                     key={`${facetType?.facet_type_slug}-${facet?.facet_id}`}
+                                                    data-analyticsid={`${slugifyName(facet?.facet_name)}-dlor-filter`}
                                                     control={
                                                         <Checkbox
+                                                            inputProps={{
+                                                                'data-analyticsid': `${slugifyName(
+                                                                    facet?.facet_name,
+                                                                )}-dlor-filter`,
+                                                            }}
                                                             onChange={handleCheckboxAction(checkBoxid)}
                                                             aria-label={'Include'}
                                                             value={facet?.facet_id}
