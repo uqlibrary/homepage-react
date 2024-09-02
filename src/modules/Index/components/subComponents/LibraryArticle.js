@@ -11,35 +11,55 @@ import { Link } from 'react-router-dom';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 
-const StyledGridItem = styled(Grid)(() => ({
-    // paddingTop: '24px',
-    '.article-card': {
-        '&:hover': {
-            backgroundColor: '#f3f3f4',
-        },
-    },
-    a: {
-        textDecoration: 'none',
-        '&:hover': {
-            textDecoration: 'none',
-        },
-        '&:hover h3': {
-            textDecoration: 'underline',
-        },
-        // backgroundColor: 'red',
-    },
+const StyledGridItem = styled(Grid)(({ articleIndex, theme }) => {
+    console.log('articleIndex:', articleIndex); // Log the articleIndex value
 
-    'a .ArticleDescription': {
-        color: 'black',
-    },
-    h3: {
-        color: 'black',
-        textDecoration: 'none',
-        '&:hover': {
-            textDecoration: 'none',
+    return {
+        /* Parent */
+        [theme.breakpoints.up('xs')]: {
+            paddingTop: '24px !important',
+            paddingLeft: '24px !important',
         },
-    },
-}));
+        [theme.breakpoints.up('sm')]: {
+            paddingTop: '32px !important',
+            paddingLeft: '32px !important',
+        },
+        '.article-card': {
+            [theme.breakpoints.up('xs')]: {
+                border: articleIndex === 0 ? '1px solid #dcdcdd' : 'none',
+                '&:hover': {
+                    backgroundColor: articleIndex === 0 ? '#f3f3f4' : 'none',
+                },
+            },
+            [theme.breakpoints.up('sm')]: {
+                border: '1px solid #dcdcdd',
+                '&:hover': {
+                    backgroundColor: '#f3f3f4',
+                },
+            },
+        },
+        a: {
+            textDecoration: 'none',
+            '&:hover': {
+                textDecoration: 'none',
+            },
+            '&:hover h3': {
+                textDecoration: 'underline',
+            },
+        },
+
+        'a .ArticleDescription': {
+            color: 'black',
+        },
+        h3: {
+            color: 'black',
+            textDecoration: 'none',
+            '&:hover': {
+                textDecoration: 'none',
+            },
+        },
+    };
+});
 
 const RenderImage = (articleIndex, article, theme, isSm) => {
     return (
@@ -48,25 +68,27 @@ const RenderImage = (articleIndex, article, theme, isSm) => {
             sx={{
                 width: {
                     xs: articleIndex === 0 ? '100%' : '120px',
+                    sm: articleIndex === 0 ? '50%' : '100%',
                     md: articleIndex === 0 ? '50%' : '100%',
+                    lg: articleIndex === 0 ? '50%' : '100%',
+                    xl: articleIndex === 0 ? '50%' : '100%',
                 },
             }}
         >
             <div
                 style={{
-                    width: isSm && articleIndex !== 0 ? '120px' : '100%',
+                    width: '100%',
                     height: 0,
                     position: 'relative',
                     paddingBottom: isSm && articleIndex !== 0 ? '91.534%' : '66.667%',
                 }}
             >
                 <img
-                    // src="/images/Rae-George-Hammer.jpg"
                     src={article.image}
                     style={{
                         position: 'absolute',
                         top: 0,
-                        left: isSm && articleIndex !== 0 ? 0 : 0,
+                        left: 0,
                         height: '100%',
                         width: '100%',
                         objectFit: 'cover',
@@ -83,25 +105,25 @@ const RenderImage = (articleIndex, article, theme, isSm) => {
 const RenderTextblock = (articleIndex, article, theme, isSm) => {
     console.log(article);
     return (
-        // <Grid
-        //     item
-        //     xs={articleIndex === 0 ? 12 : 9}
-        //     md={articleIndex === 0 ? 6 : 12}
-        //     sx={{ minHeight: isSm ? '145px' : '160px' }}
-        // >
         <Box
             sx={{
                 width: {
                     xs: articleIndex === 0 ? '100%' : 'calc(100% - 120px)',
+                    sm: articleIndex === 0 ? '50%' : '100%',
                     md: articleIndex === 0 ? '50%' : '100%',
+                    lg: articleIndex === 0 ? '50%' : '100%',
+                    xl: articleIndex === 0 ? '50%' : '100%',
                 },
                 // minHeight: isSm ? '145px' : '180px',
                 minHeight: {
                     xs: '145px',
-                    sm: '200px',
-                    md: '180px',
+                    sm: '180px',
+                    md: '260px',
+                    lg: '180px',
+                    xl: '180px',
                 },
             }}
+            className="article-text-container"
         >
             <div
                 style={{
@@ -172,28 +194,23 @@ const LibraryArticle = ({ article, articleIndex }) => {
     console.log('What is this', !window.matchMedia(theme.breakpoints.down('xs')).matches);
     return (
         <StyledGridItem
+            articleIndex={articleIndex}
+            theme={theme}
             item
             xs={12}
             sm={articleIndex === 0 ? 12 : 6}
             md={articleIndex === 0 ? 12 : 4}
-            style={{ paddingTop: isSm ? '24px' : '32px', paddingLeft: isSm ? '24px' : '32px' }}
+            className="article-container"
         >
-            <StandardCard
-                className={'article-card'}
-                style={{
-                    border: articleIndex === 0 || (articleIndex !== 0 && isSmUp) ? '1px solid #dcdcdd' : 'none',
-                }}
-                noPadding
-                noHeader
-            >
+            <StandardCard className={'article-card'} noPadding noHeader>
                 <Link to={article.canonical_url}>
                     {/* Example Wide item - to componentise */}
                     <Grid container sx={{ borderBottom: isSm ? '1px solid #ddd' : 'none' }}>
-                        {(articleIndex === 0 && isMd) || (articleIndex !== 0 && isSm)
+                        {(articleIndex === 0 && isSmUp) || (articleIndex !== 0 && isSm)
                             ? RenderTextblock(articleIndex, article, theme, isSm)
                             : RenderImage(articleIndex, article, theme, isSm)}
                         {/* Image Location */}
-                        {(articleIndex === 0 && isMd) || (articleIndex !== 0 && isSm)
+                        {(articleIndex === 0 && isSmUp) || (articleIndex !== 0 && isSm)
                             ? RenderImage(articleIndex, article, theme, isSm)
                             : RenderTextblock(articleIndex, article, theme, isSm)}
                     </Grid>
