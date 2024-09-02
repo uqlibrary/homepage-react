@@ -17,13 +17,7 @@ const StyledGridItem = styled(Grid)(() => ({
         paddingTop: '24px !important',
     },
     '@media (max-width: 56em)': {
-        // height: '4em',
         paddingTop: '24px !important',
-        marginBottom: 0,
-        h2: {
-            paddingBlock: '18px',
-            paddingLeft: '18px',
-        },
     },
 }));
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -34,9 +28,6 @@ const StyledBox = styled(Box)(({ theme }) => ({
     height: '100%',
     position: 'relative',
     cursor: 'pointer',
-    h2: {
-        marginTop: '5px',
-    },
     a: {
         color: theme.palette.secondary.dark,
         fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
@@ -48,15 +39,13 @@ const StyledBox = styled(Box)(({ theme }) => ({
         },
     },
     '@media (max-width: 56em)': {
-        padding: 0,
+        marginBottom: '-32px',
+        paddingTop: '20px',
         a: {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             paddingBlock: 0,
-        },
-        h2: {
-            marginBlock: 0,
         },
     },
     '@media (min-width: 56em)': {
@@ -89,12 +78,10 @@ const NavCard = ({ cardLabel, landingUrl }) => {
     return (
         <StyledGridItem item component="li" xs={12} md={6} lg={4}>
             <StyledBox border={1} p={2}>
-                <h2>
-                    <Link to={landingUrl}>
-                        <span>{cardLabel}</span>
-                        <ArrowForwardIcon sx={{ color: '#51247A' }} />
-                    </Link>
-                </h2>
+                <Link to={landingUrl}>
+                    <span>{cardLabel}</span>
+                    <ArrowForwardIcon sx={{ color: '#51247A' }} />
+                </Link>
             </StyledBox>
         </StyledGridItem>
     );
