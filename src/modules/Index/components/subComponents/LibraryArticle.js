@@ -12,20 +12,27 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 
 const StyledGridItem = styled(Grid)(() => ({
+    // paddingTop: '24px',
+    '.article-card': {
+        '&:hover': {
+            backgroundColor: '#f3f3f4',
+        },
+    },
     a: {
         textDecoration: 'none',
         '&:hover': {
             textDecoration: 'none',
         },
-        '&:hover h2': {
+        '&:hover h3': {
             textDecoration: 'underline',
         },
+        // backgroundColor: 'red',
     },
 
     'a .ArticleDescription': {
         color: 'black',
     },
-    h2: {
+    h3: {
         color: 'black',
         textDecoration: 'none',
         '&:hover': {
@@ -88,7 +95,12 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                     xs: articleIndex === 0 ? '100%' : 'calc(100% - 120px)',
                     md: articleIndex === 0 ? '50%' : '100%',
                 },
-                minHeight: isSm ? '145px' : '160px',
+                // minHeight: isSm ? '145px' : '180px',
+                minHeight: {
+                    xs: '145px',
+                    sm: '200px',
+                    md: '180px',
+                },
             }}
         >
             <div
@@ -98,8 +110,8 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                     alignItems: 'left',
                     height: '100%',
                     justifyContent: articleIndex === 0 ? 'center' : 'top',
-                    paddingLeft: articleIndex !== 0 && theme.breakpoints.down('sm') ? 0 : 20,
-                    paddingRight: articleIndex !== 0 && theme.breakpoints.down('sm') ? 0 : 20,
+                    paddingLeft: isSm && articleIndex !== 0 ? 0 : 24,
+                    paddingRight: isSm && articleIndex !== 0 ? 0 : 24,
                 }}
             >
                 <Typography
@@ -115,9 +127,11 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                     {article.categories[0]}
                 </Typography>
                 <Typography
-                    component={'h2'}
+                    component={'h3'}
                     sx={{
+                        lineHeight: '1.2',
                         marginTop: '0',
+                        letterSpacing: '0.01',
                         fontSize: isSm ? '22px' : '24px',
                         fontWeight: 500,
                         marginRight: isSm ? '16px' : '0px',
@@ -148,12 +162,25 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
 
 const LibraryArticle = ({ article, articleIndex }) => {
     const theme = useTheme();
+    console.log(theme.breakpoints);
+    const isLg = useMediaQuery(theme.breakpoints.up('lg'));
     const isMd = useMediaQuery(theme.breakpoints.up('md'));
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
+    console.log('What is this', !window.matchMedia(theme.breakpoints.down('xs')).matches);
     return (
-        <StyledGridItem item xs={12} md={articleIndex === 0 ? 12 : 4} sx={{ paddingTop: '0px' }}>
+        <StyledGridItem
+            item
+            xs={12}
+            sm={articleIndex === 0 ? 12 : 6}
+            md={articleIndex === 0 ? 12 : 4}
+            style={{ paddingTop: isSm ? '24px' : '32px', paddingLeft: isSm ? '24px' : '32px' }}
+        >
             <StandardCard
-                style={{ border: theme.breakpoints.down('sm') && articleIndex !== 0 ? 'none' : '1px solid #d1d0d2' }}
+                className={'article-card'}
+                style={{
+                    border: articleIndex === 0 || (articleIndex !== 0 && isSmUp) ? '1px solid #dcdcdd' : 'none',
+                }}
                 noPadding
                 noHeader
             >
