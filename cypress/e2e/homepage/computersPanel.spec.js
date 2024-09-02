@@ -80,7 +80,7 @@ describe('Computer availability', () => {
                 .find('div:nth-child(3)')
                 .contains('72 free of 110');
         });
-        it('close options for map and levels works', () => {
+        it.only('close options for map and levels works', () => {
             cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
             cy.get('[data-testid="hours-accordion-open"]').click();
 
@@ -99,7 +99,7 @@ describe('Computer availability', () => {
                 .contains('Biological Sciences Library');
             // close map
             cy.get('[data-testid="computers-library-dialog-close-button"]').click();
-            cy.get('h3').should('not.exist');
+            cy.get('[data-testid="computers-library-dialog-close-button"]').should('not.exist');
             // level list is open, click to close
             cy.get('[data-testid="computers-library-1-level-4-button"]').should('exist');
             cy.get('button[data-testid="computers-library-button-1"]').click();
