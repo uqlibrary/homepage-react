@@ -80,7 +80,7 @@ describe('Computer availability', () => {
                 .find('div:nth-child(3)')
                 .contains('72 free of 110');
         });
-        it.only('close options for map and levels works', () => {
+        it('close options for map and levels works', () => {
             cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
             cy.get('[data-testid="hours-accordion-open"]').click();
 
