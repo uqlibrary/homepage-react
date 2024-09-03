@@ -47,40 +47,28 @@
 <script>
     function cookieNotFound(cookieId, cookievalue = '') {
         const searchString = `${cookieId}=${cookievalue}`;
-        console.log(searchString, 'document.cookie=', document.cookie);
         return document.cookie.indexOf(searchString) <= -1;
     }
     function cookieFound(cookieId, cookievalue = '') {
         return !cookieNotFound(cookieId, cookievalue);
     }
-    let isSessionStorageEnabled;
-    // function sessionStorageCheck() {
-        console.log('sessionStorageCheck');
+    function sessionStorageCheck() {
         try {
             if (cookieFound('SESSIONSTORAGE_BLOCKED')) {
-                console.log('cookie found, block sessionstorage');
-                // allow testing
-                isSessionStorageEnabled = false;
-                console.log('0.1 isSessionStorageEnabled=', isSessionStorageEnabled);
-                // return false;
-            } else {
-                console.log('cookie NOT found, allow sessionstorage');
-                const key = `__storage__test`;
-                sessionStorage.setItem(key, null);
-                sessionStorage.removeItem(key);
-                isSessionStorageEnabled = true;
-                console.log('0.2 isSessionStorageEnabled=', isSessionStorageEnabled);
-                // return true;
+                // allows testing
+                return false;
             }
+
+            const key = `__storage__test`;
+            sessionStorage.setItem(key, null);
+            sessionStorage.removeItem(key);
+            return true;
+
         } catch (e) {
-            console.log('set failed, block sessionstorage');
-            isSessionStorageEnabled = false;
-            console.log('0.3 isSessionStorageEnabled=', isSessionStorageEnabled);
-            // return false;
+            return false;
         }
-    // }
-    // const isSessionStorageEnabled = sessionStorageCheck();
-    console.log('1 isSessionStorageEnabled=', isSessionStorageEnabled);
+    }
+    const isSessionStorageEnabled = sessionStorageCheck();
 
     function getEnvironmentUrl() {
         // the url that generate from these must be allowed in CSP - see Dan.
@@ -130,11 +118,10 @@
         // N.B. All bot-related session data (token, URL, and conversationId) are "directLine" prefixed.
         // Adapted from https://thehetz.com/blog/persisting-copilot-chat-sessions
         let directLineURL = '';
-        let directLineToken = '';
+        // let directLineToken = '';
         let conversationId = '';
         let token = '';
         if (!isSessionStorageEnabled || !sessionStorage['directLineToken'] || !sessionStorage['directLineURL']) {
-            console.log('get new values');
             const apiVersion = tokenEndpointURL.searchParams.get('api-version');
             const regionalChannelSettingsURL = new URL(`/powervirtualagents/regionalchannelsettings?api-version=${apiVersion}`, tokenEndpointURL);
             [directLineURL, token] = await Promise.all([
@@ -163,7 +150,6 @@
             }
         }
 
-        console.log('2 isSessionStorageEnabled=', isSessionStorageEnabled);
         // Restore directLine variables from sessionStorage.
         if (!!isSessionStorageEnabled) {
             // const {directLineURL, directLineToken: token, directLineConversationId: conversationId} = sessionStorage;
@@ -171,14 +157,12 @@
             token = sessionStorage.getItem('directLineToken');
             conversationId = sessionStorage.getItem('directLineConversationId');
         }
-        console.log('directLineURL=', directLineURL);
 
         // The "token" variable is the credentials for accessing the current conversation.
         // To maintain conversation across page navigation, save and reuse the token.
         // The token could have access to sensitive information about the user.
         // It must be treated like user password.
         const directLine = WebChat.createDirectLine({ domain: new URL('v3/directline', directLineURL), directLineURL, conversationId, token, watermark: 1 });
-        console.log('directLine=', directLine);
 
         // Sends "startConversation" event when the connection is established.
         const subscription = directLine.connectionStatus$.subscribe({
