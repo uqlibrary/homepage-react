@@ -99,7 +99,7 @@ describe('Computer availability', () => {
                 .contains('Biological Sciences Library');
             // close map
             cy.get('[data-testid="computers-library-dialog-close-button"]').click();
-            cy.get('h3').should('not.exist');
+            cy.get('[data-testid="computers-library-dialog-close-button"]').should('not.exist');
             // level list is open, click to close
             cy.get('[data-testid="computers-library-1-level-4-button"]').should('exist');
             cy.get('button[data-testid="computers-library-button-1"]').click();
