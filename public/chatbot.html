@@ -45,6 +45,43 @@
  -->
 <script crossorigin="anonymous" src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 <script>
+    function cookieNotFound(cookieId, cookievalue = '') {
+        const searchString = `${cookieId}=${cookievalue}`;
+        console.log(searchString, 'document.cookie=', document.cookie);
+        return document.cookie.indexOf(searchString) <= -1;
+    }
+    function cookieFound(cookieId, cookievalue = '') {
+        return !cookieNotFound(cookieId, cookievalue);
+    }
+    let isSessionStorageEnabled;
+    // function sessionStorageCheck() {
+        console.log('sessionStorageCheck');
+        try {
+            if (cookieFound('SESSIONSTORAGE_BLOCKED')) {
+                console.log('cookie found, block sessionstorage');
+                // allow testing
+                isSessionStorageEnabled = false;
+                console.log('0.1 isSessionStorageEnabled=', isSessionStorageEnabled);
+                // return false;
+            } else {
+                console.log('cookie NOT found, allow sessionstorage');
+                const key = `__storage__test`;
+                sessionStorage.setItem(key, null);
+                sessionStorage.removeItem(key);
+                isSessionStorageEnabled = true;
+                console.log('0.2 isSessionStorageEnabled=', isSessionStorageEnabled);
+                // return true;
+            }
+        } catch (e) {
+            console.log('set failed, block sessionstorage');
+            isSessionStorageEnabled = false;
+            console.log('0.3 isSessionStorageEnabled=', isSessionStorageEnabled);
+            // return false;
+        }
+    // }
+    // const isSessionStorageEnabled = sessionStorageCheck();
+    console.log('1 isSessionStorageEnabled=', isSessionStorageEnabled);
+
     function getEnvironmentUrl() {
         // the url that generate from these must be allowed in CSP - see Dan.
         const stagingId = '30f73f16da89ee8aaa1ea25e77cb45.c0';
@@ -92,10 +129,15 @@
 
         // N.B. All bot-related session data (token, URL, and conversationId) are "directLine" prefixed.
         // Adapted from https://thehetz.com/blog/persisting-copilot-chat-sessions
-        if (!sessionStorage['directLineToken'] || !sessionStorage['directLineURL']) {
+        let directLineURL = '';
+        let directLineToken = '';
+        let conversationId = '';
+        let token = '';
+        if (!isSessionStorageEnabled || !sessionStorage['directLineToken'] || !sessionStorage['directLineURL']) {
+            console.log('get new values');
             const apiVersion = tokenEndpointURL.searchParams.get('api-version');
             const regionalChannelSettingsURL = new URL(`/powervirtualagents/regionalchannelsettings?api-version=${apiVersion}`, tokenEndpointURL);
-            const [directLineURL, token] = await Promise.all([
+            [directLineURL, token] = await Promise.all([
                 fetch(regionalChannelSettingsURL)
                     .then(response => {
                         if (!response.ok) {
@@ -114,25 +156,36 @@
                     .then(({ token }) => token)
             ]);
 
-            sessionStorage['directLineToken'] = token;
-            sessionStorage['directLineURL'] = directLineURL;
+            directLineToken = token;
+            if (!!isSessionStorageEnabled) {
+                sessionStorage['directLineToken'] = token;
+                sessionStorage['directLineURL'] = directLineURL;
+            }
         }
 
+        console.log('2 isSessionStorageEnabled=', isSessionStorageEnabled);
         // Restore directLine variables from sessionStorage.
-        const { directLineURL, directLineToken: token, directLineConversationId: conversationId } = sessionStorage;
+        if (!!isSessionStorageEnabled) {
+            // const {directLineURL, directLineToken: token, directLineConversationId: conversationId} = sessionStorage;
+            directLineURL = sessionStorage.getItem('directLineURL');
+            token = sessionStorage.getItem('directLineToken');
+            conversationId = sessionStorage.getItem('directLineConversationId');
+        }
+        console.log('directLineURL=', directLineURL);
 
         // The "token" variable is the credentials for accessing the current conversation.
         // To maintain conversation across page navigation, save and reuse the token.
         // The token could have access to sensitive information about the user.
         // It must be treated like user password.
         const directLine = WebChat.createDirectLine({ domain: new URL('v3/directline', directLineURL), directLineURL, conversationId, token, watermark: 1 });
+        console.log('directLine=', directLine);
 
         // Sends "startConversation" event when the connection is established.
         const subscription = directLine.connectionStatus$.subscribe({
             next(value) {
                 if (value === 2) {
                     // Store the conversation id to use across refreshes and page navigations.
-                    sessionStorage['directLineConversationId'] = directLine.conversationId;
+                    !!isSessionStorageEnabled && (sessionStorage['directLineConversationId'] = directLine?.conversationId);
                     // Pass through the user's name and email if provided.
                     const searchParams = new URLSearchParams(window.location.search);
 
