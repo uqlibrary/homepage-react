@@ -16,6 +16,7 @@ describe('header', () => {
                         .then($el => {
                             const firstItemTop = $el.position().top;
                             const firstItemLeft = $el.position().left;
+                            const firstItemBottom = $el.position().top + $el.outerHeight();
 
                             let secondItemLeft;
                             cy.get('li')
@@ -48,9 +49,10 @@ describe('header', () => {
                                     const fourthItemTop = $el4.position().top;
                                     const fourthItemLeft = $el4.position().left;
 
-                                    // Ensure the fourth item is on the next row
+                                    // Ensure the fourth item is on the next row, with a gap
                                     expect(fourthItemTop).to.be.greaterThan(firstItemTop);
                                     expect(fourthItemLeft).to.equal(firstItemLeft);
+                                    expect(fourthItemTop).to.be.greaterThan(firstItemBottom + 20);
                                 });
 
                             cy.get('li')
@@ -94,6 +96,7 @@ describe('header', () => {
                         .then($el => {
                             const firstItemTop = $el.position().top;
                             const firstItemLeft = $el.position().left;
+                            const firstItemBottom = $el.position().top + $el.outerHeight();
 
                             let secondItemTop;
                             let secondItemLeft;
@@ -128,9 +131,10 @@ describe('header', () => {
                                     const fourthItemTop = $el4.position().top;
                                     fourthItemLeft = $el4.position().left;
 
-                                    // Ensure the fourth item is on the second row
+                                    // Ensure the fourth item is on the second row, with a gap
                                     expect(fourthItemTop).to.equal(thirdItemTop);
                                     expect(fourthItemLeft).to.equal(secondItemLeft);
+                                    expect(fourthItemTop).to.be.greaterThan(firstItemBottom + 20);
                                 });
 
                             let fifthItemTop;
@@ -192,12 +196,13 @@ describe('header', () => {
                                     });
 
                                 let thirdItemTop;
+                                let thirdItemBottom;
                                 cy.get('li')
                                     .eq(2)
                                     .then($el3 => {
                                         thirdItemTop = $el3.position().top;
                                         const thirdItemLeft = $el3.position().left;
-
+                                        thirdItemBottom = $el3.position().top + $el3.outerHeight();
                                         // Ensure the third item is below the second
                                         expect(thirdItemTop).to.be.greaterThan(secondItemTop);
                                         expect(thirdItemLeft).to.equal(firstItemLeft);
@@ -209,11 +214,10 @@ describe('header', () => {
                                     .should('be.visible')
                                     .then($el4 => {
                                         fourthItemTop = $el4.position().top;
-                                        const fourthItemLeft = $el4.position().left;
 
-                                        // Ensure the fourth item is below the third
+                                        // Ensure the fourth item is below the third, with a gap
                                         expect(fourthItemTop).to.be.greaterThan(thirdItemTop);
-                                        expect(fourthItemLeft).to.equal(firstItemLeft);
+                                        expect(fourthItemTop).to.be.greaterThan(thirdItemBottom + 20);
                                     });
 
                                 let fifthItemTop;
