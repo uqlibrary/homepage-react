@@ -6,17 +6,22 @@ import { styled } from '@mui/material/styles';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import NavCard from './NavCard';
 
+const StyledNav = styled('nav')(() => ({
+    marginTop: '24px',
+    marginRight: '24px',
+    marginLeft: '-24px',
+}));
+
 const StyledGridContainer = styled(Grid)(() => ({
     paddingRight: '8px',
     paddingLeft: 0,
-    marginTop: '1em',
-    marginLeft: '-24px',
+    margin: 0,
 }));
 
 const NavCardWrapper = () => {
     return (
         <StandardPage>
-            <nav>
+            <StyledNav>
                 <StyledGridContainer container component="ul" spacing={4} data-testid="help-navigation-panel">
                     <NavCard cardLabel="Find and borrow" landingUrl="https://web.library.uq.edu.au/find-and-borrow" />
                     <NavCard
@@ -34,7 +39,7 @@ const NavCardWrapper = () => {
                     />
                     <NavCard cardLabel="About" landingUrl="https://web.library.uq.edu.au/about-us" />
                 </StyledGridContainer>
-            </nav>
+            </StyledNav>
         </StandardPage>
     );
 };
