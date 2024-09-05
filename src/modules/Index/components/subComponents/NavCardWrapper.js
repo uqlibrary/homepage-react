@@ -13,7 +13,7 @@ const StyledGridContainer = styled(Grid)(() => ({
     marginLeft: '-24px',
 }));
 
-const NavPanelBlock = () => {
+const NavCardWrapper = () => {
     return (
         <StandardPage>
             <nav>
@@ -39,4 +39,4 @@ const NavPanelBlock = () => {
     );
 };
 
-export default NavPanelBlock;
+export default NavCardWrapper;
