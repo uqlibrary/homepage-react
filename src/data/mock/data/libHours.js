@@ -552,8 +552,8 @@ export const libHours = {
             "color": "#000000",
             "parent_lid": 3967,
             "day": "Tuesday",
-            "times": {"status": "open", "hours": [{"from": "7am", "to": "10:30pm"}], "currently_open": true},
-            "rendered": "7am - 10:30pm",
+            "times": {"status": "closed", "currently_open": false},
+            "rendered": "Closed",
             "open": "07:00:00",
             "close": "22:30:00"
         }, {

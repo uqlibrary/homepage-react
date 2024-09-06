@@ -26,23 +26,23 @@ export const locale = {
             value: CAMPUS_DUTTON_PARK,
         },
     ],
-    // tie a campus to a building, for highlighting the chosen location
-    computersCampusMap: {
-        // the keys in this must match the names found in the Computer Availablity api result
-        'Architecture &amp; Music Library': CAMPUS_ST_LUCIA,
-        'Biological Sciences Library': CAMPUS_ST_LUCIA,
-        'Central Library': CAMPUS_ST_LUCIA,
-        'D.H. Engineering &amp; Sciences Library': CAMPUS_ST_LUCIA,
-        'Duhig Building': CAMPUS_ST_LUCIA,
-        'Fryer Library': CAMPUS_ST_LUCIA,
-        'Gatton Campus Library': CAMPUS_GATTON,
-        'Herston Health Sciences Library': CAMPUS_HERSTON,
-        'Law Library': CAMPUS_ST_LUCIA,
-        'Whitty Mater': 'Other',
-        'Dutton Park Health Sciences Library': CAMPUS_DUTTON_PARK,
-    },
+    // // tie a campus to a building, for highlighting the chosen location
+    // computersCampusMap: {
+    //     // the keys in this must match the names found in the Computer Availablity api result
+    //     'Architecture &amp; Music Library': CAMPUS_ST_LUCIA,
+    //     'Biological Sciences Library': CAMPUS_ST_LUCIA,
+    //     'Central Library': CAMPUS_ST_LUCIA,
+    //     'D.H. Engineering &amp; Sciences Library': CAMPUS_ST_LUCIA,
+    //     'Duhig Building': CAMPUS_ST_LUCIA,
+    //     'Fryer Library': CAMPUS_ST_LUCIA,
+    //     'Gatton Campus Library': CAMPUS_GATTON,
+    //     'Herston Health Sciences Library': CAMPUS_HERSTON,
+    //     'Law Library': CAMPUS_ST_LUCIA,
+    //     'Whitty Mater': 'Other',
+    //     'Dutton Park Health Sciences Library': CAMPUS_DUTTON_PARK,
+    // },
     hoursCampusMap: {
-        // the keys in this must match the abbr values found in the Hours api result
+        // the keys in this must match the abbr values found in the Locations api result
         'Arch Music': CAMPUS_ST_LUCIA,
         AskUs: 'Online',
         'Biol Sci': CAMPUS_ST_LUCIA,

@@ -1,4 +1,4 @@
-context('Library Opening Hours Homepage Panel', () => {
+context('Library Opening Locations Homepage Panel', () => {
     it('is Accessible', () => {
         cy.visit('/');
         cy.injectAxe();
@@ -9,9 +9,9 @@ context('Library Opening Hours Homepage Panel', () => {
         cy.get('[data-testid="hours-accordion-open"]').click();
 
         // the expected content is found on the page
-        cy.get('[data-testid="hours-item-0"]').contains('Arch Music');
+        cy.get('[data-testid="hours-item-arch-music"]').contains('Architecture & Music Library');
 
-        cy.checkA11y('div[data-testid="library-hours-panel"]', {
+        cy.checkA11y('div[data-testid="locations-panel"]', {
             reportName: 'Hours',
             scopeName: 'As loaded',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
@@ -27,9 +27,9 @@ context('Library Opening Hours Homepage Panel', () => {
         cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
         cy.get('[data-testid="hours-accordion-open"]').click();
 
-        cy.get('[data-testid="hours-item-0"]')
+        cy.get('[data-testid="hours-item-arch-music"]')
             .find('a')
-            .should('contain', 'Arch Music')
+            .should('contain', 'Architecture & Music Library')
             .click();
         cy.get('body').contains('user has navigated to Drupal hours page');
     });
@@ -44,7 +44,7 @@ context('Library Opening Hours Homepage Panel', () => {
         cy.get('[data-testid="hours-accordion-open"]').click();
 
         cy.get('[data-testid="homepage-hours-weeklyhours-link"]')
-            .should('contain', 'Weekly hours')
+            .should('contain', 'See weekly Library and AskUs hours')
             .click();
         cy.get('body').contains('user has navigated to Drupal weekly hours page');
     });
@@ -52,11 +52,8 @@ context('Library Opening Hours Homepage Panel', () => {
         cy.intercept(/uqbookit/, 'user has navigated to Bookit page');
         cy.visit('/');
         cy.viewport(1300, 1000);
-        cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
-        cy.get('[data-testid="hours-accordion-open"]').click();
-
         cy.get('[data-testid="homepage-hours-bookit-link"]')
-            .should('contain', 'Book a room')
+            .should('contain', 'Make a booking')
             .click();
         cy.get('body').contains('user has navigated to Bookit page');
     });
@@ -67,25 +64,23 @@ context('Library Opening Hours Homepage Panel', () => {
         cy.get('[data-testid="hours-accordion-open"]').click();
 
         cy.log('Architecture has study space hours but not askus hours');
-        cy.get('[data-testid="hours-item-0"] div:first-child').contains('Arch Music');
-        cy.get('[data-testid="hours-item-0"] div:nth-child(2)').contains('7:30am - 7:30pm');
-        cy.get('[data-testid="hours-item-0"] div:nth-child(3)').should('not.exist');
+        cy.get('[data-testid="hours-item-arch-music"] div:first-child').contains('Architecture & Music Library');
+        cy.get('[data-testid="hours-item-arch-music"] div:nth-child(2)').contains('7:30am - 7:30pm');
 
         cy.log('Central has study space AND askus hours');
-        cy.get('[data-testid="hours-item-3"] div:first-child').contains('Central');
-        cy.get('[data-testid="hours-item-3"] div:nth-child(2)').contains('24 Hours');
-        cy.get('[data-testid="hours-item-3"] div:nth-child(3)').contains('8am - 6pm');
+        cy.get('[data-testid="hours-item-central"] div:first-child').contains('Central Library');
+        cy.get('[data-testid="hours-item-central"] div:nth-child(2)').contains('24 Hours');
 
         cy.log('Hervey Bay has an empty departments field, so we see "See Location');
-        cy.get('[data-testid="hours-item-10"] div:first-child')
-            .scrollIntoView()
-            .contains('HerveyBay');
-        cy.get('[data-testid="hours-item-10"] div:nth-child(2)').contains('See location');
+        cy.get('[data-testid="hours-item-herveybay"] div:first-child')
+            .should('exist')
+            .contains('Hervey Bay');
+        cy.get('[data-testid="hours-item-herveybay"] div:nth-child(2)').contains('See location');
 
         cy.log('Rockhampton has a missing department field (should never happen) so we see "See location"');
-        cy.get('[data-testid="hours-item-12"] div:first-child')
-            .scrollIntoView()
+        cy.get('[data-testid="hours-item-rockhampton"] div:first-child')
+            .should('exist')
             .contains('Rockhampton');
-        cy.get('[data-testid="hours-item-12"] div:nth-child(2)').contains('See location');
+        cy.get('[data-testid="hours-item-rockhampton"] div:nth-child(2)').contains('See location');
     });
 });

@@ -28,8 +28,7 @@ import {
 } from 'data/actions';
 import { canSeeLearningResources } from 'helpers/access';
 
-const Computers = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Computers')));
-const Hours = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Hours')));
+const Locations = lazy(() => lazyRetry(() => import('./subComponents/Locations')));
 const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
 const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
 
@@ -65,10 +64,13 @@ const StyleWrapper = styled('div')(() => ({
     position: 'relative',
 }));
 
-const StyledLink = styled(Link)(() => ({
+const StyledLink = styled(Link)(({ theme }) => ({
     color: 'black',
     fontWeight: 400,
-    '& div': {
+    textDecorationColor: theme.palette.primary.light,
+    '& span': {
+        color: theme.palette.primary.light,
+        display: 'block',
         paddingTop: '14px',
     },
     '@media (min-width: 640px)': {
@@ -82,6 +84,8 @@ const StyledLink = styled(Link)(() => ({
 const StyledSummary = styled('span')(({ theme }) => ({
     color: theme.palette.primary.light,
     textDecoration: 'underline',
+    fontFamily: 'Roboto, sans-serif',
+    fontWeight: 400,
 }));
 
 export const Index = ({
@@ -157,10 +161,11 @@ export const Index = ({
                     <StyleWrapper>
                         <StyledLink
                             href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
-                            underline="hover">
-                            <div>
+                            data-testid="homepage-hours-bookit-link"
+                            >
+                            <span>
                                 Make a booking
-                            </div>
+                            </span>
                         </StyledLink>
                         <StyledAccordion>
                             <StyledAccordionSummary
@@ -169,28 +174,15 @@ export const Index = ({
                                 id="panel1a-header"
                                 data-testid="hours-accordion-open"
                             >
-                                <StyledSummary>Opening hours and computer availability</StyledSummary>
+                                <StyledSummary>Library locations</StyledSummary>
                             </StyledAccordionSummary>
                             <AccordionDetails>
-                                <p>(temporary display while FE design agreed)</p>
-                                <Grid container spacing={4}>
-                                    <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                                        <Hours
-                                            libHours={libHours}
-                                            libHoursLoading={libHoursLoading}
-                                            libHoursError={libHoursError}
-                                            account={account}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={8} data-testid="computer-availability-panel">
-                                        <Computers
-                                            computerAvailability={computerAvailability}
-                                            computerAvailabilityLoading={computerAvailabilityLoading}
-                                            computerAvailabilityError={computerAvailabilityError}
-                                            account={account}
-                                        />
-                                    </Grid>
-                                </Grid>
+                                <Locations
+                                    libHours={libHours}
+                                    libHoursLoading={libHoursLoading}
+                                    libHoursError={libHoursError}
+                                    account={account}
+                                />
                             </AccordionDetails>
                         </StyledAccordion>
                     </StyleWrapper>
