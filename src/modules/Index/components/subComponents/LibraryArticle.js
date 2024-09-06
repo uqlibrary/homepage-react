@@ -57,9 +57,36 @@ const StyledGridItem = styled(Grid)(({ articleIndex, theme }) => {
             [theme.breakpoints.up('xs')]: {
                 paddingTop: articleIndex === 0 ? '24px !important' : 'none',
             },
-            [theme.breakpoints.up('md')]: {
-                paddingTop: articleIndex === 0 ? '0px !important' : 'none',
+            [theme.breakpoints.up('sm')]: {
+                paddingTop: '0px !important',
             },
+        },
+        '.ArticleTextContainer': {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'left',
+            height: '100%',
+            justifyContent: articleIndex === 0 ? 'center' : 'top',
+            paddingTop: '0px !important',
+            // paddingBottom: '24px',
+            [theme.breakpoints.up('xs')]: {
+                paddingLeft: articleIndex !== 0 ? 0 : 24,
+                paddingRight: articleIndex !== 0 ? 0 : 24,
+                paddingBottom: '24px',
+            },
+            [theme.breakpoints.up('sm')]: {
+                paddingLeft: 24,
+                paddingRight: 24,
+                paddingBottom: articleIndex !== 0 ? 0 : 24,
+            },
+            [theme.breakpoints.up('md')]: {
+                paddingLeft: 24,
+                paddingRight: 24,
+                paddingBottom: articleIndex !== 0 ? 0 : 24,
+            },
+            // [theme.breakpoints.up('md')]: {
+            //     paddingBottom: articleIndex === 0 ? 0 : 24,
+            // },
         },
         '.ArticleTitle': {},
         a: {
@@ -138,6 +165,13 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                     lg: articleIndex === 0 ? '50%' : '100%',
                     xl: articleIndex === 0 ? '50%' : '100%',
                 },
+                paddingBottom: {
+                    xs: articleIndex !== 0 ? '0px' : '24px',
+                    sm: articleIndex === 0 ? '0px' : '24px',
+                    md: articleIndex === 0 ? '0px' : '24px',
+                    lg: articleIndex === 0 ? '0px' : '24px',
+                    xl: articleIndex === 0 ? '0px' : '24px',
+                },
                 // minHeight: isSm ? '145px' : '180px',
                 // minHeight: {
                 //     xs: '145px',
@@ -147,19 +181,19 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                 //     xl: '180px',
                 // },
             }}
-            className="article-text-container"
+            className="ArticleContainer"
         >
             <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'left',
-                    height: '100%',
-                    justifyContent: articleIndex === 0 ? 'center' : 'top',
-                    paddingLeft: isSm && articleIndex !== 0 ? 0 : 24,
-                    paddingRight: isSm && articleIndex !== 0 ? 0 : 24,
-                    paddingBottom: '24px',
-                }}
+                className="ArticleTextContainer"
+                // style={
+                //     {
+                //         // display: 'flex',
+                //         // flexDirection: 'column',
+                //         // alignItems: 'left',
+                //         // height: '100%',
+                //         // paddingBottom: '24px',
+                //     }
+                // }
             >
                 <Typography
                     component={'p'}
@@ -185,12 +219,19 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                         fontSize: isSm ? '22px' : '24px',
                         fontWeight: 500,
                         marginRight: isSm ? '16px' : '0px',
-                        minHeight: articleIndex === 0 ? 0 : '116px',
+                        height: {
+                            sx: 'auto',
+                            sm: articleIndex === 0 ? 'auto' : '116px',
+                            md: articleIndex === 0 ? 'auto' : '116px',
+                            lg: articleIndex === 0 ? 'auto' : '116px',
+                            xl: articleIndex === 0 ? 'auto' : '116px',
+                        },
                         overflow: 'hidden',
                         display: '-webkit-box',
                         WebkitLineClamp: 4,
                         WebkitBoxOrient: 'vertical',
                         textOverflow: 'ellipsis',
+                        // marginBottom: '24px',
                     }}
                     data-testid={`article-${articleIndex + 1}-title`}
                 >
