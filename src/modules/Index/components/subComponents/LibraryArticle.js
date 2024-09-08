@@ -28,6 +28,7 @@ const StyledGridItem = styled(Grid)(({ articleIndex, theme }) => {
             paddingTop: articleIndex === 0 ? '24px !important' : '32px !important',
             paddingLeft: '32px !important',
         },
+        /* items and utility styles */
         '.article-card': {
             [theme.breakpoints.up('xs')]: {
                 border: articleIndex === 0 ? '1px solid #dcdcdd' : 'none',
@@ -42,12 +43,6 @@ const StyledGridItem = styled(Grid)(({ articleIndex, theme }) => {
                 },
             },
         },
-        // marginTop: isSm || articleIndex === 0 ? '0' : '24px',
-        //                 marginBottom: '0',
-        //                 fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
-
-        //                 fontWeight: 500,
-        //                 textDecoration: 'none !important',
         '.ArticleCategory': {
             color: '#666 !important',
             fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
@@ -84,9 +79,6 @@ const StyledGridItem = styled(Grid)(({ articleIndex, theme }) => {
                 paddingRight: 24,
                 paddingBottom: articleIndex !== 0 ? 0 : 24,
             },
-            // [theme.breakpoints.up('md')]: {
-            //     paddingBottom: articleIndex === 0 ? 0 : 24,
-            // },
         },
         '.ArticleTitle': {},
         a: {
@@ -114,7 +106,6 @@ const StyledGridItem = styled(Grid)(({ articleIndex, theme }) => {
 
 const RenderImage = (articleIndex, article, theme, isSm) => {
     return (
-        // <Grid item xs={articleIndex === 0 ? 12 : 3} md={articleIndex === 0 ? 6 : 12}>
         <Box
             sx={{
                 width: {
@@ -154,7 +145,6 @@ const RenderImage = (articleIndex, article, theme, isSm) => {
 };
 
 const RenderTextblock = (articleIndex, article, theme, isSm) => {
-    console.log(article);
     return (
         <Box
             sx={{
@@ -172,29 +162,10 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                     lg: articleIndex === 0 ? '0px' : '24px',
                     xl: articleIndex === 0 ? '0px' : '24px',
                 },
-                // minHeight: isSm ? '145px' : '180px',
-                // minHeight: {
-                //     xs: '145px',
-                //     sm: '180px',
-                //     md: '260px',
-                //     lg: '180px',
-                //     xl: '180px',
-                // },
             }}
             className="ArticleContainer"
         >
-            <div
-                className="ArticleTextContainer"
-                // style={
-                //     {
-                //         // display: 'flex',
-                //         // flexDirection: 'column',
-                //         // alignItems: 'left',
-                //         // height: '100%',
-                //         // paddingBottom: '24px',
-                //     }
-                // }
-            >
+            <div className="ArticleTextContainer">
                 <Typography
                     component={'p'}
                     className={'ArticleCategory'}
@@ -246,7 +217,6 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                             fontWeight: '300 !important',
                             letterSpacing: '.01rem !important',
                             textDecoration: 'none !important',
-                            // marginBottom: '20px',
                         }}
                         className={'ArticleDescription'}
                     >
@@ -254,19 +224,14 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                     </Typography>
                 )}
             </div>
-            {/* </Grid> */}
         </Box>
     );
 };
 
 const LibraryArticle = ({ article, articleIndex }) => {
     const theme = useTheme();
-    console.log(theme.breakpoints);
-    // const isLg = useMediaQuery(theme.breakpoints.up('lg'));
-    // const isMd = useMediaQuery(theme.breakpoints.up('md'));
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
-    console.log('What is this', !window.matchMedia(theme.breakpoints.down('xs')).matches);
     return (
         <StyledGridItem
             articleIndex={articleIndex}
@@ -279,12 +244,10 @@ const LibraryArticle = ({ article, articleIndex }) => {
         >
             <StandardCard className={'article-card'} noPadding noHeader>
                 <Link to={article.canonical_url}>
-                    {/* Example Wide item - to componentise */}
                     <Grid container sx={{ borderBottom: isSm ? '1px solid #ddd' : 'none' }}>
                         {(articleIndex === 0 && isSmUp) || (articleIndex !== 0 && isSm)
                             ? RenderTextblock(articleIndex, article, theme, isSm)
                             : RenderImage(articleIndex, article, theme, isSm)}
-                        {/* Image Location */}
                         {(articleIndex === 0 && isSmUp) || (articleIndex !== 0 && isSm)
                             ? RenderImage(articleIndex, article, theme, isSm)
                             : RenderTextblock(articleIndex, article, theme, isSm)}
@@ -292,75 +255,6 @@ const LibraryArticle = ({ article, articleIndex }) => {
                 </Link>
             </StandardCard>
         </StyledGridItem>
-        // <Grid item xs={12} md={4} sx={{ paddingTop: '0px' }}>
-        //     <StandardCard style={{ border: '1px solid #d1d0d2' }} noPadding noHeader>
-        //         <Grid container>
-        //             {/* Image Location */}
-        //             <Grid item xs={12}>
-        //                 <div style={{ width: '100%', height: 0, position: 'relative', paddingBottom: '66.667%' }}>
-        //                     <img
-        //                         src="/images/DE_Accessibility_DrupalCard.jpg"
-        //                         style={{
-        //                             position: 'absolute',
-        //                             top: 0,
-        //                             left: 0,
-        //                             height: '100%',
-        //                             width: '100%',
-        //                             objectFit: 'cover',
-        //                             objectPosition: 'center',
-        //                         }}
-        //                     />
-        //                 </div>
-        //             </Grid>
-        //             <Grid item xs={12}>
-        //                 <div
-        //                     style={{
-        //                         display: 'flex',
-        //                         flexDirection: 'column',
-        //                         alignItems: 'left',
-        //                         height: '100%',
-        //                         justifyContent: 'center',
-        //                         paddingLeft: 20,
-        //                         // paddingBottom: 20,
-        //                     }}
-        //                 >
-        //                     <Typography
-        //                         component={'p'}
-        //                         sx={{
-        //                             marginTop: '0.5em',
-        //                             marginBottom: '0',
-        //                             fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
-        //                             color: '#aaa',
-        //                             fontWeight: 500,
-        //                         }}
-        //                     >
-        //                         Research fellowships
-        //                     </Typography>
-        //                     <Typography component={'h2'} sx={{ marginTop: '0', fontSize: '24px', fontWeight: 500 }}>
-        //                         Rae and George Hammer Memorial
-        //                     </Typography>
-        //                     <Typography
-        //                         component={'p'}
-        //                         sx={{
-        //                             paddingBottom: '20px',
-        //                             marginTop: '0.5em',
-        //                             fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
-        //                         }}
-        //                     >
-        //                         Visiting research fellowship: up to $2,500 for students from universities outside of
-        //                         Brisbane to access our Fryer library collections
-        //                     </Typography>
-        //                 </div>
-        //             </Grid>
-        //         </Grid>
-        //     </StandardCard>
-        // </Grid>
-        // <Grid item xs={12} md={4} sx={{ paddingTop: '0px' }}>
-        //     <StandardCard style={{ border: '1px solid #d1d0d2' }}>item 3</StandardCard>
-        // </Grid>
-        // <Grid item xs={12} md={4} sx={{ paddingTop: '0px' }}>
-        //     <StandardCard style={{ border: '1px solid #d1d0d2' }}>item 4</StandardCard>
-        // </Grid>
     );
 };
 
