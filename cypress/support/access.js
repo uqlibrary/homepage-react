@@ -1,24 +1,18 @@
-export const hasPanels = (optionsTheUserShouldSee, loggedin = true) => {
-    const availableOptions = new Map();
-    availableOptions.set('computer-availability', {
-        title: 'Popular library hours (placeholder)',
-        content: 'Architecture',
-    });
-    availableOptions.set('learning-resources', { title: 'Learning resources', content: 'Search by' });
-    availableOptions.set('library-hours', { title: 'Library hours', content: 'Study space' });
-    availableOptions.set('library-services', { title: 'Library services', content: 'Services for' });
-    availableOptions.set('training', { title: 'Training', content: 'Online' });
+export const hasPanels = optionsTheUserShouldSee => {
+    const possiblePanels = new Map();
+    possiblePanels.set('learning-resources', { title: 'Learning resources', content: 'Search by' });
+    // probably not used - try without
+    possiblePanels.set('library-services', { title: 'Library services', content: 'Services for' });
+    possiblePanels.set('training', { title: 'Training', content: 'Online' });
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
-        expect(
-            [...availableOptions.keys()].includes(item),
-            `panel option unexpectedly supplied for panel test: ${item}`,
-        ).to.be.true;
+        expect([...possiblePanels.keys()].includes(item), `panel option unexpectedly supplied for panel test: ${item}`)
+            .to.be.true;
     });
 
     // eslint-disable-next-line guard-for-in
-    for (const [key, value] of availableOptions) {
+    for (const [key, value] of possiblePanels) {
         expect(typeof key).to.equal('string');
         expect(key.length).to.be.greaterThan(0);
         expect(typeof value.title).to.equal('string');
