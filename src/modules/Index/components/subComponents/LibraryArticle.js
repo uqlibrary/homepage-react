@@ -11,9 +11,13 @@ import { Link } from 'react-router-dom';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 
-const StyledGridItem = styled(Grid)(({ articleIndex, theme }) => {
-    console.log('articleIndex:', articleIndex); // Log the articleIndex value
+const fallBackImage = require('../../../../../public/images/article_placeholder.png');
 
+const loadFallbackImage = image => {
+    image.src = fallBackImage;
+};
+
+const StyledGridItem = styled(Grid)(({ articleIndex, theme }) => {
     return {
         /* Parent */
         [theme.breakpoints.up('xs')]: {
@@ -21,9 +25,10 @@ const StyledGridItem = styled(Grid)(({ articleIndex, theme }) => {
             paddingLeft: '24px !important',
         },
         [theme.breakpoints.up('sm')]: {
-            paddingTop: '32px !important',
+            paddingTop: articleIndex === 0 ? '24px !important' : '32px !important',
             paddingLeft: '32px !important',
         },
+        /* items and utility styles */
         '.article-card': {
             [theme.breakpoints.up('xs')]: {
                 border: articleIndex === 0 ? '1px solid #dcdcdd' : 'none',
@@ -38,6 +43,44 @@ const StyledGridItem = styled(Grid)(({ articleIndex, theme }) => {
                 },
             },
         },
+        '.ArticleCategory': {
+            color: '#666 !important',
+            fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
+            fontWeight: 500,
+            marginBottom: '0',
+            textDecoration: 'none !important',
+            [theme.breakpoints.up('xs')]: {
+                paddingTop: articleIndex === 0 ? '24px !important' : 'none',
+            },
+            [theme.breakpoints.up('sm')]: {
+                paddingTop: '0px !important',
+            },
+        },
+        '.ArticleTextContainer': {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'left',
+            height: '100%',
+            justifyContent: articleIndex === 0 ? 'center' : 'top',
+            paddingTop: '0px !important',
+            // paddingBottom: '24px',
+            [theme.breakpoints.up('xs')]: {
+                paddingLeft: articleIndex !== 0 ? 0 : 24,
+                paddingRight: articleIndex !== 0 ? 0 : 24,
+                paddingBottom: '24px',
+            },
+            [theme.breakpoints.up('sm')]: {
+                paddingLeft: 24,
+                paddingRight: 24,
+                paddingBottom: articleIndex !== 0 ? 0 : 24,
+            },
+            [theme.breakpoints.up('md')]: {
+                paddingLeft: 24,
+                paddingRight: 24,
+                paddingBottom: articleIndex !== 0 ? 0 : 24,
+            },
+        },
+        '.ArticleTitle': {},
         a: {
             textDecoration: 'none',
             '&:hover': {
@@ -63,7 +106,6 @@ const StyledGridItem = styled(Grid)(({ articleIndex, theme }) => {
 
 const RenderImage = (articleIndex, article, theme, isSm) => {
     return (
-        // <Grid item xs={articleIndex === 0 ? 12 : 3} md={articleIndex === 0 ? 6 : 12}>
         <Box
             sx={{
                 width: {
@@ -78,7 +120,6 @@ const RenderImage = (articleIndex, article, theme, isSm) => {
             <div
                 style={{
                     width: '100%',
-                    height: 0,
                     position: 'relative',
                     paddingBottom: isSm && articleIndex !== 0 ? '91.534%' : '66.667%',
                 }}
@@ -95,6 +136,7 @@ const RenderImage = (articleIndex, article, theme, isSm) => {
                         objectPosition: 'center',
                     }}
                     alt={article.title}
+                    onError={() => loadFallbackImage(event.target)}
                 />
             </div>
         </Box>
@@ -103,7 +145,6 @@ const RenderImage = (articleIndex, article, theme, isSm) => {
 };
 
 const RenderTextblock = (articleIndex, article, theme, isSm) => {
-    console.log(article);
     return (
         <Box
             sx={{
@@ -114,33 +155,22 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                     lg: articleIndex === 0 ? '50%' : '100%',
                     xl: articleIndex === 0 ? '50%' : '100%',
                 },
-                // minHeight: isSm ? '145px' : '180px',
-                minHeight: {
-                    xs: '145px',
-                    sm: '180px',
-                    md: '260px',
-                    lg: '180px',
-                    xl: '180px',
+                paddingBottom: {
+                    xs: articleIndex !== 0 ? '0px' : '24px',
+                    sm: articleIndex === 0 ? '0px' : '24px',
+                    md: articleIndex === 0 ? '0px' : '24px',
+                    lg: articleIndex === 0 ? '0px' : '24px',
+                    xl: articleIndex === 0 ? '0px' : '24px',
                 },
             }}
-            className="article-text-container"
+            className="ArticleContainer"
         >
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'left',
-                    height: '100%',
-                    justifyContent: articleIndex === 0 ? 'center' : 'top',
-                    paddingLeft: isSm && articleIndex !== 0 ? 0 : 24,
-                    paddingRight: isSm && articleIndex !== 0 ? 0 : 24,
-                }}
-            >
+            <div className="ArticleTextContainer">
                 <Typography
                     component={'p'}
                     className={'ArticleCategory'}
                     sx={{
-                        marginTop: isSm ? '0' : '0.5em',
+                        marginTop: isSm || articleIndex === 0 ? '0' : '24px',
                         marginBottom: '0',
                         fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
                         color: '#666 !important',
@@ -150,6 +180,7 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                 </Typography>
                 <Typography
                     component={'h3'}
+                    className={'ArticleTitle'}
                     sx={{
                         lineHeight: '1.2',
                         marginTop: '0',
@@ -157,39 +188,48 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                         fontSize: isSm ? '22px' : '24px',
                         fontWeight: 500,
                         marginRight: isSm ? '16px' : '0px',
+                        height: {
+                            sx: 'auto',
+                            sm: articleIndex === 0 ? 'auto' : '116px',
+                            md: articleIndex === 0 ? 'auto' : '116px',
+                            lg: articleIndex === 0 ? 'auto' : '116px',
+                            xl: articleIndex === 0 ? 'auto' : '116px',
+                        },
+                        overflow: 'hidden',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 4,
+                        WebkitBoxOrient: 'vertical',
+                        textOverflow: 'ellipsis',
+                        // marginBottom: '24px',
                     }}
                     data-testid={`article-${articleIndex + 1}-title`}
                 >
                     {article.title}
                 </Typography>
-                <Typography
-                    component={'p'}
-                    sx={{
-                        marginTop: '0.5em',
-                        fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
-                        fontWeight: '300 !important',
-                        letterSpacing: '.01rem !important',
-                        textDecoration: 'none !important',
-                        marginBottom: '20px',
-                    }}
-                    className={'ArticleDescription'}
-                >
-                    {articleIndex === 0 && article.description}
-                </Typography>
+                {!!article.description && (
+                    <Typography
+                        component={'p'}
+                        sx={{
+                            marginTop: '0.5em',
+                            fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
+                            fontWeight: '300 !important',
+                            letterSpacing: '.01rem !important',
+                            textDecoration: 'none !important',
+                        }}
+                        className={'ArticleDescription'}
+                    >
+                        {articleIndex === 0 && article.description}
+                    </Typography>
+                )}
             </div>
-            {/* </Grid> */}
         </Box>
     );
 };
 
 const LibraryArticle = ({ article, articleIndex }) => {
     const theme = useTheme();
-    console.log(theme.breakpoints);
-    const isLg = useMediaQuery(theme.breakpoints.up('lg'));
-    const isMd = useMediaQuery(theme.breakpoints.up('md'));
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
-    console.log('What is this', !window.matchMedia(theme.breakpoints.down('xs')).matches);
     return (
         <StyledGridItem
             articleIndex={articleIndex}
@@ -202,12 +242,10 @@ const LibraryArticle = ({ article, articleIndex }) => {
         >
             <StandardCard className={'article-card'} noPadding noHeader>
                 <Link to={article.canonical_url}>
-                    {/* Example Wide item - to componentise */}
                     <Grid container sx={{ borderBottom: isSm ? '1px solid #ddd' : 'none' }}>
                         {(articleIndex === 0 && isSmUp) || (articleIndex !== 0 && isSm)
                             ? RenderTextblock(articleIndex, article, theme, isSm)
                             : RenderImage(articleIndex, article, theme, isSm)}
-                        {/* Image Location */}
                         {(articleIndex === 0 && isSmUp) || (articleIndex !== 0 && isSm)
                             ? RenderImage(articleIndex, article, theme, isSm)
                             : RenderTextblock(articleIndex, article, theme, isSm)}
@@ -215,75 +253,6 @@ const LibraryArticle = ({ article, articleIndex }) => {
                 </Link>
             </StandardCard>
         </StyledGridItem>
-        // <Grid item xs={12} md={4} sx={{ paddingTop: '0px' }}>
-        //     <StandardCard style={{ border: '1px solid #d1d0d2' }} noPadding noHeader>
-        //         <Grid container>
-        //             {/* Image Location */}
-        //             <Grid item xs={12}>
-        //                 <div style={{ width: '100%', height: 0, position: 'relative', paddingBottom: '66.667%' }}>
-        //                     <img
-        //                         src="/images/DE_Accessibility_DrupalCard.jpg"
-        //                         style={{
-        //                             position: 'absolute',
-        //                             top: 0,
-        //                             left: 0,
-        //                             height: '100%',
-        //                             width: '100%',
-        //                             objectFit: 'cover',
-        //                             objectPosition: 'center',
-        //                         }}
-        //                     />
-        //                 </div>
-        //             </Grid>
-        //             <Grid item xs={12}>
-        //                 <div
-        //                     style={{
-        //                         display: 'flex',
-        //                         flexDirection: 'column',
-        //                         alignItems: 'left',
-        //                         height: '100%',
-        //                         justifyContent: 'center',
-        //                         paddingLeft: 20,
-        //                         // paddingBottom: 20,
-        //                     }}
-        //                 >
-        //                     <Typography
-        //                         component={'p'}
-        //                         sx={{
-        //                             marginTop: '0.5em',
-        //                             marginBottom: '0',
-        //                             fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
-        //                             color: '#aaa',
-        //                             fontWeight: 500,
-        //                         }}
-        //                     >
-        //                         Research fellowships
-        //                     </Typography>
-        //                     <Typography component={'h2'} sx={{ marginTop: '0', fontSize: '24px', fontWeight: 500 }}>
-        //                         Rae and George Hammer Memorial
-        //                     </Typography>
-        //                     <Typography
-        //                         component={'p'}
-        //                         sx={{
-        //                             paddingBottom: '20px',
-        //                             marginTop: '0.5em',
-        //                             fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
-        //                         }}
-        //                     >
-        //                         Visiting research fellowship: up to $2,500 for students from universities outside of
-        //                         Brisbane to access our Fryer library collections
-        //                     </Typography>
-        //                 </div>
-        //             </Grid>
-        //         </Grid>
-        //     </StandardCard>
-        // </Grid>
-        // <Grid item xs={12} md={4} sx={{ paddingTop: '0px' }}>
-        //     <StandardCard style={{ border: '1px solid #d1d0d2' }}>item 3</StandardCard>
-        // </Grid>
-        // <Grid item xs={12} md={4} sx={{ paddingTop: '0px' }}>
-        //     <StandardCard style={{ border: '1px solid #d1d0d2' }}>item 4</StandardCard>
-        // </Grid>
     );
 };
 
