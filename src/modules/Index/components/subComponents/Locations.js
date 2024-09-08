@@ -3,8 +3,6 @@ import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 
-import matchSorter from 'match-sorter';
-
 import Grid from '@mui/material/Grid';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
@@ -107,8 +105,7 @@ const MyLoader = props => (
         <rect x="65%" y="115" rx="3" ry="3" width="17%" height="5" />
     </ContentLoader>
 );
-const displayedDepartment = 'Study space';
-const departmentsMap = [displayedDepartment];
+const departmentsMap = ['Collections & space', 'Study space'];
 export const ariaLabelForLocation = item => {
     const name = item.name;
     const hours =
