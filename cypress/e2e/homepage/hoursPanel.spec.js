@@ -71,16 +71,16 @@ context('Library Opening Locations Homepage Panel', () => {
         cy.get('[data-testid="hours-item-central"] div:first-child').contains('Central Library');
         cy.get('[data-testid="hours-item-central"] div:nth-child(2)').contains('24 Hours');
 
-        cy.log('Hervey Bay has an empty departments field, so we see "See Location');
-        cy.get('[data-testid="hours-item-herveybay"] div:first-child')
+        cy.log('Fryer has no departments we show times from, so we see "See Location');
+        cy.get('[data-testid="hours-item-fryer"] div:first-child')
             .should('exist')
-            .contains('Hervey Bay');
-        cy.get('[data-testid="hours-item-herveybay"] div:nth-child(2)').contains('See location');
+            .contains('FW Robinson Reading Room');
+        cy.get('[data-testid="hours-item-fryer"] div:nth-child(2)').contains('See location');
 
-        cy.log('Rockhampton has a missing department field (should never happen) so we see "See location"');
-        cy.get('[data-testid="hours-item-rockhampton"] div:first-child')
+        cy.log('Whitty has a missing department field (should never happen) so we see "See location"');
+        cy.get('[data-testid="hours-item-whitty-mater"] div:first-child')
             .should('exist')
-            .contains('Rockhampton');
-        cy.get('[data-testid="hours-item-rockhampton"] div:nth-child(2)').contains('See location');
+            .contains('Whitty building, Mater');
+        cy.get('[data-testid="hours-item-whitty-mater"] div:nth-child(2)').contains('See location');
     });
 });
