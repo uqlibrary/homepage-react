@@ -6,26 +6,57 @@ import ContentLoader from 'react-content-loader';
 import Grid from '@mui/material/Grid';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 
 import { locale as locationLocale } from 'config/locale';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
-    ['&.flexWrapper']: {
+    ['&.locations-wrapper']: {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
     },
-    ['& .row']: {
+    ['& .locations-wrapper-detail']: {
+        flexGrow: 1,
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        [theme.breakpoints.down('md')]: {
+            overflowX: 'hidden',
+            overflowY: 'hidden',
+        },
+    },
+    ['& .table-row']: {
         fontSize: '1.1em',
         fontWeight: 500,
         letterSpacing: '0.16px',
-        padding: '16px 0 0 0',
+        marginLeft: 8,
+        padding: '4px 0 4px 0',
+        transition: 'all 0.3s ease',
         ['& a']: {
             color: theme.palette.primary.light,
             textDecoration: 'underline',
         },
+        '@media (max-width: 900px)': {
+            maxWidth: '98%',
+        },
+        '@media (min-width: 900px)': {
+            maxWidth: '785px',
+        },
+        '&:hover': {
+            backgroundColor: '#f3f3f4', // $grey-50	Background colour to highlight sections, cards or panes
+        },
+    },
+    '& .table-header-cell': {
+        fontWeight: 'bold',
+    },
+    '& .table-cell-hours': {
+        fontWeight: 400,
+    },
+    '& .table-cell-library-name': {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
     },
     '& .occupancy': {
         backgroundColor: 'grey',
@@ -39,14 +70,8 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             display: 'block',
             borderRadius: '20px',
         },
-    },
-    ['& .flexContent']: {
-        flexGrow: 1,
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        [theme.breakpoints.down('md')]: {
-            overflowX: 'hidden',
-            overflowY: 'hidden',
+        '& span span': {
+            paddingLeft: '24px',
         },
     },
     ['& .outlink']: {
@@ -146,7 +171,6 @@ export const hasDepartments = item => {
 };
 
 const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
-    const theme = useTheme();
     const cleanedHours =
         (!libHoursError &&
             !!libHours &&
@@ -188,13 +212,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
             // eslint-disable-next-line no-nested-ternary
             return textA < textB ? -1 : textA > textB ? 1 : /* istanbul ignore next */ 0;
         });
-    // const sortedHours =
-    //     !!account && !!account.id
-    //         ? matchSorter(alphaHours, {
-    //               keys: ['campus'],
-    //               threshold: matchSorter.rankings.NO_MATCH,
-    //           })
-    //         : alphaHours;
     const sortedHours = alphaHours.sort((a, b) => {
         if (a.abbr === 'AskUs') return 1; // Move 'askus' to the end
         if (b.abbr === 'AskUs') return -1; // Move 'askus' to the end
@@ -205,18 +222,20 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
         const departmentsMapUsed = departmentsMapIn ?? departmentsMap;
         return item.departments?.filter(d => departmentsMapUsed.includes(d.name))?.find(d => d.currently_open === true);
     };
-    const getTestid = string => {
+    const getidFromname = string => {
         // standardise a string
         return string.toLowerCase().replace(' ', '-');
     };
     return (
         <StandardCard noPadding standardCardId="locations-panel">
             <StyledWrapper
-                className={`flexWrapper ${!!account && !!account.id ? 'componentHeight' : 'componentHeightPublic'}`}
+                className={`locations-wrapper ${
+                    !!account && !!account.id ? 'componentHeight' : 'componentHeightPublic'
+                }`}
             >
                 {!!libHoursError && (
                     /* istanbul ignore next */ <Fade in={!libHoursLoading} timeout={1000}>
-                        <div className={'flexContent'}>
+                        <div className={'locations-wrapper-detail'}>
                             <Typography style={{ padding: '1rem' }}>
                                 We can’t load opening hours right now. Please refresh your browser or try again later.
                             </Typography>
@@ -225,34 +244,65 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                 )}
                 {!libHoursError && !!libHours && !libHoursLoading && (
                     <Fade in={!libHoursLoading} timeout={1000}>
-                        <div className={'flexContent'}>
+                        <div className={'locations-wrapper-detail'} role="table">
                             <p>
                                 Note: made up occupancy data (random numbers) also, pretending Gatton isnt returning
-                                data atm
+                                occupancy data atm
                             </p>
+                            <Grid container spacing={1} className="table-row" alignItems={'flex-start'} role="row">
+                                <Grid item xs={7}>
+                                    <Grid container>
+                                        <Grid
+                                            item
+                                            xs
+                                            noWrap
+                                            className={'table-cell-library-name'}
+                                            role="columnheader"
+                                            id="locations-header-library"
+                                        >
+                                            <Typography component={'h2'} className={'table-header-cell'}>
+                                                Library
+                                            </Typography>
+                                        </Grid>
+                                        <Grid
+                                            item
+                                            sx={{
+                                                display: {
+                                                    xs: 'none',
+                                                    // at about 700, the Name becomes unreadable
+                                                    // then we stop showing the times
+                                                    '@media (min-width: 700px)': {
+                                                        display: 'block',
+                                                    },
+                                                },
+                                            }}
+                                            role="columnheader"
+                                            id="locations-header-hours"
+                                        >
+                                            <Typography component={'h2'} className={'table-header-cell'}>
+                                                Opening hours
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid item xs={5} role="columnheader" id="locations-header-busyness">
+                                    <Typography component={'h2'} className={'table-header-cell'}>
+                                        Busy level
+                                    </Typography>
+                                </Grid>
+                            </Grid>
                             {!!sortedHours &&
                                 sortedHours.length > 1 &&
                                 sortedHours.map((item, index) => {
                                     return (
                                         <Grid
                                             container
-                                            data-testid={getTestid(`hours-item-${item.abbr}`)}
+                                            data-testid={getidFromname(`hours-item-${item.abbr}`)}
                                             spacing={1}
                                             key={index}
-                                            className={`row location-${item.abbr.toLowerCase()}`}
+                                            className={`table-row location-${item.abbr.toLowerCase()}`}
                                             alignItems={'flex-start'}
-                                            style={{
-                                                marginLeft: 8,
-                                                width: '70%',
-                                                paddingTop: '4px',
-                                                paddingBottom: '4px',
-                                                transition: 'all 0.3s ease',
-                                            }}
-                                            sx={{
-                                                '&:hover': {
-                                                    backgroundColor: theme.palette.secondary.main,
-                                                },
-                                            }}
+                                            role="row"
                                         >
                                             <Grid item xs={7}>
                                                 <Grid container>
@@ -260,25 +310,23 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                         item
                                                         xs
                                                         noWrap
-                                                        sx={{
-                                                            overflow: 'hidden',
-                                                            textOverflow: 'ellipsis',
-                                                            whiteSpace: 'nowrap',
-                                                        }}
-                                                        data-analyticsid={`hours-item-wrapper-${index}`}
+                                                        className={'table-cell-library-name'}
+                                                        role="cell"
+                                                        aria-labelledby="locations-header-library"
                                                     >
                                                         <a
                                                             aria-label={ariaLabelForLocation(item)}
                                                             data-analyticsid={`hours-item-${index}`}
                                                             href={item.url}
                                                         >
-                                                            {item.name}
+                                                            <span id={`${getidFromname(`hours-item-${item.abbr}`)}`}>
+                                                                {item.name}
+                                                            </span>
                                                         </a>
                                                     </Grid>
                                                     <Grid
-                                                        className="hours"
+                                                        className={'table-cell-hours'}
                                                         item
-                                                        style={{ fontWeight: 400 }}
                                                         sx={{
                                                             display: {
                                                                 xs: 'none',
@@ -289,6 +337,11 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                                 },
                                                             },
                                                         }}
+                                                        role="cell"
+                                                        aria-labelledby={
+                                                            'locations-header-hours ' +
+                                                            `${getidFromname(`hours-item-${item.abbr}`)}`
+                                                        }
                                                     >
                                                         {(() => {
                                                             if (item.abbr === 'AskUs') {
@@ -321,7 +374,12 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                 </Grid>
                                             </Grid>
                                             {item.abbr !== 'AskUs' && item.busyness !== null && (
-                                                <Grid item xs={5}>
+                                                <Grid
+                                                    item
+                                                    xs={5}
+                                                    role="cell"
+                                                    aria-labelledby="locations-header-busyness"
+                                                >
                                                     <div className="occupancy">
                                                         <span
                                                             className="full"
@@ -332,7 +390,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                                         : 0,
                                                             }}
                                                         >
-                                                            <span style={{ paddingLeft: '24px' }}>
+                                                            <span>
                                                                 {!hasDepartments(item) ||
                                                                 (isOpen(item) && item.busyness > 0)
                                                                     ? `${item.busyness}%`
