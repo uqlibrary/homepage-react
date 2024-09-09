@@ -158,6 +158,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         return {
                             name: item.name,
                             hours: item.rendered,
+                            currently_open: item.times?.currently_open,
                         };
                     });
                 }
@@ -198,9 +199,9 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
         return a.abbr?.localeCompare(b.abbr); // Sort the rest alphabetically
     });
 
-    const isOpen = item => {
-        const department = item.departments?.find(d => d.name === 'Study space');
-        return department?.hours !== 'Closed';
+    const isOpen = (item, departmentsMapIn = null) => {
+        const departmentsMapUsed = departmentsMapIn ?? departmentsMap;
+        return item.departments?.filter(d => departmentsMapUsed.includes(d.name))?.find(d => d.currently_open === true);
     };
     const getTestid = string => {
         // standardise a string
@@ -251,14 +252,22 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                     if (item.abbr === 'AskUs') {
                                                         return item.departments.map(department => {
                                                             if (['Chat'].includes(department.name)) {
-                                                                return <Typography>{department.hours}</Typography>;
+                                                                return isOpen(item, ['Chat']) ? (
+                                                                    <Typography>{department.hours}</Typography>
+                                                                ) : (
+                                                                    <Typography>Closed</Typography>
+                                                                );
                                                             }
                                                             return null;
                                                         });
                                                     } else if (hasDepartments(item)) {
                                                         return item.departments.map(department => {
                                                             if (departmentsMap.includes(department.name)) {
-                                                                return <Typography>{department.hours}</Typography>;
+                                                                return isOpen(item) ? (
+                                                                    <Typography>{department.hours}</Typography>
+                                                                ) : (
+                                                                    <Typography>Closed</Typography>
+                                                                );
                                                             }
                                                             return null;
                                                         });
@@ -272,10 +281,18 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                     <div className="occupancy">
                                                         <span
                                                             className="full"
-                                                            style={{ width: isOpen(item) ? `${item.busyness}%` : 0 }}
+                                                            style={{
+                                                                width:
+                                                                    !hasDepartments(item) || isOpen(item)
+                                                                        ? `${item.busyness}%`
+                                                                        : 0,
+                                                            }}
                                                         >
                                                             <span style={{ paddingLeft: '24px' }}>
-                                                                {isOpen(item) ? `${item.busyness}%` : 'Closed'}
+                                                                {!hasDepartments(item) ||
+                                                                (isOpen(item) && item.busyness > 0)
+                                                                    ? `${item.busyness}%`
+                                                                    : 'Closed'}
                                                             </span>
                                                         </span>
                                                     </div>
