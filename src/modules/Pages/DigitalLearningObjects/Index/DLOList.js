@@ -613,7 +613,7 @@ export const DLOList = ({
             const updateFilters = [...selectedFilters, individualFilterId];
             setSelectedFilters(updateFilters);
             window.dataLayer.push({
-                event: 'reusable_component_click',
+                event: 'reusable_component_event_click',
                 'custom_event.data-analyticsid': e.target.labels[0].innerText,
             });
 
