@@ -230,6 +230,62 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                 Note: made up occupancy data (random numbers) also, pretending Gatton isnt returning
                                 data atm
                             </p>
+                            <Grid
+                                container
+                                spacing={1}
+                                className="row"
+                                alignItems={'flex-start'}
+                                style={{
+                                    marginLeft: 8,
+                                    width: '70%',
+                                    paddingTop: '4px',
+                                    paddingBottom: '4px',
+                                    transition: 'all 0.3s ease',
+                                }}
+                            >
+                                <Grid item xs={7}>
+                                    <Grid container>
+                                        <Grid
+                                            item
+                                            xs
+                                            noWrap
+                                            sx={{
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap',
+                                            }}
+                                        >
+                                            <Typography component={'h2'} style={{ fontWeight: 'bold' }}>
+                                                Library
+                                            </Typography>
+                                        </Grid>
+                                        <Grid
+                                            className="hours"
+                                            item
+                                            style={{ fontWeight: 400 }}
+                                            sx={{
+                                                display: {
+                                                    xs: 'none',
+                                                    // at about 700, the Name becomes unreadable
+                                                    // then we stop showing the times
+                                                    '@media (min-width: 700px)': {
+                                                        display: 'block',
+                                                    },
+                                                },
+                                            }}
+                                        >
+                                            <Typography component={'h2'} style={{ fontWeight: 'bold' }}>
+                                                Opening hours
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid item xs={5}>
+                                    <Typography component={'h2'} style={{ fontWeight: 'bold' }}>
+                                        Busy level
+                                    </Typography>
+                                </Grid>
+                            </Grid>
                             {!!sortedHours &&
                                 sortedHours.length > 1 &&
                                 sortedHours.map((item, index) => {
@@ -244,8 +300,8 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                             style={{
                                                 marginLeft: 8,
                                                 width: '70%',
-                                                paddingTop: '4px',
-                                                paddingBottom: '4px',
+                                                paddingTop: '6px',
+                                                paddingBottom: '6px',
                                                 transition: 'all 0.3s ease',
                                             }}
                                             sx={{
@@ -265,7 +321,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                             textOverflow: 'ellipsis',
                                                             whiteSpace: 'nowrap',
                                                         }}
-                                                        data-analyticsid={`hours-item-wrapper-${index}`}
                                                     >
                                                         <a
                                                             aria-label={ariaLabelForLocation(item)}
