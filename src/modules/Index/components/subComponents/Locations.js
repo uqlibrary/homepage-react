@@ -164,7 +164,8 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                 }
                 const min = 20;
                 const max = 100;
-                const randomBusynessNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+                const randomBusynessNumber =
+                    item?.abbr === 'Gatton' ? null : Math.floor(Math.random() * (max - min + 1)) + min;
                 return {
                     name: item.name,
                     abbr: item.abbr,
@@ -224,7 +225,10 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                 {!libHoursError && !!libHours && !libHoursLoading && (
                     <Fade in={!libHoursLoading} timeout={1000}>
                         <div className={'flexContent'}>
-                            <p>Note: made up occupancy data (random numbers)!!</p>
+                            <p>
+                                Note: made up occupancy data (random numbers) also, pretending Gatton isnt returning
+                                data atm
+                            </p>
                             {!!sortedHours &&
                                 sortedHours.length > 1 &&
                                 sortedHours.map((item, index) => {
@@ -276,7 +280,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                     }
                                                 })()}
                                             </Grid>
-                                            {item.abbr !== 'AskUs' && (
+                                            {item.abbr !== 'AskUs' && item.busyness !== null && (
                                                 <Grid item xs={5}>
                                                     <div className="occupancy">
                                                         <span
