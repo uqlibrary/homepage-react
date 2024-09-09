@@ -205,7 +205,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
         const departmentsMapUsed = departmentsMapIn ?? departmentsMap;
         return item.departments?.filter(d => departmentsMapUsed.includes(d.name))?.find(d => d.currently_open === true);
     };
-    const getTestid = string => {
+    const getidFromname = string => {
         // standardise a string
         return string.toLowerCase().replace(' ', '-');
     };
@@ -225,7 +225,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                 )}
                 {!libHoursError && !!libHours && !libHoursLoading && (
                     <Fade in={!libHoursLoading} timeout={1000}>
-                        <div className={'flexContent'}>
+                        <div className={'flexContent'} role="table">
                             <p>
                                 Note: made up occupancy data (random numbers) also, pretending Gatton isnt returning
                                 data atm
@@ -242,6 +242,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                     paddingBottom: '4px',
                                     transition: 'all 0.3s ease',
                                 }}
+                                role="row"
                             >
                                 <Grid item xs={7}>
                                     <Grid container>
@@ -254,15 +255,15 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                 textOverflow: 'ellipsis',
                                                 whiteSpace: 'nowrap',
                                             }}
+                                            role="columnheader"
+                                            id="locations-header-library"
                                         >
                                             <Typography component={'h2'} style={{ fontWeight: 'bold' }}>
                                                 Library
                                             </Typography>
                                         </Grid>
                                         <Grid
-                                            className="hours"
                                             item
-                                            style={{ fontWeight: 400 }}
                                             sx={{
                                                 display: {
                                                     xs: 'none',
@@ -273,6 +274,8 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                     },
                                                 },
                                             }}
+                                            role="columnheader"
+                                            id="locations-header-hours"
                                         >
                                             <Typography component={'h2'} style={{ fontWeight: 'bold' }}>
                                                 Opening hours
@@ -280,7 +283,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                         </Grid>
                                     </Grid>
                                 </Grid>
-                                <Grid item xs={5}>
+                                <Grid item xs={5} role="columnheader" id="locations-header-busyness">
                                     <Typography component={'h2'} style={{ fontWeight: 'bold' }}>
                                         Busy level
                                     </Typography>
@@ -292,7 +295,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                     return (
                                         <Grid
                                             container
-                                            data-testid={getTestid(`hours-item-${item.abbr}`)}
+                                            data-testid={getidFromname(`hours-item-${item.abbr}`)}
                                             spacing={1}
                                             key={index}
                                             className={`row location-${item.abbr.toLowerCase()}`}
@@ -309,6 +312,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                     backgroundColor: theme.palette.secondary.main,
                                                 },
                                             }}
+                                            role="row"
                                         >
                                             <Grid item xs={7}>
                                                 <Grid container>
@@ -321,13 +325,17 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                             textOverflow: 'ellipsis',
                                                             whiteSpace: 'nowrap',
                                                         }}
+                                                        role="cell"
+                                                        aria-labelledby="locations-header-library"
                                                     >
                                                         <a
                                                             aria-label={ariaLabelForLocation(item)}
                                                             data-analyticsid={`hours-item-${index}`}
                                                             href={item.url}
                                                         >
-                                                            {item.name}
+                                                            <span id={`${getidFromname(`hours-item-${item.abbr}`)}`}>
+                                                                {item.name}
+                                                            </span>
                                                         </a>
                                                     </Grid>
                                                     <Grid
@@ -344,6 +352,11 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                                 },
                                                             },
                                                         }}
+                                                        role="cell"
+                                                        aria-labelledby={
+                                                            'locations-header-hours ' +
+                                                            `${getidFromname(`hours-item-${item.abbr}`)}`
+                                                        }
                                                     >
                                                         {(() => {
                                                             if (item.abbr === 'AskUs') {
@@ -376,7 +389,12 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                 </Grid>
                                             </Grid>
                                             {item.abbr !== 'AskUs' && item.busyness !== null && (
-                                                <Grid item xs={5}>
+                                                <Grid
+                                                    item
+                                                    xs={5}
+                                                    role="cell"
+                                                    aria-labelledby="locations-header-busyness"
+                                                >
                                                     <div className="occupancy">
                                                         <span
                                                             className="full"
