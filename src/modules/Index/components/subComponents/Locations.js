@@ -241,7 +241,18 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                             key={index}
                                             className={`row location-${item.abbr.toLowerCase()}`}
                                             alignItems={'flex-start'}
-                                            style={{ marginLeft: 8, width: '70%' }}
+                                            style={{
+                                                marginLeft: 8,
+                                                width: '70%',
+                                                paddingTop: '4px',
+                                                paddingBottom: '4px',
+                                                transition: 'all 0.3s ease',
+                                            }}
+                                            sx={{
+                                                '&:hover': {
+                                                    backgroundColor: theme.palette.secondary.main,
+                                                },
+                                            }}
                                         >
                                             <Grid item xs={7}>
                                                 <Grid container>
