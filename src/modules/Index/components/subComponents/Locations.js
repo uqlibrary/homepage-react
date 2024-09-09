@@ -163,7 +163,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                 }
                 const min = 20;
                 const max = 100;
-                const randomBusinessNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+                const randomBusynessNumber = Math.floor(Math.random() * (max - min + 1)) + min;
                 return {
                     name: item.name,
                     abbr: item.abbr,
@@ -173,7 +173,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                     departments,
                     // temporaily grab a random number that is the busyness %age
                     // will eventually be an api
-                    busyness: randomBusinessNumber,
+                    busyness: randomBusynessNumber,
                 };
             })) ||
         [];
@@ -246,22 +246,27 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                     {item.name}
                                                 </a>
                                             </Grid>
-                                            {hasDepartments(item) ? (
-                                                item.departments.map((department, index) => {
-                                                    if (departmentsMap.includes(department.name)) {
-                                                        return (
-                                                            <Grid item xs key={index} style={{ fontWeight: 400 }}>
-                                                                {department.hours}
-                                                            </Grid>
-                                                        );
+                                            <Grid className="hours" item xs style={{ fontWeight: 400 }}>
+                                                {(() => {
+                                                    if (item.abbr === 'AskUs') {
+                                                        return item.departments.map(department => {
+                                                            if (['Chat'].includes(department.name)) {
+                                                                return <Typography>{department.hours}</Typography>;
+                                                            }
+                                                            return null;
+                                                        });
+                                                    } else if (hasDepartments(item)) {
+                                                        return item.departments.map(department => {
+                                                            if (departmentsMap.includes(department.name)) {
+                                                                return <Typography>{department.hours}</Typography>;
+                                                            }
+                                                            return null;
+                                                        });
+                                                    } else {
+                                                        return <Typography>See location</Typography>;
                                                     }
-                                                    return null;
-                                                })
-                                            ) : (
-                                                <Grid item xs key={index} style={{ fontWeight: 400 }}>
-                                                    See location
-                                                </Grid>
-                                            )}
+                                                })()}
+                                            </Grid>
                                             {item.abbr !== 'AskUs' && (
                                                 <Grid item xs={5}>
                                                     <div className="occupancy">

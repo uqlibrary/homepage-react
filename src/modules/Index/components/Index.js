@@ -104,7 +104,7 @@ export const Index = ({
     drupalArticlesLoading,
     drupalArticlesError,
 }) => {
-    console.log('drupal article list in index feeder,', drupalArticleList);
+    // console.log('drupal article list in index feeder,', drupalArticleList);
     const dispatch = useDispatch();
 
     React.useEffect(() => {
