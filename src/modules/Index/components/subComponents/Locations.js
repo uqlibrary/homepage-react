@@ -236,7 +236,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                             key={index}
                                             className={`row location-${item.abbr.toLowerCase()}`}
                                             alignItems={'flex-start'}
-                                            style={{ marginLeft: 8, width: '98%' }}
+                                            style={{ marginLeft: 8, width: '70%' }}
                                         >
                                             <Grid item xs={5}>
                                                 <a
