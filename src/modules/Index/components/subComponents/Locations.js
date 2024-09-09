@@ -6,7 +6,7 @@ import ContentLoader from 'react-content-loader';
 import Grid from '@mui/material/Grid';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 
 import { locale as locationLocale } from 'config/locale';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -146,6 +146,7 @@ export const hasDepartments = item => {
 };
 
 const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
+    const theme = useTheme();
     const cleanedHours =
         (!libHoursError &&
             !!libHours &&
@@ -242,43 +243,71 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                             alignItems={'flex-start'}
                                             style={{ marginLeft: 8, width: '70%' }}
                                         >
-                                            <Grid item xs={5}>
-                                                <a
-                                                    aria-label={ariaLabelForLocation(item)}
-                                                    data-analyticsid={`hours-item-${index}`}
-                                                    href={item.url}
-                                                >
-                                                    {item.name}
-                                                </a>
-                                            </Grid>
-                                            <Grid className="hours" item xs style={{ fontWeight: 400 }}>
-                                                {(() => {
-                                                    if (item.abbr === 'AskUs') {
-                                                        return item.departments.map(department => {
-                                                            if (['Chat'].includes(department.name)) {
-                                                                return isOpen(item, ['Chat']) ? (
-                                                                    <Typography>{department.hours}</Typography>
-                                                                ) : (
-                                                                    <Typography>Closed</Typography>
-                                                                );
+                                            <Grid item xs={7}>
+                                                <Grid container>
+                                                    <Grid
+                                                        item
+                                                        xs
+                                                        noWrap
+                                                        sx={{
+                                                            overflow: 'hidden',
+                                                            textOverflow: 'ellipsis',
+                                                            whiteSpace: 'nowrap',
+                                                        }}
+                                                        data-analyticsid={`hours-item-wrapper-${index}`}
+                                                    >
+                                                        <a
+                                                            aria-label={ariaLabelForLocation(item)}
+                                                            data-analyticsid={`hours-item-${index}`}
+                                                            href={item.url}
+                                                        >
+                                                            {item.name}
+                                                        </a>
+                                                    </Grid>
+                                                    <Grid
+                                                        className="hours"
+                                                        item
+                                                        style={{ fontWeight: 400 }}
+                                                        sx={{
+                                                            display: {
+                                                                xs: 'none',
+                                                                // at about 700, the Name becomes unreadable
+                                                                // then we stop showing the times
+                                                                '@media (min-width: 700px)': {
+                                                                    display: 'block',
+                                                                },
+                                                            },
+                                                        }}
+                                                    >
+                                                        {(() => {
+                                                            if (item.abbr === 'AskUs') {
+                                                                return item.departments.map(department => {
+                                                                    if (['Chat'].includes(department.name)) {
+                                                                        return isOpen(item, ['Chat']) ? (
+                                                                            <Typography>{department.hours}</Typography>
+                                                                        ) : (
+                                                                            <Typography>Closed</Typography>
+                                                                        );
+                                                                    }
+                                                                    return null;
+                                                                });
+                                                            } else if (hasDepartments(item)) {
+                                                                return item.departments.map(department => {
+                                                                    if (departmentsMap.includes(department.name)) {
+                                                                        return isOpen(item) ? (
+                                                                            <Typography>{department.hours}</Typography>
+                                                                        ) : (
+                                                                            <Typography>Closed</Typography>
+                                                                        );
+                                                                    }
+                                                                    return null;
+                                                                });
+                                                            } else {
+                                                                return <Typography>See location</Typography>;
                                                             }
-                                                            return null;
-                                                        });
-                                                    } else if (hasDepartments(item)) {
-                                                        return item.departments.map(department => {
-                                                            if (departmentsMap.includes(department.name)) {
-                                                                return isOpen(item) ? (
-                                                                    <Typography>{department.hours}</Typography>
-                                                                ) : (
-                                                                    <Typography>Closed</Typography>
-                                                                );
-                                                            }
-                                                            return null;
-                                                        });
-                                                    } else {
-                                                        return <Typography>See location</Typography>;
-                                                    }
-                                                })()}
+                                                        })()}
+                                                    </Grid>
+                                                </Grid>
                                             </Grid>
                                             {item.abbr !== 'AskUs' && item.busyness !== null && (
                                                 <Grid item xs={5}>
