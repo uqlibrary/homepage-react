@@ -237,10 +237,17 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                 alignItems={'flex-start'}
                                 style={{
                                     marginLeft: 8,
-                                    width: '70%',
                                     paddingTop: '4px',
                                     paddingBottom: '4px',
                                     transition: 'all 0.3s ease',
+                                }}
+                                sx={{
+                                    '@media (max-width: 900px)': {
+                                        maxWidth: '98%',
+                                    },
+                                    '@media (min-width: 900px)': {
+                                        maxWidth: '785px',
+                                    },
                                 }}
                                 role="row"
                             >
@@ -302,12 +309,17 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                             alignItems={'flex-start'}
                                             style={{
                                                 marginLeft: 8,
-                                                width: '70%',
                                                 paddingTop: '6px',
                                                 paddingBottom: '6px',
                                                 transition: 'all 0.3s ease',
                                             }}
                                             sx={{
+                                                '@media (max-width: 900px)': {
+                                                    maxWidth: '98%',
+                                                },
+                                                '@media (min-width: 900px)': {
+                                                    maxWidth: '785px',
+                                                },
                                                 '&:hover': {
                                                     backgroundColor: theme.palette.secondary.main,
                                                 },
