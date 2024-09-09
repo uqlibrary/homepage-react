@@ -604,12 +604,18 @@ export const DLOList = ({
 
         const facetId = e.target.value;
 
+        // console.log('FACET ID', facetId, e.target.labels[0].innerText);
+
         const checkboxId = `${facetTypeSlug}-${facetId}`;
         const individualFilterId = `${facetTypeSlug}-${facetId}`;
 
         if (e?.target?.checked) {
             const updateFilters = [...selectedFilters, individualFilterId];
             setSelectedFilters(updateFilters);
+            window.dataLayer.push({
+                event: 'reusable_component_event_click',
+                'custom_event.data-analyticsid': e.target.labels[0].innerText,
+            });
 
             checkBoxArrayRef.current = [...checkBoxArrayRef.current, checkboxId];
         } else {
