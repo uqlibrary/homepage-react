@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 
-const fallBackImage = require('../../../../../public/images/article_placeholder.png');
+const fallBackImage = require('../../../../../public/images/article_placeholder.jpg');
 
 const loadFallbackImage = image => {
     image.src = fallBackImage;
