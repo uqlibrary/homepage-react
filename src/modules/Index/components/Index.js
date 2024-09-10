@@ -19,7 +19,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { lazyRetry } from 'helpers/general';
 
 import LibraryUpdates from 'modules/Index/components/subComponents/LibraryUpdates';
-import NavCardWrapper from './subComponents/NavCardWrapper';
+import NavigationCardWrapper from './subComponents/NavigationCardWrapper';
 import {
     loadLibHours,
     loadCompAvail,
@@ -212,7 +212,7 @@ export const Index = ({
                 </StandardPage>
             )}
 
-            <NavCardWrapper/>
+            <NavigationCardWrapper/>
 
             <LibraryUpdates drupalArticleList={drupalArticleList} />
         </React.Suspense>

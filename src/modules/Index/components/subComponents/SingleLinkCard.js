@@ -73,7 +73,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
     },
 }));
 
-const NavCard = ({ cardLabel, landingUrl }) => {
+const SingleLinkCard = ({ cardLabel, landingUrl }) => {
     return (
         <StyledGridItem item component="li" xs={12} md={6} lg={4}>
             <StyledLink border={1} p={1} to={landingUrl}>
@@ -84,9 +84,9 @@ const NavCard = ({ cardLabel, landingUrl }) => {
     );
 };
 
-NavCard.propTypes = {
+SingleLinkCard.propTypes = {
     cardLabel: PropTypes.string,
     landingUrl: PropTypes.string,
 };
 
-export default NavCard;
+export default SingleLinkCard;
