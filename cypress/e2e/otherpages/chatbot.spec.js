@@ -10,7 +10,12 @@ describe('Chatbot', () => {
         });
         it('works as expected', () => {
             cy.waitUntil(() => cy.get('article').should('exist'));
-            cy.contains('article', 'Hi, I’m the DEV Library Chatbot.');
+            cy.contains('article', 'provide your name');
+
+            cy.window().then(win => {
+                const value = win.sessionStorage.getItem('directLineToken');
+                expect(value).to.not.be.null; // for comparison with other test
+            });
         });
     });
     context('chatbot without session storage', () => {
@@ -22,27 +27,20 @@ describe('Chatbot', () => {
             cy.viewport(1300, 1000);
         });
         it('works without session storage', () => {
-            let oldCookie = { value: '' };
-            console.log('oldCookie=', oldCookie);
             cy.getCookie(testCookieName).then(cookie => {
-                console.log('1 cookie=', cookie);
-                oldCookie = cookie;
+                console.log(cookie);
             });
-            // cy.waitUntil(() =>
-            //     cy.getCookie(testCookieName).then(cookie => {
-            console.log('2 oldCookie=', oldCookie);
-            //         console.log('cookie=', cookie);
-            //         return oldCookie.value !== cookie.value;
-            //     }),
-            // );
 
             cy.waitUntil(() => cy.get('article').should('exist'));
-            cy.contains('article', 'Hi, I’m the DEV Library Chatbot.');
+            cy.contains('article', 'provide your name');
 
             cy.log('testCookieName=', testCookieName);
             cy.getCookie(testCookieName).then(cookie => {
-                console.log('cookie=', cookie);
                 expect(cookie).to.exist;
+            });
+            cy.window().then(win => {
+                const value = win.sessionStorage.getItem('directLineToken');
+                expect(value).to.be.null; // did not use staorage
             });
         });
     });
