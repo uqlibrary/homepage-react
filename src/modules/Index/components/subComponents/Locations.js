@@ -267,7 +267,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                         <Grid
                                             item
                                             xs
-                                            noWrap
                                             className={'table-cell-library-name'}
                                             role="columnheader"
                                             id="locations-header-library"
@@ -321,7 +320,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                     <Grid
                                                         item
                                                         xs
-                                                        noWrap
                                                         className={'table-cell-library-name'}
                                                         role="cell"
                                                         aria-labelledby="locations-header-library"
@@ -360,9 +358,17 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                                 return item.departments.map(department => {
                                                                     if (['Chat'].includes(department.name)) {
                                                                         return isOpen(item, ['Chat']) ? (
-                                                                            <Typography>{department.hours}</Typography>
+                                                                            <Typography
+                                                                                key={`chat-isopen-${department.lid}`}
+                                                                            >
+                                                                                {department.hours}
+                                                                            </Typography>
                                                                         ) : (
-                                                                            <Typography>Closed</Typography>
+                                                                            <Typography
+                                                                                key={`chat-isclosed-${department.lid}`}
+                                                                            >
+                                                                                Closed
+                                                                            </Typography>
                                                                         );
                                                                     }
                                                                     return null;
@@ -371,9 +377,17 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                                 return item.departments.map(department => {
                                                                     if (departmentsMap.includes(department.name)) {
                                                                         return isOpen(item) ? (
-                                                                            <Typography>{department.hours}</Typography>
+                                                                            <Typography
+                                                                                key={`department-isopen-${department.lid}`}
+                                                                            >
+                                                                                {department.hours}
+                                                                            </Typography>
                                                                         ) : (
-                                                                            <Typography>Closed</Typography>
+                                                                            <Typography
+                                                                                key={`department-isclosed-${department.lid}`}
+                                                                            >
+                                                                                Closed
+                                                                            </Typography>
                                                                         );
                                                                     }
                                                                     return null;
