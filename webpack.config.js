@@ -112,10 +112,17 @@ module.exports = {
         new HtmlWebpackPlugin({
             favicon: join(__dirname, 'public', 'favicon.ico'),
             filename: 'index.html',
-            reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
+            // reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
+            reusablejs:
+                'https://assets.library.uq.edu.au/reusable-webcomponents-development/chatbot-testenv/uq-lib-reusable.min.js',
             // reusablejs: 'http://localhost:8080/uq-lib-reusable.min.js',
             inject: true,
             template: join(__dirname, 'public', 'index.html'),
+        }),
+        new HtmlWebpackPlugin({
+            template: './public/chatbot.html',
+            filename: 'chatbot.html',
+            chunks: [], // No JS chunks needed for this page
         }),
         new ProgressBarPlugin({
             format: `  building webpack... [:bar] ${chalk.green.bold(
