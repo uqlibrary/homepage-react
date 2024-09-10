@@ -9,7 +9,7 @@ context('Personalised Homepage', () => {
         cy.visit('/?user=s1111111');
         cy.viewport(1300, 1000);
         // this type of user will see the following panels:
-        hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'training']);
+        hasPanels(['learning-resources', 'training']);
     });
 
     it('Renders a logged out user', () => {
@@ -21,7 +21,7 @@ context('Personalised Homepage', () => {
         cy.visit('/?user=s2222222');
         cy.viewport(1300, 1000);
 
-        hasPanels(['computer-availability', 'library-hours', 'training']);
+        hasPanels(['training']);
     });
 
     it('when session cookie auto expires the user logs out', () => {
@@ -37,90 +37,90 @@ context.skip('Extra tests per group that we might need later', () => {
         cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);
 
-        hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'training']);
+        hasPanels(['learning-resources', 'training']);
     });
 
     it('Renders a researcher home page correctly', () => {
         cy.visit('/?user=uqresearcher');
         cy.viewport(1300, 1000);
 
-        hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'training']);
+        hasPanels(['learning-resources', 'training']);
     });
 
     it('Renders a library staff administrator home page correctly', () => {
         cy.visit('/?user=digiteamMember');
         cy.viewport(1300, 1000);
 
-        hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'training']);
+        hasPanels(['learning-resources', 'training']);
     });
 
     it('Renders a Library staff member (without admin privs) home page correctly', () => {
         cy.visit('/?user=uqstaffnonpriv');
         cy.viewport(1300, 1000);
 
-        hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'training']);
+        hasPanels(['learning-resources', 'training']);
     });
 
     it('Renders a non-library staff member home page correctly', () => {
         cy.visit('/?user=uqpkopit');
         cy.viewport(1300, 1000);
 
-        hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'training']);
+        hasPanels(['learning-resources', 'training']);
     });
 
     it('Renders a paid Community EM member home page correctly', () => {
         cy.visit('/?user=emcommunity');
         cy.viewport(1300, 1000);
 
-        hasPanels(['computer-availability', 'library-hours', 'training']);
+        hasPanels(['training']);
     });
 
     it('Renders an Alumni (first year or paid) EM member home page correctly', () => {
         cy.visit('/?user=emalumni');
         cy.viewport(1300, 1000);
 
-        hasPanels(['computer-availability', 'library-hours', 'training']);
+        hasPanels(['training']);
     });
 
     it('Renders a Hospital EM member home page correctly', () => {
         cy.visit('/?user=emhospital');
         cy.viewport(1300, 1000);
 
-        hasPanels(['computer-availability', 'library-hours', 'training']);
+        hasPanels(['training']);
     });
 
     it('Renders an Associate EM member home page correctly', () => {
         cy.visit('/?user=emassociate');
         cy.viewport(1300, 1000);
 
-        hasPanels(['computer-availability', 'library-hours', 'training']);
+        hasPanels(['training']);
     });
 
     it('Renders a Fryer Library EM member home page correctly', () => {
         cy.visit('/?user=emfryer');
         cy.viewport(1300, 1000);
 
-        hasPanels(['computer-availability', 'library-hours', 'training']);
+        hasPanels(['training']);
     });
 
     it('Renders an Honorary EM member home page correctly', () => {
         cy.visit('/?user=emhonorary');
         cy.viewport(1300, 1000);
 
-        hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'training']);
+        hasPanels(['learning-resources', 'training']);
     });
 
     it('Renders a Short Form Credential course student home page correctly', () => {
         cy.visit('/?user=uqsfc');
         cy.viewport(1300, 1000);
 
-        hasPanels(['computer-availability', 'learning-resources', 'library-hours', 'training']);
+        hasPanels(['learning-resources', 'training']);
     });
 
     it('Renders a new user group home page correctly', () => {
         cy.visit('/?user=newUserGroup');
         cy.viewport(1300, 1000);
 
-        hasPanels(['computer-availability', 'library-hours', 'training']);
+        hasPanels(['training']);
     });
 });

@@ -8,9 +8,9 @@ describe('header', () => {
             cy.viewport(1280, 900);
 
             // once the page has loaded
-            cy.get('[data-testid="library-hours-panel"]')
+            cy.get('[data-testid="help-navigation-panel"]')
                 .should('exist')
-                .contains('Library hours');
+                .contains('Find and borrow');
             // then the homepage has the correct breadcrumbs
             cy.get('uq-site-header')
                 .shadow()
@@ -57,9 +57,9 @@ describe('header', () => {
                 });
             // show the page has fully loaded
             cy.url().should('eq', 'http://localhost:2020/?user=s1111111');
-            cy.get('[data-testid="library-hours-panel"]')
+            cy.get('[data-testid="help-navigation-panel"]')
                 .should('exist')
-                .contains('Library hours');
+                .contains('Find and borrow');
             // and the breadcrumbs are as expected:  learning resource breadcrumb has been removed :)
             cy.get('uq-site-header')
                 .shadow()
@@ -77,9 +77,9 @@ describe('header', () => {
             cy.viewport(1280, 900);
 
             // once the page has loaded
-            cy.get('[data-testid="library-hours-panel"]')
+            cy.get('[data-testid="help-navigation-panel"]')
                 .should('exist')
-                .contains('Library hours');
+                .contains('Find and borrow');
             // then the homepage has the correct breadcrumbs
             cy.get('uq-site-header')
                 .shadow()
@@ -126,9 +126,9 @@ describe('header', () => {
                 });
             // show the page has fully loaded
             cy.url().should('eq', 'http://localhost:2020/?user=s1111111');
-            cy.get('[data-testid="library-hours-panel"]')
+            cy.get('[data-testid="help-navigation-panel"]')
                 .should('exist')
-                .contains('Library hours');
+                .contains('Find and borrow');
             // and the breadcrumbs are as expected:  learning resource breadcrumb has been removed :)
             cy.get('uq-site-header')
                 .shadow()

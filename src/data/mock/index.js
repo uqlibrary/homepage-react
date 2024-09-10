@@ -147,7 +147,15 @@ mock.onGet(routes.TRAINING_API(10).apiUrl).reply(withDelay([200, training_object
 // .reply(withDelay([500, {}]));
 
 mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
-// .reply(withDelay([500, {}]));
+// mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
+//     if (responseType === 'error') {
+//         return [500, {}];
+//     } else if (responseType === 'missing') {
+//         return [404, {}];
+//     } else {
+//         return [200, libHours];
+//     }
+// });
 
 mock.onGet(routes.ALERTS_ALL_API().apiUrl).reply(withDelay([200, alertList]));
 mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(
@@ -1187,7 +1195,7 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ]),
     )
-    .onGet("https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json")
+    .onGet('https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json')
     .reply(() => [200, drupalArticles])
     .onAny()
     .reply(function(config) {
