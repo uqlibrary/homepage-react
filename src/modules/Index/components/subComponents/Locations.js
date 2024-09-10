@@ -226,6 +226,18 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
         // standardise a string
         return string.toLowerCase().replace(' ', '-');
     };
+    const busynessText = busyness => {
+        if (busyness <= 25) {
+            return 'Not busy';
+        }
+        if (busyness <= 50) {
+            return 'Moderately busy';
+        }
+        if (busyness <= 75) {
+            return 'Busy';
+        }
+        return 'Very busy';
+    };
     return (
         <StandardCard noPadding standardCardId="locations-panel">
             <StyledWrapper
@@ -389,11 +401,13 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                                         ? `${item.busyness}%`
                                                                         : 0,
                                                             }}
+                                                            title={busynessText(item.busyness)}
                                                         >
                                                             <span>
                                                                 {!hasDepartments(item) ||
                                                                 (isOpen(item) && item.busyness > 0)
-                                                                    ? `${item.busyness}%`
+                                                                    ? // ? `${item.busyness}%`
+                                                                      ''
                                                                     : 'Closed'}
                                                             </span>
                                                         </span>
