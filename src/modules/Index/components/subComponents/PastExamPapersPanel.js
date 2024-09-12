@@ -10,6 +10,7 @@ import { SubjectSearchDropdown } from 'modules/SharedComponents/SubjectSearchDro
 
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import { isStaff } from '../../../../helpers/access';
 
 export const getUrlForLearningResourceSpecificTab = (item, pageLocation, includeFullPath = false) => {
     const learningResourceParams = `/${item.classnumber.toLowerCase()}`;
@@ -51,6 +52,31 @@ export const PastExamPapersPanel = ({ account }) => {
 
     const learningResourceId = 'homepage-learningresource';
 
+    let displayedClasses;
+    if (account?.current_classes) {
+        displayedClasses = account?.current_classes;
+    } else if (isStaff(account)) {
+        displayedClasses = [
+            {
+                DESCR: 'Introductory French 1',
+                SUBJECT: 'FREN',
+                CATALOG_NBR: '1010',
+                classnumber: 'FREN1010',
+            },
+            {
+                DESCR: 'The Australian Experience',
+                SUBJECT: 'HIST',
+                CATALOG_NBR: '1201',
+                classnumber: 'HIST1201',
+            },
+            {
+                DESCR: 'Introduction to Philosophy: What is Philosophy?',
+                SUBJECT: 'PHIL',
+                CATALOG_NBR: '1002',
+                classnumber: 'PHIL1002',
+            },
+        ];
+    }
     return (
         <StandardCard
             subCard
@@ -68,8 +94,13 @@ export const PastExamPapersPanel = ({ account }) => {
                 elementId={learningResourceId}
                 navigateToLearningResourcePage={navigateToLearningResourcePage}
             />
+            {!account?.current_classes && isStaff(account) && (
+                <p style={{ paddingInline: '21px', marginTop: '10px' }}>
+                    Students see enrolled courses. Example links below:
+                </p>
+            )}
 
-            {!!account && !!account.current_classes && account.current_classes.length > 0 ? (
+            {!!displayedClasses && displayedClasses.length > 0 ? (
                 <Grid
                     container
                     spacing={1}
@@ -88,7 +119,7 @@ export const PastExamPapersPanel = ({ account }) => {
                             {locale.homepagePanel.userCourseTitle}
                         </Typography>
                     </Grid>
-                    {account.current_classes.map((item, index) => {
+                    {displayedClasses.map((item, index) => {
                         return (
                             <Grid
                                 item
