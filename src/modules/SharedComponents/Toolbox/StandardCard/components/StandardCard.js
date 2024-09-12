@@ -116,6 +116,8 @@ export class StandardCard extends Component {
                             variant: smallTitle ? 'h6' : 'h5',
                             component: subCard ? 'h3' : 'h2',
                             color: '#19151c',
+                            fontSize: '1.5rem',
+                            fontWeight: 500,
                             'data-testid': `${standardCardId}-header`,
                         }}
                         classes={{

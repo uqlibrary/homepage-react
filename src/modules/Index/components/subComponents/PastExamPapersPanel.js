@@ -2,15 +2,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
+
 import { fullPath } from 'config/routes';
-import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { SubjectSearchDropdown } from 'modules/SharedComponents/SubjectSearchDropdown';
 
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 import { isStaff } from 'helpers/access';
+
+const StyledLink = styled(Link)(({ theme }) => ({
+    color: theme.palette.primary.light,
+    fontWeight: 500,
+    paddingBlock: '2px',
+    textDecoration: 'underline',
+    transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
+    '&:hover': {
+        color: '#fff',
+        backgroundColor: theme.palette.primary.light,
+    },
+}));
 
 export const getPastExamPaperUrlForSubject = (item, pageLocation, includeFullPath = false) => {
     const learningResourceParams = `/${item.classnumber.toLowerCase()}`;
@@ -80,14 +93,16 @@ export const PastExamPapersPanel = ({ account }) => {
     return (
         <StandardCard
             subCard
-            style={{ border: '1px solid #d1d0d2' }}
+            style={{
+                border: '1px solid hsla(203, 50%, 30%, 0.15)',
+                borderRadius: '4px',
+                boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
+            }}
             fullHeight
             primaryHeader
             noPadding
             standardCardId="past-exam-papers-homepage-panel"
             title="Past exam papers"
-            // customTitleBgColor="white"
-            // customTitleColor="#51247A"
         >
             <SubjectSearchDropdown
                 displayType="compact"
@@ -116,7 +131,7 @@ export const PastExamPapersPanel = ({ account }) => {
                 >
                     <Grid item xs={12} style={{ marginTop: '-8px' }}>
                         <Typography component={'h4'} variant={'h6'}>
-                            {locale.homepagePanel.userCourseTitle}
+                            Your courses
                         </Typography>
                     </Grid>
                     {displayedClasses.map((item, index) => {
@@ -134,12 +149,12 @@ export const PastExamPapersPanel = ({ account }) => {
                                     paddingBottom: 8,
                                 }}
                             >
-                                <Link
+                                <StyledLink
                                     to={getPastExamPaperUrlForSubject(item, pageLocation)}
                                     data-testid={`past-exam-papers-panel-course-link-${index}`}
                                 >
                                     {item.classnumber}
-                                </Link>{' '}
+                                </StyledLink>{' '}
                                 {/* because the panel width is driven by window size, show a title
                                     so ellipsis doesn't hide some meaningful difference between course titles */}
                                 <span title={item.DESCR}>{item.DESCR}</span>
@@ -148,7 +163,7 @@ export const PastExamPapersPanel = ({ account }) => {
                     })}
                 </Grid>
             ) : (
-                <div style={{ marginLeft: 16 }}>
+                <div style={{ marginLeft: 24, marginTop: -10 }}>
                     <p>Your enrolled courses will appear here three weeks prior to the start of the semester.</p>
                     <p>Search for subjects above.</p>
                 </div>

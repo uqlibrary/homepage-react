@@ -11,6 +11,19 @@ import { SubjectSearchDropdown } from 'modules/SharedComponents/SubjectSearchDro
 
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
+
+const StyledLink = styled(Link)(({ theme }) => ({
+    color: theme.palette.primary.light,
+    fontWeight: 500,
+    paddingBlock: '2px',
+    textDecoration: 'underline',
+    transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
+    '&:hover': {
+        color: '#fff',
+        backgroundColor: theme.palette.primary.light,
+    },
+}));
 
 export const getUrlForLearningResourceSpecificTab = (
     item,
@@ -61,7 +74,11 @@ export const LearningResourcesPanel = ({ account }) => {
     return (
         <StandardCard
             subCard
-            style={{ border: '1px solid #d1d0d2' }}
+            style={{
+                border: '1px solid hsla(203, 50%, 30%, 0.15)',
+                borderRadius: '4px',
+                boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
+            }}
             fullHeight
             primaryHeader
             noPadding
@@ -114,12 +131,12 @@ export const LearningResourcesPanel = ({ account }) => {
                                     paddingBottom: 8,
                                 }}
                             >
-                                <Link
+                                <StyledLink
                                     to={getUrlForLearningResourceSpecificTab(item, pageLocation)}
                                     data-testid={`learning-resource-panel-course-link-${index}`}
                                 >
                                     {item.classnumber}
-                                </Link>{' '}
+                                </StyledLink>{' '}
                                 {/* because the panel width is driven by window size, show a title
                                     so ellipsis doesn't hide some meaningful difference between course titles */}
                                 <span title={item.DESCR}>{item.DESCR}</span>
@@ -128,7 +145,7 @@ export const LearningResourcesPanel = ({ account }) => {
                     })}
                 </Grid>
             ) : (
-                <div style={{ marginLeft: 16 }}>{locale.homepagePanel.noCourses}</div>
+                <div style={{ marginLeft: 24, marginTop: -10 }}>{locale.homepagePanel.noCourses}</div>
             )}
         </StandardCard>
     );
