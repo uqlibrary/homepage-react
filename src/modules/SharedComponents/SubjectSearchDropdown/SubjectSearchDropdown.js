@@ -14,7 +14,7 @@ import { default as locale } from 'modules/Pages/LearningResources/shared/learni
 import { styled } from '@mui/material/styles';
 
 const StyledSearchPanel = styled(Grid)(() => ({
-    padding: '20px',
+    padding: '0 24px 24px 24px',
     '& .searchPanelInfo': {
         color: 'red',
     },

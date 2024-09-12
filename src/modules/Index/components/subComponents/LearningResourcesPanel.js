@@ -60,6 +60,7 @@ export const LearningResourcesPanel = ({ account }) => {
 
     return (
         <StandardCard
+            subCard
             style={{ border: '1px solid #d1d0d2' }}
             fullHeight
             primaryHeader
@@ -93,7 +94,7 @@ export const LearningResourcesPanel = ({ account }) => {
                         padding: '0 30px 8px',
                     }}
                 >
-                    <Grid item xs={12}>
+                    <Grid item xs={12} style={{ marginTop: '-8px' }}>
                         <Typography component={'h3'} variant={'h6'}>
                             {locale.homepagePanel.userCourseTitle}
                         </Typography>

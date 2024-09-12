@@ -25,7 +25,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
         textOverflow: 'ellipsis',
         backgroundColor: theme.palette.white.main,
         borderRadius: '4px 4px 0px 0px',
-        padding: '12px 24px',
+        padding: '24px 24px 0',
     },
     '& .cardHeaderAccent': {
         color: theme.palette.white.main,
@@ -115,7 +115,7 @@ export class StandardCard extends Component {
                         titleTypographyProps={{
                             variant: smallTitle ? 'h6' : 'h5',
                             component: subCard ? 'h3' : 'h2',
-                            color: 'inherit',
+                            color: '#19151c',
                             'data-testid': `${standardCardId}-header`,
                         }}
                         classes={{

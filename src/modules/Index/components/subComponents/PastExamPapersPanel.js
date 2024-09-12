@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { fullPath } from 'config/routes';
+import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { SubjectSearchDropdown } from 'modules/SharedComponents/SubjectSearchDropdown';
@@ -52,6 +53,7 @@ export const PastExamPapersPanel = ({ account }) => {
 
     return (
         <StandardCard
+            subCard
             style={{ border: '1px solid #d1d0d2' }}
             fullHeight
             primaryHeader
@@ -81,9 +83,9 @@ export const PastExamPapersPanel = ({ account }) => {
                         padding: '0 30px 8px',
                     }}
                 >
-                    <Grid item xs={12}>
-                        <Typography component={'h3'} variant={'h6'}>
-                            Your courses
+                    <Grid item xs={12} style={{ marginTop: '-8px' }}>
+                        <Typography component={'h4'} variant={'h6'}>
+                            {locale.homepagePanel.userCourseTitle}
                         </Typography>
                     </Grid>
                     {account.current_classes.map((item, index) => {
