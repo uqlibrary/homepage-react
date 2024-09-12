@@ -7,7 +7,7 @@ import { fullPath } from 'config/routes';
 import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { LearningResourceSearch } from 'modules/SharedComponents/LearningResourceSearch';
+import { SubjectSearchDropdown } from 'modules/SharedComponents/SubjectSearchDropdown';
 
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -73,7 +73,7 @@ export const LearningResourcesPanel = ({ account }) => {
                 </Grid>
             }
         >
-            <LearningResourceSearch
+            <SubjectSearchDropdown
                 displayType="compact"
                 elementId={learningResourceId}
                 navigateToLearningResourcePage={navigateToLearningResourcePage}

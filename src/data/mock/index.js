@@ -20,7 +20,7 @@ import courseReadingList_FREN1011 from './data/records/learningResources/courseR
 import courseReadingList_HIST1201 from './data/records/learningResources/courseReadingList_HIST1201';
 import courseReadingList_PHIL1002 from './data/records/learningResources/courseReadingList_PHIL1002';
 import courseReadingList_ACCT1101 from './data/records/learningResources/courseReadingList_ACCT1101';
-import learningResourceSearchSuggestions from './data/records/learningResources/learningResourceSearchSuggestions';
+import subjectSearchSuggestions from './data/records/learningResources/subjectSearchSuggestions';
 import examSuggestion_FREN from './data/records/learningResources/examSuggestion_FREN';
 import { computerAvailability } from './data/computerAvailability';
 import { libHours } from './data/libHours';
@@ -294,7 +294,7 @@ mock.onGet(routes.COMP_AVAIL_API().apiUrl).reply(withDelay([200, computerAvailab
 // Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
 fetchMock.mock(
     'begin:https://api.library.uq.edu.au/staging/learning_resources/suggestions?hint=',
-    learningResourceSearchSuggestions,
+    subjectSearchSuggestions,
 );
 
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [

@@ -30,7 +30,7 @@ const StyledSearchPanel = styled(Grid)(() => ({
     },
 }));
 
-export const LearningResourceSearch = ({
+export const SubjectSearchDropdown = ({
     actions,
     displayType,
     // default: 'full'; values: 'full', 'compact'
@@ -198,7 +198,7 @@ export const LearningResourceSearch = ({
     );
 };
 
-LearningResourceSearch.propTypes = {
+SubjectSearchDropdown.propTypes = {
     displayType: PropTypes.string,
     elementId: PropTypes.string,
     option: PropTypes.any,
@@ -210,4 +210,4 @@ LearningResourceSearch.propTypes = {
     navigateToLearningResourcePage: PropTypes.any,
 };
 
-export default LearningResourceSearch;
+export default SubjectSearchDropdown;

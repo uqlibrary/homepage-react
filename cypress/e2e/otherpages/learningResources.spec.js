@@ -12,7 +12,7 @@ import { default as PHIL1002ReadingList } from '../../../src/data/mock/data/reco
 import { default as ACCT1101ReadingList } from '../../../src/data/mock/data/records/learningResources/courseReadingList_ACCT1101';
 import { default as ACCT1101Guide } from '../../../src/data/mock/data/records/learningResources/libraryGuides_ACCT1101';
 import { default as ACCT1101Exam } from '../../../src/data/mock/data/records/learningResources/examListACCT1101';
-import { default as learningResourceSearchSuggestions } from '../../../src/data/mock/data/records/learningResources/learningResourceSearchSuggestions';
+import { default as subjectSearchSuggestions } from '../../../src/data/mock/data/records/learningResources/subjectSearchSuggestions';
 
 function the_user_lands_on_the_My_Classes_tab(courseReadingList, panelId = 0) {
     const title = courseReadingList.course_title || 'mock data is missing';
@@ -345,7 +345,7 @@ context('The Learning Resources Page', () => {
 
         the_user_lands_on_the_Search_tab();
 
-        a_user_can_use_the_search_bar_to_load_a_subject(FREN1010ReadingList, learningResourceSearchSuggestions);
+        a_user_can_use_the_search_bar_to_load_a_subject(FREN1010ReadingList, subjectSearchSuggestions);
         FREN1010LoadsProperly();
 
         the_user_clicks_on_the_My_Courses_tab();
@@ -409,10 +409,7 @@ context('The Learning Resources Page', () => {
 
         the_user_sees_the_search_form();
 
-        load_a_subject_in_learning_resource_page_search_tab(
-            FREN1010ReadingList.coursecode,
-            learningResourceSearchSuggestions,
-        );
+        load_a_subject_in_learning_resource_page_search_tab(FREN1010ReadingList.coursecode, subjectSearchSuggestions);
 
         FREN1010_loads_properly_for_s111111_user();
     });
@@ -446,7 +443,7 @@ context('The Learning Resources Page', () => {
 
         function searchFor(searchFor = 'FREN', selectCourseCode) {
             cy.log('searching for ', selectCourseCode);
-            const searchSuggestionForThisCourse = learningResourceSearchSuggestions
+            const searchSuggestionForThisCourse = subjectSearchSuggestions
                 .filter(obj => {
                     return obj.name === selectCourseCode;
                 })
