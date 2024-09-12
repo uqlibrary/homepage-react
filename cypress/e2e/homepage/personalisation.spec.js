@@ -9,7 +9,7 @@ context('Personalised Homepage', () => {
         cy.visit('/?user=s1111111');
         cy.viewport(1300, 1000);
         // this type of user will see the following panels:
-        hasPanels(['learning-resources', 'training']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training']);
     });
 
     it('Renders a logged out user', () => {
@@ -31,41 +31,39 @@ context('Personalised Homepage', () => {
         cy.clearCookie('UQLID');
         cy.rendersALoggedoutUser();
     });
-});
-context.skip('Extra tests per group that we might need later', () => {
     it('Renders a remote undergraduate home page correctly', () => {
         cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);
 
-        hasPanels(['learning-resources', 'training']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training']);
     });
 
     it('Renders a researcher home page correctly', () => {
         cy.visit('/?user=uqresearcher');
         cy.viewport(1300, 1000);
 
-        hasPanels(['learning-resources', 'training']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training']);
     });
 
     it('Renders a library staff administrator home page correctly', () => {
         cy.visit('/?user=digiteamMember');
         cy.viewport(1300, 1000);
 
-        hasPanels(['learning-resources', 'training']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training']);
     });
 
     it('Renders a Library staff member (without admin privs) home page correctly', () => {
         cy.visit('/?user=uqstaffnonpriv');
         cy.viewport(1300, 1000);
 
-        hasPanels(['learning-resources', 'training']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training']);
     });
 
     it('Renders a non-library staff member home page correctly', () => {
         cy.visit('/?user=uqpkopit');
         cy.viewport(1300, 1000);
 
-        hasPanels(['learning-resources', 'training']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training']);
     });
 
     it('Renders a paid Community EM member home page correctly', () => {
@@ -107,14 +105,14 @@ context.skip('Extra tests per group that we might need later', () => {
         cy.visit('/?user=emhonorary');
         cy.viewport(1300, 1000);
 
-        hasPanels(['learning-resources', 'training']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training']);
     });
 
     it('Renders a Short Form Credential course student home page correctly', () => {
         cy.visit('/?user=uqsfc');
         cy.viewport(1300, 1000);
 
-        hasPanels(['learning-resources', 'training']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training']);
     });
 
     it('Renders a new user group home page correctly', () => {

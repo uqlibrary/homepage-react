@@ -210,7 +210,7 @@ export const Index = ({
                             </Grid>
                         )}
                         {canSeeLearningResources(account) && (
-                            <Grid item xs={12} md={4} data-testid="learning-resources-panel" sx={{ paddingTop: '0px' }}>
+                            <Grid item xs={12} md={4} data-testid="past-exam-papers-panel" sx={{ paddingTop: '0px' }}>
                                 <PastExamPapers account={account} history={history}/>
                             </Grid>
                         )}

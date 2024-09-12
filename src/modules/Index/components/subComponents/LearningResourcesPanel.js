@@ -95,7 +95,7 @@ export const LearningResourcesPanel = ({ account }) => {
                     }}
                 >
                     <Grid item xs={12} style={{ marginTop: '-8px' }}>
-                        <Typography component={'h3'} variant={'h6'}>
+                        <Typography component={'h4'} variant={'h6'}>
                             {locale.homepagePanel.userCourseTitle}
                         </Typography>
                     </Grid>

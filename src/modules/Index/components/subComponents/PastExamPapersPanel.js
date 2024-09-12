@@ -10,9 +10,9 @@ import { SubjectSearchDropdown } from 'modules/SharedComponents/SubjectSearchDro
 
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { isStaff } from '../../../../helpers/access';
+import { isStaff } from 'helpers/access';
 
-export const getUrlForLearningResourceSpecificTab = (item, pageLocation, includeFullPath = false) => {
+export const getPastExamPaperUrlForSubject = (item, pageLocation, includeFullPath = false) => {
     const learningResourceParams = `/${item.classnumber.toLowerCase()}`;
     const prefix = `${includeFullPath ? fullPath : ''}/exams/course`;
     const url =
@@ -47,10 +47,10 @@ export const PastExamPapersPanel = ({ account }) => {
             campus: option.campus || /* istanbul ignore next */ '',
             semester: option.semester || /* istanbul ignore next */ '',
         };
-        setSearchUrl(getUrlForLearningResourceSpecificTab(course, pageLocation, false, true));
+        setSearchUrl(getPastExamPaperUrlForSubject(course, pageLocation, false, true));
     };
 
-    const learningResourceId = 'homepage-learningresource';
+    const learningResourceId = 'homepage-pastexampapers';
 
     let displayedClasses;
     if (account?.current_classes) {
@@ -84,7 +84,7 @@ export const PastExamPapersPanel = ({ account }) => {
             fullHeight
             primaryHeader
             noPadding
-            standardCardId="learning-resources-homepage-panel"
+            standardCardId="past-exam-papers-homepage-panel"
             title="Past exam papers"
             // customTitleBgColor="white"
             // customTitleColor="#51247A"
@@ -135,8 +135,8 @@ export const PastExamPapersPanel = ({ account }) => {
                                 }}
                             >
                                 <Link
-                                    to={getUrlForLearningResourceSpecificTab(item, pageLocation)}
-                                    data-testid={`learning-resource-panel-course-link-${index}`}
+                                    to={getPastExamPaperUrlForSubject(item, pageLocation)}
+                                    data-testid={`past-exam-papers-panel-course-link-${index}`}
                                 >
                                     {item.classnumber}
                                 </Link>{' '}
@@ -150,7 +150,7 @@ export const PastExamPapersPanel = ({ account }) => {
             ) : (
                 <div style={{ marginLeft: 16 }}>
                     <p>Your enrolled courses will appear here three weeks prior to the start of the semester.</p>
-                    <p>Search for learning resources above.</p>
+                    <p>Search for subjects above.</p>
                 </div>
             )}
         </StandardCard>

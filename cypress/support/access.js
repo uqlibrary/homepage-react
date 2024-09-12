@@ -3,6 +3,7 @@ export const hasPanels = optionsTheUserShouldSee => {
     possiblePanels.set('learning-resources', { title: 'Learning resources', content: 'Search by' });
     // probably not used - try without
     possiblePanels.set('library-services', { title: 'Library services', content: 'Services for' });
+    possiblePanels.set('past-exam-papers', { title: 'Past exam papers', content: 'Search by' });
     possiblePanels.set('training', { title: 'Training', content: 'Online' });
 
     // validate the input - all supplied entries should exist in the available options
@@ -21,7 +22,7 @@ export const hasPanels = optionsTheUserShouldSee => {
         expect(value.content.length).to.be.greaterThan(0);
 
         const panelname = `${key}-panel`;
-        const titleSelector = `div[data-testid="${panelname}"] h2`;
+        const titleSelector = `div[data-testid="${panelname}"] h3`;
         if (!!optionsTheUserShouldSee.includes(key)) {
             cy.log(`checking panel ${panelname} contains ${value.title}`);
             cy.get(titleSelector).contains(value.title);
