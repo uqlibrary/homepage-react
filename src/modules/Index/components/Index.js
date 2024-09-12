@@ -30,6 +30,7 @@ import { canSeeLearningResources } from 'helpers/access';
 
 const Locations = lazy(() => lazyRetry(() => import('./subComponents/Locations')));
 const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
+const PastExamPapers = lazy(() => lazyRetry(() => import('./subComponents/PastExamPapersPanel')));
 const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
 
 const StyledAccordion = styled(Accordion)(() => ({
@@ -206,6 +207,11 @@ export const Index = ({
                         {canSeeLearningResources(account) && (
                             <Grid item xs={12} md={4} data-testid="learning-resources-panel" sx={{ paddingTop: '0px' }}>
                                 <LearningResourcesPanel account={account} history={history}/>
+                            </Grid>
+                        )}
+                        {canSeeLearningResources(account) && (
+                            <Grid item xs={12} md={4} data-testid="learning-resources-panel" sx={{ paddingTop: '0px' }}>
+                                <PastExamPapers account={account} history={history}/>
                             </Grid>
                         )}
                     </Grid>
