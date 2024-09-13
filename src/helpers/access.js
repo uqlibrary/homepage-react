@@ -75,9 +75,9 @@ export const canSeeLearningResources = account => {
     );
 };
 
-export const isStaff = account => {
-    return !!account && !!account.id && [OTHER_STAFF, LIBRARY_STAFF].includes(account.user_group);
-};
+// export const isStaff = account => {
+//     return !!account && !!account.id && ['STAFF', 'LIBRARYSTAFFB'].includes(account.user_group);
+// };
 
 export const canSeeLoans = account => isLoggedInUser(account);
 

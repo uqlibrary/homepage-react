@@ -11,27 +11,32 @@ import { fullPath } from 'config/routes';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { SubjectSearchDropdown } from 'modules/SharedComponents/SubjectSearchDropdown';
 
-import { isStaff } from 'helpers/access';
+// import { isStaff } from 'helpers/access';
 
-const StyledLink = styled(Link)(({ theme }) => ({
-    color: theme.palette.primary.light,
-    fontWeight: 500,
-    paddingBlock: '2px',
-    textDecoration: 'underline',
-    transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
-    '&:hover': {
-        color: '#fff',
-        backgroundColor: theme.palette.primary.light,
+const DesignSystemTextPane = styled(StandardCard)(({ theme }) => ({
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
+    boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
+    '& a': {
+        color: theme.palette.primary.light,
+        fontWeight: 500,
+        paddingBlock: '2px',
+        textDecoration: 'underline',
+        transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
+        '&:hover': {
+            color: '#fff',
+            backgroundColor: theme.palette.primary.light,
+        },
     },
 }));
 
 export const getPastExamPaperUrlForSubject = (item, pageLocation, includeFullPath = false) => {
-    const learningResourceParams = `/${item.classnumber.toLowerCase()}`;
+    const examPath = `/${item.classnumber.toLowerCase()}`;
     const prefix = `${includeFullPath ? fullPath : ''}/exams/course`;
     const url =
         !!pageLocation.search && pageLocation.search.indexOf('?') === 0
-            ? `${prefix}${learningResourceParams}${pageLocation.search}` // eg include ?user=s1111111
-            : `${prefix}${learningResourceParams}`;
+            ? `${prefix}${examPath}${pageLocation.search}` // eg include ?user=s1111111
+            : `${prefix}${examPath}`;
     return url;
 };
 
@@ -44,7 +49,7 @@ export const PastExamPapersPanel = ({ account }) => {
         searchUrl => {
             searchUrl !== '' && navigate(searchUrl);
         },
-        [pageLocation],
+        [navigate],
     );
     React.useEffect(() => {
         loadSearchResult(searchUrl);
@@ -63,11 +68,13 @@ export const PastExamPapersPanel = ({ account }) => {
         setSearchUrl(getPastExamPaperUrlForSubject(course, pageLocation, false, true));
     };
 
-    const learningResourceId = 'homepage-pastexampapers';
+    const pageId = 'homepage-pastexampapers';
 
-    let displayedClasses;
-    if (account?.current_classes) {
-        displayedClasses = account?.current_classes;
+    const isStaff = account => !!account && !!account.id && ['STAFF', 'LIBRARYSTAFFB'].includes(account.user_group);
+    let displayedClasses = [];
+    console.log('account.current_classes=', account?.current_classes);
+    if (!!account && !!account.id && !!account.current_classes && account.current_classes.length > 0) {
+        displayedClasses = account.current_classes;
     } else if (isStaff(account)) {
         displayedClasses = [
             {
@@ -91,13 +98,8 @@ export const PastExamPapersPanel = ({ account }) => {
         ];
     }
     return (
-        <StandardCard
+        <DesignSystemTextPane
             subCard
-            style={{
-                border: '1px solid hsla(203, 50%, 30%, 0.15)',
-                borderRadius: '4px',
-                boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
-            }}
             fullHeight
             primaryHeader
             noPadding
@@ -106,7 +108,7 @@ export const PastExamPapersPanel = ({ account }) => {
         >
             <SubjectSearchDropdown
                 displayType="compact"
-                elementId={learningResourceId}
+                elementId={pageId}
                 navigateToLearningResourcePage={navigateToLearningResourcePage}
             />
             {!account?.current_classes && isStaff(account) && (
@@ -149,12 +151,12 @@ export const PastExamPapersPanel = ({ account }) => {
                                     paddingBottom: 8,
                                 }}
                             >
-                                <StyledLink
+                                <Link
                                     to={getPastExamPaperUrlForSubject(item, pageLocation)}
                                     data-testid={`past-exam-papers-panel-course-link-${index}`}
                                 >
                                     {item.classnumber}
-                                </StyledLink>{' '}
+                                </Link>{' '}
                                 {/* because the panel width is driven by window size, show a title
                                     so ellipsis doesn't hide some meaningful difference between course titles */}
                                 <span title={item.DESCR}>{item.DESCR}</span>
@@ -163,12 +165,12 @@ export const PastExamPapersPanel = ({ account }) => {
                     })}
                 </Grid>
             ) : (
-                <div style={{ marginLeft: 24, marginTop: -10 }}>
+                <div style={{ margin: '-10px 24px 0' }}>
                     <p>Your enrolled courses will appear here three weeks prior to the start of the semester.</p>
                     <p>Search for subjects above.</p>
                 </div>
             )}
-        </StandardCard>
+        </DesignSystemTextPane>
     );
 };
 
