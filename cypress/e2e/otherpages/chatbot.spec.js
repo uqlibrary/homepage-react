@@ -10,7 +10,7 @@ describe('Chatbot', () => {
         });
         it('works as expected', () => {
             cy.waitUntil(() => cy.get('article').should('exist'));
-            cy.contains('article', 'provide your name');
+            cy.contains('article', 'Library Chatbot');
 
             cy.window().then(win => {
                 const value = win.sessionStorage.getItem('directLineToken');
@@ -32,7 +32,7 @@ describe('Chatbot', () => {
             });
 
             cy.waitUntil(() => cy.get('article').should('exist'));
-            cy.contains('article', 'provide your name');
+            cy.contains('article', 'Library Chatbot');
 
             cy.log('testCookieName=', testCookieName);
             cy.getCookie(testCookieName).then(cookie => {
