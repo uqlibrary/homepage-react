@@ -4,7 +4,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
 
 import { fullPath } from 'config/routes';
 
@@ -12,23 +11,6 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { SubjectSearchDropdown } from 'modules/SharedComponents/SubjectSearchDropdown';
 
 // import { isStaff } from 'helpers/access';
-
-const DesignSystemTextPane = styled(StandardCard)(({ theme }) => ({
-    border: '1px solid hsla(203, 50%, 30%, 0.15)',
-    borderRadius: '4px',
-    boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
-    '& a': {
-        color: theme.palette.primary.light,
-        fontWeight: 500,
-        paddingBlock: '2px',
-        textDecoration: 'underline',
-        transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
-        '&:hover': {
-            color: '#fff',
-            backgroundColor: theme.palette.primary.light,
-        },
-    },
-}));
 
 export const getPastExamPaperUrlForSubject = (item, pageLocation, includeFullPath = false) => {
     const examPath = `/${item.classnumber.toLowerCase()}`;
@@ -98,7 +80,7 @@ export const PastExamPapersPanel = ({ account }) => {
         ];
     }
     return (
-        <DesignSystemTextPane
+        <StandardCard
             subCard
             fullHeight
             primaryHeader
@@ -170,7 +152,7 @@ export const PastExamPapersPanel = ({ account }) => {
                     <p>Search for subjects above.</p>
                 </div>
             )}
-        </DesignSystemTextPane>
+        </StandardCard>
     );
 };
 
