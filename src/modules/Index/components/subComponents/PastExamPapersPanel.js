@@ -52,10 +52,13 @@ export const PastExamPapersPanel = ({ account }) => {
 
     const pageId = 'homepage-pastexampapers';
 
-    const isStaff = account => !!account && !!account.id && ['STAFF', 'LIBRARYSTAFFB'].includes(account.user_group);
+    const isLoggedIn = account => !!account && !!account.id;
+    const isStaff = account => isLoggedIn(account) && ['STAFF', 'LIBRARYSTAFFB'].includes(account.user_group);
     let displayedClasses = [];
     console.log('account.current_classes=', account?.current_classes);
-    if (!!account && !!account.id && !!account.current_classes && account.current_classes.length > 0) {
+    const hasClasses = account =>
+        isLoggedIn(account) && !!account.current_classes && account.current_classes.length > 0;
+    if (hasClasses(account)) {
         displayedClasses = account.current_classes;
     } else if (isStaff(account)) {
         displayedClasses = [
@@ -93,10 +96,14 @@ export const PastExamPapersPanel = ({ account }) => {
                 elementId={pageId}
                 navigateToLearningResourcePage={navigateToLearningResourcePage}
             />
-            {!account?.current_classes && isStaff(account) && (
-                <p style={{ paddingInline: '21px', marginTop: '10px' }}>
+            {!hasClasses(account) && isStaff(account) && (
+                <Typography
+                    component={'p'}
+                    data-testid="staff-course-prompt"
+                    style={{ paddingInline: '21px', marginTop: '10px' }}
+                >
                     Students see enrolled courses. Example links below:
-                </p>
+                </Typography>
             )}
 
             {!!displayedClasses && displayedClasses.length > 0 ? (
@@ -147,7 +154,7 @@ export const PastExamPapersPanel = ({ account }) => {
                     })}
                 </Grid>
             ) : (
-                <div style={{ margin: '-10px 24px 0' }}>
+                <div data-testid="no-enrolled-courses" style={{ margin: '-10px 24px 0' }}>
                     <p>Your enrolled courses will appear here three weeks prior to the start of the semester.</p>
                     <p>Search for subjects above.</p>
                 </div>

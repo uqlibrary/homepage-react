@@ -55,6 +55,9 @@ context('The Homepage Past Exam Papers Panel', () => {
         cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid=past-exam-papers-panel]').contains('Past exam papers');
+        cy.get('[data-testid="no-enrolled-courses"]')
+            .should('exist')
+            .contains('Your enrolled courses will appear here three weeks prior to the start of the semester');
 
         // the user is not enrolled in any subjects which means the form has no sibling elements
         cy.get('div[data-testid=past-exam-papers-panel] form')
@@ -121,5 +124,21 @@ context('The Homepage Past Exam Papers Panel', () => {
         cy.get('ul#homepage-pastexampapers-autocomplete-listbox')
             .children()
             .should('have.length', 1 + 1); // add one for title
+    });
+    it('Staff see example courses', () => {
+        cy.visit('/?user=uqstaff');
+        cy.get('[data-testid="staff-course-prompt"]')
+            .should('exist')
+            .contains('Students see enrolled courses. Example links below:');
+        cy.get('[data-testid="no-enrolled-courses"]').should('not.exist');
+        const numberOfBlocks = 3 + 1; // n classes + 1 header
+        cy.get('div[data-testid=past-exam-papers-panel] h4')
+            .parent()
+            .parent()
+            .children()
+            .should('have.length', numberOfBlocks);
+        cy.get('[data-testid="past-exam-papers-panel-course-link-0"]')
+            .should('exist')
+            .contains('FREN1010');
     });
 });
