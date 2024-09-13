@@ -69,16 +69,16 @@ export const PastExamPapersPanel = ({ account }) => {
                 classnumber: 'FREN1010',
             },
             {
-                DESCR: 'The Australian Experience',
-                SUBJECT: 'HIST',
-                CATALOG_NBR: '1201',
-                classnumber: 'HIST1201',
+                DESCR: 'Basic Mathematics',
+                SUBJECT: 'MATH',
+                CATALOG_NBR: '1040',
+                classnumber: 'MATH1040',
             },
             {
-                DESCR: 'Introduction to Philosophy: What is Philosophy?',
-                SUBJECT: 'PHIL',
-                CATALOG_NBR: '1002',
-                classnumber: 'PHIL1002',
+                DESCR: 'Mechanics & Thermal Physics I',
+                SUBJECT: 'PHYS',
+                CATALOG_NBR: '1001',
+                classnumber: 'PHYS1001',
             },
         ];
     }
