@@ -10,7 +10,9 @@ describe('Chatbot', () => {
         });
         it('works as expected', () => {
             cy.waitUntil(() => cy.get('article').should('exist'));
-            cy.contains('article', 'provide your name');
+            // because the wording is under the control of ITS (and they fiddle with it)
+            // we don't check for precise wording :(
+            // assume if the copilot JS has supplied some `article` elements, then it's ok
 
             cy.window().then(win => {
                 const value = win.sessionStorage.getItem('directLineToken');
@@ -32,7 +34,6 @@ describe('Chatbot', () => {
             });
 
             cy.waitUntil(() => cy.get('article').should('exist'));
-            cy.contains('article', 'provide your name');
 
             cy.log('testCookieName=', testCookieName);
             cy.getCookie(testCookieName).then(cookie => {
