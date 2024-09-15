@@ -106,7 +106,12 @@ const AssetPanel = ({
         <StandardCard
             standardCardId={componentIdLower}
             title={pageLocale.title}
-            style={{ marginTop: '30px', border: 'thin solid #d1d0d2' }}
+            style={{
+                marginTop: '30px',
+                border: '1px solid hsla(203, 50%, 30%, 0.15)',
+                borderRadius: '4px',
+                boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
+            }}
         >
             <UpdateDialog
                 title={actionState.title}

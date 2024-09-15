@@ -157,7 +157,7 @@ export const Index = ({
                 </StandardPage>
 
             </div>
-            <div style={{ borderBottom: '1px solid #d1d0d2' /* grey-300 */ }}>
+            <div style={{ borderBottom: '1px solid hsla(203, 50%, 30%, 0.15)' }}>
                 <div className="layout-card">
                     <StyleWrapper>
                         <StyledLink

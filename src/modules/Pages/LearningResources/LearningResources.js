@@ -349,7 +349,7 @@ export const LearningResources = ({
     return (
         <StandardPage title={locale.title}>
             <section aria-live="assertive">
-                <StandardCard style={{ border: '1px solid #d1d0d2' }} noPadding noHeader>
+                <StandardCard noPadding noHeader>
                     <Grid container>
                         <Grid item xs={12} data-testid="learning-resources">
                             <StyledAppBar
