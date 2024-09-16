@@ -82,6 +82,15 @@ const StyledLink = styled(Link)(({ theme }) => ({
     },
 }));
 
+const StyledCulturalAdvice = styled('div')(() => ({
+    backgroundColor: '#231430',
+    paddingTop: '20px',
+    backgroundImage: 'linear-gradient(90deg, #48206c 28.12%, #48206ca6 70.31%, #48206c00), url(https://static.uq.net.au/v15/images/rap/brisbane-river-artwork.png)',
+    '& p': {
+        paddingBottom: '20px',
+    },
+}));
+
 const StyledSummary = styled('span')(({ theme }) => ({
     color: theme.palette.primary.light,
     textDecoration: 'underline',
@@ -139,13 +148,15 @@ export const Index = ({
     return (
         <React.Suspense fallback={<ContentLoader message="Loading"/>}>
             { /* TEMP WORKS - USED AS A PLACEHOLDER FOR NOW */ }
-            <div style = {{ backgroundColor: '#231430', height: '50px' }}>
+            <StyledCulturalAdvice>
                 <StandardPage>
-                    <p style={{ letterSpacing: '.01rem', fontWeight: '400', fontFamily: 'Roboto, Helvetica, Arial, sans-serif', color: 'white', margin: 0, border: 0, lineHeight: '50px' }}>Aboriginal and Torres Strait Islander peoples &nbsp;&nbsp;<a style={{
+                    <p className={'newCulturalStatement'} style={{ letterSpacing: '.01rem', fontWeight: '400', fontFamily: 'Roboto, Helvetica, Arial, sans-serif', color: 'white', margin: 0, border: 0 }}>
+                        The Library is custodian of <a style={{
                         color: 'white', textDecoration: 'underline',
-                    }} href="#">Culturally sensitive collections</a></p>
+                    }} href="https://web.library.uq.edu.au/collections/culturally-sensitive-collections">culturally sensitive Indigenous material.</a></p>
+
                 </StandardPage>
-            </div>
+            </StyledCulturalAdvice>
             <div id="search-portal-container" data-testid="search-portal-container" style={{
                 paddingTop: 25,
                 paddingBottom: 25,
