@@ -4,7 +4,7 @@ import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../shar
 import { default as locale } from '../shared/learningResources.locale';
 import { SubjectBody } from '../shared/SubjectBody';
 import { TabPanel } from '../shared/TabPanel';
-import { LearningResourceSearch } from 'modules/SharedComponents/LearningResourceSearch';
+import { SubjectSearchDropdown } from 'modules/SharedComponents/SubjectSearchDropdown';
 import AppBar from '@mui/material/AppBar';
 import Grid from '@mui/material/Grid';
 import Tab from '@mui/material/Tab';
@@ -237,7 +237,7 @@ export const CourseSearch = ({
     return (
         <Grid container spacing={3} id={'full-learningresource'} data-testid={'full-learningresource'}>
             <Grid item xs={12} id="learningresource-search">
-                <LearningResourceSearch
+                <SubjectSearchDropdown
                     displayType="full"
                     elementId="full-learningresource"
                     loadCourseAndSelectTab={loadCourseAndSelectTab}

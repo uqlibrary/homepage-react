@@ -1,6 +1,6 @@
 import { accounts } from '../../../src/data/mock/data';
 import { default as locale } from '../../../src/modules/Pages/LearningResources/shared/learningResources.locale';
-import { default as learningResourceSearchSuggestions } from '../../../src/data/mock/data/records/learningResources/learningResourceSearchSuggestions';
+import { default as subjectSearchSuggestions } from '../../../src/data/mock/data/records/learningResources/subjectSearchSuggestions';
 
 context('The Homepage Learning Resource Panel', () => {
     it('Learning resources panel is accessible', () => {
@@ -9,7 +9,7 @@ context('The Homepage Learning Resource Panel', () => {
         // cy.wait(2000);
         cy.waitUntil(() =>
             cy
-                .get('div[data-testid="your-courses"]')
+                .get('[data-testid="learning-resources-panel"] [data-testid="your-courses"]')
                 .should('exist')
                 .contains(locale.homepagePanel.userCourseTitle),
         );
@@ -33,10 +33,10 @@ context('The Homepage Learning Resource Panel', () => {
         expect(currentClasses.length).to.be.above(1); // the user has courses that we can click on
 
         cy.get('div[data-testid=learning-resources-panel]').contains(locale.homepagePanel.title);
-        cy.get('div[data-testid=learning-resources-panel] h3').contains(locale.homepagePanel.userCourseTitle);
+        cy.get('div[data-testid=learning-resources-panel] h4').contains(locale.homepagePanel.userCourseTitle);
 
         const numberOfBlocks = currentClasses.length + 1; // n classes + 1 header
-        cy.get('div[data-testid=learning-resources-panel] h3')
+        cy.get('div[data-testid=learning-resources-panel] h4')
             .parent()
             .parent()
             .children()
@@ -56,7 +56,7 @@ context('The Homepage Learning Resource Panel', () => {
         cy.get(`div[data-testid="classpanel-${classIndex}"] h2`).contains(specificClass.SUBJECT);
     });
 
-    // NOTE: purely for coverage, this test is duplicated into cypress/adminPages/learning-resources
+    // NOTE: this test is duplicated into cypress/adminPages/learning-resources - this is purely for coverage
     it('The Learning resources panel searches correctly', () => {
         cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);
@@ -76,12 +76,12 @@ context('The Homepage Learning Resource Panel', () => {
 
         // user enters ACCT
         cy.get('div[data-testid=learning-resources-panel] form input').type('ACCT11');
-        const learningResourceSearchSuggestionsWithACCT = learningResourceSearchSuggestions.filter(item =>
+        const subjectSearchSuggestionsWithACCT = subjectSearchSuggestions.filter(item =>
             item.name.startsWith('ACCT11'),
         );
         cy.get('ul#homepage-learningresource-autocomplete-listbox')
             .children()
-            .should('have.length', learningResourceSearchSuggestionsWithACCT.length + 1); // add one for title
+            .should('have.length', subjectSearchSuggestionsWithACCT.length + 1); // add one for title
         // user clicks on #1, ACCT1101
         cy.get('li#homepage-learningresource-autocomplete-option-0')
             .contains('ACCT1101')

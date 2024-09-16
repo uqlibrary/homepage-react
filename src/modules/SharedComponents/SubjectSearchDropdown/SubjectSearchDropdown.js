@@ -8,12 +8,14 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import { throttle } from 'throttle-debounce';
 import Autocomplete from '@mui/material/Autocomplete';
+import Typography from '@mui/material/Typography';
 
 import { extractSubjectCodeFromName } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
 import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
 import { styled } from '@mui/material/styles';
 
 const StyledSearchPanel = styled(Grid)(() => ({
+    padding: '0 24px 24px 24px',
     '& .searchPanelInfo': {
         color: 'red',
     },
@@ -30,7 +32,7 @@ const StyledSearchPanel = styled(Grid)(() => ({
     },
 }));
 
-export const LearningResourceSearch = ({
+export const SubjectSearchDropdown = ({
     actions,
     displayType,
     // default: 'full'; values: 'full', 'compact'
@@ -96,7 +98,12 @@ export const LearningResourceSearch = ({
     }
 
     // we group them all together to place a header at the top of the search results
-    const renderGroup = params => [<h3 key={params.key}>{locale.search.autocompleteResultsTitle}</h3>, params.children];
+    const renderGroup = params => [
+        <Typography component={'h2'} variant={'h6'} key={params.key} style={{ color: '#19151c', marginLeft: '16px' }}>
+            {locale.search.autocompleteResultsTitle}
+        </Typography>,
+        params.children,
+    ];
 
     return (
         <form>
@@ -198,7 +205,7 @@ export const LearningResourceSearch = ({
     );
 };
 
-LearningResourceSearch.propTypes = {
+SubjectSearchDropdown.propTypes = {
     displayType: PropTypes.string,
     elementId: PropTypes.string,
     option: PropTypes.any,
@@ -210,4 +217,4 @@ LearningResourceSearch.propTypes = {
     navigateToLearningResourcePage: PropTypes.any,
 };
 
-export default LearningResourceSearch;
+export default SubjectSearchDropdown;

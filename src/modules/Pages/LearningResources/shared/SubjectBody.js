@@ -20,7 +20,6 @@ const StyledGridContainer = styled(Grid)(() => ({
         marginBottom: '13px',
         '& >div': {
             marginRight: '10px',
-            border: '1px solid #d1d0d2',
         },
     },
 }));

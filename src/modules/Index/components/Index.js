@@ -19,7 +19,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { lazyRetry } from 'helpers/general';
 
 import LibraryUpdates from 'modules/Index/components/subComponents/LibraryUpdates';
-import NavCardWrapper from './subComponents/NavCardWrapper';
+import NavigationCardWrapper from './subComponents/NavigationCardWrapper';
 import {
     loadLibHours,
     loadCompAvail,
@@ -30,6 +30,7 @@ import { canSeeLearningResources } from 'helpers/access';
 
 const Locations = lazy(() => lazyRetry(() => import('./subComponents/Locations')));
 const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
+const PastExamPapers = lazy(() => lazyRetry(() => import('./subComponents/PastExamPapersPanel')));
 const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
 
 const StyledAccordion = styled(Accordion)(() => ({
@@ -156,7 +157,7 @@ export const Index = ({
                 </StandardPage>
 
             </div>
-            <div style={{ borderBottom: '1px solid #d1d0d2' /* grey-300 */ }}>
+            <div style={{ borderBottom: '1px solid hsla(203, 50%, 30%, 0.15)' }}>
                 <div className="layout-card">
                     <StyleWrapper>
                         <StyledLink
@@ -208,11 +209,16 @@ export const Index = ({
                                 <LearningResourcesPanel account={account} history={history}/>
                             </Grid>
                         )}
+                        {canSeeLearningResources(account) && (
+                            <Grid item xs={12} md={4} data-testid="past-exam-papers-panel" sx={{ paddingTop: '0px' }}>
+                                <PastExamPapers account={account} history={history}/>
+                            </Grid>
+                        )}
                     </Grid>
                 </StandardPage>
             )}
 
-            <NavCardWrapper/>
+            <NavigationCardWrapper/>
 
             <LibraryUpdates drupalArticleList={drupalArticleList} />
         </React.Suspense>

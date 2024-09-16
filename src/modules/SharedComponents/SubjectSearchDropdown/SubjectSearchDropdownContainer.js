@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from 'data/actions';
-import LearningResourceSearch from './LearningResourceSearch';
+import SubjectSearchDropdown from './SubjectSearchDropdown';
 
 const mapStateToProps = state => {
     return {
@@ -15,6 +15,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-const LearningResourceSearchContainer = connect(mapStateToProps, mapDispatchToProps)(LearningResourceSearch);
+const SubjectSearchDropdownContainer = connect(mapStateToProps, mapDispatchToProps)(SubjectSearchDropdown);
 
-export default LearningResourceSearchContainer;
+export default SubjectSearchDropdownContainer;

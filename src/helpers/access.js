@@ -75,6 +75,10 @@ export const canSeeLearningResources = account => {
     );
 };
 
+// export const isStaff = account => {
+//     return !!account && !!account.id && ['STAFF', 'LIBRARYSTAFFB'].includes(account.user_group);
+// };
+
 export const canSeeLoans = account => isLoggedInUser(account);
 
 export const canSeePrintBalance = account => isLoggedInUser(account);

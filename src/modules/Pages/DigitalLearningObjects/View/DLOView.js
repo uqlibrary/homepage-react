@@ -99,7 +99,9 @@ const StyledTitleBlockDiv = styled('div')(() => ({
 const StyledHeaderDiv = styled(Typography)(() => ({
     backgroundColor: 'white',
     padding: '12px',
-    border: 'thin solid #d1d0d2',
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
+    boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
     marginTop: '12px',
     '& p': {
         margin: 0,
@@ -141,7 +143,6 @@ const StyledSeriesList = styled('ol')(() => ({
             width: '100%',
             padding: 10,
             textDecoration: 'none',
-            border: '1px solid #d1d0d2', // $grey-300
         },
         '& a:hover': {
             backgroundColor: '#a3a1a4', // $grey-500
@@ -149,7 +150,9 @@ const StyledSeriesList = styled('ol')(() => ({
     },
 }));
 const StyledDemographicsBox = styled(Box)(() => ({
-    border: 'thin solid #d1d0d2',
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
+    boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
     backgroundColor: 'white',
     marginTop: '24px',
     padding: '1em',
@@ -158,7 +161,9 @@ const StyledDemographicsBox = styled(Box)(() => ({
 }));
 const StyledLayoutBox = styled(Box)(() => ({
     backgroundColor: 'white',
-    border: 'thin solid #d1d0d2',
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
+    boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
     padding: '12px',
     marginTop: '24px',
 }));

@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import NavCard from './NavCard';
+import SingleLinkCard from './SingleLinkCard';
 
 const StyledNav = styled('nav')(() => ({
     marginTop: '24px',
@@ -18,30 +18,33 @@ const StyledGridContainer = styled(Grid)(() => ({
     margin: 0,
 }));
 
-const NavCardWrapper = () => {
+const NavigationCardWrapper = () => {
     return (
         <StandardPage>
             <StyledNav>
                 <StyledGridContainer container component="ul" spacing={4} data-testid="help-navigation-panel">
-                    <NavCard cardLabel="Find and borrow" landingUrl="https://web.library.uq.edu.au/find-and-borrow" />
-                    <NavCard
+                    <SingleLinkCard
+                        cardLabel="Find and borrow"
+                        landingUrl="https://web.library.uq.edu.au/find-and-borrow"
+                    />
+                    <SingleLinkCard
                         cardLabel="Study and learning support"
                         landingUrl="https://web.library.uq.edu.au/study-and-learning-support"
                     />
-                    <NavCard cardLabel="Visit" landingUrl="https://web.library.uq.edu.au/visit" />
-                    <NavCard
+                    <SingleLinkCard cardLabel="Visit" landingUrl="https://web.library.uq.edu.au/visit" />
+                    <SingleLinkCard
                         cardLabel="Research and publish"
                         landingUrl="https://web.library.uq.edu.au/research-and-publish"
                     />
-                    <NavCard
+                    <SingleLinkCard
                         cardLabel="AskUs and student IT support"
                         landingUrl="https://web.library.uq.edu.au/askus-and-it-support"
                     />
-                    <NavCard cardLabel="About" landingUrl="https://web.library.uq.edu.au/about-us" />
+                    <SingleLinkCard cardLabel="About" landingUrl="https://web.library.uq.edu.au/about-us" />
                 </StyledGridContainer>
             </StyledNav>
         </StandardPage>
     );
 };
 
-export default NavCardWrapper;
+export default NavigationCardWrapper;
