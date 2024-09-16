@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Grid';
+import { styled } from '@mui/material/styles';
 
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/Form/AlertForm';
@@ -10,6 +11,10 @@ import { getTimeNowFormatted, getTimeEndOfDayFormatted } from '../../alerthelper
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { default as locale } from '../../alertsadmin.locale';
+
+const StyledStandardCard = styled(StandardCard)(() => ({
+    backgroundColor: 'white',
+}));
 
 export const AlertsAdd = ({ actions, alert, alertError, alertLoading, alertStatus }) => {
     const defaults = {
@@ -41,7 +46,7 @@ export const AlertsAdd = ({ actions, alert, alertError, alertLoading, alertStatu
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
                     <AlertsUtilityArea actions={actions} helpContent={locale.form.help} />
-                    <StandardCard title="Create alert">
+                    <StyledStandardCard title="Create alert">
                         <AlertForm
                             actions={actions}
                             alertResponse={alert}
@@ -50,7 +55,7 @@ export const AlertsAdd = ({ actions, alert, alertError, alertLoading, alertStatu
                             alertStatus={alertStatus}
                             defaults={defaults}
                         />
-                    </StandardCard>
+                    </StyledStandardCard>
                 </section>
             </StandardPage>
         </Fragment>

@@ -13,6 +13,7 @@ import { unescapeString } from 'helpers/general';
 import { styled } from '@mui/material/styles';
 
 const StyledGridContainer = styled(Grid)(() => ({
+    backgroundColor: 'white',
     paddingTop: '32px',
     marginTop: 'initial',
     '& >div': {
