@@ -6,7 +6,9 @@ export function loadDrupalArticles() {
     return dispatch => {
         dispatch({ type: actions.DRUPAL_ARTICLES_LOADING });
         // console.log('THE API LOCATION: ', DRUPAL_ARTICLE_API());
-        return get(DRUPAL_ARTICLE_API())
+        return get(DRUPAL_ARTICLE_API(), {
+            headers: {},
+        })
             .then(articleResponse => {
                 console.log('ARTICLE RESPONSE:', articleResponse);
                 dispatch({
