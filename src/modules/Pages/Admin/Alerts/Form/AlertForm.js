@@ -60,6 +60,8 @@ const StyledBox = styled(Grid)(() => ({
     border: '1px solid rgb(211, 211, 211)',
     marginTop: '1em',
     paddingBottom: '1em',
+    marginLeft: '2px',
+    width: '98%',
 }));
 
 const StyledSaveButton = styled(Button)(() => ({

@@ -17,9 +17,7 @@ import { getMapLabel } from './bookExamBoothHelper';
 import { breadcrumbs } from 'config/routes';
 
 const StyledStandardCard = styled(StandardCard)(() => ({
-    border: '1px solid hsla(203, 50%, 30%, 0.15)',
-    borderRadius: '4px',
-    boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
+    backgroundColor: 'white',
 }));
 
 const BookExamBooth = ({

@@ -235,7 +235,13 @@ export const CourseSearch = ({
     };
 
     return (
-        <Grid container spacing={3} id={'full-learningresource'} data-testid={'full-learningresource'}>
+        <Grid
+            container
+            spacing={3}
+            id={'full-learningresource'}
+            data-testid={'full-learningresource'}
+            style={{ backgroundColor: 'white' }}
+        >
             <Grid item xs={12} id="learningresource-search">
                 <SubjectSearchDropdown
                     displayType="full"

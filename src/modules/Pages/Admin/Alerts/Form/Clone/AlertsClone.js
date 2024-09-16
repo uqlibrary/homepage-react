@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 
 import Grid from '@mui/material/Grid';
+import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -12,6 +13,10 @@ import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea'
 import { AlertForm } from 'modules/Pages/Admin/Alerts/Form/AlertForm';
 import { getTimeEndOfDayFormatted, getTimeNowFormatted } from '../../alerthelpers';
 import { default as locale } from '../../alertsadmin.locale';
+
+const StyledStandardCard = styled(StandardCard)(() => ({
+    backgroundColor: 'white',
+}));
 
 export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertStatus }) => {
     const { alertid } = useParams();
@@ -75,7 +80,7 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
                     <AlertsUtilityArea actions={actions} helpContent={locale.form.help} />
-                    <StandardCard title="Clone alert">
+                    <StyledStandardCard title="Clone alert">
                         <AlertForm
                             actions={actions}
                             alertLoading={alertLoading}
@@ -84,7 +89,7 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
                             alertStatus={alertStatus}
                             defaults={defaults}
                         />
-                    </StandardCard>
+                    </StyledStandardCard>
                 </section>
             </StandardPage>
         </Fragment>
