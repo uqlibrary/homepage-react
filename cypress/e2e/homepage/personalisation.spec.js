@@ -1,4 +1,4 @@
-import { hasPanels } from '../../support/access';
+import { hasEspaceEntries, hasNoEspacePanel, hasPanels } from '../../support/access';
 
 // Note: the Mylibrary Button is supplied by reusable-webcomponents. Testing is done over there.
 
@@ -9,7 +9,10 @@ context('Personalised Homepage', () => {
         cy.visit('/?user=s1111111');
         cy.viewport(1300, 1000);
         // this type of user will see the following panels:
-        hasPanels(['learning-resources', 'past-exam-papers', 'training']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace']);
+
+        // this type of user will see these lines in the Personalisation Panel
+        hasEspaceEntries(['espace-possible', 'espace-ntro']);
     });
 
     it('Renders a logged out user', () => {
@@ -21,7 +24,9 @@ context('Personalised Homepage', () => {
         cy.visit('/?user=s2222222');
         cy.viewport(1300, 1000);
 
-        hasPanels(['training']);
+        hasPanels(['training', 'espace']);
+
+        hasEspaceEntries(['espace-possible', 'espace-ntro']);
     });
 
     it('when session cookie auto expires the user logs out', () => {
@@ -36,20 +41,26 @@ context('Personalised Homepage', () => {
         cy.viewport(1300, 1000);
 
         hasPanels(['learning-resources', 'past-exam-papers', 'training']);
+
+        hasNoEspacePanel();
     });
 
     it('Renders a researcher home page correctly', () => {
         cy.visit('/?user=uqresearcher');
         cy.viewport(1300, 1000);
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace']);
+
+        hasEspaceEntries(['espace-possible', 'espace-orcid', 'espace-ntro']);
     });
 
     it('Renders a library staff administrator home page correctly', () => {
         cy.visit('/?user=digiteamMember');
         cy.viewport(1300, 1000);
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace']);
+
+        hasEspaceEntries(['espace-possible', 'espace-ntro']);
     });
 
     it('Renders a Library staff member (without admin privs) home page correctly', () => {
@@ -57,13 +68,17 @@ context('Personalised Homepage', () => {
         cy.viewport(1300, 1000);
 
         hasPanels(['learning-resources', 'past-exam-papers', 'training']);
+
+        hasNoEspacePanel();
     });
 
     it('Renders a non-library staff member home page correctly', () => {
         cy.visit('/?user=uqpkopit');
         cy.viewport(1300, 1000);
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace']);
+
+        hasEspaceEntries(['espace-possible', 'espace-ntro']);
     });
 
     it('Renders a paid Community EM member home page correctly', () => {
@@ -71,6 +86,8 @@ context('Personalised Homepage', () => {
         cy.viewport(1300, 1000);
 
         hasPanels(['training']);
+
+        hasNoEspacePanel();
     });
 
     it('Renders an Alumni (first year or paid) EM member home page correctly', () => {
@@ -78,6 +95,8 @@ context('Personalised Homepage', () => {
         cy.viewport(1300, 1000);
 
         hasPanels(['training']);
+
+        hasNoEspacePanel();
     });
 
     it('Renders a Hospital EM member home page correctly', () => {
@@ -85,6 +104,8 @@ context('Personalised Homepage', () => {
         cy.viewport(1300, 1000);
 
         hasPanels(['training']);
+
+        hasNoEspacePanel();
     });
 
     it('Renders an Associate EM member home page correctly', () => {
@@ -92,6 +113,8 @@ context('Personalised Homepage', () => {
         cy.viewport(1300, 1000);
 
         hasPanels(['training']);
+
+        hasNoEspacePanel();
     });
 
     it('Renders a Fryer Library EM member home page correctly', () => {
@@ -99,6 +122,8 @@ context('Personalised Homepage', () => {
         cy.viewport(1300, 1000);
 
         hasPanels(['training']);
+
+        hasNoEspacePanel();
     });
 
     it('Renders an Honorary EM member home page correctly', () => {
@@ -106,6 +131,8 @@ context('Personalised Homepage', () => {
         cy.viewport(1300, 1000);
 
         hasPanels(['learning-resources', 'past-exam-papers', 'training']);
+
+        hasNoEspacePanel();
     });
 
     it('Renders a Short Form Credential course student home page correctly', () => {
@@ -113,6 +140,8 @@ context('Personalised Homepage', () => {
         cy.viewport(1300, 1000);
 
         hasPanels(['learning-resources', 'past-exam-papers', 'training']);
+
+        hasNoEspacePanel();
     });
 
     it('Renders a new user group home page correctly', () => {
@@ -120,5 +149,7 @@ context('Personalised Homepage', () => {
         cy.viewport(1300, 1000);
 
         hasPanels(['training']);
+
+        hasNoEspacePanel();
     });
 });

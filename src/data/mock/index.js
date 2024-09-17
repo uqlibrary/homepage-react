@@ -25,7 +25,7 @@ import examSuggestion_FREN from './data/records/learningResources/examSuggestion
 import { computerAvailability } from './data/computerAvailability';
 import { libHours } from './data/libHours';
 import { training_object } from './data/training';
-import { espaceSearchResponse, loans, printBalance } from './data/general';
+import { espaceSearchResponse } from './data/general';
 import { alertList } from './data/alertsLong';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
 import examSearch_DENT80 from './data/records/learningResources/examSearch_DENT80';
@@ -156,6 +156,10 @@ mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
 //         return [200, libHours];
 //     }
 // });
+
+// mock cant tell the difference between 'possible' and 'ntro incomplete' calls :(
+mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(withDelay([200, espaceSearchResponse]));
+mock.onGet(routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(withDelay([200, espaceSearchResponse]));
 
 mock.onGet(routes.ALERTS_ALL_API().apiUrl).reply(withDelay([200, alertList]));
 mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(

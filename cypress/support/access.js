@@ -5,6 +5,7 @@ export const hasPanels = optionsTheUserShouldSee => {
     possiblePanels.set('library-services', { title: 'Library services', content: 'Services for' });
     possiblePanels.set('past-exam-papers', { title: 'Past exam papers', content: 'Search by' });
     possiblePanels.set('training', { title: 'Training', content: 'Online' });
+    possiblePanels.set('espace', { title: 'eSpace', content: 'Things you need to do in eSpace' });
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
@@ -44,4 +45,11 @@ export const hasPanels = optionsTheUserShouldSee => {
             .children()
             .length.to.be.greaterThan(0);
     }
+};
+export const hasNoEspacePanel = () => {
+    //
+};
+
+export const hasEspaceEntries = links => {
+    //
 };

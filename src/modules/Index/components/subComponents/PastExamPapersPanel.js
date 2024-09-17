@@ -53,9 +53,9 @@ export const PastExamPapersPanel = ({ account }) => {
     const pageId = 'homepage-pastexampapers';
 
     const isLoggedIn = account => !!account && !!account.id;
+    // on go live this should only be LIBRARYSTAFFB - STAFF included so OMC staff are able to see during dev
     const isStaff = account => isLoggedIn(account) && ['STAFF', 'LIBRARYSTAFFB'].includes(account.user_group);
     let displayedClasses = [];
-    console.log('account.current_classes=', account?.current_classes);
     const hasClasses = account =>
         isLoggedIn(account) && !!account.current_classes && account.current_classes.length > 0;
     if (hasClasses(account)) {

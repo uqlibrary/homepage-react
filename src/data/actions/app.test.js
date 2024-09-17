@@ -11,6 +11,13 @@ describe('App action creator', () => {
         mockApi.reset();
     });
 
+    it('dispatches expected actions when hidePossiblyYourPublicationsLure() is called', async () => {
+        const expectedActions = [actions.APP_DASHBOARD_POSSIBLY_YOUR_PUBLICATIONS_LURE_HIDE];
+
+        await mockActionsStore.dispatch(appActions.hidePossiblyYourPublicationsLure());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
     it('dispatches expected actions when showAppAlert() is called', async () => {
         const expectedActions = [actions.APP_ALERT_SHOW];
 
