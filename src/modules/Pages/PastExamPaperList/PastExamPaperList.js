@@ -28,12 +28,6 @@ const StyledTableCell = styled(TableCell)(() => ({
     '& .secondaryExamDetail': {
         marginTop: '1em',
     },
-    '& a:hover': {
-        '& span': {
-            color: '#fff',
-            backgroundColor: '#51247A',
-        },
-    },
 }));
 
 const StyledMobileViewWrapper = styled('div')(() => ({
@@ -294,19 +288,11 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                                         target="_blank"
                                                                                     >
                                                                                         {!!paper.examType && (
-                                                                                            <div>
-                                                                                                <span>
-                                                                                                    {paper.examType}
-                                                                                                </span>
-                                                                                            </div>
+                                                                                            <div>{paper.examType}</div>
                                                                                         )}
                                                                                         {paper.courseCode}
                                                                                         {!!paper.examNote && (
-                                                                                            <div>
-                                                                                                <span>
-                                                                                                    {paper.examNote}
-                                                                                                </span>
-                                                                                            </div>
+                                                                                            <div>{paper.examNote}</div>
                                                                                         )}
                                                                                     </a>
                                                                                 ) : null}

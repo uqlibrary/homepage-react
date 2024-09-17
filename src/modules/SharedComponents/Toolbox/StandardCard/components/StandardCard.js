@@ -7,7 +7,6 @@ import CardHeader from '@mui/material/CardHeader';
 import { styled } from '@mui/material/styles';
 
 const StyledCard = styled(Card)(({ theme }) => ({
-    backgroundColor: '#f3f3f4', // grey-50
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
     borderRadius: '4px',
     boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
@@ -22,7 +21,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
         paddingRight: '0px !important',
     },
     '& .cardHeaderPrimary': {
-        backgroundColor: '#f3f3f4', // grey-50
+        backgroundColor: theme.palette.white.main,
         color: theme.palette.primary.light,
         overflow: 'hidden',
         whiteSpace: 'nowrap',

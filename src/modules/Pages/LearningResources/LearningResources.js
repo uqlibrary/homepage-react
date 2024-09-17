@@ -351,7 +351,7 @@ export const LearningResources = ({
             <section aria-live="assertive">
                 <StandardCard noPadding noHeader>
                     <Grid container>
-                        <Grid item xs={12} data-testid="learning-resources" style={{ backgroundColor: 'white' }}>
+                        <Grid item xs={12} data-testid="learning-resources">
                             <StyledAppBar
                                 data-analyticsid="learning-resource-top-menu"
                                 data-testid="learning-resource-top-menu"

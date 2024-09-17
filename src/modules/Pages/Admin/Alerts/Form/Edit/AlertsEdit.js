@@ -1,9 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-
 import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -14,10 +12,6 @@ import { AlertForm } from 'modules/Pages/Admin/Alerts/Form/AlertForm';
 import { getTimeNowFormatted, extractFieldsFromBody } from '../../alerthelpers';
 import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { default as locale } from '../../alertsadmin.locale';
-
-const StyledStandardCard = styled(StandardCard)(() => ({
-    backgroundColor: 'white',
-}));
 
 export const AlertsEdit = ({ actions, alert, alertError, alertLoading, alertStatus }) => {
     const { alertid } = useParams();
@@ -82,7 +76,7 @@ export const AlertsEdit = ({ actions, alert, alertError, alertLoading, alertStat
                         helpContent={locale.form.help}
                         // showCloneButton
                     />
-                    <StyledStandardCard title="Edit alert">
+                    <StandardCard title="Edit alert">
                         <AlertForm
                             actions={actions}
                             alertLoading={alertLoading}
@@ -91,7 +85,7 @@ export const AlertsEdit = ({ actions, alert, alertError, alertLoading, alertStat
                             alertStatus={alertStatus}
                             defaults={defaults}
                         />
-                    </StyledStandardCard>
+                    </StandardCard>
                 </section>
             </StandardPage>
         </Fragment>
