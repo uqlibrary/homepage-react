@@ -143,7 +143,7 @@ export const Index = ({
     return (
         <React.Suspense fallback={<ContentLoader message="Loading"/>}>
             { /* TEMP WORKS - USED AS A PLACEHOLDER FOR NOW */ }
-            <StyledCulturalAdvice>
+            {/* <StyledCulturalAdvice>
                 <StandardPage>
                     <p className={'newCulturalStatement'} style={{ letterSpacing: '.01rem', fontWeight: '400', fontFamily: 'Roboto, Helvetica, Arial, sans-serif', color: 'white', margin: 0, border: 0 }}>
                         The Library is custodian of <a style={{
@@ -151,7 +151,7 @@ export const Index = ({
                     }} href="https://web.library.uq.edu.au/collections/culturally-sensitive-collections">culturally sensitive Indigenous material.</a></p>
 
                 </StandardPage>
-            </StyledCulturalAdvice>
+            </StyledCulturalAdvice> */}
             <div id="search-portal-container" data-testid="search-portal-container" style={{
                 paddingTop: 25,
                 paddingBottom: 25,
