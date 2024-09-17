@@ -1,7 +1,5 @@
 import { hasEspaceEntries, hasNoEspacePanel, hasPanels } from '../../support/access';
 
-// Note: the Mylibrary Button is supplied by reusable-webcomponents. Testing is done over there.
-
 // we test that each user type gets the correct elements on the homepage
 // we shouldn't test the mylibrary button here, same, as that is built in reusable-webcomponents
 context('Personalised Homepage', () => {

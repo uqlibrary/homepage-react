@@ -6,10 +6,6 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
-import LinkIcon from '@mui/icons-material/Link';
-import PostAddIcon from '@mui/icons-material/PostAdd';
-
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { isEspaceAuthor } from 'helpers/access';
 
@@ -24,29 +20,27 @@ const StyledGridItem = styled(Grid)(() => ({
 const EspacePossible = ({ possibleRecords }) => {
     return (
         <StyledGridItem item xs={12}>
-            <a
-                className={'menuItemRootAnchor'}
-                href={'https://espace.library.uq.edu.au/records/possible'}
-                id="pp-espace-possible-menu-button"
-                data-testid="pp-espace-possible-menu-button"
+            <Link
+                to={'https://espace.library.uq.edu.au/records/possible'}
+                id="espace-possible"
+                data-testid="espace-possible"
             >
                 {!!possibleRecords &&
                     'Claim [totalRecords] UQ eSpace records'.replace('[totalRecords]', possibleRecords.total)}
-            </a>
+            </Link>
         </StyledGridItem>
     );
 };
 const EspaceOrcid = () => {
     return (
         <StyledGridItem item xs={12}>
-            <a
-                className={'menuItemRootAnchor'}
-                href={'https://espace.library.uq.edu.au/author-identifiers/orcid/link'}
-                id="pp-espace-orcid-menu-button"
-                data-testid="pp-espace-orcid-menu-button"
+            <Link
+                to={'https://espace.library.uq.edu.au/author-identifiers/orcid/link'}
+                id="espace-orcid"
+                data-testid="espace-orcid"
             >
                 Link ORCiD account to UQ eSpace
-            </a>
+            </Link>
         </StyledGridItem>
     );
 };
@@ -54,16 +48,11 @@ const EspaceNTROs = ({ incompleteNTRORecords }) => {
     console.log('EspaceNTROs incompleteNTRORecords=', incompleteNTRORecords);
     return (
         <StyledGridItem item xs={12}>
-            <a
-                className={'menuItemRootAnchor'}
-                href={'https://espace.library.uq.edu.au/records/incomplete'}
-                id="pp-espace-ntro-menu-button"
-                data-testid="pp-espace-ntro-menu-button"
-            >
+            <Link to={'https://espace.library.uq.edu.au/records/incomplete'} id="espace-ntro" data-testid="espace-ntro">
                 {!!incompleteNTRORecords &&
                     !!incompleteNTRORecords.total &&
                     'Complete [total] NTRO records in UQ eSpace'.replace('[total]', incompleteNTRORecords.total)}
-            </a>
+            </Link>
         </StyledGridItem>
     );
 };
@@ -84,8 +73,8 @@ export const EspaceLinks = ({ account, author, possibleRecords, incompleteNTRORe
             fullHeight
             primaryHeader
             noPadding
-            standardCardId="espace-links-homepage-panel"
-            title={'eSpace'}
+            standardCardId="espace-panel"
+            title={'UQ eSpace'}
             // style={{ paddingLeft: '40px' }}
         >
             <Grid container spacing={0} style={{ paddingLeft: '24px' }}>
