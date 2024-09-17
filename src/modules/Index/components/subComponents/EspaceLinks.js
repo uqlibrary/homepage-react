@@ -98,7 +98,7 @@ export const EspaceLinks = ({ account, author, possibleRecords, incompleteNTRORe
                             whiteSpaceCollapse: 'collapse',
                         }}
                     >
-                        Things you need to do in eSpace:
+                        Things you need to do in UQ eSpace:
                     </Typography>
                 )}
 

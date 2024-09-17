@@ -5,7 +5,7 @@ export const hasPanels = optionsTheUserShouldSee => {
     possiblePanels.set('library-services', { title: 'Library services', content: 'Services for' });
     possiblePanels.set('past-exam-papers', { title: 'Past exam papers', content: 'Search by' });
     possiblePanels.set('training', { title: 'Training', content: 'Online' });
-    possiblePanels.set('espace', { title: 'UQ eSpace', content: 'Things you need to do in eSpace' });
+    possiblePanels.set('espace', { title: 'UQ eSpace', content: 'Things you need to do in UQ eSpace' });
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
