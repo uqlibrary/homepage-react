@@ -158,8 +158,13 @@ mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
 // });
 
 // mock cant tell the difference between 'possible' and 'ntro incomplete' calls :(
-mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(withDelay([200, espaceSearchResponse]));
-mock.onGet(routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(withDelay([200, espaceSearchResponse]));
+mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(() => {
+    if (responseType === 'nodatamissing') {
+        return [200, { total: 0, took: 179, per_page: 20, current_page: 1, from: null, to: null, data: [] }];
+    } else {
+        return [200, espaceSearchResponse];
+    }
+});
 
 mock.onGet(routes.ALERTS_ALL_API().apiUrl).reply(withDelay([200, alertList]));
 mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(

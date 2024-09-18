@@ -52,6 +52,15 @@ context('Personalised Homepage', () => {
         hasEspaceEntries(['espace-possible', 'espace-orcid', 'espace-ntro']);
     });
 
+    it('Renders a patron with no outstanding espace records correctly', () => {
+        cy.visit('/?user=uqresearcher&responseType=nodatamissing'); // special mock data
+        cy.viewport(1300, 1000);
+
+        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace']);
+
+        hasEspaceEntries(['espace-orcid']);
+    });
+
     it('Renders a library staff administrator home page correctly', () => {
         cy.visit('/?user=digiteamMember');
         cy.viewport(1300, 1000);

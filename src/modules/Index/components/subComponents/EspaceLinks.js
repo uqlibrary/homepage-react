@@ -64,6 +64,20 @@ const EspacePossible = ({ recordCount }) => {
         </StyledGridItem>
     );
 };
+const EspaceUpdateWorks = () => {
+    return (
+        <StyledGridItem component={'li'} item xs={12}>
+            <Link
+                to={'https://espace.library.uq.edu.au/dashboard'}
+                id="espace-updateworks"
+                data-testid="espace-updateworks"
+            >
+                Update UQ eSpace records
+            </Link>
+            <SvgIcon />
+        </StyledGridItem>
+    );
+};
 const EspaceJournalSearch = () => {
     return (
         <StyledGridItem component={'li'} item xs={12}>
@@ -125,22 +139,21 @@ export const EspaceLinks = ({ author, possibleRecords, incompleteNTRORecords }) 
                 <Grid item xs={12} style={{ margin: '20px 0 0 0' }}>
                     <Link to="https://espace.library.uq.edu.au/dashboard">Access UQ eSpace dashboard</Link>
                 </Grid>
-                {((!!possibleRecords && !!possibleRecords.total && possibleRecords.total > 0) ||
-                    !author.aut_orcid_id ||
-                    (!!incompleteNTRORecords && !!incompleteNTRORecords.total && incompleteNTRORecords.total)) && (
-                    <Grid item>
-                        <StyledLabel component={'h4'} variant={'h6'}>
-                            Actions:
-                        </StyledLabel>
-                    </Grid>
-                )}
+                <Grid item>
+                    <StyledLabel component={'h4'} variant={'h6'}>
+                        Actions:
+                    </StyledLabel>
+                </Grid>
 
                 <Grid item xs={12}>
                     <Grid container component={'ul'} style={{ paddingLeft: 0, marginTop: 0, marginLeft: 0 }}>
                         {!author.aut_orcid_id && <EspaceOrcid />}
-                        {!!possibleRecords && !!possibleRecords.total && possibleRecords.total > 0 && (
-                            <EspacePossible recordCount={possibleRecords.total} />
-                        )}
+                        {!!possibleRecords &&
+                            (!!possibleRecords.total && possibleRecords.total > 0 ? (
+                                <EspacePossible recordCount={possibleRecords.total} />
+                            ) : (
+                                <EspaceUpdateWorks />
+                            ))}
                         {!!incompleteNTRORecords &&
                             !!incompleteNTRORecords.total &&
                             incompleteNTRORecords.total > 0 && (
