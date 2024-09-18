@@ -6,37 +6,67 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import SvgIcon from '@mui/material/SvgIcon'; // use an empty icon to force matching spacing between items
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 const StyledGridItem = styled(Grid)(() => ({
-    paddingBottom: '24px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap',
+    paddingBottom: '10px',
+    paddingLeft: '10px',
+    position: 'relative',
+    '&::before': {
+        content: '"•"', // Bullet character
+        position: 'absolute',
+        left: 0,
+        fontSize: '1em',
+        lineHeight: 1,
+        color: 'currentColor',
+        top: '35%',
+    },
     '& a': {
         marginRight: -16,
         marginTop: '12px',
     },
 }));
+const StyledLabel = styled(Typography)(() => ({
+    color: '#19151c',
+    fontSize: '16px',
+    fontWeight: 500,
+    marginTop: '24px',
+    textWrap: 'nowrap',
+    whiteSpaceCollapse: 'collapse',
+}));
+const StyledHighlightIcon = styled(StarBorderIcon)(() => ({
+    color: 'red',
+    paddingLeft: '15px',
+    height: '1em',
+}));
 
-const EspacePossible = ({ possibleRecords }) => {
+/*
+ * ALWAYS refer to espace as "UQ eSpace"
+ */
+
+const EspacePossible = ({ recordCount }) => {
     return (
-        <StyledGridItem item xs={12}>
+        <StyledGridItem component={'li'} item xs={12}>
             <Link
                 to={'https://espace.library.uq.edu.au/records/possible'}
                 id="espace-possible"
                 data-testid="espace-possible"
             >
-                {!!possibleRecords &&
-                    !!possibleRecords.total &&
-                    possibleRecords.total > 0 &&
-                    'Claim [totalRecords] UQ eSpace records'.replace('[totalRecords]', possibleRecords.total)}
+                {'Claim [totalRecords] records'.replace('[totalRecords]', recordCount)}
             </Link>
-            <StarBorderIcon style={{ color: 'red', paddingLeft: '15px' }} />
+            <StyledHighlightIcon />
         </StyledGridItem>
     );
 };
 const EspaceJournalSearch = () => {
     return (
-        <StyledGridItem item xs={12}>
+        <StyledGridItem component={'li'} item xs={12}>
             <Link
                 to={'https://espace.library.uq.edu.au/journals/search/'}
                 id="espace-journalsearch"
@@ -44,13 +74,14 @@ const EspaceJournalSearch = () => {
             >
                 Search for Journals
             </Link>
+            <SvgIcon />
         </StyledGridItem>
     );
 };
 
 const EspaceEditorialAppointments = () => {
     return (
-        <StyledGridItem item xs={12}>
+        <StyledGridItem component={'li'} item xs={12}>
             <Link
                 to={'https://espace.library.uq.edu.au/editorial-appointments'}
                 id="espace-editorialAppointments"
@@ -58,101 +89,81 @@ const EspaceEditorialAppointments = () => {
             >
                 Update Editorial appointments
             </Link>
+            <SvgIcon />
         </StyledGridItem>
     );
 };
 const EspaceOrcid = () => {
     return (
-        <StyledGridItem item xs={12}>
+        <StyledGridItem component={'li'} item xs={12}>
             <Link
                 to={'https://espace.library.uq.edu.au/author-identifiers/orcid/link'}
                 id="espace-orcid"
                 data-testid="espace-orcid"
             >
-                Link ORCiD account to UQ eSpace
+                Link ORCiD account
             </Link>
-            <StarBorderIcon style={{ color: 'red', paddingLeft: '15px' }} />
+            <StyledHighlightIcon />
         </StyledGridItem>
     );
 };
-const EspaceNTROs = ({ incompleteNTRORecords }) => {
-    console.log('EspaceNTROs incompleteNTRORecords=', incompleteNTRORecords);
+const EspaceNTROs = ({ recordCount }) => {
     return (
-        <StyledGridItem item xs={12}>
+        <StyledGridItem component={'li'} item xs={12}>
             <Link to={'https://espace.library.uq.edu.au/records/incomplete'} id="espace-ntro" data-testid="espace-ntro">
-                {!!incompleteNTRORecords &&
-                    !!incompleteNTRORecords.total &&
-                    incompleteNTRORecords.total > 0 &&
-                    'Complete [total] NTRO records in UQ eSpace'.replace('[total]', incompleteNTRORecords.total)}
+                {'Complete [totalRecords] NTRO records'.replace('[totalRecords]', recordCount)}
             </Link>
-            <StarBorderIcon style={{ color: 'red', paddingLeft: '15px' }} />
+            <StyledHighlightIcon />
         </StyledGridItem>
     );
 };
 
-export const EspaceLinks = ({ account, author, possibleRecords, incompleteNTRORecords }) => {
-    !!account && console.log('EspaceLinks account=', account);
-    !!author && console.log('EspaceLinks author=', author);
-    !!possibleRecords && console.log('EspaceLinks possibleRecords=', possibleRecords);
-    !!incompleteNTRORecords && console.log('EspaceLinks incompleteNTRORecords=', incompleteNTRORecords);
-
+export const EspaceLinks = ({ author, possibleRecords, incompleteNTRORecords }) => {
     return (
-        <StandardCard
-            subCard
-            fullHeight
-            primaryHeader
-            noPadding
-            standardCardId="espace-panel"
-            title={'UQ eSpace'}
-            // style={{ paddingLeft: '40px' }}
-        >
-            <Grid container spacing={0} style={{ paddingLeft: '24px' }}>
-                <Grid item xs={12}>
-                    <Link to="https://espace.library.uq.edu.au/dashboard" style={{ padding: 0 }}>
-                        Access UQ eSpace dashboard
-                    </Link>
+        <StandardCard subCard fullHeight primaryHeader noPadding standardCardId="espace-panel" title={'UQ eSpace'}>
+            <Grid container spacing={0} style={{ paddingInline: '24px' }}>
+                <Grid item xs={12} style={{ margin: '20px 0 0 0' }}>
+                    <Link to="https://espace.library.uq.edu.au/dashboard">Access UQ eSpace dashboard</Link>
                 </Grid>
                 {((!!possibleRecords && !!possibleRecords.total && possibleRecords.total > 0) ||
                     !author.aut_orcid_id ||
-                    (!!incompleteNTRORecords && !!incompleteNTRORecords.total)) && (
-                    <Typography
-                        component={'h4'}
-                        variant={'h6'}
-                        style={{
-                            color: '#19151c',
-                            fontSize: '16px',
-                            fontWeight: 500,
-                            marginBlock: '24px',
-                            textWrap: 'nowrap',
-                            whiteSpaceCollapse: 'collapse',
-                        }}
-                    >
-                        Actions:
-                    </Typography>
+                    (!!incompleteNTRORecords && !!incompleteNTRORecords.total && incompleteNTRORecords.total)) && (
+                    <Grid item>
+                        <StyledLabel component={'h4'} variant={'h6'}>
+                            Actions:
+                        </StyledLabel>
+                    </Grid>
                 )}
 
-                {!author.aut_orcid_id && <EspaceOrcid />}
-                {!!possibleRecords && <EspacePossible possibleRecords={possibleRecords} />}
-                {!!incompleteNTRORecords && !!incompleteNTRORecords.total && incompleteNTRORecords.total > 0 && (
-                    <EspaceNTROs incompleteNTRORecords={incompleteNTRORecords} />
-                )}
-                <EspaceJournalSearch />
-                <EspaceEditorialAppointments />
+                <Grid item xs={12}>
+                    <Grid container component={'ul'} style={{ paddingLeft: 0, marginTop: 0, marginLeft: 0 }}>
+                        {!author.aut_orcid_id && <EspaceOrcid />}
+                        {!!possibleRecords && !!possibleRecords.total && possibleRecords.total > 0 && (
+                            <EspacePossible recordCount={possibleRecords.total} />
+                        )}
+                        {!!incompleteNTRORecords &&
+                            !!incompleteNTRORecords.total &&
+                            incompleteNTRORecords.total > 0 && (
+                                <EspaceNTROs recordCount={incompleteNTRORecords.total} />
+                            )}
+                        <EspaceJournalSearch />
+                        <EspaceEditorialAppointments />
+                    </Grid>
+                </Grid>
             </Grid>
         </StandardCard>
     );
 };
 
 EspacePossible.propTypes = {
-    possibleRecords: PropTypes.object,
+    recordCount: PropTypes.number,
 };
 
 EspaceNTROs.propTypes = {
-    incompleteNTRORecords: PropTypes.object,
+    recordCount: PropTypes.number,
 };
 
 EspaceLinks.propTypes = {
-    account: PropTypes.object,
     author: PropTypes.object,
     possibleRecords: PropTypes.object,
     incompleteNTRORecords: PropTypes.object,

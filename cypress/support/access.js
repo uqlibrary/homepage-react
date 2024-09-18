@@ -52,9 +52,9 @@ export const hasNoEspacePanel = () => {
 
 export const hasEspaceEntries = optionsTheUserShouldSee => {
     const availableOptions = new Map();
-    availableOptions.set('espace-possible', 'UQ eSpace records');
-    availableOptions.set('espace-orcid', 'Link ORCiD account to UQ eSpace');
-    availableOptions.set('espace-ntro', 'NTRO records in UQ eSpace');
+    availableOptions.set('espace-possible', 'records');
+    availableOptions.set('espace-orcid', 'Link ORCiD account');
+    availableOptions.set('espace-ntro', 'NTRO records');
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {

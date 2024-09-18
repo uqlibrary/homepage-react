@@ -261,7 +261,6 @@ export const Index = ({
                         {isEspaceAuthor(account, author) && (
                             <Grid item xs={12} md={4} data-testid="espace-links-panel" sx={{ paddingTop: '0px' }}>
                                 <EspaceLinks
-                                    account={account}
                                     author={author}
                                     possibleRecords={possibleRecords}
                                     incompleteNTRORecords={incompleteNTRO}
