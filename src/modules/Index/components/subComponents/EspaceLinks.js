@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -29,6 +30,7 @@ const EspacePossible = ({ possibleRecords }) => {
                     possibleRecords.total > 0 &&
                     'Claim [totalRecords] UQ eSpace records'.replace('[totalRecords]', possibleRecords.total)}
             </Link>
+            <StarBorderIcon style={{ color: 'red', paddingLeft: '15px' }} />
         </StyledGridItem>
     );
 };
@@ -51,8 +53,8 @@ const EspaceEditorialAppointments = () => {
         <StyledGridItem item xs={12}>
             <Link
                 to={'https://espace.library.uq.edu.au/editorial-appointments'}
-                id="espace-journalsearch"
-                data-testid="espace-journalsearch"
+                id="espace-editorialAppointments"
+                data-testid="espace-editorialAppointments"
             >
                 Update Editorial appointments
             </Link>
@@ -69,6 +71,7 @@ const EspaceOrcid = () => {
             >
                 Link ORCiD account to UQ eSpace
             </Link>
+            <StarBorderIcon style={{ color: 'red', paddingLeft: '15px' }} />
         </StyledGridItem>
     );
 };
@@ -82,6 +85,7 @@ const EspaceNTROs = ({ incompleteNTRORecords }) => {
                     incompleteNTRORecords.total > 0 &&
                     'Complete [total] NTRO records in UQ eSpace'.replace('[total]', incompleteNTRORecords.total)}
             </Link>
+            <StarBorderIcon style={{ color: 'red', paddingLeft: '15px' }} />
         </StyledGridItem>
     );
 };
