@@ -1,5 +1,15 @@
 import * as actions from './actionTypes';
 
+/**
+ * Hides possibly yours lure application-wide
+ * @returns {action}
+ */
+export function hidePossiblyYourPublicationsLure() {
+    return {
+        type: actions.APP_DASHBOARD_POSSIBLY_YOUR_PUBLICATIONS_LURE_HIDE,
+    };
+}
+
 export function showAppAlert(appAlert) {
     return {
         type: actions.APP_ALERT_SHOW,

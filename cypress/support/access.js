@@ -5,6 +5,7 @@ export const hasPanels = optionsTheUserShouldSee => {
     possiblePanels.set('library-services', { title: 'Library services', content: 'Services for' });
     possiblePanels.set('past-exam-papers', { title: 'Past exam papers', content: 'Search by' });
     possiblePanels.set('training', { title: 'Training', content: 'Online' });
+    possiblePanels.set('espace', { title: 'UQ eSpace', content: 'Actions' });
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
@@ -43,5 +44,43 @@ export const hasPanels = optionsTheUserShouldSee => {
         cy.get('div[data-testid=library-services-items]')
             .children()
             .length.to.be.greaterThan(0);
+    }
+};
+export const hasNoEspacePanel = () => {
+    cy.get('[data-testid="espace-links-panel"]').should('not.exist');
+};
+
+export const hasEspaceEntries = optionsTheUserShouldSee => {
+    const availableOptions = new Map();
+    availableOptions.set('espace-possible', 'records');
+    availableOptions.set('espace-orcid', 'Link ORCiD account');
+    availableOptions.set('espace-ntro', 'NTRO records');
+
+    // validate the input - all supplied entries should exist in the available options
+    optionsTheUserShouldSee.map(item => {
+        expect([...availableOptions.keys()].includes(item), `option unexpectedly supplied for panel test: ${item}`).to
+            .be.true;
+    });
+
+    for (const [key, value] of availableOptions) {
+        expect(typeof key).to.equal('string');
+        expect(key.length).to.not.equals(0);
+        expect(typeof value).to.equal('string');
+        expect(value.length).to.not.equals(0);
+
+        // Using the Link in the Personalised Panel means all the items are always in the tree.
+        // For items which should not appear, look for the 'hidden' class that stops it displaying
+        const entryname = `${key}`;
+        const elementId = `[data-testid="${entryname}"]`;
+        // the hidden class is not applied, so the element is visible
+        // the hidden class IS applied, so the element is hidden
+        // const elementIdMissing = `${elementId}`;
+        if (!!optionsTheUserShouldSee.includes(key)) {
+            cy.log(`checking personalisation line ${entryname} contains ${value}`);
+            cy.get(elementId).contains(value);
+        } else {
+            cy.log(`checking personalisation line ${entryname} is hidden`);
+            cy.get(elementId).should('not.exist');
+        }
     }
 };

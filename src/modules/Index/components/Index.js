@@ -21,13 +21,16 @@ import { lazyRetry } from 'helpers/general';
 import LibraryUpdates from 'modules/Index/components/subComponents/LibraryUpdates';
 import NavigationCardWrapper from './subComponents/NavigationCardWrapper';
 import {
+    searcheSpacePossiblePublications,
+    searcheSpaceIncompleteNTROPublications,
     loadLibHours,
     loadCompAvail,
     loadTrainingEvents,
     loadDrupalArticles,
 } from 'data/actions';
-import { canSeeLearningResources } from 'helpers/access';
+import { canSeeLearningResources, isEspaceAuthor } from 'helpers/access';
 
+const EspaceLinks = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/EspaceLinks')));
 const Locations = lazy(() => lazyRetry(() => import('./subComponents/Locations')));
 const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
 const PastExamPapers = lazy(() => lazyRetry(() => import('./subComponents/PastExamPapersPanel')));
@@ -101,18 +104,23 @@ const StyledSummary = styled('span')(({ theme }) => ({
 export const Index = ({
     account,
     accountLoading,
+    author,
     libHours,
     libHoursLoading,
     libHoursError,
-    computerAvailability,
-    computerAvailabilityLoading,
-    computerAvailabilityError,
+    // computerAvailability,
+    // computerAvailabilityLoading,
+    // computerAvailabilityError,
     trainingEvents,
     trainingEventsLoading,
     trainingEventsError,
+    possibleRecords,
+    possibleRecordsLoading,
+    incompleteNTRO,
+    incompleteNTROLoading,
     drupalArticleList,
-    drupalArticlesLoading,
-    drupalArticlesError,
+    // drupalArticlesLoading,
+    // drupalArticlesError,
 }) => {
     // console.log('drupal article list in index feeder,', drupalArticleList);
     const dispatch = useDispatch();
@@ -145,6 +153,31 @@ export const Index = ({
             dispatch(loadTrainingEvents(account));
         }
     }, [account, accountLoading, dispatch]);
+    useEffect(() => {
+        if (
+            accountLoading === false &&
+            !!account &&
+            !!author &&
+            !!author.aut_id &&
+            !possibleRecords &&
+            possibleRecordsLoading === null
+        ) {
+            dispatch(searcheSpacePossiblePublications());
+        }
+    }, [accountLoading, account, author, possibleRecords, possibleRecordsLoading, dispatch]);
+    useEffect(() => {
+        if (
+            accountLoading === false &&
+            !!account &&
+            !!author &&
+            !!author.aut_id &&
+            !incompleteNTRO &&
+            incompleteNTROLoading === null
+        ) {
+            dispatch(searcheSpaceIncompleteNTROPublications());
+        }
+    }, [accountLoading, account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
+    console.log('Index possibleRecords = ', possibleRecords);
     return (
         <React.Suspense fallback={<ContentLoader message="Loading"/>}>
             { /* TEMP WORKS - USED AS A PLACEHOLDER FOR NOW */ }
@@ -225,6 +258,15 @@ export const Index = ({
                                 <PastExamPapers account={account} history={history}/>
                             </Grid>
                         )}
+                        {isEspaceAuthor(account, author) && (
+                            <Grid item xs={12} md={4} data-testid="espace-links-panel" sx={{ paddingTop: '0px' }}>
+                                <EspaceLinks
+                                    author={author}
+                                    possibleRecords={possibleRecords}
+                                    incompleteNTRORecords={incompleteNTRO}
+                                />
+                            </Grid>
+                        )}
                     </Grid>
                 </StandardPage>
             )}
@@ -239,6 +281,7 @@ export const Index = ({
 Index.propTypes = {
     account: PropTypes.object,
     accountLoading: PropTypes.bool,
+    author: PropTypes.object,
     actions: PropTypes.any,
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
@@ -249,6 +292,10 @@ Index.propTypes = {
     trainingEvents: PropTypes.any,
     trainingEventsLoading: PropTypes.bool,
     trainingEventsError: PropTypes.bool,
+    possibleRecords: PropTypes.object,
+    possibleRecordsLoading: PropTypes.bool,
+    incompleteNTRO: PropTypes.object,
+    incompleteNTROLoading: PropTypes.bool,
     drupalArticleList: PropTypes.array,
     drupalArticlesLoading: PropTypes.bool,
     drupalArticlesError: PropTypes.bool,
