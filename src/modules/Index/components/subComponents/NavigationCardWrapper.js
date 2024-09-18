@@ -22,7 +22,7 @@ const NavigationCardWrapper = () => {
     return (
         <StandardPage>
             <StyledNav>
-                <StyledGridContainer container component="ul" spacing={4} data-testid="help-navigation-panel">
+                <StyledGridContainer container component="ul" data-testid="help-navigation-panel">
                     <SingleLinkCard
                         cardLabel="Study and learning support"
                         landingUrl="https://web.library.uq.edu.au/study-and-learning-support"

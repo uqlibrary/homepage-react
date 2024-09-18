@@ -6,21 +6,30 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 
-const StyledGridItem = styled(Grid)(() => ({
+const StyledGridItem = styled(Grid)(({ theme }) => ({
     listStyleType: 'none',
     marginBottom: '60px',
     '@media (min-width: 56em)': {
-        height: '6em',
+        // height: '6em',
         paddingTop: '24px !important',
     },
     '@media (max-width: 74.95rem)': {
         paddingLeft: '24px !important',
-        marginBottom: '51px',
+        // marginBottom: '51px',
     },
     '@media (max-width: 56em)': {
         paddingTop: '24px !important',
-        marginBottom: '60px',
+        // marginBottom: '60px',
+    },
+    paddingLeft: '16px',
+    '& div': {
+        padding: theme.spacing(2),
+        height: '100%', // Ensure the item takes full height
+        display: 'flex', // Make the item a flex container
+        flexDirection: 'column', // Align children vertically
+        justifyContent: 'center', // Center children vertically
     },
 }));
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -35,36 +44,39 @@ const StyledLink = styled(Link)(({ theme }) => ({
     fontSize: '20px',
     fontWeight: 500,
     padding: '24px',
-    '& svg': {
+    '& svg[data-testid="ArrowForwardIcon"]': {
         display: 'block',
         marginTop: '24px',
     },
     '@media (max-width: 56em)': {
-        marginBottom: '-58px',
+        // marginBottom: '-58px',
         padding: '24px',
 
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        '& svg': {
+        '& svg[data-testid="ArrowForwardIcon"]': {
             marginTop: 0,
         },
     },
 
     // on hover, the background changes colour, the link text underlines and the icon moves
     '@media (min-width: 56em)': {
-        '& svg': {
+        '& svg[data-testid="ArrowForwardIcon"]': {
             '@media (prefers-reduced-motion: no-preference)': {
                 transition: 'margin-left 200ms ease-in-out',
             },
         },
     },
     '&:hover': {
+        '& h2': {
+            textDecoration: 'underline',
+        },
         '@media (prefers-reduced-motion: no-preference)': {
             backgroundColor: '#f3f3f4',
         },
-        textDecoration: 'underline',
-        '& svg': {
+        textDecoration: 'none',
+        '& svg[data-testid="ArrowForwardIcon"]': {
             '@media (prefers-reduced-motion: no-preference)': {
                 marginLeft: '5px',
                 transition: 'margin-left 200ms ease-in-out',
@@ -76,10 +88,14 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const SingleLinkCard = ({ cardLabel, landingUrl }) => {
     return (
         <StyledGridItem item component="li" xs={12} md={6} lg={4}>
-            <StyledLink border={1} p={1} to={landingUrl}>
-                <span>{cardLabel}</span>
-                <ArrowForwardIcon sx={{ color: '#51247A' }} />
-            </StyledLink>
+            <div>
+                <StyledLink border={1} p={1} to={landingUrl}>
+                    <QuestionMarkIcon />
+                    <h2>{cardLabel}</h2>
+                    <p>a short paragraph that describes the area</p>
+                    <ArrowForwardIcon classname={'arrow'} sx={{ color: '#51247A' }} />
+                </StyledLink>
+            </div>
         </StyledGridItem>
     );
 };
