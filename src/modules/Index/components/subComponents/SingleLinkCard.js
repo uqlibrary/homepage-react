@@ -2,34 +2,53 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
 
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 
-const StyledGridItem = styled(Grid)(({ theme }) => ({
+const StyledGridItem = styled(Grid)(() => ({
     listStyleType: 'none',
-    marginBottom: '60px',
-    '@media (min-width: 56em)': {
-        // height: '6em',
-        paddingTop: '24px !important',
-    },
+    // marginBottom: '60px',
+    display: 'flex',
+    alignItems: 'stretch',
+    flex: 1,
+    marginBottom: '32px',
     '@media (max-width: 74.95rem)': {
-        paddingLeft: '24px !important',
-        // marginBottom: '51px',
+        paddingLeft: '24px',
+        marginBottom: '24px',
     },
-    '@media (max-width: 56em)': {
-        paddingTop: '24px !important',
-        // marginBottom: '60px',
+    paddingLeft: '32px',
+    '& > div': {
+        height: '100%',
+        display: 'flex',
     },
-    paddingLeft: '16px',
-    '& div': {
-        padding: theme.spacing(2),
-        height: '100%', // Ensure the item takes full height
-        display: 'flex', // Make the item a flex container
-        flexDirection: 'column', // Align children vertically
-        justifyContent: 'center', // Center children vertically
+    '@media (max-width: 899px)': {
+        ' p': {
+            display: 'none',
+        },
+        marginBottom: '24px',
+        '& > div': {
+            display: 'block',
+            width: '100%',
+        },
+    },
+    '& h2': {
+        color: '#19151c',
+        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+        fontSize: '20px',
+        fontWeight: 500,
+        letterSpacing: '0.16px',
+        lineHeight: '1.6',
+    },
+    '& p': {
+        color: '#3b383e',
+        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+        fontSize: '16px',
+        fontWeight: 400,
+        letterSpacing: '0.16px',
+        lineHeight: '1.6',
     },
 }));
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -48,9 +67,13 @@ const StyledLink = styled(Link)(({ theme }) => ({
         display: 'block',
         marginTop: '24px',
     },
-    '@media (max-width: 56em)': {
+    '& .icon': {
+        width: '56px',
+        height: '56px',
+    },
+    '@media (max-width: 899px)': {
         // marginBottom: '-58px',
-        padding: '24px',
+        padding: '24px 24px 24px 0',
 
         display: 'flex',
         justifyContent: 'space-between',
@@ -58,42 +81,72 @@ const StyledLink = styled(Link)(({ theme }) => ({
         '& svg[data-testid="ArrowForwardIcon"]': {
             marginTop: 0,
         },
+        '& > div': {
+            margin: '0 16px 0 24px',
+        },
+        '& > h2': { margin: 0 },
+        // '& > p': { margin: 0 },
+        '& > svg': { marginLeft: 'auto' },
+        '& .icon': {
+            width: '40px',
+            height: '40px',
+        },
     },
 
-    // on hover, the background changes colour, the link text underlines and the icon moves
-    '@media (min-width: 56em)': {
+    // on hover, tablet and up, the background changes colour, the link text underlines and the icon moves
+    '@media (min-width: 899px)': {
         '& svg[data-testid="ArrowForwardIcon"]': {
             '@media (prefers-reduced-motion: no-preference)': {
                 transition: 'margin-left 200ms ease-in-out',
             },
         },
-    },
-    '&:hover': {
-        '& h2': {
-            textDecoration: 'underline',
-        },
-        '@media (prefers-reduced-motion: no-preference)': {
-            backgroundColor: '#f3f3f4',
-        },
-        textDecoration: 'none',
-        '& svg[data-testid="ArrowForwardIcon"]': {
+        '&:hover': {
+            '& h2': {
+                textDecoration: 'underline',
+            },
             '@media (prefers-reduced-motion: no-preference)': {
-                marginLeft: '5px',
-                transition: 'margin-left 200ms ease-in-out',
+                backgroundColor: '#f3f3f4',
+            },
+            textDecoration: 'none',
+            '& svg[data-testid="ArrowForwardIcon"]': {
+                '@media (prefers-reduced-motion: no-preference)': {
+                    marginLeft: '5px',
+                    transition: 'margin-left 200ms ease-in-out',
+                },
             },
         },
     },
 }));
 
-const SingleLinkCard = ({ cardLabel, landingUrl }) => {
+const paneIcon = paneBackgroundImage => {
     return (
-        <StyledGridItem item component="li" xs={12} md={6} lg={4}>
+        <Box
+            className={'icon'}
+            sx={{
+                // color: '#51247A',
+                // width: 100, // Set the width of the box
+                // height: 56, // Set the height of the box
+                backgroundImage: paneBackgroundImage,
+                backgroundSize: 'contain', // Adjust the size of the background image
+                backgroundRepeat: 'no-repeat', // Prevent the image from repeating
+                backgroundPosition: 'center', // Center the image
+            }}
+        />
+    );
+};
+
+const SingleLinkCard = ({ cardLabel, landingUrl, iconBackgroundImage, shortParagraph }) => {
+    return (
+        <StyledGridItem item component={'li'} xs={12} md={6} lg={4}>
             <div>
                 <StyledLink border={1} p={1} to={landingUrl}>
-                    <QuestionMarkIcon />
+                    {paneIcon(iconBackgroundImage)}
                     <h2>{cardLabel}</h2>
-                    <p>a short paragraph that describes the area</p>
-                    <ArrowForwardIcon classname={'arrow'} sx={{ color: '#51247A' }} />
+                    <p>{shortParagraph}</p>
+                    <ArrowForwardIcon
+                        // classname={'arrow'}
+                        sx={{ color: '#51247A' }}
+                    />
                 </StyledLink>
             </div>
         </StyledGridItem>
@@ -103,6 +156,8 @@ const SingleLinkCard = ({ cardLabel, landingUrl }) => {
 SingleLinkCard.propTypes = {
     cardLabel: PropTypes.string,
     landingUrl: PropTypes.string,
+    iconBackgroundImage: PropTypes.string,
+    shortParagraph: PropTypes.string,
 };
 
 export default SingleLinkCard;
