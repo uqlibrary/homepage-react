@@ -7,7 +7,6 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { isEspaceAuthor } from 'helpers/access';
 
 const StyledGridItem = styled(Grid)(() => ({
     paddingBottom: '24px',
@@ -26,6 +25,8 @@ const EspacePossible = ({ possibleRecords }) => {
                 data-testid="espace-possible"
             >
                 {!!possibleRecords &&
+                    !!possibleRecords.total &&
+                    possibleRecords.total > 0 &&
                     'Claim [totalRecords] UQ eSpace records'.replace('[totalRecords]', possibleRecords.total)}
             </Link>
         </StyledGridItem>
@@ -51,6 +52,7 @@ const EspaceNTROs = ({ incompleteNTRORecords }) => {
             <Link to={'https://espace.library.uq.edu.au/records/incomplete'} id="espace-ntro" data-testid="espace-ntro">
                 {!!incompleteNTRORecords &&
                     !!incompleteNTRORecords.total &&
+                    incompleteNTRORecords.total > 0 &&
                     'Complete [total] NTRO records in UQ eSpace'.replace('[total]', incompleteNTRORecords.total)}
             </Link>
         </StyledGridItem>
@@ -62,10 +64,6 @@ export const EspaceLinks = ({ account, author, possibleRecords, incompleteNTRORe
     !!author && console.log('EspaceLinks author=', author);
     !!possibleRecords && console.log('EspaceLinks possibleRecords=', possibleRecords);
     !!incompleteNTRORecords && console.log('EspaceLinks incompleteNTRORecords=', incompleteNTRORecords);
-    // const pageLocation = useLocation();
-    // const navigate = useNavigate();
-    //
-    // const pageId = 'homepage-espacelinks';
 
     return (
         <StandardCard
@@ -83,7 +81,7 @@ export const EspaceLinks = ({ account, author, possibleRecords, incompleteNTRORe
                         Access UQ eSpace dashboard
                     </Link>
                 </Grid>
-                {((!!possibleRecords && !!possibleRecords.total) ||
+                {((!!possibleRecords && !!possibleRecords.total && possibleRecords.total > 0) ||
                     !author.aut_orcid_id ||
                     (!!incompleteNTRORecords && !!incompleteNTRORecords.total)) && (
                     <Typography
@@ -102,11 +100,9 @@ export const EspaceLinks = ({ account, author, possibleRecords, incompleteNTRORe
                     </Typography>
                 )}
 
-                {isEspaceAuthor(account, author) && !author.aut_orcid_id && <EspaceOrcid />}
-                {isEspaceAuthor(account, author) && !!possibleRecords && (
-                    <EspacePossible possibleRecords={possibleRecords} />
-                )}
-                {isEspaceAuthor(account, author) && !!incompleteNTRORecords && !!incompleteNTRORecords.total && (
+                {!author.aut_orcid_id && <EspaceOrcid />}
+                {!!possibleRecords && <EspacePossible possibleRecords={possibleRecords} />}
+                {!!incompleteNTRORecords && !!incompleteNTRORecords.total && incompleteNTRORecords.total > 0 && (
                     <EspaceNTROs incompleteNTRORecords={incompleteNTRORecords} />
                 )}
             </Grid>
