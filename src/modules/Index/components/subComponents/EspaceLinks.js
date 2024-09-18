@@ -32,6 +32,33 @@ const EspacePossible = ({ possibleRecords }) => {
         </StyledGridItem>
     );
 };
+const EspaceJournalSearch = () => {
+    return (
+        <StyledGridItem item xs={12}>
+            <Link
+                to={'https://espace.library.uq.edu.au/journals/search/'}
+                id="espace-journalsearch"
+                data-testid="espace-journalsearch"
+            >
+                Search for Journals
+            </Link>
+        </StyledGridItem>
+    );
+};
+
+const EspaceEditorialAppointments = () => {
+    return (
+        <StyledGridItem item xs={12}>
+            <Link
+                to={'https://espace.library.uq.edu.au/editorial-appointments'}
+                id="espace-journalsearch"
+                data-testid="espace-journalsearch"
+            >
+                Update Editorial appointments
+            </Link>
+        </StyledGridItem>
+    );
+};
 const EspaceOrcid = () => {
     return (
         <StyledGridItem item xs={12}>
@@ -96,7 +123,7 @@ export const EspaceLinks = ({ account, author, possibleRecords, incompleteNTRORe
                             whiteSpaceCollapse: 'collapse',
                         }}
                     >
-                        Things you need to do in UQ eSpace:
+                        Actions:
                     </Typography>
                 )}
 
@@ -105,6 +132,8 @@ export const EspaceLinks = ({ account, author, possibleRecords, incompleteNTRORe
                 {!!incompleteNTRORecords && !!incompleteNTRORecords.total && incompleteNTRORecords.total > 0 && (
                     <EspaceNTROs incompleteNTRORecords={incompleteNTRORecords} />
                 )}
+                <EspaceJournalSearch />
+                <EspaceEditorialAppointments />
             </Grid>
         </StandardCard>
     );
