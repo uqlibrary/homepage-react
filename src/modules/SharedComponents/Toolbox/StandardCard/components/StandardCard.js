@@ -21,11 +21,11 @@ const StyledCard = styled(Card)(({ theme }) => ({
         paddingRight: '0px !important',
     },
     '& .cardHeaderPrimary': {
+        backgroundColor: theme.palette.white.main,
         color: theme.palette.primary.light,
         overflow: 'hidden',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
-        backgroundColor: theme.palette.white.main,
         borderRadius: '4px 4px 0px 0px',
         padding: '24px 24px 0',
     },
