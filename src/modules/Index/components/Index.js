@@ -35,6 +35,7 @@ const Locations = lazy(() => lazyRetry(() => import('./subComponents/Locations')
 const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
 const PastExamPapers = lazy(() => lazyRetry(() => import('./subComponents/PastExamPapersPanel')));
 const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
+const ReferencingPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReferencingPanel')));
 
 const StyledAccordion = styled(Accordion)(() => ({
     backgroundColor: 'inherit',
@@ -267,6 +268,9 @@ export const Index = ({
                                 />
                             </Grid>
                         )}
+                        <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
+                            <ReferencingPanel account={account} />
+                        </Grid>
                     </Grid>
                 </StandardPage>
             )}
