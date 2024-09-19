@@ -9,6 +9,7 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import SvgIcon from '@mui/material/SvgIcon'; // use an empty icon to force matching spacing between items
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { pluralise } from 'helpers/general';
 
 const StyledGridItem = styled(Grid)(() => ({
     display: 'flex',
@@ -58,7 +59,9 @@ const EspacePossible = ({ recordCount }) => {
                 id="espace-possible"
                 data-testid="espace-possible"
             >
-                {'Claim [totalRecords] records'.replace('[totalRecords]', recordCount)}
+                {'Claim [totalRecords] [records]'
+                    .replace('[totalRecords]', recordCount)
+                    .replace('[records]', pluralise('record', recordCount))}
             </Link>
             <StyledHighlightIcon />
         </StyledGridItem>
@@ -125,7 +128,9 @@ const EspaceNTROs = ({ recordCount }) => {
     return (
         <StyledGridItem component={'li'} item xs={12}>
             <Link to={'https://espace.library.uq.edu.au/records/incomplete'} id="espace-ntro" data-testid="espace-ntro">
-                {'Complete [totalRecords] NTRO records'.replace('[totalRecords]', recordCount)}
+                {'Complete [totalRecords] NTRO [records]'
+                    .replace('[totalRecords]', recordCount)
+                    .replace('[records]', pluralise('record', recordCount))}
             </Link>
             <StyledHighlightIcon />
         </StyledGridItem>

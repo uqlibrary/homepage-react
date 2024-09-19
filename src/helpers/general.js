@@ -102,3 +102,15 @@ export function scrollToTopOfPage() {
     const topOfPage = document.getElementById('StandardPage');
     !!topOfPage && typeof topOfPage.scrollIntoView === 'function' && topOfPage.scrollIntoView();
 }
+
+// this is very basic, because thats all that seems required so far
+
+export const pluralise = (singularWord, count, pluralWordSpecial = null) => {
+    if (count > 1 && pluralWordSpecial !== null) {
+        return pluralWordSpecial;
+    }
+    if (count > 1) {
+        return `${singularWord}s`;
+    }
+    return singularWord;
+};

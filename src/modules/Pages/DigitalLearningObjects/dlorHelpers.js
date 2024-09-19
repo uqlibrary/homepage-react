@@ -181,16 +181,6 @@ export const isValidUrl = testUrl => {
     );
 };
 
-export const pluraliseWord = (singularWord, count, pluralWordSpecial = null) => {
-    if (count > 1 && pluralWordSpecial !== null) {
-        return pluralWordSpecial;
-    }
-    if (count > 1) {
-        return `${singularWord}s`;
-    }
-    return singularWord;
-};
-
 export const slugifyName = text => {
     return (
         text

@@ -44,7 +44,6 @@ import {
     getTotalSecondsFromMinutesAndSecond,
     isPreviewableUrl,
     isValidNumber,
-    pluraliseWord,
     slugifyName,
     validFileSizeUnits,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
@@ -55,6 +54,7 @@ import {
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { breadcrumbs } from 'config/routes';
+import { pluralise } from 'helpers/general';
 
 const StyledErrorCountBadge = styled(Badge)(() => ({
     '& span': {
@@ -224,7 +224,7 @@ export const DlorForm = ({
                 data-testid={`input-characters-remaining-${convertSnakeCaseToKebabCase(fieldName)}`}
             >
                 {numCharsCurrent > 0 && missingCharCount > 0
-                    ? `at least ${missingCharCount} more ${pluraliseWord('character', missingCharCount)} needed`
+                    ? `at least ${missingCharCount} more ${pluralise('character', missingCharCount)} needed`
                     : ''}
             </Box>
         );
