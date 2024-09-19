@@ -53,11 +53,24 @@ const EXTRAMURAL_HONORARY = 'HON';
 export const TRAINING_FILTER_GENERAL = 104;
 export const TRAINING_FILTER_HOSPITAL = 360;
 
+// Personalised section whitelist array
+export const UQ_USERS = [
+    UNDERGRADUATE_GENERAL,
+    UNDERGRADUATE_REMOTE,
+    SHORT_FORM_CREDENTIAL_COURSE,
+    SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
+    POSTGRAD_COURSEWORK,
+    POSTGRAD_COURSEWORK_REMOTE,
+    LIBRARY_STAFF,
+    OTHER_STAFF,
+];
+
 const isLoggedInUser = account => !!account && !!account.id;
 
 // define which home page panel items each user type can see
 
 export const canSeeLearningResources = account => {
+    console.log('CAN SEE LEARNING RESOURCES', account);
     return (
         !!account &&
         !!account.id &&
@@ -73,6 +86,12 @@ export const canSeeLearningResources = account => {
             SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
         ].includes(account.user_group)
     );
+};
+
+// define what is considered a UQ logged in member
+
+export const isUQUser = account => {
+    return !!account && !!account.id && UQ_USERS.includes(account.user_group);
 };
 
 // export const isStaff = account => {
