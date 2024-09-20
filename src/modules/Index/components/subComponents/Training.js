@@ -234,54 +234,64 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                         See all training
                     </a>
                 </div>
-                {!!trainingEventsError && (
-                    <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
-                        <div className={'flexContent'} role="region">
-                            <Typography style={{ padding: '1rem' }} data-testid="training-api-error">
-                                We can’t load training events right now. Please refresh your browser or try again later.
-                            </Typography>
-                        </div>
-                    </Fade>
-                )}
-                {!trainingEventsError &&
-                    standardisedTrainingEvents &&
-                    standardisedTrainingEvents.length > 0 &&
-                    !trainingEventsLoading &&
-                    !eventDetail && (
-                        <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
-                            <div className={'flexContent'} role="region" aria-label="UQ training Events list">
-                                {standardisedTrainingEvents &&
-                                    standardisedTrainingEvents.length > 0 &&
-                                    standardisedTrainingEvents.map((event, index) => {
-                                        return (
-                                            <Grid container spacing={0} className={'row'} key={index}>
-                                                <Grid item xs={12}>
-                                                    <Button
-                                                        id={`training-event-detail-button-${event.entityId}`}
-                                                        data-testid={`training-event-detail-button-${index}`}
-                                                        data-analyticsid={`training-event-detail-button-${index}`}
-                                                        onClick={() => handleEventDetail(event)}
-                                                        classes={{ root: 'linkButton' }}
-                                                        fullWidth
-                                                    >
-                                                        <Grid container spacing={0} direction="column">
-                                                            <Grid item className={'linkButtonLabel'}>
-                                                                {event.name}
-                                                            </Grid>
-                                                        </Grid>
-                                                    </Button>
-                                                </Grid>
-                                            </Grid>
-                                        );
-                                    })}
+                {(() => {
+                    if (!trainingEventsError && (!trainingEvents || trainingEventsLoading) && !eventDetail) {
+                        return (
+                            <div className={'flexLoader'} aria-label="UQ training Events loading">
+                                <MyLoader />
                             </div>
-                        </Fade>
-                    )}
-                {!trainingEventsError && (!trainingEvents || trainingEventsLoading) && !eventDetail && (
-                    <div className={'flexLoader'} aria-label="UQ training Events loading">
-                        <MyLoader />
-                    </div>
-                )}
+                        );
+                    } else if (!!trainingEventsError) {
+                        return (
+                            <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
+                                <div className={'flexContent'} role="region">
+                                    <Typography style={{ padding: '1rem' }} data-testid="training-api-error">
+                                        We can’t load training events right now. Please refresh your browser or try
+                                        again later.
+                                    </Typography>
+                                </div>
+                            </Fade>
+                        );
+                    } else if (
+                        standardisedTrainingEvents &&
+                        standardisedTrainingEvents.length > 0 &&
+                        !trainingEventsLoading &&
+                        !eventDetail
+                    ) {
+                        return (
+                            <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
+                                <div className={'flexContent'} role="region" aria-label="UQ training Events list">
+                                    {standardisedTrainingEvents &&
+                                        standardisedTrainingEvents.length > 0 &&
+                                        standardisedTrainingEvents.map((event, index) => {
+                                            return (
+                                                <Grid container spacing={0} className={'row'} key={index}>
+                                                    <Grid item xs={12}>
+                                                        <Button
+                                                            id={`training-event-detail-button-${event.entityId}`}
+                                                            data-testid={`training-event-detail-button-${index}`}
+                                                            data-analyticsid={`training-event-detail-button-${index}`}
+                                                            onClick={() => handleEventDetail(event)}
+                                                            classes={{ root: 'linkButton' }}
+                                                            fullWidth
+                                                        >
+                                                            <Grid container spacing={0} direction="column">
+                                                                <Grid item className={'linkButtonLabel'}>
+                                                                    {event.name}
+                                                                </Grid>
+                                                            </Grid>
+                                                        </Button>
+                                                    </Grid>
+                                                </Grid>
+                                            );
+                                        })}
+                                </div>
+                            </Fade>
+                        );
+                    } else {
+                        return <></>;
+                    }
+                })()}
                 <Fade
                     direction="left"
                     in={!!eventDetail}
