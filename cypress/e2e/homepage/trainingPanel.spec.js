@@ -11,7 +11,7 @@ context('Training', () => {
         cy.log('Events list');
         cy.get('[data-testid="training-event-detail-button-0"]')
             .should('exist')
-            .should('have.text', 'EndNote: getting started24 November at 10am - Online');
+            .should('have.text', 'EndNote: getting started');
         cy.checkA11y('button[data-testid="training-event-detail-button-0"]', {
             reportName: 'Training',
             scopeName: 'As loaded',

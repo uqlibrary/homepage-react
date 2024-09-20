@@ -267,12 +267,6 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                             <Grid item className={'linkButtonLabel'}>
                                                                 {event.name}
                                                             </Grid>
-                                                            <Grid item className={'eventSummary'}>
-                                                                {eventTime(event.start)}
-                                                                {event.campus
-                                                                    ? ` - ${event.campus}`
-                                                                    : /* istanbul ignore next */ ''}
-                                                            </Grid>
                                                         </Grid>
                                                     </Button>
                                                 </Grid>
@@ -368,34 +362,6 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                         <div />
                     )}
                 </Fade>
-                <div className={'flexFooter'}>
-                    {/* Buttons */}
-                    <Grid container spacing={0}>
-                        <Grid item xs={12} className={'actionButtonBlock'}>
-                            {!eventDetail ? (
-                                <a
-                                    className={'moreActionButton'}
-                                    href="https://web.library.uq.edu.au/library-services/training"
-                                    id="training-event-detail-more-training-button"
-                                    data-testid="training-event-detail-more-training-button"
-                                    data-analyticsid="training-event-detail-more-training-button"
-                                >
-                                    More training events
-                                </a>
-                            ) : (
-                                <a
-                                    className={'bookActionButton'}
-                                    href={`https://studenthub.uq.edu.au/students/events/detail/${eventDetail.entityId}`}
-                                    id="training-event-detail-training-login-button"
-                                    data-testid="training-event-detail-training-login-button"
-                                    data-analyticsid="training-event-detail-training-login-button"
-                                >
-                                    Log in and book now
-                                </a>
-                            )}
-                        </Grid>
-                    </Grid>
-                </div>
             </StyledWrapper>
         </StandardCard>
     );
