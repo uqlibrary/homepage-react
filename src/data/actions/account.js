@@ -243,7 +243,7 @@ export function loadTrainingEvents(account) {
         !!account && !!account.trainingfilterId ? account.trainingfilterId : TRAINING_FILTER_GENERAL;
     return dispatch => {
         dispatch({ type: actions.TRAINING_LOADING });
-        return get(TRAINING_API(3, trainingfilterId))
+        return get(TRAINING_API(10, trainingfilterId))
             .then(availResponse => {
                 dispatch({
                     type: actions.TRAINING_LOADED,

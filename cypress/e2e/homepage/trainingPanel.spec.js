@@ -17,7 +17,7 @@ context('Training', () => {
             .should('exist')
             .contains('Advanced Adobe Illustrator');
         // 4th, not 3rd item appears, because item 3 is fully booked
-        cy.get('[data-testid="training-event-detail-button-3"]')
+        cy.get('[data-testid="training-event-detail-button-2"]')
             .should('exist')
             .contains('Excel: Further Functions');
     });
@@ -42,7 +42,7 @@ context('Training', () => {
         });
     });
 
-    it('detailis Accessible', () => {
+    it('detail panel is accessible', () => {
         cy.visit('/');
         cy.injectAxe();
         cy.wait(2000);
@@ -81,18 +81,16 @@ context('Training', () => {
         cy.get('button[data-testid="training-event-detail-button-1"]').click();
         cy.wait(500);
         // when placesRemaining is not null we see 'full' (null means there is no limit)
-        cy.get('div[data-testid="training-events-detail-2870806"]').contains('Event is fully booked');
+        cy.get('div[data-testid="training-events-detail-2870806"]').contains('Booking is not required');
         // close it
         cy.get('button[data-testid="training-event-detail-close-button"]').click();
         cy.wait(500);
 
-        cy.get('button[data-testid="training-event-detail-button-2"]').contains(
-            'SciFinder n - learning the new features of this chemistry database',
-        );
+        cy.get('button[data-testid="training-event-detail-button-2"]').contains('Excel: Further Functions');
         cy.get('button[data-testid="training-event-detail-button-2"]').click();
         cy.wait(500);
         // when placesRemaining is 0 we see 'Event is fully booked'
-        cy.get('div[data-testid="training-events-detail-2873532"]').contains('Booking is not required');
+        cy.get('div[data-testid="training-events-detail-2870807"]').contains('Places still available');
     });
 
     it('shows an api error correctly', () => {

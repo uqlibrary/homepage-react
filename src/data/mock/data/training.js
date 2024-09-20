@@ -123,5 +123,47 @@ export const training_object = {
             "bookings": 1
         }],
         "isOnlineClass": false
+    }, "3": {
+        "entityId": 2870807,
+        "created": "2020-10-26T10:25:51.053+10:00",
+        "updated": "2020-10-26T14:16:58.85+10:00",
+        "name": "Excel: Further Functions",
+        "eventType": "Software",
+        "eventTypeId": 45,
+        "start": "2020-11-25T09:30:00+10:00",
+        "end": "2020-11-25T11:30:00+10:00",
+        "publish": "2020-10-26T14:16:00+10:00",
+        "expire": "2020-11-25T11:30:00+10:00",
+        "isActive": true,
+        "isCancelled": false,
+        "summary": "A guide to using Excel tools to analyse and consolidate data to present more meaningful information. These features will assist with report and assignment preparation.",
+        "details": "<p>At the end of this session you will be able to:</p><ul> <li>Work effectively with a variety of functions</li><li>Combine functions into powerful formulas</li></ul><p><em>This session will use Microsoft Excel. </em>Please install the software <em>before </em>joining this session: <a href=\"https://my.uq.edu.au/information-and-services/information-technology/software-and-web-apps/software-uq/microsoft-software/office-365-personal-use\">https://my.uq.edu.au/information-and-services/info...</a></p><p><img style=\"background-color:&#32;initial;&#32;width:&#32;25px;\" src=\"https://studenthub.uq.edu.au/Uploads/Images/Library/e-learning-laptop-1.png\"> Attend online: Zoom link to be sent before session</p><p><em><em>As part of <a href=\"https://ppl.app.uq.edu.au/content/10.10.01-sustainability-0\">UQ Sustainability</a> this class has no paper handouts. You may download manuals and exercises for this class on the </em><a href=\"https://web.library.uq.edu.au/library-services/training/training-resources\"><em>training resources</em></a><em> page.</em></em></p>",
+        "offCampusVenue": null,
+        "campus": "Online",
+        "building": null,
+        "location": "Zoom",
+        "url": null,
+        "onlineInstructions": null,
+        "venue": "Online, Zoom",
+        "bookingType": 1,
+        "bookingSettings": {
+            "bookings": 20,
+            "bookingLimit": 30,
+            "placesRemaining": 10,
+            "bookingsOpen": "2020-10-26T14:16:00+10:00",
+            "bookingsClose": "2020-11-25T09:30:00+10:00"
+        },
+        "workGroupId": 117,
+        "attendance": {"total": 20, "unspecified": 20, "absent": 0, "attended": 0},
+        "labels": [{"id": 377, "name": "LIB.client.ongoing.Software"}],
+        "categories": {"eventType": "Software", "campus": ["Online"]},
+        "sessions": [{
+            "id": 18796,
+            "start": "2020-11-25T09:30:00+10:00",
+            "end": "2020-11-25T11:30:00+10:00",
+            "isCancelled": false,
+            "bookings": 20
+        }],
+        "isOnlineClass": true
     }
 };

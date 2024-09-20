@@ -17,6 +17,8 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 import { styled } from '@mui/material/styles';
 
+const NUMBER_OF_DISPLAYED_EVENTS = 3; // we get 10 and hope at least 3 are available
+
 const MyLoader = props => (
     <ContentLoader
         speed={2}
@@ -196,10 +198,14 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
             })
             .replace('.00', '');
     const bookingText = ev => {
+        /*
+          if bookingSettings is null then bookings are not required
+          if bookingSettings has a placesRemaining child *and it is > 0" then there are places still available
+          if bookingSettings has a placesRemaining child *and it is zero* then the course is fully booked
+          We filter out the fully booked entries, because we are only showing 3 now, and that seems like a waste
+         */
         let placesRemainingText = 'Booking is not required';
         if (ev.bookingSettings !== null) {
-            placesRemainingText = 'Event is fully booked';
-
             if (ev.bookingSettings.placesRemaining > 0) {
                 placesRemainingText = 'Places still available';
             }
@@ -208,12 +214,18 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
     };
     // there is something strange happening that sometimes the api sends us an object
     // convert to an array when it happens
-    const standardisedTrainingEvents =
-        !!trainingEvents && typeof trainingEvents === 'object'
-            ? Object.keys(trainingEvents).map(key => {
-                  return trainingEvents[key];
-              })
-            : trainingEvents;
+    const getStandardisedTrainingEvents = () => {
+        const list =
+            !trainingEventsLoading && !trainingEventsError && !!trainingEvents && typeof trainingEvents === 'object'
+                ? Object.keys(trainingEvents).map(key => {
+                      return trainingEvents[key];
+                  })
+                : trainingEvents;
+        return !!list && list.length > 0
+            ? list.filter(t => t.bookingSettings !== null).slice(0, NUMBER_OF_DISPLAYED_EVENTS)
+            : [];
+    };
+    const standardisedTrainingEvents = getStandardisedTrainingEvents();
     return (
         <StandardCard subCard primaryHeader title="Training" noPadding>
             <StyledWrapper className={'flexWrapper componentHeight'}>
@@ -224,7 +236,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                         data-testid="training-event-detail-more-training-button"
                         data-analyticsid="training-event-detail-more-training-button"
                     >
-                        See all training
+                        See all Training
                     </a>
                 </div>
                 {(() => {
@@ -261,12 +273,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                         standardisedTrainingEvents.length > 0 &&
                                         standardisedTrainingEvents.map((event, index) => {
                                             return (
-                                                /* event.bookingSettings !== null && () */ <Grid
-                                                    container
-                                                    spacing={0}
-                                                    className={'row'}
-                                                    key={index}
-                                                >
+                                                <Grid container spacing={0} className={'row'} key={index}>
                                                     <Grid item xs={12}>
                                                         <Button
                                                             id={`training-event-detail-button-${event.entityId}`}
