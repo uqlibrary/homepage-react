@@ -14,7 +14,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
-import { pluraliseWord } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { pluralise } from 'helpers/general';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/ObjectListItem';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
@@ -251,7 +251,7 @@ export const DLOTeamList = ({
                                                                         data-testid={`dlor-team-object-list-${team?.team_id}`}
                                                                     >
                                                                         <summary>
-                                                                            {`${team?.objects_count} ${pluraliseWord(
+                                                                            {`${team?.objects_count} ${pluralise(
                                                                                 'Object',
                                                                                 team?.objects_count,
                                                                             )}`}

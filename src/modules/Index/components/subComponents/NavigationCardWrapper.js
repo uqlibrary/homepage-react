@@ -1,10 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import SingleLinkCard from './SingleLinkCard';
+import { linkToDrupal } from 'helpers/general';
 
 const StyledNav = styled('nav')(() => ({
     marginTop: '28px',
@@ -20,6 +23,12 @@ const StyledGridContainer = styled(Grid)(() => ({
     margin: 0,
 }));
 
+const StyledHeading = styled(Typography)(() => ({
+    fontSize: '24px',
+    fontWeight: 500,
+    marginTop: '1em',
+}));
+
 // inspect specific icons at https://design-system.ads-staging.aws.uq.edu.au/?path=/story/components-icon--icon and extract the backgroundimage value from the :before on the span
 const bookBackgroundImage =
     'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M7.97 14.29V4.14s-1.43-1.6-6.26-1.66a.26.26 0 0 0-.2.09c-.05.09-.08.14-.08.23v9.54c0 .18.11.29.28.32 4.83.03 6.26 1.63 6.26 1.63zM6.23 7.91c-1-.34-2.03-.54-3.06-.6m3.06 3.06c-1-.34-2.03-.54-3.06-.6m6.54-1.86c1-.34 2.03-.54 3.06-.6m-3.06 3.06c1-.34 2.03-.54 3.06-.6%27%3e%3c/path%3e%3cpath d=%27M12.77 2.57c.43-.03.92-.05 1.43-.05.09 0 .14.02.2.08a.3.3 0 0 1 .08.23v9.54c0 .17-.1.29-.28.32-4.8 0-6.23 1.6-6.23 1.6%27%3e%3c/path%3e%3cpath d=%27M7.97 14.29V4.14s.66-.74 2.63-1.23m2.17 2.63V1.71c-.74.06-1.46.18-2.17.35v3.48l1.09-.88zm0 0%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")';
@@ -30,53 +39,68 @@ const schoolBuildingBackgroundimage =
 const scienceMoleculeBackgroundImage =
     'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M8 6.74c.69 0 1.26.57 1.26 1.26 0 .69-.57 1.26-1.26 1.26-.69 0-1.26-.57-1.26-1.26 0-.69.57-1.26 1.26-1.26zm0 0%27%3e%3c/path%3e%3cpath d=%27M5.91 5.91c3.29-3.28 6.86-5 8-3.85 1.15 1.14-.57 4.74-3.85 8-3.29 3.28-6.86 5-8 3.85-1.15-1.14.6-4.71 3.85-8zm0 0%27%3e%3c/path%3e%3cpath d=%27M2.06 2.06c1.14-1.15 4.74.57 8 3.85 3.28 3.29 5 6.86 3.85 8-1.14 1.15-4.74-.57-8-3.85-3.25-3.29-5-6.83-3.85-8zm0 0%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")';
 
-const NavigationCardWrapper = () => {
+const NavigationCardWrapper = ({ account, accountLoading }) => {
     return (
         <StandardPage>
+            {accountLoading === false && !!account && (
+                // if they are not logged in, we don't need to waste space on a heading as there is nothing above
+                <StyledHeading component={'h2'}>Library navigation</StyledHeading>
+            )}
             <StyledNav>
                 <StyledGridContainer component={'ul'} container data-testid="help-navigation-panel">
                     <SingleLinkCard
                         cardLabel="Study and learning support"
-                        landingUrl="https://web.library.uq.edu.au/study-and-learning-support"
+                        landingUrl={linkToDrupal('/study-and-learning-support')}
                         iconBackgroundImage={toolboxBackgroundImage}
                         shortParagraph="Lorem ipsum odor amet, consectetuer adipiscing elit. Pulvinar finibus lectus semper volutpat orci congue vitae justo cubilia molestie accumsan maximus semper varius rutrum mauris augue."
+                        loggedIn={accountLoading === false && !!account}
                     />
                     {/* minimum length for shortParagraph string: 66 char,
                         or the wrapping is off at widest tablet 2 column width :( */}
                     <SingleLinkCard
                         cardLabel="AskUs and student IT support"
-                        landingUrl="https://web.library.uq.edu.au/askus-and-it-support"
+                        landingUrl={linkToDrupal('/askus-and-it-support')}
                         iconBackgroundImage={toolboxBackgroundImage}
                         shortParagraph="Lorem ipsum odor amet, consectetuer adipiscing elit. Lectus. finibus finibus finibus"
+                        loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardLabel="Research and publish"
-                        landingUrl="https://web.library.uq.edu.au/research-and-publish"
+                        landingUrl={linkToDrupal('/research-and-publish')}
                         iconBackgroundImage={scienceMoleculeBackgroundImage}
                         shortParagraph="Lorem ipsum odor amet, consectetuer adipiscing elit. Dolor adipiscing ante nullam accumsan volutpat; fermentum etiam sodales tempor natoque."
+                        loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardLabel="Find and borrow"
-                        landingUrl="https://web.library.uq.edu.au/find-and-borrow"
+                        landingUrl={linkToDrupal('/find-and-borrow')}
                         iconBackgroundImage={bookBackgroundImage}
                         shortParagraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet felis quis urna posuere, ac ornare justo vulputate. Nulla dictum."
+                        loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardLabel="Visit"
-                        landingUrl="https://web.library.uq.edu.au/visit"
+                        landingUrl={linkToDrupal('/visit-our-spaces')}
                         iconBackgroundImage={schoolBuildingBackgroundimage}
                         shortParagraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi placerat erat scelerisque nulla vehicula, quis finibus nibh egestas. Cras sapien."
+                        loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardLabel="About"
-                        landingUrl="https://web.library.uq.edu.au/about-us"
+                        landingUrl={linkToDrupal('/about-us')}
                         iconBackgroundImage={schoolBuildingBackgroundimage}
                         shortParagraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non ultrices mi. Etiam lobortis nunc non elementum sodales. Fusce turpis."
+                        loggedIn={accountLoading === false && !!account}
                     />
                 </StyledGridContainer>
             </StyledNav>
         </StandardPage>
     );
+};
+
+NavigationCardWrapper.propTypes = {
+    account: PropTypes.object,
+    accountLoading: PropTypes.bool,
 };
 
 export default NavigationCardWrapper;

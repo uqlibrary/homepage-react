@@ -17,13 +17,16 @@ describe('header', () => {
                             const firstItemTop = $el.position().top;
                             const firstItemLeft = $el.position().left;
                             const firstItemBottom = $el.position().top + $el.outerHeight();
+                            const firstItemRight = $el.position().left + $el.outerWidth();
 
                             let secondItemLeft;
+                            let secondItemRight;
                             cy.get('li')
                                 .eq(1)
                                 .then($el2 => {
                                     const secondItemTop = $el2.position().top;
                                     secondItemLeft = $el2.position().left;
+                                    secondItemRight = $el2.position().left + $el2.outerWidth();
 
                                     // Ensure the second item is on the same row as the first
                                     expect(secondItemTop).to.equal(firstItemTop);
@@ -31,11 +34,13 @@ describe('header', () => {
                                 });
 
                             let thirdItemLeft;
+                            let thirdtemRight;
                             cy.get('li')
                                 .eq(2)
                                 .then($el3 => {
                                     const thirdItemTop = $el3.position().top;
                                     thirdItemLeft = $el3.position().left;
+                                    thirdtemRight = $el3.position().left + $el3.outerWidth();
 
                                     // Ensure the third item is on the same row as the first
                                     expect(thirdItemTop).to.equal(firstItemTop);
@@ -48,10 +53,12 @@ describe('header', () => {
                                 .then($el4 => {
                                     const fourthItemTop = $el4.position().top;
                                     const fourthItemLeft = $el4.position().left;
+                                    const fourthItemRight = $el4.position().left + $el4.outerWidth();
 
                                     // Ensure the fourth item is on the next row, with a gap
                                     expect(fourthItemTop).to.be.greaterThan(firstItemTop);
                                     expect(fourthItemLeft).to.equal(firstItemLeft);
+                                    expect(fourthItemRight).to.equal(firstItemRight);
                                     expect(fourthItemTop).to.be.greaterThan(firstItemBottom + 20);
                                 });
 
@@ -61,10 +68,12 @@ describe('header', () => {
                                 .then($el5 => {
                                     const fifthItemTop = $el5.position().top;
                                     const fifthItemLeft = $el5.position().left;
+                                    const fifthItemRight = $el5.position().left + $el5.outerWidth();
 
                                     // Ensure the fifth item is on the next row
                                     expect(fifthItemTop).to.be.greaterThan(firstItemTop);
                                     expect(fifthItemLeft).to.equal(secondItemLeft);
+                                    expect(fifthItemRight).to.equal(secondItemRight);
                                 });
 
                             cy.get('li')
@@ -73,10 +82,12 @@ describe('header', () => {
                                 .then($el6 => {
                                     const sixthItemTop = $el6.position().top;
                                     const sixthItemLeft = $el6.position().left;
+                                    const sixthItemRight = $el6.position().left + $el6.outerWidth();
 
                                     // Ensure the sixth item is on the next row
                                     expect(sixthItemTop).to.be.greaterThan(firstItemTop);
                                     expect(sixthItemLeft).to.equal(thirdItemLeft);
+                                    expect(sixthItemRight).to.equal(thirdtemRight);
                                 });
                         });
                 });
@@ -97,14 +108,17 @@ describe('header', () => {
                             const firstItemTop = $el.position().top;
                             const firstItemLeft = $el.position().left;
                             const firstItemBottom = $el.position().top + $el.outerHeight();
+                            const firstItemRight = $el.position().left + $el.outerWidth();
 
                             let secondItemTop;
                             let secondItemLeft;
+                            let secondItemRight;
                             cy.get('li')
                                 .eq(1)
                                 .then($el2 => {
                                     secondItemTop = $el2.position().top;
                                     secondItemLeft = $el2.position().left;
+                                    secondItemRight = $el2.position().left + $el2.outerWidth();
 
                                     // Ensure the second item is on the same row as the first
                                     expect(secondItemTop).to.equal(firstItemTop);
@@ -117,10 +131,12 @@ describe('header', () => {
                                 .then($el3 => {
                                     thirdItemTop = $el3.position().top;
                                     const thirdItemLeft = $el3.position().left;
+                                    const thirdItemRight = $el3.position().left + $el3.outerWidth();
 
                                     // Ensure the third item is on the second row
                                     expect(thirdItemTop).to.be.greaterThan(firstItemTop);
                                     expect(thirdItemLeft).to.equal(firstItemLeft);
+                                    expect(thirdItemRight).to.equal(firstItemRight);
                                 });
 
                             let fourthItemLeft;
@@ -130,11 +146,13 @@ describe('header', () => {
                                 .then($el4 => {
                                     const fourthItemTop = $el4.position().top;
                                     fourthItemLeft = $el4.position().left;
+                                    const fourthItemRight = $el4.position().left + $el4.outerWidth();
 
                                     // Ensure the fourth item is on the second row, with a gap
                                     expect(fourthItemTop).to.equal(thirdItemTop);
                                     expect(fourthItemLeft).to.equal(secondItemLeft);
                                     expect(fourthItemTop).to.be.greaterThan(firstItemBottom + 20);
+                                    expect(fourthItemRight).to.equal(secondItemRight);
                                 });
 
                             let fifthItemTop;
@@ -144,10 +162,12 @@ describe('header', () => {
                                 .then($el5 => {
                                     fifthItemTop = $el5.position().top;
                                     const fifthItemLeft = $el5.position().left;
+                                    const fifthItemRight = $el5.position().left + $el5.outerWidth();
 
                                     // Ensure the fifth item is on the third row
                                     expect(fifthItemTop).to.be.greaterThan(secondItemTop);
                                     expect(fifthItemLeft).to.equal(firstItemLeft);
+                                    expect(fifthItemRight).to.equal(firstItemRight);
                                 });
 
                             cy.get('li')
@@ -156,10 +176,12 @@ describe('header', () => {
                                 .then($el6 => {
                                     const sixthItemTop = $el6.position().top;
                                     const sixthItemLeft = $el6.position().left;
+                                    const sixthItemRight = $el6.position().left + $el6.outerWidth();
 
                                     // Ensure the sixth item is on the third row
                                     expect(sixthItemTop).to.equal(fifthItemTop);
                                     expect(sixthItemLeft).to.equal(fourthItemLeft);
+                                    expect(sixthItemRight).to.equal(secondItemRight);
                                 });
                         });
                 });

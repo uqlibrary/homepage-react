@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { lazyRetry } from 'helpers/general';
+import { greeting, lazyRetry } from 'helpers/general';
 
 import LibraryUpdates from 'modules/Index/components/subComponents/LibraryUpdates';
 import NavigationCardWrapper from './subComponents/NavigationCardWrapper';
@@ -88,13 +88,19 @@ const StyledLink = styled(Link)(({ theme }) => ({
     },
 }));
 
-const StyledCulturalAdvice = styled('div')(() => ({
-    backgroundColor: '#231430',
-    paddingTop: '20px',
-    backgroundImage: 'linear-gradient(90deg, #48206c 28.12%, #48206ca6 70.31%, #48206c00), url(https://static.uq.net.au/v15/images/rap/brisbane-river-artwork.png)',
-    '& p': {
-        paddingBottom: '20px',
-    },
+// const StyledCulturalAdvice = styled('div')(() => ({
+//     backgroundColor: '#231430',
+//     paddingTop: '20px',
+//     backgroundImage: 'linear-gradient(90deg, #48206c 28.12%, #48206ca6 70.31%, #48206c00), url(https://static.uq.net.au/v15/images/rap/brisbane-river-artwork.png)',
+//     '& p': {
+//         paddingBottom: '20px',
+//     },
+// }));
+
+const StyledHeading = styled(Typography)(() => ({
+    fontSize: '24px',
+    fontWeight: 500,
+    marginTop: '1em',
 }));
 
 const StyledSummary = styled('span')(({ theme }) => ({
@@ -192,7 +198,7 @@ export const Index = ({
             dispatch(searcheSpaceIncompleteNTROPublications());
         }
     }, [accountLoading, account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
-    console.log('Index possibleRecords = ', possibleRecords);
+
     return (
         <React.Suspense fallback={<ContentLoader message="Loading"/>}>
             { /* TEMP WORKS - USED AS A PLACEHOLDER FOR NOW */ }
@@ -249,50 +255,52 @@ export const Index = ({
                 </div>
             </div>
             {accountLoading === false && !!account && (
-                <StandardPage>
-                    <Grid container spacing={4} style={{ paddingBottom: '1em' }}>
-                        <Grid item xs={12}>
-                            <Typography component={'h2'} sx={{ marginTop: '1em', fontSize: '24px', fontWeight: 500 }}>
-                                Personalised section
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                            <Training
-                                trainingEvents={trainingEvents}
-                                trainingEventsLoading={trainingEventsLoading}
-                                trainingEventsError={trainingEventsError}
-                            />
-                        </Grid>
-                        {canSeeLearningResources(account) && (
-                            <Grid item xs={12} md={4} data-testid="learning-resources-panel" sx={{ paddingTop: '0px' }}>
-                                <LearningResourcesPanel account={account} history={history}/>
+                <>
+                    <StandardPage>
+                        <Grid container spacing={4} style={{ paddingBottom: '1em' }}>
+                            <Grid item xs={12}>
+                                <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
+                                    {greeting()}, {account.firstName || /* istanbul ignore next */ ''}
+                                </StyledHeading>
                             </Grid>
-                        )}
-                        {canSeeLearningResources(account) && (
-                            <Grid item xs={12} md={4} data-testid="past-exam-papers-panel" sx={{ paddingTop: '0px' }}>
-                                <PastExamPapers account={account} history={history}/>
-                            </Grid>
-                        )}
-                        {isEspaceAuthor(account, author) && (
-                            <Grid item xs={12} md={4} data-testid="espace-links-panel" sx={{ paddingTop: '0px' }}>
-                                <EspaceLinks
-                                    author={author}
-                                    possibleRecords={possibleRecords}
-                                    incompleteNTRORecords={incompleteNTRO}
+                            <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
+                                <Training
+                                    trainingEvents={trainingEvents}
+                                    trainingEventsLoading={trainingEventsLoading}
+                                    trainingEventsError={trainingEventsError}
                                 />
                             </Grid>
-                        )}
-                        <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
-                            <ReferencingPanel account={account} />
+                            {canSeeLearningResources(account) && (
+                                <Grid item xs={12} md={4} data-testid="learning-resources-panel" sx={{ paddingTop: '0px' }}>
+                                    <LearningResourcesPanel account={account} history={history}/>
+                                </Grid>
+                            )}
+                            {canSeeLearningResources(account) && (
+                                <Grid item xs={12} md={4} data-testid="past-exam-papers-panel" sx={{ paddingTop: '0px' }}>
+                                    <PastExamPapers account={account} history={history}/>
+                                </Grid>
+                            )}
+                            {isEspaceAuthor(account, author) && (
+                                <Grid item xs={12} md={4} data-testid="espace-links-panel" sx={{ paddingTop: '0px' }}>
+                                    <EspaceLinks
+                                        author={author}
+                                        possibleRecords={possibleRecords}
+                                        incompleteNTRORecords={incompleteNTRO}
+                                    />
+                                </Grid>
+                            )}
+                            <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
+                                <ReferencingPanel account={account} />
+                            </Grid>
+                            <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
+                                <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
+                            </Grid>
                         </Grid>
-                        <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
-                            <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
-                        </Grid>
-                    </Grid>
                 </StandardPage>
+                </>
             )}
 
-            <NavigationCardWrapper/>
+            <NavigationCardWrapper account={account} accountLoading={accountLoading} />
 
             <LibraryUpdates drupalArticleList={drupalArticleList} />
         </React.Suspense>

@@ -34,7 +34,7 @@ const StyledGridItem = styled(Grid)(() => ({
             width: '100%',
         },
     },
-    '& h2': {
+    '& .cardLabel': {
         color: '#19151c',
         fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
         fontSize: '20px',
@@ -84,7 +84,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
         '& > div': {
             margin: '0 16px 0 24px',
         },
-        '& > h2': { margin: 0 },
+        '& > .cardLabel': { margin: 0 },
         // '& > p': { margin: 0 },
         '& > svg': { marginLeft: 'auto' },
         '& .icon': {
@@ -101,7 +101,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
             },
         },
         '&:hover': {
-            '& h2': {
+            '& .cardLabel': {
                 textDecoration: 'underline',
             },
             '@media (prefers-reduced-motion: no-preference)': {
@@ -135,13 +135,17 @@ const paneIcon = paneBackgroundImage => {
     );
 };
 
-const SingleLinkCard = ({ cardLabel, landingUrl, iconBackgroundImage, shortParagraph }) => {
+const SingleLinkCard = ({ cardLabel, landingUrl, iconBackgroundImage, shortParagraph, loggedIn }) => {
     return (
         <StyledGridItem item component={'li'} xs={12} md={6} lg={4}>
             <div>
                 <StyledLink border={1} p={1} to={landingUrl}>
                     {paneIcon(iconBackgroundImage)}
-                    <h2>{cardLabel}</h2>
+                    {!!loggedIn ? (
+                        <h3 className={cardLabel}>{cardLabel}</h3>
+                    ) : (
+                        <h2 className={cardLabel}>{cardLabel}</h2>
+                    )}
                     <p>{shortParagraph}</p>
                     <ArrowForwardIcon
                         // classname={'arrow'}
@@ -158,6 +162,7 @@ SingleLinkCard.propTypes = {
     landingUrl: PropTypes.string,
     iconBackgroundImage: PropTypes.string,
     shortParagraph: PropTypes.string,
+    loggedIn: PropTypes.bool,
 };
 
 export default SingleLinkCard;
