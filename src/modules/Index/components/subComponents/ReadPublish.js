@@ -1,8 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { isUQUser } from 'helpers/access';
-
-import { default as locale } from './locale/subComponents.locale';
+import { linkToDrupal } from 'helpers/general';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -41,11 +40,11 @@ export const ReadPublish = ({ account, journalSearchList, journalSearchLoading, 
                                     <ul style={{ marginTop: 0, marginBottom: 0 }}>
                                         {journalSearchList?.data.slice(0, 5).map((journal, index) => (
                                             <li key={index}>
-                                                <a
-                                                    href={`https://espace.library.uq.edu.au/journal/view/${journal.jnl_jid}`}
+                                                <Link
+                                                    to={`https://espace.library.uq.edu.au/journal/view/${journal.jnl_jid}`}
                                                 >
                                                     {journal.jnl_title}
-                                                </a>
+                                                </Link>
                                             </li>
                                         ))}
                                     </ul>
@@ -55,9 +54,9 @@ export const ReadPublish = ({ account, journalSearchList, journalSearchLoading, 
                     )}
                     <p>
                         Visit{' '}
-                        <a href="https://live-library-uq.pantheonsite.io/research-and-publish/open-research/read-and-publish-agreements">
+                        <Link to={linkToDrupal('/research-and-publish/open-research/read-and-publish-agreements')}>
                             Read and Publish Agreements
-                        </a>{' '}
+                        </Link>{' '}
                         for more information.
                     </p>
                 </p>
