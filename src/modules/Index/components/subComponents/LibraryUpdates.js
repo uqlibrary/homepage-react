@@ -9,7 +9,13 @@ import LibraryArticle from './LibraryArticle';
 const LibraryUpdates = drupalArticleList => {
     return (
         <StandardPage>
-            <Grid container spacing={4} style={{ marginTop: 0, paddingTop: 0 }} data-testid="library-updates-parent">
+            <Grid
+                container
+                spacing={4}
+                style={{ marginTop: 0, paddingTop: 0 }}
+                data-testid="library-updates-parent"
+                key="library-updates-parent"
+            >
                 <Grid item xs={12} style={{ marginTop: 0, paddingTop: 0 }}>
                     <Typography component={'h2'} sx={{ marginTop: '72px', fontSize: '32px', fontWeight: 500 }}>
                         Library updates
@@ -18,13 +24,13 @@ const LibraryUpdates = drupalArticleList => {
                 {drupalArticleList && Array.isArray(drupalArticleList.drupalArticleList) ? (
                     drupalArticleList.drupalArticleList.map((article, index) => {
                         if (index <= 3) {
-                            return <LibraryArticle article={article} articleIndex={index} />;
+                            return <LibraryArticle article={article} articleindex={index} key={index} />;
                         } else {
                             return null;
                         }
                     })
                 ) : (
-                    <Grid item xs={12}>
+                    <Grid item xs={12} index={0}>
                         <p>No articles found</p>
                     </Grid>
                 )}

@@ -17,7 +17,7 @@ const loadFallbackImage = image => {
     image.src = fallBackImage;
 };
 
-const StyledGridItem = styled(Grid)(({ articleIndex, theme }) => {
+const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
     return {
         /* Parent */
         [theme.breakpoints.up('xs')]: {
@@ -25,15 +25,15 @@ const StyledGridItem = styled(Grid)(({ articleIndex, theme }) => {
             paddingLeft: '24px !important',
         },
         [theme.breakpoints.up('sm')]: {
-            paddingTop: articleIndex === 0 ? '24px !important' : '32px !important',
+            paddingTop: articleindex === 0 ? '24px !important' : '32px !important',
             paddingLeft: '32px !important',
         },
         /* items and utility styles */
         '.article-card': {
             [theme.breakpoints.up('xs')]: {
-                border: articleIndex === 0 ? '1px solid #dcdcdd' : 'none',
+                border: articleindex === 0 ? '1px solid #dcdcdd' : 'none',
                 '&:hover': {
-                    backgroundColor: articleIndex === 0 ? '#f3f3f4' : 'none',
+                    backgroundColor: articleindex === 0 ? '#f3f3f4' : 'none',
                 },
             },
             [theme.breakpoints.up('sm')]: {
@@ -50,7 +50,7 @@ const StyledGridItem = styled(Grid)(({ articleIndex, theme }) => {
             marginBottom: '0',
             textDecoration: 'none !important',
             [theme.breakpoints.up('xs')]: {
-                paddingTop: articleIndex === 0 ? '24px !important' : 'none',
+                paddingTop: articleindex === 0 ? '24px !important' : 'none',
             },
             [theme.breakpoints.up('sm')]: {
                 paddingTop: '0px !important',
@@ -61,23 +61,23 @@ const StyledGridItem = styled(Grid)(({ articleIndex, theme }) => {
             flexDirection: 'column',
             alignItems: 'left',
             height: '100%',
-            justifyContent: articleIndex === 0 ? 'center' : 'top',
+            justifyContent: articleindex === 0 ? 'center' : 'top',
             paddingTop: '0px !important',
             // paddingBottom: '24px',
             [theme.breakpoints.up('xs')]: {
-                paddingLeft: articleIndex !== 0 ? 0 : 24,
-                paddingRight: articleIndex !== 0 ? 0 : 24,
+                paddingLeft: articleindex !== 0 ? 0 : 24,
+                paddingRight: articleindex !== 0 ? 0 : 24,
                 paddingBottom: '24px',
             },
             [theme.breakpoints.up('sm')]: {
                 paddingLeft: 24,
                 paddingRight: 24,
-                paddingBottom: articleIndex !== 0 ? 0 : 24,
+                paddingBottom: articleindex !== 0 ? 0 : 24,
             },
             [theme.breakpoints.up('md')]: {
                 paddingLeft: 24,
                 paddingRight: 24,
-                paddingBottom: articleIndex !== 0 ? 0 : 24,
+                paddingBottom: articleindex !== 0 ? 0 : 24,
             },
         },
         '.ArticleTitle': {},
@@ -104,16 +104,16 @@ const StyledGridItem = styled(Grid)(({ articleIndex, theme }) => {
     };
 });
 
-const RenderImage = (articleIndex, article, theme, isSm) => {
+const RenderImage = (articleindex, article, theme, isSm) => {
     return (
         <Box
             sx={{
                 width: {
-                    xs: articleIndex === 0 ? '100%' : '120px',
-                    sm: articleIndex === 0 ? '50%' : '100%',
-                    md: articleIndex === 0 ? '50%' : '100%',
-                    lg: articleIndex === 0 ? '50%' : '100%',
-                    xl: articleIndex === 0 ? '50%' : '100%',
+                    xs: articleindex === 0 ? '100%' : '120px',
+                    sm: articleindex === 0 ? '50%' : '100%',
+                    md: articleindex === 0 ? '50%' : '100%',
+                    lg: articleindex === 0 ? '50%' : '100%',
+                    xl: articleindex === 0 ? '50%' : '100%',
                 },
             }}
         >
@@ -121,7 +121,7 @@ const RenderImage = (articleIndex, article, theme, isSm) => {
                 style={{
                     width: '100%',
                     position: 'relative',
-                    paddingBottom: isSm && articleIndex !== 0 ? '91.534%' : '66.667%',
+                    paddingBottom: isSm && articleindex !== 0 ? '91.534%' : '66.667%',
                 }}
             >
                 <img
@@ -144,23 +144,23 @@ const RenderImage = (articleIndex, article, theme, isSm) => {
     );
 };
 
-const RenderTextblock = (articleIndex, article, theme, isSm) => {
+const RenderTextblock = (articleindex, article, theme, isSm) => {
     return (
         <Box
             sx={{
                 width: {
-                    xs: articleIndex === 0 ? '100%' : 'calc(100% - 120px)',
-                    sm: articleIndex === 0 ? '50%' : '100%',
-                    md: articleIndex === 0 ? '50%' : '100%',
-                    lg: articleIndex === 0 ? '50%' : '100%',
-                    xl: articleIndex === 0 ? '50%' : '100%',
+                    xs: articleindex === 0 ? '100%' : 'calc(100% - 120px)',
+                    sm: articleindex === 0 ? '50%' : '100%',
+                    md: articleindex === 0 ? '50%' : '100%',
+                    lg: articleindex === 0 ? '50%' : '100%',
+                    xl: articleindex === 0 ? '50%' : '100%',
                 },
                 paddingBottom: {
-                    xs: articleIndex !== 0 ? '0px' : '24px',
-                    sm: articleIndex === 0 ? '0px' : '24px',
-                    md: articleIndex === 0 ? '0px' : '24px',
-                    lg: articleIndex === 0 ? '0px' : '24px',
-                    xl: articleIndex === 0 ? '0px' : '24px',
+                    xs: articleindex !== 0 ? '0px' : '24px',
+                    sm: articleindex === 0 ? '0px' : '24px',
+                    md: articleindex === 0 ? '0px' : '24px',
+                    lg: articleindex === 0 ? '0px' : '24px',
+                    xl: articleindex === 0 ? '0px' : '24px',
                 },
             }}
             className="ArticleContainer"
@@ -170,7 +170,7 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                     component={'p'}
                     className={'ArticleCategory'}
                     sx={{
-                        marginTop: isSm || articleIndex === 0 ? '0' : '24px',
+                        marginTop: isSm || articleindex === 0 ? '0' : '24px',
                         marginBottom: '0',
                         fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
                         color: '#666 !important',
@@ -190,10 +190,10 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                         marginRight: isSm ? '16px' : '0px',
                         height: {
                             sx: 'auto',
-                            sm: articleIndex === 0 ? 'auto' : '116px',
-                            md: articleIndex === 0 ? 'auto' : '116px',
-                            lg: articleIndex === 0 ? 'auto' : '116px',
-                            xl: articleIndex === 0 ? 'auto' : '116px',
+                            sm: articleindex === 0 ? 'auto' : '116px',
+                            md: articleindex === 0 ? 'auto' : '116px',
+                            lg: articleindex === 0 ? 'auto' : '116px',
+                            xl: articleindex === 0 ? 'auto' : '116px',
                         },
                         overflow: 'hidden',
                         display: '-webkit-box',
@@ -202,7 +202,7 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                         textOverflow: 'ellipsis',
                         // marginBottom: '24px',
                     }}
-                    data-testid={`article-${articleIndex + 1}-title`}
+                    data-testid={`article-${articleindex + 1}-title`}
                 >
                     {article.title}
                 </Typography>
@@ -218,7 +218,7 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
                         }}
                         className={'ArticleDescription'}
                     >
-                        {articleIndex === 0 && article.description}
+                        {articleindex === 0 && article.description}
                     </Typography>
                 )}
             </div>
@@ -226,29 +226,30 @@ const RenderTextblock = (articleIndex, article, theme, isSm) => {
     );
 };
 
-const LibraryArticle = ({ article, articleIndex }) => {
+const LibraryArticle = ({ article, articleindex }) => {
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
     return (
         <StyledGridItem
-            articleIndex={articleIndex}
+            key={articleindex}
+            articleindex={articleindex}
             theme={theme}
             item
             xs={12}
-            sm={articleIndex === 0 ? 12 : 6}
-            md={articleIndex === 0 ? 12 : 4}
+            sm={articleindex === 0 ? 12 : 6}
+            md={articleindex === 0 ? 12 : 4}
             className="article-container"
         >
             <StandardCard className={'article-card'} noPadding noHeader>
                 <Link to={article.canonical_url}>
                     <Grid container sx={{ borderBottom: isSm ? '1px solid #ddd' : 'none' }}>
-                        {(articleIndex === 0 && isSmUp) || (articleIndex !== 0 && isSm)
-                            ? RenderTextblock(articleIndex, article, theme, isSm)
-                            : RenderImage(articleIndex, article, theme, isSm)}
-                        {(articleIndex === 0 && isSmUp) || (articleIndex !== 0 && isSm)
-                            ? RenderImage(articleIndex, article, theme, isSm)
-                            : RenderTextblock(articleIndex, article, theme, isSm)}
+                        {(articleindex === 0 && isSmUp) || (articleindex !== 0 && isSm)
+                            ? RenderTextblock(articleindex, article, theme, isSm)
+                            : RenderImage(articleindex, article, theme, isSm)}
+                        {(articleindex === 0 && isSmUp) || (articleindex !== 0 && isSm)
+                            ? RenderImage(articleindex, article, theme, isSm)
+                            : RenderTextblock(articleindex, article, theme, isSm)}
                     </Grid>
                 </Link>
             </StandardCard>
@@ -257,8 +258,8 @@ const LibraryArticle = ({ article, articleIndex }) => {
 };
 
 LibraryArticle.propTypes = {
-    article: PropTypes.array,
-    articleIndex: PropTypes.number,
+    article: PropTypes.object,
+    articleindex: PropTypes.number,
 };
 
 export default LibraryArticle;

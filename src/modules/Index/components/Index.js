@@ -27,6 +27,7 @@ import {
     loadCompAvail,
     loadTrainingEvents,
     loadDrupalArticles,
+    loadJournalSearchFavourites,
 } from 'data/actions';
 import { canSeeLearningResources, isEspaceAuthor } from 'helpers/access';
 
@@ -36,6 +37,7 @@ const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/
 const PastExamPapers = lazy(() => lazyRetry(() => import('./subComponents/PastExamPapersPanel')));
 const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
 const ReferencingPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReferencingPanel')));
+const ReadPublish = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReadPublish')));
 
 const StyledAccordion = styled(Accordion)(() => ({
     backgroundColor: 'inherit',
@@ -122,6 +124,10 @@ export const Index = ({
     drupalArticleList,
     // drupalArticlesLoading,
     // drupalArticlesError,
+    journalSearchList,
+    journalSearchLoading,
+    journalSearchError,
+
 }) => {
     // console.log('drupal article list in index feeder,', drupalArticleList);
     const dispatch = useDispatch();
@@ -141,6 +147,14 @@ export const Index = ({
             dispatch(loadDrupalArticles());
         }
     }, [drupalArticleList, dispatch]);
+
+    // Journal Search favourites here
+    useEffect(() => {
+        if (accountLoading === false && !!account) {
+            // console.log('dispatching', drupalArticleList);
+            dispatch(loadJournalSearchFavourites());
+        }
+    }, [accountLoading, account, dispatch]);
 
     useEffect(() => {
         if (accountLoading === false) {
@@ -271,6 +285,9 @@ export const Index = ({
                         <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
                             <ReferencingPanel account={account} />
                         </Grid>
+                        <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
+                            <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
+                        </Grid>
                     </Grid>
                 </StandardPage>
             )}
@@ -303,6 +320,9 @@ Index.propTypes = {
     drupalArticleList: PropTypes.array,
     drupalArticlesLoading: PropTypes.bool,
     drupalArticlesError: PropTypes.bool,
+    journalSearchList: PropTypes.object,
+    journalSearchLoading: PropTypes.bool,
+    journalSearchError: PropTypes.bool,
 };
 
 export default Index;
