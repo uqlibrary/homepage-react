@@ -16,11 +16,25 @@ context('Personalised Homepage', () => {
 
         // this type of user will see these lines in the Personalisation Panel
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
+
+        // as the user is logged in, they see nav panels with a h3
+        cy.get('[data-testid="help-navigation-panel"]')
+            .children()
+            .eq(0)
+            .find('h3')
+            .should('exist');
     });
 
     it('Renders a logged out user', () => {
         // tests ?user=public
         cy.rendersALoggedoutUser();
+
+        // as the user is logged out, they see nav panels with a h2
+        cy.get('[data-testid="help-navigation-panel"]')
+            .children()
+            .eq(0)
+            .find('h2')
+            .should('exist');
     });
 
     it('Renders an RHD home page correctly', () => {

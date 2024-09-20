@@ -56,6 +56,7 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                         landingUrl={`https://${landingDomain}/study-and-learning-support`}
                         iconBackgroundImage={toolboxBackgroundImage}
                         shortParagraph="Lorem ipsum odor amet, consectetuer adipiscing elit. Pulvinar finibus lectus semper volutpat orci congue vitae justo cubilia molestie accumsan maximus semper varius rutrum mauris augue."
+                        loggedIn={accountLoading === false && !!account}
                     />
                     {/* minimum length for shortParagraph string: 66 char,
                         or the wrapping is off at widest tablet 2 column width :( */}
@@ -64,30 +65,35 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                         landingUrl={`https://${landingDomain}/askus-and-it-support`}
                         iconBackgroundImage={toolboxBackgroundImage}
                         shortParagraph="Lorem ipsum odor amet, consectetuer adipiscing elit. Lectus. finibus finibus finibus"
+                        loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardLabel="Research and publish"
                         landingUrl={`https://${landingDomain}/research-and-publish`}
                         iconBackgroundImage={scienceMoleculeBackgroundImage}
                         shortParagraph="Lorem ipsum odor amet, consectetuer adipiscing elit. Dolor adipiscing ante nullam accumsan volutpat; fermentum etiam sodales tempor natoque."
+                        loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardLabel="Find and borrow"
                         landingUrl={`https://${landingDomain}/find-and-borrow`}
                         iconBackgroundImage={bookBackgroundImage}
                         shortParagraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet felis quis urna posuere, ac ornare justo vulputate. Nulla dictum."
+                        loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardLabel="Visit"
                         landingUrl={`https://${landingDomain}/visit-our-spaces`}
                         iconBackgroundImage={schoolBuildingBackgroundimage}
                         shortParagraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi placerat erat scelerisque nulla vehicula, quis finibus nibh egestas. Cras sapien."
+                        loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardLabel="About"
                         landingUrl={`https://${landingDomain}/about-us`}
                         iconBackgroundImage={schoolBuildingBackgroundimage}
                         shortParagraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non ultrices mi. Etiam lobortis nunc non elementum sodales. Fusce turpis."
+                        loggedIn={accountLoading === false && !!account}
                     />
                 </StyledGridContainer>
             </StyledNav>
