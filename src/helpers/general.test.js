@@ -1,4 +1,12 @@
-import { getCampusByCode, isRepeatingString, leftJoin, stripHtml, unescapeString } from './general';
+import {
+    getCampusByCode,
+    greeting,
+    pluralise,
+    isRepeatingString,
+    leftJoin,
+    stripHtml,
+    unescapeString,
+} from './general';
 
 describe('general helpers', () => {
     it('leftJoin', () => {
@@ -51,5 +59,25 @@ describe('general helpers', () => {
         expect(unescapeString(null)).toEqual('');
 
         expect(unescapeString('1&amp;2')).toEqual('1 and 2');
+    });
+
+    it('should pluralise strings correctly', () => {
+        expect(pluralise('record', 1)).toEqual('record');
+
+        expect(pluralise('record', 2)).toEqual('records');
+        expect(pluralise('record', 947)).toEqual('records');
+
+        expect(pluralise('frog', 0)).toEqual('frog');
+        expect(pluralise('frog', 1)).toEqual('frog');
+        expect(pluralise('frog', 4)).toEqual('frogs');
+        expect(pluralise('body', 0, 'bodies')).toEqual('body');
+        expect(pluralise('body', 1, 'bodies')).toEqual('body');
+        expect(pluralise('body', 8, 'bodies')).toEqual('bodies');
+    });
+
+    it('shows the correct greeting time', () => {
+        expect(greeting(9)).toEqual('Good morning'); // 9am
+        expect(greeting(13)).toEqual('Good afternoon'); // 1pm
+        expect(greeting(21)).toEqual('Good evening'); // 9pm
     });
 });

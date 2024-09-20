@@ -19,7 +19,7 @@ import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//Shar
 
 import { useConfirmationState } from 'hooks';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
-import { pluraliseWord } from '../../../DigitalLearningObjects/dlorHelpers';
+import { pluralise } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
 
 const StyledObjectDetails = styled('details')(() => ({
@@ -206,7 +206,7 @@ export const DLOSeriesList = ({
                                                 <>
                                                     {series?.series_id === null
                                                         ? 'other Objects'
-                                                        : `${series?.objects_count} ${pluraliseWord(
+                                                        : `${series?.objects_count} ${pluralise(
                                                               'Object',
                                                               series?.objects_count,
                                                           )}`}

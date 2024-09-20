@@ -1,4 +1,5 @@
 import global from 'locale/global';
+const moment = require('moment');
 
 export const leftJoin = (objArr1, objArr2, key1, key2) => {
     if (!objArr2) {
@@ -102,3 +103,31 @@ export function scrollToTopOfPage() {
     const topOfPage = document.getElementById('StandardPage');
     !!topOfPage && typeof topOfPage.scrollIntoView === 'function' && topOfPage.scrollIntoView();
 }
+
+// this is very basic, because thats all that seems required so far
+
+export const pluralise = (singularWord, count, pluralWordSpecial = null) => {
+    if (count > 1 && pluralWordSpecial !== null) {
+        return pluralWordSpecial;
+    }
+    if (count > 1) {
+        return `${singularWord}s`;
+    }
+    return singularWord;
+};
+
+const greetings = {
+    morning: 'Good morning',
+    afternoon: 'Good afternoon',
+    evening: 'Good evening',
+};
+export const greeting = (currentTime = null) => {
+    const time = currentTime ?? moment().format('H');
+    if (time < 12) {
+        return greetings.morning;
+    } else if (time >= 12 && time < 18) {
+        return greetings.afternoon;
+    } else {
+        return greetings.evening;
+    }
+};
