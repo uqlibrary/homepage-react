@@ -110,11 +110,8 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             },
         },
     },
-    ['& .moreActionButton']: {
-        backgroundColor: theme.palette.secondary.light,
-        '&:hover': {
-            backgroundColor: theme.palette.secondary.dark,
-        },
+    ['& .seeAllTrainingLink']: {
+        margin: '12px 24px auto 24px',
     },
     ['& .bookActionButton']: {
         backgroundColor: theme.palette.primary.main,
@@ -227,6 +224,16 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
     return (
         <StandardCard subCard primaryHeader title="Training" noPadding>
             <StyledWrapper className={'flexWrapper componentHeight'}>
+                <div className={'seeAllTrainingLink'}>
+                    <a
+                        href="https://web.library.uq.edu.au/library-services/training"
+                        id="training-event-detail-more-training-button"
+                        data-testid="training-event-detail-more-training-button"
+                        data-analyticsid="training-event-detail-more-training-button"
+                    >
+                        See all training
+                    </a>
+                </div>
                 {!!trainingEventsError && (
                     <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
                         <div className={'flexContent'} role="region">
