@@ -39,14 +39,6 @@ const MyLoader = props => (
         <rect x="5%" y="150" rx="3" ry="3" width="75%" height="14" />
         <rect x="5%" y="175" rx="3" ry="3" width="41%" height="10" />
         <rect x="0" y="200" rx="3" ry="3" width="100%" height="1" />
-
-        <rect x="5%" y="215" rx="3" ry="3" width="52%" height="14" />
-        <rect x="5%" y="245" rx="3" ry="3" width="25%" height="10" />
-        <rect x="0" y="270" rx="3" ry="3" width="100%" height="1" />
-
-        <rect x="5%" y="285" rx="3" ry="3" width="47%" height="14" />
-        <rect x="5%" y="310" rx="3" ry="3" width="42%" height="10" />
-        <rect x="0" y="325" rx="3" ry="3" width="100%" height="1" />
     </ContentLoader>
 );
 
@@ -111,7 +103,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         },
     },
     ['& .seeAllTrainingLink']: {
-        margin: '12px 24px auto 24px',
+        margin: '12px 24px 24px 24px',
     },
     ['& .bookActionButton']: {
         backgroundColor: theme.palette.primary.main,
@@ -150,8 +142,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         height: '100%',
     },
     ['& .row']: {
-        borderBottom: '1px solid #EEE',
         padding: '8px 0 0 0',
+        marginLeft: '20px',
+        paddingRight: '20px',
     },
     ['& .flexHeader']: {
         height: 'auto',
@@ -235,13 +228,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                     </a>
                 </div>
                 {(() => {
-                    if (!trainingEventsError && (!trainingEvents || trainingEventsLoading) && !eventDetail) {
-                        return (
-                            <div className={'flexLoader'} aria-label="UQ training Events loading">
-                                <MyLoader />
-                            </div>
-                        );
-                    } else if (!!trainingEventsError) {
+                    if (!!trainingEventsError) {
                         return (
                             <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
                                 <div className={'flexContent'} role="region">
@@ -252,6 +239,12 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                 </div>
                             </Fade>
                         );
+                    } else if ((!trainingEvents || !!trainingEventsLoading) && !eventDetail) {
+                        return (
+                            <div className={'flexLoader'} aria-label="UQ training Events loading">
+                                <MyLoader />
+                            </div>
+                        );
                     } else if (
                         standardisedTrainingEvents &&
                         standardisedTrainingEvents.length > 0 &&
@@ -261,11 +254,19 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                         return (
                             <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
                                 <div className={'flexContent'} role="region" aria-label="UQ training Events list">
+                                    <Typography component={'h4'} variant={'h6'} sx={{ marginLeft: '24px' }}>
+                                        Suggested training for you:
+                                    </Typography>
                                     {standardisedTrainingEvents &&
                                         standardisedTrainingEvents.length > 0 &&
                                         standardisedTrainingEvents.map((event, index) => {
                                             return (
-                                                <Grid container spacing={0} className={'row'} key={index}>
+                                                /* event.bookingSettings !== null && () */ <Grid
+                                                    container
+                                                    spacing={0}
+                                                    className={'row'}
+                                                    key={index}
+                                                >
                                                     <Grid item xs={12}>
                                                         <Button
                                                             id={`training-event-detail-button-${event.entityId}`}
@@ -306,6 +307,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                             aria-label={`UQ Library training event detail for ${eventDetail.name}`}
                             autoFocus
                             data-testid={`training-events-detail-${eventDetail.entityId}`}
+                            style={{ marginTop: '-23px' }}
                         >
                             <Grid container spacing={1} direction="column">
                                 <Grid item xs={12}>

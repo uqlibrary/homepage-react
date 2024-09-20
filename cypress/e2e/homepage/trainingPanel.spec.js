@@ -1,5 +1,28 @@
 context('Training', () => {
-    it('Training Accessibility', () => {
+    it('content is correct', () => {
+        cy.visit('/?user=s1111111');
+        cy.viewport(1300, 1000);
+
+        cy.waitUntil(() =>
+            cy
+                .get('[data-testid="standard-card-training-header"]')
+                .should('exist')
+                .contains('Training'),
+        );
+
+        cy.get('[data-testid="training-event-detail-button-0"]')
+            .should('exist')
+            .contains('EndNote: getting started');
+        cy.get('[data-testid="training-event-detail-button-1"]')
+            .should('exist')
+            .contains('Advanced Adobe Illustrator');
+        // 4th, not 3rd item appears, because item 3 is fully booked
+        cy.get('[data-testid="training-event-detail-button-3"]')
+            .should('exist')
+            .contains('Excel: Further Functions');
+    });
+
+    it('list is Accessible', () => {
         cy.visit('/');
         cy.injectAxe();
         cy.wait(2000);
@@ -17,6 +40,20 @@ context('Training', () => {
             scopeName: 'As loaded',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
+    });
+
+    it('detailis Accessible', () => {
+        cy.visit('/');
+        cy.injectAxe();
+        cy.wait(2000);
+        cy.viewport(1300, 1000);
+        cy.waitUntil(() => cy.get('div[data-testid="training-panel"]').should('exist'));
+        cy.log('Training');
+
+        cy.log('Events list');
+        cy.get('[data-testid="training-event-detail-button-0"]')
+            .should('exist')
+            .should('have.text', 'EndNote: getting started');
         cy.log('Event detail');
         cy.get('button[data-testid="training-event-detail-button-0"]').click();
         cy.wait(500);
