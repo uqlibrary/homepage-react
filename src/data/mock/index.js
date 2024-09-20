@@ -147,7 +147,16 @@ mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl).reply(() => {
     return [404, {}];
 });
 
-mock.onGet(routes.TRAINING_API(10).apiUrl).reply(withDelay([200, training_object]));
+mock.onGet(routes.TRAINING_API().apiUrl).reply(() => {
+    if (responseType === 'error') {
+        return [500, {}];
+    } else if (responseType === 'missing') {
+        return [404, {}];
+    } else {
+        return [200, training_object];
+    }
+});
+// .reply(withDelay([200, training_object]));
 // .reply(withDelay([200, training_array]));
 // .reply(withDelay([500, {}]));
 

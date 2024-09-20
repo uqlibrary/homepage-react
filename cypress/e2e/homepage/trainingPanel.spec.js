@@ -57,4 +57,20 @@ context('Training', () => {
         // when placesRemaining is 0 we see 'Event is fully booked'
         cy.get('div[data-testid="training-events-detail-2873532"]').contains('Booking is not required');
     });
+
+    it('shows an api error correctly', () => {
+        cy.visit('/?user=s1111111&responseType=error');
+        cy.viewport(1300, 1000);
+
+        cy.waitUntil(() =>
+            cy
+                .get('[data-testid="standard-card-training-header"]')
+                .should('exist')
+                .contains('Training'),
+        );
+
+        cy.get('[data-testid="training-api-error"]')
+            .should('exist')
+            .contains('We can’t load training events right now');
+    });
 });

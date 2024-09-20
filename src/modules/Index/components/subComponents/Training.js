@@ -228,15 +228,9 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
         <StandardCard subCard primaryHeader title="Training" noPadding>
             <StyledWrapper className={'flexWrapper componentHeight'}>
                 {!!trainingEventsError && (
-                    /* istanbul ignore next */ <Fade
-                        direction="right"
-                        timeout={1000}
-                        in={!eventDetail}
-                        mountOnEnter
-                        unmountOnExit
-                    >
+                    <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
                         <div className={'flexContent'} role="region">
-                            <Typography style={{ padding: '1rem' }}>
+                            <Typography style={{ padding: '1rem' }} data-testid="training-api-error">
                                 We can’t load training events right now. Please refresh your browser or try again later.
                             </Typography>
                         </div>
