@@ -15,7 +15,6 @@ import EventIcon from '@mui/icons-material/Event';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
-import { trainingLocale } from './Training.locale';
 import { styled } from '@mui/material/styles';
 
 const MyLoader = props => (
@@ -226,7 +225,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
               })
             : trainingEvents;
     return (
-        <StandardCard subCard primaryHeader title={trainingLocale.title} noPadding>
+        <StandardCard subCard primaryHeader title="Training" noPadding>
             <StyledWrapper className={'flexWrapper componentHeight'}>
                 {!!trainingEventsError && (
                     /* istanbul ignore next */ <Fade
@@ -237,7 +236,9 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                         unmountOnExit
                     >
                         <div className={'flexContent'} role="region">
-                            <Typography style={{ padding: '1rem' }}>{trainingLocale.unavailable}</Typography>
+                            <Typography style={{ padding: '1rem' }}>
+                                We can’t load training events right now. Please refresh your browser or try again later.
+                            </Typography>
                         </div>
                     </Fade>
                 )}
@@ -307,7 +308,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                         <Grid item xs={'auto'}>
                                             <IconButton
                                                 onClick={() => closeEvent(eventDetail.entityId)}
-                                                aria-label={trainingLocale.closeEvent}
+                                                aria-label="Close event detail"
                                                 id="training-event-detail-close-button"
                                                 data-testid="training-event-detail-close-button"
                                                 size="large"
