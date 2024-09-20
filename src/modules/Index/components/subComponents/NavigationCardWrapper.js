@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import SingleLinkCard from './SingleLinkCard';
+import { linkToDrupal } from 'helpers/general';
 
 const StyledNav = styled('nav')(() => ({
     marginTop: '28px',
@@ -38,10 +39,6 @@ const schoolBuildingBackgroundimage =
 const scienceMoleculeBackgroundImage =
     'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cg fill=%27none%27 stroke=%27%2351247A%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3e%3cpath d=%27M8 6.74c.69 0 1.26.57 1.26 1.26 0 .69-.57 1.26-1.26 1.26-.69 0-1.26-.57-1.26-1.26 0-.69.57-1.26 1.26-1.26zm0 0%27%3e%3c/path%3e%3cpath d=%27M5.91 5.91c3.29-3.28 6.86-5 8-3.85 1.15 1.14-.57 4.74-3.85 8-3.29 3.28-6.86 5-8 3.85-1.15-1.14.6-4.71 3.85-8zm0 0%27%3e%3c/path%3e%3cpath d=%27M2.06 2.06c1.14-1.15 4.74.57 8 3.85 3.28 3.29 5 6.86 3.85 8-1.14 1.15-4.74-.57-8-3.85-3.25-3.29-5-6.83-3.85-8zm0 0%27%3e%3c/path%3e%3c/g%3e%3c/svg%3e")';
 
-// for dev only
-const landingDomain = ['localhost', 'homepage-development.library.uq.edu.au'].includes(document.location.hostname)
-    ? 'live-library-uq.pantheonsite.io'
-    : 'web.library.uq.edu.au';
 const NavigationCardWrapper = ({ account, accountLoading }) => {
     return (
         <StandardPage>
@@ -53,7 +50,7 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                 <StyledGridContainer component={'ul'} container data-testid="help-navigation-panel">
                     <SingleLinkCard
                         cardLabel="Study and learning support"
-                        landingUrl={`https://${landingDomain}/study-and-learning-support`}
+                        landingUrl={linkToDrupal('/study-and-learning-support')}
                         iconBackgroundImage={toolboxBackgroundImage}
                         shortParagraph="Lorem ipsum odor amet, consectetuer adipiscing elit. Pulvinar finibus lectus semper volutpat orci congue vitae justo cubilia molestie accumsan maximus semper varius rutrum mauris augue."
                         loggedIn={accountLoading === false && !!account}
@@ -62,35 +59,35 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                         or the wrapping is off at widest tablet 2 column width :( */}
                     <SingleLinkCard
                         cardLabel="AskUs and student IT support"
-                        landingUrl={`https://${landingDomain}/askus-and-it-support`}
+                        landingUrl={linkToDrupal('/askus-and-it-support')}
                         iconBackgroundImage={toolboxBackgroundImage}
                         shortParagraph="Lorem ipsum odor amet, consectetuer adipiscing elit. Lectus. finibus finibus finibus"
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardLabel="Research and publish"
-                        landingUrl={`https://${landingDomain}/research-and-publish`}
+                        landingUrl={linkToDrupal('/research-and-publish')}
                         iconBackgroundImage={scienceMoleculeBackgroundImage}
                         shortParagraph="Lorem ipsum odor amet, consectetuer adipiscing elit. Dolor adipiscing ante nullam accumsan volutpat; fermentum etiam sodales tempor natoque."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardLabel="Find and borrow"
-                        landingUrl={`https://${landingDomain}/find-and-borrow`}
+                        landingUrl={linkToDrupal('/find-and-borrow')}
                         iconBackgroundImage={bookBackgroundImage}
                         shortParagraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet felis quis urna posuere, ac ornare justo vulputate. Nulla dictum."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardLabel="Visit"
-                        landingUrl={`https://${landingDomain}/visit-our-spaces`}
+                        landingUrl={linkToDrupal('/visit-our-spaces')}
                         iconBackgroundImage={schoolBuildingBackgroundimage}
                         shortParagraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi placerat erat scelerisque nulla vehicula, quis finibus nibh egestas. Cras sapien."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardLabel="About"
-                        landingUrl={`https://${landingDomain}/about-us`}
+                        landingUrl={linkToDrupal('/about-us')}
                         iconBackgroundImage={schoolBuildingBackgroundimage}
                         shortParagraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non ultrices mi. Etiam lobortis nunc non elementum sodales. Fusce turpis."
                         loggedIn={accountLoading === false && !!account}

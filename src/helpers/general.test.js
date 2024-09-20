@@ -1,4 +1,5 @@
 import {
+    linkToDrupal,
     getCampusByCode,
     greeting,
     pluralise,
@@ -79,5 +80,20 @@ describe('general helpers', () => {
         expect(greeting(9)).toEqual('Good morning'); // 9am
         expect(greeting(13)).toEqual('Good afternoon'); // 1pm
         expect(greeting(21)).toEqual('Good evening'); // 9pm
+    });
+
+    it('shows the correct drupal domain name', () => {
+        // actual usage
+        expect(linkToDrupal('/research')).toEqual('https://web.library.uq.edu.au/research'); // test env domain name is homepage-staging.library.uq.edu.au
+
+        // test coverage usage
+        expect(linkToDrupal('/visit', 'localhost')).toEqual('https://live-library-uq.pantheonsite.io/visit');
+        expect(linkToDrupal('/about', 'homepage-development.library.uq.edu.au')).toEqual(
+            'https://live-library-uq.pantheonsite.io/about',
+        );
+        expect(linkToDrupal('/support', 'somethingelse.library.uq.edu.au')).toEqual(
+            'https://web.library.uq.edu.au/support',
+        );
+        expect(linkToDrupal('/study', 'www.library.uq.edu.au')).toEqual('https://web.library.uq.edu.au/study');
     });
 });
