@@ -1,23 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import ContentLoader from 'react-content-loader';
 import moment from 'moment-timezone';
 
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import Autocomplete from '@mui/material/Autocomplete';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import Fade from '@mui/material/Fade';
+import InputAdornment from '@mui/material/InputAdornment';
+import { styled } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
+
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CloseIcon from '@mui/icons-material/Close';
 import EventIcon from '@mui/icons-material/Event';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import IconButton from '@mui/material/IconButton';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
-import { styled } from '@mui/material/styles';
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
-const NUMBER_OF_DISPLAYED_EVENTS = 3; // we get 10 and hope at least 3 are available
+const NUMBER_OF_DISPLAYED_EVENTS = 3;
 
 const MyLoader = props => (
     <ContentLoader
@@ -44,6 +49,17 @@ const MyLoader = props => (
     </ContentLoader>
 );
 
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    fontWeight: 400,
+    textOverflow: 'ellipsis !important',
+    overflow: 'hidden !important',
+    whiteSpace: 'nowrap !important',
+    '&::placeholder': {
+        textOverflow: 'ellipsis !important',
+        overflow: 'hidden !important',
+        whiteSpace: 'nowrap !important',
+    },
+}));
 const StyledWrapper = styled('div')(({ theme }) => ({
     ['&.flexWrapper']: {
         display: 'flex',
@@ -104,6 +120,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             },
         },
     },
+    ['& .trainingSearch']: {
+        margin: '0 24px 24px 24px',
+    },
     ['& .seeAllTrainingLink']: {
         margin: '12px 24px 24px 24px',
     },
@@ -114,7 +133,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         },
     },
     ['& .detailHeader']: {
-        backgroundColor: theme.palette.primary.dark,
+        backgroundColor: theme.palette.primary.light,
         color: theme.palette.white.main,
     },
     ['& .detailIcon']: {
@@ -172,17 +191,40 @@ const StyledWrapper = styled('div')(({ theme }) => ({
 }));
 
 const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }) => {
-    const [eventDetail, setEventDetail] = React.useState(null);
-    const handleEventDetail = event => {
-        setEventDetail(event);
+    const [inputValue, setInputValue2] = useState('');
+    const setInputValue = e => {
+        console.log('setInputValue ', `"${e}"`);
+        setInputValue2(e);
+    };
+
+    const hideElement = elementId => {
+        const element = document.getElementById(elementId);
+        !!element && (element.style.display = 'none');
+    };
+    const showElement = elementId => {
+        const element = document.getElementById(elementId);
+        !!element && (element.style.display = 'block');
+    };
+
+    const [eventDetail, setEventDetail] = useState(null);
+    const showEventDetail = (event, value = null) => {
+        console.log('showEventDetail', value, event);
+        hideElement('trainingSearch');
+        hideElement('seeAllTrainingLink');
+        setEventDetail(value ?? event);
         setTimeout(() => {
             document.getElementById('training-event-detail-close-button').focus();
         }, 300);
     };
     const closeEvent = entityId => {
-        setTimeout(() => {
-            document.getElementById(`training-event-detail-button-${entityId}`).focus();
-        }, 300);
+        console.log('closeEvent entityId=', entityId);
+        showElement('trainingSearch');
+        showElement('seeAllTrainingLink');
+        // setTimeout(() => {
+        //     const element = !!entityId && document.getElementById(`training-event-detail-button-${entityId}`);
+        //     console.log('closeEvent element=', element);
+        //     !!element && element.focus();
+        // }, 300);
         setEventDetail(null);
     };
     moment.tz.setDefault('Australia/Brisbane');
@@ -198,6 +240,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
             })
             .replace('.00', '');
     const bookingText = ev => {
+        console.log('ev=', ev);
         /*
           if bookingSettings is null then bookings are not required
           if bookingSettings has a placesRemaining child *and it is > 0" then there are places still available
@@ -206,7 +249,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
          */
         let placesRemainingText = 'Booking is not required';
         if (ev.bookingSettings !== null) {
-            if (ev.bookingSettings.placesRemaining > 0) {
+            if (ev?.bookingSettings?.placesRemaining > 0) {
                 placesRemainingText = 'Places still available';
             }
         }
@@ -214,7 +257,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
     };
     // there is something strange happening that sometimes the api sends us an object
     // convert to an array when it happens
-    const getStandardisedTrainingEvents = () => {
+    const filterStandardisedTrainingEvents = () => {
         const list =
             !trainingEventsLoading && !trainingEventsError && !!trainingEvents && typeof trainingEvents === 'object'
                 ? Object.keys(trainingEvents).map(key => {
@@ -225,11 +268,76 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
             ? list.filter(t => t.bookingSettings !== null).slice(0, NUMBER_OF_DISPLAYED_EVENTS)
             : [];
     };
-    const standardisedTrainingEvents = getStandardisedTrainingEvents();
+    const allStandardisedTrainingEvents = () => {
+        const list =
+            !trainingEventsLoading && !trainingEventsError && !!trainingEvents && typeof trainingEvents === 'object'
+                ? Object.keys(trainingEvents).map(key => {
+                      return trainingEvents[key];
+                  })
+                : trainingEvents;
+        return !!list && list.length > 0 ? list : [];
+    };
+    const filteredTrainingEvents = filterStandardisedTrainingEvents();
+    const allTrainingEvents = allStandardisedTrainingEvents();
+    const filterEvents = (events, keyword) => {
+        if (!keyword || keyword.length < 3) return [];
+        return events.filter(
+            event =>
+                event.summary.toLowerCase().includes(keyword.toLowerCase()) ||
+                event.details.toLowerCase().includes(keyword.toLowerCase()),
+        );
+    };
     return (
         <StandardCard subCard primaryHeader title="Training" noPadding>
             <StyledWrapper className={'flexWrapper componentHeight'}>
-                <div className={'seeAllTrainingLink'}>
+                {allTrainingEvents && allTrainingEvents.length > 0 && !trainingEventsLoading && !trainingEventsError && (
+                    <div className={'trainingSearch'} id="trainingSearch">
+                        <Autocomplete
+                            id="training-search-wrapper"
+                            data-testid="training-search-wrapper"
+                            freeSolo
+                            options={filterEvents(allTrainingEvents, inputValue)}
+                            getOptionLabel={option => option.name}
+                            onInputChange={e => setInputValue(e.target.value)} // letters typed
+                            onChange={(event, value) => showEventDetail(event, value)}
+                            renderInput={params => (
+                                <StyledTextField
+                                    {...params}
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        type: 'search',
+                                        classes: {
+                                            input: 'selectInput',
+                                        },
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <ArrowDropDownIcon />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    // blurOnSelect
+                                    // autoSelect
+                                    label="Search Events"
+                                    variant="standard"
+                                    // onChange={e => setInputValue(e.target.value)} // letters typed
+                                    // onInputChange={e => showEventDetail(e)}
+                                    sx={{
+                                        '& .MuiInput-underline:before': {
+                                            borderWidth: '0 0 1px 0',
+                                        },
+                                        '& .MuiInput-underline:hover:before': {
+                                            borderWidth: '0 0 2px 0',
+                                        },
+                                        '& .MuiInput-underline:after': {
+                                            borderWidth: '0 0 2px 0',
+                                        },
+                                    }}
+                                />
+                            )}
+                        />
+                    </div>
+                )}
+                <div className={'seeAllTrainingLink'} id="seeAllTrainingLink" data-testid="seeAllTrainingLink">
                     <a
                         href="https://web.library.uq.edu.au/library-services/training"
                         id="training-event-detail-more-training-button"
@@ -258,20 +366,34 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                             </div>
                         );
                     } else if (
-                        standardisedTrainingEvents &&
-                        standardisedTrainingEvents.length > 0 &&
+                        filteredTrainingEvents &&
+                        filteredTrainingEvents.length > 0 &&
                         !trainingEventsLoading &&
                         !eventDetail
                     ) {
                         return (
                             <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
-                                <div className={'flexContent'} role="region" aria-label="UQ training Events list">
-                                    <Typography component={'h4'} variant={'h6'} sx={{ marginLeft: '24px' }}>
-                                        Suggested training for you:
+                                <div
+                                    className={'flexContent'}
+                                    role="region"
+                                    aria-label="UQ training Events list"
+                                    data-testid="training-list"
+                                >
+                                    <Typography
+                                        component={'h4'}
+                                        variant={'h6'}
+                                        sx={{
+                                            marginLeft: '24px',
+                                            fontSize: '20px',
+                                            fontWeight: 500,
+                                            letterSpacing: '0.2px',
+                                        }}
+                                    >
+                                        Next training courses
                                     </Typography>
-                                    {standardisedTrainingEvents &&
-                                        standardisedTrainingEvents.length > 0 &&
-                                        standardisedTrainingEvents.map((event, index) => {
+                                    {filteredTrainingEvents &&
+                                        filteredTrainingEvents.length > 0 &&
+                                        filteredTrainingEvents.map((event, index) => {
                                             return (
                                                 <Grid container spacing={0} className={'row'} key={index}>
                                                     <Grid item xs={12}>
@@ -279,7 +401,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                             id={`training-event-detail-button-${event.entityId}`}
                                                             data-testid={`training-event-detail-button-${index}`}
                                                             data-analyticsid={`training-event-detail-button-${index}`}
-                                                            onClick={() => handleEventDetail(event)}
+                                                            onClick={() => showEventDetail(event)}
                                                             classes={{ root: 'linkButton' }}
                                                             fullWidth
                                                         >
@@ -314,12 +436,12 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                             aria-label={`UQ Library training event detail for ${eventDetail.name}`}
                             autoFocus
                             data-testid={`training-events-detail-${eventDetail.entityId}`}
-                            style={{ marginTop: '-23px' }}
+                            style={{ marginTop: '8px' }}
                         >
                             <Grid container spacing={1} direction="column">
                                 <Grid item xs={12}>
                                     <Grid container spacing={1} className={'detailHeader'}>
-                                        <Grid item xs={'auto'}>
+                                        <Grid item xs={'auto'} style={{ opacity: 1 }}>
                                             <IconButton
                                                 onClick={() => closeEvent(eventDetail.entityId)}
                                                 aria-label="Close event detail"
