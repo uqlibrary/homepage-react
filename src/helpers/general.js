@@ -131,3 +131,18 @@ export const greeting = (currentTime = null) => {
         return greetings.evening;
     }
 };
+
+// for dev only - after 2024 golive this can just be web.library
+/**
+ * @param pathname {string} the path name to appended to the correct domain, eg /about
+ * @param requestedDomainName {string|null}
+ *     for test coverage only, the domain of the current page. Default: the domain of the current page
+ * @returns string
+ */
+export const linkToDrupal = (pathname, requestedDomainName = null) => {
+    const domainName = requestedDomainName ?? document.location.hostname;
+    const origin = ['localhost', 'homepage-development.library.uq.edu.au'].includes(domainName)
+        ? 'https://live-library-uq.pantheonsite.io'
+        : 'https://web.library.uq.edu.au';
+    return `${origin}${pathname}`;
+};

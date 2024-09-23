@@ -68,9 +68,6 @@ export const App = ({ account, actions }) => {
                 <uq-header hidelibrarymenuitem="true" />
                 <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink} showmenu>
                     <span slot="site-utilities">
-                        <askus-button />
-                    </span>
-                    <span slot="site-utilities">
                         <auth-button />
                     </span>
                 </uq-site-header>

@@ -103,6 +103,7 @@ describe('header', () => {
                     // we have a 2 x 3 grid at tablet
                     cy.get('li')
                         .eq(0)
+                        .find('div')
                         .should('be.visible')
                         .then($el => {
                             const firstItemTop = $el.position().top;
@@ -115,6 +116,7 @@ describe('header', () => {
                             let secondItemRight;
                             cy.get('li')
                                 .eq(1)
+                                .find('div')
                                 .then($el2 => {
                                     secondItemTop = $el2.position().top;
                                     secondItemLeft = $el2.position().left;
@@ -128,6 +130,7 @@ describe('header', () => {
                             let thirdItemTop;
                             cy.get('li')
                                 .eq(2)
+                                .find('div')
                                 .then($el3 => {
                                     thirdItemTop = $el3.position().top;
                                     const thirdItemLeft = $el3.position().left;
@@ -142,6 +145,7 @@ describe('header', () => {
                             let fourthItemLeft;
                             cy.get('li')
                                 .eq(3)
+                                .find('div')
                                 .should('be.visible')
                                 .then($el4 => {
                                     const fourthItemTop = $el4.position().top;
@@ -158,6 +162,7 @@ describe('header', () => {
                             let fifthItemTop;
                             cy.get('li')
                                 .eq(4)
+                                .find('div')
                                 .should('be.visible')
                                 .then($el5 => {
                                     fifthItemTop = $el5.position().top;
@@ -172,6 +177,7 @@ describe('header', () => {
 
                             cy.get('li')
                                 .eq(5)
+                                .find('div')
                                 .should('be.visible')
                                 .then($el6 => {
                                     const sixthItemTop = $el6.position().top;
