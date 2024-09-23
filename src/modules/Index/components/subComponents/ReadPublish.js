@@ -5,52 +5,49 @@ import { linkToDrupal } from 'helpers/general';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
-export const ReadPublish = ({ account, journalSearchList, journalSearchLoading, journalSearchError }) => {
-    // console.log('IN THE READ AND PUBLISH', !!!journalSearchList?.data || '');
-    React.useEffect(() => {
-        console.log('Load the journals here');
-    }, []);
-
-    if (!!!account) return null;
+export const ReadPublish = ({ journalSearchList, journalSearchError }) => {
     return (
         <StandardCard
             subCard
             noPadding
             fullHeight
             primaryHeader
-            standardCardId="readpublish-homepage-panel"
+            standardCardId="readpublish-panel"
             title="Read and publish"
         >
-            <div className="reference-panel-item" style={{ margin: '0 24px 0' }}>
+            <div className="readpublish-panel-item" style={{ margin: '0 24px 0' }}>
                 <p>
                     <a href="https://espace.library.uq.edu.au/journals/search/">Journal search</a>
                     <br />
                     Find journals for your reference.
-                    {!!journalSearchList?.data && journalSearchList?.data?.length > 0 && (
+                    {!!journalSearchList?.data && (
                         <>
-                            {journalSearchList?.data?.length > 0 ? (
-                                <h4 style={{ marginBottom: 0 }}>
-                                    Your favourite items ({journalSearchList?.data?.length})
-                                </h4>
-                            ) : (
-                                <h4>You have no favourite items</h4>
-                            )}
-                            {journalSearchList?.data && ( // Only render list if data exists
-                                <>
-                                    <ul style={{ marginTop: 0, marginBottom: 0 }}>
-                                        {journalSearchList?.data.slice(0, 5).map((journal, index) => (
-                                            <li key={index}>
-                                                <Link
-                                                    to={`https://espace.library.uq.edu.au/journal/view/${journal.jnl_jid}`}
-                                                >
-                                                    {journal.jnl_title}
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </>
+                            <h4 data-testid="rp-yourfavourite-count">
+                                {journalSearchList?.data.length > 0
+                                    ? `Your favourite items (${journalSearchList?.data.length})`
+                                    : 'You have no favourite items'}
+                            </h4>
+                            {journalSearchList?.data.length > 0 && (
+                                <ul style={{ marginTop: 0, marginBottom: 0 }} data-testid="rp-journalsearch-items">
+                                    {journalSearchList?.data.slice(0, 5).map((journal, index) => (
+                                        <li key={index} data-testid={`rp-journalsearch-item-${index}`}>
+                                            <Link
+                                                to={`https://espace.library.uq.edu.au/journal/view/${journal.jnl_jid}`}
+                                            >
+                                                {journal.jnl_title}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
                             )}
                         </>
+                    )}
+                    {!!journalSearchError && (
+                        <p>
+                            We cannot display your favourite journal searches at this time. Visit{' '}
+                            <a href="https://espace.library.uq.edu.au/journals/search/">Journal search</a> to find your
+                            favourite searches
+                        </p>
                     )}
                     <p>
                         Visit{' '}

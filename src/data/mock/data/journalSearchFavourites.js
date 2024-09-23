@@ -590,3 +590,46 @@ export const journalSearchFavourites = {
         }
     }
 };
+
+export const journalSearchFavouritesLarge = {
+    ...journalSearchFavourites,
+    data: [{
+                "jnl_title": "Fake journal 1",
+                "jnl_jid": 1,
+            }, 
+            {
+                "jnl_title": "Fake journal 2",
+                "jnl_jid": 2,
+            },
+            {
+                "jnl_title": "Fake journal 3",
+                "jnl_jid": 3,
+            }, 
+            {
+                "jnl_title": "Fake journal 4",
+                "jnl_jid": 4,
+            },
+            {
+                "jnl_title": "Fake journal 5",
+                "jnl_jid": 5,
+            }, 
+            {
+                "jnl_title": "Fake journal 6",
+                "jnl_jid": 6,
+            },
+            {
+                "jnl_title": "Fake journal 7",
+                "jnl_jid": 7,
+            }, 
+            {
+                "jnl_title": "Fake journal 8",
+                "jnl_jid": 8,
+            }
+    ]
+}
+
+export const journalSearchNoFavourites = {
+    ...journalSearchFavourites,
+    data: [],
+    total: 0
+}

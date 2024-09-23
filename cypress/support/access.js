@@ -12,7 +12,7 @@ export const hasPanels = optionsTheUserShouldSee => {
     possiblePanels.set('past-exam-papers', { title: 'Past exam papers', content: 'Search by' });
     possiblePanels.set('training', { title: 'Training', content: 'Online' });
     possiblePanels.set('espace', { title: 'UQ eSpace', content: 'Actions' });
-
+    possiblePanels.set('readpublish', { title: 'Read and publish', content: 'Find journals' });
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
         expect([...possiblePanels.keys()].includes(item), `panel option unexpectedly supplied for panel test: ${item}`)

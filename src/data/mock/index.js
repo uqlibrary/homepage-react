@@ -59,7 +59,7 @@ import dlor_team_list from './data/records/dlor/dlor_team_list';
 import dlor_file_type_list from './data/records/dlor/dlor_file_type_list';
 import dlor_series_all from './data/records/dlor/dlor_series_all';
 import { drupalArticles } from './data/drupalArticles';
-import { journalSearchFavourites } from './data/journalSearchFavourites';
+import { journalSearchFavourites, journalSearchFavouritesLarge, journalSearchNoFavourites } from './data/journalSearchFavourites';
 
 const moment = require('moment');
 
@@ -1208,7 +1208,18 @@ mock.onGet('exams/course/FREN1010/summary')
     .onGet('https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json')
     .reply(() => [200, drupalArticles])
     .onGet(routes.JOURNAL_SEARCH_API().apiUrl)
-    .reply(() => [200, journalSearchFavourites])
+    .reply(() => {
+        switch (user) {
+            case "uqpf":
+                return [403, {}];
+            case "s1111111":
+                return [200, {...journalSearchFavouritesLarge}];
+            case "s3333333":
+                return [200, {...journalSearchNoFavourites}];
+            default:
+                return [200, journalSearchFavourites];
+        }
+    })
     .onAny()
     .reply(function(config) {
         console.log('url not mocked...', config.url);
