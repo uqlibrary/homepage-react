@@ -12,7 +12,7 @@ context('Personalised Homepage', () => {
         expectUserToDisplayCorrectFirstName('s1111111', 'Michael');
         cy.viewport(1300, 1000);
         // this type of user will see the following panels:
-        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace', 'readpublish']);
 
         // this type of user will see these lines in the Personalisation Panel
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
@@ -52,7 +52,7 @@ context('Personalised Homepage', () => {
     it('Renders a remote undergraduate home page correctly', () => {
         expectUserToDisplayCorrectFirstName('s3333333', 'Juno');
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'readpublish']);
 
         hasNoEspacePanel();
     });
@@ -60,7 +60,7 @@ context('Personalised Homepage', () => {
     it('Renders a researcher home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqresearcher', 'John');
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace', 'readpublish']);
 
         hasEspaceEntries(['espace-possible', 'espace-orcid', 'espace-ntro']);
     });
@@ -69,7 +69,7 @@ context('Personalised Homepage', () => {
         cy.visit('/?user=uqresearcher&responseType=nodatamissing'); // special mock data
         cy.viewport(1300, 1000);
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace', 'readpublish']);
 
         hasEspaceEntries(['espace-orcid']);
     });
@@ -77,7 +77,7 @@ context('Personalised Homepage', () => {
     it('Renders a library staff administrator home page correctly', () => {
         expectUserToDisplayCorrectFirstName('digiteamMember', 'Caroline');
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace', 'readpublish']);
 
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
     });
@@ -85,7 +85,7 @@ context('Personalised Homepage', () => {
     it('Renders a Library staff member (without admin privs) home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqstaffnonpriv', 'UQ');
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'readpublish']);
 
         hasNoEspacePanel();
     });
@@ -93,7 +93,7 @@ context('Personalised Homepage', () => {
     it('Renders a non-library staff member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqpkopit', 'Peter');
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace', 'readpublish']);
 
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
     });
@@ -101,7 +101,7 @@ context('Personalised Homepage', () => {
     it('Renders a paid Community EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emcommunity', 'Community');
 
-        hasPanels(['training']);
+        hasPanels(['training', 'readpublish']);
 
         hasNoEspacePanel();
     });
@@ -109,7 +109,7 @@ context('Personalised Homepage', () => {
     it('Renders an Alumni (first year or paid) EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emalumni', 'Alumni');
 
-        hasPanels(['training']);
+        hasPanels(['training', 'readpublish']);
 
         hasNoEspacePanel();
     });
@@ -117,7 +117,7 @@ context('Personalised Homepage', () => {
     it('Renders a Hospital EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emhospital', 'Hospital');
 
-        hasPanels(['training']);
+        hasPanels(['training', 'readpublish']);
 
         hasNoEspacePanel();
     });
@@ -125,7 +125,7 @@ context('Personalised Homepage', () => {
     it('Renders an Associate EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emassociate', 'Associate');
 
-        hasPanels(['training']);
+        hasPanels(['training', 'readpublish']);
 
         hasNoEspacePanel();
     });
@@ -133,7 +133,7 @@ context('Personalised Homepage', () => {
     it('Renders a Fryer Library EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emfryer', 'Fryer');
 
-        hasPanels(['training']);
+        hasPanels(['training', 'readpublish']);
 
         hasNoEspacePanel();
     });
@@ -141,7 +141,7 @@ context('Personalised Homepage', () => {
     it('Renders an Honorary EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emhonorary', 'Honorary');
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'readpublish']);
 
         hasNoEspacePanel();
     });
@@ -149,7 +149,7 @@ context('Personalised Homepage', () => {
     it('Renders a Short Form Credential course student home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqsfc', 'SFC');
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training']);
+        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'readpublish']);
 
         hasNoEspacePanel();
     });
@@ -157,7 +157,7 @@ context('Personalised Homepage', () => {
     it('Renders a new user group home page correctly', () => {
         expectUserToDisplayCorrectFirstName('newUserGroup', 'New');
 
-        hasPanels(['training']);
+        hasPanels(['training', 'readpublish']);
 
         hasNoEspacePanel();
     });
