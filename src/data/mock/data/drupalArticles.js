@@ -52,10 +52,27 @@ export const drupalArticles = [
     ]
   },
   {
-    "title": "Digital Essentials: Accessibility; create accessible content",
+    "title": "Digital Essentials: This article has a failed image",
     "description": "",
     "canonical_url": "https://live-library-uq.pantheonsite.io/stories/digital-essentials-accessibility-create-accessible-content",
-    "image": "/images/DE_Accessibility_DrupalCard.jpg?h=10d202d3&itok=Yup95bvf",
+    "image": "/images/this_image_doesnt_exist.jpg",
+    "promoted": false,
+    "sticky": false,
+    "date_created": "2024-08-07T03:01:14+00:00",
+    "date_modified": "2024-08-07T03:40:40+00:00",
+    "read_time": "3 minutes",
+    "audience": [
+      "Test audience group"
+    ],
+    "categories": [
+      "Training"
+    ]
+  },
+  {
+    "title": "This article should not appear",
+    "description": "",
+    "canonical_url": "https://uq.edu.au",
+    "image": "/images/this_image_doesnt_exist.jpg",
     "promoted": false,
     "sticky": false,
     "date_created": "2024-08-07T03:01:14+00:00",

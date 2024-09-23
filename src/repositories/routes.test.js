@@ -238,4 +238,20 @@ describe('Backend routes method', () => {
             expect(routes.DLOR_SERIES_CREATE_API()).toEqual({ apiUrl: 'dlor/admin/series' });
         });
     });
+
+    describe('AWS production route test', () => {
+        const envPlaceholder = process.env.BRANCH;
+        beforeEach(() => {
+            process.env.BRANCH = 'production';
+            jest.resetModules();
+        });
+        afterEach(() => {
+            process.env.BRANCH = envPlaceholder;
+        });
+        it('should return valid path for aws production route', () => {
+            expect(routes.DRUPAL_ARTICLE_API()).toEqual({
+                apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage/articles.json',
+            });
+        });
+    });
 });

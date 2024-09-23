@@ -243,7 +243,6 @@ export const DLOR_SERIES_DELETE_API = id => ({ apiUrl: `dlor/admin/series/${id}`
 export const DLOR_SERIES_UPDATE_API = id => ({ apiUrl: `dlor/admin/series/${id}` });
 export const DLOR_SERIES_CREATE_API = () => ({ apiUrl: 'dlor/admin/series' });
 
-// will need to be changed based on the alias in cloudfront
 export const DRUPAL_ARTICLE_API = () => {
     if (process.env.BRANCH === 'production') {
         return {
@@ -255,3 +254,5 @@ export const DRUPAL_ARTICLE_API = () => {
         };
     }
 };
+
+export const JOURNAL_SEARCH_API = () => ({ apiUrl: 'https://api.library.uq.edu.au/v1/journals/favourites?sort=score' });

@@ -39,3 +39,4 @@ export { default as dlorSeriesListReducer } from './dlorSeriesListReducer';
 export { default as dlorSeriesDeleteReducer } from './dlorSeriesDeleteReducer';
 export { default as dlorSeriesSingleReducer } from './dlorSeriesSingleReducer';
 export { default as drupalArticlesReducer } from './drupalArticlesReducer';
+export { default as journalSearchReducer } from './journalSearchReducer';

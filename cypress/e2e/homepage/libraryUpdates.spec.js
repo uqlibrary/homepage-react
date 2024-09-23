@@ -17,5 +17,18 @@ describe('LibraryUpdates', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
+        it('is accessible at 550 750', () => {
+            cy.injectAxe();
+            cy.wait(2000);
+            cy.viewport(550, 750);
+
+            cy.log('Homepage - Library Updates');
+            cy.waitUntil(() => cy.get('[data-testid="article-1-title"]').should('exist'));
+            cy.checkA11y('div[data-testid="library-updates-parent"]', {
+                reportName: 'Library Updates',
+                scopeName: 'As loaded',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+        });
     });
 });

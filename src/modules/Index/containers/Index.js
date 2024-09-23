@@ -8,6 +8,7 @@ const mapStateToProps = state => {
         ...state.get('accountReducer'),
         ...state.get('homeReducer'),
         ...state.get('drupalArticlesReducer'),
+        ...state.get('journalSearchReducer'),
     };
 };
 
