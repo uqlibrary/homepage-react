@@ -14,7 +14,7 @@ context('Personalised Homepage', () => {
         // this type of user will see the following panels:
         hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace', 'readpublish']);
 
-        // this type of user will see these lines in the Personalisation Panel
+        // this type of user will see these lines in the espace panel
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
 
         // as the user is logged in, they see nav panels with a h3
