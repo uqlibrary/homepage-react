@@ -89,7 +89,7 @@ const EspaceJournalSearch = () => {
                 id="espace-journalsearch"
                 data-testid="espace-journalsearch"
             >
-                Search for Journals
+                Publish in the right journal
             </Link>
             <SvgIcon />
         </StyledGridItem>
