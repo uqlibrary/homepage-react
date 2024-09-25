@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import UqArrowForwardIcon from 'modules/SharedComponents/Icons/UqArrowForwardIcon';
 
 const StyledGridItem = styled(Grid)(() => ({
     listStyleType: 'none',
@@ -63,7 +63,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
     fontSize: '20px',
     fontWeight: 500,
     padding: '24px',
-    '& svg[data-testid="ArrowForwardIcon"]': {
+    '& svg.arrowForwardIcon': {
         display: 'block',
         marginTop: '24px',
     },
@@ -78,7 +78,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        '& svg[data-testid="ArrowForwardIcon"]': {
+        '& svg.arrowForwardIcon': {
             marginTop: 0,
         },
         '& > div': {
@@ -95,7 +95,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
     // on hover, tablet and up, the background changes colour, the link text underlines and the icon moves
     '@media (min-width: 899px)': {
-        '& svg[data-testid="ArrowForwardIcon"]': {
+        '& svg.arrowForwardIcon': {
             '@media (prefers-reduced-motion: no-preference)': {
                 transition: 'margin-left 200ms ease-in-out',
             },
@@ -108,7 +108,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
                 backgroundColor: '#f3f3f4',
             },
             textDecoration: 'none',
-            '& svg[data-testid="ArrowForwardIcon"]': {
+            '& svg.arrowForwardIcon': {
                 '@media (prefers-reduced-motion: no-preference)': {
                     marginLeft: '5px',
                     transition: 'margin-left 200ms ease-in-out',
@@ -147,10 +147,7 @@ const SingleLinkCard = ({ cardLabel, landingUrl, iconBackgroundImage, shortParag
                         <h2 className={cardLabel}>{cardLabel}</h2>
                     )}
                     <p>{shortParagraph}</p>
-                    <ArrowForwardIcon
-                        // classname={'arrow'}
-                        sx={{ color: '#51247A' }}
-                    />
+                    <UqArrowForwardIcon />
                 </StyledLink>
             </div>
         </StyledGridItem>
