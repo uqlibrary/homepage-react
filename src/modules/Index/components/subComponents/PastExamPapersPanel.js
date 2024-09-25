@@ -9,8 +9,7 @@ import { fullPath } from 'config/routes';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { SubjectSearchDropdown } from 'modules/SharedComponents/SubjectSearchDropdown';
-
-// import { isStaff } from 'helpers/access';
+import { isLibraryStaff, isLoggedInUser } from 'helpers/access';
 
 export const getPastExamPaperUrlForSubject = (item, pageLocation, includeFullPath = false) => {
     const examPath = `/${item.classnumber.toLowerCase()}`;
@@ -52,15 +51,12 @@ export const PastExamPapersPanel = ({ account }) => {
 
     const pageId = 'homepage-pastexampapers';
 
-    const isLoggedIn = account => !!account && !!account.id;
-    // on go live this should only be LIBRARYSTAFFB - STAFF included so OMC staff are able to see during dev
-    const isStaff = account => isLoggedIn(account) && ['STAFF', 'LIBRARYSTAFFB'].includes(account.user_group);
     let displayedClasses = [];
     const hasClasses = account =>
-        isLoggedIn(account) && !!account.current_classes && account.current_classes.length > 0;
+        isLoggedInUser(account) && !!account.current_classes && account.current_classes.length > 0;
     if (hasClasses(account)) {
         displayedClasses = account.current_classes;
-    } else if (isStaff(account)) {
+    } else if (isLibraryStaff(account)) {
         displayedClasses = [
             {
                 DESCR: 'Introductory French 1',
@@ -96,7 +92,7 @@ export const PastExamPapersPanel = ({ account }) => {
                 elementId={pageId}
                 navigateToLearningResourcePage={navigateToLearningResourcePage}
             />
-            {!hasClasses(account) && isStaff(account) && (
+            {!hasClasses(account) && isLibraryStaff(account) && (
                 <Typography
                     component={'p'}
                     data-testid="staff-course-prompt"

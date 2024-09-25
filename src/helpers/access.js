@@ -65,7 +65,7 @@ export const UQ_USERS = [
     OTHER_STAFF,
 ];
 
-const isLoggedInUser = account => !!account && !!account.id;
+export const isLoggedInUser = account => !!account && !!account.id;
 
 // define which home page panel items each user type can see
 
@@ -94,9 +94,10 @@ export const isUQUser = account => {
     return !!account && !!account.id && UQ_USERS.includes(account.user_group);
 };
 
-// export const isStaff = account => {
-//     return !!account && !!account.id && ['STAFF', 'LIBRARYSTAFFB'].includes(account.user_group);
-// };
+export const isLibraryStaff = account =>
+    isLoggedInUser(account) &&
+    (['uqlkeati', 'uqthalin'].includes(account.id) || // marketing staff, required for 2024 dev
+        ['LIBRARYSTAFFB'].includes(account.user_group));
 
 export const canSeeLoans = account => isLoggedInUser(account);
 
