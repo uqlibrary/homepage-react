@@ -54,8 +54,10 @@ const StyledAccordionSummary = styled(AccordionSummary)(() => ({
 }));
 
 const StyledH1 = styled('h1')(({ theme }) => ({
-    marginTop: '-10px',
-    paddingBottom: '20px',
+    marginTop: 0,
+    marginBottom: 0,
+    paddingTop: 0,
+    paddingBottom: 16,
     backgroundColor: theme.palette.primary.light,
     color: '#fff',
     fontFamily: 'Montserrat, Helvetica, Arial, sans-serif',
@@ -153,8 +155,8 @@ export const Index = ({
                 </StandardPage>
             </StyledCulturalAdvice> */}
             <div id="search-portal-container" data-testid="search-portal-container" style={{
-                paddingTop: 25,
-                paddingBottom: 25,
+                paddingTop: 48,
+                paddingBottom: 48,
                 backgroundColor: '#51247a',
             }}>
                 <StandardPage>
