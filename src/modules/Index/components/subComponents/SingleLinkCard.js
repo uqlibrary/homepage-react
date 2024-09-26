@@ -62,12 +62,12 @@ const StyledLink = styled(Link)(({ theme }) => ({
         display: 'block',
         marginTop: '24px',
     },
-    '& .icon': {
+    '& .iconWrapper': {
         width: '56px',
         height: '56px',
     },
-    '@media (max-width: 847px)': {
-        '& .icon': {
+    '@media (max-width: 640px)': {
+        '& .iconWrapper': {
             width: '40px',
             height: '40px',
         },
@@ -107,7 +107,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const paneIcon = paneBackgroundImage => {
     return (
         <Box
-            className={'icon'}
+            className={'iconWrapper'}
             sx={{
                 backgroundImage: paneBackgroundImage,
                 backgroundSize: 'contain',
