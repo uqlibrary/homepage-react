@@ -104,7 +104,7 @@ const EspaceEditorialAppointments = () => {
                 id="espace-editorialAppointments"
                 data-testid="espace-editorialAppointments"
             >
-                Update Editorial appointments
+                Update editorial appointments
             </Link>
             <SvgIcon />
         </StyledGridItem>

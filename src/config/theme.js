@@ -52,16 +52,15 @@ const palette = {
 };
 
 export const mui1theme = createTheme({
-    // can reset breakpoints here
-    // breakpoints: {
-    //     values: {
-    //         xs: 0, // Phone
-    //         sm: 600, // Tablet
-    //         md: 960, // Small Desktop
-    //         lg: 1280, // Large Desktop
-    //         xl: 1920, // Extra Large Desktop
-    //     },
-    // },
+    breakpoints: {
+        values: {
+            xs: 0, // Phone
+            sm: 590, // Tablet
+            md: 640, // Small Desktop
+            lg: 848, // Large Desktop
+            xl: 1280, // Extra Large Desktop
+        },
+    },
     palette: palette,
     status: {
         danger: red[500],

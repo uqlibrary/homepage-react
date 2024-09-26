@@ -10,7 +10,6 @@ import UqArrowForwardIcon from 'modules/SharedComponents/Icons/UqArrowForwardIco
 
 const StyledGridItem = styled(Grid)(() => ({
     listStyleType: 'none',
-    // marginBottom: '60px',
     display: 'flex',
     alignItems: 'stretch',
     flex: 1,
@@ -24,15 +23,8 @@ const StyledGridItem = styled(Grid)(() => ({
         height: '100%',
         display: 'flex',
     },
-    '@media (max-width: 899px)': {
-        ' p': {
-            display: 'none',
-        },
+    '@media (max-width: 847px)': {
         marginBottom: '24px',
-        '& > div': {
-            display: 'block',
-            width: '100%',
-        },
     },
     '& .cardLabel': {
         color: '#19151c',
@@ -71,30 +63,23 @@ const StyledLink = styled(Link)(({ theme }) => ({
         width: '56px',
         height: '56px',
     },
-    '@media (max-width: 899px)': {
-        // marginBottom: '-58px',
+    '@media (max-width: 847px)': {
         padding: '24px 24px 24px 0',
 
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
         '& svg.arrowForwardIcon': {
             marginTop: 0,
         },
-        '& > div': {
-            margin: '0 16px 0 24px',
-        },
-        '& > .cardLabel': { margin: 0 },
-        // '& > p': { margin: 0 },
-        '& > svg': { marginLeft: 'auto' },
         '& .icon': {
             width: '40px',
             height: '40px',
         },
+        '& > *': {
+            marginLeft: '24px',
+        },
     },
 
     // on hover, tablet and up, the background changes colour, the link text underlines and the icon moves
-    '@media (min-width: 899px)': {
+    '@media (min-width: 848px)': {
         '& svg.arrowForwardIcon': {
             '@media (prefers-reduced-motion: no-preference)': {
                 transition: 'margin-left 200ms ease-in-out',
@@ -123,13 +108,10 @@ const paneIcon = paneBackgroundImage => {
         <Box
             className={'icon'}
             sx={{
-                // color: '#51247A',
-                // width: 100, // Set the width of the box
-                // height: 56, // Set the height of the box
                 backgroundImage: paneBackgroundImage,
-                backgroundSize: 'contain', // Adjust the size of the background image
-                backgroundRepeat: 'no-repeat', // Prevent the image from repeating
-                backgroundPosition: 'center', // Center the image
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
             }}
         />
     );
