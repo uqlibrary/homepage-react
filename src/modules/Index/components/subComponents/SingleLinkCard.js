@@ -8,27 +8,24 @@ import { styled } from '@mui/material/styles';
 
 import UqArrowForwardIcon from 'modules/SharedComponents/Icons/UqArrowForwardIcon';
 
-const StyledGridItem = styled(Grid)(() => ({
+const StyledGridItem = styled(Grid)(({ theme }) => ({
     listStyleType: 'none',
     display: 'flex',
     alignItems: 'stretch',
     flex: 1,
-    marginBottom: '32px',
-    '@media (max-width: 74.95rem)': {
-        paddingLeft: '24px',
-        marginBottom: '24px',
-    },
-    paddingLeft: '32px',
     '& > div': {
         height: '100%',
         display: 'flex',
     },
-    '@media (max-width: 640px)': {
+    paddingLeft: '24px',
+    marginBottom: '24px',
+    [theme.breakpoints.up('uqDsDesktopXL')]: {
+        paddingLeft: '32px',
+        marginBottom: '32px',
+    },
+    [theme.breakpoints.down('uqDsTablet')]: {
         display: 'block',
         width: '100%',
-    },
-    '@media (max-width: 847px)': {
-        marginBottom: '24px',
     },
     '& .cardHeading': {
         color: '#19151c',
@@ -45,10 +42,6 @@ const StyledGridItem = styled(Grid)(() => ({
         fontWeight: 400,
         letterSpacing: '0.16px',
         lineHeight: '1.6',
-    },
-    '@media (min-width: 1024px)': {
-        paddingLeft: '32px',
-        marginBottom: '32px',
     },
 }));
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -70,7 +63,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
         width: '56px',
         height: '56px',
     },
-    '@media (max-width: 640px)': {
+    [theme.breakpoints.down('uqDsTablet')]: {
         '& .iconWrapper': {
             width: '40px',
             height: '40px',
@@ -106,7 +99,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
     },
 
     // on hover, tablet and up, the background changes colour, the link text underlines and the icon moves
-    '@media (min-width: 848px)': {
+    [theme.breakpoints.up('uqDsDesktop')]: {
         '& svg.arrowForwardIcon': {
             '@media (prefers-reduced-motion: no-preference)': {
                 transition: 'margin-left 200ms ease-in-out',
@@ -146,7 +139,7 @@ const paneIcon = paneBackgroundImage => {
 
 const SingleLinkCard = ({ cardHeading, landingUrl, iconBackgroundImage, shortParagraph, loggedIn }) => {
     return (
-        <StyledGridItem item component={'li'} xs={12} md={6} lg={4}>
+        <StyledGridItem item component={'li'} uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4}>
             <div>
                 <StyledLink border={1} p={1} to={landingUrl}>
                     <div>
