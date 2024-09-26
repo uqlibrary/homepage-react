@@ -43,6 +43,11 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
                 },
             },
         },
+        'article-container': {
+            [theme.breakpoints.down('uqDsTablet')]: {
+                padding: '0 24px 0'
+            },
+        },
         '.ArticleCategory': {
             color: '#666 !important',
             fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
