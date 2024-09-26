@@ -113,7 +113,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
             textDecoration: 'none',
             '& svg.arrowForwardIcon': {
                 '@media (prefers-reduced-motion: no-preference)': {
-                    marginLeft: '5px',
+                    marginLeft: '34px', // 24 + 10
                     transition: 'margin-left 200ms ease-in-out',
                 },
             },
