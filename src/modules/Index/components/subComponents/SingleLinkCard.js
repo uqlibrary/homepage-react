@@ -30,7 +30,7 @@ const StyledGridItem = styled(Grid)(({ theme }) => ({
     '& .cardHeading': {
         color: '#19151c',
         fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-        fontSize: '20px',
+        fontSize: '24px',
         fontWeight: 500,
         letterSpacing: '0.16px',
         lineHeight: '1.6',
@@ -82,7 +82,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
             marginLeft: '24px',
         },
         '& h2': {
-            fontSize: '22px',
             margin: '0 0 0 16px',
             fontWeight: 500,
             // minWidth: '80%',
@@ -144,9 +143,9 @@ const SingleLinkCard = ({ cardHeading, landingUrl, iconBackgroundImage, shortPar
                     <div>
                         {paneIcon(iconBackgroundImage)}
                         {!!loggedIn ? (
-                            <h3 className={cardHeading}>{cardHeading}</h3>
+                            <h3 className={'cardHeading'}>{cardHeading}</h3>
                         ) : (
-                            <h2 className={cardHeading}>{cardHeading}</h2>
+                            <h2 className={'cardHeading'}>{cardHeading}</h2>
                         )}
                         <p>{shortParagraph}</p>
                     </div>
