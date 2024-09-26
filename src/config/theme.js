@@ -55,7 +55,7 @@ export const mui1theme = createTheme({
     breakpoints: {
         values: {
             xs: 0, // Phone
-            sm: 590, // Tablet
+            sm: 10, // Tablet
             md: 640, // Small Desktop
             lg: 848, // Large Desktop
             xl: 1280, // Extra Large Desktop

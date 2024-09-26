@@ -23,6 +23,9 @@ const StyledGridItem = styled(Grid)(() => ({
         height: '100%',
         display: 'flex',
     },
+    // '@media (max-width: 640px)': {
+    //     minWidth: '95%',
+    // },
     '@media (max-width: 847px)': {
         marginBottom: '24px',
     },
