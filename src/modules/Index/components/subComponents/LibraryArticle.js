@@ -20,7 +20,7 @@ const loadFallbackImage = image => {
 const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
     return {
         /* Parent */
-        [theme.breakpoints.up('xs')]: {
+        [theme.breakpoints.down('xs')]: {
             paddingTop: '24px !important',
             paddingLeft: '24px !important',
         },
@@ -45,7 +45,7 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
         },
         'article-container': {
             [theme.breakpoints.down('uqDsTablet')]: {
-                padding: '0 24px 0'
+                padding: '0 24px 0 !important'
             },
         },
         '.ArticleCategory': {
