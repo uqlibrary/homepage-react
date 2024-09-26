@@ -42,6 +42,10 @@ const StyledGridItem = styled(Grid)(() => ({
         letterSpacing: '0.16px',
         lineHeight: '1.6',
     },
+    '@media (min-width: 1024px)': {
+        paddingLeft: '32px',
+        marginBottom: '32px',
+    },
 }));
 const StyledLink = styled(Link)(({ theme }) => ({
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
