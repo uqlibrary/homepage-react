@@ -241,7 +241,7 @@ const LibraryArticle = ({ article, articleindex }) => {
             md={articleindex === 0 ? 12 : 4}
             className="article-container"
         >
-            <StandardCard className={'article-card'} noPadding noHeader>
+            <StandardCard className={'article-card'} noPadding noHeader style={{ boxShadow: 'none' }}>
                 <Link to={article.canonical_url}>
                     <Grid container sx={{ borderBottom: isSm ? '1px solid #ddd' : 'none' }}>
                         {(articleindex === 0 && isSmUp) || (articleindex !== 0 && isSm)
