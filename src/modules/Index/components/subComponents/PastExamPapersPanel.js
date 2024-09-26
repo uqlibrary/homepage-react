@@ -96,7 +96,7 @@ export const PastExamPapersPanel = ({ account }) => {
                 <Typography
                     component={'p'}
                     data-testid="staff-course-prompt"
-                    style={{ paddingInline: '21px', marginTop: '10px' }}
+                    style={{ paddingInline: '21px', marginTop: '10px', fontWeight: 400 }}
                 >
                     Students see enrolled courses. Example links below:
                 </Typography>

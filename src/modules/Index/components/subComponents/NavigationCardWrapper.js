@@ -24,9 +24,9 @@ const StyledGridContainer = styled(Grid)(() => ({
 }));
 
 const StyledHeading = styled(Typography)(() => ({
-    fontSize: '24px',
+    fontSize: '32px',
     fontWeight: 500,
-    marginTop: '1em',
+    marginTop: '1rem',
 }));
 
 // inspect specific icons at https://design-system.ads-staging.aws.uq.edu.au/?path=/story/components-icon--icon and extract the backgroundimage value from the :before on the span

@@ -65,8 +65,8 @@ const StyledPortalContainer = styled('div')(() => ({
     backgroundColor: '#51247a',
     '@media (max-width: 640px)': {
         paddingBottom: 24,
-        paddingTop: 24
-    }
+        paddingTop: 24,
+    },
 }));
 
 const StyledH1 = styled('h1')(({ theme }) => ({
@@ -109,9 +109,9 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const StyledHeading = styled(Typography)(() => ({
-    fontSize: '24px',
+    fontSize: '32px',
     fontWeight: 500,
-    marginTop: '1em',
+    marginTop: '1rem',
 }));
 
 const StyledSummary = styled('span')(({ theme }) => ({

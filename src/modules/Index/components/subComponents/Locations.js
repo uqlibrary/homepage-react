@@ -93,6 +93,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         overflowX: 'hidden',
     },
 }));
+const StyledOpeningHours = styled(Typography)(() => ({
+    fontWeight: 400,
+}));
 
 const MyLoader = props => (
     <ContentLoader
@@ -358,17 +361,17 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                                 return item.departments.map(department => {
                                                                     if (['Chat'].includes(department.name)) {
                                                                         return isOpen(item, ['Chat']) ? (
-                                                                            <Typography
+                                                                            <StyledOpeningHours
                                                                                 key={`chat-isopen-${department.lid}`}
                                                                             >
                                                                                 {department.hours}
-                                                                            </Typography>
+                                                                            </StyledOpeningHours>
                                                                         ) : (
-                                                                            <Typography
+                                                                            <StyledOpeningHours
                                                                                 key={`chat-isclosed-${department.lid}`}
                                                                             >
                                                                                 Closed
-                                                                            </Typography>
+                                                                            </StyledOpeningHours>
                                                                         );
                                                                     }
                                                                     return null;
@@ -377,23 +380,27 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                                 return item.departments.map(department => {
                                                                     if (departmentsMap.includes(department.name)) {
                                                                         return isOpen(item) ? (
-                                                                            <Typography
+                                                                            <StyledOpeningHours
                                                                                 key={`department-isopen-${department.lid}`}
                                                                             >
                                                                                 {department.hours}
-                                                                            </Typography>
+                                                                            </StyledOpeningHours>
                                                                         ) : (
-                                                                            <Typography
+                                                                            <StyledOpeningHours
                                                                                 key={`department-isclosed-${department.lid}`}
                                                                             >
                                                                                 Closed
-                                                                            </Typography>
+                                                                            </StyledOpeningHours>
                                                                         );
                                                                     }
                                                                     return null;
                                                                 });
                                                             } else {
-                                                                return <Typography>See location</Typography>;
+                                                                return (
+                                                                    <StyledOpeningHours>
+                                                                        See location
+                                                                    </StyledOpeningHours>
+                                                                );
                                                             }
                                                         })()}
                                                     </Grid>

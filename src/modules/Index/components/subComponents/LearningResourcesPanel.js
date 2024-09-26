@@ -144,7 +144,7 @@ export const LearningResourcesPanel = ({ account }) => {
                     })}
                 </Grid>
             ) : (
-                <div style={{ marginLeft: 24, marginTop: -10 }}>{locale.homepagePanel.noCourses}</div>
+                <div style={{ marginLeft: 24, marginTop: -10, fontWeight: 400 }}>{locale.homepagePanel.noCourses}</div>
             )}
         </StandardCard>
     );
