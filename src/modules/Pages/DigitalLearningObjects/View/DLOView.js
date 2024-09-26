@@ -101,7 +101,6 @@ const StyledHeaderDiv = styled(Typography)(() => ({
     padding: '12px',
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
     borderRadius: '4px',
-    boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
     marginTop: '12px',
     '& p': {
         margin: 0,
@@ -152,7 +151,6 @@ const StyledSeriesList = styled('ol')(() => ({
 const StyledDemographicsBox = styled(Box)(() => ({
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
     borderRadius: '4px',
-    boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
     backgroundColor: 'white',
     marginTop: '24px',
     padding: '1em',
@@ -163,7 +161,6 @@ const StyledLayoutBox = styled(Box)(() => ({
     backgroundColor: 'white',
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
     borderRadius: '4px',
-    boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
     padding: '12px',
     marginTop: '24px',
 }));
