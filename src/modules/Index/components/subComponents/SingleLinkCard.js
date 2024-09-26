@@ -8,32 +8,29 @@ import { styled } from '@mui/material/styles';
 
 import UqArrowForwardIcon from 'modules/SharedComponents/Icons/UqArrowForwardIcon';
 
-const StyledGridItem = styled(Grid)(() => ({
+const StyledGridItem = styled(Grid)(({ theme }) => ({
     listStyleType: 'none',
     display: 'flex',
     alignItems: 'stretch',
     flex: 1,
-    marginBottom: '32px',
-    '@media (max-width: 74.95rem)': {
-        paddingLeft: '24px',
-        marginBottom: '24px',
-    },
-    paddingLeft: '32px',
     '& > div': {
         height: '100%',
         display: 'flex',
     },
-    '@media (max-width: 640px)': {
+    paddingLeft: '24px',
+    marginBottom: '24px',
+    [theme.breakpoints.up('uqDsDesktopXL')]: {
+        paddingLeft: '32px',
+        marginBottom: '32px',
+    },
+    [theme.breakpoints.down('uqDsTablet')]: {
         display: 'block',
         width: '100%',
-    },
-    '@media (max-width: 847px)': {
-        marginBottom: '24px',
     },
     '& .cardHeading': {
         color: '#19151c',
         fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-        fontSize: '20px',
+        fontSize: '24px',
         fontWeight: 500,
         letterSpacing: '0.16px',
         lineHeight: '1.6',
@@ -46,16 +43,11 @@ const StyledGridItem = styled(Grid)(() => ({
         letterSpacing: '0.16px',
         lineHeight: '1.6',
     },
-    '@media (min-width: 1024px)': {
-        paddingLeft: '32px',
-        marginBottom: '32px',
-    },
 }));
 const StyledLink = styled(Link)(({ theme }) => ({
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
     borderRadius: '4px',
     background: '#FFFFFF',
-    boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
     display: 'block',
     cursor: 'pointer',
     color: theme.palette.secondary.dark,
@@ -70,7 +62,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
         width: '56px',
         height: '56px',
     },
-    '@media (max-width: 640px)': {
+    [theme.breakpoints.down('uqDsTablet')]: {
         '& .iconWrapper': {
             width: '40px',
             height: '40px',
@@ -90,7 +82,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
             marginLeft: '24px',
         },
         '& h2': {
-            fontSize: '22px',
             margin: '0 0 0 16px',
             fontWeight: 500,
             // minWidth: '80%',
@@ -106,7 +97,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
     },
 
     // on hover, tablet and up, the background changes colour, the link text underlines and the icon moves
-    '@media (min-width: 848px)': {
+    [theme.breakpoints.up('uqDsDesktop')]: {
         '& svg.arrowForwardIcon': {
             '@media (prefers-reduced-motion: no-preference)': {
                 transition: 'margin-left 200ms ease-in-out',
@@ -122,7 +113,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
             textDecoration: 'none',
             '& svg.arrowForwardIcon': {
                 '@media (prefers-reduced-motion: no-preference)': {
-                    marginLeft: '5px',
+                    marginLeft: '34px', // 24 + 10
                     transition: 'margin-left 200ms ease-in-out',
                 },
             },
@@ -146,15 +137,15 @@ const paneIcon = paneBackgroundImage => {
 
 const SingleLinkCard = ({ cardHeading, landingUrl, iconBackgroundImage, shortParagraph, loggedIn }) => {
     return (
-        <StyledGridItem item component={'li'} xs={12} md={6} lg={4}>
+        <StyledGridItem item component={'li'} uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4}>
             <div>
                 <StyledLink border={1} p={1} to={landingUrl}>
                     <div>
                         {paneIcon(iconBackgroundImage)}
                         {!!loggedIn ? (
-                            <h3 className={cardHeading}>{cardHeading}</h3>
+                            <h3 className={'cardHeading'}>{cardHeading}</h3>
                         ) : (
-                            <h2 className={cardHeading}>{cardHeading}</h2>
+                            <h2 className={'cardHeading'}>{cardHeading}</h2>
                         )}
                         <p>{shortParagraph}</p>
                     </div>

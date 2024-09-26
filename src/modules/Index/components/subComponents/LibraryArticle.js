@@ -43,6 +43,11 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
                 },
             },
         },
+        'article-container': {
+            [theme.breakpoints.down('uqDsTablet')]: {
+                padding: '0 24px 0'
+            },
+        },
         '.ArticleCategory': {
             color: '#666 !important',
             fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
@@ -241,7 +246,7 @@ const LibraryArticle = ({ article, articleindex }) => {
             md={articleindex === 0 ? 12 : 4}
             className="article-container"
         >
-            <StandardCard className={'article-card'} noPadding noHeader>
+            <StandardCard className={'article-card'} noPadding noHeader style={{ boxShadow: 'none' }}>
                 <Link to={article.canonical_url}>
                     <Grid container sx={{ borderBottom: isSm ? '1px solid #ddd' : 'none' }}>
                         {(articleindex === 0 && isSmUp) || (articleindex !== 0 && isSm)

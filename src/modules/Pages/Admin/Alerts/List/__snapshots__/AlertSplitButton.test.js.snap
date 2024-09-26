@@ -6,7 +6,7 @@ exports[`AlertSplitButton default values render correctly 1`] = `
     class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column css-t0zib5-MuiGrid-root"
   >
     <div
-      class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-pq3v65-MuiGrid-root"
+      class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-9kd9n7-MuiGrid-root"
     >
       <div
         aria-label="split button"

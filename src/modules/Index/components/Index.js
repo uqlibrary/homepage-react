@@ -59,6 +59,16 @@ const StyledAccordionSummary = styled(AccordionSummary)(() => ({
     },
 }));
 
+const StyledPortalContainer = styled('div')(() => ({
+    paddingTop: 48,
+    paddingBottom: 48,
+    backgroundColor: '#51247a',
+    '@media (max-width: 640px)': {
+        paddingBottom: 24,
+        paddingTop: 24
+    }
+}));
+
 const StyledH1 = styled('h1')(({ theme }) => ({
     marginTop: 0,
     marginBottom: 0,
@@ -72,6 +82,9 @@ const StyledH1 = styled('h1')(({ theme }) => ({
     backgroundColor: theme.palette.primary.light,
     color: '#fff',
     fontFamily: 'Montserrat, Helvetica, Arial, sans-serif',
+    '@media (max-width: 640px)': {
+       paddingBottom: 24,
+    },
 }));
 
 const StyleWrapper = styled('div')(() => ({
@@ -94,15 +107,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
         zIndex: 10,
     },
 }));
-
-// const StyledCulturalAdvice = styled('div')(() => ({
-//     backgroundColor: '#231430',
-//     paddingTop: '20px',
-//     backgroundImage: 'linear-gradient(90deg, #48206c 28.12%, #48206ca6 70.31%, #48206c00), url(https://static.uq.net.au/v15/images/rap/brisbane-river-artwork.png)',
-//     '& p': {
-//         paddingBottom: '20px',
-//     },
-// }));
 
 const StyledHeading = styled(Typography)(() => ({
     fontSize: '24px',
@@ -135,8 +139,7 @@ export const Index = ({
     incompleteNTRO,
     incompleteNTROLoading,
     drupalArticleList,
-    // drupalArticlesLoading,
-    // drupalArticlesError,
+    drupalArticlesError,
     journalSearchList,
     journalSearchLoading,
     journalSearchError,
@@ -208,27 +211,12 @@ export const Index = ({
 
     return (
         <React.Suspense fallback={<ContentLoader message="Loading"/>}>
-            { /* TEMP WORKS - USED AS A PLACEHOLDER FOR NOW */ }
-            {/* <StyledCulturalAdvice>
-                <StandardPage>
-                    <p className={'newCulturalStatement'} style={{ letterSpacing: '.01rem', fontWeight: '400', fontFamily: 'Roboto, Helvetica, Arial, sans-serif', color: 'white', margin: 0, border: 0 }}>
-                        The Library is custodian of <a style={{
-                        color: 'white', textDecoration: 'underline',
-                    }} href="https://web.library.uq.edu.au/collections/culturally-sensitive-collections">culturally sensitive Indigenous material.</a></p>
-
-                </StandardPage>
-            </StyledCulturalAdvice> */}
-            <div id="search-portal-container" data-testid="search-portal-container" style={{
-                paddingTop: 48,
-                paddingBottom: 48,
-                backgroundColor: '#51247a',
-            }}>
+            <StyledPortalContainer id="search-portal-container" data-testid="search-portal-container">
                 <StandardPage>
                     <StyledH1>Library</StyledH1>
                     <search-portal theme="dark" />
                 </StandardPage>
-
-            </div>
+            </StyledPortalContainer>
             <div style={{ borderBottom: '1px solid hsla(203, 50%, 30%, 0.15)' }}>
                 <div className="layout-card">
                     <StyleWrapper>
@@ -262,54 +250,51 @@ export const Index = ({
                 </div>
             </div>
             {accountLoading === false && !!account && (
-                <>
-                    <StandardPage>
-                        <Grid container spacing={4} style={{ paddingBottom: '1em' }}>
-                            <Grid item xs={12}>
-                                <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
-                                    {greeting()}, {account.firstName || /* istanbul ignore next */ ''}
-                                </StyledHeading>
+                <StandardPage>
+                    <Grid container spacing={4} style={{ paddingBottom: '1em' }}>
+                        <Grid item xs={12}>
+                            <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
+                                {greeting()}, {account.firstName || /* istanbul ignore next */ ''}
+                            </StyledHeading>
+                        </Grid>
+                        <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
+                            <Training
+                                trainingEvents={trainingEvents}
+                                trainingEventsLoading={trainingEventsLoading}
+                                trainingEventsError={trainingEventsError}
+                            />
+                        </Grid>
+                        {canSeeLearningResources(account) && (
+                            <Grid item xs={12} md={4} data-testid="learning-resources-panel" sx={{ paddingTop: '0px' }}>
+                                <LearningResourcesPanel account={account} history={history}/>
                             </Grid>
-                            <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                                <Training
-                                    trainingEvents={trainingEvents}
-                                    trainingEventsLoading={trainingEventsLoading}
-                                    trainingEventsError={trainingEventsError}
+                        )}
+                        {canSeeLearningResources(account) && (
+                            <Grid item xs={12} md={4} data-testid="past-exam-papers-panel" sx={{ paddingTop: '0px' }}>
+                                <PastExamPapers account={account} history={history}/>
+                            </Grid>
+                        )}
+                        {isEspaceAuthor(account, author) && (
+                            <Grid item xs={12} md={4} data-testid="espace-links-panel" sx={{ paddingTop: '0px' }}>
+                                <EspaceLinks
+                                    author={author}
+                                    possibleRecords={possibleRecords}
+                                    incompleteNTRORecords={incompleteNTRO}
                                 />
                             </Grid>
-                            {canSeeLearningResources(account) && (
-                                <Grid item xs={12} md={4} data-testid="learning-resources-panel" sx={{ paddingTop: '0px' }}>
-                                    <LearningResourcesPanel account={account} history={history}/>
-                                </Grid>
-                            )}
-                            {canSeeLearningResources(account) && (
-                                <Grid item xs={12} md={4} data-testid="past-exam-papers-panel" sx={{ paddingTop: '0px' }}>
-                                    <PastExamPapers account={account} history={history}/>
-                                </Grid>
-                            )}
-                            {isEspaceAuthor(account, author) && (
-                                <Grid item xs={12} md={4} data-testid="espace-links-panel" sx={{ paddingTop: '0px' }}>
-                                    <EspaceLinks
-                                        author={author}
-                                        possibleRecords={possibleRecords}
-                                        incompleteNTRORecords={incompleteNTRO}
-                                    />
-                                </Grid>
-                            )}
-                            <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
-                                <ReferencingPanel account={account} />
-                            </Grid>
-                            <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
-                                <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
-                            </Grid>
+                        )}
+                        <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
+                            <ReferencingPanel account={account} />
                         </Grid>
+                        <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
+                            <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
+                        </Grid>
+                    </Grid>
                 </StandardPage>
-                </>
             )}
-
             <NavigationCardWrapper account={account} accountLoading={accountLoading} />
 
-            <LibraryUpdates drupalArticleList={drupalArticleList} />
+            <LibraryUpdates drupalArticleList={drupalArticleList} drupalArticlesError={drupalArticlesError} />
         </React.Suspense>
     );
 };

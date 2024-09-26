@@ -141,7 +141,6 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
     backgroundColor: '#fff',
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
     borderRadius: '4px',
-    boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
     transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
     fontFamily: 'Roboto, sans-serif',
     paddingInline: 0,

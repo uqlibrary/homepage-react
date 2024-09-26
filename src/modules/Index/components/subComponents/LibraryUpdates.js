@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import LibraryArticle from './LibraryArticle';
 
-const LibraryUpdates = drupalArticleList => {
+const LibraryUpdates = ({drupalArticleList, drupalArticlesListError}) => {
     return (
         <StandardPage>
             <Grid
@@ -21,8 +21,8 @@ const LibraryUpdates = drupalArticleList => {
                         Library updates
                     </Typography>
                 </Grid>
-                {drupalArticleList && Array.isArray(drupalArticleList.drupalArticleList) ? (
-                    drupalArticleList.drupalArticleList.map((article, index) => {
+                {drupalArticleList && !drupalArticlesListError && Array.isArray(drupalArticleList) ? (
+                    drupalArticleList.map((article, index) => {
                         if (index <= 3) {
                             return <LibraryArticle article={article} articleindex={index} key={index} />;
                         } else {

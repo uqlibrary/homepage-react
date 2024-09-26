@@ -37,7 +37,6 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         flex: 1,
         border: '1px solid hsla(203, 50%, 30%, 0.15)',
         borderRadius: '4px',
-        boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
     },
     '& .centreAlignParent': {
         display: 'flex',

@@ -55,10 +55,14 @@ export const mui1theme = createTheme({
     breakpoints: {
         values: {
             xs: 0, // Phone
-            sm: 10, // Tablet
-            md: 640, // Small Desktop
-            lg: 848, // Large Desktop
-            xl: 1280, // Extra Large Desktop
+            sm: 600, // Tablet
+            md: 900, // Small Desktop
+            lg: 1280, // Large Desktop
+            xl: 1536, // Extra Large Desktop
+            uqDsMobile: 0,
+            uqDsTablet: 640,
+            uqDsDesktop: 848,
+            uqDsDesktopXL: 1024,
         },
     },
     palette: palette,
