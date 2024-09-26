@@ -58,7 +58,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
     fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
     fontSize: '20px',
     fontWeight: 500,
-    padding: '24px',
     '& svg.arrowForwardIcon': {
         display: 'block',
         marginTop: '24px',
@@ -68,11 +67,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
         height: '56px',
     },
     '@media (max-width: 847px)': {
-        padding: '24px 24px 24px 0',
-
-        '& svg.arrowForwardIcon': {
-            marginTop: 0,
-        },
         '& .icon': {
             width: '40px',
             height: '40px',
@@ -80,6 +74,9 @@ const StyledLink = styled(Link)(({ theme }) => ({
         '& > *': {
             marginLeft: '24px',
         },
+    },
+    '> *': {
+        margin: '24px',
     },
 
     // on hover, tablet and up, the background changes colour, the link text underlines and the icon moves
