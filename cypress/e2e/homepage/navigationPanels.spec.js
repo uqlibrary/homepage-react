@@ -94,7 +94,7 @@ describe('header', () => {
             });
             it('tablet displays correctly', () => {
                 cy.visit('http://localhost:2020/?user=public');
-                cy.viewport(1000, 900);
+                cy.viewport(840, 900);
 
                 cy.get('[data-testid="help-navigation-panel"]').within(() => {
                     // Check that there are 6 items

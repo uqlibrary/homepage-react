@@ -1,6 +1,6 @@
 import React from 'react';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import UqArrowForwardIcon from 'modules/SharedComponents/Icons/UqArrowForwardIcon';
 
 export const SpacedArrowForwardIcon = () => {
-    return <ArrowForwardIcon style={{ paddingRight: '1rem' }} />;
+    return <UqArrowForwardIcon style={{ paddingRight: '1rem' }} />;
 };
