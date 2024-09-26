@@ -23,13 +23,14 @@ const StyledGridItem = styled(Grid)(() => ({
         height: '100%',
         display: 'flex',
     },
-    // '@media (max-width: 640px)': {
-    //     minWidth: '95%',
-    // },
+    '@media (max-width: 640px)': {
+        display: 'block',
+        width: '100%',
+    },
     '@media (max-width: 847px)': {
         marginBottom: '24px',
     },
-    '& .cardLabel': {
+    '& .cardHeading': {
         color: '#19151c',
         fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
         fontSize: '20px',
@@ -74,8 +75,30 @@ const StyledLink = styled(Link)(({ theme }) => ({
             width: '40px',
             height: '40px',
         },
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        minWidth: '100%',
+        '& p': {
+            display: 'none',
+        },
+        '& svg.arrowForwardIcon': {
+            // marginTop: 0,
+            paddingLeft: '15px',
+        },
         '& > *': {
             marginLeft: '24px',
+        },
+        '& h2': {
+            fontSize: '22px',
+            margin: '0 0 0 16px',
+            fontWeight: 500,
+            // minWidth: '80%',
+        },
+        '& div': {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
         },
     },
     '> *': {
@@ -90,7 +113,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
             },
         },
         '&:hover': {
-            '& .cardLabel': {
+            '& .cardHeading': {
                 textDecoration: 'underline',
             },
             '@media (prefers-reduced-motion: no-preference)': {
@@ -121,18 +144,20 @@ const paneIcon = paneBackgroundImage => {
     );
 };
 
-const SingleLinkCard = ({ cardLabel, landingUrl, iconBackgroundImage, shortParagraph, loggedIn }) => {
+const SingleLinkCard = ({ cardHeading, landingUrl, iconBackgroundImage, shortParagraph, loggedIn }) => {
     return (
         <StyledGridItem item component={'li'} xs={12} md={6} lg={4}>
             <div>
                 <StyledLink border={1} p={1} to={landingUrl}>
-                    {paneIcon(iconBackgroundImage)}
-                    {!!loggedIn ? (
-                        <h3 className={cardLabel}>{cardLabel}</h3>
-                    ) : (
-                        <h2 className={cardLabel}>{cardLabel}</h2>
-                    )}
-                    <p>{shortParagraph}</p>
+                    <div>
+                        {paneIcon(iconBackgroundImage)}
+                        {!!loggedIn ? (
+                            <h3 className={cardHeading}>{cardHeading}</h3>
+                        ) : (
+                            <h2 className={cardHeading}>{cardHeading}</h2>
+                        )}
+                        <p>{shortParagraph}</p>
+                    </div>
                     <UqArrowForwardIcon />
                 </StyledLink>
             </div>
@@ -141,7 +166,7 @@ const SingleLinkCard = ({ cardLabel, landingUrl, iconBackgroundImage, shortParag
 };
 
 SingleLinkCard.propTypes = {
-    cardLabel: PropTypes.string,
+    cardHeading: PropTypes.string,
     landingUrl: PropTypes.string,
     iconBackgroundImage: PropTypes.string,
     shortParagraph: PropTypes.string,
