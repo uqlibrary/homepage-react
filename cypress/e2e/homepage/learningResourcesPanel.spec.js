@@ -18,6 +18,12 @@ context('The Homepage Learning Resource Panel', () => {
         cy.waitUntil(() => cy.get('div[data-testid="learning-resources-homepage-panel"]').should('exist'));
         cy.get('div[data-testid=learning-resources-panel]').contains(locale.homepagePanel.title);
         cy.get('div[data-testid=learning-resources-panel] form input').type('FREN');
+        cy.waitUntil(() =>
+            cy
+                .get('h2')
+                .should('exist')
+                .contains('Matching courses'),
+        );
         cy.wait(600);
         cy.checkA11y('div[data-testid="learning-resources-panel"]', {
             reportName: 'Learning resources panel',
