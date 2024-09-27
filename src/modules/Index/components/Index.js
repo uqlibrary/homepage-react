@@ -28,6 +28,7 @@ import {
     loadTrainingEvents,
     loadDrupalArticles,
     loadJournalSearchFavourites,
+    loadLoans
 } from 'data/actions';
 import { canSeeLearningResources, isEspaceAuthor } from 'helpers/access';
 
@@ -142,7 +143,9 @@ export const Index = ({
     drupalArticlesError,
     journalSearchList,
     journalSearchLoading,
-    journalSearchError,
+    journalSearchError, 
+    loans,
+    loansLoading,
 
 }) => {
     // console.log('drupal article list in index feeder,', drupalArticleList);
@@ -209,6 +212,13 @@ export const Index = ({
         }
     }, [accountLoading, account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
 
+    useEffect(() => {
+        if (accountLoading === false && !!account && !loans && loansLoading === null) {
+            console.log("dispatching")
+            dispatch(loadLoans());
+        }
+    }, [accountLoading, account, loans, loansLoading, dispatch]);
+
     return (
         <React.Suspense fallback={<ContentLoader message="Loading"/>}>
             <StyledPortalContainer id="search-portal-container" data-testid="search-portal-container">
@@ -249,6 +259,7 @@ export const Index = ({
                     </StyleWrapper>
                 </div>
             </div>
+            {console.log("loans", loans)}
             {accountLoading === false && !!account && (
                 <StandardPage>
                     <Grid container spacing={4} style={{ paddingBottom: '1em' }}>

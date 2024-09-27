@@ -304,10 +304,12 @@ export function clearSessionExpiredFlag() {
  */
 export function loadLoans() {
     if (!!getSessionCookie()) {
+        console.log("Firing Dispatch loadLoans")
         return dispatch => {
             dispatch({ type: actions.LOANS_LOADING });
             return get(LOANS_API())
                 .then(loanResponse => {
+                    console.log("Loan Response: ", loanResponse)
                     dispatch({
                         type: actions.LOANS_LOADED,
                         payload: loanResponse,
