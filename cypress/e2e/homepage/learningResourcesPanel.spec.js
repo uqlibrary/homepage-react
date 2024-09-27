@@ -18,7 +18,7 @@ context('The Homepage Learning Resource Panel', () => {
         cy.waitUntil(() => cy.get('div[data-testid="learning-resources-homepage-panel"]').should('exist'));
         cy.get('div[data-testid=learning-resources-panel]').contains(locale.homepagePanel.title);
         cy.get('div[data-testid=learning-resources-panel] form input').type('FREN');
-        cy.wait(500);
+        cy.wait(600);
         cy.checkA11y('div[data-testid="learning-resources-panel"]', {
             reportName: 'Learning resources panel',
             scopeName: 'As loaded',
