@@ -39,6 +39,7 @@ const PastExamPapers = lazy(() => lazyRetry(() => import('./subComponents/PastEx
 const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
 const ReferencingPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReferencingPanel')));
 const ReadPublish = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReadPublish')));
+const CataloguePanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/CataloguePanel')));
 
 const StyledAccordion = styled(Accordion)(() => ({
     backgroundColor: 'inherit',
@@ -259,7 +260,7 @@ export const Index = ({
                     </StyleWrapper>
                 </div>
             </div>
-            {console.log("loans", loans)}
+            {console.log("loans", loans, loansLoading)}
             {accountLoading === false && !!account && (
                 <StandardPage>
                     <Grid container spacing={4} style={{ paddingBottom: '1em' }}>
@@ -299,6 +300,10 @@ export const Index = ({
                         </Grid>
                         <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
                             <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
+                        </Grid>
+                        {/* My UQ Account / Primo Stuff */}
+                        <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
+                            <CataloguePanel account={account} loans={loans} />
                         </Grid>
                     </Grid>
                 </StandardPage>
