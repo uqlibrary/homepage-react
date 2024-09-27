@@ -25,7 +25,7 @@ import examSuggestion_FREN from './data/records/learningResources/examSuggestion
 import { computerAvailability } from './data/computerAvailability';
 import { libHours } from './data/libHours';
 import { training_object } from './data/training';
-import { espaceSearchResponse } from './data/general';
+import { espaceSearchResponse, loans } from './data/general';
 import { alertList } from './data/alertsLong';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
 import examSearch_DENT80 from './data/records/learningResources/examSearch_DENT80';
@@ -1220,6 +1220,7 @@ mock.onGet('exams/course/FREN1010/summary')
                 return [200, journalSearchFavourites];
         }
     })
+    .onGet(routes.LOANS_API().apiUrl).reply(withDelay([200, loans]))
     .onAny()
     .reply(function(config) {
         console.log('url not mocked...', config.url);
