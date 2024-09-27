@@ -76,17 +76,20 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         },
     },
     ['& .linkButton']: {
+        backgroundColor: '#fff',
+        borderRadius: 0,
+        color: theme.palette.primary.light,
+        display: 'block',
+        fontSize: '16px',
+        fontWeight: 500,
         padding: 4,
         minWidth: 0,
-        textTransform: 'none',
-    },
-    ['& .linkButtonLabel']: {
-        textTransform: 'none',
         textAlign: 'left',
-        fontSize: 16,
-        color: '#3872a8',
-        fontWeight: 300,
-        lineHeight: 1.25,
+        textTransform: 'none',
+        '&:hover': {
+            color: '#fff',
+            backgroundColor: theme.palette.primary.light,
+        },
     },
     ['& .eventName']: {
         fontWeight: 400,
@@ -373,23 +376,13 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                     ) {
                         return (
                             <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
-                                <div
-                                    className={'flexContent'}
-                                    role="region"
-                                    aria-label="UQ training Events list"
-                                    data-testid="training-list"
-                                >
+                                <div className={'flexContent'} role="region" aria-label="UQ training Events list">
                                     <Typography
                                         component={'h4'}
                                         variant={'h6'}
-                                        sx={{
-                                            marginLeft: '24px',
-                                            fontSize: '20px',
-                                            fontWeight: 500,
-                                            letterSpacing: '0.2px',
-                                        }}
+                                        sx={{ marginLeft: '24px', fontSize: '20px', fontWeight: 500 }}
                                     >
-                                        Next training courses
+                                        Suggested training for you:
                                     </Typography>
                                     {filteredTrainingEvents &&
                                         filteredTrainingEvents.length > 0 &&
@@ -405,11 +398,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                             classes={{ root: 'linkButton' }}
                                                             fullWidth
                                                         >
-                                                            <Grid container spacing={0} direction="column">
-                                                                <Grid item className={'linkButtonLabel'}>
-                                                                    {event.name}
-                                                                </Grid>
-                                                            </Grid>
+                                                            {event.name}
                                                         </Button>
                                                     </Grid>
                                                 </Grid>
