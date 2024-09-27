@@ -138,7 +138,9 @@ export const LearningResourcesPanel = ({ account }) => {
                                 </StyledLink>{' '}
                                 {/* because the panel width is driven by window size, show a title
                                     so ellipsis doesn't hide some meaningful difference between course titles */}
-                                <span title={item.DESCR}>{item.DESCR}</span>
+                                <Typography component={'span'} style={{ fontWeight: 400 }} title={item.DESCR}>
+                                    {item.DESCR}
+                                </Typography>
                             </Grid>
                         );
                     })}
