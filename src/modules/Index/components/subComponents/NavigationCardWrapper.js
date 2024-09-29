@@ -24,9 +24,9 @@ const StyledGridContainer = styled(Grid)(() => ({
 }));
 
 const StyledHeading = styled(Typography)(() => ({
-    fontSize: '24px',
+    fontSize: '32px',
     fontWeight: 500,
-    marginTop: '1em',
+    marginTop: '1rem',
 }));
 
 // inspect specific icons at https://design-system.ads-staging.aws.uq.edu.au/?path=/story/components-icon--icon and extract the backgroundimage value from the :before on the span
@@ -49,7 +49,7 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
             <StyledNav>
                 <StyledGridContainer component={'ul'} container data-testid="help-navigation-panel">
                     <SingleLinkCard
-                        cardLabel="Study and learning support"
+                        cardHeading="Study and learning support"
                         landingUrl={linkToDrupal('/study-and-learning-support')}
                         iconBackgroundImage={toolboxBackgroundImage}
                         shortParagraph="Lorem ipsum odor amet, consectetuer adipiscing elit. Pulvinar finibus lectus semper volutpat orci congue vitae justo cubilia molestie accumsan maximus semper varius rutrum mauris augue."
@@ -58,35 +58,35 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                     {/* minimum length for shortParagraph string: 66 char,
                         or the wrapping is off at widest tablet 2 column width :( */}
                     <SingleLinkCard
-                        cardLabel="AskUs and student IT support"
+                        cardHeading="AskUs and student IT support"
                         landingUrl={linkToDrupal('/askus-and-it-support')}
                         iconBackgroundImage={toolboxBackgroundImage}
                         shortParagraph="Lorem ipsum odor amet, consectetuer adipiscing elit. Lectus. finibus finibus finibus"
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
-                        cardLabel="Research and publish"
+                        cardHeading="Research and publish"
                         landingUrl={linkToDrupal('/research-and-publish')}
                         iconBackgroundImage={scienceMoleculeBackgroundImage}
                         shortParagraph="Lorem ipsum odor amet, consectetuer adipiscing elit. Dolor adipiscing ante nullam accumsan volutpat; fermentum etiam sodales tempor natoque."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
-                        cardLabel="Find and borrow"
+                        cardHeading="Find and borrow"
                         landingUrl={linkToDrupal('/find-and-borrow')}
                         iconBackgroundImage={bookBackgroundImage}
                         shortParagraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet felis quis urna posuere, ac ornare justo vulputate. Nulla dictum."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
-                        cardLabel="Visit"
+                        cardHeading="Visit"
                         landingUrl={linkToDrupal('/visit-our-spaces')}
                         iconBackgroundImage={schoolBuildingBackgroundimage}
                         shortParagraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi placerat erat scelerisque nulla vehicula, quis finibus nibh egestas. Cras sapien."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
-                        cardLabel="About"
+                        cardHeading="About"
                         landingUrl={linkToDrupal('/about-us')}
                         iconBackgroundImage={schoolBuildingBackgroundimage}
                         shortParagraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non ultrices mi. Etiam lobortis nunc non elementum sodales. Fusce turpis."

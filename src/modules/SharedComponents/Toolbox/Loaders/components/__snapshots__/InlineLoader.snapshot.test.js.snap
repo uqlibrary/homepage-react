@@ -9,7 +9,7 @@ exports[`Component InlineLoader should render as expected 1`] = `
       class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
     >
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-1wrgmsj-MuiGrid-root"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-rf0qn4-MuiGrid-root"
         style="text-align: center;"
       >
         <span
@@ -34,7 +34,7 @@ exports[`Component InlineLoader should render as expected 1`] = `
         </span>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-1wrgmsj-MuiGrid-root"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-rf0qn4-MuiGrid-root"
         style="text-align: center;"
       >
         <span
@@ -58,7 +58,7 @@ exports[`Component InlineLoader should render with styles 1`] = `
       class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
     >
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-1wrgmsj-MuiGrid-root"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-rf0qn4-MuiGrid-root"
         style="text-align: center;"
       >
         <span
@@ -83,7 +83,7 @@ exports[`Component InlineLoader should render with styles 1`] = `
         </span>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-1wrgmsj-MuiGrid-root"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-rf0qn4-MuiGrid-root"
         style="text-align: center;"
       >
         <span

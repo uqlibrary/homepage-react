@@ -77,7 +77,6 @@ export const LearningResourcesPanel = ({ account }) => {
             style={{
                 border: '1px solid hsla(203, 50%, 30%, 0.15)',
                 borderRadius: '4px',
-                boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
             }}
             fullHeight
             primaryHeader
@@ -139,13 +138,15 @@ export const LearningResourcesPanel = ({ account }) => {
                                 </StyledLink>{' '}
                                 {/* because the panel width is driven by window size, show a title
                                     so ellipsis doesn't hide some meaningful difference between course titles */}
-                                <span title={item.DESCR}>{item.DESCR}</span>
+                                <Typography component={'span'} style={{ fontWeight: 400 }} title={item.DESCR}>
+                                    {item.DESCR}
+                                </Typography>
                             </Grid>
                         );
                     })}
                 </Grid>
             ) : (
-                <div style={{ marginLeft: 24, marginTop: -10 }}>{locale.homepagePanel.noCourses}</div>
+                <div style={{ marginLeft: 24, marginTop: -10, fontWeight: 400 }}>{locale.homepagePanel.noCourses}</div>
             )}
         </StandardCard>
     );

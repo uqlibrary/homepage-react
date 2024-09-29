@@ -6,38 +6,31 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import UqArrowForwardIcon from 'modules/SharedComponents/Icons/UqArrowForwardIcon';
 
-const StyledGridItem = styled(Grid)(() => ({
+const StyledGridItem = styled(Grid)(({ theme }) => ({
     listStyleType: 'none',
-    // marginBottom: '60px',
     display: 'flex',
     alignItems: 'stretch',
     flex: 1,
-    marginBottom: '32px',
-    '@media (max-width: 74.95rem)': {
-        paddingLeft: '24px',
-        marginBottom: '24px',
-    },
-    paddingLeft: '32px',
     '& > div': {
         height: '100%',
         display: 'flex',
     },
-    '@media (max-width: 899px)': {
-        ' p': {
-            display: 'none',
-        },
-        marginBottom: '24px',
-        '& > div': {
-            display: 'block',
-            width: '100%',
-        },
+    paddingLeft: '24px',
+    marginBottom: '24px',
+    [theme.breakpoints.up('uqDsDesktopXL')]: {
+        paddingLeft: '32px',
+        marginBottom: '32px',
     },
-    '& .cardLabel': {
+    [theme.breakpoints.down('uqDsTablet')]: {
+        display: 'block',
+        width: '100%',
+    },
+    '& .cardHeading': {
         color: '#19151c',
         fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-        fontSize: '20px',
+        fontSize: '24px',
         fontWeight: 500,
         letterSpacing: '0.16px',
         lineHeight: '1.6',
@@ -55,62 +48,72 @@ const StyledLink = styled(Link)(({ theme }) => ({
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
     borderRadius: '4px',
     background: '#FFFFFF',
-    boxShadow: 'rgba(0, 0, 0, 0.10) 0 1px 3px 0',
     display: 'block',
     cursor: 'pointer',
     color: theme.palette.secondary.dark,
     fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
     fontSize: '20px',
     fontWeight: 500,
-    padding: '24px',
-    '& svg[data-testid="ArrowForwardIcon"]': {
+    '& svg.arrowForwardIcon': {
         display: 'block',
         marginTop: '24px',
     },
-    '& .icon': {
+    '& .iconWrapper': {
         width: '56px',
         height: '56px',
     },
-    '@media (max-width: 899px)': {
-        // marginBottom: '-58px',
-        padding: '24px 24px 24px 0',
-
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        '& svg[data-testid="ArrowForwardIcon"]': {
-            marginTop: 0,
-        },
-        '& > div': {
-            margin: '0 16px 0 24px',
-        },
-        '& > .cardLabel': { margin: 0 },
-        // '& > p': { margin: 0 },
-        '& > svg': { marginLeft: 'auto' },
-        '& .icon': {
+    [theme.breakpoints.down('uqDsTablet')]: {
+        '& .iconWrapper': {
             width: '40px',
             height: '40px',
         },
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        minWidth: '100%',
+        '& p': {
+            display: 'none',
+        },
+        '& svg.arrowForwardIcon': {
+            // marginTop: 0,
+            paddingLeft: '15px',
+        },
+        '& > *': {
+            marginLeft: '24px',
+        },
+        '& h2': {
+            margin: '0 0 0 16px',
+            fontWeight: 500,
+            // minWidth: '80%',
+        },
+        '& div': {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+        },
+    },
+    '> *': {
+        margin: '24px',
     },
 
     // on hover, tablet and up, the background changes colour, the link text underlines and the icon moves
-    '@media (min-width: 899px)': {
-        '& svg[data-testid="ArrowForwardIcon"]': {
+    [theme.breakpoints.up('uqDsDesktop')]: {
+        '& svg.arrowForwardIcon': {
             '@media (prefers-reduced-motion: no-preference)': {
                 transition: 'margin-left 200ms ease-in-out',
             },
         },
         '&:hover': {
-            '& .cardLabel': {
+            '& .cardHeading': {
                 textDecoration: 'underline',
             },
             '@media (prefers-reduced-motion: no-preference)': {
                 backgroundColor: '#f3f3f4',
             },
             textDecoration: 'none',
-            '& svg[data-testid="ArrowForwardIcon"]': {
+            '& svg.arrowForwardIcon': {
                 '@media (prefers-reduced-motion: no-preference)': {
-                    marginLeft: '5px',
+                    marginLeft: '34px', // 24 + 10
                     transition: 'margin-left 200ms ease-in-out',
                 },
             },
@@ -121,36 +124,32 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const paneIcon = paneBackgroundImage => {
     return (
         <Box
-            className={'icon'}
+            className={'iconWrapper'}
             sx={{
-                // color: '#51247A',
-                // width: 100, // Set the width of the box
-                // height: 56, // Set the height of the box
                 backgroundImage: paneBackgroundImage,
-                backgroundSize: 'contain', // Adjust the size of the background image
-                backgroundRepeat: 'no-repeat', // Prevent the image from repeating
-                backgroundPosition: 'center', // Center the image
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
             }}
         />
     );
 };
 
-const SingleLinkCard = ({ cardLabel, landingUrl, iconBackgroundImage, shortParagraph, loggedIn }) => {
+const SingleLinkCard = ({ cardHeading, landingUrl, iconBackgroundImage, shortParagraph, loggedIn }) => {
     return (
-        <StyledGridItem item component={'li'} xs={12} md={6} lg={4}>
+        <StyledGridItem item component={'li'} uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4}>
             <div>
                 <StyledLink border={1} p={1} to={landingUrl}>
-                    {paneIcon(iconBackgroundImage)}
-                    {!!loggedIn ? (
-                        <h3 className={cardLabel}>{cardLabel}</h3>
-                    ) : (
-                        <h2 className={cardLabel}>{cardLabel}</h2>
-                    )}
-                    <p>{shortParagraph}</p>
-                    <ArrowForwardIcon
-                        // classname={'arrow'}
-                        sx={{ color: '#51247A' }}
-                    />
+                    <div>
+                        {paneIcon(iconBackgroundImage)}
+                        {!!loggedIn ? (
+                            <h3 className={'cardHeading'}>{cardHeading}</h3>
+                        ) : (
+                            <h2 className={'cardHeading'}>{cardHeading}</h2>
+                        )}
+                        <p>{shortParagraph}</p>
+                    </div>
+                    <UqArrowForwardIcon />
                 </StyledLink>
             </div>
         </StyledGridItem>
@@ -158,7 +157,7 @@ const SingleLinkCard = ({ cardLabel, landingUrl, iconBackgroundImage, shortParag
 };
 
 SingleLinkCard.propTypes = {
-    cardLabel: PropTypes.string,
+    cardHeading: PropTypes.string,
     landingUrl: PropTypes.string,
     iconBackgroundImage: PropTypes.string,
     shortParagraph: PropTypes.string,

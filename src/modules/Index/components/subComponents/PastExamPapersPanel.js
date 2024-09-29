@@ -96,7 +96,7 @@ export const PastExamPapersPanel = ({ account }) => {
                 <Typography
                     component={'p'}
                     data-testid="staff-course-prompt"
-                    style={{ paddingInline: '21px', marginTop: '10px' }}
+                    style={{ paddingInline: '21px', marginTop: '10px', fontWeight: 400 }}
                 >
                     Students see enrolled courses. Example links below:
                 </Typography>
@@ -144,7 +144,9 @@ export const PastExamPapersPanel = ({ account }) => {
                                 </Link>{' '}
                                 {/* because the panel width is driven by window size, show a title
                                     so ellipsis doesn't hide some meaningful difference between course titles */}
-                                <span title={item.DESCR}>{item.DESCR}</span>
+                                <Typography component={'span'} style={{ fontWeight: 400 }} title={item.DESCR}>
+                                    {item.DESCR}
+                                </Typography>
                             </Grid>
                         );
                     })}
