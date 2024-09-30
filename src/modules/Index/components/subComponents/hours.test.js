@@ -1,4 +1,4 @@
-import { ariaLabelForLocation, hasDepartments } from './Hours';
+import { ariaLabelForLocation, hasDepartments } from './Locations';
 // import { accounts } from '../mock/data';
 
 const validWhitty = {

@@ -27,7 +27,8 @@ export default {
                         {...props}
                         inputProps={{ ...props.inputProps, maxLength: 10 }}
                         required
-                        helperText={locale.pages.general.helperText.maxChars(10)} />
+                        helperText={locale.pages.general.helperText.maxChars(10)}
+                    />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, minWidth: 150 },
@@ -67,7 +68,8 @@ export default {
                         {...props}
                         inputProps={{ ...props.inputProps, maxLength: 10 }}
                         required
-                        helperText={locale.pages.general.helperText.maxChars(10)} />
+                        helperText={locale.pages.general.helperText.maxChars(10)}
+                    />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, minWidth: 150 },
@@ -107,7 +109,8 @@ export default {
                         {...props}
                         inputProps={{ ...props.inputProps, maxLength: 10 }}
                         required
-                        helperText={locale.pages.general.helperText.maxChars(10)} />
+                        helperText={locale.pages.general.helperText.maxChars(10)}
+                    />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, minWidth: 150, flex: 1 },
@@ -143,7 +146,8 @@ export default {
                         {...props}
                         inputProps={{ ...props.inputProps, maxLength: 10 }}
                         required
-                        helperText={locale.pages.general.helperText.maxChars(10)} />
+                        helperText={locale.pages.general.helperText.maxChars(10)}
+                    />
                 ),
                 validate: value => isEmptyStr(value), // should return true if a validation error exists
                 fieldParams: { canEdit: true, minWidth: 150 },

@@ -2,12 +2,11 @@ import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTa
 
 describe('Test and Tag Report - Inspections by Licenced User', () => {
     beforeEach(() => {
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
         cy.visit('http://localhost:2020/admin/testntag/report/inspectionsbylicenceduser?user=uqtesttag');
     });
     const zeroPad = (num, places) => String(num).padStart(places, '0');
 
-    const getFieldValue = (dataField, rowIndex, colIndex) =>
+    const getFieldValue = (dataField, rowIndex) =>
         // cy.get(`[data-field='${dataField}'][data-rowindex='${rowIndex}'][data-colindex='${colIndex}']`);
         cy.get(`div[data-rowindex='${rowIndex}'] > div[data-field='${dataField}']`);
 
@@ -40,6 +39,16 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
         );
+    });
+    it('has breadcrumbs', () => {
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Test and tag');
+            });
     });
     it('Inspector selection works as intended', () => {
         cy.viewport(1300, 1000);
@@ -92,14 +101,14 @@ describe('Test and Tag Report - Inspections by Licenced User', () => {
         // Add an end date
         cy.data('user_inspections-tagged-start-input').should('have.value', `${currentYear}-${currentMonth}-11`);
         cy.get('[data-testid="user_inspections-tagged-end"] button').click();
-        cy.get('.MuiPickersDay-root')
+        cy.get('.MuiPaper-root[style*="opacity: 1"] .MuiPickersDay-root')
             .contains('12')
             .click();
         cy.get('body').click();
         cy.data('user_inspections-tagged-end-input').should('have.value', `${currentYear}-${currentMonth}-12`);
         // Set up an incorrect date for the end.
         cy.get('[data-testid="user_inspections-tagged-end"] button').click();
-        cy.get('.MuiPickersDay-root')
+        cy.get('.MuiPaper-root[style*="opacity: 1"] .MuiPickersDay-root')
             .contains('10')
             .click();
         cy.get('body').click();

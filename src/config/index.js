@@ -8,8 +8,7 @@ export {
     TOKEN_NAME,
 } from './general';
 
-export { api, generateCancelToken, cache, sessionApi } from './axios';
+export { api, generateCancelToken, sessionApi } from './axios';
 export * as general from './general';
 export * as routes from './routes';
 export { mui1theme } from './theme';
-export { history } from './history';

@@ -20,6 +20,7 @@ import { PERMISSIONS } from '../../../config/auth';
 import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionState, actionReducer } from './utils';
 import { useConfirmationAlert } from '../../../helpers/hooks';
 import config from './configure';
+import { breadcrumbs } from 'config/routes';
 
 const componentId = 'user-management';
 
@@ -150,6 +151,12 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
     });
 
     React.useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
+    }, []);
+
+    React.useEffect(() => {
         actions.loadUserList().catch(error => {
             console.error(error);
             openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbar.loadFail), 'error');
@@ -223,7 +230,7 @@ const Users = ({ actions, userListLoading, userList, userListError }) => {
                     actionProps={{ row: actionState?.row, props: actionState?.props }}
                 />
                 <Grid container spacing={3}>
-                    <Grid item style={{ flex: 1 }}>
+                    <Grid item sx={{ flex: 1 }}>
                         <DataTable
                             id={componentId}
                             rows={row}

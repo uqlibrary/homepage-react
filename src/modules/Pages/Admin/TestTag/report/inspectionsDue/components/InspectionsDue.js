@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
+
 import { useSelector } from 'react-redux';
 
-// import Grid from '@mui/material/Grid';
 import Grid from '@mui/material/Unstable_Grid2';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -21,19 +21,17 @@ import locale from '../../../testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { transformRow } from './utils';
-
+import { breadcrumbs } from 'config/routes';
 const moment = require('moment');
 
 const componentId = 'inspections-due';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
-    tableMarginTop: {
+const StyledWrapper = styled('div')(({ theme }) => ({
+    flexGrow: 1,
+    '& .tableMarginTop': {
         marginTop: theme.spacing(2),
     },
-    inspectionOverdue: {
+    '& .inspectionOverdue': {
         backgroundColor: theme.palette.error.main,
         color: 'white',
     },
@@ -43,12 +41,11 @@ const InspectionsDue = ({
     actions,
     inspectionsDue,
     inspectionsDueLoading,
-    // inspectionsDueLoaded,
+
     inspectionsDueError,
 }) => {
     const pageLocale = locale.pages.report.inspectionsDue;
     const monthsOptions = locale.config.monthsOptions;
-    const classes = useStyles();
 
     const store = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation } = useLocation();
@@ -76,6 +73,12 @@ const InspectionsDue = ({
     });
 
     useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
+    }, []);
+
+    useEffect(() => {
         const locationId = location[lastSelectedLocation];
 
         actions.getInspectionsDue({
@@ -99,7 +102,7 @@ const InspectionsDue = ({
             locale={pageLocale}
             requiredPermissions={[PERMISSIONS.can_see_reports]}
         >
-            <div className={classes.root}>
+            <StyledWrapper>
                 <StandardCard title={pageLocale.form.title}>
                     <Grid container spacing={3}>
                         <AutoLocationPicker
@@ -110,7 +113,7 @@ const InspectionsDue = ({
                             hasAllOption
                             locale={locale.pages.general.locationPicker}
                         />
-                        <Grid item>
+                        <Grid>
                             <MonthsSelector
                                 id={componentId}
                                 label={pageLocale.form.filterToDateLabel}
@@ -123,12 +126,12 @@ const InspectionsDue = ({
                                 fromDate={today}
                                 fromDateFormat={locale.pages.report.config.dateFormat}
                                 dateDisplayFormat={locale.pages.report.config.dateFormatDisplay}
-                                classNames={{ formControl: classes.formControl, select: classes.formSelect }}
+                                classNames={{ formControl: 'formControl', select: 'formSelect' }}
                             />
                         </Grid>
                     </Grid>
-                    <Grid container spacing={3} className={classes.tableMarginTop}>
-                        <Grid item style={{ flex: 1 }}>
+                    <Grid container spacing={3} className={'tableMarginTop'}>
+                        <Grid sx={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
                                 rows={row}
@@ -137,7 +140,7 @@ const InspectionsDue = ({
                                 loading={inspectionsDueLoading}
                                 getCellClassName={params =>
                                     params.field === 'asset_next_test_due_date' && params.value <= today
-                                        ? classes.inspectionOverdue
+                                        ? 'inspectionOverdue'
                                         : ''
                                 }
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
@@ -152,7 +155,7 @@ const InspectionsDue = ({
                         autoHideDuration={confirmationAlert.autoHideDuration}
                     />
                 </StandardCard>
-            </div>
+            </StyledWrapper>
         </StandardAuthPage>
     );
 };

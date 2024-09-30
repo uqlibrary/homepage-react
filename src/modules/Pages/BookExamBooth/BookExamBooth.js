@@ -6,12 +6,20 @@ import { Button, FormControl, FormControlLabel, Grid, MenuItem, Radio, RadioGrou
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import TextField from '@mui/material/TextField';
 import MapIcon from '@mui/icons-material/Map';
+import { styled } from '@mui/material/styles';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { useTitle } from 'hooks';
 
 import locale from './bookExamBooth.locale';
+import { getMapLabel } from './bookExamBoothHelper';
+import { breadcrumbs } from 'config/routes';
+
+const StyledStandardCard = styled(StandardCard)(() => ({
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
+}));
 
 const BookExamBooth = ({
     getBookingUrl,
@@ -22,6 +30,12 @@ const BookExamBooth = ({
     startTimeHoursListByExamLength,
 }) => {
     useTitle(locale.title);
+
+    React.useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookexambooth.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookexambooth.pathname);
+    }, []);
 
     const dateFormat = 'DD/MM/YYYY';
     const defaultHour = 8;
@@ -120,7 +134,7 @@ const BookExamBooth = ({
                     {locale.intro}
                 </Grid>
                 <Grid item xs={12}>
-                    <StandardCard title={locale.displayDecider.heading}>
+                    <StyledStandardCard title={locale.displayDecider.heading}>
                         <div className="displayDecider">
                             <label htmlFor="displayDecider">{locale.displayDecider.label}</label>
                             <br />
@@ -146,12 +160,12 @@ const BookExamBooth = ({
                                 </RadioGroup>
                             </FormControl>
                         </div>
-                    </StandardCard>
+                    </StyledStandardCard>
                 </Grid>
 
                 {isProctorU === 'yes' && (
                     <Grid item xs={12}>
-                        <StandardCard title={locale.locationDecider.heading}>
+                        <StyledStandardCard title={locale.locationDecider.heading}>
                             <div>
                                 <FormControl variant="standard" component="fieldset" required>
                                     <RadioGroup
@@ -160,54 +174,50 @@ const BookExamBooth = ({
                                         value={chosenLocationCode}
                                         onChange={_handleLocationDeciderChange}
                                     >
-                                        {locale.locationDecider.locations.map(l => {
+                                        {locale.locationDecider.locations.map(location => {
                                             return (
                                                 <FormControlLabel
                                                     control={<Radio color="primary" />}
-                                                    data-testid={`display-location-option-${l.value}`}
-                                                    data-analyticsid={`display-location-option-${l.value}`}
+                                                    data-testid={`display-location-option-${location.value}`}
+                                                    data-analyticsid={`display-location-option-${location.value}`}
                                                     label={
                                                         <React.Fragment>
-                                                            {l.label}
+                                                            {location.label}
                                                             <a
                                                                 style={{ paddingLeft: 5, marginTop: 5 }}
-                                                                href={l.mapLink}
+                                                                href={location.mapLink}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
-                                                                aria-label={`View a map showing the location of exams at ${
-                                                                    l.needsDefiniteArticle ? 'the' : ''
-                                                                } ${l.label}`}
-                                                                title={`View a map showing the location of exams at ${
-                                                                    l.needsDefiniteArticle ? 'the' : ''
-                                                                } ${l.label}`}
+                                                                aria-label={getMapLabel(location)}
+                                                                title={getMapLabel(location)}
                                                             >
                                                                 <MapIcon />
                                                             </a>
                                                         </React.Fragment>
                                                     }
-                                                    key={`location-selector-${l.mapLink}`}
-                                                    value={l.value}
+                                                    key={`location-selector-${location.mapLink}`}
+                                                    value={location.value}
                                                 />
                                             );
                                         })}
                                     </RadioGroup>
                                 </FormControl>
                             </div>
-                        </StandardCard>
+                        </StyledStandardCard>
                     </Grid>
                 )}
 
                 {isProctorU === 'no' && (
                     <Grid item xs={12}>
-                        <StandardCard title={locale.noBookingMessage.title} standardCardId="no-booking-necessary">
+                        <StyledStandardCard title={locale.noBookingMessage.title} standardCardId="no-booking-necessary">
                             {locale.noBookingMessage.message}
-                        </StandardCard>
+                        </StyledStandardCard>
                     </Grid>
                 )}
 
                 {isProctorU === 'yes' && chosenLocationCode !== 'unset' && (
                     <Grid item xs={12}>
-                        <StandardCard title={locale.detailsSectionHeading} standardCardId="booking-details">
+                        <StyledStandardCard title={locale.detailsSectionHeading} standardCardId="booking-details">
                             <Grid container spacing={3}>
                                 <Grid item xs={12}>
                                     <label htmlFor="examType">{locale.examType.label}</label>
@@ -350,7 +360,7 @@ const BookExamBooth = ({
                                     </fieldset>
                                 </Grid>
                             </Grid>
-                        </StandardCard>
+                        </StyledStandardCard>
                     </Grid>
                 )}
             </Grid>

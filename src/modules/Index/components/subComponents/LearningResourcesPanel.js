@@ -1,28 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router';
-import { withRouter } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { getCampusByCode } from 'helpers/general';
 import { fullPath } from 'config/routes';
 import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { LearningResourceSearch } from 'modules/SharedComponents/LearningResourceSearch';
+import { SubjectSearchDropdown } from 'modules/SharedComponents/SubjectSearchDropdown';
 
 import Grid from '@mui/material/Grid';
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(() => ({
-    myCourses: {
-        overflowX: 'hidden',
-        overflowY: 'auto',
-        marginRight: -16,
-        marginTop: 4,
-        marginLeft: -16,
-        padding: '0 30px 8px',
+const StyledLink = styled(Link)(({ theme }) => ({
+    color: theme.palette.primary.light,
+    fontWeight: 500,
+    paddingBlock: '2px',
+    textDecoration: 'underline',
+    transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
+    '&:hover': {
+        color: '#fff',
+        backgroundColor: theme.palette.primary.light,
     },
 }));
 
@@ -37,21 +36,21 @@ export const getUrlForLearningResourceSpecificTab = (
     const prefix = `${includeFullPath ? fullPath : ''}/learning-resources`;
     const url =
         !!pageLocation.search && pageLocation.search.indexOf('?') === 0
-            ? `${prefix}${pageLocation.search}&${learningResourceParams}` // eg include ?user=s111111
+            ? `${prefix}${pageLocation.search}&${learningResourceParams}` // eg include ?user=s1111111
             : `${prefix}?${learningResourceParams}`;
     return url;
 };
 
-export const LearningResourcesPanel = ({ account, history }) => {
+export const LearningResourcesPanel = ({ account }) => {
     const pageLocation = useLocation();
-    const classes = useStyles();
+    const navigate = useNavigate();
 
     const [searchUrl, setSearchUrl] = React.useState('');
     const loadSearchResult = React.useCallback(
         searchUrl => {
-            searchUrl !== '' && history.push(searchUrl);
+            searchUrl !== '' && navigate(searchUrl);
         },
-        [history],
+        [pageLocation],
     );
     React.useEffect(() => {
         loadSearchResult(searchUrl);
@@ -74,6 +73,11 @@ export const LearningResourcesPanel = ({ account, history }) => {
 
     return (
         <StandardCard
+            subCard
+            style={{
+                border: '1px solid hsla(203, 50%, 30%, 0.15)',
+                borderRadius: '4px',
+            }}
             fullHeight
             primaryHeader
             noPadding
@@ -86,16 +90,28 @@ export const LearningResourcesPanel = ({ account, history }) => {
                 </Grid>
             }
         >
-            <LearningResourceSearch
+            <SubjectSearchDropdown
                 displayType="compact"
                 elementId={learningResourceId}
                 navigateToLearningResourcePage={navigateToLearningResourcePage}
             />
 
             {!!account && !!account.current_classes && account.current_classes.length > 0 ? (
-                <Grid container spacing={1} data-testid="your-courses" className={classes.myCourses}>
-                    <Grid item xs={12}>
-                        <Typography component={'h3'} variant={'h6'}>
+                <Grid
+                    container
+                    spacing={1}
+                    data-testid="your-courses"
+                    style={{
+                        overflowX: 'hidden',
+                        overflowY: 'auto',
+                        marginRight: -16,
+                        marginTop: 4,
+                        marginLeft: -16,
+                        padding: '0 30px 8px',
+                    }}
+                >
+                    <Grid item xs={12} style={{ marginTop: '-8px' }}>
+                        <Typography component={'h4'} variant={'h6'}>
                             {locale.homepagePanel.userCourseTitle}
                         </Typography>
                     </Grid>
@@ -114,12 +130,12 @@ export const LearningResourcesPanel = ({ account, history }) => {
                                     paddingBottom: 8,
                                 }}
                             >
-                                <Link
+                                <StyledLink
                                     to={getUrlForLearningResourceSpecificTab(item, pageLocation)}
                                     data-testid={`learning-resource-panel-course-link-${index}`}
                                 >
                                     {item.classnumber}
-                                </Link>{' '}
+                                </StyledLink>{' '}
                                 {/* because the panel width is driven by window size, show a title
                                     so ellipsis doesn't hide some meaningful difference between course titles */}
                                 <span title={item.DESCR}>{item.DESCR}</span>
@@ -128,7 +144,7 @@ export const LearningResourcesPanel = ({ account, history }) => {
                     })}
                 </Grid>
             ) : (
-                <div style={{ marginLeft: 16 }}>{locale.homepagePanel.noCourses}</div>
+                <div style={{ marginLeft: 24, marginTop: -10, fontWeight: 400 }}>{locale.homepagePanel.noCourses}</div>
             )}
         </StandardCard>
     );
@@ -136,7 +152,6 @@ export const LearningResourcesPanel = ({ account, history }) => {
 
 LearningResourcesPanel.propTypes = {
     account: PropTypes.object,
-    history: PropTypes.object,
 };
 
-export default withRouter(LearningResourcesPanel);
+export default LearningResourcesPanel;

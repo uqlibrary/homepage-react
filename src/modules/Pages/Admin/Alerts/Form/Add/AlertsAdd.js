@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Grid';
-import { makeStyles } from '@mui/styles';
 
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/Form/AlertForm';
@@ -12,15 +11,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { default as locale } from '../../alertsadmin.locale';
 
-const useStyles = makeStyles(() => ({
-    previewWrapper: {
-        transition: 'visibility 0s, opacity 10s ease-out',
-    },
-}));
-
-export const AlertsAdd = ({ actions, alert, alertError, alertLoading, alertStatus, history }) => {
-    const classes = useStyles();
-
+export const AlertsAdd = ({ actions, alert, alertError, alertLoading, alertStatus }) => {
     const defaults = {
         id: '',
         dateList: [
@@ -45,11 +36,11 @@ export const AlertsAdd = ({ actions, alert, alertError, alertLoading, alertStatu
     return (
         <Fragment>
             <Grid container style={{ paddingBottom: '1em', display: 'block' }}>
-                <Grid item id="previewWrapper" className={classes.previewWrapper} />
+                <Grid item id="previewWrapper" sx={{ transition: 'visibility 0s, opacity 10s ease-out' }} />
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertsUtilityArea actions={actions} history={history} helpContent={locale.form.help} />
+                    <AlertsUtilityArea actions={actions} helpContent={locale.form.help} />
                     <StandardCard title="Create alert">
                         <AlertForm
                             actions={actions}
@@ -57,7 +48,6 @@ export const AlertsAdd = ({ actions, alert, alertError, alertLoading, alertStatu
                             alertError={alertError}
                             alertLoading={alertLoading}
                             alertStatus={alertStatus}
-                            history={history}
                             defaults={defaults}
                         />
                     </StandardCard>
@@ -73,7 +63,6 @@ AlertsAdd.propTypes = {
     alertError: PropTypes.any,
     alertLoading: PropTypes.any,
     alertStatus: PropTypes.any,
-    history: PropTypes.object,
 };
 
 export default AlertsAdd;

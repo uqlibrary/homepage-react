@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import LearningResources from './LearningResources';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 // this page can either be loaded as a general 'show me my courses'
@@ -25,7 +24,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let LearningResourcesContainer = connect(mapStateToProps, mapDispatchToProps)(LearningResources);
-LearningResourcesContainer = withRouter(LearningResourcesContainer);
+const LearningResourcesContainer = connect(mapStateToProps, mapDispatchToProps)(LearningResources);
 
 export default LearningResourcesContainer;

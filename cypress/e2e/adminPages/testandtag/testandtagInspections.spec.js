@@ -3,7 +3,6 @@ import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/t
 
 describe('Test and Tag Admin Inspection page', () => {
     beforeEach(() => {
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
         cy.visit('http://localhost:2020/admin/testntag/inspect?user=uqtesttag');
         cy.waitUntil(() => cy.focused().should('have.attr', 'value', 'St Lucia'));
     });
@@ -74,6 +73,16 @@ describe('Test and Tag Admin Inspection page', () => {
                     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
                 },
             );
+        });
+        it('has breadcrumb', () => {
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Test and tag');
+                });
         });
         describe('Event panel functionality', () => {
             const today = moment();
@@ -499,7 +508,7 @@ describe('Test and Tag Admin Inspection page', () => {
                 cy.wait(2000);
                 cy.get('[data-testid="message-title"] > .MuiTypography-root');
                 cy.data('message-title').contains('Asset saved');
-                cy.get('.makeStyles-dialogBarcode-32 > [data-testid="saved-asset-id"]');
+                cy.get('.dialogBarcode > [data-testid="saved-asset-id"]');
                 cy.data('saved-asset-id').contains('UQL000298');
                 cy.data('confirm-inspection-save-success').click();
 

@@ -7,12 +7,7 @@ import {
     getSemesterStringByTermNumber,
     loadCompAvail,
     loadLibHours,
-    loadLoans,
-    loadPrintBalance,
-    loadCurrentSpotlights,
     loadTrainingEvents,
-    searcheSpaceIncompleteNTROPublications,
-    searcheSpacePossiblePublications,
     getClassNumberFromPieces,
 } from './account';
 import Cookies from 'js-cookie';
@@ -261,24 +256,6 @@ describe('Account action creators', () => {
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
-    it('dispatches expected actions when loading spotlights fails', async () => {
-        mockApi.onGet(repositories.routes.SPOTLIGHTS_API_CURRENT().apiUrl).reply(500);
-
-        const expectedActions = [actions.SPOTLIGHTS_HOMEPAGE_LOADING, actions.SPOTLIGHTS_HOMEPAGE_FAILED];
-
-        await mockActionsStore.dispatch(loadCurrentSpotlights());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when loading spotlights succeeds', async () => {
-        mockApi.onGet(repositories.routes.SPOTLIGHTS_API_CURRENT().apiUrl).reply(200, []);
-
-        const expectedActions = [actions.SPOTLIGHTS_HOMEPAGE_LOADING, actions.SPOTLIGHTS_HOMEPAGE_LOADED];
-
-        await mockActionsStore.dispatch(loadCurrentSpotlights());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
     it('dispatches expected actions when loading libhours succeeds', async () => {
         mockApi.onGet(repositories.routes.LIB_HOURS_API().apiUrl).reply(500);
 
@@ -294,42 +271,6 @@ describe('Account action creators', () => {
         const expectedActions = [actions.LIB_HOURS_LOADING, actions.LIB_HOURS_LOADED];
 
         await mockActionsStore.dispatch(loadLibHours());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when loading papercut fails', async () => {
-        mockApi.onGet(repositories.routes.PRINTING_API().apiUrl).reply(500);
-
-        const expectedActions = [actions.PRINT_BALANCE_LOADING, actions.PRINT_BALANCE_FAILED];
-
-        await mockActionsStore.dispatch(loadPrintBalance());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when loading papercut succeeds', async () => {
-        mockApi.onGet(repositories.routes.PRINTING_API().apiUrl).reply(200);
-
-        const expectedActions = [actions.PRINT_BALANCE_LOADING, actions.PRINT_BALANCE_LOADED];
-
-        await mockActionsStore.dispatch(loadPrintBalance());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when loading loans fails', async () => {
-        mockApi.onGet(repositories.routes.LOANS_API().apiUrl).reply(500);
-
-        const expectedActions = [actions.LOANS_LOADING, actions.LOANS_FAILED];
-
-        await mockActionsStore.dispatch(loadLoans());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when loading loans succeeds', async () => {
-        mockApi.onGet(repositories.routes.LOANS_API().apiUrl).reply(200);
-
-        const expectedActions = [actions.LOANS_LOADING, actions.LOANS_LOADED];
-
-        await mockActionsStore.dispatch(loadLoans());
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
@@ -378,48 +319,6 @@ describe('Account action creators', () => {
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
-    it('dispatches expected actions when possible-espace publications call fails', async () => {
-        mockApi.onGet(repositories.routes.POSSIBLE_RECORDS_API().apiUrl).reply(500);
-
-        const expectedActions = [actions.POSSIBLY_YOUR_PUBLICATIONS_LOADING, actions.POSSIBLY_YOUR_PUBLICATIONS_FAILED];
-
-        await mockActionsStore.dispatch(searcheSpacePossiblePublications());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when possible-espace publications call succeeds', async () => {
-        mockApi.onGet(repositories.routes.POSSIBLE_RECORDS_API().apiUrl).reply(200);
-
-        const expectedActions = [actions.POSSIBLY_YOUR_PUBLICATIONS_LOADING, actions.POSSIBLY_YOUR_PUBLICATIONS_LOADED];
-
-        await mockActionsStore.dispatch(searcheSpacePossiblePublications());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when incomplete ntro call fails', async () => {
-        mockApi.onGet(repositories.routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(500);
-
-        const expectedActions = [
-            actions.INCOMPLETE_NTRO_PUBLICATIONS_LOADING,
-            actions.INCOMPLETE_NTRO_PUBLICATIONS_FAILED,
-        ];
-
-        await mockActionsStore.dispatch(searcheSpaceIncompleteNTROPublications());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when possible ntro call succeeds', async () => {
-        mockApi.onGet(repositories.routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(200);
-
-        const expectedActions = [
-            actions.INCOMPLETE_NTRO_PUBLICATIONS_LOADING,
-            actions.INCOMPLETE_NTRO_PUBLICATIONS_LOADED,
-        ];
-
-        await mockActionsStore.dispatch(searcheSpaceIncompleteNTROPublications());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
     it('should calculate term dates correctly', () => {
         expect(getSemesterStringByTermNumber('7050')).toEqual('Semester 2 2020');
         expect(getSemesterStringByTermNumber('7080')).toEqual('Semester 3 2020');
@@ -429,59 +328,5 @@ describe('Account action creators', () => {
     it('should calculate class ids correctly', () => {
         expect(getClassNumberFromPieces({})).toEqual('');
         expect(getClassNumberFromPieces({ SUBJECT: 'FREN', CATALOG_NBR: '1010' })).toEqual('FREN1010');
-    });
-});
-
-describe('Account action creators', () => {
-    const MockDate = require('mockdate');
-    beforeEach(() => {
-        MockDate.set('2020-01-01T00:00:00.000Z', 10);
-        mockActionsStore = setupStoreForActions();
-        mockApi = setupMockAdapter();
-        mockSessionApi = setupSessionMockAdapter();
-
-        Cookies.get = jest.fn().mockImplementation(() => '');
-        Object.defineProperty(window, 'sessionStorage', { value: sessionStorageMock });
-    });
-
-    afterEach(() => {
-        MockDate.reset();
-        mockApi.reset();
-        mockSessionApi.reset();
-        window.sessionStorage.clear();
-    });
-
-    it('dispatches expected actions when loading papercut is unauthorised (fails with 403)', async () => {
-        mockApi.onGet(repositories.routes.PRINTING_API().apiUrl).reply(403);
-
-        const expectedActions = [actions.PRINT_BALANCE_FAILED];
-
-        await mockActionsStore.dispatch(loadPrintBalance());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when loading loans is unauthorised (fails with 403)', async () => {
-        mockApi.onGet(repositories.routes.PRINTING_API().apiUrl).reply(403);
-
-        const expectedActions = [actions.LOANS_FAILED];
-
-        await mockActionsStore.dispatch(loadLoans());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-    it('dispatches expected actions when possible-espace publications call is unauthorised (fails with 403)', async () => {
-        mockApi.onGet(repositories.routes.POSSIBLE_RECORDS_API().apiUrl).reply(403);
-
-        const expectedActions = [actions.POSSIBLY_YOUR_PUBLICATIONS_FAILED];
-
-        await mockActionsStore.dispatch(searcheSpacePossiblePublications());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-    it('dispatches expected actions when incomplete ntro publications call is unauthorised (fails with 403)', async () => {
-        mockApi.onGet(repositories.routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(403);
-
-        const expectedActions = [actions.INCOMPLETE_NTRO_PUBLICATIONS_FAILED];
-
-        await mockActionsStore.dispatch(searcheSpaceIncompleteNTROPublications());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 });

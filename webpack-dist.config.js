@@ -259,16 +259,18 @@ if (!!process.env.SENTRY_AUTH_TOKEN) {
      * SENTRY_PROJECT
      * For more info, see https://docs.sentry.io/product/cli/configuration/#environment-variables
      */
-    const SentryCliPlugin = require('@sentry/webpack-plugin');
+    const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 
     // if you need to run this locally, create .sentryclirc and add the variables from the codeship env variables
     // per https://docs.sentry.io/learn/cli/configuration/#configuration-file
     // and comment out the if around this section
+    webpackConfig.devtool = 'source-map';
     webpackConfig.plugins.push(
-        new SentryCliPlugin({
-            release: process.env.CI_COMMIT_ID,
-            include: './dist',
-            ignore: ['node_modules', 'webpack-dist.config.js', 'custom_modules'],
+        sentryWebpackPlugin({
+            org: process.env.SENTRY_ORG,
+            project: process.env.SENTRY_PROJECT,
+            // Auth tokens can be obtained from https://sentry.io/orgredirect/organizations/:orgslug/settings/auth-tokens/
+            authToken: process.env.SENTRY_AUTH_TOKEN,
         }),
     );
 }

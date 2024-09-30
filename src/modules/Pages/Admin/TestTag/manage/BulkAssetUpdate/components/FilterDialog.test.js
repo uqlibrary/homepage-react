@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRouter, WithReduxStore, waitFor, userEvent, within } from 'test-utils';
+import { rtlRender, WithRouter, WithReduxStore, waitFor, userEvent, within } from 'test-utils';
 import Immutable from 'immutable';
 
 import assetsList from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssetsMine';
@@ -30,7 +30,7 @@ import pageConfig from './config';
 
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const {
         state = {},
         actions = {},
@@ -68,16 +68,18 @@ function setup(testProps = {}, renderer = renderWithRouter) {
 
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <FilterDialog
-                id="test"
-                locale={locale}
-                actions={actions}
-                config={config}
-                locationLocale={locationLocale}
-                assetTypeLocale={assetTypeLocale}
-                errorMessageFormatter={errorMessageFormatter}
-                {...props}
-            />
+            <WithRouter>
+                <FilterDialog
+                    id="test"
+                    locale={locale}
+                    actions={actions}
+                    config={config}
+                    locationLocale={locationLocale}
+                    assetTypeLocale={assetTypeLocale}
+                    errorMessageFormatter={errorMessageFormatter}
+                    {...props}
+                />
+            </WithRouter>
         </WithReduxStore>,
     );
 }
@@ -139,12 +141,12 @@ describe('FilterDialog', () => {
 
         expect(getByText('Select assets by feature')).toBeInTheDocument();
 
-        userEvent.click(getByTestId('location_picker-filter-dialog-site-input'));
+        await userEvent.click(getByTestId('location_picker-filter-dialog-site-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'St Lucia');
 
         await waitFor(() => expect(loadAssetsMineFn).toHaveBeenLastCalledWith({ textSearch: '' }));
 
-        userEvent.click(getByTestId('location_picker-filter-dialog-building-input'));
+        await userEvent.click(getByTestId('location_picker-filter-dialog-building-input'));
         await userEvent.selectOptions(getByRole('listbox'), '0001 - Forgan Smith Building');
 
         await waitFor(() =>
@@ -155,14 +157,14 @@ describe('FilterDialog', () => {
             }),
         );
 
-        userEvent.click(getByTestId('location_picker-filter-dialog-floor-input'));
+        await userEvent.click(getByTestId('location_picker-filter-dialog-floor-input'));
         await userEvent.selectOptions(getByRole('listbox'), '2');
 
         await waitFor(() =>
             expect(loadAssetsMineFn).toHaveBeenLastCalledWith({ locationType: 'floor', locationId: 1, textSearch: '' }),
         );
 
-        userEvent.click(getByTestId('location_picker-filter-dialog-room-input'));
+        await userEvent.click(getByTestId('location_picker-filter-dialog-room-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'W212');
 
         await waitFor(() =>
@@ -179,7 +181,7 @@ describe('FilterDialog', () => {
             }),
         );
 
-        userEvent.click(getByTestId('asset_type_selector-filter-dialog-input'));
+        await userEvent.click(getByTestId('asset_type_selector-filter-dialog-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'PowerBoard');
 
         await waitFor(() =>
@@ -224,7 +226,7 @@ describe('FilterDialog', () => {
         const row2 = within(getAllByRole('row')[2]);
         userEvent.click(row2.getByLabelText('Select row'));
 
-        userEvent.click(getByTestId('filter_dialog-test-action-button'));
+        await userEvent.click(getByTestId('filter_dialog-test-action-button'));
 
         expect(onActionFn).toHaveBeenCalledWith(
             expect.arrayContaining([
@@ -274,7 +276,7 @@ describe('FilterDialog', () => {
             expect(clearAssetsMineErrorFn).toHaveBeenCalled();
         });
 
-        it('fires the cancel button action', () => {
+        it('fires the cancel button action', async () => {
             const onCancelFn = jest.fn();
             const { getByText, getByTestId } = setup({
                 isOpen: true,
@@ -283,7 +285,7 @@ describe('FilterDialog', () => {
             });
 
             expect(getByText('Select assets by feature')).toBeInTheDocument();
-            userEvent.click(getByTestId('filter_dialog-test-cancel-button'));
+            await userEvent.click(getByTestId('filter_dialog-test-cancel-button'));
             expect(onCancelFn).toHaveBeenCalled();
         });
     });

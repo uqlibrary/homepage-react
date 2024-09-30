@@ -4,29 +4,32 @@ import PropTypes from 'prop-types';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import withStyles from '@mui/styles/withStyles';
+import { styled } from '@mui/material/styles';
 
-export const styles = theme => ({
-    card: {
+const StyledCard = styled(Card)(({ theme }) => ({
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
+    boxShadow: 'none',
+    '&.card': {
         overflow: 'unset',
         fontWeight: theme.typography.fontWeightRegular,
     },
-    cardContentNoPadding: {
+    '& .cardContentNoPadding': {
         paddingTop: '0px !important',
         paddingBottom: '0px !important',
         paddingLeft: '0px !important',
         paddingRight: '0px !important',
     },
-    cardHeaderPrimary: {
-        color: theme.palette.white.main,
+    '& .cardHeaderPrimary': {
+        backgroundColor: theme.palette.white.main,
+        color: theme.palette.primary.light,
         overflow: 'hidden',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
-        backgroundColor: theme.palette.primary.light,
         borderRadius: '4px 4px 0px 0px',
-        padding: '12px 24px',
+        padding: '24px 24px 0',
     },
-    cardHeaderAccent: {
+    '& .cardHeaderAccent': {
         color: theme.palette.white.main,
         overflow: 'hidden',
         whiteSpace: 'nowrap',
@@ -35,12 +38,20 @@ export const styles = theme => ({
         borderRadius: '4px 4px 0px 0px',
         padding: '12px 24px',
     },
-    fullHeight: {
-        height: '100%',
+    '& a': {
+        color: theme.palette.primary.light,
+        fontWeight: 500,
+        paddingBlock: '2px',
+        textDecoration: 'underline',
+        transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
+        '&:hover': {
+            color: '#fff',
+            backgroundColor: theme.palette.primary.light,
+        },
     },
-});
+}));
 
-export class Cards extends Component {
+export class StandardCard extends Component {
     static propTypes = {
         title: PropTypes.any,
         primaryHeader: PropTypes.bool,
@@ -49,7 +60,6 @@ export class Cards extends Component {
         noPadding: PropTypes.bool,
         noHeader: PropTypes.bool,
         children: PropTypes.any,
-        classes: PropTypes.object.isRequired,
         customBackgroundColor: PropTypes.any,
         customTitleColor: PropTypes.any,
         customTitleBgColor: PropTypes.any,
@@ -68,7 +78,6 @@ export class Cards extends Component {
 
     render() {
         const {
-            classes,
             title,
             children,
             primaryHeader,
@@ -104,12 +113,12 @@ export class Cards extends Component {
               }`;
         const cardHeaderAction = !!headerAction ? headerAction : <></>;
         return (
-            <Card
+            <StyledCard
                 data-testid={standardCardId}
                 data-analyticsid={standardCardId}
                 id={standardCardId}
-                className={`${classes.card} StandardCard ${className}`}
-                style={{ ...customBG, ...fullHeight, ...style }}
+                className={`card StandardCard ${className}`}
+                sx={{ ...customBG, ...fullHeight, ...style }}
                 variant={variant ?? 'elevation'}
             >
                 {!this.props.noHeader && (
@@ -119,13 +128,13 @@ export class Cards extends Component {
                         titleTypographyProps={{
                             variant: smallTitle ? 'h6' : 'h5',
                             component: subCard ? 'h3' : 'h2',
-                            color: 'inherit',
+                            color: '#19151c',
+                            fontSize: '1.5rem',
+                            fontWeight: 500,
                             'data-testid': `${standardCardId}-header`,
                         }}
                         classes={{
-                            root:
-                                (primaryHeader && classes.cardHeaderPrimary) ||
-                                (accentHeader && classes.cardHeaderAccent),
+                            root: (primaryHeader && 'cardHeaderPrimary') || (accentHeader && 'cardHeaderAccent'),
                         }}
                         action={cardHeaderAction}
                         {...this.props.headerProps}
@@ -133,18 +142,16 @@ export class Cards extends Component {
                 )}
                 <CardContent
                     data-testid={`${standardCardId}-content`}
-                    className={`${(this.props.noPadding && classes.cardContentNoPadding) || ''}${
+                    className={`${(this.props.noPadding && 'cardContentNoPadding') || ''}${
                         this.props?.contentProps?.className ? ` ${this.props?.contentProps?.className}` : ''
                     }`}
                     style={{ ...customText }}
                 >
                     {children}
                 </CardContent>
-            </Card>
+            </StyledCard>
         );
     }
 }
 
-const StyledCard = withStyles(styles, { withTheme: true })(Cards);
-export const StandardCard = props => <StyledCard {...props} />;
 export default StandardCard;

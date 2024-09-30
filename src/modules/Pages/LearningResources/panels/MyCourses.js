@@ -11,24 +11,20 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(
-    theme => ({
-        myCoursesTabBar: {
-            backgroundColor: theme.palette.white.main,
-            color: theme.palette.secondary.dark,
-        },
-        noclasses: {
-            marginBottom: '1rem',
-            marginTop: '1rem',
-        },
-        courseTabs: {
-            margin: 0,
-        },
-    }),
-    { withTheme: true },
-);
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+    backgroundColor: theme.palette.white.main,
+    color: theme.palette.secondary.dark,
+    boxShadow: 'none',
+    border: '1px solid rgba(0, 0, 0, 0.2)',
+}));
+
+const StyledTabPanel = styled(TabPanel)(() => ({
+    '& >div': {
+        padding: 0,
+    },
+}));
 
 export const courseTabLabel = 'subjecttab';
 
@@ -42,7 +38,6 @@ export const MyCourses = ({
     setCurrentMenuTab,
 }) => {
     const { account } = useAccountContext();
-    const classes = useStyles();
 
     const handleCourseTabChange = (event, subjectTabId) => {
         /* istanbul ignore next */
@@ -92,7 +87,7 @@ export const MyCourses = ({
         <Fragment>
             {!!account && !!account.current_classes && account.current_classes.length > 0 ? (
                 <Fragment>
-                    <AppBar position="static" className={classes.myCoursesTabBar} component="div">
+                    <StyledAppBar position="static" component="div">
                         <Tabs
                             onChange={handleCourseTabChange}
                             scrollButtons="auto"
@@ -112,11 +107,10 @@ export const MyCourses = ({
                                 );
                             })}
                         </Tabs>
-                    </AppBar>
+                    </StyledAppBar>
                     {account.current_classes.map((subject, index) => {
                         return (
-                            <TabPanel
-                                className={classes.courseTabs}
+                            <StyledTabPanel
                                 data-testid={`classpanel-${index}`}
                                 index={`${courseTabLabel}-${index}`} // must match 'value' in Tab
                                 label="classpanel"
@@ -131,18 +125,12 @@ export const MyCourses = ({
                                     examList={examList}
                                     guideList={guideList}
                                 />
-                            </TabPanel>
+                            </StyledTabPanel>
                         );
                     })}
                 </Fragment>
             ) : (
-                <Grid
-                    container
-                    spacing={3}
-                    data-testid="no-classes"
-                    style={{ paddingLeft: 24, paddingRight: 24 }}
-                    className={'noreadingLists'}
-                >
+                <Grid container spacing={3} data-testid="no-classes" className={'noreadingLists'}>
                     <Grid item>
                         <Typography variant={'h5'}>{locale.myCourses.none.title}</Typography>
                     </Grid>

@@ -13,8 +13,8 @@ const BookExamBoothContainer = () => {
      * @returns string
      */
     const getBookingUrl = (isBYOD, chosenLocationCode, locations) => {
-        const urlRoot = 'https://uqbookit.uq.edu.au/#/app/booking-types/';
-        // const urlRoot = 'https://uqbookit-dev.uq.edu.au/#/app/booking-types/';
+        const urlRoot = 'https://uqbookit.uq.edu.au/app/booking-types/';
+        // const urlRoot = 'https://uqbookit-dev.uq.edu.au/app/booking-types/';
 
         const locationCode =
             chosenLocationCode === 'unset' ? /* istanbul ignore next */ locations[0].value : chosenLocationCode; // should not be unset

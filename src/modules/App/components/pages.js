@@ -12,11 +12,19 @@ export const AlertsEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin
 export const AlertsClone = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/Form/Clone/AlertsCloneContainer')));
 export const AlertsView = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/View/AlertsViewContainer')));
 export const AlertsList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/List/AlertsListContainer')));
-export const SpotlightsList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/List/SpotlightsListContainer')));
-export const SpotlightsAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/Form/Add/SpotlightsAddContainer')));
-export const SpotlightsEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/Form/Edit/SpotlightsEditContainer')));
-export const SpotlightsView = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/View/SpotlightsViewContainer')));
-export const SpotlightsClone = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/Form/Clone/SpotlightsCloneContainer')));
+
+export const DLOList = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Index/DLOListContainer')));
+export const DLOView = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/View/DLOViewContainer')));
+export const DLOConfirmSubscription = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/ConfirmSubscription/DLOConfirmSubscriptionContainer')));
+export const DLOConfirmUnsubscription = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/ConfirmUnsubscription/DLOConfirmUnsubscriptionContainer')));
+export const DLOAdminHomepage = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Homepage/DLOAdminHomepageContainer')));
+export const DLOAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Form/Add/DLOAddContainer')));
+export const DLOEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Form/Edit/DLOEditContainer')));
+export const DLOTeamList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamListContainer')));
+export const DLOTeamEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamEditContainer')));
+export const DLOTeamAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamAddContainer')));
+export const DLOSeriesList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Series/DLOSeriesListContainer')));
+export const DLOSeriesEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Series/DLOSeriesEditContainer')));
 
 export const TestTagDashboard = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Dashboard/containers/Dashboard')));
 export const TestTagInspection = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Inspection/containers/Inspection')));
@@ -34,13 +42,6 @@ export const TestTagManageUsers = lazy(() => lazyRetry(() => import('modules/Pag
 export const Masquerade = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Masquerade/containers/Masquerade')));
 export const PastExamPaperSearch = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperSearch/PastExamPaperSearchContainer')));
 export const PastExamPaperList = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperList/PastExamPaperListContainer')));
-
-export const PromoPanelList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/List/PromoPanelListContainer')));
-export const PromoPanelAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/Form/Add/PromoPanelAddContainer')));
-export const PromoPanelEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/Form/Edit/PromoPanelEditContainer')));
-// export const PromoPanelView = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/View/PromoPanelViewContainer')));
-export const PromoPanelClone = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/Form/Clone/PromoPanelCloneContainer')));
-
 
 // always load components
 export { IndexContainer as Index } from 'modules/Index';

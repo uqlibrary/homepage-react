@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import PastExamPaperList from './PastExamPaperList';
@@ -17,7 +16,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let PastExamPaperListContainer = connect(mapStateToProps, mapDispatchToProps)(PastExamPaperList);
-PastExamPaperListContainer = withRouter(PastExamPaperListContainer);
+const PastExamPaperListContainer = connect(mapStateToProps, mapDispatchToProps)(PastExamPaperList);
 
 export default PastExamPaperListContainer;

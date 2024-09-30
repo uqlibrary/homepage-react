@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
-
-import makeStyles from '@mui/styles/makeStyles';
 
 import Grid from '@mui/material/Unstable_Grid2';
 import FormControl from '@mui/material/FormControl';
@@ -26,21 +25,18 @@ import { getNameStyles, transformRow } from './utils';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 
 import FooterRow from './FooterRow';
+import { breadcrumbs } from 'config/routes';
 
 const componentId = 'user-inspections';
 const componentIdLower = 'user_inspections';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
-    tableMarginTop: {
+const StyledWrapper = styled('div')(({ theme }) => ({
+    flexGrow: 1,
+    '& .tableMarginTop': {
         marginTop: theme.spacing(2),
     },
-    inspectionOverdue: {
-        backgroundColor: theme.palette.error.light,
-    },
-    datePickerRoot: {
+
+    '& .datePickerRoot': {
         marginTop: 0,
     },
 }));
@@ -51,17 +47,15 @@ const InspectionsByLicencedUser = ({
     totalInspections,
     licencedUsers,
     userInspectionsLoading,
-    // userInspectionsLoaded,
+
     userInspectionsError,
     licencedUsersLoading,
     licencedUsersLoaded,
     licencedUsersError,
 }) => {
     const theme = useTheme();
-    /* locale and styles */
     const pageLocale = locale.pages.report.inspectionsByLicencedUser;
-    const classes = useStyles();
-    /* State */
+
     const [inspectorName, setInspectorName] = React.useState([]);
     const [selectedStartDate, setSelectedStartDate] = React.useState({ date: null, dateFormatted: null });
     const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, dateFormatted: null });
@@ -86,7 +80,6 @@ const InspectionsByLicencedUser = ({
     });
     const { row } = useDataTableRow(userInspections, transformRow);
 
-    /* HELPERS */
     const clearDateErrors = () => {
         setStartDateError({
             error: false,
@@ -98,7 +91,6 @@ const InspectionsByLicencedUser = ({
         });
     };
 
-    /* UI HANDLERS */
     const handleStartDateChange = date => {
         setSelectedStartDate({
             date: date,
@@ -170,6 +162,10 @@ const InspectionsByLicencedUser = ({
     }, [licencedUsers, licencedUsersLoaded]);
 
     useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
+
         actions.getInspectionsByLicencedUser({ startDate: null, endDate: null, userRange: null });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -180,12 +176,12 @@ const InspectionsByLicencedUser = ({
             locale={pageLocale}
             requiredPermissions={[PERMISSIONS.can_see_reports]}
         >
-            <div className={classes.root}>
+            <StyledWrapper>
                 <StandardCard title={pageLocale.form.title}>
                     <Grid container spacing={3}>
                         <Grid item xs={12} md={4}>
                             {/* Date Pickers go here */}
-                            <FormControl variant="standard" fullWidth className={classes.formControl}>
+                            <FormControl variant="standard" fullWidth className={'formControl'}>
                                 <InputLabel>Inspector Name</InputLabel>
                                 <Select
                                     variant="standard"
@@ -211,7 +207,7 @@ const InspectionsByLicencedUser = ({
                                     onChange={handleInspectorChange}
                                     renderValue={selected => {
                                         return (
-                                            <div className={classes.chips}>
+                                            <div className={'chips'}>
                                                 {!!selected &&
                                                     licencedUsers
                                                         .filter(user => selected.includes(user.user_id))
@@ -251,7 +247,7 @@ const InspectionsByLicencedUser = ({
                                 }}
                                 inputFormat={locale.config.format.dateFormatNoTime}
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
-                                classes={{ root: classes.datePickerRoot }}
+                                classes={{ root: 'datePickerRoot' }}
                                 disableToolbar
                                 variant="inline"
                                 margin="normal"
@@ -288,7 +284,7 @@ const InspectionsByLicencedUser = ({
                                 }}
                                 inputFormat={locale.config.format.dateFormatNoTime}
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
-                                classes={{ root: classes.datePickerRoot }}
+                                classes={{ root: 'datePickerRoot' }}
                                 disableToolbar
                                 variant="inline"
                                 margin="normal"
@@ -315,8 +311,8 @@ const InspectionsByLicencedUser = ({
                             />
                         </Grid>
                     </Grid>
-                    <Grid container spacing={3} className={classes.tableMarginTop}>
-                        <Grid item style={{ flex: 1 }}>
+                    <Grid container spacing={3} className={'tableMarginTop'}>
+                        <Grid item sx={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
                                 rows={row}
@@ -342,7 +338,7 @@ const InspectionsByLicencedUser = ({
                         autoHideDuration={confirmationAlert.autoHideDuration}
                     />
                 </StandardCard>
-            </div>
+            </StyledWrapper>
         </StandardAuthPage>
     );
 };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 
 import { Grid } from '@mui/material';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -17,7 +18,6 @@ import Box from '@mui/material/Box';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import TextField from '@mui/material/TextField';
-import makeStyles from '@mui/styles/makeStyles';
 
 import ActionPanel from './ActionPanel';
 import MonthsSelector from '../../SharedComponents/MonthsSelector/MonthsSelector';
@@ -35,18 +35,18 @@ const rootIdLower = 'inspection_panel';
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 const moment = require('moment');
 
-const useStyles = makeStyles(theme => ({
-    toggleButtonRoot: {
+const StyledCollapse = styled(Collapse)(({ theme }) => ({
+    '& .toggleButtonRoot': {
         color: 'rgba(0, 0, 0, 0.87)',
         '& :disabled': {
             color: `${theme.palette.text.main} !important`,
         },
     },
-    toggleButtonSuccess: {
+    '& .toggleButtonSuccess': {
         color: `${theme.palette.primary.contrastText} !important`,
         backgroundColor: `${theme.palette.success.main} !important`,
     },
-    toggleButtonFailed: {
+    '& .toggleButtonFailed': {
         color: `${theme.palette.primary.contrastText} !important`,
         backgroundColor: `${theme.palette.error.main} !important`,
     },
@@ -58,7 +58,6 @@ const InspectionPanel = ({
     selectedAsset,
     handleChange,
     defaultNextTestDateValue,
-    classes,
     disabled,
     isMobileView,
 }) => {
@@ -67,7 +66,6 @@ const InspectionPanel = ({
 
     const pageLocale = locale.pages.inspect;
     const monthsOptions = locale.config.monthsOptions;
-    const classesInternal = useStyles();
 
     const { user } = useSelector(state => state.get('testTagUserReducer'));
 
@@ -116,12 +114,12 @@ const InspectionPanel = ({
             variant="outlined"
             noPadding={selectedAsset?.asset_status === testStatusEnum.DISCARDED.value}
         >
-            <Collapse in={selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value} timeout="auto">
+            <StyledCollapse in={selectedAsset?.asset_status !== testStatusEnum.DISCARDED.value} timeout="auto">
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6} md={4}>
                         <FormControl
                             variant="standard"
-                            className={classes.formControl}
+                            className={'formControl'}
                             fullWidth
                             error={invalidTestingDevice}
                         >
@@ -146,7 +144,7 @@ const InspectionPanel = ({
                                     'data-testid': `${componentIdLower}-inspection-device-select`,
                                 }}
                                 fullWidth
-                                className={classes.formSelect}
+                                className={'formSelect'}
                                 value={formValues.inspection_device_id ?? ''}
                                 onChange={e => {
                                     handleChange('inspection_device_id')(e.target.value);
@@ -208,7 +206,7 @@ const InspectionPanel = ({
                                 onChange={(/* istanbul ignore next*/ _, child) => {
                                     handleChange('inspection_status')(child ?? /* istanbul ignore next*/ undefined);
                                 }}
-                                style={{ display: 'flex' }}
+                                sx={{ display: 'flex' }}
                             >
                                 <ToggleButton
                                     id={`${componentIdLower}-inspection-result-${testStatusEnum.PASSED.value.toLowerCase()}-button`}
@@ -216,9 +214,9 @@ const InspectionPanel = ({
                                     value={testStatusEnum.PASSED.value}
                                     aria-label={testStatusEnum.PASSED.label}
                                     classes={{
-                                        root: classesInternal.toggleButtonRoot,
-                                        selected: classesInternal.toggleButtonSuccess,
-                                        sizeLarge: classes.toggleButtonMobile,
+                                        root: 'toggleButtonRoot',
+                                        selected: 'toggleButtonSuccess',
+                                        sizeLarge: 'toggleButtonMobile',
                                     }}
                                     disabled={disabled}
                                 >
@@ -230,9 +228,9 @@ const InspectionPanel = ({
                                     value={testStatusEnum.FAILED.value}
                                     aria-label={testStatusEnum.FAILED.label}
                                     classes={{
-                                        root: classesInternal.toggleButtonRoot,
-                                        selected: classesInternal.toggleButtonFailed,
-                                        sizeLarge: classes.toggleButtonMobile,
+                                        root: 'toggleButtonRoot',
+                                        selected: 'toggleButtonFailed',
+                                        sizeLarge: 'toggleButtonMobile',
                                     }}
                                     disabled={disabled}
                                 >
@@ -256,13 +254,13 @@ const InspectionPanel = ({
                                 fromDate={formValues.action_date}
                                 fromDateFormat={pageLocale.config.dateFormat}
                                 dateDisplayFormat={pageLocale.config.dateFormatDisplay}
-                                classNames={{ formControl: classes.formControl, select: classes.formSelect }}
+                                classNames={{ formControl: 'formControl', select: 'formSelect' }}
                             />
                         </Grid>
                     )}
                     {formValues.inspection_status === testStatusEnum.FAILED.value && (
                         <Grid item xs={12} sm={12}>
-                            <FormControl variant="standard" className={classes.formControl} fullWidth>
+                            <FormControl variant="standard" className={'formControl'} fullWidth>
                                 <TextField
                                     {...pageLocale.form.inspection.failReason}
                                     multiline
@@ -285,7 +283,7 @@ const InspectionPanel = ({
                     )}
 
                     <Grid item xs={12} sm={12}>
-                        <FormControl variant="standard" className={classes.formControl} fullWidth>
+                        <FormControl variant="standard" className={'formControl'} fullWidth>
                             <TextField
                                 {...pageLocale.form.inspection.inspectionNotes}
                                 multiline
@@ -308,11 +306,10 @@ const InspectionPanel = ({
                     formValues={formValues}
                     selectedAsset={selectedAsset}
                     handleChange={handleChange}
-                    classes={classes}
                     isMobileView={isMobileView}
                     disabled={disabled}
                 />
-            </Collapse>
+            </StyledCollapse>
         </StandardCard>
     );
 };
@@ -323,7 +320,6 @@ InspectionPanel.propTypes = {
     selectedAsset: PropTypes.object,
     handleChange: PropTypes.func.isRequired,
     defaultNextTestDateValue: PropTypes.string.isRequired,
-    classes: PropTypes.any.isRequired,
     disabled: PropTypes.bool.isRequired,
     isMobileView: PropTypes.bool.isRequired,
 };

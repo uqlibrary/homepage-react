@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 
 import Grid from '@mui/material/Unstable_Grid2';
@@ -24,14 +24,13 @@ import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
 import { emptyActionState, actionReducer, transformAddRequest, transformUpdateRequest } from './utils';
 import { locationType } from '../../../SharedComponents/LocationPicker/utils';
+import { breadcrumbs } from 'config/routes';
 
 const componentId = 'locations';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
-    tableMarginTop: {
+const StyledWrapper = styled('div')(({ theme }) => ({
+    flexGrow: 1,
+    '& .tableMarginTop': {
         marginTop: theme.spacing(2),
     },
 }));
@@ -60,12 +59,16 @@ export const locationDataFieldKeys = {
 
 const ManageLocations = ({ actions }) => {
     useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
+
         actions.clearSites();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const pageLocale = locale.pages.manage.locations;
-    const classes = useStyles();
+
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const { row, setRow } = useDataTableRow([]);
@@ -236,7 +239,7 @@ const ManageLocations = ({ actions }) => {
             locale={pageLocale}
             requiredPermissions={[PERMISSIONS.can_admin]}
         >
-            <div className={classes.root}>
+            <StyledWrapper>
                 <StandardCard title={pageLocale.form.title}>
                     <UpdateDialog
                         title={actionState.title}
@@ -308,7 +311,7 @@ const ManageLocations = ({ actions }) => {
                             locale={locale.pages.general.locationPicker}
                         />
                     </Grid>
-                    <Grid container spacing={3} className={classes.tableMarginTop}>
+                    <Grid container spacing={3} className={'tableMarginTop'}>
                         <Grid item style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
@@ -337,7 +340,7 @@ const ManageLocations = ({ actions }) => {
                         closeAlert={closeConfirmationAlert}
                     />
                 </StandardCard>
-            </div>
+            </StyledWrapper>
         </StandardAuthPage>
     );
 };

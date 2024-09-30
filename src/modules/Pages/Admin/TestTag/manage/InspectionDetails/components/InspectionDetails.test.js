@@ -1,6 +1,6 @@
 import React from 'react';
 import InspectionDetails from './InspectionDetails';
-import { renderWithRouter, waitFor, WithReduxStore, userEvent, act } from 'test-utils';
+import { rtlRender, WithRouter, waitFor, WithReduxStore, userEvent, act } from 'test-utils';
 import Immutable from 'immutable';
 import * as tntActions from '../../../../../../../data/actions/testTagActions';
 import * as repositories from 'repositories';
@@ -66,7 +66,7 @@ const mockAPIReturn = [
         last_discard: null,
     },
 ];
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, actions = {}, ...props } = testProps;
     const _state = {
         testTagUserReducer: {
@@ -93,13 +93,15 @@ function setup(testProps = {}, renderer = renderWithRouter) {
     };
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <InspectionDetails
-                actions={actions}
-                assetsList={[]}
-                assetsListLoading={false}
-                assetsListError={null}
-                {...props}
-            />
+            <WithRouter>
+                <InspectionDetails
+                    actions={actions}
+                    assetsList={[]}
+                    assetsListLoading={false}
+                    assetsListError={null}
+                    {...props}
+                />
+            </WithRouter>
         </WithReduxStore>,
     );
 }
@@ -153,16 +155,16 @@ describe('InspectionDetails', () => {
         });
         expect(getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Library'))).toBeInTheDocument();
         expect(getByText('Power Cord - C5')).toBeInTheDocument();
-        act(() => {
-            userEvent.click(getByTestId('action_cell-UQL000123-edit-button'));
-        });
+
+        await userEvent.click(getByTestId('action_cell-UQL000123-edit-button'));
+
         expect(getByTestId('inspect_notes-input')).toBeInTheDocument();
         expect(getByTestId('discard_reason-input')).toHaveAttribute('disabled');
 
-        userEvent.type(getByTestId('inspect_notes-input'), 'TEST NOTES');
-        userEvent.type(getByTestId('inspect_fail_reason-input'), 'TEST FAIL REASON');
-        userEvent.tab();
-        userEvent.click(getByTestId('update_dialog-action-button'));
+        await userEvent.type(getByTestId('inspect_notes-input'), 'TEST NOTES');
+        await userEvent.type(getByTestId('inspect_fail_reason-input'), 'TEST FAIL REASON');
+        await userEvent.tab();
+        await userEvent.click(getByTestId('update_dialog-action-button'));
 
         await expect(testActions.updateInspectionDetails).toHaveBeenCalledWith(123, { inspect_notes: 'TEST NOTES' });
         await expect(getByTestId('confirmation_alert-success-alert')).toHaveTextContent(
@@ -180,11 +182,11 @@ describe('InspectionDetails', () => {
         });
         expect(getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Library'))).toBeInTheDocument();
         expect(getByText('Power Cord - C5')).toBeInTheDocument();
-        userEvent.click(getByTestId('action_cell-UQL000123-edit-button'));
+        await userEvent.click(getByTestId('action_cell-UQL000123-edit-button'));
 
         expect(getByTestId('inspect_notes-input')).toBeInTheDocument();
         expect(getByTestId('discard_reason-input')).toHaveAttribute('disabled');
-        userEvent.click(getByTestId('update_dialog-action-button'));
+        await userEvent.click(getByTestId('update_dialog-action-button'));
 
         await expect(testActions.updateInspectionDetails).rejects.toEqual('edit error');
         await expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent(

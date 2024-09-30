@@ -1,5 +1,5 @@
 import { useLocation, useForm, useObjectList, useConfirmationAlert } from './hooks';
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 import moment from 'moment';
 
 describe('hooks', () => {

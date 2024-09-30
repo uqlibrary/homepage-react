@@ -1,9 +1,9 @@
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@mui/material/Unstable_Grid2';
+import Box from '@mui/material/Box';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
@@ -21,21 +21,13 @@ import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
 import { actionReducer, emptyActionState } from './utils';
+import { breadcrumbs } from 'config/routes';
 
 const componentId = 'asset-types';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
-    tableMarginTop: {
-        marginTop: theme.spacing(0),
-    },
-}));
-
 const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, assetTypesListError }) => {
     const pageLocale = locale.pages.manage.assetTypes;
-    const classes = useStyles();
+
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const [isDeleteConfirmOpen, showDeleteConfirm, hideDeleteConfirm] = useConfirmationState();
     const [confirmID, setConfirmID] = React.useState(null);
@@ -79,6 +71,10 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
     const { row } = useDataTableRow(assetTypesList);
 
     React.useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
+
         actions.loadAssetTypes().catch(error => {
             console.error(error);
             openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbars.loadFailed), 'error');
@@ -229,7 +225,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                 onProceed={onActionDialogueProceed}
                 isBusy={dialogueBusy}
             />
-            <div className={classes.root}>
+            <Box sx={{ flexGrow: 1 }}>
                 <StandardCard noHeader>
                     <UpdateDialog
                         title={actionState.title}
@@ -302,7 +298,7 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                         closeAlert={closeConfirmationAlert}
                     />
                 </StandardCard>
-            </div>
+            </Box>
         </StandardAuthPage>
     );
 };

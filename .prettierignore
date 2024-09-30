@@ -6,7 +6,6 @@ cypress/examples
 cypress/screenshots/
 *.json
 **/mock/data/**/*.js
-src/modules/Index/components/subComponents/promoPanel.locale.js
 src/modules/Pages/AlertsList/components/alertsadmin.locale.js
 src/modules/App/components/pages.js
 src/modules/Index/components/Index.js

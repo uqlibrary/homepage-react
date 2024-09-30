@@ -1,4 +1,5 @@
 import global from 'locale/global';
+const moment = require('moment');
 
 export const leftJoin = (objArr1, objArr2, key1, key2) => {
     if (!objArr2) {
@@ -103,23 +104,45 @@ export function scrollToTopOfPage() {
     !!topOfPage && typeof topOfPage.scrollIntoView === 'function' && topOfPage.scrollIntoView();
 }
 
-export function rotateCharacters(str, indexCount = 1) {
-    return str
-        .split('')
-        .map(char => {
-            let asciiCode = char.charCodeAt(0);
-            if (asciiCode >= 97 && asciiCode <= 122) {
-                asciiCode += indexCount;
-                if (asciiCode > 122) {
-                    asciiCode = 97;
-                }
-                return String.fromCharCode(asciiCode);
-            }
-            return char;
-        })
-        .join('');
-}
+// this is very basic, because thats all that seems required so far
 
-export function obfusticateUsername(account) {
-    return !!account && rotateCharacters(account.id, 7);
-}
+export const pluralise = (singularWord, count, pluralWordSpecial = null) => {
+    if (count > 1 && pluralWordSpecial !== null) {
+        return pluralWordSpecial;
+    }
+    if (count > 1) {
+        return `${singularWord}s`;
+    }
+    return singularWord;
+};
+
+const greetings = {
+    morning: 'Good morning',
+    afternoon: 'Good afternoon',
+    evening: 'Good evening',
+};
+export const greeting = (currentTime = null) => {
+    const time = currentTime ?? moment().format('H');
+    if (time < 12) {
+        return greetings.morning;
+    } else if (time >= 12 && time < 18) {
+        return greetings.afternoon;
+    } else {
+        return greetings.evening;
+    }
+};
+
+// for dev only - after 2024 golive this can just be web.library
+/**
+ * @param pathname {string} the path name to appended to the correct domain, eg /about
+ * @param requestedDomainName {string|null}
+ *     for test coverage only, the domain of the current page. Default: the domain of the current page
+ * @returns string
+ */
+export const linkToDrupal = (pathname, requestedDomainName = null) => {
+    const domainName = requestedDomainName ?? document.location.hostname;
+    const origin = ['localhost', 'homepage-development.library.uq.edu.au'].includes(domainName)
+        ? 'https://live-library-uq.pantheonsite.io'
+        : 'https://web.library.uq.edu.au';
+    return `${origin}${pathname}`;
+};

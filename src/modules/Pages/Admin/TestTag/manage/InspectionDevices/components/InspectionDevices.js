@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
 import { useSelector } from 'react-redux';
+import { styled } from '@mui/material/styles';
 
 import Grid from '@mui/material/Unstable_Grid2';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -18,17 +18,14 @@ import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/
 import { useConfirmationAlert } from '../../../helpers/hooks';
 import locale from '../../../testTag.locale';
 import { emptyActionState, actionReducer, transformRow, transformAddRequest, transformUpdateRequest } from './utils';
+import { breadcrumbs } from 'config/routes';
 
 const moment = require('moment');
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
-    tableMarginTop: {
-        marginTop: theme.spacing(1),
-    },
-    inspectionOverdue: {
+const StyledWrapper = styled('div')(({ theme }) => ({
+    flexGrow: 1,
+
+    '& .inspectionOverdue': {
         backgroundColor: theme.palette.error.main,
         color: 'white',
     },
@@ -47,7 +44,7 @@ const InspectionDevices = ({
     requiredPermissions,
 }) => {
     const today = moment().format(locale.config.format.dateFormatNoTime);
-    const classes = useStyles();
+
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const { user } = useSelector(state => state.get('testTagUserReducer'));
@@ -175,6 +172,10 @@ const InspectionDevices = ({
     const { row } = useDataTableRow(inspectionDevices, transformRow);
 
     useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
+
         actions.loadInspectionDevices().catch(error => {
             console.error(error);
             openConfirmationAlert(locale.config.alerts.failed('error'), 'error');
@@ -189,7 +190,7 @@ const InspectionDevices = ({
             requiredPermissions={requiredPermissions}
             inclusive={false}
         >
-            <div className={classes.root}>
+            <StyledWrapper>
                 <StandardCard noHeader>
                     {canManage && (
                         <>
@@ -252,7 +253,7 @@ const InspectionDevices = ({
                         </>
                     )}
                     <Grid container spacing={3}>
-                        <Grid item style={{ flex: 1 }}>
+                        <Grid item sx={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
                                 rows={row}
@@ -273,7 +274,7 @@ const InspectionDevices = ({
                                 loading={inspectionDevicesLoading}
                                 getCellClassName={params =>
                                     params.field === 'device_calibration_due_date' && params.value < today
-                                        ? classes.inspectionOverdue
+                                        ? 'inspectionOverdue'
                                         : ''
                                 }
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
@@ -288,7 +289,7 @@ const InspectionDevices = ({
                         autoHideDuration={confirmationAlert.autoHideDuration}
                     />
                 </StandardCard>
-            </div>
+            </StyledWrapper>
         </StandardAuthPage>
     );
 };

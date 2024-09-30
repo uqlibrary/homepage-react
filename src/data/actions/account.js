@@ -6,11 +6,9 @@ import {
     CURRENT_AUTHOR_API,
     INCOMPLETE_NTRO_RECORDS_API,
     LIB_HOURS_API,
-    LOANS_API,
     POSSIBLE_RECORDS_API,
-    PRINTING_API,
     TRAINING_API,
-    SPOTLIGHTS_API_CURRENT,
+    LOANS_API
 } from 'repositories/routes';
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
 import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME } from 'config/general';
@@ -204,93 +202,6 @@ export function loadCurrentAccount() {
 }
 
 /**
- * Loads the spotlight data
- * @returns {function(*)}
- */
-export function loadCurrentSpotlights() {
-    return dispatch => {
-        dispatch({ type: actions.SPOTLIGHTS_HOMEPAGE_LOADING });
-        return get(SPOTLIGHTS_API_CURRENT())
-            .then(spotlightsResponse => {
-                dispatch({
-                    type: actions.SPOTLIGHTS_HOMEPAGE_LOADED,
-                    payload: spotlightsResponse,
-                });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.SPOTLIGHTS_HOMEPAGE_FAILED,
-                    payload: error.message,
-                });
-            });
-    };
-}
-
-/**
- * Loads the papercut print balance data
- * @returns {function(*)}
- */
-export function loadPrintBalance() {
-    if (!!getSessionCookie()) {
-        return dispatch => {
-            dispatch({ type: actions.PRINT_BALANCE_LOADING });
-            return get(PRINTING_API())
-                .then(papercutResponse => {
-                    dispatch({
-                        type: actions.PRINT_BALANCE_LOADED,
-                        payload: papercutResponse,
-                    });
-                })
-                .catch(error => {
-                    dispatch({
-                        type: actions.PRINT_BALANCE_FAILED,
-                        payload: error.message,
-                    });
-                });
-        };
-    } else {
-        return dispatch => {
-            dispatch({
-                type: actions.PRINT_BALANCE_FAILED,
-                payload: 'not logged in',
-            });
-        };
-    }
-}
-
-/**
- * Loads the loans data
- * @returns {function(*)}
- */
-export function loadLoans() {
-    if (!!getSessionCookie()) {
-        return dispatch => {
-            dispatch({ type: actions.LOANS_LOADING });
-            return get(LOANS_API())
-                .then(loanResponse => {
-                    dispatch({
-                        type: actions.LOANS_LOADED,
-                        payload: loanResponse,
-                    });
-                })
-                .catch(error => {
-                    dispatch({
-                        type: actions.LOANS_FAILED,
-                        payload: error.message,
-                    });
-                });
-        };
-    } else {
-        return dispatch => {
-            dispatch({
-                type: actions.LOANS_FAILED,
-                payload: 'not logged in',
-            });
-        };
-    }
-}
-
-/**
  * Loads the training events data
  * @returns {function(*)}
  */
@@ -385,4 +296,38 @@ export function clearSessionExpiredFlag() {
     return dispatch => {
         dispatch({ type: actions.CLEAR_CURRENT_ACCOUNT_SESSION_FLAG });
     };
+}
+
+/**
+ * Loads the loans data
+ * @returns {function(*)}
+ */
+export function loadLoans() {
+    if (!!getSessionCookie()) {
+        console.log("Firing Dispatch loadLoans")
+        return dispatch => {
+            dispatch({ type: actions.LOANS_LOADING });
+            return get(LOANS_API())
+                .then(loanResponse => {
+                    console.log("Loan Response: ", loanResponse)
+                    dispatch({
+                        type: actions.LOANS_LOADED,
+                        payload: loanResponse,
+                    });
+                })
+                .catch(error => {
+                    dispatch({
+                        type: actions.LOANS_FAILED,
+                        payload: error.message,
+                    });
+                });
+        };
+    } else {
+        return dispatch => {
+            dispatch({
+                type: actions.LOANS_FAILED,
+                payload: 'not logged in',
+            });
+        };
+    }
 }

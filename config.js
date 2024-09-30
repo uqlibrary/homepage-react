@@ -4,9 +4,9 @@ const deployment = {
         url: branch => `https://homepage-development.library.uq.edu.au/${branch}/#/`,
         fullPath: branch => `https://homepage-development.library.uq.edu.au/${branch}/#`,
         api: 'https://api.library.uq.edu.au/staging/',
-        auth_login: 'https://auth-staging.library.uq.edu.au/login',
-        auth_logout: 'https://auth-staging.library.uq.edu.au/logout',
-        gtm: 'GTM-PNKNTSQ',
+        auth_login: 'https://auth.library.uq.edu.au/login',
+        auth_logout: 'https://auth.library.uq.edu.au/logout',
+        gtm: 'GTM-NC7M38Q',
         title: 'UQ Library (DEVELOPMENT)',
         short_name: 'Library',
         titleSuffix: 'Development',
@@ -14,7 +14,10 @@ const deployment = {
         basePath: '',
         publicPath: '',
         // reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents-development/[BRANCH_NAME]/uq-lib-reusable.min.js', // dev
-        reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
+        reusablejs:
+            'https://assets.library.uq.edu.au/reusable-webcomponents-development/webpresence-working/uq-lib-reusable.min.js',
+        // for web presence dev
+        // reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
         removeConsoleLog: false,
     },
     staging: {
@@ -23,7 +26,7 @@ const deployment = {
         api: 'https://api.library.uq.edu.au/staging/',
         auth_login: 'https://auth.library.uq.edu.au/login',
         auth_logout: 'https://auth.library.uq.edu.au/logout',
-        gtm: 'GTM-PNKNTSQ',
+        gtm: 'GTM-NC7M38Q',
         title: 'UQ Library (STAGING)',
         short_name: 'Library',
         titleSuffix: 'Staging',
@@ -39,7 +42,7 @@ const deployment = {
         api: 'https://api.library.uq.edu.au/v1/',
         auth_login: 'https://auth.library.uq.edu.au/login',
         auth_logout: 'https://auth.library.uq.edu.au/logout',
-        gtm: 'GTM-PX9H7R',
+        gtm: 'GTM-NC7M38Q',
         title: 'UQ Library',
         short_name: 'Library',
         titleSuffix: '',

@@ -32,7 +32,6 @@ const AssetPanel = ({
     assignCurrentAsset,
     handleChange,
     defaultNextTestDateValue,
-    classes,
     saveAssetTypeSaving,
     isMobileView,
     canAddAssetType,
@@ -104,7 +103,15 @@ const AssetPanel = ({
     };
 
     return (
-        <StandardCard standardCardId={componentIdLower} title={pageLocale.title} style={{ marginTop: '30px' }}>
+        <StandardCard
+            standardCardId={componentIdLower}
+            title={pageLocale.title}
+            style={{
+                marginTop: '30px',
+                border: '1px solid hsla(203, 50%, 30%, 0.15)',
+                borderRadius: '4px',
+            }}
+        >
             <UpdateDialog
                 title={actionState.title}
                 action="add"
@@ -125,7 +132,7 @@ const AssetPanel = ({
                         id={componentId}
                         locale={pageLocale}
                         user={user}
-                        classNames={{ formControl: classes.formControl }}
+                        classNames={{ formControl: 'formControl' }}
                         autoFocus={shouldAutoFocus}
                         onChange={assignCurrentAsset}
                         onReset={resetForm}
@@ -134,7 +141,7 @@ const AssetPanel = ({
                     />
                 </Grid>
                 <Grid xs={12} item sm={6}>
-                    <FormControl variant="standard" className={classes.formControl} fullWidth>
+                    <FormControl variant="standard" className={'formControl'} fullWidth>
                         <AssetTypeSelector
                             id={componentId}
                             locale={pageLocale.assetType}
@@ -167,7 +174,6 @@ const AssetPanel = ({
                     selectedAsset={selectedAsset}
                     handleChange={handleChange}
                     defaultNextTestDateValue={defaultNextTestDateValue}
-                    classes={classes}
                     disabled={!isValidAssetId(formValues?.asset_id_displayed)}
                     isMobileView={isMobileView}
                 />
@@ -186,7 +192,6 @@ AssetPanel.propTypes = {
     assignCurrentAsset: PropTypes.func.isRequired,
     handleChange: PropTypes.func.isRequired,
     defaultNextTestDateValue: PropTypes.string.isRequired,
-    classes: PropTypes.object.isRequired,
     saveAssetTypeSaving: PropTypes.bool,
     isMobileView: PropTypes.bool,
     canAddAssetType: PropTypes.bool,

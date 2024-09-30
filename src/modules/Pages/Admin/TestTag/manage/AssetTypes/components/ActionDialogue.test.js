@@ -1,6 +1,6 @@
 import React from 'react';
 import ActionDialogue from './ActionDialogue';
-import { renderWithRouter, act, fireEvent } from 'test-utils';
+import { rtlRender, WithRouter, act, fireEvent } from 'test-utils';
 
 const selectOptionFromListByIndex = (index, actions) => {
     expect(actions.getByRole('listbox')).not.toEqual(null);
@@ -14,7 +14,7 @@ const selectOptionFromListByIndex = (index, actions) => {
 const onCancel = jest.fn();
 const onProceed = jest.fn();
 
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const id = 'asset-types';
     const data = [
         {
@@ -50,17 +50,19 @@ function setup(testProps = {}, renderer = renderWithRouter) {
     const noMinContentWidth = false;
     const isBusy = false;
     return renderer(
-        <ActionDialogue
-            id={id}
-            data={data}
-            row={row}
-            isOpen={isOpen}
-            noMinContentWidth={noMinContentWidth}
-            onCancel={onCancel}
-            onProceed={onProceed}
-            isBusy={isBusy}
-            {...testProps}
-        />,
+        <WithRouter>
+            <ActionDialogue
+                id={id}
+                data={data}
+                row={row}
+                isOpen={isOpen}
+                noMinContentWidth={noMinContentWidth}
+                onCancel={onCancel}
+                onProceed={onProceed}
+                isBusy={isBusy}
+                {...testProps}
+            />
+        </WithRouter>,
     );
 }
 

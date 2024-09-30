@@ -20,14 +20,13 @@ import courseReadingList_FREN1011 from './data/records/learningResources/courseR
 import courseReadingList_HIST1201 from './data/records/learningResources/courseReadingList_HIST1201';
 import courseReadingList_PHIL1002 from './data/records/learningResources/courseReadingList_PHIL1002';
 import courseReadingList_ACCT1101 from './data/records/learningResources/courseReadingList_ACCT1101';
-import learningResourceSearchSuggestions from './data/records/learningResources/learningResourceSearchSuggestions';
+import subjectSearchSuggestions from './data/records/learningResources/subjectSearchSuggestions';
 import examSuggestion_FREN from './data/records/learningResources/examSuggestion_FREN';
 import { computerAvailability } from './data/computerAvailability';
 import { libHours } from './data/libHours';
 import { training_object } from './data/training';
-import { espaceSearchResponse, loans, printBalance, spotlights as spotlightsHomepage } from './data/general';
+import { espaceSearchResponse, loans } from './data/general';
 import { alertList } from './data/alertsLong';
-import { spotlightsLong } from './data/spotlightsLong';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
 import examSearch_DENT80 from './data/records/learningResources/examSearch_DENT80';
 import testTag_user from './data/records/testAndTag/test_tag_user';
@@ -41,7 +40,6 @@ import testTag_floorList from './data/records/testAndTag/test_tag_floors';
 import testTag_roomList from './data/records/testAndTag/test_tag_rooms';
 import testTag_inspectionDevices from './data/records/testAndTag/test_tag_inspection_devices';
 import testTag_assets from './data/records/testAndTag/test_tag_assets';
-// Test and Tag Asset Types
 import test_tag_asset_types from './data/records/testAndTag/test_tag_asset_types';
 import test_tag_pending_inspections from './data/records/testAndTag/test_tag_pending_inspections';
 import test_tag_pending_inspections_site from './data/records/testAndTag/test_tag_pending_inspections_site';
@@ -55,17 +53,13 @@ import test_tag_assets_report_assets from './data/records/testAndTag/test_tag_as
 import test_tag_assets_mine from './data/records/testAndTag/test_tag_assets_mine';
 import test_tag_user_list from './data/records/testAndTag/test_tag_user_list';
 
-import { accounts, currentAuthor } from './data';
-
-import {
-    currentPanels,
-    userListPanels,
-    activePanels,
-    mockScheduleReturn,
-    mockAuthenticatedPanel,
-    mockPublicPanel,
-    promoPanelMocks,
-} from './data/promoPanelsLong';
+import dlor_all from './data/records/dlor/dlor_all';
+import dlor_filter_list from './data/records/dlor/dlor_filter_list';
+import dlor_team_list from './data/records/dlor/dlor_team_list';
+import dlor_file_type_list from './data/records/dlor/dlor_file_type_list';
+import dlor_series_all from './data/records/dlor/dlor_series_all';
+import { drupalArticles } from './data/drupalArticles';
+import { journalSearchFavourites, journalSearchFavouritesLarge, journalSearchNoFavourites } from './data/journalSearchFavourites';
 
 const moment = require('moment');
 
@@ -79,6 +73,10 @@ let user = !!queryString
     ? queryString.get('user')
     : window.location.hash.substring(window.location.hash.indexOf('?')).user;
 user = user || 'vanilla';
+let responseType = !!queryString
+    ? queryString.get('responseType')
+    : window.location.hash.substring(window.location.hash.indexOf('?')).responseType;
+responseType = responseType || 'ok';
 
 // set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
@@ -145,249 +143,29 @@ mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl).reply(() => {
     return [404, {}];
 });
 
-mock.onGet(routes.SPOTLIGHTS_API_CURRENT().apiUrl).reply(withDelay([200, [...spotlightsHomepage]]));
-
-mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898' }).apiUrl).reply(
-    withDelay([
-        500,
-        {
-            id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898',
-            start: '2021-06-29 01:00:00',
-            end: '2031-07-30 06:00:00',
-            title: 'Have you got your mask? COVID-19',
-            url: 'https://about.uq.edu.au/coronavirus',
-            img_url: 'http://localhost:2020/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
-            img_alt: 'Have you got your mask? Please continue to maintain physically distancing.',
-            weight: 30,
-            active: 1,
-            admin_notes: '',
-        },
-    ]),
-);
-mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '3fa92cc0-6ab9-11e7-839f-a1392c2927cc' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: '3fa92cc0-6ab9-11e7-839f-a1392c2927cc',
-            start: '2021-01-08 15:05:00',
-            end: '2021-01-18 18:00:00',
-            title: 'Has been dragged to position #2',
-            url: 'https://web.library.uq.edu.au/library-services/covid-19',
-            img_url: 'https://app.library.uq.edu.au/file/public/4d2dce40-5175-11eb-8aa1-fbc04f4f5310.jpg',
-            img_alt: 'Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates.',
-            weight: 20,
-            active: 0,
-            admin_notes: '',
-        },
-    ]),
-);
-mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: 'fba95ec0-77f5-11eb-8c73-9734f9d4b368' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: 'fba95ec0-77f5-11eb-8c73-9734f9d4b368',
-            start: '2021-03-01 00:01:00',
-            end: '2099-12-07 23:59:00',
-            title: 'Study outdoors in Duhig Place - Study space',
-            url: 'http://bit.ly/3uBIK7C',
-            img_url: 'http://localhost:2020/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
-            img_alt: 'Study outdoors in Duhig Place. Shade, wifi, tables, bubbler, fairy lights and fresh air.',
-            weight: 10,
-            active: 0,
-            admin_notes: '',
-        },
-    ]),
-);
-mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '480c5c20-6df0-11e7-86d1-31e8626e095b' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: '480c5c20-6df0-11e7-86d1-31e8626e095b',
-            start: '2021-01-08 15:05:00',
-            end: '2021-01-18 18:00:00',
-            title: 'was in pos #2, dragging #1 moved this',
-            url: 'https://web.library.uq.edu.au/library-services/covid-19',
-            img_url: 'https://app.library.uq.edu.au/file/public/4d2dce40-5175-11eb-8aa1-fbc04f4f5310.jpg',
-            img_alt: 'Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates.',
-            weight: 10,
-            active: 0,
-            admin_notes: '',
-        },
-    ]),
-);
-mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f5' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: '9eab3aa0-82c1-11eb-8896-eb36601837f5',
-            start: '2021-03-15 00:02:00',
-            end: '2099-03-21 23:59:00',
-            title: 'Can be deleted and edited',
-            url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
-            img_url: 'http://localhost:2020/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
-            img_alt:
-                'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
-            weight: 10,
-            active: 1,
-            admin_notes: 'sample admin note',
-        },
-    ]),
-);
-mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: 'fba95ec0-77f5-11eb-8c73-9734f9d4b368' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: 'fba95ec0-77f5-11eb-8c73-9734f9d4b368',
-            start: '2021-03-15 00:02:00',
-            end: '2099-03-21 23:59:00',
-            title: 'Can be deleted and edited',
-            url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
-            img_url: 'http://localhost:2020/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
-            img_alt:
-                'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
-            weight: 20,
-            active: 1,
-            admin_notes: 'Admin note 2',
-        },
-    ]),
-);
-mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898',
-            start: '2021-03-15 00:02:00',
-            end: '2099-03-21 23:59:00',
-            title: 'Can be deleted and edited',
-            url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
-            img_url: 'http://localhost:2020/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
-            img_alt:
-                'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
-            weight: 30,
-            active: 1,
-            admin_notes: '',
-        },
-    ]),
-);
-mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: '38cbf430-8693-11e9-98ab-9d52a58e86ca' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: '38cbf430-8693-11e9-98ab-9d52a58e86ca',
-            start: '2021-03-15 00:02:00',
-            end: '2099-03-21 23:59:00',
-            title: 'Can be deleted and edited',
-            url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
-            img_url: 'http://localhost:2020/images/spotlights/f9ff71b0-d77e-11ea-8881-93befcabdbc2.jpg',
-            img_alt:
-                'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
-            weight: 40,
-            active: 1,
-            admin_notes: '',
-        },
-    ]),
-);
-mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: '298288b0-605c-11eb-ad87-357f112348ef' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: '298288b0-605c-11eb-ad87-357f112348ef',
-            start: '2031-01-27 00:01:00',
-            end: '2099-02-07 23:59:00',
-            title: 'Changes to Library loans and rules (can be edited)',
-            url: 'https://web.library.uq.edu.au/borrowing-requesting/how-borrow/borrowing-rules',
-            img_url: 'http://localhost:2020/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
-            img_alt: 'Changes to Library loans and rules',
-            weight: 50,
-            active: 0,
-            admin_notes: '',
-        },
-    ]),
-);
-mock.onAny(routes.SPOTLIGHT_GET_BY_ID_API({ id: '1e1b0e10-c400-11e6-a8f0-47525a49f469' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: '1e1b0e10-c400-11e6-a8f0-47525a49f469',
-            start: '2016-12-17 12:24:00',
-            end: '2021-02-28 23:59:00',
-            title: 'Can be viewed or deleted past #1',
-            url: 'https://web.library.uq.edu.au/blog/2016/12/your-feedback-july-september-2016',
-            img_url: 'http://localhost:2020/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
-            img_alt: 'Feedback on library services',
-            weight: 0,
-            active: 0,
-            admin_notes: 'sample admin note 2',
-        },
-    ]),
-);
-mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f5' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: '9eab3aa0-82c1-11eb-8896-eb36601837f5',
-            start: '2021-03-15 00:02:00',
-            end: '2099-03-21 23:59:00',
-            title: 'Can be deleted and edited',
-            url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
-            img_url: 'http://localhost:2020/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
-            img_alt:
-                'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
-            weight: 10,
-            active: 1,
-            admin_notes: '',
-        },
-    ]),
-);
-mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '298288b0-605c-11eb-ad87-357f112348ef' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: '298288b0-605c-11eb-ad87-357f112348ef',
-            start: '2031-01-27 00:01:00',
-            end: '2099-02-07 23:59:00',
-            title: 'Changes to Library loans and rules (can be edited)',
-            url: 'https://web.library.uq.edu.au/borrowing-requesting/how-borrow/borrowing-rules',
-            img_url: 'http://localhost:2020/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
-            img_alt: 'Changes to Library loans and rules',
-            weight: 50,
-            active: 0,
-            admin_notes: '',
-        },
-    ]),
-);
-mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '729df1a0-7dd0-11e9-a3a7-5fd844715207' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: '729df1a0-7dd0-11e9-a3a7-5fd844715207',
-            start: '2021-01-25 00:00:00',
-            end: '2021-02-07 23:59:00',
-            title: 'Find past exam papers',
-            url: 'https://web.library.uq.edu.au/library-services/students/past-exam-papers',
-            img_url: 'http://localhost:2020/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
-            img_alt: 'Preparing for exams? Search past exam papers.',
-            weight: 20,
-            active: 1,
-            admin_notes: '',
-        },
-    ]),
-);
-
 mock.onGet(routes.TRAINING_API(10).apiUrl).reply(withDelay([200, training_object]));
 // .reply(withDelay([200, training_array]));
 // .reply(withDelay([500, {}]));
 
-mock.onGet(routes.PRINTING_API().apiUrl).reply(withDelay([200, printBalance]));
-
-mock.onGet(routes.LOANS_API().apiUrl).reply(withDelay([200, loans]));
-
 mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
-// .reply(withDelay([500, {}]));
+// mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
+//     if (responseType === 'error') {
+//         return [500, {}];
+//     } else if (responseType === 'missing') {
+//         return [404, {}];
+//     } else {
+//         return [200, libHours];
+//     }
+// });
 
-// mock cant tell the difference between 'possible' and 'ntro incomplete' calls :(
-mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(withDelay([200, espaceSearchResponse]));
-mock.onGet(routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(withDelay([200, espaceSearchResponse]));
+// mock cant tell the difference between POSSIBLE_RECORDS_API and INCOMPLETE_NTRO_RECORDS_API calls :(
+mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(() => {
+    if (responseType === 'nodatamissing') {
+        return [200, { total: 0, took: 179, per_page: 20, current_page: 1, from: null, to: null, data: [] }];
+    } else {
+        return [200, espaceSearchResponse];
+    }
+});
 
 mock.onGet(routes.ALERTS_ALL_API().apiUrl).reply(withDelay([200, alertList]));
 mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(
@@ -526,45 +304,8 @@ mock.onGet(routes.COMP_AVAIL_API().apiUrl).reply(withDelay([200, computerAvailab
 // Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
 fetchMock.mock(
     'begin:https://api.library.uq.edu.au/staging/learning_resources/suggestions?hint=',
-    learningResourceSearchSuggestions,
+    subjectSearchSuggestions,
 );
-
-// spotlights
-mock.onGet(routes.SPOTLIGHTS_ALL_API().apiUrl).reply(
-    withDelay([
-        200,
-        spotlightsLong.map(r => {
-            // the first entry ends today
-            return r.id === '9eab3aa0-82c1-11eb-8896-eb36601837f5'
-                ? {
-                      ...r,
-                      end: moment()
-                          .endOf('day')
-                          .format('YYYY-MM-DDTHH:mm'),
-                  }
-                : r;
-        }),
-    ]),
-);
-
-mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: '5bc14170-e1e9-11ea-b88d-9bb67d805fd9',
-            start: '2020-08-19 00:01:32',
-            end: '2020-08-30 23:59:00',
-            title: 'Announcing the 2020 Fryer Library Fellow - Dr N.A.J. Taylor',
-            url: 'https://web.library.uq.edu.au/blog/2020/08/announcing-2020-fryer-library-fellow',
-            img_url: 'http://localhost:2020/images/spotlights/43f8c480-e1e9-11ea-8b42-656cb34d5c84.jpg',
-            img_alt: 'Announcing the 2020 Fryer Library Fellow - Dr N.A.J. Taylor',
-            weight: 4,
-            active: 1,
-        },
-    ]),
-);
-
-mock.onDelete(routes.SPOTLIGHT_DELETE_BULK_API().apiUrl).reply(withDelay([200, []]));
 
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
     {
@@ -574,6 +315,353 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
         size: 9999,
     },
 ]);
+
+function getSpecificTeam(teamId) {
+    return (
+        !!dlor_team_list &&
+        !!dlor_team_list.data &&
+        dlor_team_list.data.length > 0 &&
+        dlor_team_list.data.find(team => team.team_id === teamId)
+    );
+}
+function getSpecificDlorObject(dlorId) {
+    const arrayOfOneRecord = dlor_all.data.filter(o => o.object_public_uuid === dlorId);
+    const singleRecord = arrayOfOneRecord.length > 0 ? arrayOfOneRecord.pop() : null;
+    !!singleRecord && (singleRecord.object_link_types = dlor_file_type_list.data);
+    const currentTeamDetails = getSpecificTeam(singleRecord?.object_owning_team_id);
+    if (!!singleRecord && !!currentTeamDetails) {
+        singleRecord.owner.team_name = currentTeamDetails.team_name;
+        singleRecord.owner.team_email = currentTeamDetails.team_email;
+        singleRecord.owner.team_manager = currentTeamDetails.team_manager;
+    }
+
+    return singleRecord === null ? [404, {}] : [200, { data: singleRecord }];
+}
+
+mock.onGet(/dlor\/public\/find\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const dlorId = urlparts.split('?')[0];
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (dlorId === 'missingRecord') {
+            return [200, { data: {} }]; // this would more likely be a 404
+        } else if (dlorId === 'object_404') {
+            return [404, { status: 'error', message: 'No records found for that UUID' }];
+        } else {
+            return getSpecificDlorObject(dlorId);
+        }
+    })
+    .onGet(/dlor\/admin\/team\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const teamId = urlparts.split('?')[0];
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (teamId === 'missingRecord') {
+            return [200, { data: {} }]; // this would more likely be a 404
+        } else if (teamId === 'object_404') {
+            return [404, { status: 'error', message: 'No records found for that UUID' }];
+        } else {
+            return [200, { data: dlor_team_list.data.find(team => team.team_id === Number(teamId)) }];
+        }
+    })
+    .onPut(/dlor\/admin\/object\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const dlorId = urlparts.split('?')[0];
+        if (responseType === 'saveError') {
+            return [400, {}];
+        } else if (dlorId === 'missingRecord') {
+            return [200, { data: {} }]; // this would more likely be a 404
+        } else {
+            return getSpecificDlorObject(dlorId);
+        }
+    })
+    .onGet('dlor/public/list/full')
+    .reply(() => {
+        if (responseType === 'fullListError') {
+            return [500, {}];
+        } else if (responseType === 'emptyResult') {
+            return [200, { data: [] }]; // this would more likely be a 404
+        } else {
+            const currentRecords = dlor_all.data.map(d => {
+                const newObj = { ...d }; // Create a shallow copy of the object
+                delete newObj.object_series; // Delete the 'series' property
+                return newObj;
+            });
+            return [200, { data: currentRecords }];
+        }
+    })
+    .onGet('dlor/public/list/current')
+    .reply(() => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (responseType === 'emptyResult') {
+            return [200, { data: [] }]; // this would more likely be a 404
+        } else {
+            const currentRecords = dlor_all.data
+                .map(d => {
+                    const newObj = { ...d }; // Create a shallow copy of the object
+                    delete newObj.object_series; // Delete the 'series' property
+                    return newObj;
+                })
+                .filter(o => o.object_status === 'current');
+            return [200, { data: currentRecords }];
+        }
+    })
+    .onGet('dlor/public/facet/list')
+    .reply(() => {
+        if (responseType === 'filtererror') {
+            return [500, {}];
+        } else if (responseType === 'filterLoadError') {
+            return [500, { error: 'Filter api did not load' }];
+        } else if (responseType === 'filterLoadEmpty') {
+            return [200, []];
+        } else {
+            return [200, dlor_filter_list];
+        }
+    })
+    .onGet('dlor/public/teams/list')
+    .reply(() => {
+        if (responseType === 'teamsLoadError') {
+            return [500, { error: 'Teams api did not load' }];
+        } else if (responseType === 'emptyResult') {
+            return [200, { data: [] }]; // this should really be a 404?
+        } else {
+            return [200, dlor_team_list];
+        }
+    })
+    .onPost('dlor/admin/team')
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [400, {}];
+        } else {
+            return [
+                200,
+                {
+                    data: {
+                        objects_count: 0,
+                        team_email: 'someone@example.com',
+                        team_id: dlor_team_list.data.length + 1,
+                        team_manager: '',
+                        team_name: 'New Team name',
+                    },
+                },
+            ];
+        }
+    })
+    .onPut(/dlor\/admin\/team\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const teamId = urlparts.split('?')[0];
+        // if (responseType === 'error') {
+        //     return [500, {}];
+        // } else if (teamId === 'missingRecord') {
+        //     return [200, { data: {} }]; // this would more likely be a 404
+        // } else if (teamId === 'object_404') {
+        // return [404, { status: 'error', message: 'No records found for that UUID' }];
+        // } else {
+        return [200, { data: dlor_team_list.data.find(team => team.team_id === Number(teamId)) }];
+        // }
+    })
+    .onDelete(/dlor\/admin\/team\/.*/)
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else {
+            return [200, {}];
+        }
+    })
+    .onPost('dlor/admin/object')
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else {
+            // return [200, { data: getSpecificDlorObject('98j3-fgf95-8j34') }]; //any old id
+            return getSpecificDlorObject('98j3-fgf95-8j34'); //any old id
+        }
+    })
+    .onDelete(/dlor\/admin\/object\/.*/)
+    .reply(config => {
+        if (responseType === 'deleteError') {
+            return [500, {}];
+            // } else if (responseType === 'saveError') {
+            //     return [500, {}];
+        } else {
+            return [200, {}];
+        }
+    })
+    .onGet(/dlor\/admin\/file_types\/list/)
+    .reply(config => {
+        if (responseType === 'error') {
+            return [500, {}];
+            // } else if (responseType === 'missingRecord') {
+            //     return [200, { data: {} }]; // this would more likely be a 404
+            // } else if (responseType === 'object_404') {
+            //     return [404, { status: 'error', message: 'No records found' }];
+        } else {
+            return [200, dlor_file_type_list];
+        }
+    })
+
+    .onGet(/dlor\/public\/series\/list/)
+    .reply(config => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else {
+            return [200, dlor_series_all];
+        }
+    })
+    .onDelete(/dlor\/admin\/series\/.*/)
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else {
+            return [200, { status: 'OK' }];
+        }
+    })
+    .onPut(/dlor\/admin\/series\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const seriesId = urlparts.split('?')[0];
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else {
+            return [200, { data: dlor_series_all.data.find(series => series.series_id === Number(seriesId)) }];
+        }
+    })
+    .onPost('dlor/admin/series')
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [400, {}];
+        } else {
+            return [200, { data: { objects_count: 0, series_name: 'New Series name' } }];
+        }
+    })
+    .onPost(routes.DLOR_DEMOGRAPHICS_SAVE_API().apiUrl)
+    .reply(() => {
+        if (responseType === 'notifyError') {
+            return [500, {}];
+        } else if (responseType === 'alreadysubscribed') {
+            return [200, { status: 'OK', data: { demographics: true, subscription: false } }];
+        } else {
+            return [200, { status: 'OK', data: { demographics: true, subscription: true } }];
+        }
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_is_known' }).apiUrl)
+    .reply(() => {
+        return [
+            200,
+            {
+                data: {
+                    response: 'ok',
+                    object_public_uuid: '938h_4986_654f',
+                    object_title: 'Artificial Intelligence - Digital Essentials',
+                },
+            },
+        ];
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'error' }).apiUrl)
+    .reply(() => {
+        return [
+            500,
+            {
+                status: 'error',
+                error: 'something went wrong',
+            },
+        ];
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_has_already_been_used' }).apiUrl)
+    .reply(() => {
+        return [
+            200,
+            {
+                data: {
+                    response: 'used',
+                    object_public_uuid: '938h_4986_654f',
+                    object_title: 'Artificial Intelligence - Digital Essentials',
+                },
+            },
+        ];
+    })
+    .onGet(/dlor\/public\/.*\/confirm\/unsubscribe/)
+    .reply(config => {
+        const urlparts = config.url.split('/');
+        const confirmationId = urlparts[2];
+        if (confirmationId === 'unsubscribeError') {
+            return [500, {}];
+        } else {
+            return [200, { data: { response: 'ok' } }];
+        }
+    })
+    .onGet(/dlor\/public\/.*\/confirm\/find/)
+    .reply(config => {
+        const urlparts = config.url.split('/');
+        const confirmationId = urlparts[2];
+        if (['unsubscribeExpired', 'duplicateclick', 'noSuchConf'].includes(confirmationId)) {
+            return [404, { status: 'error', message: 'Subscription not found with that hash' }];
+        } else if (confirmationId === 'unsubscribeFindError') {
+            return [500, {}];
+        } else {
+            return [
+                200,
+                {
+                    data: {
+                        subscription_id: 2,
+                        object_uuid: '938h_4986_654f',
+                        subscription_email: 'someone@example.com',
+                        object: {
+                            object_id: 1,
+                            object_public_uuid: '938h_4986_654f',
+                            object_title: 'Artificial Intelligence - Digital Essentials',
+                        },
+                        // etc
+                    },
+                },
+            ];
+        }
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_known_conf_code_that_has_expired' }).apiUrl)
+    .reply(() => {
+        return [
+            200,
+            {
+                data: {
+                    response: 'expired',
+                    object_public_uuid: '938h_4986_654f',
+                    object_title: 'Artificial Intelligence - Digital Essentials',
+                },
+            },
+        ];
+        // includes when they resubscribe on one they have already clicked?
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'an_unexpected_response_type' }).apiUrl)
+    .reply(() => {
+        return [
+            200,
+            {
+                data: {
+                    response: 'something_unexpected',
+                    object_public_uuid: '938h_4986_654f',
+                    object_title: 'Artificial Intelligence - Digital Essentials',
+                },
+            },
+        ];
+        // includes when they resubscribe on one they have already clicked?
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_is_not_known' }).apiUrl)
+    .reply(() => {
+        return [200, { data: { response: 'missing', object_public_uuid: null, object_title: null } }];
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'wrong_data' }).apiUrl)
+    .reply(() => {
+        return [200, { data: { response: 'something unexpected', object_public_uuid: null, object_title: null } }];
+    })
+    .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_throws_an_error' }).apiUrl)
+    .reply(() => {
+        return [400, { error: 'something went wrong' }];
+    });
 
 mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
@@ -1117,95 +1205,24 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ]),
     )
-    // PROMO PANEL API
-    .onPost(routes.PROMOPANEL_CREATE_API().apiUrl)
-    .reply(withDelay([200, {}]))
-    .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_API({ id: '.*' }).apiUrl)))
-    .reply(withDelay([200, { status: 'OK' }]))
-    .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_SCHEDULE_API({ id: '.*', usergroup: '.*' }).apiUrl)))
-    .reply(
-        withDelay([
-            201,
-            {
-                status: 'OK',
-            },
-        ]),
-    )
-    .onGet(routes.PROMOPANEL_LIST_API().apiUrl)
+    .onGet('https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json')
+    .reply(() => [200, drupalArticles])
+    .onGet(routes.JOURNAL_SEARCH_API().apiUrl)
     .reply(() => {
-        return [200, currentPanels];
-    })
-    .onGet(routes.PROMOPANEL_LIST_USERTYPES_API().apiUrl)
-    .reply(() => {
-        return [200, userListPanels];
-    })
-
-    // Handle Delete of any panel that does NOT start with a 2 (2 configured to throw error)
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({ id: '[^2]' }).apiUrl)))
-    .reply(() => {
-        return [200, { status: 'ok' }];
-    })
-    // Specific case to throw error for Delete panel 2.
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({ id: 2 }).apiUrl)))
-    .reply(() => {
-        return [
-            400,
-            {
-                status: 'error',
-                message: '2 is not a valid panel id',
-            },
-        ];
-    })
-    // Handle Unschedule of any panel that is NOT schedule ID 11 (11 configured to throw error)
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({ id: '(?!11).*' }).apiUrl)))
-    .reply(() => {
-        return [200, { status: 'ok' }];
-    })
-    // Specific case to throw error for Delete on schedule 11
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({ id: 11 }).apiUrl)))
-    .reply(() => {
-        return [
-            400,
-            {
-                status: 'error',
-                message: '11 is not a valid schedule id',
-            },
-        ];
-    })
-    .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_ADD_SCHEDULE_API({ id: '.*', usergroup: '.*' }).apiUrl)))
-    .reply(() => {
-        return [200, mockScheduleReturn];
-    })
-    .onGet(routes.PROMOPANEL_LIST_ACTIVE_PANELS_API().apiUrl)
-    .reply(() => {
-        if (user === 'uqmasquerade') {
-            return [500, ['an api error occurred']];
-        } else {
-            return [200, activePanels];
+        switch (user) {
+            case "uqpf":
+                return [403, {}];
+            case "s1111111":
+                return [200, {...journalSearchFavouritesLarge}];
+            case "s3333333":
+                return [200, {...journalSearchNoFavourites}];
+            default:
+                return [200, journalSearchFavourites];
         }
     })
-    .onGet(routes.PROMOPANEL_GET_CURRENT_API().apiUrl)
-    .reply(() => {
-        if (user === 'uqstaff') {
-            return [200, promoPanelMocks.uqstaff];
-        } else if (user === 's1111111') {
-            return [200, promoPanelMocks.s1111111];
-        } else if (user === 'uqpkopit') {
-            return [200, promoPanelMocks.uqpkopit];
-        } else {
-            return [200, mockAuthenticatedPanel];
-        }
-    })
-    .onGet(routes.PROMOPANEL_GET_ANON_API().apiUrl)
-    .reply(() => {
-        return [200, mockPublicPanel];
-    })
-    .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_USERTYPE_DEFAULT({ id: '.*', usergroup: '.*' }).apiUrl)))
-    .reply(() => {
-        return [200, ''];
-    })
+    .onGet(routes.LOANS_API().apiUrl).reply(withDelay([200, loans]))
     .onAny()
     .reply(function(config) {
-        console.log('url not mocked...', config);
+        console.log('url not mocked...', config.url);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });

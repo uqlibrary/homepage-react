@@ -1,14 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { styled } from '@mui/material/styles';
+
 import Typography from '@mui/material/Typography';
-// import { AUTH_URL_LOGIN } from 'config';
 
 import localeGeneral from '../../testTag.locale';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { hasAccess } from '../../helpers/auth';
 import TestTagHeader from '../TestTagHeader/TestTagHeader';
+
+const StyledWrapper = styled('div')(({ theme }) => ({
+    '& .formControl': {
+        minWidth: 120,
+    },
+    '& .formSelect': {
+        minWidth: 120,
+    },
+    '& .expand': {
+        transform: 'rotate(0deg)',
+        marginLeft: 'auto',
+        transition: theme.transitions.create('transform', {
+            duration: theme.transitions.duration.shortest,
+        }),
+    },
+    '& .expandOpen': {
+        transform: 'rotate(180deg)',
+    },
+}));
 
 const StandardAuthPage = ({ title = '', locale = null, requiredPermissions, inclusive = true, children, ...props }) => {
     const { userLoading, userLoaded, userError, user, privilege } = useSelector(state =>
@@ -32,17 +52,19 @@ const StandardAuthPage = ({ title = '', locale = null, requiredPermissions, incl
     );
 
     return (
-        <StandardPage title={title} {...props}>
-            {!userLoading && (userLoaded || userError) && !shouldHaveAccess && (
-                <Typography variant={'h6'}>{localeGeneral.pages.general.pageUnavailable}</Typography>
-            )}
-            {userLoaded && !userError && shouldHaveAccess && (
-                <>
-                    <TestTagHeader departmentText={headerDepartmentText} breadcrumbs={locale?.breadcrumbs ?? []} />
-                    {children}
-                </>
-            )}
-        </StandardPage>
+        <StyledWrapper>
+            <StandardPage title={title} {...props}>
+                {!userLoading && (userLoaded || userError) && !shouldHaveAccess && (
+                    <Typography variant={'h6'}>{localeGeneral.pages.general.pageUnavailable}</Typography>
+                )}
+                {userLoaded && !userError && shouldHaveAccess && (
+                    <>
+                        <TestTagHeader departmentText={headerDepartmentText} breadcrumbs={locale?.breadcrumbs ?? []} />
+                        {children}
+                    </>
+                )}
+            </StandardPage>
+        </StyledWrapper>
     );
 };
 

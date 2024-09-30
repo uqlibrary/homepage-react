@@ -2,8 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { render } from '@testing-library/react';
-import { Router } from 'react-router-dom';
-import { Route } from 'react-router';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { mui1theme } from 'config/theme';
 import { Provider } from 'react-redux';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
@@ -15,17 +14,9 @@ import userEvent from '@testing-library/user-event';
 
 import { getStore } from '../src/config/store';
 import Immutable from 'immutable';
-import { createMemoryHistory } from 'history';
 
 const domTestingLib = require('@testing-library/dom');
 const reactTestingLib = require('@testing-library/react');
-
-const { configure } = domTestingLib;
-
-configure(config => ({
-    ...config,
-    testIdAttribute: 'id',
-}));
 
 const AllTheProviders = props => {
     return (
@@ -41,53 +32,11 @@ AllTheProviders.propTypes = {
 
 export const rtlRender = (ui, options) => render(ui, { wrapper: AllTheProviders, ...options });
 
-export const renderWithRouter = (
-    ui,
-    { route = '/', history = createMemoryHistory({ initialEntries: [route] }) } = {},
-) => {
-    return render(
-        <AllTheProviders>
-            <Router history={history}>{ui}</Router>
-        </AllTheProviders>,
-    );
+export const WithRouter = ({ children, route = '/', initialEntries = [route] }) => {
+    const routes = [{ path: route, element: children }];
+    const router = createMemoryRouter(routes, { initialEntries: initialEntries });
+    return <RouterProvider router={router} />;
 };
-
-export const RenderWithRouter = ({
-    children,
-    route = '/',
-    history = createMemoryHistory({ initialEntries: [route] }),
-}) => (
-    <AllTheProviders>
-        <Router history={history}>{children}</Router>
-    </AllTheProviders>
-);
-export const renderWithRedux = ({ initialState }) => render => {
-    return {
-        ...render,
-        store: getStore({ initialState, history: render.history }),
-    };
-};
-
-export const withRouter = ({
-    route = '/',
-    path = '/',
-    history = createMemoryHistory({ initialEntries: [route] }),
-} = {}) => WrappedComponent => {
-    return (
-        <Router history={history}>
-            <Route path={path} children={WrappedComponent} />
-        </Router>
-    );
-};
-
-export const withRedux = (initialState = Immutable.Map()) => WrappedComponent => {
-    return <Provider store={getStore(initialState)}>{WrappedComponent}</Provider>;
-};
-
-// eslint-disable-next-line react/prop-types
-export const WithRedux = ({ initialState = Immutable.Map(), children }) => (
-    <Provider store={getStore(initialState)}>{children}</Provider>
-);
 
 export const WithReduxStore = ({ initialState = Immutable.Map(), children }) => (
     <Provider store={getStore(initialState)}>
@@ -99,13 +48,8 @@ module.exports = {
     ...domTestingLib,
     ...reactTestingLib,
     rtlRender,
-    renderWithRouter,
-    renderWithRedux,
-    withRedux,
-    withRouter,
-    WithRedux,
+    WithRouter,
     WithReduxStore,
-    RenderWithRouter,
     preview,
     userEvent,
 };

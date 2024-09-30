@@ -1,6 +1,7 @@
 import React from 'react';
 import {
-    renderWithRouter,
+    rtlRender,
+    WithRouter,
     WithReduxStore,
     waitForElementToBeRemoved,
     userEvent,
@@ -34,7 +35,7 @@ const defaultLocationState = {
 import Locations, { actionHandler, locationDataFieldKeys } from './Locations';
 import { locationType } from '../../../SharedComponents/LocationPicker/utils';
 
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, actions = {}, ...props } = testProps;
     const _userData = { ...userData, privileges: { ...userData.privileges, can_admin: 1 } };
 
@@ -54,7 +55,9 @@ function setup(testProps = {}, renderer = renderWithRouter) {
 
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <Locations actions={actions} {...props} />
+            <WithRouter>
+                <Locations actions={actions} {...props} />
+            </WithRouter>
         </WithReduxStore>,
     );
 }
@@ -187,7 +190,7 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('site_id_displayed-input'), ' update');
             await userEvent.type(getByTestId('site_name-input'), ' update');
 
-            act(() => userEvent.click(getByTestId('update_dialog-action-button')));
+            userEvent.click(getByTestId('update_dialog-action-button'));
             await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
             expect(updateLocationFn).toHaveBeenCalledWith({
@@ -232,7 +235,7 @@ describe('Locations', () => {
                 timeout: 3000,
             });
 
-            act(() => userEvent.click(getByTestId('confirm-locations')));
+            userEvent.click(getByTestId('confirm-locations'));
             await waitForElementToBeRemoved(() => queryByTestId('dialogbox-locations'));
 
             expect(deleteLocationFn).toHaveBeenCalledWith({
@@ -259,9 +262,9 @@ describe('Locations', () => {
             });
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
@@ -294,9 +297,9 @@ describe('Locations', () => {
             });
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
@@ -341,9 +344,8 @@ describe('Locations', () => {
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
@@ -358,7 +360,7 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('building_id_displayed-input'), ' update');
             await userEvent.type(getByTestId('building_name-input'), ' update');
 
-            act(() => userEvent.click(getByTestId('update_dialog-action-button')));
+            userEvent.click(getByTestId('update_dialog-action-button'));
             await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
             expect(updateLocationFn).toHaveBeenCalledWith({
@@ -390,9 +392,8 @@ describe('Locations', () => {
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
@@ -410,7 +411,7 @@ describe('Locations', () => {
                 timeout: 3000,
             });
 
-            act(() => userEvent.click(getByTestId('confirm-locations')));
+            userEvent.click(getByTestId('confirm-locations'));
             await waitForElementToBeRemoved(() => queryByTestId('dialogbox-locations'));
 
             expect(deleteLocationFn).toHaveBeenCalledWith({
@@ -443,16 +444,15 @@ describe('Locations', () => {
             });
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-building-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
@@ -496,15 +496,15 @@ describe('Locations', () => {
             });
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-building-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
@@ -557,15 +557,14 @@ describe('Locations', () => {
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-building-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
@@ -579,7 +578,7 @@ describe('Locations', () => {
 
             await userEvent.type(getByTestId('floor_id_displayed-input'), ' update');
 
-            act(() => userEvent.click(getByTestId('update_dialog-action-button')));
+            userEvent.click(getByTestId('update_dialog-action-button'));
             await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
             expect(updateLocationFn).toHaveBeenCalledWith({
@@ -617,15 +616,14 @@ describe('Locations', () => {
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-building-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
@@ -641,7 +639,7 @@ describe('Locations', () => {
                 timeout: 3000,
             });
 
-            act(() => userEvent.click(getByTestId('confirm-locations')));
+            userEvent.click(getByTestId('confirm-locations'));
             await waitForElementToBeRemoved(() => queryByTestId('dialogbox-locations'));
 
             expect(deleteLocationFn).toHaveBeenCalledWith({
@@ -676,23 +674,21 @@ describe('Locations', () => {
             });
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-building-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-floor-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-floor-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '1');
             });
@@ -733,21 +729,21 @@ describe('Locations', () => {
             });
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-building-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-floor-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-floor-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '1');
             });
@@ -804,21 +800,20 @@ describe('Locations', () => {
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-building-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-floor-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-floor-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '1');
             });
@@ -833,7 +828,7 @@ describe('Locations', () => {
             expect(getByTestId('room_description-input')).toHaveAttribute('value', 'Library Facilities');
             await userEvent.type(getByTestId('room_description-input'), ' update');
 
-            act(() => userEvent.click(getByTestId('update_dialog-action-button')));
+            userEvent.click(getByTestId('update_dialog-action-button'));
             await waitForElementToBeRemoved(() => queryByTestId('update_dialog-locations'));
 
             expect(updateLocationFn).toHaveBeenCalledWith({
@@ -873,21 +868,20 @@ describe('Locations', () => {
 
             expect(getByText('Locations management for Library')).toBeInTheDocument();
 
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-site-input'));
-            });
+            await userEvent.click(getByTestId('location_picker-locations-site-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), 'Gatton');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-building-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-building-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '8102 - J.K. Murray Library');
             });
-            act(() => {
-                userEvent.click(getByTestId('location_picker-locations-floor-input'));
-            });
+
+            await userEvent.click(getByTestId('location_picker-locations-floor-input'));
+
             await act(async () => {
                 await userEvent.selectOptions(getByRole('listbox'), '1');
             });
@@ -903,7 +897,7 @@ describe('Locations', () => {
                 timeout: 3000,
             });
 
-            act(() => userEvent.click(getByTestId('confirm-locations')));
+            userEvent.click(getByTestId('confirm-locations'));
             await waitForElementToBeRemoved(() => queryByTestId('dialogbox-locations'));
 
             expect(deleteLocationFn).toHaveBeenCalledWith({
@@ -992,7 +986,7 @@ describe('Locations', () => {
             await userEvent.type(getByTestId('site_id_displayed-input'), ' update');
             await userEvent.type(getByTestId('site_name-input'), ' update');
 
-            act(() => userEvent.click(getByTestId('update_dialog-action-button')));
+            userEvent.click(getByTestId('update_dialog-action-button'));
 
             await findByTestId('confirmation_alert-error');
             expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent('Unable to update the location');
@@ -1025,7 +1019,7 @@ describe('Locations', () => {
                 timeout: 3000,
             });
 
-            act(() => userEvent.click(getByTestId('confirm-locations')));
+            userEvent.click(getByTestId('confirm-locations'));
 
             await findByTestId('confirmation_alert-error');
             expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent('Unable to delete the location');

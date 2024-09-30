@@ -1,9 +1,8 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 
 import Grid from '@mui/material/Grid';
-import { makeStyles } from '@mui/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -14,14 +13,7 @@ import { AlertForm } from 'modules/Pages/Admin/Alerts/Form/AlertForm';
 import { getTimeEndOfDayFormatted, getTimeNowFormatted } from '../../alerthelpers';
 import { default as locale } from '../../alertsadmin.locale';
 
-const useStyles = makeStyles(() => ({
-    previewWrapper: {
-        transition: 'visibility 0s, opacity 10s ease-out',
-    },
-}));
-
-export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertStatus, history }) => {
-    const classes = useStyles();
+export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertStatus }) => {
     const { alertid } = useParams();
 
     React.useEffect(() => {
@@ -78,11 +70,11 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
     return (
         <Fragment>
             <Grid container style={{ paddingBottom: '1em', display: 'block' }}>
-                <Grid item id="previewWrapper" className={classes.previewWrapper} />
+                <Grid item id="previewWrapper" sx={{ transition: 'visibility 0s, opacity 10s ease-out' }} />
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertsUtilityArea actions={actions} helpContent={locale.form.help} history={history} />
+                    <AlertsUtilityArea actions={actions} helpContent={locale.form.help} />
                     <StandardCard title="Clone alert">
                         <AlertForm
                             actions={actions}
@@ -91,7 +83,6 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
                             alertError={alertError}
                             alertStatus={alertStatus}
                             defaults={defaults}
-                            history={history}
                         />
                     </StandardCard>
                 </section>
@@ -106,7 +97,6 @@ AlertsClone.propTypes = {
     alertError: PropTypes.any,
     alertLoading: PropTypes.any,
     alertStatus: PropTypes.any,
-    history: PropTypes.object,
 };
 
 export default AlertsClone;

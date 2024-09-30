@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import makeStyles from '@mui/styles/makeStyles';
 import ActionCell from './ActionCell';
-
-const useStyles = makeStyles(() => ({
-    a11yHidden: {
-        visibility: 'hidden',
-    },
-}));
 
 export const useDataTableRow = (data, transform) => {
     const [row, _setRow] = useState(!!transform ? transform(data) : data);
@@ -34,13 +27,12 @@ export const useDataTableColumns = ({
     actionTooltips,
     getTooltips,
 }) => {
-    const classes = useStyles();
     const columns = useMemo(
         () => {
             const actionsCell = withActions
                 ? {
                       field: 'actions',
-                      headerClassName: classes.a11yHidden,
+                      headerClassName: 'a11yHidden',
                       renderCell: params => {
                           const disableEdit = shouldDisableEdit?.(params.row, filterKey) ?? false;
                           const disableDelete = shouldDisableDelete?.(params.row, filterKey) ?? false;

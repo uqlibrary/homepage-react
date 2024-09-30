@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderWithRouter, WithReduxStore, waitFor, userEvent, within } from 'test-utils';
+import { rtlRender, WithRouter, WithReduxStore, waitFor, userEvent, within } from 'test-utils';
 import Immutable from 'immutable';
 
 import AssetReportByFilters from './AssetReportByFilters';
@@ -10,7 +10,7 @@ import buildingList from '../../../../../../../data/mock/data/testing/testAndTag
 
 import { getUserPermissions } from '../../../helpers/auth';
 
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const {
         state = {},
         actions = {},
@@ -38,18 +38,20 @@ function setup(testProps = {}, renderer = renderWithRouter) {
 
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <AssetReportByFilters
-                actions={actions}
-                assetList={assetList}
-                assetListLoading={assetListLoading}
-                assetListLoaded={assetListLoaded}
-                assetListError={assetListError}
-                taggedBuildingList={taggedBuildingList}
-                taggedBuildingListLoading={taggedBuildingListLoading}
-                taggedBuildingListLoaded={taggedBuildingListLoaded}
-                taggedBuildingListError={taggedBuildingListError}
-                {...props}
-            />
+            <WithRouter>
+                <AssetReportByFilters
+                    actions={actions}
+                    assetList={assetList}
+                    assetListLoading={assetListLoading}
+                    assetListLoaded={assetListLoaded}
+                    assetListError={assetListError}
+                    taggedBuildingList={taggedBuildingList}
+                    taggedBuildingListLoading={taggedBuildingListLoading}
+                    taggedBuildingListLoaded={taggedBuildingListLoaded}
+                    taggedBuildingListError={taggedBuildingListError}
+                    {...props}
+                />
+            </WithRouter>
         </WithReduxStore>,
     );
 }
@@ -112,7 +114,7 @@ describe('AssetReportByFilters', () => {
         expect(getByText('Asset tests report for Library')).toBeInTheDocument();
 
         // select site
-        userEvent.click(getByTestId('asset_status_selector-assets-inspected-input'));
+        await userEvent.click(getByTestId('asset_status_selector-assets-inspected-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'Out for repair');
 
         await waitFor(() =>
@@ -140,7 +142,7 @@ describe('AssetReportByFilters', () => {
         expect(getByText('Asset tests report for Library')).toBeInTheDocument();
 
         // select site
-        userEvent.click(getByTestId('location_picker-assets_inspected-building-input'));
+        await userEvent.click(getByTestId('location_picker-assets_inspected-building-input'));
         await userEvent.selectOptions(getByRole('listbox'), '0910 - Block 6');
 
         await waitFor(() =>
@@ -166,8 +168,8 @@ describe('AssetReportByFilters', () => {
         });
         expect(getByText('Asset tests report for Library')).toBeInTheDocument();
 
-        userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20220101'); // input formats as date is typed
-        userEvent.type(getByTestId('assets_inspected-tagged-end-input'), '20230101'); // input formats as date is typed
+        await userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20220101'); // input formats as date is typed
+        await userEvent.type(getByTestId('assets_inspected-tagged-end-input'), '20230101'); // input formats as date is typed
 
         await waitFor(() =>
             expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
@@ -192,8 +194,8 @@ describe('AssetReportByFilters', () => {
         });
         expect(getByText('Asset tests report for Library')).toBeInTheDocument();
 
-        userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20210101');
-        userEvent.type(getByTestId('assets_inspected-tagged-end-input'), '20200101');
+        await userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20210101');
+        await userEvent.type(getByTestId('assets_inspected-tagged-end-input'), '20200101');
 
         await waitFor(() =>
             expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
@@ -228,7 +230,7 @@ describe('AssetReportByFilters', () => {
             }),
         );
 
-        userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20210101');
+        await userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20210101');
 
         expect(getByTestId('assets_inspected-tagged-start-helpertext')).toHaveTextContent(
             'Start date must be before End Date',

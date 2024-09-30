@@ -1,11 +1,6 @@
 import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
-    spotlightsCurrent: null,
-    spotlightsCurrentLoading: null,
-    spotlightsCurrentError: null,
-    printBalance: null,
-    printBalanceLoading: null,
     loans: null,
     loansLoading: null,
     possibleRecords: null,
@@ -15,43 +10,7 @@ export const initialState = {
 };
 
 const handlers = {
-    [actions.SPOTLIGHTS_HOMEPAGE_LOADING]: state => ({
-        ...state,
-        spotlightsCurrentLoading: true,
-    }),
-
-    [actions.SPOTLIGHTS_HOMEPAGE_LOADED]: (state, action) => ({
-        ...state,
-        spotlightsCurrent: action.payload,
-        spotlightsCurrentLoading: false,
-    }),
-
-    [actions.SPOTLIGHTS_HOMEPAGE_FAILED]: (state, action) => ({
-        ...state,
-        spotlightsCurrentLoading: false,
-        spotlightsCurrentError: action.payload,
-    }),
-
-    // Print balance
-    [actions.PRINT_BALANCE_LOADING]: state => ({
-        ...state,
-        printBalance: null,
-        printBalanceLoading: true,
-    }),
-
-    [actions.PRINT_BALANCE_LOADED]: (state, action) => ({
-        ...state,
-        printBalance: action.payload,
-        printBalanceLoading: false,
-    }),
-
-    [actions.PRINT_BALANCE_FAILED]: state => ({
-        ...state,
-        printBalance: null,
-        printBalanceLoading: false,
-    }),
-
-    // Loans
+     // Loans
     [actions.LOANS_LOADING]: state => ({
         ...state,
         loans: null,

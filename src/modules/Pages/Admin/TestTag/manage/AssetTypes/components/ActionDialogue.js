@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
+
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
-import makeStyles from '@mui/styles/makeStyles';
+
 import Grid from '@mui/material/Grid';
 import FormControl from '@mui/material/FormControl';
 import Typography from '@mui/material/Typography';
@@ -18,30 +20,13 @@ import locale from '../../../testTag.locale';
 
 const rootId = 'action_dialogue';
 
-export const useStyles = makeStyles(theme => ({
-    alternateActionButtonClass: {
-        color: theme.palette.white.main,
-        backgroundColor: theme.palette.warning.main,
-        '&:hover': {
-            backgroundColor: theme.palette.warning.dark,
-        },
-    },
-    alertPanel: {
-        marginTop: 10,
-    },
-    actionButtons: {
-        marginTop: 10,
-    },
-    dialogPaper: {
-        minHeight: '30vh',
-        maxHeight: '50vh',
-    },
+const StyledDialog = styled(Dialog)(() => ({
+    '& .MuiDialog-paper': { minHeight: '30vh', maxHeight: '50vh' },
 }));
 
 export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCancel, onProceed, isBusy }) => {
     const componentId = `${rootId}-${id}`;
 
-    const classes = useStyles();
     const pageLocale = locale.pages.manage.assetTypes.actionDialogue;
 
     const [selectedAssetType, setSelectedAssetType] = React.useState('');
@@ -52,13 +37,7 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
         setSelectedAssetType(assetID);
     };
     return (
-        <Dialog
-            classes={{ paper: classes.dialogPaper }}
-            style={{ padding: 6 }}
-            open={isOpen}
-            id={`${componentId}`}
-            data-testid={`${componentId}`}
-        >
+        <StyledDialog open={isOpen} id={`${componentId}`} data-testid={`${componentId}`}>
             <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
                 {pageLocale.confirmationTitle}
             </DialogTitle>
@@ -94,7 +73,7 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                             'data-testid': `${componentId}-reassign-select`,
                         }}
                         fullWidth
-                        className={classes.formSelect}
+                        className={'formSelect'}
                         value={selectedAssetType}
                         onChange={e => onAssetTypeChange(e.target.value)}
                         required
@@ -112,17 +91,17 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                     </Select>
                 </FormControl>
                 <Alert
-                    className={classes.alertPanel}
+                    sx={{ marginTop: '10px' }}
                     severity="warning"
                     id={`${componentId}-alert`}
                     data-testid={`${componentId}-alert`}
                 >
                     {pageLocale.deleteReassignWarningPrompt(row?.asset_count)}
                 </Alert>
-                <Grid container spacing={4} className={classes.actionButtons}>
+                <Grid container spacing={4} sx={{ marginTop: '10px' }}>
                     <Grid item xs={12} sm={6} container justifyContent="flex-start">
                         <Button
-                            variant="outlined"
+                            variant="contained"
                             color="secondary"
                             onClick={onCancel}
                             id={`${componentId}-cancel-button`}
@@ -134,6 +113,7 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                     </Grid>
                     <Grid item xs={12} sm={6} container justifyContent="flex-end">
                         <Button
+                            color="error"
                             variant="contained"
                             onClick={() => onProceed(row.asset_type_id, selectedAssetType)}
                             id={`${componentId}-action-button`}
@@ -154,7 +134,7 @@ export const ActionDialogue = ({ id, data, row, isOpen, noMinContentWidth, onCan
                     </Grid>
                 </Grid>
             </DialogContent>
-        </Dialog>
+        </StyledDialog>
     );
 };
 

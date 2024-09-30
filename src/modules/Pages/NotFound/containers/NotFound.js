@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import NotFound from '../components/NotFound';
@@ -17,7 +16,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-let NotFoundContainer = connect(mapStateToProps, mapDispatchToProps)(NotFound);
-NotFoundContainer = withRouter(NotFoundContainer);
+const NotFoundContainer = connect(mapStateToProps, mapDispatchToProps)(NotFound);
 
 export default NotFoundContainer;

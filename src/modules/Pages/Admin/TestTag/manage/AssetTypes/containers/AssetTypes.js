@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import AssetTypes from '../components/AssetTypes';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 import { withUser } from '../../../helpers/withUser';
 
@@ -18,7 +17,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 let AssetTypesContainer = connect(mapStateToProps, mapDispatchToProps)(AssetTypes);
-AssetTypesContainer = withRouter(AssetTypesContainer);
 AssetTypesContainer = withUser(AssetTypesContainer);
 
 export default AssetTypesContainer;

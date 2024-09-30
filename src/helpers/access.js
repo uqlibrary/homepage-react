@@ -1,5 +1,3 @@
-import { default as locale } from 'modules/Index/components/locale';
-
 /**
  Making changes? User settings need to be also created in repo reusable_webcomponents
 
@@ -30,86 +28,44 @@ import { default as locale } from 'modules/Index/components/locale';
  */
 const UNDERGRADUATE_GENERAL = 'UG';
 const UNDERGRADUATE_REMOTE = 'REMUG';
-const UNDERGRADUATE_TESOL = 'ICTE';
-const UNDERGRADUATE_VOCATIONAL = 'VET';
+// const UNDERGRADUATE_TESOL = 'ICTE';
+// const UNDERGRADUATE_VOCATIONAL = 'VET';
 const SHORT_FORM_CREDENTIAL_COURSE = 'SFC';
 const SHORT_FORM_CREDENTIAL_COURSE_REMOTE = 'REMSFC';
 
 const POSTGRAD_COURSEWORK = 'CWPG';
 const POSTGRAD_COURSEWORK_REMOTE = 'REMCWPG';
-const POSTGRAD_RESEARCH_REMOTE = 'REMRHD';
-const POSTGRAD_RESEARCH = 'RHD';
+// const POSTGRAD_RESEARCH_REMOTE = 'REMRHD';
+// const POSTGRAD_RESEARCH = 'RHD';
 
 const LIBRARY_STAFF = 'LIBRARYSTAFFB';
 const OTHER_STAFF = 'STAFF';
-const STAFF_AWAITING_AURION = 'AURION';
+// const STAFF_AWAITING_AURION = 'AURION';
 
-const EXTRAMURAL_COMMUNITY_PAID = 'COMMU';
-const EXTRAMURAL_ALUMNI = 'ALUMNI';
+// const EXTRAMURAL_COMMUNITY_PAID = 'COMMU';
+// const EXTRAMURAL_ALUMNI = 'ALUMNI';
 const EXTRAMURAL_HOSPITAL = 'HOSP';
-const EXTRAMURAL_ASSOCIATE = 'ASSOCIATE';
-const EXTRAMURAL_FRYER = 'FRYVISITOR';
+// const EXTRAMURAL_ASSOCIATE = 'ASSOCIATE';
+// const EXTRAMURAL_FRYER = 'FRYVISITOR';
 const EXTRAMURAL_HONORARY = 'HON';
-const EXTRAMURAL_PROXY = 'PROXY';
+// const EXTRAMURAL_PROXY = 'PROXY';
 
 export const TRAINING_FILTER_GENERAL = 104;
 export const TRAINING_FILTER_HOSPITAL = 360;
 
-// what is displayed in the User Services panel on the homepage, determined per group
-const userGroupServices = {
-    [UNDERGRADUATE_GENERAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [UNDERGRADUATE_REMOTE]: ['servicesforstudents', 'servicesforexternal', 'ithelp', 'digitalessentials'],
-    [UNDERGRADUATE_TESOL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [UNDERGRADUATE_VOCATIONAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [POSTGRAD_COURSEWORK]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [POSTGRAD_COURSEWORK_REMOTE]: ['servicesforstudents', 'ithelp', 'digitalessentials', 'servicesforexternal'],
-    [POSTGRAD_RESEARCH]: ['servicesforhdrs', 'ithelp'],
-    [POSTGRAD_RESEARCH_REMOTE]: ['servicesforhdrs', 'ithelp', 'servicesforexternal'],
-    [SHORT_FORM_CREDENTIAL_COURSE]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [SHORT_FORM_CREDENTIAL_COURSE_REMOTE]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
+// Personalised section whitelist array
+export const UQ_USERS = [
+    UNDERGRADUATE_GENERAL,
+    UNDERGRADUATE_REMOTE,
+    SHORT_FORM_CREDENTIAL_COURSE,
+    SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
+    POSTGRAD_COURSEWORK,
+    POSTGRAD_COURSEWORK_REMOTE,
+    LIBRARY_STAFF,
+    OTHER_STAFF,
+];
 
-    [LIBRARY_STAFF]: [
-        'servicesforstudents',
-        'servicesforhdrs',
-        'servicesforcommunity',
-        'servicesforhospital',
-        'servicesforprofessional',
-        'servicesforresearchers',
-        'servicesforsecondary',
-        'servicesforteaching',
-        'servicesforalumni',
-        'servicesforexternal',
-    ],
-    [OTHER_STAFF]: ['servicesforprofessional', 'servicesforresearchers', 'servicesforteaching'],
-    [STAFF_AWAITING_AURION]: ['servicesforprofessional', 'servicesforresearchers', 'servicesforteaching'],
-
-    [EXTRAMURAL_COMMUNITY_PAID]: ['servicesforcommunity'],
-    [EXTRAMURAL_ALUMNI]: ['servicesforalumni'],
-    [EXTRAMURAL_HOSPITAL]: ['servicesforhospital', 'requestliteraturesearch'],
-    [EXTRAMURAL_ASSOCIATE]: ['servicesforcommunity'],
-    [EXTRAMURAL_FRYER]: ['servicesforcommunity'],
-    [EXTRAMURAL_HONORARY]: ['servicesforcommunity'],
-    [EXTRAMURAL_PROXY]: ['servicesforcommunity'],
-};
-
-export const getUserServices = (account, serviceLocale = null) => {
-    const thislocale = serviceLocale === null ? locale : serviceLocale;
-    const allLibraryServices = thislocale.LibraryServices?.links || [];
-    if (allLibraryServices.length === 0) {
-        return [];
-    }
-
-    if (!account || !account.user_group) {
-        return [];
-    }
-
-    const userGroupService = userGroupServices[account.user_group] || [];
-    return userGroupService
-        .map(service => allLibraryServices.find(i => (i.id || '') === service))
-        .filter(i => i !== undefined);
-};
-
-const isLoggedInUser = account => !!account && !!account.id;
+export const isLoggedInUser = account => !!account && !!account.id;
 
 // define which home page panel items each user type can see
 
@@ -131,36 +87,31 @@ export const canSeeLearningResources = account => {
     );
 };
 
+// define what is considered a UQ logged in member
+
+export const isUQUser = account => {
+    return !!account && !!account.id && UQ_USERS.includes(account.user_group);
+};
+
+export const isLibraryStaff = account =>
+    isLoggedInUser(account) &&
+    (['uqlkeati', 'uqthalin'].includes(account.id) || // marketing staff, required for 2024 dev
+        ['LIBRARYSTAFFB'].includes(account.user_group));
+
 export const canSeeLoans = account => isLoggedInUser(account);
 
 export const canSeePrintBalance = account => isLoggedInUser(account);
 
-export const canSeeLibraryServices = account => {
-    if (!isLoggedInUser(account)) {
-        return false;
-    }
-    const userServices = getUserServices(account);
-    // if the user has no services (should only be a brand new group we havent configured yet)
-    // then don't display the panel
-    return !!userServices && userServices.length > 0;
-};
+const userHasAdGroup = (ADGroupName, account) =>
+    !!account && !!account.groups && !!account.groups.find(group => group.includes(ADGroupName));
 
-const canSeeWebContentAdminPages = account => {
-    return (
-        !!account && !!account.groups && !!account.groups.find(group => group.includes('lib_libapi_SpotlightAdmins'))
-    );
-};
-const canSeeTestTagAdminPages = account => {
-    return !!account && !!account.groups && !!account.groups.find(group => group.includes('lib_libapi_TestTagUsers'));
-};
+export const isTestTagAdminUser = account =>
+    isLoggedInUser(account) && userHasAdGroup('lib_libapi_TestTagUsers', account);
 
-export const isSpotlightsAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
+export const isAlertsAdminUser = account =>
+    isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
 
-export const isTestTagAdminUser = account => isLoggedInUser(account) && canSeeTestTagAdminPages(account);
-
-export const isAlertsAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
-
-export const isPromoPanelAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
+export const isDlorAdminUser = account => isLoggedInUser(account) && userHasAdGroup('lib_dlor_admins', account);
 
 export const isHospitalUser = account =>
     isLoggedInUser(account) && !!account.user_group && account.user_group === EXTRAMURAL_HOSPITAL;
@@ -172,26 +123,3 @@ export const isHdrStudent = account =>
     account.class.indexOf('IS_UQ_STUDENT_PLACEMENT') >= 0;
 
 export const isEspaceAuthor = (account, author) => isLoggedInUser(account) && !!author && !!author.aut_id;
-
-// note: this logic is duplicated in reusable
-/* istanbul ignore next */
-export function getHomepageLink(hostname = null, protocol = null, port = null, pathname = null, search = null) {
-    // this has full test coverage, I don't know it why isn't picking it up :(
-    const _protocol = protocol === null ? window.location.protocol : protocol;
-    const _hostname = hostname === null ? window.location.hostname : hostname;
-    let homepagelink = 'https://www.library.uq.edu.au';
-    if (_hostname === 'homepage-development.library.uq.edu.au') {
-        const _pathname = pathname === null ? window.location.pathname : pathname;
-        homepagelink = `${_protocol}//${_hostname}${_pathname}#/`;
-    } else if (_hostname.endsWith('.library.uq.edu.au')) {
-        homepagelink = `${_protocol}//${_hostname}`;
-    } else if (_hostname === 'localhost') {
-        const _port = port === null ? window.location.port : port;
-        const _search = search === null ? window.location.search : search;
-        const urlParams = new URLSearchParams(_search);
-        const userParam = urlParams.get('user');
-        const linkParameters = !!userParam ? `?user=${userParam}` : '';
-        homepagelink = `${_protocol}//${_hostname}:${_port}/${linkParameters}`;
-    }
-    return homepagelink;
-}

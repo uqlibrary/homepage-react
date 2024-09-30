@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 
 const rootId = 'data_table';
 
-const useStyles = makeStyles(() => ({
-    root: {
+const StyledWrapper = styled(Box)(() => ({
+    display: 'flex',
+    width: '100%',
+    '& .dataGridRoot': {
         border: 0,
         '& .MuiDataGrid-main': {
             border: '1px solid rgba(224, 224, 224, 1)',
@@ -28,7 +30,7 @@ const useStyles = makeStyles(() => ({
         },
     },
 
-    columnHeader: {
+    '& .columnHeader': {
         '&:focus': {
             outline: 'none !important',
         },
@@ -40,13 +42,17 @@ const useStyles = makeStyles(() => ({
             paddingRight: '4px',
         },
     },
-    cell: {
+    '& .cell': {
         '&:focus': {
             outline: 'none !important',
         },
         '&:focus-within': {
             outline: 'none !important',
         },
+    },
+
+    '& .a11yHidden': {
+        visibility: 'hidden',
     },
 }));
 const DataTable = ({
@@ -64,7 +70,6 @@ const DataTable = ({
     const componentId = `${rootId}-${id}`;
     delete rest.editMode;
     delete rest.getRowId;
-    const internalClasses = useStyles();
 
     const [sortModel, setSortModel] = React.useState([
         {
@@ -74,11 +79,7 @@ const DataTable = ({
     ]);
 
     return (
-        <Box
-            display={'flex'}
-            {...(autoHeight === false ? { height: height ?? /* istanbul ignore next */ 400 } : {})}
-            width={'100%'}
-        >
+        <StyledWrapper {...(autoHeight === false ? { height: height ?? /* istanbul ignore next */ 400 } : {})}>
             <Box flexGrow={1} id={`${componentId}`} data-testid={`${componentId}`}>
                 <DataGrid
                     rows={rows}
@@ -98,9 +99,9 @@ const DataTable = ({
                     autoHeight
                     rowsPerPageOptions={[10, 25, 50, 100]}
                     classes={{
-                        root: internalClasses.root,
-                        columnHeader: internalClasses.columnHeader,
-                        cell: internalClasses.cell,
+                        root: 'dataGridRoot',
+                        columnHeader: 'columnHeader',
+                        cell: 'cell',
                         ...classes,
                     }}
                     {...(defaultSortColumn
@@ -113,7 +114,7 @@ const DataTable = ({
                     {...rest}
                 />
             </Box>
-        </Box>
+        </StyledWrapper>
     );
 };
 

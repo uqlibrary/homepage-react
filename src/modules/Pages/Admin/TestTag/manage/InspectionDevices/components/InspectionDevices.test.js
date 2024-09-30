@@ -1,6 +1,6 @@
 import React from 'react';
 import InspectionDevices from './InspectionDevices';
-import { renderWithRouter, act, fireEvent, waitFor, WithReduxStore, userEvent } from 'test-utils';
+import { rtlRender, WithRouter, act, fireEvent, waitFor, WithReduxStore, userEvent } from 'test-utils';
 import Immutable from 'immutable';
 import { PERMISSIONS } from '../../../config/auth';
 
@@ -17,7 +17,7 @@ const actions = {
     updateInspectionDevice: jest.fn(() => Promise.resolve()),
     deleteInspectionDevice: jest.fn(() => Promise.resolve()),
 };
-function setup(testProps = {}, renderer = renderWithRouter) {
+function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, actions = {}, ...props } = testProps;
     const _state = {
         testTagUserReducer: {
@@ -38,18 +38,20 @@ function setup(testProps = {}, renderer = renderWithRouter) {
     };
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
-            <InspectionDevices
-                componentId="test"
-                componentIdLower="test"
-                actions={actions}
-                config={config}
-                pageLocale={locale.pages.manage.inspectiondevices}
-                inspectionDevices={inspectionDevices.data}
-                inspectionDevicesLoading={false}
-                inspectionDevicesError={null}
-                requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter]}
-                {...props}
-            />
+            <WithRouter>
+                <InspectionDevices
+                    componentId="test"
+                    componentIdLower="test"
+                    actions={actions}
+                    config={config}
+                    pageLocale={locale.pages.manage.inspectiondevices}
+                    inspectionDevices={inspectionDevices.data}
+                    inspectionDevicesLoading={false}
+                    inspectionDevicesError={null}
+                    requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter]}
+                    {...props}
+                />
+            </WithRouter>
         </WithReduxStore>,
     );
 }
@@ -95,12 +97,15 @@ describe('InspectionDevices', () => {
             expect(getByTestId('device_model_name-input')).toBeInTheDocument();
         });
 
-        userEvent.type(getByTestId('device_model_name-input'), 'TEST MODELX');
-        userEvent.type(getByTestId('device_serial_number-input'), 'TEST SNX');
-        userEvent.type(getByTestId('device_calibrated_by_last-input'), 'PersonX');
+        await userEvent.type(getByTestId('device_model_name-input'), 'TEST MODELX');
+        await userEvent.type(getByTestId('device_serial_number-input'), 'TEST SNX');
+        await userEvent.type(getByTestId('device_calibrated_by_last-input'), 'PersonX');
 
-        userEvent.type(getByTestId('device_calibration_due_date-input'), '2030-01-01');
-        userEvent.type(getByTestId('device_calibrated_date_last-input'), '2020-01-01');
+        userEvent.clear(getByTestId('device_calibration_due_date-input'));
+        await userEvent.type(getByTestId('device_calibration_due_date-input'), '2030-01-01');
+        userEvent.clear(getByTestId('device_calibrated_date_last-input'));
+        // max="2017-06-30"
+        await userEvent.type(getByTestId('device_calibrated_date_last-input'), '2017-06-01');
 
         // preview.debug();
         // commit the change
@@ -113,7 +118,7 @@ describe('InspectionDevices', () => {
                 device_serial_number: 'TEST SNX',
                 device_calibrated_by_last: 'PersonX',
                 device_calibration_due_date: '2030-01-01 00:00:00',
-                device_calibrated_date_last: '2020-01-01 00:00:00',
+                device_calibrated_date_last: '2017-06-01 00:00:00',
                 device_department: 'UQL',
             }),
         );
@@ -128,12 +133,14 @@ describe('InspectionDevices', () => {
             expect(getByTestId('device_model_name-input')).toBeInTheDocument();
         });
 
-        userEvent.type(getByTestId('device_model_name-input'), 'TEST MODELX');
-        userEvent.type(getByTestId('device_serial_number-input'), 'TEST SNX');
-        userEvent.type(getByTestId('device_calibrated_by_last-input'), 'PersonX');
+        await userEvent.type(getByTestId('device_model_name-input'), 'TEST MODELX');
+        await userEvent.type(getByTestId('device_serial_number-input'), 'TEST SNX');
+        await userEvent.type(getByTestId('device_calibrated_by_last-input'), 'PersonX');
 
-        userEvent.type(getByTestId('device_calibration_due_date-input'), '2030-01-01');
-        userEvent.type(getByTestId('device_calibrated_date_last-input'), '2020-01-01');
+        userEvent.clear(getByTestId('device_calibration_due_date-input'));
+        await userEvent.type(getByTestId('device_calibration_due_date-input'), '2030-01-01');
+        userEvent.clear(getByTestId('device_calibrated_date_last-input'));
+        await userEvent.type(getByTestId('device_calibrated_date_last-input'), '2017-06-01');
 
         await act(async () => {
             await userEvent.click(getByTestId('update_dialog-action-button'));
@@ -155,15 +162,15 @@ describe('InspectionDevices', () => {
             expect(getByTestId('device_model_name-input')).toBeInTheDocument();
         });
         userEvent.clear(getByTestId('device_model_name-input'));
-        userEvent.type(getByTestId('device_model_name-input'), 'EDIT NAME');
+        await userEvent.type(getByTestId('device_model_name-input'), 'EDIT NAME');
         userEvent.clear(getByTestId('device_serial_number-input'));
-        userEvent.type(getByTestId('device_serial_number-input'), 'EDIT SN');
+        await userEvent.type(getByTestId('device_serial_number-input'), 'EDIT SN');
         userEvent.clear(getByTestId('device_calibrated_by_last-input'));
-        userEvent.type(getByTestId('device_calibrated_by_last-input'), 'EDIT PERSON');
+        await userEvent.type(getByTestId('device_calibrated_by_last-input'), 'EDIT PERSON');
         userEvent.clear(getByTestId('device_calibration_due_date-input'));
-        userEvent.type(getByTestId('device_calibration_due_date-input'), '2031-01-01');
+        await userEvent.type(getByTestId('device_calibration_due_date-input'), '2031-01-01');
         userEvent.clear(getByTestId('device_calibrated_date_last-input'));
-        userEvent.type(getByTestId('device_calibrated_date_last-input'), '2030-01-01');
+        await userEvent.type(getByTestId('device_calibrated_date_last-input'), '2030-01-01');
 
         // // commit the change
         await act(async () => {

@@ -2,11 +2,9 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { connectRouter } from 'connected-react-router/immutable';
-import { AppContainer } from 'react-hot-loader';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // pick utils
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
@@ -17,7 +15,6 @@ import AppErrorBoundary from './AppErrorBoundary';
 import rootReducer from './reducer';
 import 'sass/index.scss';
 import { store } from 'config/store';
-import { history } from 'config/history';
 
 // Increase default (10) event listeners to 30
 require('events').EventEmitter.prototype._maxListeners = 30;
@@ -28,17 +25,17 @@ if (process.env.BRANCH !== 'production' && process.env.USE_MOCK) {
 }
 
 const render = () => {
-    ReactDOM.render(
-        <AppErrorBoundary>
-            <AppContainer>
+    const root = createRoot(document.getElementById('react-root'));
+    root.render(
+        <StrictMode>
+            <AppErrorBoundary>
                 <Provider store={store}>
                     <LocalizationProvider dateAdapter={AdapterMoment}>
-                        <Root history={history} />
+                        <Root />
                     </LocalizationProvider>
                 </Provider>
-            </AppContainer>
-        </AppErrorBoundary>,
-        document.getElementById('react-root'),
+            </AppErrorBoundary>
+        </StrictMode>,
     );
 };
 
@@ -53,6 +50,6 @@ if (module.hot) {
 
     // Reload reducers
     module.hot.accept('./reducer', () => {
-        store.replaceReducer(connectRouter(history)(rootReducer));
+        store.replaceReducer(rootReducer);
     });
 }
