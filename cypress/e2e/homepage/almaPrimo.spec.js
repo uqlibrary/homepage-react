@@ -3,7 +3,7 @@ describe('Alma Primo', () => {
     // but we are testing how it appears _in_ homepage so we need homepage available
     // so it has to be here :(
     context('My UQ Account Links', () => {
-        it('shows both referencing and endnote links for UQ user', () => {
+        it('shows relevant links for account user', () => {
             cy.visit('http://localhost:2020/');
             cy.viewport(1280, 900);
 
