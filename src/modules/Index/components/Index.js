@@ -28,6 +28,7 @@ import {
     loadTrainingEvents,
     loadDrupalArticles,
     loadJournalSearchFavourites,
+    loadLoans
 } from 'data/actions';
 import { canSeeLearningResources, isEspaceAuthor } from 'helpers/access';
 
@@ -38,6 +39,7 @@ const PastExamPapers = lazy(() => lazyRetry(() => import('./subComponents/PastEx
 const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
 const ReferencingPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReferencingPanel')));
 const ReadPublish = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReadPublish')));
+const CataloguePanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/CataloguePanel')));
 
 const StyledAccordion = styled(Accordion)(() => ({
     backgroundColor: 'inherit',
@@ -142,7 +144,9 @@ export const Index = ({
     drupalArticlesError,
     journalSearchList,
     journalSearchLoading,
-    journalSearchError,
+    journalSearchError, 
+    loans,
+    loansLoading,
 
 }) => {
     // console.log('drupal article list in index feeder,', drupalArticleList);
@@ -209,6 +213,13 @@ export const Index = ({
         }
     }, [accountLoading, account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
 
+    useEffect(() => {
+        if (accountLoading === false && !!account && !loans && loansLoading === null) {
+            console.log("dispatching")
+            dispatch(loadLoans());
+        }
+    }, [accountLoading, account, loans, loansLoading, dispatch]);
+
     return (
         <React.Suspense fallback={<ContentLoader message="Loading"/>}>
             <StyledPortalContainer id="search-portal-container" data-testid="search-portal-container">
@@ -249,6 +260,7 @@ export const Index = ({
                     </StyleWrapper>
                 </div>
             </div>
+            {console.log("loans", loans, loansLoading)}
             {accountLoading === false && !!account && (
                 <StandardPage>
                     <Grid container spacing={4} style={{ paddingBottom: '1em' }}>
@@ -288,6 +300,10 @@ export const Index = ({
                         </Grid>
                         <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
                             <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
+                        </Grid>
+                        {/* My UQ Account / Primo Stuff */}
+                        <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
+                            <CataloguePanel account={account} loans={loans} />
                         </Grid>
                     </Grid>
                 </StandardPage>

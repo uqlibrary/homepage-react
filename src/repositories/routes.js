@@ -256,3 +256,9 @@ export const DRUPAL_ARTICLE_API = () => {
 };
 
 export const JOURNAL_SEARCH_API = () => ({ apiUrl: 'https://api.library.uq.edu.au/v1/journals/favourites?sort=score' });
+
+// Loans API
+export const LOANS_API = () => ({
+    apiUrl: 'account/loans',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
