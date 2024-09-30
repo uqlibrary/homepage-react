@@ -15,7 +15,13 @@ export const CataloguePanel = ({ account, loans }) => {
             standardCardId="catalogue-panel"
             title="My library account"
         >
-            {console.log("Loans in the component", loans)}
+            <ul>
+                <li><a href="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">Your library loans ({`${loans?.total_loans_count}`})</a></li>
+                <li><a href="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=requests&lang=en_US">Your library requests ({`${loans?.total_holds_count}`})</a></li>
+                <li><a href="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=search_history">Your library search history</a></li>
+                <li><a href="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=queries">Your library saved searches</a></li>
+                <li><a href="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=items">Your library saved items</a></li>
+            </ul>
         </StandardCard>
     );
 };
