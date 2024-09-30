@@ -1,6 +1,8 @@
 import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
+    loans: null,
+    loansLoading: null,
     possibleRecords: null,
     possibleRecordsLoading: null,
     incompleteNTRO: null,
@@ -8,6 +10,25 @@ export const initialState = {
 };
 
 const handlers = {
+     // Loans
+    [actions.LOANS_LOADING]: state => ({
+        ...state,
+        loans: null,
+        loansLoading: true,
+    }),
+
+    [actions.LOANS_LOADED]: (state, action) => ({
+        ...state,
+        loans: action.payload,
+        loansLoading: false,
+    }),
+
+    [actions.LOANS_FAILED]: state => ({
+        ...state,
+        loans: null,
+        loansLoading: false,
+    }),
+
     // Possible publications in eSpace
     [actions.POSSIBLY_YOUR_PUBLICATIONS_LOADING]: state => ({
         ...state,
