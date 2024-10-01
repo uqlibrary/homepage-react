@@ -27,15 +27,6 @@ const StyledGridItem = styled(Grid)(({ theme }) => ({
         display: 'block',
         minWidth: '100%',
     },
-    '& .cardHeading': {
-        color: '#19151c',
-        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-        fontSize: '24px',
-        fontWeight: 500,
-        letterSpacing: '0.16px',
-        lineHeight: '1.6',
-        marginBlock: '8px',
-    },
     '& p': {
         color: '#3b383e',
         fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
@@ -56,6 +47,15 @@ const StyledLink = styled(Link)(({ theme }) => ({
     fontSize: '20px',
     fontWeight: 500,
     position: 'relative',
+    '& .cardHeading': {
+        color: '#19151c',
+        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+        fontSize: '24px',
+        fontWeight: 500,
+        letterSpacing: '0.16px',
+        lineHeight: '1.6',
+        marginBlock: '8px',
+    },
     '& svg.arrowForwardIcon': {
         display: 'block',
     },
@@ -68,14 +68,14 @@ const StyledLink = styled(Link)(({ theme }) => ({
     },
     [theme.breakpoints.up('uqDsTablet')]: {
         // tablet and above
-        '& div.panelBodyWrapper': {
+        '& .panelBodyWrapper': {
             margin: '24px 24px 0 24px',
         },
         '& p': {
             marginTop: 0,
             marginBottom: 0,
         },
-        '& div.arrowSvgWrapper': {
+        '& .arrowSvgWrapper': {
             minHeight: '48px',
             marginTop: '24px',
         },
@@ -104,7 +104,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
         },
         '& svg.arrowForwardIcon': {
             paddingLeft: '15px',
-            marginRight: '24px',
         },
         '& .cardHeading': {
             fontWeight: 500,
