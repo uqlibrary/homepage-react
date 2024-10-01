@@ -60,7 +60,7 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                         cardHeading="Study and learning support"
                         landingUrl={linkToDrupal('/study-and-learning-support')}
                         iconBackgroundImage={bookOpenBookmarkBackgroundImage}
-                        shortParagraph="Lorem ipsum odor amet, consectetuer adipiscing elit. Pulvinar finibus lectus semper volutpat orci congue vitae justo cubilia molestie accumsan maximus semper varius rutrum mauris augue."
+                        shortParagraph="Coursework resources, support for teachers, copyright advice and training."
                         loggedIn={accountLoading === false && !!account}
                     />
                     {/* minimum length for shortParagraph string: 66 char,
@@ -69,35 +69,35 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                         cardHeading="AskUs and student IT support"
                         landingUrl={linkToDrupal('/askus-and-it-support')}
                         iconBackgroundImage={conversationChatBackgroundimage}
-                        shortParagraph="Lorem ipsum odor amet, consectetuer adipiscing elit. Lectus. finibus finibus finibus"
+                        shortParagraph="Using your devices, printing and online exams. Contact or visit AskUs for help."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardHeading="Research and publish"
                         landingUrl={linkToDrupal('/research-and-publish')}
                         iconBackgroundImage={scienceMoleculeBackgroundImage}
-                        shortParagraph="Lorem ipsum odor amet, consectetuer adipiscing elit. Dolor adipiscing ante nullam accumsan volutpat; fermentum etiam sodales tempor natoque."
+                        shortParagraph="Publishing and research data, IDs, and metrics, engagement and impact."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardHeading="Find and borrow"
                         landingUrl={linkToDrupal('/find-and-borrow')}
                         iconBackgroundImage={researchExperienceBackgroundImage}
-                        shortParagraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquet felis quis urna posuere, ac ornare justo vulputate. Nulla dictum."
+                        shortParagraph="Find, borrow and request, collections, memberships and UQ Archives."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardHeading="Visit"
                         landingUrl={linkToDrupal('/visit-our-spaces')}
                         iconBackgroundImage={pinBackgroundImage}
-                        shortParagraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi placerat erat scelerisque nulla vehicula, quis finibus nibh egestas. Cras sapien."
+                        shortParagraph="Using library spaces: facilities, opening hours and availability."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardHeading="About"
                         landingUrl={linkToDrupal('/about-us')}
                         iconBackgroundImage={schoolBuildingBackgroundimage}
-                        shortParagraph="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam non ultrices mi. Etiam lobortis nunc non elementum sodales. Fusce turpis."
+                        shortParagraph="Learn about the Library. Our people, news, policies and awards."
                         loggedIn={accountLoading === false && !!account}
                     />
                 </StyledGridContainer>
