@@ -25,7 +25,7 @@ const StyledGridItem = styled(Grid)(({ theme }) => ({
     },
     [theme.breakpoints.down('uqDsTablet')]: {
         display: 'block',
-        width: '100%',
+        minWidth: '100%',
     },
     '& .cardHeading': {
         color: '#19151c',
@@ -56,55 +56,60 @@ const StyledLink = styled(Link)(({ theme }) => ({
     fontSize: '20px',
     fontWeight: 500,
     position: 'relative',
-    '& div.panelBodyWrapper': {
-        margin: '24px 24px 0 24px',
-        '& p': {
-            marginTop: 0,
-        },
-    },
-    '& div.arrowSvgWrapper': {
-        minHeight: '48px',
-        marginTop: '24px',
-    },
     '& svg.arrowForwardIcon': {
         display: 'block',
-        // marginTop: '24px',
-        position: 'absolute',
-        bottom: '24px',
-        left: '24px',
     },
     '& .panelIcon': {
         width: '56px',
         height: '56px',
+        backgroundSize: 'contain',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
     },
     [theme.breakpoints.up('uqDsTablet')]: {
+        // tablet and above
+        '& div.panelBodyWrapper': {
+            margin: '24px 24px 0 24px',
+        },
         '& p': {
+            marginTop: 0,
             marginBottom: 0,
+        },
+        '& div.arrowSvgWrapper': {
+            minHeight: '48px',
+            marginTop: '24px',
+        },
+        '& svg.arrowForwardIcon': {
+            position: 'absolute',
+            bottom: '24px',
+            left: '24px',
         },
     },
     [theme.breakpoints.down('uqDsTablet')]: {
+        // mobile
+        alignItems: 'center',
+        display: 'flex',
+        justifyContent: 'space-between',
+        minWidth: '90%',
+        marginRight: '24px',
+        padding: '24px',
         '& .panelIcon': {
             width: '40px',
             height: '40px',
+            minWidth: '40px',
+            minHeight: '40px',
         },
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        minWidth: '100%',
         '& p': {
             display: 'none',
         },
         '& svg.arrowForwardIcon': {
-            // marginTop: 0,
             paddingLeft: '15px',
+            marginRight: '24px',
         },
-        '& > *': {
-            marginLeft: '24px',
-        },
-        '& h2': {
-            margin: '0 0 0 16px',
+        '& .cardHeading': {
             fontWeight: 500,
-            // minWidth: '80%',
+            marginLeft: '24px',
+            fontSize: '22px',
         },
         '& div': {
             display: 'flex',
@@ -144,9 +149,6 @@ const paneIcon = paneBackgroundImage => {
             className={'panelIcon'}
             sx={{
                 backgroundImage: paneBackgroundImage,
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
             }}
         />
     );

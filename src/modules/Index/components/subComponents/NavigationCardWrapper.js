@@ -17,10 +17,13 @@ const StyledNav = styled('nav')(() => ({
     },
 }));
 
-const StyledGridContainer = styled(Grid)(() => ({
+const StyledGridContainer = styled(Grid)(({ theme }) => ({
     paddingRight: '8px',
     paddingLeft: 0,
     margin: 0,
+    [theme.breakpoints.down('uqDsTablet')]: {
+        marginRight: '24px',
+    },
 }));
 
 const StyledHeading = styled(Typography)(() => ({
