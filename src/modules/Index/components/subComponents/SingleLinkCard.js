@@ -34,6 +34,7 @@ const StyledGridItem = styled(Grid)(({ theme }) => ({
         fontWeight: 500,
         letterSpacing: '0.16px',
         lineHeight: '1.6',
+        marginBlock: '8px',
     },
     '& p': {
         color: '#3b383e',
@@ -54,16 +55,35 @@ const StyledLink = styled(Link)(({ theme }) => ({
     fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
     fontSize: '20px',
     fontWeight: 500,
-    '& svg.arrowForwardIcon': {
-        display: 'block',
+    position: 'relative',
+    '& div.panelBodyWrapper': {
+        margin: '24px 24px 0 24px',
+        '& p': {
+            marginTop: 0,
+        },
+    },
+    '& div.arrowSvgWrapper': {
+        minHeight: '48px',
         marginTop: '24px',
     },
-    '& .iconWrapper': {
+    '& svg.arrowForwardIcon': {
+        display: 'block',
+        // marginTop: '24px',
+        position: 'absolute',
+        bottom: '24px',
+        left: '24px',
+    },
+    '& .panelIcon': {
         width: '56px',
         height: '56px',
     },
+    [theme.breakpoints.up('uqDsTablet')]: {
+        '& p': {
+            marginBottom: 0,
+        },
+    },
     [theme.breakpoints.down('uqDsTablet')]: {
-        '& .iconWrapper': {
+        '& .panelIcon': {
             width: '40px',
             height: '40px',
         },
@@ -91,9 +111,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
             justifyContent: 'space-between',
             alignItems: 'center',
         },
-    },
-    '> *': {
-        margin: '24px',
     },
 
     // on hover, tablet and up, the background changes colour, the link text underlines and the icon moves
@@ -124,7 +141,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const paneIcon = paneBackgroundImage => {
     return (
         <Box
-            className={'iconWrapper'}
+            className={'panelIcon'}
             sx={{
                 backgroundImage: paneBackgroundImage,
                 backgroundSize: 'contain',
@@ -140,7 +157,7 @@ const SingleLinkCard = ({ cardHeading, landingUrl, iconBackgroundImage, shortPar
         <StyledGridItem item component={'li'} uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4}>
             <div>
                 <StyledLink border={1} p={1} to={landingUrl}>
-                    <div>
+                    <div className={'panelBodyWrapper'}>
                         {paneIcon(iconBackgroundImage)}
                         {!!loggedIn ? (
                             <h3 className={'cardHeading'}>{cardHeading}</h3>
@@ -149,7 +166,9 @@ const SingleLinkCard = ({ cardHeading, landingUrl, iconBackgroundImage, shortPar
                         )}
                         <p>{shortParagraph}</p>
                     </div>
-                    <UqArrowForwardIcon />
+                    <div className={'arrowSvgWrapper'}>
+                        <UqArrowForwardIcon />
+                    </div>
                 </StyledLink>
             </div>
         </StyledGridItem>
