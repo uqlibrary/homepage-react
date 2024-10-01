@@ -116,6 +116,13 @@ const StyledHeading = styled(Typography)(() => ({
     marginTop: '1rem',
 }));
 
+const StyledGridWrapper = styled('div')(() => ({
+    marginLeft: '-32px',
+    '@media (max-width: 1200px)': {
+        marginLeft: '-24px',
+    },
+}));
+
 const StyledGridItemLoggedIn = styled(Grid)(({ theme }) => ({
     paddingLeft: '24px',
     marginBottom: '24px',
@@ -272,49 +279,51 @@ export const Index = ({
             {console.log('loans', loans, loansLoading)}
             {accountLoading === false && !!account && (
                 <StandardPage>
-                    <Grid container>
-                        <Grid item uqDsMobile={12} sx={{ marginBottom: '32px' }}>
-                            <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
-                                {greeting()}, {account.firstName || /* istanbul ignore next */ ''}
-                            </StyledHeading>
-                        </Grid>
-                        <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="referencing-panel">
-                            <CataloguePanel account={account} loans={loans} />
-                        </StyledGridItemLoggedIn>
-                        {canSeeLearningResources(account) && (
-                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="learning-resources-panel">
-                                <LearningResourcesPanel account={account} history={history}/>
+                    <StyledGridWrapper>
+                        <Grid container>
+                            <Grid item uqDsMobile={12} sx={{ marginBottom: '32px', marginLeft: '24px' }}>
+                                <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
+                                    {greeting()}, {account.firstName || /* istanbul ignore next */ ''}
+                                </StyledHeading>
+                            </Grid>
+                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="referencing-panel">
+                                <CataloguePanel account={account} loans={loans} />
                             </StyledGridItemLoggedIn>
-                        )}
-                        {canSeeLearningResources(account) && (
-                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="past-exam-papers-panel">
-                                <PastExamPapers account={account} history={history}/>
+                            {canSeeLearningResources(account) && (
+                                <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="learning-resources-panel">
+                                    <LearningResourcesPanel account={account} history={history}/>
+                                </StyledGridItemLoggedIn>
+                            )}
+                            {canSeeLearningResources(account) && (
+                                <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="past-exam-papers-panel">
+                                    <PastExamPapers account={account} history={history}/>
+                                </StyledGridItemLoggedIn>
+                            )}
+                            {isEspaceAuthor(account, author) && (
+                                <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="espace-links-panel">
+                                    <EspaceLinks
+                                        author={author}
+                                        possibleRecords={possibleRecords}
+                                        incompleteNTRORecords={incompleteNTRO}
+                                    />
+                                </StyledGridItemLoggedIn>
+                            )}
+                            <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="referencing-panel">
+                                <ReferencingPanel account={account} />
                             </StyledGridItemLoggedIn>
-                        )}
-                        {isEspaceAuthor(account, author) && (
-                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="espace-links-panel">
-                                <EspaceLinks
-                                    author={author}
-                                    possibleRecords={possibleRecords}
-                                    incompleteNTRORecords={incompleteNTRO}
+                            <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="referencing-panel">
+                                <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
+                            </StyledGridItemLoggedIn>
+                            {/* My UQ Account / Primo Stuff */}
+                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="training-panel">
+                                <Training
+                                    trainingEvents={trainingEvents}
+                                    trainingEventsLoading={trainingEventsLoading}
+                                    trainingEventsError={trainingEventsError}
                                 />
                             </StyledGridItemLoggedIn>
-                        )}
-                        <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="referencing-panel">
-                            <ReferencingPanel account={account} />
-                        </StyledGridItemLoggedIn>
-                        <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="referencing-panel">
-                            <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
-                        </StyledGridItemLoggedIn>
-                        {/* My UQ Account / Primo Stuff */}
-                        <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="training-panel">
-                            <Training
-                                trainingEvents={trainingEvents}
-                                trainingEventsLoading={trainingEventsLoading}
-                                trainingEventsError={trainingEventsError}
-                            />
-                        </StyledGridItemLoggedIn>
-                    </Grid>
+                        </Grid>
+                    </StyledGridWrapper>
                 </StandardPage>
             )}
             <NavigationCardWrapper account={account} accountLoading={accountLoading} />
