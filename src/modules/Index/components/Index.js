@@ -116,9 +116,13 @@ const StyledHeading = styled(Typography)(() => ({
     marginTop: '1rem',
 }));
 
-const StyledGridItemLoggedIn = styled(Grid)(() => ({
+const StyledGridItemLoggedIn = styled(Grid)(({ theme }) => ({
     paddingLeft: '24px',
     marginBottom: '24px',
+    [theme.breakpoints.up('uqDsDesktopXL')]: {
+        paddingLeft: '32px',
+        marginBottom: '32px',
+    },
 }));
 
 const StyledSummary = styled('span')(({ theme }) => ({
