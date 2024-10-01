@@ -28,7 +28,7 @@ import {
     loadTrainingEvents,
     loadDrupalArticles,
     loadJournalSearchFavourites,
-    loadLoans
+    loadLoans,
 } from 'data/actions';
 import { canSeeLearningResources, isEspaceAuthor } from 'helpers/access';
 
@@ -116,6 +116,11 @@ const StyledHeading = styled(Typography)(() => ({
     marginTop: '1rem',
 }));
 
+const StyledGridItemLoggedIn = styled(Grid)(() => ({
+    paddingLeft: '24px',
+    marginBottom: '24px',
+}));
+
 const StyledSummary = styled('span')(({ theme }) => ({
     color: theme.palette.primary.light,
     textDecoration: 'underline',
@@ -144,7 +149,7 @@ export const Index = ({
     drupalArticlesError,
     journalSearchList,
     journalSearchLoading,
-    journalSearchError, 
+    journalSearchError,
     loans,
     loansLoading,
 
@@ -215,7 +220,7 @@ export const Index = ({
 
     useEffect(() => {
         if (accountLoading === false && !!account && !loans && loansLoading === null) {
-            console.log("dispatching")
+            console.log('dispatching');
             dispatch(loadLoans());
         }
     }, [accountLoading, account, loans, loansLoading, dispatch]);
@@ -260,51 +265,51 @@ export const Index = ({
                     </StyleWrapper>
                 </div>
             </div>
-            {console.log("loans", loans, loansLoading)}
+            {console.log('loans', loans, loansLoading)}
             {accountLoading === false && !!account && (
                 <StandardPage>
-                    <Grid container spacing={4} style={{ paddingBottom: '1em' }}>
-                        <Grid item xs={12}>
+                    <Grid container>
+                        <Grid item uqDsMobile={12} sx={{ marginBottom: '32px' }}>
                             <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
                                 {greeting()}, {account.firstName || /* istanbul ignore next */ ''}
                             </StyledHeading>
                         </Grid>
-                        <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                            <Training
-                                trainingEvents={trainingEvents}
-                                trainingEventsLoading={trainingEventsLoading}
-                                trainingEventsError={trainingEventsError}
-                            />
-                        </Grid>
+                        <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="referencing-panel">
+                            <CataloguePanel account={account} loans={loans} />
+                        </StyledGridItemLoggedIn>
                         {canSeeLearningResources(account) && (
-                            <Grid item xs={12} md={4} data-testid="learning-resources-panel" sx={{ paddingTop: '0px' }}>
+                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="learning-resources-panel">
                                 <LearningResourcesPanel account={account} history={history}/>
-                            </Grid>
+                            </StyledGridItemLoggedIn>
                         )}
                         {canSeeLearningResources(account) && (
-                            <Grid item xs={12} md={4} data-testid="past-exam-papers-panel" sx={{ paddingTop: '0px' }}>
+                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="past-exam-papers-panel">
                                 <PastExamPapers account={account} history={history}/>
-                            </Grid>
+                            </StyledGridItemLoggedIn>
                         )}
                         {isEspaceAuthor(account, author) && (
-                            <Grid item xs={12} md={4} data-testid="espace-links-panel" sx={{ paddingTop: '0px' }}>
+                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="espace-links-panel">
                                 <EspaceLinks
                                     author={author}
                                     possibleRecords={possibleRecords}
                                     incompleteNTRORecords={incompleteNTRO}
                                 />
-                            </Grid>
+                            </StyledGridItemLoggedIn>
                         )}
-                        <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
+                        <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="referencing-panel">
                             <ReferencingPanel account={account} />
-                        </Grid>
-                        <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
+                        </StyledGridItemLoggedIn>
+                        <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="referencing-panel">
                             <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
-                        </Grid>
+                        </StyledGridItemLoggedIn>
                         {/* My UQ Account / Primo Stuff */}
-                        <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
-                            <CataloguePanel account={account} loans={loans} />
-                        </Grid>
+                        <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="training-panel">
+                            <Training
+                                trainingEvents={trainingEvents}
+                                trainingEventsLoading={trainingEventsLoading}
+                                trainingEventsError={trainingEventsError}
+                            />
+                        </StyledGridItemLoggedIn>
                     </Grid>
                 </StandardPage>
             )}
