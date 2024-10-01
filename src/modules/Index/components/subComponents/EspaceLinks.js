@@ -16,11 +16,10 @@ const StyledGridItem = styled(Grid)(() => ({
     alignItems: 'center',
     justifyContent: 'flex-start',
     flexWrap: 'wrap',
-    paddingBottom: '10px',
-    paddingLeft: '10px',
+    paddingBottom: '16px',
+    paddingLeft: 0,
     position: 'relative',
     '&::before': {
-        content: '"•"', // Bullet character
         position: 'absolute',
         left: 0,
         fontSize: '1em',
@@ -30,14 +29,14 @@ const StyledGridItem = styled(Grid)(() => ({
     },
     '& a': {
         marginRight: -16,
-        marginTop: '12px',
+        // marginTop: '12px',
     },
 }));
 const StyledLabel = styled(Typography)(() => ({
     color: '#19151c',
-    fontSize: '16px',
+    fontSize: '20px',
     fontWeight: 500,
-    marginTop: '24px',
+    marginBlock: '16px',
     textWrap: 'nowrap',
     whiteSpaceCollapse: 'collapse',
 }));
@@ -146,7 +145,7 @@ export const EspaceLinks = ({ author, possibleRecords, incompleteNTRORecords }) 
                 </Grid>
                 <Grid item>
                     <StyledLabel component={'h4'} variant={'h6'}>
-                        Actions:
+                        Actions
                     </StyledLabel>
                 </Grid>
 
