@@ -752,8 +752,8 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     delete sentValues.object_review_date_next; // doesn't seem valid to figure out the date
                     delete expectedValues.object_review_date_next;
 
-                    console.log('sentValues=', sentValues);
-                    console.log('expectedValues=', expectedValues);
+                    // console.log('sentValues=', sentValues);
+                    // console.log('expectedValues=', expectedValues);
                     expect(sentValues).to.deep.equal(expectedValues);
                     expect(sentFacets).to.deep.equal(expectedFacets);
                     expect(sentKeywords).to.deep.equal(expectedKeywords);
@@ -974,8 +974,8 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     delete sentValues.object_keywords;
                     delete expectedValues.facets;
                     delete expectedValues.object_keywords;
-                    console.log('sentValues=', sentValues);
-                    console.log('expectedValues=', expectedValues);
+                    // console.log('sentValues=', sentValues);
+                    // console.log('expectedValues=', expectedValues);
                     expect(sentValues).to.deep.equal(expectedValues);
                     expect(sentFacets).to.deep.equal(expectedFacets);
                     expect(sentKeywords).to.deep.equal(expectedKeywords);
@@ -1202,8 +1202,8 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     delete sentValues.object_keywords;
                     delete expectedValues.facets;
                     delete expectedValues.object_keywords;
-                    console.log('sentValues=', sentValues);
-                    console.log('expectedValues=', expectedValues);
+                    // console.log('sentValues=', sentValues);
+                    // console.log('expectedValues=', expectedValues);
                     expect(sentValues).to.deep.equal(expectedValues);
                     expect(sentFacets).to.deep.equal(expectedFacets);
                     expect(sentKeywords).to.deep.equal(expectedKeywords);

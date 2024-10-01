@@ -295,8 +295,8 @@ describe('Digital Learning Hub View page', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 
@@ -358,8 +358,8 @@ describe('Digital Learning Hub View page', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 
@@ -406,8 +406,8 @@ describe('Digital Learning Hub View page', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 
@@ -468,12 +468,12 @@ describe('Digital Learning Hub View page', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues.dlorUuid).to.deep.equal(expectedValues.dlorUuid);
                 expect(sentValues.demographics).to.deep.equal(expectedValues.demographics);
-                console.log('sentValues.subscribeRequest=', sentValues.subscribeRequest);
+                // console.log('sentValues.subscribeRequest=', sentValues.subscribeRequest);
                 // console.log('expectedValues.subscribeRequest=', expectedValues.subscribeRequest);
                 // expect(sentValues.subscribeRequest).to.deep.equal(expectedValues.subscribeRequest);
                 // expect(sentValues).to.deep.equal(expectedValues);
@@ -538,8 +538,8 @@ describe('Digital Learning Hub View page', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 
@@ -606,8 +606,8 @@ describe('Digital Learning Hub View page', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 
@@ -666,8 +666,8 @@ describe('Digital Learning Hub View page', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 

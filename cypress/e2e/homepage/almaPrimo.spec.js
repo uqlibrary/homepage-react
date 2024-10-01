@@ -8,10 +8,10 @@ describe('Alma Primo', () => {
             cy.viewport(1280, 900);
 
             // once the page has loaded for a UQ user, check if all required links are shown.
-            cy.get('[data-testid="catalogue-panel"]') 
+            cy.get('[data-testid="catalogue-panel"]')
                 .should('exist')
                 .contains('My library account');
-            cy.get('[data-testid="catalogue-panel-content"]') 
+            cy.get('[data-testid="catalogue-panel-content"]')
                 .should('exist')
                 .contains('Your library loans (1)');
             // cy.get('.reference-panel-item')
