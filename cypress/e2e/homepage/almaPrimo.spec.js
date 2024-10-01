@@ -3,15 +3,15 @@ describe('Alma Primo', () => {
     // but we are testing how it appears _in_ homepage so we need homepage available
     // so it has to be here :(
     context('My UQ Account Links', () => {
-        it('shows both referencing and endnote links for UQ user', () => {
+        it('shows relevant links for account user', () => {
             cy.visit('http://localhost:2020/');
             cy.viewport(1280, 900);
 
             // once the page has loaded for a UQ user, check if all required links are shown.
-            cy.get('[data-testid="catalogue-panel"]') 
+            cy.get('[data-testid="catalogue-panel"]')
                 .should('exist')
                 .contains('My library account');
-            cy.get('[data-testid="catalogue-panel-content"]') 
+            cy.get('[data-testid="catalogue-panel-content"]')
                 .should('exist')
                 .contains('Your library loans (1)');
             // cy.get('.reference-panel-item')

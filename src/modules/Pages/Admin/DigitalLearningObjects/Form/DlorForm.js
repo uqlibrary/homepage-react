@@ -166,14 +166,14 @@ export const DlorForm = ({
     }, []);
 
     useEffect(() => {
-        console.log(
-            'useEffect FIRST l=',
-            dlorItemSaving,
-            '; e=',
-            dlorSavedItemError,
-            '; dlorSavedItem=',
-            dlorSavedItem,
-        );
+        // console.log(
+        //     'useEffect FIRST l=',
+        //     dlorItemSaving,
+        //     '; e=',
+        //     dlorSavedItemError,
+        //     '; dlorSavedItem=',
+        //     dlorSavedItem,
+        // );
         setConfirmationOpen(!dlorItemSaving && (!!dlorSavedItemError || !!dlorSavedItem));
     }, [dlorItemSaving, dlorSavedItemError, dlorSavedItem]);
 
@@ -1358,7 +1358,7 @@ export const DlorForm = ({
             actions.loadFileTypeList();
         }
 
-        console.log('useEffect 2ND l=', dlorItemSaving, '; e=', dlorSavedItemError, '; dlorSavedItem=', dlorSavedItem);
+        // console.log('useEffect 2ND l=', dlorItemSaving, ' e=', dlorSavedItemError, ' dlorSavedItem=', dlorSavedItem);
         setConfirmationOpen(!dlorItemSaving && (!!dlorSavedItemError || !!dlorSavedItem));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

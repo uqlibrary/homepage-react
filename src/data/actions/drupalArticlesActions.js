@@ -10,14 +10,14 @@ export function loadDrupalArticles() {
             headers: {},
         })
             .then(articleResponse => {
-                console.log('ARTICLE RESPONSE:', articleResponse);
+                // console.log('ARTICLE RESPONSE:', articleResponse);
                 dispatch({
                     type: actions.DRUPAL_ARTICLES_LOADED,
                     payload: articleResponse,
                 });
             })
             .catch(error => {
-                console.log('ARTICLE RESPONSE:', error.message, DRUPAL_ARTICLE_API());
+                // console.log('ARTICLE RESPONSE:', error.message, DRUPAL_ARTICLE_API());
                 dispatch({
                     type: actions.DRUPAL_ARTICLES_FAILED,
                     payload: error.message,
