@@ -27,15 +27,20 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         },
     },
     ['& .table-row']: {
-        fontSize: '1.1em',
+        fontSize: '16px',
+        fontStyle: 'normal',
         fontWeight: 500,
         letterSpacing: '0.16px',
+        lineHeight: '160%' /* 25.6px */,
         marginLeft: 8,
-        padding: '4px 0 4px 0',
+        padding: '8px 8px 8px 0',
         transition: 'all 0.3s ease',
         ['& a']: {
             color: theme.palette.primary.light,
             textDecoration: 'underline',
+            '&:hover': {
+                backgroundColor: 'inherit',
+            },
         },
         '@media (max-width: 900px)': {
             maxWidth: '98%',
@@ -43,12 +48,17 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         '@media (min-width: 900px)': {
             maxWidth: '785px',
         },
+    },
+    '& .table-body-row': {
         '&:hover': {
             backgroundColor: '#f3f3f4', // $grey-50	Background colour to highlight sections, cards or panes
         },
     },
     '& .table-header-cell': {
-        fontWeight: 'bold',
+        color: theme.palette.secondary.dark,
+        fontWeight: 500,
+        lineHeight: '160%', // 25.6px
+        letterSpacing: '0.16px',
     },
     '& .table-cell-hours': {
         fontWeight: 400,
@@ -59,16 +69,20 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         whiteSpace: 'nowrap',
     },
     '& .occupancy': {
-        backgroundColor: 'grey',
-        border: '1px solid #333',
+        backgroundColor: '#dcdcdc',
         borderRadius: '20px',
         fontSize: '0.8em',
         width: '100%',
-        '& .full': {
+        '& .occupancyFull': {
             backgroundColor: theme.palette.primary.light,
-            color: 'white',
+            color: theme.palette.primary.light,
             display: 'block',
-            borderRadius: '20px',
+            borderTopLeftRadius: '20px',
+            borderBottomLeftRadius: '20px',
+        },
+        '& .occupancyPercent100': {
+            borderTopRightRadius: '20px',
+            borderBottomRightRadius: '20px',
         },
         '& span span': {
             paddingLeft: '24px',
@@ -94,7 +108,10 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
 }));
 const StyledOpeningHours = styled(Typography)(() => ({
+    color: '#3B383E', // Brand-grey-grey-900
     fontWeight: 400,
+    letterSpacing: '0.16px',
+    // textAlign: 'right',
 }));
 
 const MyLoader = props => (
@@ -192,8 +209,18 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                 }
                 const min = 20;
                 const max = 100;
-                const randomBusynessNumber =
-                    item?.abbr === 'Gatton' ? null : Math.floor(Math.random() * (max - min + 1)) + min;
+
+                function tempCalcLocationBusiness() {
+                    if (item?.abbr === 'Gatton') {
+                        return null;
+                    }
+                    if (item?.abbr === 'Herston') {
+                        return 100;
+                    }
+                    return Math.floor(Math.random() * (max - min + 1)) + min;
+                }
+
+                const randomBusynessNumber = tempCalcLocationBusiness();
                 return {
                     name: item.name,
                     abbr: item.abbr,
@@ -260,10 +287,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                 {!libHoursError && !!libHours && !libHoursLoading && (
                     <Fade in={!libHoursLoading} timeout={1000}>
                         <div className={'locations-wrapper-detail'} role="table">
-                            <p>
-                                Note: made up occupancy data (random numbers) also, pretending Gatton isnt returning
-                                occupancy data atm
-                            </p>
                             <Grid container spacing={1} className="table-row" alignItems={'flex-start'} role="row">
                                 <Grid item xs={7}>
                                     <Grid container>
@@ -314,7 +337,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                             data-testid={getidFromname(`hours-item-${item.abbr}`)}
                                             spacing={1}
                                             key={index}
-                                            className={`table-row location-${item.abbr.toLowerCase()}`}
+                                            className={`table-row location-${item.abbr.toLowerCase()} table-body-row`}
                                             alignItems={'flex-start'}
                                             role="row"
                                         >
@@ -415,7 +438,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                 >
                                                     <div className="occupancy">
                                                         <span
-                                                            className="full"
+                                                            className={`occupancyFull occupancyPercent${item.busyness}`}
                                                             style={{
                                                                 width:
                                                                     !hasDepartments(item) || isOpen(item)
@@ -446,6 +469,10 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         <MyLoader id="hours-loader" data-testid="hours-loader" aria-label="Locations data is loading" />
                     </div>
                 )}
+                <p style={{ marginLeft: '30px', fontWeight: 'bold' }}>
+                    Note: made up occupancy data (random numbers) also, pretending Gatton isnt returning & Herston is
+                    full occupancy data atm
+                </p>
                 <div className="outlink">
                     <Link
                         data-testid="homepage-hours-weeklyhours-link"
