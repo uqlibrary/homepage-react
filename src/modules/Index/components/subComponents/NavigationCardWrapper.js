@@ -66,7 +66,7 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                     {/* minimum length for shortParagraph string: 66 char,
                         or the wrapping is off at widest tablet 2 column width :( */}
                     <SingleLinkCard
-                        cardHeading="AskUs and student IT support"
+                        cardHeading="Library and student IT help"
                         landingUrl={linkToDrupal('/askus-and-it-support')}
                         iconBackgroundImage={conversationChatBackgroundimage}
                         shortParagraph="Using your devices, printing and online exams. Contact or visit AskUs for help."
