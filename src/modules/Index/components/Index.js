@@ -252,7 +252,7 @@ export const Index = ({
                             data-testid="homepage-hours-bookit-link"
                             >
                             <span>
-                                Make a booking
+                                Book a room
                             </span>
                         </StyledLink>
                         <StyledAccordion>

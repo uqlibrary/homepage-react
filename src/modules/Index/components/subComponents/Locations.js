@@ -11,20 +11,16 @@ import { styled } from '@mui/material/styles';
 import { locale as locationLocale } from 'config/locale';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
+const StyledStandardCard = styled(StandardCard)(() => ({
+    '& .MuiCardHeader-root': {
+        paddingBlock: '12px',
+    },
+}));
 const StyledWrapper = styled('div')(({ theme }) => ({
     ['&.locations-wrapper']: {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-    },
-    ['& .locations-wrapper-detail']: {
-        flexGrow: 1,
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        [theme.breakpoints.down('md')]: {
-            overflowX: 'hidden',
-            overflowY: 'hidden',
-        },
     },
     ['& .table-row']: {
         fontSize: '16px',
@@ -32,7 +28,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         fontWeight: 500,
         letterSpacing: '0.16px',
         lineHeight: '160%' /* 25.6px */,
+        justifyContent: 'center',
         marginLeft: 8,
+        marginBlock: '-4px',
         padding: '8px 8px 8px 0',
         transition: 'all 0.3s ease',
         ['& a']: {
@@ -49,6 +47,13 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             maxWidth: '785px',
         },
     },
+    '& .table-row-header': {
+        marginBlock: 0,
+        paddingBlock: 0,
+        '& > div': {
+            paddingTop: 0,
+        },
+    },
     '& .table-body-row': {
         '&:hover': {
             backgroundColor: '#f3f3f4', // $grey-50	Background colour to highlight sections, cards or panes
@@ -59,6 +64,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         fontWeight: 500,
         lineHeight: '160%', // 25.6px
         letterSpacing: '0.16px',
+    },
+    '& .locations-wrapper-detail .table-column-busy': {
+        paddingLeft: '64px',
     },
     '& .table-cell-hours': {
         fontWeight: 400,
@@ -72,20 +80,27 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         backgroundColor: '#dcdcdc',
         borderRadius: '20px',
         fontSize: '0.8em',
+        marginTop: '4px',
         width: '100%',
-        '& .occupancyFull': {
+        height: '16px',
+        '& .occupancyPercent': {
             backgroundColor: theme.palette.primary.light,
             color: theme.palette.primary.light,
             display: 'block',
             borderTopLeftRadius: '20px',
             borderBottomLeftRadius: '20px',
+            height: '16px',
+            '& span': {
+                paddingLeft: '24px',
+            },
+        },
+        '& .occupancyPercent:has(.busy-closed)': {
+            lineHeight: '18px',
+            marginLeft: '20px',
         },
         '& .occupancyPercent100': {
             borderTopRightRadius: '20px',
             borderBottomRightRadius: '20px',
-        },
-        '& span span': {
-            paddingLeft: '24px',
         },
     },
     ['& .outlink']: {
@@ -252,7 +267,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
         const departmentsMapUsed = departmentsMapIn ?? departmentsMap;
         return item.departments?.filter(d => departmentsMapUsed.includes(d.name))?.find(d => d.currently_open === true);
     };
-    const getidFromname = string => {
+    const sluggifyName = string => {
         // standardise a string
         return string.toLowerCase().replace(' ', '-');
     };
@@ -269,7 +284,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
         return 'Very busy';
     };
     return (
-        <StandardCard noPadding standardCardId="locations-panel">
+        <StyledStandardCard noPadding standardCardId="locations-panel">
             <StyledWrapper
                 className={`locations-wrapper ${
                     !!account && !!account.id ? 'componentHeight' : 'componentHeightPublic'
@@ -287,7 +302,13 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                 {!libHoursError && !!libHours && !libHoursLoading && (
                     <Fade in={!libHoursLoading} timeout={1000}>
                         <div className={'locations-wrapper-detail'} role="table">
-                            <Grid container spacing={1} className="table-row" alignItems={'flex-start'} role="row">
+                            <Grid
+                                container
+                                spacing={1}
+                                className="table-row table-row-header"
+                                alignItems={'flex-start'}
+                                role="row"
+                            >
                                 <Grid item xs={7}>
                                     <Grid container>
                                         <Grid
@@ -323,21 +344,21 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={5} role="columnheader" id="locations-header-busyness">
-                                    <Typography component={'h2'} className={'table-header-cell'}>
+                                    <Typography component={'h2'} className={'table-header-cell table-column-busy'}>
                                         Busy level
                                     </Typography>
                                 </Grid>
                             </Grid>
                             {!!sortedHours &&
                                 sortedHours.length > 1 &&
-                                sortedHours.map((item, index) => {
+                                sortedHours.map((location, index) => {
                                     return (
                                         <Grid
                                             container
-                                            data-testid={getidFromname(`hours-item-${item.abbr}`)}
+                                            data-testid={sluggifyName(`hours-item-${location.abbr}`)}
                                             spacing={1}
                                             key={index}
-                                            className={`table-row location-${item.abbr.toLowerCase()} table-body-row`}
+                                            className={`table-row location-${location.abbr.toLowerCase()} table-body-row`}
                                             alignItems={'flex-start'}
                                             role="row"
                                         >
@@ -351,12 +372,12 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                         aria-labelledby="locations-header-library"
                                                     >
                                                         <a
-                                                            aria-label={ariaLabelForLocation(item)}
+                                                            aria-label={ariaLabelForLocation(location)}
                                                             data-analyticsid={`hours-item-${index}`}
-                                                            href={item.url}
+                                                            href={location.url}
                                                         >
-                                                            <span id={`${getidFromname(`hours-item-${item.abbr}`)}`}>
-                                                                {item.name}
+                                                            <span id={`${sluggifyName(`hours-item-${location.abbr}`)}`}>
+                                                                {location.name}
                                                             </span>
                                                         </a>
                                                     </Grid>
@@ -376,14 +397,14 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                         role="cell"
                                                         aria-labelledby={
                                                             'locations-header-hours ' +
-                                                            `${getidFromname(`hours-item-${item.abbr}`)}`
+                                                            `${sluggifyName(`hours-item-${location.abbr}`)}`
                                                         }
                                                     >
                                                         {(() => {
-                                                            if (item.abbr === 'AskUs') {
-                                                                return item.departments.map(department => {
+                                                            if (location.abbr === 'AskUs') {
+                                                                return location.departments.map(department => {
                                                                     if (['Chat'].includes(department.name)) {
-                                                                        return isOpen(item, ['Chat']) ? (
+                                                                        return isOpen(location, ['Chat']) ? (
                                                                             <StyledOpeningHours
                                                                                 key={`chat-isopen-${department.lid}`}
                                                                             >
@@ -399,10 +420,10 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                                     }
                                                                     return null;
                                                                 });
-                                                            } else if (hasDepartments(item)) {
-                                                                return item.departments.map(department => {
+                                                            } else if (hasDepartments(location)) {
+                                                                return location.departments.map(department => {
                                                                     if (departmentsMap.includes(department.name)) {
-                                                                        return isOpen(item) ? (
+                                                                        return isOpen(location) ? (
                                                                             <StyledOpeningHours
                                                                                 key={`department-isopen-${department.lid}`}
                                                                             >
@@ -429,35 +450,35 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
-                                            {item.abbr !== 'AskUs' && item.busyness !== null && (
-                                                <Grid
-                                                    item
-                                                    xs={5}
-                                                    role="cell"
-                                                    aria-labelledby="locations-header-busyness"
-                                                >
+                                            <Grid
+                                                item
+                                                xs={5}
+                                                role="cell"
+                                                aria-labelledby="locations-header-busyness"
+                                                className={'table-body-cell table-column-busy'}
+                                            >
+                                                {location.abbr !== 'AskUs' && location.busyness !== null && (
                                                     <div className="occupancy">
-                                                        <span
-                                                            className={`occupancyFull occupancyPercent${item.busyness}`}
+                                                        <div
+                                                            className={`occupancyPercent occupancyPercent${location.busyness}`}
                                                             style={{
                                                                 width:
-                                                                    !hasDepartments(item) || isOpen(item)
-                                                                        ? `${item.busyness}%`
+                                                                    !hasDepartments(location) || isOpen(location)
+                                                                        ? `${location.busyness}%`
                                                                         : 0,
                                                             }}
-                                                            title={busynessText(item.busyness)}
+                                                            title={busynessText(location.busyness)}
                                                         >
-                                                            <span>
-                                                                {!hasDepartments(item) ||
-                                                                (isOpen(item) && item.busyness > 0)
-                                                                    ? // ? `${item.busyness}%`
-                                                                      ''
-                                                                    : 'Closed'}
-                                                            </span>
-                                                        </span>
+                                                            {!hasDepartments(location) ||
+                                                            (isOpen(location) && location.busyness > 0) ? (
+                                                                <span>{/* ${location.busyness}%*/}</span>
+                                                            ) : (
+                                                                <div className={'busy-closed'}>Closed</div>
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                </Grid>
-                                            )}
+                                                )}
+                                            </Grid>
                                         </Grid>
                                     );
                                 })}
@@ -471,7 +492,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                 )}
                 <p style={{ marginLeft: '30px', fontWeight: 'bold' }}>
                     Note: made up occupancy data (random numbers) also, pretending Gatton isnt returning & Herston is
-                    full occupancy data atm
+                    full occupancy
                 </p>
                 <div className="outlink">
                     <Link
@@ -483,7 +504,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                     </Link>
                 </div>
             </StyledWrapper>
-        </StandardCard>
+        </StyledStandardCard>
     );
 };
 
