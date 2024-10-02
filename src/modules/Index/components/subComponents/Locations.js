@@ -102,6 +102,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             borderTopRightRadius: '20px',
             borderBottomRightRadius: '20px',
         },
+        '& .busy-closed': {
+            fontWeight: 400,
+        },
     },
     ['& .outlink']: {
         marginTop: '32px',
