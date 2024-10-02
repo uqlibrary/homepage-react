@@ -68,7 +68,7 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
             height: '100%',
             justifyContent: articleindex === 0 ? 'center' : 'top',
             paddingTop: '0px !important',
-            // paddingBottom: '24px',
+
             [theme.breakpoints.up('xs')]: {
                 paddingLeft: articleindex !== 0 ? 0 : 24,
                 paddingRight: articleindex !== 0 ? 0 : 24,
