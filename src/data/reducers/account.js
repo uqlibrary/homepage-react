@@ -3,7 +3,7 @@ import * as actions from 'data/actions/actionTypes';
 export const initialState = {
     account: null,
     author: null,
-    accountLoading: null,
+    accountLoading: null, // ternary: null = 'not started'; true = 'underway'; false = 'complete'
     accountAuthorLoading: null,
     isSessionExpired: null,
 };
