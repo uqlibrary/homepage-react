@@ -9,7 +9,9 @@ context('Library Opening Locations Homepage Panel', () => {
         cy.get('[data-testid="hours-accordion-open"]').click();
 
         // the expected content is found on the page
-        cy.get('[data-testid="hours-item-arch-music"]').contains('Architecture & Music Library');
+        cy.get('[data-testid="hours-item-arch-music"]')
+            .should('be.visible')
+            .contains('Architecture & Music Library');
 
         cy.checkA11y('div[data-testid="locations-panel"]', {
             reportName: 'Hours',
@@ -53,7 +55,7 @@ context('Library Opening Locations Homepage Panel', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
         cy.get('[data-testid="homepage-hours-bookit-link"]')
-            .should('contain', 'Make a booking')
+            .should('contain', 'Book a room')
             .click();
         cy.get('body').contains('user has navigated to Bookit page');
     });
