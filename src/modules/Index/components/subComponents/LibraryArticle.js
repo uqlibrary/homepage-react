@@ -45,7 +45,7 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
         },
         'article-container': {
             [theme.breakpoints.down('uqDsTablet')]: {
-                padding: '0 24px 0 !important'
+                padding: '0 24px 0 !important',
             },
         },
         '.ArticleCategory': {
@@ -87,12 +87,12 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
         },
         '.ArticleTitle': {},
         a: {
-            textDecoration: 'none',
+            textDecoration: 'none !important',
             '&:hover': {
-                textDecoration: 'none',
+                textDecoration: 'none !important',
             },
             '&:hover h3': {
-                textDecoration: 'underline',
+                textDecoration: 'underline !important',
             },
         },
 
