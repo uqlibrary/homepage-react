@@ -252,7 +252,7 @@ export const Index = ({
                             data-testid="homepage-hours-bookit-link"
                             >
                             <span>
-                                Make a booking
+                                Book a room
                             </span>
                         </StyledLink>
                         <StyledAccordion>
@@ -286,7 +286,7 @@ export const Index = ({
                                     {greeting()}, {account.firstName || /* istanbul ignore next */ ''}
                                 </StyledHeading>
                             </Grid>
-                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="referencing-panel">
+                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="primo-panel">
                                 <CataloguePanel account={account} loans={loans} />
                             </StyledGridItemLoggedIn>
                             {canSeeLearningResources(account) && (
@@ -311,10 +311,9 @@ export const Index = ({
                             <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="referencing-panel">
                                 <ReferencingPanel account={account} />
                             </StyledGridItemLoggedIn>
-                            <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="referencing-panel">
+                            <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="readpublish-panel">
                                 <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
                             </StyledGridItemLoggedIn>
-                            {/* My UQ Account / Primo Stuff */}
                             <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="training-panel">
                                 <Training
                                     trainingEvents={trainingEvents}

@@ -42,7 +42,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
     background: '#FFFFFF',
     display: 'block',
     cursor: 'pointer',
-    color: theme.palette.secondary.dark,
+    color: theme.palette.primary.light,
     fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
     fontSize: '20px',
     fontWeight: 500,
@@ -53,7 +53,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
         fontSize: '24px',
         fontWeight: 500,
         letterSpacing: '0.16px',
-        lineHeight: '1.6',
+        lineHeight: 1.2,
         marginBlock: '8px',
     },
     '& svg.arrowForwardIcon': {
@@ -107,8 +107,8 @@ const StyledLink = styled(Link)(({ theme }) => ({
         },
         '& .cardHeading': {
             fontWeight: 500,
-            marginLeft: '24px',
             fontSize: '22px',
+            marginLeft: '24px',
         },
         '& div': {
             display: 'flex',
@@ -134,7 +134,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
             textDecoration: 'none',
             '& svg.arrowForwardIcon': {
                 '@media (prefers-reduced-motion: no-preference)': {
-                    marginLeft: '34px', // 24 + 10
+                    marginLeft: '10px',
                     transition: 'margin-left 200ms ease-in-out',
                 },
             },

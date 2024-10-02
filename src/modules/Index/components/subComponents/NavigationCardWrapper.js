@@ -60,7 +60,7 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                         cardHeading="Study and learning support"
                         landingUrl={linkToDrupal('/study-and-learning-support')}
                         iconBackgroundImage={bookOpenBookmarkBackgroundImage}
-                        shortParagraph="Coursework resources, support for teachers, copyright advice and training."
+                        shortParagraph="Coursework and teaching resources, referencing, copyright and training."
                         loggedIn={accountLoading === false && !!account}
                     />
                     {/* minimum length for shortParagraph string: 66 char,
@@ -76,28 +76,28 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                         cardHeading="Research and publish"
                         landingUrl={linkToDrupal('/research-and-publish')}
                         iconBackgroundImage={scienceMoleculeBackgroundImage}
-                        shortParagraph="Publishing and research data, IDs, and metrics, engagement and impact."
+                        shortParagraph="Publishing and research data, and track your metrics, engagement and impact."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardHeading="Find and borrow"
                         landingUrl={linkToDrupal('/find-and-borrow')}
                         iconBackgroundImage={researchExperienceBackgroundImage}
-                        shortParagraph="Find, borrow and request, collections, memberships and UQ Archives."
+                        shortParagraph="Discover library collections, how to search, memberships and UQ Archives."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardHeading="Visit"
                         landingUrl={linkToDrupal('/visit-our-spaces')}
                         iconBackgroundImage={pinBackgroundImage}
-                        shortParagraph="Using library spaces: facilities, opening hours and availability."
+                        shortParagraph="Explore our libraries and find spaces where you can study, meet and relax."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
                         cardHeading="About"
                         landingUrl={linkToDrupal('/about-us')}
                         iconBackgroundImage={schoolBuildingBackgroundimage}
-                        shortParagraph="Learn about the Library. Our people, news, policies and awards."
+                        shortParagraph="Learn about the Library - our people, purpose and news."
                         loggedIn={accountLoading === false && !!account}
                     />
                 </StyledGridContainer>
