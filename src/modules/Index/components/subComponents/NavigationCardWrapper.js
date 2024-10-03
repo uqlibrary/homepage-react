@@ -76,7 +76,7 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                         cardHeading="Research and publish"
                         landingUrl={linkToDrupal('/research-and-publish')}
                         iconBackgroundImage={scienceMoleculeBackgroundImage}
-                        shortParagraph="Publishing and research data, and track your metrics, engagement and impact."
+                        shortParagraph="Open research, funding, metrics, engagement and impact, and UQ eSpace."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
