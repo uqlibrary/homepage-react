@@ -399,11 +399,11 @@ export const libHours = {
                 "status": "open",
                 "hours": [{
                     "from": "7am",
-                    "to": "10:30pm"
+                    "to": "10:30am"
                 }],
                 "currently_open": false
             },
-            "rendered": "7am - 10:30pm",
+            "rendered": "7am - 10:30am",
             "open": "07:00:00",
             "close": "22:30:00"
         },
@@ -464,7 +464,7 @@ export const libHours = {
             "day": "Tuesday",
             "times": {
                 "status": "ByApp",
-                "currently_open": false
+                "currently_open": true
             },
             "rendered": "By Appointment"
         }]

@@ -175,7 +175,7 @@ const MyLoader = props => (
         <rect x="65%" y="115" rx="3" ry="3" width="17%" height="5" />
     </ContentLoader>
 );
-const departmentsMap = ['Collections & space', 'Study space'];
+const departmentsMap = ['Collections & space', 'Study space', 'Service & collections'];
 export const ariaLabelForLocation = item => {
     const name = item.name;
     const hours =
