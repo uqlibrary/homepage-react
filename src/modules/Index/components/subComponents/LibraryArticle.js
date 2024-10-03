@@ -211,7 +211,7 @@ const RenderTextblock = (articleindex, article, theme, isSm) => {
                 >
                     {article.title}
                 </Typography>
-                {!!article.description && (
+                {!!article.description && article.description.trim() !== '' && (
                     <Typography
                         component={'p'}
                         sx={{
