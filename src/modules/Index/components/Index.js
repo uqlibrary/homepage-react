@@ -5,9 +5,9 @@ import { lazy } from 'react';
 import { PropTypes } from 'prop-types';
 import { useDispatch } from 'react-redux';
 
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Fade from '@mui/material/Fade';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
@@ -41,26 +41,6 @@ const ReferencingPanel = lazy(() => lazyRetry(() => import('modules/Index/compon
 const ReadPublish = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReadPublish')));
 const CataloguePanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/CataloguePanel')));
 
-const StyledAccordion = styled(Accordion)(() => ({
-    backgroundColor: 'inherit',
-    border: 'none',
-    boxShadow: 'none',
-}));
-
-const StyledAccordionSummary = styled(AccordionSummary)(() => ({
-    display: 'inline-flex',
-    width: 'auto',
-    minWidth: 0,
-    paddingLeft: 0,
-    minHeight: '48px !important',
-    '& .MuiAccordionSummary-content': {
-        margin: '0 !important',
-    },
-    '& .MuiAccordionSummary-contentGutters': {
-        margin: '0 !important',
-    },
-}));
-
 const StyledPortalContainer = styled('div')(() => ({
     paddingTop: 48,
     paddingBottom: 48,
@@ -89,24 +69,14 @@ const StyledH1 = styled('h1')(({ theme }) => ({
     },
 }));
 
-const StyleWrapper = styled('div')(() => ({
-    position: 'relative',
-}));
-
-const StyledLink = styled(Link)(({ theme }) => ({
+const StyledBookingLink = styled(Link)(({ theme }) => ({
     color: 'black',
     fontWeight: 400,
     textDecorationColor: theme.palette.primary.light,
     '& span': {
         color: theme.palette.primary.light,
         display: 'block',
-        paddingTop: '14px',
-    },
-    '@media (min-width: 640px)': {
-        position: 'absolute',
-        top: 0,
-        right: '10px',
-        zIndex: 10,
+        paddingTop: '13px',
     },
 }));
 
@@ -123,6 +93,51 @@ const StyledGridWrapper = styled('div')(() => ({
     },
 }));
 
+const StyledLocationBox = styled(Box)(({ theme }) => ({
+backgroundColor: 'white',
+    border: '1px solid #DCDCDD',
+    borderRadius: '0 0 4px 4px',
+    boxShadow: '0px 12px 24px 0px rgba(25, 21, 28, 0.05)',
+    marginTop: '3px',
+    minWidth: '66%',
+    zIndex: 999,
+    position: 'absolute',
+    top: 50,
+    left: 0,
+    [theme.breakpoints.down('uqDsDesktop')]: {
+        minWidth: '80%',
+    },
+    [theme.breakpoints.down('uqDsTablet')]: {
+        minWidth: '95%',
+        left: 5,
+    },
+}));
+
+const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+
+    '& button': {
+        color: theme.palette.primary.light,
+        fontSize: '16px',
+        marginTop: '6px',
+        textDecoration: 'underline',
+        textTransform: 'none',
+        '&:hover': {
+            backgroundColor: 'transparent',
+            textDecoration: 'underline',
+            '-webkit-text-decoration': 'none',
+        },
+    },
+    '& a': {
+        fontSize: '16px',
+        height: '40px',
+        paddingBlock: '6px',
+        marginLeft: '32px',
+    },
+}));
+
 const StyledGridItemLoggedIn = styled(Grid)(({ theme }) => ({
     paddingLeft: '24px',
     marginBottom: '24px',
@@ -130,13 +145,6 @@ const StyledGridItemLoggedIn = styled(Grid)(({ theme }) => ({
         paddingLeft: '32px',
         marginBottom: '32px',
     },
-}));
-
-const StyledSummary = styled('span')(({ theme }) => ({
-    color: theme.palette.primary.light,
-    textDecoration: 'underline',
-    fontFamily: 'Roboto, sans-serif',
-    fontWeight: 400,
 }));
 
 export const Index = ({
@@ -168,18 +176,28 @@ export const Index = ({
     // console.log('drupal article list in index feeder,', drupalArticleList);
     const dispatch = useDispatch();
 
-    React.useEffect(() => {
+    // handle the location opener
+    const [locationOpenerElement, setLocationOpenerElement] = React.useState(null);
+    const handleLocationOpenerClick = () => {
+        const showLocation = setInterval(() => {
+            setLocationOpenerElement(!locationOpenerElement);
+            console.log('setInterval locationOpenerElement=', locationOpenerElement);
+
+            clearInterval(showLocation);
+        }, 10);
+    };
+    const isLocationOpen = Boolean(locationOpenerElement);
+
+    useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader && siteHeader.removeAttribute('secondleveltitle');
         !!siteHeader && siteHeader.removeAttribute('secondLevelUrl');
     }, []);
 
-
     // drupal article stuff here.
 
     useEffect(() => {
         if (!drupalArticleList || drupalArticleList?.length < 1) {
-            // console.log('dispatching', drupalArticleList);
             dispatch(loadDrupalArticles());
         }
     }, [drupalArticleList, dispatch]);
@@ -187,7 +205,6 @@ export const Index = ({
     // Journal Search favourites here
     useEffect(() => {
         if (accountLoading === false && !!account) {
-            // console.log('dispatching', drupalArticleList);
             dispatch(loadJournalSearchFavourites());
         }
     }, [accountLoading, account, dispatch]);
@@ -236,6 +253,7 @@ export const Index = ({
         }
     }, [accountLoading, account, loans, loansLoading, dispatch]);
 
+    console.log('reload locationOpenerElement=', locationOpenerElement);
     return (
         <React.Suspense fallback={<ContentLoader message="Loading"/>}>
             <StyledPortalContainer id="search-portal-container" data-testid="search-portal-container">
@@ -245,35 +263,35 @@ export const Index = ({
                 </StandardPage>
             </StyledPortalContainer>
             <div style={{ borderBottom: '1px solid hsla(203, 50%, 30%, 0.15)' }}>
-                <div className="layout-card">
-                    <StyleWrapper>
-                        <StyledLink
+                <div className="layout-card" style={{ position: 'relative' }}>
+                    <StyledButtonWrapperDiv style={{ position: 'relative' }}>
+                        <Button
+                            id="panel1a-header"
+                            data-testid="hours-accordion-open"
+                            onClick={handleLocationOpenerClick}
+                        >
+                            Library locations
+                            <ExpandMoreIcon/>
+                        </Button>
+                        <StyledBookingLink
                             href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
                             data-testid="homepage-hours-bookit-link"
                             >
                             <span>
                                 Book a room
                             </span>
-                        </StyledLink>
-                        <StyledAccordion>
-                            <StyledAccordionSummary
-                                expandIcon={<ExpandMoreIcon/>}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                                data-testid="hours-accordion-open"
-                            >
-                                <StyledSummary>Library locations</StyledSummary>
-                            </StyledAccordionSummary>
-                            <AccordionDetails>
-                                <Locations
-                                    libHours={libHours}
-                                    libHoursLoading={libHoursLoading}
-                                    libHoursError={libHoursError}
-                                    account={account}
-                                />
-                            </AccordionDetails>
-                        </StyledAccordion>
-                    </StyleWrapper>
+                        </StyledBookingLink>
+                    </StyledButtonWrapperDiv>
+                    <Fade direction="down" in={!!isLocationOpen} mountOnEnter unmountOnExit>
+                        <StyledLocationBox>
+                            <Locations
+                                libHours={libHours}
+                                libHoursLoading={libHoursLoading}
+                                libHoursError={libHoursError}
+                                account={account}
+                            />
+                        </StyledLocationBox>
+                    </Fade>
                 </div>
             </div>
             {console.log('loans', loans, loansLoading)}

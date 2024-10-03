@@ -66,7 +66,7 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                     {/* minimum length for shortParagraph string: 66 char,
                         or the wrapping is off at widest tablet 2 column width :( */}
                     <SingleLinkCard
-                        cardHeading="AskUs and student IT support"
+                        cardHeading="Library and student IT help"
                         landingUrl={linkToDrupal('/askus-and-it-support')}
                         iconBackgroundImage={conversationChatBackgroundimage}
                         shortParagraph="Using your devices, printing and online exams. Contact or visit AskUs for help."
@@ -76,7 +76,7 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                         cardHeading="Research and publish"
                         landingUrl={linkToDrupal('/research-and-publish')}
                         iconBackgroundImage={scienceMoleculeBackgroundImage}
-                        shortParagraph="Publishing and research data, and track your metrics, engagement and impact."
+                        shortParagraph="Open research, funding, metrics, engagement and impact, and UQ eSpace."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
