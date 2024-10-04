@@ -104,7 +104,6 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         },
         '& .occupancyPercent:has(.busy-closed)': {
             lineHeight: '18px',
-            marginLeft: '20px',
         },
         '& .occupancyPercent100': {
             borderTopRightRadius: '20px',
@@ -215,6 +214,112 @@ export const hasDepartments = item => {
     return displayableDepartments.length > 0;
 };
 
+// eventually, call the api
+const vemcountapi = {
+    data: [
+        {
+            id: 14976, // Duhig Tower
+            headCount: 160,
+            capacity: 294,
+        },
+        {
+            id: 14975, // Central Library
+            headCount: 2,
+            capacity: 770,
+        },
+        {
+            id: 14974, // Architecture & Music Library
+            headCount: 90,
+            capacity: 105,
+        },
+        {
+            id: 14977, // Biological Sciences Library
+            headCount: 290,
+            capacity: 595,
+        },
+        {
+            id: 14979, // DHESL
+            headCount: 130,
+            capacity: 315,
+        },
+        // mock data, gatton did not return a response
+        // {
+        //     id: 14985, // Gatton
+        //     headCount: 16,
+        //     capacity: 378,
+        // },
+        {
+            id: 14983, // Herston
+            headCount: 70,
+            capacity: 70,
+        },
+        {
+            id: 14978, // Law
+            headCount: 100,
+            capacity: 196,
+        },
+        {
+            id: 14980, // Dutton Park  (Pace)
+            headCount: 27,
+            capacity: 112,
+        },
+    ],
+    // missing:
+    // 4986 askus
+    // 3832 fryer - FW Robinson Reading Room
+    // 3966 whitty
+};
+
+// this table maps those locations who exist on vemcount against their matching speingshare location
+// note: not all locations have vemcount people-counting gates
+const vemmcountSpringshareMapping = [
+    {
+        springshareId: 3967,
+        vemcountId: 14980,
+        name: 'Dutton park', // this doesn't need to match either system, its for the developer to not have to track raw numbers
+    },
+    {
+        springshareId: 3842,
+        vemcountId: 14975,
+        name: 'Central',
+    },
+    {
+        springshareId: 3823,
+        vemcountId: 14974,
+        name: 'Architecture',
+    },
+    {
+        springshareId: 3824,
+        vemcountId: 14977,
+        name: 'BSL',
+    },
+    {
+        springshareId: 3825,
+        vemcountId: 14979,
+        name: 'DHESL',
+    },
+    {
+        springshareId: 3830,
+        vemcountId: 14976,
+        name: 'Duhig tower',
+    },
+    {
+        springshareId: 3833,
+        vemcountId: 14985,
+        name: 'Gatton',
+    },
+    {
+        springshareId: 3838,
+        vemcountId: 14983,
+        name: 'Herston',
+    },
+    {
+        springshareId: 3841,
+        vemcountId: 14978,
+        name: 'Law',
+    },
+];
+
 const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
     const cleanedHours =
         (!libHoursError &&
@@ -232,21 +337,37 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         };
                     });
                 }
-                const min = 20;
-                const max = 100;
 
-                function tempCalcLocationBusiness() {
-                    // this wil be replaced wih api results
-                    if (location?.abbr === 'Gatton') {
-                        return null;
-                    }
-                    if (location?.abbr === 'Herston') {
-                        return 100;
-                    }
-                    return Math.floor(Math.random() * (max - min + 1)) + min;
+                function vemcountPercentByLocation(locationId) {
+                    const vemcountholder = vemmcountSpringshareMapping.filter(m => m.springshareId === locationId);
+                    const vemcountLocation = vemcountholder?.pop();
+                    const vemcountId = vemcountLocation?.vemcountId;
+                    // vemcountapi constant, above, wil be replaced wih api results
+                    const vemcountWrapper = vemcountapi?.data?.filter(v => v.id === vemcountId);
+                    const vemcountData = vemcountWrapper?.pop();
+                    return vemcountData?.headCount / vemcountData?.capacity;
                 }
 
-                const randomBusynessNumber = tempCalcLocationBusiness();
+                function getVemcountPercentage(locationId) {
+                    if (locationId === null) {
+                        return null;
+                    }
+                    const minimumDisplayedPercentage = 5;
+
+                    const vemcountBusynessPercent = vemcountPercentByLocation(locationId);
+                    const calculatedBusyness =
+                        !!vemcountBusynessPercent || vemcountBusynessPercent > 0
+                            ? Math.floor(vemcountBusynessPercent * 100)
+                            : null;
+
+                    let response = calculatedBusyness !== null ? calculatedBusyness : null;
+                    // don't let the bar go below what shows as a small curve on the left
+                    if (response !== null && response < minimumDisplayedPercentage) {
+                        response = minimumDisplayedPercentage;
+                    }
+                    return response;
+                }
+
                 return {
                     name: location.name,
                     abbr: location.abbr,
@@ -254,9 +375,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                     alt: location.name,
                     campus: locationLocale.hoursCampusMap[location.abbr],
                     departments,
-                    // temporaily grab a random number that is the busyness %age
-                    // will eventually be an api
-                    busyness: randomBusynessNumber,
+                    busyness: getVemcountPercentage(location?.lid, location.name) || null,
                 };
             })) ||
         [];
@@ -383,7 +502,9 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                             style={{ paddingBlock: 0 }}
                                                         >
                                                             <span id={`${sluggifyName(`hours-item-${location.abbr}`)}`}>
-                                                                {location.name}
+                                                                {location.abbr === 'AskUs'
+                                                                    ? 'AskUs chat hours'
+                                                                    : location.name}
                                                             </span>
                                                         </a>
                                                     </Grid>
@@ -409,12 +530,19 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                         {(() => {
                                                             if (location.abbr === 'AskUs') {
                                                                 return location.departments.map(department => {
+                                                                    console.log(
+                                                                        'A ',
+                                                                        `"${department.name}"`,
+                                                                        department.hours,
+                                                                    );
                                                                     if (['Chat'].includes(department.name)) {
-                                                                        <StyledOpeningHours
-                                                                            key={`chat-isopen-${department.lid}`}
-                                                                        >
-                                                                            {department.hours}
-                                                                        </StyledOpeningHours>;
+                                                                        return (
+                                                                            <StyledOpeningHours
+                                                                                key={`chat-isopen-${department.lid}`}
+                                                                            >
+                                                                                {department.hours}
+                                                                            </StyledOpeningHours>
+                                                                        );
                                                                     }
                                                                     return null;
                                                                 });
@@ -450,24 +578,28 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                 className={'table-body-cell table-column-busy'}
                                             >
                                                 {location.abbr !== 'AskUs' && location.busyness !== null && (
-                                                    <div className="occupancy">
-                                                        <div
-                                                            className={`occupancyPercent occupancyPercent${location.busyness}`}
-                                                            style={{
-                                                                width:
-                                                                    !hasDepartments(location) || isOpen(location)
-                                                                        ? `${location.busyness}%`
-                                                                        : 0,
-                                                            }}
-                                                            title={busynessText(location.busyness)}
-                                                        >
-                                                            {!hasDepartments(location) ||
-                                                            (isOpen(location) && location.busyness > 0) ? (
-                                                                <span>{/* ${location.busyness}%*/}</span>
-                                                            ) : (
-                                                                <div className={'busy-closed'}>Closed</div>
-                                                            )}
-                                                        </div>
+                                                    <div>
+                                                        {!hasDepartments(location) ||
+                                                        // (isOpen(location) && location.busyness > 0) ? (
+                                                        isOpen(location) ? (
+                                                            <div className="occupancy">
+                                                                <div
+                                                                    className={`occupancyPercent occupancyPercent${location.busyness}`}
+                                                                    style={{
+                                                                        width:
+                                                                            !hasDepartments(location) ||
+                                                                            isOpen(location)
+                                                                                ? `${location.busyness}%`
+                                                                                : 0,
+                                                                    }}
+                                                                    title={busynessText(location.busyness)}
+                                                                >
+                                                                    <span>{/* ${location.busyness}%*/}</span>
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <div className={'busy-closed'}>Closed</div>
+                                                        )}
                                                     </div>
                                                 )}
                                             </Grid>
@@ -482,16 +614,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         <MyLoader id="hours-loader" data-testid="hours-loader" aria-label="Locations data is loading" />
                     </div>
                 )}
-                <p
-                    style={{
-                        marginLeft: '30px',
-                        fontWeight: 'bold',
-                    }}
-                >
-                    Note: made up occupancy data (random numbers)
-                    <br />
-                    Also, pretending Gatton isn't returning occupancy data & Herston is full
-                </p>
                 <div className="outlink">
                     <Link
                         data-testid="homepage-hours-weeklyhours-link"
