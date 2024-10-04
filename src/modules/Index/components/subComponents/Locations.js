@@ -8,6 +8,8 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
+import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
+
 import { locale as locationLocale } from 'config/locale';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -113,19 +115,43 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     '& .occupancyText': {
         color: theme.palette.secondary.main,
         fontWeight: 400,
+        '& svg': {
+            height: '16px',
+            width: 'auto',
+            marginTop: '2px',
+        },
+        '& span': {
+            marginTop: '-2px',
+        },
     },
     ['& .outlink']: {
         marginTop: '32px',
         marginLeft: '32px',
+        marginRight: '32px',
         '& a': {
+            display: 'flex',
+            alignItems: 'center',
             color: theme.palette.primary.light,
             textDecoration: 'underline',
-            fontSize: '1.1em',
+            fontSize: '16px',
             fontWeight: 500,
             '&:hover': {
                 color: 'white',
             },
         },
+        '& svg': {
+            fontSize: '16px',
+            marginLeft: '10px',
+            marginTop: '2px',
+        },
+    },
+    ['& .disclaimer']: {
+        margin: '16px 32px 0 32px',
+        fontSize: '14px',
+        fontStyle: 'normal',
+        fontWeight: 400,
+        letterSpacing: '0.14px',
+        lineHeight: '160%', // 25.6px
     },
     ['& .location-askus']: {
         marginTop: '20px',
@@ -178,6 +204,15 @@ const MyLoader = props => (
         <rect x="65%" y="115" rx="3" ry="3" width="17%" height="5" />
     </ContentLoader>
 );
+const UqDsExclamationCircle = () => {
+    return (
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="9.25" stroke="#51247A" strokeWidth="1.5" />
+            <path d="M12 7.8v4" stroke="#51247A" strokeWidth="1.5" strokeLinecap="round" />
+            <circle cx="11.9" cy="15.6" r=".6" fill="#000" stroke="#51247A" />
+        </svg>
+    );
+};
 const departmentsMap = ['Collections & space', 'Study space', 'Service & collections'];
 export const ariaLabelForLocation = item => {
     const name = item.name;
@@ -476,7 +511,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                             id="locations-header-hours"
                                         >
                                             <Typography component={'h2'} className={'table-header-cell'}>
-                                                Opening hours
+                                                Opening hours*
                                             </Typography>
                                         </Grid>
                                     </Grid>
@@ -592,13 +627,20 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                     } else if (!isOpen(location)) {
                                                         return <div className="occupancyText">Closed</div>;
                                                     } else if (location.busyness === null) {
-                                                        return <span />;
+                                                        return (
+                                                            <div className="occupancyText">
+                                                                <UqDsExclamationCircle /> <span>Data not captured</span>
+                                                            </div>
+                                                        );
                                                     } else if (
                                                         location.busyness ===
                                                         VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING
                                                     ) {
-                                                        // url("data:image/svg+xml,%3csvg viewBox=%270 0 24 24%27 fill=%27none%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3ccircle cx=%2712%27 cy=%2712%27 r=%279.25%27 transform=%27rotate%28-180 12 12%29%27 stroke=%27%23000%27 stroke-width=%271.5%27%3e%3c/circle%3e%3cpath d=%27M12 16.2v-4%27 stroke=%27%23000%27 stroke-width=%271.5%27 stroke-linecap=%27round%27%3e%3c/path%3e%3ccircle cx=%2712%27 cy=%278.4%27 r=%271.1%27 transform=%27rotate%28-180 12 8.4%29%27 fill=%27%23000%27%3e%3c/circle%3e%3c/svg%3e")
-                                                        return <div className="occupancyText">[i] No information</div>;
+                                                        return (
+                                                            <div className="occupancyText">
+                                                                <UqDsExclamationCircle /> <span>No information</span>
+                                                            </div>
+                                                        );
                                                     } else {
                                                         return (
                                                             <div className="occupancy">
@@ -636,11 +678,13 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         data-testid="homepage-hours-weeklyhours-link"
                         data-analyticsid={'hours-item-weeklyhours-link'}
                         to="https://web.library.uq.edu.au/locations-hours/opening-hours"
-                        style={{ marginBottom: '24px' }}
                     >
-                        See weekly Library and AskUs hours
+                        <span>See weekly Library and AskUs hours</span> <ArrowForwardIcon /> {/* uq ds arrow-right-1 */}
                     </Link>
                 </div>
+                <p className={'disclaimer'}>
+                    *Student and staff hours only. For visitor and community hours, see individual Library links above.
+                </p>
             </StyledWrapper>
         </StyledStandardCard>
     );
