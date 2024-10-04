@@ -23,7 +23,7 @@ const palette = {
     },
     secondary: {
         light: '#595959',
-        main: '#d1d0d2', // design system $grey-300
+        main: '#3B383E', // design system grey-900
         dark: '#19151c', // design system $black
     },
     accent: {

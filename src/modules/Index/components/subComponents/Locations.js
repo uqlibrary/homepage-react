@@ -102,13 +102,17 @@ const StyledWrapper = styled('div')(({ theme }) => ({
                 paddingLeft: '24px',
             },
         },
-        '& .occupancyPercent:has(.busy-closed)': {
+        '& .occupancyPercent:has(.occupancyText)': {
             lineHeight: '18px',
         },
         '& .occupancyPercent100': {
             borderTopRightRadius: '20px',
             borderBottomRightRadius: '20px',
         },
+    },
+    '& .occupancyText': {
+        color: theme.palette.secondary.main,
+        fontWeight: 400,
     },
     ['& .outlink']: {
         marginTop: '32px',
@@ -132,8 +136,8 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         overflowX: 'hidden',
     },
 }));
-const StyledOpeningHours = styled(Typography)(() => ({
-    color: '#3B383E', // Brand-grey-grey-900
+const StyledOpeningHours = styled(Typography)(({ theme }) => ({
+    color: theme.palette.secondary.main,
     fontWeight: 400,
     letterSpacing: '0.16px',
 }));
@@ -320,6 +324,7 @@ const vemmcountSpringshareMapping = [
     },
 ];
 
+const VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING = 'Missing';
 const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
     const cleanedHours =
         (!libHoursError &&
@@ -338,34 +343,43 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                     });
                 }
 
-                function vemcountPercentByLocation(locationId) {
-                    const vemcountholder = vemmcountSpringshareMapping.filter(m => m.springshareId === locationId);
+                function vemcountPercentByLocation(springshareLocationId) {
+                    const vemcountholder = vemmcountSpringshareMapping.filter(
+                        m => m.springshareId === springshareLocationId,
+                    );
                     const vemcountLocation = vemcountholder?.pop();
                     const vemcountId = vemcountLocation?.vemcountId;
                     // vemcountapi constant, above, wil be replaced wih api results
                     const vemcountWrapper = vemcountapi?.data?.filter(v => v.id === vemcountId);
-                    const vemcountData = vemcountWrapper?.pop();
-                    return vemcountData?.headCount / vemcountData?.capacity;
+                    const vemcountData = vemcountWrapper.length > 0 ? vemcountWrapper[0] : null;
+                    if (vemcountLocation?.springshareId === springshareLocationId && vemcountWrapper?.length === 0) {
+                        return VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING;
+                    }
+                    return (vemcountData?.headCount / vemcountData?.capacity) * 100;
                 }
 
-                function getVemcountPercentage(locationId) {
-                    if (locationId === null) {
+                function getVemcountPercentage(springshareLocationId) {
+                    if (springshareLocationId === null) {
                         return null;
                     }
                     const minimumDisplayedPercentage = 5;
 
-                    const vemcountBusynessPercent = vemcountPercentByLocation(locationId);
-                    const calculatedBusyness =
-                        !!vemcountBusynessPercent || vemcountBusynessPercent > 0
-                            ? Math.floor(vemcountBusynessPercent * 100)
-                            : null;
-
-                    let response = calculatedBusyness !== null ? calculatedBusyness : null;
-                    // don't let the bar go below what shows as a small curve on the left
-                    if (response !== null && response < minimumDisplayedPercentage) {
-                        response = minimumDisplayedPercentage;
+                    const vemcountBusynessPercent = vemcountPercentByLocation(springshareLocationId);
+                    let calculatedBusyness;
+                    if (vemcountBusynessPercent === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING) {
+                        calculatedBusyness = vemcountBusynessPercent;
+                    } else if (!!isNaN(vemcountBusynessPercent)) {
+                        calculatedBusyness = null;
+                    } else if (vemcountBusynessPercent > 0 && vemcountBusynessPercent < minimumDisplayedPercentage) {
+                        // don't let the bar go below what shows as a small curve on the left
+                        calculatedBusyness = minimumDisplayedPercentage;
+                    } else if (vemcountBusynessPercent > 0) {
+                        calculatedBusyness = Math.floor(vemcountBusynessPercent);
+                    } else {
+                        calculatedBusyness = null;
                     }
-                    return response;
+
+                    return calculatedBusyness;
                 }
 
                 return {
@@ -530,11 +544,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                         {(() => {
                                                             if (location.abbr === 'AskUs') {
                                                                 return location.departments.map(department => {
-                                                                    console.log(
-                                                                        'A ',
-                                                                        `"${department.name}"`,
-                                                                        department.hours,
-                                                                    );
                                                                     if (['Chat'].includes(department.name)) {
                                                                         return (
                                                                             <StyledOpeningHours
@@ -577,11 +586,21 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                 aria-labelledby="locations-header-busyness"
                                                 className={'table-body-cell table-column-busy'}
                                             >
-                                                {location.abbr !== 'AskUs' && location.busyness !== null && (
-                                                    <div>
-                                                        {!hasDepartments(location) ||
-                                                        // (isOpen(location) && location.busyness > 0) ? (
-                                                        isOpen(location) ? (
+                                                {(() => {
+                                                    if (location.abbr === 'AskUs') {
+                                                        return <></>;
+                                                    } else if (!isOpen(location)) {
+                                                        return <div className="occupancyText">Closed</div>;
+                                                    } else if (location.busyness === null) {
+                                                        return <span />;
+                                                    } else if (
+                                                        location.busyness ===
+                                                        VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING
+                                                    ) {
+                                                        // url("data:image/svg+xml,%3csvg viewBox=%270 0 24 24%27 fill=%27none%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3ccircle cx=%2712%27 cy=%2712%27 r=%279.25%27 transform=%27rotate%28-180 12 12%29%27 stroke=%27%23000%27 stroke-width=%271.5%27%3e%3c/circle%3e%3cpath d=%27M12 16.2v-4%27 stroke=%27%23000%27 stroke-width=%271.5%27 stroke-linecap=%27round%27%3e%3c/path%3e%3ccircle cx=%2712%27 cy=%278.4%27 r=%271.1%27 transform=%27rotate%28-180 12 8.4%29%27 fill=%27%23000%27%3e%3c/circle%3e%3c/svg%3e")
+                                                        return <div className="occupancyText">[i] No information</div>;
+                                                    } else {
+                                                        return (
                                                             <div className="occupancy">
                                                                 <div
                                                                     className={`occupancyPercent occupancyPercent${location.busyness}`}
@@ -597,11 +616,9 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                                     <span>{/* ${location.busyness}%*/}</span>
                                                                 </div>
                                                             </div>
-                                                        ) : (
-                                                            <div className={'busy-closed'}>Closed</div>
-                                                        )}
-                                                    </div>
-                                                )}
+                                                        );
+                                                    }
+                                                })()}
                                             </Grid>
                                         </Grid>
                                     );

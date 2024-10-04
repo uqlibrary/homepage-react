@@ -28,7 +28,7 @@ const StyledGridItem = styled(Grid)(({ theme }) => ({
         minWidth: '100%',
     },
     '& p': {
-        color: '#3b383e',
+        color: theme.palette.secondary.main,
         fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
         fontSize: '16px',
         fontWeight: 400,
