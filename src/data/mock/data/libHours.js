@@ -1,7 +1,7 @@
 export const libHours = {
     "locations": [{
     "lid": 3823,
-    "name": "Architecture & Music Library",
+    "name": "Architecture and Music",
     "category": "library",
     "desc": "",
     "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/architecture-music-library",
@@ -126,7 +126,7 @@ export const libHours = {
     },
     {
         "lid": 3824,
-        "name": "Biological Sciences Library",
+        "name": "Biological Sciences",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/biological-sciences-library",
@@ -184,7 +184,7 @@ export const libHours = {
     },
     {
         "lid": 3842,
-        "name": "Central Library",
+        "name": "Central",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/central-library",
@@ -247,7 +247,7 @@ export const libHours = {
     },
     {
         "lid": 3825,
-        "name": "Dorothy Hill Engineering and Sciences Library",
+        "name": "Dorothy Hill Engineering and Sciences",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/dorothy-hill-engineering-and-sciences-library",
@@ -368,7 +368,7 @@ export const libHours = {
     },
     {
         "lid": 3967,
-        "name": "Dutton Park Health Sciences Library",
+        "name": "Dutton Park Health Sciences",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/dutton-park-health-sciences-library",
@@ -435,7 +435,7 @@ export const libHours = {
     },
     {
         "lid": 3832,
-        "name": "FW Robinson Reading Room",
+        "name": "Fryer",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/fw-robinson-reading-room",
@@ -471,7 +471,7 @@ export const libHours = {
     },
     {
         "lid": 3833,
-        "name": "Gatton Library",
+        "name": "JK Murray (UQ Gatton)",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/uq-gatton-library-jk-murray-library",
@@ -534,7 +534,7 @@ export const libHours = {
     },
     {
         "lid": 3838,
-        "name": "Herston Health Sciences Library",
+        "name": "Herston Health Sciences",
         "category": "library",
         "desc": "<p style=\"box-sizing: border-box; color: rgb(34, 34, 34); font-family: Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;\">The library provides resources and services to support the teaching, learning and research needs of:<\/p>\r\n\r\n<ul style=\"box-sizing: border-box; color: rgb(34, 34, 34); font-family: Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;\">\r\n\t<li style=\"box-sizing: border-box;\">UQ staff and students<\/li>\r\n\t<li style=\"box-sizing: border-box;\">Staff of the Royal Brisbane and Women&#39;s Hospital (RBWH) and the<\/li>\r\n\t<li style=\"box-sizing: border-box;\">Lady Cilento Children&#39;s Hospital<\/li>\r\n<\/ul>\r\n\r\n<p style=\"box-sizing: border-box; color: rgb(34, 34, 34); font-family: Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;\">RBWH &amp; Lady Cilento Children&#39;s Hospital&nbsp;staff see&nbsp;<a href=\"https:\/\/web.library.uq.edu.au\/library-services\/services-hospital-staff\" style=\"box-sizing: border-box; color: rgb(35, 119, 203); text-decoration: none; background-color: transparent;\">services for hospital staff<\/a>&nbsp;for more information.<\/p>",
         "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/herston-health-sciences-library",
@@ -621,7 +621,7 @@ export const libHours = {
     },
     {
         "lid": 3841,
-        "name": "Law Library",
+        "name": "Walter Harrison Law",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/law-library-walter-harrison-library",
@@ -677,23 +677,5 @@ export const libHours = {
             }
         ]
     },
-    {
-        "lid": 3966,
-        "name": "Whitty building, Mater",
-        "category": "library",
-        "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours",
-        "contact": "",
-        "lat": "",
-        "long": "",
-        "color": "#0E6E0E",
-        "fn": "Access to Whitty Building is restricted to UQ Mater students on clinical placement.",
-        "day": "Tuesday",
-        "times": {
-            "status": "not-set"
-        },
-        "rendered": "",
-        "abbr": "Whitty Mater"
-    }
 ]
 };
