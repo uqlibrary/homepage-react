@@ -13,6 +13,7 @@ import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -98,7 +99,7 @@ backgroundColor: 'white',
     border: '1px solid #DCDCDD',
     borderRadius: '0 0 4px 4px',
     boxShadow: '0px 12px 24px 0px rgba(25, 21, 28, 0.05)',
-    marginTop: '3px',
+    marginTop: '2px',
     minWidth: '66%',
     zIndex: 999,
     position: 'absolute',
@@ -115,8 +116,9 @@ backgroundColor: 'white',
 
 const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
     display: 'flex',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
     alignItems: 'center',
+    flexDirection: 'row-reverse',
 
     '& button': {
         color: theme.palette.primary.light,
@@ -177,16 +179,18 @@ export const Index = ({
     const dispatch = useDispatch();
 
     // handle the location opener
-    const [locationOpenerElement, setLocationOpenerElement] = React.useState(null);
+    const [locationOpen, setLocationOpen] = React.useState(false);
     const handleLocationOpenerClick = () => {
         const showLocation = setInterval(() => {
-            setLocationOpenerElement(!locationOpenerElement);
-            console.log('setInterval locationOpenerElement=', locationOpenerElement);
+            setLocationOpen(!locationOpen);
+
+            const locationButton = document.getElementById('location-dialog-controller');
+            !!locationButton && (locationButton.ariaExpanded = !locationOpen);
 
             clearInterval(showLocation);
         }, 10);
     };
-    const isLocationOpen = Boolean(locationOpenerElement);
+    const isLocationOpen = Boolean(locationOpen);
 
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -253,7 +257,6 @@ export const Index = ({
         }
     }, [accountLoading, account, loans, loansLoading, dispatch]);
 
-    console.log('reload locationOpenerElement=', locationOpenerElement);
     return (
         <React.Suspense fallback={<ContentLoader message="Loading"/>}>
             <StyledPortalContainer id="search-portal-container" data-testid="search-portal-container">
@@ -265,25 +268,28 @@ export const Index = ({
             <div style={{ borderBottom: '1px solid hsla(203, 50%, 30%, 0.15)' }}>
                 <div className="layout-card" style={{ position: 'relative' }}>
                     <StyledButtonWrapperDiv style={{ position: 'relative' }}>
-                        <Button
-                            id="panel1a-header"
-                            data-testid="hours-accordion-open"
-                            onClick={handleLocationOpenerClick}
-                        >
-                            Library locations
-                            <ExpandMoreIcon/>
-                        </Button>
                         <StyledBookingLink
                             href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
                             data-testid="homepage-hours-bookit-link"
-                            >
+                        >
                             <span>
                                 Book a room
                             </span>
                         </StyledBookingLink>
+                        <Button
+                            id="location-dialog-controller"
+                            data-testid="hours-accordion-open"
+                            onClick={handleLocationOpenerClick}
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            aria-controls="locations-wrapper"
+                        >
+                            Library locations
+                            {!!locationOpen ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
+                        </Button>
                     </StyledButtonWrapperDiv>
                     <Fade direction="down" in={!!isLocationOpen} mountOnEnter unmountOnExit>
-                        <StyledLocationBox>
+                        <StyledLocationBox id={'locations-wrapper'} role={'dialog'}>
                             <Locations
                                 libHours={libHours}
                                 libHoursLoading={libHoursLoading}
