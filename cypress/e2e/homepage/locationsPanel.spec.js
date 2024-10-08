@@ -1,5 +1,5 @@
-context('Library Opening Locations Homepage Panel', () => {
-    it('is Accessible', () => {
+context('Locations Panel', () => {
+    it('behaves as expected', () => {
         cy.visit('/');
         cy.injectAxe();
         cy.viewport(1300, 1000);
@@ -9,6 +9,20 @@ context('Library Opening Locations Homepage Panel', () => {
         cy.get('[data-testid="hours-accordion-open"]').click();
 
         // the expected content is found on the page
+        cy.get('[data-testid="hours-item-arch-music"]')
+            .should('be.visible')
+            .contains('Architecture and Music');
+    });
+    it('is Accessible', () => {
+        cy.visit('/');
+        cy.injectAxe();
+        cy.viewport(1300, 1000);
+
+        cy.log('Hours');
+        cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+        cy.get('[data-testid="hours-accordion-open"]').click();
+
+        // dialog has loaded corrrectly
         cy.get('[data-testid="hours-item-arch-music"]')
             .should('be.visible')
             .contains('Architecture and Music');
@@ -92,5 +106,24 @@ context('Library Opening Locations Homepage Panel', () => {
         //     .should('exist')
         //     .contains('Whitty building, Mater');
         // cy.get('[data-testid="hours-item-whitty-mater"] div:nth-child(2)').contains('See location');
+    });
+    it('can click away to close the dialog', () => {
+        cy.visit('/');
+        cy.viewport(1300, 1000);
+        cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+        cy.get('[data-testid="hours-accordion-open"]').click();
+        // dialog is open
+        cy.get('[data-testid="homepage-hours-weeklyhours-link"]')
+            .should('exist')
+            .contains('See weekly');
+
+        // click elsewhere on the screen
+        cy.get('h1')
+            .should('exist')
+            .scrollIntoView()
+            .contains('Library')
+            .click();
+        // dialog is closed
+        cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.exist');
     });
 });

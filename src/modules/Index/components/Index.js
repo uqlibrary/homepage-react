@@ -175,11 +175,16 @@ export const Index = ({
     loansLoading,
 
 }) => {
-    // console.log('drupal article list in index feeder,', drupalArticleList);
     const dispatch = useDispatch();
 
     // handle the location opener
     const [locationOpen, setLocationOpen] = React.useState(false);
+    const locationsRef = React.useRef(null);
+    const closeOnClickOutsideDialog = (event) => {
+        if (locationsRef.current && !locationsRef.current.contains(event.target)) {
+            setLocationOpen(false);
+        }
+    };
     const handleLocationOpenerClick = () => {
         const showLocation = setInterval(() => {
             setLocationOpen(!locationOpen);
@@ -187,8 +192,17 @@ export const Index = ({
             const locationButton = document.getElementById('location-dialog-controller');
             !!locationButton && (locationButton.ariaExpanded = !locationOpen);
 
+            if (!locationOpen) {
+                document.addEventListener('mousedown', closeOnClickOutsideDialog);
+            } else {
+                document.removeEventListener('mousedown', closeOnClickOutsideDialog);
+            }
+
             clearInterval(showLocation);
         }, 10);
+        return () => {
+            document.removeEventListener('mousedown', closeOnClickOutsideDialog);
+        };
     };
     const isLocationOpen = Boolean(locationOpen);
 
@@ -289,7 +303,11 @@ export const Index = ({
                         </Button>
                     </StyledButtonWrapperDiv>
                     <Fade direction="down" in={!!isLocationOpen} mountOnEnter unmountOnExit>
-                        <StyledLocationBox id={'locations-wrapper'} role={'dialog'}>
+                        <StyledLocationBox
+                            id={'locations-wrapper'}
+                            aria-labelledby="location-dialog-controller"
+                            ref={locationsRef}
+                            role={'dialog'}>
                             <Locations
                                 libHours={libHours}
                                 libHoursLoading={libHoursLoading}
@@ -300,7 +318,6 @@ export const Index = ({
                     </Fade>
                 </div>
             </div>
-            {console.log('loans', loans, loansLoading)}
             {accountLoading === false && !!account && (
                 <StandardPage>
                     <StyledGridWrapper>
@@ -377,7 +394,7 @@ Index.propTypes = {
     drupalArticleList: PropTypes.array,
     drupalArticlesLoading: PropTypes.bool,
     drupalArticlesError: PropTypes.bool,
-    journalSearchList: PropTypes.object,
+    journalSearchList: PropTypes.any,
     journalSearchLoading: PropTypes.bool,
     journalSearchError: PropTypes.bool,
 };
