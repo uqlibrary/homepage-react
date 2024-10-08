@@ -39,10 +39,9 @@ import HeroCard from 'modules/Pages/DigitalLearningObjects/SharedComponents/Hero
 import {
     convertSnakeCaseToKebabCase,
     getDlorViewPageUrl,
-    isEscapeKeyPressed,
-    isReturnKeyPressed,
     slugifyName,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { isEscapeKeyPressed, isReturnKeyPressed } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
 
 const StyledSkipLinkButton = styled(Button)(({ theme }) => ({

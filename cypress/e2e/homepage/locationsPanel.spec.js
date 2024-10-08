@@ -1,3 +1,5 @@
+const ESCAPE_KEYCODE = 27;
+
 context('Locations Panel', () => {
     it('behaves as expected', () => {
         cy.visit('/');
@@ -123,6 +125,27 @@ context('Locations Panel', () => {
             .scrollIntoView()
             .contains('Library')
             .click();
+        // dialog is closed
+        cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.exist');
+    });
+    it('escape key can close the dialog', () => {
+        cy.visit('/');
+        cy.viewport(1300, 1000);
+        cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+        cy.get('[data-testid="hours-accordion-open"]').click();
+        // dialog is open
+        cy.waitUntil(() =>
+            cy
+                .get('[data-testid="homepage-hours-weeklyhours-link"]')
+                .should('exist')
+                .should('be.visible')
+                .contains('See weekly'),
+        );
+
+        // click escape key
+        cy.get('body')
+            .focus()
+            .trigger('keydown', { keyCode: ESCAPE_KEYCODE });
         // dialog is closed
         cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.exist');
     });

@@ -17,7 +17,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { greeting, lazyRetry } from 'helpers/general';
+import { greeting, isEscapeKeyPressed, lazyRetry } from 'helpers/general';
 
 import LibraryUpdates from 'modules/Index/components/subComponents/LibraryUpdates';
 import NavigationCardWrapper from './subComponents/NavigationCardWrapper';
@@ -180,8 +180,13 @@ export const Index = ({
     // handle the location opener
     const [locationOpen, setLocationOpen] = React.useState(false);
     const locationsRef = React.useRef(null);
-    const closeOnClickOutsideDialog = (event) => {
-        if (locationsRef.current && !locationsRef.current.contains(event.target)) {
+    const closeOnClickOutsideDialog = (e) => {
+        if (locationsRef.current && !locationsRef.current.contains(e.target)) {
+            setLocationOpen(false);
+        }
+    };
+    const closeOnEscape = (e) => {
+        if (isEscapeKeyPressed(e)) {
             setLocationOpen(false);
         }
     };
@@ -194,14 +199,17 @@ export const Index = ({
 
             if (!locationOpen) {
                 document.addEventListener('mousedown', closeOnClickOutsideDialog);
+                document.addEventListener('keydown', closeOnEscape);
             } else {
                 document.removeEventListener('mousedown', closeOnClickOutsideDialog);
+                document.removeEventListener('keydown', closeOnEscape);
             }
 
             clearInterval(showLocation);
         }, 10);
         return () => {
             document.removeEventListener('mousedown', closeOnClickOutsideDialog);
+            document.removeEventListener('keydown', closeOnEscape);
         };
     };
     const isLocationOpen = Boolean(locationOpen);
@@ -397,6 +405,8 @@ Index.propTypes = {
     journalSearchList: PropTypes.any,
     journalSearchLoading: PropTypes.bool,
     journalSearchError: PropTypes.bool,
+    loans: PropTypes.any,
+    loansLoading: PropTypes.bool,
 };
 
 export default Index;
