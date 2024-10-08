@@ -16,7 +16,7 @@ exports[`Cards component renders given ID for standar card 1`] = `
         class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
       >
         <h2
-          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1fds62p-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-8ohc96-MuiTypography-root"
           data-testid="test-card-header"
         >
           card title
@@ -50,7 +50,7 @@ exports[`Cards component renders with custom colours and full height 1`] = `
         class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
       >
         <h2
-          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1fds62p-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-8ohc96-MuiTypography-root"
           data-testid="standard-card-card-title-header"
         >
           card title
@@ -84,7 +84,7 @@ exports[`Cards component renders with custom content classname 1`] = `
         class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
       >
         <h2
-          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1fds62p-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-8ohc96-MuiTypography-root"
           data-testid="standard-card-card-title-header"
         >
           card title
@@ -118,7 +118,7 @@ exports[`Cards component renders with header action 1`] = `
         class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
       >
         <h2
-          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1fds62p-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-8ohc96-MuiTypography-root"
           data-testid="standard-card-card-title-header"
         >
           card title
@@ -152,7 +152,7 @@ exports[`Cards component renders with small title and as a subcard 1`] = `
         class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
       >
         <h3
-          class="MuiTypography-root MuiTypography-h6 MuiCardHeader-title css-3xhfbh-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 MuiCardHeader-title css-49hhwz-MuiTypography-root"
           data-testid="standard-card-card-title-header"
         >
           card title
@@ -186,7 +186,7 @@ exports[`Cards component renders with square top and accent header 1`] = `
         class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
       >
         <h2
-          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1fds62p-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-8ohc96-MuiTypography-root"
           data-testid="standard-card-card-title-header"
         >
           card title
@@ -220,7 +220,7 @@ exports[`Cards component renders with title and help button 1`] = `
         class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
       >
         <h2
-          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1fds62p-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-8ohc96-MuiTypography-root"
           data-testid="standard-card-card-title-header"
         >
           card title
@@ -254,7 +254,7 @@ exports[`Cards component renders with title and no help icon 1`] = `
         class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
       >
         <h2
-          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1fds62p-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-8ohc96-MuiTypography-root"
           data-testid="standard-card-card-title-header"
         >
           card title
@@ -288,7 +288,7 @@ exports[`StandardCard component should render StyledCard with same props 1`] = `
         class="MuiCardHeader-content css-1qbkelo-MuiCardHeader-content"
       >
         <h2
-          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-1fds62p-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-8ohc96-MuiTypography-root"
           data-testid="standard-card-card-title-header"
         >
           card title
