@@ -8,6 +8,8 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
+import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
+
 import { locale as locationLocale } from 'config/locale';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -102,27 +104,54 @@ const StyledWrapper = styled('div')(({ theme }) => ({
                 paddingLeft: '24px',
             },
         },
-        '& .occupancyPercent:has(.busy-closed)': {
+        '& .occupancyPercent:has(.occupancyText)': {
             lineHeight: '18px',
-            marginLeft: '20px',
         },
         '& .occupancyPercent100': {
             borderTopRightRadius: '20px',
             borderBottomRightRadius: '20px',
         },
     },
+    '& .occupancyText': {
+        color: theme.palette.secondary.main,
+        fontWeight: 400,
+        '& svg': {
+            height: '16px',
+            width: 'auto',
+            marginTop: '2px',
+        },
+        '& span': {
+            marginTop: '-2px',
+        },
+    },
     ['& .outlink']: {
         marginTop: '32px',
         marginLeft: '32px',
+        marginRight: '32px',
         '& a': {
+            display: 'flex',
+            alignItems: 'center',
             color: theme.palette.primary.light,
             textDecoration: 'underline',
-            fontSize: '1.1em',
+            fontSize: '16px',
             fontWeight: 500,
             '&:hover': {
                 color: 'white',
             },
         },
+        '& svg': {
+            fontSize: '16px',
+            marginLeft: '10px',
+            marginTop: '2px',
+        },
+    },
+    ['& .disclaimer']: {
+        margin: '16px 32px 0 32px',
+        fontSize: '14px',
+        fontStyle: 'normal',
+        fontWeight: 400,
+        letterSpacing: '0.14px',
+        lineHeight: '160%', // 25.6px
     },
     ['& .location-askus']: {
         marginTop: '20px',
@@ -133,8 +162,8 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         overflowX: 'hidden',
     },
 }));
-const StyledOpeningHours = styled(Typography)(() => ({
-    color: '#3B383E', // Brand-grey-grey-900
+const StyledOpeningHours = styled(Typography)(({ theme }) => ({
+    color: theme.palette.secondary.main,
     fontWeight: 400,
     letterSpacing: '0.16px',
 }));
@@ -175,7 +204,16 @@ const MyLoader = props => (
         <rect x="65%" y="115" rx="3" ry="3" width="17%" height="5" />
     </ContentLoader>
 );
-const departmentsMap = ['Collections & space', 'Study space'];
+const UqDsExclamationCircle = () => {
+    return (
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="9.25" stroke="#51247A" strokeWidth="1.5" />
+            <path d="M12 7.8v4" stroke="#51247A" strokeWidth="1.5" strokeLinecap="round" />
+            <circle cx="11.9" cy="15.6" r=".6" fill="#000" stroke="#51247A" />
+        </svg>
+    );
+};
+const departmentsMap = ['Collections & space', 'Study space', 'Service & collections'];
 export const ariaLabelForLocation = item => {
     const name = item.name;
     const hours =
@@ -215,6 +253,113 @@ export const hasDepartments = item => {
     return displayableDepartments.length > 0;
 };
 
+// eventually, call the api
+const vemcountapi = {
+    data: [
+        {
+            id: 14976, // Duhig Tower
+            headCount: 160,
+            capacity: 294,
+        },
+        {
+            id: 14975, // Central Library
+            headCount: 2,
+            capacity: 770,
+        },
+        {
+            id: 14974, // Architecture & Music Library
+            headCount: 90,
+            capacity: 105,
+        },
+        {
+            id: 14977, // Biological Sciences Library
+            headCount: 290,
+            capacity: 595,
+        },
+        {
+            id: 14979, // DHESL
+            headCount: 130,
+            capacity: 315,
+        },
+        // mock data, gatton did not return a response
+        // {
+        //     id: 14985, // Gatton
+        //     headCount: 16,
+        //     capacity: 378,
+        // },
+        {
+            id: 14983, // Herston
+            headCount: 70,
+            capacity: 70,
+        },
+        {
+            id: 14978, // Law
+            headCount: 100,
+            capacity: 196,
+        },
+        {
+            id: 14980, // Dutton Park  (Pace)
+            headCount: 27,
+            capacity: 112,
+        },
+    ],
+    // missing:
+    // 4986 askus
+    // 3832 fryer - FW Robinson Reading Room
+    // 3966 whitty
+};
+
+// this table maps those locations who exist on vemcount against their matching speingshare location
+// note: not all locations have vemcount people-counting gates
+const vemmcountSpringshareMapping = [
+    {
+        springshareId: 3967,
+        vemcountId: 14980,
+        name: 'Dutton park', // this doesn't need to match either system, its for the developer to not have to track raw numbers
+    },
+    {
+        springshareId: 3842,
+        vemcountId: 14975,
+        name: 'Central',
+    },
+    {
+        springshareId: 3823,
+        vemcountId: 14974,
+        name: 'Architecture',
+    },
+    {
+        springshareId: 3824,
+        vemcountId: 14977,
+        name: 'BSL',
+    },
+    {
+        springshareId: 3825,
+        vemcountId: 14979,
+        name: 'DHESL',
+    },
+    {
+        springshareId: 3830,
+        vemcountId: 14976,
+        name: 'Duhig tower',
+    },
+    {
+        springshareId: 3833,
+        vemcountId: 14985,
+        name: 'Gatton',
+    },
+    {
+        springshareId: 3838,
+        vemcountId: 14983,
+        name: 'Herston',
+    },
+    {
+        springshareId: 3841,
+        vemcountId: 14978,
+        name: 'Law',
+    },
+];
+
+const VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING = 'Missing';
 const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
     const cleanedHours =
         (!libHoursError &&
@@ -232,21 +377,46 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         };
                     });
                 }
-                const min = 20;
-                const max = 100;
 
-                function tempCalcLocationBusiness() {
-                    // this wil be replaced wih api results
-                    if (location?.abbr === 'Gatton') {
-                        return null;
+                function vemcountPercentByLocation(springshareLocationId) {
+                    const vemcountholder = vemmcountSpringshareMapping.filter(
+                        m => m.springshareId === springshareLocationId,
+                    );
+                    const vemcountLocation = vemcountholder?.pop();
+                    const vemcountId = vemcountLocation?.vemcountId;
+                    // vemcountapi constant, above, wil be replaced wih api results
+                    const vemcountWrapper = vemcountapi?.data?.filter(v => v.id === vemcountId);
+                    const vemcountData = vemcountWrapper.length > 0 ? vemcountWrapper[0] : null;
+                    if (vemcountLocation?.springshareId === springshareLocationId && vemcountWrapper?.length === 0) {
+                        return VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING;
                     }
-                    if (location?.abbr === 'Herston') {
-                        return 100;
-                    }
-                    return Math.floor(Math.random() * (max - min + 1)) + min;
+                    return (vemcountData?.headCount / vemcountData?.capacity) * 100;
                 }
 
-                const randomBusynessNumber = tempCalcLocationBusiness();
+                function getVemcountPercentage(springshareLocationId) {
+                    if (springshareLocationId === null) {
+                        return null;
+                    }
+                    const minimumDisplayedPercentage = 5;
+
+                    const vemcountBusynessPercent = vemcountPercentByLocation(springshareLocationId);
+                    let calculatedBusyness;
+                    if (vemcountBusynessPercent === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING) {
+                        calculatedBusyness = vemcountBusynessPercent;
+                    } else if (!!isNaN(vemcountBusynessPercent)) {
+                        calculatedBusyness = null;
+                    } else if (vemcountBusynessPercent > 0 && vemcountBusynessPercent < minimumDisplayedPercentage) {
+                        // don't let the bar go below what shows as a small curve on the left
+                        calculatedBusyness = minimumDisplayedPercentage;
+                    } else if (vemcountBusynessPercent > 0) {
+                        calculatedBusyness = Math.floor(vemcountBusynessPercent);
+                    } else {
+                        calculatedBusyness = null;
+                    }
+
+                    return calculatedBusyness;
+                }
+
                 return {
                     name: location.name,
                     abbr: location.abbr,
@@ -254,9 +424,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                     alt: location.name,
                     campus: locationLocale.hoursCampusMap[location.abbr],
                     departments,
-                    // temporaily grab a random number that is the busyness %age
-                    // will eventually be an api
-                    busyness: randomBusynessNumber,
+                    busyness: getVemcountPercentage(location?.lid, location.name) || null,
                 };
             })) ||
         [];
@@ -343,7 +511,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                             id="locations-header-hours"
                                         >
                                             <Typography component={'h2'} className={'table-header-cell'}>
-                                                Opening hours
+                                                Opening hours*
                                             </Typography>
                                         </Grid>
                                     </Grid>
@@ -383,7 +551,9 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                             style={{ paddingBlock: 0 }}
                                                         >
                                                             <span id={`${sluggifyName(`hours-item-${location.abbr}`)}`}>
-                                                                {location.name}
+                                                                {location.abbr === 'AskUs'
+                                                                    ? 'AskUs chat hours'
+                                                                    : location.name}
                                                             </span>
                                                         </a>
                                                     </Grid>
@@ -410,11 +580,13 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                             if (location.abbr === 'AskUs') {
                                                                 return location.departments.map(department => {
                                                                     if (['Chat'].includes(department.name)) {
-                                                                        <StyledOpeningHours
-                                                                            key={`chat-isopen-${department.lid}`}
-                                                                        >
-                                                                            {department.hours}
-                                                                        </StyledOpeningHours>;
+                                                                        return (
+                                                                            <StyledOpeningHours
+                                                                                key={`chat-isopen-${department.lid}`}
+                                                                            >
+                                                                                {department.hours}
+                                                                            </StyledOpeningHours>
+                                                                        );
                                                                     }
                                                                     return null;
                                                                 });
@@ -449,27 +621,46 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                 aria-labelledby="locations-header-busyness"
                                                 className={'table-body-cell table-column-busy'}
                                             >
-                                                {location.abbr !== 'AskUs' && location.busyness !== null && (
-                                                    <div className="occupancy">
-                                                        <div
-                                                            className={`occupancyPercent occupancyPercent${location.busyness}`}
-                                                            style={{
-                                                                width:
-                                                                    !hasDepartments(location) || isOpen(location)
-                                                                        ? `${location.busyness}%`
-                                                                        : 0,
-                                                            }}
-                                                            title={busynessText(location.busyness)}
-                                                        >
-                                                            {!hasDepartments(location) ||
-                                                            (isOpen(location) && location.busyness > 0) ? (
-                                                                <span>{/* ${location.busyness}%*/}</span>
-                                                            ) : (
-                                                                <div className={'busy-closed'}>Closed</div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                )}
+                                                {(() => {
+                                                    if (location.abbr === 'AskUs') {
+                                                        return <></>;
+                                                    } else if (!isOpen(location)) {
+                                                        return <div className="occupancyText">Closed</div>;
+                                                    } else if (location.busyness === null) {
+                                                        return (
+                                                            <div className="occupancyText">
+                                                                <UqDsExclamationCircle /> <span>Data not captured</span>
+                                                            </div>
+                                                        );
+                                                    } else if (
+                                                        location.busyness ===
+                                                        VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING
+                                                    ) {
+                                                        return (
+                                                            <div className="occupancyText">
+                                                                <UqDsExclamationCircle /> <span>No information</span>
+                                                            </div>
+                                                        );
+                                                    } else {
+                                                        return (
+                                                            <div className="occupancy">
+                                                                <div
+                                                                    className={`occupancyPercent occupancyPercent${location.busyness}`}
+                                                                    style={{
+                                                                        width:
+                                                                            !hasDepartments(location) ||
+                                                                            isOpen(location)
+                                                                                ? `${location.busyness}%`
+                                                                                : 0,
+                                                                    }}
+                                                                    title={busynessText(location.busyness)}
+                                                                >
+                                                                    <span>{/* ${location.busyness}%*/}</span>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    }
+                                                })()}
                                             </Grid>
                                         </Grid>
                                     );
@@ -482,26 +673,18 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         <MyLoader id="hours-loader" data-testid="hours-loader" aria-label="Locations data is loading" />
                     </div>
                 )}
-                <p
-                    style={{
-                        marginLeft: '30px',
-                        fontWeight: 'bold',
-                    }}
-                >
-                    Note: made up occupancy data (random numbers)
-                    <br />
-                    Also, pretending Gatton isn't returning occupancy data & Herston is full
-                </p>
                 <div className="outlink">
                     <Link
                         data-testid="homepage-hours-weeklyhours-link"
                         data-analyticsid={'hours-item-weeklyhours-link'}
                         to="https://web.library.uq.edu.au/locations-hours/opening-hours"
-                        style={{ marginBottom: '24px' }}
                     >
-                        See weekly Library and AskUs hours
+                        <span>See weekly Library and AskUs hours</span> <ArrowForwardIcon /> {/* uq ds arrow-right-1 */}
                     </Link>
                 </div>
+                <p className={'disclaimer'}>
+                    *Student and staff hours only. For visitor and community hours, see individual Library links above.
+                </p>
             </StyledWrapper>
         </StyledStandardCard>
     );

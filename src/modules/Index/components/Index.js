@@ -13,10 +13,11 @@ import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { greeting, lazyRetry } from 'helpers/general';
+import { greeting, isEscapeKeyPressed, lazyRetry } from 'helpers/general';
 
 import LibraryUpdates from 'modules/Index/components/subComponents/LibraryUpdates';
 import NavigationCardWrapper from './subComponents/NavigationCardWrapper';
@@ -35,7 +36,7 @@ import { canSeeLearningResources, isEspaceAuthor } from 'helpers/access';
 const EspaceLinks = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/EspaceLinks')));
 const Locations = lazy(() => lazyRetry(() => import('./subComponents/Locations')));
 const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
-const PastExamPapers = lazy(() => lazyRetry(() => import('./subComponents/PastExamPapersPanel')));
+// const PastExamPapers = lazy(() => lazyRetry(() => import('./subComponents/PastExamPapersPanel')));
 const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
 const ReferencingPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReferencingPanel')));
 const ReadPublish = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReadPublish')));
@@ -88,6 +89,9 @@ const StyledHeading = styled(Typography)(() => ({
 
 const StyledGridWrapper = styled('div')(() => ({
     marginLeft: '-32px',
+    marginRight: '-32px',
+    paddingRight: '32px',
+    backgroundColor: '#f3f3f4',
     '@media (max-width: 1200px)': {
         marginLeft: '-24px',
     },
@@ -98,7 +102,7 @@ backgroundColor: 'white',
     border: '1px solid #DCDCDD',
     borderRadius: '0 0 4px 4px',
     boxShadow: '0px 12px 24px 0px rgba(25, 21, 28, 0.05)',
-    marginTop: '3px',
+    marginTop: '2px',
     minWidth: '66%',
     zIndex: 999,
     position: 'absolute',
@@ -115,8 +119,9 @@ backgroundColor: 'white',
 
 const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
     display: 'flex',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
     alignItems: 'center',
+    flexDirection: 'row-reverse',
 
     '& button': {
         color: theme.palette.primary.light,
@@ -173,20 +178,44 @@ export const Index = ({
     loansLoading,
 
 }) => {
-    // console.log('drupal article list in index feeder,', drupalArticleList);
     const dispatch = useDispatch();
 
     // handle the location opener
-    const [locationOpenerElement, setLocationOpenerElement] = React.useState(null);
+    const [locationOpen, setLocationOpen] = React.useState(false);
+    const locationsRef = React.useRef(null);
+    const closeOnClickOutsideDialog = (e) => {
+        if (locationsRef.current && !locationsRef.current.contains(e.target)) {
+            setLocationOpen(false);
+        }
+    };
+    const closeOnEscape = (e) => {
+        if (isEscapeKeyPressed(e)) {
+            setLocationOpen(false);
+        }
+    };
     const handleLocationOpenerClick = () => {
         const showLocation = setInterval(() => {
-            setLocationOpenerElement(!locationOpenerElement);
-            console.log('setInterval locationOpenerElement=', locationOpenerElement);
+            setLocationOpen(!locationOpen);
+
+            const locationButton = document.getElementById('location-dialog-controller');
+            !!locationButton && (locationButton.ariaExpanded = !locationOpen);
+
+            if (!locationOpen) {
+                document.addEventListener('mousedown', closeOnClickOutsideDialog);
+                document.addEventListener('keydown', closeOnEscape);
+            } else {
+                document.removeEventListener('mousedown', closeOnClickOutsideDialog);
+                document.removeEventListener('keydown', closeOnEscape);
+            }
 
             clearInterval(showLocation);
         }, 10);
+        return () => {
+            document.removeEventListener('mousedown', closeOnClickOutsideDialog);
+            document.removeEventListener('keydown', closeOnEscape);
+        };
     };
-    const isLocationOpen = Boolean(locationOpenerElement);
+    const isLocationOpen = Boolean(locationOpen);
 
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -253,7 +282,6 @@ export const Index = ({
         }
     }, [accountLoading, account, loans, loansLoading, dispatch]);
 
-    console.log('reload locationOpenerElement=', locationOpenerElement);
     return (
         <React.Suspense fallback={<ContentLoader message="Loading"/>}>
             <StyledPortalContainer id="search-portal-container" data-testid="search-portal-container">
@@ -265,25 +293,32 @@ export const Index = ({
             <div style={{ borderBottom: '1px solid hsla(203, 50%, 30%, 0.15)' }}>
                 <div className="layout-card" style={{ position: 'relative' }}>
                     <StyledButtonWrapperDiv style={{ position: 'relative' }}>
-                        <Button
-                            id="panel1a-header"
-                            data-testid="hours-accordion-open"
-                            onClick={handleLocationOpenerClick}
-                        >
-                            Library locations
-                            <ExpandMoreIcon/>
-                        </Button>
                         <StyledBookingLink
                             href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
                             data-testid="homepage-hours-bookit-link"
-                            >
+                        >
                             <span>
                                 Book a room
                             </span>
                         </StyledBookingLink>
+                        <Button
+                            id="location-dialog-controller"
+                            data-testid="hours-accordion-open"
+                            onClick={handleLocationOpenerClick}
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            aria-controls="locations-wrapper"
+                        >
+                            Library locations
+                            {!!locationOpen ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
+                        </Button>
                     </StyledButtonWrapperDiv>
                     <Fade direction="down" in={!!isLocationOpen} mountOnEnter unmountOnExit>
-                        <StyledLocationBox>
+                        <StyledLocationBox
+                            id={'locations-wrapper'}
+                            aria-labelledby="location-dialog-controller"
+                            ref={locationsRef}
+                            role={'dialog'}>
                             <Locations
                                 libHours={libHours}
                                 libHoursLoading={libHoursLoading}
@@ -294,7 +329,6 @@ export const Index = ({
                     </Fade>
                 </div>
             </div>
-            {console.log('loans', loans, loansLoading)}
             {accountLoading === false && !!account && (
                 <StandardPage>
                     <StyledGridWrapper>
@@ -304,41 +338,62 @@ export const Index = ({
                                     {greeting()}, {account.firstName || /* istanbul ignore next */ ''}
                                 </StyledHeading>
                             </Grid>
-                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="primo-panel">
-                                <CataloguePanel account={account} loans={loans} />
-                            </StyledGridItemLoggedIn>
-                            {canSeeLearningResources(account) && (
-                                <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="learning-resources-panel">
-                                    <LearningResourcesPanel account={account} history={history}/>
-                                </StyledGridItemLoggedIn>
-                            )}
-                            {canSeeLearningResources(account) && (
-                                <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="past-exam-papers-panel">
-                                    <PastExamPapers account={account} history={history}/>
-                                </StyledGridItemLoggedIn>
-                            )}
-                            {isEspaceAuthor(account, author) && (
-                                <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="espace-links-panel">
-                                    <EspaceLinks
-                                        author={author}
-                                        possibleRecords={possibleRecords}
-                                        incompleteNTRORecords={incompleteNTRO}
-                                    />
-                                </StyledGridItemLoggedIn>
-                            )}
-                            <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="referencing-panel">
-                                <ReferencingPanel account={account} />
-                            </StyledGridItemLoggedIn>
-                            <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="readpublish-panel">
-                                <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
-                            </StyledGridItemLoggedIn>
-                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="training-panel">
-                                <Training
-                                    trainingEvents={trainingEvents}
-                                    trainingEventsLoading={trainingEventsLoading}
-                                    trainingEventsError={trainingEventsError}
-                                />
-                            </StyledGridItemLoggedIn>
+                            <Grid className={'gridThree'} item sx={12}>
+                                <Grid className={'gridFour'} container>
+                                    <Grid className={'gridFive'} item uqDsMobile={4}>
+                                        <Grid container className={'gridSix'}>
+                                            <StyledGridItemLoggedIn className={'gridSeven'} item uqDsMobile={12} data-testid="primo-panel">
+                                                <CataloguePanel account={account} loans={loans} />
+                                            </StyledGridItemLoggedIn>
+                                            <StyledGridItemLoggedIn className={'gridEight'} item uqDsMobile={12} data-testid="training-panel">
+                                                <Training
+                                                    trainingEvents={trainingEvents}
+                                                    trainingEventsLoading={trainingEventsLoading}
+                                                    trainingEventsError={trainingEventsError}
+                                                />
+                                            </StyledGridItemLoggedIn>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid item uqDsMobile={8}>
+                                        <Grid container>
+                                            {canSeeLearningResources(account) && (
+                                                <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="learning-resources-panel">
+                                                    <LearningResourcesPanel account={account} history={history}/>
+                                                </StyledGridItemLoggedIn>
+                                            )}
+
+                                            <Grid item uqDsMobile={6}>
+                                                <Grid container>
+                                                    {/* {canSeeLearningResources(account) && (*/}
+                                                    {/*    <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="past-exam-papers-panel">*/}
+                                                    {/*        <PastExamPapers account={account} history={history}/>*/}
+                                                    {/*    </StyledGridItemLoggedIn>*/}
+                                                    {/* )}*/}
+                                                    <StyledGridItemLoggedIn  item uqDsMobile={12} data-testid="referencing-panel">
+                                                        <ReferencingPanel account={account} />
+                                                    </StyledGridItemLoggedIn>
+                                                    <StyledGridItemLoggedIn  item uqDsMobile={12} data-testid="readpublish-panel">
+                                                        <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
+                                                    </StyledGridItemLoggedIn>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid item uqDsMobile={6}>
+                                                <Grid container>
+                                                    {isEspaceAuthor(account, author) && (
+                                                        <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="espace-links-panel">
+                                                            <EspaceLinks
+                                                                author={author}
+                                                                possibleRecords={possibleRecords}
+                                                                incompleteNTRORecords={incompleteNTRO}
+                                                            />
+                                                        </StyledGridItemLoggedIn>
+                                                    )}
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
                         </Grid>
                     </StyledGridWrapper>
                 </StandardPage>
@@ -371,9 +426,11 @@ Index.propTypes = {
     drupalArticleList: PropTypes.array,
     drupalArticlesLoading: PropTypes.bool,
     drupalArticlesError: PropTypes.bool,
-    journalSearchList: PropTypes.object,
+    journalSearchList: PropTypes.any,
     journalSearchLoading: PropTypes.bool,
     journalSearchError: PropTypes.bool,
+    loans: PropTypes.any,
+    loansLoading: PropTypes.bool,
 };
 
 export default Index;

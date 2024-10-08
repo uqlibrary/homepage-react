@@ -64,13 +64,7 @@ export const App = ({ account, actions }) => {
                 height: '100%',
             }}
         >
-            <div
-                className="content-container"
-                id="content-container"
-                role="region"
-                aria-label="Site content"
-                style={{ '-webkit-font-smoothing': 'antialiased' }}
-            >
+            <div className="content-container" id="content-container" role="region" aria-label="Site content">
                 <uq-header hidelibrarymenuitem="true" />
                 <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink} showmenu>
                     <span slot="site-utilities">

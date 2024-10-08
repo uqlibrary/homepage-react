@@ -131,6 +131,8 @@ export class StandardCard extends Component {
                             color: '#19151c',
                             fontSize: '1.5rem',
                             fontWeight: 500,
+                            letterSpacing: '0.16px',
+                            lineHeight: 1.2,
                             'data-testid': `${standardCardId}-header`,
                         }}
                         classes={{

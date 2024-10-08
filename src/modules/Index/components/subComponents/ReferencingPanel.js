@@ -11,7 +11,7 @@ export const ReferencingPanel = ({ account }) => {
         <StandardCard
             subCard
             noPadding
-            fullHeight
+            // fullHeight
             primaryHeader
             standardCardId="referencing-homepage-panel"
             title="Referencing"

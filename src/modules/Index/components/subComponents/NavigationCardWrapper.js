@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import SingleLinkCard from './SingleLinkCard';
@@ -26,12 +25,6 @@ const StyledGridContainer = styled(Grid)(({ theme }) => ({
     },
 }));
 
-const StyledHeading = styled(Typography)(() => ({
-    fontSize: '32px',
-    fontWeight: 500,
-    marginTop: '1rem',
-}));
-
 // inspect specific icons at https://design-system.ads-staging.aws.uq.edu.au/?path=/story/components-icon--icon and extract the backgroundimage value from the :before on the span
 // constant name identifies the icon used
 const bookOpenBookmarkBackgroundImage =
@@ -50,10 +43,6 @@ const pinBackgroundImage =
 const NavigationCardWrapper = ({ account, accountLoading }) => {
     return (
         <StandardPage>
-            {accountLoading === false && !!account && (
-                // if they are not logged in, we don't need to waste space on a heading as there is nothing above
-                <StyledHeading component={'h2'}>Library navigation</StyledHeading>
-            )}
             <StyledNav>
                 <StyledGridContainer component={'ul'} container data-testid="help-navigation-panel">
                     <SingleLinkCard

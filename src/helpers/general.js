@@ -146,3 +146,15 @@ export const linkToDrupal = (pathname, requestedDomainName = null) => {
         : 'https://web.library.uq.edu.au';
     return `${origin}${pathname}`;
 };
+
+export function isKeyPressed(e, charKeyInput, numericKeyInput) {
+    const keyNumeric = e.charCode || e.keyCode;
+    const keyChar = e.key || /* istanbul ignore next */ e.code;
+    return keyChar === charKeyInput || keyNumeric === numericKeyInput;
+}
+export function isReturnKeyPressed(e) {
+    return isKeyPressed(e, 'Enter', 13);
+}
+export function isEscapeKeyPressed(e) {
+    return isKeyPressed(e, 'Escape', 27);
+}
