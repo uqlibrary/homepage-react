@@ -12,7 +12,7 @@ context('Personalised Homepage', () => {
         expectUserToDisplayCorrectFirstName('s1111111', 'Michael');
         cy.viewport(1300, 1000);
         // this type of user will see the following panels:
-        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace', 'readpublish', 'catalogue']);
+        hasPanels(['learning-resources', 'training', 'espace', 'readpublish', 'catalogue']);
 
         // this type of user will see these lines in the espace panel
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
@@ -52,7 +52,7 @@ context('Personalised Homepage', () => {
     it('Renders a remote undergraduate home page correctly', () => {
         expectUserToDisplayCorrectFirstName('s3333333', 'Juno');
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'readpublish', 'catalogue']);
+        hasPanels(['learning-resources', 'training', 'readpublish', 'catalogue']);
 
         hasNoEspacePanel();
     });
@@ -60,7 +60,7 @@ context('Personalised Homepage', () => {
     it('Renders a researcher home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqresearcher', 'John');
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace', 'readpublish', 'catalogue']);
+        hasPanels(['learning-resources', 'training', 'espace', 'readpublish', 'catalogue']);
 
         hasEspaceEntries(['espace-possible', 'espace-orcid', 'espace-ntro']);
     });
@@ -69,7 +69,7 @@ context('Personalised Homepage', () => {
         cy.visit('/?user=uqresearcher&responseType=nodatamissing'); // special mock data
         cy.viewport(1300, 1000);
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace', 'readpublish', 'catalogue']);
+        hasPanels(['learning-resources', 'training', 'espace', 'readpublish', 'catalogue']);
 
         hasEspaceEntries(['espace-orcid']);
     });
@@ -77,7 +77,7 @@ context('Personalised Homepage', () => {
     it('Renders a library staff administrator home page correctly', () => {
         expectUserToDisplayCorrectFirstName('digiteamMember', 'Caroline');
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace', 'readpublish', 'catalogue']);
+        hasPanels(['learning-resources', 'training', 'espace', 'readpublish', 'catalogue']);
 
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
     });
@@ -85,7 +85,7 @@ context('Personalised Homepage', () => {
     it('Renders a Library staff member (without admin privs) home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqstaffnonpriv', 'UQ');
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'readpublish', 'catalogue']);
+        hasPanels(['learning-resources', 'training', 'readpublish', 'catalogue']);
 
         hasNoEspacePanel();
     });
@@ -93,7 +93,7 @@ context('Personalised Homepage', () => {
     it('Renders a non-library staff member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqpkopit', 'Peter');
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'espace', 'readpublish', 'catalogue']);
+        hasPanels(['learning-resources', 'training', 'espace', 'readpublish', 'catalogue']);
 
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
     });
@@ -141,7 +141,7 @@ context('Personalised Homepage', () => {
     it('Renders an Honorary EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emhonorary', 'Honorary');
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'readpublish', 'catalogue']);
+        hasPanels(['learning-resources', 'training', 'readpublish', 'catalogue']);
 
         hasNoEspacePanel();
     });
@@ -149,7 +149,7 @@ context('Personalised Homepage', () => {
     it('Renders a Short Form Credential course student home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqsfc', 'SFC');
 
-        hasPanels(['learning-resources', 'past-exam-papers', 'training', 'readpublish', 'catalogue']);
+        hasPanels(['learning-resources', 'training', 'readpublish', 'catalogue']);
 
         hasNoEspacePanel();
     });
