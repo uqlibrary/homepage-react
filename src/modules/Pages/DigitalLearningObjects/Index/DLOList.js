@@ -611,12 +611,18 @@ export const DLOList = ({
 
         const facetId = e.target.value;
 
+        // console.log('FACET ID', facetId, e.target.labels[0].innerText);
+
         const checkboxId = `${facetTypeSlug}-${facetId}`;
         const individualFilterId = `${facetTypeSlug}-${facetId}`;
 
         if (e?.target?.checked) {
             const updateFilters = [...selectedFilters, individualFilterId];
             setSelectedFilters(updateFilters);
+            window.dataLayer.push({
+                event: 'reusable_component_event_click',
+                'custom_event.data-analyticsid': `${e.target.labels[0].innerText} DLOR filter click`,
+            });
 
             checkBoxArrayRef.current = [...checkBoxArrayRef.current, checkboxId];
         } else {
@@ -840,8 +846,18 @@ export const DLOList = ({
                                             return (
                                                 <StyledFormControlLabel
                                                     key={`${facetType?.facet_type_slug}-${facet?.facet_id}`}
+                                                    data-analyticsid={`${slugifyName(facet?.facet_name)}-dlor-filter`}
+                                                    id={`${slugifyName(facet?.facet_name)}-dlor-filter-label`}
                                                     control={
                                                         <Checkbox
+                                                            inputProps={{
+                                                                'data-analyticsid': `${slugifyName(
+                                                                    facet?.facet_name,
+                                                                )}-dlor-filter`,
+                                                            }}
+                                                            id={`${slugifyName(
+                                                                facet?.facet_name,
+                                                            )}-dlor-filter-checkbox`}
                                                             onChange={handleCheckboxAction(checkBoxid)}
                                                             aria-label={'Include'}
                                                             value={facet?.facet_id}

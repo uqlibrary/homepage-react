@@ -12,11 +12,11 @@ export const transformRow = row => {
         return {
             ...line,
             start_date: !!line?.start_date
-                ? moment(line.start_date).format(locale.config.format.dateFormatNoTime)
+                ? moment(new Date(line.start_date)).format(locale.config.format.dateFormatNoTime)
                 : '--',
             end_date:
                 !!line?.start_date && !!line?.end_date
-                    ? moment(line.end_date).format(locale.config.format.dateFormatNoTime)
+                    ? moment(new Date(line.end_date)).format(locale.config.format.dateFormatNoTime)
                     : '--',
             processed: true,
         };

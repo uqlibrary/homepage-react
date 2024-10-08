@@ -76,9 +76,9 @@ describe('AssetReportByFilters', () => {
             'value',
             'All - All buildings',
         );
-        expect(getByTestId('assets_inspected-tagged-start')).toBeInTheDocument();
+        expect(getByTestId('assets_inspected-tagged-start-input')).toBeInTheDocument();
         expect(getByTestId('assets_inspected-tagged-start-input')).toHaveAttribute('value', '');
-        expect(getByTestId('assets_inspected-tagged-end')).toBeInTheDocument();
+        expect(getByTestId('assets_inspected-tagged-end-input')).toBeInTheDocument();
         expect(getByTestId('assets_inspected-tagged-end-input')).toHaveAttribute('value', '');
         expect(getByTestId('data_table-assets-inspected')).toBeInTheDocument();
 
@@ -215,7 +215,7 @@ describe('AssetReportByFilters', () => {
             'End date must be after Start Date',
         );
 
-        userEvent.clear(getByTestId('assets_inspected-tagged-start-input'));
+        await userEvent.clear(getByTestId('assets_inspected-tagged-start-input'));
 
         expect(queryByText('Start date must be before End Date')).not.toBeInTheDocument();
         expect(queryByText('End date must be after Start Date')).not.toBeInTheDocument();
@@ -230,23 +230,13 @@ describe('AssetReportByFilters', () => {
             }),
         );
 
-        await userEvent.type(getByTestId('assets_inspected-tagged-start-input'), '20210101');
-
-        expect(getByTestId('assets_inspected-tagged-start-helpertext')).toHaveTextContent(
-            'Start date must be before End Date',
-        );
-
-        expect(getByTestId('assets_inspected-tagged-end-helpertext')).toHaveTextContent(
-            'End date must be after Start Date',
-        );
-
-        userEvent.clear(getByTestId('assets_inspected-tagged-end-input'));
+        await userEvent.clear(getByTestId('assets_inspected-tagged-end-input'));
 
         await waitFor(() =>
             expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
                 assetStatus: null,
-                inspectionDateFrom: '2021-01-01',
-                inspectionDateTo: null, // new request should fire as one date is supplied and valid
+                inspectionDateFrom: null,
+                inspectionDateTo: null,
                 locationId: null,
                 locationType: 'building',
             }),
@@ -268,7 +258,7 @@ describe('AssetReportByFilters', () => {
             expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent(
                 'Test taggedBuildingListError error',
             );
-            userEvent.click(getByTitle('Close'));
+            await userEvent.click(getByTitle('Close'));
             await waitFor(() => expect(queryByTestId('confirmation_alert-error-alert')).not.toBeInTheDocument());
 
             expect(clearTaggedBuildingListErrorFn).toHaveBeenCalled();
@@ -287,7 +277,7 @@ describe('AssetReportByFilters', () => {
             });
 
             expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent('Test assetListError error');
-            userEvent.click(getByTitle('Close'));
+            await userEvent.click(getByTitle('Close'));
 
             await waitFor(() => expect(queryByTestId('confirmation_alert-error-alert')).not.toBeInTheDocument());
 

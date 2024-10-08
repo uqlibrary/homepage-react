@@ -266,6 +266,17 @@ export const DLOView = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorId]);
 
+    useEffect(() => {
+        // Google Analytics to push pageView for object
+        /* istanbul ignore else */
+        if (!!dlorItem && !!dlorItem.object_title) {
+            window.dataLayer.push({
+                event: 'pageview',
+                object_title: dlorItem.object_title,
+            });
+        }
+    }, [dlorItem]);
+
     function navigateToObjectLink() {
         window.location.href = dlorItem?.object_link_url;
     }
