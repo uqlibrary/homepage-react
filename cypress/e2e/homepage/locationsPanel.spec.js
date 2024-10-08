@@ -149,4 +149,20 @@ context('Locations Panel', () => {
         // dialog is closed
         cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.exist');
     });
+    it('data is removed correctly', () => {
+        cy.visit('/');
+        cy.viewport(1300, 1000);
+        cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+        cy.get('[data-testid="hours-accordion-open"]').click();
+        // dialog is open
+        cy.waitUntil(() =>
+            cy
+                .get('[data-testid="homepage-hours-weeklyhours-link"]')
+                .should('exist')
+                .should('be.visible')
+                .contains('See weekly'),
+        );
+
+        cy.get('[data-testid="hours-item-whitty-mater"]').should('not.exist');
+    });
 });

@@ -430,6 +430,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
         [];
     const alphaHours = cleanedHours
         .filter(e => e !== null)
+        .filter(l => l.abbr !== 'Whitty Mater') // remove this from springshare data for homepage
         .sort((a, b) => {
             const textA = a.name.toUpperCase();
             const textB = b.name.toUpperCase();
