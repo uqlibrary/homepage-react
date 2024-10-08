@@ -417,6 +417,20 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                     return calculatedBusyness;
                 }
 
+                const min = 5;
+                const max = 100;
+                function tempCalcLocationBusiness() {
+                    // this wil be replaced wih api results
+                    if (location?.abbr === 'Gatton') {
+                        return null;
+                    }
+                    if (location?.abbr === 'Herston') {
+                        return 100;
+                    }
+                    return Math.floor(Math.random() * (max - min + 1)) + min;
+                }
+
+                const randomBusynessNumber = tempCalcLocationBusiness();
                 return {
                     name: location.name,
                     abbr: location.abbr,
@@ -424,7 +438,8 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                     alt: location.name,
                     campus: locationLocale.hoursCampusMap[location.abbr],
                     departments,
-                    busyness: getVemcountPercentage(location?.lid, location.name) || null,
+                    busyness: randomBusynessNumber,
+                    // busyness: getVemcountPercentage(location?.lid, location.name) || null,
                 };
             })) ||
         [];
