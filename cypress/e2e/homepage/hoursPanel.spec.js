@@ -11,7 +11,7 @@ context('Library Opening Locations Homepage Panel', () => {
         // the expected content is found on the page
         cy.get('[data-testid="hours-item-arch-music"]')
             .should('be.visible')
-            .contains('Architecture & Music Library');
+            .contains('Architecture and Music');
 
         cy.checkA11y('div[data-testid="locations-panel"]', {
             reportName: 'Hours',
@@ -31,7 +31,7 @@ context('Library Opening Locations Homepage Panel', () => {
 
         cy.get('[data-testid="hours-item-arch-music"]')
             .find('a')
-            .should('contain', 'Architecture & Music Library')
+            .should('contain', 'Architecture and Music')
             .click();
         cy.get('body').contains('user has navigated to Drupal hours page');
     });
@@ -66,23 +66,31 @@ context('Library Opening Locations Homepage Panel', () => {
         cy.get('[data-testid="hours-accordion-open"]').click();
 
         cy.log('Architecture has study space hours but not askus hours');
-        cy.get('[data-testid="hours-item-arch-music"] div:first-child').contains('Architecture & Music Library');
+        cy.get('[data-testid="hours-item-arch-music"] div:first-child').contains('Architecture and Music');
         cy.get('[data-testid="hours-item-arch-music"] div:nth-child(2)').contains('7:30am - 7:30pm');
 
         cy.log('Central has study space AND askus hours');
-        cy.get('[data-testid="hours-item-central"] div:first-child').contains('Central Library');
+        cy.get('[data-testid="hours-item-central"] div:first-child').contains('Central');
         cy.get('[data-testid="hours-item-central"] div:nth-child(2)').contains('24 Hours');
 
-        cy.log('Fryer has no departments we show times from, so we see "See Location');
+        // once we are no longer using mock data to correctly show live (during web presence dev)
+        // we should add a library to mock data to test "See location" behaves as expected!!
+        // (not fryer, its testing 'by appintment')
+        // cy.log('Fryer has no departments we show times from, so we see "See Location');
+        // cy.get('[data-testid="hours-item-fryer"] div:first-child')
+        //     .should('exist')
+        //     .contains('Fryer');
+        // cy.get('[data-testid="hours-item-fryer"] div:nth-child(2)').contains('See location');
+
         cy.get('[data-testid="hours-item-fryer"] div:first-child')
             .should('exist')
-            .contains('FW Robinson Reading Room');
-        cy.get('[data-testid="hours-item-fryer"] div:nth-child(2)').contains('See location');
+            .contains('Fryer');
+        cy.get('[data-testid="hours-item-fryer"] div:nth-child(2)').contains('By Appointment');
 
-        cy.log('Whitty has a missing department field (should never happen) so we see "See location"');
-        cy.get('[data-testid="hours-item-whitty-mater"] div:first-child')
-            .should('exist')
-            .contains('Whitty building, Mater');
-        cy.get('[data-testid="hours-item-whitty-mater"] div:nth-child(2)').contains('See location');
+        // cy.log('Whitty has a missing department field (should never happen) so we see "See location"');
+        // cy.get('[data-testid="hours-item-whitty-mater"] div:first-child')
+        //     .should('exist')
+        //     .contains('Whitty building, Mater');
+        // cy.get('[data-testid="hours-item-whitty-mater"] div:nth-child(2)').contains('See location');
     });
 });
