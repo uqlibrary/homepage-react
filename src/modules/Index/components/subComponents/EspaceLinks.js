@@ -52,7 +52,7 @@ const StyledHighlightIcon = styled(StarBorderIcon)(() => ({
 
 const EspacePossible = ({ recordCount }) => {
     return (
-        <StyledGridItem component={'li'} item xs={12}>
+        <StyledGridItem component={'li'} item xs={12} style={{ listStyleType: '' }}>
             <Link
                 to={'https://espace.library.uq.edu.au/records/possible'}
                 id="espace-possible"
@@ -137,36 +137,40 @@ const EspaceNTROs = ({ recordCount }) => {
 };
 
 export const EspaceLinks = ({ author, possibleRecords, incompleteNTRORecords }) => {
+    const authorIsMissingOrcid = !author.aut_orcid_id;
+    const authorNeedsToUpdateRecords = !!possibleRecords && !!possibleRecords.total && possibleRecords.total > 0;
+    const authorHasIncompleteNtro =
+        !!incompleteNTRORecords && !!incompleteNTRORecords.total && incompleteNTRORecords.total > 0;
+    const uqDsWarningYellow = '#fef8e8';
     return (
         <StandardCard subCard fullHeight primaryHeader noPadding standardCardId="espace-panel" title={'UQ eSpace'}>
             <Grid container spacing={0} style={{ paddingInline: '24px' }}>
                 <Grid item xs={12} style={{ margin: '20px 0 0 0' }}>
                     <Link to="https://espace.library.uq.edu.au/dashboard">Access UQ eSpace dashboard</Link>
                 </Grid>
-                <Grid item>
-                    <StyledLabel component={'h4'} variant={'h6'}>
-                        Actions
-                    </StyledLabel>
+                <Grid item xs={12} style={{ margin: '20px 0 0 0' }}>
+                    <EspaceJournalSearch />
                 </Grid>
-
-                <Grid item xs={12}>
-                    <Grid container component={'ul'} style={{ paddingLeft: 0, marginTop: 0, marginLeft: 0 }}>
-                        {!author.aut_orcid_id && <EspaceOrcid />}
-                        {!!possibleRecords &&
-                            (!!possibleRecords.total && possibleRecords.total > 0 ? (
-                                <EspacePossible recordCount={possibleRecords.total} />
-                            ) : (
-                                <EspaceUpdateWorks />
-                            ))}
-                        {!!incompleteNTRORecords &&
-                            !!incompleteNTRORecords.total &&
-                            incompleteNTRORecords.total > 0 && (
-                                <EspaceNTROs recordCount={incompleteNTRORecords.total} />
-                            )}
-                        <EspaceJournalSearch />
-                        <EspaceEditorialAppointments />
-                    </Grid>
+                <Grid item xs={12} style={{ margin: '20px 0 0 0' }}>
+                    <EspaceEditorialAppointments />
                 </Grid>
+                <Grid item xs={12} style={{ margin: '20px 0 0 0' }}>
+                    <EspaceUpdateWorks />
+                </Grid>
+                {(authorIsMissingOrcid || authorNeedsToUpdateRecords || authorHasIncompleteNtro) && (
+                    <>
+                        <Typography component={'h4'} variant={'h6'}>
+                            Update the following items:
+                        </Typography>
+                        <Grid item xs={12} style={{ backgroundColor: uqDsWarningYellow }}>
+                            <Grid container component={'ul'} style={{ paddingLeft: 0, marginTop: 0, marginLeft: 0 }}>
+                                {authorIsMissingOrcid && <EspaceOrcid />}
+                                {authorNeedsToUpdateRecords && <EspacePossible recordCount={possibleRecords.total} />}
+                                {authorHasIncompleteNtro && <EspaceNTROs recordCount={incompleteNTRORecords.total} />}
+                            </Grid>
+                        </Grid>
+                    </>
+                )}
             </Grid>
         </StandardCard>
     );
