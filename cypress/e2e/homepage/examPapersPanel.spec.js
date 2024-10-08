@@ -1,7 +1,7 @@
 import { accounts } from '../../../src/data/mock/data';
 import { default as subjectSearchSuggestions } from '../../../src/data/mock/data/records/learningResources/subjectSearchSuggestions';
 
-context('The Homepage Past Exam Papers Panel', () => {
+context.skip('The Homepage Past Exam Papers Panel', () => {
     it.skip('Past exam papers panel is accessible', () => {
         cy.visit('/?user=s1111111');
         cy.injectAxe();

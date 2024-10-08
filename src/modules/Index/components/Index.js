@@ -36,7 +36,7 @@ import { canSeeLearningResources, isEspaceAuthor } from 'helpers/access';
 const EspaceLinks = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/EspaceLinks')));
 const Locations = lazy(() => lazyRetry(() => import('./subComponents/Locations')));
 const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
-const PastExamPapers = lazy(() => lazyRetry(() => import('./subComponents/PastExamPapersPanel')));
+// const PastExamPapers = lazy(() => lazyRetry(() => import('./subComponents/PastExamPapersPanel')));
 const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
 const ReferencingPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReferencingPanel')));
 const ReadPublish = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReadPublish')));
@@ -89,6 +89,9 @@ const StyledHeading = styled(Typography)(() => ({
 
 const StyledGridWrapper = styled('div')(() => ({
     marginLeft: '-32px',
+    marginRight: '-32px',
+    paddingRight: '32px',
+    backgroundColor: '#f3f3f4',
     '@media (max-width: 1200px)': {
         marginLeft: '-24px',
     },
@@ -335,41 +338,62 @@ export const Index = ({
                                     {greeting()}, {account.firstName || /* istanbul ignore next */ ''}
                                 </StyledHeading>
                             </Grid>
-                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="primo-panel">
-                                <CataloguePanel account={account} loans={loans} />
-                            </StyledGridItemLoggedIn>
-                            {canSeeLearningResources(account) && (
-                                <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="learning-resources-panel">
-                                    <LearningResourcesPanel account={account} history={history}/>
-                                </StyledGridItemLoggedIn>
-                            )}
-                            {canSeeLearningResources(account) && (
-                                <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="past-exam-papers-panel">
-                                    <PastExamPapers account={account} history={history}/>
-                                </StyledGridItemLoggedIn>
-                            )}
-                            {isEspaceAuthor(account, author) && (
-                                <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="espace-links-panel">
-                                    <EspaceLinks
-                                        author={author}
-                                        possibleRecords={possibleRecords}
-                                        incompleteNTRORecords={incompleteNTRO}
-                                    />
-                                </StyledGridItemLoggedIn>
-                            )}
-                            <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="referencing-panel">
-                                <ReferencingPanel account={account} />
-                            </StyledGridItemLoggedIn>
-                            <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="readpublish-panel">
-                                <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
-                            </StyledGridItemLoggedIn>
-                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="training-panel">
-                                <Training
-                                    trainingEvents={trainingEvents}
-                                    trainingEventsLoading={trainingEventsLoading}
-                                    trainingEventsError={trainingEventsError}
-                                />
-                            </StyledGridItemLoggedIn>
+                            <Grid className={'gridThree'} item sx={12}>
+                                <Grid className={'gridFour'} container>
+                                    <Grid className={'gridFive'} item uqDsMobile={4}>
+                                        <Grid container className={'gridSix'}>
+                                            <StyledGridItemLoggedIn className={'gridSeven'} item uqDsMobile={12} data-testid="primo-panel">
+                                                <CataloguePanel account={account} loans={loans} />
+                                            </StyledGridItemLoggedIn>
+                                            <StyledGridItemLoggedIn className={'gridEight'} item uqDsMobile={12} data-testid="training-panel">
+                                                <Training
+                                                    trainingEvents={trainingEvents}
+                                                    trainingEventsLoading={trainingEventsLoading}
+                                                    trainingEventsError={trainingEventsError}
+                                                />
+                                            </StyledGridItemLoggedIn>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid item uqDsMobile={8}>
+                                        <Grid container>
+                                            {canSeeLearningResources(account) && (
+                                                <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="learning-resources-panel">
+                                                    <LearningResourcesPanel account={account} history={history}/>
+                                                </StyledGridItemLoggedIn>
+                                            )}
+
+                                            <Grid item uqDsMobile={6}>
+                                                <Grid container>
+                                                    {/* {canSeeLearningResources(account) && (*/}
+                                                    {/*    <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="past-exam-papers-panel">*/}
+                                                    {/*        <PastExamPapers account={account} history={history}/>*/}
+                                                    {/*    </StyledGridItemLoggedIn>*/}
+                                                    {/* )}*/}
+                                                    <StyledGridItemLoggedIn  item uqDsMobile={12} data-testid="referencing-panel">
+                                                        <ReferencingPanel account={account} />
+                                                    </StyledGridItemLoggedIn>
+                                                    <StyledGridItemLoggedIn  item uqDsMobile={12} data-testid="readpublish-panel">
+                                                        <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
+                                                    </StyledGridItemLoggedIn>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid item uqDsMobile={6}>
+                                                <Grid container>
+                                                    {isEspaceAuthor(account, author) && (
+                                                        <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="espace-links-panel">
+                                                            <EspaceLinks
+                                                                author={author}
+                                                                possibleRecords={possibleRecords}
+                                                                incompleteNTRORecords={incompleteNTRO}
+                                                            />
+                                                        </StyledGridItemLoggedIn>
+                                                    )}
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
                         </Grid>
                     </StyledGridWrapper>
                 </StandardPage>
