@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { canSeePrintBalance } from 'helpers/access';
 
 const StyledLi = styled('li')(() => ({
     paddingBottom: '16px',
@@ -156,7 +157,7 @@ const dSTimeClockFileSearchIcon = (
     </svg>
 );
 
-export const CataloguePanel = ({ loans }) => {
+export const CataloguePanel = ({ account, loans, printBalance }) => {
     return (
         <StandardCard
             subCard
@@ -177,12 +178,25 @@ export const CataloguePanel = ({ loans }) => {
                         {dsStarIcon} <span>Library saved searches</span>
                     </Link>
                 </StyledLi>
-                <StyledLi>
+                {canSeePrintBalance(account) && (
+                    <StyledLi data-testid={'show-papercut'}>
+                        <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=queries">
+                            {dsDiscountDollarDashIcon}{' '}
+                            <span>
+                                {'Print balance [balance]'.replace(
+                                    '[balance]',
+                                    printBalance && printBalance.balance ? `($${printBalance.balance})` : '',
+                                )}
+                            </span>
+                        </Link>
+                    </StyledLi>
+                )}
+                <StyledLi data-testid={'show-loans'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
-                        {dsDiscountDollarDashIcon} <span>Library loans ({`${loans?.total_loans_count}`})</span>
+                        {dsBookCloseBookmarkIcon} <span>Library loans ({`${loans?.total_loans_count}`})</span>
                     </Link>
                 </StyledLi>
-                <StyledLi>
+                <StyledLi data-testid={'show-requests'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=requests&lang=en_US">
                         {dsBookCloseBookmarkIcon} <span>Library requests ({`${loans?.total_holds_count}`})</span>
                     </Link>
@@ -198,7 +212,9 @@ export const CataloguePanel = ({ loans }) => {
 };
 
 CataloguePanel.propTypes = {
+    account: PropTypes.object,
     loans: PropTypes.object,
+    printBalance: PropTypes.object,
 };
 
 export default CataloguePanel;

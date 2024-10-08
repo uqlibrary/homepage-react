@@ -22,6 +22,7 @@ import { greeting, isEscapeKeyPressed, lazyRetry } from 'helpers/general';
 import LibraryUpdates from 'modules/Index/components/subComponents/LibraryUpdates';
 import NavigationCardWrapper from './subComponents/NavigationCardWrapper';
 import {
+    loadPrintBalance,
     searcheSpacePossiblePublications,
     searcheSpaceIncompleteNTROPublications,
     loadLibHours,
@@ -165,6 +166,8 @@ export const Index = ({
     trainingEvents,
     trainingEventsLoading,
     trainingEventsError,
+    printBalance,
+    printBalanceLoading,
     possibleRecords,
     possibleRecordsLoading,
     incompleteNTRO,
@@ -250,6 +253,11 @@ export const Index = ({
             dispatch(loadTrainingEvents(account));
         }
     }, [account, accountLoading, dispatch]);
+    useEffect(() => {
+        if (accountLoading === false && !!account && !printBalance && printBalanceLoading === null) {
+            dispatch(loadPrintBalance());
+        }
+    }, [accountLoading, account, printBalance, printBalanceLoading, dispatch]);
     useEffect(() => {
         if (
             accountLoading === false &&
@@ -343,7 +351,7 @@ export const Index = ({
                                     <Grid className={'gridFive'} item uqDsMobile={4}>
                                         <Grid container className={'gridSix'}>
                                             <StyledGridItemLoggedIn className={'gridSeven'} item uqDsMobile={12} data-testid="primo-panel">
-                                                <CataloguePanel account={account} loans={loans} />
+                                                <CataloguePanel account={account} loans={loans} printBalance={printBalance} />
                                             </StyledGridItemLoggedIn>
                                             <StyledGridItemLoggedIn className={'gridEight'} item uqDsMobile={12} data-testid="training-panel">
                                                 <Training

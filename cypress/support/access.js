@@ -94,3 +94,37 @@ export const hasEspaceEntries = optionsTheUserShouldSee => {
         }
     }
 };
+
+export const hasCatalogPanelOptions = optionsTheUserShouldSee => {
+    const availableOptions = new Map();
+    availableOptions.set('papercut', 'Print balance');
+    availableOptions.set('loans', 'Library loans');
+    availableOptions.set('fines', 'Library fines');
+    availableOptions.set('requests', 'Library requests');
+
+    // validate the input - all supplied entries should exist in the available options
+    optionsTheUserShouldSee.map(item => {
+        expect([...availableOptions.keys()].includes(item), `option unexpectedly supplied for panel test: ${item}`).to
+            .be.true;
+    });
+
+    for (const [key, value] of availableOptions) {
+        expect(typeof key).to.equal('string');
+        expect(key.length).to.not.equals(0);
+        expect(typeof value).to.equal('string');
+        expect(value.length).to.not.equals(0);
+
+        const entryname = `show-${key}`;
+        const elementId = `[data-testid="${entryname}"]`;
+        // the hidden class IS applied, so the element is hidden
+        if (!!optionsTheUserShouldSee.includes(key)) {
+            cy.log(`checking personalisation line ${entryname} contains ${value}`);
+            cy.get(elementId)
+                .should('exist')
+                .contains(value);
+        } else {
+            cy.log(`checking personalisation line ${entryname} is hidden`);
+            cy.get(elementId).should('not.exist');
+        }
+    }
+};
