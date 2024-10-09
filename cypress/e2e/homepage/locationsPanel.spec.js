@@ -126,7 +126,7 @@ context('Locations Panel', () => {
             .contains('Library')
             .click();
         // dialog is closed
-        cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.exist');
+        cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
     });
     it('escape key can close the dialog', () => {
         cy.visit('/');
@@ -147,7 +147,7 @@ context('Locations Panel', () => {
             .focus()
             .trigger('keydown', { keyCode: ESCAPE_KEYCODE });
         // dialog is closed
-        cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.exist');
+        cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
     });
     it('data is removed correctly', () => {
         cy.visit('/');
