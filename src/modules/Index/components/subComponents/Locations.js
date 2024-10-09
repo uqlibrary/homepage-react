@@ -478,6 +478,27 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
         }
         return 'Very busy';
     };
+
+    function getLibraryHours(location) {
+        if (location.abbr === 'AskUs') {
+            return location.departments.map(department => {
+                if (['Chat'].includes(department.name)) {
+                    return department.hours;
+                }
+                return null;
+            });
+        }
+        if (hasDepartments(location)) {
+            return location.departments.map(department => {
+                if (departmentsMap.includes(department.name)) {
+                    return department.hours;
+                }
+                return null;
+            });
+        }
+        return 'See location';
+    }
+
     return (
         <StyledStandardCard noPadding standardCardId="locations-panel">
             <StyledWrapper
@@ -592,41 +613,9 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                             `${sluggifyName(`hours-item-${location.abbr}`)}`
                                                         }
                                                     >
-                                                        {(() => {
-                                                            if (location.abbr === 'AskUs') {
-                                                                return location.departments.map(department => {
-                                                                    if (['Chat'].includes(department.name)) {
-                                                                        return (
-                                                                            <StyledOpeningHours
-                                                                                key={`chat-isopen-${department.lid}`}
-                                                                            >
-                                                                                {department.hours}
-                                                                            </StyledOpeningHours>
-                                                                        );
-                                                                    }
-                                                                    return null;
-                                                                });
-                                                            } else if (hasDepartments(location)) {
-                                                                return location.departments.map(department => {
-                                                                    if (departmentsMap.includes(department.name)) {
-                                                                        return (
-                                                                            <StyledOpeningHours
-                                                                                key={`department-isopen-${department.lid}`}
-                                                                            >
-                                                                                {department.hours}
-                                                                            </StyledOpeningHours>
-                                                                        );
-                                                                    }
-                                                                    return null;
-                                                                });
-                                                            } else {
-                                                                return (
-                                                                    <StyledOpeningHours>
-                                                                        See location
-                                                                    </StyledOpeningHours>
-                                                                );
-                                                            }
-                                                        })()}
+                                                        <StyledOpeningHours key={`hours-item-${location.abbr}`}>
+                                                            {getLibraryHours(location)}
+                                                        </StyledOpeningHours>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
