@@ -347,7 +347,7 @@ export const Index = ({
                             <Locations
                                 libHours={libHoursOverride}
                                 libHoursLoading={libHoursLoading}
-                                libHoursError={libHoursError}
+                                libHoursError={false}
                                 account={account}
                             />
                         </StyledLocationBox>
