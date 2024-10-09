@@ -158,18 +158,20 @@ export const EspaceLinks = ({ author, possibleRecords, incompleteNTRORecords }) 
                     <EspaceUpdateWorks />
                 </Grid>
                 {(authorIsMissingOrcid || authorNeedsToUpdateRecords || authorHasIncompleteNtro) && (
-                    <>
-                        <Typography component={'h4'} variant={'h6'}>
-                            Update the following items:
-                        </Typography>
-                        <Grid item xs={12} style={{ backgroundColor: uqDsWarningYellow }}>
-                            <Grid container component={'ul'} style={{ paddingLeft: 0, marginTop: 0, marginLeft: 0 }}>
-                                {authorIsMissingOrcid && <EspaceOrcid />}
-                                {authorNeedsToUpdateRecords && <EspacePossible recordCount={possibleRecords.total} />}
-                                {authorHasIncompleteNtro && <EspaceNTROs recordCount={incompleteNTRORecords.total} />}
-                            </Grid>
+                    <Grid
+                        item
+                        xs={12}
+                        style={{ backgroundColor: uqDsWarningYellow, padding: '12px', marginBottom: '12px' }}
+                    >
+                        <Grid container component={'ul'} style={{ paddingLeft: 0, marginTop: 0, marginLeft: 0 }}>
+                            <Typography component={'h4'} variant={'h6'}>
+                                Update the following items:
+                            </Typography>
+                            {authorIsMissingOrcid && <EspaceOrcid />}
+                            {authorNeedsToUpdateRecords && <EspacePossible recordCount={possibleRecords.total} />}
+                            {authorHasIncompleteNtro && <EspaceNTROs recordCount={incompleteNTRORecords.total} />}
                         </Grid>
-                    </>
+                    </Grid>
                 )}
             </Grid>
         </StandardCard>

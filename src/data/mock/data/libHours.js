@@ -677,5 +677,23 @@ export const libHours = {
             }
         ]
     },
+    {
+        "lid": 3966,
+        "name": "Whitty building, Mater",
+        "category": "library",
+        "desc": "",
+        "url": "https:\/\/web.library.uq.edu.au\/locations-hours",
+        "contact": "",
+        "lat": "",
+        "long": "",
+        "color": "#0E6E0E",
+        "fn": "Access to Whitty Building is restricted to UQ Mater students on clinical placement.",
+        "day": "Tuesday",
+        "times": {
+            "status": "not-set"
+        },
+        "rendered": "",
+        "abbr": "Whitty Mater"
+    }
 ]
 };

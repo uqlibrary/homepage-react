@@ -417,6 +417,20 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                     return calculatedBusyness;
                 }
 
+                const min = 5;
+                const max = 100;
+                function tempCalcLocationBusiness() {
+                    // this wil be replaced wih api results
+                    if (location?.abbr === 'Gatton') {
+                        return null;
+                    }
+                    if (location?.abbr === 'Herston') {
+                        return 100;
+                    }
+                    return Math.floor(Math.random() * (max - min + 1)) + min;
+                }
+
+                const randomBusynessNumber = tempCalcLocationBusiness();
                 return {
                     name: location.name,
                     abbr: location.abbr,
@@ -424,12 +438,14 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                     alt: location.name,
                     campus: locationLocale.hoursCampusMap[location.abbr],
                     departments,
-                    busyness: getVemcountPercentage(location?.lid, location.name) || null,
+                    busyness: randomBusynessNumber,
+                    // busyness: getVemcountPercentage(location?.lid, location.name) || null,
                 };
             })) ||
         [];
     const alphaHours = cleanedHours
         .filter(e => e !== null)
+        .filter(l => l.abbr !== 'Whitty Mater') // remove this from springshare data for homepage
         .sort((a, b) => {
             const textA = a.name.toUpperCase();
             const textB = b.name.toUpperCase();
@@ -462,6 +478,27 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
         }
         return 'Very busy';
     };
+
+    function getLibraryHours(location) {
+        if (location.abbr === 'AskUs') {
+            return location.departments.map(department => {
+                if (['Chat'].includes(department.name)) {
+                    return department.hours;
+                }
+                return null;
+            });
+        }
+        if (hasDepartments(location)) {
+            return location.departments.map(department => {
+                if (departmentsMap.includes(department.name)) {
+                    return department.hours;
+                }
+                return null;
+            });
+        }
+        return 'See location';
+    }
+
     return (
         <StyledStandardCard noPadding standardCardId="locations-panel">
             <StyledWrapper
@@ -576,41 +613,9 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                             `${sluggifyName(`hours-item-${location.abbr}`)}`
                                                         }
                                                     >
-                                                        {(() => {
-                                                            if (location.abbr === 'AskUs') {
-                                                                return location.departments.map(department => {
-                                                                    if (['Chat'].includes(department.name)) {
-                                                                        return (
-                                                                            <StyledOpeningHours
-                                                                                key={`chat-isopen-${department.lid}`}
-                                                                            >
-                                                                                {department.hours}
-                                                                            </StyledOpeningHours>
-                                                                        );
-                                                                    }
-                                                                    return null;
-                                                                });
-                                                            } else if (hasDepartments(location)) {
-                                                                return location.departments.map(department => {
-                                                                    if (departmentsMap.includes(department.name)) {
-                                                                        return (
-                                                                            <StyledOpeningHours
-                                                                                key={`department-isopen-${department.lid}`}
-                                                                            >
-                                                                                {department.hours}
-                                                                            </StyledOpeningHours>
-                                                                        );
-                                                                    }
-                                                                    return null;
-                                                                });
-                                                            } else {
-                                                                return (
-                                                                    <StyledOpeningHours>
-                                                                        See location
-                                                                    </StyledOpeningHours>
-                                                                );
-                                                            }
-                                                        })()}
+                                                        <StyledOpeningHours key={`hours-item-${location.abbr}`}>
+                                                            {getLibraryHours(location)}
+                                                        </StyledOpeningHours>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>

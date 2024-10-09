@@ -25,7 +25,7 @@ import examSuggestion_FREN from './data/records/learningResources/examSuggestion
 import { computerAvailability } from './data/computerAvailability';
 import { libHours } from './data/libHours';
 import { training_object } from './data/training';
-import { espaceSearchResponse, loans } from './data/general';
+import { espaceSearchResponse, loans, printBalance } from './data/general';
 import { alertList } from './data/alertsLong';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
 import examSearch_DENT80 from './data/records/learningResources/examSearch_DENT80';
@@ -59,7 +59,11 @@ import dlor_team_list from './data/records/dlor/dlor_team_list';
 import dlor_file_type_list from './data/records/dlor/dlor_file_type_list';
 import dlor_series_all from './data/records/dlor/dlor_series_all';
 import { drupalArticles } from './data/drupalArticles';
-import { journalSearchFavourites, journalSearchFavouritesLarge, journalSearchNoFavourites } from './data/journalSearchFavourites';
+import {
+    journalSearchFavourites,
+    journalSearchFavouritesLarge,
+    journalSearchNoFavourites,
+} from './data/journalSearchFavourites';
 
 const moment = require('moment');
 
@@ -146,6 +150,8 @@ mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl).reply(() => {
 mock.onGet(routes.TRAINING_API(10).apiUrl).reply(withDelay([200, training_object]));
 // .reply(withDelay([200, training_array]));
 // .reply(withDelay([500, {}]));
+
+mock.onGet(routes.PRINTING_API().apiUrl).reply(withDelay([200, printBalance]));
 
 mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
 // mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
@@ -1210,17 +1216,18 @@ mock.onGet('exams/course/FREN1010/summary')
     .onGet(routes.JOURNAL_SEARCH_API().apiUrl)
     .reply(() => {
         switch (user) {
-            case "uqpf":
+            case 'uqpf':
                 return [403, {}];
-            case "s1111111":
-                return [200, {...journalSearchFavouritesLarge}];
-            case "s3333333":
-                return [200, {...journalSearchNoFavourites}];
+            case 's1111111':
+                return [200, { ...journalSearchFavouritesLarge }];
+            case 's3333333':
+                return [200, { ...journalSearchNoFavourites }];
             default:
                 return [200, journalSearchFavourites];
         }
     })
-    .onGet(routes.LOANS_API().apiUrl).reply(withDelay([200, loans]))
+    .onGet(routes.LOANS_API().apiUrl)
+    .reply(withDelay([200, loans]))
     .onAny()
     .reply(function(config) {
         console.log('url not mocked...', config.url);

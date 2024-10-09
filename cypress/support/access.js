@@ -16,7 +16,7 @@ export const hasPanels = optionsTheUserShouldSee => {
     possiblePanels.set('training', { title: 'Training', content: 'Online' });
     possiblePanels.set('espace', { title: 'UQ eSpace', content: 'Update the following items' });
     possiblePanels.set('readpublish', { title: 'Read and publish', content: 'Find journals' });
-    possiblePanels.set('catalogue', { title: 'My library account', content: 'Your library loans' });
+    possiblePanels.set('catalogue', { title: 'My library account', content: 'Library loans' });
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
         expect([...possiblePanels.keys()].includes(item), `panel option unexpectedly supplied for panel test: ${item}`)
@@ -88,6 +88,40 @@ export const hasEspaceEntries = optionsTheUserShouldSee => {
         if (!!optionsTheUserShouldSee.includes(key)) {
             cy.log(`checking personalisation line ${entryname} contains ${value}`);
             cy.get(elementId).contains(value);
+        } else {
+            cy.log(`checking personalisation line ${entryname} is hidden`);
+            cy.get(elementId).should('not.exist');
+        }
+    }
+};
+
+export const hasCatalogPanelOptions = optionsTheUserShouldSee => {
+    const availableOptions = new Map();
+    availableOptions.set('papercut', 'Print balance');
+    availableOptions.set('loans', 'Library loans');
+    availableOptions.set('fines', 'Library fines');
+    availableOptions.set('requests', 'Library requests');
+
+    // validate the input - all supplied entries should exist in the available options
+    optionsTheUserShouldSee.map(item => {
+        expect([...availableOptions.keys()].includes(item), `option unexpectedly supplied for panel test: ${item}`).to
+            .be.true;
+    });
+
+    for (const [key, value] of availableOptions) {
+        expect(typeof key).to.equal('string');
+        expect(key.length).to.not.equals(0);
+        expect(typeof value).to.equal('string');
+        expect(value.length).to.not.equals(0);
+
+        const entryname = `show-${key}`;
+        const elementId = `[data-testid="${entryname}"]`;
+        // the hidden class IS applied, so the element is hidden
+        if (!!optionsTheUserShouldSee.includes(key)) {
+            cy.log(`checking personalisation line ${entryname} contains ${value}`);
+            cy.get(elementId)
+                .should('exist')
+                .contains(value);
         } else {
             cy.log(`checking personalisation line ${entryname} is hidden`);
             cy.get(elementId).should('not.exist');

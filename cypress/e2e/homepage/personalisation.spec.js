@@ -3,6 +3,7 @@ import {
     hasEspaceEntries,
     hasNoEspacePanel,
     hasPanels,
+    hasCatalogPanelOptions,
 } from '../../support/access';
 
 // we test that each user type gets the correct elements on the homepage
@@ -13,6 +14,8 @@ context('Personalised Homepage', () => {
         cy.viewport(1300, 1000);
         // this type of user will see the following panels:
         hasPanels(['learning-resources', 'training', 'espace', 'readpublish', 'catalogue']);
+
+        hasCatalogPanelOptions(['requests', 'loans', 'papercut']); // 'fines',
 
         // this type of user will see these lines in the espace panel
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
@@ -46,6 +49,8 @@ context('Personalised Homepage', () => {
     it('when session cookie auto expires the user logs out', () => {
         expectUserToDisplayCorrectFirstName('s1111111', 'Michael');
 
+        hasCatalogPanelOptions(['requests', 'loans', 'papercut']); // 'fines',
+
         cy.clearCookie('UQLID');
         cy.rendersALoggedoutUser();
     });
@@ -53,6 +58,8 @@ context('Personalised Homepage', () => {
         expectUserToDisplayCorrectFirstName('s3333333', 'Juno');
 
         hasPanels(['learning-resources', 'training', 'readpublish', 'catalogue']);
+
+        hasCatalogPanelOptions(['requests', 'loans', 'papercut']); // 'fines',
 
         hasNoEspacePanel();
     });
@@ -71,6 +78,8 @@ context('Personalised Homepage', () => {
 
         hasPanels(['learning-resources', 'training', 'espace', 'readpublish', 'catalogue']);
 
+        hasCatalogPanelOptions(['requests', 'loans', 'papercut']); // 'fines',
+
         hasEspaceEntries(['espace-orcid']);
     });
 
@@ -78,6 +87,8 @@ context('Personalised Homepage', () => {
         expectUserToDisplayCorrectFirstName('digiteamMember', 'Caroline');
 
         hasPanels(['learning-resources', 'training', 'espace', 'readpublish', 'catalogue']);
+
+        hasCatalogPanelOptions(['requests', 'loans', 'papercut']); // 'fines',
 
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
     });
@@ -87,6 +98,8 @@ context('Personalised Homepage', () => {
 
         hasPanels(['learning-resources', 'training', 'readpublish', 'catalogue']);
 
+        hasCatalogPanelOptions(['requests', 'loans', 'papercut']); // 'fines',
+
         hasNoEspacePanel();
     });
 
@@ -94,6 +107,8 @@ context('Personalised Homepage', () => {
         expectUserToDisplayCorrectFirstName('uqpkopit', 'Peter');
 
         hasPanels(['learning-resources', 'training', 'espace', 'readpublish', 'catalogue']);
+
+        hasCatalogPanelOptions(['requests', 'loans', 'papercut']); // 'fines',
 
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
     });
@@ -103,6 +118,8 @@ context('Personalised Homepage', () => {
 
         hasPanels(['training', 'readpublish', 'catalogue']);
 
+        hasCatalogPanelOptions(['requests', 'loans', 'papercut']); // 'fines',
+
         hasNoEspacePanel();
     });
 
@@ -110,6 +127,8 @@ context('Personalised Homepage', () => {
         expectUserToDisplayCorrectFirstName('emalumni', 'Alumni');
 
         hasPanels(['training', 'readpublish', 'catalogue']);
+
+        hasCatalogPanelOptions(['requests', 'loans', 'papercut']); // 'fines',
 
         hasNoEspacePanel();
     });
@@ -119,6 +138,8 @@ context('Personalised Homepage', () => {
 
         hasPanels(['training', 'readpublish', 'catalogue']);
 
+        hasCatalogPanelOptions(['requests', 'loans', 'papercut']); // 'fines',
+
         hasNoEspacePanel();
     });
 
@@ -126,6 +147,8 @@ context('Personalised Homepage', () => {
         expectUserToDisplayCorrectFirstName('emassociate', 'Associate');
 
         hasPanels(['training', 'readpublish', 'catalogue']);
+
+        hasCatalogPanelOptions(['requests', 'loans', 'papercut']); // 'fines',
 
         hasNoEspacePanel();
     });
@@ -135,6 +158,8 @@ context('Personalised Homepage', () => {
 
         hasPanels(['training', 'readpublish', 'catalogue']);
 
+        hasCatalogPanelOptions(['requests', 'loans', 'papercut']); // 'fines',
+
         hasNoEspacePanel();
     });
 
@@ -142,6 +167,8 @@ context('Personalised Homepage', () => {
         expectUserToDisplayCorrectFirstName('emhonorary', 'Honorary');
 
         hasPanels(['learning-resources', 'training', 'readpublish', 'catalogue']);
+
+        hasCatalogPanelOptions(['requests', 'loans', 'papercut']); // 'fines',
 
         hasNoEspacePanel();
     });
@@ -151,6 +178,8 @@ context('Personalised Homepage', () => {
 
         hasPanels(['learning-resources', 'training', 'readpublish', 'catalogue']);
 
+        hasCatalogPanelOptions(['requests', 'loans', 'papercut']); // 'fines',
+
         hasNoEspacePanel();
     });
 
@@ -158,6 +187,8 @@ context('Personalised Homepage', () => {
         expectUserToDisplayCorrectFirstName('newUserGroup', 'New');
 
         hasPanels(['training', 'readpublish', 'catalogue']);
+
+        hasCatalogPanelOptions(['requests', 'loans', 'papercut']); // 'fines',
 
         hasNoEspacePanel();
     });

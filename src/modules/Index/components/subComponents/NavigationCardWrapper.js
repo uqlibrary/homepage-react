@@ -58,7 +58,7 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                         cardHeading="Library and student IT help"
                         landingUrl={linkToDrupal('/askus-and-it-support')}
                         iconBackgroundImage={conversationChatBackgroundimage}
-                        shortParagraph="Using your devices, printing and online exams. Contact or visit AskUs for help."
+                        shortParagraph="Contact or visit AskUs for help with using your devices, printing and online exams."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard

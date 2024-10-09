@@ -15,6 +15,12 @@ export const TRAINING_API = (numEvents = 6, filterId = 104) => ({
     options: { params: { take: numEvents, 'filterIds[]': filterId, ts: `${new Date().getTime()}` } },
 });
 
+// Papercut balance API
+export const PRINTING_API = () => ({
+    apiUrl: 'papercut/balance',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
 // eSpace Possible records
 export const POSSIBLE_RECORDS_API = () => ({
     apiUrl: 'records/search',
