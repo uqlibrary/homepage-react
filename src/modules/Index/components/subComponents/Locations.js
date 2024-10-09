@@ -507,11 +507,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
             return <div className="occupancyText">Closed</div>;
         }
         if (location.busyness === null) {
-            return (
-                <div className="occupancyText">
-                    <UqDsExclamationCircle /> <span>Data not captured</span>
-                </div>
-            );
+            return null;
         }
         if (location.busyness === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING) {
             return (
