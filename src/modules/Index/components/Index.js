@@ -99,7 +99,7 @@ const StyledGridWrapper = styled('div')(() => ({
 }));
 
 const StyledLocationBox = styled(Box)(({ theme }) => ({
-backgroundColor: 'white',
+    backgroundColor: 'white',
     border: '1px solid #DCDCDD',
     borderRadius: '0 0 4px 4px',
     boxShadow: '0px 12px 24px 0px rgba(25, 21, 28, 0.05)',
@@ -241,12 +241,12 @@ export const Index = ({
         }
     }, [accountLoading, account, dispatch]);
 
-    useEffect(() => {
-        if (accountLoading === false) {
-            dispatch(loadLibHours());
-            dispatch(loadCompAvail());
-        }
-    }, [accountLoading, dispatch]);
+    // useEffect(() => {
+    //     if (accountLoading === false) {
+    //         dispatch(loadLibHours());
+    //         // dispatch(loadCompAvail());
+    //     }
+    // }, [accountLoading, dispatch]);
 
     useEffect(() => {
         if (accountLoading === false) {
@@ -338,7 +338,7 @@ export const Index = ({
                             {!!locationOpen ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
                         </Button>
                     </StyledButtonWrapperDiv>
-                    <Fade direction="down" in={!!isLocationOpen} mountOnEnter unmountOnExit>
+                    <Fade in={!!isLocationOpen}>
                         <StyledLocationBox
                             id={'locations-wrapper'}
                             aria-labelledby="location-dialog-controller"

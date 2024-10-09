@@ -2,17 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
+
 import { getCampusByCode } from 'helpers/general';
 import { fullPath } from 'config/routes';
 import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { SubjectSearchDropdown } from 'modules/SharedComponents/SubjectSearchDropdown';
+import { isLibraryStaff, isLoggedInUser } from 'helpers/access';
 
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
-
+const StyledCourseListGridItem = styled('div')(() => ({
+    marginLeft: '8px',
+    h4: {
+        fontSize: '20px',
+        fontWeight: 500,
+        letterSpacing: '0.2px',
+        lineHeight: '160%', // 25.6px
+    },
+}));
 const StyledLink = styled(Link)(({ theme }) => ({
     color: theme.palette.primary.light,
     fontWeight: 500,
@@ -71,6 +81,35 @@ export const LearningResourcesPanel = ({ account }) => {
 
     const learningResourceId = 'homepage-learningresource';
 
+    let displayedClasses = [];
+    const hasClasses = account =>
+        isLoggedInUser(account) && !!account.current_classes && account.current_classes.length > 0;
+    if (hasClasses(account)) {
+        displayedClasses = account.current_classes;
+    } else if (isLibraryStaff(account)) {
+        // a list of hopefully permanent subjects so staff can click through to LR page easily
+        // (and see the student experience)
+        displayedClasses = [
+            {
+                DESCR: 'Introductory French 1',
+                SUBJECT: 'FREN',
+                CATALOG_NBR: '1010',
+                classnumber: 'FREN1010',
+            },
+            {
+                DESCR: 'Basic Mathematics',
+                SUBJECT: 'MATH',
+                CATALOG_NBR: '1040',
+                classnumber: 'MATH1040',
+            },
+            {
+                DESCR: 'Mechanics & Thermal Physics I',
+                SUBJECT: 'PHYS',
+                CATALOG_NBR: '1001',
+                classnumber: 'PHYS1001',
+            },
+        ];
+    }
     return (
         <StandardCard
             subCard
@@ -96,7 +135,16 @@ export const LearningResourcesPanel = ({ account }) => {
                 navigateToLearningResourcePage={navigateToLearningResourcePage}
             />
 
-            {!!account && !!account.current_classes && account.current_classes.length > 0 ? (
+            {!hasClasses(account) && isLibraryStaff(account) && (
+                <Typography
+                    component={'p'}
+                    data-testid="staff-course-prompt"
+                    style={{ paddingInline: '21px', marginTop: '10px', fontWeight: 400 }}
+                >
+                    Students see enrolled courses. Example links below:
+                </Typography>
+            )}
+            {displayedClasses && displayedClasses.length > 0 ? (
                 <Grid
                     container
                     spacing={1}
@@ -110,12 +158,10 @@ export const LearningResourcesPanel = ({ account }) => {
                         padding: '0 30px 8px',
                     }}
                 >
-                    <Grid item xs={12} style={{ marginTop: '-8px' }}>
-                        <Typography component={'h4'} variant={'h6'}>
-                            {locale.homepagePanel.userCourseTitle}
-                        </Typography>
-                    </Grid>
-                    {account.current_classes.map((item, index) => {
+                    <StyledCourseListGridItem item xs={12}>
+                        <Typography component={'h4'}>{locale.homepagePanel.userCourseTitle}</Typography>
+                    </StyledCourseListGridItem>
+                    {displayedClasses.map((item, index) => {
                         return (
                             <Grid
                                 item

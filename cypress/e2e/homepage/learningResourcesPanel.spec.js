@@ -140,4 +140,19 @@ context('The Homepage Learning Resource Panel', () => {
             .children()
             .should('have.length', 1 + 1); // add one for title
     });
+
+    it('Staff see example courses', () => {
+        cy.visit('/?user=uqstaff');
+        cy.get('[data-testid="staff-course-prompt"]')
+            .should('exist')
+            .contains('Students see enrolled courses. Example links below:');
+        cy.get('[data-testid="no-enrolled-courses"]').should('not.exist');
+        const numberOfBlocks = 3 + 1; // n classes + 1 header
+        cy.get('[data-testid="your-courses"]')
+            .children()
+            .should('have.length', numberOfBlocks);
+        cy.get('[data-testid="hcr-0"]')
+            .should('exist')
+            .contains('FREN1010');
+    });
 });

@@ -178,6 +178,11 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
                         {dsStarIcon} <span>Library saved searches</span>
                     </Link>
                 </StyledLi>
+                <StyledLi>
+                    <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=items">
+                        {dsStudyBookIcon} <span>Library saved items</span>
+                    </Link>
+                </StyledLi>
                 {canSeePrintBalance(account) && (
                     <StyledLi data-testid={'show-papercut'}>
                         <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=queries">
@@ -199,11 +204,6 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
                 <StyledLi data-testid={'show-requests'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=requests&lang=en_US">
                         {dsBookCloseBookmarkIcon} <span>Library requests ({`${loans?.total_holds_count}`})</span>
-                    </Link>
-                </StyledLi>
-                <StyledLi>
-                    <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=items">
-                        {dsStudyBookIcon} <span>Library saved items</span>
                     </Link>
                 </StyledLi>
             </ul>
