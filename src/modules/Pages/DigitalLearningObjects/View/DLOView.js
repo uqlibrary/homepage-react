@@ -215,8 +215,8 @@ export const DLOView = ({
     const [cookies, setCookie] = useCookies();
     const [confirmationOpen, setConfirmationOpen] = React.useState(false);
 
-    console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
-    console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
+    // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
+    // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
 
     const [formValues, setFormValues] = React.useState({
         subjectCode: '',
@@ -251,7 +251,7 @@ export const DLOView = ({
             theNewValue = !!e.target.checked;
         }
         const newValues = { ...formValues, [prop]: theNewValue };
-        console.log('handleChange', prop, theNewValue, newValues);
+        // console.log('handleChange', prop, theNewValue, newValues);
 
         setFormValues(newValues);
     };
@@ -329,7 +329,7 @@ export const DLOView = ({
     };
 
     const saveAndNavigate = dlorItem => {
-        console.log('saveAndNavigate formValues', dlorItem.object_link_url, formValues);
+        // console.log('saveAndNavigate formValues', dlorItem.object_link_url, formValues);
 
         if (formValues.schoolName.length > 0 || formValues.subjectCode.length > 0 || !!formValues.notify) {
             const valuestoSend = {
@@ -397,7 +397,7 @@ export const DLOView = ({
 
     let subscriptionResponseLocale = {};
     if (!dlorItemUpdating && (!!dlorUpdatedItem || !!dlorUpdatedItemError)) {
-        console.log('dlorUpdatedItem=', dlorUpdatedItem);
+        // console.log('dlorUpdatedItem=', dlorUpdatedItem);
         const updatingMessage =
             dlorUpdatedItem?.data?.subscription === false
                 ? 'You are already subscribed'

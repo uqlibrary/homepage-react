@@ -11,14 +11,14 @@ export function loadJournalSearchFavourites() {
             headers: {},
         })
             .then(articleResponse => {
-                console.log('Journal search response:', articleResponse);
+                // console.log('Journal search response:', articleResponse);
                 dispatch({
                     type: actions.JOURNAL_SEARCH_LOADED,
                     payload: articleResponse,
                 });
             })
             .catch(error => {
-                console.log('Journal search response::', error.message, JOURNAL_SEARCH_API());
+                // console.log('Journal search response::', error.message, JOURNAL_SEARCH_API());
                 dispatch({
                     type: actions.JOURNAL_SEARCH_FAILED,
                     payload: error.message,

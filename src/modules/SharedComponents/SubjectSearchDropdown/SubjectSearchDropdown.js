@@ -20,7 +20,7 @@ const StyledSearchPanel = styled(Grid)(() => ({
         color: 'red',
     },
     '& .selectInput': {
-        fontWeight: 300,
+        fontWeight: 400,
         textOverflow: 'ellipsis !important',
         overflow: 'hidden !important',
         whiteSpace: 'nowrap !important',

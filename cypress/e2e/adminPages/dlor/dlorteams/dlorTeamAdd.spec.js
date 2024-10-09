@@ -160,14 +160,14 @@ describe('Digital Learning Hub admin Add Team', () => {
                 team_manager: '',
                 team_email: 'lea@example.com',
             };
-            console.log('document.cookies', document.cookie);
+            // console.log('document.cookies', document.cookie);
             cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                 expect(cookie).to.exist;
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 
@@ -225,14 +225,14 @@ describe('Digital Learning Hub admin Add Team', () => {
                 team_manager: 'Valid Team manager name',
                 team_email: 'lea@example.com',
             };
-            console.log('document.cookies', document.cookie);
+            // console.log('document.cookies', document.cookie);
             cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                 expect(cookie).to.exist;
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 

@@ -5,9 +5,9 @@ import { lazy } from 'react';
 import { PropTypes } from 'prop-types';
 import { useDispatch } from 'react-redux';
 
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Fade from '@mui/material/Fade';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
@@ -28,6 +28,7 @@ import {
     loadTrainingEvents,
     loadDrupalArticles,
     loadJournalSearchFavourites,
+    loadLoans,
 } from 'data/actions';
 import { canSeeLearningResources, isEspaceAuthor } from 'helpers/access';
 
@@ -38,26 +39,7 @@ const PastExamPapers = lazy(() => lazyRetry(() => import('./subComponents/PastEx
 const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
 const ReferencingPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReferencingPanel')));
 const ReadPublish = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReadPublish')));
-
-const StyledAccordion = styled(Accordion)(() => ({
-    backgroundColor: 'inherit',
-    border: 'none',
-    boxShadow: 'none',
-}));
-
-const StyledAccordionSummary = styled(AccordionSummary)(() => ({
-    display: 'inline-flex',
-    width: 'auto',
-    minWidth: 0,
-    paddingLeft: 0,
-    minHeight: '48px !important',
-    '& .MuiAccordionSummary-content': {
-        margin: '0 !important',
-    },
-    '& .MuiAccordionSummary-contentGutters': {
-        margin: '0 !important',
-    },
-}));
+const CataloguePanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/CataloguePanel')));
 
 const StyledPortalContainer = styled('div')(() => ({
     paddingTop: 48,
@@ -65,8 +47,8 @@ const StyledPortalContainer = styled('div')(() => ({
     backgroundColor: '#51247a',
     '@media (max-width: 640px)': {
         paddingBottom: 24,
-        paddingTop: 24
-    }
+        paddingTop: 24,
+    },
 }));
 
 const StyledH1 = styled('h1')(({ theme }) => ({
@@ -87,38 +69,82 @@ const StyledH1 = styled('h1')(({ theme }) => ({
     },
 }));
 
-const StyleWrapper = styled('div')(() => ({
-    position: 'relative',
-}));
-
-const StyledLink = styled(Link)(({ theme }) => ({
+const StyledBookingLink = styled(Link)(({ theme }) => ({
     color: 'black',
     fontWeight: 400,
     textDecorationColor: theme.palette.primary.light,
     '& span': {
         color: theme.palette.primary.light,
         display: 'block',
-        paddingTop: '14px',
-    },
-    '@media (min-width: 640px)': {
-        position: 'absolute',
-        top: 0,
-        right: '10px',
-        zIndex: 10,
+        paddingTop: '13px',
     },
 }));
 
 const StyledHeading = styled(Typography)(() => ({
-    fontSize: '24px',
+    fontSize: '32px',
     fontWeight: 500,
-    marginTop: '1em',
+    marginTop: '1rem',
 }));
 
-const StyledSummary = styled('span')(({ theme }) => ({
-    color: theme.palette.primary.light,
-    textDecoration: 'underline',
-    fontFamily: 'Roboto, sans-serif',
-    fontWeight: 400,
+const StyledGridWrapper = styled('div')(() => ({
+    marginLeft: '-32px',
+    '@media (max-width: 1200px)': {
+        marginLeft: '-24px',
+    },
+}));
+
+const StyledLocationBox = styled(Box)(({ theme }) => ({
+backgroundColor: 'white',
+    border: '1px solid #DCDCDD',
+    borderRadius: '0 0 4px 4px',
+    boxShadow: '0px 12px 24px 0px rgba(25, 21, 28, 0.05)',
+    marginTop: '3px',
+    minWidth: '66%',
+    zIndex: 999,
+    position: 'absolute',
+    top: 50,
+    left: 0,
+    [theme.breakpoints.down('uqDsDesktop')]: {
+        minWidth: '80%',
+    },
+    [theme.breakpoints.down('uqDsTablet')]: {
+        minWidth: '95%',
+        left: 5,
+    },
+}));
+
+const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+
+    '& button': {
+        color: theme.palette.primary.light,
+        fontSize: '16px',
+        marginTop: '6px',
+        textDecoration: 'underline',
+        textTransform: 'none',
+        '&:hover': {
+            backgroundColor: 'transparent',
+            textDecoration: 'underline',
+            '-webkit-text-decoration': 'none',
+        },
+    },
+    '& a': {
+        fontSize: '16px',
+        height: '40px',
+        paddingBlock: '6px',
+        marginLeft: '32px',
+    },
+}));
+
+const StyledGridItemLoggedIn = styled(Grid)(({ theme }) => ({
+    paddingLeft: '24px',
+    marginBottom: '24px',
+    [theme.breakpoints.up('uqDsDesktopXL')]: {
+        paddingLeft: '32px',
+        marginBottom: '32px',
+    },
 }));
 
 export const Index = ({
@@ -143,23 +169,35 @@ export const Index = ({
     journalSearchList,
     journalSearchLoading,
     journalSearchError,
+    loans,
+    loansLoading,
 
 }) => {
     // console.log('drupal article list in index feeder,', drupalArticleList);
     const dispatch = useDispatch();
 
-    React.useEffect(() => {
+    // handle the location opener
+    const [locationOpenerElement, setLocationOpenerElement] = React.useState(null);
+    const handleLocationOpenerClick = () => {
+        const showLocation = setInterval(() => {
+            setLocationOpenerElement(!locationOpenerElement);
+            console.log('setInterval locationOpenerElement=', locationOpenerElement);
+
+            clearInterval(showLocation);
+        }, 10);
+    };
+    const isLocationOpen = Boolean(locationOpenerElement);
+
+    useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader && siteHeader.removeAttribute('secondleveltitle');
         !!siteHeader && siteHeader.removeAttribute('secondLevelUrl');
     }, []);
 
-
     // drupal article stuff here.
 
     useEffect(() => {
         if (!drupalArticleList || drupalArticleList?.length < 1) {
-            // console.log('dispatching', drupalArticleList);
             dispatch(loadDrupalArticles());
         }
     }, [drupalArticleList, dispatch]);
@@ -167,7 +205,6 @@ export const Index = ({
     // Journal Search favourites here
     useEffect(() => {
         if (accountLoading === false && !!account) {
-            // console.log('dispatching', drupalArticleList);
             dispatch(loadJournalSearchFavourites());
         }
     }, [accountLoading, account, dispatch]);
@@ -209,6 +246,14 @@ export const Index = ({
         }
     }, [accountLoading, account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
 
+    useEffect(() => {
+        if (accountLoading === false && !!account && !loans && loansLoading === null) {
+            console.log('dispatching');
+            dispatch(loadLoans());
+        }
+    }, [accountLoading, account, loans, loansLoading, dispatch]);
+
+    console.log('reload locationOpenerElement=', locationOpenerElement);
     return (
         <React.Suspense fallback={<ContentLoader message="Loading"/>}>
             <StyledPortalContainer id="search-portal-container" data-testid="search-portal-container">
@@ -218,78 +263,84 @@ export const Index = ({
                 </StandardPage>
             </StyledPortalContainer>
             <div style={{ borderBottom: '1px solid hsla(203, 50%, 30%, 0.15)' }}>
-                <div className="layout-card">
-                    <StyleWrapper>
-                        <StyledLink
+                <div className="layout-card" style={{ position: 'relative' }}>
+                    <StyledButtonWrapperDiv style={{ position: 'relative' }}>
+                        <Button
+                            id="panel1a-header"
+                            data-testid="hours-accordion-open"
+                            onClick={handleLocationOpenerClick}
+                        >
+                            Library locations
+                            <ExpandMoreIcon/>
+                        </Button>
+                        <StyledBookingLink
                             href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
                             data-testid="homepage-hours-bookit-link"
                             >
                             <span>
-                                Make a booking
+                                Book a room
                             </span>
-                        </StyledLink>
-                        <StyledAccordion>
-                            <StyledAccordionSummary
-                                expandIcon={<ExpandMoreIcon/>}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                                data-testid="hours-accordion-open"
-                            >
-                                <StyledSummary>Library locations</StyledSummary>
-                            </StyledAccordionSummary>
-                            <AccordionDetails>
-                                <Locations
-                                    libHours={libHours}
-                                    libHoursLoading={libHoursLoading}
-                                    libHoursError={libHoursError}
-                                    account={account}
-                                />
-                            </AccordionDetails>
-                        </StyledAccordion>
-                    </StyleWrapper>
+                        </StyledBookingLink>
+                    </StyledButtonWrapperDiv>
+                    <Fade direction="down" in={!!isLocationOpen} mountOnEnter unmountOnExit>
+                        <StyledLocationBox>
+                            <Locations
+                                libHours={libHours}
+                                libHoursLoading={libHoursLoading}
+                                libHoursError={libHoursError}
+                                account={account}
+                            />
+                        </StyledLocationBox>
+                    </Fade>
                 </div>
             </div>
+            {console.log('loans', loans, loansLoading)}
             {accountLoading === false && !!account && (
                 <StandardPage>
-                    <Grid container spacing={4} style={{ paddingBottom: '1em' }}>
-                        <Grid item xs={12}>
-                            <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
-                                {greeting()}, {account.firstName || /* istanbul ignore next */ ''}
-                            </StyledHeading>
-                        </Grid>
-                        <Grid item xs={12} md={4} data-testid="training-panel" sx={{ paddingTop: '0px' }}>
-                            <Training
-                                trainingEvents={trainingEvents}
-                                trainingEventsLoading={trainingEventsLoading}
-                                trainingEventsError={trainingEventsError}
-                            />
-                        </Grid>
-                        {canSeeLearningResources(account) && (
-                            <Grid item xs={12} md={4} data-testid="learning-resources-panel" sx={{ paddingTop: '0px' }}>
-                                <LearningResourcesPanel account={account} history={history}/>
+                    <StyledGridWrapper>
+                        <Grid container>
+                            <Grid item uqDsMobile={12} sx={{ marginBottom: '32px', marginLeft: '24px' }}>
+                                <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
+                                    {greeting()}, {account.firstName || /* istanbul ignore next */ ''}
+                                </StyledHeading>
                             </Grid>
-                        )}
-                        {canSeeLearningResources(account) && (
-                            <Grid item xs={12} md={4} data-testid="past-exam-papers-panel" sx={{ paddingTop: '0px' }}>
-                                <PastExamPapers account={account} history={history}/>
-                            </Grid>
-                        )}
-                        {isEspaceAuthor(account, author) && (
-                            <Grid item xs={12} md={4} data-testid="espace-links-panel" sx={{ paddingTop: '0px' }}>
-                                <EspaceLinks
-                                    author={author}
-                                    possibleRecords={possibleRecords}
-                                    incompleteNTRORecords={incompleteNTRO}
+                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="primo-panel">
+                                <CataloguePanel account={account} loans={loans} />
+                            </StyledGridItemLoggedIn>
+                            {canSeeLearningResources(account) && (
+                                <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="learning-resources-panel">
+                                    <LearningResourcesPanel account={account} history={history}/>
+                                </StyledGridItemLoggedIn>
+                            )}
+                            {canSeeLearningResources(account) && (
+                                <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="past-exam-papers-panel">
+                                    <PastExamPapers account={account} history={history}/>
+                                </StyledGridItemLoggedIn>
+                            )}
+                            {isEspaceAuthor(account, author) && (
+                                <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="espace-links-panel">
+                                    <EspaceLinks
+                                        author={author}
+                                        possibleRecords={possibleRecords}
+                                        incompleteNTRORecords={incompleteNTRO}
+                                    />
+                                </StyledGridItemLoggedIn>
+                            )}
+                            <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="referencing-panel">
+                                <ReferencingPanel account={account} />
+                            </StyledGridItemLoggedIn>
+                            <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="readpublish-panel">
+                                <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
+                            </StyledGridItemLoggedIn>
+                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4} data-testid="training-panel">
+                                <Training
+                                    trainingEvents={trainingEvents}
+                                    trainingEventsLoading={trainingEventsLoading}
+                                    trainingEventsError={trainingEventsError}
                                 />
-                            </Grid>
-                        )}
-                        <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
-                            <ReferencingPanel account={account} />
+                            </StyledGridItemLoggedIn>
                         </Grid>
-                        <Grid  item xs={12} md={4} data-testid="referencing-panel" sx={{ paddingTop: '0px' }}>
-                            <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
-                        </Grid>
-                    </Grid>
+                    </StyledGridWrapper>
                 </StandardPage>
             )}
             <NavigationCardWrapper account={account} accountLoading={accountLoading} />

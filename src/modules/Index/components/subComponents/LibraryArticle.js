@@ -20,7 +20,7 @@ const loadFallbackImage = image => {
 const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
     return {
         /* Parent */
-        [theme.breakpoints.up('xs')]: {
+        [theme.breakpoints.down('xs')]: {
             paddingTop: '24px !important',
             paddingLeft: '24px !important',
         },
@@ -45,7 +45,7 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
         },
         'article-container': {
             [theme.breakpoints.down('uqDsTablet')]: {
-                padding: '0 24px 0'
+                padding: '0 24px 0 !important',
             },
         },
         '.ArticleCategory': {
@@ -68,7 +68,7 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
             height: '100%',
             justifyContent: articleindex === 0 ? 'center' : 'top',
             paddingTop: '0px !important',
-            // paddingBottom: '24px',
+
             [theme.breakpoints.up('xs')]: {
                 paddingLeft: articleindex !== 0 ? 0 : 24,
                 paddingRight: articleindex !== 0 ? 0 : 24,
@@ -87,12 +87,12 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
         },
         '.ArticleTitle': {},
         a: {
-            textDecoration: 'none',
+            textDecoration: 'none !important',
             '&:hover': {
-                textDecoration: 'none',
+                textDecoration: 'none !important',
             },
             '&:hover h3': {
-                textDecoration: 'underline',
+                textDecoration: 'underline !important',
             },
         },
 

@@ -8,6 +8,7 @@ import {
     LIB_HOURS_API,
     POSSIBLE_RECORDS_API,
     TRAINING_API,
+    LOANS_API
 } from 'repositories/routes';
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
 import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME } from 'config/general';
@@ -295,4 +296,38 @@ export function clearSessionExpiredFlag() {
     return dispatch => {
         dispatch({ type: actions.CLEAR_CURRENT_ACCOUNT_SESSION_FLAG });
     };
+}
+
+/**
+ * Loads the loans data
+ * @returns {function(*)}
+ */
+export function loadLoans() {
+    if (!!getSessionCookie()) {
+        console.log("Firing Dispatch loadLoans")
+        return dispatch => {
+            dispatch({ type: actions.LOANS_LOADING });
+            return get(LOANS_API())
+                .then(loanResponse => {
+                    console.log("Loan Response: ", loanResponse)
+                    dispatch({
+                        type: actions.LOANS_LOADED,
+                        payload: loanResponse,
+                    });
+                })
+                .catch(error => {
+                    dispatch({
+                        type: actions.LOANS_FAILED,
+                        payload: error.message,
+                    });
+                });
+        };
+    } else {
+        return dispatch => {
+            dispatch({
+                type: actions.LOANS_FAILED,
+                payload: 'not logged in',
+            });
+        };
+    }
 }

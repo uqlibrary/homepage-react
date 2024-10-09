@@ -70,7 +70,6 @@ export const isLoggedInUser = account => !!account && !!account.id;
 // define which home page panel items each user type can see
 
 export const canSeeLearningResources = account => {
-    console.log('CAN SEE LEARNING RESOURCES', account);
     return (
         !!account &&
         !!account.id &&

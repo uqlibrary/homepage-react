@@ -11,31 +11,35 @@ import { styled } from '@mui/material/styles';
 import { locale as locationLocale } from 'config/locale';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
+const StyledStandardCard = styled(StandardCard)(() => ({
+    border: 'none',
+    marginBottom: '32px',
+    '& .MuiCardHeader-root': {
+        paddingBlock: '12px',
+    },
+}));
 const StyledWrapper = styled('div')(({ theme }) => ({
     ['&.locations-wrapper']: {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
     },
-    ['& .locations-wrapper-detail']: {
-        flexGrow: 1,
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        [theme.breakpoints.down('md')]: {
-            overflowX: 'hidden',
-            overflowY: 'hidden',
-        },
-    },
     ['& .table-row']: {
-        fontSize: '1.1em',
+        fontSize: '16px',
+        fontStyle: 'normal',
         fontWeight: 500,
         letterSpacing: '0.16px',
-        marginLeft: 8,
-        padding: '4px 0 4px 0',
+        lineHeight: '160%', // 25.6px
+        justifyContent: 'center',
+        marginBlock: '-4px',
+        padding: '8px 40px 8px 0',
         transition: 'all 0.3s ease',
         ['& a']: {
             color: theme.palette.primary.light,
             textDecoration: 'underline',
+            '&:hover': {
+                backgroundColor: 'inherit',
+            },
         },
         '@media (max-width: 900px)': {
             maxWidth: '98%',
@@ -43,12 +47,34 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         '@media (min-width: 900px)': {
             maxWidth: '785px',
         },
+    },
+    '& .table-row-header': {
+        marginBlock: 0,
+        paddingBlock: 0,
+        '& > div': {
+            paddingTop: 0,
+        },
+    },
+    '& .table-row-body': {
+        marginLeft: 0,
         '&:hover': {
             backgroundColor: '#f3f3f4', // $grey-50	Background colour to highlight sections, cards or panes
         },
+        '& > div': {
+            paddingTop: 0,
+        },
     },
     '& .table-header-cell': {
-        fontWeight: 'bold',
+        color: theme.palette.secondary.dark,
+        fontWeight: 500,
+        lineHeight: '160%', // 25.6px
+        letterSpacing: '0.16px',
+    },
+    '& .locations-wrapper-detail': {
+        marginLeft: '32px',
+    },
+    '& .locations-wrapper-detail .table-column-busy': {
+        paddingLeft: '64px',
     },
     '& .table-cell-hours': {
         fontWeight: 400,
@@ -59,29 +85,43 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         whiteSpace: 'nowrap',
     },
     '& .occupancy': {
-        backgroundColor: 'grey',
-        border: '1px solid #333',
+        backgroundColor: '#dcdcdc',
         borderRadius: '20px',
         fontSize: '0.8em',
+        marginTop: '4px',
         width: '100%',
-        '& .full': {
+        height: '16px',
+        '& .occupancyPercent': {
             backgroundColor: theme.palette.primary.light,
-            color: 'white',
+            color: theme.palette.primary.light,
             display: 'block',
-            borderRadius: '20px',
+            borderTopLeftRadius: '20px',
+            borderBottomLeftRadius: '20px',
+            height: '16px',
+            '& span': {
+                paddingLeft: '24px',
+            },
         },
-        '& span span': {
-            paddingLeft: '24px',
+        '& .occupancyPercent:has(.busy-closed)': {
+            lineHeight: '18px',
+            marginLeft: '20px',
+        },
+        '& .occupancyPercent100': {
+            borderTopRightRadius: '20px',
+            borderBottomRightRadius: '20px',
         },
     },
     ['& .outlink']: {
         marginTop: '32px',
-        marginLeft: '16px',
+        marginLeft: '32px',
         '& a': {
             color: theme.palette.primary.light,
             textDecoration: 'underline',
             fontSize: '1.1em',
             fontWeight: 500,
+            '&:hover': {
+                color: 'white',
+            },
         },
     },
     ['& .location-askus']: {
@@ -92,6 +132,11 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         overflowY: 'hidden',
         overflowX: 'hidden',
     },
+}));
+const StyledOpeningHours = styled(Typography)(() => ({
+    color: '#3B383E', // Brand-grey-grey-900
+    fontWeight: 400,
+    letterSpacing: '0.16px',
 }));
 
 const MyLoader = props => (
@@ -176,27 +221,38 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
             !!libHours &&
             !!libHours.locations &&
             libHours.locations.length > 0 &&
-            libHours.locations.map(item => {
+            libHours.locations.map(location => {
                 let departments = [];
-                if (!!departmentProvided(item)) {
-                    departments = item.departments.map(item => {
+                if (!!departmentProvided(location)) {
+                    departments = location.departments.map(dept => {
                         return {
-                            name: item.name,
-                            hours: item.rendered,
-                            currently_open: item.times?.currently_open,
+                            name: dept.name,
+                            hours: dept.rendered,
+                            currently_open: dept.times?.currently_open,
                         };
                     });
                 }
                 const min = 20;
                 const max = 100;
-                const randomBusynessNumber =
-                    item?.abbr === 'Gatton' ? null : Math.floor(Math.random() * (max - min + 1)) + min;
+
+                function tempCalcLocationBusiness() {
+                    // this wil be replaced wih api results
+                    if (location?.abbr === 'Gatton') {
+                        return null;
+                    }
+                    if (location?.abbr === 'Herston') {
+                        return 100;
+                    }
+                    return Math.floor(Math.random() * (max - min + 1)) + min;
+                }
+
+                const randomBusynessNumber = tempCalcLocationBusiness();
                 return {
-                    name: item.name,
-                    abbr: item.abbr,
-                    url: item.url,
-                    alt: item.name,
-                    campus: locationLocale.hoursCampusMap[item.abbr],
+                    name: location.name,
+                    abbr: location.abbr,
+                    url: location.url,
+                    alt: location.name,
+                    campus: locationLocale.hoursCampusMap[location.abbr],
                     departments,
                     // temporaily grab a random number that is the busyness %age
                     // will eventually be an api
@@ -222,7 +278,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
         const departmentsMapUsed = departmentsMapIn ?? departmentsMap;
         return item.departments?.filter(d => departmentsMapUsed.includes(d.name))?.find(d => d.currently_open === true);
     };
-    const getidFromname = string => {
+    const sluggifyName = string => {
         // standardise a string
         return string.toLowerCase().replace(' ', '-');
     };
@@ -239,7 +295,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
         return 'Very busy';
     };
     return (
-        <StandardCard noPadding standardCardId="locations-panel">
+        <StyledStandardCard noPadding standardCardId="locations-panel">
             <StyledWrapper
                 className={`locations-wrapper ${
                     !!account && !!account.id ? 'componentHeight' : 'componentHeightPublic'
@@ -257,12 +313,8 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                 {!libHoursError && !!libHours && !libHoursLoading && (
                     <Fade in={!libHoursLoading} timeout={1000}>
                         <div className={'locations-wrapper-detail'} role="table">
-                            <p>
-                                Note: made up occupancy data (random numbers) also, pretending Gatton isnt returning
-                                occupancy data atm
-                            </p>
-                            <Grid container spacing={1} className="table-row" alignItems={'flex-start'} role="row">
-                                <Grid item xs={7}>
+                            <Grid container className="table-row table-row-header" alignItems={'flex-start'} role="row">
+                                <Grid item xs={7} style={{ paddingLeft: 0 }}>
                                     <Grid container>
                                         <Grid
                                             item
@@ -297,25 +349,25 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={5} role="columnheader" id="locations-header-busyness">
-                                    <Typography component={'h2'} className={'table-header-cell'}>
+                                    <Typography component={'h2'} className={'table-header-cell table-column-busy'}>
                                         Busy level
                                     </Typography>
                                 </Grid>
                             </Grid>
                             {!!sortedHours &&
                                 sortedHours.length > 1 &&
-                                sortedHours.map((item, index) => {
+                                sortedHours.map((location, index) => {
                                     return (
                                         <Grid
                                             container
-                                            data-testid={getidFromname(`hours-item-${item.abbr}`)}
+                                            data-testid={sluggifyName(`hours-item-${location.abbr}`)}
                                             spacing={1}
                                             key={index}
-                                            className={`table-row location-${item.abbr.toLowerCase()}`}
+                                            className={`table-row table-row-body location-${location.abbr.toLowerCase()}`}
                                             alignItems={'flex-start'}
                                             role="row"
                                         >
-                                            <Grid item xs={7}>
+                                            <Grid item xs={7} style={{ paddingLeft: 0 }}>
                                                 <Grid container>
                                                     <Grid
                                                         item
@@ -325,12 +377,13 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                         aria-labelledby="locations-header-library"
                                                     >
                                                         <a
-                                                            aria-label={ariaLabelForLocation(item)}
+                                                            aria-label={ariaLabelForLocation(location)}
                                                             data-analyticsid={`hours-item-${index}`}
-                                                            href={item.url}
+                                                            href={location.url}
+                                                            style={{ paddingBlock: 0 }}
                                                         >
-                                                            <span id={`${getidFromname(`hours-item-${item.abbr}`)}`}>
-                                                                {item.name}
+                                                            <span id={`${sluggifyName(`hours-item-${location.abbr}`)}`}>
+                                                                {location.name}
                                                             </span>
                                                         </a>
                                                     </Grid>
@@ -350,84 +403,74 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                         role="cell"
                                                         aria-labelledby={
                                                             'locations-header-hours ' +
-                                                            `${getidFromname(`hours-item-${item.abbr}`)}`
+                                                            `${sluggifyName(`hours-item-${location.abbr}`)}`
                                                         }
                                                     >
                                                         {(() => {
-                                                            if (item.abbr === 'AskUs') {
-                                                                return item.departments.map(department => {
+                                                            if (location.abbr === 'AskUs') {
+                                                                return location.departments.map(department => {
                                                                     if (['Chat'].includes(department.name)) {
-                                                                        return isOpen(item, ['Chat']) ? (
-                                                                            <Typography
-                                                                                key={`chat-isopen-${department.lid}`}
-                                                                            >
-                                                                                {department.hours}
-                                                                            </Typography>
-                                                                        ) : (
-                                                                            <Typography
-                                                                                key={`chat-isclosed-${department.lid}`}
-                                                                            >
-                                                                                Closed
-                                                                            </Typography>
-                                                                        );
+                                                                        <StyledOpeningHours
+                                                                            key={`chat-isopen-${department.lid}`}
+                                                                        >
+                                                                            {department.hours}
+                                                                        </StyledOpeningHours>;
                                                                     }
                                                                     return null;
                                                                 });
-                                                            } else if (hasDepartments(item)) {
-                                                                return item.departments.map(department => {
+                                                            } else if (hasDepartments(location)) {
+                                                                return location.departments.map(department => {
                                                                     if (departmentsMap.includes(department.name)) {
-                                                                        return isOpen(item) ? (
-                                                                            <Typography
+                                                                        return (
+                                                                            <StyledOpeningHours
                                                                                 key={`department-isopen-${department.lid}`}
                                                                             >
                                                                                 {department.hours}
-                                                                            </Typography>
-                                                                        ) : (
-                                                                            <Typography
-                                                                                key={`department-isclosed-${department.lid}`}
-                                                                            >
-                                                                                Closed
-                                                                            </Typography>
+                                                                            </StyledOpeningHours>
                                                                         );
                                                                     }
                                                                     return null;
                                                                 });
                                                             } else {
-                                                                return <Typography>See location</Typography>;
+                                                                return (
+                                                                    <StyledOpeningHours>
+                                                                        See location
+                                                                    </StyledOpeningHours>
+                                                                );
                                                             }
                                                         })()}
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
-                                            {item.abbr !== 'AskUs' && item.busyness !== null && (
-                                                <Grid
-                                                    item
-                                                    xs={5}
-                                                    role="cell"
-                                                    aria-labelledby="locations-header-busyness"
-                                                >
+                                            <Grid
+                                                item
+                                                xs={5}
+                                                role="cell"
+                                                aria-labelledby="locations-header-busyness"
+                                                className={'table-body-cell table-column-busy'}
+                                            >
+                                                {location.abbr !== 'AskUs' && location.busyness !== null && (
                                                     <div className="occupancy">
-                                                        <span
-                                                            className="full"
+                                                        <div
+                                                            className={`occupancyPercent occupancyPercent${location.busyness}`}
                                                             style={{
                                                                 width:
-                                                                    !hasDepartments(item) || isOpen(item)
-                                                                        ? `${item.busyness}%`
+                                                                    !hasDepartments(location) || isOpen(location)
+                                                                        ? `${location.busyness}%`
                                                                         : 0,
                                                             }}
-                                                            title={busynessText(item.busyness)}
+                                                            title={busynessText(location.busyness)}
                                                         >
-                                                            <span>
-                                                                {!hasDepartments(item) ||
-                                                                (isOpen(item) && item.busyness > 0)
-                                                                    ? // ? `${item.busyness}%`
-                                                                      ''
-                                                                    : 'Closed'}
-                                                            </span>
-                                                        </span>
+                                                            {!hasDepartments(location) ||
+                                                            (isOpen(location) && location.busyness > 0) ? (
+                                                                <span>{/* ${location.busyness}%*/}</span>
+                                                            ) : (
+                                                                <div className={'busy-closed'}>Closed</div>
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                </Grid>
-                                            )}
+                                                )}
+                                            </Grid>
                                         </Grid>
                                     );
                                 })}
@@ -439,17 +482,28 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         <MyLoader id="hours-loader" data-testid="hours-loader" aria-label="Locations data is loading" />
                     </div>
                 )}
+                <p
+                    style={{
+                        marginLeft: '30px',
+                        fontWeight: 'bold',
+                    }}
+                >
+                    Note: made up occupancy data (random numbers)
+                    <br />
+                    Also, pretending Gatton isn't returning occupancy data & Herston is full
+                </p>
                 <div className="outlink">
                     <Link
                         data-testid="homepage-hours-weeklyhours-link"
                         data-analyticsid={'hours-item-weeklyhours-link'}
                         to="https://web.library.uq.edu.au/locations-hours/opening-hours"
+                        style={{ marginBottom: '24px' }}
                     >
                         See weekly Library and AskUs hours
                     </Link>
                 </div>
             </StyledWrapper>
-        </StandardCard>
+        </StyledStandardCard>
     );
 };
 

@@ -48,7 +48,7 @@ const EventPanel = ({
     };
 
     const updateEventDate = newDate => {
-        console.log('Test change', newDate);
+        // console.log('Test change', newDate);
         const manualDate = moment(newDate).isBefore(moment(), 'day');
         handleChange('action_date')(newDate);
         handleChange('isManualDate')(manualDate);

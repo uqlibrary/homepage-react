@@ -155,10 +155,10 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
-                console.log('Comparison', sentValues, expectedValues);
+                // console.log('Comparison', sentValues, expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 
@@ -223,10 +223,10 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
-                console.log('Comparison', sentValues, expectedValues);
+                // console.log('Comparison', sentValues, expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 

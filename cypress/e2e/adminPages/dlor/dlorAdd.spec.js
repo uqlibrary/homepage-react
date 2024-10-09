@@ -475,7 +475,8 @@ describe('Add an object to the Digital Learning Hub', () => {
                 // cy.waitUntil(() => cy.get('[data-testid="object-summary"]').should('exist'));
                 // cy.get('[data-testid="object-summary"]').should(
                 //     'have.value',
-                //     'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox',
+                //     'The quick brown fox jumped over the lazy yellow dog and ran into the woods.
+                // The hunters blew their horns and the hounds bayed and the whole troop followed the fox',
                 // );
                 // suggestion panel no longer open
                 cy.get('[data-testid="admin-dlor-suggest-summary"]').should('not.exist');
@@ -678,9 +679,6 @@ describe('Add an object to the Digital Learning Hub', () => {
                     const decodedValue = decodeURIComponent(cookie.value);
                     const sentValues = JSON.parse(decodedValue);
 
-                    console.log('sentValues=', sentValues);
-                    console.log('expectedValues=', expectedValues);
-
                     // had trouble comparing the entire structure
                     const sentFacets = sentValues.facets;
                     const expectedFacets = expectedValues.facets;
@@ -695,7 +693,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     delete sentValues.object_review_date_next; // doesn't seem valid to figure out the date
                     delete expectedValues.object_review_date_next;
 
-                    console.log('Comparison', sentValues, expectedValues);
+                    // console.log('Comparison', sentValues, expectedValues);
 
                     expect(sentValues).to.deep.equal(expectedValues);
                     expect(sentFacets).to.deep.equal(expectedFacets);
@@ -892,7 +890,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                         45, // cc_by_nc_attribution_noncommercial
                     ],
                 };
-                console.log('document.cookies', document.cookie);
+                // console.log('document.cookies', document.cookie);
                 cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                     expect(cookie).to.exist;
                     const decodedValue = decodeURIComponent(cookie.value);
@@ -901,8 +899,8 @@ describe('Add an object to the Digital Learning Hub', () => {
                         '<p>new descriptionxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>';
 
                     expectedValues.object_download_instructions = '<p>' + typeableDownloadInstructions + '</p>';
-                    console.log('sentValues=', sentValues);
-                    console.log('expectedValues=', expectedValues);
+                    // console.log('sentValues=', sentValues);
+                    // console.log('expectedValues=', expectedValues);
 
                     // had trouble comparing the entire structure
                     const sentFacets = sentValues.facets;
@@ -918,7 +916,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     delete sentValues.object_review_date_next; // doesn't seem valid to figure out the date
                     delete expectedValues.object_review_date_next;
 
-                    console.log('Comparison', sentValues, expectedValues);
+                    // console.log('Comparison', sentValues, expectedValues);
 
                     expect(sentValues).to.deep.equal(expectedValues);
                     expect(sentFacets).to.deep.equal(expectedFacets);
@@ -1115,8 +1113,8 @@ describe('Add an object to the Digital Learning Hub', () => {
                         '<p>new descriptionxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>';
                     expectedValues.object_download_instructions = '<p>' + downloadInstructionText + '</p>';
 
-                    console.log('sentFacets=', sentFacets);
-                    console.log('expectedFacets=', expectedFacets);
+                    // console.log('sentFacets=', sentFacets);
+                    // console.log('expectedFacets=', expectedFacets);
                     expect(sentValues).to.deep.equal(expectedValues);
                     expect(sentFacets).to.deep.equal(expectedFacets);
                     expect(sentKeywords).to.deep.equal(expectedKeywords);
@@ -1286,8 +1284,8 @@ describe('Add an object to the Digital Learning Hub', () => {
                     expect(cookie).to.exist;
                     const decodedValue = decodeURIComponent(cookie.value);
                     const sentValues = JSON.parse(decodedValue);
-                    console.log('sentValues=', sentValues);
-                    console.log('expectedValues=', expectedValues);
+                    // console.log('sentValues=', sentValues);
+                    // console.log('expectedValues=', expectedValues);
 
                     // had trouble comparing the entire structure
                     const sentFacets = sentValues.facets;
@@ -1440,8 +1438,8 @@ describe('Add an object to the Digital Learning Hub', () => {
                     expect(cookie).to.exist;
                     const decodedValue = decodeURIComponent(cookie.value);
                     const sentValues = JSON.parse(decodedValue);
-                    console.log('sentValues=', sentValues);
-                    console.log('expectedValues=', expectedValues);
+                    // console.log('sentValues=', sentValues);
+                    // console.log('expectedValues=', expectedValues);
 
                     // had trouble comparing the entire structure
                     const sentFacets = sentValues.facets;
