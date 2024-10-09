@@ -499,6 +499,42 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
         return 'See location';
     }
 
+    function getBusyness(location) {
+        if (location.abbr === 'AskUs') {
+            return null;
+        }
+        if (!isOpen(location)) {
+            return <div className="occupancyText">Closed</div>;
+        }
+        if (location.busyness === null) {
+            return (
+                <div className="occupancyText">
+                    <UqDsExclamationCircle /> <span>Data not captured</span>
+                </div>
+            );
+        }
+        if (location.busyness === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING) {
+            return (
+                <div className="occupancyText">
+                    <UqDsExclamationCircle /> <span>No information</span>
+                </div>
+            );
+        }
+        return (
+            <div className="occupancy">
+                <div
+                    className={`occupancyPercent occupancyPercent${location.busyness}`}
+                    style={{
+                        width: !hasDepartments(location) || isOpen(location) ? `${location.busyness}%` : 0,
+                    }}
+                    title={busynessText(location.busyness)}
+                >
+                    <span>{/* ${location.busyness}%*/}</span>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <StyledStandardCard noPadding standardCardId="locations-panel">
             <StyledWrapper
@@ -626,46 +662,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                 aria-labelledby="locations-header-busyness"
                                                 className={'table-body-cell table-column-busy'}
                                             >
-                                                {(() => {
-                                                    if (location.abbr === 'AskUs') {
-                                                        return <></>;
-                                                    } else if (!isOpen(location)) {
-                                                        return <div className="occupancyText">Closed</div>;
-                                                    } else if (location.busyness === null) {
-                                                        return (
-                                                            <div className="occupancyText">
-                                                                <UqDsExclamationCircle /> <span>Data not captured</span>
-                                                            </div>
-                                                        );
-                                                    } else if (
-                                                        location.busyness ===
-                                                        VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING
-                                                    ) {
-                                                        return (
-                                                            <div className="occupancyText">
-                                                                <UqDsExclamationCircle /> <span>No information</span>
-                                                            </div>
-                                                        );
-                                                    } else {
-                                                        return (
-                                                            <div className="occupancy">
-                                                                <div
-                                                                    className={`occupancyPercent occupancyPercent${location.busyness}`}
-                                                                    style={{
-                                                                        width:
-                                                                            !hasDepartments(location) ||
-                                                                            isOpen(location)
-                                                                                ? `${location.busyness}%`
-                                                                                : 0,
-                                                                    }}
-                                                                    title={busynessText(location.busyness)}
-                                                                >
-                                                                    <span>{/* ${location.busyness}%*/}</span>
-                                                                </div>
-                                                            </div>
-                                                        );
-                                                    }
-                                                })()}
+                                                {getBusyness(location)}
                                             </Grid>
                                         </Grid>
                                     );
