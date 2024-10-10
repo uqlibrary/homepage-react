@@ -147,6 +147,9 @@ const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
 const StyledGridItemLoggedIn = styled(Grid)(({ theme }) => ({
     paddingLeft: '24px',
     marginBottom: '24px',
+    // [theme.breakpoints.down('uqDsDesktop')]: {
+    //     paddingRight: '24px',
+    // },
     [theme.breakpoints.up('uqDsDesktopXL')]: {
         paddingLeft: '32px',
         marginBottom: '32px',
@@ -363,14 +366,14 @@ export const Index = ({
                                     {greeting()}, {account.firstName || /* istanbul ignore next */ ''}
                                 </StyledHeading>
                             </Grid>
-                            <Grid className={'gridThree'} item sx={12}>
-                                <Grid className={'gridFour'} container>
-                                    <Grid className={'gridFive'} item uqDsMobile={4}>
-                                        <Grid container className={'gridSix'}>
-                                            <StyledGridItemLoggedIn className={'gridSeven'} item uqDsMobile={12} data-testid="primo-panel">
+                            <Grid item>
+                                <Grid container>
+                                    <Grid item uqDsDesktop={4}>
+                                        <Grid container>
+                                            <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="primo-panel">
                                                 <CataloguePanel account={account} loans={loans} printBalance={printBalance} />
                                             </StyledGridItemLoggedIn>
-                                            <StyledGridItemLoggedIn className={'gridEight'} item uqDsMobile={12} data-testid="training-panel">
+                                            <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="training-panel">
                                                 <Training
                                                     trainingEvents={trainingEvents}
                                                     trainingEventsLoading={trainingEventsLoading}
@@ -379,7 +382,7 @@ export const Index = ({
                                             </StyledGridItemLoggedIn>
                                         </Grid>
                                     </Grid>
-                                    <Grid item uqDsMobile={8}>
+                                    <Grid item uqDsDesktop={8}>
                                         <Grid container>
                                             {canSeeLearningResources(account) && (
                                                 <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="learning-resources-panel">
@@ -387,13 +390,8 @@ export const Index = ({
                                                 </StyledGridItemLoggedIn>
                                             )}
 
-                                            <Grid item uqDsMobile={6}>
+                                            <Grid item uqDsDesktop={6}>
                                                 <Grid container>
-                                                    {/* {canSeeLearningResources(account) && (*/}
-                                                    {/*    <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="past-exam-papers-panel">*/}
-                                                    {/*        <PastExamPapers account={account} history={history}/>*/}
-                                                    {/*    </StyledGridItemLoggedIn>*/}
-                                                    {/* )}*/}
                                                     <StyledGridItemLoggedIn  item uqDsMobile={12} data-testid="referencing-panel">
                                                         <ReferencingPanel account={account} />
                                                     </StyledGridItemLoggedIn>
@@ -402,7 +400,7 @@ export const Index = ({
                                                     </StyledGridItemLoggedIn>
                                                 </Grid>
                                             </Grid>
-                                            <Grid item uqDsMobile={6}>
+                                            <Grid item uqDsDesktop={6}>
                                                 <Grid container>
                                                     {isEspaceAuthor(account, author) && (
                                                         <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="espace-links-panel">
