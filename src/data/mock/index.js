@@ -396,10 +396,10 @@ mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(withDelay([200, espaceSea
 mock.onGet(routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(withDelay([200, espaceSearchResponse]));
 
 mock.onGet(routes.ALERTS_ALL_API().apiUrl).reply(withDelay([200, alertList]));
-mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(
+mock.onAny(routes.ALERTS_CREATE_API().apiUrl).reply(
     withDelay([
         200,
-        {
+        [{
             id: '99999-d897-11eb-a27e-df4e46db7245',
             start: '2020-06-07 02:00:03',
             end: '2020-06-07 03:00:03',
@@ -407,11 +407,11 @@ mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(
             body:
                 'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
             priority_type: 'info',
-        },
+        }],
     ]),
 );
 // mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(withDelay([500, {}]));
-mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
+mock.onAny(routes.ALERT_UPDATE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
     withDelay([
         200,
         {

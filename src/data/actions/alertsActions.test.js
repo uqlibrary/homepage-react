@@ -139,7 +139,7 @@ describe('Alert actions', () => {
 
     describe('Alert creation actions', () => {
         it('dispatches expected actions when alert create call fails', async () => {
-            mockApi.onAny(repositories.routes.ALERT_CREATE_API().apiUrl).reply(500);
+            mockApi.onAny(repositories.routes.ALERTS_CREATE_API().apiUrl).reply(500);
 
             const expectedActions = [actions.ALERT_LOADING, actions.APP_ALERT_SHOW, actions.ALERT_FAILED];
 
@@ -148,7 +148,7 @@ describe('Alert actions', () => {
         });
 
         it('handles an alert creation request', async () => {
-            mockApi.onAny(repositories.routes.ALERT_CREATE_API().apiUrl).reply(200, {
+            mockApi.onAny(repositories.routes.ALERTS_CREATE_API().apiUrl).reply(200, {
                 id: '88888-d62b-11e7-954e-57c2cc19d151',
                 ...newAlertRecord,
             });
@@ -189,7 +189,7 @@ describe('Alert actions', () => {
     describe('Alert save actions', () => {
         it('handles an alert save request', async () => {
             mockApi
-                .onAny(repositories.routes.ALERT_SAVE_API({ id: '88888-d62b-11e7-954e-57c2cc19d151' }).apiUrl)
+                .onAny(repositories.routes.ALERT_UPDATE_API({ id: '88888-d62b-11e7-954e-57c2cc19d151' }).apiUrl)
                 .reply(200, {
                     id: '88888-d62b-11e7-954e-57c2cc19d151',
                     ...newAlertRecord,
@@ -207,7 +207,7 @@ describe('Alert actions', () => {
         });
 
         it('dispatches expected actions when alert save call fails', async () => {
-            mockApi.onAny(repositories.routes.ALERT_SAVE_API({ id: 'id' }).apiUrl).reply(500);
+            mockApi.onAny(repositories.routes.ALERT_UPDATE_API({ id: 'id' }).apiUrl).reply(500);
 
             const expectedActions = [actions.ALERT_LOADING, actions.ALERT_FAILED];
 

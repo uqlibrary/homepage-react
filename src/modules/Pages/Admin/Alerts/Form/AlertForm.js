@@ -164,8 +164,15 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     }, []);
 
     useEffect(() => {
-        if (!!alertResponse && !!alertResponse.id && alertStatus === 'saved') {
-            setSuccessCount(prevCount => prevCount + 1);
+        if (
+            !!alertResponse &&
+            (!!alertResponse.id || (Array.isArray(alertResponse) && !!alertResponse.length)) &&
+            alertStatus === 'saved'
+        ) {
+            Array.isArray(alertResponse)
+                ? setSuccessCount(alertResponse.length)
+                : setSuccessCount(prevCount => prevCount + 1);
+
             showConfirmation();
         }
     }, [showConfirmation, alertResponse, alertStatus]);
@@ -252,6 +259,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         const expandedValues = expandValues(values);
         setValues(expandedValues);
 
+        const dateList = expandedValues.dateList;
         const newValues = {
             id: defaults.type !== 'add' ? values.id : null,
             title: values.alertTitle,
@@ -259,19 +267,23 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             priority_type: (!!values && values.priorityType) || /* istanbul ignore next */ 'info',
             start: formatDate(values.startDate),
             end: formatDate(values.endDate),
-            dateList: values.dateList,
             systems: values.systems || /* istanbul ignore next */ [],
         };
-        newValues.dateList.forEach(dateset => {
-            // an 'edit' event will only have one entry in the date array
-            const saveableValues = {
-                ...newValues,
-                start: formatDate(dateset.startDate),
-                end: formatDate(dateset.endDate),
-            };
-            !!saveableValues.dateList && delete saveableValues.dateList;
-            defaults.type === 'edit' ? actions.saveAlertChange(saveableValues) : actions.createAlert(saveableValues);
-        });
+
+        if (defaults.type === 'edit') {
+            actions.saveAlertChange(newValues);
+        } else {
+            const saveableValues = [];
+            dateList.forEach(dateset => {
+                saveableValues.push({
+                    ...newValues,
+                    start: formatDate(dateset.startDate),
+                    end: formatDate(dateset.endDate),
+                });
+            });
+
+            actions.createAlert(saveableValues);
+        }
 
         const alertWrapper = document.getElementById('previewWrapper');
         !!alertWrapper && (alertWrapper.innerHTML = '');
