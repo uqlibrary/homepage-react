@@ -54,15 +54,14 @@ context('Training', () => {
         cy.get('[data-testid="training-event-detail-button-0"]')
             .should('exist')
             .should('have.text', 'EndNote: getting started');
-        cy.log('Event detail');
         cy.get('button[data-testid="training-event-detail-button-0"]').click();
         cy.waitUntil(() =>
             cy
-                .get('[data-testid="seeAllTrainingLink"]')
+                .get('[data-testid="training-search-wrapper"]')
                 .should('exist')
                 .should('not.be.visible'),
         );
-        cy.checkA11y('div[data-testid="standard-card-training"]', {
+        cy.checkA11y('[data-testid="training-panel"]', {
             reportName: 'Training',
             scopeName: 'Event detail',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
@@ -128,13 +127,13 @@ context('Training', () => {
         // we brng the detail pane over these fields to make the pane bigger,
         // but we have to manually display: hidden them or we get an accessibility issue
         cy.get('#trainingSearch').should('be.visible');
-        cy.get('#seeAllTrainingLink').should('be.visible');
+        // cy.get('#seeAllTrainingLink').should('be.visible');
 
         cy.get('button[data-testid="training-event-detail-button-0"]').contains('EndNote: getting started');
         cy.get('button[data-testid="training-event-detail-button-0"]').click();
         cy.wait(500);
         cy.get('#trainingSearch').should('not.be.visible');
-        cy.get('#seeAllTrainingLink').should('not.be.visible');
+        // cy.get('#seeAllTrainingLink').should('not.be.visible');
         cy.get('[data-testid="training-events-detail-2824657"]')
             .should('exist')
             .contains('EndNote: getting started');
@@ -145,7 +144,7 @@ context('Training', () => {
 
         cy.get('[data-testid="training-events-detail-2824657"]').should('not.exist');
         cy.get('#trainingSearch').should('be.visible');
-        cy.get('#seeAllTrainingLink').should('be.visible');
+        // cy.get('#seeAllTrainingLink').should('be.visible');
     });
 
     it('shows an api error correctly', () => {

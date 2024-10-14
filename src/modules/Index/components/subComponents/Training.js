@@ -126,9 +126,6 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     ['& .trainingSearch']: {
         margin: '0 24px 24px 24px',
     },
-    ['& .seeAllTrainingLink']: {
-        margin: '12px 24px 24px 24px',
-    },
     ['& .bookActionButton']: {
         backgroundColor: theme.palette.primary.main,
         '&:hover': {
@@ -213,7 +210,6 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
     const showEventDetail = (event, value = null) => {
         console.log('showEventDetail', value, event);
         hideElement('trainingSearch');
-        hideElement('seeAllTrainingLink');
         setEventDetail(value ?? event);
         setTimeout(() => {
             document.getElementById('training-event-detail-close-button').focus();
@@ -222,12 +218,6 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
     const closeEvent = entityId => {
         console.log('closeEvent entityId=', entityId);
         showElement('trainingSearch');
-        showElement('seeAllTrainingLink');
-        // setTimeout(() => {
-        //     const element = !!entityId && document.getElementById(`training-event-detail-button-${entityId}`);
-        //     console.log('closeEvent element=', element);
-        //     !!element && element.focus();
-        // }, 300);
         setEventDetail(null);
     };
     moment.tz.setDefault('Australia/Brisbane');
@@ -291,7 +281,47 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
         );
     };
     return (
-        <StandardCard subCard primaryHeader title="Training" noPadding>
+        <StandardCard
+            subCard
+            primaryHeader
+            noPadding
+            standardCardId="training-panel-display"
+            title={
+                <Grid container>
+                    <Grid item style={{ display: 'flex', textAlign: 'center', justifyContent: 'flex-start' }}>
+                        <h3
+                            data-testid="standard-card-training-header"
+                            style={{
+                                fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+                                fontSize: '24px',
+                                fontStyle: 'normal',
+                                fontWeight: 500,
+                                letterSpacing: '0.24px',
+                                lineHeight: '160%', // 25.6px
+                                margin: 0,
+                            }}
+                        >
+                            Training
+                        </h3>
+                        <a
+                            href="https://web.library.uq.edu.au/library-services/training"
+                            data-analyticsid="training-event-detail-more-training-button"
+                            className={'seeAllTrainingLink'}
+                            data-testid="seeAllTrainingLink"
+                            style={{
+                                fontSize: '16px',
+                                fontStyle: 'normal',
+                                lineHeight: '160%', // 25.6px
+                                padding: '7px 0 0 0',
+                                marginLeft: '16px',
+                            }}
+                        >
+                            See all Training
+                        </a>
+                    </Grid>
+                </Grid>
+            }
+        >
             <StyledWrapper className={'flexWrapper componentHeight'}>
                 {allTrainingEvents && allTrainingEvents.length > 0 && !trainingEventsLoading && !trainingEventsError && (
                     <div className={'trainingSearch'} id="trainingSearch">
@@ -340,16 +370,6 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                         />
                     </div>
                 )}
-                <div className={'seeAllTrainingLink'} id="seeAllTrainingLink" data-testid="seeAllTrainingLink">
-                    <a
-                        href="https://web.library.uq.edu.au/library-services/training"
-                        id="training-event-detail-more-training-button"
-                        data-testid="training-event-detail-more-training-button"
-                        data-analyticsid="training-event-detail-more-training-button"
-                    >
-                        See all Training
-                    </a>
-                </div>
                 {(() => {
                     if (!!trainingEventsError) {
                         return (
