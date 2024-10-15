@@ -22,27 +22,10 @@ const StyledGridItem = styled(Grid)(() => ({
     paddingBottom: '16px',
     paddingLeft: 0,
     position: 'relative',
-    // '&::before': {
-    //     position: 'absolute',
-    //     left: 0,
-    //     fontSize: '1em',
-    //     lineHeight: 1,
-    //     color: 'currentColor',
-    //     top: '35%',
-    // },
     '& a': {
         marginRight: -16,
-        // marginTop: '12px',
     },
 }));
-// const StyledLabel = styled(Typography)(() => ({
-//     color: '#19151c',
-//     fontSize: '20px',
-//     fontWeight: 500,
-//     marginBlock: '16px',
-//     textWrap: 'nowrap',
-//     whiteSpaceCollapse: 'collapse',
-// }));
 const StyledActionsGrid = styled(Grid)(() => ({
     paddingLeft: 0,
     marginTop: 0,

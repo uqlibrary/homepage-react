@@ -368,7 +368,7 @@ export const Index = ({
                             </Grid>
                             <Grid item>
                                 <Grid container>
-                                    <Grid item uqDsDesktop={4}>
+                                    <Grid item uqDsDesktop={4} uqDsMobile={12}>
                                         <Grid container>
                                             <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="primo-panel">
                                                 <CataloguePanel account={account} loans={loans} printBalance={printBalance} />
@@ -390,7 +390,7 @@ export const Index = ({
                                                 </StyledGridItemLoggedIn>
                                             )}
 
-                                            <Grid item uqDsDesktop={6}>
+                                            <Grid item uqDsDesktop={6} uqDsMobile={12}>
                                                 <Grid container>
                                                     <StyledGridItemLoggedIn  item uqDsMobile={12} data-testid="referencing-panel">
                                                         <ReferencingPanel account={account} />
