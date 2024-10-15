@@ -32,7 +32,7 @@ import {
     loadJournalSearchFavourites,
     loadLoans,
 } from 'data/actions';
-import { canSeeLearningResources, isEspaceAuthor } from 'helpers/access';
+import { canSeeLearningResources, isEspaceAuthor, canSeeReadPublish } from 'helpers/access';
 
 const EspaceLinks = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/EspaceLinks')));
 const Locations = lazy(() => lazyRetry(() => import('./subComponents/Locations')));
@@ -395,9 +395,11 @@ export const Index = ({
                                                     <StyledGridItemLoggedIn  item uqDsMobile={12} data-testid="referencing-panel">
                                                         <ReferencingPanel account={account} />
                                                     </StyledGridItemLoggedIn>
-                                                    <StyledGridItemLoggedIn  item uqDsMobile={12} data-testid="readpublish-panel">
-                                                        <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
-                                                    </StyledGridItemLoggedIn>
+                                                    {canSeeReadPublish(account) && (
+                                                        <StyledGridItemLoggedIn  item uqDsMobile={12} data-testid="readpublish-panel">
+                                                            <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
+                                                        </StyledGridItemLoggedIn>
+                                                    )}
                                                 </Grid>
                                             </Grid>
                                             <Grid item uqDsDesktop={6}>

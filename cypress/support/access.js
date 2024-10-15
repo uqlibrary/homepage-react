@@ -13,10 +13,11 @@ export const hasPanels = optionsTheUserShouldSee => {
     // probably not used - try without
     possiblePanels.set('library-services', { title: 'Library services', content: 'Services for' });
     possiblePanels.set('past-exam-papers', { title: 'Past exam papers', content: 'Search by' });
-    possiblePanels.set('training', { title: 'Training', content: 'Training' });
+    possiblePanels.set('training', { title: 'Training', content: 'See all Training' });
     possiblePanels.set('espace', { title: 'UQ eSpace', content: 'Update the following items' });
     possiblePanels.set('readpublish', { title: 'Read and publish', content: 'Find journals' });
     possiblePanels.set('catalogue', { title: 'My library account', content: 'Library loans' });
+    possiblePanels.set('referencing', { title: 'Referencing', content: 'Referencing style guides' });
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
         expect([...possiblePanels.keys()].includes(item), `panel option unexpectedly supplied for panel test: ${item}`)
