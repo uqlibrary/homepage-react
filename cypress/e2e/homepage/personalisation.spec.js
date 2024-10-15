@@ -44,7 +44,17 @@ context('Personalised Homepage', () => {
     it('Renders an RHD home page correctly', () => {
         expectUserToDisplayCorrectFirstName('s2222222', 'Jane');
 
+        hasPanels(['catalogue', 'referencing', 'training', 'readpublish']);
+
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
+    });
+
+    it('Renders an RHD with courses home page correctly', () => {
+        expectUserToDisplayCorrectFirstName('s5555555', 'Yvonne');
+
+        hasPanels(['catalogue', 'referencing', 'learning-resources', 'training', 'readpublish']);
+
+        hasNoEspacePanel();
     });
 
     it('when session cookie auto expires the user logs out', () => {
