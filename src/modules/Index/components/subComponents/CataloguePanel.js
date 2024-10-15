@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { canSeePrintBalance } from 'helpers/access';
+import { canSeeLoans, canSeePrintBalance } from 'helpers/access';
 
 const StyledLi = styled('li')(() => ({
     paddingBottom: '16px',
@@ -188,6 +188,13 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
                         {dsBookCloseBookmarkIcon} <span>Loans ({`${loans?.total_loans_count}`})</span>
                     </Link>
                 </StyledLi>
+                {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
+                    <StyledLi data-testid={'show-fines'}>
+                        <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
+                            {dsBookCloseBookmarkIcon} <span>Fines ({`${loans?.total_loans_count}`})</span>
+                        </Link>
+                    </StyledLi>
+                )}
                 {canSeePrintBalance(account) && (
                     <StyledLi data-testid={'show-papercut'}>
                         <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=queries">
