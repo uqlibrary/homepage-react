@@ -1227,9 +1227,9 @@ mock.onGet('exams/course/FREN1010/summary')
         switch (user) {
             case 'uqpf':
                 return [403, {}];
-            case 's1111111':
+            case 'uqresearcher':
                 return [200, { ...journalSearchFavouritesLarge }];
-            case 's3333333':
+            case 's2222222':
                 return [200, { ...journalSearchNoFavourites }];
             default:
                 return [200, journalSearchFavourites];
