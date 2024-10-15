@@ -18,7 +18,7 @@ export default {
     notesTrimLength: 90,
     externalSubjectLocation: 'External Instruction',
     homepagePanel: {
-        title: 'Past exam papers and learning resources',
+        title: 'Learning resources and Past exam papers',
         userCourseTitle: 'My current courses',
         noCourses: (
             <Fragment>
