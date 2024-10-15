@@ -1,7 +1,7 @@
 describe('Read and Publish (homepage)', () => {
     context('Containing elements', () => {
         it('Shows the correct amount of items depending on the user', () => {
-            cy.visit('http://localhost:2020/');
+            cy.visit('http://localhost:2020/?user=uqstaff');
             cy.viewport(1280, 900);
 
             // User with only 2 items
@@ -11,7 +11,7 @@ describe('Read and Publish (homepage)', () => {
                 .should('have.length', 2);
             cy.get('[data-testid="rp-yourfavourite-count"]').should('contain', 2);
 
-            cy.visit('http://localhost:2020/?user=s1111111');
+            cy.visit('http://localhost:2020/?user=uqresearcher');
             cy.viewport(1280, 900);
 
             // User with 8 items, only showing 5 in the list
@@ -35,7 +35,7 @@ describe('Read and Publish (homepage)', () => {
             // no count should be showing
             cy.get('[data-testid="rp-yourfavourite-count"]').should('not.exist');
 
-            cy.visit('http://localhost:2020/?user=s3333333');
+            cy.visit('http://localhost:2020/?user=s2222222');
             cy.viewport(1280, 900);
 
             // User that has no favourite items.
