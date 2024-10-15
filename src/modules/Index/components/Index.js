@@ -89,9 +89,6 @@ const StyledHeading = styled(Typography)(() => ({
 }));
 
 const StyledGridWrapper = styled('div')(() => ({
-    marginLeft: '-32px',
-    marginRight: '-32px',
-    paddingRight: '32px',
     backgroundColor: '#f3f3f4',
     '@media (max-width: 1200px)': {
         marginLeft: '-24px',
@@ -358,8 +355,8 @@ export const Index = ({
                 </div>
             </div>
             {accountLoading === false && !!account && (
-                <StandardPage>
-                    <StyledGridWrapper>
+                <StyledGridWrapper>
+                    <StandardPage>
                         <Grid container>
                             <Grid item uqDsMobile={12} sx={{ marginBottom: '32px', marginLeft: '24px' }}>
                                 <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
@@ -420,8 +417,8 @@ export const Index = ({
                                 </Grid>
                             </Grid>
                         </Grid>
-                    </StyledGridWrapper>
-                </StandardPage>
+                    </StandardPage>
+                </StyledGridWrapper>
             )}
             <NavigationCardWrapper account={account} accountLoading={accountLoading} />
 
