@@ -16,7 +16,7 @@ context('Personalised Homepage', () => {
         // this type of user will see the following panels:
         hasPanels(['catalogue', 'referencing', 'learning-resources', 'training', 'espace']);
 
-        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
         // this type of user will see these lines in the espace panel
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
@@ -50,7 +50,7 @@ context('Personalised Homepage', () => {
     it('when session cookie auto expires the user logs out', () => {
         expectUserToDisplayCorrectFirstName('s1111111', 'Michael');
 
-        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
         cy.clearCookie('UQLID');
         cy.rendersALoggedoutUser();
@@ -60,7 +60,7 @@ context('Personalised Homepage', () => {
 
         hasPanels(['catalogue', 'referencing', 'learning-resources', 'training']);
 
-        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
         hasNoEspacePanel();
     });
@@ -79,7 +79,7 @@ context('Personalised Homepage', () => {
 
         hasPanels(['catalogue', 'referencing', 'learning-resources', 'training', 'espace', 'readpublish']);
 
-        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
         hasEspaceEntries(['espace-orcid']);
     });
@@ -89,7 +89,7 @@ context('Personalised Homepage', () => {
 
         hasPanels(['catalogue', 'referencing', 'learning-resources', 'training', 'espace', 'readpublish']);
 
-        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
     });
@@ -99,7 +99,7 @@ context('Personalised Homepage', () => {
 
         hasPanels(['catalogue', 'referencing', 'learning-resources', 'training', 'readpublish']);
 
-        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
         hasNoEspacePanel();
     });
@@ -109,7 +109,7 @@ context('Personalised Homepage', () => {
 
         hasPanels(['catalogue', 'referencing', 'learning-resources', 'training', 'espace', 'readpublish']);
 
-        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
     });
@@ -119,7 +119,7 @@ context('Personalised Homepage', () => {
 
         hasPanels(['catalogue', 'referencing', 'training']);
 
-        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
         hasNoEspacePanel();
     });
@@ -129,7 +129,7 @@ context('Personalised Homepage', () => {
 
         hasPanels(['catalogue', 'referencing', 'training']);
 
-        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
         hasNoEspacePanel();
     });
@@ -139,7 +139,7 @@ context('Personalised Homepage', () => {
 
         hasPanels(['catalogue', 'referencing', 'training']);
 
-        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
         hasNoEspacePanel();
     });
@@ -149,7 +149,7 @@ context('Personalised Homepage', () => {
 
         hasPanels(['catalogue', 'referencing', 'training']);
 
-        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
         hasNoEspacePanel();
     });
@@ -159,7 +159,7 @@ context('Personalised Homepage', () => {
 
         hasPanels(['catalogue', 'referencing', 'training']);
 
-        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
         hasNoEspacePanel();
     });
@@ -169,7 +169,7 @@ context('Personalised Homepage', () => {
 
         hasPanels(['catalogue', 'referencing', 'learning-resources', 'training', 'readpublish']);
 
-        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
         hasNoEspacePanel();
     });
@@ -179,7 +179,25 @@ context('Personalised Homepage', () => {
 
         hasPanels(['catalogue', 'referencing', 'learning-resources', 'training']);
 
-        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
+
+        hasNoEspacePanel();
+    });
+
+    it('test and tag users see home page correctly', () => {
+        expectUserToDisplayCorrectFirstName('uqtesttag', 'UQ');
+
+        hasPanels(['catalogue', 'referencing', 'learning-resources', 'training', 'readpublish']);
+
+        hasCatalogPanelOptions([
+            'searchhistory',
+            'savedsearches',
+            'requests',
+            'loans',
+            'papercut',
+            'fines',
+            'testntag',
+        ]);
 
         hasNoEspacePanel();
     });
@@ -189,7 +207,7 @@ context('Personalised Homepage', () => {
 
         hasPanels(['catalogue', 'referencing', 'training']);
 
-        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
         hasNoEspacePanel();
     });

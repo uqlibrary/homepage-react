@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { canSeeLoans, canSeePrintBalance } from 'helpers/access';
+import BeenhereIcon from '@mui/icons-material/Beenhere';
+import { canSeeLoans, canSeePrintBalance, isTestTagUser } from 'helpers/access';
+import { getHomepageLink } from 'helpers/general';
 
 const StyledLi = styled('li')(() => ({
     paddingBottom: '16px',
@@ -157,6 +159,19 @@ const dSTimeClockFileSearchIcon = (
     </svg>
 );
 
+export const librarylink = url => {
+    let _url = url;
+    if (document.location.host !== 'www.library.uq.edu.au' && _url.startsWith('https://www.library.uq.edu.au/')) {
+        let homepageLink = getHomepageLink();
+        let params = '';
+        const tempUrl = new URL(homepageLink);
+        params = tempUrl.search;
+        homepageLink = homepageLink.replace(params, '');
+        _url = _url.replace('https://www.library.uq.edu.au/', homepageLink) + params;
+    }
+    return _url;
+};
+
 export const CataloguePanel = ({ account, loans, printBalance }) => {
     return (
         <StandardCard
@@ -191,7 +206,7 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
                 {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
                     <StyledLi data-testid={'show-fines'}>
                         <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
-                            {dsBookCloseBookmarkIcon} <span>Fines ({`${loans?.total_loans_count}`})</span>
+                            {dsDiscountDollarDashIcon} <span>Fines ({`${loans?.total_loans_count}`})</span>
                         </Link>
                     </StyledLi>
                 )}
@@ -205,6 +220,14 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
                                     printBalance && printBalance.balance ? `($${printBalance.balance})` : '',
                                 )}
                             </span>
+                        </Link>
+                    </StyledLi>
+                )}
+                {isTestTagUser(account) && (
+                    <StyledLi data-testid={'show-testntag'}>
+                        <Link to={librarylink('admin/testntag')}>
+                            <BeenhereIcon />
+                            <span>Test and tag</span>
                         </Link>
                     </StyledLi>
                 )}

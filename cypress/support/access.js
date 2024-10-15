@@ -7,10 +7,9 @@ export const expectUserToDisplayCorrectFirstName = (username, firstname) => {
 export const hasPanels = optionsTheUserShouldSee => {
     const possiblePanels = new Map();
     possiblePanels.set('learning-resources', {
-        title: 'Past exam papers and learning resources',
+        title: 'Learning resources and past exam papers',
         content: 'Search by',
     });
-    // probably not used - try without
     possiblePanels.set('library-services', { title: 'Library services', content: 'Services for' });
     possiblePanels.set('past-exam-papers', { title: 'Past exam papers', content: 'Search by' });
     possiblePanels.set('training', { title: 'Training', content: 'See all Training' });
@@ -104,6 +103,7 @@ export const hasCatalogPanelOptions = optionsTheUserShouldSee => {
     availableOptions.set('loans', 'Loans');
     availableOptions.set('fines', 'Fines');
     availableOptions.set('papercut', 'Print balance');
+    availableOptions.set('testntag', 'Test and tag');
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {

@@ -7,7 +7,7 @@ import { AccountContext } from 'context';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import * as pages from 'modules/App/components/pages';
 import Grid from '@mui/material/Grid';
-import { getHomepageLink } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
+import { getHomepageLink } from 'helpers/general';
 
 browserUpdate({
     required: {

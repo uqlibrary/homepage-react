@@ -121,8 +121,7 @@ export const canSeePrintBalance = account => isLoggedInUser(account);
 const userHasAdGroup = (ADGroupName, account) =>
     !!account && !!account.groups && !!account.groups.find(group => group.includes(ADGroupName));
 
-export const isTestTagAdminUser = account =>
-    isLoggedInUser(account) && userHasAdGroup('lib_libapi_TestTagUsers', account);
+export const isTestTagUser = account => isLoggedInUser(account) && userHasAdGroup('lib_libapi_TestTagUsers', account);
 
 export const isAlertsAdminUser = account =>
     isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
