@@ -292,7 +292,7 @@ describe('InspectionsDue', () => {
                 inspectionsDueError: 'Test inspectionsDueError error',
             });
             expect(getByTestId('confirmation_alert-error-alert')).toHaveTextContent('Test inspectionsDueError error');
-            userEvent.click(getByTitle('Close'));
+            await userEvent.click(getByTitle('Close'));
 
             await waitForElementToBeRemoved(getByTestId('confirmation_alert-error-alert'));
 

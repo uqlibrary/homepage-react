@@ -95,9 +95,9 @@ export const ALERTS_ALL_API = () => {
 };
 export const ALERT_BY_ID_API = ({ id }) => ({ apiUrl: `alert/${id}` });
 
-export const ALERT_CREATE_API = () => ({ apiUrl: 'alert' });
+export const ALERTS_CREATE_API = () => ({ apiUrl: 'alerts' });
 
-export const ALERT_SAVE_API = ({ id }) => ({ apiUrl: `alert/${id}` });
+export const ALERT_UPDATE_API = ({ id }) => ({ apiUrl: `alert/${id}` });
 
 export const ALERT_DELETE_API = ({ id }) => ({ apiUrl: `alert/${id}` });
 
