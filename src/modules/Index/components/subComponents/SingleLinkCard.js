@@ -25,18 +25,10 @@ const StyledGridItem = styled(Grid)(({ theme }) => ({
     },
     [theme.breakpoints.down('uqDsTablet')]: {
         display: 'block',
-        width: '100%',
-    },
-    '& .cardHeading': {
-        color: '#19151c',
-        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-        fontSize: '24px',
-        fontWeight: 500,
-        letterSpacing: '0.16px',
-        lineHeight: '1.6',
+        minWidth: '100%',
     },
     '& p': {
-        color: '#3b383e',
+        color: theme.palette.secondary.main,
         fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
         fontSize: '16px',
         fontWeight: 400,
@@ -50,50 +42,79 @@ const StyledLink = styled(Link)(({ theme }) => ({
     background: '#FFFFFF',
     display: 'block',
     cursor: 'pointer',
-    color: theme.palette.secondary.dark,
+    color: theme.palette.primary.light,
     fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
     fontSize: '20px',
     fontWeight: 500,
+    position: 'relative',
+    '& .cardHeading': {
+        color: '#19151c',
+        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+        fontSize: '24px',
+        fontWeight: 500,
+        letterSpacing: '0.16px',
+        lineHeight: 1.2,
+        marginBlock: '8px',
+    },
     '& svg.arrowForwardIcon': {
         display: 'block',
-        marginTop: '24px',
     },
-    '& .iconWrapper': {
+    '& .panelIcon': {
         width: '56px',
         height: '56px',
+        backgroundSize: 'contain',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+    },
+    [theme.breakpoints.up('uqDsTablet')]: {
+        // tablet and above
+        '& .panelBodyWrapper': {
+            margin: '24px 24px 0 24px',
+        },
+        '& p': {
+            marginTop: 0,
+            marginBottom: 0,
+        },
+        '& .arrowSvgWrapper': {
+            minHeight: '48px',
+            marginTop: '24px',
+        },
+        '& svg.arrowForwardIcon': {
+            position: 'absolute',
+            bottom: '24px',
+            left: '24px',
+        },
     },
     [theme.breakpoints.down('uqDsTablet')]: {
-        '& .iconWrapper': {
-            width: '40px',
-            height: '40px',
-        },
+        // mobile
+        alignItems: 'center',
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        minWidth: '100%',
+        minWidth: '90%',
+        marginRight: '24px',
+        padding: '24px',
+        '& .panelIcon': {
+            width: '40px',
+            height: '40px',
+            minWidth: '40px',
+            minHeight: '40px',
+        },
         '& p': {
             display: 'none',
         },
         '& svg.arrowForwardIcon': {
-            // marginTop: 0,
             paddingLeft: '15px',
         },
-        '& > *': {
-            marginLeft: '24px',
-        },
-        '& h2': {
-            margin: '0 0 0 16px',
+        '& .cardHeading': {
             fontWeight: 500,
-            // minWidth: '80%',
+            fontSize: '22px',
+            marginLeft: '24px',
         },
         '& div': {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
         },
-    },
-    '> *': {
-        margin: '24px',
     },
 
     // on hover, tablet and up, the background changes colour, the link text underlines and the icon moves
@@ -113,7 +134,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
             textDecoration: 'none',
             '& svg.arrowForwardIcon': {
                 '@media (prefers-reduced-motion: no-preference)': {
-                    marginLeft: '34px', // 24 + 10
+                    marginLeft: '10px',
                     transition: 'margin-left 200ms ease-in-out',
                 },
             },
@@ -124,12 +145,9 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const paneIcon = paneBackgroundImage => {
     return (
         <Box
-            className={'iconWrapper'}
+            className={'panelIcon'}
             sx={{
                 backgroundImage: paneBackgroundImage,
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
             }}
         />
     );
@@ -140,7 +158,7 @@ const SingleLinkCard = ({ cardHeading, landingUrl, iconBackgroundImage, shortPar
         <StyledGridItem item component={'li'} uqDsMobile={12} uqDsTablet={6} uqDsDesktop={4}>
             <div>
                 <StyledLink border={1} p={1} to={landingUrl}>
-                    <div>
+                    <div className={'panelBodyWrapper'}>
                         {paneIcon(iconBackgroundImage)}
                         {!!loggedIn ? (
                             <h3 className={'cardHeading'}>{cardHeading}</h3>
@@ -149,7 +167,9 @@ const SingleLinkCard = ({ cardHeading, landingUrl, iconBackgroundImage, shortPar
                         )}
                         <p>{shortParagraph}</p>
                     </div>
-                    <UqArrowForwardIcon />
+                    <div className={'arrowSvgWrapper'}>
+                        <UqArrowForwardIcon />
+                    </div>
                 </StyledLink>
             </div>
         </StyledGridItem>

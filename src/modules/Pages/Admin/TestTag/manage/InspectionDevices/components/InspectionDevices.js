@@ -253,7 +253,7 @@ const InspectionDevices = ({
                         </>
                     )}
                     <Grid container spacing={3}>
-                        <Grid item sx={{ flex: 1 }}>
+                        <Grid sx={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
                                 rows={row}

@@ -35,8 +35,8 @@ const SHORT_FORM_CREDENTIAL_COURSE_REMOTE = 'REMSFC';
 
 const POSTGRAD_COURSEWORK = 'CWPG';
 const POSTGRAD_COURSEWORK_REMOTE = 'REMCWPG';
-// const POSTGRAD_RESEARCH_REMOTE = 'REMRHD';
-// const POSTGRAD_RESEARCH = 'RHD';
+const POSTGRAD_RESEARCH_REMOTE = 'REMRHD';
+const POSTGRAD_RESEARCH = 'RHD';
 
 const LIBRARY_STAFF = 'LIBRARYSTAFFB';
 const OTHER_STAFF = 'STAFF';
@@ -83,6 +83,22 @@ export const canSeeLearningResources = account => {
             EXTRAMURAL_HONORARY,
             SHORT_FORM_CREDENTIAL_COURSE,
             SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
+        ].includes(account.user_group)
+    );
+};
+
+export const canSeeReadPublish = account => {
+    return (
+        !!account &&
+        !!account.id &&
+        [
+            OTHER_STAFF,
+            LIBRARY_STAFF,
+            POSTGRAD_COURSEWORK,
+            POSTGRAD_COURSEWORK_REMOTE,
+            POSTGRAD_RESEARCH,
+            POSTGRAD_RESEARCH_REMOTE,
+            EXTRAMURAL_HONORARY,
         ].includes(account.user_group)
     );
 };

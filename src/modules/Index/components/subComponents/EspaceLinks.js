@@ -5,46 +5,46 @@ import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import SvgIcon from '@mui/material/SvgIcon'; // use an empty icon to force matching spacing between items
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { pluralise } from 'helpers/general';
+import UqDsExclamationCircle from '../../../SharedComponents/Icons/UqDsExclamationCircle';
 
+const StyledGridListItem = styled(Grid)(() => ({
+    marginLeft: '8px',
+    listStyleType: 'square',
+}));
 const StyledGridItem = styled(Grid)(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
     flexWrap: 'wrap',
-    paddingBottom: '10px',
-    paddingLeft: '10px',
+    paddingBottom: '16px',
+    paddingLeft: 0,
     position: 'relative',
-    '&::before': {
-        content: '"•"', // Bullet character
-        position: 'absolute',
-        left: 0,
-        fontSize: '1em',
-        lineHeight: 1,
-        color: 'currentColor',
-        top: '35%',
-    },
     '& a': {
         marginRight: -16,
-        marginTop: '12px',
     },
 }));
-const StyledLabel = styled(Typography)(() => ({
-    color: '#19151c',
-    fontSize: '16px',
-    fontWeight: 500,
-    marginTop: '24px',
-    textWrap: 'nowrap',
-    whiteSpaceCollapse: 'collapse',
+const StyledActionsGrid = styled(Grid)(() => ({
+    paddingLeft: 0,
+    marginTop: 0,
+    marginLeft: '42px',
+    marginBottom: 0,
+    '& li': {
+        marginTop: '8px',
+    },
 }));
-const StyledHighlightIcon = styled(StarBorderIcon)(() => ({
-    color: 'red',
-    paddingLeft: '15px',
-    height: '1em',
+const StyledSubtitleTypography = styled(Typography)(() => ({
+    fontStyle: 'normal',
+    fontWeight: 500,
+    letterSpacing: '0.16px',
+    lineHeight: '160%', // 25.6px
+    display: 'flex',
+    alignItems: 'flex-start',
+    '& span': {
+        marginLeft: '8px',
+    },
 }));
 
 /*
@@ -53,7 +53,7 @@ const StyledHighlightIcon = styled(StarBorderIcon)(() => ({
 
 const EspacePossible = ({ recordCount }) => {
     return (
-        <StyledGridItem component={'li'} item xs={12}>
+        <StyledGridListItem component={'li'} item xs={12}>
             <Link
                 to={'https://espace.library.uq.edu.au/records/possible'}
                 id="espace-possible"
@@ -63,8 +63,7 @@ const EspacePossible = ({ recordCount }) => {
                     .replace('[totalRecords]', recordCount)
                     .replace('[records]', pluralise('record', recordCount))}
             </Link>
-            <StyledHighlightIcon />
-        </StyledGridItem>
+        </StyledGridListItem>
     );
 };
 const EspaceUpdateWorks = () => {
@@ -77,7 +76,6 @@ const EspaceUpdateWorks = () => {
             >
                 Update UQ eSpace records
             </Link>
-            <SvgIcon />
         </StyledGridItem>
     );
 };
@@ -91,7 +89,6 @@ const EspaceJournalSearch = () => {
             >
                 Publish in the right journal
             </Link>
-            <SvgIcon />
         </StyledGridItem>
     );
 };
@@ -106,13 +103,12 @@ const EspaceEditorialAppointments = () => {
             >
                 Update editorial appointments
             </Link>
-            <SvgIcon />
         </StyledGridItem>
     );
 };
 const EspaceOrcid = () => {
     return (
-        <StyledGridItem component={'li'} item xs={12}>
+        <StyledGridListItem component={'li'} item xs={12}>
             <Link
                 to={'https://espace.library.uq.edu.au/author-identifiers/orcid/link'}
                 id="espace-orcid"
@@ -120,54 +116,58 @@ const EspaceOrcid = () => {
             >
                 Link ORCiD account
             </Link>
-            <StyledHighlightIcon />
-        </StyledGridItem>
+        </StyledGridListItem>
     );
 };
 const EspaceNTROs = ({ recordCount }) => {
     return (
-        <StyledGridItem component={'li'} item xs={12}>
+        <StyledGridListItem component={'li'} item xs={12}>
             <Link to={'https://espace.library.uq.edu.au/records/incomplete'} id="espace-ntro" data-testid="espace-ntro">
                 {'Complete [totalRecords] NTRO [records]'
                     .replace('[totalRecords]', recordCount)
                     .replace('[records]', pluralise('record', recordCount))}
             </Link>
-            <StyledHighlightIcon />
-        </StyledGridItem>
+        </StyledGridListItem>
     );
 };
 
 export const EspaceLinks = ({ author, possibleRecords, incompleteNTRORecords }) => {
+    const authorIsMissingOrcid = !author.aut_orcid_id;
+    const authorNeedsToUpdateRecords = !!possibleRecords && !!possibleRecords.total && possibleRecords.total > 0;
+    const authorHasIncompleteNtro =
+        !!incompleteNTRORecords && !!incompleteNTRORecords.total && incompleteNTRORecords.total > 0;
+    const uqDsWarningYellow = '#fef8e8';
     return (
         <StandardCard subCard fullHeight primaryHeader noPadding standardCardId="espace-panel" title={'UQ eSpace'}>
-            <Grid container spacing={0} style={{ paddingInline: '24px' }}>
-                <Grid item xs={12} style={{ margin: '20px 0 0 0' }}>
-                    <Link to="https://espace.library.uq.edu.au/dashboard">Access UQ eSpace dashboard</Link>
-                </Grid>
-                <Grid item>
-                    <StyledLabel component={'h4'} variant={'h6'}>
-                        Actions:
-                    </StyledLabel>
-                </Grid>
-
-                <Grid item xs={12}>
-                    <Grid container component={'ul'} style={{ paddingLeft: 0, marginTop: 0, marginLeft: 0 }}>
-                        {!author.aut_orcid_id && <EspaceOrcid />}
-                        {!!possibleRecords &&
-                            (!!possibleRecords.total && possibleRecords.total > 0 ? (
-                                <EspacePossible recordCount={possibleRecords.total} />
-                            ) : (
-                                <EspaceUpdateWorks />
-                            ))}
-                        {!!incompleteNTRORecords &&
-                            !!incompleteNTRORecords.total &&
-                            incompleteNTRORecords.total > 0 && (
-                                <EspaceNTROs recordCount={incompleteNTRORecords.total} />
-                            )}
-                        <EspaceJournalSearch />
-                        <EspaceEditorialAppointments />
+            <Grid container spacing={0} style={{ paddingInline: '24px', marginTop: '24px' }}>
+                <StyledGridItem component={'li'} item xs={12}>
+                    <Link to={'https://espace.library.uq.edu.au/dashboard"'}>UQ eSpace dashboard</Link>
+                </StyledGridItem>
+                <EspaceJournalSearch />
+                <EspaceEditorialAppointments />
+                {!authorNeedsToUpdateRecords && <EspaceUpdateWorks />}
+                {(authorIsMissingOrcid || authorNeedsToUpdateRecords || authorHasIncompleteNtro) && (
+                    <Grid
+                        item
+                        xs={12}
+                        style={{
+                            backgroundColor: uqDsWarningYellow,
+                            padding: '16px',
+                            marginBottom: '16px',
+                            marginTop: '16px',
+                        }}
+                    >
+                        <StyledSubtitleTypography component={'h4'}>
+                            <UqDsExclamationCircle style={{ height: '22px' }} />{' '}
+                            <span>Update the following items:</span>
+                        </StyledSubtitleTypography>
+                        <StyledActionsGrid container component={'ul'}>
+                            {authorIsMissingOrcid && <EspaceOrcid />}
+                            {authorNeedsToUpdateRecords && <EspacePossible recordCount={possibleRecords.total} />}
+                            {authorHasIncompleteNtro && <EspaceNTROs recordCount={incompleteNTRORecords.total} />}
+                        </StyledActionsGrid>
                     </Grid>
-                </Grid>
+                )}
             </Grid>
         </StandardCard>
     );

@@ -18,8 +18,8 @@ export default {
     notesTrimLength: 90,
     externalSubjectLocation: 'External Instruction',
     homepagePanel: {
-        title: 'Learning resources',
-        userCourseTitle: 'Your courses',
+        title: 'Past exam papers and learning resources',
+        userCourseTitle: 'My current courses',
         noCourses: (
             <Fragment>
                 <p>Your enrolled courses will appear here three weeks prior to the start of the semester.</p>

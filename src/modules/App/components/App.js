@@ -94,8 +94,7 @@ export const App = ({ account, actions }) => {
                         </React.Suspense>
                     </AccountContext.Provider>
                 </div>
-                <div id="full-footer-block">
-                    <connect-footer />
+                <div id="full-footer-block" style={{ marginTop: '50px' }}>
                     <uq-footer />
                 </div>
             </div>

@@ -45,14 +45,14 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
         },
         'article-container': {
             [theme.breakpoints.down('uqDsTablet')]: {
-                padding: '0 24px 0 !important'
+                padding: '0 24px 0 !important',
             },
         },
         '.ArticleCategory': {
             color: '#666 !important',
             fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
             fontWeight: 500,
-            marginBottom: '0',
+            marginBottom: articleindex === 0 ? '.25rem' : '0',
             textDecoration: 'none !important',
             [theme.breakpoints.up('xs')]: {
                 paddingTop: articleindex === 0 ? '24px !important' : 'none',
@@ -68,7 +68,7 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
             height: '100%',
             justifyContent: articleindex === 0 ? 'center' : 'top',
             paddingTop: '0px !important',
-            // paddingBottom: '24px',
+
             [theme.breakpoints.up('xs')]: {
                 paddingLeft: articleindex !== 0 ? 0 : 24,
                 paddingRight: articleindex !== 0 ? 0 : 24,
@@ -87,20 +87,21 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
         },
         '.ArticleTitle': {},
         a: {
-            textDecoration: 'none',
+            textDecoration: 'none !important',
             '&:hover': {
-                textDecoration: 'none',
+                textDecoration: 'none !important',
             },
             '&:hover h3': {
-                textDecoration: 'underline',
+                textDecoration: 'underline !important',
             },
         },
 
         'a .ArticleDescription': {
-            color: 'black',
+            color: '#3b383e',
+            lineHeight: '1.6',
         },
         h3: {
-            color: 'black',
+            color: '#19151c',
             textDecoration: 'none',
             '&:hover': {
                 textDecoration: 'none',
@@ -211,13 +212,13 @@ const RenderTextblock = (articleindex, article, theme, isSm) => {
                 >
                     {article.title}
                 </Typography>
-                {!!article.description && (
+                {!!article.description && article.description.trim() !== '' && (
                     <Typography
                         component={'p'}
                         sx={{
                             marginTop: '0.5em',
                             fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
-                            fontWeight: '300 !important',
+                            fontWeight: '400 !important',
                             letterSpacing: '.01rem !important',
                             textDecoration: 'none !important',
                         }}

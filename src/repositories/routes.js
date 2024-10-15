@@ -15,6 +15,12 @@ export const TRAINING_API = (numEvents = 6, filterId = 104) => ({
     options: { params: { take: numEvents, 'filterIds[]': filterId, ts: `${new Date().getTime()}` } },
 });
 
+// Papercut balance API
+export const PRINTING_API = () => ({
+    apiUrl: 'papercut/balance',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
 // eSpace Possible records
 export const POSSIBLE_RECORDS_API = () => ({
     apiUrl: 'records/search',
@@ -89,9 +95,9 @@ export const ALERTS_ALL_API = () => {
 };
 export const ALERT_BY_ID_API = ({ id }) => ({ apiUrl: `alert/${id}` });
 
-export const ALERT_CREATE_API = () => ({ apiUrl: 'alert' });
+export const ALERTS_CREATE_API = () => ({ apiUrl: 'alerts' });
 
-export const ALERT_SAVE_API = ({ id }) => ({ apiUrl: `alert/${id}` });
+export const ALERT_UPDATE_API = ({ id }) => ({ apiUrl: `alert/${id}` });
 
 export const ALERT_DELETE_API = ({ id }) => ({ apiUrl: `alert/${id}` });
 

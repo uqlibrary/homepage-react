@@ -1,10 +1,10 @@
 import * as actions from './actionTypes';
-import { destroy, get, post } from 'repositories/generic';
+import { destroy, get, put, post } from 'repositories/generic';
 import {
     ALERT_BY_ID_API,
-    ALERT_CREATE_API,
+    ALERTS_CREATE_API,
     ALERT_DELETE_API,
-    ALERT_SAVE_API,
+    ALERT_UPDATE_API,
     ALERTS_ALL_API,
 } from 'repositories/routes';
 
@@ -36,7 +36,7 @@ export function loadAllAlerts() {
 export const createAlert = request => {
     return async dispatch => {
         dispatch({ type: actions.ALERT_LOADING });
-        return post(ALERT_CREATE_API(), request)
+        return post(ALERTS_CREATE_API(), request)
             .then(data => {
                 dispatch({
                     type: actions.ALERT_SAVED,
@@ -55,7 +55,7 @@ export const createAlert = request => {
 export const saveAlertChange = request => {
     return async dispatch => {
         dispatch({ type: actions.ALERT_LOADING });
-        return post(ALERT_SAVE_API({ id: request.id }), request)
+        return put(ALERT_UPDATE_API({ id: request.id }), request)
             .then(data => {
                 dispatch({
                     type: actions.ALERT_SAVED,

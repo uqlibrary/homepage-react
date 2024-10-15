@@ -121,6 +121,11 @@ const webpackConfig = {
             inject: true,
             template: resolve(__dirname, './public', 'index.html'),
         }),
+        new HtmlWebpackPlugin({
+            template: './public/chatbot.html',
+            filename: 'chatbot.html',
+            chunks: [],
+        }),
         new CopyPlugin({
             patterns: [
                 {
@@ -202,7 +207,7 @@ const webpackConfig = {
                 parallel: true,
                 terserOptions: {
                     compress: {
-                        drop_console: config.removeConsoleLog,
+                        // drop_console: config.removeConsoleLog,
                     },
                 },
             }),

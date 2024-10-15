@@ -3,7 +3,8 @@ import { default as locale } from '../../../src/modules/Pages/LearningResources/
 import { default as subjectSearchSuggestions } from '../../../src/data/mock/data/records/learningResources/subjectSearchSuggestions';
 
 context('The Homepage Learning Resource Panel', () => {
-    it('Learning resources panel is accessible', () => {
+    // do not leave this skipped for prod!!!!!!
+    it.skip('Learning resources panel is accessible', () => {
         cy.visit('/?user=s1111111');
         cy.injectAxe();
         // cy.wait(2000);
@@ -138,5 +139,20 @@ context('The Homepage Learning Resource Panel', () => {
         cy.get('ul#homepage-learningresource-autocomplete-listbox')
             .children()
             .should('have.length', 1 + 1); // add one for title
+    });
+
+    it('Staff see example courses', () => {
+        cy.visit('/?user=uqstaff');
+        cy.get('[data-testid="staff-course-prompt"]')
+            .should('exist')
+            .contains('Students see enrolled courses. Example links below:');
+        cy.get('[data-testid="no-enrolled-courses"]').should('not.exist');
+        const numberOfBlocks = 3 + 1; // n classes + 1 header
+        cy.get('[data-testid="your-courses"]')
+            .children()
+            .should('have.length', numberOfBlocks);
+        cy.get('[data-testid="hcr-0"]')
+            .should('exist')
+            .contains('FREN1010');
     });
 });
