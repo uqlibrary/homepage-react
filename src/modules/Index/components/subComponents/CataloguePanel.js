@@ -168,19 +168,24 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
             title="My library account"
         >
             <ul>
-                <StyledLi>
+                <StyledLi data-testid={'show-searchhistory'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=search_history">
-                        {dSTimeClockFileSearchIcon} <span>Library search history</span>
+                        {dSTimeClockFileSearchIcon} <span>Search history</span>
                     </Link>
                 </StyledLi>
-                <StyledLi>
+                <StyledLi data-testid={'show-savedsearches'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=queries">
-                        {dsStarIcon} <span>Library saved searches</span>
+                        {dsStarIcon} <span>Saved searches</span>
                     </Link>
                 </StyledLi>
-                <StyledLi>
-                    <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=items">
-                        {dsStudyBookIcon} <span>Library saved items</span>
+                <StyledLi data-testid={'show-requests'}>
+                    <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=requests&lang=en_US">
+                        {dsBookCloseBookmarkIcon} <span>Requests ({`${loans?.total_holds_count}`})</span>
+                    </Link>
+                </StyledLi>
+                <StyledLi data-testid={'show-loans'}>
+                    <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
+                        {dsBookCloseBookmarkIcon} <span>Loans ({`${loans?.total_loans_count}`})</span>
                     </Link>
                 </StyledLi>
                 {canSeePrintBalance(account) && (
@@ -196,16 +201,6 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
                         </Link>
                     </StyledLi>
                 )}
-                <StyledLi data-testid={'show-loans'}>
-                    <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
-                        {dsBookCloseBookmarkIcon} <span>Library loans ({`${loans?.total_loans_count}`})</span>
-                    </Link>
-                </StyledLi>
-                <StyledLi data-testid={'show-requests'}>
-                    <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=requests&lang=en_US">
-                        {dsBookCloseBookmarkIcon} <span>Library requests ({`${loans?.total_holds_count}`})</span>
-                    </Link>
-                </StyledLi>
             </ul>
         </StandardCard>
     );

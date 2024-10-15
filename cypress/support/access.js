@@ -16,7 +16,7 @@ export const hasPanels = optionsTheUserShouldSee => {
     possiblePanels.set('training', { title: 'Training', content: 'See all Training' });
     possiblePanels.set('espace', { title: 'UQ eSpace', content: 'Update the following items' });
     possiblePanels.set('readpublish', { title: 'Read and publish', content: 'Find journals' });
-    possiblePanels.set('catalogue', { title: 'My library account', content: 'Library loans' });
+    possiblePanels.set('catalogue', { title: 'My library account', content: 'Search history' });
     possiblePanels.set('referencing', { title: 'Referencing', content: 'Referencing style guides' });
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
@@ -98,10 +98,12 @@ export const hasEspaceEntries = optionsTheUserShouldSee => {
 
 export const hasCatalogPanelOptions = optionsTheUserShouldSee => {
     const availableOptions = new Map();
+    availableOptions.set('searchhistory', 'Search history');
+    availableOptions.set('savedsearches', 'Saved searches');
+    availableOptions.set('requests', 'Requests');
+    availableOptions.set('loans', 'Loans');
+    availableOptions.set('fines', 'Fines');
     availableOptions.set('papercut', 'Print balance');
-    availableOptions.set('loans', 'Library loans');
-    availableOptions.set('fines', 'Library fines');
-    availableOptions.set('requests', 'Library requests');
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
