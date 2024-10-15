@@ -141,7 +141,7 @@ export const EspaceLinks = ({ author, possibleRecords, incompleteNTRORecords }) 
         <StandardCard subCard fullHeight primaryHeader noPadding standardCardId="espace-panel" title={'UQ eSpace'}>
             <Grid container spacing={0} style={{ paddingInline: '24px', marginTop: '24px' }}>
                 <StyledGridItem component={'li'} item xs={12}>
-                    <Link to={'https://espace.library.uq.edu.au/dashboard"'}>UQ eSpace dashboard</Link>
+                    <Link to={'https://espace.library.uq.edu.au/dashboard'}>UQ eSpace dashboard</Link>
                 </StyledGridItem>
                 <EspaceJournalSearch />
                 <EspaceEditorialAppointments />
