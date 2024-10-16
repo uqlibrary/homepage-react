@@ -31,7 +31,7 @@ describe('Read and Publish (homepage)', () => {
             // User in which an error shows
             cy.get('[data-testid="readpublish-panel-content"]')
                 .should('exist')
-                .should('contain', 'Journal search')
+                .should('contain', 'Publish in the right journal')
                 .should('contain', 'We cannot display your favourite journal searches at this time.');
             cy.get('[data-testid="rp-journalsearch-items"]').should('not.exist');
 
@@ -45,14 +45,14 @@ describe('Read and Publish (homepage)', () => {
             // User that has no favourite items.
             cy.get('[data-testid="readpublish-panel-content"]')
                 .should('exist')
-                .should('contain', 'Journal search')
-                .should('contain', 'You have no favourite items');
+                .should('contain', 'Publish in the right journal')
+                .should('contain', 'You have no favourite journals');
             cy.get('[data-testid="rp-journalsearch-items"]').should('not.exist');
 
             // no count should be showing, but hold a message.
             cy.get('[data-testid="rp-yourfavourite-count"]')
                 .should('exist')
-                .should('contain', 'no favourite items');
+                .should('contain', 'You have no favourite journals');
         });
         it('does not show read and publish to the non logged in user', () => {
             cy.visit('http://localhost:2020/?user=public');
