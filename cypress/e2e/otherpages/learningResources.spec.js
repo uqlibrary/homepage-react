@@ -297,6 +297,18 @@ context('Learning Resources Access', () => {
         cy.viewport(1300, 1000);
         cy.get('body').contains('The requested page is available to authorised users only.');
     });
+    it('an rhd user, who is only doing research subjects can access the learning resources page', () => {
+        cy.visit(
+            '/learning-resources?user=s2222222&coursecode=PHYS1101E&campus=St%20Lucia&semester=Semester%202%202020',
+        );
+        cy.waitUntil(() => cy.get('[data-testid="learning-resource-subject-title"]').contains('PHYS1101E'));
+    });
+    it('an rhd user, who is doing non research subjects can access the learning resources page', () => {
+        cy.visit(
+            '/learning-resources?user=s5555555&coursecode=PHYS1101E&campus=St%20Lucia&semester=Semester%202%202020',
+        );
+        cy.waitUntil(() => cy.get('[data-testid="learning-resource-subject-title"]').contains('PHYS1101E'));
+    });
 });
 
 context('The Learning Resources Page', () => {
@@ -631,12 +643,6 @@ context('The Learning Resources Page', () => {
     it('an rhd user can access the learning resources page', () => {
         cy.visit(
             '/learning-resources?user=s5555555&coursecode=PHYS1101E&campus=St%20Lucia&semester=Semester%202%202020',
-        );
-        cy.waitUntil(() => cy.get('[data-testid="learning-resource-subject-title"]').contains('PHYS1101E'));
-    });
-    it('an rhd user, who is only doing research subjects can access the learning resources page', () => {
-        cy.visit(
-            '/learning-resources?user=s2222222&coursecode=PHYS1101E&campus=St%20Lucia&semester=Semester%202%202020',
         );
         cy.waitUntil(() => cy.get('[data-testid="learning-resource-subject-title"]').contains('PHYS1101E'));
     });
