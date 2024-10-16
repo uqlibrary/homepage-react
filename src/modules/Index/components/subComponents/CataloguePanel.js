@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import BeenhereIcon from '@mui/icons-material/Beenhere';
 import { canSeeLoans, canSeePrintBalance, isTestTagUser } from 'helpers/access';
-import { getHomepageLink } from 'helpers/general';
+import { getHomepageLink } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
 
 const StyledLi = styled('li')(() => ({
     paddingBottom: '16px',

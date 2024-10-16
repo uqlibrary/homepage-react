@@ -44,7 +44,17 @@ context('Personalised Homepage', () => {
     it('Renders an RHD home page correctly', () => {
         expectUserToDisplayCorrectFirstName('s2222222', 'Jane');
 
+        hasPanels(['catalogue', 'referencing', 'training', 'readpublish']);
+
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
+    });
+
+    it('Renders an RHD with courses home page correctly', () => {
+        expectUserToDisplayCorrectFirstName('s5555555', 'Yvonne');
+
+        hasPanels(['catalogue', 'referencing', 'learning-resources', 'training', 'readpublish']);
+
+        hasNoEspacePanel();
     });
 
     it('when session cookie auto expires the user logs out', () => {
@@ -138,6 +148,13 @@ context('Personalised Homepage', () => {
         expectUserToDisplayCorrectFirstName('emhospital', 'Hospital');
 
         hasPanels(['catalogue', 'referencing', 'training']);
+
+        // sees hospital training items
+        cy.get('[data-testid="training-event-detail-button-0"]')
+            .should('exist')
+            .should('be.visible')
+            .scrollIntoView()
+            .contains('Planning your systematic review');
 
         hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 

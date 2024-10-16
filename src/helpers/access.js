@@ -69,10 +69,31 @@ export const isLoggedInUser = account => !!account && !!account.id;
 
 // define which home page panel items each user type can see
 
-export const canSeeLearningResources = account => {
+export const canSeeLearningResourcesPage = account => {
     return (
         !!account &&
         !!account.id &&
+        [
+            UNDERGRADUATE_GENERAL,
+            UNDERGRADUATE_REMOTE,
+            SHORT_FORM_CREDENTIAL_COURSE,
+            SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
+            OTHER_STAFF,
+            LIBRARY_STAFF,
+            EXTRAMURAL_HONORARY,
+            POSTGRAD_COURSEWORK,
+            POSTGRAD_COURSEWORK_REMOTE,
+            POSTGRAD_RESEARCH,
+            POSTGRAD_RESEARCH_REMOTE,
+        ].includes(account.user_group)
+    );
+};
+
+export const canSeeLearningResourcesPanel = account => {
+    if (!account || !account.id) {
+        return false;
+    }
+    if (
         [
             UNDERGRADUATE_GENERAL,
             UNDERGRADUATE_REMOTE,
@@ -84,7 +105,19 @@ export const canSeeLearningResources = account => {
             SHORT_FORM_CREDENTIAL_COURSE,
             SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
         ].includes(account.user_group)
-    );
+    ) {
+        return true;
+    }
+    if (
+        // if they are an RHD who is enrolled in a non research subject, then they get the panel
+        [POSTGRAD_RESEARCH, POSTGRAD_RESEARCH_REMOTE].includes(account.user_group) &&
+        !!account.current_classes &&
+        account.current_classes.length > 0 &&
+        account.current_classes?.every(course => course.SUBJECT !== 'RSCH')
+    ) {
+        return true;
+    }
+    return false;
 };
 
 export const canSeeReadPublish = account => {

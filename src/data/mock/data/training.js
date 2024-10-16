@@ -419,3 +419,133 @@ export const training_object = {
         "isOnlineClass": true
     }
 };
+export const training_object_hospital = [
+    {
+        "entityId": 5320343,
+        "created": "2024-09-27T12:57:23.393+10:00",
+        "updated": "2024-09-27T12:58:16.393+10:00",
+        "name": "Planning your systematic review",
+        "eventType": "Research",
+        "eventTypeId": 42,
+        "start": "2024-10-22T13:00:00+10:00",
+        "end": "2024-10-22T14:00:00+10:00",
+        "publish": "2024-09-27T12:58:00+10:00",
+        "expire": "2024-10-22T14:00:00+10:00",
+        "isActive": true,
+        "isCancelled": false,
+        "summary": "For hospital staff only. Discover the steps in a systematic review and the resources available to support producing one.",
+        "details": "<p>Starting a systematic review can be a big undertaking.&nbsp;<\/p><p>This workshop will provide an overview of the steps involved in producing a systematic review and help you to plan your own.<\/p><p>The Zoom link will be sent to you prior to the session.&nbsp;<\/p><p>This training session is for hospital staff.<\/p>",
+        "offCampusLocation": null,
+        "campus": "Online",
+        "building": null,
+        "location": "Zoom ",
+        "url": null,
+        "onlineInstructions": null,
+        "venue": "Online, Zoom ",
+        "bookingType": 1,
+        "bookingSettings": {
+            "bookings": 1,
+            "bookingLimit": 60,
+            "placesRemaining": 59,
+            "bookingsOpen": "2024-09-27T12:58:00+10:00",
+            "bookingsClose": "2024-10-22T13:00:00+10:00"
+        },
+        "workGroupId": 117,
+        "attendance": {
+            "total": 1,
+            "unspecified": 1,
+            "absent": 0,
+            "attended": 0
+        },
+        "labels": [
+            {
+                "id": 376,
+                "name": "LIB.client.ongoing.For Hospital Staff"
+            }
+        ],
+        "categories": {
+            "eventType": "Research",
+            "campus": [
+                "Online"
+            ]
+        },
+        "sessions": [
+            {
+                "id": 34520,
+                "start": "2024-10-22T13:00:00+10:00",
+                "end": "2024-10-22T14:00:00+10:00",
+                "isCancelled": false,
+                "bookings": 1,
+                "bookingClose": "2024-10-22T13:00:00+10:00"
+            }
+        ],
+        "experienceType": null,
+        "skills": [],
+        "endorsements": [],
+        "isOnlineClass": false
+    },
+    {
+        "entityId": 5320344,
+        "created": "2024-09-27T12:59:31.993+10:00",
+        "updated": "2024-09-27T13:01:15.087+10:00",
+        "name": "PubMed - Tips and tricks",
+        "eventType": "Research",
+        "eventTypeId": 42,
+        "start": "2024-10-30T14:00:00+10:00",
+        "end": "2024-10-30T15:00:00+10:00",
+        "publish": "2024-09-27T13:01:00+10:00",
+        "expire": "2024-10-30T15:00:00+10:00",
+        "isActive": true,
+        "isCancelled": false,
+        "summary": "For hospital staff only. Learn how to effectively search PubMed. Explore the site with us, as we demonstrate key features, including the PubMed Advanced Search Builder and MeSH Database.",
+        "details": "<p>In this workshop you will learn:<\/p><ul><li>What is PubMed and how to access it<\/li><li>The differences between PubMed and MEDLINE<\/li><li>How to perform effective searches<\/li><li>How to use MeSH (Medical Subject Headings)<\/li><li>How to limit your searches<\/li><li>How to select and save records<\/li><li>How to export citations to EndNote<\/li><\/ul><p>The Zoom link will be sent to you prior to the session.<\/p><p>This training session is for hospital staff.<\/p>",
+        "offCampusLocation": null,
+        "campus": "Online",
+        "building": null,
+        "location": "Zoom ",
+        "url": null,
+        "onlineInstructions": null,
+        "venue": "Online, Zoom ",
+        "bookingType": 1,
+        "bookingSettings": {
+            "bookings": 0,
+            "bookingLimit": 60,
+            "placesRemaining": 60,
+            "bookingsOpen": "2024-09-27T13:01:00+10:00",
+            "bookingsClose": "2024-10-30T14:00:00+10:00"
+        },
+        "workGroupId": 117,
+        "attendance": {
+            "total": 0,
+            "unspecified": 0,
+            "absent": 0,
+            "attended": 0
+        },
+        "labels": [
+            {
+                "id": 376,
+                "name": "LIB.client.ongoing.For Hospital Staff"
+            }
+        ],
+        "categories": {
+            "eventType": "Research",
+            "campus": [
+                "Online"
+            ]
+        },
+        "sessions": [
+            {
+                "id": 34521,
+                "start": "2024-10-30T14:00:00+10:00",
+                "end": "2024-10-30T15:00:00+10:00",
+                "isCancelled": false,
+                "bookings": 0,
+                "bookingClose": "2024-10-30T14:00:00+10:00"
+            }
+        ],
+        "experienceType": null,
+        "skills": [],
+        "endorsements": [],
+        "isOnlineClass": false
+    }
+]

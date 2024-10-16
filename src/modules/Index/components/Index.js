@@ -32,7 +32,7 @@ import {
     loadJournalSearchFavourites,
     loadLoans,
 } from 'data/actions';
-import { canSeeLearningResources, isEspaceAuthor, canSeeReadPublish } from 'helpers/access';
+import { canSeeLearningResourcesPanel, isEspaceAuthor, canSeeReadPublish } from 'helpers/access';
 
 const EspaceLinks = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/EspaceLinks')));
 const Locations = lazy(() => lazyRetry(() => import('./subComponents/Locations')));
@@ -380,7 +380,7 @@ export const Index = ({
                                     </Grid>
                                     <Grid item uqDsDesktop={8}>
                                         <Grid container>
-                                            {canSeeLearningResources(account) && (
+                                            {canSeeLearningResourcesPanel(account) && (
                                                 <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="learning-resources-panel">
                                                     <LearningResourcesPanel account={account} history={history}/>
                                                 </StyledGridItemLoggedIn>
