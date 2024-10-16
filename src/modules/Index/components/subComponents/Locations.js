@@ -410,20 +410,22 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                     return calculatedBusyness;
                 }
 
-                const min = 5;
-                const max = 100;
                 function tempCalcLocationBusiness() {
                     // this wil be replaced wih api results
+                    const lookuptable = {
+                        Central: 100,
+                        DHEngSci: 20,
+                        Fryer: 25,
+                        Law: 70,
+                        'Duhig Study': 90,
+                        'Arch Music': 95,
+                        'Biol Sci': VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING,
+                        Herston: 100,
+                    };
                     if (location?.abbr === 'Gatton') {
                         return null;
                     }
-                    if (location?.abbr === 'Herston') {
-                        return 100;
-                    }
-                    if (location?.abbr === 'Biol Sci') {
-                        return VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING;
-                    }
-                    return Math.floor(Math.random() * (max - min + 1)) + min;
+                    return lookuptable[location?.abbr] || 50;
                 }
 
                 const randomBusynessNumber = tempCalcLocationBusiness();
