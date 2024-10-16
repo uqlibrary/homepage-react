@@ -25,17 +25,13 @@ context('Training', () => {
     it('list is Accessible', () => {
         cy.visit('/');
         cy.injectAxe();
-        cy.wait(2000);
         cy.viewport(1300, 1000);
         cy.waitUntil(() => cy.get('div[data-testid="training-panel"]').should('exist'));
-        cy.log('Training');
-        cy.get('button[data-testid="training-event-detail-button-0"]').contains('EndNote: getting started');
-
-        cy.log('Events list');
         cy.get('[data-testid="training-event-detail-button-0"]')
             .should('exist')
-            .should('have.text', 'EndNote: getting started');
-        cy.checkA11y('button[data-testid="training-event-detail-button-0"]', {
+            .scrollIntoView()
+            .contains('EndNote: getting started');
+        cy.checkA11y('[data-testid="training-panel"]', {
             reportName: 'Training',
             scopeName: 'As loaded',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
@@ -45,15 +41,13 @@ context('Training', () => {
     it('detail panel is accessible', () => {
         cy.visit('/');
         cy.injectAxe();
-        cy.wait(2000);
         cy.viewport(1300, 1000);
         cy.waitUntil(() => cy.get('div[data-testid="training-panel"]').should('exist'));
-        cy.log('Training');
 
-        cy.log('Events list');
         cy.get('[data-testid="training-event-detail-button-0"]')
             .should('exist')
-            .should('have.text', 'EndNote: getting started');
+            .scrollIntoView()
+            .contains('EndNote: getting started');
         cy.get('button[data-testid="training-event-detail-button-0"]').click();
         cy.waitUntil(() =>
             cy

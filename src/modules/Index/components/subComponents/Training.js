@@ -21,6 +21,7 @@ import IconButton from '@mui/material/IconButton';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { linkToDrupal } from 'helpers/general';
 
 const NUMBER_OF_DISPLAYED_EVENTS = 3;
 
@@ -49,7 +50,7 @@ const MyLoader = props => (
     </ContentLoader>
 );
 
-const StyledTextField = styled(TextField)(({ theme }) => ({
+const StyledTextField = styled(TextField)(() => ({
     fontWeight: 400,
     textOverflow: 'ellipsis !important',
     overflow: 'hidden !important',
@@ -66,71 +67,50 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         flexDirection: 'column',
         height: '100%',
         overflow: 'hidden',
+        marginBottom: '24px',
     },
     ['&.componentHeight']: {
-        [theme.breakpoints.down('md')]: {
-            height: '100%',
-        },
-        [theme.breakpoints.up('md')]: {
-            height: 300,
-        },
+        height: '100%',
+        minHeight: '350px',
     },
     ['& .linkButton']: {
         backgroundColor: '#fff',
+        borderBottom: '1px solid #dcdcdd',
         borderRadius: 0,
-        color: theme.palette.primary.light,
+        color: theme.palette.secondary.dark,
         display: 'block',
         fontSize: '16px',
         fontWeight: 500,
-        padding: 4,
+        letterSpacing: '0.16px',
+        padding: '16px 0',
         minWidth: 0,
         textAlign: 'left',
         textTransform: 'none',
-        '&:hover': {
-            color: '#fff',
-            backgroundColor: theme.palette.primary.light,
+        '& .listEventDate': {
+            color: theme.palette.primary.light,
+            lineHeight: '100%', // 16px
         },
-    },
-    ['& .eventName']: {
-        fontWeight: 400,
-    },
-    ['& .eventSummary']: {
-        marginTop: 0,
-        fontSize: 14,
-        fontWeight: 300,
-        textAlign: 'left',
-    },
-    ['& .actionButtons']: {
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0,
-        width: '100%',
-    },
-    ['& .actionButtonBlock']: {
-        '& a': {
-            borderBottomLeftRadius: 4,
-            borderBottomRightRadius: 4,
-            color: '#fff',
-            display: 'block',
-            fontSize: 13,
+        ['& .listEventTitle']: {
+            fontSize: '20px',
+            lineHeight: '120%', // 24px
+            letterSpacing: '0.2px',
+            marginTop: '8px',
+        },
+        ['& .listEventLocation']: {
             fontWeight: 400,
-            padding: 6,
-            textAlign: 'center',
-            textTransform: 'uppercase',
-            width: '100%',
-            '&:hover': {
-                textDecoration: 'none',
-                boxShadow: 'none',
+            lineHeight: '160%', // 25.6px
+            marginTop: '4px',
+        },
+        '&:hover': {
+            backgroundColor: theme.palette.primary.light,
+            '& .listEventItem': {
+                color: '#fff',
+                backgroundColor: theme.palette.primary.light,
             },
         },
     },
     ['& .trainingSearch']: {
         margin: '0 24px 24px 24px',
-    },
-    ['& .bookActionButton']: {
-        backgroundColor: theme.palette.primary.main,
-        '&:hover': {
-            backgroundColor: theme.palette.primary.dark,
-        },
     },
     ['& .detailHeader']: {
         backgroundColor: theme.palette.primary.light,
@@ -151,25 +131,11 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     ['& .detailMeta']: {
         padding: '4px 20px !important',
     },
-    ['& .scrollArea']: {
-        overflowX: 'hidden',
-        overflowY: 'auto',
-        marginRight: 0,
-        marginTop: 0,
-        marginBottom: 0,
-        marginLeft: 0,
-        padding: 8,
-        color: theme.palette.secondary.dark,
-        height: '100%',
-    },
     ['& .row']: {
         padding: '8px 0 0 0',
         marginLeft: '20px',
         paddingRight: '20px',
-    },
-    ['& .flexHeader']: {
-        height: 'auto',
-        whiteSpace: 'nowrap',
+        paddingBottom: '20px',
     },
     ['& .flexContent']: {
         flexGrow: 1,
@@ -179,9 +145,6 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             overflowX: 'hidden',
             overflowY: 'hidden',
         },
-    },
-    ['& .flexFooter']: {
-        height: 'auto',
     },
     ['& .flexLoader']: {
         flexGrow: 1,
@@ -224,14 +187,14 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
     const eventTime = eventTime =>
         moment(eventTime)
             .calendar(null, {
-                sameDay: '[Today,] dddd D MMMM [at] h.mma',
-                nextDay: '[Tomorrow,] dddd D MMMM [at] h.mma',
-                nextWeek: 'dddd D MMMM [at] h.mma',
-                lastDay: '[Yesterday]  D MMMM [at] h.mma',
-                lastWeek: '[Last] dddd  D MMMM [at] h.mma',
-                sameElse: 'D MMMM [at] h.mma',
+                sameDay: '[Today,] dddd D MMMM [at] h:mma',
+                nextDay: '[Tomorrow,] dddd D MMMM [at] h:mma',
+                nextWeek: 'dddd D MMMM [at] h:mma',
+                lastDay: '[Yesterday]  D MMMM [at] h:mma',
+                lastWeek: '[Last] dddd  D MMMM [at] h:mma',
+                sameElse: 'D MMMM [at] h:mma',
             })
-            .replace('.00', '');
+            .replace(':00', '');
     const bookingText = ev => {
         console.log('ev=', ev);
         /*
@@ -248,7 +211,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
         }
         return placesRemainingText;
     };
-    // there is something strange happening that sometimes the api sends us an object
+    // there is something strange happening that sometimes the api sends us an object and sometimes an array
     // convert to an array when it happens
     const filterStandardisedTrainingEvents = () => {
         const list =
@@ -304,7 +267,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                             Training
                         </h3>
                         <a
-                            href="https://web.library.uq.edu.au/library-services/training"
+                            href={linkToDrupal('/library-services/training')}
                             data-analyticsid="training-event-detail-more-training-button"
                             className={'seeAllTrainingLink'}
                             data-testid="seeAllTrainingLink"
@@ -348,12 +311,8 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                             </InputAdornment>
                                         ),
                                     }}
-                                    // blurOnSelect
-                                    // autoSelect
                                     label="Search Events"
                                     variant="standard"
-                                    // onChange={e => setInputValue(e.target.value)} // letters typed
-                                    // onInputChange={e => showEventDetail(e)}
                                     sx={{
                                         '& .MuiInput-underline:before': {
                                             borderWidth: '0 0 1px 0',
@@ -397,19 +356,18 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                         return (
                             <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
                                 <div className={'flexContent'} role="region" aria-label="UQ training Events list">
-                                    <Typography
-                                        component={'h4'}
-                                        variant={'h6'}
-                                        sx={{ marginLeft: '24px', fontSize: '20px', fontWeight: 500 }}
-                                    >
-                                        Suggested training for you:
-                                    </Typography>
                                     {filteredTrainingEvents &&
                                         filteredTrainingEvents.length > 0 &&
                                         filteredTrainingEvents.map((event, index) => {
                                             return (
-                                                <Grid container spacing={0} className={'row'} key={index}>
-                                                    <Grid item xs={12}>
+                                                <Grid
+                                                    container
+                                                    spacing={1}
+                                                    className={'row'}
+                                                    key={index}
+                                                    style={{ paddingBlock: 0, marginBlock: 0 }}
+                                                >
+                                                    <Grid item xs={12} style={{ marginRight: '24px', paddingTop: 0 }}>
                                                         <Button
                                                             id={`training-event-detail-button-${event.entityId}`}
                                                             data-testid={`training-event-detail-button-${index}`}
@@ -418,7 +376,15 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                             classes={{ root: 'linkButton' }}
                                                             fullWidth
                                                         >
-                                                            {event.name}
+                                                            <div className={'listEventItem listEventDate'}>
+                                                                {eventTime(event.start)}
+                                                            </div>
+                                                            <div className={'listEventItem listEventTitle'}>
+                                                                {event.name}...
+                                                            </div>
+                                                            <div className={'listEventItem listEventLocation'}>
+                                                                {event.campus}
+                                                            </div>
                                                         </Button>
                                                     </Grid>
                                                 </Grid>
