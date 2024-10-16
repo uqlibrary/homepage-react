@@ -79,19 +79,6 @@ const EspaceUpdateWorks = () => {
         </StyledGridItem>
     );
 };
-const EspaceJournalSearch = () => {
-    return (
-        <StyledGridItem component={'li'} item xs={12}>
-            <Link
-                to={'https://espace.library.uq.edu.au/journals/search/'}
-                id="espace-journalsearch"
-                data-testid="espace-journalsearch"
-            >
-                Publish in the right journal
-            </Link>
-        </StyledGridItem>
-    );
-};
 
 const EspaceEditorialAppointments = () => {
     return (
@@ -143,7 +130,6 @@ export const EspaceLinks = ({ author, possibleRecords, incompleteNTRORecords }) 
                 <StyledGridItem component={'li'} item xs={12}>
                     <Link to={'https://espace.library.uq.edu.au/dashboard'}>UQ eSpace dashboard</Link>
                 </StyledGridItem>
-                <EspaceJournalSearch />
                 <EspaceEditorialAppointments />
                 {!authorNeedsToUpdateRecords && <EspaceUpdateWorks />}
                 {(authorIsMissingOrcid || authorNeedsToUpdateRecords || authorHasIncompleteNtro) && (

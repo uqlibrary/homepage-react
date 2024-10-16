@@ -17,15 +17,16 @@ export const ReadPublish = ({ journalSearchList, journalSearchError }) => {
         >
             <div className="readpublish-panel-item" style={{ margin: '0 24px 0' }}>
                 <p>
-                    <a href="https://espace.library.uq.edu.au/journals/search/">Journal search</a>
+                    <a href="https://espace.library.uq.edu.au/journals/search/">Publish in the right journal</a>
                     <br />
-                    Find journals for your reference.
                     {!!journalSearchList?.data && (
                         <>
                             <h4 data-testid="rp-yourfavourite-count">
-                                {journalSearchList?.data.length > 0
-                                    ? `Your favourite items (${journalSearchList?.data.length})`
-                                    : 'You have no favourite items'}
+                                {journalSearchList?.data.length > 0 ? (
+                                    `My favourite journals (${journalSearchList?.data.length <= 5 ? journalSearchList?.data.length : '5 of ' + journalSearchList?.data.length})`
+                                ) : (
+                                    'You have no favourite journals'
+                                )}
                             </h4>
                             {journalSearchList?.data.length > 0 && (
                                 <ul style={{ marginTop: 0, marginBottom: 0 }} data-testid="rp-journalsearch-items">

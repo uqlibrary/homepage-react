@@ -4,7 +4,7 @@ export default {
             {
                 title: 'Referencing style guides',
                 url: 'https://guides.library.uq.edu.au/referencing',
-                description: 'ACS, AGLC, Chicago...',
+                description: 'APA, Chicago, Vancouver and more',
                 uqOnly: false,
             },
             {
