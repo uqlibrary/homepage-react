@@ -24,7 +24,7 @@ import subjectSearchSuggestions from './data/records/learningResources/subjectSe
 import examSuggestion_FREN from './data/records/learningResources/examSuggestion_FREN';
 import { computerAvailability } from './data/computerAvailability';
 import { libHours } from './data/libHours';
-import { training_object } from './data/training';
+import { training_object, training_object_hospital } from './data/training';
 import { espaceSearchResponse, loans, printBalance } from './data/general';
 import { alertList } from './data/alertsLong';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
@@ -152,6 +152,8 @@ mock.onGet(routes.TRAINING_API().apiUrl).reply(() => {
         return [500, {}];
     } else if (responseType === 'missing') {
         return [404, {}];
+    } else if (user === 'emhospital') {
+        return [200, training_object_hospital];
     } else {
         return [200, training_object];
     }
@@ -186,15 +188,17 @@ mock.onGet(routes.ALERTS_ALL_API().apiUrl).reply(withDelay([200, alertList]));
 mock.onAny(routes.ALERTS_CREATE_API().apiUrl).reply(
     withDelay([
         200,
-        [{
-            id: '99999-d897-11eb-a27e-df4e46db7245',
-            start: '2020-06-07 02:00:03',
-            end: '2020-06-07 03:00:03',
-            title: 'Updated alert 1',
-            body:
-                'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
-            priority_type: 'info',
-        }],
+        [
+            {
+                id: '99999-d897-11eb-a27e-df4e46db7245',
+                start: '2020-06-07 02:00:03',
+                end: '2020-06-07 03:00:03',
+                title: 'Updated alert 1',
+                body:
+                    'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
+                priority_type: 'info',
+            },
+        ],
     ]),
 );
 // mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(withDelay([500, {}]));

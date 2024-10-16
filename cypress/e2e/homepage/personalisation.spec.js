@@ -149,6 +149,13 @@ context('Personalised Homepage', () => {
 
         hasPanels(['catalogue', 'referencing', 'training']);
 
+        // sees hospital training items
+        cy.get('[data-testid="training-event-detail-button-0"]')
+            .should('exist')
+            .should('be.visible')
+            .scrollIntoView()
+            .contains('Planning your systematic review');
+
         hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
         hasNoEspacePanel();
