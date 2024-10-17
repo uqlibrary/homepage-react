@@ -113,7 +113,7 @@ export const canSeeLearningResourcesPanel = account => {
         [POSTGRAD_RESEARCH, POSTGRAD_RESEARCH_REMOTE].includes(account.user_group) &&
         !!account.current_classes &&
         account.current_classes.length > 0 &&
-        account.current_classes?.every(course => course.SUBJECT !== 'RSCH')
+        account.current_classes?.some(course => course.SUBJECT !== 'RSCH')
     ) {
         return true;
     }
