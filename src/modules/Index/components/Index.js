@@ -29,7 +29,6 @@ import {
     loadCompAvail,
     loadTrainingEvents,
     loadDrupalArticles,
-    loadJournalSearchFavourites,
     loadLoans,
 } from 'data/actions';
 import { canSeeLearningResourcesPanel, isEspaceAuthor, canSeeReadPublish } from 'helpers/access';
@@ -173,9 +172,6 @@ export const Index = ({
     incompleteNTROLoading,
     drupalArticleList,
     drupalArticlesError,
-    journalSearchList,
-    journalSearchLoading,
-    journalSearchError,
     loans,
     loansLoading,
 
@@ -232,13 +228,6 @@ export const Index = ({
             dispatch(loadDrupalArticles());
         }
     }, [drupalArticleList, dispatch]);
-
-    // Journal Search favourites here
-    useEffect(() => {
-        if (accountLoading === false && !!account) {
-            dispatch(loadJournalSearchFavourites());
-        }
-    }, [accountLoading, account, dispatch]);
 
     // useEffect(() => {
     //     if (accountLoading === false) {
@@ -393,7 +382,7 @@ export const Index = ({
                                                     </StyledGridItemLoggedIn>
                                                     {canSeeReadPublish(account) && (
                                                         <StyledGridItemLoggedIn  item uqDsMobile={12} data-testid="readpublish-panel">
-                                                            <ReadPublish account={account} journalSearchList={journalSearchList} journalSearchError={journalSearchError} journalSearchLoading={journalSearchLoading} />
+                                                            <ReadPublish />
                                                         </StyledGridItemLoggedIn>
                                                     )}
                                                 </Grid>
@@ -447,9 +436,6 @@ Index.propTypes = {
     drupalArticleList: PropTypes.array,
     drupalArticlesLoading: PropTypes.bool,
     drupalArticlesError: PropTypes.bool,
-    journalSearchList: PropTypes.any,
-    journalSearchLoading: PropTypes.bool,
-    journalSearchError: PropTypes.bool,
     loans: PropTypes.any,
     loansLoading: PropTypes.bool,
 };
