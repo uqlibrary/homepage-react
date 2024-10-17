@@ -41,9 +41,7 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     },
 }));
 const StyledWrapper = styled('div')(({ theme }) => ({
-    marginTop: '24px',
-    marginLeft: '32px',
-    marginRight: '40px',
+    margin: 0,
     [theme.breakpoints.down('uqDsTablet')]: {
         margin: '24px 0 24px',
     },
@@ -53,6 +51,8 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     '& table': {
         width: '100%',
         borderCollapse: 'collapse',
+        marginTop: '24px',
+        marginBottom: 0,
     },
     '& tr': {
         height: '2rem',
@@ -75,6 +75,10 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
     '& .table-cell-name a': {
         marginTop: '4px',
+        paddingLeft: '32px',
+    },
+    '& .table-header-name div': {
+        paddingLeft: '32px',
     },
     '& th .table-cell-name-content': {
         marginTop: '4px',
@@ -104,6 +108,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
     '& .table-column-busy': {
         paddingBlock: 0,
+        paddingRight: '40px',
         '& > div': {
             marginLeft: '24px',
         },
@@ -150,6 +155,10 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
     '& .outlink': {
         marginTop: '32px',
+        padding: '4px 40px 4px 32px',
+        '&:hover': {
+            backgroundColor: '#f3f3f4', // $grey-50	Background colour to highlight sections, cards or panes
+        },
         '& a': {
             display: 'flex',
             alignItems: 'center',
@@ -158,7 +167,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             fontSize: '16px',
             fontWeight: 500,
             '&:hover': {
-                color: 'white',
+                backgroundColor: 'inherit',
             },
         },
         '& svg': {
@@ -169,6 +178,8 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
     '& .disclaimer': {
         marginTop: '16px',
+        paddingLeft: '32px',
+        paddingRight: '40px',
         paddingBottom: '24px',
         fontSize: '14px',
         fontStyle: 'normal',
@@ -577,7 +588,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                             <table className={'locations-wrapper'}>
                                 <thead className="table-row-header">
                                     <tr className={'table-row'}>
-                                        <th className={'table-column-library-name'} id="locations-header-library">
+                                        <th className={'table-header-name'} id="locations-header-library">
                                             <div className={'table-cell-name-content'}>Library</div>
                                         </th>
                                         {isWideScreen && (
@@ -607,9 +618,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                                                     className={`table-row table-row-body location-${location.abbr.toLowerCase()}`}
                                                 >
                                                     <td
-                                                        className={
-                                                            'table-body-cell table-cell-name table-column-library-name'
-                                                        }
+                                                        className={'table-body-cell table-cell-name'}
                                                         aria-labelledby="locations-header-library"
                                                     >
                                                         <a
