@@ -5,9 +5,7 @@ import { lazy } from 'react';
 import { PropTypes } from 'prop-types';
 import { useDispatch } from 'react-redux';
 
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
@@ -79,9 +77,6 @@ const StyledGridWrapper = styled('div')(() => ({
 const StyledGridItemLoggedIn = styled(Grid)(({ theme }) => ({
     paddingLeft: '24px',
     marginBottom: '24px',
-    // [theme.breakpoints.down('uqDsDesktop')]: {
-    //     paddingRight: '24px',
-    // },
     [theme.breakpoints.up('uqDsDesktopXL')]: {
         paddingLeft: '32px',
         marginBottom: '32px',
@@ -115,20 +110,6 @@ export const Index = ({
 }) => {
     const dispatch = useDispatch();
 
-    // handle the location opener
-    const [locationOpen, setLocationOpen] = React.useState(false);
-    const locationsRef = React.useRef(null);
-    const closeOnClickOutsideDialog = (e) => {
-        if (locationsRef.current && !locationsRef.current.contains(e.target)) {
-            setLocationOpen(false);
-        }
-    };
-    const closeOnEscape = (e) => {
-        if (isEscapeKeyPressed(e)) {
-            setLocationOpen(false);
-        }
-    };
-
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader && siteHeader.removeAttribute('secondleveltitle');
@@ -142,6 +123,13 @@ export const Index = ({
             dispatch(loadDrupalArticles());
         }
     }, [drupalArticleList, dispatch]);
+
+    // useEffect(() => {
+    //     if (accountLoading === false) {
+    //         dispatch(loadLibHours());
+    //         // dispatch(loadVemcount());
+    //     }
+    // }, [accountLoading, dispatch]);
 
     useEffect(() => {
         if (accountLoading === false) {
@@ -185,6 +173,7 @@ export const Index = ({
         }
     }, [accountLoading, account, loans, loansLoading, dispatch]);
 
+    const verySimplelayout = !canSeeLearningResourcesPanel(account) && !isEspaceAuthor(account, author) && !canSeeReadPublish(account);
     return (
         <React.Suspense fallback={<ContentLoader message="Loading"/>}>
             <StyledPortalContainer id="search-portal-container" data-testid="search-portal-container">
@@ -207,59 +196,77 @@ export const Index = ({
                                     {greeting()}, {account.firstName || /* istanbul ignore next */ ''}
                                 </StyledHeading>
                             </Grid>
-                            <Grid item>
-                                <Grid container>
-                                    <Grid item uqDsDesktop={4} uqDsMobile={12}>
-                                        <Grid container>
-                                            <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="primo-panel">
-                                                <CataloguePanel account={account} loans={loans} printBalance={printBalance} />
-                                            </StyledGridItemLoggedIn>
-                                            <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="training-panel">
-                                                <Training
-                                                    trainingEvents={trainingEvents}
-                                                    trainingEventsLoading={trainingEventsLoading}
-                                                    trainingEventsError={trainingEventsError}
-                                                />
-                                            </StyledGridItemLoggedIn>
-                                        </Grid>
-                                    </Grid>
-                                    <Grid item uqDsDesktop={8}>
-                                        <Grid container>
-                                            {canSeeLearningResourcesPanel(account) && (
-                                                <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="learning-resources-panel">
-                                                    <LearningResourcesPanel account={account} history={history}/>
+                                {verySimplelayout ? (
+                                    <>
+                                        <StyledGridItemLoggedIn item uqDsMobile={12} uqDsDesktop={4} data-testid="primo-panel">
+                                            <CataloguePanel account={account} loans={loans} printBalance={printBalance} />
+                                        </StyledGridItemLoggedIn>
+                                        <StyledGridItemLoggedIn item uqDsMobile={12} uqDsDesktop={4} data-testid="training-panel">
+                                            <Training
+                                                trainingEvents={trainingEvents}
+                                                trainingEventsLoading={trainingEventsLoading}
+                                                trainingEventsError={trainingEventsError}
+                                            />
+                                        </StyledGridItemLoggedIn>
+                                        <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsDesktop={4} data-testid="referencing-panel">
+                                            <ReferencingPanel account={account} />
+                                        </StyledGridItemLoggedIn>
+                                    </>
+                                ) : (
+                                    <Grid item>
+                                    <Grid container>
+                                        <Grid item uqDsDesktop={4} uqDsMobile={12}>
+                                            <Grid container>
+                                                <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="primo-panel">
+                                                    <CataloguePanel account={account} loans={loans} printBalance={printBalance} />
                                                 </StyledGridItemLoggedIn>
-                                            )}
-
-                                            <Grid item uqDsDesktop={6} uqDsMobile={12}>
-                                                <Grid container>
-                                                    <StyledGridItemLoggedIn  item uqDsMobile={12} data-testid="referencing-panel">
-                                                        <ReferencingPanel account={account} />
-                                                    </StyledGridItemLoggedIn>
-                                                    {canSeeReadPublish(account) && (
-                                                        <StyledGridItemLoggedIn  item uqDsMobile={12} data-testid="readpublish-panel">
-                                                            <ReadPublish />
-                                                        </StyledGridItemLoggedIn>
-                                                    )}
-                                                </Grid>
+                                                <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="training-panel">
+                                                    <Training
+                                                        trainingEvents={trainingEvents}
+                                                        trainingEventsLoading={trainingEventsLoading}
+                                                        trainingEventsError={trainingEventsError}
+                                                    />
+                                                </StyledGridItemLoggedIn>
                                             </Grid>
-                                            <Grid item uqDsDesktop={6}>
-                                                <Grid container>
-                                                    {isEspaceAuthor(account, author) && (
-                                                        <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="espace-links-panel">
-                                                            <EspaceLinks
-                                                                author={author}
-                                                                possibleRecords={possibleRecords}
-                                                                incompleteNTRORecords={incompleteNTRO}
-                                                            />
+                                        </Grid>
+                                        <Grid item uqDsDesktop={8}>
+                                            <Grid container>
+                                                {canSeeLearningResourcesPanel(account) && (
+                                                    <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="learning-resources-panel">
+                                                        <LearningResourcesPanel account={account} history={history}/>
+                                                    </StyledGridItemLoggedIn>
+                                                )}
+
+                                                <Grid item uqDsDesktop={6} uqDsMobile={12}>
+                                                    <Grid container>
+                                                        <StyledGridItemLoggedIn  item uqDsMobile={12} data-testid="referencing-panel">
+                                                            <ReferencingPanel account={account} />
                                                         </StyledGridItemLoggedIn>
-                                                    )}
+                                                        {canSeeReadPublish(account) && (
+                                                            <StyledGridItemLoggedIn  item uqDsMobile={12} data-testid="readpublish-panel">
+                                                                <ReadPublish />
+                                                            </StyledGridItemLoggedIn>
+                                                        )}
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid item uqDsDesktop={6}>
+                                                    <Grid container>
+                                                        {isEspaceAuthor(account, author) && (
+                                                            <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="espace-links-panel">
+                                                                <EspaceLinks
+                                                                    author={author}
+                                                                    possibleRecords={possibleRecords}
+                                                                    incompleteNTRORecords={incompleteNTRO}
+                                                                />
+                                                            </StyledGridItemLoggedIn>
+                                                        )}
+                                                    </Grid>
                                                 </Grid>
                                             </Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>
-                            </Grid>
+                            )}
                         </Grid>
                     </StandardPage>
                 </StyledGridWrapper>

@@ -174,14 +174,7 @@ export const librarylink = url => {
 
 export const CataloguePanel = ({ account, loans, printBalance }) => {
     return (
-        <StandardCard
-            subCard
-            noPadding
-            fullHeight
-            primaryHeader
-            standardCardId="catalogue-panel"
-            title="My library account"
-        >
+        <StandardCard subCard noPadding primaryHeader standardCardId="catalogue-panel" title="My library account">
             <ul>
                 <StyledLi data-testid={'show-searchhistory'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=search_history">
