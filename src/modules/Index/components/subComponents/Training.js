@@ -79,7 +79,8 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         fontSize: '16px',
         fontWeight: 500,
         letterSpacing: '0.16px',
-        padding: '16px 0',
+        padding: '16px 0 16px 4px',
+        marginLeft: '-4px',
         minWidth: 0,
         textAlign: 'left',
         textTransform: 'none',
@@ -100,9 +101,10 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         },
         '&:hover': {
             backgroundColor: theme.palette.primary.light,
+            transition: 'background-color 200ms ease-out',
             '& .listEventItem': {
                 color: '#fff',
-                backgroundColor: theme.palette.primary.light,
+                backgroundColor: 'inherit',
             },
         },
     },
