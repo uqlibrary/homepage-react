@@ -19,6 +19,7 @@ const StyledUl = styled('ul')(() => ({
             paddingLeft: '24px',
             '& svg': {
                 stroke: '#51247A',
+                width: '22px',
             },
             '&:hover svg': {
                 stroke: 'white',
