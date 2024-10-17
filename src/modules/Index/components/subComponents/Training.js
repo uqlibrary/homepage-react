@@ -68,10 +68,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         height: '100%',
         overflow: 'hidden',
         marginBottom: '24px',
-    },
-    ['&.componentHeight']: {
-        height: '100%',
-        minHeight: '350px',
+        minHeight: '25em',
     },
     ['& .linkButton']: {
         backgroundColor: '#fff',
@@ -285,7 +282,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                 </Grid>
             }
         >
-            <StyledWrapper className={'flexWrapper componentHeight'}>
+            <StyledWrapper className={'flexWrapper'}>
                 {allTrainingEvents && allTrainingEvents.length > 0 && !trainingEventsLoading && !trainingEventsError && (
                     <div className={'trainingSearch'} id="trainingSearch">
                         <Autocomplete
