@@ -7,26 +7,29 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { canSeeLoans, canSeePrintBalance, isTestTagUser } from 'helpers/access';
 import { getHomepageLink } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
 
-const StyledLi = styled('li')(() => ({
-    paddingBottom: '16px',
-    marginLeft: '-20px',
-    listStyleType: 'none',
-    '& a': {
-        display: 'flex',
-        alignItems: 'center',
-        paddingLeft: '4px',
-        '& svg': {
-            stroke: '#51247A',
+const StyledUl = styled('ul')(() => ({
+    marginLeft: 0,
+    paddingLeft: 0,
+    '& li': {
+        listStyleType: 'none',
+        '& a': {
+            display: 'flex',
+            alignItems: 'center',
+            paddingBlock: '8px',
+            paddingLeft: '24px',
+            '& svg': {
+                stroke: '#51247A',
+            },
+            '&:hover svg': {
+                stroke: 'white',
+            },
+            '&:hover path': {
+                stroke: 'white',
+            },
         },
-        '&:hover svg': {
-            stroke: 'white',
+        '& span': {
+            paddingLeft: '12px',
         },
-        '&:hover path': {
-            stroke: 'white',
-        },
-    },
-    '& span': {
-        paddingLeft: '12px',
     },
 }));
 
@@ -194,36 +197,36 @@ export const librarylink = url => {
 export const CataloguePanel = ({ account, loans, printBalance }) => {
     return (
         <StandardCard subCard noPadding primaryHeader standardCardId="catalogue-panel" title="My library account">
-            <ul>
-                <StyledLi data-testid={'show-searchhistory'}>
+            <StyledUl>
+                <li data-testid={'show-searchhistory'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=search_history">
                         {dSTimeClockFileSearchIcon} <span>Search history</span>
                     </Link>
-                </StyledLi>
-                <StyledLi data-testid={'show-savedsearches'}>
+                </li>
+                <li data-testid={'show-savedsearches'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=queries">
                         {dsStarIcon} <span>Saved searches</span>
                     </Link>
-                </StyledLi>
-                <StyledLi data-testid={'show-requests'}>
+                </li>
+                <li data-testid={'show-requests'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=requests&lang=en_US">
                         {dsBookCloseBookmarkIcon} <span>Requests ({`${loans?.total_holds_count}`})</span>
                     </Link>
-                </StyledLi>
-                <StyledLi data-testid={'show-loans'}>
+                </li>
+                <li data-testid={'show-loans'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
                         {dsBookCloseBookmarkIcon} <span>Loans ({`${loans?.total_loans_count}`})</span>
                     </Link>
-                </StyledLi>
+                </li>
                 {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
-                    <StyledLi data-testid={'show-fines'}>
+                    <li data-testid={'show-fines'}>
                         <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
                             {dsDiscountDollarDashIcon} <span>Fines ({`${loans?.total_loans_count}`})</span>
                         </Link>
-                    </StyledLi>
+                    </li>
                 )}
                 {canSeePrintBalance(account) && (
-                    <StyledLi data-testid={'show-papercut'}>
+                    <li data-testid={'show-papercut'}>
                         <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=queries">
                             {dsDiscountDollarDashIcon}{' '}
                             <span>
@@ -233,17 +236,17 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
                                 )}
                             </span>
                         </Link>
-                    </StyledLi>
+                    </li>
                 )}
                 {isTestTagUser(account) && (
-                    <StyledLi data-testid={'show-testntag'}>
+                    <li data-testid={'show-testntag'}>
                         <Link to={librarylink('admin/testntag')}>
                             {testntagSheildIcon}
                             <span>Test and tag</span>
                         </Link>
-                    </StyledLi>
+                    </li>
                 )}
-            </ul>
+            </StyledUl>
         </StandardCard>
     );
 };
