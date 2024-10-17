@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import BeenhereIcon from '@mui/icons-material/Beenhere';
 import { canSeeLoans, canSeePrintBalance, isTestTagUser } from 'helpers/access';
 import { getHomepageLink } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
 
@@ -20,6 +19,9 @@ const StyledLi = styled('li')(() => ({
             stroke: '#51247A',
         },
         '&:hover svg': {
+            stroke: 'white',
+        },
+        '&:hover path': {
             stroke: 'white',
         },
     },
@@ -158,6 +160,23 @@ const dSTimeClockFileSearchIcon = (
         </defs>
     </svg>
 );
+const testntagSheildIcon = (
+    <svg
+        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+        focusable="false"
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        data-testid="BeenhereIcon"
+    >
+        <path
+            d="M19 1H5c-1.1 0-1.99.9-1.99 2L3 15.93c0 .69.35 1.3.88 1.66L12 23l8.11-5.41c.53-.36.88-.97.88-1.66L21 3c0-1.1-.9-2-2-2z"
+            fill="none"
+            stroke="#51247A"
+            strokeWidth="1"
+        />
+        <path d="M10 16l-5-5 1.41-1.41L10 13.17l7.59-7.59L19 7z" fill="none" stroke="#51247A" strokeWidth="1" />
+    </svg>
+);
 
 export const librarylink = url => {
     let _url = url;
@@ -219,7 +238,7 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
                 {isTestTagUser(account) && (
                     <StyledLi data-testid={'show-testntag'}>
                         <Link to={librarylink('admin/testntag')}>
-                            <BeenhereIcon />
+                            {testntagSheildIcon}
                             <span>Test and tag</span>
                         </Link>
                     </StyledLi>
