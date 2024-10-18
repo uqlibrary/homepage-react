@@ -10,7 +10,7 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { greeting, isEscapeKeyPressed, lazyRetry } from 'helpers/general';
+import { greeting, lazyRetry } from 'helpers/general';
 
 import LibraryUpdates from 'modules/Index/components/subComponents/LibraryUpdates';
 import NavigationCardWrapper from './subComponents/NavigationCardWrapper';
@@ -23,7 +23,12 @@ import {
     loadDrupalArticles,
     loadLoans,
 } from 'data/actions';
-import { canSeeLearningResourcesPanel, isEspaceAuthor, canSeeReadPublish } from 'helpers/access';
+import {
+    canSeeLearningResourcesPanel,
+    isEspaceAuthor,
+    canSeeReadPublish,
+    canSeeTrainingPanel,
+} from 'helpers/access';
 import UtilityBar from './subComponents/UtilityBar';
 
 const EspaceLinks = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/EspaceLinks')));
@@ -196,18 +201,20 @@ export const Index = ({
                                     {greeting()}, {account.firstName || /* istanbul ignore next */ ''}
                                 </StyledHeading>
                             </Grid>
-                                {verySimplelayout ? (
+                                {!!verySimplelayout ? (
                                     <>
                                         <StyledGridItemLoggedIn item uqDsMobile={12} uqDsDesktop={4} data-testid="primo-panel">
                                             <CataloguePanel account={account} loans={loans} printBalance={printBalance} />
                                         </StyledGridItemLoggedIn>
-                                        <StyledGridItemLoggedIn item uqDsMobile={12} uqDsDesktop={4} data-testid="training-panel">
-                                            <Training
-                                                trainingEvents={trainingEvents}
-                                                trainingEventsLoading={trainingEventsLoading}
-                                                trainingEventsError={trainingEventsError}
-                                            />
-                                        </StyledGridItemLoggedIn>
+                                        {canSeeTrainingPanel(account) && (
+                                            <StyledGridItemLoggedIn item uqDsMobile={12} uqDsDesktop={4} data-testid="training-panel">
+                                                <Training
+                                                    trainingEvents={trainingEvents}
+                                                    trainingEventsLoading={trainingEventsLoading}
+                                                    trainingEventsError={trainingEventsError}
+                                                />
+                                            </StyledGridItemLoggedIn>
+                                        )}
                                         <StyledGridItemLoggedIn  item uqDsMobile={12} uqDsDesktop={4} data-testid="referencing-panel">
                                             <ReferencingPanel account={account} />
                                         </StyledGridItemLoggedIn>
@@ -220,13 +227,15 @@ export const Index = ({
                                                 <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="primo-panel">
                                                     <CataloguePanel account={account} loans={loans} printBalance={printBalance} />
                                                 </StyledGridItemLoggedIn>
-                                                <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="training-panel">
-                                                    <Training
-                                                        trainingEvents={trainingEvents}
-                                                        trainingEventsLoading={trainingEventsLoading}
-                                                        trainingEventsError={trainingEventsError}
-                                                    />
-                                                </StyledGridItemLoggedIn>
+                                                {canSeeTrainingPanel(account) && (
+                                                    <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="training-panel">
+                                                        <Training
+                                                            trainingEvents={trainingEvents}
+                                                            trainingEventsLoading={trainingEventsLoading}
+                                                            trainingEventsError={trainingEventsError}
+                                                        />
+                                                    </StyledGridItemLoggedIn>
+                                                    )}
                                             </Grid>
                                         </Grid>
                                         <Grid item uqDsDesktop={8}>
