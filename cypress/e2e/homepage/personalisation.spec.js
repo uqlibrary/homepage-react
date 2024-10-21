@@ -127,7 +127,7 @@ context('Personalised Homepage', () => {
     it('Renders a paid Community EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emcommunity', 'Community');
 
-        hasPanels(['catalogue', 'referencing', 'training']);
+        hasPanels(['catalogue', 'referencing']);
 
         hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
@@ -137,7 +137,7 @@ context('Personalised Homepage', () => {
     it('Renders an Alumni (first year or paid) EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emalumni', 'Alumni');
 
-        hasPanels(['catalogue', 'referencing', 'training']);
+        hasPanels(['catalogue', 'referencing']);
 
         hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
@@ -164,7 +164,7 @@ context('Personalised Homepage', () => {
     it('Renders an Associate EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emassociate', 'Associate');
 
-        hasPanels(['catalogue', 'referencing', 'training']);
+        hasPanels(['catalogue', 'referencing']);
 
         hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
@@ -174,7 +174,7 @@ context('Personalised Homepage', () => {
     it('Renders a Fryer Library EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emfryer', 'Fryer');
 
-        hasPanels(['catalogue', 'referencing', 'training']);
+        hasPanels(['catalogue', 'referencing']);
 
         hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
@@ -222,7 +222,7 @@ context('Personalised Homepage', () => {
     it('Renders a new user group home page correctly', () => {
         expectUserToDisplayCorrectFirstName('newUserGroup', 'New');
 
-        hasPanels(['catalogue', 'referencing', 'training']);
+        hasPanels(['catalogue', 'referencing']);
 
         hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
