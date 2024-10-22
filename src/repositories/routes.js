@@ -63,12 +63,6 @@ export const LIB_HOURS_API = () => ({
     options: { params: { ts: `${new Date().getTime()}` } },
 });
 
-// Computer availability
-export const COMP_AVAIL_API = () => ({
-    apiUrl: 'computer_availability',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-
 // file uploading apis
 export const UPLOAD_PUBLIC_FILES_API = () => ({ apiUrl: 'file/public' });
 

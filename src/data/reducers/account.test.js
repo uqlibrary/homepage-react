@@ -159,16 +159,6 @@ describe('account reducer', () => {
         });
     });
 
-    it('should set computer availability to null when failed loading', () => {
-        const test = accountReducer(emptyState, { type: actions.COMP_AVAIL_FAILED });
-        expect(test).toEqual({
-            ...emptyState,
-            computerAvailability: null,
-            computerAvailabilityLoading: false,
-            computerAvailabilityError: true,
-        });
-    });
-
     it('should set training to null when failed loading', () => {
         const test = accountReducer(emptyState, { type: actions.TRAINING_FAILED });
         expect(test).toEqual({
@@ -196,26 +186,6 @@ describe('account reducer', () => {
             libHours: null,
             libHoursLoading: true,
             libHoursError: false,
-        });
-    });
-
-    it('should set computer availability value when successfully loaded', () => {
-        const test = accountReducer(emptyState, { type: actions.COMP_AVAIL_LOADED, payload: [] });
-        expect(test).toEqual({
-            ...emptyState,
-            computerAvailability: [],
-            computerAvailabilityLoading: false,
-            computerAvailabilityError: false,
-        });
-    });
-
-    it('should set computer availability loading flag to true when loading library hours', () => {
-        const test = accountReducer(emptyState, { type: actions.COMP_AVAIL_LOADING });
-        expect(test).toEqual({
-            ...emptyState,
-            computerAvailability: null,
-            computerAvailabilityLoading: true,
-            computerAvailabilityError: false,
         });
     });
 
