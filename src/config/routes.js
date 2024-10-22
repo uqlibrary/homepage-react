@@ -1,6 +1,6 @@
 import React from 'react';
 import { locale } from 'locale';
-import { canSeeLearningResources, isAlertsAdminUser, isDlorAdminUser, isTestTagAdminUser } from 'helpers/access';
+import { canSeeLearningResourcesPage, isAlertsAdminUser, isDlorAdminUser, isTestTagUser } from 'helpers/access';
 import { pathConfig } from './pathConfig';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
@@ -291,11 +291,11 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 
     return [
         ...publicPages,
-        ...(account && canSeeLearningResources(account) ? courseResourcesDisplay : []),
+        ...(account && canSeeLearningResourcesPage(account) ? courseResourcesDisplay : []),
         ...(account && isAlertsAdminUser(account) ? alertsDisplay : []),
         ...(account && isDlorAdminUser(account) ? dlorAdminDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
-        ...(account && isTestTagAdminUser(account) ? testntagDisplay : []),
+        ...(account && isTestTagUser(account) ? testntagDisplay : []),
         {
             path: '*',
             element: <components.NotFound />,

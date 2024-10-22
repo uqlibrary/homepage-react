@@ -1,8 +1,8 @@
 import {
-    canSeeLearningResources,
+    canSeeLearningResourcesPage,
+    canSeeLearningResourcesPanel,
     canSeeLoans,
     canSeePrintBalance,
-    getUserServices,
     isAlertsAdminUser,
     isEspaceAuthor,
     isHdrStudent,
@@ -33,8 +33,16 @@ describe('access', () => {
     });
 
     it('only authorised users can see learning resources', () => {
-        expect(canSeeLearningResources({ id: 's123456', user_group: 'UG' })).toEqual(true);
-        expect(canSeeLearningResources({ id: 's123456', user_group: 'STAFF_AWAITING_AURION' })).toEqual(false);
+        expect(canSeeLearningResourcesPage({ id: 's123456', user_group: 'UG' })).toEqual(true);
+        expect(canSeeLearningResourcesPage({ id: 's123456', user_group: 'STAFF_AWAITING_AURION' })).toEqual(false);
+        expect(canSeeLearningResourcesPage({ id: 's123456', user_group: 'RHD' })).toEqual(true);
+
+        expect(canSeeLearningResourcesPanel({ id: 's123456', user_group: 'UG' })).toEqual(true);
+        expect(canSeeLearningResourcesPanel({ id: 's123456', user_group: 'STAFF_AWAITING_AURION' })).toEqual(false);
+        expect(canSeeLearningResourcesPanel({ id: 's123456', user_group: 'RHD', current_classes: [] })).toEqual(false);
+        expect(
+            canSeeLearningResourcesPanel({ id: 's123456', user_group: 'RHD', current_classes: [{ SUBJECT: 'FREN' }] }),
+        ).toEqual(true);
     });
 
     it('alerts pages are limited to appropriate users', () => {

@@ -22,27 +22,10 @@ const StyledGridItem = styled(Grid)(() => ({
     paddingBottom: '16px',
     paddingLeft: 0,
     position: 'relative',
-    // '&::before': {
-    //     position: 'absolute',
-    //     left: 0,
-    //     fontSize: '1em',
-    //     lineHeight: 1,
-    //     color: 'currentColor',
-    //     top: '35%',
-    // },
     '& a': {
         marginRight: -16,
-        // marginTop: '12px',
     },
 }));
-// const StyledLabel = styled(Typography)(() => ({
-//     color: '#19151c',
-//     fontSize: '20px',
-//     fontWeight: 500,
-//     marginBlock: '16px',
-//     textWrap: 'nowrap',
-//     whiteSpaceCollapse: 'collapse',
-// }));
 const StyledActionsGrid = styled(Grid)(() => ({
     paddingLeft: 0,
     marginTop: 0,
@@ -96,19 +79,6 @@ const EspaceUpdateWorks = () => {
         </StyledGridItem>
     );
 };
-const EspaceJournalSearch = () => {
-    return (
-        <StyledGridItem component={'li'} item xs={12}>
-            <Link
-                to={'https://espace.library.uq.edu.au/journals/search/'}
-                id="espace-journalsearch"
-                data-testid="espace-journalsearch"
-            >
-                Publish in the right journal
-            </Link>
-        </StyledGridItem>
-    );
-};
 
 const EspaceEditorialAppointments = () => {
     return (
@@ -158,9 +128,8 @@ export const EspaceLinks = ({ author, possibleRecords, incompleteNTRORecords }) 
         <StandardCard subCard fullHeight primaryHeader noPadding standardCardId="espace-panel" title={'UQ eSpace'}>
             <Grid container spacing={0} style={{ paddingInline: '24px', marginTop: '24px' }}>
                 <StyledGridItem component={'li'} item xs={12}>
-                    <Link to={'https://espace.library.uq.edu.au/dashboard"'}>UQ eSpace dashboard</Link>
+                    <Link to={'https://espace.library.uq.edu.au/dashboard'}>UQ eSpace dashboard</Link>
                 </StyledGridItem>
-                <EspaceJournalSearch />
                 <EspaceEditorialAppointments />
                 {!authorNeedsToUpdateRecords && <EspaceUpdateWorks />}
                 {(authorIsMissingOrcid || authorNeedsToUpdateRecords || authorHasIncompleteNtro) && (

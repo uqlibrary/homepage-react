@@ -146,59 +146,65 @@ export function logout(reload = false) {
  */
 export function loadCurrentAccount() {
     return dispatch => {
+        if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
+            dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
+            // no cookie, don't even bother calling for the account api!!
+            return Promise.resolve({});
+        }
+
         if (navigator.userAgent.match(/Googlebot|facebookexternalhit|bingbot|Slackbot-LinkExpanding|Twitterbot/)) {
             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
             return Promise.resolve({});
-        } else {
-            dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
-
-            let currentAuthor = null;
-
-            // load UQL account (based on token)
-            return get(CURRENT_ACCOUNT_API())
-                .then(account => {
-                    if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
-                        return Promise.resolve(account);
-                    } else {
-                        dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
-                        return Promise.reject(new Error('Session expired. User is unauthorized.'));
-                    }
-                })
-                .then(accountResponse => {
-                    dispatch({
-                        type: actions.CURRENT_ACCOUNT_LOADED,
-                        payload: extendAccountDetails(accountResponse),
-                    });
-
-                    // if the UQL cookie times out, we want to log the user out
-                    const watchforAccountExpiry = setInterval(() => {
-                        if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
-                            logout(true);
-                            clearInterval(watchforAccountExpiry);
-                        }
-                    }, 1000);
-
-                    // load current author details (based on token)
-                    dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
-                    return get(CURRENT_AUTHOR_API());
-                })
-                .then(currentAuthorResponse => {
-                    currentAuthor = currentAuthorResponse.data;
-                    dispatch({
-                        type: actions.CURRENT_AUTHOR_LOADED,
-                        payload: currentAuthor,
-                    });
-                    return null;
-                })
-                .catch(error => {
-                    if (!currentAuthor) {
-                        dispatch({
-                            type: actions.CURRENT_AUTHOR_FAILED,
-                            payload: error.message,
-                        });
-                    }
-                });
         }
+
+        dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
+
+        let currentAuthor = null;
+
+        // load UQL account (based on token)
+        return get(CURRENT_ACCOUNT_API())
+            .then(account => {
+                if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
+                    return Promise.resolve(account);
+                } else {
+                    dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
+                    return Promise.reject(new Error('Session expired. User is unauthorized.'));
+                }
+            })
+            .then(accountResponse => {
+                dispatch({
+                    type: actions.CURRENT_ACCOUNT_LOADED,
+                    payload: extendAccountDetails(accountResponse),
+                });
+
+                // if the UQL cookie times out, we want to log the user out
+                const watchforAccountExpiry = setInterval(() => {
+                    if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
+                        logout(true);
+                        clearInterval(watchforAccountExpiry);
+                    }
+                }, 1000);
+
+                // load current author details (based on token)
+                dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
+                return get(CURRENT_AUTHOR_API());
+            })
+            .then(currentAuthorResponse => {
+                currentAuthor = currentAuthorResponse.data;
+                dispatch({
+                    type: actions.CURRENT_AUTHOR_LOADED,
+                    payload: currentAuthor,
+                });
+                return null;
+            })
+            .catch(error => {
+                if (!currentAuthor) {
+                    dispatch({
+                        type: actions.CURRENT_AUTHOR_FAILED,
+                        payload: error.message,
+                    });
+                }
+            });
     };
 }
 
@@ -243,7 +249,7 @@ export function loadTrainingEvents(account) {
         !!account && !!account.trainingfilterId ? account.trainingfilterId : TRAINING_FILTER_GENERAL;
     return dispatch => {
         dispatch({ type: actions.TRAINING_LOADING });
-        return get(TRAINING_API(10, trainingfilterId))
+        return get(TRAINING_API(100, trainingfilterId))
             .then(availResponse => {
                 dispatch({
                     type: actions.TRAINING_LOADED,

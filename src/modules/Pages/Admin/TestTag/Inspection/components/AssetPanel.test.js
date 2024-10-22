@@ -4,6 +4,7 @@ import { render, act, fireEvent, WithReduxStore, waitFor } from 'test-utils';
 import Immutable from 'immutable';
 
 import assetData from '../../../../../../data/mock/data/testing/testAndTag/testTagAssets';
+
 import assetTypeData from '../../../../../../data/mock/data/testing/testAndTag/testTagAssetTypes';
 import configData from '../../../../../../data/mock/data/testing/testAndTag/testTagOnLoadInspection';
 import locale from '../../testTag.locale.js';
@@ -140,7 +141,7 @@ describe('AssetPanel', () => {
         const actionFn = jest.fn();
         const { getByTestId, rerender } = setup({
             actions: { loadAssetTypes: actionFn },
-            formValues,
+            formValues: {},
             location,
             resetForm,
             assignCurrentAsset,
@@ -157,7 +158,7 @@ describe('AssetPanel', () => {
         setup(
             {
                 actions: { loadAssetTypes: actionFn },
-                formValues,
+                formValues: {},
                 location,
                 resetForm,
                 assignCurrentAsset,

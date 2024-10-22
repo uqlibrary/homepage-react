@@ -3,7 +3,6 @@ import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 
-import Grid from '@mui/material/Grid';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
@@ -13,85 +12,111 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import { locale as locationLocale } from 'config/locale';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import UqDsExclamationCircle from '../../../SharedComponents/Icons/UqDsExclamationCircle';
+import { linkToDrupal } from 'helpers/general';
 
-const StyledStandardCard = styled(StandardCard)(() => ({
-    border: 'none',
+const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     marginBottom: '32px',
     '& .MuiCardHeader-root': {
         paddingBlock: '12px',
     },
+    backgroundColor: 'white',
+    border: '1px solid #DCDCDD',
+    borderRadius: '0 0 4px 4px',
+    boxShadow: '0px 12px 24px 0px rgba(25, 21, 28, 0.05)',
+    marginTop: '2px',
+    zIndex: 999,
+    position: 'absolute',
+    top: 50,
+
+    minWidth: '66%',
+    [theme.breakpoints.down('uqDsDesktop')]: {
+        minWidth: '80%',
+        left: '0 !important',
+        padding: '1px 24px',
+    },
+    [theme.breakpoints.down('uqDsTablet')]: {
+        minWidth: 'auto',
+        maxWidth: '95%',
+        left: 5,
+    },
 }));
 const StyledWrapper = styled('div')(({ theme }) => ({
-    ['&.locations-wrapper']: {
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
+    margin: 0,
+    [theme.breakpoints.down('uqDsTablet')]: {
+        margin: '24px 0 24px',
     },
-    ['& .table-row']: {
-        fontSize: '16px',
-        fontStyle: 'normal',
-        fontWeight: 500,
-        letterSpacing: '0.16px',
-        lineHeight: '160%', // 25.6px
-        justifyContent: 'center',
-        marginBlock: '-4px',
-        padding: '8px 40px 8px 0',
-        transition: 'all 0.3s ease',
-        ['& a']: {
+    '& .wrapper2': {
+        width: '100%',
+    },
+    '& table': {
+        width: '100%',
+        borderCollapse: 'collapse',
+        marginTop: '24px',
+        marginBottom: 0,
+    },
+    '& tr': {
+        height: '2rem',
+        '& td:not(:first-child)': {
+            width: '1%', // this allows the library name cell to do an ellipsis
+            whiteSpace: 'nowrap',
+        },
+        '& th:not(:first-child)': {
+            width: '1%',
+            whiteSpace: 'nowrap',
+        },
+    },
+    '& td': {
+        position: 'relative',
+    },
+    '& th': {
+        position: 'relative',
+        textAlign: 'left',
+        color: theme.palette.secondary.dark,
+    },
+    '& .table-cell-name a': {
+        marginTop: '4px',
+        paddingLeft: '32px',
+    },
+    '& .table-header-name div': {
+        paddingLeft: '32px',
+    },
+    '& th .table-cell-name-content': {
+        marginTop: '4px',
+    },
+    '& .table-cell-name-content': {
+        overflow: 'hidden',
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        width: '100%',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+    },
+    '& .table-row': {
+        '& a': {
             color: theme.palette.primary.light,
             textDecoration: 'underline',
             '&:hover': {
                 backgroundColor: 'inherit',
             },
         },
-        '@media (max-width: 900px)': {
-            maxWidth: '98%',
-        },
-        '@media (min-width: 900px)': {
-            maxWidth: '785px',
-        },
-    },
-    '& .table-row-header': {
-        marginBlock: 0,
-        paddingBlock: 0,
-        '& > div': {
-            paddingTop: 0,
-        },
     },
     '& .table-row-body': {
-        marginLeft: 0,
         '&:hover': {
             backgroundColor: '#f3f3f4', // $grey-50	Background colour to highlight sections, cards or panes
         },
+    },
+    '& .table-column-busy': {
+        paddingBlock: 0,
+        paddingRight: '40px',
         '& > div': {
-            paddingTop: 0,
+            marginLeft: '24px',
         },
-    },
-    '& .table-header-cell': {
-        color: theme.palette.secondary.dark,
-        fontWeight: 500,
-        lineHeight: '160%', // 25.6px
-        letterSpacing: '0.16px',
-    },
-    '& .locations-wrapper-detail': {
-        marginLeft: '32px',
-    },
-    '& .locations-wrapper-detail .table-column-busy': {
-        paddingLeft: '64px',
-    },
-    '& .table-cell-hours': {
-        fontWeight: 400,
-    },
-    '& .table-cell-library-name': {
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
     },
     '& .occupancy': {
         backgroundColor: '#dcdcdc',
         borderRadius: '20px',
         fontSize: '0.8em',
-        marginTop: '4px',
         width: '100%',
         height: '16px',
         '& .occupancyPercent': {
@@ -113,6 +138,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             borderBottomRightRadius: '20px',
         },
     },
+    '& .occupancyTextClosed': {
+        textAlign: 'center',
+    },
     '& .occupancyText': {
         color: theme.palette.secondary.main,
         fontWeight: 400,
@@ -125,10 +153,12 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             marginTop: '-2px',
         },
     },
-    ['& .outlink']: {
+    '& .outlink': {
         marginTop: '32px',
-        marginLeft: '32px',
-        marginRight: '32px',
+        padding: '4px 40px 4px 32px',
+        '&:hover': {
+            backgroundColor: '#f3f3f4', // $grey-50	Background colour to highlight sections, cards or panes
+        },
         '& a': {
             display: 'flex',
             alignItems: 'center',
@@ -137,7 +167,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             fontSize: '16px',
             fontWeight: 500,
             '&:hover': {
-                color: 'white',
+                backgroundColor: 'inherit',
             },
         },
         '& svg': {
@@ -146,27 +176,25 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             marginTop: '2px',
         },
     },
-    ['& .disclaimer']: {
-        margin: '16px 32px 0 32px',
+    '& .disclaimer': {
+        marginTop: '16px',
+        paddingLeft: '32px',
+        paddingRight: '40px',
+        paddingBottom: '24px',
         fontSize: '14px',
         fontStyle: 'normal',
         fontWeight: 400,
         letterSpacing: '0.14px',
         lineHeight: '160%', // 25.6px
     },
-    ['& .location-askus']: {
+    '& .location-askus': {
         marginTop: '20px',
     },
-    ['& .loaderContent']: {
+    '& .loaderContent': {
         flexGrow: 1,
         overflowY: 'hidden',
         overflowX: 'hidden',
     },
-}));
-const StyledOpeningHours = styled(Typography)(({ theme }) => ({
-    color: theme.palette.secondary.main,
-    fontWeight: 400,
-    letterSpacing: '0.16px',
 }));
 
 const MyLoader = props => (
@@ -353,7 +381,21 @@ const vemmcountSpringshareMapping = [
 ];
 
 const VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING = 'Missing';
-const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
+const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
+    const [isWideScreen, setIsWideScreen] = React.useState(window.innerWidth > 700);
+    React.useEffect(() => {
+        const handleResize = () => {
+            setIsWideScreen(window.innerWidth > 700);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        // Cleanup the event listener on component unmount
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     const cleanedHours =
         (!libHoursError &&
             !!libHours &&
@@ -444,6 +486,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
     const alphaHours = cleanedHours
         .filter(e => e !== null)
         .filter(l => l.abbr !== 'Whitty Mater') // remove this from springshare data for homepage
+        .filter(l => isWideScreen || l.abbr !== 'AskUs') // remove the askus line when on smaller screens, it lacks extra info
         .sort((a, b) => {
             const textA = a.name.toUpperCase();
             const textB = b.name.toUpperCase();
@@ -502,7 +545,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
             return null;
         }
         if (!isOpen(location)) {
-            return <div className="occupancyText">Closed</div>;
+            return <div className="occupancyText occupancyTextClosed">Closed</div>;
         }
         if (location.busyness === null) {
             return null;
@@ -530,15 +573,11 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
     }
 
     return (
-        <StyledStandardCard noPadding standardCardId="locations-panel">
-            <StyledWrapper
-                className={`locations-wrapper ${
-                    !!account && !!account.id ? 'componentHeight' : 'componentHeightPublic'
-                }`}
-            >
+        <StyledStandardCard noPadding noHeader standardCardId="locations-panel">
+            <StyledWrapper id="tablewrapper">
                 {!!libHoursError && (
-                    /* istanbul ignore next */ <Fade in={!libHoursLoading} timeout={1000}>
-                        <div className={'locations-wrapper-detail'}>
+                    <Fade in={!libHoursLoading} timeout={1000}>
+                        <div className={'locations-wrapper'}>
                             <Typography style={{ padding: '1rem' }}>
                                 We can’t load opening hours right now. Please refresh your browser or try again later.
                             </Typography>
@@ -547,124 +586,84 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                 )}
                 {!libHoursError && !!libHours && !libHoursLoading && (
                     <Fade in={!libHoursLoading} timeout={1000}>
-                        <div className={'locations-wrapper-detail'} role="table">
-                            <Grid container className="table-row table-row-header" alignItems={'flex-start'} role="row">
-                                <Grid item xs={7} style={{ paddingLeft: 0 }}>
-                                    <Grid container>
-                                        <Grid
-                                            item
-                                            xs
-                                            className={'table-cell-library-name'}
-                                            role="columnheader"
-                                            id="locations-header-library"
-                                        >
-                                            <Typography component={'h2'} className={'table-header-cell'}>
-                                                Library
-                                            </Typography>
-                                        </Grid>
-                                        <Grid
-                                            item
-                                            sx={{
-                                                display: {
-                                                    xs: 'none',
-                                                    // at about 700, the Name becomes unreadable
-                                                    // then we stop showing the times
-                                                    '@media (min-width: 700px)': {
-                                                        display: 'block',
-                                                    },
-                                                },
-                                            }}
-                                            role="columnheader"
-                                            id="locations-header-hours"
-                                        >
-                                            <Typography component={'h2'} className={'table-header-cell'}>
+                        <div className={'wrapper2'}>
+                            <table className={'locations-wrapper'}>
+                                <thead className="table-row-header">
+                                    <tr className={'table-row'}>
+                                        <th className={'table-header-name'} id="locations-header-library">
+                                            <div className={'table-cell-name-content'}>Library</div>
+                                        </th>
+                                        {isWideScreen && (
+                                            <th
+                                                className={'table-header-cell table-column-hours'}
+                                                id="locations-header-hours"
+                                            >
                                                 Opening hours*
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                                <Grid item xs={5} role="columnheader" id="locations-header-busyness">
-                                    <Typography component={'h2'} className={'table-header-cell table-column-busy'}>
-                                        Busy level
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                            {!!sortedHours &&
-                                sortedHours.length > 1 &&
-                                sortedHours.map((location, index) => {
-                                    return (
-                                        <Grid
-                                            container
-                                            data-testid={sluggifyName(`hours-item-${location.abbr}`)}
-                                            spacing={1}
-                                            key={index}
-                                            className={`table-row table-row-body location-${location.abbr.toLowerCase()}`}
-                                            alignItems={'flex-start'}
-                                            role="row"
+                                            </th>
+                                        )}
+                                        <th
+                                            id="locations-header-busyness"
+                                            className={'table-header-cell table-column-busy'}
                                         >
-                                            <Grid item xs={7} style={{ paddingLeft: 0 }}>
-                                                <Grid container>
-                                                    <Grid
-                                                        item
-                                                        xs
-                                                        className={'table-cell-library-name'}
-                                                        role="cell"
+                                            <div>Busy level</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {!!sortedHours &&
+                                        sortedHours.length > 1 &&
+                                        sortedHours.map((location, index) => {
+                                            return (
+                                                <tr
+                                                    data-testid={sluggifyName(`hours-item-${location.abbr}`)}
+                                                    key={index}
+                                                    className={`table-row table-row-body location-${location.abbr.toLowerCase()}`}
+                                                >
+                                                    <td
+                                                        className={'table-body-cell table-cell-name'}
                                                         aria-labelledby="locations-header-library"
                                                     >
                                                         <a
+                                                            id={`${sluggifyName(`hours-item-${location.abbr}`)}`}
                                                             aria-label={ariaLabelForLocation(location)}
                                                             data-analyticsid={`hours-item-${index}`}
                                                             href={location.url}
                                                             style={{ paddingBlock: 0 }}
+                                                            className={'table-cell-name-content'}
                                                         >
-                                                            <span id={`${sluggifyName(`hours-item-${location.abbr}`)}`}>
-                                                                {location.abbr === 'AskUs'
-                                                                    ? 'AskUs chat hours'
-                                                                    : location.name}
-                                                            </span>
+                                                            {location.abbr === 'AskUs'
+                                                                ? 'AskUs chat hours'
+                                                                : location.name}
                                                         </a>
-                                                    </Grid>
-                                                    <Grid
-                                                        className={'table-cell-hours'}
-                                                        item
-                                                        sx={{
-                                                            display: {
-                                                                xs: 'none',
-                                                                // at about 700, the Name becomes unreadable
-                                                                // then we stop showing the times
-                                                                '@media (min-width: 700px)': {
-                                                                    display: 'block',
-                                                                },
-                                                            },
-                                                        }}
-                                                        role="cell"
-                                                        aria-labelledby={
-                                                            'locations-header-hours ' +
-                                                            `${sluggifyName(`hours-item-${location.abbr}`)}`
-                                                        }
-                                                    >
-                                                        <StyledOpeningHours key={`hours-item-${location.abbr}`}>
+                                                    </td>
+                                                    {isWideScreen && (
+                                                        <td
+                                                            className={
+                                                                'table-body-cell table-column-hours table-cell-hours'
+                                                            }
+                                                            aria-labelledby={
+                                                                'locations-header-hours ' +
+                                                                `${sluggifyName(`hours-item-${location.abbr}`)}`
+                                                            }
+                                                        >
                                                             {getLibraryHours(location)}
-                                                        </StyledOpeningHours>
-                                                    </Grid>
-                                                </Grid>
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs={5}
-                                                role="cell"
-                                                aria-labelledby="locations-header-busyness"
-                                                className={'table-body-cell table-column-busy'}
-                                            >
-                                                {getBusyness(location)}
-                                            </Grid>
-                                        </Grid>
-                                    );
-                                })}
+                                                        </td>
+                                                    )}
+                                                    <td
+                                                        aria-labelledby="locations-header-busyness"
+                                                        className={'table-body-cell table-cell-busy table-column-busy'}
+                                                    >
+                                                        <div>{getBusyness(location)}</div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                </tbody>
+                            </table>
                         </div>
                     </Fade>
                 )}
-                {!libHoursError && !(!!libHours && !libHoursLoading) && (
+                {!!libHoursLoading && !libHoursError && !libHours && (
                     <div className={'loaderContent'}>
                         <MyLoader id="hours-loader" data-testid="hours-loader" aria-label="Locations data is loading" />
                     </div>
@@ -673,7 +672,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
                     <Link
                         data-testid="homepage-hours-weeklyhours-link"
                         data-analyticsid={'hours-item-weeklyhours-link'}
-                        to="https://web.library.uq.edu.au/locations-hours/opening-hours"
+                        to={linkToDrupal('/locations-hours/opening-hours')}
                     >
                         <span>See weekly Library and AskUs hours</span> <ArrowForwardIcon /> {/* uq ds arrow-right-1 */}
                     </Link>
@@ -688,7 +687,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, account }) => {
 
 Locations.propTypes = {
     libHours: PropTypes.object,
-    account: PropTypes.object,
     libHoursLoading: PropTypes.bool,
     libHoursError: PropTypes.bool,
 };

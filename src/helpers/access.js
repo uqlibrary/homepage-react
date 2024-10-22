@@ -28,19 +28,19 @@
  */
 const UNDERGRADUATE_GENERAL = 'UG';
 const UNDERGRADUATE_REMOTE = 'REMUG';
-// const UNDERGRADUATE_TESOL = 'ICTE';
-// const UNDERGRADUATE_VOCATIONAL = 'VET';
+const UNDERGRADUATE_TESOL = 'ICTE';
+const UNDERGRADUATE_VOCATIONAL = 'VET';
 const SHORT_FORM_CREDENTIAL_COURSE = 'SFC';
 const SHORT_FORM_CREDENTIAL_COURSE_REMOTE = 'REMSFC';
 
 const POSTGRAD_COURSEWORK = 'CWPG';
 const POSTGRAD_COURSEWORK_REMOTE = 'REMCWPG';
-// const POSTGRAD_RESEARCH_REMOTE = 'REMRHD';
-// const POSTGRAD_RESEARCH = 'RHD';
+const POSTGRAD_RESEARCH_REMOTE = 'REMRHD';
+const POSTGRAD_RESEARCH = 'RHD';
 
 const LIBRARY_STAFF = 'LIBRARYSTAFFB';
 const OTHER_STAFF = 'STAFF';
-// const STAFF_AWAITING_AURION = 'AURION';
+const STAFF_AWAITING_AURION = 'AURION';
 
 // const EXTRAMURAL_COMMUNITY_PAID = 'COMMU';
 // const EXTRAMURAL_ALUMNI = 'ALUMNI';
@@ -69,10 +69,31 @@ export const isLoggedInUser = account => !!account && !!account.id;
 
 // define which home page panel items each user type can see
 
-export const canSeeLearningResources = account => {
+export const canSeeLearningResourcesPage = account => {
     return (
         !!account &&
         !!account.id &&
+        [
+            UNDERGRADUATE_GENERAL,
+            UNDERGRADUATE_REMOTE,
+            SHORT_FORM_CREDENTIAL_COURSE,
+            SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
+            OTHER_STAFF,
+            LIBRARY_STAFF,
+            EXTRAMURAL_HONORARY,
+            POSTGRAD_COURSEWORK,
+            POSTGRAD_COURSEWORK_REMOTE,
+            POSTGRAD_RESEARCH,
+            POSTGRAD_RESEARCH_REMOTE,
+        ].includes(account.user_group)
+    );
+};
+
+export const canSeeLearningResourcesPanel = account => {
+    if (!account || !account.id) {
+        return false;
+    }
+    if (
         [
             UNDERGRADUATE_GENERAL,
             UNDERGRADUATE_REMOTE,
@@ -83,6 +104,58 @@ export const canSeeLearningResources = account => {
             EXTRAMURAL_HONORARY,
             SHORT_FORM_CREDENTIAL_COURSE,
             SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
+        ].includes(account.user_group)
+    ) {
+        return true;
+    }
+    if (
+        // if they are an RHD who is enrolled in a non research subject, then they get the panel
+        [POSTGRAD_RESEARCH, POSTGRAD_RESEARCH_REMOTE].includes(account.user_group) &&
+        !!account.current_classes &&
+        account.current_classes.length > 0 &&
+        account.current_classes?.some(course => course.SUBJECT !== 'RSCH')
+    ) {
+        return true;
+    }
+    return false;
+};
+
+export const canSeeReadPublish = account => {
+    return (
+        !!account &&
+        !!account.id &&
+        [
+            OTHER_STAFF,
+            LIBRARY_STAFF,
+            POSTGRAD_COURSEWORK,
+            POSTGRAD_COURSEWORK_REMOTE,
+            POSTGRAD_RESEARCH,
+            POSTGRAD_RESEARCH_REMOTE,
+            EXTRAMURAL_HONORARY,
+        ].includes(account.user_group)
+    );
+};
+
+export const canSeeTrainingPanel = account => {
+    return (
+        !!account &&
+        !!account.id &&
+        [
+            UNDERGRADUATE_GENERAL,
+            UNDERGRADUATE_REMOTE,
+            UNDERGRADUATE_TESOL,
+            UNDERGRADUATE_VOCATIONAL,
+            SHORT_FORM_CREDENTIAL_COURSE,
+            SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
+            POSTGRAD_COURSEWORK,
+            POSTGRAD_COURSEWORK_REMOTE,
+            POSTGRAD_RESEARCH_REMOTE,
+            POSTGRAD_RESEARCH,
+            LIBRARY_STAFF,
+            OTHER_STAFF,
+            STAFF_AWAITING_AURION,
+            EXTRAMURAL_HOSPITAL,
+            EXTRAMURAL_HONORARY,
         ].includes(account.user_group)
     );
 };
@@ -105,8 +178,7 @@ export const canSeePrintBalance = account => isLoggedInUser(account);
 const userHasAdGroup = (ADGroupName, account) =>
     !!account && !!account.groups && !!account.groups.find(group => group.includes(ADGroupName));
 
-export const isTestTagAdminUser = account =>
-    isLoggedInUser(account) && userHasAdGroup('lib_libapi_TestTagUsers', account);
+export const isTestTagUser = account => isLoggedInUser(account) && userHasAdGroup('lib_libapi_TestTagUsers', account);
 
 export const isAlertsAdminUser = account =>
     isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);

@@ -89,24 +89,32 @@ export const LearningResourcesPanel = ({ account }) => {
     } else if (isLibraryStaff(account)) {
         // a list of hopefully permanent subjects so staff can click through to LR page easily
         // (and see the student experience)
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
         displayedClasses = [
             {
                 DESCR: 'Introductory French 1',
                 SUBJECT: 'FREN',
                 CATALOG_NBR: '1010',
                 classnumber: 'FREN1010',
+                CAMPUS: 'STLUC',
+                semester: `Semester 1 ${currentYear}`,
             },
             {
                 DESCR: 'Basic Mathematics',
                 SUBJECT: 'MATH',
                 CATALOG_NBR: '1040',
                 classnumber: 'MATH1040',
+                CAMPUS: 'STLUC',
+                semester: `Semester 1 ${currentYear}`,
             },
             {
                 DESCR: 'Mechanics & Thermal Physics I',
                 SUBJECT: 'PHYS',
                 CATALOG_NBR: '1001',
                 classnumber: 'PHYS1001',
+                CAMPUS: 'STLUC',
+                semester: `Semester 1 ${currentYear}`,
             },
         ];
     }

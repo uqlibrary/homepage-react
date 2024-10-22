@@ -32,11 +32,13 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
         );
     }
 
+    const alertData = Array.isArray(alert) && alert.length > 0 ? alert[0] : alert;
+
     // Strip markdown from the body
-    const linkRegex = !!alert?.body && alert.body.match(/\[([^\]]+)\]\(([^)]+)\)/);
-    let message = alert?.body || '';
+    const linkRegex = !!alertData?.body && alertData.body.match(/\[([^\]]+)\]\(([^)]+)\)/);
+    let message = alertData?.body || '';
     if (!!linkRegex && linkRegex.length === 3) {
-        message = alert.body.replace(linkRegex[0], '').replace('  ', ' ');
+        message = alertData.body.replace(linkRegex[0], '').replace('  ', ' ');
         message = message.replace(linkRegex[0], '').replace('  ', ' ');
     }
 
@@ -46,7 +48,7 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
     }
 
     const defaults = {
-        id: alert?.id || '',
+        id: alertData?.id || '',
         dateList: [
             {
                 startDate: getTimeNowFormatted(),
@@ -55,16 +57,16 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
         ],
         startDateDefault: getTimeNowFormatted(),
         endDateDefault: getTimeEndOfDayFormatted(),
-        alertTitle: alert?.title || '',
+        alertTitle: alertData?.title || '',
         enteredbody: message || '',
         linkRequired: linkRegex?.length === 3,
-        priorityType: (!!alert && alert.priority_type) || 'info',
+        priorityType: (!!alertData && alertData.priority_type) || 'info',
         permanentAlert: isPermanent || false,
         linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
         linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
         type: 'clone',
         minimumDate: getTimeNowFormatted(),
-        systems: alert?.systems || [],
+        systems: alertData?.systems || [],
     };
 
     return (

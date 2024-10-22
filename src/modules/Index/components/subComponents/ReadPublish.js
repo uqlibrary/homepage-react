@@ -5,7 +5,7 @@ import { linkToDrupal } from 'helpers/general';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
-export const ReadPublish = ({ journalSearchList, journalSearchError }) => {
+export const ReadPublish = () => {
     return (
         <StandardCard
             subCard
@@ -17,38 +17,9 @@ export const ReadPublish = ({ journalSearchList, journalSearchError }) => {
         >
             <div className="readpublish-panel-item" style={{ margin: '0 24px 0' }}>
                 <p>
-                    <a href="https://espace.library.uq.edu.au/journals/search/">Journal search</a>
+                    <a href="https://espace.library.uq.edu.au/journals/search/">Publish in the right journal</a>
                     <br />
-                    Find journals for your reference.
-                    {!!journalSearchList?.data && (
-                        <>
-                            <h4 data-testid="rp-yourfavourite-count">
-                                {journalSearchList?.data.length > 0
-                                    ? `Your favourite items (${journalSearchList?.data.length})`
-                                    : 'You have no favourite items'}
-                            </h4>
-                            {journalSearchList?.data.length > 0 && (
-                                <ul style={{ marginTop: 0, marginBottom: 0 }} data-testid="rp-journalsearch-items">
-                                    {journalSearchList?.data.slice(0, 5).map((journal, index) => (
-                                        <li key={index} data-testid={`rp-journalsearch-item-${index}`}>
-                                            <Link
-                                                to={`https://espace.library.uq.edu.au/journal/view/${journal.jnl_jid}`}
-                                            >
-                                                {journal.jnl_title}
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </>
-                    )}
-                    {!!journalSearchError && (
-                        <p>
-                            We cannot display your favourite journal searches at this time. Visit{' '}
-                            <a href="https://espace.library.uq.edu.au/journals/search/">Journal search</a> to find your
-                            favourite searches
-                        </p>
-                    )}
+                    <span>Lorem ispum, dolor sit amet. Adepescing, delo elit. Further information in this space to come.</span>
                     <p>
                         Visit{' '}
                         <Link to={linkToDrupal('/research-and-publish/open-research/read-and-publish-agreements')}>

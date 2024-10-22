@@ -7,16 +7,16 @@ export const expectUserToDisplayCorrectFirstName = (username, firstname) => {
 export const hasPanels = optionsTheUserShouldSee => {
     const possiblePanels = new Map();
     possiblePanels.set('learning-resources', {
-        title: 'Past exam papers and learning resources',
+        title: 'Learning resources and past exam papers',
         content: 'Search by',
     });
-    // probably not used - try without
     possiblePanels.set('library-services', { title: 'Library services', content: 'Services for' });
     possiblePanels.set('past-exam-papers', { title: 'Past exam papers', content: 'Search by' });
-    possiblePanels.set('training', { title: 'Training', content: 'Online' });
+    possiblePanels.set('training', { title: 'Training', content: 'See all Training' });
     possiblePanels.set('espace', { title: 'UQ eSpace', content: 'Update the following items' });
-    possiblePanels.set('readpublish', { title: 'Read and publish', content: 'Find journals' });
-    possiblePanels.set('catalogue', { title: 'My library account', content: 'Library loans' });
+    possiblePanels.set('readpublish', { title: 'Read and publish', content: 'Publish in the right journal' });
+    possiblePanels.set('catalogue', { title: 'My library account', content: 'Search history' });
+    possiblePanels.set('referencing', { title: 'Referencing', content: 'Referencing style guides' });
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
         expect([...possiblePanels.keys()].includes(item), `panel option unexpectedly supplied for panel test: ${item}`)
@@ -97,10 +97,13 @@ export const hasEspaceEntries = optionsTheUserShouldSee => {
 
 export const hasCatalogPanelOptions = optionsTheUserShouldSee => {
     const availableOptions = new Map();
+    availableOptions.set('searchhistory', 'Search history');
+    availableOptions.set('savedsearches', 'Saved searches');
+    availableOptions.set('requests', 'Requests');
+    availableOptions.set('loans', 'Loans');
+    availableOptions.set('fines', 'Fines');
     availableOptions.set('papercut', 'Print balance');
-    availableOptions.set('loans', 'Library loans');
-    availableOptions.set('fines', 'Library fines');
-    availableOptions.set('requests', 'Library requests');
+    availableOptions.set('testntag', 'Test and tag');
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {

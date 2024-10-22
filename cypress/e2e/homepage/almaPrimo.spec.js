@@ -13,7 +13,7 @@ describe('Alma Primo', () => {
                 .contains('My library account');
             cy.get('[data-testid="catalogue-panel-content"]')
                 .should('exist')
-                .contains('Library loans (1)');
+                .contains('Loans (1)');
             // cy.get('.reference-panel-item')
             //     .should('contain', 'Referencing style guides')
             //     .and('contain', 'Endnote referencing software');
