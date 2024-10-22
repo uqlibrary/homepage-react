@@ -159,6 +159,16 @@ describe('account reducer', () => {
         });
     });
 
+    it('should set vemcount to null when failed loading', () => {
+        const test = accountReducer(emptyState, { type: actions.VEMCOUNT_FAILED });
+        expect(test).toEqual({
+            ...emptyState,
+            vemcount: null,
+            vemcountLoading: false,
+            vemcountError: true,
+        });
+    });
+
     it('should set training to null when failed loading', () => {
         const test = accountReducer(emptyState, { type: actions.TRAINING_FAILED });
         expect(test).toEqual({
@@ -186,6 +196,26 @@ describe('account reducer', () => {
             libHours: null,
             libHoursLoading: true,
             libHoursError: false,
+        });
+    });
+
+    it('should set vemcount value when successfully loaded', () => {
+        const test = accountReducer(emptyState, { type: actions.VEMCOUNT_LOADED, payload: [] });
+        expect(test).toEqual({
+            ...emptyState,
+            vemcount: [],
+            vemcountLoading: false,
+            vemcountError: false,
+        });
+    });
+
+    it('should set vemcount loading flag to true when loading library hours', () => {
+        const test = accountReducer(emptyState, { type: actions.VEMCOUNT_LOADING });
+        expect(test).toEqual({
+            ...emptyState,
+            vemcount: null,
+            vemcountLoading: true,
+            vemcountError: false,
         });
     });
 

@@ -10,6 +10,7 @@ import {
     loadPrintBalance,
     loadTrainingEvents,
     getClassNumberFromPieces,
+    loadVemcountList,
 } from './account';
 import Cookies from 'js-cookie';
 
@@ -346,6 +347,24 @@ describe('Account action creators', () => {
     it('should calculate class ids correctly', () => {
         expect(getClassNumberFromPieces({})).toEqual('');
         expect(getClassNumberFromPieces({ SUBJECT: 'FREN', CATALOG_NBR: '1010' })).toEqual('FREN1010');
+    });
+
+    it('dispatches expected actions when loading vemcount succeeds', async () => {
+        mockApi.onGet(repositories.routes.VEMCOUNT_API().apiUrl).reply(200);
+
+        const expectedActions = [actions.VEMCOUNT_LOADING, actions.VEMCOUNT_LOADED];
+
+        await mockActionsStore.dispatch(loadVemcountList());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('dispatches expected actions when loading vemcount fails', async () => {
+        mockApi.onGet(repositories.routes.VEMCOUNT_API().apiUrl).reply(500);
+
+        const expectedActions = [actions.VEMCOUNT_LOADING, actions.VEMCOUNT_FAILED];
+
+        await mockActionsStore.dispatch(loadVemcountList());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 });
 
