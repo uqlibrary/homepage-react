@@ -70,6 +70,43 @@ const dsStarIcon = (
     </svg>
 );
 
+const dsStudyBookIcon = (
+    <svg width="22" height="22" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+        <g clipPath="url(#clip0_1362_2629)">
+            <path
+                d="M6.94119 14.9674C5.39361 14.4538 3.7794 14.1686 2.14952 14.1209C1.84375 14.1045 1.55608 13.9708 1.34635 13.7477C1.13662 13.5246 1.02098 13.2292 1.02348 12.923V2.25354C1.02318 2.08999 1.05638 1.92812 1.12103 1.77789C1.18567 1.62766 1.28039 1.49226 1.39936 1.38003C1.51832 1.2678 1.65901 1.18112 1.81274 1.12532C1.96648 1.06953 2.13002 1.04581 2.29327 1.05563C7.34848 1.31917 9.99987 3.12403 9.99987 4.49764C9.99987 3.13201 12.9707 1.34313 17.6985 1.06361C17.8633 1.05029 18.0291 1.07145 18.1852 1.12577C18.3414 1.18008 18.4845 1.26634 18.6055 1.37905C18.7265 1.49176 18.8226 1.62844 18.8879 1.78039C18.9531 1.93233 18.9859 2.09619 18.9842 2.26153V12.324"
+                stroke="#51247A"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+            <path d="M10 4.49756V7.60416" stroke="#51247A" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+                d="M7.876 5.64757C6.43958 5.12659 4.94637 4.77808 3.42773 4.60938"
+                stroke="#51247A"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+            <path
+                d="M7.876 8.69012C6.43764 8.17733 4.94508 7.83166 3.42773 7.65991"
+                stroke="#51247A"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+            <path
+                d="M18.8963 18.9843L18.9762 18.0899C19.0288 17.5095 18.868 16.9299 18.524 16.4595C18.1801 15.9891 17.6764 15.6602 17.1074 15.5343L14.1925 14.8875V10.3034C14.2075 10.0976 14.18 9.89088 14.1115 9.69617C14.0431 9.50146 13.9352 9.32295 13.7947 9.17179C13.6542 9.02063 13.484 8.90007 13.2948 8.81762C13.1056 8.73518 12.9015 8.69263 12.6951 8.69263C12.4887 8.69263 12.2845 8.73518 12.0953 8.81762C11.9061 8.90007 11.7359 9.02063 11.5954 9.17179C11.4549 9.32295 11.3471 9.50146 11.2786 9.69617C11.2102 9.89088 11.1826 10.0976 11.1977 10.3034V17.6507L9.99977 16.7642C9.76416 16.5846 9.47131 16.4967 9.17574 16.5169C8.88016 16.5371 8.60198 16.664 8.39298 16.8739C8.18398 17.0839 8.05838 17.3627 8.03958 17.6584C8.02077 17.954 8.11003 18.2465 8.29074 18.4812L8.66609 18.9843"
+                stroke="#51247A"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+        </g>
+        <defs>
+            <clipPath id="clip0_1362_2629">
+                <rect width="20" height="20" fill="white" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 const dsBookCloseBookmarkIcon = (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true" focusable="false">
         <g id="Book-Close-Bookmark-1--Streamline-Streamline--3.0" clipPath="url(#clip0_1183_4075)">
@@ -171,7 +208,7 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
                 </li>
                 <li data-testid={'show-requests'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=requests&lang=en_US">
-                        {dsBookCloseBookmarkIcon} <span>Requests ({`${loans?.total_holds_count}`})</span>
+                        {dsStudyBookIcon} <span>Requests ({`${loans?.total_holds_count}`})</span>
                     </Link>
                 </li>
                 <li data-testid={'show-loans'}>
