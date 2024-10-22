@@ -45,4 +45,54 @@ export const locale = {
         Rockhampton: 'Other',
         Toowoomba: 'Other',
     },
+
+    // this table maps those locations who exist on vemcount against their matching springshare location
+    // note: not all locations have vemcount people-counting gates
+    vemcountSpringshareMapping: [
+        {
+            springshareId: 3967,
+            vemcountId: 14980,
+            name: 'Dutton park', // this doesn't need to match either system, its for the developer to not have to track raw numbers
+        },
+        {
+            springshareId: 3842,
+            vemcountId: 14975,
+            name: 'Central',
+        },
+        {
+            springshareId: 3823,
+            vemcountId: 14974,
+            name: 'Architecture',
+        },
+        {
+            springshareId: 3824,
+            vemcountId: 14977,
+            name: 'BSL',
+        },
+        {
+            springshareId: 3825,
+            vemcountId: 14979,
+            name: 'DHESL',
+        },
+        {
+            springshareId: 3830,
+            vemcountId: 14976,
+            name: 'Duhig tower',
+        },
+        {
+            springshareId: 3833,
+            vemcountId: 14985,
+            name: 'Gatton',
+        },
+        {
+            springshareId: 3838,
+            vemcountId: 14983,
+            name: 'Herston',
+        },
+        {
+            springshareId: 3841,
+            vemcountId: 14978,
+            name: 'Law',
+        },
+    ],
 };

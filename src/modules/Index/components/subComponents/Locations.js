@@ -330,56 +330,6 @@ const vemcountapi = {
     // 3966 whitty
 };
 
-// this table maps those locations who exist on vemcount against their matching speingshare location
-// note: not all locations have vemcount people-counting gates
-const vemmcountSpringshareMapping = [
-    {
-        springshareId: 3967,
-        vemcountId: 14980,
-        name: 'Dutton park', // this doesn't need to match either system, its for the developer to not have to track raw numbers
-    },
-    {
-        springshareId: 3842,
-        vemcountId: 14975,
-        name: 'Central',
-    },
-    {
-        springshareId: 3823,
-        vemcountId: 14974,
-        name: 'Architecture',
-    },
-    {
-        springshareId: 3824,
-        vemcountId: 14977,
-        name: 'BSL',
-    },
-    {
-        springshareId: 3825,
-        vemcountId: 14979,
-        name: 'DHESL',
-    },
-    {
-        springshareId: 3830,
-        vemcountId: 14976,
-        name: 'Duhig tower',
-    },
-    {
-        springshareId: 3833,
-        vemcountId: 14985,
-        name: 'Gatton',
-    },
-    {
-        springshareId: 3838,
-        vemcountId: 14983,
-        name: 'Herston',
-    },
-    {
-        springshareId: 3841,
-        vemcountId: 14978,
-        name: 'Law',
-    },
-];
-
 const VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING = 'Missing';
 const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
     const [isWideScreen, setIsWideScreen] = React.useState(window.innerWidth > 700);
@@ -414,7 +364,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                 }
 
                 function vemcountPercentByLocation(springshareLocationId) {
-                    const vemcountholder = vemmcountSpringshareMapping.filter(
+                    const vemcountholder = locationLocale.vemcountSpringshareMapping.filter(
                         m => m.springshareId === springshareLocationId,
                     );
                     const vemcountLocation = vemcountholder?.pop();
@@ -476,7 +426,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                     alt: location.name,
                     campus: locationLocale.hoursCampusMap[location.abbr],
                     departments,
-                    //busyness: randomBusynessNumber,
+                    // busyness: randomBusynessNumber,
                     busyness: getVemcountPercentage(location?.lid, location.name) || null,
                 };
             })) ||
