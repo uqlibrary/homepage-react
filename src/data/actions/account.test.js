@@ -5,7 +5,6 @@ import * as repositories from 'repositories';
 import * as accountActions from './account';
 import {
     getSemesterStringByTermNumber,
-    loadCompAvail,
     loadLibHours,
     loadLoans,
     loadPrintBalance,
@@ -311,25 +310,6 @@ describe('Account action creators', () => {
         await mockActionsStore.dispatch(loadLoans());
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
-
-    it('dispatches expected actions when loading computer availability fails', async () => {
-        mockApi.onGet(repositories.routes.COMP_AVAIL_API().apiUrl).reply(200);
-
-        const expectedActions = [actions.COMP_AVAIL_LOADING, actions.COMP_AVAIL_LOADED];
-
-        await mockActionsStore.dispatch(loadCompAvail());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when loading computer availability succeeds', async () => {
-        mockApi.onGet(repositories.routes.COMP_AVAIL_API().apiUrl).reply(500);
-
-        const expectedActions = [actions.COMP_AVAIL_LOADING, actions.COMP_AVAIL_FAILED];
-
-        await mockActionsStore.dispatch(loadCompAvail());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
     it('dispatches expected actions when loading training fails', async () => {
         mockApi.onGet(repositories.routes.TRAINING_API().apiUrl).reply(500);
 
