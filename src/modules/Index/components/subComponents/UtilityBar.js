@@ -29,6 +29,7 @@ const StyledBookingLink = styled(Link)(({ theme }) => ({
 
 const StyledLocationBox = styled(Box)(({ theme }) => ({
     marginLeft: 0,
+    opacity: 0
 }));
 
 const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
@@ -46,7 +47,7 @@ const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
         '&:hover': {
             backgroundColor: 'transparent',
             textDecoration: 'underline',
-            '-webkit-text-decoration': 'none',
+            WebkitTextDecoration: 'none',
         },
     },
     '& a': {
