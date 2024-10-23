@@ -58,41 +58,85 @@ const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
 }));
 
 export const UtilityBar = ({ libHours, libHoursLoading, libHoursError }) => {
-    // handle the location opener
+    // // handle the location opener
+    // const [locationOpen, setLocationOpen] = React.useState(false);
+    // const locationsRef = React.useRef(null);
+    // const closeOnClickOutsideDialog = e => {
+    //     console.log("Current1", locationsRef.current);
+    //     console.log("Current2", !locationsRef.current.contains(e.target));
+    //     console.log("Current3", !e.target.id === 'location-dialog-controller', (e.target?.id || 'NONE'), e?.target);
+    //     if (locationOpen && locationsRef.current && !locationsRef.current.contains(e.target) && !((e.target?.id || "NONE") === 'location-dialog-controller')) {
+    //         setLocationOpen(false);
+    //     }
+    // };
+    // const closeOnEscape = e => {
+    //     if (isEscapeKeyPressed(e)) {
+    //         setLocationOpen(false);
+    //     }
+    // };
+    // const handleLocationOpenerClick = () => {
+    //     //const showLocation = setInterval(() => {
+          
+    //         const locationButton = document.getElementById('location-dialog-controller');
+    //         !!locationButton && (locationButton.ariaExpanded = locationOpen);
+
+    //         if (locationOpen) {
+    //             document.addEventListener('mousedown', closeOnClickOutsideDialog);
+    //             document.addEventListener('keydown', closeOnEscape);
+    //         } else {
+    //             document.removeEventListener('mousedown', closeOnClickOutsideDialog);
+    //             document.removeEventListener('keydown', closeOnEscape);
+    //         }
+
+    //  //       clearInterval(showLocation);
+    //  //   }, 10);
+    //     setLocationOpen(!locationOpen);
+
+    //     // return () => {
+    //     //     document.removeEventListener('mousedown', closeOnClickOutsideDialog);
+    //     //     document.removeEventListener('keydown', closeOnEscape);
+    //     // };
+    // };
+
+
     const [locationOpen, setLocationOpen] = React.useState(false);
     const locationsRef = React.useRef(null);
-    const closeOnClickOutsideDialog = e => {
-        if (locationsRef.current && !locationsRef.current.contains(e.target)) {
-            setLocationOpen(false);
-        }
-    };
-    const closeOnEscape = e => {
-        if (isEscapeKeyPressed(e)) {
-            setLocationOpen(false);
-        }
-    };
-    const handleLocationOpenerClick = () => {
-        const showLocation = setInterval(() => {
-            setLocationOpen(!locationOpen);
 
-            const locationButton = document.getElementById('location-dialog-controller');
-            !!locationButton && (locationButton.ariaExpanded = !locationOpen);
-
-            if (!locationOpen) {
-                document.addEventListener('mousedown', closeOnClickOutsideDialog);
-                document.addEventListener('keydown', closeOnEscape);
-            } else {
-                document.removeEventListener('mousedown', closeOnClickOutsideDialog);
-                document.removeEventListener('keydown', closeOnEscape);
+    // UseEffect to listen to when the state of locationOpen changes. Mitigates delay checks, etc.
+    useEffect(() => {
+        const closeOnClickOutsideDialog = e => {
+            // Extra condition added to not include the label the opens or closes the hours - because it already has one - no need to fire twice.
+            if (locationOpen && locationsRef.current && !locationsRef.current.contains(e.target) && !((e.target?.id || "NONE") === 'location-dialog-controller')) {
+                    setLocationOpen(false);
             }
+        };
+        const closeOnEscape = e => {
+            if (isEscapeKeyPressed(e)) {
+                setLocationOpen(false);
+            }
+        };
 
-            clearInterval(showLocation);
-        }, 10);
+        if (locationOpen) {
+            document.addEventListener('mousedown', closeOnClickOutsideDialog);
+            document.addEventListener('keydown', closeOnEscape);
+        } else {
+            document.removeEventListener('mousedown', closeOnClickOutsideDialog);
+            document.removeEventListener('keydown', closeOnEscape);
+        }
+
         return () => {
             document.removeEventListener('mousedown', closeOnClickOutsideDialog);
             document.removeEventListener('keydown', closeOnEscape);
         };
+    }, [locationOpen]); 
+
+    const handleLocationOpenerClick = () => {
+    // New simplified handleLocationOpener Click handler - Just toggle open or closed.
+    setLocationOpen(!locationOpen);
     };
+
+
+
     const isLocationOpen = Boolean(locationOpen);
 
     useEffect(() => {
