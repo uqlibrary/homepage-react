@@ -129,12 +129,12 @@ export const Index = ({
         }
     }, [drupalArticleList, dispatch]);
 
-    // useEffect(() => {
-    //     if (accountLoading === false) {
-    //         dispatch(loadLibHours());
-    //         // dispatch(loadVemcount());
-    //     }
-    // }, [accountLoading, dispatch]);
+    useEffect(() => {
+        if (accountLoading === false) {
+            dispatch(loadLibHours());
+            // dispatch(loadVemcount());
+        }
+    }, [accountLoading, dispatch]);
 
     useEffect(() => {
         if (accountLoading === false) {

@@ -19,7 +19,7 @@ export const ReadPublish = () => {
                 <p>
                     <a href="https://espace.library.uq.edu.au/journals/search/">Publish in the right journal</a>
                     <br />
-                    <span>Lorem ispum, dolor sit amet. Adepescing, delo elit. Further information in this space to come.</span>
+                    <span>Find and evaluate the best publishing options using Journal Search.</span>
                     <p>
                         Visit{' '}
                         <Link to={linkToDrupal('/research-and-publish/open-research/read-and-publish-agreements')}>
