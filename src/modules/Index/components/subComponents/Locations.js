@@ -454,21 +454,21 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
 
                 const min = 5;
                 const max = 100;
-                function tempCalcLocationBusiness() {
-                    // this wil be replaced wih api results
-                    if (location?.abbr === 'Gatton') {
-                        return null;
-                    }
-                    if (location?.abbr === 'Herston') {
-                        return 100;
-                    }
-                    if (location?.abbr === 'Biol Sci') {
-                        return VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING;
-                    }
-                    return Math.floor(Math.random() * (max - min + 1)) + min;
-                }
+                // function tempCalcLocationBusiness() {
+                //     // this wil be replaced wih api results
+                //     if (location?.abbr === 'Gatton') {
+                //         return null;
+                //     }
+                //     if (location?.abbr === 'Herston') {
+                //         return 100;
+                //     }
+                //     if (location?.abbr === 'Biol Sci') {
+                //         return VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING;
+                //     }
+                //     return Math.floor(Math.random() * (max - min + 1)) + min;
+                // }
 
-                const randomBusynessNumber = tempCalcLocationBusiness();
+                // const randomBusynessNumber = tempCalcLocationBusiness();
                 return {
                     name: location.name,
                     abbr: location.abbr,
@@ -476,8 +476,8 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                     alt: location.name,
                     campus: locationLocale.hoursCampusMap[location.abbr],
                     departments,
-                    busyness: randomBusynessNumber,
-                    // busyness: getVemcountPercentage(location?.lid, location.name) || null,
+                    //busyness: randomBusynessNumber,
+                    busyness: getVemcountPercentage(location?.lid, location.name) || null,
                 };
             })) ||
         [];

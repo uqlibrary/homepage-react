@@ -139,18 +139,21 @@ const muiBeenHereIcon = (
     </svg>
 );
 
-export const librarylink = url => {
-    let _url = url;
-    if (document.location.host !== 'www.library.uq.edu.au' && _url.startsWith('https://www.library.uq.edu.au/')) {
-        let homepageLink = getHomepageLink();
-        let params = '';
-        const tempUrl = new URL(homepageLink);
-        params = tempUrl.search;
-        homepageLink = homepageLink.replace(params, '');
-        _url = _url.replace('https://www.library.uq.edu.au/', homepageLink) + params;
-    }
-    return _url;
-};
+
+
+// Function appears to be redundant in this particular case.
+// export const librarylink = url => {
+//     let _url = url;
+//     if (document.location.host !== 'www.library.uq.edu.au' && _url.startsWith('https://www.library.uq.edu.au/')) {
+//         let homepageLink = getHomepageLink();
+//         let params = '';
+//         const tempUrl = new URL(homepageLink);
+//         params = tempUrl.search;
+//         homepageLink = homepageLink.replace(params, '');
+//         _url = _url.replace('https://www.library.uq.edu.au/', homepageLink) + params;
+//     }
+//     return _url;
+// };
 
 export const CataloguePanel = ({ account, loans, printBalance }) => {
     return (
@@ -198,7 +201,7 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
                 )}
                 {isTestTagUser(account) && (
                     <li data-testid={'show-testntag'}>
-                        <Link to={librarylink('admin/testntag')}>
+                        <Link to={'admin/testntag'}>
                             {muiBeenHereIcon}
                             <span>Test and tag</span>
                         </Link>
