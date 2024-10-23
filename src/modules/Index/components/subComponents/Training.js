@@ -266,7 +266,9 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                             Training
                         </h3>
                         <a
-                            href={linkToDrupal('/library-services/training')}
+                            href={linkToDrupal(
+                                '/study-and-learning-support/training-and-workshops/online-and-person-workshops',
+                            )}
                             data-analyticsid="training-event-detail-more-training-button"
                             className={'seeAllTrainingLink'}
                             data-testid="seeAllTrainingLink"
