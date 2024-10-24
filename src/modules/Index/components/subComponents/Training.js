@@ -100,11 +100,12 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             marginTop: '4px',
         },
         '&:hover': {
-            backgroundColor: theme.palette.primary.light,
-            transition: 'background-color 200ms ease-out',
-            '& .listEventItem': {
+            color: theme.palette.secondary.dark,
+            backgroundColor: '#fff',
+            '& .listEventTitle': {
                 color: '#fff',
-                backgroundColor: 'inherit',
+                backgroundColor: theme.palette.primary.light,
+                transition: 'background-color 200ms ease-out',
             },
         },
     },
@@ -195,7 +196,6 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
             })
             .replace(':00', '');
     const bookingText = ev => {
-        console.log('ev=', ev);
         /*
           if bookingSettings is null then bookings are not required
           if bookingSettings has a placesRemaining child *and it is > 0" then there are places still available
