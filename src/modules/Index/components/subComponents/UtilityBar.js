@@ -58,47 +58,42 @@ const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
     },
 }));
 
-export const UtilityBar = ({ libHours, libHoursLoading, libHoursError }) => {
+export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcountLoading, vemcountError }) => {
+    // handle the location opener
     const [locationOpen, setLocationOpen] = React.useState(false);
     const locationsRef = React.useRef(null);
-
-    // UseEffect to listen to when the state of locationOpen changes. Mitigates delay checks, etc.
-    useEffect(() => {
-        const closeOnClickOutsideDialog = e => {
-            // Extra condition added to not include the label the opens or closes the hours - because it already has one - no need to fire twice.
-            if (
-                locationOpen &&
-                locationsRef.current &&
-                !locationsRef.current.contains(e.target) &&
-                !((e.target?.id || 'NONE') === 'location-dialog-controller')
-            ) {
-                setLocationOpen(false);
-            }
-        };
-        const closeOnEscape = e => {
-            if (isEscapeKeyPressed(e)) {
-                setLocationOpen(false);
-            }
-        };
-
-        if (locationOpen) {
-            document.addEventListener('mousedown', closeOnClickOutsideDialog);
-            document.addEventListener('keydown', closeOnEscape);
-        } else {
-            document.removeEventListener('mousedown', closeOnClickOutsideDialog);
-            document.removeEventListener('keydown', closeOnEscape);
+    const closeOnClickOutsideDialog = e => {
+        if (locationsRef.current && !locationsRef.current.contains(e.target)) {
+            setLocationOpen(false);
         }
+    };
+    const closeOnEscape = e => {
+        if (isEscapeKeyPressed(e)) {
+            setLocationOpen(false);
+        }
+    };
+    const handleLocationOpenerClick = () => {
+        const showLocation = setInterval(() => {
+            setLocationOpen(!locationOpen);
 
+            const locationButton = document.getElementById('location-dialog-controller');
+            !!locationButton && (locationButton.ariaExpanded = !locationOpen);
+
+            if (!locationOpen) {
+                document.addEventListener('mousedown', closeOnClickOutsideDialog);
+                document.addEventListener('keydown', closeOnEscape);
+            } else {
+                document.removeEventListener('mousedown', closeOnClickOutsideDialog);
+                document.removeEventListener('keydown', closeOnEscape);
+            }
+
+            clearInterval(showLocation);
+        }, 10);
         return () => {
             document.removeEventListener('mousedown', closeOnClickOutsideDialog);
             document.removeEventListener('keydown', closeOnEscape);
         };
-    }, [locationOpen]);
-
-    const handleLocationOpenerClick = () => {
-        setLocationOpen(!locationOpen);
     };
-
     const isLocationOpen = Boolean(locationOpen);
 
     useEffect(() => {
@@ -140,6 +135,9 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError }) => {
                             libHours={libHours}
                             libHoursLoading={libHoursLoading}
                             libHoursError={libHoursError}
+                            vemcount={vemcount}
+                            vemcountLoading={vemcountLoading}
+                            vemcountError={vemcountError}
                         />
                     </StyledLocationBox>
                 </Fade>
@@ -152,6 +150,9 @@ UtilityBar.propTypes = {
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
     libHoursError: PropTypes.bool,
+    vemcount: PropTypes.object,
+    vemcountLoading: PropTypes.bool,
+    vemcountError: PropTypes.bool,
 };
 
 export default UtilityBar;

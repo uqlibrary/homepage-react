@@ -22,6 +22,7 @@ import {
     loadTrainingEvents,
     loadDrupalArticles,
     loadLoans,
+    loadVemcountList,
 } from 'data/actions';
 import {
     canSeeLearningResourcesPanel,
@@ -108,7 +109,9 @@ export const Index = ({
     drupalArticlesError,
     loans,
     loansLoading,
-
+    vemcount,
+    vemcountLoading,
+    vemcountError,
 }) => {
     const dispatch = useDispatch();
 
@@ -129,7 +132,7 @@ export const Index = ({
     useEffect(() => {
         if (accountLoading === false) {
             dispatch(loadLibHours());
-            // dispatch(loadVemcount());
+            dispatch(loadVemcountList());
         }
     }, [accountLoading, dispatch]);
 
@@ -188,6 +191,9 @@ export const Index = ({
                 libHours={libHours}
                 libHoursLoading={libHoursLoading}
                 libHoursError={libHoursError}
+                vemcount={vemcount}
+                vemcountLoading={vemcountLoading}
+                vemcountError={vemcountError}
             />
             {accountLoading === false && !!account && (
                 <StyledGridWrapper>
@@ -306,6 +312,9 @@ Index.propTypes = {
     loansLoading: PropTypes.bool,
     printBalance: PropTypes.any,
     printBalanceLoading: PropTypes.bool,
+    vemcount: PropTypes.object,
+    vemcountLoading: PropTypes.bool,
+    vemcountError: PropTypes.bool,
 };
 
 export default Index;
