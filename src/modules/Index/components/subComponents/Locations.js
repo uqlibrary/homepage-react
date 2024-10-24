@@ -55,11 +55,11 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
     '& tr': {
         height: '2rem',
-        '& td:not(:first-child)': {
+        '& td:not(:first-of-type)': {
             // width: '1%', // this allows the library name cell to do an ellipsis
             whiteSpace: 'nowrap',
         },
-        '& th:not(:first-child)': {
+        '& th:not(:first-of-type)': {
             // width: '1%',
             whiteSpace: 'nowrap',
         },
@@ -91,7 +91,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         transition: 'color 200ms ease-out, background-color 200ms ease-out',
         '&:hover': {
             cursor: 'pointer',
-            '& td:first-child a': {
+            '& td:first-of-type a': {
                 backgroundColor: theme.palette.primary.light,
                 color: 'white',
             },
@@ -446,28 +446,11 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                         calculatedBusyness = minimumDisplayedPercentage;
                     } else {
                         calculatedBusyness = Math.floor(vemcountBusynessPercent);
-                    } 
-                    
+                    }
+
                     return calculatedBusyness;
                 }
 
-                const min = 5;
-                const max = 100;
-                // function tempCalcLocationBusiness() {
-                //     // this wil be replaced wih api results
-                //     if (location?.abbr === 'Gatton') {
-                //         return null;
-                //     }
-                //     if (location?.abbr === 'Herston') {
-                //         return 100;
-                //     }
-                //     if (location?.abbr === 'Biol Sci') {
-                //         return VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING;
-                //     }
-                //     return Math.floor(Math.random() * (max - min + 1)) + min;
-                // }
-
-                // const randomBusynessNumber = tempCalcLocationBusiness();
                 return {
                     name: location.name,
                     abbr: location.abbr,
