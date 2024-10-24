@@ -5,30 +5,36 @@ import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { canSeeLoans, canSeePrintBalance, isTestTagUser } from 'helpers/access';
-import { getHomepageLink } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
 
 const StyledUl = styled('ul')(() => ({
-    marginLeft: 0,
-    paddingLeft: 0,
     '& li': {
+        paddingBottom: '16px',
+        marginLeft: '-20px',
         listStyleType: 'none',
         '& a': {
             display: 'flex',
             alignItems: 'center',
-            paddingBlock: '8px',
-            paddingLeft: '24px',
+            paddingLeft: '4px',
+            '&:hover': {
+                color: 'inherit',
+                backgroundColor: 'inherit',
+            },
             '& svg': {
                 stroke: '#51247A',
+                paddingRight: '12px',
+            },
+            '&:hover span': {
+                color: '#fff',
+                backgroundColor: '#51247A',
             },
             '&:hover svg': {
-                stroke: 'white',
+                color: 'inherit',
+                backgroundColor: 'inherit',
             },
             '&:hover path': {
-                stroke: 'white',
+                color: 'inherit',
+                backgroundColor: 'inherit',
             },
-        },
-        '& span': {
-            paddingLeft: '12px',
         },
     },
 }));
@@ -175,22 +181,6 @@ const muiBeenHereIcon = (
         <path d="M10 16l-5-5 1.41-1.41L10 13.17l7.59-7.59L19 7z" fill="none" stroke="#51247A" strokeWidth="1" />
     </svg>
 );
-
-
-
-// Function appears to be redundant in this particular case.
-// export const librarylink = url => {
-//     let _url = url;
-//     if (document.location.host !== 'www.library.uq.edu.au' && _url.startsWith('https://www.library.uq.edu.au/')) {
-//         let homepageLink = getHomepageLink();
-//         let params = '';
-//         const tempUrl = new URL(homepageLink);
-//         params = tempUrl.search;
-//         homepageLink = homepageLink.replace(params, '');
-//         _url = _url.replace('https://www.library.uq.edu.au/', homepageLink) + params;
-//     }
-//     return _url;
-// };
 
 export const CataloguePanel = ({ account, loans, printBalance }) => {
     return (
