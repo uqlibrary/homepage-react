@@ -571,6 +571,25 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
         );
     }
 
+    const getOverrideLocationName = locationAbbr => {
+        // if not present in the lookup table, use the value passed from Springhshare
+        const lookupTable = {
+            AskUs: 'AskUs chat hours', // this one must be overriden long term, I think
+            'Arch Music': 'Architecture and Music', // all these following should be able to be deleted once the Springshare name values are updated, post go live
+            'Biol Sci': 'Biological Sciences',
+            DHEngSci: 'Dorothy Hill Engineering and Sciences',
+            'Dutton Park': 'Dutton Park Health Sciences',
+            Fryer: 'FW Robinson Reading Room (Fryer)',
+            Gatton: 'JK Murray (UQ Gatton)',
+            Law: 'Walter Harrison Law',
+        };
+        if (lookupTable.hasOwnProperty(locationAbbr)) {
+            return lookupTable[locationAbbr];
+        }
+        // Return null if the key is not found
+        return null;
+    };
+
     return (
         <StyledStandardCard noPadding noHeader standardCardId="locations-panel">
             <StyledWrapper id="tablewrapper">
@@ -590,7 +609,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                                 <thead className="table-row-header">
                                     <tr className={'table-row'}>
                                         <th className={'table-header-name'} id="locations-header-library">
-                                            <div className={'table-cell-name-content'}>Library</div>
+                                            <div>Library</div>
                                         </th>
                                         {isWideScreen && (
                                             <th
@@ -631,9 +650,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                                                             style={{ paddingBlock: 0 }}
                                                             // className={'table-cell-name-content'}
                                                         >
-                                                            {location.abbr === 'AskUs'
-                                                                ? 'AskUs chat hours'
-                                                                : location.name}
+                                                            {getOverrideLocationName(location.abbr) || location.name}
                                                         </a>
                                                     </td>
                                                     {isWideScreen && (
@@ -651,7 +668,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                                                                 data-testid={`hours-item-hours-${index}`}
                                                                 href={location.url}
                                                                 style={{ paddingBlock: 0 }}
-                                                                className={'table-cell-name-content'}
+                                                                // className={'table-cell-name-content'}
                                                             >
                                                                 {getLibraryHours(location)}
                                                             </a>
@@ -666,7 +683,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                                                             data-testid={`hours-item-busy-${index}`}
                                                             href={location.url}
                                                             style={{ paddingBlock: 0 }}
-                                                            className={'table-cell-name-content'}
+                                                            // className={'table-cell-name-content'}
                                                         >
                                                             {getBusyness(location)}
                                                         </a>
