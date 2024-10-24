@@ -7,7 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import { throttle } from 'throttle-debounce';
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
 import Typography from '@mui/material/Typography';
 
 import { extractSubjectCodeFromName } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
@@ -105,6 +105,21 @@ export const SubjectSearchDropdown = ({
         params.children,
     ];
 
+    function dsSearchIcon() {
+        return (
+            <svg width="24" height="24" fill="none" aria-hidden="true" focusable="false">
+                <path stroke="#000" strokeWidth="1.5" d="M10.5 17a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13Z" />
+                <path
+                    stroke="#000"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                    d="M15.5 15.5 20 20"
+                />
+            </svg>
+        );
+    }
+
     return (
         <form>
             <StyledSearchPanel container spacing={1} alignItems={'flex-end'}>
@@ -125,7 +140,13 @@ export const SubjectSearchDropdown = ({
                         }}
                         onInputChange={handleTypedKeywordChange}
                         noOptionsText={noOptionsText}
+                        popupIcon={dsSearchIcon()}
                         renderGroup={renderGroup}
+                        sx={{
+                            [`& .${autocompleteClasses.popupIndicator}`]: {
+                                transform: 'none',
+                            },
+                        }}
                         groupBy={() => false}
                         renderInput={params => {
                             return (
