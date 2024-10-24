@@ -51,9 +51,9 @@ context('Training', () => {
         cy.get('button[data-testid="training-event-detail-button-0"]').click();
         cy.waitUntil(() =>
             cy
-                .get('[data-testid="training-search-wrapper"]')
+                .get('[data-testid="training-events-detail-2824657"]')
                 .should('exist')
-                .should('not.be.visible'),
+                .should('be.visible'),
         );
         cy.checkA11y('[data-testid="training-panel"]', {
             reportName: 'Training',
@@ -93,40 +93,18 @@ context('Training', () => {
         cy.get('div[data-testid="training-events-detail-2870807"]').contains('Places still available');
     });
 
-    it('can close a detail pane from a search', () => {
-        cy.visit('/');
-        cy.viewport(1300, 1000);
-
-        cy.get('[data-testid="training-search-wrapper"] input')
-            .should('exist')
-            .type('End');
-
-        cy.get('#training-search-wrapper-option-0')
-            .contains('EndNote: getting started')
-            .click();
-        cy.get('[data-testid="training-events-detail-2824657"] h3')
-            .should('exist')
-            .should('be.visible')
-            .contains('EndNote: getting started');
-
-        cy.waitUntil(() => cy.get('[data-testid="training-event-detail-close-button"]').should('exist'));
-        cy.get('[data-testid="training-event-detail-close-button"]').click();
-
-        cy.get('[data-testid="training-events-detail-2824657"]').should('not.exist');
-        cy.log('done'); // needed or the test crashes?!?
-    });
     it('can close a detail pane from a click', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
         // we brng the detail pane over these fields to make the pane bigger,
         // but we have to manually display: hidden them or we get an accessibility issue
-        cy.get('#trainingSearch').should('be.visible');
-        // cy.get('#seeAllTrainingLink').should('be.visible');
+        cy.get('button[data-testid="training-event-detail-button-0"]')
+            .should('exist')
+            .scrollIntoView();
 
         cy.get('button[data-testid="training-event-detail-button-0"]').contains('EndNote: getting started');
         cy.get('button[data-testid="training-event-detail-button-0"]').click();
         cy.wait(500);
-        cy.get('#trainingSearch').should('not.be.visible');
         // cy.get('#seeAllTrainingLink').should('not.be.visible');
         cy.get('[data-testid="training-events-detail-2824657"]')
             .should('exist')
@@ -137,8 +115,6 @@ context('Training', () => {
             .click();
 
         cy.get('[data-testid="training-events-detail-2824657"]').should('not.exist');
-        cy.get('#trainingSearch').should('be.visible');
-        // cy.get('#seeAllTrainingLink').should('be.visible');
     });
 
     it('shows an api error correctly', () => {

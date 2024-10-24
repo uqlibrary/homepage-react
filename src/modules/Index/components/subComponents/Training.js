@@ -3,17 +3,13 @@ import { PropTypes } from 'prop-types';
 import ContentLoader from 'react-content-loader';
 import moment from 'moment-timezone';
 
-import Autocomplete from '@mui/material/Autocomplete';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Fade from '@mui/material/Fade';
-import InputAdornment from '@mui/material/InputAdornment';
 import { styled } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CloseIcon from '@mui/icons-material/Close';
 import EventIcon from '@mui/icons-material/Event';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
@@ -49,18 +45,6 @@ const MyLoader = props => (
         <rect x="0" y="200" rx="3" ry="3" width="100%" height="1" />
     </ContentLoader>
 );
-
-const StyledTextField = styled(TextField)(() => ({
-    fontWeight: 400,
-    textOverflow: 'ellipsis !important',
-    overflow: 'hidden !important',
-    whiteSpace: 'nowrap !important',
-    '&::placeholder': {
-        textOverflow: 'ellipsis !important',
-        overflow: 'hidden !important',
-        whiteSpace: 'nowrap !important',
-    },
-}));
 const StyledWrapper = styled('div')(({ theme }) => ({
     ['&.flexWrapper']: {
         display: 'flex',
@@ -154,12 +138,6 @@ const StyledWrapper = styled('div')(({ theme }) => ({
 }));
 
 const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }) => {
-    const [inputValue, setInputValue2] = useState('');
-    const setInputValue = e => {
-        console.log('setInputValue ', `"${e}"`);
-        setInputValue2(e);
-    };
-
     const hideElement = elementId => {
         const element = document.getElementById(elementId);
         !!element && (element.style.display = 'none');
@@ -224,25 +202,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
             ? list.filter(t => t.bookingSettings !== null).slice(0, NUMBER_OF_DISPLAYED_EVENTS)
             : [];
     };
-    const allStandardisedTrainingEvents = () => {
-        const list =
-            !trainingEventsLoading && !trainingEventsError && !!trainingEvents && typeof trainingEvents === 'object'
-                ? Object.keys(trainingEvents).map(key => {
-                      return trainingEvents[key];
-                  })
-                : trainingEvents;
-        return !!list && list.length > 0 ? list : [];
-    };
     const filteredTrainingEvents = filterStandardisedTrainingEvents();
-    const allTrainingEvents = allStandardisedTrainingEvents();
-    const filterEvents = (events, keyword) => {
-        if (!keyword || keyword.length < 3) return [];
-        return events.filter(
-            event =>
-                event.summary.toLowerCase().includes(keyword.toLowerCase()) ||
-                event.details.toLowerCase().includes(keyword.toLowerCase()),
-        );
-    };
     return (
         <StandardCard
             subCard
@@ -288,49 +248,6 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
             }
         >
             <StyledWrapper className={'flexWrapper'}>
-                {allTrainingEvents && allTrainingEvents.length > 0 && !trainingEventsLoading && !trainingEventsError && (
-                    <div className={'trainingSearch'} id="trainingSearch">
-                        <Autocomplete
-                            id="training-search-wrapper"
-                            data-testid="training-search-wrapper"
-                            freeSolo
-                            options={filterEvents(allTrainingEvents, inputValue)}
-                            getOptionLabel={option => option.name}
-                            onInputChange={e => setInputValue(e.target.value)} // letters typed
-                            onChange={(event, value) => showEventDetail(event, value)}
-                            renderInput={params => (
-                                <StyledTextField
-                                    {...params}
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        type: 'search',
-                                        classes: {
-                                            input: 'selectInput',
-                                        },
-                                        endAdornment: (
-                                            <InputAdornment position="end">
-                                                <ArrowDropDownIcon />
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                    label="Search Events"
-                                    variant="standard"
-                                    sx={{
-                                        '& .MuiInput-underline:before': {
-                                            borderWidth: '0 0 1px 0',
-                                        },
-                                        '& .MuiInput-underline:hover:before': {
-                                            borderWidth: '0 0 2px 0',
-                                        },
-                                        '& .MuiInput-underline:after': {
-                                            borderWidth: '0 0 2px 0',
-                                        },
-                                    }}
-                                />
-                            )}
-                        />
-                    </div>
-                )}
                 {(() => {
                     if (!!trainingEventsError) {
                         return (
