@@ -284,7 +284,7 @@ const vemcountapi = {
         },
         {
             id: 14975, // Central Library
-            headCount: 2,
+            headCount: 0,
             capacity: 770,
         },
         {
