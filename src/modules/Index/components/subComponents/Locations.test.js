@@ -1,7 +1,8 @@
 import React from 'react';
 import Locations from './Locations';
-import { rtlRender, WithRouter, WithReduxStore, act, fireEvent, waitFor, screen } from 'test-utils';
+import { rtlRender, WithRouter, WithReduxStore, act,  waitFor, screen } from 'test-utils';
 import { getByTestId } from '@testing-library/dom';
+import { fireEvent } from '@testing-library/react';
 
 function setup(testProps = {}, renderer = rtlRender) {
     return renderer(
@@ -199,14 +200,51 @@ describe('Locations panel', () => {
             "fn": "UQ ID card access after hours. Touch your card to the reader for entry.",
             "day": "Tuesday",
             "times": {
-                "status": "not-set"
+                "status": "open",
+                "hours": [
+                    {
+                        "from": "8am",
+                        "to": "8pm"
+                    }
+                ],
+                "currently_open": true
             },
-            "rendered": "",
+            "rendered": "8am - 8pm",
+            "open": "08:00:00",
+            "close": "20:00:00",
             "abbr": "Biol Sci",
+            "departments": []
+        },
+        {
+            "lid": 38245,
+            "name": "Biological SciencesX",
+            "category": "library",
+            "desc": "",
+            "url": "https://web.library.uq.edu.au/locations-hours/biological-sciences-library",
+            "contact": "",
+            "lat": "",
+            "long": "",
+            "color": "#0E6E0E",
+            "fn": "UQ ID card access after hours. Touch your card to the reader for entry.",
+            "day": "Tuesday",
+            "times": {
+                "status": "open",
+                "hours": [
+                    {
+                        "from": "8am",
+                        "to": "8pm"
+                    }
+                ],
+                "currently_open": true
+            },
+            "rendered": "8am - 8pm",
+            "open": "08:00:00",
+            "close": "20:00:00",
+            "abbr": "Biol SciX",
             "departments": [
                 {
                     "lid": 3829,
-                    "name": "Study space",
+                    "name": "",
                     "category": "department",
                     "desc": "",
                     "url": "",
@@ -226,7 +264,7 @@ describe('Locations panel', () => {
                 },
                 {
                     "lid": 10792,
-                    "name": "AskUs desk",
+                    "name": "",
                     "category": "department",
                     "desc": "",
                     "url": "",
@@ -242,72 +280,6 @@ describe('Locations panel', () => {
                         "currently_open": false
                     },
                     "rendered": "8am–8pm Virtual Service"
-                }
-            ]
-        },
-        {
-            "lid": 3842,
-            "name": "Central",
-            "category": "library",
-            "desc": "",
-            "url": "https://web.library.uq.edu.au/locations-hours/central-library",
-            "contact": "",
-            "lat": "",
-            "long": "",
-            "color": "#0E6E0E",
-            "fn": "UQ ID card access to the building after hours. Touch your card to the reader for entry.",
-            "day": "Tuesday",
-            "times": {
-                "status": "not-set"
-            },
-            "rendered": "",
-            "abbr": "Central",
-            "departments": [
-                {
-                    "lid": 10457,
-                    "name": "Collections & space",
-                    "category": "department",
-                    "desc": "",
-                    "url": "",
-                    "contact": "",
-                    "lat": "",
-                    "long": "",
-                    "color": "#000000",
-                    "parent_lid": 3842,
-                    "day": "Tuesday",
-                    "times": {
-                        "status": "24hours",
-                        "currently_open": true
-                    },
-                    "rendered": "24 Hours",
-                    "open": "00:00:00",
-                    "close": "24:00:00"
-                },
-                {
-                    "lid": 3843,
-                    "name": "AskUs desk",
-                    "category": "department",
-                    "desc": "",
-                    "url": "",
-                    "contact": "",
-                    "lat": "",
-                    "long": "",
-                    "color": "#000000",
-                    "parent_lid": 3842,
-                    "day": "Tuesday",
-                    "times": {
-                        "status": "open",
-                        "hours": [
-                            {
-                                "from": "8am",
-                                "to": "6pm"
-                            }
-                        ],
-                        "currently_open": true
-                    },
-                    "rendered": "8am - 6pm",
-                    "open": "08:00:00",
-                    "close": "18:00:00"
                 }
             ]
         },
@@ -394,6 +366,72 @@ describe('Locations panel', () => {
                     "rendered": "9am - 5pm",
                     "open": "09:00:00",
                     "close": "17:00:00"
+                }
+            ]
+        },
+        {
+            "lid": 3842,
+            "name": "Central",
+            "category": "library",
+            "desc": "",
+            "url": "https://web.library.uq.edu.au/locations-hours/central-library",
+            "contact": "",
+            "lat": "",
+            "long": "",
+            "color": "#0E6E0E",
+            "fn": "UQ ID card access to the building after hours. Touch your card to the reader for entry.",
+            "day": "Tuesday",
+            "times": {
+                "status": "not-set"
+            },
+            "rendered": "",
+            "abbr": "Central",
+            "departments": [
+                {
+                    "lid": 10457,
+                    "name": "Collections & space",
+                    "category": "department",
+                    "desc": "",
+                    "url": "",
+                    "contact": "",
+                    "lat": "",
+                    "long": "",
+                    "color": "#000000",
+                    "parent_lid": 3842,
+                    "day": "Tuesday",
+                    "times": {
+                        "status": "24hours",
+                        "currently_open": true
+                    },
+                    "rendered": "24 Hours",
+                    "open": "00:00:00",
+                    "close": "24:00:00"
+                },
+                {
+                    "lid": 3843,
+                    "name": "AskUs desk",
+                    "category": "department",
+                    "desc": "",
+                    "url": "",
+                    "contact": "",
+                    "lat": "",
+                    "long": "",
+                    "color": "#000000",
+                    "parent_lid": 3842,
+                    "day": "Tuesday",
+                    "times": {
+                        "status": "open",
+                        "hours": [
+                            {
+                                "from": "8am",
+                                "to": "6pm"
+                            }
+                        ],
+                        "currently_open": true
+                    },
+                    "rendered": "8am - 6pm",
+                    "open": "08:00:00",
+                    "close": "18:00:00"
                 }
             ]
         },
@@ -718,9 +756,23 @@ describe('Locations panel', () => {
             libHoursError: false,
             libHours: vemcountapi
         };
-        console.log("vemcount API", vemcountapi)
         const { getByTestId } = setup({...props});
         expect(getByTestId('locations-panel-content')).toBeInTheDocument();
+
+    });
+
+    it('should handle display resize', () => {
+        const props = {
+            libHoursLoading: false,
+            libHoursError: false,
+            libHours: vemcountapi
+        };
+        const { getByTestId, queryByTestId } = setup({...props});
+        
+        expect(getByTestId('hours-item-askus')).toBeInTheDocument();
+        window.innerWidth = 400;
+        fireEvent.resize(window, {target: {width: 400, height: 600}});
+        expect(queryByTestId('hours-item-askus')).toBeNull();
 
     });
 

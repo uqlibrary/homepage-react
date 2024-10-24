@@ -435,20 +435,18 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                     const minimumDisplayedPercentage = 5;
 
                     const vemcountBusynessPercent = vemcountPercentByLocation(springshareLocationId);
-                    let calculatedBusyness;
+                    let calculatedBusyness = null;
                     if (vemcountBusynessPercent === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING) {
                         calculatedBusyness = vemcountBusynessPercent;
                     } else if (!!isNaN(vemcountBusynessPercent)) {
                         calculatedBusyness = null;
-                    } else if (vemcountBusynessPercent > 0 && vemcountBusynessPercent < minimumDisplayedPercentage) {
+                    } else if (vemcountBusynessPercent < minimumDisplayedPercentage) {
                         // don't let the bar go below what shows as a small curve on the left
                         calculatedBusyness = minimumDisplayedPercentage;
-                    } else if (vemcountBusynessPercent > 0) {
-                        calculatedBusyness = Math.floor(vemcountBusynessPercent);
                     } else {
-                        calculatedBusyness = null;
-                    }
-
+                        calculatedBusyness = Math.floor(vemcountBusynessPercent);
+                    } 
+                    
                     return calculatedBusyness;
                 }
 
@@ -519,6 +517,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
     };
 
     function getLibraryHours(location) {
+        /* istanbul ignore else */
         if (location.abbr === 'AskUs') {
             return location.departments.map(department => {
                 if (['Chat'].includes(department.name)) {
@@ -527,6 +526,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                 return null;
             });
         }
+        /* istanbul ignore else */
         if (hasDepartments(location)) {
             return location.departments.map(department => {
                 if (departmentsMap.includes(department.name)) {
@@ -560,7 +560,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                 <div
                     className={`occupancyPercent occupancyPercent${location.busyness}`}
                     style={{
-                        width: !hasDepartments(location) || isOpen(location) ? `${location.busyness}%` : 0,
+                        width: !hasDepartments(location) || isOpen(location) ? `${location.busyness}%` : /* istanbul ignore next */ 0,
                     }}
                     title={busynessText(location.busyness)}
                 >

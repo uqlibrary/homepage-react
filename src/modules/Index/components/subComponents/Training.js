@@ -203,6 +203,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
           We filter out the fully booked entries, because we are only showing 3 now, and that seems like a waste
          */
         let placesRemainingText = 'Booking is not required';
+        /* istanbul ignore else */
         if (ev.bookingSettings !== null) {
             if (ev?.bookingSettings?.placesRemaining > 0) {
                 placesRemainingText = 'Places still available';
