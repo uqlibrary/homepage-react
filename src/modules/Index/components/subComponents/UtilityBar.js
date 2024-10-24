@@ -76,6 +76,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError }) => {
             }
         };
         const closeOnEscape = e => {
+            /* istanbul ignore else */
             if (isEscapeKeyPressed(e)) {
                 setLocationOpen(false);
             }
