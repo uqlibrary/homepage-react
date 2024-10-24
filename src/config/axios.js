@@ -9,7 +9,7 @@ import locale from 'locale/global';
 
 import * as Sentry from '@sentry/browser';
 
-import { COMP_AVAIL_API, LIB_HOURS_API, TRAINING_API } from '../repositories/routes';
+import { LIB_HOURS_API, TRAINING_API } from '../repositories/routes';
 
 let apiClient = axios.create({
     baseURL: API_URL,
@@ -120,7 +120,6 @@ function alertDisplayAllowed(error) {
     // these APIs don't put a banner on the page because they are reported or ignored within their own panel
     const handlesErrorUrls =
         responseURL.startsWith(`${urlRoot}/${TRAINING_API().apiUrl}`) ||
-        responseURL.startsWith(`${urlRoot}/${COMP_AVAIL_API().apiUrl}`) ||
         responseURL.startsWith(`${urlRoot}/${LIB_HOURS_API().apiUrl}`);
 
     return !handlesErrorUrls;

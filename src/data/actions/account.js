@@ -1,7 +1,6 @@
 import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
 import {
-    COMP_AVAIL_API,
     CURRENT_ACCOUNT_API,
     CURRENT_AUTHOR_API,
     INCOMPLETE_NTRO_RECORDS_API,
@@ -107,35 +106,12 @@ export function loadLibHours() {
     };
 }
 
-/**
- * Loads the computer availability data
- * @returns {function(*)}
- */
-export function loadCompAvail() {
-    return dispatch => {
-        dispatch({ type: actions.COMP_AVAIL_LOADING });
-        return get(COMP_AVAIL_API())
-            .then(availResponse => {
-                dispatch({
-                    type: actions.COMP_AVAIL_LOADED,
-                    payload: availResponse,
-                });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.COMP_AVAIL_FAILED,
-                    payload: error.message,
-                });
-            });
-    };
-}
-
 export function logout(reload = false) {
     return dispatch => {
         dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
         if (!!reload) {
             dispatch(loadLibHours());
-            dispatch(loadCompAvail());
+            // dispatch(loadVemcountList());
         }
     };
 }
