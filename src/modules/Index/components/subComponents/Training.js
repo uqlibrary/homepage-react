@@ -93,9 +93,6 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             },
         },
     },
-    ['& .trainingSearch']: {
-        margin: '0 24px 24px 24px',
-    },
     ['& .detailHeader']: {
         backgroundColor: theme.palette.primary.light,
         color: theme.palette.white.main,
@@ -138,19 +135,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
 }));
 
 const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }) => {
-    const hideElement = elementId => {
-        const element = document.getElementById(elementId);
-        !!element && (element.style.display = 'none');
-    };
-    const showElement = elementId => {
-        const element = document.getElementById(elementId);
-        !!element && (element.style.display = 'block');
-    };
-
     const [eventDetail, setEventDetail] = useState(null);
     const showEventDetail = (event, value = null) => {
         console.log('showEventDetail', value, event);
-        hideElement('trainingSearch');
         setEventDetail(value ?? event);
         setTimeout(() => {
             document.getElementById('training-event-detail-close-button').focus();
@@ -158,7 +145,6 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
     };
     const closeEvent = entityId => {
         console.log('closeEvent entityId=', entityId);
-        showElement('trainingSearch');
         setEventDetail(null);
     };
     moment.tz.setDefault('Australia/Brisbane');
