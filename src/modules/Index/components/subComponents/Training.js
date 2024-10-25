@@ -72,11 +72,14 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             color: theme.palette.primary.light,
             lineHeight: '100%', // 16px
         },
+        ['& .listEventItem:has(> .listEventTitle)']: {
+            marginTop: '8px',
+        },
         ['& .listEventTitle']: {
             fontSize: '20px',
-            lineHeight: '120%', // 24px
+            lineHeight: 1,
             letterSpacing: '0.2px',
-            marginTop: '8px',
+            padding: '2px 0',
         },
         ['& .listEventLocation']: {
             fontWeight: 400,
@@ -223,11 +226,12 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                 fontSize: '16px',
                                 fontStyle: 'normal',
                                 lineHeight: '160%', // 25.6px
-                                padding: '7px 0 0 0',
+                                paddingBlock: 0,
                                 marginLeft: '16px',
+                                marginTop: '7px',
                             }}
                         >
-                            See all Training
+                            See all training
                         </a>
                     </Grid>
                 </Grid>
@@ -284,8 +288,10 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                             <div className={'listEventItem listEventDate'}>
                                                                 {eventTime(event.start)}
                                                             </div>
-                                                            <div className={'listEventItem listEventTitle'}>
-                                                                {event.name}...
+                                                            <div className={'listEventItem'}>
+                                                                <span className={'listEventTitle'}>
+                                                                    {event.name}...
+                                                                </span>
                                                             </div>
                                                             <div className={'listEventItem listEventLocation'}>
                                                                 {event.campus}
