@@ -17,6 +17,7 @@ import { default as locale } from 'modules/Pages/LearningResources/shared/learni
 import { styled } from '@mui/material/styles';
 
 const StyledSearchPanel = styled(Grid)(() => ({
+    marginTop: '10px',
     padding: '0 24px 24px 24px',
     '& .searchPanelInfo': {
         color: 'red',
@@ -158,7 +159,6 @@ export const SubjectSearchDropdown = ({
                                 <TextField
                                     variant="standard"
                                     {...params}
-                                    placeholder={locale.search.placeholder}
                                     error={!!CRsuggestionsError}
                                     InputProps={{
                                         ...params.InputProps,
@@ -166,6 +166,7 @@ export const SubjectSearchDropdown = ({
                                         classes: {
                                             input: 'selectInput',
                                         },
+                                        'data-testid': 'learning-resource-search-input-field',
                                     }}
                                     inputProps={{
                                         ...params.inputProps,
@@ -174,10 +175,14 @@ export const SubjectSearchDropdown = ({
                                         'aria-label': 'search for a subject by course code or title',
                                     }}
                                     InputLabelProps={{
+                                        shrink: false,
                                         sx: {
-                                            [`&.${inputLabelClasses.shrink}`]: {
+                                            paddingLeft: '2px',
+                                            '&.Mui-focused': {
+                                                color: 'grey',
                                                 borderWidth: 0,
                                             },
+                                            display: !!searchKeyword ? 'none' : 'block',
                                         },
                                     }}
                                     label={locale.search.placeholder}
