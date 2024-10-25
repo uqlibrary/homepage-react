@@ -1,14 +1,16 @@
 import React, { useRef, useState } from 'react';
 import { PropTypes } from 'prop-types';
 
-import { isRepeatingString, unescapeString } from 'helpers/general';
+import { throttle } from 'throttle-debounce';
 
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import { throttle } from 'throttle-debounce';
 import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
+import { inputLabelClasses } from '@mui/material/InputLabel';
 import Typography from '@mui/material/Typography';
+
+import { isRepeatingString, unescapeString } from 'helpers/general';
 
 import { extractSubjectCodeFromName } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
 import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
@@ -107,7 +109,7 @@ export const SubjectSearchDropdown = ({
 
     function dsSearchIcon() {
         return (
-            <svg width="24" height="24" fill="none" aria-hidden="true" focusable="false">
+            <svg width="24" height="24" fill="none" aria-hidden="true" focusable="false" style={{ marginRight: '2px' }}>
                 <path stroke="#000" strokeWidth="1.5" d="M10.5 17a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13Z" />
                 <path
                     stroke="#000"
@@ -146,6 +148,9 @@ export const SubjectSearchDropdown = ({
                             [`& .${autocompleteClasses.popupIndicator}`]: {
                                 transform: 'none',
                             },
+                            '& .Mui-focused': {
+                                border: '1px solid #dcdcdd',
+                            },
                         }}
                         groupBy={() => false}
                         renderInput={params => {
@@ -168,7 +173,32 @@ export const SubjectSearchDropdown = ({
                                         'data-analyticsid': `${elementId}-autocomplete-input-wrapper`,
                                         'aria-label': 'search for a subject by course code or title',
                                     }}
+                                    InputLabelProps={{
+                                        sx: {
+                                            [`&.${inputLabelClasses.shrink}`]: {
+                                                borderWidth: 0,
+                                            },
+                                        },
+                                    }}
                                     label={locale.search.placeholder}
+                                    sx={{
+                                        // full grey border on input field, like drupal
+                                        '& .MuiAutocomplete-inputRoot': {
+                                            border: '1px solid #dcdcdd',
+                                        },
+                                        // blue border on focus on input field, like drupal
+                                        '& .MuiInputBase-root': {
+                                            '&:focus-within': {
+                                                borderColor: '#2377CB',
+                                            },
+                                        },
+                                        // stop the bottom border from being double thickness, like drupal
+                                        '& .MuiInput-underline:before': { borderBottomWidth: 0 },
+                                        '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+                                            borderBottomWidth: 0,
+                                        },
+                                        '& .MuiInput-underline:after': { borderBottomWidth: 0 },
+                                    }}
                                 />
                             );
                         }}
