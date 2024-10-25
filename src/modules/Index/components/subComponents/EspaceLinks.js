@@ -27,10 +27,11 @@ const StyledGridItem = styled(Grid)(() => ({
     },
 }));
 const StyledActionsGrid = styled(Grid)(() => ({
-    paddingLeft: 0,
+    paddingLeft: '10px',
     marginTop: 0,
-    marginLeft: '42px',
+    marginLeft: '30px',
     marginBottom: 0,
+    maxWidth: 'calc(100% - 18px)',
     '& li': {
         marginTop: '8px',
     },
@@ -68,7 +69,7 @@ const EspacePossible = ({ recordCount }) => {
 };
 const EspaceUpdateWorks = () => {
     return (
-        <StyledGridItem component={'li'} item xs={12}>
+        <StyledGridItem component={'div'} item xs={12}>
             <Link
                 to={'https://espace.library.uq.edu.au/dashboard'}
                 id="espace-updateworks"
@@ -82,7 +83,7 @@ const EspaceUpdateWorks = () => {
 
 const EspaceEditorialAppointments = () => {
     return (
-        <StyledGridItem component={'li'} item xs={12}>
+        <StyledGridItem component={'div'} item xs={12}>
             <Link
                 to={'https://espace.library.uq.edu.au/editorial-appointments'}
                 id="espace-editorialAppointments"
@@ -139,8 +140,7 @@ export const EspaceLinks = ({ author, possibleRecords, incompleteNTRORecords }) 
                         style={{
                             backgroundColor: uqDsWarningYellow,
                             padding: '16px',
-                            marginBottom: '16px',
-                            marginTop: '16px',
+                            margin: '16px 0',
                         }}
                     >
                         <StyledSubtitleTypography component={'h4'}>
