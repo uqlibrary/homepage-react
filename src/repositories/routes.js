@@ -63,7 +63,9 @@ export const LIB_HOURS_API = () => ({
     options: { params: { ts: `${new Date().getTime()}` } },
 });
 
-export const VEMCOUNT_API = () => ({ apiUrl: 'vemcount/list' });
+export const VEMCOUNT_API = () => ({
+    apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage/articles.json',
+});
 
 // file uploading apis
 export const UPLOAD_PUBLIC_FILES_API = () => ({ apiUrl: 'file/public' });
