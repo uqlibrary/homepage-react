@@ -64,7 +64,7 @@ export const LIB_HOURS_API = () => ({
 });
 
 export const VEMCOUNT_API = () => ({
-    apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage/articles.json',
+    apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/headcount.json',
 });
 
 // file uploading apis
