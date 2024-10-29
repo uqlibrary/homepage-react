@@ -5,8 +5,22 @@ import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { canSeeLoans, canSeePrintBalance, isTestTagUser } from 'helpers/access';
+import UqDsExclamationCircle from '../../../SharedComponents/Icons/UqDsExclamationCircle';
+
+const uqDsWarningYellow = '#fef8e8';
+const StyledAlertDiv = styled('div')(() => ({
+    backgroundColor: uqDsWarningYellow,
+    padding: '16px',
+    margin: '0 16px 16px 16px',
+    display: 'flex',
+    textAlign: 'center',
+    '& a': {
+        marginLeft: '6px',
+    },
+}));
 
 const StyledUl = styled('ul')(() => ({
+    marginBottom: 0,
     '& li': {
         paddingBottom: '16px',
         marginLeft: '-20px',
@@ -183,6 +197,12 @@ const muiBeenHereIcon = (
 );
 
 export const CataloguePanel = ({ account, loans, printBalance }) => {
+    function totalFines(fines) {
+        return fines.reduce((sum, fine) => {
+            return sum + (typeof fine.fineAmount === 'number' ? fine.fineAmount : 0);
+        }, 0);
+    }
+
     return (
         <StandardCard subCard noPadding primaryHeader standardCardId="catalogue-panel" title="My library account">
             <StyledUl>
@@ -206,13 +226,6 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
                         {dsBookCloseBookmarkIcon} <span>Loans ({`${loans?.total_loans_count}`})</span>
                     </Link>
                 </li>
-                {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
-                    <li data-testid={'show-fines'}>
-                        <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
-                            {dsDiscountDollarDashIcon} <span>Fines ({`${loans?.total_loans_count}`})</span>
-                        </Link>
-                    </li>
-                )}
                 {canSeePrintBalance(account) && (
                     <li data-testid={'show-papercut'}>
                         <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=queries">
@@ -235,6 +248,14 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
                     </li>
                 )}
             </StyledUl>
+            {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
+                <StyledAlertDiv data-testid={'show-fines'}>
+                    <UqDsExclamationCircle style={{ height: '22px' }} />
+                    <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
+                        <span>Fines (${`${totalFines(loans?.fines)}`})</span>
+                    </Link>
+                </StyledAlertDiv>
+            )}
         </StandardCard>
     );
 };
