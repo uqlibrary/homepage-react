@@ -49,19 +49,18 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         width: '100%',
     },
     '& table': {
-        width: '100%',
+        width: '85%',
         borderCollapse: 'collapse',
-        marginTop: '24px',
-        marginBottom: 0,
+        margin: '24px 40px 0 32px',
     },
     '& tr': {
         height: '2rem',
-        '& td:not(:first-child)': {
-            width: '1%', // this allows the library name cell to do an ellipsis
+        '& td:not(:first-of-type)': {
+            // width: '1%', // this allows the library name cell to do an ellipsis
             whiteSpace: 'nowrap',
         },
-        '& th:not(:first-child)': {
-            width: '1%',
+        '& th:not(:first-of-type)': {
+            // width: '1%',
             whiteSpace: 'nowrap',
         },
     },
@@ -73,13 +72,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         textAlign: 'left',
         color: theme.palette.secondary.dark,
     },
-    '& .table-cell-name a': {
-        marginTop: '4px',
-        paddingLeft: '32px',
-    },
-    '& .table-header-name div': {
-        paddingLeft: '32px',
-    },
+    // '& .table-header-name div': {
+    //     paddingLeft: '32px',
+    // },
     '& th .table-cell-name-content': {
         marginTop: '4px',
     },
@@ -88,30 +83,36 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         position: 'absolute',
         left: 0,
         top: 0,
-        width: '100%',
+        // width: '100%',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
     },
-    '& .table-row': {
-        '& a': {
-            color: theme.palette.primary.light,
+    '& .table-row-body': {
+        transition: 'color 200ms ease-out, background-color 200ms ease-out',
+        '&:hover': {
+            cursor: 'pointer',
+            '& td:first-of-type a': {
+                backgroundColor: theme.palette.primary.light,
+                color: 'white',
+            },
+        },
+        '& td a': {
+            marginBlock: '4px',
+            padding: 0,
             textDecoration: 'underline',
             '&:hover': {
+                color: 'inherit',
                 backgroundColor: 'inherit',
             },
         },
     },
-    '& .table-row-body': {
-        '&:hover': {
-            backgroundColor: '#f3f3f4', // $grey-50	Background colour to highlight sections, cards or panes
-        },
-    },
     '& .table-column-busy': {
         paddingBlock: 0,
-        paddingRight: '40px',
-        '& > div': {
-            marginLeft: '24px',
-        },
+        marginRight: '40px',
+        // width: '150px', // needs adjustment for mobile?
+    },
+    '& a:has(.occupancy)': {
+        width: '150px', // needs adjustment for mobile?
     },
     '& .occupancy': {
         backgroundColor: '#dcdcdc',
@@ -284,7 +285,7 @@ const vemcountapi = {
         },
         {
             id: 14975, // Central Library
-            headCount: 2,
+            headCount: 0,
             capacity: 770,
         },
         {
@@ -435,42 +436,21 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                     const minimumDisplayedPercentage = 5;
 
                     const vemcountBusynessPercent = vemcountPercentByLocation(springshareLocationId);
-                    let calculatedBusyness;
+                    let calculatedBusyness = null;
                     if (vemcountBusynessPercent === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING) {
                         calculatedBusyness = vemcountBusynessPercent;
                     } else if (!!isNaN(vemcountBusynessPercent)) {
                         calculatedBusyness = null;
-                    } else if (vemcountBusynessPercent > 0 && vemcountBusynessPercent < minimumDisplayedPercentage) {
+                    } else if (vemcountBusynessPercent < minimumDisplayedPercentage) {
                         // don't let the bar go below what shows as a small curve on the left
                         calculatedBusyness = minimumDisplayedPercentage;
-                    } else if (vemcountBusynessPercent > 0) {
-                        calculatedBusyness = Math.floor(vemcountBusynessPercent);
                     } else {
-                        calculatedBusyness = null;
+                        calculatedBusyness = Math.floor(vemcountBusynessPercent);
                     }
 
                     return calculatedBusyness;
                 }
 
-                function tempCalcLocationBusiness() {
-                    // this wil be replaced wih api results
-                    const lookuptable = {
-                        Central: 100,
-                        DHEngSci: 20,
-                        Fryer: 25,
-                        Law: 70,
-                        'Duhig Study': 90,
-                        'Arch Music': 95,
-                        'Biol Sci': VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING,
-                        Herston: 100,
-                    };
-                    if (location?.abbr === 'Gatton') {
-                        return null;
-                    }
-                    return lookuptable[location?.abbr] || 50;
-                }
-
-                const randomBusynessNumber = tempCalcLocationBusiness();
                 return {
                     name: location.name,
                     abbr: location.abbr,
@@ -478,8 +458,8 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                     alt: location.name,
                     campus: locationLocale.hoursCampusMap[location.abbr],
                     departments,
-                    busyness: randomBusynessNumber,
-                    // busyness: getVemcountPercentage(location?.lid, location.name) || null,
+                    // busyness: randomBusynessNumber,
+                    busyness: getVemcountPercentage(location?.lid, location.name) || null,
                 };
             })) ||
         [];
@@ -521,6 +501,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
     };
 
     function getLibraryHours(location) {
+        /* istanbul ignore else */
         if (location.abbr === 'AskUs') {
             return location.departments.map(department => {
                 if (['Chat'].includes(department.name)) {
@@ -529,6 +510,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                 return null;
             });
         }
+        /* istanbul ignore else */
         if (hasDepartments(location)) {
             return location.departments.map(department => {
                 if (departmentsMap.includes(department.name)) {
@@ -562,7 +544,10 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                 <div
                     className={`occupancyPercent occupancyPercent${location.busyness}`}
                     style={{
-                        width: !hasDepartments(location) || isOpen(location) ? `${location.busyness}%` : 0,
+                        width:
+                            !hasDepartments(location) || isOpen(location)
+                                ? `${location.busyness}%`
+                                : /* istanbul ignore next */ 0,
                     }}
                     title={busynessText(location.busyness)}
                 >
@@ -571,6 +556,25 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
             </div>
         );
     }
+
+    const getOverrideLocationName = locationAbbr => {
+        // if not present in the lookup table, use the value passed from Springhshare
+        const lookupTable = {
+            AskUs: 'AskUs chat hours', // this one must be overriden long term, I think
+            'Arch Music': 'Architecture and Music', // all these following should be able to be deleted once the Springshare name values are updated, post go live
+            'Biol Sci': 'Biological Sciences',
+            DHEngSci: 'Dorothy Hill Engineering and Sciences',
+            'Dutton Park': 'Dutton Park Health Sciences',
+            Fryer: 'FW Robinson Reading Room (Fryer)',
+            Gatton: 'JK Murray (UQ Gatton)',
+            Law: 'Walter Harrison Law',
+        };
+        if (lookupTable.hasOwnProperty(locationAbbr)) {
+            return lookupTable[locationAbbr];
+        }
+        // Return null if the key is not found
+        return null;
+    };
 
     return (
         <StyledStandardCard noPadding noHeader standardCardId="locations-panel">
@@ -591,7 +595,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                                 <thead className="table-row-header">
                                     <tr className={'table-row'}>
                                         <th className={'table-header-name'} id="locations-header-library">
-                                            <div className={'table-cell-name-content'}>Library</div>
+                                            <div>Library</div>
                                         </th>
                                         {isWideScreen && (
                                             <th
@@ -618,6 +622,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                                                     data-testid={sluggifyName(`hours-item-${location.abbr}`)}
                                                     key={index}
                                                     className={`table-row table-row-body location-${location.abbr.toLowerCase()}`}
+                                                    data-analyticsid={`hours-item-${index}`}
                                                 >
                                                     <td
                                                         className={'table-body-cell table-cell-name'}
@@ -626,14 +631,12 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                                                         <a
                                                             id={`${sluggifyName(`hours-item-${location.abbr}`)}`}
                                                             aria-label={ariaLabelForLocation(location)}
-                                                            data-analyticsid={`hours-item-${index}`}
+                                                            data-testid={`hours-item-name-${index}`}
                                                             href={location.url}
                                                             style={{ paddingBlock: 0 }}
-                                                            className={'table-cell-name-content'}
+                                                            // className={'table-cell-name-content'}
                                                         >
-                                                            {location.abbr === 'AskUs'
-                                                                ? 'AskUs chat hours'
-                                                                : location.name}
+                                                            {getOverrideLocationName(location.abbr) || location.name}
                                                         </a>
                                                     </td>
                                                     {isWideScreen && (
@@ -646,14 +649,30 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                                                                 `${sluggifyName(`hours-item-${location.abbr}`)}`
                                                             }
                                                         >
-                                                            {getLibraryHours(location)}
+                                                            <a
+                                                                aria-label={ariaLabelForLocation(location)}
+                                                                data-testid={`hours-item-hours-${index}`}
+                                                                href={location.url}
+                                                                style={{ paddingBlock: 0 }}
+                                                                // className={'table-cell-name-content'}
+                                                            >
+                                                                {getLibraryHours(location)}
+                                                            </a>
                                                         </td>
                                                     )}
                                                     <td
                                                         aria-labelledby="locations-header-busyness"
                                                         className={'table-body-cell table-cell-busy table-column-busy'}
                                                     >
-                                                        <div>{getBusyness(location)}</div>
+                                                        <a
+                                                            aria-label={ariaLabelForLocation(location)}
+                                                            data-testid={`hours-item-busy-${index}`}
+                                                            href={location.url}
+                                                            style={{ paddingBlock: 0 }}
+                                                            // className={'table-cell-name-content'}
+                                                        >
+                                                            {getBusyness(location)}
+                                                        </a>
                                                     </td>
                                                 </tr>
                                             );
