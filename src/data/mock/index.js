@@ -1248,8 +1248,12 @@ mock.onGet('exams/course/FREN1010/summary')
                 return [200, loans];
             case 's2222222':
                 return [200, addFineEntry(loans, 17.04)];
+            case 's3333333':
+                return [200, { ...loans, total_holds_count: 4, total_loans_count: 0, total_fines_count: 0 }];
+            case 'uqresearcher':
+                return [200, { ...loans, total_loans_count: 7, total_holds_count: 0, total_fines_count: 0 }];
             default:
-                return [200, { ...loans, total_fines_count: 0 }];
+                return [200, { ...loans, fines: [], total_fines_count: 0 }];
         }
     })
     .onAny()

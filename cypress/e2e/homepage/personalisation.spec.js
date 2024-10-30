@@ -85,6 +85,13 @@ context('Personalised Homepage', () => {
         hasPanels(['catalogue', 'referencing', 'learning-resources', 'training']);
 
         hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        // special loans & requests values
+        cy.get('[data-testid="show-requests"] span')
+            .should('exist')
+            .contains('4');
+        cy.get('[data-testid="show-loans"] span')
+            .should('exist')
+            .contains('0');
 
         hasNoEspacePanel();
     });
@@ -95,6 +102,13 @@ context('Personalised Homepage', () => {
         hasPanels(['catalogue', 'referencing', 'learning-resources', 'training', 'espace', 'readpublish']);
 
         hasCatalogPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        // special loans & requests values
+        cy.get('[data-testid="show-requests"] span')
+            .should('exist')
+            .contains('0');
+        cy.get('[data-testid="show-loans"] span')
+            .should('exist')
+            .contains('7');
 
         hasEspaceEntries(['espace-possible', 'espace-orcid', 'espace-ntro']);
     });
