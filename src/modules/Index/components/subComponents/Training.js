@@ -51,7 +51,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         flexDirection: 'column',
         height: '100%',
         overflow: 'hidden',
-        marginBottom: '24px',
+        marginBottom: '-24px',
         minHeight: '25em',
     },
     ['& .linkButton']: {
