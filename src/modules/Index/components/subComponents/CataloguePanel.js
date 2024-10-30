@@ -196,11 +196,32 @@ const muiBeenHereIcon = (
     </svg>
 );
 
-export const CataloguePanel = ({ account, loans, printBalance }) => {
+export const CataloguePanel = ({ account, loans, loansLoading, printBalance, printBalanceLoading }) => {
     function totalFines(fines) {
         return fines.reduce((sum, fine) => {
             return sum + (typeof fine.fineAmount === 'number' ? fine.fineAmount : 0);
         }, 0);
+    }
+
+    function markedLoanQuantity() {
+        if (!!loansLoading || !loans?.total_loans_count) {
+            return null;
+        }
+        return <> ({`${loans?.total_loans_count}`})</>;
+    }
+
+    function markedRequestQuantity() {
+        if (!!loansLoading || !loans?.total_holds_count) {
+            return null;
+        }
+        return <> ({`${loans?.total_holds_count}`})</>;
+    }
+
+    function markedPrintBalance() {
+        if (!!printBalanceLoading || !printBalance?.balance) {
+            return null;
+        }
+        return <> (${printBalance?.balance})</>;
     }
 
     return (
@@ -218,24 +239,18 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
                 </li>
                 <li data-testid={'show-requests'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=requests&lang=en_US">
-                        {dsStudyBookIcon} <span>Requests ({`${loans?.total_holds_count}`})</span>
+                        {dsStudyBookIcon} <span>Requests {markedRequestQuantity()}</span>
                     </Link>
                 </li>
                 <li data-testid={'show-loans'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
-                        {dsBookCloseBookmarkIcon} <span>Loans ({`${loans?.total_loans_count}`})</span>
+                        {dsBookCloseBookmarkIcon} <span>Loans {markedLoanQuantity()}</span>
                     </Link>
                 </li>
                 {canSeePrintBalance(account) && (
                     <li data-testid={'show-papercut'}>
                         <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=queries">
-                            {dsDiscountDollarDashIcon}{' '}
-                            <span>
-                                {'Print balance [balance]'.replace(
-                                    '[balance]',
-                                    printBalance && printBalance.balance ? `($${printBalance.balance})` : '',
-                                )}
-                            </span>
+                            {dsDiscountDollarDashIcon} <span>Print balance {markedPrintBalance()}</span>
                         </Link>
                     </li>
                 )}
@@ -263,7 +278,9 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
 CataloguePanel.propTypes = {
     account: PropTypes.object,
     loans: PropTypes.object,
+    loansLoading: PropTypes.bool,
     printBalance: PropTypes.object,
+    printBalanceLoading: PropTypes.bool,
 };
 
 export default CataloguePanel;
