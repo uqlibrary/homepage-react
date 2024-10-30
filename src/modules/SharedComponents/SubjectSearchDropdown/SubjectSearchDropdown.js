@@ -183,6 +183,7 @@ export const SubjectSearchDropdown = ({
                                                 borderWidth: 0,
                                             },
                                             display: !!searchKeyword ? 'none' : 'block',
+                                            marginTop: '2px',
                                         },
                                     }}
                                     label={locale.search.placeholder}
