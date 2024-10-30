@@ -1,7 +1,6 @@
 /* eslint max-len: 0 */
 import React, { useEffect } from 'react';
 import ContentLoader from 'react-content-loader';
-import { lazy } from 'react';
 import { PropTypes } from 'prop-types';
 import { useDispatch } from 'react-redux';
 
@@ -10,7 +9,7 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { greeting, lazyRetry } from 'helpers/general';
+import { greeting } from 'helpers/general';
 
 import LibraryUpdates from 'modules/Index/components/subComponents/LibraryUpdates';
 import NavigationCardWrapper from './subComponents/NavigationCardWrapper';
@@ -31,12 +30,12 @@ import {
 } from 'helpers/access';
 import UtilityBar from './subComponents/UtilityBar';
 
-//const EspaceLinks = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/EspaceLinks')));
-//const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
-//const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
-//const ReferencingPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReferencingPanel')));
-//const ReadPublish = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReadPublish')));
-//const CataloguePanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/CataloguePanel')));
+// const EspaceLinks = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/EspaceLinks')));
+// const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
+// const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
+// const ReferencingPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReferencingPanel')));
+// const ReadPublish = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReadPublish')));
+// const CataloguePanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/CataloguePanel')));
 
 import EspaceLinks from './subComponents/EspaceLinks';
 import LearningResourcesPanel from './subComponents/LearningResourcesPanel';
@@ -196,7 +195,7 @@ export const Index = ({
                 libHoursLoading={libHoursLoading}
                 libHoursError={libHoursError}
             />
-            <React.Suspense fallback={<ContentLoader message="Loading"/>}> 
+            <React.Suspense fallback={<ContentLoader message="Loading"/>}>
             {!!account && (
                 <StyledGridWrapper>
                     <StandardPage>
@@ -209,7 +208,7 @@ export const Index = ({
                                 {!!verySimplelayout ? (
                                     <>
                                         <StyledGridItemLoggedIn item uqDsMobile={12} uqDsDesktop={4} data-testid="primo-panel">
-                                            <CataloguePanel account={account} loans={loans} printBalance={printBalance} />
+                                            <CataloguePanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} />
                                         </StyledGridItemLoggedIn>
                                         {canSeeTrainingPanel(account) && (
                                             <StyledGridItemLoggedIn item uqDsMobile={12} uqDsDesktop={4} data-testid="training-panel">
@@ -230,7 +229,7 @@ export const Index = ({
                                         <Grid item uqDsDesktop={4} uqDsMobile={12}>
                                             <Grid container>
                                                 <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="primo-panel">
-                                                    <CataloguePanel account={account} loans={loans} printBalance={printBalance} />
+                                                    <CataloguePanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} />
                                                 </StyledGridItemLoggedIn>
                                                 {canSeeTrainingPanel(account) && (
                                                     <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="training-panel">
