@@ -78,9 +78,15 @@
             </div>
         </div>
         <script type="text/javascript" src="<%= htmlWebpackPlugin.options.reusablejs %>" defer></script>
-        <script type='text/javascript'>
-            window.EESvcs = { 'eeid': 200106309487 };
+        <script
+                id="oit-loader"
+                src="https://uqcurrent--test.widget.custhelp.com/s/oit/latest/common/v0/libs/oit/loader.js" async>
         </script>
-        <script type='text/javascript' src="//ee.channels.ocs.oraclecloud.com/js/eesvcs.js" />
+
+        <inlay-oracle-chat-embedded
+                id="chatInlay"
+                class="inlay"
+                site-url="uqcurrent--test.widget.custhelp.com" >
+        </inlay-oracle-chat-embedded>
     </body>
 </html>
