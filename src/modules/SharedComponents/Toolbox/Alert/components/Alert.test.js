@@ -230,4 +230,18 @@ describe('Alert', () => {
         expect(actionFn).toHaveBeenCalledTimes(0);
         expect(container).toMatchSnapshot();
     });
+
+    it('should fire an action when the kind of type does not exist, as an error', () => {
+        const actionFn = jest.fn();
+        const { container, getByText, getByTestId } = setup({
+            message: 'Click me',
+            action: actionFn,
+            type: 'this_doesnt_exist',
+        });
+
+        fireEvent.click(getByText(/Click me/));
+        expect(actionFn).toHaveBeenCalledTimes(1);
+        expect(getByTestId('error-icon')).toBeInTheDocument();
+
+    });
 });

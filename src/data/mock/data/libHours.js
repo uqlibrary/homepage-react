@@ -1,7 +1,7 @@
 export const libHours = {
     "locations": [{
     "lid": 3823,
-    "name": "Architecture and Music",
+    "name": "Architecture & Music Library",
     "category": "library",
     "desc": "",
     "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/architecture-music-library",
@@ -126,7 +126,7 @@ export const libHours = {
     },
     {
         "lid": 3824,
-        "name": "Biological Sciences",
+        "name": "Biological Sciences Library",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/biological-sciences-library",
@@ -184,7 +184,7 @@ export const libHours = {
     },
     {
         "lid": 3842,
-        "name": "Central",
+        "name": "Central Library",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/central-library",
@@ -247,7 +247,7 @@ export const libHours = {
     },
     {
         "lid": 3825,
-        "name": "Dorothy Hill Engineering and Sciences",
+        "name": "Dorothy Hill Engineering and Sciences Library",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/dorothy-hill-engineering-and-sciences-library",
@@ -368,7 +368,7 @@ export const libHours = {
     },
     {
         "lid": 3967,
-        "name": "Dutton Park Health Sciences",
+        "name": "Dutton Park Health Sciences Library",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/dutton-park-health-sciences-library",
@@ -435,7 +435,7 @@ export const libHours = {
     },
     {
         "lid": 3832,
-        "name": "Fryer",
+        "name": "FW Robinson Reading Room",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/fw-robinson-reading-room",
@@ -485,7 +485,7 @@ export const libHours = {
             "status": "not-set"
         },
         "rendered": "",
-        "abbr": "Gatton",
+        "abbr": "Gatton Library",
         "departments": [{
             "lid": 8867,
             "name": "Collections & space",
@@ -548,7 +548,7 @@ export const libHours = {
             "status": "not-set"
         },
         "rendered": "",
-        "abbr": "Herston",
+        "abbr": "Herston Health Sciences Library",
         "departments": [{
             "lid": 10726,
             "name": "Collections & space",
@@ -621,7 +621,7 @@ export const libHours = {
     },
     {
         "lid": 3841,
-        "name": "Walter Harrison Law",
+        "name": "Law Library",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/law-library-walter-harrison-library",

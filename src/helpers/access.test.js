@@ -43,6 +43,7 @@ describe('access', () => {
         expect(
             canSeeLearningResourcesPanel({ id: 's123456', user_group: 'RHD', current_classes: [{ SUBJECT: 'FREN' }] }),
         ).toEqual(true);
+        expect(canSeeLearningResourcesPanel({})).toEqual(false);
     });
 
     it('alerts pages are limited to appropriate users', () => {

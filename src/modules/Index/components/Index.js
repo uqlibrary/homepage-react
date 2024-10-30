@@ -31,12 +31,19 @@ import {
 } from 'helpers/access';
 import UtilityBar from './subComponents/UtilityBar';
 
-const EspaceLinks = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/EspaceLinks')));
-const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
-const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
-const ReferencingPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReferencingPanel')));
-const ReadPublish = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReadPublish')));
-const CataloguePanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/CataloguePanel')));
+//const EspaceLinks = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/EspaceLinks')));
+//const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
+//const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
+//const ReferencingPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReferencingPanel')));
+//const ReadPublish = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReadPublish')));
+//const CataloguePanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/CataloguePanel')));
+
+import EspaceLinks from './subComponents/EspaceLinks';
+import LearningResourcesPanel from './subComponents/LearningResourcesPanel';
+import Training from './subComponents/Training';
+import ReferencingPanel from './subComponents/ReferencingPanel';
+import ReadPublish from './subComponents/ReadPublish';
+import CataloguePanel from './subComponents/CataloguePanel';
 
 const StyledPortalContainer = styled('div')(() => ({
     paddingTop: 48,
@@ -95,9 +102,6 @@ export const Index = ({
     libHours,
     libHoursLoading,
     libHoursError,
-    // computerAvailability,
-    // computerAvailabilityLoading,
-    // computerAvailabilityError,
     trainingEvents,
     trainingEventsLoading,
     trainingEventsError,
@@ -180,7 +184,7 @@ export const Index = ({
 
     const verySimplelayout = !canSeeLearningResourcesPanel(account) && !isEspaceAuthor(account, author) && !canSeeReadPublish(account);
     return (
-        <React.Suspense fallback={<ContentLoader message="Loading"/>}>
+            <>
             <StyledPortalContainer id="search-portal-container" data-testid="search-portal-container">
                 <StandardPage>
                     <StyledH1>Library</StyledH1>
@@ -192,7 +196,8 @@ export const Index = ({
                 libHoursLoading={libHoursLoading}
                 libHoursError={libHoursError}
             />
-            {accountLoading === false && !!account && (
+            <React.Suspense fallback={<ContentLoader message="Loading"/>}> 
+            {!!account && (
                 <StyledGridWrapper>
                     <StandardPage>
                         <Grid container>
@@ -280,10 +285,11 @@ export const Index = ({
                     </StandardPage>
                 </StyledGridWrapper>
             )}
+            </React.Suspense>
             <NavigationCardWrapper account={account} accountLoading={accountLoading} />
 
             <LibraryUpdates drupalArticleList={drupalArticleList} drupalArticlesError={drupalArticlesError} />
-        </React.Suspense>
+            </>
     );
 };
 
@@ -295,9 +301,6 @@ Index.propTypes = {
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
     libHoursError: PropTypes.bool,
-    computerAvailability: PropTypes.array,
-    computerAvailabilityLoading: PropTypes.bool,
-    computerAvailabilityError: PropTypes.bool,
     trainingEvents: PropTypes.any,
     trainingEventsLoading: PropTypes.bool,
     trainingEventsError: PropTypes.bool,

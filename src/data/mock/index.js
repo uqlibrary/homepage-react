@@ -22,7 +22,6 @@ import courseReadingList_PHIL1002 from './data/records/learningResources/courseR
 import courseReadingList_ACCT1101 from './data/records/learningResources/courseReadingList_ACCT1101';
 import subjectSearchSuggestions from './data/records/learningResources/subjectSearchSuggestions';
 import examSuggestion_FREN from './data/records/learningResources/examSuggestion_FREN';
-import { computerAvailability } from './data/computerAvailability';
 import { libHours } from './data/libHours';
 import { training_object, training_object_hospital } from './data/training';
 import { espaceSearchResponse, loans, printBalance } from './data/general';
@@ -316,9 +315,6 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08' }
         },
     ]),
 );
-
-mock.onGet(routes.COMP_AVAIL_API().apiUrl).reply(withDelay([200, computerAvailability]));
-// .reply(withDelay([500, {}]));
 
 // Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
 fetchMock.mock(
@@ -1240,7 +1236,26 @@ mock.onGet('exams/course/FREN1010/summary')
         }
     })
     .onGet(routes.LOANS_API().apiUrl)
-    .reply(withDelay([200, loans]))
+    .reply(() => {
+        function addFineEntry(_loans, newFine) {
+            const newFineObject = { fineAmount: newFine };
+            _loans.fines.push(newFineObject); // (we don't care about all the entries...)
+            _loans.total_fines_count = _loans.fines.length;
+            return _loans;
+        }
+        switch (user) {
+            case 's1111111':
+                return [200, loans];
+            case 's2222222':
+                return [200, addFineEntry(loans, 17.04)];
+            case 's3333333':
+                return [200, { ...loans, total_holds_count: 4, total_loans_count: 0, total_fines_count: 0 }];
+            case 'uqresearcher':
+                return [200, { ...loans, total_loans_count: 7, total_holds_count: 0, total_fines_count: 0 }];
+            default:
+                return [200, { ...loans, fines: [], total_fines_count: 0 }];
+        }
+    })
     .onAny()
     .reply(function(config) {
         console.log('url not mocked...', config.url);

@@ -75,11 +75,9 @@ context('The Homepage Learning Resource Panel', () => {
             .children()
             .should('have.length', 2); // 1 search field and one div with 'no courses' text
         // the user sees a search field
-        cy.get('div[data-testid=learning-resources-panel] form input').should(
-            'have.attr',
-            'placeholder',
-            locale.search.placeholder,
-        );
+        cy.get('div[data-testid="learning-resource-search-input-field"] input')
+            .should('exist')
+            .should('be.visible');
 
         // user enters ACCT
         cy.get('div[data-testid=learning-resources-panel] form input').type('ACCT11');
@@ -107,11 +105,9 @@ context('The Homepage Learning Resource Panel', () => {
         cy.viewport(1300, 1000);
         cy.get('div[data-testid=learning-resources-panel]').contains(locale.homepagePanel.title);
 
-        cy.get('div[data-testid=learning-resources-panel] form input').should(
-            'have.attr',
-            'placeholder',
-            locale.search.placeholder,
-        );
+        cy.get('div[data-testid="learning-resource-search-input-field"] input')
+            .should('exist')
+            .should('be.visible');
 
         // user enters FREN
         cy.get('div[data-testid=learning-resources-panel] form input').type('FREN');

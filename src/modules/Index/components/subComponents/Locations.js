@@ -544,10 +544,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                 <div
                     className={`occupancyPercent occupancyPercent${location.busyness}`}
                     style={{
-                        width:
-                            !hasDepartments(location) || isOpen(location)
-                                ? `${location.busyness}%`
-                                : /* istanbul ignore next */ 0,
+                        width: !hasDepartments(location) || isOpen(location) ? `${location.busyness}%` : /* istanbul ignore next */ 0,
                     }}
                     title={busynessText(location.busyness)}
                 >

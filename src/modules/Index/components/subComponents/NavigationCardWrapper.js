@@ -56,7 +56,7 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                         or the wrapping is off at widest tablet 2 column width :( */}
                     <SingleLinkCard
                         cardHeading="Library and student IT help"
-                        landingUrl={linkToDrupal('/askus-and-it-support')}
+                        landingUrl={linkToDrupal('/library-and-student-it-help')}
                         iconBackgroundImage={conversationChatBackgroundimage}
                         shortParagraph="Contact or visit AskUs for help with using your devices, printing and online exams."
                         loggedIn={accountLoading === false && !!account}

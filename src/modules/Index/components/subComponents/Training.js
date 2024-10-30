@@ -3,17 +3,13 @@ import { PropTypes } from 'prop-types';
 import ContentLoader from 'react-content-loader';
 import moment from 'moment-timezone';
 
-import Autocomplete from '@mui/material/Autocomplete';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Fade from '@mui/material/Fade';
-import InputAdornment from '@mui/material/InputAdornment';
 import { styled } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CloseIcon from '@mui/icons-material/Close';
 import EventIcon from '@mui/icons-material/Event';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
@@ -49,18 +45,6 @@ const MyLoader = props => (
         <rect x="0" y="200" rx="3" ry="3" width="100%" height="1" />
     </ContentLoader>
 );
-
-const StyledTextField = styled(TextField)(() => ({
-    fontWeight: 400,
-    textOverflow: 'ellipsis !important',
-    overflow: 'hidden !important',
-    whiteSpace: 'nowrap !important',
-    '&::placeholder': {
-        textOverflow: 'ellipsis !important',
-        overflow: 'hidden !important',
-        whiteSpace: 'nowrap !important',
-    },
-}));
 const StyledWrapper = styled('div')(({ theme }) => ({
     ['&.flexWrapper']: {
         display: 'flex',
@@ -88,11 +72,14 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             color: theme.palette.primary.light,
             lineHeight: '100%', // 16px
         },
+        ['& .listEventItem:has(> .listEventTitle)']: {
+            marginTop: '8px',
+        },
         ['& .listEventTitle']: {
             fontSize: '20px',
-            lineHeight: '120%', // 24px
+            lineHeight: 1,
             letterSpacing: '0.2px',
-            marginTop: '8px',
+            padding: '2px 0',
         },
         ['& .listEventLocation']: {
             fontWeight: 400,
@@ -100,16 +87,14 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             marginTop: '4px',
         },
         '&:hover': {
-            backgroundColor: theme.palette.primary.light,
-            transition: 'background-color 200ms ease-out',
-            '& .listEventItem': {
+            color: theme.palette.secondary.dark,
+            backgroundColor: '#fff',
+            '& .listEventTitle': {
                 color: '#fff',
-                backgroundColor: 'inherit',
+                backgroundColor: theme.palette.primary.light,
+                transition: 'background-color 200ms ease-out',
             },
         },
-    },
-    ['& .trainingSearch']: {
-        margin: '0 24px 24px 24px',
     },
     ['& .detailHeader']: {
         backgroundColor: theme.palette.primary.light,
@@ -153,25 +138,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
 }));
 
 const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }) => {
-    const [inputValue, setInputValue2] = useState('');
-    const setInputValue = e => {
-        console.log('setInputValue ', `"${e}"`);
-        setInputValue2(e);
-    };
-
-    const hideElement = elementId => {
-        const element = document.getElementById(elementId);
-        !!element && (element.style.display = 'none');
-    };
-    const showElement = elementId => {
-        const element = document.getElementById(elementId);
-        !!element && (element.style.display = 'block');
-    };
-
     const [eventDetail, setEventDetail] = useState(null);
     const showEventDetail = (event, value = null) => {
         console.log('showEventDetail', value, event);
-        hideElement('trainingSearch');
         setEventDetail(value ?? event);
         setTimeout(() => {
             document.getElementById('training-event-detail-close-button').focus();
@@ -179,7 +148,6 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
     };
     const closeEvent = entityId => {
         console.log('closeEvent entityId=', entityId);
-        showElement('trainingSearch');
         setEventDetail(null);
     };
     moment.tz.setDefault('Australia/Brisbane');
@@ -195,7 +163,6 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
             })
             .replace(':00', '');
     const bookingText = ev => {
-        console.log('ev=', ev);
         /*
           if bookingSettings is null then bookings are not required
           if bookingSettings has a placesRemaining child *and it is > 0" then there are places still available
@@ -203,6 +170,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
           We filter out the fully booked entries, because we are only showing 3 now, and that seems like a waste
          */
         let placesRemainingText = 'Booking is not required';
+        /* istanbul ignore else */
         if (ev.bookingSettings !== null) {
             if (ev?.bookingSettings?.placesRemaining > 0) {
                 placesRemainingText = 'Places still available';
@@ -223,25 +191,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
             ? list.filter(t => t.bookingSettings !== null).slice(0, NUMBER_OF_DISPLAYED_EVENTS)
             : [];
     };
-    const allStandardisedTrainingEvents = () => {
-        const list =
-            !trainingEventsLoading && !trainingEventsError && !!trainingEvents && typeof trainingEvents === 'object'
-                ? Object.keys(trainingEvents).map(key => {
-                      return trainingEvents[key];
-                  })
-                : trainingEvents;
-        return !!list && list.length > 0 ? list : [];
-    };
     const filteredTrainingEvents = filterStandardisedTrainingEvents();
-    const allTrainingEvents = allStandardisedTrainingEvents();
-    const filterEvents = (events, keyword) => {
-        if (!keyword || keyword.length < 3) return [];
-        return events.filter(
-            event =>
-                event.summary.toLowerCase().includes(keyword.toLowerCase()) ||
-                event.details.toLowerCase().includes(keyword.toLowerCase()),
-        );
-    };
     return (
         <StandardCard
             subCard
@@ -266,7 +216,9 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                             Training
                         </h3>
                         <a
-                            href={linkToDrupal('/library-services/training')}
+                            href={linkToDrupal(
+                                '/study-and-learning-support/training-and-workshops/online-and-person-workshops',
+                            )}
                             data-analyticsid="training-event-detail-more-training-button"
                             className={'seeAllTrainingLink'}
                             data-testid="seeAllTrainingLink"
@@ -274,60 +226,18 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                 fontSize: '16px',
                                 fontStyle: 'normal',
                                 lineHeight: '160%', // 25.6px
-                                padding: '7px 0 0 0',
+                                paddingBlock: 0,
                                 marginLeft: '16px',
+                                marginTop: '7px',
                             }}
                         >
-                            See all Training
+                            See all training
                         </a>
                     </Grid>
                 </Grid>
             }
         >
             <StyledWrapper className={'flexWrapper'}>
-                {allTrainingEvents && allTrainingEvents.length > 0 && !trainingEventsLoading && !trainingEventsError && (
-                    <div className={'trainingSearch'} id="trainingSearch">
-                        <Autocomplete
-                            id="training-search-wrapper"
-                            data-testid="training-search-wrapper"
-                            freeSolo
-                            options={filterEvents(allTrainingEvents, inputValue)}
-                            getOptionLabel={option => option.name}
-                            onInputChange={e => setInputValue(e.target.value)} // letters typed
-                            onChange={(event, value) => showEventDetail(event, value)}
-                            renderInput={params => (
-                                <StyledTextField
-                                    {...params}
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        type: 'search',
-                                        classes: {
-                                            input: 'selectInput',
-                                        },
-                                        endAdornment: (
-                                            <InputAdornment position="end">
-                                                <ArrowDropDownIcon />
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                    label="Search Events"
-                                    variant="standard"
-                                    sx={{
-                                        '& .MuiInput-underline:before': {
-                                            borderWidth: '0 0 1px 0',
-                                        },
-                                        '& .MuiInput-underline:hover:before': {
-                                            borderWidth: '0 0 2px 0',
-                                        },
-                                        '& .MuiInput-underline:after': {
-                                            borderWidth: '0 0 2px 0',
-                                        },
-                                    }}
-                                />
-                            )}
-                        />
-                    </div>
-                )}
                 {(() => {
                     if (!!trainingEventsError) {
                         return (
@@ -378,8 +288,10 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                             <div className={'listEventItem listEventDate'}>
                                                                 {eventTime(event.start)}
                                                             </div>
-                                                            <div className={'listEventItem listEventTitle'}>
-                                                                {event.name}...
+                                                            <div className={'listEventItem'}>
+                                                                <span className={'listEventTitle'}>
+                                                                    {event.name}...
+                                                                </span>
                                                             </div>
                                                             <div className={'listEventItem listEventLocation'}>
                                                                 {event.campus}

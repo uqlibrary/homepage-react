@@ -35,36 +35,38 @@ context('Locations Panel', () => {
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
     });
-    it('can navigate to specific library hours page', () => {
-        cy.intercept('GET', 'https://web.library.uq.edu.au/locations-hours/architecture-music-library', {
-            statusCode: 200,
-            body: 'user has navigated to Drupal hours page',
-        });
-        cy.visit('/');
-        cy.viewport(1300, 1000);
-        cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
-        cy.get('[data-testid="hours-accordion-open"]').click();
+    context('can navigate to weekly hours page', () => {
+        // the user can click from anywhere on each row
+        beforeEach(() => {
+            cy.intercept('GET', 'https://web.library.uq.edu.au/locations-hours/architecture-music-library', {
+                statusCode: 200,
+                body: 'user has navigated to Drupal hours page',
+            });
+            cy.visit('/');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
 
-        cy.get('[data-testid="hours-item-arch-music"]')
-            .find('a')
-            .should('contain', 'Architecture and Music')
-            .click();
-        cy.get('body').contains('user has navigated to Drupal hours page');
-    });
-    it('can navigate to weekly hours page', () => {
-        cy.intercept('GET', 'https://live-library-uq.pantheonsite.io/locations-hours/opening-hours', {
-            statusCode: 200,
-            body: 'user has navigated to Drupal weekly hours page',
+            cy.get('[data-testid="hours-accordion-open"]').click();
+            cy.get('[data-testid="hours-item-arch-music"]')
+                .find('a')
+                .should('contain', 'Architecture and Music');
         });
-        cy.visit('/');
-        cy.viewport(1300, 1000);
-        cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
-        cy.get('[data-testid="hours-accordion-open"]').click();
-
-        cy.get('[data-testid="homepage-hours-weeklyhours-link"]')
-            .should('contain', 'See weekly Library and AskUs hours')
-            .click();
-        cy.get('body').contains('user has navigated to Drupal weekly hours page');
+        it('from the library name cell', () => {
+            cy.get('a[data-testid="hours-item-name-0"]')
+                .should('contain', 'Architecture and Music')
+                .click();
+            cy.get('body').contains('user has navigated to Drupal hours page');
+        });
+        it('from the library open hours cell', () => {
+            cy.get('a[data-testid="hours-item-hours-0"]')
+                .should('contain', '7:30am - 7:30pm')
+                .click();
+            cy.get('body').contains('user has navigated to Drupal hours page');
+        });
+        it('from the busy level cell', () => {
+            cy.get('a[data-testid="hours-item-busy-0"]').click();
+            cy.get('body').contains('user has navigated to Drupal hours page');
+        });
     });
     it('can navigate to book a room page', () => {
         cy.intercept(/uqbookit/, 'user has navigated to Bookit page');
