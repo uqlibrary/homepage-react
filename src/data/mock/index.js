@@ -1236,7 +1236,22 @@ mock.onGet('exams/course/FREN1010/summary')
         }
     })
     .onGet(routes.LOANS_API().apiUrl)
-    .reply(withDelay([200, loans]))
+    .reply(() => {
+        function addFineEntry(_loans, newFine) {
+            const newFineObject = { fineAmount: newFine };
+            _loans.fines.push(newFineObject); // (we don't care about all the entries...)
+            _loans.total_fines_count = _loans.fines.length;
+            return _loans;
+        }
+        switch (user) {
+            case 's1111111':
+                return [200, loans];
+            case 's2222222':
+                return [200, addFineEntry(loans, 17.04)];
+            default:
+                return [200, { ...loans, total_fines_count: 0 }];
+        }
+    })
     .onAny()
     .reply(function(config) {
         console.log('url not mocked...', config.url);
