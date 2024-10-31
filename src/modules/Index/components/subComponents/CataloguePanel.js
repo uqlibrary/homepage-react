@@ -204,21 +204,21 @@ export const CataloguePanel = ({ account, loans, loansLoading, printBalance, pri
     }
 
     function markedLoanQuantity() {
-        if (!!loansLoading || !loans?.total_loans_count) {
+        if (!!loansLoading || !loans?.hasOwnProperty('total_loans_count')) {
             return null;
         }
         return <> ({`${loans?.total_loans_count}`})</>;
     }
 
     function markedRequestQuantity() {
-        if (!!loansLoading || !loans?.total_holds_count) {
+        if (!!loansLoading || !loans?.hasOwnProperty('total_holds_count')) {
             return null;
         }
         return <> ({`${loans?.total_holds_count}`})</>;
     }
 
     function markedPrintBalance() {
-        if (!!printBalanceLoading || !printBalance?.balance) {
+        if (!!printBalanceLoading || !printBalance?.hasOwnProperty('balance')) {
             return null;
         }
         return <> (${printBalance?.balance})</>;
