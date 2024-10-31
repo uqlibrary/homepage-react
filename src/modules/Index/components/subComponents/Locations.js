@@ -565,6 +565,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
             Fryer: 'FW Robinson Reading Room (Fryer)',
             Gatton: 'JK Murray (UQ Gatton)',
             Law: 'Walter Harrison Law',
+            Herston: 'Herston Health Sciences',
         };
         if (lookupTable.hasOwnProperty(locationAbbr)) {
             return lookupTable[locationAbbr];

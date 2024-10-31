@@ -534,7 +534,7 @@ export const libHours = {
     },
     {
         "lid": 3838,
-        "name": "Herston Health Sciences",
+        "name": "Herston Health Sciences Library",
         "category": "library",
         "desc": "<p style=\"box-sizing: border-box; color: rgb(34, 34, 34); font-family: Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;\">The library provides resources and services to support the teaching, learning and research needs of:<\/p>\r\n\r\n<ul style=\"box-sizing: border-box; color: rgb(34, 34, 34); font-family: Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;\">\r\n\t<li style=\"box-sizing: border-box;\">UQ staff and students<\/li>\r\n\t<li style=\"box-sizing: border-box;\">Staff of the Royal Brisbane and Women&#39;s Hospital (RBWH) and the<\/li>\r\n\t<li style=\"box-sizing: border-box;\">Lady Cilento Children&#39;s Hospital<\/li>\r\n<\/ul>\r\n\r\n<p style=\"box-sizing: border-box; color: rgb(34, 34, 34); font-family: Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;\">RBWH &amp; Lady Cilento Children&#39;s Hospital&nbsp;staff see&nbsp;<a href=\"https:\/\/web.library.uq.edu.au\/library-services\/services-hospital-staff\" style=\"box-sizing: border-box; color: rgb(35, 119, 203); text-decoration: none; background-color: transparent;\">services for hospital staff<\/a>&nbsp;for more information.<\/p>",
         "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/herston-health-sciences-library",
@@ -548,7 +548,7 @@ export const libHours = {
             "status": "not-set"
         },
         "rendered": "",
-        "abbr": "Herston Health Sciences Library",
+        "abbr": "Herston",
         "departments": [{
             "lid": 10726,
             "name": "Collections & space",
