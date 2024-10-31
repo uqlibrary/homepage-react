@@ -51,47 +51,47 @@ export const locale = {
     vemcountSpringshareMapping: [
         {
             springshareId: 3967,
-            vemcountId: 14980,
+            vemcountZoneId: 7880,
             name: 'Dutton park', // this doesn't need to match either system, its for the developer to not have to track raw numbers
         },
         {
             springshareId: 3842,
-            vemcountId: 14975,
+            vemcountZoneId: 7665,
             name: 'Central',
         },
         {
             springshareId: 3823,
-            vemcountId: 14974,
+            vemcountZoneId: 7877,
             name: 'Architecture',
         },
         {
             springshareId: 3824,
-            vemcountId: 14977,
+            vemcountZoneId: 7878,
             name: 'BSL',
         },
         {
             springshareId: 3825,
-            vemcountId: 14979,
+            vemcountZoneId: 7879,
             name: 'DHESL',
         },
         {
             springshareId: 3830,
-            vemcountId: 14976,
+            vemcountZoneId: 7411,
             name: 'Duhig tower',
         },
         {
             springshareId: 3833,
-            vemcountId: 14985,
+            vemcountZoneId: 7884,
             name: 'Gatton',
         },
         {
             springshareId: 3838,
-            vemcountId: 14983,
+            vemcountZoneId: 7883,
             name: 'Herston',
         },
         {
             springshareId: 3841,
-            vemcountId: 14978,
+            vemcountZoneId: 7882,
             name: 'Law',
         },
     ],

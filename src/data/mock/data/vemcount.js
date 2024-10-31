@@ -1,53 +1,65 @@
 export const vemcountData = {
-    data: [
-        {
-            id: 14976, // Duhig Tower
-            headCount: 160,
-            capacity: 294,
-        },
-        {
-            id: 14975, // Central Library
-            headCount: 2,
-            capacity: 770,
-        },
-        {
-            id: 14974, // Architecture & Music Library
-            headCount: 90,
-            capacity: 105,
-        },
-        {
-            id: 14977, // Biological Sciences Library
-            headCount: 290,
-            capacity: 595,
-        },
-        {
-            id: 14979, // DHESL
-            headCount: 130,
-            capacity: 315,
-        },
-        // mock data, gatton did not return a response
-        // {
-        //     id: 14985, // Gatton
-        //     headCount: 16,
-        //     capacity: 378,
-        // },
-        {
-            id: 14983, // Herston
-            headCount: 70,
-            capacity: 70,
-        },
-        {
-            id: 14978, // Law
-            headCount: 100,
-            capacity: 196,
-        },
-        {
-            id: 14980, // Dutton Park  (Pace)
-            headCount: 27,
-            capacity: 112,
-        },
-    ],
-    // missing:
+    data: {
+        dateLoaded: '2024-10-31 10:00:21',
+        locationList: [
+            {
+                id: 7411,
+                headCount: 160,
+                capacity: 294,
+                name: "Duhig Tower",
+            },
+            {
+                id: 7665,
+                headCount: 2,
+                capacity: 770,
+                name: '"Central (was Duhig North',
+            },
+            {
+                id: 7877,
+                headCount: 90,
+                capacity: 105,
+                name: 'Armus',
+            },
+            {
+                id: 7878,
+                headCount: 290,
+                capacity: 595,
+                name: 'BSL',
+            },
+            {
+                id: 7879,
+                headCount: 130,
+                capacity: 315,
+                name: 'DHESL',
+            },
+            // mock data, gatton did not return a response
+            // {
+            //     id: 7884,
+            //     headCount: 16,
+            //     capacity: 378,
+            //     name: 'Gatton',
+            // },
+            {
+                id: 7883,
+                headCount: 70,
+                capacity: 70,
+                name: 'Herston',
+            },
+            {
+                id: 7882,
+                headCount: 100,
+                capacity: 196,
+                name: 'Law',
+            },
+            {
+                id: 7880,
+                headCount: 27,
+                capacity: 112,
+                name: 'Dutton Park (PACE)',
+            },
+        ],
+    },
+    // missing, because no gates:
     // 4986 askus
     // 3832 fryer - FW Robinson Reading Room
     // 3966 whitty

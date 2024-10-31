@@ -285,15 +285,15 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
         };
     }, []);
 
+    function getVemcountZoneBySpringshareId(springshareLocationId) {
+        return locationLocale.vemcountSpringshareMapping.find(m => m.springshareId === springshareLocationId);
+    }
+
     function vemcountPercentByLocation(springshareLocationId) {
-        const vemcountholder = locationLocale.vemcountSpringshareMapping.filter(
-            m => m.springshareId === springshareLocationId,
-        );
-        const vemcountLocation = vemcountholder?.pop();
-        console.log('vemcountLocation=', vemcountLocation);
-        console.log('vemcount=', vemcount);
-        const vemcountId = vemcountLocation?.vemcountId;
-        const vemcountWrapper = vemcount?.data?.filter(v => v.id === vemcountId);
+        const vemcountLocation = getVemcountZoneBySpringshareId(springshareLocationId);
+        const vemcountZoneId = vemcountLocation?.vemcountZoneId;
+        const vemcountWrapper = vemcount?.data?.locationList?.filter(v => v.id === vemcountZoneId);
+        // const dateLoaded = vemcount?.data?.dateLoaded; // for use later
         const vemcountData = vemcountWrapper.length > 0 ? vemcountWrapper[0] : null;
         if (vemcountLocation?.springshareId === springshareLocationId && vemcountWrapper?.length === 0) {
             return VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING;
@@ -302,7 +302,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
     }
 
     function getVemcountPercentage(springshareLocationId) {
-        console.log('getVemcountPercentage', springshareLocationId);
         if (springshareLocationId === null) {
             return null;
         }
@@ -330,7 +329,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
 
     const getLocationsList = libHours => {
         return libHours.locations.map(location => {
-            console.log('location=', location);
             let departments = [];
             if (!!departmentProvided(location)) {
                 departments = location.departments.map(dept => {
@@ -342,7 +340,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                 });
             }
 
-            const response = {
+            return {
                 name: location.name,
                 abbr: location.abbr,
                 url: location.url,
@@ -351,8 +349,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                 departments,
                 busyness: getVemcountPercentage(location?.lid, location.name) || null,
             };
-            console.log('response', response);
-            return response;
         });
     };
 
@@ -362,7 +358,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
             !libHoursError &&
             !!libHours &&
             !!libHours.locations &&
-            vemcount.data.length > 0 &&
+            vemcount?.data?.locationList?.length > 0 &&
             libHours.locations.length > 0 &&
             getLocationsList(libHours)) ||
         [];
