@@ -347,7 +347,6 @@ export function loadLoans() {
             dispatch({ type: actions.LOANS_LOADING });
             return get(LOANS_API())
                 .then(loanResponse => {
-                    console.log('Loan Response: ', loanResponse);
                     dispatch({
                         type: actions.LOANS_LOADED,
                         payload: loanResponse,

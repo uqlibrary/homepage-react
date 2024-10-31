@@ -12,7 +12,7 @@ export const hasPanels = optionsTheUserShouldSee => {
     });
     possiblePanels.set('library-services', { title: 'Library services', content: 'Services for' });
     possiblePanels.set('past-exam-papers', { title: 'Past exam papers', content: 'Search by' });
-    possiblePanels.set('training', { title: 'Training', content: 'See all Training' });
+    possiblePanels.set('training', { title: 'Training', content: 'See all training' });
     possiblePanels.set('espace', { title: 'UQ eSpace', content: 'Update the following items' });
     possiblePanels.set('readpublish', { title: 'Read and publish', content: 'Publish in the right journal' });
     possiblePanels.set('catalogue', { title: 'My library account', content: 'Search history' });

@@ -200,11 +200,9 @@ function a_user_with_no_classes_sees_notice_of_same_in_courses_list() {
 }
 
 function the_user_sees_the_search_form() {
-    cy.get('div[data-testid=full-learningresource-autocomplete] input').should(
-        'have.attr',
-        'placeholder',
-        locale.search.placeholder,
-    );
+    cy.get('[data-testid="learning-resource-search-input-field"] input')
+        .should('exist')
+        .should('be.visible');
 }
 
 function click_on_a_subject_tab(panelNumber, courseReadingList) {

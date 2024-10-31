@@ -5,30 +5,50 @@ import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { canSeeLoans, canSeePrintBalance, isTestTagUser } from 'helpers/access';
-import { getHomepageLink } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
+import UqDsExclamationCircle from '../../../SharedComponents/Icons/UqDsExclamationCircle';
+
+const uqDsWarningYellow = '#fef8e8';
+const StyledAlertDiv = styled('div')(() => ({
+    backgroundColor: uqDsWarningYellow,
+    padding: '16px',
+    margin: '0 16px 16px 16px',
+    display: 'flex',
+    textAlign: 'center',
+    '& a': {
+        marginLeft: '6px',
+    },
+}));
 
 const StyledUl = styled('ul')(() => ({
-    marginLeft: 0,
-    paddingLeft: 0,
+    marginBottom: 0,
     '& li': {
+        paddingBottom: '16px',
+        marginLeft: '-20px',
         listStyleType: 'none',
         '& a': {
             display: 'flex',
             alignItems: 'center',
-            paddingBlock: '8px',
-            paddingLeft: '24px',
+            paddingLeft: '4px',
+            '&:hover': {
+                color: 'inherit',
+                backgroundColor: 'inherit',
+            },
             '& svg': {
                 stroke: '#51247A',
+                paddingRight: '12px',
+            },
+            '&:hover span': {
+                color: '#fff',
+                backgroundColor: '#51247A',
             },
             '&:hover svg': {
-                stroke: 'white',
+                color: 'inherit',
+                backgroundColor: 'inherit',
             },
             '&:hover path': {
-                stroke: 'white',
+                color: 'inherit',
+                backgroundColor: 'inherit',
             },
-        },
-        '& span': {
-            paddingLeft: '12px',
         },
     },
 }));
@@ -176,23 +196,34 @@ const muiBeenHereIcon = (
     </svg>
 );
 
+export const CataloguePanel = ({ account, loans, loansLoading, printBalance, printBalanceLoading }) => {
+    function totalFines(fines) {
+        return fines.reduce((sum, fine) => {
+            return sum + (typeof fine.fineAmount === 'number' ? fine.fineAmount : 0);
+        }, 0);
+    }
 
+    function markedLoanQuantity() {
+        if (!!loansLoading || !loans?.total_loans_count) {
+            return null;
+        }
+        return <> ({`${loans?.total_loans_count}`})</>;
+    }
 
-// Function appears to be redundant in this particular case.
-// export const librarylink = url => {
-//     let _url = url;
-//     if (document.location.host !== 'www.library.uq.edu.au' && _url.startsWith('https://www.library.uq.edu.au/')) {
-//         let homepageLink = getHomepageLink();
-//         let params = '';
-//         const tempUrl = new URL(homepageLink);
-//         params = tempUrl.search;
-//         homepageLink = homepageLink.replace(params, '');
-//         _url = _url.replace('https://www.library.uq.edu.au/', homepageLink) + params;
-//     }
-//     return _url;
-// };
+    function markedRequestQuantity() {
+        if (!!loansLoading || !loans?.total_holds_count) {
+            return null;
+        }
+        return <> ({`${loans?.total_holds_count}`})</>;
+    }
 
-export const CataloguePanel = ({ account, loans, printBalance }) => {
+    function markedPrintBalance() {
+        if (!!printBalanceLoading || !printBalance?.balance) {
+            return null;
+        }
+        return <> (${printBalance?.balance})</>;
+    }
+
     return (
         <StandardCard subCard noPadding primaryHeader standardCardId="catalogue-panel" title="My library account">
             <StyledUl>
@@ -208,31 +239,18 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
                 </li>
                 <li data-testid={'show-requests'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=requests&lang=en_US">
-                        {dsStudyBookIcon} <span>Requests ({`${loans?.total_holds_count}`})</span>
+                        {dsStudyBookIcon} <span>Requests {markedRequestQuantity()}</span>
                     </Link>
                 </li>
                 <li data-testid={'show-loans'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
-                        {dsBookCloseBookmarkIcon} <span>Loans ({`${loans?.total_loans_count}`})</span>
+                        {dsBookCloseBookmarkIcon} <span>Loans {markedLoanQuantity()}</span>
                     </Link>
                 </li>
-                {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
-                    <li data-testid={'show-fines'}>
-                        <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
-                            {dsDiscountDollarDashIcon} <span>Fines ({`${loans?.total_loans_count}`})</span>
-                        </Link>
-                    </li>
-                )}
                 {canSeePrintBalance(account) && (
                     <li data-testid={'show-papercut'}>
                         <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=queries">
-                            {dsDiscountDollarDashIcon}{' '}
-                            <span>
-                                {'Print balance [balance]'.replace(
-                                    '[balance]',
-                                    printBalance && printBalance.balance ? `($${printBalance.balance})` : '',
-                                )}
-                            </span>
+                            {dsDiscountDollarDashIcon} <span>Print balance {markedPrintBalance()}</span>
                         </Link>
                     </li>
                 )}
@@ -245,6 +263,14 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
                     </li>
                 )}
             </StyledUl>
+            {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
+                <StyledAlertDiv data-testid={'show-fines'}>
+                    <UqDsExclamationCircle style={{ height: '22px' }} />
+                    <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
+                        <span>Fines (${`${totalFines(loans?.fines)}`})</span>
+                    </Link>
+                </StyledAlertDiv>
+            )}
         </StandardCard>
     );
 };
@@ -252,7 +278,9 @@ export const CataloguePanel = ({ account, loans, printBalance }) => {
 CataloguePanel.propTypes = {
     account: PropTypes.object,
     loans: PropTypes.object,
+    loansLoading: PropTypes.bool,
     printBalance: PropTypes.object,
+    printBalanceLoading: PropTypes.bool,
 };
 
 export default CataloguePanel;

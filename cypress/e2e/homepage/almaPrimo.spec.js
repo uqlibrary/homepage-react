@@ -29,5 +29,18 @@ describe('Alma Primo', () => {
             //     .should('contain', 'Referencing style guides')
             //     .and('not.contain', 'Endnote referencing software');
         });
+        it('displays nothing on an error correctly', () => {
+            cy.visit('http://localhost:2020/?user=s1111111&responseType=almaError');
+            cy.viewport(1280, 900);
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="show-requests"]')
+                    .should('exist')
+                    .contains('Requests'),
+            );
+            cy.get('[data-testid="show-requests"]').should('not.contain', '(');
+            cy.get('[data-testid="show-loans"]').should('not.contain', '(');
+            cy.get('[data-testid="show-papercut"]').should('not.contain', '(');
+        });
     });
 });

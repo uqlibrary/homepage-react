@@ -164,7 +164,14 @@ mock.onGet(routes.TRAINING_API().apiUrl).reply(() => {
 // .reply(withDelay([200, training_array]));
 // .reply(withDelay([500, {}]));
 
-mock.onGet(routes.PRINTING_API().apiUrl).reply(withDelay([200, printBalance]));
+mock.onGet(routes.PRINTING_API().apiUrl)
+    // .reply(withDelay([200, printBalance]));
+    .reply(() => {
+        if (responseType === 'almaError') {
+            return [500, {}];
+        }
+        return [200, printBalance];
+    });
 
 mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
 // mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
@@ -1239,7 +1246,29 @@ mock.onGet('exams/course/FREN1010/summary')
         }
     })
     .onGet(routes.LOANS_API().apiUrl)
-    .reply(withDelay([200, loans]))
+    .reply(() => {
+        function addFineEntry(_loans, newFine) {
+            const newFineObject = { fineAmount: newFine };
+            _loans.fines.push(newFineObject); // (we don't care about all the entries...)
+            _loans.total_fines_count = _loans.fines.length;
+            return _loans;
+        }
+        if (responseType === 'almaError') {
+            return [500, {}];
+        }
+        switch (user) {
+            case 's1111111':
+                return [200, loans];
+            case 's2222222':
+                return [200, addFineEntry(loans, 17.04)];
+            case 's3333333':
+                return [200, { ...loans, total_holds_count: 4, total_loans_count: 0, total_fines_count: 0 }];
+            case 'uqresearcher':
+                return [200, { ...loans, total_loans_count: 7, total_holds_count: 0, total_fines_count: 0 }];
+            default:
+                return [200, { ...loans, fines: [], total_fines_count: 0 }];
+        }
+    })
     .onAny()
     .reply(function(config) {
         console.log('url not mocked...', config.url);

@@ -14,22 +14,19 @@ context('Personalisation', () => {
 
 context('Learning Resources', () => {
     it('The Learning resources panel searches correctly', () => {
-        // this test simplifies the matching homepage/learningResources.js test, just to give coverage
         cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid=learning-resources-panel]').contains(locale.homepagePanel.title);
 
-        // the user sees NO subjects (the form has no sibling elements)
+        // the user is not enrolled in any subjects which means the form has no sibling elements
         cy.get('div[data-testid=learning-resources-panel] form')
             .parent()
             .children()
             .should('have.length', 2); // 1 search field and one div with 'no courses' text
         // the user sees a search field
-        cy.get('div[data-testid=learning-resources-panel] form input').should(
-            'have.attr',
-            'placeholder',
-            locale.search.placeholder,
-        );
+        cy.get('div[data-testid="learning-resource-search-input-field"] input')
+            .should('exist')
+            .should('be.visible');
 
         // user enters ACCT
         cy.get('div[data-testid=learning-resources-panel] form input').type('ACCT11');
@@ -39,5 +36,16 @@ context('Learning Resources', () => {
         cy.get('ul#homepage-learningresource-autocomplete-listbox')
             .children()
             .should('have.length', subjectSearchSuggestionsWithACCT.length + 1); // add one for title
+        // user clicks on #1, ACCT1101
+        cy.get('li#homepage-learningresource-autocomplete-option-0')
+            .contains('ACCT1101')
+            .click();
+        // user lands on appropriate learning resources page
+        cy.url().should(
+            'include',
+            'learning-resources?user=s3333333&coursecode=ACCT1101&campus=St%20Lucia&semester=Semester%202%202020',
+        );
+        const classPanelId = 'classpanel-0';
+        cy.get(`div[data-testid=${classPanelId}] h3`).contains('ACCT1101');
     });
 });
