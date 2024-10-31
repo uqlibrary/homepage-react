@@ -58,11 +58,10 @@ const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
     },
 }));
 
-export const UtilityBar = ({ libHours, libHoursLoading, libHoursError }) => {
+export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcountLoading, vemcountError }) => {
     const [locationOpen, setLocationOpen] = React.useState(false);
     const locationsRef = React.useRef(null);
 
-    // UseEffect to listen to when the state of locationOpen changes. Mitigates delay checks, etc.
     useEffect(() => {
         const closeOnClickOutsideDialog = e => {
             // Extra condition added to not include the label the opens or closes the hours - because it already has one - no need to fire twice.
@@ -141,6 +140,9 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError }) => {
                             libHours={libHours}
                             libHoursLoading={libHoursLoading}
                             libHoursError={libHoursError}
+                            vemcount={vemcount}
+                            vemcountLoading={vemcountLoading}
+                            vemcountError={vemcountError}
                         />
                     </StyledLocationBox>
                 </Fade>
@@ -153,6 +155,9 @@ UtilityBar.propTypes = {
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
     libHoursError: PropTypes.bool,
+    vemcount: PropTypes.object,
+    vemcountLoading: PropTypes.bool,
+    vemcountError: PropTypes.bool,
 };
 
 export default UtilityBar;

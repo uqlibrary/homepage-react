@@ -31,13 +31,6 @@ import {
 } from 'helpers/access';
 import UtilityBar from './subComponents/UtilityBar';
 
-// const EspaceLinks = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/EspaceLinks')));
-// const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
-// const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
-// const ReferencingPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReferencingPanel')));
-// const ReadPublish = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReadPublish')));
-// const CataloguePanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/CataloguePanel')));
-
 import EspaceLinks from './subComponents/EspaceLinks';
 import LearningResourcesPanel from './subComponents/LearningResourcesPanel';
 import Training from './subComponents/Training';
@@ -202,7 +195,7 @@ export const Index = ({
                 vemcountError={vemcountError}
             />
             <React.Suspense fallback={<ContentLoader message="Loading"/>}>
-            {!!account && (
+            {accountLoading === false && !!account && (
                 <StyledGridWrapper>
                     <StandardPage>
                         <Grid container>
