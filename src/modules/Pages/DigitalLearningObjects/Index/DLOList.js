@@ -31,6 +31,9 @@ import InfoIcon from '@mui/icons-material/Info';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 
+import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
+import CallMadeOutlinedIcon from '@mui/icons-material/CallMadeOutlined';
+
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
@@ -680,6 +683,8 @@ export const DLOList = ({
             topic: <TopicIcon aria-label={getPublicHelp(facetTypeSlug)} />,
             graduate_attributes: <SchoolSharpIcon aria-label={getPublicHelp(facetTypeSlug)} />,
             subject: <LocalLibrarySharpIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            audience: <PeopleOutlinedIcon aria-label={getPublicHelp(facetTypeSlug)} />, 
+            level: <CallMadeOutlinedIcon aria-label={getPublicHelp(facetTypeSlug)} />
         };
         return iconList[facetTypeSlug];
     };
