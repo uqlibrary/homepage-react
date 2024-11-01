@@ -131,7 +131,7 @@ const RenderImage = (articleindex, article, theme, isSm) => {
                 }}
             >
                 <img
-                    src={article.image}
+                    src={article.image ?? fallBackImage}
                     style={{
                         position: 'absolute',
                         top: 0,

@@ -20,7 +20,7 @@ export const drupalArticles = [
     "title": "Teaching and learning academics, update your course reading lists for Semester 2",
     "description": "",
     "canonical_url": "https://live-library-uq.pantheonsite.io/stories/teaching-and-learning-academics-update-your-course-reading-lists-semester-2",
-    "image": "/images/teaser-update-reading-lists.jpg?h=a81fead4&itok=g625QBnK",
+    "image": null,
     "promoted": true,
     "sticky": false,
     "date_created": "2024-08-07T02:57:52+00:00",
