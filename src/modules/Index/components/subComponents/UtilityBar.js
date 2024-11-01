@@ -58,7 +58,7 @@ const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
     },
 }));
 
-export const UtilityBar = ({ libHours, libHoursLoading, libHoursError }) => {
+export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount }) => {
     const [locationOpen, setLocationOpen] = React.useState(false);
     const locationsRef = React.useRef(null);
 
@@ -141,6 +141,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError }) => {
                             libHours={libHours}
                             libHoursLoading={libHoursLoading}
                             libHoursError={libHoursError}
+                            vemcount={vemcount}
                         />
                     </StyledLocationBox>
                 </Fade>
@@ -150,6 +151,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError }) => {
 };
 
 UtilityBar.propTypes = {
+    vemcount: PropTypes.object,
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
     libHoursError: PropTypes.bool,
