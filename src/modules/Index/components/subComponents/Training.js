@@ -96,6 +96,26 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             },
         },
     },
+    ['& .bookActionButton']: {
+        backgroundColor: theme.palette.primary.light,
+        borderWidth: '2px',
+        borderStyle: 'solid',
+        borderColor: theme.palette.primary.light,
+        borderRadius: '.25rem',
+        color: '#fff',
+        display: 'block',
+        fontSize: 13,
+        fontWeight: 400,
+        padding: 6,
+        textAlign: 'center',
+        textTransform: 'uppercase',
+        '&:hover': {
+            backgroundColor: '#fff',
+            borderColor: theme.palette.primary.light,
+            color: theme.palette.primary.light,
+            textDecoration: 'underline',
+        },
+    },
     ['& .detailHeader']: {
         backgroundColor: theme.palette.primary.light,
         color: theme.palette.white.main,
@@ -383,6 +403,15 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                             {bookingText(eventDetail)}
                                         </Grid>
                                     </Grid>
+                                    <a
+                                        className={'bookActionButton'}
+                                        href={`https://studenthub.uq.edu.au/students/events/detail/${eventDetail.entityId}`}
+                                        id="training-event-detail-training-login-button"
+                                        data-testid="training-event-detail-training-login-button"
+                                        data-analyticsid="training-event-detail-training-login-button"
+                                    >
+                                        Log in and book now
+                                    </a>
                                 </Grid>
                             </Grid>
                         </div>

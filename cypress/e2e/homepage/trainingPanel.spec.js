@@ -116,6 +116,28 @@ context('Training', () => {
 
         cy.get('[data-testid="training-events-detail-2824657"]').should('not.exist');
     });
+    it('can navigate to event page', () => {
+        cy.intercept(/studenthub/, 'user has navigated to Studenthub page');
+
+        cy.visit('/');
+        cy.viewport(1300, 1000);
+
+        cy.get('button[data-testid="training-event-detail-button-0"]')
+            .should('exist')
+            .scrollIntoView();
+        cy.get('button[data-testid="training-event-detail-button-0"]').contains('EndNote: getting started');
+        cy.get('button[data-testid="training-event-detail-button-0"]').click();
+        cy.wait(500);
+
+        cy.get('[data-testid="training-events-detail-2824657"]')
+            .should('exist')
+            .contains('EndNote: getting started');
+        cy.get('[data-testid="training-event-detail-training-login-button"]')
+            .should('exist')
+            .click();
+
+        cy.get('body').contains('user has navigated to Studenthub page');
+    });
 
     it('shows an api error correctly', () => {
         cy.visit('/?user=s1111111&responseType=error');
