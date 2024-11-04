@@ -637,26 +637,25 @@ export const libHours = {
         "rendered": "",
         "abbr": "Law",
         "departments": [{
-            "lid": 4801,
-            "name": "Collections & space",
-            "category": "department",
-            "desc": "",
-            "url": "",
-            "contact": "",
-            "lat": "",
-            "long": "",
-            "color": "#000000",
-            "parent_lid": 3841,
-            "day": "Tuesday",
-            "times": {
-                "status": "24hours",
-                "currently_open": true
-            },
-            "rendered": "24 Hours",
-            "open": "00:00:00",
-            "close": "24:00:00"
-        },
-            {
+        //     "lid": 4801,
+        //     "name": "Collections & space",
+        //     "category": "department",
+        //     "desc": "",
+        //     "url": "",
+        //     "contact": "",
+        //     "lat": "",
+        //     "long": "",
+        //     "color": "#000000",
+        //     "parent_lid": 3841,
+        //     "day": "Tuesday",
+        //     "times": {
+        //         "status": "24hours",
+        //         "currently_open": true
+        //     },
+        //     "rendered": "24 Hours",
+        //     "open": "00:00:00",
+        //     "close": "24:00:00"
+        // }, {
                 "lid": 10780,
                 "name": "AskUs desk",
                 "category": "department",

@@ -198,6 +198,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         flexGrow: 1,
         overflowY: 'hidden',
         overflowX: 'hidden',
+        marginLeft: '32px',
     },
 }));
 
@@ -257,21 +258,23 @@ export const ariaLabelForLocation = item => {
     return `${studySpaceHours} ${hoursConjunction} ${askUsHours}`;
 };
 
-function departmentProvided(item) {
-    return !!item && !!item.departments && Array.isArray(item.departments) && item.departments.length > 0;
+function departmentProvided(location) {
+    return (
+        !!location && !!location.departments && Array.isArray(location.departments) && location.departments.length > 0
+    );
 }
 
-export const hasDepartments = item => {
+export const hasDepartments = location => {
     const departments =
-        !!departmentProvided(item) &&
-        item.departments.map(item => {
+        !!departmentProvided(location) &&
+        location.departments.map(item => {
             if (departmentsMap.includes(item.name)) {
                 return item.name;
             }
             return null;
         });
     const displayableDepartments =
-        !!departmentProvided(item) &&
+        !!departmentProvided(location) &&
         departments.filter(el => {
             return el !== null;
         });
@@ -322,8 +325,8 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
 
                 function vemcountPercentByLocation(springshareLocationId) {
                     const vemcountLocation = getVemcountZoneBySpringshareId(springshareLocationId);
-                    const vemcountId = vemcountLocation?.vemcountId;
-                    const vemcountWrapper = vemcount?.data?.locationList?.filter(v => v.id === vemcountId);
+                    const vemcountZoneId = vemcountLocation?.vemcountZoneId;
+                    const vemcountWrapper = vemcount?.data?.locationList?.filter(v => v.id === vemcountZoneId);
                     // const dateLoaded = vemcount?.data?.dateLoaded; // for use later
                     const vemcountData = vemcountWrapper.length > 0 ? vemcountWrapper[0] : null;
                     if (vemcountLocation?.springshareId === springshareLocationId && vemcountWrapper?.length === 0) {
@@ -427,6 +430,13 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
     function getBusyness(location) {
         if (location.abbr === 'AskUs') {
             return null;
+        }
+        if (!hasDepartments(location)) {
+            return (
+                <div className="occupancyText">
+                    <UqDsExclamationCircle /> <span>No information</span>
+                </div>
+            );
         }
         if (!isOpen(location)) {
             return <div className="occupancyText occupancyTextClosed">Closed</div>;

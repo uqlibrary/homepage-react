@@ -85,23 +85,52 @@ context('Locations Panel', () => {
 
         cy.get('[data-testid="hours-item-arch-music"] td:first-child').contains('Architecture and Music');
         cy.get('[data-testid="hours-item-arch-music"] td:nth-child(2)').contains('7:30am - 7:30pm');
+        cy.get('[data-testid="hours-item-arch-music"] td:nth-child(3) div.occupancyPercent85')
+            .should('exist')
+            .should('have.attr', 'title', 'Very busy');
 
         cy.get('[data-testid="hours-item-central"] td:first-child').contains('Central');
         cy.get('[data-testid="hours-item-central"] td:nth-child(2)').contains('24 Hours');
+        cy.get('[data-testid="hours-item-central"] td:nth-child(3) div.occupancyPercent5')
+            .should('exist')
+            .should('have.attr', 'title', 'Not busy');
 
-        // once we are no longer using mock data to correctly show live (during web presence dev)
-        // we should add a library to mock data to test "See location" behaves as expected!!
-        // (not fryer, its testing 'by appintment')
-        // cy.log('Fryer has no departments we show times from, so we see "See Location');
-        // cy.get('[data-testid="hours-item-fryer"] td:first-child')
-        //     .should('exist')
-        //     .contains('Fryer');
-        // cy.get('[data-testid="hours-item-fryer"] td:nth-child(2)').contains('See location');
+        cy.get('[data-testid="hours-item-biol-sci"] td:first-child').contains('Biological Sciences');
+        cy.get('[data-testid="hours-item-biol-sci"] td:nth-child(2)').contains('24 Hours');
+        cy.get('[data-testid="hours-item-biol-sci"] td:nth-child(3) div.occupancyPercent48')
+            .should('exist')
+            .should('have.attr', 'title', 'Moderately busy');
+
+        cy.get('[data-testid="hours-item-duhig-study"] td:first-child').contains('Duhig Tower');
+        cy.get('[data-testid="hours-item-duhig-study"] td:nth-child(2)').contains('24 Hours');
+        cy.get('[data-testid="hours-item-duhig-study"] td:nth-child(3) div.occupancyPercent54')
+            .should('exist')
+            .should('have.attr', 'title', 'Busy');
+
+        cy.get('[data-testid="hours-item-dutton-park"] td:first-child').contains('Dutton Park Health Sciences');
+        cy.get('[data-testid="hours-item-dutton-park"] td:nth-child(2)').contains('7am - 10:30am');
+        cy.get('[data-testid="hours-item-dutton-park"] td:nth-child(3) div.occupancyTextClosed')
+            .should('exist')
+            .contains('Closed');
+
+        cy.get('[data-testid="hours-item-gatton-library"] td:first-child').contains('JK Murray (UQ Gatton)');
+        cy.get('[data-testid="hours-item-gatton-library"] td:nth-child(2)').contains('24 Hours');
+        cy.get('[data-testid="hours-item-gatton-library"] td:nth-child(3) div.occupancyText')
+            .should('exist')
+            .contains('No information');
+
+        cy.get('[data-testid="hours-item-law"] td:first-child').contains('Walter Harrison Law');
+        cy.get('[data-testid="hours-item-law"] td:nth-child(2)').contains('See location');
+        cy.get('[data-testid="hours-item-law"] td:nth-child(3) div.occupancyText')
+            .should('exist')
+            .contains('No information');
 
         cy.get('[data-testid="hours-item-fryer"] td:first-child')
             .should('exist')
             .contains('Fryer');
         cy.get('[data-testid="hours-item-fryer"] td:nth-child(2)').contains('By Appointment');
+        cy.get('[data-testid="hours-item-fryer"] td:nth-child(3) div.occupancyText').should('not.exist');
+        cy.get('[data-testid="hours-item-fryer"] td:nth-child(3) a').should('exist');
 
         // cy.log('Whitty has a missing department field (should never happen) so we see "See location"');
         // cy.get('[data-testid="hours-item-whitty-mater"] div:first-child')
