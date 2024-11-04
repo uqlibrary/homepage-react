@@ -3,6 +3,21 @@ import Locations from './Locations';
 import { rtlRender, WithRouter } from 'test-utils';
 import { getByTestId } from '@testing-library/dom';
 import { fireEvent } from '@testing-library/react';
+import { ariaLabelForLocation, hasDepartments } from './Locations';
+// import { accounts } from '../mock/data';
+
+const validWhitty = {
+    alt: 'Whitty building, Mater,',
+    campus: 'Other',
+    departments: [
+        {
+            hours: '6:30am - 10pm',
+            name: 'Study space',
+        },
+    ],
+    name: 'Whitty Mater',
+    url: 'https://web.library.uq.edu.au/locations-hours',
+};
 
 function setup(testProps = {}, renderer = rtlRender) {
     return renderer(
@@ -266,5 +281,30 @@ describe('Locations panel', () => {
         window.innerWidth = 400;
         fireEvent.resize(window, { target: { width: 400, height: 600 } });
         expect(queryByTestId('hours-item-askus')).toBeNull();
+    });
+});
+describe('the departments are shown correctly', () => {
+    it('should know a library has departments', () => {
+        expect(hasDepartments(validWhitty)).toEqual(true);
+    });
+    it('should know a library has no displayable departments', () => {
+        const testdata = {
+            alt: 'Fryer',
+            campus: 'St Lucia',
+            departments: [
+                {
+                    hours: 'ByApp',
+                    name: 'AskUs desk & collections', // <-- this name isnt in hoursLocale.departmentsMap
+                },
+            ],
+            name: 'FW Robinson Reading Room',
+            url: 'https://web.library.uq.edu.au/locations-hours/',
+        };
+        expect(hasDepartments(testdata)).toEqual(false);
+    });
+});
+describe('the aria label is correct', () => {
+    it('the aria label is correct', () => {
+        expect(ariaLabelForLocation(validWhitty).trim()).toEqual('More information on the Whitty Mater Library');
     });
 });

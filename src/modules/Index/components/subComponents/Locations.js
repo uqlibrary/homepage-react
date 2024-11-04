@@ -72,21 +72,6 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         textAlign: 'left',
         color: theme.palette.secondary.dark,
     },
-    // '& .table-header-name div': {
-    //     paddingLeft: '32px',
-    // },
-    '& th .table-cell-name-content': {
-        marginTop: '4px',
-    },
-    '& .table-cell-name-content': {
-        overflow: 'hidden',
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        // width: '100%',
-        whiteSpace: 'nowrap',
-        textOverflow: 'ellipsis',
-    },
     '& .table-row-body': {
         transition: 'color 200ms ease-out, background-color 200ms ease-out',
         '&:hover': {
@@ -132,6 +117,8 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             height: '16px',
             '& span': {
                 paddingLeft: '24px',
+                borderTopRightRadius: '20px',
+                borderBottomRightRadius: '20px',
             },
         },
         '& .occupancyPercent:has(.occupancyText)': {
@@ -240,24 +227,6 @@ const MyLoader = props => (
 );
 
 const departmentsMap = ['Collections & space', 'Study space', 'Service & collections'];
-export const ariaLabelForLocation = item => {
-    const name = item.name;
-    const hours =
-        item.departments.length > 0 &&
-        item.departments.map(i => {
-            if (departmentsMap.includes(i.name)) {
-                return i.hours;
-            }
-            return null;
-        });
-    const studySpaceHours = `${name || /* istanbul ignore next */ ''}. ${
-        !!hours[0] ? 'Study space hours are ' + hours[0] : ''
-    }`;
-    const askUsHours = !!hours[1] ? 'Ask Us hours are ' + hours[1] : '';
-    const hoursConjunction = !!hours[0] && !!hours[1] ? 'and' : '';
-    return `${studySpaceHours} ${hoursConjunction} ${askUsHours}`;
-};
-
 function departmentProvided(location) {
     return (
         !!location && !!location.departments && Array.isArray(location.departments) && location.departments.length > 0
@@ -279,6 +248,40 @@ export const hasDepartments = location => {
             return el !== null;
         });
     return displayableDepartments.length > 0;
+};
+
+const getOverrideLocationName = locationAbbr => {
+    // if not present in the lookup table, use the value passed from Springhshare
+    const lookupTable = {
+        AskUs: 'AskUs chat hours', // this one must be overriden long term, I think
+        'Arch Music': 'Architecture and Music', // all these following should be able to be deleted once the Springshare name values are updated, post go live
+        Central: 'Central',
+        'Biol Sci': 'Biological Sciences',
+        DHEngSci: 'Dorothy Hill Engineering and Sciences',
+        'Dutton Park': 'Dutton Park Health Sciences',
+        Fryer: 'FW Robinson Reading Room (Fryer)',
+        Gatton: 'JK Murray (UQ Gatton)',
+        Law: 'Walter Harrison Law',
+        Herston: 'Herston Health Sciences',
+    };
+    if (lookupTable.hasOwnProperty(locationAbbr)) {
+        return lookupTable[locationAbbr];
+    }
+    // Return null if the key is not found
+    return null;
+};
+
+export const ariaLabelForLocation = location => {
+    let libraryName = 'the ' + (getOverrideLocationName(location?.abbr) || location.name) + ' Library';
+    const lookupTable = {
+        AskUs: 'the AskUs chat & phone assistance',
+        Fryer: 'Fryer Library',
+        Gatton: 'JK Murray Library',
+    };
+    if (lookupTable.hasOwnProperty(location?.abbr)) {
+        libraryName = lookupTable[location.abbr];
+    }
+    return 'More information on ' + libraryName;
 };
 
 const VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING = 'Missing';
@@ -469,26 +472,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
         );
     }
 
-    const getOverrideLocationName = locationAbbr => {
-        // if not present in the lookup table, use the value passed from Springhshare
-        const lookupTable = {
-            AskUs: 'AskUs chat hours', // this one must be overriden long term, I think
-            'Arch Music': 'Architecture and Music', // all these following should be able to be deleted once the Springshare name values are updated, post go live
-            'Biol Sci': 'Biological Sciences',
-            DHEngSci: 'Dorothy Hill Engineering and Sciences',
-            'Dutton Park': 'Dutton Park Health Sciences',
-            Fryer: 'FW Robinson Reading Room (Fryer)',
-            Gatton: 'JK Murray (UQ Gatton)',
-            Law: 'Walter Harrison Law',
-            Herston: 'Herston Health Sciences',
-        };
-        if (lookupTable.hasOwnProperty(locationAbbr)) {
-            return lookupTable[locationAbbr];
-        }
-        // Return null if the key is not found
-        return null;
-    };
-
     return (
         <StyledStandardCard noPadding noHeader standardCardId="locations-panel">
             <StyledWrapper id="tablewrapper">
@@ -544,11 +527,9 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                                                     >
                                                         <a
                                                             id={`${sluggifyName(`hours-item-${location.abbr}`)}`}
-                                                            aria-label={ariaLabelForLocation(location)}
                                                             data-testid={`hours-item-name-${index}`}
                                                             href={location.url}
                                                             style={{ paddingBlock: 0 }}
-                                                            // className={'table-cell-name-content'}
                                                         >
                                                             {getOverrideLocationName(location.abbr) || location.name}
                                                         </a>
@@ -568,7 +549,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                                                                 data-testid={`hours-item-hours-${index}`}
                                                                 href={location.url}
                                                                 style={{ paddingBlock: 0 }}
-                                                                // className={'table-cell-name-content'}
                                                             >
                                                                 {getLibraryHours(location)}
                                                             </a>
@@ -583,7 +563,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                                                             data-testid={`hours-item-busy-${index}`}
                                                             href={location.url}
                                                             style={{ paddingBlock: 0 }}
-                                                            // className={'table-cell-name-content'}
                                                         >
                                                             {getBusyness(location)}
                                                         </a>
