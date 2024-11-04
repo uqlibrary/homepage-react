@@ -250,16 +250,19 @@ describe('Locations panel', () => {
         },
     };
 
-    it.skip('should handle display resize', () => {
+    it('should handle display resize', () => {
         const props = {
             libHoursLoading: false,
             libHoursError: false,
             libHours: libhoursApi,
+            vemcountLoading: false,
+            vemcountError: false,
             vemcount: vemcountApi,
         };
         const { getByTestId, queryByTestId } = setup({ ...props });
 
         expect(getByTestId('hours-item-askus')).toBeInTheDocument();
+
         window.innerWidth = 400;
         fireEvent.resize(window, { target: { width: 400, height: 600 } });
         expect(queryByTestId('hours-item-askus')).toBeNull();

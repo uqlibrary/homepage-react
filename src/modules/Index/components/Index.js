@@ -179,7 +179,6 @@ export const Index = ({
 
     useEffect(() => {
         if (accountLoading === false && !!account && !loans && loansLoading === null) {
-            console.log('dispatching');
             dispatch(loadLoans());
         }
     }, [accountLoading, account, loans, loansLoading, dispatch]);

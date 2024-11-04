@@ -297,7 +297,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
             !libHoursError &&
             !!libHours &&
             !!libHours.locations &&
-            vemcount.data.length > 0 &&
+            vemcount.data.locationList.length > 0 &&
             libHours.locations.length > 0 &&
             libHours.locations.map(location => {
                 let departments = [];
@@ -311,13 +311,17 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                     });
                 }
 
-                function vemcountPercentByLocation(springshareLocationId) {
-                    const vemcountholder = locationLocale.vemcountSpringshareMapping.filter(
+                function getVemcountZoneBySpringshareId(springshareLocationId) {
+                    return locationLocale.vemcountSpringshareMapping.find(
                         m => m.springshareId === springshareLocationId,
                     );
-                    const vemcountLocation = vemcountholder?.pop();
+                }
+
+                function vemcountPercentByLocation(springshareLocationId) {
+                    const vemcountLocation = getVemcountZoneBySpringshareId(springshareLocationId);
                     const vemcountId = vemcountLocation?.vemcountId;
-                    const vemcountWrapper = vemcount?.data?.filter(v => v.id === vemcountId);
+                    const vemcountWrapper = vemcount?.data?.locationList?.filter(v => v.id === vemcountId);
+                    // const dateLoaded = vemcount?.data?.dateLoaded; // for use later
                     const vemcountData = vemcountWrapper.length > 0 ? vemcountWrapper[0] : null;
                     if (vemcountLocation?.springshareId === springshareLocationId && vemcountWrapper?.length === 0) {
                         return VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING;
@@ -332,7 +336,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                     const minimumDisplayedPercentage = 5;
 
                     const vemcountBusynessPercent = vemcountPercentByLocation(springshareLocationId);
-                    let calculatedBusyness = null;
+                    let calculatedBusyness;
                     if (vemcountBusynessPercent === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING) {
                         calculatedBusyness = vemcountBusynessPercent;
                     } else if (!!isNaN(vemcountBusynessPercent)) {
@@ -354,7 +358,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                     alt: location.name,
                     campus: locationLocale.hoursCampusMap[location.abbr],
                     departments,
-                    // busyness: randomBusynessNumber,
                     busyness: getVemcountPercentage(location?.lid, location.name) || null,
                 };
             })) ||
@@ -480,7 +483,8 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                     <Fade in={!libHoursLoading} timeout={1000}>
                         <div className={'locations-wrapper'}>
                             <Typography style={{ padding: '1rem' }}>
-                                We can’t load opening hours right now. Please refresh your browser or try again later.
+                                We can’t load location information right now. Please refresh your browser or try again
+                                later.
                             </Typography>
                         </div>
                     </Fade>
