@@ -105,6 +105,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
                 backgroundColor: 'inherit',
             },
         },
+        '& td:not(:first-of-type) a': {
+            textDecoration: 'none',
+        },
     },
     '& .table-column-busy': {
         paddingBlock: 0,
