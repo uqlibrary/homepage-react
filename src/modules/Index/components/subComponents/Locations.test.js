@@ -18,6 +18,8 @@ describe('Locations panel', () => {
             libHoursLoading: true,
             libHoursError: false,
             libHours: null,
+            vemcountLoading: true,
+            vemcountError: false,
             vemcount: null,
         };
         const { getByTestId } = setup({ ...props });
@@ -28,6 +30,8 @@ describe('Locations panel', () => {
             libHoursLoading: false,
             libHoursError: true,
             libHours: null,
+            vemcountLoading: false,
+            vemcountError: true,
             vemcount: null,
         };
         const { getByTestId } = setup({ ...props });

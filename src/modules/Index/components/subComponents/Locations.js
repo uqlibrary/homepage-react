@@ -275,58 +275,8 @@ export const hasDepartments = item => {
     return displayableDepartments.length > 0;
 };
 
-// this table maps those locations who exist on vemcount against their matching speingshare location
-// note: not all locations have vemcount people-counting gates
-const vemcountSpringshareMapping = [
-    {
-        springshareId: 3967,
-        vemcountId: 14980,
-        name: 'Dutton park', // this doesn't need to match either system, its for the developer to not have to track raw numbers
-    },
-    {
-        springshareId: 3842,
-        vemcountId: 14975,
-        name: 'Central',
-    },
-    {
-        springshareId: 3823,
-        vemcountId: 14974,
-        name: 'Architecture',
-    },
-    {
-        springshareId: 3824,
-        vemcountId: 14977,
-        name: 'BSL',
-    },
-    {
-        springshareId: 3825,
-        vemcountId: 14979,
-        name: 'DHESL',
-    },
-    {
-        springshareId: 3830,
-        vemcountId: 14976,
-        name: 'Duhig tower',
-    },
-    {
-        springshareId: 3833,
-        vemcountId: 14985,
-        name: 'Gatton',
-    },
-    {
-        springshareId: 3838,
-        vemcountId: 14983,
-        name: 'Herston',
-    },
-    {
-        springshareId: 3841,
-        vemcountId: 14978,
-        name: 'Law',
-    },
-];
-
 const VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING = 'Missing';
-const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount }) => {
+const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcountLoading, vemcountError }) => {
     const [isWideScreen, setIsWideScreen] = React.useState(window.innerWidth > 700);
     React.useEffect(() => {
         const handleResize = () => {
@@ -342,9 +292,12 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount }) => {
     }, []);
 
     const cleanedHours =
-        (!libHoursError &&
+        (vemcountLoading === false &&
+            !vemcountError &&
+            !libHoursError &&
             !!libHours &&
             !!libHours.locations &&
+            vemcount.data.length > 0 &&
             libHours.locations.length > 0 &&
             libHours.locations.map(location => {
                 let departments = [];
@@ -359,7 +312,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount }) => {
                 }
 
                 function vemcountPercentByLocation(springshareLocationId) {
-                    const vemcountholder = vemcountSpringshareMapping.filter(
+                    const vemcountholder = locationLocale.vemcountSpringshareMapping.filter(
                         m => m.springshareId === springshareLocationId,
                     );
                     const vemcountLocation = vemcountholder?.pop();
@@ -523,7 +476,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount }) => {
     return (
         <StyledStandardCard noPadding noHeader standardCardId="locations-panel">
             <StyledWrapper id="tablewrapper">
-                {!!libHoursError && (
+                {(!!libHoursError || !!vemcountError) && (
                     <Fade in={!libHoursLoading} timeout={1000}>
                         <div className={'locations-wrapper'}>
                             <Typography style={{ padding: '1rem' }}>
@@ -532,7 +485,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount }) => {
                         </div>
                     </Fade>
                 )}
-                {!libHoursError && !!libHours && !libHoursLoading && (
+                {!libHoursError && !!libHours && !libHoursLoading && !vemcountError && !!vemcount && !vemcountLoading && (
                     <Fade in={!libHoursLoading} timeout={1000}>
                         <div className={'wrapper2'}>
                             <table className={'locations-wrapper'}>
@@ -626,7 +579,8 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount }) => {
                         </div>
                     </Fade>
                 )}
-                {!!libHoursLoading && !libHoursError && !libHours && (
+                {((!!libHoursLoading && !libHoursError && !libHours) ||
+                    (!vemcountError && !vemcount && !!vemcountLoading)) && (
                     <div className={'loaderContent'}>
                         <MyLoader id="hours-loader" data-testid="hours-loader" aria-label="Locations data is loading" />
                     </div>
@@ -637,11 +591,16 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount }) => {
                         data-analyticsid={'hours-item-weeklyhours-link'}
                         to={linkToDrupal('/locations-hours/opening-hours')}
                     >
-                        <span>See weekly Library and AskUs hours</span> <ArrowForwardIcon /> {/* uq ds arrow-right-1 */}
+                        <span>
+                            {!!libHoursError || !!vemcountError ? <span>In the meantime, s</span> : <span>S</span>}
+                            ee weekly Library and AskUs hours
+                        </span>{' '}
+                        <ArrowForwardIcon /> {/* uq ds arrow-right-1 */}
                     </Link>
                 </div>
                 <p className={'disclaimer'}>
-                    *Student and staff hours only. For visitor and community hours, see individual Library links above.
+                    {!(!!libHoursError || !!vemcountError) &&
+                        '*Student and staff hours only. For visitor and community hours, see individual Library links above.'}
                 </p>
             </StyledWrapper>
         </StyledStandardCard>
@@ -653,6 +612,8 @@ Locations.propTypes = {
     libHoursLoading: PropTypes.bool,
     libHoursError: PropTypes.bool,
     vemcount: PropTypes.object,
+    vemcountLoading: PropTypes.bool,
+    vemcountError: PropTypes.bool,
 };
 
 export default Locations;

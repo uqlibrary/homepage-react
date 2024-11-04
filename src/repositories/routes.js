@@ -63,6 +63,8 @@ export const LIB_HOURS_API = () => ({
     options: { params: { ts: `${new Date().getTime()}` } },
 });
 
+export const VEMCOUNT_API = () => ({ apiUrl: 'vemcount/list' });
+
 // file uploading apis
 export const UPLOAD_PUBLIC_FILES_API = () => ({ apiUrl: 'file/public' });
 

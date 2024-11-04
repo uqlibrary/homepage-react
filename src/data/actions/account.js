@@ -9,6 +9,7 @@ import {
     POSSIBLE_RECORDS_API,
     PRINTING_API,
     TRAINING_API,
+    VEMCOUNT_API,
 } from 'repositories/routes';
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
 import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME } from 'config/general';
@@ -106,12 +107,35 @@ export function loadLibHours() {
     };
 }
 
+/**
+ * Loads the vemcount events data
+ * @returns {function(*)}
+ */
+export function loadVemcountList() {
+    return dispatch => {
+        dispatch({ type: actions.VEMCOUNT_LOADING });
+        return get(VEMCOUNT_API())
+            .then(availResponse => {
+                dispatch({
+                    type: actions.VEMCOUNT_LOADED,
+                    payload: availResponse,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.VEMCOUNT_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
 export function logout(reload = false) {
     return dispatch => {
         dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
         if (!!reload) {
             dispatch(loadLibHours());
-            // dispatch(loadVemcountList());
+            dispatch(loadVemcountList());
         }
     };
 }
