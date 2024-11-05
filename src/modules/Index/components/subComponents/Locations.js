@@ -354,6 +354,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                         return null;
                     }
                     const minimumDisplayedPercentage = 5;
+                    const maxmumDisplayedPercentage = 100;
 
                     const vemcountBusynessPercent = vemcountPercentByLocation(springshareLocationId);
                     let calculatedBusyness;
@@ -364,6 +365,8 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                     } else if (vemcountBusynessPercent < minimumDisplayedPercentage) {
                         // don't let the bar go below what shows as a small curve on the left
                         calculatedBusyness = minimumDisplayedPercentage;
+                    } else if (vemcountBusynessPercent > maxmumDisplayedPercentage) {
+                        calculatedBusyness = maxmumDisplayedPercentage;
                     } else {
                         calculatedBusyness = Math.floor(vemcountBusynessPercent);
                     }
@@ -469,7 +472,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
             <div className="occupancy">
                 <div
                     className={`occupancyPercent ${
-                        location.busyness > 96 ? 'occupancyPercentLong' : ''
+                        location.busyness > 94 ? 'occupancyPercentLong' : ''
                     } occupancyPercent${location.busyness}`}
                     style={{
                         width:
