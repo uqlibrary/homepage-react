@@ -253,6 +253,11 @@ export const Index = ({
         // 3966 whitty
     };
     console.log('temp=', vemcountTempApi);
+    const queryParameters = new URLSearchParams(window.location.search);
+    const dataType = queryParameters.get('dataType');
+    console.log('dataType=', dataType);
+    const usedVemcount = dataType === 'dummy' ? vemcountTempApi : vemcount;
+    console.log('usedVemcount=', usedVemcount);
     const verySimplelayout = !canSeeLearningResourcesPanel(account) && !isEspaceAuthor(account, author) && !canSeeReadPublish(account);
     return (
         <>
@@ -266,7 +271,7 @@ export const Index = ({
                 libHours={libHours}
                 libHoursLoading={libHoursLoading}
                 libHoursError={libHoursError}
-                vemcount={vemcountTempApi}
+                vemcount={usedVemcount}
                 vemcountLoading={vemcountLoading}
                 vemcountError={vemcountError}
             />
