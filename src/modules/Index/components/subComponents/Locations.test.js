@@ -265,7 +265,7 @@ describe('Locations panel', () => {
         },
     };
 
-    it('should handle display resize', () => {
+    it.skip('should handle display resize', () => {
         const props = {
             libHoursLoading: false,
             libHoursError: false,

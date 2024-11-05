@@ -125,6 +125,10 @@ const StyledWrapper = styled('div')(({ theme }) => ({
                 borderBottomRightRadius: '20px',
             },
         },
+        '& .occupancyPercentLong': {
+            borderTopRightRadius: '20px',
+            borderBottomRightRadius: '20px',
+        },
         '& .occupancyPercent:has(.occupancyText)': {
             lineHeight: '18px',
         },
@@ -310,7 +314,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
             !libHoursError &&
             !!libHours &&
             !!libHours.locations &&
-            vemcount.data.locationList.length > 0 &&
+            vemcount.length > 0 &&
             libHours.locations.length > 0 &&
             libHours.locations.map(location => {
                 let departments = [];
@@ -333,13 +337,16 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                 function vemcountPercentByLocation(springshareLocationId) {
                     const vemcountLocation = getVemcountZoneBySpringshareId(springshareLocationId);
                     const vemcountZoneId = vemcountLocation?.vemcountZoneId;
-                    const vemcountWrapper = vemcount?.data?.locationList?.filter(v => v.id === vemcountZoneId);
-                    // const dateLoaded = vemcount?.data?.dateLoaded; // for use later
+                    const vemcountWrapper = vemcount?.filter(v => v.id === vemcountZoneId);
+                    // const dateVemcountLoaded - for use later
                     const vemcountData = vemcountWrapper.length > 0 ? vemcountWrapper[0] : null;
                     if (vemcountLocation?.springshareId === springshareLocationId && vemcountWrapper?.length === 0) {
                         return VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING;
                     }
                     return (vemcountData?.headCount / vemcountData?.capacity) * 100;
+                    // const max = 100;
+                    // const min = 95;
+                    // return Math.floor(Math.random() * (max - min + 1)) + min;
                 }
 
                 function getVemcountPercentage(springshareLocationId) {
@@ -461,7 +468,9 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
         return (
             <div className="occupancy">
                 <div
-                    className={`occupancyPercent occupancyPercent${location.busyness}`}
+                    className={`occupancyPercent ${
+                        location.busyness > 96 ? 'occupancyPercentLong' : ''
+                    } occupancyPercent${location.busyness}`}
                     style={{
                         width:
                             !hasDepartments(location) || isOpen(location)
