@@ -19,8 +19,6 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { linkToDrupal } from 'helpers/general';
 
-const NUMBER_OF_DISPLAYED_EVENTS = 3;
-
 const MyLoader = props => (
     <ContentLoader
         speed={2}

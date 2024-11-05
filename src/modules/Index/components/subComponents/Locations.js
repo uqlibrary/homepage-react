@@ -125,6 +125,10 @@ const StyledWrapper = styled('div')(({ theme }) => ({
                 borderBottomRightRadius: '20px',
             },
         },
+        '& .occupancyPercentLong': {
+            borderTopRightRadius: '20px',
+            borderBottomRightRadius: '20px',
+        },
         '& .occupancyPercent:has(.occupancyText)': {
             lineHeight: '18px',
         },
@@ -461,7 +465,9 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
         return (
             <div className="occupancy">
                 <div
-                    className={`occupancyPercent occupancyPercent${location.busyness}`}
+                    className={`occupancyPercent ${
+                        location.busyness > 96 ? 'occupancyPercentLong' : ''
+                    } occupancyPercent${location.busyness}`}
                     style={{
                         width:
                             !hasDepartments(location) || isOpen(location)
