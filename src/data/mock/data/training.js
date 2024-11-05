@@ -49,7 +49,7 @@ export const training_object = {
         "entityId": 2870806,
         "created": "2020-10-26T10:25:36.8+10:00",
         "updated": "2020-10-26T14:13:25.207+10:00",
-        "name": "Advanced Adobe Illustrator",
+        "name": "UQRDM for researchers and research students - how to use it to help with managing research data",
         "eventType": "Software",
         "eventTypeId": 45,
         "start": "2020-11-24T13:00:00+10:00",

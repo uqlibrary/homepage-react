@@ -15,7 +15,7 @@ context('Training', () => {
             .contains('EndNote: getting started');
         cy.get('[data-testid="training-event-detail-button-1"]')
             .should('exist')
-            .contains('Advanced Adobe Illustrator');
+            .contains('UQRDM for researchers');
         // 4th, not 3rd item appears, because item 3 is fully booked
         cy.get('[data-testid="training-event-detail-button-2"]')
             .should('exist')
@@ -76,7 +76,7 @@ context('Training', () => {
         cy.wait(500);
 
         cy.get('button[data-testid="training-event-detail-button-1"]')
-            .contains('Advanced Adobe Illustrator')
+            .contains('UQRDM for researchers')
             .click();
         cy.wait(500);
 

@@ -94,6 +94,10 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             textDecoration: 'none',
         },
     },
+    '& .table-cell-hours a': {
+        color: '#3B383E',
+        fontWeight: 400,
+    },
     '& .table-column-busy': {
         paddingBlock: 0,
         marginRight: '40px',
