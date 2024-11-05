@@ -72,6 +72,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             color: theme.palette.primary.light,
             lineHeight: '100%', // 16px
         },
+        '& .listEventItem': {
+            lineHeight: '24px',
+        },
         ['& .listEventItem:has(> .listEventTitle)']: {
             marginTop: '8px',
         },
@@ -174,12 +177,12 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
     const eventTime = eventTime =>
         moment(eventTime)
             .calendar(null, {
-                sameDay: '[Today,] dddd D MMMM [at] h:mma',
-                nextDay: '[Tomorrow,] dddd D MMMM [at] h:mma',
-                nextWeek: 'dddd D MMMM [at] h:mma',
-                lastDay: '[Yesterday]  D MMMM [at] h:mma',
-                lastWeek: '[Last] dddd  D MMMM [at] h:mma',
-                sameElse: 'D MMMM [at] h:mma',
+                sameDay: '[Today,] dddd D MMMM',
+                nextDay: '[Tomorrow,] dddd D MMMM',
+                nextWeek: 'dddd D MMMM',
+                lastDay: '[Yesterday]  D MMMM',
+                lastWeek: '[Last] dddd  D MMMM',
+                sameElse: 'D MMMM',
             })
             .replace(':00', '');
     const bookingText = ev => {
