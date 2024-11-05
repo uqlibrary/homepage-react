@@ -190,13 +190,15 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
           if bookingSettings is null then bookings are not required
           if bookingSettings has a placesRemaining child *and it is > 0" then there are places still available
           if bookingSettings has a placesRemaining child *and it is zero* then the course is fully booked
-          We filter out the fully booked entries, because we are only showing 3 now, and that seems like a waste
          */
-        let placesRemainingText = 'Booking is not required';
-        /* istanbul ignore else */
+        const placesRemainingText = { display: 'Booking is not required', button: 'Log in for more details' };
         if (ev.bookingSettings !== null) {
-            if (ev?.bookingSettings?.placesRemaining > 0) {
-                placesRemainingText = 'Places still available';
+            if (ev.bookingSettings.placesRemaining > 0) {
+                placesRemainingText.display = 'Places still available';
+                placesRemainingText.button = 'Log in and book now';
+            } else {
+                placesRemainingText.display = 'Event is fully booked';
+                placesRemainingText.button = 'Log in to join wait list';
             }
         }
         return placesRemainingText;
@@ -210,9 +212,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                       return trainingEvents[key];
                   })
                 : trainingEvents;
-        return !!list && list.length > 0
-            ? list.filter(t => t.bookingSettings !== null).slice(0, NUMBER_OF_DISPLAYED_EVENTS)
-            : [];
+        return !!list && list.length > 0 ? list.slice(0, 3) : [];
     };
     const filteredTrainingEvents = filterStandardisedTrainingEvents();
     return (
@@ -368,7 +368,12 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                         </Grid>
                                     </Grid>
                                     <Grid container spacing={1}>
-                                        <Grid item xs={12} className={'detailSummary'}>
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            className={'detailSummary'}
+                                            data-testid="event-detail-open-summary"
+                                        >
                                             <div dangerouslySetInnerHTML={{ __html: eventDetail.summary }} />
                                         </Grid>
                                         <Grid item xs={1} className={'detailMeta'}>
@@ -403,7 +408,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                             </Tooltip>
                                         </Grid>
                                         <Grid item xs={10} className={'detailMeta'}>
-                                            {bookingText(eventDetail)}
+                                            {bookingText(eventDetail).display}
                                         </Grid>
                                     </Grid>
                                     <a
@@ -413,7 +418,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                         data-testid="training-event-detail-training-login-button"
                                         data-analyticsid="training-event-detail-training-login-button"
                                     >
-                                        Log in and book now
+                                        {bookingText(eventDetail).button}
                                     </a>
                                 </Grid>
                             </Grid>
