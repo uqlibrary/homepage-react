@@ -88,13 +88,8 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             marginTop: '4px',
         },
         '&:hover': {
-            color: theme.palette.secondary.dark,
-            backgroundColor: '#fff',
-            '& .listEventTitle': {
-                color: '#fff',
-                backgroundColor: theme.palette.primary.light,
-                transition: 'background-color 200ms ease-out',
-            },
+            backgroundColor: '#F3F3F4', // Brand-grey-grey-50
+            transition: 'background-color 200ms ease-out',
         },
     },
     ['& .bookActionButton']: {
