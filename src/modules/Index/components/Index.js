@@ -119,9 +119,6 @@ export const Index = ({
     vemcountLoading,
     vemcountError,
 }) => {
-    const vemcountList = vemcount?.data?.locationList;
-    console.log('short=', vemcountList);
-    console.log('  api=', vemcount, vemcountLoading, vemcountError);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -188,7 +185,7 @@ export const Index = ({
 
 
     // eventually, call the api
-    const vemcountTempApi = {
+    const vemcountMockApi = {
         data: {
             dateLoaded: '2024-10-31 10:00:21',
             locationList: [
@@ -254,15 +251,16 @@ export const Index = ({
         // 3832 fryer - FW Robinson Reading Room
         // 3966 whitty
     };
-    console.log('temp=', vemcountTempApi);
+    console.log('Index   api=', vemcountLoading, vemcountError, vemcount);
+    console.log('Index  mock=', vemcountMockApi);
     const queryParameters = new URLSearchParams(window.location.search);
     const dataType = queryParameters.get('dataType');
-    console.log('dataType=', dataType);
-    const usedVemcount = dataType === 'dummy' ? vemcountTempApi : vemcount;
-    console.log('usedVemcount=', usedVemcount);
-    console.log('actual', vemcount?.data?.locationList);
-    console.log(' dummy', vemcountTempApi?.data?.locationList);
-    console.log('----');
+    console.log('Index actual', JSON.stringify(vemcount?.data?.locationList));
+    console.log('Index  dummy', JSON.stringify(vemcountMockApi?.data?.locationList));
+    console.log('Index dataType=', !!dataType ? dataType : 'from api');
+    const usedVemcount = dataType === 'dummy' ? vemcountMockApi : vemcount;
+    console.log('Index usedVemcount=', usedVemcount);
+    console.log('Index ----');
     const verySimplelayout = !canSeeLearningResourcesPanel(account) && !isEspaceAuthor(account, author) && !canSeeReadPublish(account);
     return (
         <>

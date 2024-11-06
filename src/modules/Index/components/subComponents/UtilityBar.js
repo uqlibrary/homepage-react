@@ -109,8 +109,6 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
         !!siteHeader && siteHeader.removeAttribute('secondLevelUrl');
     }, []);
 
-    const vemcountList = vemcount?.data?.locationList;
-    console.log('UtilityBar vemcountList=', vemcountList);
     return (
         <div style={{ borderBottom: '1px solid hsla(203, 50%, 30%, 0.15)' }}>
             <div className="layout-card" style={{ position: 'relative' }}>
@@ -144,7 +142,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                             libHours={libHours}
                             libHoursLoading={libHoursLoading}
                             libHoursError={libHoursError}
-                            vemcount={vemcountList}
+                            vemcount={vemcount}
                             vemcountLoading={vemcountLoading}
                             vemcountError={vemcountError}
                         />

@@ -314,7 +314,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
             !libHoursError &&
             !!libHours &&
             !!libHours.locations &&
-            vemcount.length > 0 &&
+            vemcount.data.locationList.length > 0 &&
             libHours.locations.length > 0 &&
             libHours.locations.map(location => {
                 let departments = [];
@@ -337,8 +337,8 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                 function vemcountPercentByLocation(springshareLocationId) {
                     const vemcountLocation = getVemcountZoneBySpringshareId(springshareLocationId);
                     const vemcountZoneId = vemcountLocation?.vemcountZoneId;
-                    const vemcountWrapper = vemcount?.filter(v => v.id === vemcountZoneId);
-                    // const dateVemcountLoaded - for use later
+                    const vemcountWrapper = vemcount?.data?.locationList?.filter(v => v.id === vemcountZoneId);
+                    // const dateLoaded = vemcount?.data?.dateLoaded; // for use later
                     const vemcountData = vemcountWrapper.length > 0 ? vemcountWrapper[0] : null;
                     if (vemcountLocation?.springshareId === springshareLocationId && vemcountWrapper?.length === 0) {
                         return VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING;
@@ -488,6 +488,8 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
         );
     }
 
+    console.log('Locations - incoming: ', vemcount);
+    console.log('Locations - display: ', sortedHours);
     return (
         <StyledStandardCard noPadding noHeader standardCardId="locations-panel">
             <StyledWrapper id="tablewrapper">
