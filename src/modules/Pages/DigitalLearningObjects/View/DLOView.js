@@ -258,7 +258,7 @@ export const DLOView = ({
         if (!!dlorItem && !!dlorItem.object_title) {
             window.dataLayer.push({
                 event: 'pageview',
-                object_title: dlorItem.object_title,
+                page_title: dlorItem.object_title,
             });
         }
     }, [dlorItem]);
