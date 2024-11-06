@@ -37,10 +37,11 @@ exports[`Cards component renders given ID for standar card 1`] = `
 exports[`Cards component renders with custom colours and full height 1`] = `
 <div>
   <div
-    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-1ocrqg0-MuiPaper-root-MuiCard-root"
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard  css-sgnn8k-MuiPaper-root-MuiCard-root"
     data-analyticsid="standard-card-card-title"
     data-testid="standard-card-card-title"
     id="standard-card-card-title"
+    style="background-color: rgb(255, 204, 204); height: 100%;"
   >
     <div
       class="MuiCardHeader-root cardHeaderPrimary css-185gdzj-MuiCardHeader-root"

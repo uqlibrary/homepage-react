@@ -4,7 +4,6 @@ import { rtlRender, WithRouter } from 'test-utils';
 import { getByTestId } from '@testing-library/dom';
 import { fireEvent } from '@testing-library/react';
 import { ariaLabelForLocation, hasDepartments } from './Locations';
-// import { accounts } from '../mock/data';
 
 const validWhitty = {
     alt: 'Whitty building, Mater,',

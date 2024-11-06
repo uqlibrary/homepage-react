@@ -24,6 +24,7 @@ const StyledBookingLink = styled(Link)(({ theme }) => ({
         color: theme.palette.primary.light,
         display: 'block',
         paddingTop: '13px',
+        whiteSpace: 'nowrap',
     },
 }));
 
@@ -33,6 +34,8 @@ const StyledLocationBox = styled(Box)(() => ({
 }));
 
 const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
+    // display as locations then booking link but code as booking then locations,
+    // so they don't tab to the booking link after clicking the locations open
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -44,6 +47,7 @@ const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
         marginTop: '6px',
         textDecoration: 'underline',
         textTransform: 'none',
+        whiteSpace: 'nowrap',
         '&:hover': {
             backgroundColor: 'transparent',
             textDecoration: 'underline',
@@ -127,7 +131,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                         aria-expanded="false"
                         aria-controls="locations-wrapper"
                     >
-                        Library locations
+                        Locations and hours
                         {!!locationOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                     </Button>
                 </StyledButtonWrapperDiv>
