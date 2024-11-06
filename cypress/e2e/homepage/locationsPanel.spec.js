@@ -91,7 +91,7 @@ context('Locations Panel', () => {
 
         cy.get('[data-testid="hours-item-central"] td:first-child').contains('Central');
         cy.get('[data-testid="hours-item-central"] td:nth-child(2)').contains('24 Hours');
-        cy.get('[data-testid="hours-item-central"] td:nth-child(3) div.occupancyPercent5')
+        cy.get('[data-testid="hours-item-central"] td:nth-child(3) div.occupancyPercent7')
             .should('exist')
             .should('have.attr', 'title', 'Not busy');
 

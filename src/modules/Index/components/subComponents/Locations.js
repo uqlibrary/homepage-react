@@ -350,7 +350,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                     if (springshareLocationId === null) {
                         return null;
                     }
-                    const minimumDisplayedPercentage = 5;
+                    const minimumDisplayedPercentage = 7;
                     const maxmumDisplayedPercentage = 100;
 
                     const vemcountBusynessPercent = vemcountPercentByLocation(springshareLocationId);
