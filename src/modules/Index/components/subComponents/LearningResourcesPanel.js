@@ -14,7 +14,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { SubjectSearchDropdown } from 'modules/SharedComponents/SubjectSearchDropdown';
 import { isLibraryStaff, isLoggedInUser } from 'helpers/access';
 
-const StyledCourseListGridItem = styled('div')(() => ({
+const StyledHeadingGridItem = styled('div')(() => ({
     marginLeft: '8px',
     h4: {
         fontSize: '20px',
@@ -23,15 +23,43 @@ const StyledCourseListGridItem = styled('div')(() => ({
         lineHeight: '160%', // 25.6px
     },
 }));
-const StyledLink = styled(Link)(({ theme }) => ({
-    color: theme.palette.primary.light,
-    fontWeight: 500,
-    paddingBlock: '2px',
-    textDecoration: 'underline',
-    transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
-    '&:hover': {
-        color: '#fff',
-        backgroundColor: theme.palette.primary.light,
+const StyledGridListItem = styled(Grid)(({ theme }) => ({
+    paddingBottom: 8,
+    marginLeft: '10px',
+    listStyleType: 'disc',
+    '& a': {
+        marginLeft: '-5px',
+        color: theme.palette.primary.light,
+        fontWeight: 500,
+        paddingBlock: '2px',
+        textDecoration: 'none',
+        transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
+        '& .link': {
+            textDecoration: 'underline',
+            fontWeight: 500,
+        },
+        '&:hover': {
+            color: 'rgba(0, 0, 0, 0.87)',
+            backgroundColor: '#fff',
+            textDecoration: 'none',
+        },
+        '&:hover .link': {
+            color: '#fff',
+            backgroundColor: theme.palette.primary.light,
+            textDecoration: 'none',
+        },
+        '&:hover .descriptor': {
+            color: 'rgba(0, 0, 0, 0.87)',
+            backgroundColor: '#fff',
+        },
+        '& .descriptor': {
+            color: 'rgba(0, 0, 0, 0.87)',
+            backgroundColor: '#fff',
+            paddingLeft: '15px',
+            marginLeft: '100px',
+            display: 'block',
+            marginTop: '-25px',
+        },
     },
 }));
 
@@ -52,6 +80,8 @@ export const getUrlForLearningResourceSpecificTab = (
 };
 
 export const LearningResourcesPanel = ({ account }) => {
+    const MAXIMUM_NUMBER_DISPLAYED_ENROLLED_COURSES = 5;
+
     const pageLocation = useLocation();
     const navigate = useNavigate();
 
@@ -147,7 +177,7 @@ export const LearningResourcesPanel = ({ account }) => {
                 <Typography
                     component={'p'}
                     data-testid="staff-course-prompt"
-                    style={{ paddingInline: '21px', marginTop: '10px', fontWeight: 400 }}
+                    style={{ paddingInline: '21px', fontWeight: 400 }}
                 >
                     Students see enrolled courses. Example links below:
                 </Typography>
@@ -161,43 +191,54 @@ export const LearningResourcesPanel = ({ account }) => {
                         overflowX: 'hidden',
                         overflowY: 'auto',
                         marginRight: -16,
-                        marginTop: 4,
+                        marginTop: 0,
                         marginLeft: -16,
                         padding: '0 30px 8px',
+                        marginBottom: '8px',
                     }}
                 >
-                    <StyledCourseListGridItem item xs={12}>
+                    <StyledHeadingGridItem item xs={12}>
                         <Typography component={'h4'}>{locale.homepagePanel.userCourseTitle}</Typography>
-                    </StyledCourseListGridItem>
-                    {displayedClasses.map((item, index) => {
+                    </StyledHeadingGridItem>
+                    {displayedClasses.slice(0, MAXIMUM_NUMBER_DISPLAYED_ENROLLED_COURSES).map((item, index) => {
                         return (
-                            <Grid
+                            <StyledGridListItem
                                 item
+                                component={'li'}
                                 xs={12}
                                 data-testid={`hcr-${index}`}
                                 data-analyticsid={`hcr-${index}`}
                                 key={`hcr-${index}`}
-                                style={{
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    paddingBottom: 8,
-                                }}
                             >
-                                <StyledLink
+                                <Link
                                     to={getUrlForLearningResourceSpecificTab(item, pageLocation)}
                                     data-testid={`learning-resource-panel-course-link-${index}`}
                                 >
-                                    {item.classnumber}
-                                </StyledLink>{' '}
-                                {/* because the panel width is driven by window size, show a title
-                                    so ellipsis doesn't hide some meaningful difference between course titles */}
-                                <Typography component={'span'} style={{ fontWeight: 400 }} title={item.DESCR}>
-                                    {item.DESCR}
-                                </Typography>
-                            </Grid>
+                                    <Typography className={'link'} component={'span'}>
+                                        {item.classnumber}
+                                    </Typography>
+                                    <Typography
+                                        className={'descriptor'}
+                                        component={'span'}
+                                        style={{ fontWeight: 400 }}
+                                        title={item.DESCR}
+                                    >
+                                        {item.DESCR}
+                                    </Typography>
+                                </Link>{' '}
+                            </StyledGridListItem>
                         );
                     })}
+                    {displayedClasses.length > MAXIMUM_NUMBER_DISPLAYED_ENROLLED_COURSES && (
+                        <Grid
+                            item
+                            xs={12}
+                            style={{ marginTop: '6px', marginBottom: '6px' }}
+                            data-testid={'learning-resource-panel-course-multi-footer'}
+                        >
+                            <Link to={'/learning-resources'}>{`See all ${displayedClasses.length} classes`}</Link>
+                        </Grid>
+                    )}
                 </Grid>
             ) : (
                 <div style={{ marginLeft: 24, marginTop: -10, fontWeight: 400 }}>{locale.homepagePanel.noCourses}</div>

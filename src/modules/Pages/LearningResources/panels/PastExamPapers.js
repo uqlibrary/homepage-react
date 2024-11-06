@@ -44,7 +44,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
 
     return (
         <StandardCard fullHeight noHeader standardCardId={`past-exams-${subject}`}>
-            <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
+            <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 500 }}>
                 {examPaperTitle}
             </Typography>
             <Grid container className={'exams'}>

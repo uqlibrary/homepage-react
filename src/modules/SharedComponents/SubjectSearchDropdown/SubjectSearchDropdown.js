@@ -33,6 +33,14 @@ const StyledSearchPanel = styled(Grid)(() => ({
             whiteSpace: 'nowrap !important',
         },
     },
+    '& label': {
+        color: '#3b383e', // grey 900
+        fontSize: '16px',
+        fontStyle: 'normal',
+        fontWeight: 400,
+        lineHeight: '160%', // 25.6px
+        letterSpacing: '0.16px',
+    },
 }));
 
 export const SubjectSearchDropdown = ({
@@ -126,6 +134,14 @@ export const SubjectSearchDropdown = ({
     return (
         <form>
             <StyledSearchPanel container spacing={1} alignItems={'flex-end'}>
+                <Grid item xs={12} style={{ height: '32px', marginTop: '6px' }}>
+                    <label
+                        htmlFor="homepage-learningresource-autocomplete"
+                        id="homepage-learningresource-autocomplete-label"
+                    >
+                        {locale.search.placeholder}
+                    </label>
+                </Grid>
                 <Grid item xs={12} sm>
                     <Autocomplete
                         filterOptions={options => {
@@ -183,9 +199,9 @@ export const SubjectSearchDropdown = ({
                                                 borderWidth: 0,
                                             },
                                             display: !!searchKeyword ? 'none' : 'block',
+                                            marginTop: '2px',
                                         },
                                     }}
-                                    label={locale.search.placeholder}
                                     sx={{
                                         // full grey border on input field, like drupal
                                         '& .MuiAutocomplete-inputRoot': {

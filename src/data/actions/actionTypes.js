@@ -362,3 +362,8 @@ export const JOURNAL_SEARCH_FAILED = 'JOURNAL_SEARCH_FAILED';
 export const LOANS_LOADING = 'LOANS_LOADING';
 export const LOANS_FAILED = 'LOANS_FAILED';
 export const LOANS_LOADED = 'LOANS_LOADED';
+
+// Vemcount - location occupancy/busyness
+export const VEMCOUNT_LOADING = 'VEMCOUNT_LOADING';
+export const VEMCOUNT_FAILED = 'VEMCOUNT_FAILED';
+export const VEMCOUNT_LOADED = 'VEMCOUNT_LOADED';

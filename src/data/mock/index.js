@@ -63,6 +63,7 @@ import {
     journalSearchFavouritesLarge,
     journalSearchNoFavourites,
 } from './data/journalSearchFavourites';
+import { vemcountData } from './data/vemcount';
 
 const moment = require('moment');
 
@@ -146,6 +147,8 @@ mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl).reply(() => {
     return [404, {}];
 });
 
+mock.onGet(routes.VEMCOUNT_API().apiUrl).reply(withDelay([200, vemcountData]));
+
 mock.onGet(routes.TRAINING_API().apiUrl).reply(() => {
     if (responseType === 'error') {
         return [500, {}];
@@ -161,7 +164,14 @@ mock.onGet(routes.TRAINING_API().apiUrl).reply(() => {
 // .reply(withDelay([200, training_array]));
 // .reply(withDelay([500, {}]));
 
-mock.onGet(routes.PRINTING_API().apiUrl).reply(withDelay([200, printBalance]));
+mock.onGet(routes.PRINTING_API().apiUrl)
+    // .reply(withDelay([200, printBalance]));
+    .reply(() => {
+        if (responseType === 'almaError') {
+            return [500, {}];
+        }
+        return [200, printBalance];
+    });
 
 mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
 // mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
@@ -1242,6 +1252,9 @@ mock.onGet('exams/course/FREN1010/summary')
             _loans.fines.push(newFineObject); // (we don't care about all the entries...)
             _loans.total_fines_count = _loans.fines.length;
             return _loans;
+        }
+        if (responseType === 'almaError') {
+            return [500, {}];
         }
         switch (user) {
             case 's1111111':

@@ -72,21 +72,6 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         textAlign: 'left',
         color: theme.palette.secondary.dark,
     },
-    // '& .table-header-name div': {
-    //     paddingLeft: '32px',
-    // },
-    '& th .table-cell-name-content': {
-        marginTop: '4px',
-    },
-    '& .table-cell-name-content': {
-        overflow: 'hidden',
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        // width: '100%',
-        whiteSpace: 'nowrap',
-        textOverflow: 'ellipsis',
-    },
     '& .table-row-body': {
         transition: 'color 200ms ease-out, background-color 200ms ease-out',
         '&:hover': {
@@ -105,6 +90,13 @@ const StyledWrapper = styled('div')(({ theme }) => ({
                 backgroundColor: 'inherit',
             },
         },
+        '& td:not(:first-of-type) a': {
+            textDecoration: 'none',
+        },
+    },
+    '& .table-cell-hours a': {
+        color: '#3B383E',
+        fontWeight: 400,
     },
     '& .table-column-busy': {
         paddingBlock: 0,
@@ -129,7 +121,13 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             height: '16px',
             '& span': {
                 paddingLeft: '24px',
+                borderTopRightRadius: '20px',
+                borderBottomRightRadius: '20px',
             },
+        },
+        '& .occupancyPercentLong': {
+            borderTopRightRadius: '20px',
+            borderBottomRightRadius: '20px',
         },
         '& .occupancyPercent:has(.occupancyText)': {
             lineHeight: '18px',
@@ -195,6 +193,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         flexGrow: 1,
         overflowY: 'hidden',
         overflowX: 'hidden',
+        marginLeft: '32px',
     },
 }));
 
@@ -236,153 +235,65 @@ const MyLoader = props => (
 );
 
 const departmentsMap = ['Collections & space', 'Study space', 'Service & collections'];
-export const ariaLabelForLocation = item => {
-    const name = item.name;
-    const hours =
-        item.departments.length > 0 &&
-        item.departments.map(i => {
-            if (departmentsMap.includes(i.name)) {
-                return i.hours;
-            }
-            return null;
-        });
-    const studySpaceHours = `${name || /* istanbul ignore next */ ''}. ${
-        !!hours[0] ? 'Study space hours are ' + hours[0] : ''
-    }`;
-    const askUsHours = !!hours[1] ? 'Ask Us hours are ' + hours[1] : '';
-    const hoursConjunction = !!hours[0] && !!hours[1] ? 'and' : '';
-    return `${studySpaceHours} ${hoursConjunction} ${askUsHours}`;
-};
-
-function departmentProvided(item) {
-    return !!item && !!item.departments && Array.isArray(item.departments) && item.departments.length > 0;
+function departmentProvided(location) {
+    return (
+        !!location && !!location.departments && Array.isArray(location.departments) && location.departments.length > 0
+    );
 }
 
-export const hasDepartments = item => {
+export const hasDepartments = location => {
     const departments =
-        !!departmentProvided(item) &&
-        item.departments.map(item => {
+        !!departmentProvided(location) &&
+        location.departments.map(item => {
             if (departmentsMap.includes(item.name)) {
                 return item.name;
             }
             return null;
         });
     const displayableDepartments =
-        !!departmentProvided(item) &&
+        !!departmentProvided(location) &&
         departments.filter(el => {
             return el !== null;
         });
     return displayableDepartments.length > 0;
 };
 
-// eventually, call the api
-const vemcountapi = {
-    data: [
-        {
-            id: 14976, // Duhig Tower
-            headCount: 160,
-            capacity: 294,
-        },
-        {
-            id: 14975, // Central Library
-            headCount: 0,
-            capacity: 770,
-        },
-        {
-            id: 14974, // Architecture & Music Library
-            headCount: 90,
-            capacity: 105,
-        },
-        {
-            id: 14977, // Biological Sciences Library
-            headCount: 290,
-            capacity: 595,
-        },
-        {
-            id: 14979, // DHESL
-            headCount: 130,
-            capacity: 315,
-        },
-        // mock data, gatton did not return a response
-        // {
-        //     id: 14985, // Gatton
-        //     headCount: 16,
-        //     capacity: 378,
-        // },
-        {
-            id: 14983, // Herston
-            headCount: 70,
-            capacity: 70,
-        },
-        {
-            id: 14978, // Law
-            headCount: 100,
-            capacity: 196,
-        },
-        {
-            id: 14980, // Dutton Park  (Pace)
-            headCount: 27,
-            capacity: 112,
-        },
-    ],
-    // missing:
-    // 4986 askus
-    // 3832 fryer - FW Robinson Reading Room
-    // 3966 whitty
+const getOverrideLocationName = locationAbbr => {
+    // if not present in the lookup table, use the value passed from Springhshare
+    const lookupTable = {
+        AskUs: 'AskUs chat hours', // this one must be overriden long term, I think
+        'Arch Music': 'Architecture and Music', // all these following should be able to be deleted once the Springshare name values are updated, post go live
+        Central: 'Central',
+        'Biol Sci': 'Biological Sciences',
+        DHEngSci: 'Dorothy Hill Engineering and Sciences',
+        'Dutton Park': 'Dutton Park Health Sciences',
+        Fryer: 'FW Robinson Reading Room (Fryer)',
+        Gatton: 'JK Murray (UQ Gatton)',
+        Law: 'Walter Harrison Law',
+        Herston: 'Herston Health Sciences',
+    };
+    if (lookupTable.hasOwnProperty(locationAbbr)) {
+        return lookupTable[locationAbbr];
+    }
+    // Return null if the key is not found
+    return null;
 };
 
-// this table maps those locations who exist on vemcount against their matching speingshare location
-// note: not all locations have vemcount people-counting gates
-const vemmcountSpringshareMapping = [
-    {
-        springshareId: 3967,
-        vemcountId: 14980,
-        name: 'Dutton park', // this doesn't need to match either system, its for the developer to not have to track raw numbers
-    },
-    {
-        springshareId: 3842,
-        vemcountId: 14975,
-        name: 'Central',
-    },
-    {
-        springshareId: 3823,
-        vemcountId: 14974,
-        name: 'Architecture',
-    },
-    {
-        springshareId: 3824,
-        vemcountId: 14977,
-        name: 'BSL',
-    },
-    {
-        springshareId: 3825,
-        vemcountId: 14979,
-        name: 'DHESL',
-    },
-    {
-        springshareId: 3830,
-        vemcountId: 14976,
-        name: 'Duhig tower',
-    },
-    {
-        springshareId: 3833,
-        vemcountId: 14985,
-        name: 'Gatton',
-    },
-    {
-        springshareId: 3838,
-        vemcountId: 14983,
-        name: 'Herston',
-    },
-    {
-        springshareId: 3841,
-        vemcountId: 14978,
-        name: 'Law',
-    },
-];
+export const ariaLabelForLocation = location => {
+    let libraryName = 'the ' + (getOverrideLocationName(location?.abbr) || location.name) + ' Library';
+    const lookupTable = {
+        AskUs: 'the AskUs chat & phone assistance',
+        Fryer: 'Fryer Library',
+        Gatton: 'JK Murray Library',
+    };
+    if (lookupTable.hasOwnProperty(location?.abbr)) {
+        libraryName = lookupTable[location.abbr];
+    }
+    return 'More information on ' + libraryName;
+};
 
 const VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING = 'Missing';
-const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
+const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcountLoading, vemcountError }) => {
     const [isWideScreen, setIsWideScreen] = React.useState(window.innerWidth > 700);
     React.useEffect(() => {
         const handleResize = () => {
@@ -398,9 +309,12 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
     }, []);
 
     const cleanedHours =
-        (!libHoursError &&
+        (vemcountLoading === false &&
+            !vemcountError &&
+            !libHoursError &&
             !!libHours &&
             !!libHours.locations &&
+            vemcount.data.locationList.length > 0 &&
             libHours.locations.length > 0 &&
             libHours.locations.map(location => {
                 let departments = [];
@@ -414,14 +328,17 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                     });
                 }
 
-                function vemcountPercentByLocation(springshareLocationId) {
-                    const vemcountholder = vemmcountSpringshareMapping.filter(
+                function getVemcountZoneBySpringshareId(springshareLocationId) {
+                    return locationLocale.vemcountSpringshareMapping.find(
                         m => m.springshareId === springshareLocationId,
                     );
-                    const vemcountLocation = vemcountholder?.pop();
-                    const vemcountId = vemcountLocation?.vemcountId;
-                    // vemcountapi constant, above, wil be replaced wih api results
-                    const vemcountWrapper = vemcountapi?.data?.filter(v => v.id === vemcountId);
+                }
+
+                function vemcountPercentByLocation(springshareLocationId) {
+                    const vemcountLocation = getVemcountZoneBySpringshareId(springshareLocationId);
+                    const vemcountZoneId = vemcountLocation?.vemcountZoneId;
+                    const vemcountWrapper = vemcount?.data?.locationList?.filter(v => v.id === vemcountZoneId);
+                    // const dateLoaded = vemcount?.data?.dateLoaded; // for use later
                     const vemcountData = vemcountWrapper.length > 0 ? vemcountWrapper[0] : null;
                     if (vemcountLocation?.springshareId === springshareLocationId && vemcountWrapper?.length === 0) {
                         return VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING;
@@ -433,10 +350,11 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                     if (springshareLocationId === null) {
                         return null;
                     }
-                    const minimumDisplayedPercentage = 5;
+                    const minimumDisplayedPercentage = 7;
+                    const maxmumDisplayedPercentage = 100;
 
                     const vemcountBusynessPercent = vemcountPercentByLocation(springshareLocationId);
-                    let calculatedBusyness = null;
+                    let calculatedBusyness;
                     if (vemcountBusynessPercent === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING) {
                         calculatedBusyness = vemcountBusynessPercent;
                     } else if (!!isNaN(vemcountBusynessPercent)) {
@@ -444,6 +362,8 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                     } else if (vemcountBusynessPercent < minimumDisplayedPercentage) {
                         // don't let the bar go below what shows as a small curve on the left
                         calculatedBusyness = minimumDisplayedPercentage;
+                    } else if (vemcountBusynessPercent > maxmumDisplayedPercentage) {
+                        calculatedBusyness = maxmumDisplayedPercentage;
                     } else {
                         calculatedBusyness = Math.floor(vemcountBusynessPercent);
                     }
@@ -458,7 +378,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                     alt: location.name,
                     campus: locationLocale.hoursCampusMap[location.abbr],
                     departments,
-                    // busyness: randomBusynessNumber,
                     busyness: getVemcountPercentage(location?.lid, location.name) || null,
                 };
             })) ||
@@ -526,6 +445,13 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
         if (location.abbr === 'AskUs') {
             return null;
         }
+        if (!hasDepartments(location)) {
+            return (
+                <div className="occupancyText">
+                    <UqDsExclamationCircle /> <span>No information</span>
+                </div>
+            );
+        }
         if (!isOpen(location)) {
             return <div className="occupancyText occupancyTextClosed">Closed</div>;
         }
@@ -542,9 +468,14 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
         return (
             <div className="occupancy">
                 <div
-                    className={`occupancyPercent occupancyPercent${location.busyness}`}
+                    className={`occupancyPercent ${
+                        location.busyness > 94 ? 'occupancyPercentLong' : ''
+                    } occupancyPercent${location.busyness}`}
                     style={{
-                        width: !hasDepartments(location) || isOpen(location) ? `${location.busyness}%` : /* istanbul ignore next */ 0,
+                        width:
+                            !hasDepartments(location) || isOpen(location)
+                                ? `${location.busyness}%`
+                                : /* istanbul ignore next */ 0,
                     }}
                     title={busynessText(location.busyness)}
                 >
@@ -554,38 +485,20 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
         );
     }
 
-    const getOverrideLocationName = locationAbbr => {
-        // if not present in the lookup table, use the value passed from Springhshare
-        const lookupTable = {
-            AskUs: 'AskUs chat hours', // this one must be overriden long term, I think
-            'Arch Music': 'Architecture and Music', // all these following should be able to be deleted once the Springshare name values are updated, post go live
-            'Biol Sci': 'Biological Sciences',
-            DHEngSci: 'Dorothy Hill Engineering and Sciences',
-            'Dutton Park': 'Dutton Park Health Sciences',
-            Fryer: 'FW Robinson Reading Room (Fryer)',
-            Gatton: 'JK Murray (UQ Gatton)',
-            Law: 'Walter Harrison Law',
-        };
-        if (lookupTable.hasOwnProperty(locationAbbr)) {
-            return lookupTable[locationAbbr];
-        }
-        // Return null if the key is not found
-        return null;
-    };
-
     return (
         <StyledStandardCard noPadding noHeader standardCardId="locations-panel">
             <StyledWrapper id="tablewrapper">
-                {!!libHoursError && (
+                {(!!libHoursError || !!vemcountError) && (
                     <Fade in={!libHoursLoading} timeout={1000}>
                         <div className={'locations-wrapper'}>
                             <Typography style={{ padding: '1rem' }}>
-                                We can’t load opening hours right now. Please refresh your browser or try again later.
+                                We can’t load location information right now. Please refresh your browser or try again
+                                later.
                             </Typography>
                         </div>
                     </Fade>
                 )}
-                {!libHoursError && !!libHours && !libHoursLoading && (
+                {!libHoursError && !!libHours && !libHoursLoading && !vemcountError && !!vemcount && !vemcountLoading && (
                     <Fade in={!libHoursLoading} timeout={1000}>
                         <div className={'wrapper2'}>
                             <table className={'locations-wrapper'}>
@@ -627,11 +540,9 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                                                     >
                                                         <a
                                                             id={`${sluggifyName(`hours-item-${location.abbr}`)}`}
-                                                            aria-label={ariaLabelForLocation(location)}
                                                             data-testid={`hours-item-name-${index}`}
                                                             href={location.url}
                                                             style={{ paddingBlock: 0 }}
-                                                            // className={'table-cell-name-content'}
                                                         >
                                                             {getOverrideLocationName(location.abbr) || location.name}
                                                         </a>
@@ -651,7 +562,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                                                                 data-testid={`hours-item-hours-${index}`}
                                                                 href={location.url}
                                                                 style={{ paddingBlock: 0 }}
-                                                                // className={'table-cell-name-content'}
                                                             >
                                                                 {getLibraryHours(location)}
                                                             </a>
@@ -666,7 +576,6 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                                                             data-testid={`hours-item-busy-${index}`}
                                                             href={location.url}
                                                             style={{ paddingBlock: 0 }}
-                                                            // className={'table-cell-name-content'}
                                                         >
                                                             {getBusyness(location)}
                                                         </a>
@@ -679,7 +588,8 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                         </div>
                     </Fade>
                 )}
-                {!!libHoursLoading && !libHoursError && !libHours && (
+                {((!!libHoursLoading && !libHoursError && !libHours) ||
+                    (!vemcountError && !vemcount && !!vemcountLoading)) && (
                     <div className={'loaderContent'}>
                         <MyLoader id="hours-loader" data-testid="hours-loader" aria-label="Locations data is loading" />
                     </div>
@@ -690,11 +600,16 @@ const Locations = ({ libHours, libHoursLoading, libHoursError }) => {
                         data-analyticsid={'hours-item-weeklyhours-link'}
                         to={linkToDrupal('/locations-hours/opening-hours')}
                     >
-                        <span>See weekly Library and AskUs hours</span> <ArrowForwardIcon /> {/* uq ds arrow-right-1 */}
+                        <span>
+                            {!!libHoursError || !!vemcountError ? <span>In the meantime, s</span> : <span>S</span>}
+                            ee weekly Library and AskUs hours
+                        </span>{' '}
+                        <ArrowForwardIcon /> {/* uq ds arrow-right-1 */}
                     </Link>
                 </div>
                 <p className={'disclaimer'}>
-                    *Student and staff hours only. For visitor and community hours, see individual Library links above.
+                    {!(!!libHoursError || !!vemcountError) &&
+                        '*Student and staff hours only. For visitor and community hours, see individual Library links above.'}
                 </p>
             </StyledWrapper>
         </StyledStandardCard>
@@ -705,6 +620,9 @@ Locations.propTypes = {
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
     libHoursError: PropTypes.bool,
+    vemcount: PropTypes.object,
+    vemcountLoading: PropTypes.bool,
+    vemcountError: PropTypes.bool,
 };
 
 export default Locations;

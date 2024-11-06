@@ -113,6 +113,27 @@ const handlers = {
         libHoursError: true,
     }),
 
+    [actions.VEMCOUNT_LOADING]: state => ({
+        ...state,
+        vemcount: null,
+        vemcountLoading: true,
+        vemcountError: false,
+    }),
+
+    [actions.VEMCOUNT_LOADED]: (state, action) => ({
+        ...state,
+        vemcount: action.payload,
+        vemcountLoading: false,
+        vemcountError: false,
+    }),
+
+    [actions.VEMCOUNT_FAILED]: state => ({
+        ...state,
+        vemcount: null,
+        vemcountLoading: false,
+        vemcountError: true,
+    }),
+
     // Training
     [actions.TRAINING_LOADING]: state => ({
         ...state,

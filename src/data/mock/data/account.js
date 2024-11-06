@@ -422,6 +422,87 @@ export const accounts = {
             "INSTRUCTION_MODE": "IN",
             "ACAD_GROUP": "SCI",
             "STRM": "7060",
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "Chemistry",
+            "SUBJECT": "CHEM",
+            "CATALOG_NBR": "1101E",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7410"
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "Design",
+            "SUBJECT": "DSGN",
+            "CATALOG_NBR": "1101E",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7410"
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "Animals and Archaeology: Analytical approaches to understand past human-animal relationships",
+            "SUBJECT": "ARCS",
+            "CATALOG_NBR": "2090",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7410"
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "Physics",
+            "SUBJECT": "PHYS",
+            "CATALOG_NBR": "1101E",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7410"
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "Academic English",
+            "SUBJECT": "ENGL",
+            "CATALOG_NBR": "1101E",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7450"
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "Design",
+            "SUBJECT": "DSGN",
+            "CATALOG_NBR": "1101E",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7450"
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "General Mathematics",
+            "SUBJECT": "MATH",
+            "CATALOG_NBR": "1101E",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7450"
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "Health and Nutrition",
+            "SUBJECT": "HLTH",
+            "CATALOG_NBR": "1101E",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7450"
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "Humanities and Social Sciences",
+            "SUBJECT": "HUMN",
+            "CATALOG_NBR": "1101E",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7450"
         }],
         "expiryDate": "14-12-19",
         "hasSession": true,

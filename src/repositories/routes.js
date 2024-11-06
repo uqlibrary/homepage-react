@@ -63,6 +63,15 @@ export const LIB_HOURS_API = () => ({
     options: { params: { ts: `${new Date().getTime()}` } },
 });
 
+const location = ['localhost', 'homepage-development.library.uq.edu.au', 'homepage-staging.library.uq.edu.au'].includes(
+    document.location.hostname,
+)
+    ? 'reusable-webcomponents-staging'
+    : /* istanbul ignore next */ 'reusable-webcomponents';
+export const VEMCOUNT_API = () => ({
+    apiUrl: 'https://assets.library.uq.edu.au/' + location + '/api/homepage/headcount.json',
+});
+
 // file uploading apis
 export const UPLOAD_PUBLIC_FILES_API = () => ({ apiUrl: 'file/public' });
 

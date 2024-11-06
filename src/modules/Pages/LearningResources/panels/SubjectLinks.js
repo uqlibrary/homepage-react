@@ -28,7 +28,7 @@ export const SubjectLinks = ({ subject, headingLevel }) => {
 
     return (
         <StandardCard fullHeight noHeader standardCardId={`subject-links-${subject.classnumber}`}>
-            <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
+            <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 500 }}>
                 {locale.myCourses.courseLinks.title}
             </Typography>
             <Grid container className={'CourseLinks'}>

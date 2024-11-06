@@ -100,6 +100,49 @@ context('The Homepage Learning Resource Panel', () => {
         cy.get(`div[data-testid=${classPanelId}] h3`).contains('ACCT1101');
     });
 
+    it('The Learning resources panel displays results correctly when the user has many classes', () => {
+        cy.visit('?user=s5555555');
+        cy.viewport(1300, 1000);
+        cy.get('div[data-testid=learning-resources-panel]').contains(locale.homepagePanel.title);
+
+        cy.get('[data-testid="staff-course-prompt"]').should('not.exist');
+        cy.get('[data-testid="your-courses"]')
+            .should('exist')
+            .should('be.visible')
+            .children()
+            .should('have.length', 5 + 2);
+        cy.get('[data-testid="learning-resource-panel-course-multi-footer"]')
+            .should('exist')
+            .should('be.visible')
+            .contains('See all 10 classes');
+        // the longer subject name wraps properly
+        cy.get('[data-testid="your-courses"]').within(() => {
+            cy.get('li').should('have.length', 5);
+            let firstItemLeft;
+            cy.get('li .descriptor')
+                .eq(0)
+                .should('be.visible')
+                .then($el => {
+                    firstItemLeft = $el.position().left;
+                });
+            cy.get('li .descriptor')
+                .eq(3)
+                .contains('Animals')
+                .then($el3 => {
+                    const thirdItemTop = $el3.position().top;
+                    const thirdItemLeft = $el3.position().left;
+                    const thirdItemBottom = $el3.position().top + $el3.outerHeight();
+
+                    // they both sit at the same spot on the left
+                    expect(thirdItemLeft).to.equal(firstItemLeft);
+                    // the line wraps correctly - it has a height of more than one line
+                    expect(thirdItemBottom - thirdItemTop).be.greaterThan(47);
+                    expect(thirdItemBottom - thirdItemTop).be.lessThan(49);
+                    // (hard to test something useful)
+                });
+        });
+    });
+
     it('The Learning resources panel displays results with incomplete data correctly', () => {
         cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);

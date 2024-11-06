@@ -19,8 +19,6 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { linkToDrupal } from 'helpers/general';
 
-const NUMBER_OF_DISPLAYED_EVENTS = 3;
-
 const MyLoader = props => (
     <ContentLoader
         speed={2}
@@ -72,6 +70,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             color: theme.palette.primary.light,
             lineHeight: '100%', // 16px
         },
+        '& .listEventItem': {
+            lineHeight: '24px',
+        },
         ['& .listEventItem:has(> .listEventTitle)']: {
             marginTop: '8px',
         },
@@ -87,13 +88,28 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             marginTop: '4px',
         },
         '&:hover': {
-            color: theme.palette.secondary.dark,
+            backgroundColor: '#F3F3F4', // Brand-grey-grey-50
+            transition: 'background-color 200ms ease-out',
+        },
+    },
+    ['& .bookActionButton']: {
+        backgroundColor: theme.palette.primary.light,
+        borderWidth: '2px',
+        borderStyle: 'solid',
+        borderColor: theme.palette.primary.light,
+        borderRadius: '.25rem',
+        color: '#fff',
+        display: 'block',
+        fontSize: 13,
+        fontWeight: 400,
+        padding: 6,
+        textAlign: 'center',
+        textTransform: 'uppercase',
+        '&:hover': {
             backgroundColor: '#fff',
-            '& .listEventTitle': {
-                color: '#fff',
-                backgroundColor: theme.palette.primary.light,
-                transition: 'background-color 200ms ease-out',
-            },
+            borderColor: theme.palette.primary.light,
+            color: theme.palette.primary.light,
+            textDecoration: 'underline',
         },
     },
     ['& .detailHeader']: {
@@ -154,12 +170,12 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
     const eventTime = eventTime =>
         moment(eventTime)
             .calendar(null, {
-                sameDay: '[Today,] dddd D MMMM [at] h:mma',
-                nextDay: '[Tomorrow,] dddd D MMMM [at] h:mma',
-                nextWeek: 'dddd D MMMM [at] h:mma',
-                lastDay: '[Yesterday]  D MMMM [at] h:mma',
-                lastWeek: '[Last] dddd  D MMMM [at] h:mma',
-                sameElse: 'D MMMM [at] h:mma',
+                sameDay: '[Today,] dddd D MMMM',
+                nextDay: '[Tomorrow,] dddd D MMMM',
+                nextWeek: 'dddd D MMMM',
+                lastDay: '[Yesterday]  D MMMM',
+                lastWeek: '[Last] dddd  D MMMM',
+                sameElse: 'D MMMM',
             })
             .replace(':00', '');
     const bookingText = ev => {
@@ -167,13 +183,15 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
           if bookingSettings is null then bookings are not required
           if bookingSettings has a placesRemaining child *and it is > 0" then there are places still available
           if bookingSettings has a placesRemaining child *and it is zero* then the course is fully booked
-          We filter out the fully booked entries, because we are only showing 3 now, and that seems like a waste
          */
-        let placesRemainingText = 'Booking is not required';
-        /* istanbul ignore else */
+        const placesRemainingText = { display: 'Booking is not required', button: 'Log in for more details' };
         if (ev.bookingSettings !== null) {
-            if (ev?.bookingSettings?.placesRemaining > 0) {
-                placesRemainingText = 'Places still available';
+            if (ev.bookingSettings.placesRemaining > 0) {
+                placesRemainingText.display = 'Places still available';
+                placesRemainingText.button = 'Log in and book now';
+            } else {
+                placesRemainingText.display = 'Event is fully booked';
+                placesRemainingText.button = 'Log in to join wait list';
             }
         }
         return placesRemainingText;
@@ -187,9 +205,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                       return trainingEvents[key];
                   })
                 : trainingEvents;
-        return !!list && list.length > 0
-            ? list.filter(t => t.bookingSettings !== null).slice(0, NUMBER_OF_DISPLAYED_EVENTS)
-            : [];
+        return !!list && list.length > 0 ? list.slice(0, 3) : [];
     };
     const filteredTrainingEvents = filterStandardisedTrainingEvents();
     return (
@@ -345,7 +361,12 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                         </Grid>
                                     </Grid>
                                     <Grid container spacing={1}>
-                                        <Grid item xs={12} className={'detailSummary'}>
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            className={'detailSummary'}
+                                            data-testid="event-detail-open-summary"
+                                        >
                                             <div dangerouslySetInnerHTML={{ __html: eventDetail.summary }} />
                                         </Grid>
                                         <Grid item xs={1} className={'detailMeta'}>
@@ -380,9 +401,18 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                             </Tooltip>
                                         </Grid>
                                         <Grid item xs={10} className={'detailMeta'}>
-                                            {bookingText(eventDetail)}
+                                            {bookingText(eventDetail).display}
                                         </Grid>
                                     </Grid>
+                                    <a
+                                        className={'bookActionButton'}
+                                        href={`https://studenthub.uq.edu.au/students/events/detail/${eventDetail.entityId}`}
+                                        id="training-event-detail-training-login-button"
+                                        data-testid="training-event-detail-training-login-button"
+                                        data-analyticsid="training-event-detail-training-login-button"
+                                    >
+                                        {bookingText(eventDetail).button}
+                                    </a>
                                 </Grid>
                             </Grid>
                         </div>
