@@ -260,6 +260,8 @@ export const DLOView = ({
                 event: 'pageview',
                 page_title: dlorItem.object_title,
             });
+            document.title = dlorItem.object_title;
+             
         }
     }, [dlorItem]);
 
