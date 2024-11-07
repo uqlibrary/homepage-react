@@ -39,27 +39,17 @@ const StyledGridListItem = styled(Grid)(({ theme }) => ({
             fontWeight: 500,
         },
         '&:hover': {
-            color: 'rgba(0, 0, 0, 0.87)',
-            backgroundColor: '#fff',
-            textDecoration: 'none',
-        },
-        '&:hover .link': {
             color: '#fff',
             backgroundColor: theme.palette.primary.light,
             textDecoration: 'none',
         },
-        '&:hover .descriptor': {
-            color: 'rgba(0, 0, 0, 0.87)',
-            backgroundColor: '#fff',
-        },
-        '& .descriptor': {
-            color: 'rgba(0, 0, 0, 0.87)',
-            backgroundColor: '#fff',
-            paddingLeft: '15px',
-            marginLeft: '100px',
-            display: 'block',
-            marginTop: '-25px',
-        },
+    },
+    '& .descriptor': {
+        paddingLeft: '15px',
+        marginLeft: '100px',
+        display: 'block',
+        marginTop: '-25px',
+        fontWeight: 400,
     },
 }));
 
@@ -201,11 +191,7 @@ export const LearningResourcesPanel = ({ account }) => {
                         <Typography component={'h4'}>{locale.homepagePanel.userCourseTitle}</Typography>
                     </StyledHeadingGridItem>
                     {displayedClasses.length > 0 && (
-                        <ul style={{
-                            margin: '8px 0 0 24px',
-                            padding: 0,
-                            width: '100%'
-                        }}>
+                        <ul style={{ margin: '8px 0 0 24px', padding: 0, width: '100%' }}>
                             {displayedClasses.slice(0, MAXIMUM_NUMBER_DISPLAYED_ENROLLED_COURSES).map((item, index) => {
                                 return (
                                     <StyledGridListItem
@@ -223,12 +209,7 @@ export const LearningResourcesPanel = ({ account }) => {
                                             <Typography className={'link'} component={'span'}>
                                                 {item.classnumber}
                                             </Typography>
-                                            <Typography
-                                                className={'descriptor'}
-                                                component={'span'}
-                                                style={{ fontWeight: 400 }}
-                                                title={item.DESCR}
-                                            >
+                                            <Typography className={'descriptor'} component={'span'} title={item.DESCR}>
                                                 {item.DESCR}
                                             </Typography>
                                         </Link>{' '}
