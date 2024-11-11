@@ -28,7 +28,7 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     marginTop: '2px',
     zIndex: 999,
     position: 'absolute',
-    top: 50,
+    top: 102,
     [theme.breakpoints.down('uqDsDesktop')]: {
         left: '0 !important',
     },

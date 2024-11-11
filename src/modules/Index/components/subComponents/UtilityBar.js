@@ -17,10 +17,10 @@ import { isEscapeKeyPressed, lazyRetry } from 'helpers/general';
 const Locations = lazy(() => lazyRetry(() => import('./Locations')));
 
 const StyledBookingLink = styled(Link)(({ theme }) => ({
-    color: 'black',
-    fontWeight: 400,
     textDecorationColor: theme.palette.primary.light,
     '& span': {
+        fontSize: '18px',
+        fontWeight: 500,
         color: theme.palette.primary.light,
         display: 'block',
         paddingTop: '13px',
@@ -43,7 +43,8 @@ const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
 
     '& button': {
         color: theme.palette.primary.light,
-        fontSize: '16px',
+        fontSize: '18px',
+        fontWeight: 500,
         marginTop: '6px',
         textDecoration: 'underline',
         textTransform: 'none',
@@ -57,10 +58,31 @@ const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
     '& a': {
         fontSize: '16px',
         height: '40px',
-        paddingBlock: '6px',
+        paddingBlock: '32px',
         marginLeft: '32px',
     },
 }));
+
+const UqDsLocationIcon = (
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="26" viewBox="0 0 18 26" fill="none">
+        <g id="icon/location">
+            <path
+                d="M9.00047 5C10.8267 5 12.3333 6.50685 12.3333 8.33333C12.3333 10.1598 10.8267 11.6667 9.00047 11.6667C7.17426 11.6667 5.66764 10.1598 5.66764 8.33333C5.62198 6.50685 7.1286 5 9.00047 5Z"
+                stroke="#51247A"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+            <path
+                d="M9 1C13.4082 1 17 4.59365 17 9.00404C17 12.6521 11.6122 21.7452 9.70748 24.631C9.4898 25.0121 8.94558 25.121 8.61905 24.8488C8.5102 24.7943 8.45578 24.7399 8.40136 24.631C6.38775 21.6907 1 12.5977 1 9.00404C1 4.59365 4.59184 1 9 1Z"
+                stroke="#51247A"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+        </g>
+    </svg>
+);
 
 export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcountLoading, vemcountError }) => {
     // handle the location opener
@@ -131,7 +153,8 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                         aria-expanded="false"
                         aria-controls="locations-wrapper"
                     >
-                        Locations and hours
+                        {UqDsLocationIcon}
+                        <span style={{ paddingLeft: '16px' }}>Locations and hours</span>
                         {!!locationOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                     </Button>
                 </StyledButtonWrapperDiv>
