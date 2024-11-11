@@ -116,22 +116,6 @@ export const pluralise = (singularWord, count, pluralWordSpecial = null) => {
     return singularWord;
 };
 
-const greetings = {
-    morning: 'Good morning',
-    afternoon: 'Good afternoon',
-    evening: 'Good evening',
-};
-export const greeting = (currentTime = null) => {
-    const time = currentTime ?? moment().format('H');
-    if (time < 12) {
-        return greetings.morning;
-    } else if (time >= 12 && time < 18) {
-        return greetings.afternoon;
-    } else {
-        return greetings.evening;
-    }
-};
-
 // for dev only - after 2024 golive this can just be web.library
 /**
  * @param pathname {string} the path name to appended to the correct domain, eg /about

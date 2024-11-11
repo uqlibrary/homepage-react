@@ -5,17 +5,16 @@ import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { canSeeLoans, canSeePrintBalance, isTestTagUser } from 'helpers/access';
-import UqDsExclamationCircle from '../../../SharedComponents/Icons/UqDsExclamationCircle';
+import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
 
-const uqDsWarningYellow = '#fef8e8';
 const StyledAlertDiv = styled('div')(() => ({
-    backgroundColor: uqDsWarningYellow,
-    padding: '16px',
-    margin: '0 16px 16px 16px',
     display: 'flex',
-    textAlign: 'center',
+    marginLeft: '25px',
     '& a': {
-        marginLeft: '6px',
+        marginLeft: '30px',
+    },
+    '& > div': {
+        width: '100%',
     },
 }));
 
@@ -264,11 +263,12 @@ export const CataloguePanel = ({ account, loans, loansLoading, printBalance, pri
                 )}
             </StyledUl>
             {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
-                <StyledAlertDiv data-testid={'show-fines'}>
-                    <UqDsExclamationCircle style={{ height: '22px' }} />
-                    <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
-                        <span>Fines (${`${totalFines(loans?.fines)}`})</span>
-                    </Link>
+                <StyledAlertDiv data-testid={'show-fines'} style={{ marginBottom: '24px', marginRight: '24px' }}>
+                    <UserAttention titleText={'Fines and charges'}>
+                        <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
+                            <span>${`${totalFines(loans?.fines)}`} payable</span>
+                        </Link>
+                    </UserAttention>
                 </StyledAlertDiv>
             )}
         </StandardCard>

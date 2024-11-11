@@ -9,7 +9,6 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { greeting } from 'helpers/general';
 
 import LibraryUpdates from 'modules/Index/components/subComponents/LibraryUpdates';
 import NavigationCardWrapper from './subComponents/NavigationCardWrapper';
@@ -207,7 +206,7 @@ export const Index = ({
                         <Grid container>
                             <Grid item uqDsMobile={12} sx={{ marginBottom: '32px', marginLeft: '24px' }}>
                                 <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
-                                    {greeting()}, {account.firstName || /* istanbul ignore next */ ''}
+                                    Welcome, {account.firstName || /* istanbul ignore next */ ''}
                                 </StyledHeading>
                             </Grid>
                                 {!!verySimplelayout ? (

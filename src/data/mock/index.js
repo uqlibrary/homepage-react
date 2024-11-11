@@ -152,7 +152,9 @@ mock.onGet(routes.VEMCOUNT_API().apiUrl).reply(withDelay([200, vemcountData]));
 mock.onGet(routes.TRAINING_API().apiUrl).reply(() => {
     if (responseType === 'error') {
         return [500, {}];
-    } else if (responseType === 'missing') {
+    } else if (responseType === 'empty') {
+        return [200, {}];
+    } else if (responseType === '404') {
         return [404, {}];
     } else if (user === 'emhospital') {
         return [200, training_object_hospital];

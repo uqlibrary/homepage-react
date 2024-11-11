@@ -1,7 +1,6 @@
 import {
     linkToDrupal,
     getCampusByCode,
-    greeting,
     pluralise,
     isRepeatingString,
     leftJoin,
@@ -74,12 +73,6 @@ describe('general helpers', () => {
         expect(pluralise('body', 0, 'bodies')).toEqual('body');
         expect(pluralise('body', 1, 'bodies')).toEqual('body');
         expect(pluralise('body', 8, 'bodies')).toEqual('bodies');
-    });
-
-    it('shows the correct greeting time', () => {
-        expect(greeting(9)).toEqual('Good morning'); // 9am
-        expect(greeting(13)).toEqual('Good afternoon'); // 1pm
-        expect(greeting(21)).toEqual('Good evening'); // 9pm
     });
 
     it('shows the correct drupal domain name', () => {
