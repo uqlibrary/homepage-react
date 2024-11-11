@@ -265,7 +265,7 @@ export const CataloguePanel = ({ account, loans, loansLoading, printBalance, pri
             </StyledUl>
             {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
                 <StyledAlertDiv data-testid={'show-fines'} style={{ marginBottom: '24px', marginRight: '24px' }}>
-                    <UserAttention titleText={'Fines for overdue loans'}>
+                    <UserAttention titleText={'Fines and charges'}>
                         <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
                             <span>${`${totalFines(loans?.fines)}`} in fines payable</span>
                         </Link>
