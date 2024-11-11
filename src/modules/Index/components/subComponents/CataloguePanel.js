@@ -9,10 +9,9 @@ import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
 
 const StyledAlertDiv = styled('div')(() => ({
     display: 'flex',
-    textAlign: 'center',
     marginLeft: '25px',
     '& a': {
-        marginLeft: '-25px',
+        marginLeft: '30px',
     },
     '& > div': {
         width: '100%',
@@ -267,7 +266,7 @@ export const CataloguePanel = ({ account, loans, loansLoading, printBalance, pri
                 <StyledAlertDiv data-testid={'show-fines'} style={{ marginBottom: '24px', marginRight: '24px' }}>
                     <UserAttention titleText={'Fines and charges'}>
                         <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
-                            <span>${`${totalFines(loans?.fines)}`} in fines payable</span>
+                            <span>${`${totalFines(loans?.fines)}`} payable</span>
                         </Link>
                     </UserAttention>
                 </StyledAlertDiv>
