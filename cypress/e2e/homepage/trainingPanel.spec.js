@@ -155,6 +155,36 @@ context('Training', () => {
         cy.get('body').contains('user has navigated to Studenthub page');
     });
 
+    it('when there is no training it shows a friendly message', () => {
+        cy.visit('/?user=s1111111&responseType=empty');
+        cy.waitUntil(() =>
+            cy
+                .get('[data-testid="standard-card-training-header"]')
+                .should('exist')
+                .contains('Training'),
+        );
+
+        cy.get('[data-testid="training-api-error"]')
+            .should('exist')
+            .contains('There are no training sessions available at the moment.');
+    });
+
+    it('when the api 404s, it shows a friendly message', () => {
+        cy.visit('/?user=s1111111&responseType=404');
+        cy.viewport(1300, 1000);
+
+        cy.waitUntil(() =>
+            cy
+                .get('[data-testid="standard-card-training-header"]')
+                .should('exist')
+                .contains('Training'),
+        );
+
+        cy.get('[data-testid="training-api-error"]')
+            .should('exist')
+            .contains('We can’t load training events right now');
+    });
+
     it('shows an api error correctly', () => {
         cy.visit('/?user=s1111111&responseType=error');
         cy.viewport(1300, 1000);

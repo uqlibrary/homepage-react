@@ -44,13 +44,16 @@ const MyLoader = props => (
     </ContentLoader>
 );
 const StyledWrapper = styled('div')(({ theme }) => ({
-    ['&.flexWrapper']: {
+    ['&.trainingWrapper']: {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
         overflow: 'hidden',
         marginBottom: '24px',
         minHeight: '25em',
+        '&.missing': {
+            minHeight: '5em',
+        },
     },
     ['& .linkButton']: {
         backgroundColor: '#fff',
@@ -232,9 +235,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                             Training
                         </h3>
                         <a
-                            href={linkToDrupal(
-                                '/study-and-learning-support/training-and-workshops/online-and-person-workshops',
-                            )}
+                            href={linkToDrupal('/study-and-learning-support/training-and-workshops')}
                             data-analyticsid="training-event-detail-more-training-button"
                             className={'seeAllTrainingLink'}
                             data-testid="seeAllTrainingLink"
@@ -253,9 +254,17 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                 </Grid>
             }
         >
-            <StyledWrapper className={'flexWrapper'}>
+            <StyledWrapper className={'trainingWrapper'}>
                 {(() => {
-                    if (!!trainingEventsError) {
+                    console.log('trainingEvents=', trainingEvents);
+                    console.log('filteredTrainingEvents=', filteredTrainingEvents);
+                    if (!!trainingEventsLoading && !eventDetail) {
+                        return (
+                            <div className={'flexLoader'} aria-label="UQ training Events loading">
+                                <MyLoader />
+                            </div>
+                        );
+                    } else if (!!trainingEventsError) {
                         return (
                             <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
                                 <div className={'flexContent'} role="region">
@@ -266,11 +275,31 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                 </div>
                             </Fade>
                         );
-                    } else if ((!trainingEvents || !!trainingEventsLoading) && !eventDetail) {
+                    } else if (trainingEventsLoading === false && filteredTrainingEvents.length === 0 && !eventDetail) {
+                        const displayElement = document.querySelector('.trainingWrapper');
+                        !!displayElement && displayElement.classList.add('missing');
                         return (
-                            <div className={'flexLoader'} aria-label="UQ training Events loading">
-                                <MyLoader />
-                            </div>
+                            <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
+                                <div className={'flexContent'} role="region">
+                                    <Typography
+                                        style={{ margin: '1rem 1rem 1rem 26px' }}
+                                        data-testid="training-api-error"
+                                    >
+                                        There are no training sessions available at the moment.
+                                    </Typography>
+                                    <Typography style={{ margin: '1rem 1rem 1rem 26px' }}>
+                                        You can visit{' '}
+                                        <a
+                                            href={linkToDrupal(
+                                                '/study-and-learning-support/training-and-workshops/online-and-person-workshops',
+                                            )}
+                                        >
+                                            Training and workshops
+                                        </a>{' '}
+                                        for other training options or try again later.
+                                    </Typography>
+                                </div>
+                            </Fade>
                         );
                     } else if (
                         filteredTrainingEvents &&
