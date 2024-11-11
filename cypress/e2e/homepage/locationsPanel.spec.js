@@ -156,8 +156,9 @@ context('Locations Panel', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
         cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+        // open dialog
         cy.get('[data-testid="hours-accordion-open"]').click();
-        // dialog is open
+        // confirm dialog is open
         cy.waitUntil(() =>
             cy
                 .get('[data-testid="homepage-hours-weeklyhours-link"]')
@@ -166,8 +167,8 @@ context('Locations Panel', () => {
                 .contains('See weekly'),
         );
 
-        // click escape key
-        cy.get('body')
+        // click escape key to close dialog
+        cy.get('[data-testid="hours-item-arch-music-link"]')
             .focus()
             .trigger('keydown', { keyCode: ESCAPE_KEYCODE });
         // dialog is closed
