@@ -45,8 +45,7 @@ const StyledGridListItem = styled(Grid)(({ theme }) => ({
         },
     },
     '& .descriptor': {
-        paddingLeft: '15px',
-        marginLeft: '100px',
+        marginLeft: '95px',
         display: 'block',
         marginTop: '-25px',
         fontWeight: 400,
@@ -209,10 +208,10 @@ export const LearningResourcesPanel = ({ account }) => {
                                             <Typography className={'link'} component={'span'}>
                                                 {item.classnumber}
                                             </Typography>
-                                            <Typography className={'descriptor'} component={'span'} title={item.DESCR}>
-                                                {item.DESCR}
-                                            </Typography>
                                         </Link>{' '}
+                                        <Typography className={'descriptor'} component={'span'} title={item.DESCR}>
+                                            {item.DESCR}
+                                        </Typography>
                                     </StyledGridListItem>
                                 );
                             })}
