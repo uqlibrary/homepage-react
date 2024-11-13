@@ -3,7 +3,6 @@ const ESCAPE_KEYCODE = 27;
 context('Locations Panel', () => {
     it('behaves as expected', () => {
         cy.visit('/');
-        cy.injectAxe();
         cy.viewport(1300, 1000);
 
         cy.log('Hours');
@@ -73,49 +72,54 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-arch-music"] > div:nth-child(3) span')
             .should('exist')
             .should('have.attr', 'aria-valuenow', '85');
-        cy.get('[data-testid="hours-item-arch-music"] > div:nth-child(4)').contains('Very busy');
+        cy.get('[data-testid="hours-item-arch-music"] > div:nth-child(3) span')
+            .should('exist')
+            .should('have.attr', 'aria-label', 'Very busy');
 
         cy.get('[data-testid="hours-item-biol-sci"] > div:first-child').contains('Biological Sciences');
         cy.get('[data-testid="hours-item-biol-sci"] > div:nth-child(2)').contains('24 Hours');
         cy.get('[data-testid="hours-item-biol-sci"] > div:nth-child(3) span')
             .should('exist')
             .should('have.attr', 'aria-valuenow', '48');
-        cy.get('[data-testid="hours-item-biol-sci"] > div:nth-child(4)').contains('Moderate');
+        cy.get('[data-testid="hours-item-biol-sci"] > div:nth-child(3) span')
+            .should('exist')
+            .should('have.attr', 'aria-label', 'Moderately busy');
 
         cy.get('[data-testid="hours-item-central"] > div:first-child').contains('Central');
         cy.get('[data-testid="hours-item-central"] > div:nth-child(2)').contains('24 Hours');
         cy.get('[data-testid="hours-item-central"] > div:nth-child(3) span')
             .should('exist')
             .should('have.attr', 'aria-valuenow', '5');
-        cy.get('[data-testid="hours-item-central"] > div:nth-child(4)').contains('Not busy');
+        cy.get('[data-testid="hours-item-central"] > div:nth-child(3) span')
+            .should('exist')
+            .should('have.attr', 'aria-label', 'Not busy');
 
         cy.get('[data-testid="hours-item-duhig-study"] > div:first-child').contains('Duhig Tower');
         cy.get('[data-testid="hours-item-duhig-study"] > div:nth-child(2)').contains('24 Hours');
         cy.get('[data-testid="hours-item-duhig-study"] > div:nth-child(3) span')
             .should('exist')
             .should('have.attr', 'aria-valuenow', '54');
-        cy.get('[data-testid="hours-item-duhig-study"] > div:nth-child(4)').contains('Busy');
+        cy.get('[data-testid="hours-item-duhig-study"] > div:nth-child(3) span')
+            .should('exist')
+            .should('have.attr', 'aria-label', 'Quite busy');
 
         cy.get('[data-testid="hours-item-dutton-park"] > div:first-child').contains('Dutton Park Health Sciences');
         cy.get('[data-testid="hours-item-dutton-park"] > div:nth-child(2)').contains('7am - 10:30am');
         cy.get('[data-testid="hours-item-dutton-park"] > div:nth-child(3) div.occupancyTextClosed')
             .should('exist')
             .contains('Closed');
-        cy.get('[data-testid="hours-item-dutton-park"] > div:nth-child(4) span').should('be.empty');
 
         cy.get('[data-testid="hours-item-gatton-library"] > div:first-child').contains('JK Murray (UQ Gatton)');
         cy.get('[data-testid="hours-item-gatton-library"] > div:nth-child(2)').contains('24 Hours');
         cy.get('[data-testid="hours-item-gatton-library"] > div:nth-child(3) div.occupancyText')
             .should('exist')
             .contains('Data not available');
-        cy.get('[data-testid="hours-item-gatton-library"] > div:nth-child(4) span').should('be.empty');
 
         cy.get('[data-testid="hours-item-law"] > div:first-child').contains('Walter Harrison Law');
         cy.get('[data-testid="hours-item-law"] > div:nth-child(2)').contains('See location');
         cy.get('[data-testid="hours-item-law"] > div:nth-child(3) div.occupancyText')
             .should('exist')
             .contains('Data not available');
-        cy.get('[data-testid="hours-item-law"] > div:nth-child(4) span').should('be.empty');
 
         cy.get('[data-testid="hours-item-fryer"] > div:first-child')
             .should('exist')
@@ -125,7 +129,6 @@ context('Locations Panel', () => {
             .should('exist')
             .contains('By appointment only');
         cy.get('[data-testid="hours-item-fryer"] > div:nth-child(3)').should('exist');
-        cy.get('[data-testid="hours-item-fryer"] > div:nth-child(4) span').should('be.empty');
 
         // cy.log('Whitty has a missing department field (should never happen) so we see "See location"');
         // cy.get('[data-testid="hours-item-whitty-mater"] div:first-child')
@@ -190,5 +193,20 @@ context('Locations Panel', () => {
         );
 
         cy.get('[data-testid="hours-item-whitty-mater"]').should('not.exist');
+    });
+    it('handles an error as expected', () => {
+        cy.visit('/?responseType=error');
+        cy.viewport(1300, 1000);
+
+        cy.log('Hours');
+        cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+        cy.get('[data-testid="hours-accordion-open"]').click();
+
+        // the expected content is found on the page
+        cy.get('[data-testid="locations-error"]')
+            .should('be.visible')
+            .contains(
+                "We can't load opening hours or study space availability information right now. Please refresh your browser or try again later.",
+            );
     });
 });

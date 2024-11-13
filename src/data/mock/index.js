@@ -147,7 +147,13 @@ mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl).reply(() => {
     return [404, {}];
 });
 
-mock.onGet(routes.VEMCOUNT_API().apiUrl).reply(withDelay([200, vemcountData]));
+// mock.onGet(routes.VEMCOUNT_API().apiUrl).reply(withDelay([200, vemcountData]));
+mock.onGet(routes.VEMCOUNT_API().apiUrl).reply(() => {
+    if (responseType === 'error') {
+        return [500, {}];
+    }
+    return [200, vemcountData];
+});
 
 mock.onGet(routes.TRAINING_API().apiUrl).reply(() => {
     if (responseType === 'error') {
