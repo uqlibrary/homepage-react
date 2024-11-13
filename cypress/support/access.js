@@ -1,7 +1,7 @@
 export const expectUserToDisplayCorrectFirstName = (username, firstname) => {
     cy.visit(`/?user=${username}`);
     cy.viewport(1300, 1000);
-    cy.get('[data-testid="homepage-user-greeting"]').contains(firstname);
+    cy.get('[data-testid="homepage-user-greeting"]').contains('Hi, ' + firstname);
 };
 
 export const hasPanels = optionsTheUserShouldSee => {

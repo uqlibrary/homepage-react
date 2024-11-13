@@ -206,7 +206,7 @@ export const Index = ({
                         <Grid container>
                             <Grid item uqDsMobile={12} sx={{ marginBottom: '32px', marginLeft: '24px' }}>
                                 <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
-                                    Welcome, {account.firstName || /* istanbul ignore next */ ''}
+                                    Hi, {account.firstName || /* istanbul ignore next */ ''}
                                 </StyledHeading>
                             </Grid>
                                 {!!verySimplelayout ? (
