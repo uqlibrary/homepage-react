@@ -97,7 +97,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                 locationOpen &&
                 locationsRef.current &&
                 !locationsRef.current.contains(e.target) &&
-                !((e.target?.id || 'NONE') === 'location-dialog-controller')
+                !((e.target?.id || 'NONE') === 'location-dialog-controller-span')
             ) {
                 setLocationOpen(false);
             }
@@ -154,7 +154,9 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                         aria-controls="locations-wrapper"
                     >
                         {UqDsLocationIcon}
-                        <span style={{ paddingLeft: '16px' }}>Locations and hours</span>
+                        <span id="location-dialog-controller-span" style={{ paddingLeft: '16px' }}>
+                            Locations and hours
+                        </span>
                         {!!locationOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                     </Button>
                 </StyledButtonWrapperDiv>
