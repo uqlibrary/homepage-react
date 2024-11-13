@@ -4,24 +4,34 @@ describe('Referencing', () => {
             cy.visit('http://localhost:2020/');
             cy.viewport(1280, 900);
 
-            // once the page has loaded for a UQ user, check if all required links are shown.
-            cy.get('[data-testid="referencing-homepage-panel"]')
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="referencing-homepage-panel"]')
+                    .should('exist')
+                    .contains('Referencing'),
+            );
+            cy.get('[data-testid="referencing-style"]')
                 .should('exist')
-                .contains('Referencing');
-            cy.get('.reference-panel-item')
-                .should('contain', 'Referencing style guides')
-                .and('contain', 'Endnote referencing software');
-
+                .should('contain', 'Referencing style guides');
+            cy.get('[data-testid="referencing-endnote"]')
+                .should('exist')
+                .should('contain', 'Endnote referencing software');
+        });
+        it('shows both endnote links only for non UQ user', () => {
             // now check for non-uq users - end not should not be shown.
             cy.visit('http://localhost:2020?user=emcommunity');
             cy.viewport(1280, 900);
 
-            cy.get('[data-testid="referencing-homepage-panel"]')
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="referencing-homepage-panel"]')
+                    .should('exist')
+                    .contains('Referencing'),
+            );
+            cy.get('[data-testid="referencing-style"]')
                 .should('exist')
-                .contains('Referencing');
-            cy.get('.reference-panel-item')
-                .should('contain', 'Referencing style guides')
-                .and('not.contain', 'Endnote referencing software');
+                .should('contain', 'Referencing style guides');
+            cy.get('[data-testid="referencing-endnote"]').should('not.exist');
         });
     });
 });

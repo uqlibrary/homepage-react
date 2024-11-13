@@ -131,3 +131,11 @@ export const hasCatalogPanelOptions = optionsTheUserShouldSee => {
         }
     }
 };
+export const seesEndNoteInReferencing = () => {
+    cy.get('[data-testid="referencing-endnote"]')
+        .should('exist')
+        .should('contain', 'Endnote referencing software');
+};
+export const noEndNoteInReferencing = () => {
+    cy.get('[data-testid="referencing-endnote"]').should('not.exist');
+};
