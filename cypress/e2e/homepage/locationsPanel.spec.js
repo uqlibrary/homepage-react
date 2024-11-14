@@ -76,7 +76,7 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-arch-music"] > div:first-child a').should(
             'have.attr',
             'aria-label',
-            'The Architecture and Music Library study space hours are 7:30am to 7:30pm. This space is currently very busy.',
+            'The Architecture and Music Library study space is open 7:30am to 7:30pm. This space is currently very busy.',
         );
         cy.get('[data-testid="hours-item-arch-music"] > div:nth-child(2)').contains('7:30am - 7:30pm');
         cy.get('[data-testid="hours-item-arch-music"] > div:nth-child(3) span')
@@ -91,7 +91,7 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-biol-sci"] > div:first-child a').should(
             'have.attr',
             'aria-label',
-            'The Biological Sciences Library study space hours are 24 Hours. This space is currently moderately busy.',
+            'The Biological Sciences Library study space is open 24 hours. This space is currently moderately busy.',
         );
         cy.get('[data-testid="hours-item-biol-sci"] > div:nth-child(2)').contains('24 Hours');
         cy.get('[data-testid="hours-item-biol-sci"] > div:nth-child(3) span')
@@ -106,7 +106,7 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-central"] > div:first-child a').should(
             'have.attr',
             'aria-label',
-            'The Central Library study space hours are 24 Hours. This space is currently not busy.',
+            'The Central Library study space is open 24 hours. This space is currently not busy.',
         );
 
         cy.get('[data-testid="hours-item-central"] > div:nth-child(2)').contains('24 Hours');
@@ -122,7 +122,7 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-duhig-study"] > div:first-child a').should(
             'have.attr',
             'aria-label',
-            'The Duhig Tower Library study space hours are 24 Hours. This space is currently quite busy.',
+            'The Duhig Tower Library study space is open 24 hours. This space is currently quite busy.',
         );
         cy.get('[data-testid="hours-item-duhig-study"] > div:nth-child(2)').contains('24 Hours');
         cy.get('[data-testid="hours-item-duhig-study"] > div:nth-child(3) span')
@@ -137,7 +137,7 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-dutton-park"] > div:first-child a').should(
             'have.attr',
             'aria-label',
-            'The Dutton Park Health Sciences Library study space hours are 7am to 10:30am.',
+            'The Dutton Park Health Sciences Library study space is open 7am to 10:30am.',
         );
         cy.get('[data-testid="hours-item-dutton-park"] > div:nth-child(2)').contains('7am - 10:30am');
         cy.get('[data-testid="hours-item-dutton-park"] > div:nth-child(3) div.occupancyTextClosed')
@@ -149,7 +149,7 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-gatton-library"] > div:first-child a').should(
             'have.attr',
             'aria-label',
-            'The JK Murray (UQ Gatton) Library study space hours are 24 Hours.',
+            'The JK Murray (UQ Gatton) Library study space is open 24 hours.',
         );
         cy.get('[data-testid="hours-item-gatton-library"] > div:nth-child(2)').contains('24 Hours');
         cy.get('[data-testid="hours-item-gatton-library"] > div:nth-child(3) div.occupancyText')
@@ -161,7 +161,7 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-law"] > div:first-child a').should(
             'have.attr',
             'aria-label',
-            'Click through to the location page for the Walter Harrison Law Library hours and busyness level.',
+            'Click through to the location page for the Walter Harrison Law Library hours and busy level.',
         );
         cy.get('[data-testid="hours-item-law"] > div:nth-child(2)').contains('See location');
         cy.get('[data-testid="hours-item-law"] > div:nth-child(3) div.occupancyText')
@@ -175,7 +175,7 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-fryer"] > div:first-child a').should(
             'have.attr',
             'aria-label',
-            'Fryer Library study space hours are By Appointment.',
+            'Fryer Library study space is open by appointment.',
         );
         cy.get('[data-testid="hours-item-fryer"] > div:nth-child(2)').contains('By Appointment');
         cy.get('[data-testid="hours-item-fryer"] > div:nth-child(3) div.occupancyText')

@@ -298,7 +298,7 @@ export const ariaLabelForLocation = location => {
     let openingHours =
         !!openingHoursArray && Array.isArray(openingHoursArray) ? openingHoursArray.join(' ') : openingHoursArray;
     if (openingHours === 'See location') {
-        return `Click through to the location page for ${libraryName} hours and busyness level.`;
+        return `Click through to the location page for ${libraryName} hours and busy level.`;
     }
 
     openingHours = openingHours
