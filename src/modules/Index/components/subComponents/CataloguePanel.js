@@ -248,7 +248,7 @@ export const CataloguePanel = ({ account, loans, loansLoading, printBalance, pri
                 </li>
                 {canSeePrintBalance(account) && (
                     <li data-testid={'show-papercut'}>
-                        <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=queries">
+                        <Link to="https://web.library.uq.edu.au/library-services/it/print-scan-copy/your-printing-account">
                             {dsDiscountDollarDashIcon} <span>Print balance {markedPrintBalance()}</span>
                         </Link>
                     </li>
