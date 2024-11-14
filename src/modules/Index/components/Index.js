@@ -35,14 +35,14 @@ import UtilityBar from './subComponents/UtilityBar';
 // const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
 // const ReferencingPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReferencingPanel')));
 // const ReadPublish = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReadPublish')));
-// const CataloguePanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/CataloguePanel')));
+// const AccountPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/AccountPanel')));
 
 import EspaceLinks from './subComponents/EspaceLinks';
 import LearningResourcesPanel from './subComponents/LearningResourcesPanel';
 import Training from './subComponents/Training';
 import ReferencingPanel from './subComponents/ReferencingPanel';
 import ReadPublish from './subComponents/ReadPublish';
-import CataloguePanel from './subComponents/CataloguePanel';
+import AccountPanel from './subComponents/AccountPanel';
 
 const StyledPortalContainer = styled('div')(() => ({
     paddingTop: 48,
@@ -212,7 +212,7 @@ export const Index = ({
                                 {!!verySimplelayout ? (
                                     <>
                                         <StyledGridItemLoggedIn item uqDsMobile={12} uqDsDesktop={4} data-testid="primo-panel">
-                                            <CataloguePanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} />
+                                            <AccountPanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} />
                                         </StyledGridItemLoggedIn>
                                         {canSeeTrainingPanel(account) && (
                                             <StyledGridItemLoggedIn item uqDsMobile={12} uqDsDesktop={4} data-testid="training-panel">
@@ -233,7 +233,7 @@ export const Index = ({
                                         <Grid item uqDsDesktop={4} uqDsMobile={12}>
                                             <Grid container>
                                                 <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="primo-panel">
-                                                    <CataloguePanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} />
+                                                    <AccountPanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} />
                                                 </StyledGridItemLoggedIn>
                                                 {canSeeTrainingPanel(account) && (
                                                     <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="training-panel">

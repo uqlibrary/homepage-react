@@ -195,7 +195,7 @@ const muiBeenHereIcon = (
     </svg>
 );
 
-export const CataloguePanel = ({ account, loans, loansLoading, printBalance, printBalanceLoading }) => {
+export const AccountPanel = ({ account, loans, loansLoading, printBalance, printBalanceLoading }) => {
     function totalFines(fines) {
         return fines.reduce((sum, fine) => {
             return sum + (typeof fine.fineAmount === 'number' ? fine.fineAmount : 0);
@@ -275,7 +275,7 @@ export const CataloguePanel = ({ account, loans, loansLoading, printBalance, pri
     );
 };
 
-CataloguePanel.propTypes = {
+AccountPanel.propTypes = {
     account: PropTypes.object,
     loans: PropTypes.object,
     loansLoading: PropTypes.bool,
@@ -283,4 +283,4 @@ CataloguePanel.propTypes = {
     printBalanceLoading: PropTypes.bool,
 };
 
-export default CataloguePanel;
+export default AccountPanel;

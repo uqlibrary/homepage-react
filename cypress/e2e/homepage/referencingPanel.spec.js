@@ -1,7 +1,4 @@
 describe('Referencing', () => {
-    // really this ought to be in reusable
-    // but we are testing how it appears _in_ homepage so we need homepage available
-    // so it has to be here :(
     context('Referencing Links', () => {
         it('shows both referencing and endnote links for UQ user', () => {
             cy.visit('http://localhost:2020/');
