@@ -95,7 +95,7 @@ export const hasEspaceEntries = optionsTheUserShouldSee => {
     }
 };
 
-export const hasCatalogPanelOptions = optionsTheUserShouldSee => {
+export const hasAccountPanelOptions = optionsTheUserShouldSee => {
     const availableOptions = new Map();
     availableOptions.set('searchhistory', 'Search history');
     availableOptions.set('savedsearches', 'Saved searches');
