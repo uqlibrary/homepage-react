@@ -65,9 +65,19 @@ context('Locations Panel', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
         cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+        cy.get('[data-testid="hours-accordion-open"]').should('have.attr', 'aria-expanded', 'false');
         cy.get('[data-testid="hours-accordion-open"]').click();
+        cy.get('[data-testid="hours-accordion-open"]').should('have.attr', 'aria-expanded', 'true');
+        cy.get('[data-testid="locations-wrapper"]')
+            .should('exist')
+            .should('have.attr', 'aria-live', 'assertive');
 
         cy.get('[data-testid="hours-item-arch-music"] > div:first-child').contains('Architecture and Music');
+        cy.get('[data-testid="hours-item-arch-music"] > div:first-child a').should(
+            'have.attr',
+            'aria-label',
+            'The Architecture and Music Library study space hours are 7:30am to 7:30pm. This space is currently very busy.',
+        );
         cy.get('[data-testid="hours-item-arch-music"] > div:nth-child(2)').contains('7:30am - 7:30pm');
         cy.get('[data-testid="hours-item-arch-music"] > div:nth-child(3) span')
             .should('exist')
@@ -75,8 +85,14 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-arch-music"] > div:nth-child(3) span')
             .should('exist')
             .should('have.attr', 'aria-label', 'Very busy');
+        cy.get('[data-testid="hours-item-arch-music"] > div:nth-child(4)').contains('Very busy');
 
         cy.get('[data-testid="hours-item-biol-sci"] > div:first-child').contains('Biological Sciences');
+        cy.get('[data-testid="hours-item-biol-sci"] > div:first-child a').should(
+            'have.attr',
+            'aria-label',
+            'The Biological Sciences Library study space hours are 24 Hours. This space is currently moderately busy.',
+        );
         cy.get('[data-testid="hours-item-biol-sci"] > div:nth-child(2)').contains('24 Hours');
         cy.get('[data-testid="hours-item-biol-sci"] > div:nth-child(3) span')
             .should('exist')
@@ -84,8 +100,15 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-biol-sci"] > div:nth-child(3) span')
             .should('exist')
             .should('have.attr', 'aria-label', 'Moderately busy');
+        cy.get('[data-testid="hours-item-biol-sci"] > div:nth-child(4)').contains('Moderate');
 
         cy.get('[data-testid="hours-item-central"] > div:first-child').contains('Central');
+        cy.get('[data-testid="hours-item-central"] > div:first-child a').should(
+            'have.attr',
+            'aria-label',
+            'The Central Library study space hours are 24 Hours. This space is currently not busy.',
+        );
+
         cy.get('[data-testid="hours-item-central"] > div:nth-child(2)').contains('24 Hours');
         cy.get('[data-testid="hours-item-central"] > div:nth-child(3) span')
             .should('exist')
@@ -93,8 +116,14 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-central"] > div:nth-child(3) span')
             .should('exist')
             .should('have.attr', 'aria-label', 'Not busy');
+        cy.get('[data-testid="hours-item-central"] > div:nth-child(4)').contains('Not busy');
 
         cy.get('[data-testid="hours-item-duhig-study"] > div:first-child').contains('Duhig Tower');
+        cy.get('[data-testid="hours-item-duhig-study"] > div:first-child a').should(
+            'have.attr',
+            'aria-label',
+            'The Duhig Tower Library study space hours are 24 Hours. This space is currently quite busy.',
+        );
         cy.get('[data-testid="hours-item-duhig-study"] > div:nth-child(2)').contains('24 Hours');
         cy.get('[data-testid="hours-item-duhig-study"] > div:nth-child(3) span')
             .should('exist')
@@ -102,33 +131,58 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-duhig-study"] > div:nth-child(3) span')
             .should('exist')
             .should('have.attr', 'aria-label', 'Quite busy');
+        cy.get('[data-testid="hours-item-duhig-study"] > div:nth-child(4)').contains('Quite busy');
 
         cy.get('[data-testid="hours-item-dutton-park"] > div:first-child').contains('Dutton Park Health Sciences');
+        cy.get('[data-testid="hours-item-dutton-park"] > div:first-child a').should(
+            'have.attr',
+            'aria-label',
+            'The Dutton Park Health Sciences Library study space hours are 7am to 10:30am.',
+        );
         cy.get('[data-testid="hours-item-dutton-park"] > div:nth-child(2)').contains('7am - 10:30am');
         cy.get('[data-testid="hours-item-dutton-park"] > div:nth-child(3) div.occupancyTextClosed')
             .should('exist')
             .contains('Closed');
+        cy.get('[data-testid="hours-item-dutton-park"] > div:nth-child(4) span').should('be.empty');
 
         cy.get('[data-testid="hours-item-gatton-library"] > div:first-child').contains('JK Murray (UQ Gatton)');
+        cy.get('[data-testid="hours-item-gatton-library"] > div:first-child a').should(
+            'have.attr',
+            'aria-label',
+            'The JK Murray (UQ Gatton) Library study space hours are 24 Hours.',
+        );
         cy.get('[data-testid="hours-item-gatton-library"] > div:nth-child(2)').contains('24 Hours');
         cy.get('[data-testid="hours-item-gatton-library"] > div:nth-child(3) div.occupancyText')
             .should('exist')
             .contains('Data not available');
+        cy.get('[data-testid="hours-item-gatton-library"] > div:nth-child(4) span').should('be.empty');
 
         cy.get('[data-testid="hours-item-law"] > div:first-child').contains('Walter Harrison Law');
+        cy.get('[data-testid="hours-item-law"] > div:first-child a').should(
+            'have.attr',
+            'aria-label',
+            'Click through to the location page for the Walter Harrison Law Library hours and busyness level.',
+        );
         cy.get('[data-testid="hours-item-law"] > div:nth-child(2)').contains('See location');
         cy.get('[data-testid="hours-item-law"] > div:nth-child(3) div.occupancyText')
             .should('exist')
             .contains('Data not available');
+        cy.get('[data-testid="hours-item-law"] > div:nth-child(4) span').should('be.empty');
 
         cy.get('[data-testid="hours-item-fryer"] > div:first-child')
             .should('exist')
             .contains('Fryer');
+        cy.get('[data-testid="hours-item-fryer"] > div:first-child a').should(
+            'have.attr',
+            'aria-label',
+            'Fryer Library study space hours are By Appointment.',
+        );
         cy.get('[data-testid="hours-item-fryer"] > div:nth-child(2)').contains('By Appointment');
         cy.get('[data-testid="hours-item-fryer"] > div:nth-child(3) div.occupancyText')
             .should('exist')
             .contains('By appointment only');
         cy.get('[data-testid="hours-item-fryer"] > div:nth-child(3)').should('exist');
+        cy.get('[data-testid="hours-item-fryer"] > div:nth-child(4) span').should('be.empty');
 
         // cy.log('Whitty has a missing department field (should never happen) so we see "See location"');
         // cy.get('[data-testid="hours-item-whitty-mater"] div:first-child')

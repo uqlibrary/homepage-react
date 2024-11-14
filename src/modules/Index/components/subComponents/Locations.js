@@ -103,12 +103,10 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         marginTop: '4px,', // force the text to centre align
     },
     '& .occupancy': {
-        backgroundColor: '#dcdcdc',
         borderRadius: '20px',
-        '& .occupancyPercent': {
-            backgroundColor: theme.palette.primary.light,
-            color: theme.palette.primary.light,
-        },
+        height: 16,
+        backgroundColor: '#dcdcdc',
+        '& .MuiLinearProgress-bar': { backgroundColor: '#51247A' },
     },
     '& .occupancyText': {
         display: 'flex',
@@ -237,31 +235,108 @@ const getOverrideLocationName = locationAbbr => {
     if (lookupTable.hasOwnProperty(locationAbbr)) {
         return lookupTable[locationAbbr];
     }
-    // Return null if the key is not found
     return null;
 };
 
+const VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING = 'Missing';
+const isOpen = (location, departmentsMapIn = null) => {
+    const departmentsMapUsed = departmentsMapIn ?? departmentsMap;
+    return location.departments?.filter(d => departmentsMapUsed.includes(d.name))?.find(d => d.currently_open === true);
+};
+const getTextForBusyness = (location, busyLookup) => {
+    if (
+        location.abbr === 'AskUs' ||
+        !location?.busyness ||
+        location.busyness === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING ||
+        !isOpen(location)
+    ) {
+        return null;
+    }
+    let busyinessIndex = 4; // Very busy
+    if (location.busyness <= 25) {
+        busyinessIndex = 1; // 'Not busy';
+    } else if (location.busyness <= 50) {
+        busyinessIndex = 2; // 'Moderate';
+    } else if (location.busyness <= 75) {
+        busyinessIndex = 3; // 'Busy';
+    }
+    return busyLookup.hasOwnProperty(busyinessIndex) ? busyLookup[busyinessIndex] : null;
+};
+function getLibraryHours(location) {
+    /* istanbul ignore else */
+    if (location.abbr === 'AskUs') {
+        return location.departments.map(department => {
+            if (['Chat'].includes(department.name)) {
+                return department.hours;
+            }
+            return null;
+        });
+    }
+    /* istanbul ignore else */
+    if (hasDepartments(location)) {
+        return location.departments.map(department => {
+            if (departmentsMap.includes(department.name)) {
+                return department.hours;
+            }
+            return null;
+        });
+    }
+    return 'See location';
+}
 export const ariaLabelForLocation = location => {
     let libraryName = 'the ' + (getOverrideLocationName(location?.abbr) || location.name) + ' Library';
-    const lookupTable = {
-        AskUs: 'the AskUs chat & phone assistance',
+    const nameLookupTable = {
+        AskUs: 'AskUs chat assistance',
         Fryer: 'Fryer Library',
         Gatton: 'JK Murray Library',
     };
-    if (lookupTable.hasOwnProperty(location?.abbr)) {
-        libraryName = lookupTable[location.abbr];
+    if (nameLookupTable.hasOwnProperty(location?.abbr)) {
+        libraryName = nameLookupTable[location.abbr];
     }
-    return 'More information on ' + libraryName;
+
+    const openingHoursArray = getLibraryHours(location);
+    let openingHours =
+        !!openingHoursArray && Array.isArray(openingHoursArray) ? openingHoursArray.join(' ') : openingHoursArray;
+    if (openingHours === 'See location') {
+        return `Click through to the location page for ${libraryName} hours and busyness level.`;
+    }
+
+    openingHours = openingHours
+        .trim()
+        .replace(' - ', ' to ')
+        .toLowerCase();
+
+    let locationType = 'study space';
+    if (location?.abbr === 'AskUs') {
+        locationType = 'operating hours today';
+    }
+
+    const capitaliseLibraryName =
+        String(libraryName)
+            .charAt(0)
+            .toUpperCase() + String(libraryName).slice(1);
+    let response = `${capitaliseLibraryName} ${locationType} is open ${openingHours}.`;
+
+    const busynessLabels = {
+        1: 'not busy',
+        2: 'moderately busy',
+        3: 'quite busy',
+        4: 'very busy',
+    };
+    const business = getTextForBusyness(location, busynessLabels);
+    if (!!business) {
+        response += ` This space is currently ${business}.`;
+    }
+
+    return response;
 };
 
-const VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING = 'Missing';
 const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcountLoading, vemcountError }) => {
     const SHRINK_BREAKPOINT_TABLET = 760;
     const SHRINK_BREAKPOINT_MINI = 390;
     const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
     React.useEffect(() => {
         const handleResize = () => {
-            console.log('window.innerWidth  =', window.innerWidth);
             setScreenWidth(window.innerWidth);
         };
 
@@ -362,57 +437,9 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
         return a.abbr?.localeCompare(b.abbr); // Sort the rest alphabetically
     });
 
-    const isOpen = (location, departmentsMapIn = null) => {
-        const departmentsMapUsed = departmentsMapIn ?? departmentsMap;
-        return location.departments
-            ?.filter(d => departmentsMapUsed.includes(d.name))
-            ?.find(d => d.currently_open === true);
-    };
     const sluggifyName = string => {
         return string.toLowerCase().replace(' ', '-');
     };
-    const getTextForBusyness = location => {
-        if (
-            location.abbr === 'AskUs' ||
-            !location?.busyness ||
-            location.busyness === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING ||
-            !isOpen(location)
-        ) {
-            return null;
-        }
-        if (location.busyness <= 25) {
-            return 'Not busy';
-        }
-        if (location.busyness <= 50) {
-            return 'Moderate';
-        }
-        if (location.busyness <= 75) {
-            return 'Busy';
-        }
-        return 'Very busy';
-    };
-
-    function getLibraryHours(location) {
-        /* istanbul ignore else */
-        if (location.abbr === 'AskUs') {
-            return location.departments.map(department => {
-                if (['Chat'].includes(department.name)) {
-                    return department.hours;
-                }
-                return null;
-            });
-        }
-        /* istanbul ignore else */
-        if (hasDepartments(location)) {
-            return location.departments.map(department => {
-                if (departmentsMap.includes(department.name)) {
-                    return department.hours;
-                }
-                return null;
-            });
-        }
-        return 'See location';
-    }
 
     function getBusynessBar(location) {
         if (location.abbr === 'AskUs') {
@@ -447,15 +474,21 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
             }
             return screenWidth > SHRINK_BREAKPOINT_TABLET ? '232px' : '143px';
         };
+        const labels = {
+            1: 'Not busy',
+            2: 'Moderately busy',
+            3: 'Quite busy',
+            4: 'Very busy',
+        };
+        // return getTextForBusyness(location, labels);
+
         return (
             <LinearProgress
                 className="occupancy"
                 variant="determinate"
                 value={location.busyness}
+                aria-label={getTextForBusyness(location, labels)}
                 sx={{
-                    height: 16,
-                    backgroundColor: '#dcdcdc',
-                    '& .MuiLinearProgress-bar': { backgroundColor: '#51247A' },
                     maxWidth: barWidth,
                 }}
             />
@@ -467,7 +500,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
             <StyledWrapper id="tablewrapper">
                 {(!!libHoursError || !!vemcountError) && (
                     <Fade in={!libHoursLoading} timeout={1000}>
-                        <div className={'locations-wrapper'}>
+                        <div className={'locations-wrapper'} data-testid={'locations-wrapper'}>
                             <Typography style={{ padding: '1rem 1rem 1rem 0' }} data-testid="locations-error">
                                 We can't load opening hours or study space availability information right now. Please
                                 refresh your browser or try again later.
@@ -515,6 +548,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                                                 to={location.url}
                                                 id={`${sluggifyName(`hours-item-${location.abbr}`)}`}
                                                 data-testid={`${sluggifyName(`hours-item-${location.abbr}`)}-link`}
+                                                aria-label={ariaLabelForLocation(location)}
                                             >
                                                 {getOverrideLocationName(location.abbr) || location.name}
                                             </Link>
@@ -549,7 +583,12 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                                                         `hours-item-busy-words-${location.abbr}`,
                                                     )}`}
                                                 >
-                                                    {getTextForBusyness(location)}
+                                                    {getTextForBusyness(location, {
+                                                        1: 'Not busy',
+                                                        2: 'Moderate',
+                                                        3: 'Quite busy',
+                                                        4: 'Very busy',
+                                                    })}
                                                 </Typography>
                                             </Grid>
                                         )}

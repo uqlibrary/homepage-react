@@ -304,6 +304,8 @@ describe('the departments are shown correctly', () => {
 });
 describe('the aria label is correct', () => {
     it('the aria label is correct', () => {
-        expect(ariaLabelForLocation(validWhitty).trim()).toEqual('More information on the Whitty Mater Library');
+        expect(ariaLabelForLocation(validWhitty).trim()).toEqual(
+            'The Whitty Mater Library study space is open 6:30am to 10pm.',
+        );
     });
 });

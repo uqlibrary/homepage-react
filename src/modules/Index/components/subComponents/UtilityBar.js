@@ -150,7 +150,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                         data-testid="hours-accordion-open"
                         onClick={handleLocationOpenerClick}
                         aria-haspopup="true"
-                        aria-expanded="false"
+                        aria-expanded={locationOpen ? 'true' : 'false'}
                         aria-controls="locations-wrapper"
                     >
                         {UqDsLocationIcon}
@@ -163,9 +163,11 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                 <Fade in={!!isLocationOpen}>
                     <StyledLocationBox
                         id={'locations-wrapper'}
+                        data-testid={'locations-wrapper'}
                         aria-labelledby="location-dialog-controller"
                         ref={locationsRef}
                         role={'dialog'}
+                        aria-live="assertive"
                     >
                         <Locations
                             libHours={libHours}
