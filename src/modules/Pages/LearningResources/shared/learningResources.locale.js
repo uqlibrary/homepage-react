@@ -19,7 +19,7 @@ export default {
     externalSubjectLocation: 'External Instruction',
     homepagePanel: {
         title: 'Learning resources and past exam papers',
-        userCourseTitle: 'Your Current courses',
+        userCourseTitle: 'Your current courses',
         noCourses: (
             <Fragment>
                 <p>Your enrolled courses will appear here three weeks prior to the start of the semester.</p>
