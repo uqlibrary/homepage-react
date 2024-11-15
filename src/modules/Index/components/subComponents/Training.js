@@ -256,8 +256,6 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
         >
             <StyledWrapper className={'trainingWrapper'}>
                 {(() => {
-                    console.log('trainingEvents=', trainingEvents);
-                    console.log('filteredTrainingEvents=', filteredTrainingEvents);
                     if (!!trainingEventsLoading && !eventDetail) {
                         return (
                             <div className={'flexLoader'} aria-label="UQ training Events loading">
