@@ -61,8 +61,11 @@ export const mui1theme = createTheme({
             lg: 1280, // Large Desktop
             xl: 1536, // Extra Large Desktop
             uqDsMobile: 0,
+            specialLocationsMicroBreakpoint: 390,
             uqDsTablet: 640,
+            specialLocationsSmallBreakpoint: 700,
             uqDsDesktop: 848,
+            specialLocationsLargeBreakpoint: 888,
             uqDsDesktopXL: 1024,
         },
     },

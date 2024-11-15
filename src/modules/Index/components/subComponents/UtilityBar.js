@@ -89,6 +89,20 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
     const [locationOpen, setLocationOpen] = React.useState(false);
     const locationsRef = React.useRef(null);
 
+    const showHideLocationPanel = () => {
+        setLocationOpen(!locationOpen);
+
+        const showHideButton = document.getElementById('location-dialog-controller');
+        if (!!showHideButton) {
+            const isOpen = showHideButton.ariaExpanded === 'true';
+            showHideButton.ariaExpanded = isOpen ? 'false' : 'true'; // toggle the current value
+
+            const locationsPanel = document.getElementById('locations-wrapper');
+            !!locationsPanel && (locationsPanel.ariaHidden = isOpen ? 'true' : 'false');
+            !!locationsPanel && (locationsPanel.ariaLive = isOpen ? 'off' : 'assertive');
+        }
+    };
+
     // UseEffect to listen to when the state of locationOpen changes. Mitigates delay checks, etc.
     useEffect(() => {
         const closeOnClickOutsideDialog = e => {
@@ -99,13 +113,13 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                 !locationsRef.current.contains(e.target) &&
                 !((e.target?.id || 'NONE') === 'location-dialog-controller-span')
             ) {
-                setLocationOpen(false);
+                showHideLocationPanel();
             }
         };
         const closeOnEscape = e => {
             /* istanbul ignore else */
             if (isEscapeKeyPressed(e)) {
-                setLocationOpen(false);
+                showHideLocationPanel();
             }
         };
 
@@ -122,10 +136,6 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
             document.removeEventListener('keydown', closeOnEscape);
         };
     }, [locationOpen]);
-
-    const handleLocationOpenerClick = () => {
-        setLocationOpen(!locationOpen);
-    };
 
     const isLocationOpen = Boolean(locationOpen);
 
@@ -148,10 +158,11 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                     <Button
                         id="location-dialog-controller"
                         data-testid="hours-accordion-open"
-                        onClick={handleLocationOpenerClick}
+                        onClick={showHideLocationPanel}
                         aria-haspopup="true"
                         aria-expanded={locationOpen ? 'true' : 'false'}
                         aria-controls="locations-wrapper"
+                        aria-label="Show/hide Locations and hours panel"
                     >
                         {UqDsLocationIcon}
                         <span id="location-dialog-controller-span" style={{ paddingLeft: '16px' }}>
@@ -163,11 +174,12 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                 <Fade in={!!isLocationOpen}>
                     <StyledLocationBox
                         id={'locations-wrapper'}
-                        data-testid={'locations-wrapper'}
+                        data-testid="locations-wrapper"
                         aria-labelledby="location-dialog-controller"
                         ref={locationsRef}
                         role={'dialog'}
-                        aria-live="assertive"
+                        aria-live="off"
+                        aria-hidden="true"
                     >
                         <Locations
                             libHours={libHours}
