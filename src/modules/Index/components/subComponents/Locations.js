@@ -29,11 +29,8 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     position: 'absolute',
     top: 102,
     maxWidth: '100%',
-    [theme.breakpoints.up('uqDsMobile')]: {
-        marginLeft: '5%',
-    },
     [theme.breakpoints.up('uqDsTablet')]: {
-        marginLeft: 'auto',
+        marginLeft: '-28px',
     },
     [theme.breakpoints.up('uqDsDesktop')]: {
         width: '790px',
