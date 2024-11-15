@@ -222,18 +222,18 @@ export const Index = ({
                 <StyledGridWrapper>
                     <StandardPage>
                         <Grid container>
-                            <Grid item uqDsMobile={12}>
+                            <Grid item xs={12}>
                                 <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
                                     Hi, {account.firstName || /* istanbul ignore next */ ''}
                                 </StyledHeading>
                             </Grid>
                                 {!!verySimplelayout ? (
                                     <>
-                                        <StyledGridItemLoggedInLeftAlign item uqDsMobile={12} uqDsDesktop={4} data-testid="primo-panel">
+                                        <StyledGridItemLoggedInLeftAlign item xs={12} uqDsDesktop={4} data-testid="primo-panel">
                                             <AccountPanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} />
                                         </StyledGridItemLoggedInLeftAlign>
                                         {canSeeTrainingPanel(account) && (
-                                            <StyledGridItemLoggedInLeftAlign item uqDsMobile={12} uqDsDesktop={4} data-testid="training-panel">
+                                            <StyledGridItemLoggedInLeftAlign item xs={12} uqDsDesktop={4} data-testid="training-panel">
                                                 <Training
                                                     trainingEvents={trainingEvents}
                                                     trainingEventsLoading={trainingEventsLoading}
@@ -241,20 +241,20 @@ export const Index = ({
                                                 />
                                             </StyledGridItemLoggedInLeftAlign>
                                         )}
-                                        <StyledGridItemLoggedInLeftAlign  item uqDsMobile={12} uqDsDesktop={4} data-testid="referencing-panel">
+                                        <StyledGridItemLoggedInLeftAlign  item xs={12} uqDsDesktop={4} data-testid="referencing-panel">
                                             <ReferencingPanel account={account} />
                                         </StyledGridItemLoggedInLeftAlign>
                                     </>
                                 ) : (
                                     <Grid item>
                                     <Grid container>
-                                        <Grid item uqDsDesktop={4} uqDsMobile={12}>
+                                        <Grid item uqDsDesktop={4} xs={12}>
                                             <Grid container>
-                                                <StyledGridItemLoggedInLeftAlign item uqDsMobile={12} data-testid="primo-panel">
+                                                <StyledGridItemLoggedInLeftAlign item xs={12} data-testid="primo-panel">
                                                     <AccountPanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} />
                                                 </StyledGridItemLoggedInLeftAlign>
                                                 {canSeeTrainingPanel(account) && (
-                                                    <StyledGridItemLoggedInLeftAlign item uqDsMobile={12} data-testid="training-panel">
+                                                    <StyledGridItemLoggedInLeftAlign item xs={12} data-testid="training-panel">
                                                         <Training
                                                             trainingEvents={trainingEvents}
                                                             trainingEventsLoading={trainingEventsLoading}
@@ -267,18 +267,18 @@ export const Index = ({
                                         <Grid item uqDsDesktop={8}>
                                             <Grid container>
                                                 {canSeeLearningResourcesPanel(account) && (
-                                                    <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="learning-resources-panel">
+                                                    <StyledGridItemLoggedIn item xs={12} data-testid="learning-resources-panel">
                                                         <LearningResourcesPanel account={account} history={history}/>
                                                     </StyledGridItemLoggedIn>
                                                 )}
 
-                                                <Grid item uqDsDesktop={6} uqDsMobile={12}>
+                                                <Grid item uqDsDesktop={6} xs={12}>
                                                     <Grid container>
-                                                        <StyledGridItemLoggedIn  item uqDsMobile={12} data-testid="referencing-panel">
+                                                        <StyledGridItemLoggedIn  item xs={12} data-testid="referencing-panel">
                                                             <ReferencingPanel account={account} />
                                                         </StyledGridItemLoggedIn>
                                                         {canSeeReadPublish(account) && (
-                                                            <StyledGridItemLoggedIn  item uqDsMobile={12} data-testid="readpublish-panel">
+                                                            <StyledGridItemLoggedIn  item xs={12} data-testid="readpublish-panel">
                                                                 <ReadPublish />
                                                             </StyledGridItemLoggedIn>
                                                         )}
@@ -287,7 +287,7 @@ export const Index = ({
                                                 <Grid item uqDsDesktop={6}>
                                                     <Grid container>
                                                         {isEspaceAuthor(account, author) && (
-                                                            <StyledGridItemLoggedIn item uqDsMobile={12} data-testid="espace-links-panel">
+                                                            <StyledGridItemLoggedIn item xs={12} data-testid="espace-links-panel">
                                                                 <EspaceLinks
                                                                     author={author}
                                                                     possibleRecords={possibleRecords}

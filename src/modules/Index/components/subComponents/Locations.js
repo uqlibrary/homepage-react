@@ -29,7 +29,7 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     position: 'absolute',
     top: 102,
     maxWidth: '100%',
-    [theme.breakpoints.up('specialLocationsMicroBreakpoint')]: {
+    [theme.breakpoints.up('uqDsMobile')]: {
         marginLeft: '5%',
     },
     [theme.breakpoints.up('uqDsTablet')]: {
@@ -129,7 +129,7 @@ const StyledTableWrapper = styled('div')(({ theme }) => ({
     '& .table-column-busy': {
         boxSizing: 'border-box',
         width: '156px', // Default width for 0px - 390px:  132px + 24px left margin = 156px
-        [theme.breakpoints.up('specialLocationsMicroBreakpoint')]: {
+        [theme.breakpoints.up('uqDsMobile')]: {
             width: '204px', // Width for 391px - 640px:  180px + 24px left margin = 204px
         },
         [theme.breakpoints.up('uqDsTablet')]: {
@@ -151,7 +151,7 @@ const StyledTableWrapper = styled('div')(({ theme }) => ({
         height: 16,
         '& .MuiLinearProgress-bar': { backgroundColor: '#51247A' },
         width: '132px', //  0px - 390px
-        [theme.breakpoints.up('specialLocationsMicroBreakpoint')]: {
+        [theme.breakpoints.up('uqDsMobile')]: {
             width: '180px', // 391px - 640px
         },
         [theme.breakpoints.up('uqDsTablet')]: {

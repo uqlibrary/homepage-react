@@ -33,7 +33,7 @@ export const ReferencingPanel = ({ account }) => {
             title="Referencing"
         >
             <Grid container>
-                <Grid item uqDsMobile={12} style={{ margin: '0 24px 0' }}>
+                <Grid item xs={12} style={{ margin: '0 24px 0' }}>
                     {referencingPanel.map((item, index) =>
                         !item.uqOnly || (item.uqOnly && canSeeEndnoteReferencing(account)) ? (
                             <p key={index}>
