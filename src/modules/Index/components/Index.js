@@ -75,7 +75,8 @@ const StyledH1 = styled('h1')(({ theme }) => ({
 const StyledHeading = styled(Typography)(() => ({
     fontSize: '32px',
     fontWeight: 500,
-    marginTop: '1rem',
+    marginTop: '32px',
+    marginBottom: '24px',
 }));
 
 const StyledGridWrapper = styled('div')(() => ({
@@ -90,14 +91,14 @@ const StyledGridItemLoggedIn = styled(Grid)(({ theme }) => {
         paddingLeft: '24px',
         marginBottom: '24px',
         [theme.breakpoints.down('uqDsDesktop')]: {
-            paddingLeft:  '0',
+            paddingLeft: '0',
             marginBottom: '24px',
         },
         [theme.breakpoints.up('uqDsDesktopXL')]: {
-            paddingLeft:  '32px',
+            paddingLeft: '32px',
             marginBottom: '32px',
         },
-    }   
+    };
 });
 
 const StyledGridItemLoggedInLeftAlign = styled(Grid)(({ theme }) => {
@@ -105,10 +106,10 @@ const StyledGridItemLoggedInLeftAlign = styled(Grid)(({ theme }) => {
         paddingLeft: '0',
         marginBottom: '24px',
         [theme.breakpoints.up('uqDsDesktopXL')]: {
-            paddingLeft:  '0px',
+            paddingLeft: '0px',
             marginBottom: '32px',
         },
-    }   
+    };
 });
 
 export const Index = ({
@@ -221,7 +222,7 @@ export const Index = ({
                 <StyledGridWrapper>
                     <StandardPage>
                         <Grid container>
-                            <Grid item uqDsMobile={12} sx={{ marginBottom: '32px' }}>
+                            <Grid item uqDsMobile={12}>
                                 <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
                                     Hi, {account.firstName || /* istanbul ignore next */ ''}
                                 </StyledHeading>
