@@ -204,9 +204,9 @@ export const CourseSearch = ({
 
         const semester = thisSuggestion?.semester || /* istanbul ignore next */ '';
 
-        // if subject is in 'my courses' list, swap to that tab
+        // if subject is in 'your courses' list, swap to that tab
         if (isEnrolledInSubject(searchKeyword, account)) {
-            // swap to correct tab on My Courses tab
+            // swap to correct tab on Your Courses tab
             const subjectId = getPlaceInCurrentAccountList(searchKeyword);
             selectMyCoursesTab(searchKeyword, subjectId);
         } else if (

@@ -1,5 +1,5 @@
 describe('Alma Primo', () => {
-    context('My UQ Account Links', () => {
+    context('Logged in Account panel', () => {
         it('shows relevant links for account user', () => {
             cy.visit('http://localhost:2020/');
             cy.viewport(1280, 900);
@@ -7,7 +7,7 @@ describe('Alma Primo', () => {
             // once the page has loaded for a UQ user, check if all required links are shown.
             cy.get('[data-testid="catalogue-panel"]')
                 .should('exist')
-                .contains('My library account');
+                .contains('Your library account');
             cy.get('[data-testid="catalogue-panel-content"]')
                 .should('exist')
                 .contains('Loans (1)');

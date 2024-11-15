@@ -258,7 +258,7 @@ context('Learning Resources Accessibility', () => {
         cy.visit('/learning-resources?user=s1111111');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('div[data-testid="learning-resources"]').contains('My courses');
+        cy.get('div[data-testid="learning-resources"]').contains('Your courses');
         cy.log('Learning Resources');
         cy.wait(1000);
         cy.checkA11y('div[data-testid="learning-resources"]', {
@@ -272,7 +272,7 @@ context('Learning Resources Accessibility', () => {
         cy.visit('/learning-resources?user=s1111111');
         cy.injectAxe();
         cy.viewport(414, 736);
-        cy.get('div[data-testid="learning-resources"]').contains('My courses');
+        cy.get('div[data-testid="learning-resources"]').contains('Your courses');
         cy.log('Learning Resources');
         cy.wait(1000);
         cy.checkA11y('div[data-testid="learning-resources"]', {

@@ -224,7 +224,7 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
     }
 
     return (
-        <StandardCard subCard noPadding primaryHeader standardCardId="catalogue-panel" title="My library account">
+        <StandardCard subCard noPadding primaryHeader standardCardId="catalogue-panel" title="Your library account">
             <StyledUl>
                 <li data-testid={'show-searchhistory'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=search_history">
