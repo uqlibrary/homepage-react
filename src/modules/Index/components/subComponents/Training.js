@@ -242,6 +242,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                             style={{
                                 fontSize: '16px',
                                 fontStyle: 'normal',
+                                height: '24px',
                                 lineHeight: '160%', // 25.6px
                                 paddingBlock: 0,
                                 marginLeft: '16px',
