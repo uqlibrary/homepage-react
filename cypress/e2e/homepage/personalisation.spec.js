@@ -49,7 +49,7 @@ context('Personalised Homepage', () => {
             .should('exist');
     });
 
-    it('Renders an RHD home page correctly', () => {
+    it('Renders an RHD who is only enrolled in a research subject home page correctly', () => {
         expectUserToDisplayCorrectFirstName('s2222222', 'Jane');
 
         hasPanels(['catalogue', 'referencing', 'training', 'readpublish']);
@@ -63,6 +63,18 @@ context('Personalised Homepage', () => {
             .contains('65.97');
 
         hasEspaceEntries(['espace-possible', 'espace-ntro']);
+    });
+
+    it('Renders an RHD who has a non reserarch subject home page correctly', () => {
+        expectUserToDisplayCorrectFirstName('s6666666', 'Maryanne');
+
+        hasPanels(['catalogue', 'referencing', 'learning-resources', 'training', 'readpublish']);
+        seesEndNoteInReferencing();
+
+        hasAccountPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+
+        // this would be odd, all rhds should automatically be setup as an author
+        hasNoEspacePanel();
     });
 
     it('Renders an RHD with courses home page correctly', () => {

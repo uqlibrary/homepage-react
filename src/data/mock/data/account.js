@@ -300,7 +300,7 @@ export const accounts = {
         "canMasquerade": false,
         "blocked": false,
     },
-    // rhd student
+    // rhd student only doing research subjects
     s2222222: {
         "id": "s2222222",
         "class": ["IS_UQ_STUDENT_PLACEMENT", "IS_CURRENT"],
@@ -510,6 +510,68 @@ export const accounts = {
         "canMasquerade": false,
         "blocked": false,
         "user_group": "REMRHD",
+    },
+    // rhd student doing a non-research subject
+    s6666666: {
+        "id": "s6666666",
+        "class": ["IS_UQ_STUDENT_PLACEMENT", "IS_CURRENT"],
+        "type": 22,
+        "homeLib": "St Lucia",
+        "firstName": "Maryanne",
+        "lastName": "Wilkins",
+        "name": "Maryanne Wilkins",
+        "mail": "rhd@student.uq.edu.au",
+        "barcode": "111111111111111",
+        "groups": null,
+        "classes": [
+            {
+                "ACAD_CAREER": "PGRS",
+                "DESCR": "Interruption to Candidature",
+                "SUBJECT": "RSCH",
+                "CATALOG_NBR": "9901",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "GRAD",
+                "STRM": "7445"
+            },
+            {
+                "ACAD_CAREER": "PGRS",
+                "DESCR": "Research Studies (Part-time)",
+                "SUBJECT": "RSCH",
+                "CATALOG_NBR": "9001",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "GRAD",
+                "STRM": "7475"
+            }
+        ],
+        "current_classes": [
+            {
+                "ACAD_CAREER": "PGRS",
+                "DESCR": "Research Studies (Part-time)",
+                "SUBJECT": "RSCH",
+                "CATALOG_NBR": "9001",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "GRAD",
+                "STRM": "7475"
+            }, {
+                "ACAD_CAREER": "UQCL",
+                "DESCR": "General Mathematics",
+                "SUBJECT": "MATH",
+                "CATALOG_NBR": "1101E",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "UQCOL",
+                "STRM": "7450"
+            }
+        ],
+        "expiryDate": "14-12-19",
+        "hasSession": true,
+        "tokenBased": false,
+        "canMasquerade": false,
+        "blocked": false,
+        "user_group": "RHD",
     },
     // researchers
     uqresearcher: {

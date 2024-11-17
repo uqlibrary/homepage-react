@@ -303,7 +303,7 @@ context('Learning Resources Access', () => {
     });
     it('an rhd user, who is doing non research subjects can access the learning resources page', () => {
         cy.visit(
-            '/learning-resources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
+            '/learning-resources?user=s6666666&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
         );
         cy.waitUntil(() => cy.get('[data-testid="learning-resource-subject-title"]').contains('FREN1010'));
     });
