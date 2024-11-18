@@ -100,7 +100,7 @@ context('Personalised panel', () => {
 
     it('can navigate to papercut topup page', () => {
         // from PersonalisedPanel locale: items.papercut.topup
-        cy.intercept(/payments.uq.edu.au/, 'papercut topup page');
+        cy.intercept(/papercut\/top-up/, 'papercut topup page');
 
         cy.visit('/?user=vanilla');
         cy.viewport(1300, 1000);
@@ -112,5 +112,6 @@ context('Personalised panel', () => {
             .click();
 
         cy.get('body').contains('papercut topup page');
+        cy.url().should('include', '?amount=5');
     });
 });

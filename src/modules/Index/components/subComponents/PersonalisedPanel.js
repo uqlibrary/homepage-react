@@ -203,11 +203,16 @@ const PersonalisedPanel = ({
                 'https://web.library.uq.edu.au/library-services/it/print-scan-copy/your-printing-account';
             handleClose();
         };
+        // eg topup = 'https://www.library.uq.edu.au/papercut/top-up?amount=5'
+        // which redirects to a api route that then redirects to xetta payment gateway
         const navigatToTopUpUrl = value => {
+            const destinationOrigin =
+                location.hostname === 'www.library.uq.edu.au'
+                    ? location.origin
+                    : 'https://homepage-staging.library.uq.edu.au';
             window.location.href = ppLocale.items.papercut.topup
-                .replace('[id]', account.id)
-                .replace('[value]', value)
-                .replace('[email]', printBalance.email);
+                .replace('[origin]', destinationOrigin)
+                .replace('[value]', value);
         };
         return (
             <Grid item xs={12} className={'menuItem'}>
