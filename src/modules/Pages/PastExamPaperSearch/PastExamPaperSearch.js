@@ -13,7 +13,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import locale from './pastExamPaperSearch.locale';
-import { isRepeatingString } from 'helpers/general';
+import { isRepeatingString, linkToDrupal } from 'helpers/general';
 import { noResultsFoundBlock } from './pastExamPapers.helpers';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
@@ -221,7 +221,7 @@ export const PastExamPaperSearch = ({
                 <Grid container>
                     <Grid item xs={'auto'}>
                         <StyledAboutLink>
-                            <a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">
+                            <a href={linkToDrupal('/library-services/students/past-exam-papers')}>
                                 Read more about searching for past exam papers
                             </a>
                         </StyledAboutLink>

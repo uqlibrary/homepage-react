@@ -13,7 +13,6 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 
 import { locale as locationLocale } from 'config/locale';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import UqDsExclamationCircle from '../../../SharedComponents/Icons/UqDsExclamationCircle';
 import { linkToDrupal } from 'helpers/general';
 
 const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
@@ -29,19 +28,53 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     zIndex: 999,
     position: 'absolute',
     top: 102,
+    maxWidth: '100%',
+    [theme.breakpoints.up('uqDsTablet')]: {
+        marginLeft: '-28px',
+    },
+    [theme.breakpoints.up('uqDsDesktop')]: {
+        width: '790px',
+    },
     [theme.breakpoints.down('uqDsDesktop')]: {
         left: '0 !important',
     },
-    [theme.breakpoints.down('uqDsTablet')]: {
-        left: 5,
-        paddingLeft: 0,
+}));
+const StyledOutlinkDiv = styled('div')(({ theme }) => ({
+    marginTop: '24px',
+    padding: '0',
+    display: 'inline-block',
+    '& > span': {
+        display: 'flex',
+        alignItems: 'center',
+    },
+    '& a': {
+        color: theme.palette.primary.light,
+        textDecoration: 'underline',
+        fontSize: '16px',
+        fontWeight: 500,
+        '&:hover': {
+            color: '#fff',
+            backgroundColor: theme.palette.primary.light,
+        },
+    },
+    '& svg': {
+        fontSize: '16px',
+        marginLeft: '10px',
+        marginTop: '2px',
     },
 }));
-const StyledWrapper = styled('div')(({ theme }) => ({
-    margin: '32px 0 32px 32px',
-    [theme.breakpoints.down('uqDsDesktop')]: {
-        marginRight: '32px',
-    },
+const StyledDisclaimerParagraph = styled('div')(() => ({
+    marginTop: '16px',
+    paddingLeft: 0,
+    fontSize: '14px',
+    fontStyle: 'normal',
+    fontWeight: 400,
+    letterSpacing: '0.14px',
+    lineHeight: '160%', // 25.6px
+    marginBottom: 0,
+}));
+const StyledTableWrapper = styled('div')(({ theme }) => ({
+    margin: '32px',
     [theme.breakpoints.down('uqDsTablet')]: {
         margin: '24px',
     },
@@ -53,27 +86,37 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             fontWeight: 500,
         },
     },
-    '& .table-column-hours': {
-        paddingLeft: '32px',
-        whiteSpace: 'nowrap',
-        [theme.breakpoints.down('uqDsTablet')]: {
-            paddingLeft: '24px',
-        },
-        [theme.breakpoints.up('uqDsTablet')]: {
-            maxWidth: '150px',
-        },
+    '& .table-row ': {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+    },
+    '& .table-row, .table-row > *': {
+        boxSizing: 'border-box',
     },
     '& .table-row-body': {
         paddingBlock: '8px',
-        [theme.breakpoints.up('uqDsDesktop')]: {
-            minWidth: '820px',
-        },
-        maxWidth: '100%',
     },
-    '& .table-row-body > div.table-cell-ellipsis': {
+    '& .has-ellipsis': {
         overflow: 'hidden',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
+    },
+    '& .table-column-name': {
+        flex: 1,
+        maxWidth: '340px',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+
+        paddingRight: '64px',
+        [theme.breakpoints.down('uqDsDesktop')]: {
+            paddingRight: '24px',
+        },
+    },
+    '& .table-column-hours': {
+        whiteSpace: 'nowrap',
+        width: '120px',
     },
     '& .table-cell-hastext span': {
         color: '#3B383E',
@@ -81,81 +124,54 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         whiteSpace: 'nowrap',
     },
     '& .table-column-busy': {
-        paddingLeft: '32px',
-        width: '232px !important',
-        [theme.breakpoints.down('uqDsTablet')]: {
-            paddingLeft: '24px',
+        boxSizing: 'border-box',
+        width: '156px', // Default width for 0px - 390px:  132px + 24px left margin = 156px
+        [theme.breakpoints.up('uqDsMobile')]: {
+            width: '204px', // Width for 391px - 640px:  180px + 24px left margin = 204px
         },
-    },
-    '& .table-column-busyword': {
-        '& span': {
-            paddingLeft: '10px',
-            fontSize: '14px',
-            fontStyle: 'normal',
-            lineHeight: '160%', // 22.4px
-            letterSpacing: '0.14px',
+        [theme.breakpoints.up('uqDsTablet')]: {
+            width: '256px', // Width for above 640px: 192px + 64px left margin = 256px
         },
     },
     '& .location-askus > div': {
         paddingTop: '16px',
     },
-    '& .table-cell-busy': {
-        marginTop: '4px,', // force the text to centre align
+    '& .occupancyWrapper': {
+        paddingLeft: '64px',
+        [theme.breakpoints.down('uqDsDesktop')]: {
+            paddingLeft: '24px',
+        },
     },
-    '& .occupancy': {
+    '& .occupancyBar': {
         backgroundColor: '#dcdcdc',
         borderRadius: '20px',
-        '& .occupancyPercent': {
-            backgroundColor: theme.palette.primary.light,
-            color: theme.palette.primary.light,
+        height: 16,
+        '& .MuiLinearProgress-bar': { backgroundColor: '#51247A' },
+        width: '132px', //  0px - 390px
+        [theme.breakpoints.up('uqDsMobile')]: {
+            width: '180px', // 391px - 640px
+        },
+        [theme.breakpoints.up('uqDsTablet')]: {
+            width: '192px', // above 640px
         },
     },
     '& .occupancyText': {
         display: 'flex',
         alignItems: 'center',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
         '& span': {
             paddingLeft: '4px',
-            overflow: 'hidden',
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-        },
-        '& svg': {
-            height: '16px',
         },
     },
-    '& .outlink': {
-        marginTop: '24px',
-        padding: '0',
-        display: 'inline-block',
-        '& > span': {
-            display: 'flex',
-            alignItems: 'center',
-        },
-        '& a': {
-            color: theme.palette.primary.light,
-            textDecoration: 'underline',
-            fontSize: '16px',
-            fontWeight: 500,
-            '&:hover': {
-                color: '#fff',
-                backgroundColor: theme.palette.primary.light,
-            },
-        },
-        '& svg': {
-            fontSize: '16px',
-            marginLeft: '10px',
-            marginTop: '2px',
-        },
-    },
-    '& .disclaimer': {
-        marginTop: '16px',
-        paddingLeft: 0,
-        fontSize: '14px',
-        fontStyle: 'normal',
-        fontWeight: 400,
-        letterSpacing: '0.14px',
-        lineHeight: '160%', // 25.6px
-        marginBottom: 0,
+    '& .has-exclamation-icon': {
+        paddingLeft: '20px',
+        backgroundImage:
+            'url("data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229.25%22%20stroke%3D%22%2351247A%22%20stroke-width%3D%221.5%22/%3E%3Cpath%20d%3D%22M12%207.8v4%22%20stroke%3D%22%2351247A%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%2211.9%22%20cy%3D%2215.6%22%20r%3D%22.6%22%20fill%3D%22%23000%22%20stroke%3D%22%2351247A%22/%3E%3C/svg%3E")',
+        backgroundSize: ' 16px 16px',
+        backgroundPosition: 'left center',
+        backgroundRepeat: 'no-repeat',
     },
 }));
 
@@ -237,31 +253,107 @@ const getOverrideLocationName = locationAbbr => {
     if (lookupTable.hasOwnProperty(locationAbbr)) {
         return lookupTable[locationAbbr];
     }
-    // Return null if the key is not found
     return null;
 };
 
+const VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING = 'Missing';
+const isOpen = (location, departmentsMapIn = null) => {
+    const departmentsMapUsed = departmentsMapIn ?? departmentsMap;
+    return location.departments?.filter(d => departmentsMapUsed.includes(d.name))?.find(d => d.currently_open === true);
+};
+const getTextForBusyness = (location, busyLookup) => {
+    if (
+        location.abbr === 'AskUs' ||
+        !location?.busyness ||
+        location.busyness === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING ||
+        !isOpen(location)
+    ) {
+        return null;
+    }
+    let busyinessIndex = 4; // Very busy
+    if (location.busyness <= 25) {
+        busyinessIndex = 1; // 'Not busy';
+    } else if (location.busyness <= 50) {
+        busyinessIndex = 2; // 'Moderate';
+    } else if (location.busyness <= 75) {
+        busyinessIndex = 3; // 'Busy';
+    }
+    return busyLookup.hasOwnProperty(busyinessIndex) ? busyLookup[busyinessIndex] : null;
+};
+function getLibraryHours(location) {
+    /* istanbul ignore else */
+    if (location.abbr === 'AskUs') {
+        return location.departments.map(department => {
+            if (['Chat'].includes(department.name)) {
+                return department.hours;
+            }
+            return null;
+        });
+    }
+    /* istanbul ignore else */
+    if (hasDepartments(location)) {
+        return location.departments.map(department => {
+            if (departmentsMap.includes(department.name)) {
+                return department.hours;
+            }
+            return null;
+        });
+    }
+    return 'See location';
+}
 export const ariaLabelForLocation = location => {
     let libraryName = 'the ' + (getOverrideLocationName(location?.abbr) || location.name) + ' Library';
-    const lookupTable = {
-        AskUs: 'the AskUs chat & phone assistance',
+    const nameLookupTable = {
+        AskUs: 'AskUs chat assistance',
         Fryer: 'Fryer Library',
         Gatton: 'JK Murray Library',
     };
-    if (lookupTable.hasOwnProperty(location?.abbr)) {
-        libraryName = lookupTable[location.abbr];
+    if (nameLookupTable.hasOwnProperty(location?.abbr)) {
+        libraryName = nameLookupTable[location.abbr];
     }
-    return 'More information on ' + libraryName;
+
+    const openingHoursArray = getLibraryHours(location);
+    let openingHours =
+        !!openingHoursArray && Array.isArray(openingHoursArray) ? openingHoursArray.join(' ') : openingHoursArray;
+    if (openingHours === 'See location') {
+        return `Click through to the location page for ${libraryName} hours and busy level.`;
+    }
+
+    openingHours = openingHours
+        .trim()
+        .replace(' - ', ' to ')
+        .toLowerCase();
+
+    let locationType = 'study space';
+    if (location?.abbr === 'AskUs') {
+        locationType = 'operating hours today';
+    }
+
+    const capitaliseLibraryName =
+        String(libraryName)
+            .charAt(0)
+            .toUpperCase() + String(libraryName).slice(1);
+    let response = `${capitaliseLibraryName} ${locationType} is open ${openingHours}.`;
+
+    const busynessLabels = {
+        1: 'not busy',
+        2: 'moderately busy',
+        3: 'quite busy',
+        4: 'very busy',
+    };
+    const business = getTextForBusyness(location, busynessLabels);
+    if (!!business) {
+        response += ` This space is currently ${business}.`;
+    }
+
+    return response;
 };
 
-const VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING = 'Missing';
 const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcountLoading, vemcountError }) => {
-    const SHRINK_BREAKPOINT_TABLET = 760;
-    const SHRINK_BREAKPOINT_MINI = 390;
+    const SHRINK_BREAKPOINT_TABLET = 640;
     const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
     React.useEffect(() => {
         const handleResize = () => {
-            console.log('window.innerWidth  =', window.innerWidth);
             setScreenWidth(window.innerWidth);
         };
 
@@ -362,201 +454,133 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
         return a.abbr?.localeCompare(b.abbr); // Sort the rest alphabetically
     });
 
-    const isOpen = (location, departmentsMapIn = null) => {
-        const departmentsMapUsed = departmentsMapIn ?? departmentsMap;
-        return location.departments
-            ?.filter(d => departmentsMapUsed.includes(d.name))
-            ?.find(d => d.currently_open === true);
-    };
     const sluggifyName = string => {
         return string.toLowerCase().replace(' ', '-');
     };
-    const getTextForBusyness = location => {
-        if (
-            location.abbr === 'AskUs' ||
-            !location?.busyness ||
-            location.busyness === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING ||
-            !isOpen(location)
-        ) {
-            return null;
-        }
-        if (location.busyness <= 25) {
-            return 'Not busy';
-        }
-        if (location.busyness <= 50) {
-            return 'Moderate';
-        }
-        if (location.busyness <= 75) {
-            return 'Busy';
-        }
-        return 'Very busy';
-    };
-
-    function getLibraryHours(location) {
-        /* istanbul ignore else */
-        if (location.abbr === 'AskUs') {
-            return location.departments.map(department => {
-                if (['Chat'].includes(department.name)) {
-                    return department.hours;
-                }
-                return null;
-            });
-        }
-        /* istanbul ignore else */
-        if (hasDepartments(location)) {
-            return location.departments.map(department => {
-                if (departmentsMap.includes(department.name)) {
-                    return department.hours;
-                }
-                return null;
-            });
-        }
-        return 'See location';
-    }
 
     function getBusynessBar(location) {
         if (location.abbr === 'AskUs') {
             return null;
         }
         if (location.abbr === 'Fryer') {
-            return <div className="occupancyText occupancyTextClosed">By appointment only</div>;
+            return <div className="occupancyText has-ellipsis has-exclamation-icon">By appointment only</div>;
         }
         if (!hasDepartments(location)) {
-            return (
-                <div className="occupancyText">
-                    <UqDsExclamationCircle /> <span>Data not available</span>
-                </div>
-            );
+            return <div className="occupancyText has-ellipsis has-exclamation-icon">Data not available</div>;
         }
         if (!isOpen(location)) {
-            return <div className="occupancyText occupancyTextClosed">Closed</div>;
+            return <div className="occupancyText has-ellipsis">Closed</div>;
         }
         if (location.busyness === null) {
             return null;
         }
         if (location.busyness === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING) {
-            return (
-                <div className="occupancyText">
-                    <UqDsExclamationCircle /> <span>Data not available</span>
-                </div>
-            );
+            return <div className="occupancyText has-ellipsis has-exclamation-icon">Data not available</div>;
         }
-        const barWidth = () => {
-            if (screenWidth <= SHRINK_BREAKPOINT_MINI) {
-                return '132px';
-            }
-            return screenWidth > SHRINK_BREAKPOINT_TABLET ? '232px' : '143px';
-        };
         return (
             <LinearProgress
-                className="occupancy"
+                className="occupancyBar"
                 variant="determinate"
                 value={location.busyness}
-                sx={{
-                    height: 16,
-                    backgroundColor: '#dcdcdc',
-                    '& .MuiLinearProgress-bar': { backgroundColor: '#51247A' },
-                    maxWidth: barWidth,
-                }}
+                aria-label={getTextForBusyness(location, {
+                    1: 'Not busy',
+                    2: 'Moderately busy',
+                    3: 'Quite busy',
+                    4: 'Very busy',
+                })}
             />
         );
     }
 
+    // const lengthOfLongestName = hoursList = {
+    //     libHours.
+    // }
+
     return (
         <StyledStandardCard noPadding noHeader standardCardId="locations-panel">
-            <StyledWrapper id="tablewrapper">
+            <StyledTableWrapper id="tablewrapper">
                 {(!!libHoursError || !!vemcountError) && (
                     <Fade in={!libHoursLoading} timeout={1000}>
                         <div className={'locations-wrapper'}>
-                            <Typography style={{ padding: '1rem' }}>
-                                We can’t load location information right now. Please refresh your browser or try again
-                                later.
+                            <Typography style={{ padding: '1rem 1rem 1rem 0' }} data-testid="locations-error">
+                                We can't load opening hours or study space availability information right now. Please
+                                refresh your browser or try again later.
                             </Typography>
                         </div>
                     </Fade>
                 )}
                 {!libHoursError && !!libHours && !libHoursLoading && !vemcountError && !!vemcount && !vemcountLoading && (
-                    <Fade in={!libHoursLoading} timeout={1000}>
-                        <div id={'fadeWrapper'}>
-                            {/* Header Row */}
-                            <Grid container className="table-row-header">
-                                <Grid item uqDsMobile={5} uqDsTablet={4}>
-                                    <Typography component="h3" variant="h6">
-                                        Library
-                                    </Typography>
-                                </Grid>
-                                {screenWidth > SHRINK_BREAKPOINT_TABLET && (
-                                    <Grid item uqDsMobile={3} className="table-column-hours">
-                                        <Typography component="h3" variant="h6">
-                                            Opening hours*
-                                        </Typography>
-                                    </Grid>
-                                )}
-                                <Grid item uqDsMobile={screenWidth > 390 ? 4 : 5} className="table-column-busy">
-                                    <Typography component="h3" variant="h6">
-                                        Busy level
-                                    </Typography>
-                                </Grid>
-                                {screenWidth > 390 && <Grid item className="table-column-busyword" />}
+                    <>
+                        {/* Header Row */}
+                        <Grid container className="table-row table-row-header">
+                            <Grid item id="header-library" className={'table-column-name'}>
+                                <Typography component="h3" variant="h6">
+                                    Library
+                                </Typography>
                             </Grid>
+                            {screenWidth > SHRINK_BREAKPOINT_TABLET && (
+                                <Grid item className="table-column-hours" id="header-hours">
+                                    <Typography component="h3" variant="h6">
+                                        Opening hours*
+                                    </Typography>
+                                </Grid>
+                            )}
+                            <Grid item className="table-column-busy occupancyWrapper" id="header-busy">
+                                <Typography component="h3" variant="h6">
+                                    Busy level
+                                </Typography>
+                            </Grid>
+                        </Grid>
 
-                            {/* Body Rows */}
-                            {!!sortedHours &&
-                                sortedHours.length > 1 &&
-                                sortedHours.map((location, index) => (
+                        {/* Body Rows */}
+                        {!!sortedHours &&
+                            sortedHours.length > 1 &&
+                            sortedHours.map((location, index) => (
+                                <Grid
+                                    container
+                                    key={index}
+                                    className={`table-row table-row-body location-${location.abbr.toLowerCase()}`}
+                                    data-testid={sluggifyName(`hours-item-${location.abbr}`)}
+                                >
                                     <Grid
-                                        container
-                                        key={index}
-                                        className={`table-row-body location-${location.abbr.toLowerCase()}`}
-                                        data-testid={sluggifyName(`hours-item-${location.abbr}`)}
+                                        item
+                                        id={sluggifyName(`library-name-${location.abbr}`)}
+                                        className="table-column-name has-ellipsis"
+                                        aria-labelledby="header-library"
                                     >
-                                        <Grid item uqDsMobile={5} uqDsTablet={4} className="table-cell-ellipsis">
-                                            <Link
-                                                to={location.url}
-                                                id={`${sluggifyName(`hours-item-${location.abbr}`)}`}
-                                                data-testid={`${sluggifyName(`hours-item-${location.abbr}`)}-link`}
-                                            >
-                                                {getOverrideLocationName(location.abbr) || location.name}
-                                            </Link>
-                                        </Grid>
-                                        {screenWidth > SHRINK_BREAKPOINT_TABLET && (
-                                            <Grid item uqDsMobile={3} className="table-column-hours table-cell-hastext">
-                                                <Typography
-                                                    component={'span'}
-                                                    data-testid={`hours-item-hours-${index}`}
-                                                >
-                                                    {getLibraryHours(location)}
-                                                </Typography>
-                                            </Grid>
-                                        )}
+                                        <Link
+                                            to={location.url}
+                                            id={`${sluggifyName(`hours-item-${location.abbr}`)}`}
+                                            data-testid={`${sluggifyName(`hours-item-${location.abbr}`)}-link`}
+                                            aria-label={ariaLabelForLocation(location)}
+                                        >
+                                            {getOverrideLocationName(location.abbr) || location.name}
+                                        </Link>
+                                    </Grid>
+                                    {screenWidth > SHRINK_BREAKPOINT_TABLET && (
                                         <Grid
                                             item
-                                            uqDsMobile={screenWidth > 390 ? 4 : 5}
-                                            className="table-cell-ellipsis table-cell-busy table-column-busy"
-                                            data-testid={`${sluggifyName(`hours-item-busy-${location.abbr}`)}`}
+                                            className="table-column-hours table-cell-hastext"
+                                            aria-labelledby={`header-hours ${sluggifyName(
+                                                `library-name-${location.abbr}`,
+                                            )}`}
                                         >
-                                            {getBusynessBar(location)}
+                                            <Typography component={'span'} data-testid={`hours-item-hours-${index}`}>
+                                                {getLibraryHours(location)}
+                                            </Typography>
                                         </Grid>
-                                        {screenWidth > 390 && (
-                                            <Grid
-                                                item
-                                                uqDsMobile={1}
-                                                className="table-cell-hastext table-column-busyword"
-                                            >
-                                                <Typography
-                                                    component={'span'}
-                                                    data-testid={`${sluggifyName(
-                                                        `hours-item-busy-words-${location.abbr}`,
-                                                    )}`}
-                                                >
-                                                    {getTextForBusyness(location)}
-                                                </Typography>
-                                            </Grid>
-                                        )}
+                                    )}
+                                    <Grid
+                                        item
+                                        className="table-cell-busy table-column-busy"
+                                        data-testid={`${sluggifyName(`hours-item-busy-${location.abbr}`)}`}
+                                        aria-labelledby={`header-busy ${sluggifyName(`library-name-${location.abbr}`)}`}
+                                    >
+                                        <div className={'occupancyWrapper'}>{getBusynessBar(location)}</div>
                                     </Grid>
-                                ))}
-                        </div>
-                    </Fade>
+                                </Grid>
+                            ))}
+                    </>
                 )}
                 {((!!libHoursLoading && !libHoursError && !libHours) ||
                     (!vemcountError && !vemcount && !!vemcountLoading)) && (
@@ -564,7 +588,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                         <MyLoader id="hours-loader" data-testid="hours-loader" aria-label="Locations data is loading" />
                     </div>
                 )}
-                <div className="outlink">
+                <StyledOutlinkDiv>
                     <span>
                         <Link
                             data-testid="homepage-hours-weeklyhours-link"
@@ -578,14 +602,14 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                         </Link>
                         <ArrowForwardIcon /> {/* uq ds arrow-right-1 */}
                     </span>
-                </div>
+                </StyledOutlinkDiv>
                 {screenWidth > SHRINK_BREAKPOINT_TABLET && (
-                    <p className={'disclaimer'}>
+                    <StyledDisclaimerParagraph>
                         {!(!!libHoursError || !!vemcountError) &&
                             '*Student and staff hours only. For visitor and community hours, see individual Library links above.'}
-                    </p>
+                    </StyledDisclaimerParagraph>
                 )}
-            </StyledWrapper>
+            </StyledTableWrapper>
         </StyledStandardCard>
     );
 };

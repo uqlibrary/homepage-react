@@ -19,7 +19,7 @@ export default {
     externalSubjectLocation: 'External Instruction',
     homepagePanel: {
         title: 'Learning resources and past exam papers',
-        userCourseTitle: 'Current courses',
+        userCourseTitle: 'Your current courses',
         noCourses: (
             <Fragment>
                 <p>Your enrolled courses will appear here three weeks prior to the start of the semester.</p>
@@ -28,7 +28,7 @@ export default {
         ),
     },
     myCourses: {
-        title: 'My courses',
+        title: 'Your courses',
         none: {
             title: 'No enrolled courses available',
             description: (
@@ -102,7 +102,12 @@ export default {
                 icon: <CourtHouseIcon style={{ marginRight: 6 }} />,
                 id: 'legalResearchEssentials',
                 linkLabel: 'Legal Research Essentials',
-                linkOutPattern: 'https://web.library.uq.edu.au/library-services/training/legal-research-essentials',
+                linkOutPattern: ['localhost', 'homepage-development.library.uq.edu.au'].includes(
+                    document.location.hostname,
+                    // this doesnt like an `import linkToDrupal` line above - weird! linkToDrupal is only temporary anyway
+                )
+                    ? 'https://live-library-uq.pantheonsite.io/library-services/training/legal-research-essentials'
+                    : 'https://web.library.uq.edu.au/library-services/training/legal-research-essentials',
             },
         },
     },

@@ -1,7 +1,7 @@
 export const expectUserToDisplayCorrectFirstName = (username, firstname) => {
     cy.visit(`/?user=${username}`);
     cy.viewport(1300, 1000);
-    cy.get('[data-testid="homepage-user-greeting"]').contains(firstname);
+    cy.get('[data-testid="homepage-user-greeting"]').contains('Hi, ' + firstname);
 };
 
 export const hasPanels = optionsTheUserShouldSee => {
@@ -15,7 +15,7 @@ export const hasPanels = optionsTheUserShouldSee => {
     possiblePanels.set('training', { title: 'Training', content: 'See all training' });
     possiblePanels.set('espace', { title: 'UQ eSpace', content: 'Update the following items' });
     possiblePanels.set('readpublish', { title: 'Read and publish', content: 'Publish in the right journal' });
-    possiblePanels.set('catalogue', { title: 'My library account', content: 'Search history' });
+    possiblePanels.set('catalogue', { title: 'Your library account', content: 'Search history' });
     possiblePanels.set('referencing', { title: 'Referencing', content: 'Referencing style guides' });
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
@@ -95,7 +95,7 @@ export const hasEspaceEntries = optionsTheUserShouldSee => {
     }
 };
 
-export const hasCatalogPanelOptions = optionsTheUserShouldSee => {
+export const hasAccountPanelOptions = optionsTheUserShouldSee => {
     const availableOptions = new Map();
     availableOptions.set('searchhistory', 'Search history');
     availableOptions.set('savedsearches', 'Saved searches');
@@ -130,4 +130,12 @@ export const hasCatalogPanelOptions = optionsTheUserShouldSee => {
             cy.get(elementId).should('not.exist');
         }
     }
+};
+export const seesEndNoteInReferencing = () => {
+    cy.get('[data-testid="referencing-endnote"]')
+        .should('exist')
+        .should('contain', 'Endnote referencing software');
+};
+export const noEndNoteInReferencing = () => {
+    cy.get('[data-testid="referencing-endnote"]').should('not.exist');
 };

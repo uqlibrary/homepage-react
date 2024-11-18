@@ -21,6 +21,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { noResultsFoundBlock, MESSAGE_EXAMCODE_404 } from 'modules/Pages/PastExamPaperSearch/pastExamPapers.helpers';
 import { styled } from '@mui/material/styles';
 import { breadcrumbs } from 'config/routes';
+import { linkToDrupal } from 'helpers/general';
 
 const StyledTableCell = styled(TableCell)(() => ({
     textAlign: 'center',
@@ -314,7 +315,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                 <Grid container>
                     <Grid item xs={'auto'}>
                         <p className={'aboutLink'}>
-                            <a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">
+                            <a href={linkToDrupal('/library-services/students/past-exam-papers')}>
                                 Read more about searching for past exam papers
                             </a>
                         </p>

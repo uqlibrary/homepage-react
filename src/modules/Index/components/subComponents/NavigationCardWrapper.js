@@ -49,7 +49,7 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                         cardHeading="Study and learning support"
                         landingUrl={linkToDrupal('/study-and-learning-support')}
                         iconBackgroundImage={bookOpenBookmarkBackgroundImage}
-                        shortParagraph="Coursework and teaching resources, referencing, copyright and training."
+                        shortParagraph="Course materials, assignments, training, referencing, teaching and copyright "
                         loggedIn={accountLoading === false && !!account}
                     />
                     {/* minimum length for shortParagraph string: 66 char,
@@ -65,7 +65,7 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                         cardHeading="Research and publish"
                         landingUrl={linkToDrupal('/research-and-publish')}
                         iconBackgroundImage={scienceMoleculeBackgroundImage}
-                        shortParagraph="Open research, funding, metrics, engagement and impact, and UQ eSpace."
+                        shortParagraph="Open research, funding, metrics, impact, data and UQ eSpace."
                         loggedIn={accountLoading === false && !!account}
                     />
                     <SingleLinkCard
@@ -77,7 +77,7 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                     />
                     <SingleLinkCard
                         cardHeading="Visit"
-                        landingUrl={linkToDrupal('/visit-our-spaces')}
+                        landingUrl={linkToDrupal('/visit')}
                         iconBackgroundImage={pinBackgroundImage}
                         shortParagraph="Explore our libraries and find spaces where you can study, meet and relax."
                         loggedIn={accountLoading === false && !!account}

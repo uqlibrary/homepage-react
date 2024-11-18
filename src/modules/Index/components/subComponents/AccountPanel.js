@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { canSeeLoans, canSeePrintBalance, isTestTagUser } from 'helpers/access';
 import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
+import { linkToDrupal } from 'helpers/general';
 
 const StyledAlertDiv = styled('div')(() => ({
     display: 'flex',
@@ -195,7 +196,7 @@ const muiBeenHereIcon = (
     </svg>
 );
 
-export const CataloguePanel = ({ account, loans, loansLoading, printBalance, printBalanceLoading }) => {
+export const AccountPanel = ({ account, loans, loansLoading, printBalance, printBalanceLoading }) => {
     function totalFines(fines) {
         return fines.reduce((sum, fine) => {
             return sum + (typeof fine.fineAmount === 'number' ? fine.fineAmount : 0);
@@ -224,7 +225,7 @@ export const CataloguePanel = ({ account, loans, loansLoading, printBalance, pri
     }
 
     return (
-        <StandardCard subCard noPadding primaryHeader standardCardId="catalogue-panel" title="My library account">
+        <StandardCard subCard noPadding primaryHeader standardCardId="catalogue-panel" title="Your library account">
             <StyledUl>
                 <li data-testid={'show-searchhistory'}>
                     <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=search_history">
@@ -248,7 +249,7 @@ export const CataloguePanel = ({ account, loans, loansLoading, printBalance, pri
                 </li>
                 {canSeePrintBalance(account) && (
                     <li data-testid={'show-papercut'}>
-                        <Link to="https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=queries">
+                        <Link to={linkToDrupal('/library-services/it/print-scan-copy/your-printing-account')}>
                             {dsDiscountDollarDashIcon} <span>Print balance {markedPrintBalance()}</span>
                         </Link>
                     </li>
@@ -275,7 +276,7 @@ export const CataloguePanel = ({ account, loans, loansLoading, printBalance, pri
     );
 };
 
-CataloguePanel.propTypes = {
+AccountPanel.propTypes = {
     account: PropTypes.object,
     loans: PropTypes.object,
     loansLoading: PropTypes.bool,
@@ -283,4 +284,4 @@ CataloguePanel.propTypes = {
     printBalanceLoading: PropTypes.bool,
 };
 
-export default CataloguePanel;
+export default AccountPanel;

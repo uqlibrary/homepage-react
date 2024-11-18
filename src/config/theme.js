@@ -60,7 +60,7 @@ export const mui1theme = createTheme({
             md: 900, // Small Desktop
             lg: 1280, // Large Desktop
             xl: 1536, // Extra Large Desktop
-            uqDsMobile: 0,
+            uqDsMobile: 390,
             uqDsTablet: 640,
             uqDsDesktop: 848,
             uqDsDesktopXL: 1024,
