@@ -36,13 +36,22 @@ const StyledLocationBox = styled(Box)(() => ({
 const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
     // display as locations then booking link but code as booking then locations,
     // so they don't tab to the booking link after clicking the locations open
+    position: 'relative',
     display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
     flexDirection: 'row-reverse',
-
+    justifyContent: 'flex-end', // actually the start, reversed because of flex-direction
+    alignItems: 'center',
     '& button': {
         color: theme.palette.primary.light,
+        [theme.breakpoints.up('uqDsMobile')]: {
+            backgroundImage:
+                // location/map icon
+                "url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2218%22%20height%3D%2226%22%20viewBox%3D%220%200%2018%2026%22%20fill%3D%22none%22%3E%3Cg%20id%3D%22icon/location%22%3E%3Cpath%20d%3D%22M9.00047%205C10.8267%205%2012.3333%206.50685%2012.3333%208.33333C12.3333%2010.1598%2010.8267%2011.6667%209.00047%2011.6667C7.17426%2011.6667%205.66764%2010.1598%205.66764%208.33333C5.62198%206.50685%207.1286%205%209.00047%205Z%22%20stroke%3D%22%2351247A%22%20strokeWidth%3D%221.5%22%20strokeLinecap%3D%22round%22%20strokeLinejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M9%201C13.4082%201%2017%204.59365%2017%209.00404C17%2012.6521%2011.6122%2021.7452%209.70748%2024.631C9.4898%2025.0121%208.94558%2025.121%208.61905%2024.8488C8.5102%2024.7943%208.45578%2024.7399%208.40136%2024.631C6.38775%2021.6907%201%2012.5977%201%209.00404C1%204.59365%204.59184%201%209%201Z%22%20stroke%3D%22%2351247A%22%20strokeWidth%3D%221.5%22%20strokeLinecap%3D%22round%22%20strokeLinejoin%3D%22round%22/%3E%3C/g%3E%3C/svg%3E')",
+            paddingLeft: '26px', // 18px wide + 8px padding between icon and text
+            backgroundSize: '18px 26px',
+            backgroundPosition: 'left center',
+            backgroundRepeat: 'no-repeat',
+        },
         fontSize: '18px',
         fontWeight: 500,
         marginTop: '6px',
@@ -59,30 +68,11 @@ const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
         fontSize: '16px',
         height: '40px',
         paddingBlock: '32px',
-        marginLeft: '32px',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: '32px',
+        },
     },
 }));
-
-const UqDsLocationIcon = (
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="26" viewBox="0 0 18 26" fill="none">
-        <g id="icon/location">
-            <path
-                d="M9.00047 5C10.8267 5 12.3333 6.50685 12.3333 8.33333C12.3333 10.1598 10.8267 11.6667 9.00047 11.6667C7.17426 11.6667 5.66764 10.1598 5.66764 8.33333C5.62198 6.50685 7.1286 5 9.00047 5Z"
-                stroke="#51247A"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-            <path
-                d="M9 1C13.4082 1 17 4.59365 17 9.00404C17 12.6521 11.6122 21.7452 9.70748 24.631C9.4898 25.0121 8.94558 25.121 8.61905 24.8488C8.5102 24.7943 8.45578 24.7399 8.40136 24.631C6.38775 21.6907 1 12.5977 1 9.00404C1 4.59365 4.59184 1 9 1Z"
-                stroke="#51247A"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-        </g>
-    </svg>
-);
 
 export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcountLoading, vemcountError }) => {
     // handle the location opener
@@ -148,7 +138,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
     return (
         <div style={{ borderBottom: '1px solid hsla(203, 50%, 30%, 0.15)' }}>
             <div className="layout-card" style={{ position: 'relative' }}>
-                <StyledButtonWrapperDiv style={{ position: 'relative' }}>
+                <StyledButtonWrapperDiv>
                     <StyledBookingLink
                         href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
                         data-testid="homepage-hours-bookit-link"
@@ -164,10 +154,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                         aria-controls="locations-wrapper"
                         aria-label="Show/hide Locations and hours panel"
                     >
-                        {UqDsLocationIcon}
-                        <span id="location-dialog-controller-span" style={{ paddingLeft: '16px' }}>
-                            Locations and hours
-                        </span>
+                        <span id="location-dialog-controller-span">Locations and hours</span>
                         {!!locationOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                     </Button>
                 </StyledButtonWrapperDiv>
