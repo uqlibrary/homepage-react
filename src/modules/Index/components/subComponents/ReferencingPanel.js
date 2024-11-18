@@ -5,6 +5,7 @@ import { canSeeEndnoteReferencing } from 'helpers/access';
 import Grid from '@mui/material/Grid';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { linkToDrupal } from 'helpers/general';
 
 export const ReferencingPanel = ({ account }) => {
     const referencingPanel = [
@@ -18,7 +19,7 @@ export const ReferencingPanel = ({ account }) => {
         {
             id: 'endnote',
             title: 'Endnote referencing software',
-            url: 'https://web.library.uq.edu.au/research-tools-techniques/endnote-referencing-software',
+            url: linkToDrupal('/research-tools-techniques/endnote-referencing-software'),
             description: 'Download and support',
             uqOnly: true,
         },

@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { canSeeLoans, canSeePrintBalance, isTestTagUser } from 'helpers/access';
 import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
+import { linkToDrupal } from 'helpers/general';
 
 const StyledAlertDiv = styled('div')(() => ({
     display: 'flex',
@@ -248,7 +249,7 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
                 </li>
                 {canSeePrintBalance(account) && (
                     <li data-testid={'show-papercut'}>
-                        <Link to="https://web.library.uq.edu.au/library-services/it/print-scan-copy/your-printing-account">
+                        <Link to={linkToDrupal('/library-services/it/print-scan-copy/your-printing-account')}>
                             {dsDiscountDollarDashIcon} <span>Print balance {markedPrintBalance()}</span>
                         </Link>
                     </li>
