@@ -206,10 +206,9 @@ const PersonalisedPanel = ({
         // eg topup = 'https://www.library.uq.edu.au/papercut/top-up?amount=5'
         // which redirects to a api route that then redirects to xetta payment gateway
         const navigatToTopUpUrl = value => {
+            const staging = 'https://homepage-staging.library.uq.edu.au';
             const destinationOrigin =
-                location.hostname === 'www.library.uq.edu.au'
-                    ? location.origin
-                    : 'https://homepage-staging.library.uq.edu.au';
+                location.hostname === 'www.library.uq.edu.au' ? /* istanbul ignore next */ location.origin : staging;
             window.location.href = ppLocale.items.papercut.topup
                 .replace('[origin]', destinationOrigin)
                 .replace('[value]', value);
