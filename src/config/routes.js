@@ -72,6 +72,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
     const examSearchCourseHint = ':courseHint';
 
     const dlorId = ':dlorId';
+    const seriesId = ':seriesId';
     const confirmationId = ':confirmationId';
 
     const publicPages = [
@@ -103,6 +104,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             element: <components.DLOList />,
             exact: true,
             pageTitle: 'Digital Learning Object Repository',
+        },
+        {
+            path: pathConfig.dlorViewSeries(seriesId),
+            element: <components.SeriesView />,
+            exact: true,
+            pageTitle: 'Digital Learning Object Repository - View Series',
         },
         {
             path: pathConfig.dlorSubscriptionConfirmation(confirmationId),

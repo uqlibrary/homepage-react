@@ -68,6 +68,7 @@ import dlor_filter_list from './data/records/dlor/dlor_filter_list';
 import dlor_team_list from './data/records/dlor/dlor_team_list';
 import dlor_file_type_list from './data/records/dlor/dlor_file_type_list';
 import dlor_series_all from './data/records/dlor/dlor_series_all';
+import dlor_series_view from './data/records/dlor/dlor_series_view';
 
 const moment = require('moment');
 
@@ -776,6 +777,15 @@ mock.onGet(/dlor\/public\/find\/.*/)
             return [500, {}];
         } else {
             return [200, dlor_series_all];
+        }
+    })
+    .onGet(/dlor\/public\/series\/.*/)
+    .reply(config => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else {
+            console.log("TEST!!!", dlor_series_view);
+            return [200, dlor_series_view];
         }
     })
     .onDelete(/dlor\/admin\/series\/.*/)
