@@ -597,7 +597,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                         >
                             <span>
                                 {!!libHoursError || !!vemcountError ? <span>In the meantime, s</span> : <span>S</span>}
-                                ee weekly Library and AskUs hours
+                                ee all Library and AskUs hours
                             </span>{' '}
                         </Link>
                         <ArrowForwardIcon /> {/* uq ds arrow-right-1 */}
@@ -606,7 +606,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                 {screenWidth > SHRINK_BREAKPOINT_TABLET && (
                     <StyledDisclaimerParagraph>
                         {!(!!libHoursError || !!vemcountError) &&
-                            '*Student and staff hours only. For visitor and community hours, see individual Library links above.'}
+                            '*Student and staff hours. For visitor and community hours, see individual locations.'}
                     </StyledDisclaimerParagraph>
                 )}
             </StyledTableWrapper>

@@ -204,7 +204,7 @@ context('Locations Panel', () => {
         // dialog is open
         cy.get('[data-testid="homepage-hours-weeklyhours-link"]')
             .should('exist')
-            .contains('See weekly');
+            .contains('See all Library and AskUs hours');
 
         // click elsewhere on the screen
         cy.get('h1')
@@ -227,7 +227,7 @@ context('Locations Panel', () => {
                 .get('[data-testid="homepage-hours-weeklyhours-link"]')
                 .should('exist')
                 .should('be.visible')
-                .contains('See weekly'),
+                .contains('See all Library and AskUs hours'),
         );
 
         // re-click button
@@ -247,7 +247,7 @@ context('Locations Panel', () => {
                 .get('[data-testid="homepage-hours-weeklyhours-link"]')
                 .should('exist')
                 .should('be.visible')
-                .contains('See weekly'),
+                .contains('See all Library and AskUs hours'),
         );
 
         // re-click button
@@ -267,7 +267,7 @@ context('Locations Panel', () => {
                 .get('[data-testid="homepage-hours-weeklyhours-link"]')
                 .should('exist')
                 .should('be.visible')
-                .contains('See weekly'),
+                .contains('See all Library and AskUs hours'),
         );
 
         // click escape key to close dialog
@@ -289,7 +289,7 @@ context('Locations Panel', () => {
                 .get('[data-testid="homepage-hours-weeklyhours-link"]')
                 .should('exist')
                 .should('be.visible')
-                .contains('See weekly'),
+                .contains('See all Library and AskUs hours'),
         );
 
         cy.get('[data-testid="hours-item-whitty-mater"]').should('not.exist');
