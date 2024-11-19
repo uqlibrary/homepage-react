@@ -1239,7 +1239,12 @@ mock.onGet('exams/course/FREN1010/summary')
         ]),
     )
     .onGet('https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json')
-    .reply(() => [200, drupalArticles])
+    .reply(() => {
+        if (responseType === 'drupalError') {
+            return [500, {}];
+        }
+        return [200, drupalArticles];
+    })
     .onGet(routes.JOURNAL_SEARCH_API().apiUrl)
     .reply(() => {
         switch (user) {

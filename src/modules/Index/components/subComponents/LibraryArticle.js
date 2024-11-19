@@ -248,7 +248,7 @@ const LibraryArticle = ({ article, articleindex }) => {
             className="article-container"
         >
             <StandardCard className={'article-card'} noPadding noHeader style={{ boxShadow: 'none' }}>
-                <Link to={article.canonical_url}>
+                <Link to={article.canonical_url} data-testid={`drupal-article-${articleindex}`}>
                     <Grid container sx={{ borderBottom: isSm ? '1px solid #ddd' : 'none' }}>
                         {(articleindex === 0 && isSmUp) || (articleindex !== 0 && isSm)
                             ? RenderTextblock(articleindex, article, theme, isSm)
