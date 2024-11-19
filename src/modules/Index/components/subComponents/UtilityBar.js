@@ -18,12 +18,17 @@ const Locations = lazy(() => lazyRetry(() => import('./Locations')));
 
 const StyledBookingLink = styled(Link)(({ theme }) => ({
     textDecorationColor: theme.palette.primary.light,
+    fontSize: '16px',
+    height: '30px',
+    [theme.breakpoints.up('sm')]: {
+        marginLeft: '32px',
+    },
     '& span': {
         fontSize: '18px',
         fontWeight: 500,
         color: theme.palette.primary.light,
         display: 'block',
-        paddingTop: '13px',
+        paddingTop: '3.5px',
         whiteSpace: 'nowrap',
     },
 }));
@@ -41,6 +46,7 @@ const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
     flexDirection: 'row-reverse',
     justifyContent: 'flex-end', // actually the start, reversed because of flex-direction
     alignItems: 'center',
+    paddingBlock: '32px',
     '& button': {
         color: theme.palette.primary.light,
         [theme.breakpoints.up('uqDsMobile')]: {
@@ -54,7 +60,8 @@ const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
         },
         fontSize: '18px',
         fontWeight: 500,
-        marginTop: '6px',
+        marginTop: 0,
+        padding: 0,
         textDecoration: 'underline',
         textTransform: 'none',
         whiteSpace: 'nowrap',
@@ -62,14 +69,6 @@ const StyledButtonWrapperDiv = styled('div')(({ theme }) => ({
             backgroundColor: 'transparent',
             textDecoration: 'underline',
             WebkitTextDecoration: 'none',
-        },
-    },
-    '& a': {
-        fontSize: '16px',
-        height: '40px',
-        paddingBlock: '32px',
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: '32px',
         },
     },
 }));
