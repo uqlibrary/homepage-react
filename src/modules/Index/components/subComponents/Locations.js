@@ -40,7 +40,7 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     },
 }));
 const StyledOutlinkDiv = styled('div')(({ theme }) => ({
-    marginTop: '24px',
+    marginTop: '22px',
     padding: '0',
     display: 'inline-block',
     '& > span': {
@@ -64,7 +64,7 @@ const StyledOutlinkDiv = styled('div')(({ theme }) => ({
     },
 }));
 const StyledDisclaimerParagraph = styled('div')(({ theme }) => ({
-    marginTop: '16px',
+    marginTop: '26px',
     paddingLeft: 0,
     fontSize: '14px',
     fontStyle: 'normal',
@@ -111,6 +111,9 @@ const StyledTableWrapper = styled('div')(({ theme }) => ({
         overflow: 'hidden',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
+        '& a': {
+            paddingBlock: 0, // override mui
+        },
 
         paddingRight: '64px',
         [theme.breakpoints.down('uqDsDesktop')]: {
@@ -139,8 +142,8 @@ const StyledTableWrapper = styled('div')(({ theme }) => ({
             width: '256px', // Width for above 640px: 192px + 64px left margin = 256px
         },
     },
-    '& .location-askus > div': {
-        paddingTop: '16px',
+    '& .location-askus': {
+        paddingTop: '24px',
     },
     '& .occupancyWrapper': {
         paddingLeft: '64px',
