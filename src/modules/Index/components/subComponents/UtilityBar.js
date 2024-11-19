@@ -145,7 +145,6 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                         <span>Book a room</span>
                     </StyledBookingLink>
                     <StyledLocationOpenerButton
-                        Button
                         id="location-dialog-controller"
                         data-testid="hours-accordion-open"
                         onClick={showHideLocationPanel}
