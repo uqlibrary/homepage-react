@@ -6,7 +6,7 @@ import ContentLoader from 'react-content-loader';
 import Fade from '@mui/material/Fade';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
@@ -63,7 +63,7 @@ const StyledOutlinkDiv = styled('div')(({ theme }) => ({
         marginTop: '2px',
     },
 }));
-const StyledDisclaimerParagraph = styled('div')(() => ({
+const StyledDisclaimerParagraph = styled('div')(({ theme }) => ({
     marginTop: '16px',
     paddingLeft: 0,
     fontSize: '14px',
@@ -72,6 +72,9 @@ const StyledDisclaimerParagraph = styled('div')(() => ({
     letterSpacing: '0.14px',
     lineHeight: '160%', // 25.6px
     marginBottom: 0,
+    [theme.breakpoints.down('uqDsTablet')]: {
+        display: 'none',
+    },
 }));
 const StyledTableWrapper = styled('div')(({ theme }) => ({
     margin: '32px',
@@ -117,6 +120,9 @@ const StyledTableWrapper = styled('div')(({ theme }) => ({
     '& .table-column-hours': {
         whiteSpace: 'nowrap',
         width: '120px',
+        [theme.breakpoints.down('uqDsTablet')]: {
+            display: 'none',
+        },
     },
     '& .table-cell-hastext span': {
         color: '#3B383E',
@@ -350,7 +356,7 @@ export const ariaLabelForLocation = location => {
 };
 
 const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcountLoading, vemcountError }) => {
-    const SHRINK_BREAKPOINT_TABLET = 640;
+    const theme = useTheme();
     const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
     React.useEffect(() => {
         const handleResize = () => {
@@ -441,7 +447,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
     const alphaHours = cleanedHours
         .filter(e => e !== null)
         .filter(l => l.abbr !== 'Whitty Mater') // remove this from springshare data for homepage
-        .filter(l => screenWidth > SHRINK_BREAKPOINT_TABLET || l.abbr !== 'AskUs') // remove the askus line when on smaller screens, it lacks extra info
+        .filter(l => screenWidth > theme.breakpoints.values.uqDsTablet || l.abbr !== 'AskUs') // remove the askus line when on smaller screens, it lacks extra info
         .sort((a, b) => {
             const textA = a.name.toUpperCase();
             const textB = b.name.toUpperCase();
@@ -518,13 +524,11 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                                     Library
                                 </Typography>
                             </Grid>
-                            {screenWidth > SHRINK_BREAKPOINT_TABLET && (
-                                <Grid item className="table-column-hours" id="header-hours">
-                                    <Typography component="h3" variant="h6">
-                                        Opening hours*
-                                    </Typography>
-                                </Grid>
-                            )}
+                            <Grid item className="table-column-hours" id="header-hours">
+                                <Typography component="h3" variant="h6">
+                                    Opening hours*
+                                </Typography>
+                            </Grid>
                             <Grid item className="table-column-busy occupancyWrapper" id="header-busy">
                                 <Typography component="h3" variant="h6">
                                     Busy level
@@ -557,19 +561,20 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                                             {getOverrideLocationName(location.abbr) || location.name}
                                         </Link>
                                     </Grid>
-                                    {screenWidth > SHRINK_BREAKPOINT_TABLET && (
-                                        <Grid
-                                            item
-                                            className="table-column-hours table-cell-hastext"
-                                            aria-labelledby={`header-hours ${sluggifyName(
-                                                `library-name-${location.abbr}`,
-                                            )}`}
+                                    <Grid
+                                        item
+                                        className="table-column-hours table-cell-hastext"
+                                        aria-labelledby={`header-hours ${sluggifyName(
+                                            `library-name-${location.abbr}`,
+                                        )}`}
+                                    >
+                                        <Typography
+                                            component={'span'}
+                                            data-testid={`${sluggifyName(`location-item-${location.abbr}-hours`)}`}
                                         >
-                                            <Typography component={'span'} data-testid={`hours-item-hours-${index}`}>
-                                                {getLibraryHours(location)}
-                                            </Typography>
-                                        </Grid>
-                                    )}
+                                            {getLibraryHours(location)}
+                                        </Typography>
+                                    </Grid>
                                     <Grid
                                         item
                                         className="table-cell-busy table-column-busy"
@@ -603,12 +608,10 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                         <ArrowForwardIcon /> {/* uq ds arrow-right-1 */}
                     </span>
                 </StyledOutlinkDiv>
-                {screenWidth > SHRINK_BREAKPOINT_TABLET && (
-                    <StyledDisclaimerParagraph>
-                        {!(!!libHoursError || !!vemcountError) &&
-                            '*Student and staff hours. For visitor and community hours, see individual locations.'}
-                    </StyledDisclaimerParagraph>
-                )}
+                <StyledDisclaimerParagraph data-testid="locations-hours-disclaimer">
+                    {!(!!libHoursError || !!vemcountError) &&
+                        '*Student and staff hours. For visitor and community hours, see individual locations.'}
+                </StyledDisclaimerParagraph>
             </StyledTableWrapper>
         </StyledStandardCard>
     );

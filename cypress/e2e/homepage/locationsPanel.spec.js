@@ -13,6 +13,18 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-arch-music"]')
             .should('be.visible')
             .contains('Architecture and Music');
+
+        // at desktop hours are displayed
+        cy.get('[data-testid="location-item-arch-music-hours"]')
+            .should('exist')
+            .should('be.visible')
+            .contains('7:30am - 7:30pm');
+        cy.get('[data-testid="locations-hours-disclaimer"]')
+            .should('exist')
+            .contains('Student and staff hours');
+        cy.get('[data-testid="hours-item-askus-link"]')
+            .should('exist')
+            .contains('AskUs chat hours');
     });
     it.skip('is Accessible', () => {
         cy.visit('/');
@@ -24,7 +36,7 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-accordion-open"]').click();
 
         // dialog has loaded corrrectly
-        cy.get('[data-testid="hours-item-arch-music"]')
+        cy.get('[data-testid="location-item-arch-music-hours"]')
             .should('be.visible')
             .contains('Architecture and Music');
 
@@ -33,6 +45,14 @@ context('Locations Panel', () => {
             scopeName: 'As loaded',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
+    });
+    it('hides hours on tablet', () => {
+        cy.visit('/');
+        cy.viewport(414, 736);
+
+        cy.get('[data-testid="location-item-arch-music-hours"]').should('not.exist');
+        cy.get('[data-testid="locations-hours-disclaimer"]').should('not.exist');
+        cy.get('[data-testid="hours-item-askus-link"]').should('not.exist');
     });
     it('can navigate to weekly hours page from the library name cell', () => {
         cy.intercept('GET', 'https://web.library.uq.edu.au/locations-hours/architecture-music-library', {
