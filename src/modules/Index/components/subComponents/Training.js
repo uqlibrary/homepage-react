@@ -170,17 +170,18 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
         setEventDetail(null);
     };
     moment.tz.setDefault('Australia/Brisbane');
-    const eventTime = eventTime =>
+    const eventTimeLong = eventTime =>
         moment(eventTime)
             .calendar(null, {
-                sameDay: '[Today,] dddd D MMMM',
-                nextDay: '[Tomorrow,] dddd D MMMM',
-                nextWeek: 'dddd D MMMM',
-                lastDay: '[Yesterday]  D MMMM',
-                lastWeek: '[Last] dddd  D MMMM',
-                sameElse: 'D MMMM',
+                sameDay: '[Today,] dddd D MMMM [at] h.mma',
+                nextDay: '[Tomorrow,] dddd D MMMM [at] h.mma',
+                nextWeek: 'dddd D MMMM [at] h.mma',
+                lastDay: '[Yesterday]  D MMMM [at] h.mma',
+                lastWeek: '[Last] dddd  D MMMM [at] h.mma',
+                sameElse: 'D MMMM [at] h.mma',
             })
-            .replace(':00', '');
+            .replace('.00', '');
+    const eventDate = eventTime => moment(eventTime).format('D MMMM');
     const bookingText = ev => {
         /*
           if bookingSettings is null then bookings are not required
@@ -330,7 +331,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                             fullWidth
                                                         >
                                                             <div className={'listEventItem listEventDate'}>
-                                                                {eventTime(event.start)}
+                                                                {eventDate(event.start)}
                                                             </div>
                                                             <div className={'listEventItem'}>
                                                                 <span className={'listEventTitle'}>
@@ -403,7 +404,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                             </Tooltip>
                                         </Grid>
                                         <Grid item xs={10} className={'detailMeta'}>
-                                            {eventTime(eventDetail.start)}
+                                            {eventTimeLong(eventDetail.start)}
                                         </Grid>
                                         <Grid item xs={1} className={'detailMeta'}>
                                             <Tooltip
