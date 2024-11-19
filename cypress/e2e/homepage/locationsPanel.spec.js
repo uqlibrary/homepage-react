@@ -306,7 +306,7 @@ context('Locations Panel', () => {
         cy.get('[data-testid="locations-error"]')
             .should('be.visible')
             .contains(
-                "We can't load opening hours or study space availability information right now. Please refresh your browser or try again later.",
+                "We can't load opening hours or how busy Library spaces are right now. Please refresh your browser or try again later.",
             );
     });
 });

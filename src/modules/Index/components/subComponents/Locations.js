@@ -503,8 +503,8 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                     <Fade in={!libHoursLoading} timeout={1000}>
                         <div className={'locations-wrapper'}>
                             <Typography style={{ padding: '1rem 1rem 1rem 0' }} data-testid="locations-error">
-                                We can't load opening hours or study space availability information right now. Please
-                                refresh your browser or try again later.
+                                We can't load opening hours or how busy Library spaces are right now. Please refresh
+                                your browser or try again later.
                             </Typography>
                         </div>
                     </Fade>
