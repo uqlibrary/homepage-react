@@ -42,7 +42,7 @@ const LibraryUpdates = ({ drupalArticleList, drupalArticlesListError }) => {
                     >
                         Library updates
                     </Typography>
-                    <StyledLink to={linkToDrupal('/about-us/news')}>See more library updates</StyledLink>
+                    <StyledLink to={linkToDrupal('/about-us/news')}>See more updates</StyledLink>
                 </Grid>
                 {drupalArticleList && !drupalArticlesListError && Array.isArray(drupalArticleList) ? (
                     drupalArticleList.map((article, index) => {
@@ -54,7 +54,7 @@ const LibraryUpdates = ({ drupalArticleList, drupalArticlesListError }) => {
                     })
                 ) : (
                     <Grid item xs={12} index={0}>
-                        <p>No articles found</p>
+                        <p data-testid="drupal-error">No articles found</p>
                     </Grid>
                 )}
             </Grid>

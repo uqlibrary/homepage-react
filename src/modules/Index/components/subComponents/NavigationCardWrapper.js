@@ -49,7 +49,7 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                         cardHeading="Study and learning support"
                         landingUrl={linkToDrupal('/study-and-learning-support')}
                         iconBackgroundImage={bookOpenBookmarkBackgroundImage}
-                        shortParagraph="Course materials, assignments, training, referencing, teaching and copyright "
+                        shortParagraph="Course materials, assignments, training, referencing, teaching and copyright."
                         loggedIn={accountLoading === false && !!account}
                     />
                     {/* minimum length for shortParagraph string: 66 char,
