@@ -32,6 +32,7 @@ const StyledUl = styled('ul')(() => ({
             '&:hover': {
                 color: 'inherit',
                 backgroundColor: 'inherit',
+                textDecorationColor: 'white',
             },
             '& svg': {
                 stroke: '#51247A',
