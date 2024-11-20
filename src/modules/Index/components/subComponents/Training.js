@@ -82,7 +82,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         ['& .listEventTitle']: {
             fontSize: '20px',
             lineHeight: 1,
-            letterSpacing: '0.2px',
+            letterSpacing: '0.16px',
             padding: '2px 0',
         },
         ['& .listEventLocation']: {
