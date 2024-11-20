@@ -7,7 +7,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
-import { inputLabelClasses } from '@mui/material/InputLabel';
 import Typography from '@mui/material/Typography';
 
 import { isRepeatingString, unescapeString } from 'helpers/general';
@@ -17,7 +16,7 @@ import { default as locale } from 'modules/Pages/LearningResources/shared/learni
 import { styled } from '@mui/material/styles';
 
 const StyledSearchPanel = styled(Grid)(() => ({
-    marginTop: '10px',
+    marginTop: '20px',
     padding: '0 24px 24px 24px',
     '& .searchPanelInfo': {
         color: 'red',
@@ -27,12 +26,26 @@ const StyledSearchPanel = styled(Grid)(() => ({
         textOverflow: 'ellipsis !important',
         overflow: 'hidden !important',
         whiteSpace: 'nowrap !important',
+        height: '40px',
+        padding: '0 0 0 16px !important',
         '&::placeholder': {
             textOverflow: 'ellipsis !important',
             overflow: 'hidden !important',
             whiteSpace: 'nowrap !important',
         },
     },
+    '& button[title="Open"]': {
+        paddingRight: '16px',
+        // borderTopColor: 'black',
+        // borderRightColor: 'black',
+        // borderBottomColor: 'black',
+    },
+    '& .MuiAutocomplete-inputRoot': {
+        borderColor: 'black !important',
+    },
+}));
+const SearchLabelGridItem = styled(Grid)(() => ({
+    paddingTop: '0 !important',
     '& label': {
         color: '#3b383e', // grey 900
         fontSize: '16px',
@@ -118,14 +131,27 @@ export const SubjectSearchDropdown = ({
 
     function dsSearchIcon() {
         return (
-            <svg width="24" height="24" fill="none" aria-hidden="true" focusable="false" style={{ marginRight: '2px' }}>
-                <path stroke="#000" strokeWidth="1.5" d="M10.5 17a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13Z" />
+            <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                focusable="false"
+                style={{ marginRight: '2px' }}
+            >
                 <path
-                    stroke="#000"
+                    d="M10.5 17C14.0899 17 17 14.0899 17 10.5C17 6.91015 14.0899 4 10.5 4C6.91015 4 4 6.91015 4 10.5C4 14.0899 6.91015 17 10.5 17Z"
+                    stroke="#51247A"
+                    strokeWidth="1.5"
+                />
+                <path
+                    d="M15.5 15.5L20 20"
+                    stroke="#51247A"
+                    strokeWidth="1.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth="1.5"
-                    d="M15.5 15.5 20 20"
                 />
             </svg>
         );
@@ -134,14 +160,14 @@ export const SubjectSearchDropdown = ({
     return (
         <form>
             <StyledSearchPanel container spacing={1} alignItems={'flex-end'}>
-                <Grid item xs={12} style={{ height: '32px', marginTop: '6px' }}>
+                <SearchLabelGridItem item xs={12}>
                     <label
                         htmlFor="homepage-learningresource-autocomplete"
                         id="homepage-learningresource-autocomplete-label"
                     >
                         {locale.search.placeholder}
                     </label>
-                </Grid>
+                </SearchLabelGridItem>
                 <Grid item xs={12} sm>
                     <Autocomplete
                         filterOptions={options => {

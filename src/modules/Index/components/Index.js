@@ -130,6 +130,7 @@ export const Index = ({
     incompleteNTROLoading,
     drupalArticleList,
     drupalArticlesError,
+    drupalArticlesLoading,
     loans,
     loansLoading,
     vemcount,
@@ -309,7 +310,7 @@ export const Index = ({
             </React.Suspense>
             <NavigationCardWrapper account={account} accountLoading={accountLoading} />
 
-            <LibraryUpdates drupalArticleList={drupalArticleList} drupalArticlesError={drupalArticlesError} />
+            <LibraryUpdates drupalArticleList={drupalArticleList} drupalArticlesError={drupalArticlesError} drupalArticlesLoading={drupalArticlesLoading} />
         </>
     );
 };

@@ -16,10 +16,14 @@ import { isEscapeKeyPressed, lazyRetry } from 'helpers/general';
 
 const Locations = lazy(() => lazyRetry(() => import('./Locations')));
 
-const StyledWrapperDiv = styled('div')(() => ({
+const StyledWrapperDiv = styled('div')(({ theme }) => ({
     position: 'relative',
     display: 'flex',
     flexDirection: 'row-reverse',
+    flexWrap: 'wrap',
+    [theme.breakpoints.up('uqDsMobile')]: {
+        gap: '32px',
+    },
     justifyContent: 'flex-end', // actually the start, reversed because of flex-direction
     alignItems: 'center',
     paddingBlock: '32px',
@@ -29,28 +33,29 @@ const StyledBookingLink = styled(Link)(({ theme }) => ({
     textDecorationColor: theme.palette.primary.light,
     fontSize: '16px',
     height: '30px',
-    [theme.breakpoints.up('sm')]: {
-        marginLeft: '32px',
-    },
     '& span': {
         fontSize: '18px',
         fontWeight: 500,
         color: theme.palette.primary.light,
         display: 'block',
-        paddingTop: '3.5px',
+        marginTop: '3.5px',
         whiteSpace: 'nowrap',
+    },
+    '&:hover span': {
+        backgroundColor: theme.palette.primary.light,
+        color: 'white',
     },
 }));
 const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
     color: theme.palette.primary.light,
-    [theme.breakpoints.up('uqDsMobile')]: {
+    [theme.breakpoints.up('uqDsTablet')]: {
         backgroundImage:
             // location/map icon
             "url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2218%22%20height%3D%2226%22%20viewBox%3D%220%200%2018%2026%22%20fill%3D%22none%22%3E%3Cg%20id%3D%22icon/location%22%3E%3Cpath%20d%3D%22M9.00047%205C10.8267%205%2012.3333%206.50685%2012.3333%208.33333C12.3333%2010.1598%2010.8267%2011.6667%209.00047%2011.6667C7.17426%2011.6667%205.66764%2010.1598%205.66764%208.33333C5.62198%206.50685%207.1286%205%209.00047%205Z%22%20stroke%3D%22%2351247A%22%20strokeWidth%3D%221.5%22%20strokeLinecap%3D%22round%22%20strokeLinejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M9%201C13.4082%201%2017%204.59365%2017%209.00404C17%2012.6521%2011.6122%2021.7452%209.70748%2024.631C9.4898%2025.0121%208.94558%2025.121%208.61905%2024.8488C8.5102%2024.7943%208.45578%2024.7399%208.40136%2024.631C6.38775%2021.6907%201%2012.5977%201%209.00404C1%204.59365%204.59184%201%209%201Z%22%20stroke%3D%22%2351247A%22%20strokeWidth%3D%221.5%22%20strokeLinecap%3D%22round%22%20strokeLinejoin%3D%22round%22/%3E%3C/g%3E%3C/svg%3E')",
-        paddingLeft: '26px', // 18px wide + 8px padding between icon and text
-        backgroundSize: '18px 26px',
         backgroundPosition: 'left center',
         backgroundRepeat: 'no-repeat',
+        backgroundSize: '18px 26px',
+        paddingLeft: '26px', // 18px wide + 8px padding between icon and text
     },
     fontSize: '18px',
     fontWeight: 500,
@@ -59,9 +64,19 @@ const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
     textDecoration: 'underline',
     textTransform: 'none',
     whiteSpace: 'nowrap',
+    '& .MuiTouchRipple-root': {
+        display: 'none', // remove mui ripple
+    },
     '&:hover': {
-        backgroundColor: 'transparent',
-        textDecoration: 'underline',
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+    },
+    '& span span': {
+        height: '10px', // nest to make purple hover really tight on the link text
+    },
+    '&:hover span span': {
+        backgroundColor: theme.palette.primary.light,
+        color: 'white',
+        textDecoration: 'none',
         WebkitTextDecoration: 'none',
     },
 }));
@@ -98,7 +113,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                 locationOpen &&
                 locationsRef.current &&
                 !locationsRef.current.contains(e.target) &&
-                !((e.target?.id || 'NONE') === 'location-dialog-controller-span')
+                !((e.target?.id || 'NONE') === 'location-dialog-controller-label')
             ) {
                 showHideLocationPanel();
             }
@@ -153,7 +168,9 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                         aria-controls="locations-wrapper"
                         aria-label="Show/hide Locations and hours panel"
                     >
-                        <span id="location-dialog-controller-span">Locations and hours</span>
+                        <span>
+                            <span id="location-dialog-controller-label">Locations and hours</span>
+                        </span>
                         {!!locationOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                     </StyledLocationOpenerButton>
                 </StyledWrapperDiv>

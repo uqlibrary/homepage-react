@@ -52,6 +52,7 @@ const StyledOutlinkDiv = styled('div')(({ theme }) => ({
         textDecoration: 'underline',
         fontSize: '16px',
         fontWeight: 500,
+        letterSpacing: '0.16px',
         '&:hover': {
             color: '#fff',
             backgroundColor: theme.palette.primary.light,
@@ -69,7 +70,7 @@ const StyledDisclaimerParagraph = styled('div')(({ theme }) => ({
     fontSize: '14px',
     fontStyle: 'normal',
     fontWeight: 400,
-    letterSpacing: '0.14px',
+    letterSpacing: '0.16px',
     lineHeight: '160%', // 25.6px
     marginBottom: 0,
     [theme.breakpoints.down('uqDsTablet')]: {
@@ -78,6 +79,7 @@ const StyledDisclaimerParagraph = styled('div')(({ theme }) => ({
 }));
 const StyledTableWrapper = styled('div')(({ theme }) => ({
     margin: '32px',
+    letterSpacing: '0.16px',
     [theme.breakpoints.down('uqDsTablet')]: {
         margin: '24px',
     },
@@ -87,7 +89,11 @@ const StyledTableWrapper = styled('div')(({ theme }) => ({
             color: theme.palette.secondary.dark,
             fontSize: '16px',
             fontWeight: 500,
+            letterSpacing: '0.16px',
         },
+    },
+    '& .table-cell ': {
+        letterSpacing: '0.16px',
     },
     '& .table-row ': {
         display: 'flex',
@@ -131,6 +137,7 @@ const StyledTableWrapper = styled('div')(({ theme }) => ({
         color: '#3B383E',
         fontWeight: 400,
         whiteSpace: 'nowrap',
+        letterSpacing: '0.16px',
     },
     '& .table-column-busy': {
         boxSizing: 'border-box',
@@ -170,6 +177,7 @@ const StyledTableWrapper = styled('div')(({ theme }) => ({
         overflow: 'hidden',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
+        fontWeight: 400,
         '& span': {
             paddingLeft: '4px',
         },
@@ -552,7 +560,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                                     <Grid
                                         item
                                         id={sluggifyName(`library-name-${location.abbr}`)}
-                                        className="table-column-name has-ellipsis"
+                                        className="table-cell table-column-name has-ellipsis"
                                         aria-labelledby="header-library"
                                     >
                                         <Link
@@ -566,7 +574,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                                     </Grid>
                                     <Grid
                                         item
-                                        className="table-column-hours table-cell-hastext"
+                                        className="table-cell table-column-hours table-cell-hastext"
                                         aria-labelledby={`header-hours ${sluggifyName(
                                             `library-name-${location.abbr}`,
                                         )}`}
@@ -580,7 +588,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                                     </Grid>
                                     <Grid
                                         item
-                                        className="table-cell-busy table-column-busy"
+                                        className="table-cell table-cell-busy table-column-busy"
                                         data-testid={`${sluggifyName(`hours-item-busy-${location.abbr}`)}`}
                                         aria-labelledby={`header-busy ${sluggifyName(`library-name-${location.abbr}`)}`}
                                     >
