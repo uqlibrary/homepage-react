@@ -98,6 +98,9 @@ const StyledGridItemLoggedIn = styled(Grid)(({ theme }) => {
             paddingLeft: '32px',
             marginBottom: '32px',
         },
+        [theme.breakpoints.down('uqDsTablet')]: {
+            maxWidth: '100%',
+        },
     };
 });
 
@@ -108,6 +111,9 @@ const StyledGridItemLoggedInLeftAlign = styled(Grid)(({ theme }) => {
         [theme.breakpoints.up('uqDsDesktopXL')]: {
             paddingLeft: '0px',
             marginBottom: '32px',
+        },
+        [theme.breakpoints.down('uqDsTablet')]: {
+            maxWidth: '100%',
         },
     };
 });
