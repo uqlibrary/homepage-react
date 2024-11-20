@@ -182,7 +182,7 @@ export const LearningResourcesPanel = ({ account }) => {
                         marginRight: -16,
                         marginTop: 0,
                         marginLeft: -16,
-                        padding: '0 30px 8px',
+                        padding: '0 30px',
                         marginBottom: '8px',
                     }}
                 >
@@ -190,7 +190,7 @@ export const LearningResourcesPanel = ({ account }) => {
                         <Typography component={'h4'}>{locale.homepagePanel.userCourseTitle}</Typography>
                     </StyledHeadingGridItem>
                     {displayedClasses.length > 0 && (
-                        <ul style={{ margin: '8px 0 0 24px', padding: 0, width: '100%' }}>
+                        <ul style={{ margin: '16px 0 0 24px', padding: 0, width: '100%' }}>
                             {displayedClasses.slice(0, MAXIMUM_NUMBER_DISPLAYED_ENROLLED_COURSES).map((item, index) => {
                                 return (
                                     <StyledGridListItem
@@ -221,7 +221,7 @@ export const LearningResourcesPanel = ({ account }) => {
                         <Grid
                             item
                             xs={12}
-                            style={{ marginTop: '6px', marginBottom: '6px' }}
+                            style={{ marginTop: '8px', marginBottom: '22px', paddingLeft: '12px' }}
                             data-testid={'learning-resource-panel-course-multi-footer'}
                         >
                             <Link to={'/learning-resources'}>{`See all ${displayedClasses.length} classes`}</Link>
