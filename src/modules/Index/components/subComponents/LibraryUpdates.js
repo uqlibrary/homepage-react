@@ -25,7 +25,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
     },
 }));
 
-const LibraryUpdates = ({ drupalArticleList, drupalArticlesListError }) => {
+const LibraryUpdates = ({ drupalArticleList, drupalArticlesError, drupalArticlesLoading }) => {
     return (
         <StandardPage>
             <Grid
@@ -44,19 +44,33 @@ const LibraryUpdates = ({ drupalArticleList, drupalArticlesListError }) => {
                     </Typography>
                     <StyledLink to={linkToDrupal('/about-us/news')}>See more updates</StyledLink>
                 </Grid>
-                {drupalArticleList && !drupalArticlesListError && Array.isArray(drupalArticleList) ? (
-                    drupalArticleList.map((article, index) => {
-                        if (index <= 3) {
-                            return <LibraryArticle article={article} articleindex={index} key={index} />;
-                        } else {
-                            return null;
-                        }
-                    })
-                ) : (
-                    <Grid item xs={12} index={0}>
-                        <p data-testid="drupal-error">No articles found</p>
-                    </Grid>
-                )}
+                {(() => {
+                    if (!!drupalArticlesError) {
+                        return (
+                            <Grid item xs={12}>
+                                <p data-testid="drupal-error">No articles found</p>
+                            </Grid>
+                        );
+                    } else if (!!drupalArticlesLoading) {
+                        return (
+                            <Grid item xs={12}>
+                                <p data-testid="drupal-loading">Loading</p>
+                            </Grid>
+                        );
+                    } else if (drupalArticleList && Array.isArray(drupalArticleList) && drupalArticleList.length > 0) {
+                        return drupalArticleList.map((article, index) => {
+                            return index <= 3 ? (
+                                <LibraryArticle article={article} articleindex={index} key={index} />
+                            ) : null;
+                        });
+                    } else {
+                        return (
+                            <Grid item xs={12}>
+                                <p data-testid="drupal-empty">No articles found</p>
+                            </Grid>
+                        );
+                    }
+                })()}
             </Grid>
         </StandardPage>
     );
@@ -64,7 +78,8 @@ const LibraryUpdates = ({ drupalArticleList, drupalArticlesListError }) => {
 
 LibraryUpdates.propTypes = {
     drupalArticleList: PropTypes.array,
-    drupalArticlesListError: PropTypes.bool,
+    drupalArticlesError: PropTypes.bool,
+    drupalArticlesLoading: PropTypes.bool,
 };
 
 export default LibraryUpdates;

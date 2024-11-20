@@ -2,7 +2,7 @@ import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
     drupalArticleList: [],
-    drupalArticlesLoading: false,
+    drupalArticlesLoading: null,
     drupalArticlesError: null,
 };
 
@@ -18,7 +18,7 @@ const handlers = {
         ...initialState,
         ...state,
         drupalArticleList: action.payload,
-        drupalArticlesLoading: true,
+        drupalArticlesLoading: false,
         drupalArticlesError: null,
     }),
     [actions.DRUPAL_ARTICLES_FAILED]: (state, action) => ({

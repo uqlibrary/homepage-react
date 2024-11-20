@@ -52,6 +52,7 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
             color: '#666 !important',
             fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
             fontWeight: 500,
+            letterSpacing: '0.16px',
             marginBottom: articleindex === 0 ? '.25rem' : '0',
             textDecoration: 'none !important',
             [theme.breakpoints.up('xs')]: {
@@ -85,7 +86,9 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
                 paddingBottom: articleindex !== 0 ? 0 : 24,
             },
         },
-        '.ArticleTitle': {},
+        '.ArticleTitle': {
+            letterSpacing: '0.24px',
+        },
         a: {
             textDecoration: 'none !important',
             '&:hover': {
