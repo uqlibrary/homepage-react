@@ -455,21 +455,19 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                 };
             })) ||
         [];
-    const alphaHours = cleanedHours
+    const sortedHours = cleanedHours
         .filter(e => e !== null)
         .filter(l => l.abbr !== 'Whitty Mater') // remove this from springshare data for homepage
         .filter(l => screenWidth > theme.breakpoints.values.uqDsTablet || l.abbr !== 'AskUs') // remove the askus line when on smaller screens, it lacks extra info
         .sort((a, b) => {
-            const textA = a.name.toUpperCase();
-            const textB = b.name.toUpperCase();
-            // eslint-disable-next-line no-nested-ternary
-            return textA < textB ? -1 : textA > textB ? 1 : /* istanbul ignore next */ 0;
+            // Askus goes last in the list
+            if (a.abbr === 'AskUs') return 1;
+            if (b.abbr === 'AskUs') return -1;
+
+            // Otherwise, sort alphabetically by name
+            return a.name.localeCompare(b.name);
         });
-    const sortedHours = alphaHours.sort((a, b) => {
-        if (a.abbr === 'AskUs') return 1; // Move 'askus' to the end
-        if (b.abbr === 'AskUs') return -1; // Move 'askus' to the end
-        return a.abbr?.localeCompare(b.abbr); // Sort the rest alphabetically
-    });
+    sortedHours.forEach(l => console.log('sortedHours:', l.abbr, ':', l.name));
 
     const sluggifyName = string => {
         return string.toLowerCase().replace(' ', '-');
