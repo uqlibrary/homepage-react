@@ -16,7 +16,7 @@ import { default as locale } from 'modules/Pages/LearningResources/shared/learni
 import { styled } from '@mui/material/styles';
 
 const StyledSearchPanel = styled(Grid)(() => ({
-    marginTop: '20px',
+    marginTop: '24px',
     padding: '0 24px 24px 24px',
     '& .searchPanelInfo': {
         color: 'red',
@@ -26,7 +26,7 @@ const StyledSearchPanel = styled(Grid)(() => ({
         textOverflow: 'ellipsis !important',
         overflow: 'hidden !important',
         whiteSpace: 'nowrap !important',
-        height: '40px',
+        height: '45px',
         padding: '0 0 0 16px !important',
         '&::placeholder': {
             textOverflow: 'ellipsis !important',

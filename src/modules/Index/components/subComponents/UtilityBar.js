@@ -33,12 +33,15 @@ const StyledBookingLink = styled(Link)(({ theme }) => ({
     textDecorationColor: theme.palette.primary.light,
     fontSize: '16px',
     height: '30px',
+    '&:hover': {
+        textDecorationColor: 'white',
+    },
     '& span': {
         fontSize: '18px',
         fontWeight: 500,
         color: theme.palette.primary.light,
         display: 'block',
-        marginTop: '3.5px',
+        marginTop: '4px',
         whiteSpace: 'nowrap',
     },
     '&:hover span': {
@@ -61,23 +64,17 @@ const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
     fontWeight: 500,
     marginTop: 0,
     padding: 0,
-    textDecoration: 'underline',
     textTransform: 'none',
     whiteSpace: 'nowrap',
     '& .MuiTouchRipple-root': {
         display: 'none', // remove mui ripple
     },
-    '&:hover': {
-        backgroundColor: 'rgba(0, 0, 0, 0)',
-    },
     '& span span': {
-        height: '10px', // nest to make purple hover really tight on the link text
+        textDecoration: 'underline',
     },
     '&:hover span span': {
         backgroundColor: theme.palette.primary.light,
         color: 'white',
-        textDecoration: 'none',
-        WebkitTextDecoration: 'none',
     },
 }));
 

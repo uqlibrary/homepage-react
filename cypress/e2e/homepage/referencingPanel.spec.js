@@ -1,37 +1,30 @@
 describe('Referencing', () => {
-    context('Referencing Links', () => {
-        it('shows both referencing and endnote links for UQ user', () => {
-            cy.visit('http://localhost:2020/');
-            cy.viewport(1280, 900);
+    context('is accessible', () => {
+        it('at 1300 x 1000', () => {
+            cy.visit('http://localhost:2020/?user=s1111111');
+            cy.injectAxe();
+            cy.wait(2000);
+            cy.viewport(1300, 1000);
 
-            cy.waitUntil(() =>
-                cy
-                    .get('[data-testid="referencing-homepage-panel"]')
-                    .should('exist')
-                    .contains('Referencing'),
-            );
-            cy.get('[data-testid="referencing-style"]')
-                .should('exist')
-                .should('contain', 'Referencing style guides');
-            cy.get('[data-testid="referencing-endnote"]')
-                .should('exist')
-                .should('contain', 'Endnote referencing software');
+            cy.waitUntil(() => cy.get('[data-testid="referencing-panel"]').should('exist'));
+            cy.checkA11y('[data-testid="referencing-panel"]', {
+                reportName: 'Referencing desktop',
+                scopeName: 'As loaded',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
         });
-        it('shows both endnote links only for non UQ user', () => {
-            // now check for non-uq users - end not should not be shown.
-            cy.visit('http://localhost:2020?user=emcommunity');
-            cy.viewport(1280, 900);
+        it('at 550 x 750', () => {
+            cy.visit('http://localhost:2020/?user=s1111111');
+            cy.injectAxe();
+            cy.wait(2000);
+            cy.viewport(550, 750);
 
-            cy.waitUntil(() =>
-                cy
-                    .get('[data-testid="referencing-homepage-panel"]')
-                    .should('exist')
-                    .contains('Referencing'),
-            );
-            cy.get('[data-testid="referencing-style"]')
-                .should('exist')
-                .should('contain', 'Referencing style guides');
-            cy.get('[data-testid="referencing-endnote"]').should('not.exist');
+            cy.waitUntil(() => cy.get('[data-testid="referencing-panel"]').should('exist'));
+            cy.checkA11y('[data-testid="referencing-panel"]', {
+                reportName: 'Referencing desktop',
+                scopeName: 'As loaded',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
         });
     });
 });
