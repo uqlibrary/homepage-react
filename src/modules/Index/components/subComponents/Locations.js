@@ -460,6 +460,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
         .filter(l => l.abbr !== 'Whitty Mater') // remove this from springshare data for homepage
         .filter(l => screenWidth > theme.breakpoints.values.uqDsTablet || l.abbr !== 'AskUs') // remove the askus line when on smaller screens, it lacks extra info
         .sort((a, b) => {
+            console.log('a.name=', a.name);
             // Askus goes last in the list
             if (a.abbr === 'AskUs') return 1;
             if (b.abbr === 'AskUs') return -1;
