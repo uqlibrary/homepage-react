@@ -23,12 +23,25 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import InfoIcon from '@mui/icons-material/Info';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import StarIcon from '@mui/icons-material/Star';
+import DescriptionIcon from '@mui/icons-material/Description';
+import LaptopIcon from '@mui/icons-material/Laptop';
+import LocalLibrarySharpIcon from '@mui/icons-material/LocalLibrarySharp';
+import CopyrightIcon from '@mui/icons-material/Copyright';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import TopicIcon from '@mui/icons-material/Topic';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import CloseIcon from '@mui/icons-material/Close';
+import SchoolSharpIcon from '@mui/icons-material/SchoolSharp';
+import SearchIcon from '@mui/icons-material/Search';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { isDlorAdminUser } from 'helpers/access';
 import { useAccountContext } from 'context';
+import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import {
@@ -204,66 +217,356 @@ function getTitleBlock(detailTitle = 'View a series') {
     );
 }
 
+
+const StyledTagLabel = styled('span')(() => ({
+    fontVariant: 'small-caps',
+    textTransform: 'lowercase',
+    fontWeight: 'bold',
+    marginRight: 10,
+    color: '#333',
+}));
+const StyledArticleCard = styled('button')(({ theme }) => ({
+    backgroundColor: '#fff',
+    borderColor: 'transparent',
+    fontFamily: 'Roboto, sans-serif',
+    paddingInline: 0,
+    textAlign: 'left',
+    width: '100%',
+    '&:hover': {
+        cursor: 'pointer',
+        textDecoration: 'none',
+        borderTopColor: '#f2f2f2',
+        borderLeftColor: '#f2f2f2',
+        '& > article': {
+            backgroundColor: '#f2f2f2',
+        },
+    },
+    '& article': {
+        padding: '12px',
+        '& header': {
+            '& h2': {
+                lineHeight: 1.2,
+                marginBlock: 7,
+                display: 'flex',
+                alignItems: 'center',
+            },
+        },
+        '& > div': {
+            maxHeight: 180,
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            fontWeight: 300,
+        },
+        '& > div p': {
+            marginBottom: '0.2em',
+            marginTop: '0.2em',
+            fontSize: 16,
+        },
+        '& > div p:first-of-type': {
+            marginTop: 0,
+        },
+        '& footer': {
+            color: theme.palette.primary.light,
+            fontWeight: 400,
+            marginTop: 6,
+            display: 'flex',
+            alignItems: 'center', // horizontally, align icon and label at the center
+            '& > svg:not(:first-of-type)': {
+                paddingLeft: 12,
+            },
+            '& svg': {
+                width: 20,
+                '& > path': {
+                    fill: theme.palette.primary.light,
+                },
+            },
+            '& span': {
+                paddingLeft: 2,
+            },
+        },
+    },
+}));
+
+
+
+
+
+
+
+
+
+
 export const SeriesView = ({
-    actions, dlorSeries
+    actions, dlorSeries, dlorSeriesLoading, dlorSeriesError, dlorList,  dlorListError, dlorListLoading,
 }) => {
     const { account } = useAccountContext();
+    const { seriesId } = useParams();
+
+    // console.log("Series ID", seriesId);
     useEffect(() => {
-        if (!dlorSeries) {
-            actions.loadDlorSeries(1);
+        if (!dlorSeries && seriesId) {
+            actions.loadDlorSeries(seriesId);
         }
     }, [dlorSeries]);
-    console.log("series List", dlorSeries, account) 
+
+    const [filterListTrimmed] = React.useState([]);
+
+    const getPublicHelp = facetTypeSlug => {
+        let result = '';
+        /* istanbul ignore else */
+        if (!!filterListTrimmed) {
+            result = filterListTrimmed?.filter(f => f?.facet_type_slug === facetTypeSlug)?.pop()
+                ?.facet_type_help_public;
+        }
+        return result;
+    };
+    const getFacetTypeIcon = facetTypeSlug => {
+        const iconList = {
+            item_type: <LaptopIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            media_format: <DescriptionIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            licence: <CopyrightIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            topic: <TopicIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            graduate_attributes: <SchoolSharpIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            subject: <LocalLibrarySharpIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+        };
+        return iconList[facetTypeSlug];
+    };
+
+    function displayItemPanel(object, index) {
+        function hasTopicFacet(facetTypeSlug) {
+            const f = object?.object_filters?.filter(o => o.filter_key === facetTypeSlug);
+            return !(!f || f.length === 0);
+        }
+    
+        const getConcatenatedFilterLabels = (facetTypeSlug, wrapInParam = false) => {
+            const f = object?.object_filters?.filter(o => o?.filter_key === facetTypeSlug);
+            const output = f?.pop();
+            const facetNames = output?.filter_values?.map(item => item.name)?.join(', ');
+            return !!wrapInParam ? /* istanbul ignore next */ `(${facetNames})` : facetNames;
+        };
+    
+        return (
+            <Grid
+                item
+                xs={12}
+                sx={{
+                    // paddingLeft: '16px',
+                    paddingBottom: '16px',
+                    paddingTop: '0 !important',
+                }}
+                key={object?.object_id}
+                data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(object?.object_public_uuid)}`}
+            >
+                <StyledArticleCard
+                    onClick={() => navigateToDetailPage(object?.object_public_uuid)}
+                    aria-label={`Click for more details on ${object.object_title}`}
+                    id={index === 0 ? 'first-panel-button' : null}
+                >
+                    <article>
+                        <header>
+                            <Typography component={'h2'} variant={'h6'}>
+                                <span>{object?.object_title}</span>
+                            </Typography>
+                            <>
+                                {(!!object?.object_cultural_advice ||
+                                    !!object?.object_is_featured ||
+                                    !!object?.object_series_name) && (
+                                    <Typography
+                                        component={'p'}
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            marginLeft: '-4px',
+                                            marginTop: '-4px',
+                                            marginBottom: '6px',
+                                        }}
+                                    >
+                                        {!!object?.object_is_featured && (
+                                            <>
+                                                <BookmarkIcon
+                                                    sx={{ fill: '#51247A', marginRight: '2px', width: '20px' }}
+                                                />
+                                                <StyledTagLabel
+                                                    data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                        object?.object_public_uuid,
+                                                    )}-featured`}
+                                                    sx={{ marginLeft: '-2px' }}
+                                                >
+                                                    Featured
+                                                </StyledTagLabel>
+                                            </>
+                                        )}
+                                        {!!object?.object_cultural_advice && (
+                                            <>
+                                                <InfoIcon sx={{ fill: '#2377CB', marginRight: '2px', width: '20px' }} />
+                                                <StyledTagLabel
+                                                    data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                        object?.object_public_uuid,
+                                                    )}-cultural-advice`}
+                                                >
+                                                    Cultural advice
+                                                </StyledTagLabel>
+                                            </>
+                                        )}
+                                        {!!object?.object_series_name && (
+                                            <>
+                                                <PlaylistAddCheckIcon
+                                                    sx={{ fill: '#4aa74e', marginRight: '2px', width: '24px' }}
+                                                />
+                                                <StyledTagLabel
+                                                    data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                        object?.object_public_uuid,
+                                                    )}-object-series-name`}
+                                                >
+                                                    Series: {object?.object_series_name}
+                                                </StyledTagLabel>
+                                            </>
+                                        )}
+                                    </Typography>
+                                )}
+                            </>
+                        </header>
+    
+                        <div>
+                            <p>{object?.object_summary}</p>
+                        </div>
+                        <footer>
+                            {!!hasTopicFacet('item_type') && (
+                                <>
+                                    {getFacetTypeIcon('item_type')}
+                                    <span
+                                        data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                            object?.object_public_uuid,
+                                        )}-footer-type`}
+                                    >
+                                        {getConcatenatedFilterLabels('item_type')}
+                                    </span>
+                                </>
+                            )}
+                            {!!hasTopicFacet('media_format') && (
+                                <>
+                                    {getFacetTypeIcon('media_format')}
+                                    <span
+                                        data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                            object?.object_public_uuid,
+                                        )}-footer-media`}
+                                    >
+                                        {getConcatenatedFilterLabels('media_format')}
+                                    </span>
+                                </>
+                            )}
+                            {!!hasTopicFacet('topic') && (
+                                <>
+                                    {getFacetTypeIcon('topic')}
+                                    <span
+                                        data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                            object?.object_public_uuid,
+                                        )}-footer-topic`}
+                                    >
+                                        {getConcatenatedFilterLabels('topic')}
+                                    </span>
+                                </>
+                            )}
+                        </footer>
+                    </article>
+                </StyledArticleCard>
+            </Grid>
+        );
+    }
+    
+    useEffect(() => {
+        if (!dlorListError && !dlorListLoading && !dlorList) {
+            actions.loadCurrentDLORs();
+        }
+    }, [dlorList,  dlorListError, dlorListLoading,  actions]);
+
+    function navigateToDetailPage(uuid) {
+        window.location.href = getDlorViewPageUrl(uuid);
+    }
+
+
+    console.log("series List", dlorSeries) 
     return (
         <StandardPage>
             {getTitleBlock()}
-            <StyledContentGrid container spacing={4} data-testid="dlor-seriespage">
-                <Grid item xs={12} md={9}>
-                    <LoginPrompt account={account} instyle={{ marginBottom: '12px' }} />
-                    <Box sx={{ marginBottom: '12px' }}>
-                        <StyledTitleTypography component={'h1'} variant={'h4'}>
-                            {dlorSeries?.series_title}
+                {!!dlorSeries && !dlorSeriesLoading && (
+                    <StyledContentGrid container spacing={4} data-testid="dlor-seriespage">
+                        <Grid item xs={12}>
+                            {/* <LoginPrompt account={account} instyle={{ marginBottom: '12px' }} /> */}
+                            <Box sx={{ marginBottom: '12px' }}>
+                                <StyledTitleTypography component={'h1'} variant={'h4'}>
+                                    {dlorSeries?.series_name}
+                                </StyledTitleTypography>
+                            </Box>
+                            <StyledHeaderDiv data-testid="dlor-seriespage-description">
+                                        {!!dlorSeries?.series_description ? parse(dlorSeries?.series_description) : "This series does not have a detailed description at this time."}
+                                        
+                            </StyledHeaderDiv>
+                            <StyledTitleTypography component="h2" variant="h6">
+                                Objects contained in this series:
+                            </StyledTitleTypography>
+                            {/* <StyledLayoutBox> */}
+                                
+                                {/* <StyledSeriesList> */}
+                                    {console.log("DLOR LIST", dlorList)}
+                                    {
+                                        !!dlorList && dlorList.map((item, index) => {
+                                            if(item.object_series_id && item.object_series_id == seriesId) {
+                                                return displayItemPanel(item, index)
+                                            }
+                                        }) 
+                                    }
+                                    {/* {dlorSeries?.series_list
+                                        ?.sort((a, b) => a.series_object_order - b.series_object_order)
+                                        .map((s, index) => {
+                                            return (
+                                                <li
+                                                    key={`dlor-view-series-item-${s.series_object_uuid}`}
+                                                    data-testid={`dlor-view-series-item-${convertSnakeCaseToKebabCase(
+                                                        s.series_object_uuid,
+                                                    )}-order-${index}`}
+                                                >
+                                                    
+                                                    <a
+                                                        href={getDlorViewPageUrl(s?.series_object_uuid)}
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        {s.series_object_title}
+                                                    </a>
+                                                
+                                                </li>
+                                            );
+                                        })} */}
+                                {/* </StyledSeriesList> */}
+                            {/* </StyledLayoutBox> */}
+                        </Grid>
+                    </StyledContentGrid>
+                )}
+                
+                {!!dlorListLoading && (
+                    <ContentLoader />
+                )}
+                {console.log("ERRORS", dlorSeriesError)}
+                {!!dlorSeriesError && (
+                    <StyledHeaderDiv data-testid="dlor-seriespage-loadError">
+                        <StyledTitleTypography component={'p'}>
+                            {dlorSeriesError}
                         </StyledTitleTypography>
-                    </Box>
-                    <StyledHeaderDiv data-testid="dlor-seriespage-description">
-                                {!!dlorSeries?.series_description && parse(dlorSeries?.series_description)}
                     </StyledHeaderDiv>
-                    <StyledLayoutBox>
-                        <StyledTitleTypography component="h2" variant="h6">
-                            Objects contained in this series:
-                        </StyledTitleTypography>
-                        <StyledSeriesList>
-                            {dlorSeries?.series_list
-                                ?.sort((a, b) => a.series_object_order - b.series_object_order)
-                                .map((s, index) => {
-                                    return (
-                                        <li
-                                            key={`dlor-view-series-item-${s.series_object_uuid}`}
-                                            data-testid={`dlor-view-series-item-${convertSnakeCaseToKebabCase(
-                                                s.series_object_uuid,
-                                            )}-order-${index}`}
-                                        >
-                                            
-                                            <a
-                                                href={getDlorViewPageUrl(s?.series_object_uuid)}
-                                                rel="noopener noreferrer"
-                                            >
-                                                {s.series_object_title}
-                                            </a>
-                                           
-                                        </li>
-                                    );
-                                })}
-                        </StyledSeriesList>
-                    </StyledLayoutBox>
-                </Grid>
-            </StyledContentGrid>
+                )}
         </StandardPage>
     );
 };
 
 SeriesView.propTypes = {
     dlorSeries: PropTypes.any,
+    dlorList: PropTypes.any,
+    dlorListError: PropTypes.bool, 
+    dlorListLoading: PropTypes.bool,
+    dlorSeriesError: PropTypes.any,
+    dlorSeriesLoading: PropTypes.bool,
+    actions: PropTypes.any
+
 };
 
 export default React.memo(SeriesView);

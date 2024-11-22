@@ -1,88 +1,43 @@
 export default {
-    'data' : {
-        'series_title': 'This is the series title',
-        'series_description': 'This is the <b>series</b> description of the mock data stored in local',
-        'series_list': [
+    "data": {
+        "series_id": 1,
+        "series_name": "Series Name",
+        "series_description": null,
+        "objects": [
             {
-                "series_object_order": 1,
-                "series_object_uuid": "9c2575a5-1113-468c-a3de-763931b1f572",
-                "series_object_title": "Use UQ systems"
+                "object_title": "Aboriginal and Torres Strait Islander referencing",
+                "object_public_uuid": "9c400dc4-397e-468d-831f-637952365109",
+                "object_description": "<p>The Aboriginal and Torres Strait Islander referencing guide outlines a method to acknowledge, celebrate and respect Aboriginal and Torres Strait Islander peoples' knowledge and materials.</p><p>The guide includes examples of how to acknowledge:</p><ul><li>Aboriginal and Torres Strait Islander authors</li><li>Oral teachings from Aboriginal and Torres Strait Islander Elders and Knowledge keepers</li><li>Aboriginal and Torres Strait Islander knowledge recorded in non-Indigenous authored works</li><li>Artwork by&nbsp;Aboriginal and Torres Strait Islander peoples</li><li>Aboriginal and Torres Strait Islander information in data sets.</li></ul><p>The Aboriginal and Torres Strait Islander referencing guide seeks to improve the treatment of Aboriginal and Torres Strait Islander voices in citation guides.</p>",
+                "filters": {
+                    "Topic": [
+                        "Aboriginal and Torres Strait Islander",
+                        "Referencing"
+                    ],
+                    "Item type": [
+                        "Guide"
+                    ],
+                    "Media format": [
+                        "Webpage"
+                    ]
+                }
             },
             {
-                "series_object_order": 2,
-                "series_object_uuid": "9bcf0b33-8a68-4631-b5e2-e1dd4a66f49a",
-                "series_object_title": "Information essentials"
-            },
-            {
-                "series_object_order": 3,
-                "series_object_uuid": "9c2571f3-ac10-45d2-b3a8-1f041af47d33",
-                "series_object_title": "Write, cite, submit"
-            },
-            {
-                "series_object_order": 4,
-                "series_object_uuid": "9bc9fdf8-504f-4f94-ad15-5d70e97722f2",
-                "series_object_title": "Find\u00a0and use\u00a0media"
-            },
-            {
-                "series_object_order": 5,
-                "series_object_uuid": "9c25793f-2d71-4bff-bd60-6e6135a1014c",
-                "series_object_title": "Types of assignments"
-            },
-            {
-                "series_object_order": 6,
-                "series_object_uuid": "9bc192a8-324c-4f6b-ac50-07e7ff2df240",
-                "series_object_title": "Choose the right tool"
-            },
-            {
-                "series_object_order": 7,
-                "series_object_uuid": "9bc18f91-2271-4173-b2d7-2e63d4af6c10",
-                "series_object_title": "Artificial Intelligence"
-            },
-            {
-                "series_object_order": 8,
-                "series_object_uuid": "9bc17ab4-3ddf-4a10-81c4-3e6e98db78a8",
-                "series_object_title": "Accessibility"
-            },
-            {
-                "series_object_order": 9,
-                "series_object_uuid": "9bc33683-ae76-4e16-93e7-6e904a45ffba",
-                "series_object_title": "Communicate and collaborate"
-            },
-            {
-                "series_object_order": 10,
-                "series_object_uuid": "9bc9f72a-98ae-439f-a06b-f4ee3b12f46a",
-                "series_object_title": "Digital security"
-            },
-            {
-                "series_object_order": 11,
-                "series_object_uuid": "9bc9fc29-a0e7-4fd6-825b-423f76f624d7",
-                "series_object_title": "eProfessionalism"
-            },
-            {
-                "series_object_order": 12,
-                "series_object_uuid": "9bca0136-5d53-4cef-a73e-c4b669cada5f",
-                "series_object_title": "Intellectual property"
-            },
-            {
-                "series_object_order": 13,
-                "series_object_uuid": "9c2bdfe6-9bae-4312-8c54-fbdae3a4a130",
-                "series_object_title": "Internet essentials"
-            },
-            {
-                "series_object_order": 14,
-                "series_object_uuid": "9c25776a-177a-4950-b6ff-fe1811108980",
-                "series_object_title": "Social media"
-            },
-            {
-                "series_object_order": 15,
-                "series_object_uuid": "9c257347-79dc-464f-928e-908617178c97",
-                "series_object_title": "Work\u00a0with data and files"
-            },
-            {
-                "series_object_order": 16,
-                "series_object_uuid": "9c257a8b-8ea1-45b3-a786-5f036a140fda",
-                "series_object_title": "Document your research data"
+                "object_title": "The language of relationships with Aboriginal and Torres Strait Islander peoples - Introductory guide",
+                "object_public_uuid": "9c259dbd-535d-453b-9f0e-4c424bd79b37",
+                "object_description": "<p>This open book was created to support the UQ community to build stronger relationships between Aboriginal and Torres Strait Islander peoples and non-Indigenous peoples across the University.</p><p>The Language of Relationships Guide aims to inform students and staff of appropriate language and provide tools for non-Indigenous peoples in the context of formal, academic communication and everyday conversations that will build and enhance those relationships.</p>",
+                "filters": {
+                    "Topic": [
+                        "Aboriginal and Torres Strait Islander"
+                    ],
+                    "Item type": [
+                        "Guide"
+                    ],
+                    "Media format": [
+                        "Pressbook"
+                    ]
+                }
             }
-        ],
+        ]
     }
 }
+

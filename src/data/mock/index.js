@@ -779,7 +779,11 @@ mock.onGet(/dlor\/public\/find\/.*/)
             return [200, dlor_series_all];
         }
     })
-    .onGet(/dlor\/public\/series\/.*/)
+    .onGet(/dlor\/public\/series\/find\/5/)
+    .reply(config => {
+            return [500, {}];
+    })
+    .onGet(/dlor\/public\/series\/find\/.*/)
     .reply(config => {
         if (responseType === 'error') {
             return [500, {}];

@@ -7,6 +7,7 @@ import SeriesView from './SeriesView';
 const mapStateToProps = state => {
     return {
         ...state.get('dlorSeriesSingleReducer'),
+        ...state.get('dlorListReducer'),
     };
 };
 
