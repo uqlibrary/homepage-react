@@ -241,9 +241,9 @@ function departmentProvided(location) {
 export const hasDepartments = location => {
     const departments =
         !!departmentProvided(location) &&
-        location.departments.map(item => {
-            if (departmentsMap.includes(item.name)) {
-                return item.name;
+        location.departments.map(dept => {
+            if (departmentsMap.includes(dept.name)) {
+                return dept.name;
             }
             return null;
         });
@@ -253,26 +253,6 @@ export const hasDepartments = location => {
             return el !== null;
         });
     return displayableDepartments.length > 0;
-};
-
-const getOverrideLocationName = locationAbbr => {
-    // if not present in the lookup table, uses the value passed from Springhshare
-    const lookupTable = {
-        AskUs: 'AskUs chat hours', // this one must be overriden long term, I think
-        'Arch Music': 'Architecture and Music', // all these following should be able to be deleted once the Springshare name values are updated, post go live
-        Central: 'Central',
-        'Biol Sci': 'Biological Sciences',
-        DHEngSci: 'Dorothy Hill Engineering and Sciences',
-        'Dutton Park': 'Dutton Park Health Sciences',
-        Fryer: 'FW Robinson Reading Room (Fryer)',
-        Gatton: 'JK Murray (UQ Gatton)',
-        Law: 'Walter Harrison Law',
-        Herston: 'Herston Health Sciences',
-    };
-    if (lookupTable.hasOwnProperty(locationAbbr)) {
-        return lookupTable[locationAbbr];
-    }
-    return null;
 };
 
 const VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING = 'Missing';
@@ -446,12 +426,30 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                     return calculatedBusyness;
                 }
 
+                const getDisplayName = location => {
+                    // if not present in the lookup table, uses the value passed from Springshare
+                    const lookupTable = {
+                        AskUs: 'AskUs chat hours', // this one must be overriden long term, I think
+                        'Arch Music': 'Architecture and Music', // all these following should be able to be deleted once the Springshare name values are updated, post go live
+                        Central: 'Central',
+                        'Biol Sci': 'Biological Sciences',
+                        DHEngSci: 'Dorothy Hill Engineering and Sciences',
+                        'Dutton Park': 'Dutton Park Health Sciences',
+                        Fryer: 'FW Robinson Reading Room (Fryer)',
+                        Gatton: 'JK Murray (UQ Gatton)',
+                        Law: 'Walter Harrison Law',
+                        Herston: 'Herston Health Sciences',
+                    };
+                    if (lookupTable.hasOwnProperty(location.abbr)) {
+                        return lookupTable[location.abbr];
+                    }
+                    return location.name;
+                };
+
                 return {
-                    name: location.name,
-                    displayName: getOverrideLocationName(location.abbr) || location.name,
+                    displayName: getDisplayName(location),
                     abbr: location.abbr,
                     url: location.url,
-                    alt: location.name,
                     campus: locationLocale.hoursCampusMap[location.abbr],
                     departments,
                     busyness: getVemcountPercentage(location?.lid, location.name) || null,
