@@ -300,8 +300,12 @@ export const SeriesView = ({
         if (seriesId && !initialRender.current) {
             console.log("USEEFFECT", dlorSeries, seriesId);
             actions.loadDlorSeries(seriesId);
+           
+        } else {
+            console.log('WHY??', seriesId, initialRender.current)
         }
         initialRender.current = false;
+       
     }, [seriesId]);
 
 
