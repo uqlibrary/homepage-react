@@ -90,6 +90,7 @@ const StyledContentGrid = styled(Grid)(() => ({
     },
 }));
 const StyledTitleBlockDiv = styled('div')(() => ({
+    marginTop: '16px',
     display: 'flex',
     alignItems: 'center',
     '& p:first-child': {
@@ -287,27 +288,22 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
     },
 }));
 
-
-
-
-
-
-
-
-
-
 export const SeriesView = ({
     actions, dlorSeries, dlorSeriesLoading, dlorSeriesError, dlorList,  dlorListError, dlorListLoading,
 }) => {
     const { account } = useAccountContext();
     const { seriesId } = useParams();
 
-    // console.log("Series ID", seriesId);
+    const initialRender = React.useRef(true);
+
     useEffect(() => {
-        if (!dlorSeries && seriesId) {
+        if (seriesId && !initialRender.current) {
+            console.log("USEEFFECT", dlorSeries, seriesId);
             actions.loadDlorSeries(seriesId);
         }
-    }, [dlorSeries]);
+        initialRender.current = false;
+    }, [seriesId]);
+
 
     const [filterListTrimmed] = React.useState([]);
 
@@ -484,8 +480,6 @@ export const SeriesView = ({
         window.location.href = getDlorViewPageUrl(uuid);
     }
 
-
-    console.log("series List", dlorSeries) 
     return (
         <StandardPage>
             {getTitleBlock()}
@@ -508,7 +502,6 @@ export const SeriesView = ({
                             {/* <StyledLayoutBox> */}
                                 
                                 {/* <StyledSeriesList> */}
-                                    {console.log("DLOR LIST", dlorList)}
                                     {
                                         !!dlorList && dlorList.map((item, index) => {
                                             if(item.object_series_id && item.object_series_id == seriesId) {
@@ -546,7 +539,6 @@ export const SeriesView = ({
                 {!!dlorListLoading && (
                     <ContentLoader />
                 )}
-                {console.log("ERRORS", dlorSeriesError)}
                 {!!dlorSeriesError && (
                     <StyledHeaderDiv data-testid="dlor-seriespage-loadError">
                         <StyledTitleTypography component={'p'}>
