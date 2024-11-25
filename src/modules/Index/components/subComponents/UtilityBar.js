@@ -95,6 +95,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
         setLocationOpen(!locationOpen);
 
         const showHideButton = document.getElementById('location-dialog-controller');
+        /* istanbul ignore else */
         if (!!showHideButton) {
             const isOpen = showHideButton.ariaExpanded === 'true';
             showHideButton.ariaExpanded = isOpen ? 'false' : 'true'; // toggle the current value

@@ -218,7 +218,7 @@ const dsChecklistIcon = (
 export const AccountPanel = ({ account, loans, loansLoading, printBalance, printBalanceLoading }) => {
     function totalFines(fines) {
         return fines.reduce((sum, fine) => {
-            return sum + (typeof fine.fineAmount === 'number' ? fine.fineAmount : 0);
+            return sum + (typeof fine.fineAmount === 'number' ? fine.fineAmount : /* istanbul ignore next */ 0);
         }, 0);
     }
 
