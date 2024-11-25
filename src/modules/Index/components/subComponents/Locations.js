@@ -466,7 +466,9 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
             if (b.abbr === 'AskUs') return -1;
 
             // Otherwise, sort alphabetically by name
-            return a.name.localeCompare(b.name);
+            const finalNameA = getOverrideLocationName(a.abbr) || a.name;
+            const finalNameB = getOverrideLocationName(b.abbr) || b.name;
+            return finalNameA.localeCompare(finalNameB);
         });
     sortedHours.forEach(l => console.log('sortedHours:', l.abbr, ':', l.name));
 
