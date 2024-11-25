@@ -9,16 +9,10 @@ import { default as FREN1010Exam } from '../../../src/data/mock/data/records/lea
 import { default as FREN1011Exam } from '../../../src/data/mock/data/records/learningResources/examListFREN1011';
 import { default as HIST1201ReadingList } from '../../../src/data/mock/data/records/learningResources/courseReadingList_HIST1201';
 import { default as PHIL1002ReadingList } from '../../../src/data/mock/data/records/learningResources/courseReadingList_PHIL1002';
-import { default as PHIL1002Guide } from '../../../src/data/mock/data/records/learningResources/libraryGuides_PHIL1002';
 import { default as ACCT1101ReadingList } from '../../../src/data/mock/data/records/learningResources/courseReadingList_ACCT1101';
 import { default as ACCT1101Guide } from '../../../src/data/mock/data/records/learningResources/libraryGuides_ACCT1101';
 import { default as ACCT1101Exam } from '../../../src/data/mock/data/records/learningResources/examListACCT1101';
-import { default as learningResourceSearchSuggestions } from '../../../src/data/mock/data/records/learningResources/learningResourceSearchSuggestions';
-import { readingListLength } from '../../support/helpers';
-
-const getReadingListHeader = courseReadingList => {
-    return `view the ${readingListLength(courseReadingList)} items on the ${courseReadingList.coursecode} Reading list`;
-};
+import { default as subjectSearchSuggestions } from '../../../src/data/mock/data/records/learningResources/subjectSearchSuggestions';
 
 function the_user_lands_on_the_My_Classes_tab(courseReadingList, panelId = 0) {
     const title = courseReadingList.course_title || 'mock data is missing';
@@ -44,20 +38,11 @@ function the_user_clicks_on_the_Search_tab() {
         .click();
 }
 
-function exams_panel_loads_correctly_for_a_subject_with_no_exams(coursecode) {
-    cy.get(`div[data-testid=past-exams-${coursecode}]`).contains(locale.myCourses.examPapers.none);
-    cy.get(`div[data-testid=past-exams-${coursecode}] a`).should(
-        'have.attr',
-        'href',
-        _courseLink('', locale.myCourses.examPapers.footer.noPastExams.linkOut),
-    );
-}
-
-function exams_panel_loads_correctly_for_a_subject_with_one_exam() {
-    cy.get('div[data-testid=exam-more-link] a').should('not.exist');
-}
-
-function exams_panel_loads_correctly_for_a_subject_with_many_exams(examPapers, displayType = 'mycourses') {
+function exams_panel_loads_correctly_for_a_subject_with_many_exams(
+    examPapers,
+    displayType = 'mycourses',
+    username = 's1111111',
+) {
     const headerLevel = displayType === 'mycourses' ? 'h3' : 'h4';
 
     const courseCode = examPapers.coursecode || 'mock data is missing';
@@ -86,11 +71,7 @@ function exams_panel_loads_correctly_for_a_subject_with_many_exams(examPapers, d
                 .replace('[numberExcessExams]', numberExcessExams)
                 .replace('[examNumber]', _pluralise('paper', numberExcessExams)),
         )
-        .should(
-            'have.attr',
-            'href',
-            _courseLink(courseCode, locale.myCourses.examPapers.footer.morePastExams.linkOutPattern),
-        );
+        .should('have.attr', 'href', `http://localhost:2020/exams/course/${courseCode}?user=${username}`);
 }
 
 function guides_panel_has_correct_Library_Guides_footer_links_for_a_subject_page() {
@@ -103,33 +84,6 @@ function guides_panel_has_correct_Library_Guides_footer_links_for_a_subject_page
             .contains(guideTitle)
             .should('have.attr', 'href', guideLink);
     });
-}
-
-function guides_panel_loads_correctly_for_a_subject_with_zero_guides() {
-    cy.get('div[data-testid=no-guides]').contains(locale.myCourses.guides.none);
-
-    guides_panel_has_correct_Library_Guides_footer_links_for_a_subject_page();
-}
-
-function guides_panel_loads_correctly_for_a_subject_with_many_guides(guidesList, coursecode) {
-    cy.get(`div[data-testid=guides-${coursecode}] h3`).contains(`${locale.myCourses.guides.title}`);
-
-    const numGuides = guidesList.length - 1;
-    const numGuidesVisible =
-        numGuides > locale.myCourses.guides.visibleItemsCount ? locale.myCourses.guides.visibleItemsCount : numGuides;
-    guidesList.map((guide, index) => {
-        const guideTitle = guide.title || 'mock data is missing';
-        const guideLink = guide.url || 'mock data is missing';
-        if (index >= numGuidesVisible) {
-            cy.get(`div[data-testid=guides-${coursecode}]`).should('not.have.value', guideTitle);
-        } else {
-            cy.get(`div[data-testid=guides-${coursecode}] a`)
-                .contains(guideTitle)
-                .should('have.attr', 'href', guideLink);
-        }
-    });
-
-    guides_panel_has_correct_Library_Guides_footer_links_for_a_subject_page();
 }
 
 function guides_panel_loads_correctly_for_a_subject_with_one_guide(guides, coursecode, displayType = 'mycourses') {
@@ -246,11 +200,9 @@ function a_user_with_no_classes_sees_notice_of_same_in_courses_list() {
 }
 
 function the_user_sees_the_search_form() {
-    cy.get('div[data-testid=full-learningresource-autocomplete] input').should(
-        'have.attr',
-        'placeholder',
-        locale.search.placeholder,
-    );
+    cy.get('[data-testid="learning-resource-search-input-field"] input')
+        .should('exist')
+        .should('be.visible');
 }
 
 function click_on_a_subject_tab(panelNumber, courseReadingList) {
@@ -299,6 +251,25 @@ function FREN1010LoadsProperly() {
     cy.get('[data-testid="guides-FREN1010-content"]')
         .should('exist')
         .contains('French Studies');
+    cy.get('[data-testid="legalResearchEssentials-LAWS7107"]').should('not.exist');
+}
+
+function searchFor(searchFor = 'FREN', selectCourseCode) {
+    cy.log('searching for ', selectCourseCode);
+    const searchSuggestionForThisCourse = subjectSearchSuggestions
+        .filter(obj => {
+            return obj.name === selectCourseCode;
+        })
+        .pop();
+
+    cy.get('div[data-testid=full-learningresource-autocomplete] input').clear();
+    cy.get('div[data-testid=full-learningresource-autocomplete] input').type(searchFor);
+    // click the first option
+    cy.get('li#full-learningresource-autocomplete-option-0')
+        .contains(
+            `${searchSuggestionForThisCourse.course_title}, ${searchSuggestionForThisCourse.campus}, ${searchSuggestionForThisCourse.period}`,
+        )
+        .click();
 }
 
 context('Learning Resources Accessibility', () => {
@@ -306,7 +277,7 @@ context('Learning Resources Accessibility', () => {
         cy.visit('/learning-resources?user=s1111111');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('div[data-testid="learning-resources"]').contains('My courses');
+        cy.get('div[data-testid="learning-resources"]').contains('Your courses');
         cy.log('Learning Resources');
         cy.wait(1000);
         cy.checkA11y('div[data-testid="learning-resources"]', {
@@ -320,7 +291,7 @@ context('Learning Resources Accessibility', () => {
         cy.visit('/learning-resources?user=s1111111');
         cy.injectAxe();
         cy.viewport(414, 736);
-        cy.get('div[data-testid="learning-resources"]').contains('My courses');
+        cy.get('div[data-testid="learning-resources"]').contains('Your courses');
         cy.log('Learning Resources');
         cy.wait(1000);
         cy.checkA11y('div[data-testid="learning-resources"]', {
@@ -343,13 +314,34 @@ context('Learning Resources Access', () => {
         cy.viewport(1300, 1000);
         cy.get('body').contains('The requested page is available to authorised users only.');
     });
+    it('an rhd user, who is only doing research subjects can access the learning resources page', () => {
+        cy.visit(
+            '/learning-resources?user=s2222222&coursecode=PHYS1101E&campus=St%20Lucia&semester=Semester%202%202020',
+        );
+        cy.waitUntil(() => cy.get('[data-testid="learning-resource-subject-title"]').contains('PHYS1101E'));
+    });
+    it('an rhd user, who is doing non research subjects can access the learning resources page', () => {
+        cy.visit(
+            '/learning-resources?user=s6666666&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
+        );
+        cy.waitUntil(() => cy.get('[data-testid="learning-resource-subject-title"]').contains('FREN1010'));
+    });
 });
 
-beforeEach(() => {
-    cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
-});
 context('The Learning Resources Page', () => {
     // NOTE: purely for coverage, this test is duplicated into cypress/adminPages/learning-resources
+    it('has breadcrumbs', () => {
+        cy.visit('/learning-resources?user=s1111111');
+        cy.viewport(1300, 1000);
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Learning resources');
+            });
+    });
     it('User with classes sees their classes', () => {
         cy.visit('/learning-resources?user=s1111111');
         cy.viewport(1300, 1000);
@@ -382,7 +374,7 @@ context('The Learning Resources Page', () => {
 
         the_user_lands_on_the_Search_tab();
 
-        a_user_can_use_the_search_bar_to_load_a_subject(FREN1010ReadingList, learningResourceSearchSuggestions);
+        a_user_can_use_the_search_bar_to_load_a_subject(FREN1010ReadingList, subjectSearchSuggestions);
         FREN1010LoadsProperly();
 
         the_user_clicks_on_the_My_Courses_tab();
@@ -431,7 +423,7 @@ context('The Learning Resources Page', () => {
         cy.get('[data-testid="reading-list-FREN1011-content"] h4').contains('Course reading lists');
         cy.get('[data-testid="reading-list-link"]').contains('FREN1011 Reading list (contains 11 items)');
 
-        exams_panel_loads_correctly_for_a_subject_with_many_exams(FREN1011Exam, 'searchresults');
+        exams_panel_loads_correctly_for_a_subject_with_many_exams(FREN1011Exam, 'searchresults', 's3333333');
 
         guides_panel_loads_correctly_for_a_subject_with_one_guide(FREN1010Guide, 'FREN1011', 'searchresults');
 
@@ -446,10 +438,7 @@ context('The Learning Resources Page', () => {
 
         the_user_sees_the_search_form();
 
-        load_a_subject_in_learning_resource_page_search_tab(
-            FREN1010ReadingList.coursecode,
-            learningResourceSearchSuggestions,
-        );
+        load_a_subject_in_learning_resource_page_search_tab(FREN1010ReadingList.coursecode, subjectSearchSuggestions);
 
         FREN1010_loads_properly_for_s111111_user();
     });
@@ -466,6 +455,7 @@ context('The Learning Resources Page', () => {
             cy.get('[data-testid="guides-false-content"]')
                 .should('exist')
                 .contains('No subject guides');
+            cy.get('[data-testid="legalResearchEssentials-LAWS7107"]').should('not.exist');
         }
 
         function ACCT1101LoadsProperly() {
@@ -479,25 +469,9 @@ context('The Learning Resources Page', () => {
             cy.get('[data-testid="guides-ACCT1101-content"]')
                 .should('exist')
                 .contains('Accounting');
+            cy.get('[data-testid="legalResearchEssentials-LAWS7107"]').should('not.exist');
         }
 
-        function searchFor(searchFor = 'FREN', selectCourseCode) {
-            cy.log('searching for ', selectCourseCode);
-            const searchSuggestionForThisCourse = learningResourceSearchSuggestions
-                .filter(obj => {
-                    return obj.name === selectCourseCode;
-                })
-                .pop();
-
-            cy.get('div[data-testid=full-learningresource-autocomplete] input').clear();
-            cy.get('div[data-testid=full-learningresource-autocomplete] input').type(searchFor);
-            // click the first option
-            cy.get('li#full-learningresource-autocomplete-option-0')
-                .contains(
-                    `${searchSuggestionForThisCourse.course_title}, ${searchSuggestionForThisCourse.campus}, ${searchSuggestionForThisCourse.period}`,
-                )
-                .click();
-        }
         cy.visit('/learning-resources?user=s3333333');
         cy.viewport(1300, 1000);
 
@@ -667,5 +641,20 @@ context('The Learning Resources Page', () => {
         cy.waitUntil(() =>
             cy.get('[data-testid="reading-list-PHYS1101E-content"]').contains('No Reading list for this course'),
         );
+    });
+
+    it('A user sees an extra link on laws subjects', () => {
+        cy.visit('/learning-resources?user=s1111111');
+        cy.viewport(1300, 1000);
+
+        the_user_clicks_on_the_Search_tab();
+
+        the_user_sees_the_search_form();
+
+        searchFor('LAWS', 'LAWS7107');
+
+        cy.get('[data-testid="legalResearchEssentials-LAWS7107"]')
+            .should('exist')
+            .contains('Legal Research Essentials');
     });
 });

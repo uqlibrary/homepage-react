@@ -22,6 +22,16 @@ describe('Digital Learning Hub admin Add Team', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
+        it('has breadcrumbs', () => {
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Digital learning hub admin');
+                });
+        });
         it('loads as expected', () => {
             cy.get('[data-testid="StandardPage-title"]')
                 .should('exist')
@@ -150,14 +160,14 @@ describe('Digital Learning Hub admin Add Team', () => {
                 team_manager: '',
                 team_email: 'lea@example.com',
             };
-            console.log('document.cookies', document.cookie);
+            // console.log('document.cookies', document.cookie);
             cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                 expect(cookie).to.exist;
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 
@@ -215,14 +225,14 @@ describe('Digital Learning Hub admin Add Team', () => {
                 team_manager: 'Valid Team manager name',
                 team_email: 'lea@example.com',
             };
-            console.log('document.cookies', document.cookie);
+            // console.log('document.cookies', document.cookie);
             cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                 expect(cookie).to.exist;
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 

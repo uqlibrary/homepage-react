@@ -43,6 +43,7 @@ import {
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import { breadcrumbs } from 'config/routes';
 
 const StyledUQActionButton = styled('div')(({ theme }) => ({
     marginBlock: '32px',
@@ -79,6 +80,7 @@ const StyledContentGrid = styled(Grid)(() => ({
 const StyledTitleBlockDiv = styled('div')(() => ({
     display: 'flex',
     alignItems: 'center',
+    marginTop: '16px',
     '& p:first-child': {
         padding: 0,
         fontSize: 16,
@@ -97,6 +99,9 @@ const StyledTitleBlockDiv = styled('div')(() => ({
 const StyledHeaderDiv = styled(Typography)(() => ({
     backgroundColor: 'white',
     padding: '12px',
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
+    marginTop: '12px',
     '& p': {
         margin: 0,
         fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
@@ -137,7 +142,6 @@ const StyledSeriesList = styled('ol')(() => ({
             width: '100%',
             padding: 10,
             textDecoration: 'none',
-            border: '1px solid #d1d0d2', // $grey-300
         },
         '& a:hover': {
             backgroundColor: '#a3a1a4', // $grey-500
@@ -145,15 +149,18 @@ const StyledSeriesList = styled('ol')(() => ({
     },
 }));
 const StyledDemographicsBox = styled(Box)(() => ({
-    padding: '1em',
-    marginTop: '24px',
-    borderRadius: '10px',
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
     backgroundColor: 'white',
+    marginTop: '24px',
+    padding: '1em',
     '& p': { marginLeft: '-8px' },
     '& form': { margin: '-8px', '& p': { marginBlock: '3em 0', marginLeft: '2px' } },
 }));
 const StyledLayoutBox = styled(Box)(() => ({
     backgroundColor: 'white',
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
     padding: '12px',
     marginTop: '24px',
 }));
@@ -193,7 +200,7 @@ const StyledSidebarHeadingTypography = styled(Typography)(() => ({
 }));
 
 const StyledFilterLink = styled(Link)(() => ({
-    color: '#3872a8 !important'
+    color: '#3872a8 !important',
 }));
 
 export const DLOView = ({
@@ -211,8 +218,8 @@ export const DLOView = ({
     const { dlorId } = useParams();
     const [cookies, setCookie] = useCookies();
     const [confirmationOpen, setConfirmationOpen] = React.useState(false);
-    
-    const isLoggedIn = !!account?.id;
+
+    // const isLoggedIn = !!account?.id;
 
     const [formValues, setFormValues] = React.useState({
         subjectCode: '',
@@ -222,21 +229,26 @@ export const DLOView = ({
         userEmail: '',
     });
 
-   // PENDING CHANGE - left in to merge when ticket for require login is built.
-  
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dlor.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dlor.pathname);
+    }, []);
+
+    // PENDING CHANGE - left in to merge when ticket for require login is built.
+
     // async function sha256(message) {
     //     // Encode as UTF-8
     //     const msgBuffer = new TextEncoder('utf-8').encode(message);
     //     // Hash the message
     //     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    //     // Convert ArrayBuffer to Array   
+    //     // Convert ArrayBuffer to Array
     //     const hashArray = Array.from(new Uint8Array(hashBuffer));
     //     // Convert bytes to hex string
-    //     const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');   
+    //     const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
     //     return hashHex;
     //   }
 
-   
     // useEffect(() => {
     //     if (dlorItem && dlorItem.object_public_uuid) {
     //         // check if they have access param requirement. If it doesnt match, reject.
@@ -253,10 +265,9 @@ export const DLOView = ({
     //                 }
     //             });
     //         }
-            
+
     //     }
     // }, [dlorItem]);
-
 
     useEffect(() => {
         if (!!account?.id) {
@@ -277,7 +288,7 @@ export const DLOView = ({
             theNewValue = !!e.target.checked;
         }
         const newValues = { ...formValues, [prop]: theNewValue };
-       
+
         setFormValues(newValues);
     };
 
@@ -300,7 +311,6 @@ export const DLOView = ({
                 page_title: dlorItem.object_title,
             });
             document.title = dlorItem.object_title;
-             
         }
     }, [dlorItem]);
 
@@ -367,7 +377,6 @@ export const DLOView = ({
     };
 
     const saveAndNavigate = dlorItem => {
-        
         if (formValues.schoolName.length > 0 || formValues.subjectCode.length > 0 || !!formValues.notify) {
             const valuestoSend = {
                 dlorUuid: dlorItem.object_public_uuid,
@@ -778,7 +787,11 @@ export const DLOView = ({
                                                         filter.filter_values.map((value, subIndex) => {
                                                             return (
                                                                 <li key={subIndex}>
-                                                                    <StyledFilterLink to={`/digital-learning-hub?filters=${value.id}`} >{value.name}</StyledFilterLink>
+                                                                    <StyledFilterLink
+                                                                        to={`/digital-learning-hub?filters=${value.id}`}
+                                                                    >
+                                                                        {value.name}
+                                                                    </StyledFilterLink>
                                                                     {!!value?.help && value?.help.startsWith('http') && (
                                                                         <a
                                                                             href={value.help}
@@ -804,7 +817,14 @@ export const DLOView = ({
                                                 {dlorItem.object_keywords.map((keyword, index) => {
                                                     return (
                                                         <li key={index}>
-                                                            <StyledFilterLink to={`/digital-learning-hub?keyword=${keyword.charAt(0).toUpperCase() + keyword.slice(1).replace(/\s/g, '+')}`}>{keyword.charAt(0).toUpperCase() + keyword.slice(1)}</StyledFilterLink>
+                                                            <StyledFilterLink
+                                                                to={`/digital-learning-hub?keyword=${keyword
+                                                                    .charAt(0)
+                                                                    .toUpperCase() +
+                                                                    keyword.slice(1).replace(/\s/g, '+')}`}
+                                                            >
+                                                                {keyword.charAt(0).toUpperCase() + keyword.slice(1)}
+                                                            </StyledFilterLink>
                                                         </li>
                                                     );
                                                 })}

@@ -26,6 +26,7 @@ import {
     getDlorViewPageUrl,
     toTitleCase,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { breadcrumbs } from 'config/routes';
 
 const StyledDraggableListItem = styled('li')(({ theme }) => ({
     display: 'flex',
@@ -88,6 +89,10 @@ export const DLOSeriesEdit = ({
     };
 
     useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dloradmin.pathname);
+
         /* istanbul ignore else */
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();

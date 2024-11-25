@@ -14,10 +14,11 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
-import { pluraliseWord } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { pluralise } from 'helpers/general';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/ObjectListItem';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
+import { breadcrumbs } from 'config/routes';
 
 const StyledObjectDetails = styled('details')(() => ({
     marginLeft: '20px',
@@ -42,6 +43,12 @@ export const DLOTeamList = ({
     const [teamToDelete, setObjectToDelete] = React.useState(null);
     const [deleteStep, setDeleteStep] = React.useState(DELETION_STEP_NULL);
     const [confirmationOpen, setConfirmationOpen] = useState(false);
+
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dloradmin.pathname);
+    }, []);
 
     useEffect(() => {
         if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {
@@ -244,7 +251,7 @@ export const DLOTeamList = ({
                                                                         data-testid={`dlor-team-object-list-${team?.team_id}`}
                                                                     >
                                                                         <summary>
-                                                                            {`${team?.objects_count} ${pluraliseWord(
+                                                                            {`${team?.objects_count} ${pluralise(
                                                                                 'Object',
                                                                                 team?.objects_count,
                                                                             )}`}
