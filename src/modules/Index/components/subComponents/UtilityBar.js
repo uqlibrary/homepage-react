@@ -72,6 +72,9 @@ const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
     '& span span': {
         textDecoration: 'underline',
     },
+    '&:hover': {
+        backgroundColor: 'white',
+    },
     '&:hover span span': {
         backgroundColor: theme.palette.primary.light,
         color: 'white',
