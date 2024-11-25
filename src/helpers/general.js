@@ -126,6 +126,7 @@ export const pluralise = (singularWord, count, pluralWordSpecial = null) => {
 export const linkToDrupal = (pathname, requestedDomainName = null) => {
     const domainName = requestedDomainName ?? document.location.hostname;
     // after jan 2025 golive, should be web.library only
+    // note some tests need correction
     const origin = [
         'localhost',
         'homepage-development.library.uq.edu.au',
