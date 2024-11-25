@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import parse from 'html-react-parser';
@@ -294,18 +294,36 @@ export const SeriesView = ({
     const { account } = useAccountContext();
     const { seriesId } = useParams();
 
-    const hasLoaded = React.useRef(false);
+    // const hasLoaded = React.useRef(false);
+
+    // useEffect(() => {
+    //     if (seriesId && !hasLoaded.current) {
+    //         console.log("USEEFFECT", dlorSeries, seriesId);
+    //         actions.loadDlorSeries(seriesId);
+    //         hasLoaded.current = true  
+    //     } 
+    //     //initialRender.current = false;
+       
+    // }, [seriesId]);
+
+    
+
+    function usePrevious(value) {
+        const seriesRef = useRef();
+        useEffect(() => {
+            seriesRef.current = value;
+        }, [value]);
+        return seriesRef.current;
+    }
+
+    const previousSeriesId = usePrevious(seriesId);
 
     useEffect(() => {
-        if (seriesId && !hasLoaded.current) {
+        if (seriesId !== previousSeriesId) {
             console.log("USEEFFECT", dlorSeries, seriesId);
             actions.loadDlorSeries(seriesId);
-            hasLoaded.current = true
-           
-        } 
-        //initialRender.current = false;
-       
-    }, [seriesId]);
+        }
+    }, [seriesId, previousSeriesId]);
 
 
     const [filterListTrimmed] = React.useState([]);
