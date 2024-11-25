@@ -294,17 +294,16 @@ export const SeriesView = ({
     const { account } = useAccountContext();
     const { seriesId } = useParams();
 
-    const initialRender = React.useRef(true);
+    const hasLoaded = React.useRef(false);
 
     useEffect(() => {
-        if (seriesId && !initialRender.current) {
+        if (seriesId && !hasLoaded.current) {
             console.log("USEEFFECT", dlorSeries, seriesId);
             actions.loadDlorSeries(seriesId);
+            hasLoaded.current = true
            
-        } else {
-            console.log('WHY??', seriesId, initialRender.current)
-        }
-        initialRender.current = false;
+        } 
+        //initialRender.current = false;
        
     }, [seriesId]);
 
