@@ -3,7 +3,7 @@ const deployment = {
     development: {
         url: branch => `https://homepage-development.library.uq.edu.au/${branch}/#/`,
         fullPath: branch => `https://homepage-development.library.uq.edu.au/${branch}/#`,
-        api: 'https://api.library.uq.edu.au/staging/',
+        api: 'https://api.library.uq.edu.au/v1/', // this should be changed back to 'https://api.library.uq.edu.au/staging/' after webpresence golive Jan 2025
         auth_login: 'https://auth.library.uq.edu.au/login',
         auth_logout: 'https://auth.library.uq.edu.au/logout',
         gtm: 'GTM-NC7M38Q',
@@ -14,6 +14,7 @@ const deployment = {
         basePath: '',
         publicPath: '',
         // reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents-development/[BRANCH_NAME]/uq-lib-reusable.min.js', // dev
+        // for web presence dev
         reusablejs:
             'https://assets.library.uq.edu.au/reusable-webcomponents-development/webpresence-staging/uq-lib-reusable.min.js?last=20240813', // dev
         // reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
@@ -22,7 +23,7 @@ const deployment = {
     staging: {
         url: () => 'https://homepage-staging.library.uq.edu.au/',
         fullPath: () => 'https://homepage-staging.library.uq.edu.au',
-        api: 'https://api.library.uq.edu.au/staging/',
+        api: 'https://api.library.uq.edu.au/v1/', // this should be changed back to 'https://api.library.uq.edu.au/staging/' after webpresence golive Jan 2025
         auth_login: 'https://auth.library.uq.edu.au/login',
         auth_logout: 'https://auth.library.uq.edu.au/logout',
         gtm: 'GTM-NC7M38Q',

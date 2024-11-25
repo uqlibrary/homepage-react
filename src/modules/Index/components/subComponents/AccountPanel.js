@@ -10,6 +10,8 @@ import { linkToDrupal } from 'helpers/general';
 
 const StyledAlertDiv = styled('div')(() => ({
     display: 'flex',
+    marginRight: '24px',
+    marginBottom: '24px',
     marginLeft: '25px',
     '& a': {
         marginLeft: '30px',
@@ -185,22 +187,38 @@ const dSTimeClockFileSearchIcon = (
     </svg>
 );
 
-const muiBeenHereIcon = (
+const dsChecklistIcon = (
     <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" width="22" height="22">
         <path
-            d="M19 1H5c-1.1 0-1.99.9-1.99 2L3 15.93c0 .69.35 1.3.88 1.66L12 23l8.11-5.41c.53-.36.88-.97.88-1.66L21 3c0-1.1-.9-2-2-2z"
-            fill="none"
+            d="M3.81513 2.57129H20.1438C20.8724 2.57129 21.4296 3.12844 21.4296 3.81416V20.1429C21.4296 20.8286 20.8724 21.3857 20.1867 21.3857H3.81513C3.12941 21.4286 2.57227 20.8714 2.57227 20.1857V3.81416C2.57227 3.12844 3.12941 2.57129 3.81513 2.57129Z"
             stroke="#51247A"
-            strokeWidth="1"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
         />
-        <path d="M10 16l-5-5 1.41-1.41L10 13.17l7.59-7.59L19 7z" fill="none" stroke="#51247A" strokeWidth="1" />
+        <path
+            d="M12.0002 5.7002L8.22879 10.7145L5.7002 8.18593"
+            stroke="#51247A"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+        />
+        <path d="M13.8857 8.87109H17.6582" stroke="#51247A" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        <path
+            d="M12.0002 13.2432L8.22879 18.2575L5.7002 15.7289"
+            stroke="#51247A"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+        />
+        <path d="M13.8857 16.4141H17.6582" stroke="#51247A" strokeLinecap="round" strokeLinejoin="round" fill="none" />
     </svg>
 );
 
 export const AccountPanel = ({ account, loans, loansLoading, printBalance, printBalanceLoading }) => {
     function totalFines(fines) {
         return fines.reduce((sum, fine) => {
-            return sum + (typeof fine.fineAmount === 'number' ? fine.fineAmount : 0);
+            return sum + (typeof fine.fineAmount === 'number' ? fine.fineAmount : /* istanbul ignore next */ 0);
         }, 0);
     }
 
@@ -258,14 +276,14 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
                 {isTestTagUser(account) && (
                     <li data-testid={'show-testntag'}>
                         <Link to={'admin/testntag'}>
-                            {muiBeenHereIcon}
+                            {dsChecklistIcon}
                             <span>Test and tag</span>
                         </Link>
                     </li>
                 )}
             </StyledUl>
             {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
-                <StyledAlertDiv data-testid={'show-fines'} style={{ marginBottom: '24px', marginRight: '24px' }}>
+                <StyledAlertDiv data-testid={'show-fines'}>
                     <UserAttention titleText={'Fines and charges'}>
                         <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
                             <span>${`${totalFines(loans?.fines)}`} payable</span>

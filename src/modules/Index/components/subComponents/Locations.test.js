@@ -16,6 +16,7 @@ const validWhitty = {
     ],
     name: 'Whitty Mater',
     url: 'https://web.library.uq.edu.au/locations-hours',
+    displayName: 'Whitty Mater',
 };
 
 function setup(testProps = {}, renderer = rtlRender) {
@@ -302,7 +303,7 @@ describe('the departments are shown correctly', () => {
         expect(hasDepartments(testdata)).toEqual(false);
     });
 });
-describe('the aria label is correct', () => {
+describe('name setting', () => {
     it('the aria label is correct', () => {
         expect(ariaLabelForLocation(validWhitty).trim()).toEqual(
             'The Whitty Mater Library study space is open 6:30am to 10pm.',

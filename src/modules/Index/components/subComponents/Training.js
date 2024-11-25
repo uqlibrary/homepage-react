@@ -159,14 +159,12 @@ const StyledWrapper = styled('div')(({ theme }) => ({
 const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }) => {
     const [eventDetail, setEventDetail] = useState(null);
     const showEventDetail = (event, value = null) => {
-        console.log('showEventDetail', value, event);
         setEventDetail(value ?? event);
         setTimeout(() => {
             document.getElementById('training-event-detail-close-button').focus();
         }, 300);
     };
     const closeEvent = entityId => {
-        console.log('closeEvent entityId=', entityId);
         setEventDetail(null);
     };
     moment.tz.setDefault('Australia/Brisbane');

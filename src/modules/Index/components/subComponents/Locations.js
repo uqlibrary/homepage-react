@@ -24,7 +24,7 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     border: '1px solid #DCDCDD',
     borderRadius: '0 0 4px 4px',
     boxShadow: '0px 12px 24px 0px rgba(25, 21, 28, 0.05)',
-    marginTop: '2px',
+    marginTop: '-7px',
     zIndex: 999,
     position: 'absolute',
     top: 102,
@@ -201,6 +201,8 @@ const MyLoader = props => (
         viewBox="0 0 365 250"
         backgroundColor="#f3f3f3"
         foregroundColor="#e2e2e2"
+        data-testid="hours-loader"
+        aria-label="Locations data is loading"
         {...props}
     >
         <rect x="0%" y="15" rx="3" ry="3" width="21%" height="5" />
@@ -295,7 +297,7 @@ const getTextForBusyness = (location, busyLookup) => {
     } else if (location.busyness <= 75) {
         busyinessIndex = 3; // 'Busy';
     }
-    return busyLookup.hasOwnProperty(busyinessIndex) ? busyLookup[busyinessIndex] : null;
+    return busyLookup.hasOwnProperty(busyinessIndex) ? busyLookup[busyinessIndex] : /* istanbul ignore next */ null;
 };
 function getLibraryHours(location) {
     /* istanbul ignore else */
@@ -319,7 +321,7 @@ function getLibraryHours(location) {
     return 'See location';
 }
 export const ariaLabelForLocation = location => {
-    let libraryName = 'the ' + (getOverrideLocationName(location?.abbr) || location.name) + ' Library';
+    let libraryName = `the ${location?.displayName} Library`;
     const nameLookupTable = {
         AskUs: 'AskUs chat assistance',
         Fryer: 'Fryer Library',
@@ -446,6 +448,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
 
                 return {
                     name: location.name,
+                    displayName: getOverrideLocationName(location.abbr) || location.name,
                     abbr: location.abbr,
                     url: location.url,
                     alt: location.name,
@@ -455,21 +458,18 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                 };
             })) ||
         [];
-    const alphaHours = cleanedHours
+    const sortedHours = cleanedHours
         .filter(e => e !== null)
         .filter(l => l.abbr !== 'Whitty Mater') // remove this from springshare data for homepage
         .filter(l => screenWidth > theme.breakpoints.values.uqDsTablet || l.abbr !== 'AskUs') // remove the askus line when on smaller screens, it lacks extra info
         .sort((a, b) => {
-            const textA = a.name.toUpperCase();
-            const textB = b.name.toUpperCase();
-            // eslint-disable-next-line no-nested-ternary
-            return textA < textB ? -1 : textA > textB ? 1 : /* istanbul ignore next */ 0;
+            // Askus goes last in the list
+            if (a.abbr === 'AskUs') return 1;
+            if (b.abbr === 'AskUs') return -1;
+
+            // Otherwise, sort alphabetically by name
+            return a.displayName.localeCompare(b.displayName);
         });
-    const sortedHours = alphaHours.sort((a, b) => {
-        if (a.abbr === 'AskUs') return 1; // Move 'askus' to the end
-        if (b.abbr === 'AskUs') return -1; // Move 'askus' to the end
-        return a.abbr?.localeCompare(b.abbr); // Sort the rest alphabetically
-    });
 
     const sluggifyName = string => {
         return string.toLowerCase().replace(' ', '-');
@@ -488,6 +488,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
         if (!isOpen(location)) {
             return <div className="occupancyText has-ellipsis">Closed</div>;
         }
+        /* istanbul ignore next */
         if (location.busyness === null) {
             return null;
         }
@@ -569,7 +570,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                                             data-testid={`${sluggifyName(`hours-item-${location.abbr}`)}-link`}
                                             aria-label={ariaLabelForLocation(location)}
                                         >
-                                            {getOverrideLocationName(location.abbr) || location.name}
+                                            {location.displayName}
                                         </Link>
                                     </Grid>
                                     <Grid
@@ -601,7 +602,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                 {((!!libHoursLoading && !libHoursError && !libHours) ||
                     (!vemcountError && !vemcount && !!vemcountLoading)) && (
                     <div className={'loaderContent'}>
-                        <MyLoader id="hours-loader" data-testid="hours-loader" aria-label="Locations data is loading" />
+                        <MyLoader id="hours-loader" />
                     </div>
                 )}
                 <StyledOutlinkDiv>

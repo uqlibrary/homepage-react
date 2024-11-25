@@ -72,6 +72,9 @@ const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
     '& span span': {
         textDecoration: 'underline',
     },
+    '&:hover': {
+        backgroundColor: 'white',
+    },
     '&:hover span span': {
         backgroundColor: theme.palette.primary.light,
         color: 'white',
@@ -92,6 +95,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
         setLocationOpen(!locationOpen);
 
         const showHideButton = document.getElementById('location-dialog-controller');
+        /* istanbul ignore else */
         if (!!showHideButton) {
             const isOpen = showHideButton.ariaExpanded === 'true';
             showHideButton.ariaExpanded = isOpen ? 'false' : 'true'; // toggle the current value

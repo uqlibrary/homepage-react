@@ -125,8 +125,14 @@ export const pluralise = (singularWord, count, pluralWordSpecial = null) => {
  */
 export const linkToDrupal = (pathname, requestedDomainName = null) => {
     const domainName = requestedDomainName ?? document.location.hostname;
-    const origin = ['localhost', 'homepage-development.library.uq.edu.au'].includes(domainName)
-        ? 'https://live-library-uq.pantheonsite.io'
+    // after jan 2025 golive, should be web.library only
+    // note some tests need correction
+    const origin = [
+        'localhost',
+        'homepage-development.library.uq.edu.au',
+        'homepage-staging.library.uq.edu.au',
+    ].includes(domainName)
+        ? 'https://web-live.library.uq.edu.au'
         : 'https://web.library.uq.edu.au';
     return `${origin}${pathname}`;
 };
