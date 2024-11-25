@@ -228,7 +228,7 @@ export const Index = ({
             {!!account && (
                 <StyledGridWrapper>
                     <StandardPage>
-                        <Grid container>
+                        <Grid container spacing={!!verySimplelayout ? 2 : 0}>
                             <Grid item xs={12}>
                                 <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
                                     Hi, {account.firstName || /* istanbul ignore next */ ''}
@@ -236,11 +236,11 @@ export const Index = ({
                             </Grid>
                                 {!!verySimplelayout ? (
                                     <>
-                                        <StyledGridItemLoggedInLeftAlign item xs={12} uqDsDesktop={4} data-testid="primo-panel">
+                                        <StyledGridItemLoggedInLeftAlign item xs={12} uqDsDesktop={4} data-testid="primo-panel" style={{ paddingTop: 0 }}>
                                             <AccountPanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} />
                                         </StyledGridItemLoggedInLeftAlign>
                                         {canSeeTrainingPanel(account) && (
-                                            <StyledGridItemLoggedInLeftAlign item xs={12} uqDsDesktop={4} data-testid="training-panel">
+                                            <StyledGridItemLoggedInLeftAlign item xs={12} uqDsDesktop={4} data-testid="training-panel" style={{ paddingTop: 0 }}>
                                                 <Training
                                                     trainingEvents={trainingEvents}
                                                     trainingEventsLoading={trainingEventsLoading}
@@ -248,13 +248,12 @@ export const Index = ({
                                                 />
                                             </StyledGridItemLoggedInLeftAlign>
                                         )}
-                                        <StyledGridItemLoggedInLeftAlign  item xs={12} uqDsDesktop={4} data-testid="referencing-panel">
+                                        <StyledGridItemLoggedInLeftAlign  item xs={12} uqDsDesktop={4} data-testid="referencing-panel" style={{ paddingTop: 0 }}>
                                             <ReferencingPanel account={account} />
                                         </StyledGridItemLoggedInLeftAlign>
                                     </>
                                 ) : (
-                                    <Grid item>
-                                    <Grid container>
+                                    <>
                                         <Grid item uqDsDesktop={4} xs={12}>
                                             <Grid container>
                                                 <StyledGridItemLoggedInLeftAlign item xs={12} data-testid="primo-panel">
@@ -268,7 +267,7 @@ export const Index = ({
                                                             trainingEventsError={trainingEventsError}
                                                         />
                                                     </StyledGridItemLoggedInLeftAlign>
-                                                    )}
+                                                )}
                                             </Grid>
                                         </Grid>
                                         <Grid item uqDsDesktop={8}>
@@ -306,9 +305,8 @@ export const Index = ({
                                                 </Grid>
                                             </Grid>
                                         </Grid>
-                                    </Grid>
-                                </Grid>
-                            )}
+                                    </>
+                                )}
                         </Grid>
                     </StandardPage>
                 </StyledGridWrapper>

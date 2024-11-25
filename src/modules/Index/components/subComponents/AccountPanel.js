@@ -10,6 +10,8 @@ import { linkToDrupal } from 'helpers/general';
 
 const StyledAlertDiv = styled('div')(() => ({
     display: 'flex',
+    marginRight: '24px',
+    marginBottom: '24px',
     marginLeft: '25px',
     '& a': {
         marginLeft: '30px',
@@ -281,7 +283,7 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
                 )}
             </StyledUl>
             {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
-                <StyledAlertDiv data-testid={'show-fines'} style={{ marginBottom: '24px', marginRight: '24px' }}>
+                <StyledAlertDiv data-testid={'show-fines'}>
                     <UserAttention titleText={'Fines and charges'}>
                         <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
                             <span>${`${totalFines(loans?.fines)}`} payable</span>
