@@ -106,12 +106,10 @@ export default {
                     'localhost',
                     'homepage-development.library.uq.edu.au',
                     'homepage-staging.library.uq.edu.au',
-                ].includes(
-                    document.location.hostname,
-                    // this doesn't like an `import linkToDrupal` line above - weird! linkToDrupal is only temporary anyway
-                )
+                ].includes(document.location.hostname)
                     ? 'https:///web-live.library.uq.edu.au/library-services/training/legal-research-essentials'
-                    : 'https://web.library.uq.edu.au/library-services/training/legal-research-essentials',
+                    : /* istanbul ignore next */ 'https://web.library.uq.edu.au/library-services/training/legal-research-essentials',
+                // this doesn't like an `import linkToDrupal` line above - weird! linkToDrupal is only temporary anyway
             },
         },
     },
