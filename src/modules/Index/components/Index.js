@@ -236,7 +236,7 @@ export const Index = ({
                             </Grid>
                                 {!!verySimplelayout ? (
                                     <>
-                                        <StyledGridItemLoggedInLeftAlign item xs={12} uqDsDesktop={4} data-testid="primo-panel" style={{ paddingTop: 0 }}>
+                                        <StyledGridItemLoggedInLeftAlign item xs={12} uqDsDesktop={4} data-testid="account-panel" style={{ paddingTop: 0 }}>
                                             <AccountPanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} />
                                         </StyledGridItemLoggedInLeftAlign>
                                         {canSeeTrainingPanel(account) && (
@@ -256,7 +256,7 @@ export const Index = ({
                                     <>
                                         <Grid item uqDsDesktop={4} xs={12}>
                                             <Grid container>
-                                                <StyledGridItemLoggedInLeftAlign item xs={12} data-testid="primo-panel">
+                                                <StyledGridItemLoggedInLeftAlign item xs={12} data-testid="account-panel">
                                                     <AccountPanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} />
                                                 </StyledGridItemLoggedInLeftAlign>
                                                 {canSeeTrainingPanel(account) && (
