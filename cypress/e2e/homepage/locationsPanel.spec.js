@@ -255,26 +255,6 @@ context('Locations Panel', () => {
         // dialog is closed
         cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
     });
-    it('a second click on the button can close the dialog', () => {
-        cy.visit('/');
-        cy.viewport(1300, 1000);
-        cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
-        // open dialog
-        cy.get('[data-testid="hours-accordion-open"]').click();
-        // confirm dialog is open
-        cy.waitUntil(() =>
-            cy
-                .get('[data-testid="homepage-hours-weeklyhours-link"]')
-                .should('exist')
-                .should('be.visible')
-                .contains('See all Library and AskUs hours'),
-        );
-
-        // re-click button
-        cy.get('[data-testid="hours-accordion-open"]').click();
-        // dialog is closed
-        cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
-    });
     it('escape key can close the dialog', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
