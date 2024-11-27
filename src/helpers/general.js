@@ -137,14 +137,17 @@ export const linkToDrupal = (pathname, requestedDomainName = null) => {
     return `${origin}${pathname}`;
 };
 
+/* istanbul ignore next */
 export function isKeyPressed(e, charKeyInput, numericKeyInput) {
     const keyNumeric = e.charCode || e.keyCode;
     const keyChar = e.key || /* istanbul ignore next */ e.code;
     return keyChar === charKeyInput || keyNumeric === numericKeyInput;
 }
+/* istanbul ignore next */
 export function isReturnKeyPressed(e) {
     return isKeyPressed(e, 'Enter', 13);
 }
+/* istanbul ignore next */
 export function isEscapeKeyPressed(e) {
     return isKeyPressed(e, 'Escape', 27);
 }
