@@ -290,7 +290,7 @@ export const Index = ({
                                                         )}
                                                     </Grid>
                                                 </Grid>
-                                                <Grid item uqDsDesktop={6}>
+                                                <Grid item uqDsDesktop={6} xs={12}>
                                                     <Grid container>
                                                         {isEspaceAuthor(account, author) && (
                                                             <StyledGridItemLoggedIn item xs={12} data-testid="espace-links-panel">
