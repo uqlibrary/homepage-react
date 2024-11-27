@@ -28,7 +28,7 @@ const StyledUl = styled('ul')(() => ({
         marginLeft: '-20px',
         listStyleType: 'none',
         '& a': {
-            display: 'flex',
+            display: 'inline-flex',
             alignItems: 'center',
             paddingLeft: '4px',
             '&:hover': {
