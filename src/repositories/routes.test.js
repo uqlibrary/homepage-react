@@ -1,24 +1,4 @@
 import * as routes from './routes';
-import {
-    DLOR_ALL_API,
-    DLOR_ALL_CURRENT_API,
-    DLOR_CREATE_API,
-    DLOR_DEMOGRAPHICS_SAVE_API,
-    DLOR_DESTROY_API,
-    DLOR_FILE_TYPE_LIST_API,
-    DLOR_GET_BY_ID_API,
-    DLOR_GET_FILTER_LIST,
-    DLOR_SERIES_CREATE_API,
-    DLOR_SERIES_DELETE_API,
-    DLOR_SERIES_LIST_API,
-    DLOR_SERIES_UPDATE_API,
-    DLOR_SUBSCRIPTION_CONFIRMATION_API,
-    DLOR_TEAM_CREATE_API,
-    DLOR_TEAM_DELETE_API,
-    DLOR_TEAM_SINGLE_GET_API,
-    DLOR_TEAM_UPDATE_API,
-    DLOR_UPDATE_API,
-} from './routes';
 
 describe('Backend routes method', () => {
     it('should get zero-padded year', () => {
@@ -236,6 +216,14 @@ describe('Backend routes method', () => {
             expect(routes.DLOR_SERIES_DELETE_API(100)).toEqual({ apiUrl: 'dlor/admin/series/100' });
             expect(routes.DLOR_SERIES_UPDATE_API(100)).toEqual({ apiUrl: 'dlor/admin/series/100' });
             expect(routes.DLOR_SERIES_CREATE_API()).toEqual({ apiUrl: 'dlor/admin/series' });
+
+            expect(routes.DRUPAL_ARTICLE_API()).toEqual({
+                apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json',
+            });
+
+            expect(routes.VEMCOUNT_API()).toEqual({
+                apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/headcount.json',
+            });
         });
     });
 
