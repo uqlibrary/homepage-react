@@ -216,6 +216,14 @@ describe('Backend routes method', () => {
             expect(routes.DLOR_SERIES_DELETE_API(100)).toEqual({ apiUrl: 'dlor/admin/series/100' });
             expect(routes.DLOR_SERIES_UPDATE_API(100)).toEqual({ apiUrl: 'dlor/admin/series/100' });
             expect(routes.DLOR_SERIES_CREATE_API()).toEqual({ apiUrl: 'dlor/admin/series' });
+
+            expect(routes.DRUPAL_ARTICLE_API()).toEqual({
+                apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json',
+            });
+
+            expect(routes.VEMCOUNT_API()).toEqual({
+                apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/headcount.json',
+            });
         });
     });
 

@@ -63,14 +63,19 @@ export const LIB_HOURS_API = () => ({
     options: { params: { ts: `${new Date().getTime()}` } },
 });
 
-const location = ['localhost', 'homepage-development.library.uq.edu.au', 'homepage-staging.library.uq.edu.au'].includes(
-    document.location.hostname,
-)
-    ? 'reusable-webcomponents-staging'
-    : /* istanbul ignore next */ 'reusable-webcomponents';
-export const VEMCOUNT_API = () => ({
-    apiUrl: 'https://assets.library.uq.edu.au/' + location + '/api/homepage/headcount.json',
-});
+export const VEMCOUNT_API = () => {
+    const nonProdLocations = [
+        'localhost',
+        'homepage-development.library.uq.edu.au',
+        'homepage-staging.library.uq.edu.au',
+    ];
+    const location = nonProdLocations.includes(document.location.hostname)
+        ? 'reusable-webcomponents-staging'
+        : /* istanbul ignore next */ 'reusable-webcomponents';
+    return {
+        apiUrl: 'https://assets.library.uq.edu.au/' + location + '/api/homepage/headcount.json',
+    };
+};
 
 // file uploading apis
 export const UPLOAD_PUBLIC_FILES_API = () => ({ apiUrl: 'file/public' });
@@ -253,15 +258,12 @@ export const DLOR_SERIES_UPDATE_API = id => ({ apiUrl: `dlor/admin/series/${id}`
 export const DLOR_SERIES_CREATE_API = () => ({ apiUrl: 'dlor/admin/series' });
 
 export const DRUPAL_ARTICLE_API = () => {
-    if (process.env.BRANCH === 'production') {
-        return {
-            apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage/articles.json',
-        };
-    } else {
-        return {
-            apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json',
-        };
-    }
+    const productionLocation = 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage/articles.json';
+    const stagingLocation =
+        'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json';
+    return {
+        apiUrl: process.env.BRANCH === 'production' ? productionLocation : stagingLocation,
+    };
 };
 
 export const JOURNAL_SEARCH_API = () => ({ apiUrl: 'https://api.library.uq.edu.au/v1/journals/favourites?sort=score' });
