@@ -199,7 +199,7 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-fryer"] > div:nth-child(2)').contains('By Appointment');
         cy.get('[data-testid="hours-item-fryer"] > div:nth-child(3) div.occupancyText')
             .should('exist')
-            .contains('By appointment only');
+            .contains('By appointment');
         cy.get('[data-testid="hours-item-fryer"] > div:nth-child(3)').should('exist');
 
         // cy.log('Whitty has a missing department field (should never happen) so we see "See location"');
