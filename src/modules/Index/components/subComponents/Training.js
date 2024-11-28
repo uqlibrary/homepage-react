@@ -248,8 +248,10 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                     !eventDetail && (
                         <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
                             <div className={'flexContent'} role="region" aria-label="UQ training Events list">
+                                {console.log("Standardised", standardisedTrainingEvents)}
                                 {standardisedTrainingEvents &&
                                     standardisedTrainingEvents.length > 0 &&
+                                    Array.isArray(standardisedTrainingEvents) &&
                                     standardisedTrainingEvents.map((event, index) => {
                                         return (
                                             <Grid container spacing={0} className={'row'} key={index}>
