@@ -63,20 +63,6 @@ export const LIB_HOURS_API = () => ({
     options: { params: { ts: `${new Date().getTime()}` } },
 });
 
-export const VEMCOUNT_API = () => {
-    const nonProdLocations = [
-        'localhost',
-        'homepage-development.library.uq.edu.au',
-        'homepage-staging.library.uq.edu.au',
-    ];
-    const location = nonProdLocations.includes(document.location.hostname)
-        ? 'reusable-webcomponents-staging'
-        : /* istanbul ignore next */ 'reusable-webcomponents';
-    return {
-        apiUrl: 'https://assets.library.uq.edu.au/' + location + '/api/homepage/headcount.json',
-    };
-};
-
 // file uploading apis
 export const UPLOAD_PUBLIC_FILES_API = () => ({ apiUrl: 'file/public' });
 
@@ -257,12 +243,27 @@ export const DLOR_SERIES_DELETE_API = id => ({ apiUrl: `dlor/admin/series/${id}`
 export const DLOR_SERIES_UPDATE_API = id => ({ apiUrl: `dlor/admin/series/${id}` });
 export const DLOR_SERIES_CREATE_API = () => ({ apiUrl: 'dlor/admin/series' });
 
+const productionRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage';
+const stagingRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage';
 export const DRUPAL_ARTICLE_API = () => {
-    const productionLocation = 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage/articles.json';
-    const stagingLocation =
-        'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json';
+    const filePath = '/articles.json';
+    const shouldUseProduction =
+        process.env.BRANCH === 'production' ||
+        (document.location.hostname === 'homepage-development.library.uq.edu.au' && // production on dev for test only
+            document.location.pathname === '/webpresence-staging/');
     return {
-        apiUrl: process.env.BRANCH === 'production' ? productionLocation : stagingLocation,
+        apiUrl: shouldUseProduction ? `${productionRoot}${filePath}` : `${stagingRoot}${filePath}`,
+    };
+};
+
+export const VEMCOUNT_API = () => {
+    const filePath = '/headcount.json';
+    const shouldUseProduction =
+        process.env.BRANCH === 'production' ||
+        (document.location.hostname === 'homepage-development.library.uq.edu.au' && // production on dev for test only
+            document.location.pathname === '/webpresence-staging/');
+    return {
+        apiUrl: shouldUseProduction ? `${productionRoot}${filePath}` : `${stagingRoot}${filePath}`,
     };
 };
 

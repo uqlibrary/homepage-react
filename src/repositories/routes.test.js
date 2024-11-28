@@ -363,6 +363,9 @@ describe('Backend routes method', () => {
             expect(routes.DRUPAL_ARTICLE_API()).toEqual({
                 apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage/articles.json',
             });
+            expect(routes.VEMCOUNT_API()).toEqual({
+                apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage/headcount.json',
+            });
         });
     });
 });
