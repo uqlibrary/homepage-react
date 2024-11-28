@@ -35,6 +35,7 @@ context('Training', () => {
             scopeName: 'As loaded',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
+        cy.get('h3 h3').should('not.exist'); // we managed to nest the heading at one point
     });
 
     it.skip('detail panel is accessible', () => {

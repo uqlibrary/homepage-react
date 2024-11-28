@@ -43,6 +43,30 @@ const MyLoader = props => (
         <rect x="0" y="200" rx="3" ry="3" width="100%" height="1" />
     </ContentLoader>
 );
+const StyledHeaderGridItem = styled(Grid)(() => ({
+    display: 'flex',
+    textAlign: 'center',
+    justifyContent: 'flex-start',
+    '& h3': {
+        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+        fontSize: '24px',
+        fontStyle: 'normal',
+        fontWeight: 500,
+        letterSpacing: '0.24px',
+        lineHeight: '160%', // 25.6px
+        margin: 0,
+    },
+    '& a': {
+        fontSize: '16px',
+        fontStyle: 'normal',
+        height: '24px',
+        lineHeight: '160%', // 25.6px
+        paddingBlock: 0,
+        marginLeft: '16px',
+        marginTop: '7px',
+    },
+}));
+
 const StyledWrapper = styled('div')(({ theme }) => ({
     ['&.trainingWrapper']: {
         display: 'flex',
@@ -211,49 +235,19 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
     };
     const filteredTrainingEvents = filterStandardisedTrainingEvents();
     return (
-        <StandardCard
-            subCard
-            primaryHeader
-            noPadding
-            standardCardId="training-panel-display"
-            title={
-                <Grid container>
-                    <Grid item style={{ display: 'flex', textAlign: 'center', justifyContent: 'flex-start' }}>
-                        <h3
-                            data-testid="standard-card-training-header"
-                            style={{
-                                fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-                                fontSize: '24px',
-                                fontStyle: 'normal',
-                                fontWeight: 500,
-                                letterSpacing: '0.24px',
-                                lineHeight: '160%', // 25.6px
-                                margin: 0,
-                            }}
-                        >
-                            Training
-                        </h3>
-                        <a
-                            href={linkToDrupal('/study-and-learning-support/training-and-workshops')}
-                            data-analyticsid="training-event-detail-more-training-button"
-                            className={'seeAllTrainingLink'}
-                            data-testid="seeAllTrainingLink"
-                            style={{
-                                fontSize: '16px',
-                                fontStyle: 'normal',
-                                height: '24px',
-                                lineHeight: '160%', // 25.6px
-                                paddingBlock: 0,
-                                marginLeft: '16px',
-                                marginTop: '7px',
-                            }}
-                        >
-                            See all training
-                        </a>
-                    </Grid>
-                </Grid>
-            }
-        >
+        <StandardCard subCard primaryHeader noPadding standardCardId="training-panel-display" noHeader>
+            <Grid container padding={3} style={{ paddingBottom: 0 }}>
+                <StyledHeaderGridItem item>
+                    <h3 data-testid="standard-card-training-header">Training</h3>
+                    <a
+                        href={linkToDrupal('/study-and-learning-support/training-and-workshops')}
+                        data-analyticsid="training-event-detail-more-training-button"
+                        data-testid="seeAllTrainingLink"
+                    >
+                        See all training
+                    </a>
+                </StyledHeaderGridItem>
+            </Grid>
             <StyledWrapper className={'trainingWrapper'}>
                 {(() => {
                     if (!!trainingEventsLoading && !eventDetail) {
