@@ -25,26 +25,25 @@ export const ReferencingPanel = ({ account }) => {
         },
     ];
     return (
-        <StandardCard
-            subCard
-            noPadding
-            // fullHeight
-            primaryHeader
-            standardCardId="referencing-homepage-panel"
-            title="Referencing"
-        >
-            <Grid container>
-                <Grid item xs={12} style={{ margin: '0 24px 0' }}>
-                    {referencingPanel.map((item, index) =>
-                        !item.uqOnly || (item.uqOnly && canSeeEndnoteReferencing(account)) ? (
-                            <p key={index}>
-                                <a href={`${item.url}`} data-testid={`referencing-${item.id}`}>{`${item.title}`}</a>
-                                <br />
-                                {`${item.description}`}
-                            </p>
-                        ) : null,
-                    )}
+        <StandardCard subCard noPadding primaryHeader standardCardId="referencing-homepage-panel" title="Referencing">
+            <Grid container padding={3} spacing={2} style={{ paddingBlock: '16px' }}>
+                <Grid item xs={12}>
+                    <a href={'https://guides.library.uq.edu.au/referencing'} data-testid={'referencing-style'}>
+                        Referencing style guides
+                    </a>
+                    <div>APA, Chicago, Vancouver and more</div>
                 </Grid>
+                {canSeeEndnoteReferencing(account) && (
+                    <Grid item xs={12}>
+                        <a
+                            href={linkToDrupal('/research-tools-techniques/endnote-referencing-software')}
+                            data-testid={'referencing-endnote'}
+                        >
+                            Endnote referencing software
+                        </a>
+                        <div>Download and support</div>
+                    </Grid>
+                )}
             </Grid>
         </StandardCard>
     );
