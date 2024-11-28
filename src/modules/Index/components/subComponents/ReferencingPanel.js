@@ -3,27 +3,16 @@ import PropTypes from 'prop-types';
 import { canSeeEndnoteReferencing } from 'helpers/access';
 
 import Grid from '@mui/material/Grid';
+import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { linkToDrupal } from 'helpers/general';
 
+const StyledBodyCopyDiv = styled('div')(() => ({
+    fontWeight: 400,
+}));
+
 export const ReferencingPanel = ({ account }) => {
-    const referencingPanel = [
-        {
-            id: 'style',
-            title: 'Referencing style guides',
-            url: 'https://guides.library.uq.edu.au/referencing',
-            description: 'APA, Chicago, Vancouver and more',
-            uqOnly: false, // only "UQ users", this is mostly to exclude EM users
-        },
-        {
-            id: 'endnote',
-            title: 'Endnote referencing software',
-            url: linkToDrupal('/research-tools-techniques/endnote-referencing-software'),
-            description: 'Download and support',
-            uqOnly: true,
-        },
-    ];
     return (
         <StandardCard subCard noPadding primaryHeader standardCardId="referencing-homepage-panel" title="Referencing">
             <Grid container padding={3} spacing={2} style={{ paddingBlock: '16px' }}>
@@ -31,7 +20,7 @@ export const ReferencingPanel = ({ account }) => {
                     <a href={'https://guides.library.uq.edu.au/referencing'} data-testid={'referencing-style'}>
                         Referencing style guides
                     </a>
-                    <div>APA, Chicago, Vancouver and more</div>
+                    <StyledBodyCopyDiv>APA, Chicago, Vancouver and more</StyledBodyCopyDiv>
                 </Grid>
                 {canSeeEndnoteReferencing(account) && (
                     <Grid item xs={12}>
@@ -41,7 +30,7 @@ export const ReferencingPanel = ({ account }) => {
                         >
                             Endnote referencing software
                         </a>
-                        <div>Download and support</div>
+                        <StyledBodyCopyDiv>Download and support</StyledBodyCopyDiv>
                     </Grid>
                 )}
             </Grid>
