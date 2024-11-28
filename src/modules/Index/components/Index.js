@@ -86,37 +86,39 @@ const StyledGridWrapper = styled('div')(() => ({
     },
 }));
 
-const StyledGridItemLoggedIn = styled(Grid)(({ theme }) => {
-    return {
-        paddingLeft: '24px',
-        marginBottom: '24px',
-        [theme.breakpoints.down('uqDsDesktop')]: {
-            paddingLeft: '0',
-            marginBottom: '24px',
-        },
-        [theme.breakpoints.up('uqDsDesktopXL')]: {
-            paddingLeft: '32px',
-            marginBottom: '32px',
-        },
-        [theme.breakpoints.down('uqDsTablet')]: {
-            maxWidth: '100%',
-        },
-    };
-});
-
-const StyledGridItemLoggedInLeftAlign = styled(Grid)(({ theme }) => {
-    return {
+const StyledGridItemLoggedIn = styled(Grid)(({ theme }) => ({
+    paddingLeft: '24px',
+    marginBottom: '24px',
+    [theme.breakpoints.down('uqDsDesktop')]: {
         paddingLeft: '0',
         marginBottom: '24px',
-        [theme.breakpoints.up('uqDsDesktopXL')]: {
-            paddingLeft: '0px',
-            marginBottom: '32px',
-        },
-        [theme.breakpoints.down('uqDsTablet')]: {
-            maxWidth: '100%',
-        },
-    };
-});
+    },
+    [theme.breakpoints.up('uqDsDesktopXL')]: {
+        paddingLeft: '32px',
+        marginBottom: '32px',
+    },
+    [theme.breakpoints.down('uqDsTablet')]: {
+        maxWidth: '100%',
+    },
+    '& h3': {
+        whiteSpace: 'pre-wrap',
+    },
+}));
+
+const StyledGridItemLoggedInLeftMost = styled(Grid)(({ theme }) => ({
+    paddingLeft: '0',
+    marginBottom: '24px',
+    [theme.breakpoints.up('uqDsDesktopXL')]: {
+        paddingLeft: '0px',
+        marginBottom: '32px',
+    },
+    [theme.breakpoints.down('uqDsTablet')]: {
+        maxWidth: '100%',
+    },
+    '& h3': {
+        whiteSpace: 'pre-wrap',
+    },
+}));
 
 export const Index = ({
     account,
@@ -236,41 +238,41 @@ export const Index = ({
                             </Grid>
                                 {!!verySimplelayout ? (
                                     <>
-                                        <StyledGridItemLoggedInLeftAlign item xs={12} uqDsDesktop={4} data-testid="primo-panel" style={{ paddingTop: 0 }}>
+                                        <StyledGridItemLoggedInLeftMost item xs={12} uqDsDesktop={4} data-testid="account-panel" style={{ paddingTop: 0 }}>
                                             <AccountPanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} />
-                                        </StyledGridItemLoggedInLeftAlign>
+                                        </StyledGridItemLoggedInLeftMost>
                                         {canSeeTrainingPanel(account) && (
-                                            <StyledGridItemLoggedInLeftAlign item xs={12} uqDsDesktop={4} data-testid="training-panel" style={{ paddingTop: 0 }}>
+                                            <StyledGridItemLoggedInLeftMost item xs={12} uqDsDesktop={4} data-testid="training-panel" style={{ paddingTop: 0 }}>
                                                 <Training
                                                     trainingEvents={trainingEvents}
                                                     trainingEventsLoading={trainingEventsLoading}
                                                     trainingEventsError={trainingEventsError}
                                                 />
-                                            </StyledGridItemLoggedInLeftAlign>
+                                            </StyledGridItemLoggedInLeftMost>
                                         )}
-                                        <StyledGridItemLoggedInLeftAlign  item xs={12} uqDsDesktop={4} data-testid="referencing-panel" style={{ paddingTop: 0 }}>
+                                        <StyledGridItemLoggedInLeftMost  item xs={12} uqDsDesktop={4} data-testid="referencing-panel" style={{ paddingTop: 0 }}>
                                             <ReferencingPanel account={account} />
-                                        </StyledGridItemLoggedInLeftAlign>
+                                        </StyledGridItemLoggedInLeftMost>
                                     </>
                                 ) : (
                                     <>
                                         <Grid item uqDsDesktop={4} xs={12}>
                                             <Grid container>
-                                                <StyledGridItemLoggedInLeftAlign item xs={12} data-testid="primo-panel">
+                                                <StyledGridItemLoggedInLeftMost item xs={12} data-testid="account-panel">
                                                     <AccountPanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} />
-                                                </StyledGridItemLoggedInLeftAlign>
+                                                </StyledGridItemLoggedInLeftMost>
                                                 {canSeeTrainingPanel(account) && (
-                                                    <StyledGridItemLoggedInLeftAlign item xs={12} data-testid="training-panel">
+                                                    <StyledGridItemLoggedInLeftMost item xs={12} data-testid="training-panel">
                                                         <Training
                                                             trainingEvents={trainingEvents}
                                                             trainingEventsLoading={trainingEventsLoading}
                                                             trainingEventsError={trainingEventsError}
                                                         />
-                                                    </StyledGridItemLoggedInLeftAlign>
+                                                    </StyledGridItemLoggedInLeftMost>
                                                 )}
                                             </Grid>
                                         </Grid>
-                                        <Grid item uqDsDesktop={8}>
+                                        <Grid item uqDsDesktop={8} xs={12}>
                                             <Grid container>
                                                 {canSeeLearningResourcesPanel(account) && (
                                                     <StyledGridItemLoggedIn item xs={12} data-testid="learning-resources-panel">
@@ -290,7 +292,7 @@ export const Index = ({
                                                         )}
                                                     </Grid>
                                                 </Grid>
-                                                <Grid item uqDsDesktop={6}>
+                                                <Grid item uqDsDesktop={6} xs={12}>
                                                     <Grid container>
                                                         {isEspaceAuthor(account, author) && (
                                                             <StyledGridItemLoggedIn item xs={12} data-testid="espace-links-panel">

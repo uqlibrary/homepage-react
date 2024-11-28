@@ -110,8 +110,8 @@ export default {
                     document.location.hostname,
                     // this doesn't like an `import linkToDrupal` line above - weird! linkToDrupal is only temporary anyway
                 )
-                    ? 'https:///web-live.library.uq.edu.au/library-services/training/legal-research-essentials'
-                    : 'https://web.library.uq.edu.au/library-services/training/legal-research-essentials',
+                    ? 'https://web-live.library.uq.edu.au/study-and-learning-support/training-and-workshops/legal-research-essentials'
+                    : /* istanbul ignore next */ 'https://web.library.uq.edu.au/study-and-learning-support/training-and-workshops/legal-research-essentials',
             },
         },
     },
