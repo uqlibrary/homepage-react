@@ -268,7 +268,9 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
                 </li>
                 {canSeePrintBalance(account) && (
                     <li data-testid={'show-papercut'}>
-                        <Link to={linkToDrupal('/library-services/it/print-scan-copy/your-printing-account')}>
+                        <Link
+                            to={linkToDrupal('/library-and-student-it-help/print-scan-and-copy/your-printing-account')}
+                        >
                             {dsDiscountDollarDashIcon} <span>Print balance {markedPrintBalance()}</span>
                         </Link>
                     </li>

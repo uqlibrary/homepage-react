@@ -25,7 +25,7 @@ export const ReferencingPanel = ({ account }) => {
                 {canSeeEndnoteReferencing(account) && (
                     <Grid item xs={12}>
                         <a
-                            href={linkToDrupal('/research-tools-techniques/endnote-referencing-software')}
+                            href={'https://guides.library.uq.edu.au/referencing/endnote'}
                             data-testid={'referencing-endnote'}
                         >
                             Endnote referencing software
