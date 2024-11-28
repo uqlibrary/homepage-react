@@ -22,6 +22,7 @@ import {
     DLOR_UPDATE_API,
     DLOR_UNSUBSCRIBE_API,
     DLOR_UNSUBSCRIBE_FIND_API,
+    DLOR_SERIES_LOAD_API
 } from 'repositories/routes';
 
 const checkExpireSession = (dispatch, error) => {
@@ -354,6 +355,27 @@ export function loadDlorSeriesList() {
             .catch(error => {
                 dispatch({
                     type: actions.DLOR_SERIESLIST_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function loadDlorSeries(seriesId) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_SERIES_LOADING });
+        return get(DLOR_SERIES_LOAD_API(seriesId))
+            .then(response => {
+                console.log("RESPONSE: ", response, seriesId)
+                dispatch({
+                    type: actions.DLOR_SERIES_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_SERIES_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);

@@ -43,6 +43,7 @@ export const pathConfig = {
     bookExamBooth: '/book-exam-booth',
     dlorHome: '/digital-learning-hub',
     dlorView: dlorId => `/digital-learning-hub/view/${dlorId}`,
+    dlorViewSeries: seriesId => `/digital-learning-hub/series/${seriesId}`,
     dlorSubscriptionConfirmation: confirmationId => `/digital-learning-hub/confirm/subscribe/${confirmationId}`,
     dlorUnsubscribe: confirmationId => `/digital-learning-hub/confirm/unsubscribe/${confirmationId}`,
     pastExamPaperList: courseHint => `/exams/course/${courseHint}`,
