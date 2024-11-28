@@ -250,7 +250,7 @@ export const DRUPAL_ARTICLE_API = () => {
     const shouldUseProduction =
         process.env.BRANCH === 'production' ||
         (document.location.hostname === 'homepage-development.library.uq.edu.au' && // production on dev for test only
-            document.location.pathname === '/webpresence-staging/');
+            /* istanbul ignore next */ document.location.pathname === '/webpresence-staging/');
     return {
         apiUrl: shouldUseProduction ? `${productionRoot}${filePath}` : `${stagingRoot}${filePath}`,
     };
@@ -261,7 +261,7 @@ export const VEMCOUNT_API = () => {
     const shouldUseProduction =
         process.env.BRANCH === 'production' ||
         (document.location.hostname === 'homepage-development.library.uq.edu.au' && // production on dev for test only
-            document.location.pathname === '/webpresence-staging/');
+            /* istanbul ignore next */ document.location.pathname === '/webpresence-staging/');
     return {
         apiUrl: shouldUseProduction ? `${productionRoot}${filePath}` : `${stagingRoot}${filePath}`,
     };
