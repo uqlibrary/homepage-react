@@ -27,6 +27,9 @@ import {
     toTitleCase,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 const StyledDraggableListItem = styled('li')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
@@ -61,6 +64,14 @@ export const DLOSeriesEdit = ({
     dlorListLoading,
     dlorListError,
 }) => {
+    const handleEditorChange = (fieldname, newContent) => {
+        // setSummarySuggestionOpen(true);
+        // amalgamate new value into data set
+        const newValues = { ...formValues, [fieldname]: newContent };
+
+        setFormValues(newValues);
+    };
+
     const { dlorSeriesId } = useParams();
     const [cookies, setCookie] = useCookies();
 
@@ -71,9 +82,31 @@ export const DLOSeriesEdit = ({
     const [confirmationOpen, setConfirmationOpen] = useState(false);
     const [formValues, setFormValues] = useState({
         series_name: '',
+        series_descrpition: '',
         object_list_linked: [],
         object_list_unassigned: [],
     });
+    const editorConfig = {
+        removePlugins: [
+            'Image',
+            'ImageCaption',
+            'ImageStyle',
+            'ImageToolbar',
+            'ImageUpload',
+            'EasyImage',
+            'CKFinder',
+            'BlockQuote',
+            'Table',
+            'MediaEmbed',
+        ],
+        heading: {
+            options: [
+                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                { model: 'heading1', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                { model: 'heading2', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+            ],
+        },
+    };
 
     useEffect(() => {
         setConfirmationOpen(!dlorItemUpdating && (!!dlorUpdatedItemError || !!dlorUpdatedItem));
@@ -103,9 +136,11 @@ export const DLOSeriesEdit = ({
             setOriginalSeriesDetails({
                 series_id: seriesDetail?.object_series_id,
                 series_name: seriesDetail?.object_series_name,
+                series_description: seriesDetail?.object_series_description
             });
             setFormValues({
                 series_name: seriesDetail?.object_series_name,
+                series_description: seriesDetail?.object_series_description,
                 object_list_linked:
                     dlorList?.length > 0
                         ? dlorList?.filter(o => {
@@ -212,6 +247,7 @@ export const DLOSeriesEdit = ({
     const saveChanges = () => {
         const valuesToSend = {
             series_name: formValues.series_name,
+            series_description: formValues.series_description,
             series_list: formValues.object_list_linked
                 .filter(item => Number(item.object_series_order) > 0)
                 .map(item => ({
@@ -224,7 +260,7 @@ export const DLOSeriesEdit = ({
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
-
+        console.log("Saving values", valuesToSend)
         actions.updateDlorSeries(dlorSeriesId, valuesToSend);
     };
 
@@ -286,8 +322,9 @@ export const DLOSeriesEdit = ({
                                                 !!dlorUpdatedItemError ? locale.errorMessage : locale.successMessage
                                             }
                                         />
-
+                                        {console.log("Form Values: ", formValues)}
                                         <StyledSeriesEditForm id="dlor-editSeries-form">
+                                        {/* <form id="dlor-editSeries-form"> */}
                                             <Grid item xs={12}>
                                                 <FormControl variant="standard" fullWidth>
                                                     <InputLabel htmlFor="series_name">Series name *</InputLabel>
@@ -306,8 +343,33 @@ export const DLOSeriesEdit = ({
                                                         This series name is not valid.
                                                     </StyledErrorMessageBox>
                                                 )}
+                                               
                                             </Grid>
-                                        </StyledSeriesEditForm>
+                                      
+                                            {!!dlorList && !!isValidSeriesName(formValues?.series_name) && (
+                                                <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
+                                                    <InputLabel htmlFor="object_description">Description of Series</InputLabel>
+                                                        <CKEditor
+                                                        id="object_description"
+                                                        data-testid="object-description"
+                                                        sx={{ width: '100%' }}
+                                                        editor={ClassicEditor}
+                                                        config={editorConfig}
+                                                        data={formValues?.series_description || ""}
+                                                        onReady={editor => {
+                                                            editor.editing.view.change(writer => {
+                                                                writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
+                                                            });
+                                                        }}
+                                                        onChange={(event, editor) => {
+                                                            const htmlData = editor.getData();
+                                                            handleEditorChange('series_description', htmlData);
+                                                        }}
+                                                    />
+                                                </FormControl>
+                                             )} 
+                                        </StyledSeriesEditForm>   
+                                        {/* </form> */}
                                     </Grid>
                                 </Grid>
 

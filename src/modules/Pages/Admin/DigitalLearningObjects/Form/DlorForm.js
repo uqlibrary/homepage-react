@@ -123,6 +123,7 @@ export const DlorForm = ({
     formDefaults,
     mode,
 }) => {
+    console.log("Form Defaults", formDefaults);
     const [cookies, setCookie] = useCookies();
 
     const [confirmationOpen, setConfirmationOpen] = useState(false);
@@ -689,6 +690,7 @@ export const DlorForm = ({
                         characterCount(formValues?.object_title?.length, titleMinimumLength, 'object_title')}
                 </FormControl>
             </Grid>
+            {console.log("THE FORM VALUES:", formValues)}
             <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
