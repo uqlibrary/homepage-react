@@ -12,7 +12,21 @@ describe('Alma Primo', () => {
                 .should('exist')
                 .contains('Loans (1)');
         });
-        it('displays nothing on an error correctly', () => {
+        it('is accessible', () => {
+            cy.visit('/');
+            cy.injectAxe();
+            cy.wait(2000);
+            cy.viewport(1300, 1000);
+
+            cy.waitUntil(() => cy.get('[data-testid="show-searchhistory"]').should('exist'));
+            cy.get('[data-testid="show-searchhistory"]').contains('Search history');
+            cy.checkA11y('[data-testid="account-panel"]', {
+                reportName: 'Account panel',
+                scopeName: 'As loaded',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+        });
+        it('displays no Requests on an error correctly', () => {
             cy.visit('http://localhost:2020/?user=s1111111&responseType=almaError');
             cy.viewport(1280, 900);
             cy.waitUntil(() =>

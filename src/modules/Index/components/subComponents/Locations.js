@@ -478,7 +478,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
             return null;
         }
         if (location.abbr === 'Fryer') {
-            return <div className="occupancyText has-ellipsis">By appointment only</div>;
+            return <div className="occupancyText has-ellipsis">By appointment</div>;
         }
         if (!hasDepartments(location)) {
             return <div className="occupancyText has-ellipsis has-exclamation-icon">Data not available</div>;

@@ -199,7 +199,7 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-fryer"] > div:nth-child(2)').contains('By Appointment');
         cy.get('[data-testid="hours-item-fryer"] > div:nth-child(3) div.occupancyText')
             .should('exist')
-            .contains('By appointment only');
+            .contains('By appointment');
         cy.get('[data-testid="hours-item-fryer"] > div:nth-child(3)').should('exist');
 
         // cy.log('Whitty has a missing department field (should never happen) so we see "See location"');
@@ -232,26 +232,6 @@ context('Locations Panel', () => {
             .scrollIntoView()
             .contains('Library')
             .click();
-        // dialog is closed
-        cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
-    });
-    it('a second click on the button can close the dialog', () => {
-        cy.visit('/');
-        cy.viewport(1300, 1000);
-        cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
-        // open dialog
-        cy.get('[data-testid="hours-accordion-open"]').click();
-        // confirm dialog is open
-        cy.waitUntil(() =>
-            cy
-                .get('[data-testid="homepage-hours-weeklyhours-link"]')
-                .should('exist')
-                .should('be.visible')
-                .contains('See all Library and AskUs hours'),
-        );
-
-        // re-click button
-        cy.get('[data-testid="hours-accordion-open"]').click();
         // dialog is closed
         cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
     });

@@ -11,17 +11,21 @@ import LibraryArticle from './LibraryArticle';
 
 import { styled } from '@mui/material/styles';
 
-const StyledLink = styled(Link)(({ theme }) => ({
-    color: theme.palette.primary.light,
-    fontWeight: 500,
-    display: 'inline-block',
-    marginLeft: '16px',
-    paddingBlock: '2px',
-    textDecoration: 'underline',
-    transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
-    '&:hover': {
-        color: '#fff',
-        backgroundColor: theme.palette.primary.light,
+const StyledHeaderGridItem = styled(Grid)(({ theme }) => ({
+    marginTop: 0,
+    paddingTop: 0,
+    '& h2': { marginTop: '72px', fontSize: '32px', fontWeight: 500, display: 'inline-block', marginRight: '16px' },
+    '& a': {
+        color: theme.palette.primary.light,
+        fontWeight: 500,
+        display: 'inline-block',
+        paddingBlock: '2px',
+        textDecoration: 'underline',
+        transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
+        '&:hover': {
+            color: '#fff',
+            backgroundColor: theme.palette.primary.light,
+        },
     },
 }));
 
@@ -35,15 +39,10 @@ const LibraryUpdates = ({ drupalArticleList, drupalArticlesError, drupalArticles
                 data-testid="library-updates-parent"
                 key="library-updates-parent"
             >
-                <Grid item xs={12} style={{ marginTop: 0, paddingTop: 0 }}>
-                    <Typography
-                        component={'h2'}
-                        sx={{ marginTop: '72px', fontSize: '32px', fontWeight: 500, display: 'inline-block' }}
-                    >
-                        Library updates
-                    </Typography>
-                    <StyledLink to={linkToDrupal('/about-us/news')}>See more updates</StyledLink>
-                </Grid>
+                <StyledHeaderGridItem item xs={12}>
+                    <Typography component={'h2'}>Library updates</Typography>
+                    <Link to={linkToDrupal('/about-us/news')}>See more updates</Link>
+                </StyledHeaderGridItem>
                 {(() => {
                     if (!!drupalArticlesError) {
                         return (

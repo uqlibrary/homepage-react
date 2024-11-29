@@ -315,7 +315,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                 <Grid container>
                     <Grid item xs={'auto'}>
                         <p className={'aboutLink'}>
-                            <a href={linkToDrupal('/library-services/students/past-exam-papers')}>
+                            <a href={linkToDrupal('/study-and-learning-support/coursework/past-exam-papers')}>
                                 Read more about searching for past exam papers
                             </a>
                         </p>
