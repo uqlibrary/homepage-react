@@ -19,12 +19,11 @@ const Locations = lazy(() => lazyRetry(() => import('./Locations')));
 const StyledWrapperDiv = styled('div')(({ theme }) => ({
     position: 'relative',
     display: 'flex',
-    flexDirection: 'row-reverse',
     flexWrap: 'wrap',
     [theme.breakpoints.up('uqDsMobile')]: {
         gap: '32px',
     },
-    justifyContent: 'flex-end', // actually the start, reversed because of flex-direction
+    justifyContent: 'flex-start',
     alignItems: 'center',
     paddingBlock: '32px',
 }));
@@ -66,6 +65,7 @@ const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
     padding: 0,
     textTransform: 'none',
     whiteSpace: 'nowrap',
+    border: '2px solid white', // prefill space for tabbing through
     '& .MuiTouchRipple-root': {
         display: 'none', // remove mui ripple
     },
@@ -78,6 +78,9 @@ const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
     '&:hover span span': {
         backgroundColor: theme.palette.primary.light,
         color: 'white',
+    },
+    '&:focus': {
+        borderColor: '#3872a8', // match other elements outline colour
     },
 }));
 
@@ -96,13 +99,26 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
 
         const showHideButton = document.getElementById('location-dialog-controller');
         /* istanbul ignore else */
-        if (!!showHideButton) {
-            const isOpen = showHideButton.ariaExpanded === 'true';
-            showHideButton.ariaExpanded = isOpen ? 'false' : 'true'; // toggle the current value
+        if (!showHideButton) {
+            return;
+        }
+        const isOpen = showHideButton.getAttribute('aria-expanded') === 'true';
+        showHideButton.setAttribute('aria-expanded', isOpen ? 'false' : 'true'); // toggle the current value
 
-            const locationsPanel = document.getElementById('locations-wrapper');
-            !!locationsPanel && (locationsPanel.ariaHidden = isOpen ? 'true' : 'false');
-            !!locationsPanel && (locationsPanel.ariaLive = isOpen ? 'off' : 'assertive');
+        const locationsPanel = document.getElementById('locations-wrapper');
+        !!locationsPanel && locationsPanel.setAttribute('aria-hidden', isOpen ? 'true' : 'false');
+        !!locationsPanel && locationsPanel.setAttribute('aria-live', isOpen ? 'off' : 'assertive');
+
+        if (!isOpen) {
+            const findLink = setInterval(() => {
+                // wait for the links to load (probably already available) and then navigate to it
+                const listLinks = document.querySelectorAll('.locationLink');
+                if (!!listLinks && listLinks.length > 0) {
+                    clearInterval(findLink);
+                    // move the user's focus to the first link
+                    !!listLinks && listLinks.length > 0 && listLinks[0].focus();
+                }
+            }, 100);
         }
     };
 
@@ -138,7 +154,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
             document.removeEventListener('mousedown', closeOnClickOutsideDialog);
             document.removeEventListener('keydown', closeOnEscape);
         };
-    }, [locationOpen]);
+    }, [locationOpen, showHideLocationPanel]);
 
     const isLocationOpen = Boolean(locationOpen);
 
@@ -154,12 +170,6 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
         <div style={{ borderBottom: '1px solid hsla(203, 50%, 30%, 0.15)' }}>
             <div className="layout-card" style={{ position: 'relative' }}>
                 <StyledWrapperDiv>
-                    <StyledBookingLink
-                        href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
-                        data-testid="homepage-hours-bookit-link"
-                    >
-                        <span>Book a room</span>
-                    </StyledBookingLink>
                     <StyledLocationOpenerButton
                         id="location-dialog-controller"
                         data-testid="hours-accordion-open"
@@ -174,6 +184,12 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                         </span>
                         {!!locationOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                     </StyledLocationOpenerButton>
+                    <StyledBookingLink
+                        href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
+                        data-testid="homepage-hours-bookit-link"
+                    >
+                        <span>Book a room</span>
+                    </StyledBookingLink>
                 </StyledWrapperDiv>
                 <Fade in={!!isLocationOpen}>
                     <StyledLocationBox
@@ -192,6 +208,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                             vemcount={vemcount}
                             vemcountLoading={vemcountLoading}
                             vemcountError={vemcountError}
+                            closePanel={showHideLocationPanel}
                         />
                     </StyledLocationBox>
                 </Fade>
