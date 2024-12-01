@@ -348,7 +348,15 @@ export const ariaLabelForLocation = location => {
     return response;
 };
 
-const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcountLoading, vemcountError }) => {
+const Locations = ({
+    libHours,
+    libHoursLoading,
+    libHoursError,
+    vemcount,
+    vemcountLoading,
+    vemcountError,
+    closePanel,
+}) => {
     const theme = useTheme();
     const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
     React.useEffect(() => {
@@ -514,7 +522,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
 
     return (
         <StyledStandardCard noPadding noHeader standardCardId="locations-panel">
-            <StyledTableWrapper id="tablewrapper">
+            <StyledTableWrapper id="locationsTableWrapper">
                 {(!!libHoursError || !!vemcountError) && (
                     <Fade in={!libHoursLoading} timeout={1000}>
                         <div className={'locations-wrapper'}>
@@ -565,6 +573,7 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                                         <Link
                                             to={location.url}
                                             id={`${sluggifyName(`hours-item-${location.abbr}`)}`}
+                                            className={'locationLink'}
                                             data-testid={`${sluggifyName(`hours-item-${location.abbr}`)}-link`}
                                             aria-label={ariaLabelForLocation(location)}
                                         >
@@ -606,9 +615,11 @@ const Locations = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcoun
                 <StyledOutlinkDiv>
                     <span>
                         <Link
+                            id="homepage-hours-weeklyhours-link"
                             data-testid="homepage-hours-weeklyhours-link"
                             data-analyticsid={'hours-item-weeklyhours-link'}
-                            to={linkToDrupal('/locations-hours/opening-hours')}
+                            to={linkToDrupal('/visit-our-spaces/all-opening-hours')}
+                            onBlur={closePanel}
                         >
                             <span>
                                 {!!libHoursError || !!vemcountError ? <span>In the meantime, s</span> : <span>S</span>}
@@ -634,6 +645,7 @@ Locations.propTypes = {
     vemcount: PropTypes.object,
     vemcountLoading: PropTypes.bool,
     vemcountError: PropTypes.bool,
+    closePanel: PropTypes.func,
 };
 
 export default Locations;
