@@ -98,7 +98,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
         setLocationOpen(!locationOpen);
 
         const showHideButton = document.getElementById('location-dialog-controller');
-        /* istanbul ignore else */
+        /* istanbul ignore next */
         if (!showHideButton) {
             return;
         }
