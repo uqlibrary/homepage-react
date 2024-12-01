@@ -84,7 +84,7 @@ const NavigationCardWrapper = ({ account, accountLoading }) => {
                     />
                     <SingleLinkCard
                         cardHeading="About"
-                        landingUrl={linkToDrupal('/about-us')}
+                        landingUrl={linkToDrupal('/about')}
                         iconBackgroundImage={schoolBuildingBackgroundimage}
                         shortParagraph="Learn about the Library - our people, purpose and news."
                         loggedIn={accountLoading === false && !!account}

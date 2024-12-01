@@ -41,7 +41,7 @@ const LibraryUpdates = ({ drupalArticleList, drupalArticlesError, drupalArticles
             >
                 <StyledHeaderGridItem item xs={12}>
                     <Typography component={'h2'}>Library updates</Typography>
-                    <Link to={linkToDrupal('/about-us/news')}>See more updates</Link>
+                    <Link to={linkToDrupal('/about/news')}>See more updates</Link>
                 </StyledHeaderGridItem>
                 {(() => {
                     if (!!drupalArticlesError) {
