@@ -1237,6 +1237,7 @@ export const DlorForm = ({
                 aria-describedby="notify-lightbox-description"
                 data-testid="notify-lightbox-modal"
                 sx={{ zIndex: 1000 }}
+                disableEnforceFocus
             >
                 <Box
                     sx={{
