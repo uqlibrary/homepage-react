@@ -367,7 +367,6 @@ export function loadDlorSeries(seriesId) {
         dispatch({ type: actions.DLOR_SERIES_LOADING });
         return get(DLOR_SERIES_LOAD_API(seriesId))
             .then(response => {
-                console.log("RESPONSE: ", response, seriesId)
                 dispatch({
                     type: actions.DLOR_SERIES_LOADED,
                     payload: response.data,
@@ -407,11 +406,11 @@ export function updateDlorSeries(seriesId, request) {
 
 export function createDlorSeries(request) {
     return async dispatch => {
-        dispatch({ type: actions.DLOR_CREATING });
+        dispatch({ type: actions.DLOR_UPDATING });
         return post(DLOR_SERIES_CREATE_API(), request)
             .then(data => {
                 dispatch({
-                    type: actions.DLOR_CREATED,
+                    type: actions.DLOR_UPDATED,
                     payload: data,
                 });
                 // refresh the list after change
@@ -419,7 +418,7 @@ export function createDlorSeries(request) {
             })
             .catch(error => {
                 dispatch({
-                    type: actions.DLOR_CREATE_FAILED,
+                    type: actions.DLOR_UPDATE_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
