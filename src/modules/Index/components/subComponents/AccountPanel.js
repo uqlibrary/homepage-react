@@ -275,14 +275,15 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
                         </Link>
                     </li>
                 )}
-                {isTestTagUser(account) && (
-                    <li data-testid={'show-testntag'}>
-                        <Link to={'admin/testntag'}>
-                            {dsChecklistIcon}
-                            <span>Test and tag</span>
-                        </Link>
-                    </li>
-                )}
+                {isTestTagUser(account) &&
+                /* istanbul ignore next */ !['uqldegro', 'uqslanca', 'uqjtilse'].includes(account.id) && ( // hide until end of 2024 dev(
+                        <li data-testid={'show-testntag'}>
+                            <Link to={'admin/testntag'}>
+                                {dsChecklistIcon}
+                                <span>Test and tag</span>
+                            </Link>
+                        </li>
+                    )}
             </StyledUl>
             {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
                 <StyledAlertDiv data-testid={'show-fines'}>
