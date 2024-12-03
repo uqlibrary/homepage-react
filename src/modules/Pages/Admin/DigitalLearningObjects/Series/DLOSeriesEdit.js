@@ -139,8 +139,8 @@ export const DLOSeriesEdit = ({
             let seriesDetail = dlorList.find(s => s.object_series_id === Number(dlorSeriesId)) || {};
             if (Object.keys(seriesDetail).length === 0) {
                 seriesDetail.object_series_id = dlorSeriesId;
-                seriesDetail.object_series_name = dlorSeries.series_name,
-                seriesDetail.object_series_description = dlorSeries.series_description
+                seriesDetail.object_series_name = dlorSeries?.series_name,
+                seriesDetail.object_series_description = dlorSeries?.series_description
             }
             setOriginalSeriesDetails({
                 series_id: seriesDetail?.object_series_id,
