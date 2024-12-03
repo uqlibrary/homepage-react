@@ -145,13 +145,13 @@ export const DLOSeriesEdit = ({
                 seriesDetail.object_series_name = dlorSeries?.series_name,
                 seriesDetail.object_series_description = dlorSeries?.series_description
             }
-            setOriginalSeriesDetails({
+            mode === "EDIT" && setOriginalSeriesDetails({
                 series_id: seriesDetail?.object_series_id,
                 series_name: seriesDetail?.object_series_name,
                 series_description: seriesDetail?.object_series_description
             });
             console.log("About to set the values", seriesDetail, dlorSeries)
-            setFormValues({
+            mode === "EDIT" && setFormValues({
                 series_name: seriesDetail?.object_series_name,
                 series_description: seriesDetail?.object_series_description,
                 object_list_linked:
