@@ -377,12 +377,9 @@ const Locations = ({
 
     /* istanbul ignore next */
     const handleFirstLinkKeyDown = e => {
-        console.log('handleFirstLinkKeyDown e.id=', e?.id);
-        console.log('handleFirstLinkKeyDown document.activeElement=', document.activeElement);
         if (e.key === 'Tab' && e.shiftKey) {
             e.preventDefault();
             const openerCloserButton = document.getElementById('location-dialog-controller');
-            console.log('handleFirstLinkKeyDown openerCloserButton=', openerCloserButton);
             !!openerCloserButton && openerCloserButton.focus();
             closePanel();
         }
