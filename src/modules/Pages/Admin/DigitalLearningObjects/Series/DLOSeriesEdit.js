@@ -83,7 +83,7 @@ export const DLOSeriesEdit = ({
     const [confirmationOpen, setConfirmationOpen] = useState(false);
     const [formValues, setFormValues] = useState({
         series_name: '',
-        series_descrpition: '',
+        series_description: '',
         object_list_linked: [],
         object_list_unassigned: [],
     });
@@ -217,6 +217,7 @@ export const DLOSeriesEdit = ({
             unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
             newValues = {
                 series_name: formValues.series_name,
+                series_description: formValues.series_description,
                 object_list_linked: linked,
                 object_list_unassigned: unassigned,
             };
@@ -239,6 +240,7 @@ export const DLOSeriesEdit = ({
             unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
             newValues = {
                 series_name: formValues.series_name,
+                series_description: formValues.series_description,
                 object_list_linked: linked,
                 object_list_unassigned: unassigned,
             };
