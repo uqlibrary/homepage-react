@@ -124,6 +124,10 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
         window.location.href = dlorAdminLink('/series/manage');
     };
 
+    const navigateToAddSeriesPage = () => {
+        window.location.href = dlorAdminLink('/series/add');
+    };
+
     const navigateToEditPage = uuid => {
         window.location.href = dlorAdminLink(`/edit/${uuid}`);
     };
@@ -277,6 +281,13 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
             />
             <Grid container spacing={2} sx={{ marginBottom: '25px' }}>
                 <Grid item xs={12} sx={{ textAlign: 'right' }}>
+                <Button
+                        children="Add series"
+                        color="primary"
+                        data-testid="admin-dlor-visit-add-series-button"
+                        onClick={() => navigateToAddSeriesPage()}
+                        variant="contained"
+                    />{' '}
                     <Button
                         children="Manage series"
                         color="primary"
