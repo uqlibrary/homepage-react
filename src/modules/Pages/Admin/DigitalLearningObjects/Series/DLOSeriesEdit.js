@@ -127,6 +127,7 @@ export const DLOSeriesEdit = ({
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
             if (dlorSeriesId) {
+                console.log("Loading DLOR Series");
                 actions.loadDlorSeries(dlorSeriesId)
             }
         }
@@ -134,10 +135,11 @@ export const DLOSeriesEdit = ({
     }, []);
 
     useEffect(() => {
-        if (!dlorListLoading && !dlorListError && !!dlorList) {
+        if (!dlorListLoading && !dlorListError && (!!dlorList || !!dlorSeries)) {
             setConfirmationOpen(false);
-            let seriesDetail = dlorList.find(s => s.object_series_id === Number(dlorSeriesId)) || {};
+            let seriesDetail = !!dlorList && dlorList?.find(s => s.object_series_id === Number(dlorSeriesId)) || {};
             if (Object.keys(seriesDetail).length === 0) {
+                console.log("Doing the things")
                 seriesDetail.object_series_id = dlorSeriesId;
                 seriesDetail.object_series_name = dlorSeries?.series_name,
                 seriesDetail.object_series_description = dlorSeries?.series_description
@@ -147,6 +149,7 @@ export const DLOSeriesEdit = ({
                 series_name: seriesDetail?.object_series_name,
                 series_description: seriesDetail?.object_series_description
             });
+            console.log("About to set the values", seriesDetail)
             setFormValues({
                 series_name: seriesDetail?.object_series_name,
                 series_description: seriesDetail?.object_series_description,
