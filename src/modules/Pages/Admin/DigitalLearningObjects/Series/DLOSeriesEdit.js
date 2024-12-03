@@ -63,6 +63,7 @@ export const DLOSeriesEdit = ({
     dlorList,
     dlorListLoading,
     dlorListError,
+    dlorSeries,
     mode
 }) => {
     const handleEditorChange = (fieldname, newContent) => {
@@ -125,6 +126,9 @@ export const DLOSeriesEdit = ({
         /* istanbul ignore else */
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
+            if (dlorSeriesId) {
+                actions.loadDlorSeries(dlorSeriesId)
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -132,8 +136,12 @@ export const DLOSeriesEdit = ({
     useEffect(() => {
         if (!dlorListLoading && !dlorListError && !!dlorList) {
             setConfirmationOpen(false);
-
-            const seriesDetail = dlorList.find(s => s.object_series_id === Number(dlorSeriesId));
+            let seriesDetail = dlorList.find(s => s.object_series_id === Number(dlorSeriesId)) || {};
+            if (Object.keys(seriesDetail).length === 0) {
+                seriesDetail.object_series_id = dlorSeriesId;
+                seriesDetail.object_series_name = dlorSeries.series_name,
+                seriesDetail.object_series_description = dlorSeries.series_description
+            }
             setOriginalSeriesDetails({
                 series_id: seriesDetail?.object_series_id,
                 series_name: seriesDetail?.object_series_name,
@@ -156,7 +164,7 @@ export const DLOSeriesEdit = ({
                         : /* istanbul ignore next */ [],
             });
         }
-    }, [dlorSeriesId, dlorList, dlorListError, dlorListLoading, actions]);
+    }, [dlorSeriesId, dlorList, dlorListError, dlorListLoading, actions, dlorSeries]);
 
     function closeConfirmationBox() {
         setConfirmationOpen(false);
