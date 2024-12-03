@@ -240,7 +240,9 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                 <StyledHeaderGridItem item>
                     <h3 data-testid="standard-card-training-header">Training</h3>
                     <a
-                        href={linkToDrupal('/study-and-learning-support/training-and-workshops')}
+                        href={linkToDrupal(
+                            '/study-and-learning-support/training-and-workshops/online-and-person-workshops',
+                        )}
                         data-analyticsid="training-event-detail-more-training-button"
                         data-testid="seeAllTrainingLink"
                     >
@@ -281,11 +283,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                     </Typography>
                                     <Typography style={{ margin: '1rem 1rem 1rem 26px' }}>
                                         You can visit{' '}
-                                        <a
-                                            href={linkToDrupal(
-                                                '/study-and-learning-support/training-and-workshops/online-and-person-workshops',
-                                            )}
-                                        >
+                                        <a href={linkToDrupal('/study-and-learning-support/training-and-workshops')}>
                                             Training and workshops
                                         </a>{' '}
                                         for other training options or try again later.
