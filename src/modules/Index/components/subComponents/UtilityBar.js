@@ -148,13 +148,16 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
         } else {
             document.removeEventListener('mousedown', closeOnClickOutsideDialog);
             document.removeEventListener('keydown', closeOnEscape);
+
+            const bookitLink = document.getElementById('bookit-link');
+            !!bookitLink && bookitLink.focus();
         }
 
         return () => {
             document.removeEventListener('mousedown', closeOnClickOutsideDialog);
             document.removeEventListener('keydown', closeOnEscape);
         };
-    }, [locationOpen, showHideLocationPanel]);
+    }, [locationOpen]);
 
     const isLocationOpen = Boolean(locationOpen);
 
@@ -187,6 +190,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                     <StyledBookingLink
                         href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
                         data-testid="homepage-hours-bookit-link"
+                        id="bookit-link"
                     >
                         <span>Book a room</span>
                     </StyledBookingLink>
