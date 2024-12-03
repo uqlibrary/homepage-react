@@ -63,6 +63,7 @@ export const DLOSeriesEdit = ({
     dlorList,
     dlorListLoading,
     dlorListError,
+    mode
 }) => {
     const handleEditorChange = (fieldname, newContent) => {
         // setSummarySuggestionOpen(true);
@@ -177,9 +178,9 @@ export const DLOSeriesEdit = ({
 
     const locale = {
         successMessage: {
-            confirmationTitle: 'Changes have been saved',
+            confirmationTitle: mode == "EDIT" ? 'Changes have been saved' : 'Series has been created',
             confirmationMessage: '',
-            cancelButtonLabel: 'Re-edit Series',
+            cancelButtonLabel: mode == "EDIT" ? 'Re-edit Series' : 'Add a new Series',
             confirmButtonLabel: 'Return to Admin Series page',
         },
         errorMessage: {
@@ -191,7 +192,6 @@ export const DLOSeriesEdit = ({
 
     const handleChange = prop => e => {
         const theNewValue = e.target.value;
-
         let newValues;
         let linked = formValues.object_list_linked;
         let unassigned = formValues.object_list_unassigned;
@@ -199,20 +199,22 @@ export const DLOSeriesEdit = ({
         if (prop.startsWith('linked_object_series_order-')) {
             const uuid = prop.replace('linked_object_series_order-', '');
             const thisdlor = linked.find(d => d.object_public_uuid === uuid);
+            const indexToRemove = linked.findIndex(d => d.object_public_uuid === uuid);
             thisdlor.object_series_order = e.target.value;
-
-            if (e.target.value === 0) {
+            if (e.target.value === "0") {
                 // remove thisdlor from linked group
-                linked = linked.filter(d => d.object_public_uuid !== uuid);
+                if (indexToRemove !== -1) {
+                    linked.splice(indexToRemove, 1);
+                }
                 // add thisdlor to unassigned group
+                thisdlor.object_series_order = null;
                 unassigned.push(thisdlor);
             } else {
                 // move within linked group
                 linked.map(d => d.object_public_uuid === uuid && (d.object_series_order = e.target.value));
             }
             linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
-            unassigned = unassigned.sort((a, b) => a.object_series_order - b.object_series_order);
-
+            unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
             newValues = {
                 series_name: formValues.series_name,
                 object_list_linked: linked,
@@ -221,16 +223,20 @@ export const DLOSeriesEdit = ({
         } else if (prop.startsWith('unassigned_object_series_order-')) {
             const uuid = prop.replace('unassigned_object_series_order-', '');
             const thisdlor = unassigned.find(d => d.object_public_uuid === uuid);
+            const indexToRemove = unassigned.findIndex(d => d.object_public_uuid === uuid);
             thisdlor.object_series_order = e.target.value;
 
             if (e.target.value !== 0) {
                 // remove thisdlor from unassigned group
-                unassigned = unassigned.filter(d => d.object_public_uuid !== uuid);
+                //unassigned = unassigned.filter(d => d.object_public_uuid !== uuid);
+                if (indexToRemove !== -1) {
+                    unassigned.splice(indexToRemove, 1);
+                }
                 // add thisdlor to linked group
                 linked.push(thisdlor);
             }
             linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
-            unassigned = unassigned.sort((a, b) => a.object_series_order - b.object_series_order);
+            unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
             newValues = {
                 series_name: formValues.series_name,
                 object_list_linked: linked,
@@ -260,12 +266,22 @@ export const DLOSeriesEdit = ({
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
-        console.log("Saving values", valuesToSend)
-        actions.updateDlorSeries(dlorSeriesId, valuesToSend);
+        if (mode === "EDIT") {
+            actions.updateDlorSeries(dlorSeriesId, valuesToSend);
+        } else {
+            actions.createDlorSeries(valuesToSend);
+        }
+        
     };
 
+    function toProperCase(text) {
+        return text.replace(/\w\S*/g, function(txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); 1 
+        });
+      }
+
     return (
-        <StandardPage title="Digital Learning Hub - Edit Series">
+        <StandardPage title={`Digital Learning Hub - ${toProperCase(mode)} Series`}>
             <DlorAdminBreadcrumbs
                 breadCrumbList={[
                     {
@@ -273,7 +289,7 @@ export const DLOSeriesEdit = ({
                         title: 'Series management',
                     },
                     {
-                        title: `Edit series: ${originalSeriesDetails.series_name || ''}`,
+                        title: `${toProperCase(mode)} series: ${originalSeriesDetails.series_name || ''}`,
                         id: 'edit-series',
                     },
                 ]}
@@ -322,7 +338,6 @@ export const DLOSeriesEdit = ({
                                                 !!dlorUpdatedItemError ? locale.errorMessage : locale.successMessage
                                             }
                                         />
-                                        {console.log("Form Values: ", formValues)}
                                         <StyledSeriesEditForm id="dlor-editSeries-form">
                                         {/* <form id="dlor-editSeries-form"> */}
                                             <Grid item xs={12}>
@@ -437,7 +452,6 @@ export const DLOSeriesEdit = ({
                                         </Typography>
                                         <StyledSeriesList>
                                             {formValues?.object_list_unassigned?.map(f => {
-                                                // console.log('dragLandingAarea 2 f=', f);
                                                 return (
                                                     <StyledDraggableListItem
                                                         key={f.object_id}
@@ -516,6 +530,7 @@ DLOSeriesEdit.propTypes = {
     dlorList: PropTypes.array,
     dlorListLoading: PropTypes.bool,
     dlorListError: PropTypes.any,
+    mode: PropTypes.string
 };
 
 export default DLOSeriesEdit;
