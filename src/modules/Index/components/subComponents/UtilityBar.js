@@ -91,25 +91,39 @@ const StyledLocationBox = styled(Box)(() => ({
 
 export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcountLoading, vemcountError }) => {
     // handle the location opener
-    const [locationOpen, setLocationOpen] = React.useState(false);
+    const [locationOpen, setLocationOpen2] = React.useState(null);
+    const setLocationOpen = v => {
+        setLocationOpen2(v);
+    };
     const locationsRef = React.useRef(null);
 
+    function closeLocationPanel() {
+        const showHideButton = document.getElementById('location-dialog-controller');
+        const locationsPanel = document.getElementById('locations-wrapper');
+
+        showHideButton.setAttribute('aria-expanded', 'false');
+
+        !!locationsPanel && locationsPanel.setAttribute('inert', 'true');
+        !!locationsPanel && locationsPanel.setAttribute('aria-live', 'off');
+    }
+
     const showHideLocationPanel = () => {
-        setLocationOpen(!locationOpen);
+        const hasOpened = !locationOpen;
+        setLocationOpen(hasOpened);
 
         const showHideButton = document.getElementById('location-dialog-controller');
         /* istanbul ignore next */
         if (!showHideButton) {
             return;
         }
-        const isOpen = showHideButton.getAttribute('aria-expanded') === 'true';
-        showHideButton.setAttribute('aria-expanded', isOpen ? 'false' : 'true'); // toggle the current value
-
         const locationsPanel = document.getElementById('locations-wrapper');
-        !!locationsPanel && locationsPanel.setAttribute('aria-hidden', isOpen ? 'true' : 'false');
-        !!locationsPanel && locationsPanel.setAttribute('aria-live', isOpen ? 'off' : 'assertive');
+        if (!!hasOpened) {
+            showHideButton.setAttribute('aria-expanded', 'true');
 
-        if (!isOpen) {
+            !!locationsPanel && locationsPanel.removeAttribute('inert');
+            !!locationsPanel && locationsPanel.setAttribute('aria-live', 'assertive');
+
+            // put focus on the first element
             const findLink = setInterval(() => {
                 // wait for the links to load (probably already available) and then navigate to it
                 const listLinks = document.querySelectorAll('.locationLink');
@@ -119,13 +133,14 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                     !!listLinks && listLinks.length > 0 && listLinks[0].focus();
                 }
             }, 100);
+        } else {
+            closeLocationPanel();
         }
     };
 
-    // UseEffect to listen to when the state of locationOpen changes. Mitigates delay checks, etc.
     useEffect(() => {
         const closeOnClickOutsideDialog = e => {
-            // Extra condition added to not include the label the opens or closes the hours - because it already has one - no need to fire twice.
+            // Don't include the label the opens or closes the hours - because it already has one - no need to fire twice.
             if (
                 locationOpen &&
                 locationsRef.current &&
@@ -142,20 +157,35 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
             }
         };
 
-        if (locationOpen) {
-            document.addEventListener('mousedown', closeOnClickOutsideDialog);
-            document.addEventListener('keydown', closeOnEscape);
-        } else {
+        /* istanbul ignore next */
+        const handleLastLinkKeyDown = e => {
+            if (e?.key === 'Tab') {
+                e.preventDefault();
+
+                closeLocationPanel();
+
+                const bookitLink = document.getElementById('bookit-link');
+                !!bookitLink && bookitLink.focus();
+            }
+        };
+
+        if (locationOpen === false) {
             document.removeEventListener('mousedown', closeOnClickOutsideDialog);
             document.removeEventListener('keydown', closeOnEscape);
+        } else if (locationOpen === true) {
+            document.addEventListener('mousedown', closeOnClickOutsideDialog);
+            document.addEventListener('keydown', closeOnEscape);
 
-            const bookitLink = document.getElementById('bookit-link');
-            !!bookitLink && bookitLink.focus();
+            const lastLink = document.getElementById('homepage-hours-weeklyhours-link');
+            lastLink.addEventListener('keydown', handleLastLinkKeyDown);
         }
 
         return () => {
             document.removeEventListener('mousedown', closeOnClickOutsideDialog);
             document.removeEventListener('keydown', closeOnEscape);
+
+            const lastLink = document.getElementById('homepage-hours-weeklyhours-link');
+            lastLink.removeEventListener('keydown', handleLastLinkKeyDown);
         };
     }, [locationOpen]);
 
@@ -203,7 +233,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                         ref={locationsRef}
                         role={'dialog'}
                         aria-live="off"
-                        aria-hidden="true"
+                        inert="true"
                     >
                         <Locations
                             libHours={libHours}

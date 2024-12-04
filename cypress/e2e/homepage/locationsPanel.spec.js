@@ -89,14 +89,14 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-accordion-open"]').should('have.attr', 'aria-expanded', 'false');
         cy.get('[data-testid="locations-wrapper"]').should('exist');
         cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'aria-live', 'off');
-        cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'aria-hidden', 'true');
+        cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'inert', 'true');
         // open the dialog
         cy.get('[data-testid="hours-accordion-open"]').click();
         // everything now shows the dialog is open
         cy.get('[data-testid="hours-accordion-open"]').should('have.attr', 'aria-expanded', 'true');
         cy.get('[data-testid="locations-wrapper"]').should('exist');
         cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'aria-live', 'assertive');
-        cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'aria-hidden', 'false');
+        cy.get('[data-testid="locations-wrapper"]').should('not.have.attr', 'inert');
 
         cy.get('[data-testid="hours-item-arch-music"] > div:first-child').contains('Architecture and Music');
         cy.get('[data-testid="hours-item-arch-music"] > div:first-child a').should(
@@ -214,7 +214,7 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-accordion-open"]').should('have.attr', 'aria-expanded', 'false');
         cy.get('[data-testid="locations-wrapper"]').should('exist');
         cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'aria-live', 'off');
-        cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'aria-hidden', 'true');
+        cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'inert', '');
     });
     it('can click away to close the dialog', () => {
         cy.visit('/');
