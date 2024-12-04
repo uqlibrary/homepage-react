@@ -541,16 +541,18 @@ export const DLOView = ({
                                             </>
                                         )}
                                         {!!dlorItem?.object_series_name && dlorItem?.object_series?.length > 1 && (
-                                            <>
+                                             <>
                                                 <PlaylistAddCheckIcon
                                                     sx={{ fill: '#4aa74e', marginRight: '2px', width: 24 }}
                                                 />
-                                                <StyledTagLabelSpan
-                                                    data-testid={'dlor-detailpage-object-series-name-custom-indicator'}
-                                                >
-                                                    Series: {dlorItem?.object_series_name}
-                                                </StyledTagLabelSpan>
-                                            </>
+                                                <Link to={`/digital-learning-hub/series/${dlorItem.object_series_id}`}>
+                                                    <StyledTagLabelSpan
+                                                        data-testid={'dlor-detailpage-object-series-name-custom-indicator'}
+                                                    >
+                                                        Series: {dlorItem?.object_series_name}
+                                                    </StyledTagLabelSpan>
+                                                </Link>
+                                                </>
                                         )}
                                     </Typography>
                                 )}
