@@ -378,6 +378,7 @@ const Locations = ({
     /* istanbul ignore next */
     const handleFirstLinkKeyDown = e => {
         if (e.key === 'Tab' && e.shiftKey) {
+            // when the user back-clicks out of the first link on the Locations dialog
             e.preventDefault();
             const openerCloserButton = document.getElementById('location-dialog-controller');
             !!openerCloserButton && openerCloserButton.focus();
