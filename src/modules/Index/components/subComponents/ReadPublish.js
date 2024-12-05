@@ -11,10 +11,15 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 const StyledBodyCopyDiv = styled('div')(() => ({
     fontWeight: 400,
 }));
+const StyledStandardCard = styled(StandardCard)(() => ({
+    '& .cardContentNoPadding': {
+        marginTop: '-24px',
+    },
+}));
 
 export const ReadPublish = () => {
     return (
-        <StandardCard
+        <StyledStandardCard
             subCard
             noPadding
             fullHeight
@@ -22,7 +27,7 @@ export const ReadPublish = () => {
             standardCardId="readpublish-panel"
             title="Read and publish"
         >
-            <Grid container padding={3} spacing={2} style={{ paddingBlock: '16px' }}>
+            <Grid container padding={3} spacing={2}>
                 <Grid item xs={12}>
                     <a href="https://espace.library.uq.edu.au/journals/search/">Publish in the right journal</a>
                     <StyledBodyCopyDiv>
@@ -39,7 +44,7 @@ export const ReadPublish = () => {
                     </StyledBodyCopyDiv>
                 </Grid>
             </Grid>
-        </StandardCard>
+        </StyledStandardCard>
     );
 };
 
