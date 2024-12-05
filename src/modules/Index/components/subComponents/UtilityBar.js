@@ -177,7 +177,10 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
             document.addEventListener('keydown', closeOnEscape);
 
             const lastLink = document.getElementById('homepage-hours-weeklyhours-link');
-            lastLink.addEventListener('keydown', handleLastLinkKeyDown);
+            if (!!lastLink) {
+                lastLink.setAttribute('haslistener', 'true');
+                lastLink.addEventListener('keydown', handleLastLinkKeyDown);
+            }
         }
 
         return () => {
@@ -185,7 +188,9 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
             document.removeEventListener('keydown', closeOnEscape);
 
             const lastLink = document.getElementById('homepage-hours-weeklyhours-link');
-            lastLink.removeEventListener('keydown', handleLastLinkKeyDown);
+            if (!!lastLink && lastLink.getAttribute('haslistener') === 'true') {
+                lastLink.removeEventListener('keydown', handleLastLinkKeyDown);
+            }
         };
     }, [locationOpen]);
 
