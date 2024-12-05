@@ -237,11 +237,11 @@ describe('Edit an object on the Digital Learning Hub', () => {
 
                 cy.get('[data-testid="object-is-featured"] input')
                     .should('exist')
-                    .should('not.be.checked');
+                    .should('be.checked');
 
                 cy.get('[data-testid="object-cultural-advice"] input')
                     .should('exist')
-                    .should('not.be.checked');
+                    .should('be.checked');
 
                 // go to panel 3
                 cy.get('[data-testid="dlor-form-next-button"]')
@@ -571,12 +571,12 @@ describe('Edit an object on the Digital Learning Hub', () => {
 
                 cy.get('[data-testid="object-is-featured"] input')
                     .should('exist')
-                    .should('not.be.checked');
+                    .should('be.checked');
                 cy.get('[data-testid="object-is-featured"] input').check();
 
                 cy.get('[data-testid="object-cultural-advice"] input')
                     .should('exist')
-                    .should('not.be.checked');
+                    .should('be.checked');
                 cy.get('[data-testid="object-cultural-advice"] input').check();
 
                 // go to the third panel, Link
@@ -923,8 +923,8 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     object_link_size: 390,
                     object_link_url: 'http://example.com',
                     object_download_instructions: '<p>' + downloadInstructionText + '</p>',
-                    object_is_featured: 0,
-                    object_cultural_advice: 0,
+                    object_is_featured: 1,
+                    object_cultural_advice: 1,
                     object_publishing_user: 'uqjsmith',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'current',

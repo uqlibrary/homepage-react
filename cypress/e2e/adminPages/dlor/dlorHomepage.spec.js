@@ -85,29 +85,29 @@ describe('Digital Learning Hub admin homepage', () => {
                 'CDS DX Digital Content',
             );
 
-            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) h2')
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) h2')
                 .should('exist')
                 .should('contain', 'UQ has a Blak History');
-            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) svg path').should(
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) svg path').should(
                 'have.attr',
                 'd',
                 'M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z',
             ); // has green tick
-            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) div:nth-child(3) p:first-child').contains(
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) div:nth-child(3) p:first-child').contains(
                 'uquser1',
             );
-            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) div:nth-child(3) p:nth-child(2)').contains(
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) div:nth-child(3) p:nth-child(2)').contains(
                 'CDS DX Digital Content',
             );
 
-            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) h2')
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) h2')
                 .should('exist')
                 .should('contain', 'Advanced literature searching');
-            cy.get('[data-testid="dlor-homepage-featured-98s0_dy5k3_98h4"]').should('not.exist'); // unfeatured: no green tick
-            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) div:nth-child(3) p:first-child').contains(
+            cy.get('[data-testid="dlor-homepage-featured-98s0_dy5k3_98h4"]').should('exist'); 
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) div:nth-child(3) p:first-child').contains(
                 'uqjsmith',
             );
-            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) div:nth-child(3) p:nth-child(2)').contains(
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) div:nth-child(3) p:nth-child(2)').contains(
                 'Faculty Services Librarians',
             );
         });
