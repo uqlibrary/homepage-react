@@ -103,6 +103,10 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         ['& .listEventItem:has(> .listEventTitle)']: {
             marginTop: '8px',
         },
+        '&:hover .listEventTitle': {
+            textDecoration: 'underline',
+            textUnderlineOffset: '2px',
+        },
         ['& .listEventTitle']: {
             fontSize: '20px',
             lineHeight: 1,
