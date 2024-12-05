@@ -195,7 +195,8 @@ export default {
             "object_series_name": "Advanced literature searching",
             "object_series_description": 'Advanced literature description',
             "object_series_order": 1,
-            "object_cultural_advice": 0,
+            "object_cultural_advice": 1,
+            "object_is_featured": 1,
         },
         {
             "object_id": 8,

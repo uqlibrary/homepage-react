@@ -57,29 +57,6 @@ import {
 import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
-const StyledUQActionButton = styled('div')(({ theme }) => ({
-    marginBlock: '32px',
-    '& button, & a': {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.white.main,
-        borderColor: theme.palette.primary.main,
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderRadius: '6px',
-        padding: '8px 12px',
-        fontWeight: 400,
-        '&:hover': {
-            backgroundColor: theme.palette.white.main,
-            color: theme.palette.primary.main,
-            textDecoration: 'none',
-        },
-    },
-    '&:has(button)': {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        marginTop: '12px',
-    },
-}));
 const StyledTitleTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.primary.light,
 }));
@@ -111,6 +88,7 @@ const StyledTitleBlockDiv = styled('div')(() => ({
 const StyledHeaderDiv = styled(Typography)(() => ({
     backgroundColor: 'white',
     padding: '12px',
+    marginBottom: 12,
     '& p': {
         margin: 0,
         fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
@@ -118,91 +96,6 @@ const StyledHeaderDiv = styled(Typography)(() => ({
         fontSize: '1rem',
         lineHeight: 1.5,
         letterSpacing: '0.00938em',
-    },
-}));
-const StyledIframe = styled('iframe')(() => ({
-    left: 0,
-    top: 0,
-    height: '100%',
-    width: '100%',
-    position: 'absolute',
-}));
-const StyledTagLabelSpan = styled('span')(() => ({
-    fontVariant: 'small-caps',
-    textTransform: 'lowercase',
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: '#333',
-    marginRight: '10px',
-}));
-const StyledSeriesList = styled('ol')(() => ({
-    paddingInlineStart: 0,
-    marginInlineStart: 0,
-    '& li': {
-        display: 'flex',
-        marginBottom: '0.5em',
-        '& a': {
-            backgroundColor: '#d1d0d2', // $grey-300
-            color: '#000',
-        },
-        '& a, & > span': {
-            display: 'flex',
-            alignItems: 'center',
-            width: '100%',
-            padding: 10,
-            textDecoration: 'none',
-            border: '1px solid #d1d0d2', // $grey-300
-        },
-        '& a:hover': {
-            backgroundColor: '#a3a1a4', // $grey-500
-        },
-    },
-}));
-const StyledDemographicsBox = styled(Box)(() => ({
-    padding: '1em',
-    marginTop: '24px',
-    borderRadius: '10px',
-    backgroundColor: 'white',
-    '& p': { marginLeft: '-8px' },
-    '& form': { margin: '-8px', '& p': { marginBlock: '3em 0', marginLeft: '2px' } },
-}));
-const StyledLayoutBox = styled(Box)(() => ({
-    backgroundColor: 'white',
-    padding: '12px',
-    marginTop: '24px',
-}));
-const StyledKeywordList = styled('ul')(() => ({
-    listStyleType: 'none',
-    paddingLeft: 0,
-    '& li': {
-        display: 'flex',
-        alignItems: 'center',
-        listStyleType: 'none',
-        paddingBottom: '6px',
-    },
-}));
-const StyledSidebarList = styled('ul')(() => ({
-    listStyleType: 'none',
-    paddingLeft: 0,
-    '& li': {
-        display: 'flex',
-        alignItems: 'center',
-        listStyleType: 'none',
-        paddingBottom: '6px',
-        '& a': {
-            color: '#333',
-            marginTop: '2px',
-            marginLeft: '3px',
-        },
-    },
-}));
-const StyledSidebarHeadingTypography = styled(Typography)(() => ({
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '12px',
-    '& svg': {
-        width: 30,
-        paddingRight: '6px',
     },
 }));
 
@@ -328,23 +221,15 @@ export const SeriesView = ({
 
     const [filterListTrimmed] = React.useState([]);
 
-    const getPublicHelp = facetTypeSlug => {
-        let result = '';
-        /* istanbul ignore else */
-        if (!!filterListTrimmed) {
-            result = filterListTrimmed?.filter(f => f?.facet_type_slug === facetTypeSlug)?.pop()
-                ?.facet_type_help_public;
-        }
-        return result;
-    };
+    
     const getFacetTypeIcon = facetTypeSlug => {
         const iconList = {
-            item_type: <LaptopIcon aria-label={getPublicHelp(facetTypeSlug)} />,
-            media_format: <DescriptionIcon aria-label={getPublicHelp(facetTypeSlug)} />,
-            licence: <CopyrightIcon aria-label={getPublicHelp(facetTypeSlug)} />,
-            topic: <TopicIcon aria-label={getPublicHelp(facetTypeSlug)} />,
-            graduate_attributes: <SchoolSharpIcon aria-label={getPublicHelp(facetTypeSlug)} />,
-            subject: <LocalLibrarySharpIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            item_type: <LaptopIcon aria-label={`Describes the item type`} />,
+            media_format: <DescriptionIcon aria-label={`Describes the media format`} />,
+            licence: <CopyrightIcon aria-label={`Describes the copyright licence type`} />,
+            topic: <TopicIcon aria-label={`Describes the item topic`} />,
+            graduate_attributes: <SchoolSharpIcon aria-label={`Describes the graduate attributes applied`} />,
+            subject: <LocalLibrarySharpIcon aria-label={`Describes the subject`} />,
         };
         return iconList[facetTypeSlug];
     };
@@ -517,9 +402,6 @@ export const SeriesView = ({
                                         {!!dlorSeries?.series_description ? parse(dlorSeries?.series_description) : "This series does not have a detailed description at this time."}
                                         
                             </StyledHeaderDiv>
-                            <StyledTitleTypography component="h2" variant="h6">
-                                Objects contained in this series:
-                            </StyledTitleTypography>
                             {/* <StyledLayoutBox> */}
                                 
                                 {/* <StyledSeriesList> */}

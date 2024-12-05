@@ -60,13 +60,13 @@ describe('Digital Learning Hub', () => {
                 'contain',
                 'Accessibility - Digital Essentials',
             );
-            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(3) article h2').should(
+            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(4) article h2').should(
                 'contain',
                 'UQ has a Blak History',
             );
-            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(4) article h2').should(
+            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(5) article h2').should(
                 'contain',
-                'Advanced literature searching',
+                'Artificial Intelligence',
             );
 
             // article 1 contents correct
@@ -111,8 +111,8 @@ describe('Digital Learning Hub', () => {
                 'contain',
                 'Advanced literature searching',
             );
-            cy.get('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4-cultural-advice"]').should('not.exist');
-            cy.get('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4-featured"]').should('not.exist');
+            cy.get('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4-cultural-advice"]').should('exist');
+            cy.get('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4-featured"]').should('exist');
             cy.get('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4-object-series-name"]')
                 .should('exist')
                 .contains('Series: Advanced literature searching');
