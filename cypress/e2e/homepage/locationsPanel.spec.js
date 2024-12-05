@@ -214,7 +214,7 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-accordion-open"]').should('have.attr', 'aria-expanded', 'false');
         cy.get('[data-testid="locations-wrapper"]').should('exist');
         cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'aria-live', 'off');
-        cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'inert', '');
+        cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'inert', 'true');
     });
     it('can click away to close the dialog', () => {
         cy.visit('/');
