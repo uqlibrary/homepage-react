@@ -9,6 +9,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 const StyledBodyCopyDiv = styled('div')(() => ({
     fontWeight: 400,
+    marginTop: '8px',
 }));
 const StyledStandardCard = styled(StandardCard)(() => ({
     '& .cardContentNoPadding': {

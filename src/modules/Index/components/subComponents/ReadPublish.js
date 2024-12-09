@@ -10,6 +10,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 const StyledBodyCopyDiv = styled('div')(() => ({
     fontWeight: 400,
+    lineHeight: '150%', // 24px
 }));
 const StyledStandardCard = styled(StandardCard)(() => ({
     '& .cardContentNoPadding': {
@@ -30,7 +31,7 @@ export const ReadPublish = () => {
             <Grid container padding={3} spacing={2}>
                 <Grid item xs={12}>
                     <a href="https://espace.library.uq.edu.au/journals/search/">Publish in the right journal</a>
-                    <StyledBodyCopyDiv>
+                    <StyledBodyCopyDiv style={{ marginTop: '8px' }}>
                         Find and evaluate the best publishing options using Journal Search.
                     </StyledBodyCopyDiv>
                 </Grid>
