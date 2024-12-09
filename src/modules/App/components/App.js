@@ -75,7 +75,7 @@ export const App = ({ account, actions }) => {
                 <div role="region" aria-label="UQ Library Alerts">
                     <alert-list system="homepage" />
                 </div>
-                <cultural-advice />
+                {!hideForAdmin() && <cultural-advice />}
                 <div style={{ flexGrow: 1 }}>
                     <a name="content" />
                     <AccountContext.Provider
