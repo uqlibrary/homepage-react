@@ -1,9 +1,4 @@
 describe('Digital Learning Hub View page', () => {
-    beforeEach(() => {
-        cy.clearCookies();
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
-    });
-
     context('details page', () => {
         it('appears as expected', () => {
             cy.intercept('GET', /uq.h5p.com/, {
@@ -16,6 +11,14 @@ describe('Digital Learning Hub View page', () => {
                 'contain',
                 'Artificial Intelligence - Digital Essentials',
             );
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Digital learning hub');
+                });
 
             cy.get('[data-testid="dlor-detailpage-cultural-advice-custom-indicator"]').should('not.exist');
             cy.get('[data-testid="dlor-detailpage-featured-custom-indicator"]').should('not.exist');
@@ -292,8 +295,8 @@ describe('Digital Learning Hub View page', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 
@@ -355,8 +358,8 @@ describe('Digital Learning Hub View page', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 
@@ -403,8 +406,8 @@ describe('Digital Learning Hub View page', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 
@@ -465,12 +468,12 @@ describe('Digital Learning Hub View page', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues.dlorUuid).to.deep.equal(expectedValues.dlorUuid);
                 expect(sentValues.demographics).to.deep.equal(expectedValues.demographics);
-                console.log('sentValues.subscribeRequest=', sentValues.subscribeRequest);
+                // console.log('sentValues.subscribeRequest=', sentValues.subscribeRequest);
                 // console.log('expectedValues.subscribeRequest=', expectedValues.subscribeRequest);
                 // expect(sentValues.subscribeRequest).to.deep.equal(expectedValues.subscribeRequest);
                 // expect(sentValues).to.deep.equal(expectedValues);
@@ -535,8 +538,8 @@ describe('Digital Learning Hub View page', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 
@@ -603,8 +606,8 @@ describe('Digital Learning Hub View page', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 
@@ -663,8 +666,8 @@ describe('Digital Learning Hub View page', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 

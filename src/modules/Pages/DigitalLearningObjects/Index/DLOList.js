@@ -39,10 +39,10 @@ import HeroCard from 'modules/Pages/DigitalLearningObjects/SharedComponents/Hero
 import {
     convertSnakeCaseToKebabCase,
     getDlorViewPageUrl,
-    isEscapeKeyPressed,
-    isReturnKeyPressed,
     slugifyName,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { isEscapeKeyPressed, isReturnKeyPressed } from 'helpers/general';
+import { breadcrumbs } from 'config/routes';
 
 const StyledSkipLinkButton = styled(Button)(({ theme }) => ({
     // hidden when not focused
@@ -138,7 +138,9 @@ const StyledFilterSidebarGrid = styled(Grid)(({ theme }) => ({
 }));
 const StyledArticleCard = styled('button')(({ theme }) => ({
     backgroundColor: '#fff',
-    borderColor: 'transparent',
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
+    transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
     fontFamily: 'Roboto, sans-serif',
     paddingInline: 0,
     textAlign: 'left',
@@ -146,8 +148,6 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
     '&:hover': {
         cursor: 'pointer',
         textDecoration: 'none',
-        borderTopColor: '#f2f2f2',
-        borderLeftColor: '#f2f2f2',
         '& > article': {
             backgroundColor: '#f2f2f2',
         },
@@ -293,6 +293,12 @@ export const DLOList = ({
     const heroDescriptionDlor =
         'Use the Digital Learning Hub to find modules, videos and guides for teaching and study.';
     const heroBackgroundImageDlor = require('../../../../../public/images/digital-learning-hub-hero-shot-wide.png');
+
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dlor.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dlor.pathname);
+    }, []);
 
     useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
@@ -604,12 +610,18 @@ export const DLOList = ({
 
         const facetId = e.target.value;
 
+        // console.log('FACET ID', facetId, e.target.labels[0].innerText);
+
         const checkboxId = `${facetTypeSlug}-${facetId}`;
         const individualFilterId = `${facetTypeSlug}-${facetId}`;
 
         if (e?.target?.checked) {
             const updateFilters = [...selectedFilters, individualFilterId];
             setSelectedFilters(updateFilters);
+            window.dataLayer.push({
+                event: 'reusable_component_event_click',
+                'custom_event.data-analyticsid': `${e.target.labels[0].innerText} DLOR filter click`,
+            });
 
             checkBoxArrayRef.current = [...checkBoxArrayRef.current, checkboxId];
         } else {
@@ -833,8 +845,18 @@ export const DLOList = ({
                                             return (
                                                 <StyledFormControlLabel
                                                     key={`${facetType?.facet_type_slug}-${facet?.facet_id}`}
+                                                    data-analyticsid={`${slugifyName(facet?.facet_name)}-dlor-filter`}
+                                                    id={`${slugifyName(facet?.facet_name)}-dlor-filter-label`}
                                                     control={
                                                         <Checkbox
+                                                            inputProps={{
+                                                                'data-analyticsid': `${slugifyName(
+                                                                    facet?.facet_name,
+                                                                )}-dlor-filter`,
+                                                            }}
+                                                            id={`${slugifyName(
+                                                                facet?.facet_name,
+                                                            )}-dlor-filter-checkbox`}
                                                             onChange={handleCheckboxAction(checkBoxid)}
                                                             aria-label={'Include'}
                                                             value={facet?.facet_id}

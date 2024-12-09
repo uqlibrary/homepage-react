@@ -3,7 +3,6 @@ import { default as locale } from '../../../../src/modules/Pages/Admin/TestTag/t
 
 describe('Test and Tag Admin Inspection page', () => {
     beforeEach(() => {
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
         cy.visit('http://localhost:2020/admin/testntag/inspect?user=uqtesttag');
         cy.waitUntil(() => cy.focused().should('have.attr', 'value', 'St Lucia'));
     });
@@ -75,6 +74,16 @@ describe('Test and Tag Admin Inspection page', () => {
                 },
             );
         });
+        it('has breadcrumb', () => {
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Test and tag');
+                });
+        });
         describe('Event panel functionality', () => {
             const today = moment();
             it('should show correct dates', () => {
@@ -87,21 +96,21 @@ describe('Test and Tag Admin Inspection page', () => {
             it('should allow entry of new date', () => {
                 const invalidDate = today.add(1, 'day').format(locale.pages.inspect.config.dateFormatDisplay);
                 const validDate = today.subtract(1, 'day').format(locale.pages.inspect.config.dateFormatDisplay);
-                cy.data('event_panel-event-date-button')
-                    .children('button')
-                    .click();
+                cy.data('event_panel-event-date-button').click();
                 cy.get('[role="dialog"]').should('exist');
                 cy.get('body').type('{esc}');
                 cy.get('[role="dialog"]').should('not.exist');
 
                 cy.data('event_panel-event-date-input').clear();
                 cy.data('event_panel-event-date-input').type(invalidDate);
-                cy.get('#event_panel-event-date-helper-text').contains(
+                cy.get('#event_panel-event-date-input-helper-text').contains(
                     locale.pages.inspect.form.event.date.maxDateMessage,
                 );
                 cy.data('event_panel-event-date-input').clear();
+                // make sure if starts typing from day
+                cy.data('event_panel-event-date-input').type('{leftArrow}{leftArrow}');
                 cy.data('event_panel-event-date-input').type(validDate);
-                cy.get('#event_panel-event-date-helper-text').should('not.exist');
+                cy.get('#event_panel-event-date-input-helper-text').should('not.exist');
             });
 
             it('should allow selection of location', () => {

@@ -2,7 +2,6 @@ import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTa
 
 describe('Test and Tag bulk asset update', () => {
     beforeEach(() => {
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
         cy.visit('http://localhost:2020/admin/testntag/manage/bulkassetupdate?user=uqtesttag');
     });
     const getFieldValue = (dataField, rowIndex, colIndex) =>
@@ -48,6 +47,16 @@ describe('Test and Tag bulk asset update', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
         );
+    });
+    it('has breadcrumbs', () => {
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Test and tag');
+            });
     });
     it('Asset id search functions correctly', () => {
         checkBaseline();

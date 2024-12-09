@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -27,6 +27,7 @@ import {
 } from '../alerthelpers';
 import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage } from 'helpers/general';
+import { breadcrumbs } from 'config/routes';
 
 export const AlertsView = ({ actions, alert, alertStatus }) => {
     const { alertid } = useParams();
@@ -70,7 +71,13 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
         return null;
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.alertsadmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.alertsadmin.pathname);
+    }, []);
+
+    useEffect(() => {
         /* istanbul ignore else */
         if (!!alertid) {
             actions.loadAnAlert(alertid);
@@ -78,7 +85,7 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [alertid]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!!alert) {
             displayPreview(alert);
         }

@@ -25,6 +25,9 @@ describe('spotlight helpers', () => {
         expect(getTimeSundayNextFormatted(moment('08-26-2021', 'MM-DD-YYYY'))).toEqual('2021-09-05T23:59'); // thursday
         expect(getTimeSundayNextFormatted(moment('08-27-2021', 'MM-DD-YYYY'))).toEqual('2021-09-05T23:59'); // friday
         expect(getTimeSundayNextFormatted(moment('08-28-2021', 'MM-DD-YYYY'))).toEqual('2021-09-05T23:59'); // saturday
+
+        // defaults
+        expect(getTimeSundayNextFormatted()).toEqual('2017-07-09T23:59');
     });
     it('correctly calculates next monday', () => {
         const fmt = 'MM-DD-YYYY';
@@ -40,6 +43,9 @@ describe('spotlight helpers', () => {
 
         expect(getTimeMondayComing(moment('08-23-2021', fmt)).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-30T09:00'); // monday
         expect(getTimeMondayComing(moment('08-24-2021', fmt)).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-30T09:00'); // tuesday
+
+        // default
+        expect(getTimeMondayComing().format('YYYY-MM-DDTHH:mm')).toEqual('2017-07-03T09:00');
     });
     it('correctly calculates next monday midnight', () => {
         // these dates should be 6 days before the date produced by getTimeSundayNextFormatted
@@ -59,6 +65,9 @@ describe('spotlight helpers', () => {
         expect(getTimeMondayMidnightNext(moment('08-26-2021', 'MM-DD-YYYY'))).toEqual('2021-08-30T00:01'); // thursday
         expect(getTimeMondayMidnightNext(moment('08-27-2021', 'MM-DD-YYYY'))).toEqual('2021-08-30T00:01'); // friday
         expect(getTimeMondayMidnightNext(moment('08-28-2021', 'MM-DD-YYYY'))).toEqual('2021-08-30T00:01'); // saturday
+
+        // default
+        expect(getTimeMondayMidnightNext()).toEqual('2017-07-03T00:01');
     });
     // it('correctly calculates end of day', () => {
     //     expect(getTimeEndOfDayFormatted()).toEqual(moment().format('YYYY-MM-DDT23:59'));

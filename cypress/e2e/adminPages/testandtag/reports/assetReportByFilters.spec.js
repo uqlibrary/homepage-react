@@ -2,7 +2,6 @@ import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTa
 
 describe('Test and Tag Report - Asset inspection by filters', () => {
     beforeEach(() => {
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
         cy.visit('http://localhost:2020/admin/testntag/report/assetsbyfilter?user=uqtesttag');
     });
     const zeroPad = (num, places) => String(num).padStart(places, '0');
@@ -33,6 +32,16 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
         );
+    });
+    it('has breadcrumbs', () => {
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Test and tag');
+            });
     });
     it('UI Dropdown for Status and building function correctly', () => {
         cy.get('h1').contains(locale.pages.general.pageTitle);
@@ -75,7 +84,7 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         cy.wait(1000);
         cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000001'));
         // Select a Tagged from Date.
-        cy.get('[data-testid="assets_inspected-tagged-start"] button').click();
+        cy.get('[data-testid="assets_inspected-tagged-start-button"]').click();
         cy.get('.MuiPickersDay-root')
             .contains('11')
             .click();
@@ -84,7 +93,7 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         cy.data('assets_inspected-tagged-start-input').should('have.value', `${currentYear}-${currentMonth}-11`);
         cy.waitUntil(() => getFieldValue('asset_barcode', 0, 0).should('contain', 'UQL000001'));
         // Select a Tagged to Date.
-        cy.get('[data-testid="assets_inspected-tagged-end"] button').click();
+        cy.get('[data-testid="assets_inspected-tagged-end-button"]').click();
         cy.get('.MuiPickersDay-root')
             .contains('12')
             .click();
@@ -92,36 +101,29 @@ describe('Test and Tag Report - Asset inspection by filters', () => {
         cy.wait(1000);
         cy.data('assets_inspected-tagged-end-input').should('have.value', `${currentYear}-${currentMonth}-12`);
         // Select invalid end date.
-        cy.get('[data-testid="assets_inspected-tagged-end"] button').click();
+        cy.get('[data-testid="assets_inspected-tagged-end-button"]').click();
         cy.get('.MuiPickersDay-root')
             .contains('10')
             .click();
         cy.get('body').type('{esc}');
         cy.wait(1000);
-        cy.data('assets_inspected-tagged-start')
-            .find('label')
-            .should('have.class', 'Mui-error');
+        cy.get('#assets_inspected-tagged-start-input-label').should('have.class', 'Mui-error');
+
         // select a valid date.
-        cy.get('[data-testid="assets_inspected-tagged-end"] button').click();
+        cy.get('[data-testid="assets_inspected-tagged-end-button"]').click();
         cy.get('.MuiPickersDay-root')
             .contains('12')
             .click();
         cy.get('body').type('{esc}');
         cy.wait(1000);
-        cy.data('assets_inspected-tagged-start')
-            .find('label')
-            .should('not.have.class', 'Mui-error');
+        cy.get('#assets_inspected-tagged-start-input-label').should('not.have.class', 'Mui-error');
         // Clear both dates.
         cy.data('assets_inspected-tagged-start-input').clear();
         cy.get('body').type('{esc}');
         cy.data('assets_inspected-tagged-end-input').clear();
         cy.get('body').type('{esc}');
-        cy.data('assets_inspected-tagged-start')
-            .find('label')
-            .should('not.have.class', 'Mui-error');
-        cy.data('assets_inspected-tagged-end')
-            .find('label')
-            .should('not.have.class', 'Mui-error');
+        cy.get('#assets_inspected-tagged-start-input-label').should('not.have.class', 'Mui-error');
+        cy.get('#assets_inspected-tagged-end-input-label').should('not.have.class', 'Mui-error');
     });
     it('Sorting should work correctly', () => {
         cy.get('h1').contains(locale.pages.general.pageTitle);

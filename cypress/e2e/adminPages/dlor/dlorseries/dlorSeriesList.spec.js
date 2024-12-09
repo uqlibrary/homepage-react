@@ -22,6 +22,16 @@ describe('Digital Learning Hub admin Series management', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
+        it('has breadcrumbs', () => {
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Digital learning hub admin');
+                });
+        });
         it('loads as expected', () => {
             cy.get('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                 .contains('Digital Learning Hub admin')
