@@ -378,6 +378,7 @@ const Locations = ({
     /* istanbul ignore next */
     const handleFirstLinkKeyDown = e => {
         if (e.key === 'Tab' && e.shiftKey) {
+            // when the user back-clicks out of the first link on the Locations dialog
             e.preventDefault();
             const openerCloserButton = document.getElementById('location-dialog-controller');
             !!openerCloserButton && openerCloserButton.focus();
@@ -547,17 +548,22 @@ const Locations = ({
                     <>
                         {/* Header Row */}
                         <Grid container className="table-row table-row-header">
-                            <Grid item id="header-library" className={'table-column-name'}>
+                            <Grid item id="header-library" className={'table-column-name'} aria-hidden="true">
                                 <Typography component="h3" variant="h6">
                                     Library
                                 </Typography>
                             </Grid>
-                            <Grid item className="table-column-hours" id="header-hours">
+                            <Grid item className="table-column-hours" id="header-hours" aria-hidden="true">
                                 <Typography component="h3" variant="h6">
                                     Opening hours*
                                 </Typography>
                             </Grid>
-                            <Grid item className="table-column-busy occupancyWrapper" id="header-busy">
+                            <Grid
+                                item
+                                className="table-column-busy occupancyWrapper"
+                                id="header-busy"
+                                aria-hidden="true"
+                            >
                                 <Typography component="h3" variant="h6">
                                     Busy level
                                 </Typography>
@@ -599,6 +605,7 @@ const Locations = ({
                                             aria-labelledby={`header-hours ${sluggifyName(
                                                 `library-name-${location.abbr}`,
                                             )}`}
+                                            aria-hidden="true"
                                         >
                                             <Typography
                                                 component={'span'}
@@ -614,6 +621,7 @@ const Locations = ({
                                             aria-labelledby={`header-busy ${sluggifyName(
                                                 `library-name-${location.abbr}`,
                                             )}`}
+                                            aria-hidden="true"
                                         >
                                             <div className={'occupancyWrapper'}>{getBusynessBar(location)}</div>
                                         </Grid>

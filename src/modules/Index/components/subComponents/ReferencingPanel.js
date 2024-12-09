@@ -6,16 +6,27 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { linkToDrupal } from 'helpers/general';
 
 const StyledBodyCopyDiv = styled('div')(() => ({
     fontWeight: 400,
+    marginTop: '8px',
+}));
+const StyledStandardCard = styled(StandardCard)(() => ({
+    '& .cardContentNoPadding': {
+        marginTop: '-24px',
+    },
 }));
 
 export const ReferencingPanel = ({ account }) => {
     return (
-        <StandardCard subCard noPadding primaryHeader standardCardId="referencing-homepage-panel" title="Referencing">
-            <Grid container padding={3} spacing={2} style={{ paddingBlock: '16px' }}>
+        <StyledStandardCard
+            subCard
+            noPadding
+            primaryHeader
+            standardCardId="referencing-homepage-panel"
+            title="Referencing"
+        >
+            <Grid container padding={3} spacing={2}>
                 <Grid item xs={12}>
                     <a href={'https://guides.library.uq.edu.au/referencing'} data-testid={'referencing-style'}>
                         Referencing style guides
@@ -34,7 +45,7 @@ export const ReferencingPanel = ({ account }) => {
                     </Grid>
                 )}
             </Grid>
-        </StandardCard>
+        </StyledStandardCard>
     );
 };
 
