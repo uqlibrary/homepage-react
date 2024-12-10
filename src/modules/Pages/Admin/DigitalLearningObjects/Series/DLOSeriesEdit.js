@@ -291,7 +291,7 @@ export const DLOSeriesEdit = ({
 
     function toProperCase(text) {
         return text.replace(/\w\S*/g, function(txt) {
-          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); 1 
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); 
         });
       }
 
