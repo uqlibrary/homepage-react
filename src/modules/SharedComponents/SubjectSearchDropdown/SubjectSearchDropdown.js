@@ -132,27 +132,28 @@ export const SubjectSearchDropdown = ({
     function dsSearchIcon() {
         return (
             <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                fill="none"
                 aria-hidden="true"
                 focusable="false"
-                style={{ marginRight: '2px' }}
             >
-                <path
-                    d="M10.5 17C14.0899 17 17 14.0899 17 10.5C17 6.91015 14.0899 4 10.5 4C6.91015 4 4 6.91015 4 10.5C4 14.0899 6.91015 17 10.5 17Z"
-                    stroke="#51247A"
-                    strokeWidth="1.5"
-                />
-                <path
-                    d="M15.5 15.5L20 20"
-                    stroke="#51247A"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
+                <g id="Search">
+                    <path
+                        d="M7.5 14C11.0899 14 14 11.0899 14 7.5C14 3.91015 11.0899 1 7.5 1C3.91015 1 1 3.91015 1 7.5C1 11.0899 3.91015 14 7.5 14Z"
+                        stroke="#51247A"
+                        strokeWidth="1.5"
+                    />
+                    <path
+                        d="M12.5 12.5L17 17"
+                        stroke="#51247A"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    />
+                </g>
             </svg>
         );
     }
