@@ -188,7 +188,8 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
     const showEventDetail = (event, value = null) => {
         setEventDetail(value ?? event);
         setTimeout(() => {
-            document.getElementById('training-event-detail-close-button').focus();
+            const closeButton = document.getElementById('training-event-detail-close-button');
+            !!closeButton && closeButton.focus();
         }, 300);
     };
     const closeEvent = entityId => {
