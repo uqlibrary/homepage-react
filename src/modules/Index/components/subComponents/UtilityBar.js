@@ -105,6 +105,10 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
 
         !!locationsPanel && locationsPanel.setAttribute('inert', 'true');
         !!locationsPanel && locationsPanel.setAttribute('aria-live', 'off');
+        !!locationsPanel && locationsPanel.setAttribute('data-analyticsid', 'hours-accordion-open');
+
+        const buttonsvg = locationsPanel.querySelector('svg');
+        !!buttonsvg && buttonsvg.setAttribute('data-analyticsid', 'hours-accordion-open-word');
     }
 
     const showHideLocationPanel = () => {
@@ -122,6 +126,10 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
 
             !!locationsPanel && locationsPanel.removeAttribute('inert');
             !!locationsPanel && locationsPanel.setAttribute('aria-live', 'assertive');
+            !!locationsPanel && locationsPanel.setAttribute('data-analyticsid', 'hours-accordion-closed');
+
+            const buttonsvg = locationsPanel.querySelector('svg');
+            !!buttonsvg && buttonsvg.setAttribute('data-analyticsid', 'hours-accordion-closed-word');
 
             // put focus on the first element
             const findLink = setInterval(() => {
@@ -212,6 +220,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                     <StyledLocationOpenerButton
                         id="location-dialog-controller"
                         data-testid="hours-accordion-open"
+                        data-analyticsid="hours-accordion-open"
                         onClick={showHideLocationPanel}
                         aria-haspopup="true"
                         aria-expanded={locationOpen ? 'true' : 'false'}
@@ -219,9 +228,15 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                         aria-label="Show/hide Locations and hours panel"
                     >
                         <span>
-                            <span id="location-dialog-controller-label">Locations and hours</span>
+                            <span id="location-dialog-controller-label" data-analyticsid="hours-accordion-open-word">
+                                Locations and hours
+                            </span>
                         </span>
-                        {!!locationOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                        {!!locationOpen ? (
+                            <ExpandLessIcon data-analyticsid="hours-accordion-open-arrow" />
+                        ) : (
+                            <ExpandMoreIcon data-analyticsid="hours-accordion-closed-arrow" />
+                        )}
                     </StyledLocationOpenerButton>
                     <StyledBookingLink
                         href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
