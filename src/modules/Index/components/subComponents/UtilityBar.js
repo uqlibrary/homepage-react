@@ -177,6 +177,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
             document.addEventListener('keydown', closeOnEscape);
 
             const lastLink = document.getElementById('homepage-hours-weeklyhours-link');
+            /* istanbul ignore else */
             if (!!lastLink) {
                 lastLink.setAttribute('haslistener', 'true');
                 lastLink.addEventListener('keydown', handleLastLinkKeyDown);
