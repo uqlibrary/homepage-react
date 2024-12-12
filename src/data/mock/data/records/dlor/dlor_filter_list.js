@@ -78,11 +78,11 @@ export default {
                 }, {
                     "facet_id": 14,
                     "facet_name": "Influential communicators",
-                    "facet_help": "Graduates will have a well-founded knowledge of their field of study and an understanding of how it relates to other disciplines. They will have the ability to engage with different traditions of thought and apply this knowledge in multi-disciplinary and global settings and contexts to enact a positive difference in their world.",
+                    "facet_help": "",
                 }, {
                     "facet_id": 15,
                     "facet_name": "Respectful leaders",
-                    "facet_help": "Graduates will have a well-founded knowledge of their field of study and an understanding of how it relates to other disciplines. They will have the ability to engage with different traditions of thought and apply this knowledge in multi-disciplinary and global settings and contexts to enact a positive difference in their world.",
+                    "facet_help": "",
                 }
             ]
         },

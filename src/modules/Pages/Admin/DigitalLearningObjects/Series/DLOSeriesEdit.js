@@ -291,7 +291,7 @@ export const DLOSeriesEdit = ({
 
     function toProperCase(text) {
         return text.replace(/\w\S*/g, function(txt) {
-          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); 1 
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); 
         });
       }
 
@@ -353,7 +353,7 @@ export const DLOSeriesEdit = ({
                                                 !!dlorUpdatedItemError ? locale.errorMessage : locale.successMessage
                                             }
                                         />
-                                        <StyledSeriesEditForm id="dlor-editSeries-form">
+                                        <StyledSeriesEditForm id={`dlor-${mode.toLowerCase()}Series-form`}>
                                         {/* <form id="dlor-editSeries-form"> */}
                                             <Grid item xs={12}>
                                                 <FormControl variant="standard" fullWidth>
@@ -473,7 +473,7 @@ export const DLOSeriesEdit = ({
                                                         // className={classes.draggableItem}
                                                     >
                                                         <span
-                                                            data-testid={`dlor-series-edit-draggable-title-${convertSnakeCaseToKebabCase(
+                                                            data-testid={`dlor-series-${mode.toLowerCase()}-draggable-title-${convertSnakeCaseToKebabCase(
                                                                 f?.object_public_uuid,
                                                             )}`}
                                                         >

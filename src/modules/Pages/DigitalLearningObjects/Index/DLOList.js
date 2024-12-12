@@ -1272,8 +1272,8 @@ export const DLOList = ({
                                         return (
                                             <div key={`item__${item.facet_id}`} style={{flex: '0 0 100%', backgroundColor: '#FAFAFA', padding: '0 -24px 0px 12px'}}>
                                                 <div style={{paddingLeft: '12px'}}>
-                                                    <h3 key={`name_${item.facet_id}`} style={{color: '#51247a', marginBottom: '5px', paddingBottom: 0}}>{item.facet_name}</h3>
-                                                    <p key={`help_${item.facet_id}`} style={{color: '#555', fontStyle: 'italic', paddingTop: '0px', marginTop: 0}}>{item.facet_help && parse(item.facet_help) || 'no help for this graduate attribute at this time'}</p>
+                                                    <h3 key={`name_${item.facet_id}`} style={{color: '#51247a', marginBottom: '5px', paddingBottom: 0}} data-testid={`graduate-attribute-${item.facet_id}-name`}>{item.facet_name}</h3>
+                                                    <p key={`help_${item.facet_id}`} style={{color: '#555', fontStyle: 'italic', paddingTop: '0px', marginTop: 0}} data-testid={`graduate-attribute-${item.facet_id}-description`}>{item.facet_help && parse(item.facet_help) || 'no help for this graduate attribute at this time'}</p>
                                                 </div>
                                             </div>
                                         )
