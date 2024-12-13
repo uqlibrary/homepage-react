@@ -120,7 +120,12 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
     };
 
     const handleLocationButtonKeyDown = e => {
+        if (e?.key !== 'Enter') {
+            return;
+        }
+
         e.preventDefault();
+
         const hasOpened = !locationOpen;
 
         setLocationOpen(hasOpened);
