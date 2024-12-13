@@ -105,10 +105,6 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
 
         !!locationsPanel && locationsPanel.setAttribute('inert', 'true');
         !!locationsPanel && locationsPanel.setAttribute('aria-live', 'off');
-        !!locationsPanel && locationsPanel.setAttribute('data-analyticsid', 'hours-accordion-open');
-
-        const buttonsvg = locationsPanel.querySelector('svg');
-        !!buttonsvg && buttonsvg.setAttribute('data-analyticsid', 'hours-accordion-open-word');
     }
 
     const showHideLocationPanel = () => {
@@ -126,10 +122,6 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
 
             !!locationsPanel && locationsPanel.removeAttribute('inert');
             !!locationsPanel && locationsPanel.setAttribute('aria-live', 'assertive');
-            !!locationsPanel && locationsPanel.setAttribute('data-analyticsid', 'hours-accordion-closed');
-
-            const buttonsvg = locationsPanel.querySelector('svg');
-            !!buttonsvg && buttonsvg.setAttribute('data-analyticsid', 'hours-accordion-closed-word');
 
             // put focus on the first element
             const findLink = setInterval(() => {
@@ -233,9 +225,9 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                             </span>
                         </span>
                         {!!locationOpen ? (
-                            <ExpandLessIcon data-analyticsid="hours-accordion-open-arrow" />
+                            <ExpandLessIcon data-analyticsid="hours-accordion-closed-arrow" />
                         ) : (
-                            <ExpandMoreIcon data-analyticsid="hours-accordion-closed-arrow" />
+                            <ExpandMoreIcon data-analyticsid="hours-accordion-open-arrow" />
                         )}
                     </StyledLocationOpenerButton>
                     <StyledBookingLink
