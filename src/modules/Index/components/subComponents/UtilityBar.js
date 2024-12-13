@@ -220,14 +220,14 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                         aria-label="Show/hide Locations and hours panel"
                     >
                         <span>
-                            <span id="location-dialog-controller-label" data-analyticsid="hours-accordion-open-word">
+                            <span id="location-dialog-controller-label" data-analyticsid="hours-accordion-word">
                                 Locations and hours
                             </span>
                         </span>
                         {!!locationOpen ? (
-                            <ExpandLessIcon data-analyticsid="hours-accordion-closed-arrow" />
+                            <ExpandLessIcon data-analyticsid="hours-accordion-arrow" />
                         ) : (
-                            <ExpandMoreIcon data-analyticsid="hours-accordion-open-arrow" />
+                            <ExpandMoreIcon data-analyticsid="hours-accordion-arrow" />
                         )}
                     </StyledLocationOpenerButton>
                     <StyledBookingLink
