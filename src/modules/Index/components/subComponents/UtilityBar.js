@@ -97,33 +97,37 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
     };
     const locationsRef = React.useRef(null);
 
-    function closeLocationPanel() {
-        const showHideButton = document.getElementById('location-dialog-controller');
+    function setLocationPanelAsClosed() {
         const locationsPanel = document.getElementById('locations-wrapper');
-
-        showHideButton.setAttribute('aria-expanded', 'false');
-
         !!locationsPanel && locationsPanel.setAttribute('inert', 'true');
-        !!locationsPanel && locationsPanel.setAttribute('aria-live', 'off');
+    }
+
+    function setLocationPanelAsOpen() {
+        const locationsPanel = document.getElementById('locations-wrapper');
+        !!locationsPanel && locationsPanel.removeAttribute('inert');
     }
 
     const showHideLocationPanel = () => {
         const hasOpened = !locationOpen;
+
         setLocationOpen(hasOpened);
 
-        const showHideButton = document.getElementById('location-dialog-controller');
-        /* istanbul ignore next */
-        if (!showHideButton) {
-            return;
-        }
-        const locationsPanel = document.getElementById('locations-wrapper');
         if (!!hasOpened) {
-            showHideButton.setAttribute('aria-expanded', 'true');
+            setLocationPanelAsOpen();
+        } else {
+            setLocationPanelAsClosed();
+        }
+    };
 
-            !!locationsPanel && locationsPanel.removeAttribute('inert');
-            !!locationsPanel && locationsPanel.setAttribute('aria-live', 'assertive');
+    const handleLocationButtonKeyDown = e => {
+        e.preventDefault();
+        const hasOpened = !locationOpen;
 
-            // put focus on the first element
+        setLocationOpen(hasOpened);
+
+        if (!!hasOpened) {
+            setLocationPanelAsOpen();
+
             const findLink = setInterval(() => {
                 // wait for the links to load (probably already available) and then navigate to it
                 const listLinks = document.querySelectorAll('.locationLink');
@@ -134,7 +138,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                 }
             }, 100);
         } else {
-            closeLocationPanel();
+            setLocationPanelAsClosed();
         }
     };
 
@@ -162,7 +166,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
             if (e?.key === 'Tab') {
                 e.preventDefault();
 
-                closeLocationPanel();
+                showHideLocationPanel();
 
                 const bookitLink = document.getElementById('bookit-link');
                 !!bookitLink && bookitLink.focus();
@@ -177,6 +181,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
             document.addEventListener('keydown', closeOnEscape);
 
             const lastLink = document.getElementById('homepage-hours-weeklyhours-link');
+            /* istanbul ignore else */
             if (!!lastLink) {
                 lastLink.setAttribute('haslistener', 'true');
                 lastLink.addEventListener('keydown', handleLastLinkKeyDown);
@@ -211,16 +216,24 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                     <StyledLocationOpenerButton
                         id="location-dialog-controller"
                         data-testid="hours-accordion-open"
+                        data-analyticsid="hours-accordion-open"
                         onClick={showHideLocationPanel}
+                        onKeyDown={handleLocationButtonKeyDown}
                         aria-haspopup="true"
                         aria-expanded={locationOpen ? 'true' : 'false'}
                         aria-controls="locations-wrapper"
                         aria-label="Show/hide Locations and hours panel"
                     >
                         <span>
-                            <span id="location-dialog-controller-label">Locations and hours</span>
+                            <span id="location-dialog-controller-label" data-analyticsid="hours-accordion-word">
+                                Locations and hours
+                            </span>
                         </span>
-                        {!!locationOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                        {!!locationOpen ? (
+                            <ExpandLessIcon data-analyticsid="hours-accordion-arrow" />
+                        ) : (
+                            <ExpandMoreIcon data-analyticsid="hours-accordion-arrow" />
+                        )}
                     </StyledLocationOpenerButton>
                     <StyledBookingLink
                         href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
@@ -237,7 +250,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                         aria-labelledby="location-dialog-controller"
                         ref={locationsRef}
                         role={'dialog'}
-                        aria-live="off"
+                        aria-live={locationOpen ? 'assertive' : 'off'}
                         inert="true"
                     >
                         <Locations
