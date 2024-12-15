@@ -38,7 +38,7 @@ context('Training', () => {
         cy.get('h3 h3').should('not.exist'); // we managed to nest the heading at one point
     });
 
-    it.skip('detail panel is accessible', () => {
+    it('detail panel is accessible', () => {
         cy.visit('/');
         cy.injectAxe();
         cy.viewport(1300, 1000);

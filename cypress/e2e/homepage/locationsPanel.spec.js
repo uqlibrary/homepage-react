@@ -26,7 +26,7 @@ context('Locations Panel', () => {
             .should('exist')
             .contains('AskUs chat hours');
     });
-    it.skip('is Accessible', () => {
+    it('is accessible', () => {
         cy.visit('/');
         cy.injectAxe();
         cy.viewport(1300, 1000);
@@ -36,7 +36,7 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-accordion-open"]').click();
 
         // dialog has loaded corrrectly
-        cy.get('[data-testid="location-item-arch-music-hours"]')
+        cy.get('[data-testid="hours-item-arch-music-link"]')
             .should('be.visible')
             .contains('Architecture and Music');
 
