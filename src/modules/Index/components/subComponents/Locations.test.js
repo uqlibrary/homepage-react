@@ -4,7 +4,6 @@ import { rtlRender, WithRouter } from 'test-utils';
 import { getByTestId } from '@testing-library/dom';
 import { fireEvent } from '@testing-library/react';
 import { ariaLabelForLocation, hasDepartments } from './Locations';
-// import { accounts } from '../mock/data';
 
 const validWhitty = {
     alt: 'Whitty building, Mater,',
@@ -17,6 +16,7 @@ const validWhitty = {
     ],
     name: 'Whitty Mater',
     url: 'https://web.library.uq.edu.au/locations-hours',
+    displayName: 'Whitty Mater',
 };
 
 function setup(testProps = {}, renderer = rtlRender) {
@@ -265,7 +265,7 @@ describe('Locations panel', () => {
         },
     };
 
-    it.skip('should handle display resize', () => {
+    it('should handle display resize', () => {
         const props = {
             libHoursLoading: false,
             libHoursError: false,
@@ -303,8 +303,10 @@ describe('the departments are shown correctly', () => {
         expect(hasDepartments(testdata)).toEqual(false);
     });
 });
-describe('the aria label is correct', () => {
+describe('name setting', () => {
     it('the aria label is correct', () => {
-        expect(ariaLabelForLocation(validWhitty).trim()).toEqual('More information on the Whitty Mater Library');
+        expect(ariaLabelForLocation(validWhitty).trim()).toEqual(
+            'The Whitty Mater Library study space is open 6:30am to 10pm.',
+        );
     });
 });

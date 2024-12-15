@@ -19,8 +19,6 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { linkToDrupal } from 'helpers/general';
 
-const NUMBER_OF_DISPLAYED_EVENTS = 3;
-
 const MyLoader = props => (
     <ContentLoader
         speed={2}
@@ -45,14 +43,40 @@ const MyLoader = props => (
         <rect x="0" y="200" rx="3" ry="3" width="100%" height="1" />
     </ContentLoader>
 );
+const StyledHeaderGridItem = styled(Grid)(() => ({
+    display: 'flex',
+    textAlign: 'center',
+    justifyContent: 'flex-start',
+    '& h3': {
+        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+        fontSize: '24px',
+        fontStyle: 'normal',
+        fontWeight: 500,
+        letterSpacing: '0.24px',
+        lineHeight: '160%', // 25.6px
+        margin: 0,
+    },
+    '& a': {
+        fontSize: '16px',
+        fontStyle: 'normal',
+        height: '24px',
+        lineHeight: '160%', // 25.6px
+        paddingBlock: 0,
+        marginLeft: '16px',
+        marginTop: '7px',
+    },
+}));
+
 const StyledWrapper = styled('div')(({ theme }) => ({
-    ['&.flexWrapper']: {
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        overflow: 'hidden',
-        marginBottom: '24px',
-        minHeight: '25em',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    overflow: 'hidden',
+    marginTop: '16px',
+    marginBottom: '24px',
+    minHeight: '25em',
+    '&.missing': {
+        minHeight: '5em',
     },
     ['& .linkButton']: {
         backgroundColor: '#fff',
@@ -78,10 +102,14 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         ['& .listEventItem:has(> .listEventTitle)']: {
             marginTop: '8px',
         },
+        '&:hover .listEventTitle': {
+            textDecoration: 'underline',
+            textUnderlineOffset: '2px',
+        },
         ['& .listEventTitle']: {
             fontSize: '20px',
             lineHeight: 1,
-            letterSpacing: '0.2px',
+            letterSpacing: '0.16px',
             padding: '2px 0',
         },
         ['& .listEventLocation']: {
@@ -90,13 +118,8 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             marginTop: '4px',
         },
         '&:hover': {
-            color: theme.palette.secondary.dark,
-            backgroundColor: '#fff',
-            '& .listEventTitle': {
-                color: '#fff',
-                backgroundColor: theme.palette.primary.light,
-                transition: 'background-color 200ms ease-out',
-            },
+            backgroundColor: '#F3F3F4', // Brand-grey-grey-50
+            transition: 'background-color 200ms ease-out',
         },
     },
     ['& .bookActionButton']: {
@@ -163,40 +186,42 @@ const StyledWrapper = styled('div')(({ theme }) => ({
 const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }) => {
     const [eventDetail, setEventDetail] = useState(null);
     const showEventDetail = (event, value = null) => {
-        console.log('showEventDetail', value, event);
         setEventDetail(value ?? event);
         setTimeout(() => {
-            document.getElementById('training-event-detail-close-button').focus();
+            const closeButton = document.getElementById('training-event-detail-close-button');
+            !!closeButton && closeButton.focus();
         }, 300);
     };
     const closeEvent = entityId => {
-        console.log('closeEvent entityId=', entityId);
         setEventDetail(null);
     };
     moment.tz.setDefault('Australia/Brisbane');
-    const eventTime = eventTime =>
+    const eventTimeLong = eventTime =>
         moment(eventTime)
             .calendar(null, {
-                sameDay: '[Today,] dddd D MMMM',
-                nextDay: '[Tomorrow,] dddd D MMMM',
-                nextWeek: 'dddd D MMMM',
-                lastDay: '[Yesterday]  D MMMM',
-                lastWeek: '[Last] dddd  D MMMM',
-                sameElse: 'D MMMM',
+                sameDay: '[Today,] dddd D MMMM [at] h.mma',
+                nextDay: '[Tomorrow,] dddd D MMMM [at] h.mma',
+                nextWeek: 'dddd D MMMM [at] h.mma',
+                lastDay: '[Yesterday]  D MMMM [at] h.mma',
+                lastWeek: '[Last] dddd  D MMMM [at] h.mma',
+                sameElse: 'D MMMM [at] h.mma',
             })
-            .replace(':00', '');
+            .replace('.00', '');
+    const eventDate = eventTime => moment(eventTime).format('D MMMM');
     const bookingText = ev => {
         /*
           if bookingSettings is null then bookings are not required
           if bookingSettings has a placesRemaining child *and it is > 0" then there are places still available
           if bookingSettings has a placesRemaining child *and it is zero* then the course is fully booked
-          We filter out the fully booked entries, because we are only showing 3 now, and that seems like a waste
          */
-        let placesRemainingText = 'Booking is not required';
-        /* istanbul ignore else */
+        const placesRemainingText = { display: 'Booking is not required', button: 'Log in for more details' };
         if (ev.bookingSettings !== null) {
-            if (ev?.bookingSettings?.placesRemaining > 0) {
-                placesRemainingText = 'Places still available';
+            if (ev.bookingSettings.placesRemaining > 0) {
+                placesRemainingText.display = 'Places still available';
+                placesRemainingText.button = 'Log in and book now';
+            } else {
+                placesRemainingText.display = 'Event is fully booked';
+                placesRemainingText.button = 'Log in to join wait list';
             }
         }
         return placesRemainingText;
@@ -210,59 +235,34 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                       return trainingEvents[key];
                   })
                 : trainingEvents;
-        return !!list && list.length > 0
-            ? list.filter(t => t.bookingSettings !== null).slice(0, NUMBER_OF_DISPLAYED_EVENTS)
-            : [];
+        return !!list && list.length > 0 ? list.slice(0, 3) : [];
     };
     const filteredTrainingEvents = filterStandardisedTrainingEvents();
     return (
-        <StandardCard
-            subCard
-            primaryHeader
-            noPadding
-            standardCardId="training-panel-display"
-            title={
-                <Grid container>
-                    <Grid item style={{ display: 'flex', textAlign: 'center', justifyContent: 'flex-start' }}>
-                        <h3
-                            data-testid="standard-card-training-header"
-                            style={{
-                                fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-                                fontSize: '24px',
-                                fontStyle: 'normal',
-                                fontWeight: 500,
-                                letterSpacing: '0.24px',
-                                lineHeight: '160%', // 25.6px
-                                margin: 0,
-                            }}
-                        >
-                            Training
-                        </h3>
-                        <a
-                            href={linkToDrupal(
-                                '/study-and-learning-support/training-and-workshops/online-and-person-workshops',
-                            )}
-                            data-analyticsid="training-event-detail-more-training-button"
-                            className={'seeAllTrainingLink'}
-                            data-testid="seeAllTrainingLink"
-                            style={{
-                                fontSize: '16px',
-                                fontStyle: 'normal',
-                                lineHeight: '160%', // 25.6px
-                                paddingBlock: 0,
-                                marginLeft: '16px',
-                                marginTop: '7px',
-                            }}
-                        >
-                            See all training
-                        </a>
-                    </Grid>
-                </Grid>
-            }
-        >
-            <StyledWrapper className={'flexWrapper'}>
+        <StandardCard subCard primaryHeader noPadding standardCardId="training-panel-display" noHeader>
+            <Grid container padding={3} style={{ paddingBottom: 0 }}>
+                <StyledHeaderGridItem item>
+                    <h3 data-testid="standard-card-training-header">Training</h3>
+                    <a
+                        href={linkToDrupal(
+                            '/study-and-learning-support/training-and-workshops/online-and-person-workshops',
+                        )}
+                        data-analyticsid="training-event-detail-more-training-button"
+                        data-testid="seeAllTrainingLink"
+                    >
+                        See all training
+                    </a>
+                </StyledHeaderGridItem>
+            </Grid>
+            <StyledWrapper className={'trainingWrapper'}>
                 {(() => {
-                    if (!!trainingEventsError) {
+                    if (!!trainingEventsLoading && !eventDetail) {
+                        return (
+                            <div className={'flexLoader'} aria-label="UQ training Events loading">
+                                <MyLoader />
+                            </div>
+                        );
+                    } else if (!!trainingEventsError) {
                         return (
                             <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
                                 <div className={'flexContent'} role="region">
@@ -273,11 +273,27 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                 </div>
                             </Fade>
                         );
-                    } else if ((!trainingEvents || !!trainingEventsLoading) && !eventDetail) {
+                    } else if (trainingEventsLoading === false && filteredTrainingEvents.length === 0 && !eventDetail) {
+                        const displayElement = document.querySelector('.trainingWrapper');
+                        !!displayElement && displayElement.classList.add('missing');
                         return (
-                            <div className={'flexLoader'} aria-label="UQ training Events loading">
-                                <MyLoader />
-                            </div>
+                            <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
+                                <div className={'flexContent'} role="region">
+                                    <Typography
+                                        style={{ margin: '1rem 1rem 1rem 26px' }}
+                                        data-testid="training-api-error"
+                                    >
+                                        There are no training sessions available at the moment.
+                                    </Typography>
+                                    <Typography style={{ margin: '1rem 1rem 1rem 26px' }}>
+                                        You can visit{' '}
+                                        <a href={linkToDrupal('/study-and-learning-support/training-and-workshops')}>
+                                            Training and workshops
+                                        </a>{' '}
+                                        for other training options or try again later.
+                                    </Typography>
+                                </div>
+                            </Fade>
                         );
                     } else if (
                         filteredTrainingEvents &&
@@ -309,7 +325,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                             fullWidth
                                                         >
                                                             <div className={'listEventItem listEventDate'}>
-                                                                {eventTime(event.start)}
+                                                                {eventDate(event.start)}
                                                             </div>
                                                             <div className={'listEventItem'}>
                                                                 <span className={'listEventTitle'}>
@@ -368,7 +384,12 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                         </Grid>
                                     </Grid>
                                     <Grid container spacing={1}>
-                                        <Grid item xs={12} className={'detailSummary'}>
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            className={'detailSummary'}
+                                            data-testid="event-detail-open-summary"
+                                        >
                                             <div dangerouslySetInnerHTML={{ __html: eventDetail.summary }} />
                                         </Grid>
                                         <Grid item xs={1} className={'detailMeta'}>
@@ -377,7 +398,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                             </Tooltip>
                                         </Grid>
                                         <Grid item xs={10} className={'detailMeta'}>
-                                            {eventTime(eventDetail.start)}
+                                            {eventTimeLong(eventDetail.start)}
                                         </Grid>
                                         <Grid item xs={1} className={'detailMeta'}>
                                             <Tooltip
@@ -403,7 +424,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                             </Tooltip>
                                         </Grid>
                                         <Grid item xs={10} className={'detailMeta'}>
-                                            {bookingText(eventDetail)}
+                                            {bookingText(eventDetail).display}
                                         </Grid>
                                     </Grid>
                                     <a
@@ -413,7 +434,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                         data-testid="training-event-detail-training-login-button"
                                         data-analyticsid="training-event-detail-training-login-button"
                                     >
-                                        Log in and book now
+                                        {bookingText(eventDetail).button}
                                     </a>
                                 </Grid>
                             </Grid>

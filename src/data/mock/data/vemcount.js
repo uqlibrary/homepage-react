@@ -41,7 +41,7 @@ export const vemcountData = {
             // },
             {
                 id: 7883,
-                headCount: 70,
+                headCount: 80,
                 capacity: 70,
                 name: 'Herston',
             },

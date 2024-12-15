@@ -16,10 +16,9 @@ context('Training', () => {
         cy.get('[data-testid="training-event-detail-button-1"]')
             .should('exist')
             .contains('UQRDM for researchers');
-        // 4th, not 3rd item appears, because item 3 is fully booked
         cy.get('[data-testid="training-event-detail-button-2"]')
             .should('exist')
-            .contains('Excel: Further Functions');
+            .contains('SciFinder n');
     });
 
     it('list is Accessible', () => {
@@ -36,9 +35,10 @@ context('Training', () => {
             scopeName: 'As loaded',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
+        cy.get('h3 h3').should('not.exist'); // we managed to nest the heading at one point
     });
 
-    it.skip('detail panel is accessible', () => {
+    it('detail panel is accessible', () => {
         cy.visit('/');
         cy.injectAxe();
         cy.viewport(1300, 1000);
@@ -53,7 +53,8 @@ context('Training', () => {
             cy
                 .get('[data-testid="training-events-detail-2824657"]')
                 .should('exist')
-                .should('be.visible'),
+                .should('be.visible')
+                .contains('Places still available'),
         );
         cy.checkA11y('[data-testid="training-panel"]', {
             reportName: 'Training',
@@ -68,29 +69,45 @@ context('Training', () => {
 
         cy.get('button[data-testid="training-event-detail-button-0"]').contains('EndNote: getting started');
         cy.get('button[data-testid="training-event-detail-button-0"]').click();
-        cy.wait(500);
+        cy.waitUntil(() =>
+            cy
+                .get('[data-testid="event-detail-open-summary"]')
+                .should('exist')
+                .contains('Learn how to use EndNote referencing software'),
+        );
         // when placesRemaining > 0 we see 'places available'
         cy.get('div[data-testid="training-events-detail-2824657"]').contains('Places still available');
-        // close it
-        cy.get('button[data-testid="training-event-detail-close-button"]').click();
-        cy.wait(500);
+        cy.get('[data-testid="training-event-detail-training-login-button"]').contains('Log in and book now');
+        cy.get('button[data-testid="training-event-detail-close-button"]').click(); // close it
 
-        cy.get('button[data-testid="training-event-detail-button-1"]')
-            .contains('UQRDM for researchers')
-            .click();
-        cy.wait(500);
+        cy.waitUntil(() =>
+            cy.get('button[data-testid="training-event-detail-button-1"]').contains('UQRDM for researchers'),
+        );
+        cy.get('button[data-testid="training-event-detail-button-1"]').click(); // open it
 
-        cy.get('div[data-testid="training-events-detail-2870806"]').contains('Booking is not required');
-        // close it
-        cy.get('button[data-testid="training-event-detail-close-button"]').click();
-        cy.wait(500);
+        cy.waitUntil(() =>
+            cy
+                .get('[data-testid="event-detail-open-summary"]')
+                .should('exist')
+                .contains(
+                    'A short hands-on course that introduces some intermediate level tools and skills with Adobe Illustrator.',
+                ),
+        );
+        cy.get('div[data-testid="training-events-detail-2870806"]').contains('Event is fully booked');
+        cy.get('[data-testid="training-event-detail-training-login-button"]').contains('Log in to join wait list');
+        cy.get('button[data-testid="training-event-detail-close-button"]').click(); // close it
 
-        cy.get('button[data-testid="training-event-detail-button-2"]')
-            .contains('Excel: Further Functions')
-            .click();
-        cy.wait(500);
-        // if placesRemaining were 0 we would see 'Event is fully booked'
-        cy.get('div[data-testid="training-events-detail-2870807"]').contains('Places still available');
+        cy.waitUntil(() => cy.get('button[data-testid="training-event-detail-button-2"]').contains('SciFinder n'));
+        cy.get('button[data-testid="training-event-detail-button-2"]').click(); // open it
+
+        cy.waitUntil(() =>
+            cy
+                .get('[data-testid="event-detail-open-summary"]')
+                .should('exist')
+                .contains('This is a hands on session'),
+        );
+        cy.get('div[data-testid="training-events-detail-2873532"]').contains('Booking is not required');
+        cy.get('[data-testid="training-event-detail-training-login-button"]').contains('Log in for more details');
     });
 
     it('can close a detail pane from a click', () => {
@@ -137,6 +154,36 @@ context('Training', () => {
             .click();
 
         cy.get('body').contains('user has navigated to Studenthub page');
+    });
+
+    it('when there is no training it shows a friendly message', () => {
+        cy.visit('/?user=s1111111&responseType=empty');
+        cy.waitUntil(() =>
+            cy
+                .get('[data-testid="standard-card-training-header"]')
+                .should('exist')
+                .contains('Training'),
+        );
+
+        cy.get('[data-testid="training-api-error"]')
+            .should('exist')
+            .contains('There are no training sessions available at the moment.');
+    });
+
+    it('when the api 404s, it shows a friendly message', () => {
+        cy.visit('/?user=s1111111&responseType=404');
+        cy.viewport(1300, 1000);
+
+        cy.waitUntil(() =>
+            cy
+                .get('[data-testid="standard-card-training-header"]')
+                .should('exist')
+                .contains('Training'),
+        );
+
+        cy.get('[data-testid="training-api-error"]')
+            .should('exist')
+            .contains('We can’t load training events right now');
     });
 
     it('shows an api error correctly', () => {

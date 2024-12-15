@@ -4,7 +4,7 @@ import { default as subjectSearchSuggestions } from '../../../src/data/mock/data
 
 context('The Homepage Learning Resource Panel', () => {
     // do not leave this skipped for prod!!!!!!
-    it.skip('Learning resources panel is accessible', () => {
+    it('Learning resources panel is accessible', () => {
         cy.visit('/?user=s1111111');
         cy.injectAxe();
         // cy.wait(2000);
@@ -46,6 +46,7 @@ context('The Homepage Learning Resource Panel', () => {
         cy.get('div[data-testid=learning-resources-panel] h4')
             .parent()
             .parent()
+            .children()
             .children()
             .should('have.length', numberOfBlocks);
 
@@ -109,6 +110,7 @@ context('The Homepage Learning Resource Panel', () => {
         cy.get('[data-testid="your-courses"]')
             .should('exist')
             .should('be.visible')
+            .children()
             .children()
             .should('have.length', 5 + 2);
         cy.get('[data-testid="learning-resource-panel-course-multi-footer"]')
@@ -188,6 +190,7 @@ context('The Homepage Learning Resource Panel', () => {
         cy.get('[data-testid="no-enrolled-courses"]').should('not.exist');
         const numberOfBlocks = 3 + 1; // n classes + 1 header
         cy.get('[data-testid="your-courses"]')
+            .children()
             .children()
             .should('have.length', numberOfBlocks);
         cy.get('[data-testid="hcr-0"]')

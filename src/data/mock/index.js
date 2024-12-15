@@ -147,12 +147,20 @@ mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl).reply(() => {
     return [404, {}];
 });
 
-mock.onGet(routes.VEMCOUNT_API().apiUrl).reply(withDelay([200, vemcountData]));
+// mock.onGet(routes.VEMCOUNT_API().apiUrl).reply(withDelay([200, vemcountData]));
+mock.onGet(routes.VEMCOUNT_API().apiUrl).reply(() => {
+    if (responseType === 'error') {
+        return [500, {}];
+    }
+    return [200, vemcountData];
+});
 
 mock.onGet(routes.TRAINING_API().apiUrl).reply(() => {
     if (responseType === 'error') {
         return [500, {}];
-    } else if (responseType === 'missing') {
+    } else if (responseType === 'empty') {
+        return [200, {}];
+    } else if (responseType === '404') {
         return [404, {}];
     } else if (user === 'emhospital') {
         return [200, training_object_hospital];
@@ -1231,7 +1239,12 @@ mock.onGet('exams/course/FREN1010/summary')
         ]),
     )
     .onGet('https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json')
-    .reply(() => [200, drupalArticles])
+    .reply(() => {
+        if (responseType === 'drupalError') {
+            return [500, {}];
+        }
+        return [200, drupalArticles];
+    })
     .onGet(routes.JOURNAL_SEARCH_API().apiUrl)
     .reply(() => {
         switch (user) {

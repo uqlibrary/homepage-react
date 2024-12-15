@@ -4,11 +4,10 @@ import { Link } from 'react-router-dom';
 
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { pluralise } from 'helpers/general';
-import UqDsExclamationCircle from '../../../SharedComponents/Icons/UqDsExclamationCircle';
+import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
 
 const StyledGridListItem = styled(Grid)(() => ({
     marginLeft: '8px',
@@ -26,7 +25,7 @@ const StyledGridItem = styled(Grid)(() => ({
         marginRight: -16,
     },
 }));
-const StyledActionsGrid = styled(Grid)(() => ({
+const StyledActionsUl = styled('ul')(() => ({
     paddingLeft: '10px',
     marginTop: 0,
     marginLeft: '30px',
@@ -34,17 +33,6 @@ const StyledActionsGrid = styled(Grid)(() => ({
     maxWidth: 'calc(100% - 18px)',
     '& li': {
         marginTop: '8px',
-    },
-}));
-const StyledSubtitleTypography = styled(Typography)(() => ({
-    fontStyle: 'normal',
-    fontWeight: 500,
-    letterSpacing: '0.16px',
-    lineHeight: '160%', // 25.6px
-    display: 'flex',
-    alignItems: 'flex-start',
-    '& span': {
-        marginLeft: '8px',
     },
 }));
 
@@ -124,34 +112,23 @@ export const EspaceLinks = ({ author, possibleRecords, incompleteNTRORecords }) 
     const authorNeedsToUpdateRecords = !!possibleRecords && !!possibleRecords.total && possibleRecords.total > 0;
     const authorHasIncompleteNtro =
         !!incompleteNTRORecords && !!incompleteNTRORecords.total && incompleteNTRORecords.total > 0;
-    const uqDsWarningYellow = '#fef8e8';
     return (
         <StandardCard subCard fullHeight primaryHeader noPadding standardCardId="espace-panel" title={'UQ eSpace'}>
-            <Grid container spacing={0} style={{ paddingInline: '24px', marginTop: '24px' }}>
+            <Grid container component={'ul'} spacing={0} style={{ paddingInline: '24px', marginTop: '24px' }}>
                 <StyledGridItem component={'li'} item xs={12}>
                     <Link to={'https://espace.library.uq.edu.au/dashboard'}>UQ eSpace dashboard</Link>
                 </StyledGridItem>
                 <EspaceEditorialAppointments />
                 {!authorNeedsToUpdateRecords && <EspaceUpdateWorks />}
                 {(authorIsMissingOrcid || authorNeedsToUpdateRecords || authorHasIncompleteNtro) && (
-                    <Grid
-                        item
-                        xs={12}
-                        style={{
-                            backgroundColor: uqDsWarningYellow,
-                            padding: '16px',
-                            margin: '16px 0',
-                        }}
-                    >
-                        <StyledSubtitleTypography component={'h4'}>
-                            <UqDsExclamationCircle style={{ height: '22px' }} />{' '}
-                            <span>Update the following items:</span>
-                        </StyledSubtitleTypography>
-                        <StyledActionsGrid container component={'ul'}>
-                            {authorIsMissingOrcid && <EspaceOrcid />}
-                            {authorNeedsToUpdateRecords && <EspacePossible recordCount={possibleRecords.total} />}
-                            {authorHasIncompleteNtro && <EspaceNTROs recordCount={incompleteNTRORecords.total} />}
-                        </StyledActionsGrid>
+                    <Grid item xs={12} style={{ margin: '16px 0' }}>
+                        <UserAttention titleText="Update the following items:">
+                            <StyledActionsUl>
+                                {authorIsMissingOrcid && <EspaceOrcid />}
+                                {authorNeedsToUpdateRecords && <EspacePossible recordCount={possibleRecords.total} />}
+                                {authorHasIncompleteNtro && <EspaceNTROs recordCount={incompleteNTRORecords.total} />}
+                            </StyledActionsUl>
+                        </UserAttention>
                     </Grid>
                 )}
             </Grid>

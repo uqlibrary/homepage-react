@@ -251,6 +251,25 @@ function FREN1010LoadsProperly() {
     cy.get('[data-testid="guides-FREN1010-content"]')
         .should('exist')
         .contains('French Studies');
+    cy.get('[data-testid="legalResearchEssentials-LAWS7107"]').should('not.exist');
+}
+
+function searchFor(searchFor = 'FREN', selectCourseCode) {
+    cy.log('searching for ', selectCourseCode);
+    const searchSuggestionForThisCourse = subjectSearchSuggestions
+        .filter(obj => {
+            return obj.name === selectCourseCode;
+        })
+        .pop();
+
+    cy.get('div[data-testid=full-learningresource-autocomplete] input').clear();
+    cy.get('div[data-testid=full-learningresource-autocomplete] input').type(searchFor);
+    // click the first option
+    cy.get('li#full-learningresource-autocomplete-option-0')
+        .contains(
+            `${searchSuggestionForThisCourse.course_title}, ${searchSuggestionForThisCourse.campus}, ${searchSuggestionForThisCourse.period}`,
+        )
+        .click();
 }
 
 context('Learning Resources Accessibility', () => {
@@ -258,7 +277,7 @@ context('Learning Resources Accessibility', () => {
         cy.visit('/learning-resources?user=s1111111');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('div[data-testid="learning-resources"]').contains('My courses');
+        cy.get('div[data-testid="learning-resources"]').contains('Your courses');
         cy.log('Learning Resources');
         cy.wait(1000);
         cy.checkA11y('div[data-testid="learning-resources"]', {
@@ -272,7 +291,7 @@ context('Learning Resources Accessibility', () => {
         cy.visit('/learning-resources?user=s1111111');
         cy.injectAxe();
         cy.viewport(414, 736);
-        cy.get('div[data-testid="learning-resources"]').contains('My courses');
+        cy.get('div[data-testid="learning-resources"]').contains('Your courses');
         cy.log('Learning Resources');
         cy.wait(1000);
         cy.checkA11y('div[data-testid="learning-resources"]', {
@@ -303,7 +322,7 @@ context('Learning Resources Access', () => {
     });
     it('an rhd user, who is doing non research subjects can access the learning resources page', () => {
         cy.visit(
-            '/learning-resources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
+            '/learning-resources?user=s6666666&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
         );
         cy.waitUntil(() => cy.get('[data-testid="learning-resource-subject-title"]').contains('FREN1010'));
     });
@@ -436,6 +455,7 @@ context('The Learning Resources Page', () => {
             cy.get('[data-testid="guides-false-content"]')
                 .should('exist')
                 .contains('No subject guides');
+            cy.get('[data-testid="legalResearchEssentials-LAWS7107"]').should('not.exist');
         }
 
         function ACCT1101LoadsProperly() {
@@ -449,25 +469,9 @@ context('The Learning Resources Page', () => {
             cy.get('[data-testid="guides-ACCT1101-content"]')
                 .should('exist')
                 .contains('Accounting');
+            cy.get('[data-testid="legalResearchEssentials-LAWS7107"]').should('not.exist');
         }
 
-        function searchFor(searchFor = 'FREN', selectCourseCode) {
-            cy.log('searching for ', selectCourseCode);
-            const searchSuggestionForThisCourse = subjectSearchSuggestions
-                .filter(obj => {
-                    return obj.name === selectCourseCode;
-                })
-                .pop();
-
-            cy.get('div[data-testid=full-learningresource-autocomplete] input').clear();
-            cy.get('div[data-testid=full-learningresource-autocomplete] input').type(searchFor);
-            // click the first option
-            cy.get('li#full-learningresource-autocomplete-option-0')
-                .contains(
-                    `${searchSuggestionForThisCourse.course_title}, ${searchSuggestionForThisCourse.campus}, ${searchSuggestionForThisCourse.period}`,
-                )
-                .click();
-        }
         cy.visit('/learning-resources?user=s3333333');
         cy.viewport(1300, 1000);
 
@@ -637,5 +641,20 @@ context('The Learning Resources Page', () => {
         cy.waitUntil(() =>
             cy.get('[data-testid="reading-list-PHYS1101E-content"]').contains('No Reading list for this course'),
         );
+    });
+
+    it('A user sees an extra link on laws subjects', () => {
+        cy.visit('/learning-resources?user=s1111111');
+        cy.viewport(1300, 1000);
+
+        the_user_clicks_on_the_Search_tab();
+
+        the_user_sees_the_search_form();
+
+        searchFor('LAWS', 'LAWS7107');
+
+        cy.get('[data-testid="legalResearchEssentials-LAWS7107"]')
+            .should('exist')
+            .contains('Legal Research Essentials');
     });
 });

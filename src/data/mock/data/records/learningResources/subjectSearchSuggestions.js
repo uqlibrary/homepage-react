@@ -34,7 +34,7 @@ export default [{
         campus: 'St Lucia',
         period: 'Semester 2 2020',
     }, {
-        name: 'ACCT7107',
+        name: 'LAWS7107',
         url: 'http://uq.rl.talis.com/lists/C6A4040F-7111-DB7D-2C9D-855C0B0B77F9',
         type: 'learning_resource',
         course_title: 'Management Accounting and Control',

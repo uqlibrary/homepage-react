@@ -1,43 +1,51 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { isUQUser } from 'helpers/access';
+import { canSeeEndnoteReferencing } from 'helpers/access';
 
 import Grid from '@mui/material/Grid';
-
-import { default as locale } from './locale/subComponents.locale';
+import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
+const StyledBodyCopyDiv = styled('div')(() => ({
+    fontWeight: 400,
+    marginTop: '8px',
+}));
+const StyledStandardCard = styled(StandardCard)(() => ({
+    '& .cardContentNoPadding': {
+        marginTop: '-24px',
+    },
+}));
+
 export const ReferencingPanel = ({ account }) => {
     return (
-        <StandardCard
+        <StyledStandardCard
             subCard
             noPadding
-            // fullHeight
             primaryHeader
             standardCardId="referencing-homepage-panel"
             title="Referencing"
         >
-            <Grid container>
-                {locale.referencingPanel.items.map((item, index) =>
-                    !item.uqOnly || (item.uqOnly && isUQUser(account)) ? (
-                        <Grid
-                            item
-                            uqDsMobile={12}
-                            key={index}
-                            className="reference-panel-item"
-                            style={{ margin: '0 24px 0' }}
+            <Grid container padding={3} spacing={2}>
+                <Grid item xs={12}>
+                    <a href={'https://guides.library.uq.edu.au/referencing'} data-testid={'referencing-style'}>
+                        Referencing style guides
+                    </a>
+                    <StyledBodyCopyDiv>APA, Chicago, Vancouver and more</StyledBodyCopyDiv>
+                </Grid>
+                {canSeeEndnoteReferencing(account) && (
+                    <Grid item xs={12}>
+                        <a
+                            href={'https://guides.library.uq.edu.au/referencing/endnote'}
+                            data-testid={'referencing-endnote'}
                         >
-                            <p>
-                                <a href={`${item.url}`}>{`${item.title}`}</a>
-                                <br />
-                                {`${item.description}`}
-                            </p>
-                        </Grid>
-                    ) : null,
+                            Endnote referencing software
+                        </a>
+                        <StyledBodyCopyDiv>Download and support</StyledBodyCopyDiv>
+                    </Grid>
                 )}
             </Grid>
-        </StandardCard>
+        </StyledStandardCard>
     );
 };
 

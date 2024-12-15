@@ -184,7 +184,7 @@ export const LearningResources = ({
 
     const getInitialTopTabState = () => {
         let initialTopTabState = 'searchtab';
-        // if has account and no search param supplied, show My Course tab
+        // if has account and no search param supplied, show Your Courses tab
         if (
             !!account &&
             !!account.current_classes &&
@@ -193,7 +193,7 @@ export const LearningResources = ({
         ) {
             initialTopTabState = 'mycoursestab';
         }
-        // if has account and param supplied and param in account list, show My Course tab
+        // if has account and param supplied and param in account list, show Your Courses tab
         !!params &&
             !!account &&
             !!account.current_classes &&

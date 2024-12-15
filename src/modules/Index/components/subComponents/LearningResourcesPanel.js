@@ -39,27 +39,16 @@ const StyledGridListItem = styled(Grid)(({ theme }) => ({
             fontWeight: 500,
         },
         '&:hover': {
-            color: 'rgba(0, 0, 0, 0.87)',
-            backgroundColor: '#fff',
-            textDecoration: 'none',
-        },
-        '&:hover .link': {
             color: '#fff',
             backgroundColor: theme.palette.primary.light,
             textDecoration: 'none',
         },
-        '&:hover .descriptor': {
-            color: 'rgba(0, 0, 0, 0.87)',
-            backgroundColor: '#fff',
-        },
-        '& .descriptor': {
-            color: 'rgba(0, 0, 0, 0.87)',
-            backgroundColor: '#fff',
-            paddingLeft: '15px',
-            marginLeft: '100px',
-            display: 'block',
-            marginTop: '-25px',
-        },
+    },
+    '& .descriptor': {
+        marginLeft: '95px',
+        display: 'block',
+        marginTop: '-25px',
+        fontWeight: 400,
     },
 }));
 
@@ -193,47 +182,46 @@ export const LearningResourcesPanel = ({ account }) => {
                         marginRight: -16,
                         marginTop: 0,
                         marginLeft: -16,
-                        padding: '0 30px 8px',
+                        padding: '0 30px',
                         marginBottom: '8px',
                     }}
                 >
                     <StyledHeadingGridItem item xs={12}>
                         <Typography component={'h4'}>{locale.homepagePanel.userCourseTitle}</Typography>
                     </StyledHeadingGridItem>
-                    {displayedClasses.slice(0, MAXIMUM_NUMBER_DISPLAYED_ENROLLED_COURSES).map((item, index) => {
-                        return (
-                            <StyledGridListItem
-                                item
-                                component={'li'}
-                                xs={12}
-                                data-testid={`hcr-${index}`}
-                                data-analyticsid={`hcr-${index}`}
-                                key={`hcr-${index}`}
-                            >
-                                <Link
-                                    to={getUrlForLearningResourceSpecificTab(item, pageLocation)}
-                                    data-testid={`learning-resource-panel-course-link-${index}`}
-                                >
-                                    <Typography className={'link'} component={'span'}>
-                                        {item.classnumber}
-                                    </Typography>
-                                    <Typography
-                                        className={'descriptor'}
-                                        component={'span'}
-                                        style={{ fontWeight: 400 }}
-                                        title={item.DESCR}
+                    {displayedClasses.length > 0 && (
+                        <ul style={{ margin: '16px 0 0 24px', padding: 0, width: '100%' }}>
+                            {displayedClasses.slice(0, MAXIMUM_NUMBER_DISPLAYED_ENROLLED_COURSES).map((item, index) => {
+                                return (
+                                    <StyledGridListItem
+                                        item
+                                        component={'li'}
+                                        xs={12}
+                                        data-testid={`hcr-${index}`}
+                                        data-analyticsid={`hcr-${index}`}
+                                        key={`hcr-${index}`}
                                     >
-                                        {item.DESCR}
-                                    </Typography>
-                                </Link>{' '}
-                            </StyledGridListItem>
-                        );
-                    })}
+                                        <Link
+                                            to={getUrlForLearningResourceSpecificTab(item, pageLocation)}
+                                            data-testid={`learning-resource-panel-course-link-${index}`}
+                                        >
+                                            <Typography className={'link'} component={'span'}>
+                                                {item.classnumber}
+                                            </Typography>
+                                        </Link>{' '}
+                                        <Typography className={'descriptor'} component={'span'} title={item.DESCR}>
+                                            {item.DESCR}
+                                        </Typography>
+                                    </StyledGridListItem>
+                                );
+                            })}
+                        </ul>
+                    )}
                     {displayedClasses.length > MAXIMUM_NUMBER_DISPLAYED_ENROLLED_COURSES && (
                         <Grid
                             item
                             xs={12}
-                            style={{ marginTop: '6px', marginBottom: '6px' }}
+                            style={{ marginTop: '8px', marginBottom: '22px', paddingLeft: '12px' }}
                             data-testid={'learning-resource-panel-course-multi-footer'}
                         >
                             <Link to={'/learning-resources'}>{`See all ${displayedClasses.length} classes`}</Link>

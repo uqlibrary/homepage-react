@@ -116,22 +116,6 @@ export const pluralise = (singularWord, count, pluralWordSpecial = null) => {
     return singularWord;
 };
 
-const greetings = {
-    morning: 'Good morning',
-    afternoon: 'Good afternoon',
-    evening: 'Good evening',
-};
-export const greeting = (currentTime = null) => {
-    const time = currentTime ?? moment().format('H');
-    if (time < 12) {
-        return greetings.morning;
-    } else if (time >= 12 && time < 18) {
-        return greetings.afternoon;
-    } else {
-        return greetings.evening;
-    }
-};
-
 // for dev only - after 2024 golive this can just be web.library
 /**
  * @param pathname {string} the path name to appended to the correct domain, eg /about
@@ -141,20 +125,29 @@ export const greeting = (currentTime = null) => {
  */
 export const linkToDrupal = (pathname, requestedDomainName = null) => {
     const domainName = requestedDomainName ?? document.location.hostname;
-    const origin = ['localhost', 'homepage-development.library.uq.edu.au'].includes(domainName)
-        ? 'https://live-library-uq.pantheonsite.io'
+    // after jan 2025 golive, should be web.library only
+    // note some tests need correction
+    const origin = [
+        'localhost',
+        'homepage-development.library.uq.edu.au',
+        'homepage-staging.library.uq.edu.au',
+    ].includes(domainName)
+        ? 'https://web-live.library.uq.edu.au'
         : 'https://web.library.uq.edu.au';
     return `${origin}${pathname}`;
 };
 
+/* istanbul ignore next */
 export function isKeyPressed(e, charKeyInput, numericKeyInput) {
     const keyNumeric = e.charCode || e.keyCode;
     const keyChar = e.key || /* istanbul ignore next */ e.code;
     return keyChar === charKeyInput || keyNumeric === numericKeyInput;
 }
+/* istanbul ignore next */
 export function isReturnKeyPressed(e) {
     return isKeyPressed(e, 'Enter', 13);
 }
+/* istanbul ignore next */
 export function isEscapeKeyPressed(e) {
     return isKeyPressed(e, 'Escape', 27);
 }

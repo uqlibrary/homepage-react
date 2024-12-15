@@ -63,15 +63,6 @@ export const LIB_HOURS_API = () => ({
     options: { params: { ts: `${new Date().getTime()}` } },
 });
 
-const location = ['localhost', 'homepage-development.library.uq.edu.au', 'homepage-staging.library.uq.edu.au'].includes(
-    document.location.hostname,
-)
-    ? 'reusable-webcomponents-staging'
-    : /* istanbul ignore next */ 'reusable-webcomponents';
-export const VEMCOUNT_API = () => ({
-    apiUrl: 'https://assets.library.uq.edu.au/' + location + '/api/homepage/headcount.json',
-});
-
 // file uploading apis
 export const UPLOAD_PUBLIC_FILES_API = () => ({ apiUrl: 'file/public' });
 
@@ -227,7 +218,7 @@ export const TEST_TAG_UPDATE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id
 export const TEST_TAG_ADD_USER_API = () => ({ apiUrl: 'test-and-tag/user' });
 export const TEST_TAG_DELETE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id}` });
 
-export const DLOR_ALL_API = () => ({ apiUrl: 'dlor/public/list/full' });
+export const DLOR_ALL_API = () => ({ apiUrl: 'dlor/public/list/full' }); // is admin in staging
 export const DLOR_ALL_CURRENT_API = () => ({ apiUrl: 'dlor/public/list/current' });
 export const DLOR_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/public/find/${id}` });
 export const DLOR_GET_FILTER_LIST = () => ({ apiUrl: 'dlor/public/facet/list' });
@@ -252,16 +243,28 @@ export const DLOR_SERIES_DELETE_API = id => ({ apiUrl: `dlor/admin/series/${id}`
 export const DLOR_SERIES_UPDATE_API = id => ({ apiUrl: `dlor/admin/series/${id}` });
 export const DLOR_SERIES_CREATE_API = () => ({ apiUrl: 'dlor/admin/series' });
 
+const productionRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage';
+const stagingRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage';
 export const DRUPAL_ARTICLE_API = () => {
-    if (process.env.BRANCH === 'production') {
-        return {
-            apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage/articles.json',
-        };
-    } else {
-        return {
-            apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json',
-        };
-    }
+    const filePath = '/articles.json';
+    const shouldUseProduction =
+        process.env.BRANCH === 'production' ||
+        (document.location.hostname === 'homepage-development.library.uq.edu.au' && // production on dev for test only
+            /* istanbul ignore next */ document.location.pathname === '/webpresence-staging/');
+    return {
+        apiUrl: shouldUseProduction ? `${productionRoot}${filePath}` : `${stagingRoot}${filePath}`,
+    };
+};
+
+export const VEMCOUNT_API = () => {
+    const filePath = '/headcount.json';
+    const shouldUseProduction =
+        process.env.BRANCH === 'production' ||
+        (document.location.hostname === 'homepage-development.library.uq.edu.au' && // production on dev for test only
+            /* istanbul ignore next */ document.location.pathname === '/webpresence-staging/');
+    return {
+        apiUrl: shouldUseProduction ? `${productionRoot}${filePath}` : `${stagingRoot}${filePath}`,
+    };
 };
 
 export const JOURNAL_SEARCH_API = () => ({ apiUrl: 'https://api.library.uq.edu.au/v1/journals/favourites?sort=score' });
