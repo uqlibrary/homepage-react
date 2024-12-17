@@ -30,7 +30,6 @@ const StyledMenuList = styled(List)(({ theme }) => ({
     backgroundColor: '#fff',
     zIndex: 2,
     border: '1px solid #dcdcdd',
-    // transition: 'transform .2s ease-out,opacity .2s ease-out',
     '& li': {
         fontWeight: 400,
         '&:hover': {
@@ -274,7 +273,6 @@ const dsChecklistIcon = (
 );
 
 export const AccountPanel = ({ account, loans, loansLoading, printBalance, printBalanceLoading }) => {
-    console.log('AccountPanel printBalance=', printBalance, printBalanceLoading);
     function totalFines(fines) {
         return fines.reduce((sum, fine) => {
             return sum + (typeof fine.fineAmount === 'number' ? fine.fineAmount : /* istanbul ignore next */ 0);
@@ -320,16 +318,7 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
                 }
             };
 
-            // const handleClickOutside = event => {
-            //     if (menuAnchorElement && !menuAnchorElement.contains(event.target)) {
-            //         handleClose();
-            //     }
-            // };
             const handleClickOutside = event => {
-                console.log('menuAnchorElement=', menuAnchorElement);
-                console.log('popperRef.current=', popperRef.current);
-                console.log('menuAnchorElement=', menuAnchorElement);
-                console.log('printBalance=', printBalance);
                 if (
                     menuAnchorElement &&
                     !menuAnchorElement.contains(event.target) &&
@@ -348,22 +337,19 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
                 document.removeEventListener('mousedown', handleClickOutside);
             };
         }, [menuAnchorElement]);
-        const handleNavigationToManage = () => {
+        const handleNavigationToAboutPage = () => {
             window.location.href = linkToDrupal(
                 '/library-and-student-it-help/print-scan-and-copy/your-printing-account ',
             );
             handleClose();
         };
         const navigateToTopUpUrl = value => {
-            console.log('navigateToTopUpUrl printBalance=', printBalance);
             const papercutAddress =
                 'https://payments.uq.edu.au/OneStopWeb/aspx/TranAdd.aspx?TRAN-TYPE=W361&username=[id]&unitamountinctax=[value]&email=[email]';
-            const landingPage = papercutAddress
+            window.location.href = papercutAddress
                 .replace('[id]', account.id)
                 .replace('[value]', value)
                 .replace('[email]', printBalance.email);
-            console.log('navigateToTopUpUrl landingPage=', landingPage);
-            window.location.href = landingPage;
         };
         return (
             <>
@@ -386,10 +372,6 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
                     open={!!menuAnchorElement}
                     placement="bottom-start"
                     disablePortal={false}
-                    // PaperProps={{
-                    //     id: 'papercut-paper',
-                    //     'data-testid': 'papercut-paper',
-                    // }}
                     modifiers={[
                         {
                             name: 'flip',
@@ -432,7 +414,7 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
                             id={getPapercutId('item-button-0')}
                             data-testid={getPapercutId('item-button-0')}
                             data-analyticsid={getPapercutId('item-button-0')}
-                            onClick={() => handleNavigationToManage()}
+                            onClick={() => handleNavigationToAboutPage()}
                         >
                             <span>More about your printing account</span>
                         </MenuItem>
