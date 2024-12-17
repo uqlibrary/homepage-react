@@ -40,7 +40,7 @@ describe('Account panel', () => {
             cy.get('[data-testid="show-papercut"]').should('not.contain', '(');
         });
     });
-    context.only('Papercut', () => {
+    context('Papercut', () => {
         function openPapercutPopup() {
             // center where the menu will be
             cy.get('[data-testid="show-searchhistory"]')
@@ -165,6 +165,25 @@ describe('Account panel', () => {
                 .click();
 
             cy.get('body').contains('papercut topup page');
+        });
+
+        it('top up items dont appear on error', () => {
+            // if we don't get a print balance entry, we lack the details to send them through
+            cy.visit('http://localhost:2020/?user=s1111111&responseType=almaError');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="show-requests"]')
+                    .should('exist')
+                    .contains('Requests'),
+            );
+            openPapercutPopup();
+
+            cy.get('[data-testid="papercut-item-button-0"]')
+                .should('exist')
+                .should('be.visible')
+                .contains('More about your printing account');
+            cy.get('[data-testid="papercut-item-button-1"]').should('not.exist');
         });
     });
 });

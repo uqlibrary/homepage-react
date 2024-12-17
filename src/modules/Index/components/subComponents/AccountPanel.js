@@ -272,7 +272,14 @@ const dsChecklistIcon = (
     </svg>
 );
 
-export const AccountPanel = ({ account, loans, loansLoading, printBalance, printBalanceLoading }) => {
+export const AccountPanel = ({
+    account,
+    loans,
+    loansLoading,
+    printBalance,
+    printBalanceLoading,
+    printBalanceError,
+}) => {
     function totalFines(fines) {
         return fines.reduce((sum, fine) => {
             return sum + (typeof fine.fineAmount === 'number' ? fine.fineAmount : /* istanbul ignore next */ 0);
@@ -294,7 +301,7 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
     }
 
     function markedPrintBalance() {
-        if (!!printBalanceLoading || !printBalance?.hasOwnProperty('balance')) {
+        if (!!printBalanceLoading || !printBalance?.hasOwnProperty('balance') || !!printBalanceError) {
             return null;
         }
         return <> (${printBalance?.balance})</>;
@@ -397,19 +404,23 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
                     ref={popperRef}
                 >
                     <StyledMenuList>
-                        {[5, 10, 20].map((topupAmount, index) => {
-                            const topUpLabel = topupAmount => 'Top up your print balance - $' + topupAmount;
-                            return (
-                                <MenuItem
-                                    id={getPapercutId(`item-button-${index + 1}`)}
-                                    key={getPapercutId(`item-button-${index + 1}`)}
-                                    data-testid={getPapercutId(`item-button-${index + 1}`)}
-                                    onClick={() => navigateToTopUpUrl(topupAmount)}
-                                >
-                                    <span>{topUpLabel(topupAmount)}</span>
-                                </MenuItem>
-                            );
-                        })}
+                        {!printBalanceLoading &&
+                            !!printBalance &&
+                            !printBalanceError &&
+                            !!printBalance.email &&
+                            [5, 10, 20].map((topupAmount, index) => {
+                                const topUpLabel = topupAmount => 'Top up your print balance - $' + topupAmount;
+                                return (
+                                    <MenuItem
+                                        id={getPapercutId(`item-button-${index + 1}`)}
+                                        key={getPapercutId(`item-button-${index + 1}`)}
+                                        data-testid={getPapercutId(`item-button-${index + 1}`)}
+                                        onClick={() => navigateToTopUpUrl(topupAmount)}
+                                    >
+                                        <span>{topUpLabel(topupAmount)}</span>
+                                    </MenuItem>
+                                );
+                            })}
                         <MenuItem
                             id={getPapercutId('item-button-0')}
                             data-testid={getPapercutId('item-button-0')}
@@ -479,6 +490,7 @@ AccountPanel.propTypes = {
     loansLoading: PropTypes.bool,
     printBalance: PropTypes.object,
     printBalanceLoading: PropTypes.bool,
+    printBalanceError: PropTypes.bool,
 };
 
 export default AccountPanel;

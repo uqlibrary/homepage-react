@@ -132,6 +132,7 @@ export const Index = ({
     trainingEventsError,
     printBalance,
     printBalanceLoading,
+    printBalanceError,
     possibleRecords,
     possibleRecordsLoading,
     incompleteNTRO,
@@ -239,7 +240,7 @@ export const Index = ({
                                 {!!verySimplelayout ? (
                                     <>
                                         <StyledGridItemLoggedInLeftMost item xs={12} uqDsDesktop={4} data-testid="account-panel" style={{ paddingTop: 0 }}>
-                                            <AccountPanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} />
+                                            <AccountPanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} printBalanceError={printBalanceError} />
                                         </StyledGridItemLoggedInLeftMost>
                                         {canSeeTrainingPanel(account) && (
                                             <StyledGridItemLoggedInLeftMost item xs={12} uqDsDesktop={4} data-testid="training-panel" style={{ paddingTop: 0 }}>
@@ -259,7 +260,7 @@ export const Index = ({
                                         <Grid item uqDsDesktop={4} xs={12}>
                                             <Grid container>
                                                 <StyledGridItemLoggedInLeftMost item xs={12} data-testid="account-panel">
-                                                    <AccountPanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} />
+                                                    <AccountPanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} printBalanceError={printBalanceError} />
                                                 </StyledGridItemLoggedInLeftMost>
                                                 {canSeeTrainingPanel(account) && (
                                                     <StyledGridItemLoggedInLeftMost item xs={12} data-testid="training-panel">
@@ -343,6 +344,7 @@ Index.propTypes = {
     loansLoading: PropTypes.bool,
     printBalance: PropTypes.any,
     printBalanceLoading: PropTypes.bool,
+    printBalanceError: PropTypes.bool,
     vemcount: PropTypes.object,
     vemcountLoading: PropTypes.bool,
     vemcountError: PropTypes.bool,
