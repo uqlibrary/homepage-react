@@ -312,11 +312,15 @@ export const AccountPanel = ({
         const popperRef = React.useRef(null);
 
         const getPapercutId = tag => `papercut${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
-        const handleClick = event => {
-            setMenuAnchorElement(event.currentTarget);
-        };
         const handleClose = () => {
             setMenuAnchorElement(null);
+        };
+        const handleToggle = event => {
+            if (menuAnchorElement === null) {
+                setMenuAnchorElement(event.currentTarget);
+            } else {
+                handleClose();
+            }
         };
         React.useEffect(() => {
             const handleKeyDown = event => {
@@ -344,7 +348,7 @@ export const AccountPanel = ({
                 document.removeEventListener('mousedown', handleClickOutside);
             };
         }, [menuAnchorElement]);
-        const handleNavigationToAboutPage = () => {
+        const navigateToAboutPage = () => {
             window.location.href = linkToDrupal(
                 '/library-and-student-it-help/print-scan-and-copy/your-printing-account ',
             );
@@ -363,7 +367,7 @@ export const AccountPanel = ({
                 <Button
                     fullWidth
                     classes={{ root: 'menuItemRoot' }}
-                    onClick={handleClick}
+                    onClick={handleToggle}
                     id={getPapercutId('menu-button')}
                     data-testid={getPapercutId('menu-button')}
                     data-analyticsid={getPapercutId('tooltip')}
@@ -425,7 +429,7 @@ export const AccountPanel = ({
                             id={getPapercutId('item-button-0')}
                             data-testid={getPapercutId('item-button-0')}
                             data-analyticsid={getPapercutId('item-button-0')}
-                            onClick={() => handleNavigationToAboutPage()}
+                            onClick={() => navigateToAboutPage()}
                         >
                             <span>More about your printing account</span>
                         </MenuItem>
