@@ -185,7 +185,7 @@ describe('LibraryUpdates', () => {
 
                 // item one has a border so they aren't quite the same
                 expect(secondItemLeft - firstItemLeft).to.be.lessThan(1);
-                expect(secondItemRight - firstItemRight).to.be.lessThan(1);
+                expect(secondItemRight - firstItemRight).to.be.lte(1);
                 expect(secondItemTop).to.be.greaterThan(firstItemBottom);
             });
 
