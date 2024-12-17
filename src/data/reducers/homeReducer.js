@@ -94,6 +94,5 @@ export default function homeReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-    console.log('homeReducer', action.type, state);
     return handler(state, action);
 }
