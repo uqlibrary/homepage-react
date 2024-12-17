@@ -1,10 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+
+import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import MenuItem from '@mui/material/MenuItem';
+import Popper from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { canSeeLoans, canSeePrintBalance, isTestTagUser } from 'helpers/access';
+import { canSeeLoans, isTestTagUser } from 'helpers/access';
 import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
 import { linkToDrupal } from 'helpers/general';
 
@@ -21,12 +26,65 @@ const StyledAlertDiv = styled('div')(() => ({
     },
 }));
 
-const StyledUl = styled('ul')(() => ({
+const StyledMenuList = styled(List)(({ theme }) => ({
+    backgroundColor: '#fff',
+    zIndex: 2,
+    border: '1px solid #dcdcdd',
+    // transition: 'transform .2s ease-out,opacity .2s ease-out',
+    '& li': {
+        fontWeight: 400,
+        '&:hover': {
+            backgroundColor: 'inherit',
+            color: 'inherit',
+            '& span': {
+                backgroundColor: theme.palette.primary.light,
+                color: '#fff',
+            },
+        },
+        '& span': {
+            lineHeight: 'normal',
+        },
+    },
+    '& .MuiTouchRipple-root': {
+        display: 'none', // remove mui ripple
+    },
+}));
+
+const StyledUl = styled('ul')(({ theme }) => ({
     marginBottom: 0,
     '& li': {
         paddingBottom: '16px',
         marginLeft: '-20px',
         listStyleType: 'none',
+        '& button': {
+            color: theme.palette.primary.light,
+            fontWeight: 500,
+            fontSize: '16px',
+            textAlign: 'left',
+            textTransform: 'none',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            lineHeight: 'normal',
+            padding: '0 4px',
+            '&:hover': {
+                backgroundColor: 'inherit',
+            },
+            '& span': {
+                textDecoration: 'underline',
+                '&:hover': {
+                    backgroundColor: theme.palette.primary.light,
+                    color: '#fff',
+                },
+            },
+            '& svg': {
+                stroke: theme.palette.primary.light,
+                paddingRight: '12px',
+            },
+            '& .MuiTouchRipple-root': {
+                display: 'none', // remove mui ripple
+            },
+        },
         '& a': {
             display: 'inline-flex',
             alignItems: 'center',
@@ -37,12 +95,12 @@ const StyledUl = styled('ul')(() => ({
                 textDecorationColor: 'white',
             },
             '& svg': {
-                stroke: '#51247A',
+                stroke: theme.palette.primary.light,
                 paddingRight: '12px',
             },
             '&:hover span': {
                 color: '#fff',
-                backgroundColor: '#51247A',
+                backgroundColor: theme.palette.primary.light,
             },
             '&:hover svg': {
                 color: 'inherit',
@@ -216,6 +274,7 @@ const dsChecklistIcon = (
 );
 
 export const AccountPanel = ({ account, loans, loansLoading, printBalance, printBalanceLoading }) => {
+    console.log('AccountPanel printBalance=', printBalance, printBalanceLoading);
     function totalFines(fines) {
         return fines.reduce((sum, fine) => {
             return sum + (typeof fine.fineAmount === 'number' ? fine.fineAmount : /* istanbul ignore next */ 0);
@@ -243,6 +302,146 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
         return <> (${printBalance?.balance})</>;
     }
 
+    const PaperCut = () => {
+        const [menuAnchorElement, setMenuAnchorElement] = React.useState(null);
+        const popperRef = React.useRef(null);
+
+        const getPapercutId = tag => `papercut${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
+        const handleClick = event => {
+            setMenuAnchorElement(event.currentTarget);
+        };
+        const handleClose = () => {
+            setMenuAnchorElement(null);
+        };
+        React.useEffect(() => {
+            const handleKeyDown = event => {
+                if (event.key === 'Escape') {
+                    handleClose();
+                }
+            };
+
+            // const handleClickOutside = event => {
+            //     if (menuAnchorElement && !menuAnchorElement.contains(event.target)) {
+            //         handleClose();
+            //     }
+            // };
+            const handleClickOutside = event => {
+                console.log('menuAnchorElement=', menuAnchorElement);
+                console.log('popperRef.current=', popperRef.current);
+                console.log('menuAnchorElement=', menuAnchorElement);
+                console.log('printBalance=', printBalance);
+                if (
+                    menuAnchorElement &&
+                    !menuAnchorElement.contains(event.target) &&
+                    popperRef.current &&
+                    !popperRef.current.contains(event.target)
+                ) {
+                    handleClose();
+                }
+            };
+
+            document.addEventListener('keydown', handleKeyDown);
+            document.addEventListener('mousedown', handleClickOutside);
+
+            return () => {
+                document.removeEventListener('keydown', handleKeyDown);
+                document.removeEventListener('mousedown', handleClickOutside);
+            };
+        }, [menuAnchorElement]);
+        const handleNavigationToManage = () => {
+            window.location.href = linkToDrupal(
+                '/library-and-student-it-help/print-scan-and-copy/your-printing-account ',
+            );
+            handleClose();
+        };
+        const navigateToTopUpUrl = value => {
+            console.log('navigateToTopUpUrl printBalance=', printBalance);
+            const papercutAddress =
+                'https://payments.uq.edu.au/OneStopWeb/aspx/TranAdd.aspx?TRAN-TYPE=W361&username=[id]&unitamountinctax=[value]&email=[email]';
+            const landingPage = papercutAddress
+                .replace('[id]', account.id)
+                .replace('[value]', value)
+                .replace('[email]', printBalance.email);
+            console.log('navigateToTopUpUrl landingPage=', landingPage);
+            window.location.href = landingPage;
+        };
+        return (
+            <>
+                <Button
+                    fullWidth
+                    classes={{ root: 'menuItemRoot' }}
+                    onClick={handleClick}
+                    id={getPapercutId('menu-button')}
+                    data-testid={getPapercutId('menu-button')}
+                    data-analyticsid={getPapercutId('tooltip')}
+                    title="Click to manage your print balance"
+                >
+                    {dsDiscountDollarDashIcon}{' '}
+                    <span data-testid="papercut-print-balance">Print balance {markedPrintBalance()}</span>
+                </Button>
+                <Popper
+                    id={getPapercutId('menu')}
+                    data-testid={getPapercutId('menu')}
+                    anchorEl={menuAnchorElement}
+                    open={!!menuAnchorElement}
+                    placement="bottom-start"
+                    disablePortal={false}
+                    // PaperProps={{
+                    //     id: 'papercut-paper',
+                    //     'data-testid': 'papercut-paper',
+                    // }}
+                    modifiers={[
+                        {
+                            name: 'flip',
+                            enabled: true,
+                            options: {
+                                altBoundary: true,
+                                rootBoundary: 'viewport',
+                                padding: 8,
+                            },
+                        },
+                        {
+                            name: 'preventOverflow',
+                            enabled: true,
+                            options: {
+                                altAxis: true,
+                                altBoundary: true,
+                                tether: true,
+                                rootBoundary: 'document',
+                                padding: 8,
+                            },
+                        },
+                    ]}
+                    ref={popperRef}
+                >
+                    <StyledMenuList>
+                        {[5, 10, 20].map((topupAmount, index) => {
+                            const topUpLabel = topupAmount => 'Top up your print balance - $' + topupAmount;
+                            return (
+                                <MenuItem
+                                    id={getPapercutId(`item-button-${index + 1}`)}
+                                    key={getPapercutId(`item-button-${index + 1}`)}
+                                    data-testid={getPapercutId(`item-button-${index + 1}`)}
+                                    onClick={() => navigateToTopUpUrl(topupAmount)}
+                                >
+                                    <span>{topUpLabel(topupAmount)}</span>
+                                </MenuItem>
+                            );
+                        })}
+                        <MenuItem
+                            id={getPapercutId('item-button-0')}
+                            data-testid={getPapercutId('item-button-0')}
+                            data-analyticsid={getPapercutId('item-button-0')}
+                            onClick={() => handleNavigationToManage()}
+                        >
+                            <span>More about your printing account</span>
+                        </MenuItem>
+                    </StyledMenuList>
+                </Popper>
+            </>
+        );
+    };
+
     return (
         <StandardCard subCard noPadding primaryHeader standardCardId="catalogue-panel" title="Your library account">
             <StyledUl>
@@ -266,23 +465,18 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
                         {dsBookCloseBookmarkIcon} <span>Loans {markedLoanQuantity()}</span>
                     </Link>
                 </li>
-                {canSeePrintBalance(account) && (
-                    <li data-testid={'show-papercut'}>
-                        <Link
-                            to={linkToDrupal('/library-and-student-it-help/print-scan-and-copy/your-printing-account')}
-                        >
-                            {dsDiscountDollarDashIcon} <span>Print balance {markedPrintBalance()}</span>
-                        </Link>
-                    </li>
-                )}
-                {isTestTagUser(account) && (
-                    /* istanbul ignore next */ <li data-testid={'show-testntag'}>
-                        <Link to={'admin/testntag'}>
-                            {dsChecklistIcon}
-                            <span>Test and tag</span>
-                        </Link>
-                    </li>
-                )}
+                <li data-testid={'show-papercut'}>
+                    <PaperCut />
+                </li>
+                {isTestTagUser(account) &&
+                /* istanbul ignore next */ !['uqldegro', 'uqslanca', 'uqjtilse'].includes(account.id) && ( // hide until end of 2024 dev(
+                        <li data-testid={'show-testntag'}>
+                            <Link to={'admin/testntag'}>
+                                {dsChecklistIcon}
+                                <span>Test and tag</span>
+                            </Link>
+                        </li>
+                    )}
             </StyledUl>
             {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
                 <StyledAlertDiv data-testid={'show-fines'}>
