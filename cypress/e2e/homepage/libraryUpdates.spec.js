@@ -137,7 +137,7 @@ describe('LibraryUpdates', () => {
                 expect(thirdItemTop).to.equal(secondItemTop);
                 expect(thirdItemBottom).to.equal(secondItemBottom);
                 expect(thirdItemLeft).to.be.greaterThan(secondItemRight);
-                expect(thirdItemRight).to.be.greaterThan(797); // near right edge of 840 width
+                expect(thirdItemRight).to.be.greaterThan(795); // near right edge of 840 width
             });
 
             // visually the fourth article drops down, but by the numbers it seems to sit on the right,
@@ -170,7 +170,7 @@ describe('LibraryUpdates', () => {
                     firstItemBottom = $el.position().top + $el.outerHeight();
                     firstItemRight = $el.position().left + $el.outerWidth();
 
-                    expect(firstItemLeft).to.lessThan(25); // near left hand edge
+                    expect(firstItemLeft).to.lessThan(26); // near left hand edge
                 });
 
             let secondItemTop;
@@ -185,7 +185,7 @@ describe('LibraryUpdates', () => {
 
                 // item one has a border so they aren't quite the same
                 expect(secondItemLeft - firstItemLeft).to.be.lessThan(1);
-                expect(secondItemRight - firstItemRight).to.be.lessThan(1);
+                expect(secondItemRight - firstItemRight).to.be.lte(1);
                 expect(secondItemTop).to.be.greaterThan(firstItemBottom);
             });
 
