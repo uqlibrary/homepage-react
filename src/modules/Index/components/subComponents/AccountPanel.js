@@ -44,8 +44,10 @@ const StyledMenuList = styled(List)(({ theme }) => ({
     backgroundColor: '#fff',
     zIndex: 2,
     border: '1px solid #dcdcdd',
+    paddingBlock: '20px',
     '& li': {
         fontWeight: 400,
+        padding: '8px 24px',
         '&:focus-visible': {
             outline: '-webkit-focus-ring-color auto 1px',
         },
@@ -436,23 +438,28 @@ export const AccountPanel = ({
                     ref={popperRef}
                 >
                     <StyledMenuList>
-                        {!printBalanceLoading &&
-                            !!printBalance &&
-                            !printBalanceError &&
-                            !!printBalance.email &&
-                            [5, 10, 20].map((topupAmount, index) => {
-                                const topUpLabel = topupAmount => 'Top up your print balance - $' + topupAmount;
-                                return (
-                                    <MenuItem
-                                        id={getPapercutId(`item-button-${index + 1}`)}
-                                        key={getPapercutId(`item-button-${index + 1}`)}
-                                        data-testid={getPapercutId(`item-button-${index + 1}`)}
-                                        onClick={() => navigateToTopUpUrl(topupAmount)}
-                                    >
-                                        <span>{topUpLabel(topupAmount)}</span>
-                                    </MenuItem>
-                                );
-                            })}
+                        {(() => {
+                            if (!!printBalanceLoading) {
+                                return <MenuItem>Loading...</MenuItem>;
+                            } else if (!!printBalanceError || !printBalance?.email) {
+                                return <MenuItem>Top up is currently unavailable - please try again later.</MenuItem>;
+                            } else {
+                                return [5, 10, 20].map((topupAmount, index) => {
+                                    const topUpLabel = topupAmount => 'Top up your print balance - $' + topupAmount;
+                                    return (
+                                        <MenuItem
+                                            id={getPapercutId(`item-button-${index + 1}`)}
+                                            key={getPapercutId(`item-button-${index + 1}`)}
+                                            data-testid={getPapercutId(`item-button-${index + 1}`)}
+                                            onClick={() => navigateToTopUpUrl(topupAmount)}
+                                        >
+                                            <span>{topUpLabel(topupAmount)}</span>
+                                        </MenuItem>
+                                    );
+                                });
+                            }
+                        })()}
+
                         <MenuItem
                             id={getPapercutId('item-button-0')}
                             data-testid={getPapercutId('item-button-0')}
