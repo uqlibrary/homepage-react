@@ -19,6 +19,7 @@ describe('account reducer', () => {
             ...emptyState,
             printBalance: [],
             printBalanceLoading: false,
+            printBalanceError: false,
         });
     });
 
@@ -30,6 +31,7 @@ describe('account reducer', () => {
             ...emptyState,
             printBalance: null,
             printBalanceLoading: true,
+            printBalanceError: false,
         });
     });
 
@@ -41,6 +43,7 @@ describe('account reducer', () => {
             ...emptyState,
             printBalanceLoading: false,
             printBalance: null,
+            printBalanceError: true,
         });
     });
 

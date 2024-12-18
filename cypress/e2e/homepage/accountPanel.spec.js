@@ -12,20 +12,6 @@ describe('Account panel', () => {
                 .should('exist')
                 .contains('Loans (1)');
         });
-        it('is accessible', () => {
-            cy.visit('/');
-            cy.injectAxe();
-            cy.wait(2000);
-            cy.viewport(1300, 1000);
-
-            cy.waitUntil(() => cy.get('[data-testid="show-searchhistory"]').should('exist'));
-            cy.get('[data-testid="show-searchhistory"]').contains('Search history');
-            cy.checkA11y('[data-testid="account-panel"]', {
-                reportName: 'Account panel',
-                scopeName: 'As loaded',
-                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-            });
-        });
         it('displays no Requests on an error correctly', () => {
             cy.visit('http://localhost:2020/?user=s1111111&responseType=almaError');
             cy.viewport(1280, 900);
@@ -39,6 +25,26 @@ describe('Account panel', () => {
             cy.get('[data-testid="show-loans"]').should('not.contain', '(');
             cy.get('[data-testid="show-papercut"]').should('not.contain', '(');
         });
+    });
+    context('Accessibility', () => {
+        it('is accessible, base', () => {
+            cy.visit('/');
+            cy.injectAxe();
+            cy.wait(2000);
+            cy.viewport(1300, 1000);
+
+            cy.waitUntil(() => cy.get('[data-testid="show-searchhistory"]').should('exist'));
+            cy.get('[data-testid="show-searchhistory"]').contains('Search history');
+            cy.checkA11y('[data-testid="account-panel"]', {
+                reportName: 'Account panel',
+                scopeName: 'As loaded',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+        });
+        // add extra tests for:
+        // for s1111111 (has fines)
+        // pop open print balance menu
+        // pop open print balance menu WITH ERROR
     });
     context('Papercut', () => {
         function openPapercutPopup() {
@@ -67,7 +73,7 @@ describe('Account panel', () => {
 
             openPapercutPopup();
 
-            cy.get('[data-testid="papercut-item-button-0"]')
+            cy.get('[data-testid="papercut-item-button-4"]')
                 .should('exist')
                 .should('be.visible')
                 .contains('More about your printing account');
@@ -85,7 +91,7 @@ describe('Account panel', () => {
 
             openPapercutPopup();
 
-            cy.get('[data-testid="papercut-item-button-0"]')
+            cy.get('[data-testid="papercut-item-button-4"]')
                 .should('exist')
                 .should('be.visible')
                 .contains('More about your printing account');
@@ -93,7 +99,8 @@ describe('Account panel', () => {
             // papercut menu closes by user tapping the escape key
             cy.get('body').type('{esc}');
 
-            cy.get('[data-testid="papercut-item-button-0"]').should('not.exist');
+            // "More about your printing account" link is no longer available
+            cy.get('[data-testid="papercut-item-button-4"]').should('not.exist');
         });
 
         it('Personalised panel print menu can close with button click', () => {
@@ -104,7 +111,7 @@ describe('Account panel', () => {
 
             openPapercutPopup();
 
-            cy.get('[data-testid="papercut-item-button-0"]')
+            cy.get('[data-testid="papercut-item-button-4"]')
                 .should('exist')
                 .should('be.visible')
                 .contains('More about your printing account');
@@ -112,7 +119,8 @@ describe('Account panel', () => {
             // papercut menu closes by user reclicking the open button
             cy.get('[data-testid="papercut-menu-button"]').click();
 
-            cy.get('[data-testid="papercut-item-button-0"]').should('not.exist');
+            // "More about your printing account" link is no longer available
+            cy.get('[data-testid="papercut-item-button-4"]').should('not.exist');
         });
 
         it('Personalised panel print menu can close with a click away', () => {
@@ -123,7 +131,7 @@ describe('Account panel', () => {
 
             openPapercutPopup();
 
-            cy.get('[data-testid="papercut-item-button-0"]')
+            cy.get('[data-testid="papercut-item-button-4"]')
                 .should('exist')
                 .should('be.visible')
                 .contains('More about your printing account');
@@ -131,7 +139,8 @@ describe('Account panel', () => {
             // papercut menu closes by user clicking somewhere else in the window
             cy.get('[data-testid="homepage-user-greeting"]').click();
 
-            cy.get('[data-testid="papercut-item-button-0"]').should('not.exist');
+            // "More about your printing account" link is no longer available
+            cy.get('[data-testid="papercut-item-button-4"]').should('not.exist');
         });
 
         it('can navigate to papercut manage page', () => {
@@ -144,7 +153,7 @@ describe('Account panel', () => {
 
             openPapercutPopup();
 
-            cy.get('li[data-testid="papercut-item-button-0"]')
+            cy.get('li[data-testid="papercut-item-button-4"]')
                 .contains('More about your printing account')
                 .click();
 
@@ -179,11 +188,39 @@ describe('Account panel', () => {
             );
             openPapercutPopup();
 
-            cy.get('[data-testid="papercut-item-button-0"]')
+            cy.get('[data-testid="papercut-item-button-4"]')
                 .should('exist')
                 .should('be.visible')
                 .contains('More about your printing account');
             cy.get('[data-testid="papercut-item-button-1"]').should('not.exist');
         });
+
+        // there is custom tab handling on the papercut menu, but Cypress cant test that :(
+        // working:
+        // load http://localhost:2020/?user=vanilla
+        // tab to Print balance field
+        // tab again - focus is on "See all training"
+        // back tab - back on Print balance
+        // click return - menu opens, focus is on first item
+        // tab through each item, land on next item in menu
+        // tab out of final menu item, menu closes, focus is on "See all training"
+        // back tab, focus is on Print balance
+        // click enter to load menu
+        // tab to final entry on menu
+        // back tab through each menu item
+        // back tab out of first menu item, menu closes, focus is on Print balance
+        // -- also check when fines and charges available
+        // load http://localhost:2020/?user=s1111111
+        // tab to Print balance field
+        // tab again - focus is on "Fines and charges"
+        // back tab - back on Prin galance
+        // click return - menu opens, focus is on first item
+        // tab through each item, land on next item in menu
+        // tab out of final menu item, menu closes, focus is on "Fines and charges"
+        // back tab, focus is on Print balance
+        // click enter to load menu
+        // tab to final entry on menu
+        // back tab through each menu item
+        // back tab out of first menu item, menu closes, focus is on Print balance
     });
 });
