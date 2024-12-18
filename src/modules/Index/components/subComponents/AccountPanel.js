@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -7,6 +7,9 @@ import List from '@mui/material/List';
 import MenuItem from '@mui/material/MenuItem';
 import Popper from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
+
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { canSeeLoans, isTestTagUser } from 'helpers/access';
@@ -23,6 +26,12 @@ const StyledAlertDiv = styled('div')(() => ({
     },
     '& > div': {
         width: '100%',
+    },
+}));
+
+const StyledPrintBalanceButton = styled(Button)(({ theme }) => ({
+    '&:focus-visible': {
+        outline: '-webkit-focus-ring-color auto 1px',
     },
 }));
 
@@ -308,8 +317,8 @@ export const AccountPanel = ({
     }
 
     const PaperCut = () => {
-        const [menuAnchorElement, setMenuAnchorElement] = React.useState(null);
-        const popperRef = React.useRef(null);
+        const [menuAnchorElement, setMenuAnchorElement] = useState(null);
+        const popperRef = useRef(null);
 
         const getPapercutId = tag => `papercut${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         const handleClose = () => {
@@ -322,7 +331,7 @@ export const AccountPanel = ({
                 handleClose();
             }
         };
-        React.useEffect(() => {
+        useEffect(() => {
             const handleKeyDown = event => {
                 if (event.key === 'Escape') {
                     handleClose();
@@ -364,7 +373,7 @@ export const AccountPanel = ({
         };
         return (
             <>
-                <Button
+                <StyledPrintBalanceButton
                     fullWidth
                     classes={{ root: 'menuItemRoot' }}
                     onClick={handleToggle}
@@ -372,10 +381,21 @@ export const AccountPanel = ({
                     data-testid={getPapercutId('menu-button')}
                     data-analyticsid={getPapercutId('tooltip')}
                     title="Click to manage your print balance"
+                    aria-haspopup="true"
+                    aria-expanded={menuAnchorElement !== null ? 'true' : 'false'}
+                    aria-controls="papercut-menu"
+                    aria-label="Show/hide Locations and hours panel"
                 >
                     {dsDiscountDollarDashIcon}{' '}
-                    <span data-testid="papercut-print-balance">Print balance {markedPrintBalance()}</span>
-                </Button>
+                    <span data-testid="papercut-print-balance" data-analyticsid="papercut-accordion-label">
+                        Print balance {markedPrintBalance()}
+                    </span>
+                    {menuAnchorElement !== null ? (
+                        <ExpandLessIcon data-analyticsid="papercut-accordion-arrow-opener" />
+                    ) : (
+                        <ExpandMoreIcon data-analyticsid="papercut-accordion-arrow-closer" />
+                    )}
+                </StyledPrintBalanceButton>
                 <Popper
                     id={getPapercutId('menu')}
                     data-testid={getPapercutId('menu')}
