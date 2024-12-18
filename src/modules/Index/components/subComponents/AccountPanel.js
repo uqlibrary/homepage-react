@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -7,6 +7,9 @@ import List from '@mui/material/List';
 import MenuItem from '@mui/material/MenuItem';
 import Popper from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
+
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { canSeeLoans, isTestTagUser } from 'helpers/access';
@@ -26,12 +29,32 @@ const StyledAlertDiv = styled('div')(() => ({
     },
 }));
 
+const StyledPrintBalanceButton = styled(Button)(({ theme }) => ({
+    '&[aria-expanded="true"] span': {
+        // when the menu is open, the button looks hovered
+        backgroundColor: theme.palette.primary.light,
+        color: '#fff',
+    },
+    '&:focus-visible': {
+        outline: '-webkit-focus-ring-color auto 1px',
+    },
+}));
+
 const StyledMenuList = styled(List)(({ theme }) => ({
     backgroundColor: '#fff',
     zIndex: 2,
     border: '1px solid #dcdcdd',
+    paddingBlock: '20px',
     '& li': {
         fontWeight: 400,
+        padding: '8px 24px',
+        '&:focus-visible': {
+            backgroundColor: '#fff',
+            '& span': {
+                backgroundColor: theme.palette.primary.light,
+                color: '#fff',
+            },
+        },
         '&:hover': {
             backgroundColor: 'inherit',
             color: 'inherit',
@@ -272,7 +295,14 @@ const dsChecklistIcon = (
     </svg>
 );
 
-export const AccountPanel = ({ account, loans, loansLoading, printBalance, printBalanceLoading }) => {
+export const AccountPanel = ({
+    account,
+    loans,
+    loansLoading,
+    printBalance,
+    printBalanceLoading,
+    printBalanceError,
+}) => {
     function totalFines(fines) {
         return fines.reduce((sum, fine) => {
             return sum + (typeof fine.fineAmount === 'number' ? fine.fineAmount : /* istanbul ignore next */ 0);
@@ -294,31 +324,48 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
     }
 
     function markedPrintBalance() {
-        if (!!printBalanceLoading || !printBalance?.hasOwnProperty('balance')) {
+        if (!!printBalanceLoading || !printBalance?.hasOwnProperty('balance') || !!printBalanceError) {
             return null;
         }
         return <> (${printBalance?.balance})</>;
     }
 
-    const PaperCut = () => {
-        const [menuAnchorElement, setMenuAnchorElement] = React.useState(null);
-        const popperRef = React.useRef(null);
+    const PaperCutMenu = () => {
+        const [menuAnchorElement, setMenuAnchorElement] = useState(null);
+        const popperRef = useRef(null);
+
+        const isOpenpapercutMenu = Boolean(menuAnchorElement);
+        useEffect(() => {
+            if (!!isOpenpapercutMenu) {
+                const findLink = setInterval(() => {
+                    const firstMenuItem = document.querySelector('#papercut-menu li:first-of-type');
+                    if (!!firstMenuItem) {
+                        clearInterval(findLink);
+                        firstMenuItem.focus();
+                    }
+                }, 100);
+            }
+        }, [isOpenpapercutMenu]);
 
         const getPapercutId = tag => `papercut${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
-        const handleClick = event => {
-            setMenuAnchorElement(event.currentTarget);
-        };
         const handleClose = () => {
             setMenuAnchorElement(null);
         };
-        React.useEffect(() => {
+        const handleToggle = event => {
+            if (menuAnchorElement === null) {
+                setMenuAnchorElement(event.currentTarget);
+            } else {
+                handleClose();
+            }
+        };
+        useEffect(() => {
             const handleKeyDown = event => {
                 if (event.key === 'Escape') {
                     handleClose();
                 }
             };
 
-            const handleClickOutside = event => {
+            const handleMouseClick = event => {
                 if (
                     menuAnchorElement &&
                     !menuAnchorElement.contains(event.target) &&
@@ -330,14 +377,58 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
             };
 
             document.addEventListener('keydown', handleKeyDown);
-            document.addEventListener('mousedown', handleClickOutside);
+            document.addEventListener('mousedown', handleMouseClick);
 
             return () => {
                 document.removeEventListener('keydown', handleKeyDown);
-                document.removeEventListener('mousedown', handleClickOutside);
+                document.removeEventListener('mousedown', handleMouseClick);
             };
         }, [menuAnchorElement]);
-        const handleNavigationToAboutPage = () => {
+        const handlePapercutTabNextKeyDown = e => {
+            if (e?.key !== 'Tab') {
+                return;
+            }
+
+            e.preventDefault();
+
+            const elementPrefix = 'papercut-item-button-';
+            const elementCount = parseInt(e.target.id.replace(elementPrefix, ''), 10);
+            const nextElementId = e.shiftKey
+                ? `${elementPrefix}${elementCount - 1}`
+                : `${elementPrefix}${elementCount + 1}`;
+
+            let tabTo = document.getElementById(nextElementId);
+            if (!tabTo) {
+                handleClose();
+                tabTo = document.getElementById('papercut-menu-button');
+            }
+            !!tabTo && tabTo.focus();
+        };
+
+        const handlePapercutTabOutKeyDown = e => {
+            if (e?.key !== 'Tab') {
+                return;
+            }
+
+            e.preventDefault();
+
+            let tabTo;
+            if (e.shiftKey) {
+                const elementPrefix = 'papercut-item-button-';
+                const elementCount = parseInt(e.target.id.replace(elementPrefix, ''), 10);
+                const nextElementId = `${elementPrefix}${elementCount - 1}`;
+                tabTo = document.getElementById(nextElementId);
+            } else {
+                handleClose();
+
+                tabTo = document.getElementById('fines-and-charges-link');
+                if (!tabTo) {
+                    tabTo = document.getElementById('training-event-detail-more-training-button');
+                }
+            }
+            !!tabTo && tabTo.focus();
+        };
+        const navigateToAboutPage = () => {
             window.location.href = linkToDrupal(
                 '/library-and-student-it-help/print-scan-and-copy/your-printing-account ',
             );
@@ -351,20 +442,32 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
                 .replace('[value]', value)
                 .replace('[email]', printBalance.email);
         };
+        const topupAmounts = [5, 10, 20];
         return (
             <>
-                <Button
+                <StyledPrintBalanceButton
                     fullWidth
                     classes={{ root: 'menuItemRoot' }}
-                    onClick={handleClick}
+                    onClick={handleToggle}
                     id={getPapercutId('menu-button')}
                     data-testid={getPapercutId('menu-button')}
                     data-analyticsid={getPapercutId('tooltip')}
                     title="Click to manage your print balance"
+                    aria-haspopup="true"
+                    aria-expanded={menuAnchorElement !== null ? 'true' : 'false'}
+                    aria-controls="papercut-menu"
+                    aria-label="Show/hide Locations and hours panel"
                 >
                     {dsDiscountDollarDashIcon}{' '}
-                    <span data-testid="papercut-print-balance">Print balance {markedPrintBalance()}</span>
-                </Button>
+                    <span data-testid="papercut-print-balance" data-analyticsid="papercut-accordion-label">
+                        Print balance {markedPrintBalance()}
+                    </span>
+                    {menuAnchorElement !== null ? (
+                        <ExpandLessIcon data-analyticsid="papercut-accordion-arrow-opener" />
+                    ) : (
+                        <ExpandMoreIcon data-analyticsid="papercut-accordion-arrow-closer" />
+                    )}
+                </StyledPrintBalanceButton>
                 <Popper
                     id={getPapercutId('menu')}
                     data-testid={getPapercutId('menu')}
@@ -397,24 +500,35 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
                     ref={popperRef}
                 >
                     <StyledMenuList>
-                        {[5, 10, 20].map((topupAmount, index) => {
-                            const topUpLabel = topupAmount => 'Top up your print balance - $' + topupAmount;
-                            return (
-                                <MenuItem
-                                    id={getPapercutId(`item-button-${index + 1}`)}
-                                    key={getPapercutId(`item-button-${index + 1}`)}
-                                    data-testid={getPapercutId(`item-button-${index + 1}`)}
-                                    onClick={() => navigateToTopUpUrl(topupAmount)}
-                                >
-                                    <span>{topUpLabel(topupAmount)}</span>
-                                </MenuItem>
-                            );
-                        })}
+                        {(() => {
+                            if (!!printBalanceLoading) {
+                                return <MenuItem>Loading...</MenuItem>;
+                            } else if (!!printBalanceError || !printBalance?.email) {
+                                return <MenuItem>Top up is currently unavailable - please try again later.</MenuItem>;
+                            } else {
+                                return topupAmounts.map((topupAmount, index) => {
+                                    const topUpLabel = topupAmount => 'Top up your print balance - $' + topupAmount;
+                                    return (
+                                        <MenuItem
+                                            id={getPapercutId(`item-button-${index + 1}`)}
+                                            key={getPapercutId(`item-button-${index + 1}`)}
+                                            data-testid={getPapercutId(`item-button-${index + 1}`)}
+                                            onClick={() => navigateToTopUpUrl(topupAmount)}
+                                            onKeyDown={handlePapercutTabNextKeyDown}
+                                        >
+                                            <span>{topUpLabel(topupAmount)}</span>
+                                        </MenuItem>
+                                    );
+                                });
+                            }
+                        })()}
+
                         <MenuItem
-                            id={getPapercutId('item-button-0')}
-                            data-testid={getPapercutId('item-button-0')}
-                            data-analyticsid={getPapercutId('item-button-0')}
-                            onClick={() => handleNavigationToAboutPage()}
+                            id={getPapercutId(`item-button-${topupAmounts.length + 1}`)}
+                            data-testid={getPapercutId(`item-button-${topupAmounts.length + 1}`)}
+                            data-analyticsid={getPapercutId(`item-button-${topupAmounts.length + 1}`)}
+                            onClick={() => navigateToAboutPage()}
+                            onKeyDown={handlePapercutTabOutKeyDown}
                         >
                             <span>More about your printing account</span>
                         </MenuItem>
@@ -448,7 +562,7 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
                     </Link>
                 </li>
                 <li data-testid={'show-papercut'}>
-                    <PaperCut />
+                    <PaperCutMenu />
                 </li>
                 {isTestTagUser(account) &&
                 /* istanbul ignore next */ !['uqldegro', 'uqslanca', 'uqjtilse'].includes(account.id) && ( // hide until end of 2024 dev(
@@ -463,7 +577,10 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
             {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
                 <StyledAlertDiv data-testid={'show-fines'}>
                     <UserAttention titleText={'Fines and charges'}>
-                        <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
+                        <Link
+                            to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US"
+                            id="fines-and-charges-link"
+                        >
                             <span>${`${totalFines(loans?.fines)}`} payable</span>
                         </Link>
                     </UserAttention>
@@ -479,6 +596,7 @@ AccountPanel.propTypes = {
     loansLoading: PropTypes.bool,
     printBalance: PropTypes.object,
     printBalanceLoading: PropTypes.bool,
+    printBalanceError: PropTypes.bool,
 };
 
 export default AccountPanel;
