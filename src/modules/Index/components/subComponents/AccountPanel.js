@@ -30,6 +30,11 @@ const StyledAlertDiv = styled('div')(() => ({
 }));
 
 const StyledPrintBalanceButton = styled(Button)(({ theme }) => ({
+    '&[aria-expanded="true"] span': {
+        // when the menu is open, the button looks hovered
+        backgroundColor: theme.palette.primary.light,
+        color: '#fff',
+    },
     '&:focus-visible': {
         outline: '-webkit-focus-ring-color auto 1px',
     },
@@ -41,6 +46,9 @@ const StyledMenuList = styled(List)(({ theme }) => ({
     border: '1px solid #dcdcdd',
     '& li': {
         fontWeight: 400,
+        '&:focus-visible': {
+            outline: '-webkit-focus-ring-color auto 1px',
+        },
         '&:hover': {
             backgroundColor: 'inherit',
             color: 'inherit',
