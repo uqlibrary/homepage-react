@@ -49,7 +49,11 @@ const StyledMenuList = styled(List)(({ theme }) => ({
         fontWeight: 400,
         padding: '8px 24px',
         '&:focus-visible': {
-            outline: '-webkit-focus-ring-color auto 1px',
+            backgroundColor: '#fff',
+            '& span': {
+                backgroundColor: theme.palette.primary.light,
+                color: '#fff',
+            },
         },
         '&:hover': {
             backgroundColor: 'inherit',
@@ -326,9 +330,22 @@ export const AccountPanel = ({
         return <> (${printBalance?.balance})</>;
     }
 
-    const PaperCut = () => {
+    const PaperCutMenu = () => {
         const [menuAnchorElement, setMenuAnchorElement] = useState(null);
         const popperRef = useRef(null);
+
+        const isOpenpapercutMenu = Boolean(menuAnchorElement);
+        useEffect(() => {
+            if (!!isOpenpapercutMenu) {
+                const findLink = setInterval(() => {
+                    const firstMenuItem = document.querySelector('#papercut-menu li:first-of-type');
+                    if (!!firstMenuItem) {
+                        clearInterval(findLink);
+                        firstMenuItem.focus();
+                    }
+                }, 100);
+            }
+        }, [isOpenpapercutMenu]);
 
         const getPapercutId = tag => `papercut${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         const handleClose = () => {
@@ -348,7 +365,7 @@ export const AccountPanel = ({
                 }
             };
 
-            const handleClickOutside = event => {
+            const handleMouseClick = event => {
                 if (
                     menuAnchorElement &&
                     !menuAnchorElement.contains(event.target) &&
@@ -360,13 +377,57 @@ export const AccountPanel = ({
             };
 
             document.addEventListener('keydown', handleKeyDown);
-            document.addEventListener('mousedown', handleClickOutside);
+            document.addEventListener('mousedown', handleMouseClick);
 
             return () => {
                 document.removeEventListener('keydown', handleKeyDown);
-                document.removeEventListener('mousedown', handleClickOutside);
+                document.removeEventListener('mousedown', handleMouseClick);
             };
         }, [menuAnchorElement]);
+        const handlePapercutTabNextKeyDown = e => {
+            if (e?.key !== 'Tab') {
+                return;
+            }
+
+            e.preventDefault();
+
+            const elementPrefix = 'papercut-item-button-';
+            const elementCount = parseInt(e.target.id.replace(elementPrefix, ''), 10);
+            const nextElementId = e.shiftKey
+                ? `${elementPrefix}${elementCount - 1}`
+                : `${elementPrefix}${elementCount + 1}`;
+
+            let tabTo = document.getElementById(nextElementId);
+            if (!tabTo) {
+                handleClose();
+                tabTo = document.getElementById('papercut-menu-button');
+            }
+            !!tabTo && tabTo.focus();
+        };
+
+        const handlePapercutTabOutKeyDown = e => {
+            if (e?.key !== 'Tab') {
+                return;
+            }
+
+            e.preventDefault();
+
+            let tabTo;
+            if (e.shiftKey) {
+                const elementPrefix = 'papercut-item-button-';
+                const elementCount = parseInt(e.target.id.replace(elementPrefix, ''), 10);
+                const nextElementId = `${elementPrefix}${elementCount - 1}`;
+                tabTo = document.getElementById(nextElementId);
+            } else {
+                handleClose();
+
+                tabTo = document.getElementById('fines-and-charges-link');
+                if (!tabTo) {
+                    tabTo = document.getElementById('training-event-detail-more-training-button');
+                }
+            }
+            !!tabTo && tabTo.focus();
+        };
         const navigateToAboutPage = () => {
             window.location.href = linkToDrupal(
                 '/library-and-student-it-help/print-scan-and-copy/your-printing-account ',
@@ -381,6 +442,7 @@ export const AccountPanel = ({
                 .replace('[value]', value)
                 .replace('[email]', printBalance.email);
         };
+        const topupAmounts = [5, 10, 20];
         return (
             <>
                 <StyledPrintBalanceButton
@@ -444,7 +506,7 @@ export const AccountPanel = ({
                             } else if (!!printBalanceError || !printBalance?.email) {
                                 return <MenuItem>Top up is currently unavailable - please try again later.</MenuItem>;
                             } else {
-                                return [5, 10, 20].map((topupAmount, index) => {
+                                return topupAmounts.map((topupAmount, index) => {
                                     const topUpLabel = topupAmount => 'Top up your print balance - $' + topupAmount;
                                     return (
                                         <MenuItem
@@ -452,6 +514,7 @@ export const AccountPanel = ({
                                             key={getPapercutId(`item-button-${index + 1}`)}
                                             data-testid={getPapercutId(`item-button-${index + 1}`)}
                                             onClick={() => navigateToTopUpUrl(topupAmount)}
+                                            onKeyDown={handlePapercutTabNextKeyDown}
                                         >
                                             <span>{topUpLabel(topupAmount)}</span>
                                         </MenuItem>
@@ -461,10 +524,11 @@ export const AccountPanel = ({
                         })()}
 
                         <MenuItem
-                            id={getPapercutId('item-button-0')}
-                            data-testid={getPapercutId('item-button-0')}
-                            data-analyticsid={getPapercutId('item-button-0')}
+                            id={getPapercutId(`item-button-${topupAmounts.length + 1}`)}
+                            data-testid={getPapercutId(`item-button-${topupAmounts.length + 1}`)}
+                            data-analyticsid={getPapercutId(`item-button-${topupAmounts.length + 1}`)}
                             onClick={() => navigateToAboutPage()}
+                            onKeyDown={handlePapercutTabOutKeyDown}
                         >
                             <span>More about your printing account</span>
                         </MenuItem>
@@ -498,7 +562,7 @@ export const AccountPanel = ({
                     </Link>
                 </li>
                 <li data-testid={'show-papercut'}>
-                    <PaperCut />
+                    <PaperCutMenu />
                 </li>
                 {isTestTagUser(account) &&
                 /* istanbul ignore next */ !['uqldegro', 'uqslanca', 'uqjtilse'].includes(account.id) && ( // hide until end of 2024 dev(
@@ -513,7 +577,10 @@ export const AccountPanel = ({
             {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
                 <StyledAlertDiv data-testid={'show-fines'}>
                     <UserAttention titleText={'Fines and charges'}>
-                        <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
+                        <Link
+                            to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US"
+                            id="fines-and-charges-link"
+                        >
                             <span>${`${totalFines(loans?.fines)}`} payable</span>
                         </Link>
                     </UserAttention>
