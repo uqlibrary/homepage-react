@@ -2,60 +2,32 @@ import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import parse from 'html-react-parser';
-import { useCookies } from 'react-cookie';
 
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import BookmarksIcon from '@mui/icons-material/Bookmarks';
-import EditIcon from '@mui/icons-material/Edit';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import InfoIcon from '@mui/icons-material/Info';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
-import StarIcon from '@mui/icons-material/Star';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LaptopIcon from '@mui/icons-material/Laptop';
 import LocalLibrarySharpIcon from '@mui/icons-material/LocalLibrarySharp';
 import CopyrightIcon from '@mui/icons-material/Copyright';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import TopicIcon from '@mui/icons-material/Topic';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import CloseIcon from '@mui/icons-material/Close';
 import SchoolSharpIcon from '@mui/icons-material/SchoolSharp';
-import SearchIcon from '@mui/icons-material/Search';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { isDlorAdminUser } from 'helpers/access';
 import { useAccountContext } from 'context';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
-import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import {
-    getDurationString,
-    getFileSizeString,
-    getYoutubeUrlForPreviewEmbed,
-    isPreviewableUrl,
     getDlorViewPageUrl,
     getPathRoot,
-    toTitleCase,
     convertSnakeCaseToKebabCase,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
-import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
 const StyledTitleTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.primary.light,
@@ -184,22 +156,7 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
 export const SeriesView = ({
     actions, dlorSeries, dlorSeriesLoading, dlorSeriesError, dlorList,  dlorListError, dlorListLoading,
 }) => {
-    const { account } = useAccountContext();
     const { seriesId } = useParams();
-
-    // const hasLoaded = React.useRef(false);
-
-    // useEffect(() => {
-    //     if (seriesId && !hasLoaded.current) {
-    //         console.log("USEEFFECT", dlorSeries, seriesId);
-    //         actions.loadDlorSeries(seriesId);
-    //         hasLoaded.current = true  
-    //     } 
-    //     //initialRender.current = false;
-       
-    // }, [seriesId]);
-
-    
 
     function usePrevious(value) {
         const seriesRef = useRef();
@@ -218,10 +175,6 @@ export const SeriesView = ({
         }
     }, [seriesId, previousSeriesId]);
 
-
-    const [filterListTrimmed] = React.useState([]);
-
-    
     const getFacetTypeIcon = facetTypeSlug => {
         const iconList = {
             item_type: <LaptopIcon aria-label={`Describes the item type`} />,
@@ -392,7 +345,6 @@ export const SeriesView = ({
                 {!!dlorSeries && !dlorSeriesLoading && (
                     <StyledContentGrid container spacing={4} data-testid="dlor-seriespage">
                         <Grid item xs={12}>
-                            {/* <LoginPrompt account={account} instyle={{ marginBottom: '12px' }} /> */}
                             <Box sx={{ marginBottom: '12px' }}>
                                 <StyledTitleTypography component={'h1'} variant={'h4'}>
                                     {dlorSeries?.series_name}
@@ -402,39 +354,13 @@ export const SeriesView = ({
                                         {!!dlorSeries?.series_description ? parse(dlorSeries?.series_description) : "This series does not have a detailed description at this time."}
                                         
                             </StyledHeaderDiv>
-                            {/* <StyledLayoutBox> */}
-                                
-                                {/* <StyledSeriesList> */}
-                                    {
-                                        !!dlorList && dlorList.map((item, index) => {
-                                            if(item.object_series_id && item.object_series_id == seriesId) {
-                                                return displayItemPanel(item, index)
-                                            }
-                                        }) 
+                            {
+                                !!dlorList && dlorList.map((item, index) => {
+                                    if(item.object_series_id && item.object_series_id == seriesId) {
+                                        return displayItemPanel(item, index)
                                     }
-                                    {/* {dlorSeries?.series_list
-                                        ?.sort((a, b) => a.series_object_order - b.series_object_order)
-                                        .map((s, index) => {
-                                            return (
-                                                <li
-                                                    key={`dlor-view-series-item-${s.series_object_uuid}`}
-                                                    data-testid={`dlor-view-series-item-${convertSnakeCaseToKebabCase(
-                                                        s.series_object_uuid,
-                                                    )}-order-${index}`}
-                                                >
-                                                    
-                                                    <a
-                                                        href={getDlorViewPageUrl(s?.series_object_uuid)}
-                                                        rel="noopener noreferrer"
-                                                    >
-                                                        {s.series_object_title}
-                                                    </a>
-                                                
-                                                </li>
-                                            );
-                                        })} */}
-                                {/* </StyledSeriesList> */}
-                            {/* </StyledLayoutBox> */}
+                                }) 
+                            }
                         </Grid>
                     </StyledContentGrid>
                 )}
