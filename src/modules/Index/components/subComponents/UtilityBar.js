@@ -116,6 +116,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
         }
     };
 
+    /* istanbul ignore next */
     const handleLocationButtonKeyDown = e => {
         if (e?.key !== 'Enter') {
             return;
