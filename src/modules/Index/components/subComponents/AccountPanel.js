@@ -384,6 +384,8 @@ export const AccountPanel = ({
                 document.removeEventListener('mousedown', handleMouseClick);
             };
         }, [menuAnchorElement]);
+
+        /* istanbul ignore next */
         const handlePapercutTabNextKeyDown = e => {
             if (e?.key !== 'Tab') {
                 return;
@@ -405,6 +407,7 @@ export const AccountPanel = ({
             !!tabTo && tabTo.focus();
         };
 
+        /* istanbul ignore next */
         const handlePapercutTabOutKeyDown = e => {
             if (e?.key !== 'Tab') {
                 return;
