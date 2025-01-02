@@ -1,6 +1,6 @@
 import React from 'react';
 import InspectionDetails from './InspectionDetails';
-import { rtlRender, WithRouter, waitFor, WithReduxStore, userEvent, act } from 'test-utils';
+import { rtlRender, WithRouter, waitFor, WithReduxStore, userEvent } from 'test-utils';
 import Immutable from 'immutable';
 import * as tntActions from '../../../../../../../data/actions/testTagActions';
 import * as repositories from 'repositories';
@@ -139,7 +139,7 @@ describe('InspectionDetails', () => {
         });
         expect(getByText(locale.pages.manage.inspectiondetails.header.pageSubtitle('Library'))).toBeInTheDocument();
 
-        userEvent.type(getByTestId('asset_selector-inspection-details-input'), '123');
+        await userEvent.type(getByTestId('asset_selector-inspection-details-input'), '123');
         await waitFor(() => {
             expect(testActions.loadAssets).rejects.toEqual('load error');
         });

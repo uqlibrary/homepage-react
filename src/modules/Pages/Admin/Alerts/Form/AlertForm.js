@@ -12,6 +12,7 @@ import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
@@ -29,7 +30,8 @@ import {
 } from '../alerthelpers';
 import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage } from 'helpers/general';
-import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
+import { breadcrumbs } from 'config/routes';
 
 const moment = require('moment');
 
@@ -95,7 +97,8 @@ export const isValidUrl = testurl => {
     return true;
 };
 
-export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, defaults, alertError, history }) => {
+export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, defaults, alertError }) => {
+    const navigate = useNavigate();
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
@@ -152,15 +155,29 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     };
 
     useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.alertsadmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.alertsadmin.pathname);
+
         if (!!defaults && defaults.type === 'clone') {
             setFormValidity(validateValues(defaults));
         }
+        return () => {
+            setSuccessCount(0);
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        if (!!alertResponse && !!alertResponse.id && alertStatus === 'saved') {
-            setSuccessCount(prevCount => prevCount + 1);
+        if (
+            !!alertResponse &&
+            (!!alertResponse.id || (Array.isArray(alertResponse) && !!alertResponse.length)) &&
+            alertStatus === 'saved'
+        ) {
+            Array.isArray(alertResponse)
+                ? setSuccessCount(alertResponse.length)
+                : setSuccessCount(prevCount => prevCount + 1);
+
             showConfirmation();
         }
     }, [showConfirmation, alertResponse, alertStatus]);
@@ -200,7 +217,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
         actions.clearAnAlert(); // make the form clear for the next use
 
-        history.push('/admin/alerts');
+        navigate('/admin/alerts');
         scrollToTopOfPage();
     };
 
@@ -247,6 +264,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         const expandedValues = expandValues(values);
         setValues(expandedValues);
 
+        const dateList = expandedValues.dateList;
         const newValues = {
             id: defaults.type !== 'add' ? values.id : null,
             title: values.alertTitle,
@@ -254,19 +272,23 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             priority_type: (!!values && values.priorityType) || /* istanbul ignore next */ 'info',
             start: formatDate(values.startDate),
             end: formatDate(values.endDate),
-            dateList: values.dateList,
             systems: values.systems || /* istanbul ignore next */ [],
         };
-        newValues.dateList.forEach(dateset => {
-            // an 'edit' event will only have one entry in the date array
-            const saveableValues = {
-                ...newValues,
-                start: formatDate(dateset.startDate),
-                end: formatDate(dateset.endDate),
-            };
-            !!saveableValues.dateList && delete saveableValues.dateList;
-            defaults.type === 'edit' ? actions.saveAlertChange(saveableValues) : actions.createAlert(saveableValues);
-        });
+
+        if (defaults.type === 'edit') {
+            actions.saveAlertChange(newValues);
+        } else {
+            const saveableValues = [];
+            dateList.forEach(dateset => {
+                saveableValues.push({
+                    ...newValues,
+                    start: formatDate(dateset.startDate),
+                    end: formatDate(dateset.endDate),
+                });
+            });
+
+            actions.createAlert(saveableValues);
+        }
 
         const alertWrapper = document.getElementById('previewWrapper');
         !!alertWrapper && (alertWrapper.innerHTML = '');
@@ -806,7 +828,6 @@ AlertForm.propTypes = {
     alertLoading: PropTypes.any,
     alertStatus: PropTypes.any,
     defaults: PropTypes.object,
-    history: PropTypes.object,
 };
 
 export default AlertForm;

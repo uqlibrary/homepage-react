@@ -1,7 +1,6 @@
 import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
 import {
-    COMP_AVAIL_API,
     CURRENT_ACCOUNT_API,
     CURRENT_AUTHOR_API,
     INCOMPLETE_NTRO_RECORDS_API,
@@ -10,6 +9,7 @@ import {
     POSSIBLE_RECORDS_API,
     PRINTING_API,
     TRAINING_API,
+    VEMCOUNT_API,
 } from 'repositories/routes';
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
 import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME } from 'config/general';
@@ -108,22 +108,22 @@ export function loadLibHours() {
 }
 
 /**
- * Loads the computer availability data
+ * Loads the vemcount events data
  * @returns {function(*)}
  */
-export function loadCompAvail() {
+export function loadVemcountList() {
     return dispatch => {
-        dispatch({ type: actions.COMP_AVAIL_LOADING });
-        return get(COMP_AVAIL_API())
+        dispatch({ type: actions.VEMCOUNT_LOADING });
+        return get(VEMCOUNT_API())
             .then(availResponse => {
                 dispatch({
-                    type: actions.COMP_AVAIL_LOADED,
+                    type: actions.VEMCOUNT_LOADED,
                     payload: availResponse,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.COMP_AVAIL_FAILED,
+                    type: actions.VEMCOUNT_FAILED,
                     payload: error.message,
                 });
             });
@@ -135,7 +135,7 @@ export function logout(reload = false) {
         dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
         if (!!reload) {
             dispatch(loadLibHours());
-            dispatch(loadCompAvail());
+            dispatch(loadVemcountList());
         }
     };
 }
@@ -146,59 +146,65 @@ export function logout(reload = false) {
  */
 export function loadCurrentAccount() {
     return dispatch => {
+        if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
+            dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
+            // no cookie, don't even bother calling for the account api!!
+            return Promise.resolve({});
+        }
+
         if (navigator.userAgent.match(/Googlebot|facebookexternalhit|bingbot|Slackbot-LinkExpanding|Twitterbot/)) {
             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
             return Promise.resolve({});
-        } else {
-            dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
-
-            let currentAuthor = null;
-
-            // load UQL account (based on token)
-            return get(CURRENT_ACCOUNT_API())
-                .then(account => {
-                    if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
-                        return Promise.resolve(account);
-                    } else {
-                        dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
-                        return Promise.reject(new Error('Session expired. User is unauthorized.'));
-                    }
-                })
-                .then(accountResponse => {
-                    dispatch({
-                        type: actions.CURRENT_ACCOUNT_LOADED,
-                        payload: extendAccountDetails(accountResponse),
-                    });
-
-                    // if the UQL cookie times out, we want to log the user out
-                    const watchforAccountExpiry = setInterval(() => {
-                        if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
-                            logout(true);
-                            clearInterval(watchforAccountExpiry);
-                        }
-                    }, 1000);
-
-                    // load current author details (based on token)
-                    dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
-                    return get(CURRENT_AUTHOR_API());
-                })
-                .then(currentAuthorResponse => {
-                    currentAuthor = currentAuthorResponse.data;
-                    dispatch({
-                        type: actions.CURRENT_AUTHOR_LOADED,
-                        payload: currentAuthor,
-                    });
-                    return null;
-                })
-                .catch(error => {
-                    if (!currentAuthor) {
-                        dispatch({
-                            type: actions.CURRENT_AUTHOR_FAILED,
-                            payload: error.message,
-                        });
-                    }
-                });
         }
+
+        dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
+
+        let currentAuthor = null;
+
+        // load UQL account (based on token)
+        return get(CURRENT_ACCOUNT_API())
+            .then(account => {
+                if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
+                    return Promise.resolve(account);
+                } else {
+                    dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
+                    return Promise.reject(new Error('Session expired. User is unauthorized.'));
+                }
+            })
+            .then(accountResponse => {
+                dispatch({
+                    type: actions.CURRENT_ACCOUNT_LOADED,
+                    payload: extendAccountDetails(accountResponse),
+                });
+
+                // if the UQL cookie times out, we want to log the user out
+                const watchforAccountExpiry = setInterval(() => {
+                    if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
+                        logout(true);
+                        clearInterval(watchforAccountExpiry);
+                    }
+                }, 1000);
+
+                // load current author details (based on token)
+                dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
+                return get(CURRENT_AUTHOR_API());
+            })
+            .then(currentAuthorResponse => {
+                currentAuthor = currentAuthorResponse.data;
+                dispatch({
+                    type: actions.CURRENT_AUTHOR_LOADED,
+                    payload: currentAuthor,
+                });
+                return null;
+            })
+            .catch(error => {
+                if (!currentAuthor) {
+                    dispatch({
+                        type: actions.CURRENT_AUTHOR_FAILED,
+                        payload: error.message,
+                    });
+                }
+            });
     };
 }
 
@@ -235,38 +241,6 @@ export function loadPrintBalance() {
 }
 
 /**
- * Loads the loans data
- * @returns {function(*)}
- */
-export function loadLoans() {
-    if (!!getSessionCookie()) {
-        return dispatch => {
-            dispatch({ type: actions.LOANS_LOADING });
-            return get(LOANS_API())
-                .then(loanResponse => {
-                    dispatch({
-                        type: actions.LOANS_LOADED,
-                        payload: loanResponse,
-                    });
-                })
-                .catch(error => {
-                    dispatch({
-                        type: actions.LOANS_FAILED,
-                        payload: error.message,
-                    });
-                });
-        };
-    } else {
-        return dispatch => {
-            dispatch({
-                type: actions.LOANS_FAILED,
-                payload: 'not logged in',
-            });
-        };
-    }
-}
-
-/**
  * Loads the training events data
  * @returns {function(*)}
  */
@@ -275,7 +249,7 @@ export function loadTrainingEvents(account) {
         !!account && !!account.trainingfilterId ? account.trainingfilterId : TRAINING_FILTER_GENERAL;
     return dispatch => {
         dispatch({ type: actions.TRAINING_LOADING });
-        return get(TRAINING_API(10, trainingfilterId))
+        return get(TRAINING_API(100, trainingfilterId))
             .then(availResponse => {
                 dispatch({
                     type: actions.TRAINING_LOADED,
@@ -361,4 +335,36 @@ export function clearSessionExpiredFlag() {
     return dispatch => {
         dispatch({ type: actions.CLEAR_CURRENT_ACCOUNT_SESSION_FLAG });
     };
+}
+
+/**
+ * Loads the loans data
+ * @returns {function(*)}
+ */
+export function loadLoans() {
+    if (!!getSessionCookie()) {
+        return dispatch => {
+            dispatch({ type: actions.LOANS_LOADING });
+            return get(LOANS_API())
+                .then(loanResponse => {
+                    dispatch({
+                        type: actions.LOANS_LOADED,
+                        payload: loanResponse,
+                    });
+                })
+                .catch(error => {
+                    dispatch({
+                        type: actions.LOANS_FAILED,
+                        payload: error.message,
+                    });
+                });
+        };
+    } else {
+        return dispatch => {
+            dispatch({
+                type: actions.LOANS_FAILED,
+                payload: 'not logged in',
+            });
+        };
+    }
 }

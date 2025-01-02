@@ -21,12 +21,6 @@ export const PRINTING_API = () => ({
     options: { params: { ts: `${new Date().getTime()}` } },
 });
 
-// Loans API
-export const LOANS_API = () => ({
-    apiUrl: 'account/loans',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-
 // eSpace Possible records
 export const POSSIBLE_RECORDS_API = () => ({
     apiUrl: 'records/search',
@@ -69,12 +63,6 @@ export const LIB_HOURS_API = () => ({
     options: { params: { ts: `${new Date().getTime()}` } },
 });
 
-// Computer availability
-export const COMP_AVAIL_API = () => ({
-    apiUrl: 'computer_availability',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-
 // file uploading apis
 export const UPLOAD_PUBLIC_FILES_API = () => ({ apiUrl: 'file/public' });
 
@@ -101,51 +89,12 @@ export const ALERTS_ALL_API = () => {
 };
 export const ALERT_BY_ID_API = ({ id }) => ({ apiUrl: `alert/${id}` });
 
-export const ALERT_CREATE_API = () => ({ apiUrl: 'alert' });
+export const ALERTS_CREATE_API = () => ({ apiUrl: 'alerts' });
 
-export const ALERT_SAVE_API = ({ id }) => ({ apiUrl: `alert/${id}` });
+export const ALERT_UPDATE_API = ({ id }) => ({ apiUrl: `alert/${id}` });
 
 export const ALERT_DELETE_API = ({ id }) => ({ apiUrl: `alert/${id}` });
 
-// Promo Panel Admin
-
-export const PROMOPANEL_CREATE_API = () => ({ apiUrl: 'promo_panel/panel' });
-export const PROMOPANEL_UPDATE_API = ({ id }) => ({ apiUrl: `promo_panel/panel/${id}` });
-export const PROMOPANEL_LIST_USERTYPES_API = () => ({
-    apiUrl: 'promo_panel/groups',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-export const PROMOPANEL_LIST_ACTIVE_PANELS_API = () => ({
-    apiUrl: 'promo_panel/groups/active',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-export const PROMOPANEL_LIST_API = () => ({
-    apiUrl: 'promo_panel/panels',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-export const PROMOPANEL_GET_CURRENT_API = () => ({
-    apiUrl: 'promo_panel',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-export const PROMOPANEL_GET_ANON_API = () => ({
-    apiUrl: 'promo_panel/loggedout',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-export const PROMOPANEL_ADD_SCHEDULE_API = ({ id, usergroup }) => ({
-    apiUrl: `promo_panel/group/${usergroup}/panel/${id}/schedule`,
-});
-export const PROMOPANEL_UPDATE_SCHEDULE_API = ({ id, usergroup }) => ({
-    apiUrl: `promo_panel/group/${usergroup}/schedule/${id}`,
-});
-export const PROMOPANEL_UPDATE_USERTYPE_DEFAULT = ({ id, usergroup }) => ({
-    apiUrl: `promo_panel/group/${usergroup}/panel/${id}/default`,
-});
-
-export const PROMOPANEL_DELETE_API = ({ id }) => ({ apiUrl: `promo_panel/panel/${id}` });
-
-export const PROMOPANEL_UNSCHEDULE_API = ({ id }) => ({
-    apiUrl: `promo_panel/schedule/${id}`,
-});
 /** TEST AND TAG **/
 export const TEST_TAG_USER_API = () => ({ apiUrl: 'test-and-tag/user' });
 export const TEST_TAG_ONLOAD_DASHBOARD_API = () => ({ apiUrl: 'test-and-tag/onload/dashboard' });
@@ -269,7 +218,7 @@ export const TEST_TAG_UPDATE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id
 export const TEST_TAG_ADD_USER_API = () => ({ apiUrl: 'test-and-tag/user' });
 export const TEST_TAG_DELETE_USER_API = id => ({ apiUrl: `test-and-tag/user/${id}` });
 
-export const DLOR_ALL_API = () => ({ apiUrl: 'dlor/public/list/full' });
+export const DLOR_ALL_API = () => ({ apiUrl: 'dlor/public/list/full' }); // is admin in staging
 export const DLOR_ALL_CURRENT_API = () => ({ apiUrl: 'dlor/public/list/current' });
 export const DLOR_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/public/find/${id}` });
 export const DLOR_GET_FILTER_LIST = () => ({ apiUrl: 'dlor/public/facet/list' });
@@ -293,3 +242,35 @@ export const DLOR_FILE_TYPE_LIST_API = () => ({ apiUrl: 'dlor/admin/file_types/l
 export const DLOR_SERIES_DELETE_API = id => ({ apiUrl: `dlor/admin/series/${id}` });
 export const DLOR_SERIES_UPDATE_API = id => ({ apiUrl: `dlor/admin/series/${id}` });
 export const DLOR_SERIES_CREATE_API = () => ({ apiUrl: 'dlor/admin/series' });
+
+const productionRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage';
+const stagingRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage';
+export const DRUPAL_ARTICLE_API = () => {
+    const filePath = '/articles.json';
+    const shouldUseProduction =
+        process.env.BRANCH === 'production' ||
+        (document.location.hostname === 'homepage-development.library.uq.edu.au' && // production on dev for test only
+            /* istanbul ignore next */ document.location.pathname === '/webpresence-staging/');
+    return {
+        apiUrl: shouldUseProduction ? `${productionRoot}${filePath}` : `${stagingRoot}${filePath}`,
+    };
+};
+
+export const VEMCOUNT_API = () => {
+    const filePath = '/headcount.json';
+    const shouldUseProduction =
+        process.env.BRANCH === 'production' ||
+        (document.location.hostname === 'homepage-development.library.uq.edu.au' && // production on dev for test only
+            /* istanbul ignore next */ document.location.pathname === '/webpresence-staging/');
+    return {
+        apiUrl: shouldUseProduction ? `${productionRoot}${filePath}` : `${stagingRoot}${filePath}`,
+    };
+};
+
+export const JOURNAL_SEARCH_API = () => ({ apiUrl: 'https://api.library.uq.edu.au/v1/journals/favourites?sort=score' });
+
+// Loans API
+export const LOANS_API = () => ({
+    apiUrl: 'account/loans',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});

@@ -20,11 +20,10 @@ import courseReadingList_FREN1011 from './data/records/learningResources/courseR
 import courseReadingList_HIST1201 from './data/records/learningResources/courseReadingList_HIST1201';
 import courseReadingList_PHIL1002 from './data/records/learningResources/courseReadingList_PHIL1002';
 import courseReadingList_ACCT1101 from './data/records/learningResources/courseReadingList_ACCT1101';
-import learningResourceSearchSuggestions from './data/records/learningResources/learningResourceSearchSuggestions';
+import subjectSearchSuggestions from './data/records/learningResources/subjectSearchSuggestions';
 import examSuggestion_FREN from './data/records/learningResources/examSuggestion_FREN';
-import { computerAvailability } from './data/computerAvailability';
 import { libHours } from './data/libHours';
-import { training_object } from './data/training';
+import { training_object, training_object_hospital } from './data/training';
 import { espaceSearchResponse, loans, printBalance } from './data/general';
 import { alertList } from './data/alertsLong';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
@@ -53,20 +52,18 @@ import test_tag_assets_report_assets from './data/records/testAndTag/test_tag_as
 import test_tag_assets_mine from './data/records/testAndTag/test_tag_assets_mine';
 import test_tag_user_list from './data/records/testAndTag/test_tag_user_list';
 
-import {
-    activePanels,
-    currentPanels,
-    mockAuthenticatedPanel,
-    mockPublicPanel,
-    mockScheduleReturn,
-    promoPanelMocks,
-    userListPanels,
-} from './data/promoPanelsLong';
 import dlor_all from './data/records/dlor/dlor_all';
 import dlor_filter_list from './data/records/dlor/dlor_filter_list';
 import dlor_team_list from './data/records/dlor/dlor_team_list';
 import dlor_file_type_list from './data/records/dlor/dlor_file_type_list';
 import dlor_series_all from './data/records/dlor/dlor_series_all';
+import { drupalArticles } from './data/drupalArticles';
+import {
+    journalSearchFavourites,
+    journalSearchFavouritesLarge,
+    journalSearchNoFavourites,
+} from './data/journalSearchFavourites';
+import { vemcountData } from './data/vemcount';
 
 const moment = require('moment');
 
@@ -150,38 +147,79 @@ mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl).reply(() => {
     return [404, {}];
 });
 
-mock.onGet(routes.TRAINING_API(10).apiUrl).reply(withDelay([200, training_object]));
+// mock.onGet(routes.VEMCOUNT_API().apiUrl).reply(withDelay([200, vemcountData]));
+mock.onGet(routes.VEMCOUNT_API().apiUrl).reply(() => {
+    if (responseType === 'error') {
+        return [500, {}];
+    }
+    return [200, vemcountData];
+});
+
+mock.onGet(routes.TRAINING_API().apiUrl).reply(() => {
+    if (responseType === 'error') {
+        return [500, {}];
+    } else if (responseType === 'empty') {
+        return [200, {}];
+    } else if (responseType === '404') {
+        return [404, {}];
+    } else if (user === 'emhospital') {
+        return [200, training_object_hospital];
+    } else {
+        return [200, training_object];
+    }
+});
+// .reply(withDelay([200, training_object]));
 // .reply(withDelay([200, training_array]));
 // .reply(withDelay([500, {}]));
 
-mock.onGet(routes.PRINTING_API().apiUrl).reply(withDelay([200, printBalance]));
-
-mock.onGet(routes.LOANS_API().apiUrl).reply(withDelay([200, loans]));
+mock.onGet(routes.PRINTING_API().apiUrl)
+    // .reply(withDelay([200, printBalance]));
+    .reply(() => {
+        if (responseType === 'almaError') {
+            return [500, {}];
+        }
+        return [200, printBalance];
+    });
 
 mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
-// .reply(withDelay([500, {}]));
+// mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
+//     if (responseType === 'error') {
+//         return [500, {}];
+//     } else if (responseType === 'missing') {
+//         return [404, {}];
+//     } else {
+//         return [200, libHours];
+//     }
+// });
 
-// mock cant tell the difference between 'possible' and 'ntro incomplete' calls :(
-mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(withDelay([200, espaceSearchResponse]));
-mock.onGet(routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(withDelay([200, espaceSearchResponse]));
+// mock cant tell the difference between POSSIBLE_RECORDS_API and INCOMPLETE_NTRO_RECORDS_API calls :(
+mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(() => {
+    if (responseType === 'nodatamissing') {
+        return [200, { total: 0, took: 179, per_page: 20, current_page: 1, from: null, to: null, data: [] }];
+    } else {
+        return [200, espaceSearchResponse];
+    }
+});
 
 mock.onGet(routes.ALERTS_ALL_API().apiUrl).reply(withDelay([200, alertList]));
-mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(
+mock.onAny(routes.ALERTS_CREATE_API().apiUrl).reply(
     withDelay([
         200,
-        {
-            id: '99999-d897-11eb-a27e-df4e46db7245',
-            start: '2020-06-07 02:00:03',
-            end: '2020-06-07 03:00:03',
-            title: 'Updated alert 1',
-            body:
-                'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
-            priority_type: 'info',
-        },
+        [
+            {
+                id: '99999-d897-11eb-a27e-df4e46db7245',
+                start: '2020-06-07 02:00:03',
+                end: '2020-06-07 03:00:03',
+                title: 'Updated alert 1',
+                body:
+                    'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
+                priority_type: 'info',
+            },
+        ],
     ]),
 );
 // mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(withDelay([500, {}]));
-mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
+mock.onAny(routes.ALERT_UPDATE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
     withDelay([
         200,
         {
@@ -296,13 +334,10 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08' }
     ]),
 );
 
-mock.onGet(routes.COMP_AVAIL_API().apiUrl).reply(withDelay([200, computerAvailability]));
-// .reply(withDelay([500, {}]));
-
 // Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
 fetchMock.mock(
     'begin:https://api.library.uq.edu.au/staging/learning_resources/suggestions?hint=',
-    learningResourceSearchSuggestions,
+    subjectSearchSuggestions,
 );
 
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
@@ -1203,92 +1238,49 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ]),
     )
-    // PROMO PANEL API
-    .onPost(routes.PROMOPANEL_CREATE_API().apiUrl)
-    .reply(withDelay([200, {}]))
-    .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_API({ id: '.*' }).apiUrl)))
-    .reply(withDelay([200, { status: 'OK' }]))
-    .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_SCHEDULE_API({ id: '.*', usergroup: '.*' }).apiUrl)))
-    .reply(
-        withDelay([
-            201,
-            {
-                status: 'OK',
-            },
-        ]),
-    )
-    .onGet(routes.PROMOPANEL_LIST_API().apiUrl)
+    .onGet('https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json')
     .reply(() => {
-        return [200, currentPanels];
+        if (responseType === 'drupalError') {
+            return [500, {}];
+        }
+        return [200, drupalArticles];
     })
-    .onGet(routes.PROMOPANEL_LIST_USERTYPES_API().apiUrl)
+    .onGet(routes.JOURNAL_SEARCH_API().apiUrl)
     .reply(() => {
-        return [200, userListPanels];
-    })
-
-    // Handle Delete of any panel that does NOT start with a 2 (2 configured to throw error)
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({ id: '[^2]' }).apiUrl)))
-    .reply(() => {
-        return [200, { status: 'ok' }];
-    })
-    // Specific case to throw error for Delete panel 2.
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_DELETE_API({ id: 2 }).apiUrl)))
-    .reply(() => {
-        return [
-            400,
-            {
-                status: 'error',
-                message: '2 is not a valid panel id',
-            },
-        ];
-    })
-    // Handle Unschedule of any panel that is NOT schedule ID 11 (11 configured to throw error)
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({ id: '(?!11).*' }).apiUrl)))
-    .reply(() => {
-        return [200, { status: 'ok' }];
-    })
-    // Specific case to throw error for Delete on schedule 11
-    .onDelete(new RegExp(panelRegExp(routes.PROMOPANEL_UNSCHEDULE_API({ id: 11 }).apiUrl)))
-    .reply(() => {
-        return [
-            400,
-            {
-                status: 'error',
-                message: '11 is not a valid schedule id',
-            },
-        ];
-    })
-    .onPost(new RegExp(panelRegExp(routes.PROMOPANEL_ADD_SCHEDULE_API({ id: '.*', usergroup: '.*' }).apiUrl)))
-    .reply(() => {
-        return [200, mockScheduleReturn];
-    })
-    .onGet(routes.PROMOPANEL_LIST_ACTIVE_PANELS_API().apiUrl)
-    .reply(() => {
-        if (user === 'uqmasquerade') {
-            return [500, ['an api error occurred']];
-        } else {
-            return [200, activePanels];
+        switch (user) {
+            case 'uqpf':
+                return [403, {}];
+            case 'uqresearcher':
+                return [200, { ...journalSearchFavouritesLarge }];
+            case 's2222222':
+                return [200, { ...journalSearchNoFavourites }];
+            default:
+                return [200, journalSearchFavourites];
         }
     })
-    .onGet(routes.PROMOPANEL_GET_CURRENT_API().apiUrl)
+    .onGet(routes.LOANS_API().apiUrl)
     .reply(() => {
-        if (user === 'uqstaff') {
-            return [200, promoPanelMocks.uqstaff];
-        } else if (user === 's1111111') {
-            return [200, promoPanelMocks.s1111111];
-        } else if (user === 'uqpkopit') {
-            return [200, promoPanelMocks.uqpkopit];
-        } else {
-            return [200, mockAuthenticatedPanel];
+        function addFineEntry(_loans, newFine) {
+            const newFineObject = { fineAmount: newFine };
+            _loans.fines.push(newFineObject); // (we don't care about all the entries...)
+            _loans.total_fines_count = _loans.fines.length;
+            return _loans;
         }
-    })
-    .onGet(routes.PROMOPANEL_GET_ANON_API().apiUrl)
-    .reply(() => {
-        return [200, mockPublicPanel];
-    })
-    .onPut(new RegExp(panelRegExp(routes.PROMOPANEL_UPDATE_USERTYPE_DEFAULT({ id: '.*', usergroup: '.*' }).apiUrl)))
-    .reply(() => {
-        return [200, ''];
+        if (responseType === 'almaError') {
+            return [500, {}];
+        }
+        switch (user) {
+            case 's1111111':
+                return [200, loans];
+            case 's2222222':
+                return [200, addFineEntry(loans, 17.04)];
+            case 's3333333':
+                return [200, { ...loans, total_holds_count: 4, total_loans_count: 0, total_fines_count: 0 }];
+            case 'uqresearcher':
+                return [200, { ...loans, total_loans_count: 7, total_holds_count: 0, total_fines_count: 0 }];
+            default:
+                return [200, { ...loans, fines: [], total_fines_count: 0 }];
+        }
     })
     .onAny()
     .reply(function(config) {

@@ -31,6 +31,9 @@ import InfoIcon from '@mui/icons-material/Info';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 
+import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
+import CallMadeOutlinedIcon from '@mui/icons-material/CallMadeOutlined';
+
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
@@ -41,6 +44,8 @@ import {
     getDlorViewPageUrl,
     slugifyName,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { isEscapeKeyPressed, isReturnKeyPressed } from 'helpers/general';
+import { breadcrumbs } from 'config/routes';
 
 const StyledSkipLinkButton = styled(Button)(({ theme }) => ({
     // hidden when not focused
@@ -136,7 +141,9 @@ const StyledFilterSidebarGrid = styled(Grid)(({ theme }) => ({
 }));
 const StyledArticleCard = styled('button')(({ theme }) => ({
     backgroundColor: '#fff',
-    borderColor: 'transparent',
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
+    transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
     fontFamily: 'Roboto, sans-serif',
     paddingInline: 0,
     textAlign: 'left',
@@ -144,8 +151,6 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
     '&:hover': {
         cursor: 'pointer',
         textDecoration: 'none',
-        borderTopColor: '#f2f2f2',
-        borderLeftColor: '#f2f2f2',
         '& > article': {
             backgroundColor: '#f2f2f2',
         },
@@ -171,7 +176,7 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
             marginTop: '0.2em',
             fontSize: 16,
         },
-        '& > div p:first-child': {
+        '& > div p:first-of-type': {
             marginTop: 0,
         },
         '& footer': {
@@ -180,7 +185,7 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
             marginTop: 6,
             display: 'flex',
             alignItems: 'center', // horizontally, align icon and label at the center
-            '& > svg:not(:first-child)': {
+            '& > svg:not(:first-of-type)': {
                 paddingLeft: 12,
             },
             '& svg': {
@@ -246,7 +251,7 @@ const StyledSidebarFilterFacetHelpPopupBox = styled(Box)(() => ({
 const StyledFormControlLabel = styled(FormControlLabel)(() => ({
     display: 'flex',
     alignItems: 'flex-start',
-    '& span:first-child': {
+    '& span:first-of-type': {
         paddingBlock: 0,
     },
     paddingBottom: 5,
@@ -276,6 +281,7 @@ export const DLOList = ({
     const [filterListTrimmed, setFilterListTrimmed] = useState([]);
     const checkBoxArrayRef = useRef([]);
     const [keywordSearch, setKeywordSearch] = useState('');
+    const [isKeywordClearable, setIsKeywordClearable] = useState(false);
     const keyWordSearchRef = useRef('');
 
     const [paginationPage, setPaginationPage] = React.useState(1);
@@ -292,6 +298,12 @@ export const DLOList = ({
     const heroBackgroundImageDlor = require('../../../../../public/images/digital-learning-hub-hero-shot-wide.png');
 
     useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dlor.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dlor.pathname);
+    }, []);
+
+    useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadCurrentDLORs();
         }
@@ -299,11 +311,6 @@ export const DLOList = ({
             actions.loadAllFilters();
         }
     }, [dlorList, dlorFilterList, dlorListError, dlorListLoading, dlorFilterListError, dlorFilterListLoading, actions]);
-
-    function keywordIsSearchable(keyword) {
-        // don't filter on something terribly short
-        return keyword?.length > 1;
-    }
 
     const updateUrl = itemType => {
         const url = new URL(document.URL);
@@ -345,23 +352,43 @@ export const DLOList = ({
         keyWordSearchRef.current.value = '';
         setPaginationPage(1); // set pagination back to page 1
         updateUrl('keyword');
+        setIsKeywordClearable(false);
     };
 
-    const handleKeywordEntry = e => {
-        const keyword = e?.target?.value;
+    function keywordIsSearchable(keyword) {
+        // don't filter on something terribly short
+        return keyword?.length > 1;
+    }
 
+    // search icon pressed or loaded from url
+    const handleKeywordChange = () => {
+        const keyword = keyWordSearchRef.current.value;
+
+        /* istanbul ignore else */
         if (keywordIsSearchable(keyword)) {
             setKeywordSearch(keyword);
             setPaginationPage(1);
-        } else if (
-            !keyword ||
-            keyword.length === 0 // they've cleared it
-        ) {
+        }
+    };
+
+    // search icon pressed or loaded from url
+    const handleSearchIconPressed = () => {
+        handleKeywordChange();
+        updateUrl('keyword');
+    };
+
+    const handleKeywordCharacterEntry = e => {
+        const keyword = e.target.value;
+        setIsKeywordClearable(true);
+        if (isReturnKeyPressed(e)) {
+            if (keywordIsSearchable(keyword)) {
+                setKeywordSearch(keyword);
+                setPaginationPage(1);
+                updateUrl('keyword');
+            }
+        } else if (isEscapeKeyPressed(e) || keyword === '') {
             clearKeywordField();
         }
-
-        keyWordSearchRef.current.value = keyword;
-        updateUrl('keyword');
     };
 
     function hideElement(element, displayproperty = null) {
@@ -442,12 +469,10 @@ export const DLOList = ({
         const params = !!rawsearchparams && new URLSearchParams(rawsearchparams);
 
         if (params.has('keyword') && params.get('keyword').length > 0) {
-            const keyword = {
-                target: {
-                    value: params.get('keyword'),
-                },
-            };
-            handleKeywordEntry(keyword);
+            const rawKeyword = params.get('keyword');
+            keyWordSearchRef.current.value = rawKeyword;
+            handleKeywordChange();
+            setIsKeywordClearable(true);
         }
         const openPanels = [];
         if (params.has('filters') && params.get('filters').length > 0) {
@@ -588,12 +613,18 @@ export const DLOList = ({
 
         const facetId = e.target.value;
 
+        // console.log('FACET ID', facetId, e.target.labels[0].innerText);
+
         const checkboxId = `${facetTypeSlug}-${facetId}`;
         const individualFilterId = `${facetTypeSlug}-${facetId}`;
 
         if (e?.target?.checked) {
             const updateFilters = [...selectedFilters, individualFilterId];
             setSelectedFilters(updateFilters);
+            window.dataLayer.push({
+                event: 'reusable_component_event_click',
+                'custom_event.data-analyticsid': `${e.target.labels[0].innerText} DLOR filter click`,
+            });
 
             checkBoxArrayRef.current = [...checkBoxArrayRef.current, checkboxId];
         } else {
@@ -658,6 +689,8 @@ export const DLOList = ({
             topic: <TopicIcon aria-label={getPublicHelp(facetTypeSlug)} />,
             graduate_attributes: <SchoolSharpIcon aria-label={getPublicHelp(facetTypeSlug)} />,
             subject: <LocalLibrarySharpIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            audience: <PeopleOutlinedIcon aria-label={getPublicHelp(facetTypeSlug)} />, 
+            level: <CallMadeOutlinedIcon aria-label={getPublicHelp(facetTypeSlug)} />
         };
         return iconList[facetTypeSlug];
     };
@@ -817,8 +850,18 @@ export const DLOList = ({
                                             return (
                                                 <StyledFormControlLabel
                                                     key={`${facetType?.facet_type_slug}-${facet?.facet_id}`}
+                                                    data-analyticsid={`${slugifyName(facet?.facet_name)}-dlor-filter`}
+                                                    id={`${slugifyName(facet?.facet_name)}-dlor-filter-label`}
                                                     control={
                                                         <Checkbox
+                                                            inputProps={{
+                                                                'data-analyticsid': `${slugifyName(
+                                                                    facet?.facet_name,
+                                                                )}-dlor-filter`,
+                                                            }}
+                                                            id={`${slugifyName(
+                                                                facet?.facet_name,
+                                                            )}-dlor-filter-checkbox`}
                                                             onChange={handleCheckboxAction(checkBoxid)}
                                                             aria-label={'Include'}
                                                             value={facet?.facet_id}
@@ -885,7 +928,9 @@ export const DLOList = ({
         return sortedList?.filter(d => {
             const passesCheckboxFilter = filterDlor(d, groupedFilters);
             const passesKeyWordFilter =
-                !keywordSearch || !keywordIsSearchable(keywordSearch) || !!keywordFoundIn(d, keywordSearch);
+                !keywordSearch || // keyword not supplied - don't block
+                !keywordIsSearchable(keywordSearch) || // keyword too short to be useful - don't block
+                !!keywordFoundIn(d, keywordSearch); // DO block the Object by keyword
             return passesCheckboxFilter && passesKeyWordFilter;
         });
     }
@@ -1114,7 +1159,7 @@ export const DLOList = ({
                             href={contactFormLink}
                             target="_blank"
                             title="Load a contact form, in a new window"
-                            sx={{ fontSize: '1.2em', maxWidth: '8em', display: 'flex', alignItems: 'center' }}
+                            sx={{ maxWidth: '8em', display: 'flex', alignItems: 'center' }}
                         >
                             Contact us&nbsp;
                             <OpenInNewIcon />
@@ -1147,16 +1192,30 @@ export const DLOList = ({
                             }}
                             data-testid="dlor-homepage-keyword"
                             label="Search our digital objects by keyword"
-                            onChange={handleKeywordEntry}
+                            onKeyUp={handleKeywordCharacterEntry}
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        <IconButton onClick={clearKeywordField} aria-label="search by keyword">
-                                            {keyWordSearchRef.current?.value === '' ? (
-                                                <SearchIcon />
-                                            ) : (
+                                        {!!isKeywordClearable && (
+                                            <IconButton onClick={clearKeywordField} aria-label="clear keyword">
                                                 <CloseIcon data-testid="keyword-clear" />
-                                            )}
+                                            </IconButton>
+                                        )}
+                                        <IconButton
+                                            onClick={handleSearchIconPressed}
+                                            aria-label="Perform your search"
+                                            title="Perform your search"
+                                            sx={{
+                                                backgroundColor: '#2377CB',
+                                                color: 'white',
+                                                borderRadius: '5px',
+                                                marginLeft: '2px',
+                                                '&:hover': {
+                                                    backgroundColor: '#195794',
+                                                },
+                                            }}
+                                        >
+                                            <SearchIcon data-testid="keyword-submit" sx={{ fill: 'white' }} />
                                         </IconButton>
                                     </InputAdornment>
                                 ),

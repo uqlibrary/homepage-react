@@ -159,16 +159,6 @@ describe('account reducer', () => {
         });
     });
 
-    it('should set computer availability to null when failed loading', () => {
-        const test = accountReducer(emptyState, { type: actions.COMP_AVAIL_FAILED });
-        expect(test).toEqual({
-            ...emptyState,
-            computerAvailability: null,
-            computerAvailabilityLoading: false,
-            computerAvailabilityError: true,
-        });
-    });
-
     it('should set training to null when failed loading', () => {
         const test = accountReducer(emptyState, { type: actions.TRAINING_FAILED });
         expect(test).toEqual({
@@ -199,23 +189,33 @@ describe('account reducer', () => {
         });
     });
 
-    it('should set computer availability value when successfully loaded', () => {
-        const test = accountReducer(emptyState, { type: actions.COMP_AVAIL_LOADED, payload: [] });
+    it('should set vemcount to null when failed loading', () => {
+        const test = accountReducer(emptyState, { type: actions.VEMCOUNT_FAILED });
         expect(test).toEqual({
             ...emptyState,
-            computerAvailability: [],
-            computerAvailabilityLoading: false,
-            computerAvailabilityError: false,
+            vemcount: null,
+            vemcountLoading: false,
+            vemcountError: true,
         });
     });
 
-    it('should set computer availability loading flag to true when loading library hours', () => {
-        const test = accountReducer(emptyState, { type: actions.COMP_AVAIL_LOADING });
+    it('should set vemcount value when successfully loaded', () => {
+        const test = accountReducer(emptyState, { type: actions.VEMCOUNT_LOADED, payload: [] });
         expect(test).toEqual({
             ...emptyState,
-            computerAvailability: null,
-            computerAvailabilityLoading: true,
-            computerAvailabilityError: false,
+            vemcount: [],
+            vemcountLoading: false,
+            vemcountError: false,
+        });
+    });
+
+    it('should set vemcount loading flag to true when loading library hours', () => {
+        const test = accountReducer(emptyState, { type: actions.VEMCOUNT_LOADING });
+        expect(test).toEqual({
+            ...emptyState,
+            vemcount: null,
+            vemcountLoading: true,
+            vemcountError: false,
         });
     });
 

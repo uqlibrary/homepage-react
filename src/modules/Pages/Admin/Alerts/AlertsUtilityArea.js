@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import Fade from '@mui/material/Fade';
 import Drawer from '@mui/material/Drawer';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * a block that shows:
@@ -43,13 +44,8 @@ const StyledActionButtonPlacer = styled('div')(({ theme }) => ({
     marginRight: 16,
 }));
 
-export const AlertsUtilityArea = ({
-    actions,
-    helpButtonLabel = 'Help',
-    helpContent,
-    history,
-    showAddButton = false,
-}) => {
+export const AlertsUtilityArea = ({ actions, helpButtonLabel = 'Help', helpContent, showAddButton = false }) => {
+    const navigate = useNavigate();
     const [lightboxOpen, setLightboxOpen] = useState(false);
 
     const openHelpLightbox = () => {
@@ -62,7 +58,7 @@ export const AlertsUtilityArea = ({
 
     const navigateToAddPage = () => {
         actions.clearAnAlert();
-        history.push('/admin/alerts/add');
+        navigate('/admin/alerts/add');
     };
 
     return (
@@ -124,6 +120,5 @@ AlertsUtilityArea.propTypes = {
     actions: PropTypes.any,
     helpContent: PropTypes.any,
     helpButtonLabel: PropTypes.string,
-    history: PropTypes.object,
     showAddButton: PropTypes.bool,
 };

@@ -1,5 +1,4 @@
 import { getUrlForLearningResourceSpecificTab } from './subComponents/LearningResourcesPanel';
-import { greeting } from './subComponents/PersonalisedPanel';
 
 describe('Learning Resources panel', () => {
     it('test urls correct', () => {
@@ -28,13 +27,5 @@ describe('Learning Resources panel', () => {
         expect(getUrlForLearningResourceSpecificTab(aclass, pageNoParams, true, true)).toEqual(
             'http://localhost/learning-resources?coursecode=HIST1201&campus=undefined&semester=Semester 2 2020',
         );
-    });
-});
-
-describe('Personalised panel', () => {
-    it('shows the correct greeting time', () => {
-        expect(greeting(9)).toEqual('Good morning'); // 9am
-        expect(greeting(13)).toEqual('Good afternoon'); // 1pm
-        expect(greeting(21)).toEqual('Good evening'); // 9pm
     });
 });

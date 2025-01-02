@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router-dom';
 import parse from 'html-react-parser';
 import { useCookies } from 'react-cookie';
 
@@ -43,6 +43,7 @@ import {
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import { breadcrumbs } from 'config/routes';
 
 const StyledUQActionButton = styled('div')(({ theme }) => ({
     marginBlock: '32px',
@@ -98,6 +99,9 @@ const StyledTitleBlockDiv = styled('div')(() => ({
 const StyledHeaderDiv = styled(Typography)(() => ({
     backgroundColor: 'white',
     padding: '12px',
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
+    marginTop: '12px',
     '& p': {
         margin: 0,
         fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
@@ -138,7 +142,6 @@ const StyledSeriesList = styled('ol')(() => ({
             width: '100%',
             padding: 10,
             textDecoration: 'none',
-            border: '1px solid #d1d0d2', // $grey-300
         },
         '& a:hover': {
             backgroundColor: '#a3a1a4', // $grey-500
@@ -146,15 +149,18 @@ const StyledSeriesList = styled('ol')(() => ({
     },
 }));
 const StyledDemographicsBox = styled(Box)(() => ({
-    padding: '1em',
-    marginTop: '24px',
-    borderRadius: '10px',
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
     backgroundColor: 'white',
+    marginTop: '24px',
+    padding: '1em',
     '& p': { marginLeft: '-8px' },
     '& form': { margin: '-8px', '& p': { marginBlock: '3em 0', marginLeft: '2px' } },
 }));
 const StyledLayoutBox = styled(Box)(() => ({
     backgroundColor: 'white',
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
     padding: '12px',
     marginTop: '24px',
 }));
@@ -193,6 +199,10 @@ const StyledSidebarHeadingTypography = styled(Typography)(() => ({
     },
 }));
 
+const StyledFilterLink = styled(Link)(() => ({
+    color: '#3872a8 !important'
+}));
+
 export const DLOView = ({
     actions,
     // get viewed dlor item
@@ -209,8 +219,10 @@ export const DLOView = ({
     const [cookies, setCookie] = useCookies();
     const [confirmationOpen, setConfirmationOpen] = React.useState(false);
 
-    console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
-    console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
+    // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
+    // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
+    
+    const isLoggedIn = !!account?.id;
 
     const [formValues, setFormValues] = React.useState({
         subjectCode: '',
@@ -219,6 +231,48 @@ export const DLOView = ({
         preferredName: '',
         userEmail: '',
     });
+
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dlor.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dlor.pathname);
+    }, []);
+   // PENDING CHANGE - left in to merge when ticket for require login is built.
+  
+    // async function sha256(message) {
+    //     // Encode as UTF-8
+    //     const msgBuffer = new TextEncoder('utf-8').encode(message);
+    //     // Hash the message
+    //     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    //     // Convert ArrayBuffer to Array   
+    //     const hashArray = Array.from(new Uint8Array(hashBuffer));
+    //     // Convert bytes to hex string
+    //     const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');   
+    //     return hashHex;
+    //   }
+
+   
+    // useEffect(() => {
+    //     if (dlorItem && dlorItem.object_public_uuid) {
+    //         // check if they have access param requirement. If it doesnt match, reject.
+    //         // if it does match, require them to log in.
+    //         const url = new URL(window.location.href);
+    //         const params = url.searchParams;
+    //         const hasParam2value = params.get('vw');
+    //         if (hasParam2value) {
+    //             sha256(dlorItem.object_public_uuid).then(hash => {
+    //                 if (hash !== hasParam2value) {
+    //                     console.log("XXXTHEY ARE NOT ALLOWED IN - HASH MUNGED", hash)
+    //                 } else {
+    //                     console.log("XXXTHEY ARE ALLOWED - Requires login.")
+    //                 }
+    //             });
+    //         }
+            
+    //     }
+    // }, [dlorItem]);
+
+
     useEffect(() => {
         if (!!account?.id) {
             const tempForm = {
@@ -238,8 +292,9 @@ export const DLOView = ({
             theNewValue = !!e.target.checked;
         }
         const newValues = { ...formValues, [prop]: theNewValue };
-        console.log('handleChange', prop, theNewValue, newValues);
+        // console.log('handleChange', prop, theNewValue, newValues);
 
+       
         setFormValues(newValues);
     };
 
@@ -252,6 +307,19 @@ export const DLOView = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorId]);
+
+    useEffect(() => {
+        // Google Analytics to push pageView for object
+        /* istanbul ignore else */
+        if (!!dlorItem && !!dlorItem.object_title) {
+            window.dataLayer.push({
+                event: 'pageview',
+                page_title: dlorItem.object_title,
+            });
+            document.title = dlorItem.object_title;
+             
+        }
+    }, [dlorItem]);
 
     function navigateToObjectLink() {
         window.location.href = dlorItem?.object_link_url;
@@ -316,8 +384,9 @@ export const DLOView = ({
     };
 
     const saveAndNavigate = dlorItem => {
-        console.log('saveAndNavigate formValues', dlorItem.object_link_url, formValues);
+        // console.log('saveAndNavigate formValues', dlorItem.object_link_url, formValues);
 
+        
         if (formValues.schoolName.length > 0 || formValues.subjectCode.length > 0 || !!formValues.notify) {
             const valuestoSend = {
                 dlorUuid: dlorItem.object_public_uuid,
@@ -384,7 +453,7 @@ export const DLOView = ({
 
     let subscriptionResponseLocale = {};
     if (!dlorItemUpdating && (!!dlorUpdatedItem || !!dlorUpdatedItemError)) {
-        console.log('dlorUpdatedItem=', dlorUpdatedItem);
+        // console.log('dlorUpdatedItem=', dlorUpdatedItem);
         const updatingMessage =
             dlorUpdatedItem?.data?.subscription === false
                 ? 'You are already subscribed'
@@ -729,7 +798,7 @@ export const DLOView = ({
                                                         filter.filter_values.map((value, subIndex) => {
                                                             return (
                                                                 <li key={subIndex}>
-                                                                    {value.name}
+                                                                    <StyledFilterLink to={`/digital-learning-hub?filters=${value.id}`} >{value.name}</StyledFilterLink>
                                                                     {!!value?.help && value?.help.startsWith('http') && (
                                                                         <a
                                                                             href={value.help}
@@ -755,7 +824,7 @@ export const DLOView = ({
                                                 {dlorItem.object_keywords.map((keyword, index) => {
                                                     return (
                                                         <li key={index}>
-                                                            {keyword.charAt(0).toUpperCase() + keyword.slice(1)}
+                                                            <StyledFilterLink to={`/digital-learning-hub?keyword=${keyword.charAt(0).toUpperCase() + keyword.slice(1).replace(/\s/g, '+')}`}>{keyword.charAt(0).toUpperCase() + keyword.slice(1)}</StyledFilterLink>
                                                         </li>
                                                     );
                                                 })}

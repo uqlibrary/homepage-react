@@ -102,8 +102,8 @@ export default [
         course_title: 'Financial Statement Analysis',
     },
     {
-        name: 'ACCT7107',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_ACCT7107.pdf',
+        name: 'LAWS7107',
+        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_LAWS7107.pdf',
         type: 'exam_paper',
         course_title: 'Management Accounting and Control',
     },

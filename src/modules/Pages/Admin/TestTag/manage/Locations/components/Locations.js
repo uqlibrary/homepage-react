@@ -24,6 +24,7 @@ import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
 import { emptyActionState, actionReducer, transformAddRequest, transformUpdateRequest } from './utils';
 import { locationType } from '../../../SharedComponents/LocationPicker/utils';
+import { breadcrumbs } from 'config/routes';
 
 const componentId = 'locations';
 
@@ -58,6 +59,10 @@ export const locationDataFieldKeys = {
 
 const ManageLocations = ({ actions }) => {
     useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
+
         actions.clearSites();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -307,7 +312,7 @@ const ManageLocations = ({ actions }) => {
                         />
                     </Grid>
                     <Grid container spacing={3} className={'tableMarginTop'}>
-                        <Grid item style={{ flex: 1 }}>
+                        <Grid style={{ flex: 1 }}>
                             <DataTable
                                 id={componentId}
                                 rows={row}

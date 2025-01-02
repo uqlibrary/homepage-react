@@ -5,15 +5,6 @@ export function formatDate(dateString, dateFormat = 'YYYY-MM-DD HH:mm:ss') {
     return newMoment.format(dateFormat);
 }
 
-export function getStartOfDayFormatted() {
-    const BrisbaneZone = moment().tz('Australia/Brisbane');
-    BrisbaneZone.utcOffset(600);
-    return BrisbaneZone.startOf('day')
-        .add(1, 'minutes')
-        .add(1, 'minutes')
-        .format('YYYY-MM-DDTHH:mm');
-}
-
 // return the sunday after next monday
 // (next monday is the default start date, this is the default end date)
 export function getTimeSundayNextFormatted(baseDate = null) {

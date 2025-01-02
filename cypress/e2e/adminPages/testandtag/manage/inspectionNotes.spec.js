@@ -2,7 +2,6 @@ import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTa
 
 describe('Test and Tag Manage Inspection Notes', () => {
     beforeEach(() => {
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
         cy.visit('http://localhost:2020/admin/testntag/manage/inspectiondetails?user=uqtesttag');
     });
     const getFieldValue = (dataField, rowIndex, colIndex) =>
@@ -33,7 +32,8 @@ describe('Test and Tag Manage Inspection Notes', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
         );
-
+    });
+    it('has breadcrumbs', () => {
         cy.get('uq-site-header')
             .shadow()
             .within(() => {

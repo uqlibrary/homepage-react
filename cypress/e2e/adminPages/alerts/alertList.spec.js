@@ -7,6 +7,17 @@ describe('Alert Admin List page', () => {
         cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
         cy.viewport(1300, 1200);
     });
+    it('has breadcrumb', () => {
+        cy.waitUntil(() => cy.get('[data-testid="admin-alerts-list-current-list"]').should('exist'));
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Alerts admin');
+            });
+    });
     it('displays a list of alerts to the authorised user', () => {
         cy.waitUntil(() => cy.get('[data-testid="admin-alerts-list-current-list"]').should('exist'));
         cy.get('[data-testid="admin-alerts-list-current-list"]').should('be.visible');
@@ -18,14 +29,6 @@ describe('Alert Admin List page', () => {
                     .then(elements => elements.length === 1 + numRowsHiddenAsNoDatainfo),
             { timeout: 10000, interval: 500 },
         );
-        cy.get('uq-site-header')
-            .shadow()
-            .within(() => {
-                cy.get('[data-testid="subsite-title"]')
-                    .should('exist')
-                    .should('be.visible')
-                    .contains('Alerts admin');
-            });
         cy.get('[data-testid="headerRow-count-current"]').contains('1 alert');
 
         // this alert has all 3 chips

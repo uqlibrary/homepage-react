@@ -1,6 +1,11 @@
 import React from 'react';
 import { rtlRender } from 'test-utils';
 import AlertsListAsTable from './AlertsListAsTable';
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => jest.fn(),
+}));
 function setup(testProps = {}) {
     const props = {
         rows: [],
@@ -13,7 +18,7 @@ function setup(testProps = {}) {
     return rtlRender(<AlertsListAsTable {...props} {...testProps} />);
 }
 
-describe('PersonalisedPanel', () => {
+describe('AlertsListAsTable', () => {
     it('default values render correctly', () => {
         const { container } = setup();
         expect(container).toMatchSnapshot();

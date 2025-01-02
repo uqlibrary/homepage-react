@@ -9,8 +9,10 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import AlertsListAsTable from './AlertsListAsTable';
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
+
 import { default as locale } from '../alertsadmin.locale';
 import { styled } from '@mui/material/styles';
+import { breadcrumbs } from 'config/routes';
 
 const StyledPageLayout = styled(Grid)(() => ({
     marginBottom: 24,
@@ -33,12 +35,16 @@ const StyledMobileView = styled(Grid)(({ theme }) => ({
     },
 }));
 
-export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, history }) => {
+export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
     const [currentAlerts, setCurrentAlerts] = useState([]);
     const [futureAlerts, setFutureAlerts] = useState([]);
     const [pastAlerts, setPastAlerts] = useState([]);
 
     React.useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.alertsadmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.alertsadmin.pathname);
+
         /* istanbul ignore else */
         if (!alertsError && !alertsLoading && !alerts) {
             actions.loadAllAlerts();
@@ -126,12 +132,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                         <p>Mobile? You might want to turn your phone sideways!</p>
                     </StyledMobileView>
                 </Grid>
-                <AlertsUtilityArea
-                    actions={actions}
-                    helpContent={locale.listPage.help}
-                    history={history}
-                    showAddButton
-                />
+                <AlertsUtilityArea actions={actions} helpContent={locale.listPage.help} showAddButton />
                 <StandardCard title="All alerts" noPadding>
                     <Grid container>
                         <StyledPageLayout item xs={12} id="admin-alerts-list" data-testid="admin-alerts-list">
@@ -140,7 +141,6 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                                     rows={currentAlerts}
                                     headertag="Current alerts"
                                     alertsLoading={alertsLoading}
-                                    history={history}
                                     actions={actions}
                                     deleteAlert={deleteAlert}
                                     alertOrder="forwardEnd"
@@ -151,7 +151,6 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                                     rows={futureAlerts}
                                     headertag="Scheduled alerts"
                                     alertsLoading={alertsLoading}
-                                    history={history}
                                     actions={actions}
                                     deleteAlert={deleteAlert}
                                     alertOrder="forwardStart"
@@ -162,7 +161,6 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                                     rows={pastAlerts}
                                     headertag="Past alerts"
                                     alertsLoading={alertsLoading}
-                                    history={history}
                                     actions={actions}
                                     deleteAlert={deleteAlert}
                                     alertOrder="reverseEnd"
@@ -181,7 +179,6 @@ AlertsList.propTypes = {
     alerts: PropTypes.array,
     alertsLoading: PropTypes.any,
     alertsError: PropTypes.any,
-    history: PropTypes.object,
 };
 
 export default React.memo(AlertsList);

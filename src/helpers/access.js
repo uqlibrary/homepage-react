@@ -1,5 +1,3 @@
-import { default as locale } from 'modules/Index/components/locale';
-
 /**
  Making changes? User settings need to be also created in repo reusable_webcomponents
 
@@ -44,79 +42,47 @@ const LIBRARY_STAFF = 'LIBRARYSTAFFB';
 const OTHER_STAFF = 'STAFF';
 const STAFF_AWAITING_AURION = 'AURION';
 
-const EXTRAMURAL_COMMUNITY_PAID = 'COMMU';
-const EXTRAMURAL_ALUMNI = 'ALUMNI';
+// const EXTRAMURAL_COMMUNITY_PAID = 'COMMU';
+// const EXTRAMURAL_ALUMNI = 'ALUMNI';
 const EXTRAMURAL_HOSPITAL = 'HOSP';
-const EXTRAMURAL_ASSOCIATE = 'ASSOCIATE';
-const EXTRAMURAL_FRYER = 'FRYVISITOR';
+// const EXTRAMURAL_ASSOCIATE = 'ASSOCIATE';
+// const EXTRAMURAL_FRYER = 'FRYVISITOR';
 const EXTRAMURAL_HONORARY = 'HON';
-const EXTRAMURAL_PROXY = 'PROXY';
+// const EXTRAMURAL_PROXY = 'PROXY';
 
 export const TRAINING_FILTER_GENERAL = 104;
 export const TRAINING_FILTER_HOSPITAL = 360;
 
-// what is displayed in the User Services panel on the homepage, determined per group
-const userGroupServices = {
-    [UNDERGRADUATE_GENERAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [UNDERGRADUATE_REMOTE]: ['servicesforstudents', 'servicesforexternal', 'ithelp', 'digitalessentials'],
-    [UNDERGRADUATE_TESOL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [UNDERGRADUATE_VOCATIONAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [POSTGRAD_COURSEWORK]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [POSTGRAD_COURSEWORK_REMOTE]: ['servicesforstudents', 'ithelp', 'digitalessentials', 'servicesforexternal'],
-    [POSTGRAD_RESEARCH]: ['servicesforhdrs', 'ithelp'],
-    [POSTGRAD_RESEARCH_REMOTE]: ['servicesforhdrs', 'ithelp', 'servicesforexternal'],
-    [SHORT_FORM_CREDENTIAL_COURSE]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [SHORT_FORM_CREDENTIAL_COURSE_REMOTE]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-
-    [LIBRARY_STAFF]: [
-        'servicesforstudents',
-        'servicesforhdrs',
-        'servicesforcommunity',
-        'servicesforhospital',
-        'servicesforprofessional',
-        'servicesforresearchers',
-        'servicesforsecondary',
-        'servicesforteaching',
-        'servicesforalumni',
-        'servicesforexternal',
-    ],
-    [OTHER_STAFF]: ['servicesforprofessional', 'servicesforresearchers', 'servicesforteaching'],
-    [STAFF_AWAITING_AURION]: ['servicesforprofessional', 'servicesforresearchers', 'servicesforteaching'],
-
-    [EXTRAMURAL_COMMUNITY_PAID]: ['servicesforcommunity'],
-    [EXTRAMURAL_ALUMNI]: ['servicesforalumni'],
-    [EXTRAMURAL_HOSPITAL]: ['servicesforhospital', 'requestliteraturesearch'],
-    [EXTRAMURAL_ASSOCIATE]: ['servicesforcommunity'],
-    [EXTRAMURAL_FRYER]: ['servicesforcommunity'],
-    [EXTRAMURAL_HONORARY]: ['servicesforcommunity'],
-    [EXTRAMURAL_PROXY]: ['servicesforcommunity'],
-};
-
-export const getUserServices = (account, serviceLocale = null) => {
-    const thislocale = serviceLocale === null ? locale : serviceLocale;
-    const allLibraryServices = thislocale.LibraryServices?.links || [];
-    if (allLibraryServices.length === 0) {
-        return [];
-    }
-
-    if (!account || !account.user_group) {
-        return [];
-    }
-
-    const userGroupService = userGroupServices[account.user_group] || [];
-    return userGroupService
-        .map(service => allLibraryServices.find(i => (i.id || '') === service))
-        .filter(i => i !== undefined);
-};
-
-const isLoggedInUser = account => !!account && !!account.id;
+// Personalised section whitelist array
+export const isLoggedInUser = account => !!account && !!account.id;
 
 // define which home page panel items each user type can see
 
-export const canSeeLearningResources = account => {
+export const canSeeLearningResourcesPage = account => {
     return (
         !!account &&
         !!account.id &&
+        [
+            UNDERGRADUATE_GENERAL,
+            UNDERGRADUATE_REMOTE,
+            SHORT_FORM_CREDENTIAL_COURSE,
+            SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
+            OTHER_STAFF,
+            LIBRARY_STAFF,
+            EXTRAMURAL_HONORARY,
+            POSTGRAD_COURSEWORK,
+            POSTGRAD_COURSEWORK_REMOTE,
+            POSTGRAD_RESEARCH,
+            POSTGRAD_RESEARCH_REMOTE,
+        ].includes(account.user_group)
+    );
+};
+
+export const canSeeLearningResourcesPanel = account => {
+    if (!account || !account.id) {
+        return false;
+    }
+    if (
         [
             UNDERGRADUATE_GENERAL,
             UNDERGRADUATE_REMOTE,
@@ -128,33 +94,95 @@ export const canSeeLearningResources = account => {
             SHORT_FORM_CREDENTIAL_COURSE,
             SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
         ].includes(account.user_group)
+    ) {
+        return true;
+    }
+    if (
+        // if they are an RHD who is enrolled in a non research subject, then they get the panel
+        [POSTGRAD_RESEARCH, POSTGRAD_RESEARCH_REMOTE].includes(account.user_group) &&
+        !!account.current_classes &&
+        account.current_classes.length > 0 &&
+        account.current_classes?.some(course => course.SUBJECT !== 'RSCH')
+    ) {
+        return true;
+    }
+    return false;
+};
+
+export const canSeeReadPublish = account => {
+    return (
+        !!account &&
+        !!account.id &&
+        [
+            OTHER_STAFF,
+            LIBRARY_STAFF,
+            POSTGRAD_COURSEWORK,
+            POSTGRAD_COURSEWORK_REMOTE,
+            POSTGRAD_RESEARCH,
+            POSTGRAD_RESEARCH_REMOTE,
+            EXTRAMURAL_HONORARY,
+        ].includes(account.user_group)
     );
 };
+
+export const canSeeTrainingPanel = account => {
+    return (
+        !!account &&
+        !!account.id &&
+        [
+            UNDERGRADUATE_GENERAL,
+            UNDERGRADUATE_REMOTE,
+            UNDERGRADUATE_TESOL,
+            UNDERGRADUATE_VOCATIONAL,
+            SHORT_FORM_CREDENTIAL_COURSE,
+            SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
+            POSTGRAD_COURSEWORK,
+            POSTGRAD_COURSEWORK_REMOTE,
+            POSTGRAD_RESEARCH_REMOTE,
+            POSTGRAD_RESEARCH,
+            LIBRARY_STAFF,
+            OTHER_STAFF,
+            STAFF_AWAITING_AURION,
+            EXTRAMURAL_HOSPITAL,
+            EXTRAMURAL_HONORARY,
+        ].includes(account.user_group)
+    );
+};
+
+export const canSeeEndnoteReferencing = account => {
+    return (
+        !!account &&
+        !!account.id &&
+        [
+            UNDERGRADUATE_GENERAL,
+            UNDERGRADUATE_REMOTE,
+            SHORT_FORM_CREDENTIAL_COURSE,
+            SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
+            POSTGRAD_COURSEWORK,
+            POSTGRAD_COURSEWORK_REMOTE,
+            POSTGRAD_RESEARCH_REMOTE,
+            POSTGRAD_RESEARCH,
+            LIBRARY_STAFF,
+            OTHER_STAFF,
+        ].includes(account.user_group)
+    );
+};
+
+export const isLibraryStaff = account =>
+    isLoggedInUser(account) &&
+    (['uqlkeati', 'uqthalin'].includes(account.id) || // marketing staff, required for 2024 dev
+        ['LIBRARYSTAFFB'].includes(account.user_group));
 
 export const canSeeLoans = account => isLoggedInUser(account);
 
 export const canSeePrintBalance = account => isLoggedInUser(account);
 
-export const canSeeLibraryServices = account => {
-    if (!isLoggedInUser(account)) {
-        return false;
-    }
-    const userServices = getUserServices(account);
-    // if the user has no services (should only be a brand new group we havent configured yet)
-    // then don't display the panel
-    return !!userServices && userServices.length > 0;
-};
-
 const userHasAdGroup = (ADGroupName, account) =>
     !!account && !!account.groups && !!account.groups.find(group => group.includes(ADGroupName));
 
-export const isTestTagAdminUser = account =>
-    isLoggedInUser(account) && userHasAdGroup('lib_libapi_TestTagUsers', account);
+export const isTestTagUser = account => isLoggedInUser(account) && userHasAdGroup('lib_libapi_TestTagUsers', account);
 
 export const isAlertsAdminUser = account =>
-    isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
-
-export const isPromoPanelAdminUser = account =>
     isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
 
 export const isDlorAdminUser = account => isLoggedInUser(account) && userHasAdGroup('lib_dlor_admins', account);

@@ -1,9 +1,8 @@
 import {
-    canSeeLearningResources,
-    canSeeLibraryServices,
+    canSeeLearningResourcesPage,
+    canSeeLearningResourcesPanel,
     canSeeLoans,
     canSeePrintBalance,
-    getUserServices,
     isAlertsAdminUser,
     isEspaceAuthor,
     isHdrStudent,
@@ -11,54 +10,9 @@ import {
 import { accounts } from 'data/mock/data';
 
 describe('access', () => {
-    it('should get the correct services when the account is missing', () => {
-        expect(getUserServices({})).toEqual([]);
-    });
-
     it('should know if an account is for a HDR student', () => {
         expect(isHdrStudent(accounts.s1111111)).toEqual(true);
         expect(isHdrStudent(accounts.uqstaff)).toEqual(false);
-    });
-
-    it('should show the correct services to the correct groups', () => {
-        // happy path
-        expect(getUserServices(accounts.s1111111).length).toEqual(3);
-
-        // coverage: various parameters invalid
-        expect(getUserServices(accounts.s1111111, {})).toEqual([]);
-
-        expect(
-            getUserServices(accounts.s1111111, {
-                LibraryServices: 'x',
-            }),
-        ).toEqual([]);
-
-        expect(
-            getUserServices({
-                id: 'dummy',
-                user_group: 'unknown',
-            }),
-        ).toEqual([]);
-
-        expect(
-            getUserServices({
-                user_group: 'unknown',
-            }),
-        ).toEqual([]);
-
-        expect(
-            getUserServices(accounts.s1111111, {
-                LibraryServices: {
-                    links: [
-                        {
-                            // missing id
-                            title: 'Title',
-                            url: 'https://blah',
-                        },
-                    ],
-                },
-            }),
-        ).toEqual([]);
     });
 
     it('only the logged in user can see their loans', () => {
@@ -79,14 +33,17 @@ describe('access', () => {
     });
 
     it('only authorised users can see learning resources', () => {
-        expect(canSeeLearningResources({ id: 's123456', user_group: 'UG' })).toEqual(true);
-        expect(canSeeLearningResources({ id: 's123456', user_group: 'STAFF_AWAITING_AURION' })).toEqual(false);
-    });
+        expect(canSeeLearningResourcesPage({ id: 's123456', user_group: 'UG' })).toEqual(true);
+        expect(canSeeLearningResourcesPage({ id: 's123456', user_group: 'STAFF_AWAITING_AURION' })).toEqual(false);
+        expect(canSeeLearningResourcesPage({ id: 's123456', user_group: 'RHD' })).toEqual(true);
 
-    it('library services are shown to appropriate users', () => {
-        expect(canSeeLibraryServices({})).toEqual(false);
-        expect(canSeeLibraryServices({ id: 's123456', user_group: 'UG' })).toEqual(true);
-        expect(canSeeLibraryServices({ id: 's123456', user_group: 'a different one' })).toEqual(false);
+        expect(canSeeLearningResourcesPanel({ id: 's123456', user_group: 'UG' })).toEqual(true);
+        expect(canSeeLearningResourcesPanel({ id: 's123456', user_group: 'STAFF_AWAITING_AURION' })).toEqual(false);
+        expect(canSeeLearningResourcesPanel({ id: 's123456', user_group: 'RHD', current_classes: [] })).toEqual(false);
+        expect(
+            canSeeLearningResourcesPanel({ id: 's123456', user_group: 'RHD', current_classes: [{ SUBJECT: 'FREN' }] }),
+        ).toEqual(true);
+        expect(canSeeLearningResourcesPanel({})).toEqual(false);
     });
 
     it('alerts pages are limited to appropriate users', () => {

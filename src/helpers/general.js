@@ -1,4 +1,5 @@
 import global from 'locale/global';
+const moment = require('moment');
 
 export const leftJoin = (objArr1, objArr2, key1, key2) => {
     if (!objArr2) {
@@ -103,23 +104,50 @@ export function scrollToTopOfPage() {
     !!topOfPage && typeof topOfPage.scrollIntoView === 'function' && topOfPage.scrollIntoView();
 }
 
-export function rotateCharacters(str, indexCount = 1) {
-    return str
-        .split('')
-        .map(char => {
-            let asciiCode = char.charCodeAt(0);
-            if (asciiCode >= 97 && asciiCode <= 122) {
-                asciiCode += indexCount;
-                if (asciiCode > 122) {
-                    asciiCode = 97;
-                }
-                return String.fromCharCode(asciiCode);
-            }
-            return char;
-        })
-        .join('');
-}
+// this is very basic, because thats all that seems required so far
 
-export function obfusticateUsername(account) {
-    return !!account && rotateCharacters(account.id, 7);
+export const pluralise = (singularWord, count, pluralWordSpecial = null) => {
+    if (count > 1 && pluralWordSpecial !== null) {
+        return pluralWordSpecial;
+    }
+    if (count > 1) {
+        return `${singularWord}s`;
+    }
+    return singularWord;
+};
+
+// for dev only - after 2024 golive this can just be web.library
+/**
+ * @param pathname {string} the path name to appended to the correct domain, eg /about
+ * @param requestedDomainName {string|null}
+ *     for test coverage only, the domain of the current page. Default: the domain of the current page
+ * @returns string
+ */
+export const linkToDrupal = (pathname, requestedDomainName = null) => {
+    const domainName = requestedDomainName ?? document.location.hostname;
+    // after jan 2025 golive, should be web.library only
+    // note some tests need correction
+    const origin = [
+        'localhost',
+        'homepage-development.library.uq.edu.au',
+        'homepage-staging.library.uq.edu.au',
+    ].includes(domainName)
+        ? 'https://web-live.library.uq.edu.au'
+        : 'https://web.library.uq.edu.au';
+    return `${origin}${pathname}`;
+};
+
+/* istanbul ignore next */
+export function isKeyPressed(e, charKeyInput, numericKeyInput) {
+    const keyNumeric = e.charCode || e.keyCode;
+    const keyChar = e.key || /* istanbul ignore next */ e.code;
+    return keyChar === charKeyInput || keyNumeric === numericKeyInput;
+}
+/* istanbul ignore next */
+export function isReturnKeyPressed(e) {
+    return isKeyPressed(e, 'Enter', 13);
+}
+/* istanbul ignore next */
+export function isEscapeKeyPressed(e) {
+    return isKeyPressed(e, 'Escape', 27);
 }

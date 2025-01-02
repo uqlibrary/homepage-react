@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
 
 import DLOSeriesEdit from 'modules/Pages/Admin/DigitalLearningObjects/Series/DLOSeriesEdit';
@@ -20,7 +19,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let SeriesListContainer = connect(mapStateToProps, mapDispatchToProps)(DLOSeriesEdit);
-SeriesListContainer = withRouter(SeriesListContainer);
+const SeriesListContainer = connect(mapStateToProps, mapDispatchToProps)(DLOSeriesEdit);
 
 export default SeriesListContainer;

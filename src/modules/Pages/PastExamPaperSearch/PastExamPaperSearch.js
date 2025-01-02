@@ -13,9 +13,11 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import locale from './pastExamPaperSearch.locale';
-import { isRepeatingString } from 'helpers/general';
+import { isRepeatingString, linkToDrupal } from 'helpers/general';
 import { noResultsFoundBlock } from './pastExamPapers.helpers';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
+import { breadcrumbs } from 'config/routes';
 
 const StyledAboutLink = styled('p')(() => ({
     marginTop: '4em',
@@ -40,17 +42,24 @@ export const PastExamPaperSearch = ({
     examSuggestionListError,
     examSuggestionList,
     examSuggestionListLoading,
-    history,
 }) => {
     useTitle('Search for a past exam paper - Library - The University of Queensland');
     const filter = createFilterOptions();
     const MAX_LENGTH_COURSE_CODE = 9;
+    const navigate = useNavigate();
 
     const [isOpen, setOpen] = React.useState(false);
     const [searchTerm, setSearchTerm] = React.useState('');
 
     const noOptionsTextTooShort = 'Type more characters to search';
     const [noOptionsText, setNoOptionsText] = React.useState(null);
+
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.exampapers.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.exampapers.pathname);
+    }, []);
+
     useEffect(() => {
         const noOptionsTextNoResultsFoundPanel = () => {
             return (
@@ -117,7 +126,7 @@ export const PastExamPaperSearch = ({
 
     const gotoSearchResultPage = (event, value) => {
         const searchUrl = `/exams/course/${value.name.toUpperCase()}`;
-        history.push(searchUrl);
+        navigate(searchUrl);
     };
 
     return (
@@ -212,7 +221,7 @@ export const PastExamPaperSearch = ({
                 <Grid container>
                     <Grid item xs={'auto'}>
                         <StyledAboutLink>
-                            <a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">
+                            <a href={linkToDrupal('/study-and-learning-support/coursework/past-exam-papers')}>
                                 Read more about searching for past exam papers
                             </a>
                         </StyledAboutLink>
@@ -228,7 +237,6 @@ PastExamPaperSearch.propTypes = {
     examSuggestionListError: PropTypes.any,
     examSuggestionList: PropTypes.array,
     examSuggestionListLoading: PropTypes.bool,
-    history: PropTypes.object,
 };
 
 export default PastExamPaperSearch;

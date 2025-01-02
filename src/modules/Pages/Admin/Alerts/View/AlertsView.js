@@ -1,6 +1,6 @@
-import React, { Fragment } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -27,9 +27,11 @@ import {
 } from '../alerthelpers';
 import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage } from 'helpers/general';
+import { breadcrumbs } from 'config/routes';
 
-export const AlertsView = ({ actions, alert, alertStatus, history }) => {
+export const AlertsView = ({ actions, alert, alertStatus }) => {
     const { alertid } = useParams();
+    const navigate = useNavigate();
 
     const displayPreview = thisAlert => {
         const alertWrapper = document.getElementById('previewWrapper');
@@ -69,7 +71,13 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
         return null;
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.alertsadmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.alertsadmin.pathname);
+    }, []);
+
+    useEffect(() => {
         /* istanbul ignore else */
         if (!!alertid) {
             actions.loadAnAlert(alertid);
@@ -77,7 +85,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [alertid]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!!alert) {
             displayPreview(alert);
         }
@@ -93,12 +101,12 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
     }
 
     const navigateToCloneForm = () => {
-        history.push(`/admin/alerts/clone/${alertid}`);
+        navigate(`/admin/alerts/clone/${alertid}`);
         scrollToTopOfPage();
     };
 
     const navigateToListPage = () => {
-        history.push('/admin/alerts');
+        navigate('/admin/alerts');
         scrollToTopOfPage();
     };
 
@@ -140,7 +148,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertsUtilityArea actions={actions} helpContent={locale.view.help} history={history} />
+                    <AlertsUtilityArea actions={actions} helpContent={locale.view.help} />
                     <StandardCard title="View alert" squash>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -375,7 +383,6 @@ AlertsView.propTypes = {
     alert: PropTypes.any,
     alertError: PropTypes.any,
     alertStatus: PropTypes.any,
-    history: PropTypes.object,
 };
 
 export default AlertsView;

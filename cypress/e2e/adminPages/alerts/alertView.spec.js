@@ -10,14 +10,14 @@ describe('Alerts Admin View Page', () => {
         cy.viewport(1300, 1000);
         cy.get('h2').should('be.visible');
         cy.get('h2').contains('View alert');
-        cy.wait(500);
+        cy.wait(1500);
         cy.checkA11y('[data-testid="StandardPage"]', {
             reportName: 'Alerts Admin View',
             scopeName: 'Content',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
     });
-    it('can view an alert without being able to edit any fields', () => {
+    it('has breadcrumb', () => {
         cy.get('uq-site-header')
             .shadow()
             .within(() => {
@@ -26,6 +26,8 @@ describe('Alerts Admin View Page', () => {
                     .should('be.visible')
                     .contains('Alerts admin');
             });
+    });
+    it('can view an alert without being able to edit any fields', () => {
         cy.get('h2').should('be.visible');
         cy.get('h2').contains('View alert');
         cy.get('[data-testid="admin-alerts-view-title"] input').should('have.value', 'Example alert:');

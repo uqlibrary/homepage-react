@@ -154,7 +154,7 @@ const AssetSelector = ({
                     return `${option.asset_id_displayed ?? /* istanbul ignore next */ ''}`;
                 }}
                 renderOption={(props, option) => (
-                    <Box component="li" {...props} key={option.org_id}>
+                    <Box component="li" {...props} key={option.asset_id_displayed}>
                         {option.asset_id_displayed}
                     </Box>
                 )}

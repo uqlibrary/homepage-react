@@ -10,7 +10,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
             cy.visit(`http://localhost:2020/admin/dlor/series/edit/1?user=${DLOR_ADMIN_USER}`);
             cy.viewport(1300, 1000);
         });
-        it('loads as expected', () => {
+        it('has breadcrumbs', () => {
             cy.get('uq-site-header')
                 .shadow()
                 .within(() => {
@@ -19,6 +19,8 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                         .should('be.visible')
                         .contains('Digital learning hub admin');
                 });
+        });
+        it('loads as expected', () => {
             cy.get('[data-testid="StandardPage-title"]')
                 .should('exist')
                 .should('contain', 'Digital Learning Hub - Edit Series');
@@ -153,10 +155,10 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
-                console.log('Comparison', sentValues, expectedValues);
+                // console.log('Comparison', sentValues, expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 
@@ -221,10 +223,10 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
-                console.log('Comparison', sentValues, expectedValues);
+                // console.log('Comparison', sentValues, expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 

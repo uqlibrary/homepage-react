@@ -19,6 +19,7 @@ import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
 import { transformRow, transformUpdateRequest, emptyActionState, actionReducer } from './utils';
+import { breadcrumbs } from 'config/routes';
 
 const componentId = 'inspection-details';
 
@@ -26,6 +27,10 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
     const pageLocale = locale.pages.manage.inspectiondetails;
 
     useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
+
         actions.clearAssets();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -120,7 +125,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                         isBusy={dialogueBusy}
                     />
                     <Grid container spacing={3}>
-                        <Grid item xs={12} md={4} style={{ flex: 1 }}>
+                        <Grid xs={12} md={4} style={{ flex: 1 }}>
                             <AssetSelector
                                 id={componentId}
                                 locale={pageLocale.form}
@@ -141,7 +146,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
                             marginTop: theme.spacing(0);
                         }}
                     >
-                        <Grid item style={{ flex: 1 }}>
+                        <Grid style={{ flex: 1 }}>
                             <DataTable
                                 rows={row}
                                 columns={columns}

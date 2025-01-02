@@ -1,15 +1,12 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Route, Switch } from 'react-router';
-import browserUpdate from 'browser-update';
-
-import Grid from '@mui/material/Grid';
-
-import { AccountContext } from 'context';
+import { Route, Routes } from 'react-router-dom';
 import { routes } from 'config';
-
-import * as pages from 'modules/App/components/pages';
+import browserUpdate from 'browser-update';
+import { AccountContext } from 'context';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import * as pages from 'modules/App/components/pages';
+import Grid from '@mui/material/Grid';
 import { getHomepageLink } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
 
 browserUpdate({
@@ -54,35 +51,6 @@ export const App = ({ account, actions }) => {
         homepageLabel = 'Library Local';
     }
 
-    const breadcrumbLabels = [
-        { pathname: '/admin/alerts', title: 'Alerts admin' },
-        { pathname: '/admin/dlor', title: 'Digital learning hub admin' },
-        { pathname: '/admin/promopanel', title: 'Promo panel admin' },
-        { pathname: '/admin/testntag', title: 'Test and tag' },
-        { pathname: '/book-exam-booth', title: 'Book an Exam booth' },
-        { pathname: '/digital-learning-hub', title: 'Digital learning hub' },
-        { pathname: '/exams', title: 'Past exam papers' },
-        { pathname: '/learning-resources', title: 'Learning resources' },
-        { pathname: '/payment-receipt', title: 'Payment receipt' },
-    ];
-
-    let secondLevelTitle = null;
-    let secondLevelUrl = null;
-
-    function pageIsSubsystem(item) {
-        return (
-            window.location.pathname.startsWith(item.pathname) || window.location.hash.startsWith(`#${item.pathname}`)
-        );
-    }
-
-    for (const item of breadcrumbLabels) {
-        if (pageIsSubsystem(item)) {
-            secondLevelTitle = item.title;
-            secondLevelUrl = item.pathname;
-            break; // Exit the loop once a match is found
-        }
-    }
-
     return (
         <Grid
             container
@@ -98,26 +66,17 @@ export const App = ({ account, actions }) => {
         >
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
                 <uq-header hidelibrarymenuitem="true" />
-                {!hideForAdmin() && <cultural-advice-popup />}
-
-                <uq-site-header
-                    sitetitle={homepageLabel}
-                    siteurl={homepagelink}
-                    secondleveltitle={secondLevelTitle}
-                    secondlevelurl={secondLevelUrl}
-                    showmenu
-                >
-                    <span slot="site-utilities">
-                        <askus-button />
-                    </span>
+                <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink} showmenu>
                     <span slot="site-utilities">
                         <auth-button />
                     </span>
                 </uq-site-header>
-                <div role="region" aria-label="UQ Library Alerts" style={{ marginBottom: -16 }}>
+                {!hideForAdmin() && <proactive-chat />}
+                <div role="region" aria-label="UQ Library Alerts">
                     <alert-list system="homepage" />
                 </div>
-                <div style={{ flexGrow: 1, marginTop: 16 }}>
+                {!hideForAdmin() && <cultural-advice />}
+                <div style={{ flexGrow: 1 }}>
                     <a name="content" />
                     <AccountContext.Provider
                         value={{
@@ -127,18 +86,16 @@ export const App = ({ account, actions }) => {
                         }}
                     >
                         <React.Suspense fallback={<ContentLoader message="Loading" />}>
-                            <Switch>
+                            <Routes>
                                 {routesConfig.map((route, index) => (
                                     <Route key={`route_${index}`} {...route} />
                                 ))}
-                            </Switch>
+                            </Routes>
                         </React.Suspense>
                     </AccountContext.Provider>
                 </div>
-                <div id="full-footer-block">
-                    <connect-footer />
+                <div id="full-footer-block" style={{ marginTop: '50px' }}>
                     <uq-footer />
-                    {!hideForAdmin() && <proactive-chat />}
                 </div>
             </div>
         </Grid>
@@ -148,7 +105,6 @@ export const App = ({ account, actions }) => {
 App.propTypes = {
     account: PropTypes.object,
     actions: PropTypes.any,
-    history: PropTypes.any,
     chatStatus: PropTypes.object,
     isSessionExpired: PropTypes.any,
 };

@@ -1,4 +1,12 @@
-import { getCampusByCode, isRepeatingString, leftJoin, rotateCharacters, stripHtml, unescapeString } from './general';
+import {
+    linkToDrupal,
+    getCampusByCode,
+    pluralise,
+    isRepeatingString,
+    leftJoin,
+    stripHtml,
+    unescapeString,
+} from './general';
 
 describe('general helpers', () => {
     it('leftJoin', () => {
@@ -53,8 +61,35 @@ describe('general helpers', () => {
         expect(unescapeString('1&amp;2')).toEqual('1 and 2');
     });
 
-    it('should rotate strings correctly', () => {
-        expect(rotateCharacters('vanilla', 7)).toEqual('ahupssh');
-        expect(rotateCharacters('uqldegro')).toEqual('vrmefhsp');
+    it('should pluralise strings correctly', () => {
+        expect(pluralise('record', 1)).toEqual('record');
+
+        expect(pluralise('record', 2)).toEqual('records');
+        expect(pluralise('record', 947)).toEqual('records');
+
+        expect(pluralise('frog', 0)).toEqual('frog');
+        expect(pluralise('frog', 1)).toEqual('frog');
+        expect(pluralise('frog', 4)).toEqual('frogs');
+        expect(pluralise('body', 0, 'bodies')).toEqual('body');
+        expect(pluralise('body', 1, 'bodies')).toEqual('body');
+        expect(pluralise('body', 8, 'bodies')).toEqual('bodies');
+    });
+
+    it('shows the correct drupal domain name', () => {
+        // actual usage
+        expect(linkToDrupal('/research')).toEqual('https://web-live.library.uq.edu.au/research'); // test env domain name is homepage-staging.library.uq.edu.au
+
+        // test coverage usage
+        expect(linkToDrupal('/visit', 'localhost')).toEqual('https://web-live.library.uq.edu.au/visit');
+        expect(linkToDrupal('/about', 'homepage-development.library.uq.edu.au')).toEqual(
+            'https://web-live.library.uq.edu.au/about',
+        );
+        expect(linkToDrupal('/about', 'homepage-staging.library.uq.edu.au')).toEqual(
+            'https://web-live.library.uq.edu.au/about',
+        );
+        expect(linkToDrupal('/support', 'somethingelse.library.uq.edu.au')).toEqual(
+            'https://web.library.uq.edu.au/support',
+        );
+        expect(linkToDrupal('/study', 'www.library.uq.edu.au')).toEqual('https://web.library.uq.edu.au/study');
     });
 });

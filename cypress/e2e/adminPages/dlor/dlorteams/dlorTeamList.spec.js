@@ -22,7 +22,7 @@ describe('Digital Learning Hub admin Teams management', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it('loads as expected', () => {
+        it('has breadcrumbs', () => {
             cy.get('uq-site-header')
                 .shadow()
                 .within(() => {
@@ -31,6 +31,8 @@ describe('Digital Learning Hub admin Teams management', () => {
                         .should('be.visible')
                         .contains('Digital learning hub admin');
                 });
+        });
+        it('loads as expected', () => {
             cy.get('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                 .contains('Digital Learning Hub admin')
                 .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);

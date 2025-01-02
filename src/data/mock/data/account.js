@@ -300,7 +300,7 @@ export const accounts = {
         "canMasquerade": false,
         "blocked": false,
     },
-    // rhd student
+    // rhd student only doing research subjects
     s2222222: {
         "id": "s2222222",
         "class": ["IS_UQ_STUDENT_PLACEMENT", "IS_CURRENT"],
@@ -312,7 +312,40 @@ export const accounts = {
         "mail": "rhd@student.uq.edu.au",
         "barcode": "111111111111111",
         "groups": null,
-        "classes": [],
+        "classes": [
+            {
+                "ACAD_CAREER": "PGRS",
+                "DESCR": "Interruption to Candidature",
+                "SUBJECT": "RSCH",
+                "CATALOG_NBR": "9901",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "GRAD",
+                "STRM": "7445"
+            },
+            {
+                "ACAD_CAREER": "PGRS",
+                "DESCR": "Research Studies (Part-time)",
+                "SUBJECT": "RSCH",
+                "CATALOG_NBR": "9001",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "GRAD",
+                "STRM": "7475"
+            }
+        ],
+        "current_classes": [
+            {
+                "ACAD_CAREER": "PGRS",
+                "DESCR": "Research Studies (Part-time)",
+                "SUBJECT": "RSCH",
+                "CATALOG_NBR": "9001",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "GRAD",
+                "STRM": "7475"
+            }
+        ],
         "expiryDate": "14-12-19",
         "hasSession": true,
         "tokenBased": false,
@@ -339,6 +372,206 @@ export const accounts = {
         "canMasquerade": false,
         "blocked": false,
         "user_group": "REMUG",
+    },
+    s4444444: {
+        "id": "s4444444",
+        "class": ["IS_UQ_STUDENT_PLACEMENT", "IS_CURRENT"],
+        "type": 22,
+        "homeLib": "St Lucia",
+        "firstName": "Sanjit",
+        "lastName": "CWPG",
+        "name": "Sanjib CWPG",
+        "mail": "s4444444@uq.edu.au",
+        "barcode": "111111111111111",
+        "groups": null,
+        "classes": [],
+        "expiryDate": "14-12-19",
+        "hasSession": true,
+        "tokenBased": false,
+        "canMasquerade": false,
+        "blocked": false,
+        "user_group": "CWPG",
+    },
+    s5555555: {
+        "id": "s5555555",
+        "class": ["IS_UQ_STUDENT_PLACEMENT", "IS_CURRENT"],
+        "type": 22,
+        "homeLib": "St Lucia",
+        "firstName": "Yvonne",
+        "lastName": "Remote RHD Student",
+        "name": "Yvonne Remote RHD Student",
+        "mail": "rhd@student.uq.edu.au",
+        "barcode": "111111111111111",
+        "groups": null,
+        "classes": [{
+            "ACAD_CAREER": "UGRD",
+            "DESCR": "Introductory French 1",
+            "SUBJECT": "FREN",
+            "CATALOG_NBR": "1010",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "SCI",
+            "STRM": "7060",
+        }],
+        "current_classes": [{
+            "ACAD_CAREER": "UGRD",
+            "DESCR": "Introductory French 1",
+            "SUBJECT": "FREN",
+            "CATALOG_NBR": "1010",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "SCI",
+            "STRM": "7060",
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "Chemistry",
+            "SUBJECT": "CHEM",
+            "CATALOG_NBR": "1101E",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7410"
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "Design",
+            "SUBJECT": "DSGN",
+            "CATALOG_NBR": "1101E",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7410"
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "Animals and Archaeology: Analytical approaches to understand past human-animal relationships",
+            "SUBJECT": "ARCS",
+            "CATALOG_NBR": "2090",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7410"
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "Physics",
+            "SUBJECT": "PHYS",
+            "CATALOG_NBR": "1101E",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7410"
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "Academic English",
+            "SUBJECT": "ENGL",
+            "CATALOG_NBR": "1101E",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7450"
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "Design",
+            "SUBJECT": "DSGN",
+            "CATALOG_NBR": "1101E",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7450"
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "General Mathematics",
+            "SUBJECT": "MATH",
+            "CATALOG_NBR": "1101E",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7450"
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "Health and Nutrition",
+            "SUBJECT": "HLTH",
+            "CATALOG_NBR": "1101E",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7450"
+        }, {
+            "ACAD_CAREER": "UQCL",
+            "DESCR": "Humanities and Social Sciences",
+            "SUBJECT": "HUMN",
+            "CATALOG_NBR": "1101E",
+            "CAMPUS": "STLUC",
+            "INSTRUCTION_MODE": "IN",
+            "ACAD_GROUP": "UQCOL",
+            "STRM": "7450"
+        }],
+        "expiryDate": "14-12-19",
+        "hasSession": true,
+        "tokenBased": false,
+        "canMasquerade": false,
+        "blocked": false,
+        "user_group": "REMRHD",
+    },
+    // rhd student doing a non-research subject
+    s6666666: {
+        "id": "s6666666",
+        "class": ["IS_UQ_STUDENT_PLACEMENT", "IS_CURRENT"],
+        "type": 22,
+        "homeLib": "St Lucia",
+        "firstName": "Maryanne",
+        "lastName": "Wilkins",
+        "name": "Maryanne Wilkins",
+        "mail": "rhd@student.uq.edu.au",
+        "barcode": "111111111111111",
+        "groups": null,
+        "classes": [
+            {
+                "ACAD_CAREER": "PGRS",
+                "DESCR": "Interruption to Candidature",
+                "SUBJECT": "RSCH",
+                "CATALOG_NBR": "9901",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "GRAD",
+                "STRM": "7445"
+            },
+            {
+                "ACAD_CAREER": "PGRS",
+                "DESCR": "Research Studies (Part-time)",
+                "SUBJECT": "RSCH",
+                "CATALOG_NBR": "9001",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "GRAD",
+                "STRM": "7475"
+            }
+        ],
+        "current_classes": [
+            {
+                "ACAD_CAREER": "PGRS",
+                "DESCR": "Research Studies (Part-time)",
+                "SUBJECT": "RSCH",
+                "CATALOG_NBR": "9001",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "GRAD",
+                "STRM": "7475"
+            }, {
+                "ACAD_CAREER": "UQCL",
+                "DESCR": "General Mathematics",
+                "SUBJECT": "MATH",
+                "CATALOG_NBR": "1101E",
+                "CAMPUS": "STLUC",
+                "INSTRUCTION_MODE": "IN",
+                "ACAD_GROUP": "UQCOL",
+                "STRM": "7450"
+            }
+        ],
+        "expiryDate": "14-12-19",
+        "hasSession": true,
+        "tokenBased": false,
+        "canMasquerade": false,
+        "blocked": false,
+        "user_group": "RHD",
     },
     // researchers
     uqresearcher: {

@@ -2,7 +2,6 @@ import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTa
 
 describe('Test and Tag Report - Inspections due', () => {
     beforeEach(() => {
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
         cy.visit('http://localhost:2020/admin/testntag/report/inspectionsdue?user=uqtesttag');
     });
 
@@ -38,6 +37,8 @@ describe('Test and Tag Report - Inspections due', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             },
         );
+    });
+    it('has breadcrumbs', () => {
         cy.get('uq-site-header')
             .shadow()
             .within(() => {
