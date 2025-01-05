@@ -136,6 +136,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: false,
             pageTitle: locale.pages.pastExamPaperSearch.title,
         },
+        {
+            path: pathConfig.dlorSubmit,
+            element: <components.DLONew />,
+            exact: false,
+            pageTitle: 'Submit request for new object',
+        },
     ];
 
     const courseResourcesDisplay = [

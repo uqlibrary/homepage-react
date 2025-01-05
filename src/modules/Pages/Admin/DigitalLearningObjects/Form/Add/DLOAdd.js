@@ -25,6 +25,7 @@ export const DLOAdd = ({
     dlorFilterListError,
 }) => {
     const { account } = useAccountContext();
+    console.log("ACCOUNT", account)
 
     function getTodayPlusOneYear(baseDate = null) {
         const today = baseDate || moment();
@@ -55,6 +56,8 @@ export const DLOAdd = ({
         object_cultural_advice: 0,
         notificationText: '',
     };
+
+    console.log("Form Defaults", formDefaults)
 
     return (
         <Fragment>

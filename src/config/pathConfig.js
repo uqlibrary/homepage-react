@@ -50,4 +50,5 @@ export const pathConfig = {
     pastExamPaperList: courseHint => `/exams/course/${courseHint}`,
     pastExamPaperSearch: '/exams',
     help: 'https://guides.library.uq.edu.au/for-researchers/research-publications-guide',
+    dlorSubmit: '/digital-learning-hub/submit',
 };

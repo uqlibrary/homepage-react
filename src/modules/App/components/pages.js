@@ -56,6 +56,8 @@ export const PromoPanelEdit = lazy(() => lazyRetry(() => import('modules/Pages/A
 // export const PromoPanelView = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/View/PromoPanelViewContainer')));
 export const PromoPanelClone = lazy(() => lazyRetry(() => import('modules/Pages/Admin/PromoPanel/Form/Clone/PromoPanelCloneContainer')));
 
+export const DLONew = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Objects/DLOAddContainer')));
+
 
 // always load components
 export { IndexContainer as Index } from 'modules/Index';
