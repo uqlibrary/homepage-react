@@ -89,6 +89,11 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
             label: 'Deleted',
             isChecked: false,
         },
+        {
+            type: 'submitted',
+            label: 'User Submitted',
+            isChecked: false,
+        },
     ];
     const [checkedStatusType, setCheckedStatusType] = useState(statusTypes.map(status => status.isChecked));
 
