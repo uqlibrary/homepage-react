@@ -7,7 +7,7 @@ import { AccountContext } from 'context';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import * as pages from 'modules/App/components/pages';
 import Grid from '@mui/material/Grid';
-import { getHomepageLink } from 'helpers/access';
+import { getHomepageLink } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
 
 browserUpdate({
     required: {
@@ -66,12 +66,7 @@ export const App = ({ account, actions }) => {
         >
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
                 <uq-header hidelibrarymenuitem="true" />
-                {!hideForAdmin() && <cultural-advice-popup />}
-
                 <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink} showmenu>
-                    <span slot="site-utilities">
-                        <askus-button />
-                    </span>
                     <span slot="site-utilities">
                         <auth-button />
                     </span>
@@ -80,7 +75,8 @@ export const App = ({ account, actions }) => {
                 <div role="region" aria-label="UQ Library Alerts">
                     <alert-list system="homepage" />
                 </div>
-                <div style={{ flexGrow: 1, marginTop: 16 }}>
+                {!hideForAdmin() && <cultural-advice />}
+                <div style={{ flexGrow: 1 }}>
                     <a name="content" />
                     <AccountContext.Provider
                         value={{
@@ -98,8 +94,7 @@ export const App = ({ account, actions }) => {
                         </React.Suspense>
                     </AccountContext.Provider>
                 </div>
-                <div id="full-footer-block">
-                    <connect-footer />
+                <div id="full-footer-block" style={{ marginTop: '50px' }}>
                     <uq-footer />
                 </div>
             </div>

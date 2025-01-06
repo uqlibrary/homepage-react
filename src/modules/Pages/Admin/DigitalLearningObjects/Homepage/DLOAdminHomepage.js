@@ -31,6 +31,7 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { convertSnakeCaseToKebabCase } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects/SharedDlorComponents/VisitHomepage';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { breadcrumbs } from 'config/routes';
 
 const StyledPageListItemGridContainer = styled(Grid)(() => ({
     paddingTop: '10px',
@@ -89,6 +90,11 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
             label: 'Deleted',
             isChecked: false,
         },
+        {
+            type: 'submitted',
+            label: 'User Submitted',
+            isChecked: false,
+        },
     ];
     const [checkedStatusType, setCheckedStatusType] = useState(statusTypes.map(status => status.isChecked));
 
@@ -105,6 +111,12 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
         showDeleteFailureConfirmation,
         hideDeleteFailureConfirmation,
     ] = useConfirmationState();
+
+    React.useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dloradmin.pathname);
+    }, []);
 
     React.useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {

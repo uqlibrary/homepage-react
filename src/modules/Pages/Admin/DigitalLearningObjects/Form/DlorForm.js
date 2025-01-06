@@ -36,6 +36,8 @@ import { scrollToTopOfPage } from 'helpers/general';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import { useAccountContext } from 'context';
+
 
 import {
     convertFileSizeToKb,
@@ -44,7 +46,6 @@ import {
     getTotalSecondsFromMinutesAndSecond,
     isPreviewableUrl,
     isValidNumber,
-    pluraliseWord,
     slugifyName,
     validFileSizeUnits,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
@@ -54,6 +55,9 @@ import {
     splitStringToArrayOnComma,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { breadcrumbs } from 'config/routes';
+import { pluralise } from 'helpers/general';
+import { isDlorAdminUser } from 'helpers/access';
 
 const StyledErrorCountBadge = styled(Badge)(() => ({
     '& span': {
@@ -123,8 +127,9 @@ export const DlorForm = ({
     formDefaults,
     mode,
 }) => {
-    console.log("Form Defaults", formDefaults);
+    console.log("Form Defaults form", formDefaults);
     const [cookies, setCookie] = useCookies();
+    const { account } = useAccountContext();
 
     const [confirmationOpen, setConfirmationOpen] = useState(false);
 
@@ -160,14 +165,20 @@ export const DlorForm = ({
     }
 
     useEffect(() => {
-        console.log(
-            'useEffect FIRST l=',
-            dlorItemSaving,
-            '; e=',
-            dlorSavedItemError,
-            '; dlorSavedItem=',
-            dlorSavedItem,
-        );
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dloradmin.pathname);
+    }, []);
+
+    useEffect(() => {
+        // console.log(
+        //     'useEffect FIRST l=',
+        //     dlorItemSaving,
+        //     '; e=',
+        //     dlorSavedItemError,
+        //     '; dlorSavedItem=',
+        //     dlorSavedItem,
+        // );
         setConfirmationOpen(!dlorItemSaving && (!!dlorSavedItemError || !!dlorSavedItem));
     }, [dlorItemSaving, dlorSavedItemError, dlorSavedItem]);
 
@@ -201,6 +212,15 @@ export const DlorForm = ({
         }
     }, [dlorTeamList, dlorTeamListError, dlorTeamListLoading, mode]);
 
+
+    // useEffect(() => {
+    //     console.log("UseEffect formDefaults", formDefaults, formValues);
+    //     if (!!!formDefaults.object_publishing_user) {
+    //         console.log("SETTING FORM DEFAULTS");
+    //         setFormValues({...formValues, object_publishing_user: formDefaults.object_publishing_user});
+    //     }
+    // }, [formDefaults]);
+
     // these match the values in dlor cypress admin tests
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
@@ -218,7 +238,7 @@ export const DlorForm = ({
                 data-testid={`input-characters-remaining-${convertSnakeCaseToKebabCase(fieldName)}`}
             >
                 {numCharsCurrent > 0 && missingCharCount > 0
-                    ? `at least ${missingCharCount} more ${pluraliseWord('character', missingCharCount)} needed`
+                    ? `at least ${missingCharCount} more ${pluralise('character', missingCharCount)} needed`
                     : ''}
             </Box>
         );
@@ -247,12 +267,14 @@ export const DlorForm = ({
     };
 
     const isValidUsername = testUserName => {
+        console.log("TEST THE USERNAME, ", testUserName);
         return testUserName?.length >= 4 && testUserName?.length <= 8;
     };
 
     function validatePanelOwnership(currentValues) {
         let firstPanelErrorCount = 0;
         // valid user id is 8 or 9 char
+        console.log("currentValues", currentValues);
         !isValidUsername(currentValues?.object_publishing_user) && firstPanelErrorCount++;
         if (teamSelectRef.current === 'new') {
             if (
@@ -457,7 +479,9 @@ export const DlorForm = ({
         setFormValues(newValues);
     };
 
-    const stepPanelContentOwnership = (
+    console.log("IS ADMIN", isDlorAdminUser(account));
+
+    const stepPanelContentOwnership = React.useMemo(() => (
         <>
             <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth>
@@ -466,6 +490,7 @@ export const DlorForm = ({
                         id="object_publishing_user"
                         data-testid="object-publishing-user"
                         required
+                        disabled={!isDlorAdminUser(account)}
                         value={formValues?.object_publishing_user || ''}
                         onChange={handleChange('object_publishing_user')}
                         sx={{ width: '20em' }}
@@ -620,7 +645,16 @@ export const DlorForm = ({
                 )}
             </Grid>
         </>
-    );
+    ), [formValues, showTeamForm, teamSelectRef.current, dlorTeamList, mode, formDefaults]);
+
+    useEffect(() => {
+        if (formDefaults?.object_publishing_user !== formValues?.object_publishing_user) {
+            setFormValues(prevValues => ({
+                ...prevValues,
+                object_publishing_user: formDefaults.object_publishing_user,
+            }));
+        }
+    }, [formDefaults?.object_publishing_user]);
 
     const suggestSummary = (enteredDescription, requiredLength = 150) => {
         const plainSummary = html2text.fromString(enteredDescription);
@@ -768,44 +802,48 @@ export const DlorForm = ({
                     )}
                 </FormControl>
             </Grid>
-            <Grid item xs={12}>
-                <FormControl variant="standard" fullWidth>
-                    <FormLabel id="object_status_label">Object publication status</FormLabel>
-                    <RadioGroup
-                        aria-labelledby="demo-radio-object_status_label-group-label"
-                        defaultValue="new"
-                        name="object_status_radio-buttons-group"
-                        row
-                        value={formValues?.object_status || 'new'}
-                        onChange={handleChange('object_status')}
-                    >
-                        <FormControlLabel
-                            value="current"
-                            control={<Radio />}
-                            label="Published"
-                            selected={formValues?.object_status === 'current'}
+            {!!isDlorAdminUser(account) && (
+            <>
+                <Grid item xs={12}>
+                    <FormControl variant="standard" fullWidth>
+                        <FormLabel id="object_status_label">Object publication status</FormLabel>
+                        <RadioGroup
+                            aria-labelledby="demo-radio-object_status_label-group-label"
+                            defaultValue="new"
+                            name="object_status_radio-buttons-group"
+                            row
+                            value={formValues?.object_status || 'new'}
+                            onChange={handleChange('object_status')}
+                        >
+                            <FormControlLabel
+                                value="current"
+                                control={<Radio />}
+                                label="Published"
+                                selected={formValues?.object_status === 'current'}
+                            />
+                            <FormControlLabel
+                                value="new"
+                                control={<Radio />}
+                                label="Draft"
+                                selected={formValues?.object_status === 'new'}
+                            />
+                        </RadioGroup>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                    <FormLabel>Featured object?</FormLabel>
+                    <InputLabel>
+                        <Checkbox
+                            checked={!!formValues?.object_is_featured}
+                            data-testid="object-is-featured"
+                            onChange={handleChange('object_is_featured')}
+                            sx={{ paddingLeft: 0 }}
                         />
-                        <FormControlLabel
-                            value="new"
-                            control={<Radio />}
-                            label="Draft"
-                            selected={formValues?.object_status === 'new'}
-                        />
-                    </RadioGroup>
-                </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-                <FormLabel>Featured object?</FormLabel>
-                <InputLabel>
-                    <Checkbox
-                        checked={!!formValues?.object_is_featured}
-                        data-testid="object-is-featured"
-                        onChange={handleChange('object_is_featured')}
-                        sx={{ paddingLeft: 0 }}
-                    />
-                    Feature this Object at the top of the list page
-                </InputLabel>
-            </Grid>
+                        Feature this Object at the top of the list page
+                    </InputLabel>
+                </Grid>
+            </>
+            )}
             <Grid item xs={12}>
                 <FormLabel>Cultural advice?</FormLabel>
                 <InputLabel>
@@ -1232,6 +1270,7 @@ export const DlorForm = ({
                 aria-describedby="notify-lightbox-description"
                 data-testid="notify-lightbox-modal"
                 sx={{ zIndex: 1000 }}
+                disableEnforceFocus
             >
                 <Box
                     sx={{
@@ -1353,7 +1392,7 @@ export const DlorForm = ({
             actions.loadFileTypeList();
         }
 
-        console.log('useEffect 2ND l=', dlorItemSaving, '; e=', dlorSavedItemError, '; dlorSavedItem=', dlorSavedItem);
+        // console.log('useEffect 2ND l=', dlorItemSaving, ' e=', dlorSavedItemError, ' dlorSavedItem=', dlorSavedItem);
         setConfirmationOpen(!dlorItemSaving && (!!dlorSavedItemError || !!dlorSavedItem));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

@@ -69,6 +69,14 @@ context('Book Exam Booth page', () => {
 
     it('should show initial view', () => {
         cy.get('[data-testid="StandardPage-title"]').contains(locale.pageTitle);
+        cy.get('uq-site-header')
+            .shadow()
+            .within(() => {
+                cy.get('[data-testid="subsite-title"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('Book an Exam booth');
+            });
     });
 
     it('should show message on selecting "am not sitting a ProctorU exam"', () => {

@@ -1,67 +1,50 @@
-import { promoPanel } from '../../src/modules/Index/components/subComponents/promoPanel.locale';
-import { panelTitleOther, panelTitles } from '../../src/data/mock/data/promoPanelsLong';
-
 export const expectUserToDisplayCorrectFirstName = (username, firstname) => {
     cy.visit(`/?user=${username}`);
     cy.viewport(1300, 1000);
-    cy.waitUntil(() => cy.get('[data-testid="location-button"]').contains('Set a preferred campus'));
-    cy.get('div[data-testid="personalised-panel"]').contains(firstname);
+    cy.get('[data-testid="homepage-user-greeting"]').contains('Hi, ' + firstname);
 };
-export const hasPanels = (optionsTheUserShouldSee, loggedin = true) => {
-    const availableOptions = new Map();
-    availableOptions.set('computer-availability', { title: 'Computer availability', content: 'Architecture' });
-    availableOptions.set('learning-resources', { title: 'Learning resources', content: 'Search by' });
-    availableOptions.set('library-hours', { title: 'Library hours', content: 'Study space' });
-    availableOptions.set('library-services', { title: 'Library services', content: 'Services for' });
-    availableOptions.set('training', { title: 'Training', content: 'Online' });
-    availableOptions.set('promo', 'n/a');
 
+export const hasPanels = optionsTheUserShouldSee => {
+    const possiblePanels = new Map();
+    possiblePanels.set('learning-resources', {
+        title: 'Learning resources and past exam papers',
+        content: 'Search by',
+    });
+    possiblePanels.set('library-services', { title: 'Library services', content: 'Services for' });
+    possiblePanels.set('past-exam-papers', { title: 'Past exam papers', content: 'Search by' });
+    possiblePanels.set('training', { title: 'Training', content: 'See all training' });
+    possiblePanels.set('espace', { title: 'UQ eSpace', content: 'Update the following items' });
+    possiblePanels.set('readpublish', { title: 'Read and publish', content: 'Publish in the right journal' });
+    possiblePanels.set('catalogue', { title: 'Your library account', content: 'Search history' });
+    possiblePanels.set('referencing', { title: 'Referencing', content: 'Referencing style guides' });
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
-        expect(
-            [...availableOptions.keys()].includes(item),
-            `panel option unexpectedly supplied for panel test: ${item}`,
-        ).to.be.true;
+        expect([...possiblePanels.keys()].includes(item), `panel option unexpectedly supplied for panel test: ${item}`)
+            .to.be.true;
     });
 
-    // promo panel title is currently set in locale by end user
-    // (there is a plan to make it api driven, then we can use mock here)
-    const title = loggedin ? promoPanel.loggedin.title : promoPanel.loggedout.title;
-    expect(typeof title).to.equal('string');
-    expect(title.length).to.be.greaterThan(0);
-
     // eslint-disable-next-line guard-for-in
-    for (const [key, value] of availableOptions) {
+    for (const [key, value] of possiblePanels) {
         expect(typeof key).to.equal('string');
         expect(key.length).to.be.greaterThan(0);
-        if (key !== 'promo') {
-            expect(typeof value.title).to.equal('string');
-            expect(value.title.length).to.be.greaterThan(0);
-            expect(typeof value.content).to.equal('string');
-            expect(value.content.length).to.be.greaterThan(0);
-        }
+        expect(typeof value.title).to.equal('string');
+        expect(value.title.length).to.be.greaterThan(0);
+        expect(typeof value.content).to.equal('string');
+        expect(value.content.length).to.be.greaterThan(0);
 
         const panelname = `${key}-panel`;
-        const titleSelector = `div[data-testid="${panelname}"] h2`;
+        const titleSelector = `div[data-testid="${panelname}"] h3`;
         if (!!optionsTheUserShouldSee.includes(key)) {
-            if (key === 'promo') {
-                const titleCheck = loggedin ? 'Authenticated Panel' : 'General default';
-                cy.get(titleSelector).should('exist');
-                // .contains(titleCheck);
-            } else {
-                cy.log(`checking panel ${panelname} contains ${value.title}`);
-                cy.get(titleSelector).contains(value.title);
-            }
+            cy.log(`checking panel ${panelname} contains ${value.title}`);
+            cy.get(titleSelector).contains(value.title);
         } else {
             cy.log(`checking panel ${panelname} is missing`);
             cy.get(titleSelector).should('not.exist');
         }
         const contentSelector = `div[data-testid="${panelname}"]`;
         if (!!optionsTheUserShouldSee.includes(key)) {
-            if (key !== 'promo') {
-                cy.log(`checking panel ${panelname} contains ${value.content}`);
-                cy.get(contentSelector).contains(value.content);
-            }
+            cy.log(`checking panel ${panelname} contains ${value.content}`);
+            cy.get(contentSelector).contains(value.content);
         }
     }
 
@@ -73,19 +56,15 @@ export const hasPanels = (optionsTheUserShouldSee, loggedin = true) => {
             .length.to.be.greaterThan(0);
     }
 };
-export const promoPanelIsForRightUser = userId => {
-    const expectedString = !!panelTitles[userId] ? panelTitles[userId] : panelTitleOther;
-    const contentSelector = 'div[data-testid="promo-panel"] h2';
-    cy.get(contentSelector).contains(expectedString);
+export const hasNoEspacePanel = () => {
+    cy.get('[data-testid="espace-links-panel"]').should('not.exist');
 };
-export const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
+
+export const hasEspaceEntries = optionsTheUserShouldSee => {
     const availableOptions = new Map();
-    availableOptions.set('papercut', 'Manage your print balance');
-    availableOptions.set('loans', 'Manage your library loans');
-    availableOptions.set('fines', 'Manage your library fines');
-    availableOptions.set('espace-possible', 'UQ eSpace records');
-    availableOptions.set('espace-orcid', 'Link ORCiD account to UQ eSpace');
-    availableOptions.set('espace-ntro', 'NTRO records in UQ eSpace');
+    availableOptions.set('espace-possible', 'records');
+    availableOptions.set('espace-orcid', 'Link ORCiD account');
+    availableOptions.set('espace-ntro', 'NTRO records');
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
@@ -99,21 +78,64 @@ export const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
         expect(typeof value).to.equal('string');
         expect(value.length).to.not.equals(0);
 
-        // Using the Collapse item in the Personalised Panel means all the items are always in the tree.
+        // Using the Link in the Personalised Panel means all the items are always in the tree.
         // For items which should not appear, look for the 'hidden' class that stops it displaying
-        const entryname = `pp-${key}-menu-button`;
+        const entryname = `${key}`;
         const elementId = `[data-testid="${entryname}"]`;
         // the hidden class is not applied, so the element is visible
-        const elementIdFound = `#personalisedPanel :not(div.MuiCollapse-hidden) ${elementId}`;
         // the hidden class IS applied, so the element is hidden
-        const elementIdMissing = `#personalisedPanel div.MuiCollapse-hidden ${elementId}`;
+        // const elementIdMissing = `${elementId}`;
         if (!!optionsTheUserShouldSee.includes(key)) {
             cy.log(`checking personalisation line ${entryname} contains ${value}`);
-            cy.get(elementIdFound).contains(value);
-            cy.get(elementIdMissing).should('not.exist');
+            cy.get(elementId).contains(value);
         } else {
             cy.log(`checking personalisation line ${entryname} is hidden`);
-            cy.get(elementIdMissing).should('exist');
+            cy.get(elementId).should('not.exist');
         }
     }
+};
+
+export const hasAccountPanelOptions = optionsTheUserShouldSee => {
+    const availableOptions = new Map();
+    availableOptions.set('searchhistory', 'Search history');
+    availableOptions.set('savedsearches', 'Saved searches');
+    availableOptions.set('requests', 'Requests');
+    availableOptions.set('loans', 'Loans');
+    availableOptions.set('fines', 'Fines');
+    availableOptions.set('papercut', 'Print balance');
+    availableOptions.set('testntag', 'Test and tag');
+
+    // validate the input - all supplied entries should exist in the available options
+    optionsTheUserShouldSee.map(item => {
+        expect([...availableOptions.keys()].includes(item), `option unexpectedly supplied for panel test: ${item}`).to
+            .be.true;
+    });
+
+    for (const [key, value] of availableOptions) {
+        expect(typeof key).to.equal('string');
+        expect(key.length).to.not.equals(0);
+        expect(typeof value).to.equal('string');
+        expect(value.length).to.not.equals(0);
+
+        const entryname = `show-${key}`;
+        const elementId = `[data-testid="${entryname}"]`;
+        // the hidden class IS applied, so the element is hidden
+        if (!!optionsTheUserShouldSee.includes(key)) {
+            cy.log(`checking personalisation line ${entryname} contains ${value}`);
+            cy.get(elementId)
+                .should('exist')
+                .contains(value);
+        } else {
+            cy.log(`checking personalisation line ${entryname} is hidden`);
+            cy.get(elementId).should('not.exist');
+        }
+    }
+};
+export const seesEndNoteInReferencing = () => {
+    cy.get('[data-testid="referencing-endnote"]')
+        .should('exist')
+        .should('contain', 'Endnote referencing software');
+};
+export const noEndNoteInReferencing = () => {
+    cy.get('[data-testid="referencing-endnote"]').should('not.exist');
 };

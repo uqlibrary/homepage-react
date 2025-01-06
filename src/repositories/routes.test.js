@@ -1,24 +1,4 @@
 import * as routes from './routes';
-import {
-    DLOR_ALL_API,
-    DLOR_ALL_CURRENT_API,
-    DLOR_CREATE_API,
-    DLOR_DEMOGRAPHICS_SAVE_API,
-    DLOR_DESTROY_API,
-    DLOR_FILE_TYPE_LIST_API,
-    DLOR_GET_BY_ID_API,
-    DLOR_GET_FILTER_LIST,
-    DLOR_SERIES_CREATE_API,
-    DLOR_SERIES_DELETE_API,
-    DLOR_SERIES_LIST_API,
-    DLOR_SERIES_UPDATE_API,
-    DLOR_SUBSCRIPTION_CONFIRMATION_API,
-    DLOR_TEAM_CREATE_API,
-    DLOR_TEAM_DELETE_API,
-    DLOR_TEAM_SINGLE_GET_API,
-    DLOR_TEAM_UPDATE_API,
-    DLOR_UPDATE_API,
-} from './routes';
 
 describe('Backend routes method', () => {
     it('should get zero-padded year', () => {
@@ -26,48 +6,106 @@ describe('Backend routes method', () => {
         expect(routes.zeroPaddedYear(83)).toBe('0083');
     });
 
-    // it('should construct url for POSSIBLE_RECORDS_API', () => {
-    //     const testCases = [
-    //         {
-    //             values: { facets: {} },
-    //             expected: {
-    //                 apiUrl: 'records/search',
-    //                 options: {
-    //                     params: {
-    //                         export_to: '',
-    //                         order_by: 'desc',
-    //                         page: 1,
-    //                         per_page: 20,
-    //                         rule: 'possible',
-    //                         sort: 'score',
-    //                     },
-    //                 },
-    //             },
-    //         },
-    //         {
-    //             values: { facets: { filters: { one: 'one facet', two: 'two facets' } } },
-    //             expected: {
-    //                 apiUrl: 'records/search',
-    //                 options: {
-    //                     params: {
-    //                         export_to: '',
-    //                         order_by: 'desc',
-    //                         page: 1,
-    //                         per_page: 20,
-    //                         rule: 'possible',
-    //                         sort: 'score',
-    //                         ['filters[facets][one]']: 'one facet',
-    //                         ['filters[facets][two]']: 'two facets',
-    //                     },
-    //                 },
-    //             },
-    //         },
-    //     ];
-    //
-    //     testCases.map(item => {
-    //         expect(routes.POSSIBLE_RECORDS_API({ ...item.values })).toEqual(item.expected);
-    //     });
-    // });
+    it('should construct url for POSSIBLE_RECORDS_API', () => {
+        const value = { facets: {} };
+        const expected = {
+            apiUrl: 'records/search',
+            options: {
+                params: {
+                    export_to: '',
+                    order_by: 'desc',
+                    page: 1,
+                    per_page: 20,
+                    rule: 'possible',
+                    sort: 'score',
+                    ['filters[stats_only]']: true,
+                },
+            },
+        };
+        expect(routes.POSSIBLE_RECORDS_API({ value1: value })).toEqual(expected);
+    });
+
+    it('should construct url for INCOMPLETE_NTRO_RECORDS_API', () => {
+        const value = { facets: {} };
+        const expected = {
+            apiUrl: 'records/search',
+            options: {
+                params: {
+                    export_to: '',
+                    order_by: 'desc',
+                    page: 1,
+                    per_page: 20,
+                    rule: 'incomplete',
+                    sort: 'score',
+                    ['filters[stats_only]']: true,
+                },
+            },
+        };
+        expect(routes.INCOMPLETE_NTRO_RECORDS_API({ value1: value })).toEqual(expected);
+    });
+
+    it('should construct url for LEARNING_RESOURCES_COURSE_SUGGESTIONS_API', () => {
+        const keyword = 'cows';
+        expect(routes.LEARNING_RESOURCES_COURSE_SUGGESTIONS_API({ keyword })).toEqual({
+            apiUrl: 'https://api.library.uq.edu.au/staging/learning_resources/suggestions?hint=cows',
+        });
+    });
+
+    it('should construct url for GUIDES_API', () => {
+        const keyword = 'FREN';
+        expect(routes.GUIDES_API({ keyword })).toEqual({ apiUrl: 'library_guides/FREN' });
+    });
+
+    it('should construct url for LEARNING_RESOURCES_EXAMS_API', () => {
+        const keyword = 'PHIL';
+        expect(routes.LEARNING_RESOURCES_EXAMS_API({ keyword })).toEqual({ apiUrl: 'exams/course/PHIL/summary' });
+    });
+
+    it('should construct url for ALERT_BY_ID_API', () => {
+        const id = '34tf-dr8s-gers';
+        expect(routes.ALERT_BY_ID_API({ id })).toEqual({ apiUrl: 'alert/34tf-dr8s-gers' });
+    });
+
+    it('should construct url for ALERTS_CREATE_API', () => {
+        expect(routes.ALERTS_CREATE_API()).toEqual({ apiUrl: 'alerts' });
+    });
+
+    it('should construct url for ALERT_UPDATE_API', () => {
+        const id = '34tf-dr8s-gers';
+        expect(routes.ALERT_UPDATE_API({ id })).toEqual({ apiUrl: 'alert/34tf-dr8s-gers' });
+    });
+
+    it('should construct url for ALERT_DELETE_API', () => {
+        const id = '34tf-dr8s-gers';
+        expect(routes.ALERT_DELETE_API({ id })).toEqual({ apiUrl: 'alert/34tf-dr8s-gers' });
+    });
+
+    it('should construct url for EXAMS_SEARCH_API', () => {
+        const hint = 'PHYS';
+        expect(routes.EXAMS_SEARCH_API(hint)).toEqual({ apiUrl: 'exams/search/PHYS' });
+    });
+
+    it('should construct url for EXAMS_SUGGESTION_API', () => {
+        const hint = 'PHYS';
+        expect(routes.EXAMS_SUGGESTION_API(hint)).toEqual({ apiUrl: 'exams/suggestions/PHYS' });
+    });
+
+    it('should construct url for READING_LIST_API', () => {
+        const hint = { coursecode: 'FREN1010', campus: 'St%20Lucia', semester: '2020 Semester 1' };
+        expect(routes.READING_LIST_API(hint)).toEqual({
+            apiUrl: 'learning_resources/reading_list/count/FREN1010/St%20Lucia/2020%2520Semester%25201',
+        });
+    });
+
+    it('should construct url for LIB_HOURS_API', () => {
+        const MockDate = require('mockdate');
+        MockDate.set('2020-01-01T00:00:00.000Z', 10);
+        expect(routes.LIB_HOURS_API()).toEqual({
+            apiUrl: 'library_hours/day',
+            options: { params: { ts: '1577836800000' } },
+        });
+        MockDate.reset();
+    });
 
     it('should construct url for UPLOAD_PUBLIC_FILES_API', () => {
         expect(routes.UPLOAD_PUBLIC_FILES_API()).toEqual({
@@ -88,6 +126,26 @@ describe('Backend routes method', () => {
         MockDate.set('2020-01-01T00:00:00.000Z', 10);
         expect(routes.CURRENT_ACCOUNT_API()).toEqual({
             apiUrl: 'account',
+            options: { params: { ts: '1577836800000' } },
+        });
+        MockDate.reset();
+    });
+
+    it('should construct url for LOANS_API', () => {
+        const MockDate = require('mockdate');
+        MockDate.set('2020-01-01T00:00:00.000Z', 10);
+        expect(routes.LOANS_API()).toEqual({
+            apiUrl: 'account/loans',
+            options: { params: { ts: '1577836800000' } },
+        });
+        MockDate.reset();
+    });
+
+    it('should construct url for PRINTING_API', () => {
+        const MockDate = require('mockdate');
+        MockDate.set('2020-01-01T00:00:00.000Z', 10);
+        expect(routes.PRINTING_API()).toEqual({
+            apiUrl: 'papercut/balance',
             options: { params: { ts: '1577836800000' } },
         });
         MockDate.reset();
@@ -205,12 +263,50 @@ describe('Backend routes method', () => {
     describe('coverage', () => {
         it('should return valid path for routes', () => {
             expect(routes.TEST_TAG_SAVE_ASSETTYPE_API(100)).toEqual({ apiUrl: 'test-and-tag/asset-type/100' });
+            expect(routes.TEST_TAG_FLOOR_API(100)).toEqual({ apiUrl: 'test-and-tag/building/100/current' });
+            expect(routes.TEST_TAG_ROOM_API(100)).toEqual({ apiUrl: 'test-and-tag/floor/100/current' });
+            expect(routes.TEST_TAG_ASSETS_API('pattern')).toEqual({
+                apiUrl: '/test-and-tag/asset/search/current/pattern',
+            });
+            expect(routes.TEST_TAG_ADD_LOCATION_API('powerboard')).toEqual({ apiUrl: 'test-and-tag/powerboard' });
+            expect(routes.TEST_TAG_MODIFY_LOCATION_API({ type: 'powerboard', id: 100 })).toEqual({
+                apiUrl: 'test-and-tag/powerboard/100',
+            });
             expect(routes.TEST_TAG_DELETE_ASSET_TYPE_API(100)).toEqual({ apiUrl: 'test-and-tag/asset-type/100' });
-            expect(routes.TEST_TAG_UPDATE_USER_API(100)).toEqual({ apiUrl: 'test-and-tag/user/100' });
+            expect(routes.TEST_TAG_ASSET_ACTION()).toEqual({ apiUrl: '/test-and-tag/action' });
+            expect(routes.TEST_TAG_ASSETTYPE_ADD()).toEqual({ apiUrl: '/test-and-tag/asset-type' });
+            expect(routes.TEST_TAG_INSPECTION_DEVICE_API()).toEqual({
+                apiUrl: '/test-and-tag/inspection-device/current/mine',
+            });
+            expect(routes.TEST_TAG_ADD_INSPECTION_DEVICE_API()).toEqual({ apiUrl: '/test-and-tag/inspection-device' });
+            expect(routes.TEST_TAG_MODIFY_INSPECTION_DEVICE_API(123)).toEqual({
+                apiUrl: '/test-and-tag/inspection-device/123',
+            });
+            expect(routes.TEST_TAG_ONLOAD_DASHBOARD_API()).toEqual({ apiUrl: 'test-and-tag/onload/dashboard' });
+            expect(routes.TEST_TAG_ONLOAD_INSPECT_API()).toEqual({ apiUrl: 'test-and-tag/onload/inspect' });
+            expect(routes.TEST_TAG_ASSETTYPE_API()).toEqual({ apiUrl: 'test-and-tag/asset-type/current/mine' });
+            expect(routes.TEST_TAG_DELETE_REASSIGN_ASSETTYPE_API()).toEqual({
+                apiUrl: 'test-and-tag/asset-type/reassign',
+            });
+            expect(routes.TEST_TAG_ADD_ASSET_TYPE_API()).toEqual({ apiUrl: 'test-and-tag/asset-type' });
+            expect(routes.TEST_TAG_SAVE_ASSETTYPE_API(100)).toEqual({ apiUrl: 'test-and-tag/asset-type/100' });
+            expect(routes.TEST_TAG_DELETE_ASSET_TYPE_API(100)).toEqual({ apiUrl: 'test-and-tag/asset-type/100' });
+            expect(routes.TEST_TAG_SITE_API()).toEqual({ apiUrl: 'test-and-tag/site/current' });
+            expect(routes.TEST_TAG_USER_API()).toEqual({ apiUrl: 'test-and-tag/user' });
             expect(routes.TEST_TAG_ADD_USER_API()).toEqual({ apiUrl: 'test-and-tag/user' });
+            expect(routes.TEST_TAG_UPDATE_USER_API(100)).toEqual({ apiUrl: 'test-and-tag/user/100' });
             expect(routes.TEST_TAG_DELETE_USER_API(100)).toEqual({ apiUrl: 'test-and-tag/user/100' });
+            expect(routes.TEST_TAG_REPORT_UTILITY_LICENCED_USERS()).toEqual({
+                apiUrl: 'test-and-tag/report/licenced-inspectors',
+            });
+            expect(routes.TEST_TAG_TAGGED_BUILDING_LIST()).toEqual({ apiUrl: 'test-and-tag/building/mine' });
+            expect(routes.TEST_TAG_BULK_UPDATE_API()).toEqual({ apiUrl: 'test-and-tag/asset' });
+            expect(routes.TEST_TAG_MODIFY_INSPECTION_DETAILS_API(99)).toEqual({
+                apiUrl: '/test-and-tag/asset/99/action',
+            });
+            expect(routes.TEST_TAG_USER_LIST_API()).toEqual({ apiUrl: 'test-and-tag/users/all' });
 
-            expect(routes.DLOR_ALL_API()).toEqual({ apiUrl: 'dlor/public/list/full' });
+            expect(routes.DLOR_ALL_API()).toEqual({ apiUrl: 'dlor/public/list/full' }); // is admin in staging
             expect(routes.DLOR_ALL_CURRENT_API()).toEqual({ apiUrl: 'dlor/public/list/current' });
             expect(routes.DLOR_GET_BY_ID_API({ id: 100 })).toEqual({ apiUrl: 'dlor/public/find/100' });
             expect(routes.DLOR_TEAM_LIST_API()).toEqual({ apiUrl: 'dlor/public/teams/list' });
@@ -218,6 +314,9 @@ describe('Backend routes method', () => {
             expect(routes.DLOR_SERIES_LIST_API()).toEqual({ apiUrl: 'dlor/public/series/list' });
             expect(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 100 })).toEqual({
                 apiUrl: 'dlor/public/100/confirm/subscribe',
+            });
+            expect(routes.DLOR_UNSUBSCRIBE_API({ id: 100 })).toEqual({
+                apiUrl: 'dlor/public/100/confirm/unsubscribe',
             });
             expect(routes.DLOR_UNSUBSCRIBE_FIND_API({ id: 100 })).toEqual({
                 apiUrl: 'dlor/public/100/confirm/find',
@@ -236,6 +335,37 @@ describe('Backend routes method', () => {
             expect(routes.DLOR_SERIES_DELETE_API(100)).toEqual({ apiUrl: 'dlor/admin/series/100' });
             expect(routes.DLOR_SERIES_UPDATE_API(100)).toEqual({ apiUrl: 'dlor/admin/series/100' });
             expect(routes.DLOR_SERIES_CREATE_API()).toEqual({ apiUrl: 'dlor/admin/series' });
+
+            expect(routes.DRUPAL_ARTICLE_API()).toEqual({
+                apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/articles.json',
+            });
+
+            expect(routes.VEMCOUNT_API()).toEqual({
+                apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage/headcount.json',
+            });
+
+            expect(routes.JOURNAL_SEARCH_API()).toEqual({
+                apiUrl: 'https://api.library.uq.edu.au/v1/journals/favourites?sort=score',
+            });
+        });
+    });
+
+    describe('AWS production route test', () => {
+        const envPlaceholder = process.env.BRANCH;
+        beforeEach(() => {
+            process.env.BRANCH = 'production';
+            jest.resetModules();
+        });
+        afterEach(() => {
+            process.env.BRANCH = envPlaceholder;
+        });
+        it('should return valid path for aws production route', () => {
+            expect(routes.DRUPAL_ARTICLE_API()).toEqual({
+                apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage/articles.json',
+            });
+            expect(routes.VEMCOUNT_API()).toEqual({
+                apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage/headcount.json',
+            });
         });
     });
 });

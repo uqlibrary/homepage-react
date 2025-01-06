@@ -7,6 +7,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import DlOTeamForm from 'modules/Pages/Admin/DigitalLearningObjects/Team/DlOTeamForm';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
+import { breadcrumbs } from 'config/routes';
 
 export const DLOTeamEdit = ({
     actions,
@@ -18,6 +19,12 @@ export const DLOTeamEdit = ({
     dlorUpdatedItem,
 }) => {
     const { dlorTeamId } = useParams();
+
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dloradmin.pathname);
+    }, []);
 
     useEffect(() => {
         /* istanbul ignore else */

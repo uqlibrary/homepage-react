@@ -17,6 +17,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { scrollToTopOfPage } from 'helpers/general';
+import { breadcrumbs } from 'config/routes';
 
 const StyledForm = styled('form')(() => ({
     width: '100%',
@@ -43,6 +44,12 @@ export const DLOTeamForm = ({
     });
     const [confirmationOpen, setConfirmationOpen] = useState(false);
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
+
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dloradmin.pathname);
+    }, []);
 
     useEffect(() => {
         setConfirmationOpen(false);

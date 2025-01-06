@@ -11,13 +11,14 @@ function setup(testProps = {}) {
         rows: [],
         headertag: 'Current alerts',
         alertsLoading: false,
+        history: {},
         actions: {},
         deleteAlert: jest.fn(),
     };
     return rtlRender(<AlertsListAsTable {...props} {...testProps} />);
 }
 
-describe('PersonalisedPanel', () => {
+describe('AlertsListAsTable', () => {
     it('default values render correctly', () => {
         const { container } = setup();
         expect(container).toMatchSnapshot();

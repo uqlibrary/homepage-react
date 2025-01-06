@@ -13,10 +13,11 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import locale from './pastExamPaperSearch.locale';
-import { isRepeatingString } from 'helpers/general';
+import { isRepeatingString, linkToDrupal } from 'helpers/general';
 import { noResultsFoundBlock } from './pastExamPapers.helpers';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { breadcrumbs } from 'config/routes';
 
 const StyledAboutLink = styled('p')(() => ({
     marginTop: '4em',
@@ -52,6 +53,13 @@ export const PastExamPaperSearch = ({
 
     const noOptionsTextTooShort = 'Type more characters to search';
     const [noOptionsText, setNoOptionsText] = React.useState(null);
+
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.exampapers.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.exampapers.pathname);
+    }, []);
+
     useEffect(() => {
         const noOptionsTextNoResultsFoundPanel = () => {
             return (
@@ -122,8 +130,8 @@ export const PastExamPaperSearch = ({
     };
 
     return (
-        <StandardPage>
-            <StandardCard title="Search for a past exam paper">
+        <StandardPage title="Search for a past exam paper" style={{ marginTop: '16px' }}>
+            <StandardCard>
                 <Grid container alignItems={'flex-end'}>
                     <StyledAboutBlock item xs={12} sm>
                         <p>
@@ -213,7 +221,7 @@ export const PastExamPaperSearch = ({
                 <Grid container>
                     <Grid item xs={'auto'}>
                         <StyledAboutLink>
-                            <a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">
+                            <a href={linkToDrupal('/study-and-learning-support/coursework/past-exam-papers')}>
                                 Read more about searching for past exam papers
                             </a>
                         </StyledAboutLink>

@@ -43,6 +43,7 @@ import {
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import { breadcrumbs } from 'config/routes';
 
 const StyledUQActionButton = styled('div')(({ theme }) => ({
     marginBlock: '32px',
@@ -79,6 +80,7 @@ const StyledContentGrid = styled(Grid)(() => ({
 const StyledTitleBlockDiv = styled('div')(() => ({
     display: 'flex',
     alignItems: 'center',
+    marginTop: '16px',
     '& p:first-child': {
         padding: 0,
         fontSize: 16,
@@ -97,6 +99,9 @@ const StyledTitleBlockDiv = styled('div')(() => ({
 const StyledHeaderDiv = styled(Typography)(() => ({
     backgroundColor: 'white',
     padding: '12px',
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
+    marginTop: '12px',
     '& p': {
         margin: 0,
         fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
@@ -137,7 +142,6 @@ const StyledSeriesList = styled('ol')(() => ({
             width: '100%',
             padding: 10,
             textDecoration: 'none',
-            border: '1px solid #d1d0d2', // $grey-300
         },
         '& a:hover': {
             backgroundColor: '#a3a1a4', // $grey-500
@@ -145,15 +149,18 @@ const StyledSeriesList = styled('ol')(() => ({
     },
 }));
 const StyledDemographicsBox = styled(Box)(() => ({
-    padding: '1em',
-    marginTop: '24px',
-    borderRadius: '10px',
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
     backgroundColor: 'white',
+    marginTop: '24px',
+    padding: '1em',
     '& p': { marginLeft: '-8px' },
     '& form': { margin: '-8px', '& p': { marginBlock: '3em 0', marginLeft: '2px' } },
 }));
 const StyledLayoutBox = styled(Box)(() => ({
     backgroundColor: 'white',
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
     padding: '12px',
     marginTop: '24px',
 }));
@@ -211,6 +218,9 @@ export const DLOView = ({
     const { dlorId } = useParams();
     const [cookies, setCookie] = useCookies();
     const [confirmationOpen, setConfirmationOpen] = React.useState(false);
+
+    // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
+    // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
     
     const isLoggedIn = !!account?.id;
 
@@ -222,6 +232,11 @@ export const DLOView = ({
         userEmail: '',
     });
 
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dlor.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dlor.pathname);
+    }, []);
    // PENDING CHANGE - left in to merge when ticket for require login is built.
   
     // async function sha256(message) {
@@ -277,6 +292,8 @@ export const DLOView = ({
             theNewValue = !!e.target.checked;
         }
         const newValues = { ...formValues, [prop]: theNewValue };
+        // console.log('handleChange', prop, theNewValue, newValues);
+
        
         setFormValues(newValues);
     };
@@ -367,6 +384,8 @@ export const DLOView = ({
     };
 
     const saveAndNavigate = dlorItem => {
+        // console.log('saveAndNavigate formValues', dlorItem.object_link_url, formValues);
+
         
         if (formValues.schoolName.length > 0 || formValues.subjectCode.length > 0 || !!formValues.notify) {
             const valuestoSend = {
@@ -434,6 +453,7 @@ export const DLOView = ({
 
     let subscriptionResponseLocale = {};
     if (!dlorItemUpdating && (!!dlorUpdatedItem || !!dlorUpdatedItemError)) {
+        // console.log('dlorUpdatedItem=', dlorUpdatedItem);
         const updatingMessage =
             dlorUpdatedItem?.data?.subscription === false
                 ? 'You are already subscribed'

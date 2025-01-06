@@ -24,6 +24,7 @@ import AuthWrapper from '../../SharedComponents/AuthWrapper/AuthWrapper';
 import { pathConfig } from '../../../../../../config/pathConfig';
 import { PERMISSIONS, ROLES } from '../../config/auth';
 import { useConfirmationAlert } from '../../helpers/hooks';
+import { breadcrumbs } from 'config/routes';
 
 const componentId = 'dashboard';
 
@@ -34,6 +35,8 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
     '& .card': {
         flex: 1,
+        border: '1px solid hsla(203, 50%, 30%, 0.15)',
+        borderRadius: '4px',
     },
     '& .centreAlignParent': {
         display: 'flex',
@@ -71,6 +74,10 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
     });
 
     React.useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
+
         actions.loadDashboard();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
