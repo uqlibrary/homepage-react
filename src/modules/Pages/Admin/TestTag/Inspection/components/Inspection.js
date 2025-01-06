@@ -28,6 +28,7 @@ import { saveInspectionTransformer } from '../transformers/saveInspectionTransfo
 import { getSuccessDialog } from '../utils/saveDialog';
 import { PERMISSIONS } from '../../config/auth';
 import { useConfirmationState } from 'hooks';
+import { breadcrumbs } from 'config/routes';
 
 const componentId = 'inspection';
 
@@ -234,6 +235,10 @@ const Inspection = ({
     };
 
     useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
+
         resetForm();
         actions.loadInspectionConfig();
         // eslint-disable-next-line react-hooks/exhaustive-deps

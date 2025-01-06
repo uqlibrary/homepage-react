@@ -1,12 +1,19 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import txt from './masquerade.locale';
+
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import { styled } from '@mui/material/styles';
+
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
+
+const StyledStandardCard = styled(StandardCard)(() => ({
+    backgroundColor: 'white',
+}));
 
 export default class Masquerade extends PureComponent {
     static propTypes = {
@@ -51,7 +58,7 @@ export default class Masquerade extends PureComponent {
     render() {
         return (
             <StandardPage title={txt.title}>
-                <StandardCard noHeader>
+                <StyledStandardCard noHeader>
                     <Grid container spacing={1}>
                         <Grid item xs={12} id="masquerade">
                             <Typography>
@@ -85,7 +92,7 @@ export default class Masquerade extends PureComponent {
                             </Grid>
                         </Grid>
                     </Grid>
-                </StandardCard>
+                </StyledStandardCard>
             </StandardPage>
         );
     }

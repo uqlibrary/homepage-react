@@ -4,7 +4,7 @@ import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../shar
 import { default as locale } from '../shared/learningResources.locale';
 import { SubjectBody } from '../shared/SubjectBody';
 import { TabPanel } from '../shared/TabPanel';
-import { LearningResourceSearch } from 'modules/SharedComponents/LearningResourceSearch';
+import { SubjectSearchDropdown } from 'modules/SharedComponents/SubjectSearchDropdown';
 import AppBar from '@mui/material/AppBar';
 import Grid from '@mui/material/Grid';
 import Tab from '@mui/material/Tab';
@@ -15,9 +15,15 @@ import { styled } from '@mui/material/styles';
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.white.main,
     color: theme.palette.secondary.dark,
-    marginTop: '24px',
+    boxShadow: 'none',
+    border: '1px solid rgba(0, 0, 0, 0.2)',
 }));
 
+const StyledTabPanel = styled(TabPanel)(() => ({
+    '& >div': {
+        padding: 0,
+    },
+}));
 export const isEnrolledInSubject = (subject, account) => {
     return (
         (!!account &&
@@ -142,14 +148,13 @@ export const CourseSearch = ({
                     subjectList.length > 0 &&
                     subjectList.map((subjectCode, index) => {
                         return (
-                            <TabPanel
+                            <StyledTabPanel
                                 data-testid={`classpanel-${index}`}
                                 index={`${subjectTabLabel}-${index}`} // must match 'value' in Tabs
                                 label="classpanel"
                                 key={`classpanel-${index}`}
                                 tabId={searchTab}
                                 value={searchTab}
-                                sx={{ backgroundColor: 'rgb(247, 247, 247)', margin: 0 }}
                                 {...reverseA11yProps(index, subjectTabLabel)}
                             >
                                 <SubjectBody
@@ -160,7 +165,7 @@ export const CourseSearch = ({
                                     panelHeadingLevel="h4"
                                     subjectHeaderLevel="h3"
                                 />
-                            </TabPanel>
+                            </StyledTabPanel>
                         );
                     })}
             </Fragment>
@@ -199,9 +204,9 @@ export const CourseSearch = ({
 
         const semester = thisSuggestion?.semester || /* istanbul ignore next */ '';
 
-        // if subject is in 'my courses' list, swap to that tab
+        // if subject is in 'your courses' list, swap to that tab
         if (isEnrolledInSubject(searchKeyword, account)) {
-            // swap to correct tab on My Courses tab
+            // swap to correct tab on Your Courses tab
             const subjectId = getPlaceInCurrentAccountList(searchKeyword);
             selectMyCoursesTab(searchKeyword, subjectId);
         } else if (
@@ -232,7 +237,7 @@ export const CourseSearch = ({
     return (
         <Grid container spacing={3} id={'full-learningresource'} data-testid={'full-learningresource'}>
             <Grid item xs={12} id="learningresource-search">
-                <LearningResourceSearch
+                <SubjectSearchDropdown
                     displayType="full"
                     elementId="full-learningresource"
                     loadCourseAndSelectTab={loadCourseAndSelectTab}
@@ -240,12 +245,7 @@ export const CourseSearch = ({
             </Grid>
             {!!listSearchedSubjects && listSearchedSubjects.length > 0 && (
                 <Grid item xs={12} role="region" aria-live="assertive" aria-label="Learning Resource Search Results">
-                    <Typography
-                        component="h2"
-                        variant="h6"
-                        style={{ marginLeft: '1.2rem' }}
-                        id="learning-resource-search-results"
-                    >
+                    <Typography component="h2" variant="h6" id="learning-resource-search-results">
                         {locale.searchResultsTitle}
                     </Typography>
                     {renderSearchResults(listSearchedSubjects)}

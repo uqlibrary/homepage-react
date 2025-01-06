@@ -11,7 +11,6 @@ import {
     isPreviewableUrl,
     isValidNumber,
     isValidUrl,
-    pluraliseWord,
     toTitleCase,
 } from './dlorHelpers';
 
@@ -120,15 +119,6 @@ describe('helpers', () => {
 
     it('generates view urls', () => {
         expect(getDlorViewPageUrl('xyz')).toEqual('http://localhost/digital-learning-hub/view/xyz');
-    });
-
-    it('forms the plural of words correctly', () => {
-        expect(pluraliseWord('frog', 0)).toEqual('frog');
-        expect(pluraliseWord('frog', 1)).toEqual('frog');
-        expect(pluraliseWord('frog', 4)).toEqual('frogs');
-        expect(pluraliseWord('body', 0, 'bodies')).toEqual('body');
-        expect(pluraliseWord('body', 1, 'bodies')).toEqual('body');
-        expect(pluraliseWord('body', 8, 'bodies')).toEqual('bodies');
     });
 
     it('should correctly validate an url', () => {

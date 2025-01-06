@@ -42,10 +42,10 @@ import HeroCard from 'modules/Pages/DigitalLearningObjects/SharedComponents/Hero
 import {
     convertSnakeCaseToKebabCase,
     getDlorViewPageUrl,
-    isEscapeKeyPressed,
-    isReturnKeyPressed,
     slugifyName,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { isEscapeKeyPressed, isReturnKeyPressed } from 'helpers/general';
+import { breadcrumbs } from 'config/routes';
 
 const StyledSkipLinkButton = styled(Button)(({ theme }) => ({
     // hidden when not focused
@@ -141,7 +141,9 @@ const StyledFilterSidebarGrid = styled(Grid)(({ theme }) => ({
 }));
 const StyledArticleCard = styled('button')(({ theme }) => ({
     backgroundColor: '#fff',
-    borderColor: 'transparent',
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
+    transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
     fontFamily: 'Roboto, sans-serif',
     paddingInline: 0,
     textAlign: 'left',
@@ -149,8 +151,6 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
     '&:hover': {
         cursor: 'pointer',
         textDecoration: 'none',
-        borderTopColor: '#f2f2f2',
-        borderLeftColor: '#f2f2f2',
         '& > article': {
             backgroundColor: '#f2f2f2',
         },
@@ -296,6 +296,12 @@ export const DLOList = ({
     const heroDescriptionDlor =
         'Use the Digital Learning Hub to find modules, videos and guides for teaching and study.';
     const heroBackgroundImageDlor = require('../../../../../public/images/digital-learning-hub-hero-shot-wide.png');
+
+    useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dlor.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dlor.pathname);
+    }, []);
 
     useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {

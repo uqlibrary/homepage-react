@@ -22,6 +22,16 @@ describe('Digital Learning Hub admin Edit Team', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
+        it('has breadcrumbs', () => {
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Digital learning hub admin');
+                });
+        });
         it('appears as expected', () => {
             cy.get('[data-testid="StandardPage-title"]')
                 .should('exist')
@@ -166,14 +176,14 @@ describe('Digital Learning Hub admin Edit Team', () => {
                 team_manager: 'Jane Green changed',
                 team_email: 'train@library.uq.edu.au', // (we added .au to the email)
             };
-            console.log('document.cookies', document.cookie);
+            // console.log('document.cookies', document.cookie);
             cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                 expect(cookie).to.exist;
                 const decodedValue = decodeURIComponent(cookie.value);
                 const sentValues = JSON.parse(decodedValue);
 
-                console.log('sentValues=', sentValues);
-                console.log('expectedValues=', expectedValues);
+                // console.log('sentValues=', sentValues);
+                // console.log('expectedValues=', expectedValues);
 
                 expect(sentValues).to.deep.equal(expectedValues);
 

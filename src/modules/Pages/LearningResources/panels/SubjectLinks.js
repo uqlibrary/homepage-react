@@ -12,7 +12,7 @@ import { styled } from '@mui/material/styles';
 
 const StyledItem = styled(Grid)(() => ({
     borderTop: '1px solid #e8e8e8',
-    padding: '15px 0',
+    paddingBlock: '15px',
     '& a': {
         display: 'flex',
         alignItems: 'center',
@@ -28,7 +28,7 @@ export const SubjectLinks = ({ subject, headingLevel }) => {
 
     return (
         <StandardCard fullHeight noHeader standardCardId={`subject-links-${subject.classnumber}`}>
-            <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
+            <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 500 }}>
                 {locale.myCourses.courseLinks.title}
             </Typography>
             <Grid container className={'CourseLinks'}>

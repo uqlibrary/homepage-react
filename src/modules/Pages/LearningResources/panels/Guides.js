@@ -23,7 +23,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
     const coursecode = !!guideList && !!guideList.length > 0 && guideList[0].coursecode;
     return (
         <StandardCard fullHeight noHeader standardCardId={`guides-${coursecode}`}>
-            <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
+            <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 500 }}>
                 {locale.myCourses.guides.title}
             </Typography>
             <Grid container className={'guides'}>
@@ -32,16 +32,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                     <Typography>{locale.myCourses.guides.unavailable}</Typography>
                 )}
                 {!guideListError && !!guideListLoading && (
-                    <Grid
-                        item
-                        xs={12}
-                        style={{
-                            width: 80,
-                            marginRight: 20,
-                            marginBottom: 6,
-                            opacity: 0.3,
-                        }}
-                    >
+                    <Grid item xs={12} style={{ width: 80, opacity: 0.3 }}>
                         <CircularProgress
                             color="primary"
                             size={20}
