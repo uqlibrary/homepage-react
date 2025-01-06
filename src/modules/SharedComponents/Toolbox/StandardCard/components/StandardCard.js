@@ -7,6 +7,9 @@ import CardHeader from '@mui/material/CardHeader';
 import { styled } from '@mui/material/styles';
 
 const StyledCard = styled(Card)(({ theme }) => ({
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: '4px',
+    boxShadow: 'none',
     '&.card': {
         overflow: 'unset',
         fontWeight: theme.typography.fontWeightRegular,
@@ -18,13 +21,13 @@ const StyledCard = styled(Card)(({ theme }) => ({
         paddingRight: '0px !important',
     },
     '& .cardHeaderPrimary': {
-        color: theme.palette.white.main,
+        backgroundColor: theme.palette.white.main,
+        color: theme.palette.primary.light,
         overflow: 'hidden',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
-        backgroundColor: theme.palette.primary.light,
         borderRadius: '4px 4px 0px 0px',
-        padding: '12px 24px',
+        padding: '24px 24px 0',
     },
     '& .cardHeaderAccent': {
         color: theme.palette.white.main,
@@ -34,6 +37,17 @@ const StyledCard = styled(Card)(({ theme }) => ({
         backgroundColor: theme.palette.primary.main,
         borderRadius: '4px 4px 0px 0px',
         padding: '12px 24px',
+    },
+    '& a': {
+        color: theme.palette.primary.light,
+        fontWeight: 500,
+        paddingBlock: '2px',
+        textDecoration: 'underline',
+        transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
+        '&:hover': {
+            color: '#fff',
+            backgroundColor: theme.palette.primary.light,
+        },
     },
 }));
 
@@ -114,7 +128,11 @@ export class StandardCard extends Component {
                         titleTypographyProps={{
                             variant: smallTitle ? 'h6' : 'h5',
                             component: subCard ? 'h3' : 'h2',
-                            color: 'inherit',
+                            color: '#19151c',
+                            fontSize: '1.5rem',
+                            fontWeight: 500,
+                            letterSpacing: '0.16px',
+                            lineHeight: 1.2,
                             'data-testid': `${standardCardId}-header`,
                         }}
                         classes={{

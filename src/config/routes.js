@@ -1,13 +1,6 @@
 import React from 'react';
 import { locale } from 'locale';
-import {
-    canSeeLearningResources,
-    isAlertsAdminUser,
-    isDlorAdminUser,
-    isPromoPanelAdminUser,
-    isSpotlightsAdminUser,
-    isTestTagAdminUser,
-} from 'helpers/access';
+import { canSeeLearningResourcesPage, isAlertsAdminUser, isDlorAdminUser, isTestTagUser } from 'helpers/access';
 import { pathConfig } from './pathConfig';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
@@ -29,10 +22,6 @@ export const flattedPathConfigExact = [
     '/admin/dlor/team/add',
     '/admin/masquerade',
     '/admin/masquerade/',
-    '/admin/spotlights/add',
-    '/admin/spotlights',
-    '/admin/promopanel/add',
-    '/admin/promopanel',
     '/admin/testntag',
     '/admin/testntag/manage/users',
     '/admin/testntag/manage/assettypes',
@@ -58,12 +47,6 @@ export const flattedPathConfig = [
     '/admin/dlor/series/edit',
     '/admin/dlor/team/edit',
     '/admin/dlor/series/add',
-    '/admin/spotlights/edit',
-    '/admin/spotlights/view',
-    '/admin/spotlights/clone',
-    '/admin/promopanel/edit',
-    '/admin/promopanel/view',
-    '/admin/promopanel/clone',
     '/digital-learning-hub/view',
     '/digital-learning-hub/confirm/subscribe',
     '/digital-learning-hub/confirm/unsubscribe',
@@ -184,63 +167,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             element: <components.Masquerade />,
             exact: true,
             pageTitle: locale.pages.admin.masquerade.title,
-        },
-    ];
-
-    const promopanelid = ':promopanelid';
-    const promoPanelDisplay = [
-        {
-            path: pathConfig.admin.promopanel,
-            element: <components.PromoPanelList />,
-            exact: true,
-            pageTitle: locale.pages.admin.promopanel.title,
-        },
-        {
-            path: pathConfig.admin.promopaneladd,
-            element: <components.PromoPanelAdd />,
-            exact: true,
-            pageTitle: locale.pages.admin.promopanel.form.add.title,
-        },
-        {
-            path: pathConfig.admin.promopaneledit(promopanelid),
-            element: <components.PromoPanelEdit />,
-            pageTitle: locale.pages.admin.promopanel.form.edit.title,
-        },
-        {
-            path: pathConfig.admin.promopanelclone(promopanelid),
-            element: <components.PromoPanelClone />,
-            pageTitle: locale.pages.admin.promopanel.form.clone.title,
-        },
-    ];
-
-    const spotlightid = ':spotlightid';
-    const spotlightsDisplay = [
-        {
-            path: pathConfig.admin.spotlights,
-            element: <components.SpotlightsList />,
-            exact: true,
-            pageTitle: locale.pages.admin.spotlights.title,
-        },
-        {
-            path: pathConfig.admin.spotlightsadd,
-            element: <components.SpotlightsAdd />,
-            exact: true,
-            pageTitle: locale.pages.admin.spotlights.form.add.title,
-        },
-        {
-            path: pathConfig.admin.spotlightsedit(spotlightid),
-            element: <components.SpotlightsEdit />,
-            pageTitle: locale.pages.admin.spotlights.form.edit.title,
-        },
-        {
-            path: pathConfig.admin.spotlightsclone(spotlightid),
-            element: <components.SpotlightsClone />,
-            pageTitle: locale.pages.admin.spotlights.form.clone.title,
-        },
-        {
-            path: pathConfig.admin.spotlightsview(spotlightid),
-            element: <components.SpotlightsView />,
-            pageTitle: locale.pages.admin.spotlights.form.view.title,
         },
     ];
 
@@ -380,16 +306,27 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 
     return [
         ...publicPages,
-        ...(account && canSeeLearningResources(account) ? courseResourcesDisplay : []),
+        ...(account && canSeeLearningResourcesPage(account) ? courseResourcesDisplay : []),
         ...(account && isAlertsAdminUser(account) ? alertsDisplay : []),
         ...(account && isDlorAdminUser(account) ? dlorAdminDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
-        ...(account && isSpotlightsAdminUser(account) ? spotlightsDisplay : []),
-        ...(account && isPromoPanelAdminUser(account) ? promoPanelDisplay : []),
-        ...(account && isTestTagAdminUser(account) ? testntagDisplay : []),
+        ...(account && isTestTagUser(account) ? testntagDisplay : []),
         {
             path: '*',
             element: <components.NotFound />,
         },
     ];
+};
+
+// the top level link that appears in the page breadcrumb
+// call with use effect on eveyer page that should have a 3rd level breadcrumb
+export const breadcrumbs = {
+    alertsadmin: { pathname: '/admin/alerts', title: 'Alerts admin' },
+    dloradmin: { pathname: '/admin/dlor', title: 'Digital learning hub admin' },
+    testntag: { pathname: '/admin/testntag', title: 'Test and tag' },
+    bookexambooth: { pathname: '/book-exam-booth', title: 'Book an Exam booth' },
+    dlor: { pathname: '/digital-learning-hub', title: 'Digital learning hub' },
+    exampapers: { pathname: '/exams', title: 'Past exam papers' },
+    learningresources: { pathname: '/learning-resources', title: 'Learning resources' },
+    paymentreceipt: { pathname: '/payment-receipt', title: 'Payment receipt' },
 };

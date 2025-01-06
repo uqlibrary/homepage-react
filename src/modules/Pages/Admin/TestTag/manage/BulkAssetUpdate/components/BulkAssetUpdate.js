@@ -37,6 +37,7 @@ import { isEmptyObject, isEmptyStr } from '../../../helpers/helpers';
 import { useForm, useObjectList, useConfirmationAlert } from '../../../helpers/hooks';
 import { transformRow, transformRequest } from './utils';
 import AuthWrapper from '../../../SharedComponents/AuthWrapper/AuthWrapper';
+import { breadcrumbs } from 'config/routes';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     flexGrow: 1,
@@ -112,6 +113,10 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     };
 
     useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
+
         resetForm();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

@@ -21,6 +21,7 @@ import locale from '../../../testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
 import { actionReducer, emptyActionState } from './utils';
+import { breadcrumbs } from 'config/routes';
 
 const componentId = 'asset-types';
 
@@ -70,6 +71,10 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
     const { row } = useDataTableRow(assetTypesList);
 
     React.useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
+
         actions.loadAssetTypes().catch(error => {
             console.error(error);
             openConfirmationAlert(locale.config.alerts.error(pageLocale.snackbars.loadFailed), 'error');
