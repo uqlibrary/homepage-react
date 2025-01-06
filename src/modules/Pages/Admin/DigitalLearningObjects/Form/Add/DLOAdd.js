@@ -6,6 +6,7 @@ import { useAccountContext } from 'context';
 
 import DlorForm from 'modules/Pages/Admin/DigitalLearningObjects/Form/DlorForm';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
+import { isDlorAdminUser } from 'helpers/access';
 
 const moment = require('moment-timezone');
 
@@ -25,6 +26,7 @@ export const DLOAdd = ({
     dlorFilterListError,
 }) => {
     const { account } = useAccountContext();
+    console.log("ACCOUNT", account)
 
     function getTodayPlusOneYear(baseDate = null) {
         const today = baseDate || moment();
@@ -43,7 +45,7 @@ export const DLOAdd = ({
         object_link_url: '',
         object_download_instructions: '',
         object_publishing_user: account?.id,
-        object_status: 'new',
+        object_status: isDlorAdminUser(account) ? 'new' : 'submitted',
         object_review_date_next: getTodayPlusOneYear(),
         // team_name_add: '',
         // team_manager_add: '',
@@ -55,6 +57,8 @@ export const DLOAdd = ({
         object_cultural_advice: 0,
         notificationText: '',
     };
+
+    console.log("Form Defaults", formDefaults)
 
     return (
         <Fragment>

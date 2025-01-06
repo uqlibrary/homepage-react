@@ -45,6 +45,7 @@ export const Masquerade = lazy(() => lazyRetry(() => import('modules/Pages/Admin
 export const PastExamPaperSearch = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperSearch/PastExamPaperSearchContainer')));
 export const PastExamPaperList = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperList/PastExamPaperListContainer')));
 
+export const DLONew = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Objects/DLOAddContainer')));
 // always load components
 export { IndexContainer as Index } from 'modules/Index';
 export { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
