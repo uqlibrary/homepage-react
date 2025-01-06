@@ -185,7 +185,10 @@ export const isTestTagUser = account => isLoggedInUser(account) && userHasAdGrou
 export const isAlertsAdminUser = account =>
     isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
 
-export const isDlorAdminUser = account => isLoggedInUser(account) && userHasAdGroup('lib_dlor_admins', account);
+export const isDlorAdminUser = account =>
+    isLoggedInUser(account) &&
+    userHasAdGroup('lib_dlor_admins', account) &&
+    (!account?.masqueradingId || account?.masqueradingId === "");
 
 export const isHospitalUser = account =>
     isLoggedInUser(account) && !!account.user_group && account.user_group === EXTRAMURAL_HOSPITAL;
