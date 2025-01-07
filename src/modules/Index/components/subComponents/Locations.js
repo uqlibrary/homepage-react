@@ -266,7 +266,7 @@ const isOpen = (location, departmentsMapIn = null) => {
 };
 const getTextForBusyness = (location, busyLookup) => {
     if (
-        location.abbr === 'AskUs' ||
+        locationLocale.springshareIds[location.lid] === 'AskUs' ||
         !location?.busyness ||
         location.busyness === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING ||
         !isOpen(location)
@@ -285,7 +285,7 @@ const getTextForBusyness = (location, busyLookup) => {
 };
 function getLibraryHours(location) {
     /* istanbul ignore else */
-    if (location.abbr === 'AskUs') {
+    if (locationLocale.springshareIds[location.lid] === 'AskUs') {
         return location.departments.map(department => {
             if (['Chat'].includes(department.name)) {
                 return department.hours;
@@ -309,7 +309,7 @@ export const ariaLabelForLocation = location => {
     const nameLookupTable = {
         AskUs: 'AskUs chat assistance',
         Fryer: 'Fryer Library',
-        Gatton: 'JK Murray Library',
+        Gatton: 'the JK Murray Library',
     };
     if (nameLookupTable.hasOwnProperty(location?.abbr)) {
         libraryName = nameLookupTable[location.abbr];
@@ -395,6 +395,7 @@ const Locations = ({
             vemcount.data.locationList.length > 0 &&
             libHours.locations.length > 0 &&
             libHours.locations.map(location => {
+                location.abbr = locationLocale.springshareIds[location.lid];
                 let departments = [];
                 if (!!departmentProvided(location)) {
                     departments = location.departments.map(dept => {
@@ -464,12 +465,15 @@ const Locations = ({
                         Herston: 'Herston Health Sciences',
                     };
                     if (lookupTable.hasOwnProperty(location.abbr)) {
+                        console.log('getDisplayName YES', location.abbr, lookupTable[location.abbr]);
                         return lookupTable[location.abbr];
                     }
+                    console.log('getDisplayName NO', location.abbr, location.name);
                     return location.name;
                 };
 
                 return {
+                    lid: location.lid,
                     displayName: getDisplayName(location),
                     abbr: location.abbr,
                     url: location.url,
@@ -579,7 +583,7 @@ const Locations = ({
                                     <Grid
                                         container
                                         key={index}
-                                        className={`table-row table-row-body location-${location.abbr.toLowerCase()} `}
+                                        className={`table-row table-row-body location-${location.abbr?.toLowerCase()}`}
                                         data-testid={librarySlug}
                                     >
                                         <Grid

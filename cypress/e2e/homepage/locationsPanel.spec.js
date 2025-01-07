@@ -1,7 +1,7 @@
 const ESCAPE_KEYCODE = 27;
 
 context('Locations Panel', () => {
-    it('behaves as expected', () => {
+    it('loads as expected', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
 
@@ -55,7 +55,7 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-askus-link"]').should('not.exist');
     });
     it('can navigate to weekly hours page from the library name cell', () => {
-        cy.intercept('GET', 'https://web.library.uq.edu.au/locations-hours/architecture-music-library', {
+        cy.intercept('GET', 'https://web.library.uq.edu.au/visit/architecture-and-music-library', {
             statusCode: 200,
             body: 'user has navigated to Drupal hours page',
         });
@@ -166,14 +166,14 @@ context('Locations Panel', () => {
             .should('exist')
             .contains('Closed');
 
-        cy.get('[data-testid="hours-item-gatton-library"] > div:first-child').contains('JK Murray (UQ Gatton)');
-        cy.get('[data-testid="hours-item-gatton-library"] > div:first-child a').should(
+        cy.get('[data-testid="hours-item-gatton"] > div:first-child').contains('JK Murray (UQ Gatton)');
+        cy.get('[data-testid="hours-item-gatton"] > div:first-child a').should(
             'have.attr',
             'aria-label',
-            'The JK Murray (UQ Gatton) Library study space is open 24 hours.',
+            'The JK Murray Library study space is open 24 hours.',
         );
-        cy.get('[data-testid="hours-item-gatton-library"] > div:nth-child(2)').contains('24 Hours');
-        cy.get('[data-testid="hours-item-gatton-library"] > div:nth-child(3) div.occupancyText')
+        cy.get('[data-testid="hours-item-gatton"] > div:nth-child(2)').contains('24 Hours');
+        cy.get('[data-testid="hours-item-gatton"] > div:nth-child(3) div.occupancyText')
             .should('exist')
             .contains('Data not available');
 
@@ -201,6 +201,15 @@ context('Locations Panel', () => {
             .should('exist')
             .contains('By appointment');
         cy.get('[data-testid="hours-item-fryer"] > div:nth-child(3)').should('exist');
+
+        cy.get('[data-testid="hours-item-askus"] > div:first-child').contains('AskUs chat hours');
+        cy.get('[data-testid="hours-item-askus"] > div:first-child a').should(
+            'have.attr',
+            'aria-label',
+            'AskUs chat assistance operating hours today is open 8am to 8pm.',
+        );
+        cy.get('[data-testid="hours-item-askus"] > div:nth-child(2)').contains('8am - 8pm');
+        cy.get('[data-testid="hours-item-askus"] > div:nth-child(3) div.occupancyWrapper').should('be.empty');
 
         // cy.log('Whitty has a missing department field (should never happen) so we see "See location"');
         // cy.get('[data-testid="hours-item-whitty-mater"] div:first-child')
