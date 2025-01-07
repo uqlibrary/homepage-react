@@ -55,9 +55,9 @@ import {
     splitStringToArrayOnComma,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { isDlorAdminUser } from 'helpers/access';
 import { breadcrumbs } from 'config/routes';
 import { pluralise } from 'helpers/general';
-import { isDlorAdminUser } from 'helpers/access';
 
 const StyledErrorCountBadge = styled(Badge)(() => ({
     '& span': {
@@ -1490,7 +1490,7 @@ export const DlorForm = ({
         }
 
         return mode === 'add'
-            ? actions.createDlor(valuesToSend)
+            ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
             : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend);
     };
 
