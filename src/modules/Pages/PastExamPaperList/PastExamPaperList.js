@@ -20,6 +20,8 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { noResultsFoundBlock, MESSAGE_EXAMCODE_404 } from 'modules/Pages/PastExamPaperSearch/pastExamPapers.helpers';
 import { styled } from '@mui/material/styles';
+import { breadcrumbs } from 'config/routes';
+import { linkToDrupal } from 'helpers/general';
 
 const StyledTableCell = styled(TableCell)(() => ({
     textAlign: 'center',
@@ -64,6 +66,12 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
     useTitle(`${listTitle} - Library - The University of Queensland`);
 
     useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.exampapers.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.exampapers.pathname);
+    }, []);
+
+    useEffect(() => {
         /* istanbul ignore else */
         if (!!courseHint) {
             actions.loadExamSearch(courseHint);
@@ -90,8 +98,8 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
     const isNon404Error = !!examSearchListError && examSearchListError !== MESSAGE_EXAMCODE_404;
 
     return (
-        <StandardPage>
-            <StandardCard title={listTitle}>
+        <StandardPage title={listTitle}>
+            <StandardCard>
                 {!!examSearchListLoading && (
                     <Grid container>
                         <Grid item xs={'auto'}>
@@ -307,7 +315,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                 <Grid container>
                     <Grid item xs={'auto'}>
                         <p className={'aboutLink'}>
-                            <a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">
+                            <a href={linkToDrupal('/study-and-learning-support/coursework/past-exam-papers')}>
                                 Read more about searching for past exam papers
                             </a>
                         </p>

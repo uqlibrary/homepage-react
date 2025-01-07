@@ -24,8 +24,8 @@ const palette = {
     },
     secondary: {
         light: '#595959',
-        main: '#f7f6f5', // design system light grey
-        dark: '#333333',
+        main: '#3B383E', // design system grey-900
+        dark: '#19151c', // design system $black
     },
     accent: {
         light: '#962A8B',
@@ -53,6 +53,19 @@ const palette = {
 };
 
 export const mui1theme = createTheme({
+    breakpoints: {
+        values: {
+            xs: 0, // Phone
+            sm: 600, // Tablet
+            md: 900, // Small Desktop
+            lg: 1280, // Large Desktop
+            xl: 1536, // Extra Large Desktop
+            uqDsMobile: 390,
+            uqDsTablet: 640,
+            uqDsDesktop: 848,
+            uqDsDesktopXL: 1024,
+        },
+    },
     palette: palette,
     components: {
         MuiDesktopTimePicker: {

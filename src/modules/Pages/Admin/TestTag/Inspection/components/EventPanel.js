@@ -80,6 +80,10 @@ const EventPanel = ({
                 </IconButton>
             }
             noPadding={!eventExpanded}
+            style={{
+                border: '1px solid hsla(203, 50%, 30%, 0.15)',
+                borderRadius: '4px',
+            }}
         >
             <Collapse in={eventExpanded} timeout="auto">
                 <Grid container spacing={3}>

@@ -1,9 +1,4 @@
 describe('Digital Learning Hub', () => {
-    beforeEach(() => {
-        cy.clearCookies();
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
-    });
-
     context('desktop homepage visits', () => {
         it('is accessible', () => {
             cy.visit('digital-learning-hub/confirm/subscribe/a_conf_code_that_is_known');
@@ -39,6 +34,14 @@ describe('Digital Learning Hub', () => {
                         'Thank you for your interest in following Artificial Intelligence - Digital Essentials.',
                     ),
             );
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Digital learning hub');
+                });
             cy.get('[data-testid="dlor-confirm-line-2"]')
                 .should('exist')
                 .should('be.visible')

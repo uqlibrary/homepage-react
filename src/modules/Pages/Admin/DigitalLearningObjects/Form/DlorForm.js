@@ -46,7 +46,6 @@ import {
     getTotalSecondsFromMinutesAndSecond,
     isPreviewableUrl,
     isValidNumber,
-    pluraliseWord,
     slugifyName,
     validFileSizeUnits,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
@@ -57,6 +56,8 @@ import {
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { isDlorAdminUser } from 'helpers/access';
+import { breadcrumbs } from 'config/routes';
+import { pluralise } from 'helpers/general';
 
 const StyledErrorCountBadge = styled(Badge)(() => ({
     '& span': {
@@ -164,14 +165,20 @@ export const DlorForm = ({
     }
 
     useEffect(() => {
-        console.log(
-            'useEffect FIRST l=',
-            dlorItemSaving,
-            '; e=',
-            dlorSavedItemError,
-            '; dlorSavedItem=',
-            dlorSavedItem,
-        );
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dloradmin.pathname);
+    }, []);
+
+    useEffect(() => {
+        // console.log(
+        //     'useEffect FIRST l=',
+        //     dlorItemSaving,
+        //     '; e=',
+        //     dlorSavedItemError,
+        //     '; dlorSavedItem=',
+        //     dlorSavedItem,
+        // );
         setConfirmationOpen(!dlorItemSaving && (!!dlorSavedItemError || !!dlorSavedItem));
     }, [dlorItemSaving, dlorSavedItemError, dlorSavedItem]);
 
@@ -231,7 +238,7 @@ export const DlorForm = ({
                 data-testid={`input-characters-remaining-${convertSnakeCaseToKebabCase(fieldName)}`}
             >
                 {numCharsCurrent > 0 && missingCharCount > 0
-                    ? `at least ${missingCharCount} more ${pluraliseWord('character', missingCharCount)} needed`
+                    ? `at least ${missingCharCount} more ${pluralise('character', missingCharCount)} needed`
                     : ''}
             </Box>
         );
@@ -1263,6 +1270,7 @@ export const DlorForm = ({
                 aria-describedby="notify-lightbox-description"
                 data-testid="notify-lightbox-modal"
                 sx={{ zIndex: 1000 }}
+                disableEnforceFocus
             >
                 <Box
                     sx={{
@@ -1384,7 +1392,7 @@ export const DlorForm = ({
             actions.loadFileTypeList();
         }
 
-        console.log('useEffect 2ND l=', dlorItemSaving, '; e=', dlorSavedItemError, '; dlorSavedItem=', dlorSavedItem);
+        // console.log('useEffect 2ND l=', dlorItemSaving, ' e=', dlorSavedItemError, ' dlorSavedItem=', dlorSavedItem);
         setConfirmationOpen(!dlorItemSaving && (!!dlorSavedItemError || !!dlorSavedItem));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

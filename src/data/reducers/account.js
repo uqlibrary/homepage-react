@@ -3,7 +3,7 @@ import * as actions from 'data/actions/actionTypes';
 export const initialState = {
     account: null,
     author: null,
-    accountLoading: null,
+    accountLoading: null, // ternary: null = 'not started'; true = 'underway'; false = 'complete'
     accountAuthorLoading: null,
     isSessionExpired: null,
 };
@@ -112,27 +112,28 @@ const handlers = {
         libHoursLoading: false,
         libHoursError: true,
     }),
-    // Computer availability
-    [actions.COMP_AVAIL_LOADING]: state => ({
+
+    [actions.VEMCOUNT_LOADING]: state => ({
         ...state,
-        computerAvailability: null,
-        computerAvailabilityLoading: true,
-        computerAvailabilityError: false,
+        vemcount: null,
+        vemcountLoading: true,
+        vemcountError: false,
     }),
 
-    [actions.COMP_AVAIL_LOADED]: (state, action) => ({
+    [actions.VEMCOUNT_LOADED]: (state, action) => ({
         ...state,
-        computerAvailability: action.payload,
-        computerAvailabilityLoading: false,
-        computerAvailabilityError: false,
+        vemcount: action.payload,
+        vemcountLoading: false,
+        vemcountError: false,
     }),
 
-    [actions.COMP_AVAIL_FAILED]: state => ({
+    [actions.VEMCOUNT_FAILED]: state => ({
         ...state,
-        computerAvailability: null,
-        computerAvailabilityLoading: false,
-        computerAvailabilityError: true,
+        vemcount: null,
+        vemcountLoading: false,
+        vemcountError: true,
     }),
+
     // Training
     [actions.TRAINING_LOADING]: state => ({
         ...state,

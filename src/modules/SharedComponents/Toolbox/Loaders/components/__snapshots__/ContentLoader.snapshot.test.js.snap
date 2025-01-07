@@ -11,13 +11,13 @@ exports[`ContentLoader snapshots tests renders loader 1`] = `
       id="StandardPage"
     >
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-ox0vta-MuiGrid-root"
       >
         <div
           class="MuiGrid-root MuiGrid-container css-11lq3yg-MuiGrid-root"
         >
           <div
-            class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-1idn90j-MuiGrid-root"
+            class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-ox0vta-MuiGrid-root"
           >
             <div
               style="padding: 8px;"
@@ -26,7 +26,7 @@ exports[`ContentLoader snapshots tests renders loader 1`] = `
                 class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
               >
                 <div
-                  class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-1wrgmsj-MuiGrid-root"
+                  class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-tih3ug-MuiGrid-root"
                   style="text-align: center;"
                 >
                   <span
@@ -51,7 +51,7 @@ exports[`ContentLoader snapshots tests renders loader 1`] = `
                   </span>
                 </div>
                 <div
-                  class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-1wrgmsj-MuiGrid-root"
+                  class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-tih3ug-MuiGrid-root"
                   style="text-align: center;"
                 >
                   <span

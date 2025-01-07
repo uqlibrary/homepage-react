@@ -1,9 +1,4 @@
 describe('Digital Learning Hub', () => {
-    beforeEach(() => {
-        cy.clearCookies();
-        cy.setCookie('UQ_CULTURAL_ADVICE', 'hidden');
-    });
-
     const itemsPerPage = 10; // matches value in DLOList
     const extraRowCount = 2; // pagination row + hidden mobile filter icon
     context('desktop homepage visits', () => {
@@ -28,6 +23,17 @@ describe('Digital Learning Hub', () => {
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
+        });
+        it('has breadcrumbs', () => {
+            cy.waitUntil(() => cy.get('h1').should('exist'));
+            cy.get('uq-site-header')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="subsite-title"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('Digital learning hub');
+                });
         });
         it('appears as expected', () => {
             cy.waitUntil(() => cy.get('h1').should('exist'));

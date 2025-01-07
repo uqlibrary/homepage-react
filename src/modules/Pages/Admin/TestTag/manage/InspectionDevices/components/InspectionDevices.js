@@ -18,6 +18,7 @@ import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/
 import { useConfirmationAlert } from '../../../helpers/hooks';
 import locale from '../../../testTag.locale';
 import { emptyActionState, actionReducer, transformRow, transformAddRequest, transformUpdateRequest } from './utils';
+import { breadcrumbs } from 'config/routes';
 
 const moment = require('moment');
 
@@ -171,6 +172,10 @@ const InspectionDevices = ({
     const { row } = useDataTableRow(inspectionDevices, transformRow);
 
     useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.testntag.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
+
         actions.loadInspectionDevices().catch(error => {
             console.error(error);
             openConfirmationAlert(locale.config.alerts.failed('error'), 'error');
