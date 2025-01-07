@@ -24,7 +24,7 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     border: '1px solid #DCDCDD',
     borderRadius: '0 0 4px 4px',
     boxShadow: '0px 12px 24px 0px rgba(25, 21, 28, 0.05)',
-    marginTop: '-7px',
+    marginTop: '-3px',
     zIndex: 999,
     position: 'absolute',
     top: 102,
