@@ -4,6 +4,7 @@ import {
     DLOR_ALL_API,
     DLOR_ALL_CURRENT_API,
     DLOR_CREATE_API,
+    DLOR_REQUEST_API,
     DLOR_DEMOGRAPHICS_SAVE_API,
     DLOR_DESTROY_API,
     DLOR_FILE_TYPE_LIST_API,
@@ -119,17 +120,19 @@ export function clearADlor() {
     };
 }
 
-export function createDlor(request) {
+export function createDlor(request, isDlorAdminUser = true) {
+    // isDlorAdminUser is overriden to false when creating a request by a non-admin user
+    // used to determine the API endpoint to use. Default is true.
     return async dispatch => {
         dispatch({ type: actions.DLOR_CREATING });
-        return post(DLOR_CREATE_API(), request)
+        return post(isDlorAdminUser ? DLOR_CREATE_API() : DLOR_REQUEST_API(), request)
             .then(data => {
                 dispatch({
                     type: actions.DLOR_CREATED,
                     payload: data,
                 });
-                // refresh the list after change
-                dispatch(loadAllDLORs());
+                // refresh the list after change, only if the user is an admin
+                !!isDlorAdminUser && dispatch(loadAllDLORs());
             })
             .catch(error => {
                 dispatch({

@@ -1490,7 +1490,7 @@ export const DlorForm = ({
         }
 
         return mode === 'add'
-            ? actions.createDlor(valuesToSend)
+            ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
             : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend);
     };
 
