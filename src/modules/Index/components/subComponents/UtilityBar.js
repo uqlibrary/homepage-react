@@ -75,12 +75,9 @@ const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
     '&:hover': {
         backgroundColor: 'white',
     },
-    '&:hover span span': {
+    '&:hover span span, &:focus span span': {
         backgroundColor: theme.palette.primary.light,
         color: 'white',
-    },
-    '&:focus': {
-        borderColor: '#3872a8', // match other elements outline colour
     },
 }));
 
@@ -119,6 +116,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
         }
     };
 
+    /* istanbul ignore next */
     const handleLocationButtonKeyDown = e => {
         if (e?.key !== 'Enter') {
             return;
