@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 
 import Grid from '@mui/material/Grid';
+import { Link as MuiLink } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -43,28 +44,34 @@ const StyledActionsUl = styled('ul')(() => ({
 const EspacePossible = ({ recordCount }) => {
     return (
         <StyledGridListItem component={'li'} item xs={12}>
-            <Link
+            <MuiLink
+                component={RouterLink}
                 to={'https://espace.library.uq.edu.au/records/possible'}
                 id="espace-possible"
                 data-testid="espace-possible"
+                target="_blank"
+                rel="noopener noreferrer"
             >
                 {'Claim [totalRecords] [records]'
                     .replace('[totalRecords]', recordCount)
                     .replace('[records]', pluralise('record', recordCount))}
-            </Link>
+            </MuiLink>
         </StyledGridListItem>
     );
 };
 const EspaceUpdateWorks = () => {
     return (
         <StyledGridItem component={'div'} item xs={12}>
-            <Link
+            <MuiLink
+                component={RouterLink}
                 to={'https://espace.library.uq.edu.au/dashboard'}
                 id="espace-updateworks"
                 data-testid="espace-updateworks"
+                target="_blank"
+                rel="noopener noreferrer"
             >
                 Update UQ eSpace records
-            </Link>
+            </MuiLink>
         </StyledGridItem>
     );
 };
@@ -72,37 +79,50 @@ const EspaceUpdateWorks = () => {
 const EspaceEditorialAppointments = () => {
     return (
         <StyledGridItem component={'div'} item xs={12}>
-            <Link
+            <MuiLink
+                component={RouterLink}
                 to={'https://espace.library.uq.edu.au/editorial-appointments'}
                 id="espace-editorialAppointments"
                 data-testid="espace-editorialAppointments"
+                target="_blank"
+                rel="noopener noreferrer"
             >
                 Update editorial appointments
-            </Link>
+            </MuiLink>
         </StyledGridItem>
     );
 };
 const EspaceOrcid = () => {
     return (
         <StyledGridListItem component={'li'} item xs={12}>
-            <Link
+            <MuiLink
+                component={RouterLink}
                 to={'https://espace.library.uq.edu.au/author-identifiers/orcid/link'}
                 id="espace-orcid"
                 data-testid="espace-orcid"
+                target="_blank"
+                rel="noopener noreferrer"
             >
                 Link ORCiD account
-            </Link>
+            </MuiLink>
         </StyledGridListItem>
     );
 };
 const EspaceNTROs = ({ recordCount }) => {
     return (
         <StyledGridListItem component={'li'} item xs={12}>
-            <Link to={'https://espace.library.uq.edu.au/records/incomplete'} id="espace-ntro" data-testid="espace-ntro">
+            <MuiLink
+                component={RouterLink}
+                to={'https://espace.library.uq.edu.au/records/incomplete'}
+                id="espace-ntro"
+                data-testid="espace-ntro"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
                 {'Complete [totalRecords] NTRO [records]'
                     .replace('[totalRecords]', recordCount)
                     .replace('[records]', pluralise('record', recordCount))}
-            </Link>
+            </MuiLink>
         </StyledGridListItem>
     );
 };
@@ -116,7 +136,14 @@ export const EspaceLinks = ({ author, possibleRecords, incompleteNTRORecords }) 
         <StandardCard subCard fullHeight primaryHeader noPadding standardCardId="espace-panel" title={'UQ eSpace'}>
             <Grid container component={'ul'} spacing={0} style={{ paddingInline: '24px', marginTop: '24px' }}>
                 <StyledGridItem component={'li'} item xs={12}>
-                    <Link to={'https://espace.library.uq.edu.au/dashboard'}>UQ eSpace dashboard</Link>
+                    <MuiLink
+                        component={RouterLink}
+                        to={'https://espace.library.uq.edu.au/dashboard'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        UQ eSpace dashboard
+                    </MuiLink>
                 </StyledGridItem>
                 <EspaceEditorialAppointments />
                 {!authorNeedsToUpdateRecords && <EspaceUpdateWorks />}
