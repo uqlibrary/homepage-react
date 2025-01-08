@@ -322,10 +322,8 @@ export const ariaLabelForLocation = location => {
         return `Click through to the location page for ${libraryName} hours and busy level.`;
     }
 
-    openingHours = openingHours
-        .trim()
-        .replace(' - ', ' to ')
-        .toLowerCase();
+    openingHours = openingHours.trim().replace(' - ', ' to ');
+    openingHours = openingHours?.toLowerCase();
 
     let locationType = 'study space';
     if (location?.abbr === 'AskUs') {
@@ -465,10 +463,8 @@ const Locations = ({
                         Herston: 'Herston Health Sciences',
                     };
                     if (lookupTable.hasOwnProperty(location.abbr)) {
-                        console.log('getDisplayName YES', location.abbr, lookupTable[location.abbr]);
                         return lookupTable[location.abbr];
                     }
-                    console.log('getDisplayName NO', location.abbr, location.name);
                     return location.name;
                 };
 
@@ -497,7 +493,7 @@ const Locations = ({
         });
 
     const sluggifyName = string => {
-        return string.toLowerCase().replace(' ', '-');
+        return string?.toLowerCase().replace(' ', '-');
     };
 
     function getBusynessBar(location) {
