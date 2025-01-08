@@ -4,7 +4,7 @@ export const libHours = {
     "name": "Architecture & Music Library",
     "category": "library",
     "desc": "",
-    "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/architecture-music-library",
+    "url": "https:\/\/web.library.uq.edu.au\/visit\/architecture-and-music-library",
     "contact": "",
     "lat": "",
     "long": "",
@@ -15,7 +15,6 @@ export const libHours = {
         "status": "not-set"
     },
     "rendered": "",
-    "abbr": "Arch Music",
     "departments": [{
         "lid": 10451,
         "name": "Collections & space",
@@ -62,7 +61,7 @@ export const libHours = {
         "name": "AskUs chat & phone assistance",
         "category": "library",
         "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/contact-us",
+        "url": "https:\/\/web.library.uq.edu.au\/about\/contact-us",
         "contact": "",
         "lat": "",
         "long": "",
@@ -73,7 +72,6 @@ export const libHours = {
             "status": "not-set"
         },
         "rendered": "",
-        "abbr": "AskUs",
         "departments": [{
             "lid": 4987,
             "name": "Chat",
@@ -129,7 +127,7 @@ export const libHours = {
         "name": "Biological Sciences Library",
         "category": "library",
         "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/biological-sciences-library",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/biological-sciences-library",
         "contact": "",
         "lat": "",
         "long": "",
@@ -140,7 +138,6 @@ export const libHours = {
             "status": "not-set"
         },
         "rendered": "",
-        "abbr": "Biol Sci",
         "departments": [{
             "lid": 3829,
             "name": "Study space",
@@ -187,7 +184,7 @@ export const libHours = {
         "name": "Central Library",
         "category": "library",
         "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/central-library",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/central-library",
         "contact": "",
         "lat": "",
         "long": "",
@@ -198,7 +195,6 @@ export const libHours = {
             "status": "not-set"
         },
         "rendered": "",
-        "abbr": "Central",
         "departments": [{
             "lid": 10457,
             "name": "Collections & space",
@@ -250,7 +246,7 @@ export const libHours = {
         "name": "Dorothy Hill Engineering and Sciences Library",
         "category": "library",
         "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/dorothy-hill-engineering-and-sciences-library",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/dorothy-hill-engineering-and-sciences-library",
         "contact": "",
         "lat": "",
         "long": "",
@@ -261,7 +257,6 @@ export const libHours = {
             "status": "not-set"
         },
         "rendered": "",
-        "abbr": "DHEngSci",
         "departments": [{
             "lid": 10458,
             "name": "Study space",
@@ -333,7 +328,7 @@ export const libHours = {
         "name": "Duhig Tower",
         "category": "library",
         "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/duhig-tower",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/duhig-tower",
         "contact": "",
         "lat": "",
         "long": "",
@@ -344,7 +339,6 @@ export const libHours = {
             "status": "not-set"
         },
         "rendered": "",
-        "abbr": "Duhig Study",
         "departments": [{
             "lid": 3831,
             "name": "Study space",
@@ -371,7 +365,7 @@ export const libHours = {
         "name": "Dutton Park Health Sciences Library",
         "category": "library",
         "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/dutton-park-health-sciences-library",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/dutton-park-health-sciences-library",
         "contact": "",
         "lat": "",
         "long": "",
@@ -382,7 +376,6 @@ export const libHours = {
             "status": "not-set"
         },
         "rendered": "",
-        "abbr": "Dutton Park",
         "departments": [{
             "lid": 3970,
             "name": "Collections & space",
@@ -438,7 +431,7 @@ export const libHours = {
         "name": "FW Robinson Reading Room",
         "category": "library",
         "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/fw-robinson-reading-room",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/fryer-library-and-fw-robinson-reading-room",
         "contact": "",
         "lat": "",
         "long": "",
@@ -449,7 +442,6 @@ export const libHours = {
             "status": "not-set"
         },
         "rendered": "",
-        "abbr": "Fryer",
         "departments": [{
             "lid": 3851,
             "name": "Service & collections",
@@ -474,7 +466,7 @@ export const libHours = {
         "name": "JK Murray (UQ Gatton)",
         "category": "library",
         "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/uq-gatton-library-jk-murray-library",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/jk-murray-library-uq-gatton",
         "contact": "",
         "lat": "",
         "long": "",
@@ -485,7 +477,6 @@ export const libHours = {
             "status": "not-set"
         },
         "rendered": "",
-        "abbr": "Gatton Library",
         "departments": [{
             "lid": 8867,
             "name": "Collections & space",
@@ -537,7 +528,7 @@ export const libHours = {
         "name": "Herston Health Sciences Library",
         "category": "library",
         "desc": "<p style=\"box-sizing: border-box; color: rgb(34, 34, 34); font-family: Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;\">The library provides resources and services to support the teaching, learning and research needs of:<\/p>\r\n\r\n<ul style=\"box-sizing: border-box; color: rgb(34, 34, 34); font-family: Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;\">\r\n\t<li style=\"box-sizing: border-box;\">UQ staff and students<\/li>\r\n\t<li style=\"box-sizing: border-box;\">Staff of the Royal Brisbane and Women&#39;s Hospital (RBWH) and the<\/li>\r\n\t<li style=\"box-sizing: border-box;\">Lady Cilento Children&#39;s Hospital<\/li>\r\n<\/ul>\r\n\r\n<p style=\"box-sizing: border-box; color: rgb(34, 34, 34); font-family: Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;\">RBWH &amp; Lady Cilento Children&#39;s Hospital&nbsp;staff see&nbsp;<a href=\"https:\/\/web.library.uq.edu.au\/library-services\/services-hospital-staff\" style=\"box-sizing: border-box; color: rgb(35, 119, 203); text-decoration: none; background-color: transparent;\">services for hospital staff<\/a>&nbsp;for more information.<\/p>",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/herston-health-sciences-library",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/herston-health-sciences-library",
         "contact": "",
         "lat": "",
         "long": "",
@@ -548,7 +539,6 @@ export const libHours = {
             "status": "not-set"
         },
         "rendered": "",
-        "abbr": "Herston",
         "departments": [{
             "lid": 10726,
             "name": "Collections & space",
@@ -624,7 +614,7 @@ export const libHours = {
         "name": "Law Library",
         "category": "library",
         "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/law-library-walter-harrison-library",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/walter-harrison-law-library",
         "contact": "",
         "lat": "",
         "long": "",
@@ -635,7 +625,6 @@ export const libHours = {
             "status": "not-set"
         },
         "rendered": "",
-        "abbr": "Law",
         "departments": [{
         //     "lid": 4801,
         //     "name": "Collections & space",
@@ -692,7 +681,6 @@ export const libHours = {
             "status": "not-set"
         },
         "rendered": "",
-        "abbr": "Whitty Mater"
     }
 ]
 };

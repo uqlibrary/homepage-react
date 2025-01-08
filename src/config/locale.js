@@ -45,6 +45,20 @@ export const locale = {
         Rockhampton: 'Other',
         Toowoomba: 'Other',
     },
+    springshareIds: {
+        4986: 'AskUs',
+        3832: 'Fryer',
+        3833: 'Gatton',
+        3823: 'Arch Music',
+        3824: 'Biol Sci',
+        3842: 'Central',
+        3825: 'DHEngSci',
+        3830: 'Duhig Study',
+        3967: 'Dutton Park',
+        3838: 'Herston',
+        3841: 'Law',
+        3966: 'Whitty Mater',
+    },
 
     // this table maps those locations who exist on vemcount against their matching springshare location
     // note: not all locations have vemcount people-counting gates
