@@ -131,6 +131,7 @@ const RenderImage = (articleindex, article, theme, isSm) => {
                     width: '100%',
                     position: 'relative',
                     paddingBottom: isSm && articleindex !== 0 ? '91.534%' : '66.667%',
+                    marginBottom: isSm && articleindex !== 0 ? '32px' : null,
                 }}
             >
                 <img

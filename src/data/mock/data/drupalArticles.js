@@ -17,24 +17,6 @@ export const drupalArticles = [
     ]
   },
   {
-    "title": "Teaching and learning academics, update your course reading lists for Semester 2",
-    "description": "",
-    "canonical_url": "https://live-library-uq.pantheonsite.io/stories/teaching-and-learning-academics-update-your-course-reading-lists-semester-2",
-    "image": null,
-    "promoted": true,
-    "sticky": false,
-    "date_created": "2024-08-07T02:57:52+00:00",
-    "date_modified": "2024-08-07T03:30:28+00:00",
-    "read_time": "5 minutes",
-    "audience": [
-      "Test audience group"
-    ],
-    "categories": [
-      "Teaching and learning"
-    ]
-  },
-  
-  {
     "title": "Building works at Biological Sciences Library, April to December 2024",
     "description": "",
     "canonical_url": "https://live-library-uq.pantheonsite.io/stories/building-works-biological-sciences-library-april-december-2024",
@@ -49,6 +31,23 @@ export const drupalArticles = [
     ],
     "categories": [
       "Building works"
+    ]
+  },
+  {
+    "title": "Teaching",
+    "description": "",
+    "canonical_url": "https://live-library-uq.pantheonsite.io/stories/teaching-and-learning-academics-update-your-course-reading-lists-semester-2",
+    "image": null,
+    "promoted": true,
+    "sticky": false,
+    "date_created": "2024-08-07T02:57:52+00:00",
+    "date_modified": "2024-08-07T03:30:28+00:00",
+    "read_time": "5 minutes",
+    "audience": [
+      "Test audience group"
+    ],
+    "categories": [
+      "Teaching"
     ]
   },
   {

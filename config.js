@@ -14,10 +14,7 @@ const deployment = {
         basePath: '',
         publicPath: '',
         // reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents-development/[BRANCH_NAME]/uq-lib-reusable.min.js', // dev
-        // for web presence dev
-        reusablejs:
-            'https://assets.library.uq.edu.au/reusable-webcomponents-development/webpresence-staging/uq-lib-reusable.min.js?last=20240813', // dev
-        // reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
+        reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
         removeConsoleLog: false,
     },
     staging: {
