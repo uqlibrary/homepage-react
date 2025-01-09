@@ -463,10 +463,8 @@ const Locations = ({
                         Herston: 'Herston Health Sciences',
                     };
                     if (lookupTable.hasOwnProperty(location.abbr)) {
-                        console.log('getDisplayName YES', location.abbr, lookupTable[location.abbr]);
                         return lookupTable[location.abbr];
                     }
-                    console.log('getDisplayName NO', location.abbr, location.name);
                     return location.name;
                 };
 
