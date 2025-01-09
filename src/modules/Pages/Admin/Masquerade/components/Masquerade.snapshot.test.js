@@ -1,16 +1,25 @@
 import React from 'react';
 import Masquerade from './Masquerade';
-import { rtlRender } from 'test-utils';
+import { render, WithReduxStore, fireEvent } from 'test-utils';
 
 function setup(testProps = {}) {
     const props = {
-        author: testProps.author || null,
-        actions: testProps.actions || {},
-        account: testProps.account || {},
+        author: null,
+        actions: {},
+        account: {},
         ...testProps,
     };
-    return rtlRender(<Masquerade {...props} />);
+    return render(
+        <WithReduxStore>
+            <Masquerade {...props} />
+        </WithReduxStore>,
+    );
 }
+
+beforeAll(() => {
+    delete global.window.location;
+    global.window.location = { href: '', replace: jest.fn(), assign: jest.fn() };
+});
 
 describe('Component Masquerade', () => {
     it('Should render form as expected', () => {

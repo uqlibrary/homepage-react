@@ -3,9 +3,9 @@ context('Masquerade', () => {
         cy.visit('/admin/masquerade?user=uqstaff');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('div#masquerade').contains('Masquerade');
+        cy.get('[data-testid="masquerade"]').contains('Masquerade');
         cy.log('Masquerade');
-        cy.checkA11y('div#masquerade', {
+        cy.checkA11y('[data-testid="masquerade"]', {
             reportName: 'Masquerade',
             scopeName: 'Content',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
@@ -16,9 +16,9 @@ context('Masquerade', () => {
         cy.visit('/admin/masquerade?user=uqmasquerade');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('div#masquerade').contains('Masquerade');
+        cy.get('[data-testid="masquerade"]').contains('Masquerade');
         cy.log('Masquerade');
-        cy.checkA11y('div#masquerade', {
+        cy.checkA11y('[data-testid="masquerade"]', {
             reportName: 'Masquerade',
             scopeName: 'Content',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
@@ -40,7 +40,7 @@ context('Masquerade', () => {
 
         cy.visit('/admin/masquerade/?user=uqmasquerade');
         cy.viewport(1300, 1000);
-        cy.get('#userName').type('s1111111');
+        cy.get('[data-testid="masquerade-userName"]').type('s1111111');
         cy.get('button')
             .contains('Masquerade')
             .click();
@@ -57,7 +57,7 @@ context('Masquerade', () => {
         cy.visit('/admin/masquerade/?user=uqstaff');
         cy.viewport(1300, 1000);
         cy.get('body').contains('When masquerading');
-        cy.get('#userName').type('s1111111');
+        cy.get('[data-testid="masquerade-userName"]').type('s1111111');
         cy.get('button')
             .contains('Masquerade')
             .click();
