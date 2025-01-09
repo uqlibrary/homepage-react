@@ -193,6 +193,9 @@ const StyledTableWrapper = styled('div')(({ theme }) => ({
         backgroundPosition: 'left center',
         backgroundRepeat: 'no-repeat',
     },
+    '& .locations-error': {
+        padding: '1rem 1rem 1rem 0',
+    },
 }));
 
 const MyLoader = props => (
@@ -542,8 +545,8 @@ const Locations = ({
                         );
                     } else if (!!libHoursError || !!vemcountError) {
                         return (
-                            <div className={'locations-wrapper'}>
-                                <Typography style={{ padding: '1rem 1rem 1rem 0' }} data-testid="locations-error">
+                            <div>
+                                <Typography className={'locations-error'} data-testid="locations-error">
                                     We can't load opening hours or how busy Library spaces are right now. Please refresh
                                     your browser or try again later.
                                 </Typography>
