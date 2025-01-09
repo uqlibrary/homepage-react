@@ -25,80 +25,72 @@ exports[`Component Masquerade Should render form as expected 1`] = `
       >
         <div
           class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard css-1fo4ce8-MuiPaper-root-MuiCard-root"
-          data-analyticsid="standard-card"
-          data-testid="standard-card"
-          id="standard-card"
+          data-analyticsid="masquerade"
+          data-testid="masquerade"
+          id="masquerade"
         >
           <div
             class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
-            data-testid="standard-card-content"
+            data-testid="masquerade-content"
           >
+            <p
+              class="MuiTypography-root MuiTypography-body1 css-u1nwny-MuiTypography-root"
+            >
+              <span>
+                <strong>
+                  WARNING!!
+                </strong>
+                 When masquerading as a user, you will effectively become that user, and changes you make will apply to the account!
+              </span>
+            </p>
             <div
-              class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-a5rdam-MuiGrid-root"
+              class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-3 css-1vne64g-MuiGrid-root"
+              style="margin-top: 12px;"
             >
               <div
-                class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-ox0vta-MuiGrid-root"
-                id="masquerade"
+                class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true css-1svz66l-MuiGrid-root"
               >
-                <p
-                  class="MuiTypography-root MuiTypography-body1 css-u1nwny-MuiTypography-root"
-                >
-                  <span>
-                    <strong>
-                      WARNING!!
-                    </strong>
-                     When masquerading as a user, you will effectively become that user, and changes you make will apply to the account!
-                  </span>
-                </p>
                 <div
-                  class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-3 css-1vne64g-MuiGrid-root"
-                  style="margin-top: 12px;"
+                  class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+                  data-testid="masquerade-userName"
                 >
-                  <div
-                    class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true css-1svz66l-MuiGrid-root"
+                  <label
+                    class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard css-14c9fi4-MuiFormLabel-root-MuiInputLabel-root"
+                    data-shrink="false"
+                    for=":r0:"
+                    id=":r0:-label"
                   >
-                    <div
-                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-                      data-testid="masquerade-userName"
-                    >
-                      <label
-                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard css-14c9fi4-MuiFormLabel-root-MuiInputLabel-root"
-                        data-shrink="false"
-                        for="userName"
-                        id="userName-label"
-                      >
-                        Enter a UQ staff or student username (eg. uqjsmith1 or s123456)
-                      </label>
-                      <div
-                        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-1xgqg2-MuiInputBase-root-MuiInput-root"
-                      >
-                        <input
-                          aria-invalid="false"
-                          class="MuiInputBase-input MuiInput-input css-1x51dt5-MuiInputBase-input-MuiInput-input"
-                          id="userName"
-                          type="text"
-                          value=""
-                        />
-                      </div>
-                    </div>
-                  </div>
+                    Enter a UQ staff or student username (eg. uqjsmith1 or s123456)
+                  </label>
                   <div
-                    class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-auto css-drrzl8-MuiGrid-root"
+                    class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-1xgqg2-MuiInputBase-root-MuiInput-root"
                   >
-                    <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-pitokd-MuiButtonBase-root-MuiButton-root"
-                      data-testid="masquerade-submit"
-                      id="submitMasquerade"
-                      tabindex="0"
-                      type="button"
-                    >
-                      Masquerade
-                      <span
-                        class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                      />
-                    </button>
+                    <input
+                      aria-invalid="false"
+                      class="MuiInputBase-input MuiInput-input css-1x51dt5-MuiInputBase-input-MuiInput-input"
+                      id=":r0:"
+                      type="text"
+                      value=""
+                    />
                   </div>
                 </div>
+              </div>
+              <div
+                class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-auto css-drrzl8-MuiGrid-root"
+              >
+                <button
+                  class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-pitokd-MuiButtonBase-root-MuiButton-root"
+                  data-analyticsid="submitMasquerade"
+                  data-testid="masquerade-submit"
+                  id="submitMasquerade"
+                  tabindex="0"
+                  type="button"
+                >
+                  Masquerade
+                  <span
+                    class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                  />
+                </button>
               </div>
             </div>
           </div>
@@ -134,80 +126,72 @@ exports[`Component Masquerade Should render readonly description 1`] = `
       >
         <div
           class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root card StandardCard css-1fo4ce8-MuiPaper-root-MuiCard-root"
-          data-analyticsid="standard-card"
-          data-testid="standard-card"
-          id="standard-card"
+          data-analyticsid="masquerade"
+          data-testid="masquerade"
+          id="masquerade"
         >
           <div
             class="MuiCardContent-root css-46bh2p-MuiCardContent-root"
-            data-testid="standard-card-content"
+            data-testid="masquerade-content"
           >
+            <p
+              class="MuiTypography-root MuiTypography-body1 css-u1nwny-MuiTypography-root"
+            >
+              <span>
+                <strong>
+                  NOTE:
+                </strong>
+                 As a read-only masquerader, you can view all parts of the profile, but you are not able to make any changes to the account.
+              </span>
+            </p>
             <div
-              class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-a5rdam-MuiGrid-root"
+              class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-3 css-1vne64g-MuiGrid-root"
+              style="margin-top: 12px;"
             >
               <div
-                class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-ox0vta-MuiGrid-root"
-                id="masquerade"
+                class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true css-1svz66l-MuiGrid-root"
               >
-                <p
-                  class="MuiTypography-root MuiTypography-body1 css-u1nwny-MuiTypography-root"
-                >
-                  <span>
-                    <strong>
-                      NOTE:
-                    </strong>
-                     As a read-only masquerader, you can view all parts of the profile, but you are not able to make any changes to the account.
-                  </span>
-                </p>
                 <div
-                  class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-3 css-1vne64g-MuiGrid-root"
-                  style="margin-top: 12px;"
+                  class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+                  data-testid="masquerade-userName"
                 >
-                  <div
-                    class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true css-1svz66l-MuiGrid-root"
+                  <label
+                    class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard css-14c9fi4-MuiFormLabel-root-MuiInputLabel-root"
+                    data-shrink="false"
+                    for=":r1:"
+                    id=":r1:-label"
                   >
-                    <div
-                      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-                      data-testid="masquerade-userName"
-                    >
-                      <label
-                        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard css-14c9fi4-MuiFormLabel-root-MuiInputLabel-root"
-                        data-shrink="false"
-                        for="userName"
-                        id="userName-label"
-                      >
-                        Enter a UQ staff or student username (eg. uqjsmith1 or s123456)
-                      </label>
-                      <div
-                        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-1xgqg2-MuiInputBase-root-MuiInput-root"
-                      >
-                        <input
-                          aria-invalid="false"
-                          class="MuiInputBase-input MuiInput-input css-1x51dt5-MuiInputBase-input-MuiInput-input"
-                          id="userName"
-                          type="text"
-                          value=""
-                        />
-                      </div>
-                    </div>
-                  </div>
+                    Enter a UQ staff or student username (eg. uqjsmith1 or s123456)
+                  </label>
                   <div
-                    class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-auto css-drrzl8-MuiGrid-root"
+                    class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-1xgqg2-MuiInputBase-root-MuiInput-root"
                   >
-                    <button
-                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-pitokd-MuiButtonBase-root-MuiButton-root"
-                      data-testid="masquerade-submit"
-                      id="submitMasquerade"
-                      tabindex="0"
-                      type="button"
-                    >
-                      Masquerade
-                      <span
-                        class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                      />
-                    </button>
+                    <input
+                      aria-invalid="false"
+                      class="MuiInputBase-input MuiInput-input css-1x51dt5-MuiInputBase-input-MuiInput-input"
+                      id=":r1:"
+                      type="text"
+                      value=""
+                    />
                   </div>
                 </div>
+              </div>
+              <div
+                class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-auto css-drrzl8-MuiGrid-root"
+              >
+                <button
+                  class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-fullWidth css-pitokd-MuiButtonBase-root-MuiButton-root"
+                  data-analyticsid="submitMasquerade"
+                  data-testid="masquerade-submit"
+                  id="submitMasquerade"
+                  tabindex="0"
+                  type="button"
+                >
+                  Masquerade
+                  <span
+                    class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                  />
+                </button>
               </div>
             </div>
           </div>
