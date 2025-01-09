@@ -451,16 +451,9 @@ const Locations = ({
                 const getDisplayName = location => {
                     // if not present in the lookup table, uses the value passed from Springshare
                     const lookupTable = {
-                        AskUs: 'AskUs chat hours', // this one must be overriden long term, I think
-                        'Arch Music': 'Architecture and Music', // all these following should be able to be deleted once the Springshare name values are updated, post go live
-                        Central: 'Central',
-                        'Biol Sci': 'Biological Sciences',
-                        DHEngSci: 'Dorothy Hill Engineering and Sciences',
-                        'Dutton Park': 'Dutton Park Health Sciences',
+                        AskUs: 'AskUs chat hours', // override the Springshare-supplied label because homepage doesn't show phone hours, only chat
                         Fryer: 'FW Robinson Reading Room (Fryer)',
                         Gatton: 'JK Murray (UQ Gatton)',
-                        Law: 'Walter Harrison Law',
-                        Herston: 'Herston Health Sciences',
                     };
                     if (lookupTable.hasOwnProperty(location.abbr)) {
                         return lookupTable[location.abbr];
