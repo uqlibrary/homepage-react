@@ -1,7 +1,7 @@
 export const libHours = {
     "locations": [{
     "lid": 3823,
-    "name": "Architecture & Music Library",
+    "name": "Architecture and Music",
     "category": "library",
     "desc": "",
     "url": "https:\/\/web.library.uq.edu.au\/visit\/architecture-and-music-library",
@@ -124,7 +124,7 @@ export const libHours = {
     },
     {
         "lid": 3824,
-        "name": "Biological Sciences Library",
+        "name": "Biological Sciences",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/visit\/biological-sciences-library",
@@ -181,7 +181,7 @@ export const libHours = {
     },
     {
         "lid": 3842,
-        "name": "Central Library",
+        "name": "Central",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/visit\/central-library",
@@ -243,7 +243,7 @@ export const libHours = {
     },
     {
         "lid": 3825,
-        "name": "Dorothy Hill Engineering and Sciences Library",
+        "name": "Dorothy Hill Engineering and Sciences",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/visit\/dorothy-hill-engineering-and-sciences-library",
@@ -362,7 +362,7 @@ export const libHours = {
     },
     {
         "lid": 3967,
-        "name": "Dutton Park Health Sciences Library",
+        "name": "Dutton Park Health Sciences",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/visit\/dutton-park-health-sciences-library",
@@ -525,7 +525,7 @@ export const libHours = {
     },
     {
         "lid": 3838,
-        "name": "Herston Health Sciences Library",
+        "name": "Herston Health Sciences",
         "category": "library",
         "desc": "<p style=\"box-sizing: border-box; color: rgb(34, 34, 34); font-family: Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;\">The library provides resources and services to support the teaching, learning and research needs of:<\/p>\r\n\r\n<ul style=\"box-sizing: border-box; color: rgb(34, 34, 34); font-family: Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;\">\r\n\t<li style=\"box-sizing: border-box;\">UQ staff and students<\/li>\r\n\t<li style=\"box-sizing: border-box;\">Staff of the Royal Brisbane and Women&#39;s Hospital (RBWH) and the<\/li>\r\n\t<li style=\"box-sizing: border-box;\">Lady Cilento Children&#39;s Hospital<\/li>\r\n<\/ul>\r\n\r\n<p style=\"box-sizing: border-box; color: rgb(34, 34, 34); font-family: Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;\">RBWH &amp; Lady Cilento Children&#39;s Hospital&nbsp;staff see&nbsp;<a href=\"https:\/\/web.library.uq.edu.au\/library-services\/services-hospital-staff\" style=\"box-sizing: border-box; color: rgb(35, 119, 203); text-decoration: none; background-color: transparent;\">services for hospital staff<\/a>&nbsp;for more information.<\/p>",
         "url": "https:\/\/web.library.uq.edu.au\/visit\/herston-health-sciences-library",
@@ -611,7 +611,7 @@ export const libHours = {
     },
     {
         "lid": 3841,
-        "name": "Law Library",
+        "name": "Walter Harrison Law",
         "category": "library",
         "desc": "",
         "url": "https:\/\/web.library.uq.edu.au\/visit\/walter-harrison-law-library",
@@ -681,6 +681,34 @@ export const libHours = {
             "status": "not-set"
         },
         "rendered": "",
+        "departments": [
+        {
+            "lid": 4384,
+            "name": "Study space",
+            "category": "department",
+            "desc": "",
+            "url": "",
+            "contact": "",
+            "lat": "",
+            "long": "",
+            "color": "#000000",
+            "parent_lid": 3966,
+            "day": "Thursday",
+            "times": {
+                "status": "open",
+                "hours": [
+                    {
+                        "from": "6:30am",
+                        "to": "10pm"
+                    }
+                ],
+                "currently_open": true
+            },
+            "rendered": "6:30am - 10pm",
+            "open": "06:30:00",
+            "close": "22:00:00"
+        }
+        ]
     }
 ]
 };
