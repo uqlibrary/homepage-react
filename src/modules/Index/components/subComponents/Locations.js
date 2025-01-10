@@ -112,7 +112,7 @@ const StyledTableWrapper = styled('div')(({ theme }) => ({
     },
     '& .table-column-name': {
         flex: 1,
-        maxWidth: '340px',
+        maxWidth: '345px',
         overflow: 'hidden',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
