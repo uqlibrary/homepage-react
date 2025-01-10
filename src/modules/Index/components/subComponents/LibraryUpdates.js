@@ -12,9 +12,14 @@ import LibraryArticle from './LibraryArticle';
 import { styled } from '@mui/material/styles';
 
 const StyledHeaderGridItem = styled(Grid)(({ theme }) => ({
-    marginTop: 0,
-    paddingTop: 0,
-    '& h2': { marginTop: '72px', fontSize: '32px', fontWeight: 500, display: 'inline-block', marginRight: '16px' },
+    marginTop: '-32px',
+    '& h2': {
+        marginTop: '72px',
+        fontSize: '32px',
+        fontWeight: 500,
+        display: 'inline-block',
+        marginRight: '16px',
+    },
     '& a': {
         color: theme.palette.primary.light,
         fontWeight: 500,

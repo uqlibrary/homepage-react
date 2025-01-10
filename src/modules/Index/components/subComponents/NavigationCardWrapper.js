@@ -20,6 +20,8 @@ const StyledGridContainer = styled(Grid)(({ theme }) => ({
     paddingRight: '8px',
     paddingLeft: 0,
     margin: 0,
+    marginBottom: '-32px',
+    marginTop: '64px',
     [theme.breakpoints.down('uqDsTablet')]: {
         marginRight: '24px',
     },

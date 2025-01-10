@@ -68,16 +68,15 @@ const StyledHeaderGridItem = styled(Grid)(() => ({
 }));
 
 const StyledWrapper = styled('div')(({ theme }) => ({
-    ['&.trainingWrapper']: {
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        overflow: 'hidden',
-        marginBottom: '24px',
-        minHeight: '25em',
-        '&.missing': {
-            minHeight: '5em',
-        },
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    overflow: 'hidden',
+    marginTop: '16px',
+    marginBottom: '24px',
+    minHeight: '25em',
+    '&.missing': {
+        minHeight: '5em',
     },
     ['& .linkButton']: {
         backgroundColor: '#fff',
@@ -189,7 +188,8 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
     const showEventDetail = (event, value = null) => {
         setEventDetail(value ?? event);
         setTimeout(() => {
-            document.getElementById('training-event-detail-close-button').focus();
+            const closeButton = document.getElementById('training-event-detail-close-button');
+            !!closeButton && closeButton.focus();
         }, 300);
     };
     const closeEvent = entityId => {
