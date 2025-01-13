@@ -21,7 +21,7 @@ const openCloseWorks = () => {
         });
         it('clicking the button label can open and close the dialog', () => {
             function clickLabel() {
-                cy.get('#location-dialog-controller span:first-child')
+                cy.get('#location-dialog-controller')
                     .should('be.visible')
                     .click();
             }
