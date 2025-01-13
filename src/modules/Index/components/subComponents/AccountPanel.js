@@ -347,7 +347,6 @@ export const AccountPanel = ({
             }
         }, [isOpenpapercutMenu]);
 
-        const getPapercutId = tag => `papercut${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         const handleClose = () => {
             setMenuAnchorElement(null);
         };
@@ -452,9 +451,9 @@ export const AccountPanel = ({
                     fullWidth
                     classes={{ root: 'menuItemRoot' }}
                     onClick={handleToggle}
-                    id={getPapercutId('menu-button')}
-                    data-testid={getPapercutId('menu-button')}
-                    data-analyticsid={getPapercutId('tooltip')}
+                    id={'papercut-menu-button'}
+                    data-testid={'papercut-menu-button'}
+                    data-analyticsid={'papercut-tooltip'}
                     title="Click to manage your print balance"
                     aria-haspopup="true"
                     aria-expanded={menuAnchorElement !== null ? 'true' : 'false'}
@@ -472,8 +471,8 @@ export const AccountPanel = ({
                     )}
                 </StyledPrintBalanceButton>
                 <Popper
-                    id={getPapercutId('menu')}
-                    data-testid={getPapercutId('menu')}
+                    id={'papercut-menu'}
+                    data-testid={'papercut-menu'}
                     anchorEl={menuAnchorElement}
                     open={!!menuAnchorElement}
                     placement="bottom-start"
@@ -513,9 +512,9 @@ export const AccountPanel = ({
                                     const topUpLabel = topupAmount => 'Top up your print balance - $' + topupAmount;
                                     return (
                                         <MenuItem
-                                            id={getPapercutId(`item-button-${index + 1}`)}
-                                            key={getPapercutId(`item-button-${index + 1}`)}
-                                            data-testid={getPapercutId(`item-button-${index + 1}`)}
+                                            id={`papercut-item-button-${index + 1}`}
+                                            key={`papercut-item-button-${index + 1}`}
+                                            data-testid={`papercut-item-button-${index + 1}`}
                                             onClick={() => navigateToTopUpUrl(topupAmount)}
                                             onKeyDown={handlePapercutTabNextKeyDown}
                                         >
@@ -527,9 +526,9 @@ export const AccountPanel = ({
                         })()}
 
                         <MenuItem
-                            id={getPapercutId(`item-button-${topupAmounts.length + 1}`)}
-                            data-testid={getPapercutId(`item-button-${topupAmounts.length + 1}`)}
-                            data-analyticsid={getPapercutId(`item-button-${topupAmounts.length + 1}`)}
+                            id={`papercut-item-button-${topupAmounts.length + 1}`}
+                            data-testid={`papercut-item-button-${topupAmounts.length + 1}`}
+                            data-analyticsid={`papercut-item-button-${topupAmounts.length + 1}`}
                             onClick={() => navigateToAboutPage()}
                             onKeyDown={handlePapercutTabOutKeyDown}
                         >
