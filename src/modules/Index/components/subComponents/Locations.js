@@ -113,7 +113,7 @@ const StyledTableWrapper = styled('div')(({ theme }) => ({
     },
     '& .table-column-name': {
         flex: 1,
-        maxWidth: '340px',
+        maxWidth: '345px',
         overflow: 'hidden',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
@@ -235,7 +235,13 @@ const MyLoader = props => (
     </ContentLoader>
 );
 
-const departmentsMap = ['Collections & space', 'Study space', 'Service & collections'];
+const departmentsMap = [
+    'Collections and space',
+    'Study space',
+    'Service and collections',
+    'Collections & space', // remove after Feb 2025
+    'Service & collections', // remove after Feb 2025
+];
 function departmentProvided(location) {
     return (
         !!location && !!location.departments && Array.isArray(location.departments) && location.departments.length > 0

@@ -75,7 +75,7 @@ describe('Locations panel', () => {
                 departments: [
                     {
                         lid: 10451,
-                        name: 'Collections & space',
+                        name: 'Collections and space',
                         category: 'department',
                         desc: '',
                         url: '',
@@ -105,7 +105,7 @@ describe('Locations panel', () => {
                     },
                     {
                         lid: 10779,
-                        name: 'Collections & space',
+                        name: 'Collections and space',
                         category: 'department',
                         desc: '',
                         url: '',

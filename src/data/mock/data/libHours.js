@@ -17,7 +17,7 @@ export const libHours = {
     "rendered": "",
     "departments": [{
         "lid": 10451,
-        "name": "Collections & space",
+        "name": "Collections and space",
         "category": "department",
         "desc": "",
         "url": "",
@@ -197,7 +197,7 @@ export const libHours = {
         "rendered": "",
         "departments": [{
             "lid": 10457,
-            "name": "Collections & space",
+            "name": "Collections and space",
             "category": "department",
             "desc": "",
             "url": "",
@@ -378,7 +378,7 @@ export const libHours = {
         "rendered": "",
         "departments": [{
             "lid": 3970,
-            "name": "Collections & space",
+            "name": "Collections and space",
             "category": "department",
             "desc": "",
             "url": "",
@@ -444,7 +444,7 @@ export const libHours = {
         "rendered": "",
         "departments": [{
             "lid": 3851,
-            "name": "Service & collections",
+            "name": "Service and collections",
             "category": "department",
             "desc": "",
             "url": "",
@@ -479,7 +479,7 @@ export const libHours = {
         "rendered": "",
         "departments": [{
             "lid": 8867,
-            "name": "Collections & space",
+            "name": "Collections and space",
             "category": "department",
             "desc": "",
             "url": "",
@@ -541,7 +541,7 @@ export const libHours = {
         "rendered": "",
         "departments": [{
             "lid": 10726,
-            "name": "Collections & space",
+            "name": "Collections and space",
             "category": "department",
             "desc": "",
             "url": "",
@@ -627,7 +627,7 @@ export const libHours = {
         "rendered": "",
         "departments": [{
         //     "lid": 4801,
-        //     "name": "Collections & space",
+        //     "name": "Collections and space",
         //     "category": "department",
         //     "desc": "",
         //     "url": "",
