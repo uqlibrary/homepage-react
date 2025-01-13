@@ -19,21 +19,116 @@ const openCloseWorks = () => {
             // dialog is closed
             cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
         });
-        it('a second click on the button can close the dialog', () => {
+        it('clicking the button label can open and close the dialog', () => {
+            function clickLabel() {
+                cy.get('#location-dialog-controller span:first-child')
+                    .should('be.visible')
+                    .click();
+            }
+            cy.visit('/');
+            cy.viewport(1300, 1000);
             cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
             // open dialog
-            cy.get('[data-testid="hours-accordion-open"]').click();
+            clickLabel();
+
             // confirm dialog is open
             cy.waitUntil(() =>
                 cy
-                    .get('[data-testid="homepage-hours-weeklyhours-link"]')
+                    .get('[data-testid="hours-item-askus"]')
                     .should('exist')
                     .should('be.visible')
-                    .contains('See all Library and AskUs hours'),
+                    .contains('AskUs chat hours'),
             );
 
             // re-click button
-            cy.get('[data-testid="hours-accordion-open"]').click();
+            clickLabel();
+            // dialog is closed
+            cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
+
+            // re-click button
+            clickLabel();
+            // dialog is open
+            cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('be.visible');
+
+            // re-click button
+            clickLabel();
+            // dialog is closed
+            cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
+        });
+        it('clicking the button up-down arrow can open and close the dialog', () => {
+            function clickChevron() {
+                cy.get('#location-dialog-controller svg')
+                    .should('be.visible')
+                    .click();
+            }
+            cy.visit('/');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+            // open dialog
+            clickChevron();
+
+            // confirm dialog is open
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="hours-item-askus"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('AskUs chat hours'),
+            );
+
+            // re-click button
+            clickChevron();
+            // dialog is closed
+            cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
+
+            // re-click button
+            clickChevron();
+            // dialog is open
+            cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('be.visible');
+
+            // re-click button
+            clickChevron();
+            // dialog is closed
+            cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
+        });
+        it('clicking the button icon can open and close the dialog', () => {
+            function clickIcon() {
+                cy.get('#location-dialog-controller')
+                    .should('be.visible') // Ensure the button is visible
+                    .then($button => {
+                        // Calculate the position to click on the background icon
+                        const paddingLeft = parseFloat($button.css('padding-left'));
+
+                        // Click within the left padding area
+                        cy.wrap($button).click(paddingLeft / 2, $button.height() / 2);
+                    });
+            }
+            cy.visit('/');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+            // open dialog
+            clickIcon();
+            // confirm dialog is open
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="hours-item-askus"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('AskUs chat hours'),
+            );
+
+            // re-click button
+            clickIcon();
+            // dialog is closed
+            cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
+
+            // re-click button
+            clickIcon();
+            // dialog is open
+            cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('be.visible');
+
+            // re-click button
+            clickIcon();
             // dialog is closed
             cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
         });

@@ -165,6 +165,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                 locationOpen &&
                 locationsRef.current &&
                 !locationsRef.current.contains(e.target) &&
+                !((e.target?.id || 'NONE') === 'location-dialog-controller') &&
                 !((e.target?.id || 'NONE') === 'location-dialog-controller-label')
             ) {
                 showHideLocationPanel();
@@ -238,10 +239,8 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                         aria-controls="locations-wrapper"
                         aria-label="Show/hide Locations and hours panel"
                     >
-                        <span>
-                            <span id="location-dialog-controller-label" data-analyticsid="hours-accordion-word">
-                                Locations and hours
-                            </span>
+                        <span id="location-dialog-controller-label" data-analyticsid="hours-accordion-word">
+                            Locations and hours
                         </span>
                         {!!locationOpen ? (
                             <ExpandLessIcon data-analyticsid="hours-accordion-arrow" />
