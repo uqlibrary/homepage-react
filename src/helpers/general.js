@@ -125,14 +125,12 @@ export const pluralise = (singularWord, count, pluralWordSpecial = null) => {
  */
 export const linkToDrupal = (pathname, requestedDomainName = null) => {
     const domainName = requestedDomainName ?? document.location.hostname;
-    // after jan 2025 golive, should be web.library only
-    // note some tests need correction
     const origin = [
-        'localhost',
-        'homepage-development.library.uq.edu.au',
-        'homepage-staging.library.uq.edu.au',
+        // 'localhost',
+        // 'homepage-development.library.uq.edu.au',
+        'homepage-staging.library.uq.edu.au', // unit tests assume this
     ].includes(domainName)
-        ? 'https://web-live.library.uq.edu.au'
+        ? 'https://dev-library-uq.pantheonsite.io' // Drupal10 staging env
         : 'https://web.library.uq.edu.au';
     return `${origin}${pathname}`;
 };

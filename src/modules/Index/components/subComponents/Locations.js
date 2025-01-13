@@ -3,7 +3,6 @@ import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
 import ContentLoader from 'react-content-loader';
 
-import Fade from '@mui/material/Fade';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/material/styles';
@@ -193,6 +192,9 @@ const StyledTableWrapper = styled('div')(({ theme }) => ({
         backgroundSize: ' 16px 16px',
         backgroundPosition: 'left center',
         backgroundRepeat: 'no-repeat',
+    },
+    '& .locations-error': {
+        padding: '1rem 1rem 1rem 0',
     },
 }));
 
@@ -540,108 +542,113 @@ const Locations = ({
     return (
         <StyledStandardCard noPadding noHeader standardCardId="locations-panel">
             <StyledTableWrapper id="locationsTableWrapper">
-                {(!!libHoursError || !!vemcountError) && (
-                    <Fade in={!libHoursLoading} timeout={1000}>
-                        <div className={'locations-wrapper'}>
-                            <Typography style={{ padding: '1rem 1rem 1rem 0' }} data-testid="locations-error">
-                                We can't load opening hours or how busy Library spaces are right now. Please refresh
-                                your browser or try again later.
-                            </Typography>
-                        </div>
-                    </Fade>
-                )}
-                {!libHoursError && !!libHours && !libHoursLoading && !vemcountError && !!vemcount && !vemcountLoading && (
-                    <>
-                        {/* Header Row */}
-                        <Grid container className="table-row table-row-header">
-                            <Grid item id="header-library" className={'table-column-name'} aria-hidden="true">
-                                <Typography component="h3" variant="h6">
-                                    Library
+                {(() => {
+                    if (!!libHoursLoading || !!vemcountLoading) {
+                        return (
+                            <div className={'loaderContent'}>
+                                <MyLoader id="hours-loader" />
+                            </div>
+                        );
+                    } else if (!!libHoursError || !!vemcountError) {
+                        return (
+                            <div>
+                                <Typography className={'locations-error'} data-testid="locations-error">
+                                    We can't load opening hours or how busy Library spaces are right now. Please refresh
+                                    your browser or try again later.
                                 </Typography>
-                            </Grid>
-                            <Grid item className="table-column-hours" id="header-hours" aria-hidden="true">
-                                <Typography component="h3" variant="h6">
-                                    Opening hours*
-                                </Typography>
-                            </Grid>
-                            <Grid
-                                item
-                                className="table-column-busy occupancyWrapper"
-                                id="header-busy"
-                                aria-hidden="true"
-                            >
-                                <Typography component="h3" variant="h6">
-                                    Busy level
-                                </Typography>
-                            </Grid>
-                        </Grid>
-
-                        {/* Body Rows */}
-                        {!!sortedHours &&
-                            sortedHours.length > 1 &&
-                            sortedHours.map((location, index) => {
-                                const librarySlug = sluggifyName(`hours-item-${location.abbr}`);
-                                return (
-                                    <Grid
-                                        container
-                                        key={index}
-                                        className={`table-row table-row-body location-${location.abbr?.toLowerCase()}`}
-                                        data-testid={librarySlug}
-                                    >
-                                        <Grid
-                                            item
-                                            id={sluggifyName(`library-name-${location.abbr}`)}
-                                            className="table-cell table-column-name has-ellipsis"
-                                            aria-labelledby="header-library"
-                                        >
-                                            <Link
-                                                to={location.url}
-                                                id={`${librarySlug}`}
-                                                className={'locationLink'}
-                                                data-testid={`${librarySlug}-link`}
-                                                aria-label={ariaLabelForLocation(location)}
-                                                onKeyDown={index === 0 ? handleFirstLinkKeyDown : null}
-                                            >
-                                                {location.displayName}
-                                            </Link>
-                                        </Grid>
-                                        <Grid
-                                            item
-                                            className="table-cell table-column-hours table-cell-hastext"
-                                            aria-labelledby={`header-hours ${sluggifyName(
-                                                `library-name-${location.abbr}`,
-                                            )}`}
-                                            aria-hidden="true"
-                                        >
-                                            <Typography
-                                                component={'span'}
-                                                data-testid={`${sluggifyName(`location-item-${location.abbr}-hours`)}`}
-                                            >
-                                                {getLibraryHours(location)}
-                                            </Typography>
-                                        </Grid>
-                                        <Grid
-                                            item
-                                            className="table-cell table-cell-busy table-column-busy"
-                                            data-testid={`${sluggifyName(`hours-item-busy-${location.abbr}`)}`}
-                                            aria-labelledby={`header-busy ${sluggifyName(
-                                                `library-name-${location.abbr}`,
-                                            )}`}
-                                            aria-hidden="true"
-                                        >
-                                            <div className={'occupancyWrapper'}>{getBusynessBar(location)}</div>
-                                        </Grid>
+                            </div>
+                        );
+                    } else {
+                        return (
+                            <>
+                                {/* Header Row */}
+                                <Grid container className="table-row table-row-header">
+                                    <Grid item id="header-library" className={'table-column-name'} aria-hidden="true">
+                                        <Typography component="h3" variant="h6">
+                                            Library
+                                        </Typography>
                                     </Grid>
-                                );
-                            })}
-                    </>
-                )}
-                {((!!libHoursLoading && !libHoursError && !libHours) ||
-                    (!vemcountError && !vemcount && !!vemcountLoading)) && (
-                    <div className={'loaderContent'}>
-                        <MyLoader id="hours-loader" />
-                    </div>
-                )}
+                                    <Grid item className="table-column-hours" id="header-hours" aria-hidden="true">
+                                        <Typography component="h3" variant="h6">
+                                            Opening hours*
+                                        </Typography>
+                                    </Grid>
+                                    <Grid
+                                        item
+                                        className="table-column-busy occupancyWrapper"
+                                        id="header-busy"
+                                        aria-hidden="true"
+                                    >
+                                        <Typography component="h3" variant="h6">
+                                            Busy level
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+
+                                {/* Body Rows */}
+                                {!!sortedHours &&
+                                    sortedHours.length > 1 &&
+                                    sortedHours.map((location, index) => {
+                                        const librarySlug = sluggifyName(`hours-item-${location.abbr}`);
+                                        return (
+                                            <Grid
+                                                container
+                                                key={index}
+                                                className={`table-row table-row-body location-${location.abbr?.toLowerCase()}`}
+                                                data-testid={librarySlug}
+                                            >
+                                                <Grid
+                                                    item
+                                                    id={sluggifyName(`library-name-${location.abbr}`)}
+                                                    className="table-cell table-column-name has-ellipsis"
+                                                    aria-labelledby="header-library"
+                                                >
+                                                    <Link
+                                                        to={location.url}
+                                                        id={`${librarySlug}`}
+                                                        className={'locationLink'}
+                                                        data-testid={`${librarySlug}-link`}
+                                                        aria-label={ariaLabelForLocation(location)}
+                                                        onKeyDown={index === 0 ? handleFirstLinkKeyDown : null}
+                                                    >
+                                                        {location.displayName}
+                                                    </Link>
+                                                </Grid>
+                                                <Grid
+                                                    item
+                                                    className="table-cell table-column-hours table-cell-hastext"
+                                                    aria-labelledby={`header-hours ${sluggifyName(
+                                                        `library-name-${location.abbr}`,
+                                                    )}`}
+                                                    aria-hidden="true"
+                                                >
+                                                    <Typography
+                                                        component={'span'}
+                                                        data-testid={`${sluggifyName(
+                                                            `location-item-${location.abbr}-hours`,
+                                                        )}`}
+                                                    >
+                                                        {getLibraryHours(location)}
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid
+                                                    item
+                                                    className="table-cell table-cell-busy table-column-busy"
+                                                    data-testid={`${sluggifyName(`hours-item-busy-${location.abbr}`)}`}
+                                                    aria-labelledby={`header-busy ${sluggifyName(
+                                                        `library-name-${location.abbr}`,
+                                                    )}`}
+                                                    aria-hidden="true"
+                                                >
+                                                    <div className={'occupancyWrapper'}>{getBusynessBar(location)}</div>
+                                                </Grid>
+                                            </Grid>
+                                        );
+                                    })}
+                            </>
+                        );
+                    }
+                })()}
                 <StyledOutlinkDiv>
                     <span>
                         <Link
