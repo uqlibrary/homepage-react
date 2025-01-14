@@ -10,7 +10,13 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 
-import { locale as locationLocale } from 'config/locale';
+import {
+    ASKUS_SPRINGSHARE_ID,
+    FRYER_SPRINGSHARE_ID,
+    GATTON_SPRINGSHARE_ID,
+    locale as locationLocale,
+    WHITTY_SPRINGSHARE_ID,
+} from 'config/locale';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { linkToDrupal } from 'helpers/general';
 
@@ -237,47 +243,13 @@ const MyLoader = props => (
     </ContentLoader>
 );
 
-const departmentsMap = [
-    'Collections and space',
-    'Study space',
-    'Service and collections',
-    'Collections & space', // remove after Feb 2025
-    'Service & collections', // remove after Feb 2025
-];
-function departmentProvided(location) {
-    return (
-        !!location && !!location.departments && Array.isArray(location.departments) && location.departments.length > 0
-    );
-}
-
-export const hasDepartments = location => {
-    const departments =
-        !!departmentProvided(location) &&
-        location.departments.map(dept => {
-            if (departmentsMap.includes(dept.name)) {
-                return dept.name;
-            }
-            return null;
-        });
-    const displayableDepartments =
-        !!departmentProvided(location) &&
-        departments.filter(el => {
-            return el !== null;
-        });
-    return displayableDepartments.length > 0;
-};
-
 const VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING = 'Missing';
-const isOpen = (location, departmentsMapIn = null) => {
-    const departmentsMapUsed = departmentsMapIn ?? departmentsMap;
-    return location.departments?.filter(d => departmentsMapUsed.includes(d.name))?.find(d => d.currently_open === true);
-};
 const getTextForBusyness = (location, busyLookup) => {
     if (
-        locationLocale.springshareIds[location.lid] === 'AskUs' ||
+        location.lid === ASKUS_SPRINGSHARE_ID ||
         !location?.busyness ||
         location.busyness === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING ||
-        !isOpen(location)
+        !location?.isCurrentlyOpen
     ) {
         return null;
     }
@@ -291,50 +263,27 @@ const getTextForBusyness = (location, busyLookup) => {
     }
     return busyLookup.hasOwnProperty(busyinessIndex) ? busyLookup[busyinessIndex] : /* istanbul ignore next */ null;
 };
-function getLibraryHours(location) {
-    /* istanbul ignore else */
-    if (locationLocale.springshareIds[location.lid] === 'AskUs') {
-        return location.departments.map(department => {
-            if (['Chat'].includes(department.name)) {
-                return department.hours;
-            }
-            return null;
-        });
-    }
-    /* istanbul ignore else */
-    if (hasDepartments(location)) {
-        return location.departments.map(department => {
-            if (departmentsMap.includes(department.name)) {
-                return department.hours;
-            }
-            return null;
-        });
-    }
-    return 'See location';
-}
 export const ariaLabelForLocation = location => {
     let libraryName = `the ${location?.displayName} Library`;
     const nameLookupTable = {
-        AskUs: 'AskUs chat assistance',
-        Fryer: 'Fryer Library',
-        Gatton: 'the JK Murray Library',
+        [ASKUS_SPRINGSHARE_ID]: 'AskUs chat assistance',
+        [FRYER_SPRINGSHARE_ID]: 'Fryer Library',
+        [GATTON_SPRINGSHARE_ID]: 'the JK Murray Library',
     };
-    if (nameLookupTable.hasOwnProperty(location?.abbr)) {
-        libraryName = nameLookupTable[location.abbr];
+    if (nameLookupTable.hasOwnProperty(location?.lid)) {
+        libraryName = nameLookupTable[location.lid];
     }
 
-    const openingHoursArray = getLibraryHours(location);
-    let openingHours =
-        !!openingHoursArray && Array.isArray(openingHoursArray) ? openingHoursArray.join(' ') : openingHoursArray;
+    let openingHours = location?.openingHours;
     if (openingHours === 'See location') {
         return `Click through to the location page for ${libraryName} hours and busy level.`;
     }
 
-    openingHours = openingHours.trim().replace(' - ', ' to ');
+    openingHours = openingHours?.trim().replace(' - ', ' to ');
     openingHours = openingHours?.toLowerCase();
 
     let locationType = 'study space';
-    if (location?.abbr === 'AskUs') {
+    if (location?.lid === ASKUS_SPRINGSHARE_ID) {
         locationType = 'operating hours today';
     }
 
@@ -401,44 +350,26 @@ const Locations = ({
             vemcount.data.locationList.length > 0 &&
             libHours.locations.length > 0 &&
             libHours.locations.map(location => {
-                location.abbr = locationLocale.springshareIds[location.lid];
-                let departments = [];
-                if (!!departmentProvided(location)) {
-                    departments = location.departments.map(dept => {
-                        return {
-                            name: dept.name,
-                            hours: dept.rendered,
-                            currently_open: dept.times?.currently_open,
-                        };
-                    });
-                }
+                location.abbr = locationLocale.locationAbbreviations[location.lid];
 
-                function getVemcountZoneBySpringshareId(springshareLocationId) {
-                    return locationLocale.vemcountSpringshareMapping.find(
-                        m => m.springshareId === springshareLocationId,
-                    );
-                }
-
-                function vemcountPercentByLocation(springshareLocationId) {
-                    const vemcountLocation = getVemcountZoneBySpringshareId(springshareLocationId);
-                    const vemcountZoneId = vemcountLocation?.vemcountZoneId;
+                function vemcountPercentByLocation(vemcountZoneId) {
                     const vemcountWrapper = vemcount?.data?.locationList?.filter(v => v.id === vemcountZoneId);
                     // const dateLoaded = vemcount?.data?.dateLoaded; // for use later
                     const vemcountData = vemcountWrapper.length > 0 ? vemcountWrapper[0] : null;
-                    if (vemcountLocation?.springshareId === springshareLocationId && vemcountWrapper?.length === 0) {
+                    if (vemcountZoneId !== null && vemcountWrapper?.length === 0) {
                         return VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING;
                     }
                     return (vemcountData?.headCount / vemcountData?.capacity) * 100;
                 }
 
-                function getVemcountPercentage(springshareLocationId) {
-                    if (springshareLocationId === null) {
+                function getVemcountPercentage(vemcountZoneId) {
+                    if (vemcountZoneId === null) {
                         return null;
                     }
                     const minimumDisplayedPercentage = 5;
                     const maxmumDisplayedPercentage = 100;
 
-                    const vemcountBusynessPercent = vemcountPercentByLocation(springshareLocationId);
+                    const vemcountBusynessPercent = vemcountPercentByLocation(vemcountZoneId);
                     let calculatedBusyness;
                     if (vemcountBusynessPercent === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING) {
                         calculatedBusyness = vemcountBusynessPercent;
@@ -455,66 +386,41 @@ const Locations = ({
 
                     return calculatedBusyness;
                 }
-
-                const getDisplayName = location => {
-                    // if not present in the lookup table, uses the value passed from Springshare
-                    const lookupTable = {
-                        AskUs: 'AskUs chat hours', // this one must be overriden long term, I think
-                        'Arch Music': 'Architecture and Music', // all these following should be able to be deleted once the Springshare name values are updated, post go live
-                        Central: 'Central',
-                        'Biol Sci': 'Biological Sciences',
-                        DHEngSci: 'Dorothy Hill Engineering and Sciences',
-                        'Dutton Park': 'Dutton Park Health Sciences',
-                        Fryer: 'FW Robinson Reading Room (Fryer)',
-                        Gatton: 'JK Murray (UQ Gatton)',
-                        Law: 'Walter Harrison Law',
-                        Herston: 'Herston Health Sciences',
-                    };
-                    if (lookupTable.hasOwnProperty(location.abbr)) {
-                        return lookupTable[location.abbr];
-                    }
-                    return location.name;
-                };
-
                 return {
-                    lid: location.lid,
-                    displayName: getDisplayName(location),
-                    abbr: location.abbr,
-                    url: location.url,
-                    campus: locationLocale.hoursCampusMap[location.abbr],
-                    departments,
-                    busyness: getVemcountPercentage(location?.lid, location.name) || null,
+                    lid: location?.lid,
+                    displayName: location?.display_name,
+                    abbr: location?.abbr,
+                    url: location?.url,
+                    openingHours: location?.opening_hours || 'See location',
+                    vemcountZoneId: location?.vemcount_zone_id,
+                    isCurrentlyOpen: location?.currently_open,
+                    campus: location?.campus_name,
+                    busyness: getVemcountPercentage(location?.vemcount_zone_id) || null,
                 };
             })) ||
         [];
     const sortedHours = cleanedHours
         .filter(e => e !== null)
-        .filter(l => l.abbr !== 'Whitty Mater') // remove this from springshare data for homepage
-        .filter(l => screenWidth > theme.breakpoints.values.uqDsTablet || l.abbr !== 'AskUs') // remove the askus line when on smaller screens, it lacks extra info
+        .filter(l => l.lid !== WHITTY_SPRINGSHARE_ID) // remove this from springshare data for homepage
+        // remove the askus line when on smaller screens, it lacks extra info
+        .filter(l => screenWidth > theme.breakpoints.values.uqDsTablet || l.lid !== ASKUS_SPRINGSHARE_ID)
         .sort((a, b) => {
             // Askus goes last in the list
-            if (a.abbr === 'AskUs') return 1;
-            if (b.abbr === 'AskUs') return -1;
+            if (a.lid === ASKUS_SPRINGSHARE_ID) return 1;
+            if (b.lid === ASKUS_SPRINGSHARE_ID) return -1;
 
             // Otherwise, sort alphabetically by name
             return a.displayName.localeCompare(b.displayName);
         });
 
-    const sluggifyName = string => {
-        return string?.toLowerCase().replace(' ', '-');
-    };
-
     function getBusynessBar(location) {
-        if (location.abbr === 'AskUs') {
+        if (location?.lid === ASKUS_SPRINGSHARE_ID) {
             return null;
         }
-        if (location.abbr === 'Fryer') {
+        if (location?.lid === FRYER_SPRINGSHARE_ID) {
             return <div className="occupancyText has-ellipsis">By appointment</div>;
         }
-        if (!hasDepartments(location)) {
-            return <div className="occupancyText has-ellipsis has-exclamation-icon">Data not available</div>;
-        }
-        if (!isOpen(location)) {
+        if (!location?.isCurrentlyOpen) {
             return <div className="occupancyText has-ellipsis">Closed</div>;
         }
         /* istanbul ignore next */
@@ -589,17 +495,17 @@ const Locations = ({
                                 {!!sortedHours &&
                                     sortedHours.length > 1 &&
                                     sortedHours.map((location, index) => {
-                                        const librarySlug = sluggifyName(`hours-item-${location.abbr}`);
+                                        const librarySlug = `hours-item-${location.abbr}`;
                                         return (
                                             <Grid
                                                 container
                                                 key={index}
-                                                className={`table-row table-row-body location-${location.abbr?.toLowerCase()}`}
+                                                className={`table-row table-row-body location-${location.abbr}`}
                                                 data-testid={librarySlug}
                                             >
                                                 <Grid
                                                     item
-                                                    id={sluggifyName(`library-name-${location.abbr}`)}
+                                                    id={`library-name-${location.abbr}`}
                                                     className="table-cell table-column-name has-ellipsis"
                                                     aria-labelledby="header-library"
                                                 >
@@ -617,27 +523,21 @@ const Locations = ({
                                                 <Grid
                                                     item
                                                     className="table-cell table-column-hours table-cell-hastext"
-                                                    aria-labelledby={`header-hours ${sluggifyName(
-                                                        `library-name-${location.abbr}`,
-                                                    )}`}
+                                                    aria-labelledby={`header-hours library-name-${location.abbr}`}
                                                     aria-hidden="true"
                                                 >
                                                     <Typography
                                                         component={'span'}
-                                                        data-testid={`${sluggifyName(
-                                                            `location-item-${location.abbr}-hours`,
-                                                        )}`}
+                                                        data-testid={`location-item-${location.abbr}-hours`}
                                                     >
-                                                        {getLibraryHours(location)}
+                                                        {location?.openingHours}
                                                     </Typography>
                                                 </Grid>
                                                 <Grid
                                                     item
                                                     className="table-cell table-cell-busy table-column-busy"
-                                                    data-testid={`${sluggifyName(`hours-item-busy-${location.abbr}`)}`}
-                                                    aria-labelledby={`header-busy ${sluggifyName(
-                                                        `library-name-${location.abbr}`,
-                                                    )}`}
+                                                    data-testid={`hours-item-busy-${location.abbr}`}
+                                                    aria-labelledby={`header-busy library-name-${location.abbr}`}
                                                     aria-hidden="true"
                                                 >
                                                     <div className={'occupancyWrapper'}>{getBusynessBar(location)}</div>
