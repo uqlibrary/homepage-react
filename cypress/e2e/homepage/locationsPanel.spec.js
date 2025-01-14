@@ -25,6 +25,40 @@ context('Locations Panel', () => {
         cy.get('[data-testid="hours-item-askus-link"]')
             .should('exist')
             .contains('AskUs chat hours');
+
+        // there is a gap above the askus link
+        cy.get('[data-testid="locations-panel-content"]').within(() => {
+            let gattonBottom;
+            cy.get('[data-testid="hours-item-gatton"] a')
+                .should('be.visible')
+                .then($gattonLink => {
+                    gattonBottom = $gattonLink.position().top + $gattonLink.outerHeight();
+                });
+
+            let lawTop;
+            let lawBottom;
+            cy.get('[data-testid="hours-item-law"] a')
+                .should('be.visible')
+                .then($lawLink => {
+                    lawTop = $lawLink.position().top;
+                    lawBottom = $lawLink.position().top + $lawLink.outerHeight();
+                });
+
+            let askusTop;
+            cy.get('[data-testid="hours-item-askus"] a')
+                .should('be.visible')
+                .then($askusLink => {
+                    askusTop = $askusLink.position().top;
+
+                    // law is below gatton and askus is below law
+                    expect(lawTop).to.be.greaterThan(gattonBottom);
+                    expect(askusTop).to.be.greaterThan(lawBottom);
+                    // the gap between gatton and law is smaller than the gap between askus and law
+                    const spaceBetweenGattonAndLaw = lawTop - gattonBottom;
+                    const spaceBetweenLawAndAskus = askusTop - lawBottom;
+                    expect(spaceBetweenLawAndAskus).to.be.greaterThan(spaceBetweenGattonAndLaw * 1.5);
+                });
+        });
     });
     it.skip('is Accessible', () => {
         cy.visit('/');
@@ -81,7 +115,7 @@ context('Locations Panel', () => {
             .click();
         cy.get('body').contains('user has navigated to Bookit page');
     });
-    it.only('shows the expected values', () => {
+    it('shows the expected values', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
         cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
