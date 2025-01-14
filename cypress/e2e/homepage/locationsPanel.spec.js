@@ -118,20 +118,24 @@ context('Locations Panel', () => {
     it('shows the expected values', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
+
+        // the dialog is closed initially
         cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
-        // everything shows the dialog is closed initially
         cy.get('[data-testid="hours-accordion-open"]').should('have.attr', 'aria-expanded', 'false');
         cy.get('[data-testid="locations-wrapper"]').should('exist');
         cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'aria-live', 'off');
         cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'inert', 'true');
+
         // open the dialog
         cy.get('[data-testid="hours-accordion-open"]').click();
-        // everything now shows the dialog is open
+
+        // the dialog is open
         cy.get('[data-testid="hours-accordion-open"]').should('have.attr', 'aria-expanded', 'true');
         cy.get('[data-testid="locations-wrapper"]').should('exist');
         cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'aria-live', 'assertive');
         cy.get('[data-testid="locations-wrapper"]').should('not.have.attr', 'inert');
 
+        // content displayed correctly
         cy.get('[data-testid="hours-item-arch-music"] > div:first-child').contains('Architecture and Music');
         cy.get('[data-testid="hours-item-arch-music"] > div:first-child a').should(
             'have.attr',
@@ -189,11 +193,6 @@ context('Locations Panel', () => {
             .should('exist')
             .should('have.attr', 'aria-label', 'Quite busy');
 
-        /*
-        to have attribute aria-label with the value
-        **The Dutton Park Health Sciences Library study space is open 7am to 10:30am.**, but the value was
-        **The Dutton Park Health Sciences Library study space is open 7am to 10:30am. This space is currently not busy.**
-         */
         cy.get('[data-testid="hours-item-dutton-park"] > div:first-child').contains('Dutton Park Health Sciences');
         cy.get('[data-testid="hours-item-dutton-park"] > div:first-child a').should(
             'have.attr',
@@ -223,9 +222,12 @@ context('Locations Panel', () => {
             'Click through to the location page for the Walter Harrison Law Library hours and busy level.',
         );
         cy.get('[data-testid="hours-item-law"] > div:nth-child(2)').contains('See location');
-        cy.get('[data-testid="hours-item-law"] > div:nth-child(3) div.occupancyText')
+        cy.get('[data-testid="hours-item-law"] > div:nth-child(3) span')
             .should('exist')
-            .contains('Data not available');
+            .should('have.attr', 'aria-valuenow', '51');
+        cy.get('[data-testid="hours-item-law"] > div:nth-child(3) span')
+            .should('exist')
+            .should('have.attr', 'aria-label', 'Quite busy');
 
         cy.get('[data-testid="hours-item-fryer"] > div:first-child')
             .should('exist')
@@ -235,7 +237,7 @@ context('Locations Panel', () => {
             'aria-label',
             'Fryer Library study space is open by appointment.',
         );
-        cy.get('[data-testid="hours-item-fryer"] > div:nth-child(2)').contains('By Appointment');
+        cy.get('[data-testid="hours-item-fryer"] > div:nth-child(2)').contains('By appointment');
         cy.get('[data-testid="hours-item-fryer"] > div:nth-child(3) div.occupancyText')
             .should('exist')
             .contains('By appointment');

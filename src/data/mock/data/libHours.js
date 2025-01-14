@@ -28,7 +28,7 @@ export const libHours = {
         "url": "https:\/\/web.library.uq.edu.au\/about\/contact-us",
         "vemcount_zone_id": null,
         "campus_name": "Online",
-        "opening_hours": "8am - 6pm",
+        "opening_hours": "8am - 8pm",
         "currently_open": true,
         "departments": [{
             "lid": 4987,
@@ -144,7 +144,7 @@ export const libHours = {
         "vemcount_zone_id": 7880,
         "campus_name": "Dutton Park",
         "opening_hours": "7am - 10:30am",
-        "currently_open": true,
+        "currently_open": false,
         "departments": [{
             "lid": 3970,
             "name": "Collections and space",
@@ -235,8 +235,8 @@ export const libHours = {
         "url": "https:\/\/web.library.uq.edu.au\/visit\/walter-harrison-law-library",
         "vemcount_zone_id": 7882,
         "campus_name": "St Lucia",
-        "opening_hours": "24 Hours",
-        "currently_open": false,
+        "opening_hours": null,
+        "currently_open": true,
         "departments": [
             // {
             //     "lid": 4801,
