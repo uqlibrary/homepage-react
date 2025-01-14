@@ -179,6 +179,40 @@ describe('Locations Panel', () => {
         cy.get('[data-testid="hours-item-askus-link"]')
             .should('exist')
             .contains('AskUs chat hours');
+
+        // there is a gap above the askus link
+        cy.get('[data-testid="locations-panel-content"]').within(() => {
+            let gattonBottom;
+            cy.get('[data-testid="hours-item-gatton"] a')
+                .should('be.visible')
+                .then($gattonLink => {
+                    gattonBottom = $gattonLink.position().top + $gattonLink.outerHeight();
+                });
+
+            let lawTop;
+            let lawBottom;
+            cy.get('[data-testid="hours-item-law"] a')
+                .should('be.visible')
+                .then($lawLink => {
+                    lawTop = $lawLink.position().top;
+                    lawBottom = $lawLink.position().top + $lawLink.outerHeight();
+                });
+
+            let askusTop;
+            cy.get('[data-testid="hours-item-askus"] a')
+                .should('be.visible')
+                .then($askusLink => {
+                    askusTop = $askusLink.position().top;
+
+                    // law is below gatton and askus is below law
+                    expect(lawTop).to.be.greaterThan(gattonBottom);
+                    expect(askusTop).to.be.greaterThan(lawBottom);
+                    // the gap between gatton and law is smaller than the gap between askus and law
+                    const spaceBetweenGattonAndLaw = lawTop - gattonBottom;
+                    const spaceBetweenLawAndAskus = askusTop - lawBottom;
+                    expect(spaceBetweenLawAndAskus).to.be.greaterThan(spaceBetweenGattonAndLaw * 1.5);
+                });
+        });
     });
     context('Accessibility', () => {
         it('200 is Accessible', () => {
@@ -260,20 +294,24 @@ describe('Locations Panel', () => {
         it('shows the expected values', () => {
             cy.visit('/');
             cy.viewport(1300, 1000);
+
+            // the dialog is closed initially
             cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
-            // everything shows the dialog is closed initially
             cy.get('[data-testid="hours-accordion-open"]').should('have.attr', 'aria-expanded', 'false');
             cy.get('[data-testid="locations-wrapper"]').should('exist');
             cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'aria-live', 'off');
             cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'inert', 'true');
+
             // open the dialog
             cy.get('[data-testid="hours-accordion-open"]').click();
-            // everything now shows the dialog is open
+
+            // the dialog is open
             cy.get('[data-testid="hours-accordion-open"]').should('have.attr', 'aria-expanded', 'true');
             cy.get('[data-testid="locations-wrapper"]').should('exist');
             cy.get('[data-testid="locations-wrapper"]').should('have.attr', 'aria-live', 'assertive');
             cy.get('[data-testid="locations-wrapper"]').should('not.have.attr', 'inert');
 
+            // content displayed correctly
             cy.get('[data-testid="hours-item-arch-music"] > div:first-child').contains('Architecture and Music');
             cy.get('[data-testid="hours-item-arch-music"] > div:first-child a').should(
                 'have.attr',
@@ -360,9 +398,12 @@ describe('Locations Panel', () => {
                 'Click through to the location page for the Walter Harrison Law Library hours and busy level.',
             );
             cy.get('[data-testid="hours-item-law"] > div:nth-child(2)').contains('See location');
-            cy.get('[data-testid="hours-item-law"] > div:nth-child(3) div.occupancyText')
+            cy.get('[data-testid="hours-item-law"] > div:nth-child(3) span')
                 .should('exist')
-                .contains('Data not available');
+                .should('have.attr', 'aria-valuenow', '51');
+            cy.get('[data-testid="hours-item-law"] > div:nth-child(3) span')
+                .should('exist')
+                .should('have.attr', 'aria-label', 'Quite busy');
 
             cy.get('[data-testid="hours-item-fryer"] > div:first-child')
                 .should('exist')
@@ -372,7 +413,7 @@ describe('Locations Panel', () => {
                 'aria-label',
                 'Fryer Library study space is open by appointment.',
             );
-            cy.get('[data-testid="hours-item-fryer"] > div:nth-child(2)').contains('By Appointment');
+            cy.get('[data-testid="hours-item-fryer"] > div:nth-child(2)').contains('By appointment');
             cy.get('[data-testid="hours-item-fryer"] > div:nth-child(3) div.occupancyText')
                 .should('exist')
                 .contains('By appointment');
@@ -386,6 +427,12 @@ describe('Locations Panel', () => {
             );
             cy.get('[data-testid="hours-item-askus"] > div:nth-child(2)').contains('8am - 8pm');
             cy.get('[data-testid="hours-item-askus"] > div:nth-child(3) div.occupancyWrapper').should('be.empty');
+
+            // cy.log('Whitty has a missing department field (should never happen) so we see "See location"');
+            // cy.get('[data-testid="hours-item-whitty-mater"] div:first-child')
+            //     .should('exist')
+            //     .contains('Whitty building, Mater');
+            // cy.get('[data-testid="hours-item-whitty-mater"] div:nth-child(2)').contains('See location');
 
             // close the dialog
             cy.get('[data-testid="hours-accordion-open"]').click();
