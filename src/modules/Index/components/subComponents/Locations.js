@@ -242,27 +242,39 @@ function departmentProvided(location) {
     );
 }
 
-export const hasDepartments = location => {
-    const departments =
-        !!departmentProvided(location) &&
-        location.departments.map(dept => {
-            if (departmentsMap.includes(dept.name)) {
-                return dept.name;
-            }
-            return null;
-        });
-    const displayableDepartments =
-        !!departmentProvided(location) &&
-        departments.filter(el => {
-            return el !== null;
-        });
-    return displayableDepartments.length > 0;
-};
+// const isOpeningHoursValid = location => {
+//     console.log('location', location);
+//     if (location.currently_open !== true && location.currently_open !== false) {
+//         return false;
+//     }
+//     if (!location.opening_hours || location.opening_hours.length === 0) {
+//         return false;
+//     }
+//     return true;
+// };
+
+// export const hasDepartments = location => {
+//     const departments =
+//         !!departmentProvided(location) &&
+//         location.departments.map(dept => {
+//             if (departmentsMap.includes(dept.name)) {
+//                 return dept.name;
+//             }
+//             return null;
+//         });
+//     const displayableDepartments =
+//         !!departmentProvided(location) &&
+//         departments.filter(el => {
+//             return el !== null;
+//         });
+//     return displayableDepartments.length > 0;
+// };
 
 const VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING = 'Missing';
 const isOpen = (location, departmentsMapIn = null) => {
-    const departmentsMapUsed = departmentsMapIn ?? departmentsMap;
-    return location.departments?.filter(d => departmentsMapUsed.includes(d.name))?.find(d => d.currently_open === true);
+    return location.isCurrentlyOpen;
+    // const departmentsMapUsed = departmentsMapIn ?? departmentsMap;
+    // return location.departments?.filter(d => departmentsMapUsed.includes(d.name))?.find(d => d.currently_open === true);
 };
 const getTextForBusyness = (location, busyLookup) => {
     if (
@@ -284,25 +296,7 @@ const getTextForBusyness = (location, busyLookup) => {
     return busyLookup.hasOwnProperty(busyinessIndex) ? busyLookup[busyinessIndex] : /* istanbul ignore next */ null;
 };
 function getLibraryHours(location) {
-    /* istanbul ignore else */
-    if (locationLocale.springshareIds[location.lid] === 'AskUs') {
-        return location.departments.map(department => {
-            if (['Chat'].includes(department.name)) {
-                return department.hours;
-            }
-            return null;
-        });
-    }
-    /* istanbul ignore else */
-    if (hasDepartments(location)) {
-        return location.departments.map(department => {
-            if (departmentsMap.includes(department.name)) {
-                return department.hours;
-            }
-            return null;
-        });
-    }
-    return 'See location';
+    return location.openingHours;
 }
 export const ariaLabelForLocation = location => {
     let libraryName = `the ${location?.displayName} Library`;
@@ -315,14 +309,13 @@ export const ariaLabelForLocation = location => {
         libraryName = nameLookupTable[location.abbr];
     }
 
-    const openingHoursArray = getLibraryHours(location);
-    let openingHours =
-        !!openingHoursArray && Array.isArray(openingHoursArray) ? openingHoursArray.join(' ') : openingHoursArray;
+    let openingHours = location?.opening_hours;
+    openingHours = getLibraryHours(location);
     if (openingHours === 'See location') {
         return `Click through to the location page for ${libraryName} hours and busy level.`;
     }
 
-    openingHours = openingHours.trim().replace(' - ', ' to ');
+    openingHours = openingHours?.trim().replace(' - ', ' to ');
     openingHours = openingHours?.toLowerCase();
 
     let locationType = 'study space';
@@ -405,32 +398,25 @@ const Locations = ({
                     });
                 }
 
-                function getVemcountZoneBySpringshareId(springshareLocationId) {
-                    return locationLocale.vemcountSpringshareMapping.find(
-                        m => m.springshareId === springshareLocationId,
-                    );
-                }
-
-                function vemcountPercentByLocation(springshareLocationId) {
-                    const vemcountLocation = getVemcountZoneBySpringshareId(springshareLocationId);
-                    const vemcountZoneId = vemcountLocation?.vemcountZoneId;
+                function vemcountPercentByLocation(vemcountZoneId) {
                     const vemcountWrapper = vemcount?.data?.locationList?.filter(v => v.id === vemcountZoneId);
                     // const dateLoaded = vemcount?.data?.dateLoaded; // for use later
                     const vemcountData = vemcountWrapper.length > 0 ? vemcountWrapper[0] : null;
-                    if (vemcountLocation?.springshareId === springshareLocationId && vemcountWrapper?.length === 0) {
+                    console.log('vemcountData', vemcountData);
+                    if (vemcountZoneId !== null && vemcountWrapper?.length === 0) {
                         return VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING;
                     }
                     return (vemcountData?.headCount / vemcountData?.capacity) * 100;
                 }
 
-                function getVemcountPercentage(springshareLocationId) {
-                    if (springshareLocationId === null) {
+                function getVemcountPercentage(vemcountZoneId) {
+                    if (vemcountZoneId === null) {
                         return null;
                     }
                     const minimumDisplayedPercentage = 5;
                     const maxmumDisplayedPercentage = 100;
 
-                    const vemcountBusynessPercent = vemcountPercentByLocation(springshareLocationId);
+                    const vemcountBusynessPercent = vemcountPercentByLocation(vemcountZoneId);
                     let calculatedBusyness;
                     if (vemcountBusynessPercent === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING) {
                         calculatedBusyness = vemcountBusynessPercent;
@@ -447,35 +433,17 @@ const Locations = ({
 
                     return calculatedBusyness;
                 }
-
-                const getDisplayName = location => {
-                    // if not present in the lookup table, uses the value passed from Springshare
-                    const lookupTable = {
-                        AskUs: 'AskUs chat hours', // this one must be overriden long term, I think
-                        'Arch Music': 'Architecture and Music', // all these following should be able to be deleted once the Springshare name values are updated, post go live
-                        Central: 'Central',
-                        'Biol Sci': 'Biological Sciences',
-                        DHEngSci: 'Dorothy Hill Engineering and Sciences',
-                        'Dutton Park': 'Dutton Park Health Sciences',
-                        Fryer: 'FW Robinson Reading Room (Fryer)',
-                        Gatton: 'JK Murray (UQ Gatton)',
-                        Law: 'Walter Harrison Law',
-                        Herston: 'Herston Health Sciences',
-                    };
-                    if (lookupTable.hasOwnProperty(location.abbr)) {
-                        return lookupTable[location.abbr];
-                    }
-                    return location.name;
-                };
-
                 return {
                     lid: location.lid,
-                    displayName: getDisplayName(location),
+                    displayName: location.display_name,
                     abbr: location.abbr,
                     url: location.url,
-                    campus: locationLocale.hoursCampusMap[location.abbr],
+                    openingHours: location.opening_hours,
+                    vemcountZoneId: location.vemcount_zone_id,
+                    isCurrentlyOpen: location.currently_open,
+                    campus: location.campus_name || locationLocale.hoursCampusMap[location.abbr], // after March 2025, no fallback needed
                     departments,
-                    busyness: getVemcountPercentage(location?.lid, location.name) || null,
+                    busyness: getVemcountPercentage(location?.vemcount_zone_id) || null,
                 };
             })) ||
         [];
@@ -497,15 +465,16 @@ const Locations = ({
     };
 
     function getBusynessBar(location) {
+        console.log('getBusynessBar location=', location);
         if (location.abbr === 'AskUs') {
             return null;
         }
         if (location.abbr === 'Fryer') {
             return <div className="occupancyText has-ellipsis">By appointment</div>;
         }
-        if (!hasDepartments(location)) {
-            return <div className="occupancyText has-ellipsis has-exclamation-icon">Data not available</div>;
-        }
+        // if (!isOpeningHoursValid(location)) {
+        //     return <div className="occupancyText has-ellipsis has-exclamation-icon">Data not available</div>;
+        // }
         if (!isOpen(location)) {
             return <div className="occupancyText has-ellipsis">Closed</div>;
         }
