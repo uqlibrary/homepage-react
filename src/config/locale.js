@@ -3,110 +3,50 @@ const CAMPUS_GATTON = 'Gatton';
 const CAMPUS_HERSTON = 'Herston';
 const CAMPUS_DUTTON_PARK = 'Dutton Park';
 
-export const locale = {
-    locations: [
-        {
-            displayName: 'No preference',
-            value: 'not set',
-        },
-        {
-            displayName: 'St Lucia',
-            value: CAMPUS_ST_LUCIA,
-        },
-        {
-            displayName: 'Gatton',
-            value: CAMPUS_GATTON,
-        },
-        {
-            displayName: 'Herston',
-            value: CAMPUS_HERSTON,
-        },
-        {
-            displayName: 'Dutton Park',
-            value: CAMPUS_DUTTON_PARK,
-        },
-    ],
-    hoursCampusMap: {
-        // the keys in this must match the abbr values found in the Locations api result
-        'Arch Music': CAMPUS_ST_LUCIA,
-        AskUs: 'Online',
-        'Biol Sci': CAMPUS_ST_LUCIA,
-        Central: CAMPUS_ST_LUCIA,
-        DHEngSci: CAMPUS_ST_LUCIA,
-        'Duhig Study': CAMPUS_ST_LUCIA,
-        Fryer: CAMPUS_ST_LUCIA,
-        Gatton: CAMPUS_GATTON,
-        Herston: CAMPUS_HERSTON,
-        Law: CAMPUS_ST_LUCIA,
-        'Whitty Mater': 'Other',
-        'Dutton Park': CAMPUS_DUTTON_PARK,
-        Bundaberg: 'Other',
-        HerveyBay: 'Other',
-        Rockhampton: 'Other',
-        Toowoomba: 'Other',
-    },
-    springshareIds: {
-        4986: 'AskUs',
-        3832: 'Fryer',
-        3833: 'Gatton',
-        3823: 'Arch Music',
-        3824: 'Biol Sci',
-        3842: 'Central',
-        3825: 'DHEngSci',
-        3830: 'Duhig Study',
-        3967: 'Dutton Park',
-        3838: 'Herston',
-        3841: 'Law',
-        3966: 'Whitty Mater',
-    },
+export const ASKUS_SPRINGSHARE_ID = 4986;
+export const FRYER_SPRINGSHARE_ID = 3832;
+export const GATTON_SPRINGSHARE_ID = 3833;
+export const ARMUS_SPRINGSHARE_ID = 3823;
+export const BSL_SPRINGSHARE_ID = 3824;
+export const CENTRAL_SPRINGSHARE_ID = 3842;
+export const DHESL_SPRINGSHARE_ID = 3825;
+export const DUHIG_SPRINGSHARE_ID = 3830;
+export const DUTTON_SPRINGSHARE_ID = 3967;
+export const HERSTON_SPRINGSHARE_ID = 3838;
+export const LAW_SPRINGSHARE_ID = 3841;
+export const WHITTY_SPRINGSHARE_ID = 3966;
 
-    // this table maps those locations who exist on vemcount against their matching springshare location
-    // note: not all locations have vemcount people-counting gates
-    vemcountSpringshareMapping: [
-        {
-            springshareId: 3967,
-            vemcountZoneId: 7880,
-            name: 'Dutton park', // this doesn't need to match either system, its for the developer to not have to track raw numbers
-        },
-        {
-            springshareId: 3842,
-            vemcountZoneId: 7665,
-            name: 'Central',
-        },
-        {
-            springshareId: 3823,
-            vemcountZoneId: 7877,
-            name: 'Architecture',
-        },
-        {
-            springshareId: 3824,
-            vemcountZoneId: 7878,
-            name: 'BSL',
-        },
-        {
-            springshareId: 3825,
-            vemcountZoneId: 7879,
-            name: 'DHESL',
-        },
-        {
-            springshareId: 3830,
-            vemcountZoneId: 7411,
-            name: 'Duhig tower',
-        },
-        {
-            springshareId: 3833,
-            vemcountZoneId: 7884,
-            name: 'Gatton',
-        },
-        {
-            springshareId: 3838,
-            vemcountZoneId: 7883,
-            name: 'Herston',
-        },
-        {
-            springshareId: 3841,
-            vemcountZoneId: 7882,
-            name: 'Law',
-        },
-    ],
+export const locale = {
+    hoursCampusMap: {
+        [ARMUS_SPRINGSHARE_ID]: CAMPUS_ST_LUCIA,
+        [ASKUS_SPRINGSHARE_ID]: 'Online',
+        [BSL_SPRINGSHARE_ID]: CAMPUS_ST_LUCIA,
+        [CENTRAL_SPRINGSHARE_ID]: CAMPUS_ST_LUCIA,
+        [DHESL_SPRINGSHARE_ID]: CAMPUS_ST_LUCIA,
+        [DUHIG_SPRINGSHARE_ID]: CAMPUS_ST_LUCIA,
+        [FRYER_SPRINGSHARE_ID]: CAMPUS_ST_LUCIA,
+        [GATTON_SPRINGSHARE_ID]: CAMPUS_GATTON,
+        [HERSTON_SPRINGSHARE_ID]: CAMPUS_HERSTON,
+        [LAW_SPRINGSHARE_ID]: CAMPUS_ST_LUCIA,
+        [WHITTY_SPRINGSHARE_ID]: 'Other',
+        [DUTTON_SPRINGSHARE_ID]: CAMPUS_DUTTON_PARK,
+        // Bundaberg: 'Other',
+        // HerveyBay: 'Other',
+        // Rockhampton: 'Other',
+        // Toowoomba: 'Other',
+    },
+    locationAbbreviations: {
+        [ASKUS_SPRINGSHARE_ID]: 'askus',
+        [FRYER_SPRINGSHARE_ID]: 'fryer',
+        [GATTON_SPRINGSHARE_ID]: 'gatton',
+        [ARMUS_SPRINGSHARE_ID]: 'arch-music',
+        [BSL_SPRINGSHARE_ID]: 'biol-sci',
+        [CENTRAL_SPRINGSHARE_ID]: 'central',
+        [DHESL_SPRINGSHARE_ID]: 'dhengsci',
+        [DUHIG_SPRINGSHARE_ID]: 'duhig-study',
+        [DUTTON_SPRINGSHARE_ID]: 'dutton-park',
+        [HERSTON_SPRINGSHARE_ID]: 'herston',
+        [LAW_SPRINGSHARE_ID]: 'law',
+        [WHITTY_SPRINGSHARE_ID]: 'whitty-mater',
+    },
 };
