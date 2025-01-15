@@ -4,7 +4,7 @@ export const vemcountData = {
         locationList: [
             {
                 id: 7411,
-                headCount: 160,
+                headCount: 'invalid',
                 capacity: 294,
                 name: "Duhig Tower",
             },

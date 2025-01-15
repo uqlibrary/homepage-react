@@ -247,10 +247,7 @@ const productionRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents/
 const stagingRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage';
 export const DRUPAL_ARTICLE_API = () => {
     const filePath = '/articles.json';
-    const shouldUseProduction =
-        process.env.BRANCH === 'production' ||
-        (document.location.hostname === 'homepage-development.library.uq.edu.au' && // production on dev for test only
-            /* istanbul ignore next */ document.location.pathname === '/webpresence-staging/');
+    const shouldUseProduction = process.env.BRANCH === 'production';
     return {
         apiUrl: shouldUseProduction ? `${productionRoot}${filePath}` : `${stagingRoot}${filePath}`,
     };
@@ -258,10 +255,7 @@ export const DRUPAL_ARTICLE_API = () => {
 
 export const VEMCOUNT_API = () => {
     const filePath = '/headcount.json';
-    const shouldUseProduction =
-        process.env.BRANCH === 'production' ||
-        (document.location.hostname === 'homepage-development.library.uq.edu.au' && // production on dev for test only
-            /* istanbul ignore next */ document.location.pathname === '/webpresence-staging/');
+    const shouldUseProduction = process.env.BRANCH === 'production';
     return {
         apiUrl: shouldUseProduction ? `${productionRoot}${filePath}` : `${stagingRoot}${filePath}`,
     };

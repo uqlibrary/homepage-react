@@ -107,7 +107,7 @@ export default {
                     'homepage-development.library.uq.edu.au',
                     'homepage-staging.library.uq.edu.au',
                 ].includes(document.location.hostname)
-                    ? 'https://web-live.library.uq.edu.au/study-and-learning-support/training-and-workshops/legal-research-essentials'
+                    ? 'https://dev-library-uq.pantheonsite.io/study-and-learning-support/training-and-workshops/legal-research-essentials'
                     : /* istanbul ignore next */ 'https://web.library.uq.edu.au/study-and-learning-support/training-and-workshops/legal-research-essentials',
                 // this doesn't like an `import linkToDrupal` line above - weird! linkToDrupal is only temporary anyway
             },
