@@ -48,9 +48,9 @@ const StyledMenuList = styled(List)(({ theme }) => ({
         },
         '& span': {
             lineHeight: 'normal',
-        },
-        '&.has-error': {
             textDecoration: 'underline',
+            color: theme.palette.primary.light,
+            fontWeight: 500,
         },
     },
     '& .MuiTouchRipple-root': {
@@ -289,7 +289,6 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
                         data-analyticsid={`papercut-item-button-${topupAmounts.length + 1}`}
                         onClick={() => navigateToAboutPage()}
                         onKeyDown={handlePapercutTabOutKeyDown}
-                        className={!!printBalanceError || !printBalance?.email ? 'has-error' : ''}
                     >
                         <span>More about your printing account</span>
                     </MenuItem>
