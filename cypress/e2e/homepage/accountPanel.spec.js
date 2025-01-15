@@ -26,9 +26,9 @@ describe('Account panel', () => {
             cy.get('[data-testid="show-papercut"]').should('not.contain', '(');
         });
     });
-    context('Accessibility', () => {
-        it('is accessible, base', () => {
-            cy.visit('/');
+    context('is accessible', () => {
+        it('on load', () => {
+            cy.visit('/?user=s1111111');
             cy.injectAxe();
             cy.wait(2000);
             cy.viewport(1300, 1000);
@@ -41,10 +41,58 @@ describe('Account panel', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        // add extra tests for:
-        // for s1111111 (has fines)
-        // pop open print balance menu
-        // pop open print balance menu WITH ERROR
+        it('when papercut menu is open', () => {
+            cy.visit('/');
+            cy.injectAxe();
+            cy.wait(2000);
+            cy.viewport(1300, 1000);
+
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="papercut-menu-button"]')
+                    .should('exist')
+                    .contains('12.50'),
+            );
+            cy.get('[data-testid="papercut-menu-button"]').click();
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="papercut-item-button-1"]')
+                    .should('exist')
+                    .contains('Top up'),
+            );
+
+            cy.checkA11y('[data-testid="account-panel"]', {
+                reportName: 'papercut panel',
+                scopeName: 'As loaded',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+        });
+        it('when papercut menu is open to error', () => {
+            cy.visit('http://localhost:2020/?responseType=almaError');
+            cy.injectAxe();
+            cy.wait(2000);
+            cy.viewport(1300, 1000);
+
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="papercut-menu-button"]')
+                    .should('exist')
+                    .contains('Print balance'),
+            );
+            cy.get('[data-testid="papercut-menu-button"]').click();
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="papercut-item-button-4"]')
+                    .should('exist')
+                    .contains('More'),
+            );
+
+            cy.checkA11y('[data-testid="account-panel"]', {
+                reportName: 'papercut panel',
+                scopeName: 'As loaded',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+        });
     });
     context('Papercut', () => {
         function openPapercutPopup() {
@@ -194,33 +242,34 @@ describe('Account panel', () => {
                 .contains('More about your printing account');
             cy.get('[data-testid="papercut-item-button-1"]').should('not.exist');
         });
-
-        // there is custom tab handling on the papercut menu, but Cypress cant test that :(
-        // working:
-        // load http://localhost:2020/?user=vanilla
-        // tab to Print balance field
-        // tab again - focus is on "See all training"
-        // back tab - back on Print balance
-        // click return - menu opens, focus is on first item
-        // tab through each item, land on next item in menu
-        // tab out of final menu item, menu closes, focus is on "See all training"
-        // back tab, focus is on Print balance
-        // click enter to load menu
-        // tab to final entry on menu
-        // back tab through each menu item
-        // back tab out of first menu item, menu closes, focus is on Print balance
-        // -- also check when fines and charges available
-        // load http://localhost:2020/?user=s1111111
-        // tab to Print balance field
-        // tab again - focus is on "Fines and charges"
-        // back tab - back on Prin galance
-        // click return - menu opens, focus is on first item
-        // tab through each item, land on next item in menu
-        // tab out of final menu item, menu closes, focus is on "Fines and charges"
-        // back tab, focus is on Print balance
-        // click enter to load menu
-        // tab to final entry on menu
-        // back tab through each menu item
-        // back tab out of first menu item, menu closes, focus is on Print balance
+        it.skip('MANUALLY CHECK THAT TABBING WORKS!!!!', () => {
+            // there is custom tab handling on the papercut menu, but Cypress cant test that :(
+            // working:
+            // load http://localhost:2020/?user=vanilla
+            // tab to Print balance field
+            // tab again - focus is on "See all training"
+            // back tab - back on Print balance
+            // click return - menu opens, focus is on first item
+            // tab through each item, land on next item in menu
+            // tab out of final menu item, menu closes, focus is on "See all training"
+            // back tab, focus is on Print balance
+            // click enter to load menu
+            // tab to final entry on menu
+            // back tab through each menu item
+            // back tab out of first menu item, menu closes, focus is on Print balance
+            // -- also check when fines and charges available
+            // load http://localhost:2020/?user=s1111111
+            // tab to Print balance field
+            // tab again - focus is on "Fines and charges"
+            // back tab - back on Prin galance
+            // click return - menu opens, focus is on first item
+            // tab through each item, land on next item in menu
+            // tab out of final menu item, menu closes, focus is on "Fines and charges"
+            // back tab, focus is on Print balance
+            // click enter to load menu
+            // tab to final entry on menu
+            // back tab through each menu item
+            // back tab out of first menu item, menu closes, focus is on Print balance        })
+        });
     });
 });
