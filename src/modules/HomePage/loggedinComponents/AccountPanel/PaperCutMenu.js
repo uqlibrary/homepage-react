@@ -21,6 +21,9 @@ const StyledPrintBalanceButton = styled(Button)(({ theme }) => ({
     '&:focus-visible': {
         outline: '-webkit-focus-ring-color auto 1px',
     },
+    '& svg.openClose': {
+        marginTop: '2px',
+    },
 }));
 
 const StyledMenuList = styled(List)(({ theme }) => ({
@@ -223,9 +226,9 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
                     Print balance {markedPrintBalance()}
                 </span>
                 {menuAnchorElement !== null ? (
-                    <ExpandLessIcon data-analyticsid="papercut-accordion-arrow-opener" />
+                    <ExpandLessIcon data-analyticsid="papercut-accordion-arrow-opener" className={'openClose'} />
                 ) : (
-                    <ExpandMoreIcon data-analyticsid="papercut-accordion-arrow-closer" />
+                    <ExpandMoreIcon data-analyticsid="papercut-accordion-arrow-closer" className={'openClose'} />
                 )}
             </StyledPrintBalanceButton>
             <Popper
