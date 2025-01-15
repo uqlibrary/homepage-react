@@ -10,8 +10,8 @@ import Typography from '@mui/material/Typography';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
-import LibraryUpdates from 'modules/Index/components/subComponents/LibraryUpdates';
-import NavigationCardWrapper from './subComponents/NavigationCardWrapper';
+import LibraryUpdates from './publicComponents/LibraryUpdates/LibraryUpdates';
+import NavigationCardWrapper from './publicComponents/HelpNavigation/NavigationCardWrapper';
 import {
     loadPrintBalance,
     searcheSpacePossiblePublications,
@@ -22,27 +22,15 @@ import {
     loadLoans,
     loadVemcountList,
 } from 'data/actions';
-import {
-    canSeeLearningResourcesPanel,
-    isEspaceAuthor,
-    canSeeReadPublish,
-    canSeeTrainingPanel,
-} from 'helpers/access';
-import UtilityBar from './subComponents/UtilityBar';
+import { canSeeLearningResourcesPanel, isEspaceAuthor, canSeeReadPublish, canSeeTrainingPanel } from 'helpers/access';
+import UtilityBar from './publicComponents/UtilityBar/UtilityBar';
 
-// const EspaceLinks = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/EspaceLinks')));
-// const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
-// const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
-// const ReferencingPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReferencingPanel')));
-// const ReadPublish = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/ReadPublish')));
-// const AccountPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/AccountPanel')));
-
-import EspaceLinks from './subComponents/EspaceLinks';
-import LearningResourcesPanel from './subComponents/LearningResourcesPanel';
-import Training from './subComponents/Training';
-import ReferencingPanel from './subComponents/ReferencingPanel';
-import ReadPublish from './subComponents/ReadPublish';
-import AccountPanel from './subComponents/AccountPanel';
+import EspaceLinks from './loggedinComponents/EspaceLinks';
+import LearningResourcesPanel from './loggedinComponents/LearningResourcesPanel';
+import Training from './loggedinComponents/Training';
+import ReferencingPanel from './loggedinComponents/ReferencingPanel';
+import ReadPublish from './loggedinComponents/ReadPublish';
+import AccountPanel from './loggedinComponents/AccountPanel/AccountPanel';
 
 const StyledPortalContainer = styled('div')(() => ({
     paddingTop: 48,
@@ -68,7 +56,7 @@ const StyledH1 = styled('h1')(({ theme }) => ({
     color: '#fff',
     fontFamily: 'Montserrat, Helvetica, Arial, sans-serif',
     '@media (max-width: 640px)': {
-       paddingBottom: 24,
+        paddingBottom: 24,
     },
 }));
 
@@ -120,7 +108,7 @@ const StyledGridItemLoggedInLeftMost = styled(Grid)(({ theme }) => ({
     },
 }));
 
-export const Index = ({
+export const HomePage = ({
     account,
     accountLoading,
     author,
@@ -210,7 +198,8 @@ export const Index = ({
         }
     }, [accountLoading, account, loans, loansLoading, dispatch]);
 
-    const verySimplelayout = !canSeeLearningResourcesPanel(account) && !isEspaceAuthor(account, author) && !canSeeReadPublish(account);
+    const verySimplelayout =
+        !canSeeLearningResourcesPanel(account) && !isEspaceAuthor(account, author) && !canSeeReadPublish(account);
     return (
         <>
             <StyledPortalContainer id="search-portal-container" data-testid="search-portal-container">
@@ -227,23 +216,42 @@ export const Index = ({
                 vemcountLoading={vemcountLoading}
                 vemcountError={vemcountError}
             />
-            <React.Suspense fallback={<ContentLoader message="Loading"/>}>
-            {!!account && (
-                <StyledGridWrapper>
-                    <StandardPage>
-                        <Grid container spacing={!!verySimplelayout ? 2 : 0}>
-                            <Grid item xs={12}>
-                                <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
-                                    Hi, {account.firstName || /* istanbul ignore next */ ''}
-                                </StyledHeading>
-                            </Grid>
+            <React.Suspense fallback={<ContentLoader message="Loading" />}>
+                {!!account && (
+                    <StyledGridWrapper>
+                        <StandardPage>
+                            <Grid container spacing={!!verySimplelayout ? 2 : 0}>
+                                <Grid item xs={12}>
+                                    <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
+                                        Hi, {account.firstName || /* istanbul ignore next */ ''}
+                                    </StyledHeading>
+                                </Grid>
                                 {!!verySimplelayout ? (
                                     <>
-                                        <StyledGridItemLoggedInLeftMost item xs={12} uqDsDesktop={4} data-testid="account-panel" style={{ paddingTop: 0 }}>
-                                            <AccountPanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} printBalanceError={printBalanceError} />
+                                        <StyledGridItemLoggedInLeftMost
+                                            item
+                                            xs={12}
+                                            uqDsDesktop={4}
+                                            data-testid="account-panel"
+                                            style={{ paddingTop: 0 }}
+                                        >
+                                            <AccountPanel
+                                                account={account}
+                                                loans={loans}
+                                                loansLoading={loansLoading}
+                                                printBalance={printBalance}
+                                                printBalanceLoading={printBalanceLoading}
+                                                printBalanceError={printBalanceError}
+                                            />
                                         </StyledGridItemLoggedInLeftMost>
                                         {canSeeTrainingPanel(account) && (
-                                            <StyledGridItemLoggedInLeftMost item xs={12} uqDsDesktop={4} data-testid="training-panel" style={{ paddingTop: 0 }}>
+                                            <StyledGridItemLoggedInLeftMost
+                                                item
+                                                xs={12}
+                                                uqDsDesktop={4}
+                                                data-testid="training-panel"
+                                                style={{ paddingTop: 0 }}
+                                            >
                                                 <Training
                                                     trainingEvents={trainingEvents}
                                                     trainingEventsLoading={trainingEventsLoading}
@@ -251,7 +259,13 @@ export const Index = ({
                                                 />
                                             </StyledGridItemLoggedInLeftMost>
                                         )}
-                                        <StyledGridItemLoggedInLeftMost  item xs={12} uqDsDesktop={4} data-testid="referencing-panel" style={{ paddingTop: 0 }}>
+                                        <StyledGridItemLoggedInLeftMost
+                                            item
+                                            xs={12}
+                                            uqDsDesktop={4}
+                                            data-testid="referencing-panel"
+                                            style={{ paddingTop: 0 }}
+                                        >
                                             <ReferencingPanel account={account} />
                                         </StyledGridItemLoggedInLeftMost>
                                     </>
@@ -259,11 +273,26 @@ export const Index = ({
                                     <>
                                         <Grid item uqDsDesktop={4} xs={12}>
                                             <Grid container>
-                                                <StyledGridItemLoggedInLeftMost item xs={12} data-testid="account-panel">
-                                                    <AccountPanel account={account} loans={loans} loansLoading={loansLoading} printBalance={printBalance} printBalanceLoading={printBalanceLoading} printBalanceError={printBalanceError} />
+                                                <StyledGridItemLoggedInLeftMost
+                                                    item
+                                                    xs={12}
+                                                    data-testid="account-panel"
+                                                >
+                                                    <AccountPanel
+                                                        account={account}
+                                                        loans={loans}
+                                                        loansLoading={loansLoading}
+                                                        printBalance={printBalance}
+                                                        printBalanceLoading={printBalanceLoading}
+                                                        printBalanceError={printBalanceError}
+                                                    />
                                                 </StyledGridItemLoggedInLeftMost>
                                                 {canSeeTrainingPanel(account) && (
-                                                    <StyledGridItemLoggedInLeftMost item xs={12} data-testid="training-panel">
+                                                    <StyledGridItemLoggedInLeftMost
+                                                        item
+                                                        xs={12}
+                                                        data-testid="training-panel"
+                                                    >
                                                         <Training
                                                             trainingEvents={trainingEvents}
                                                             trainingEventsLoading={trainingEventsLoading}
@@ -276,18 +305,30 @@ export const Index = ({
                                         <Grid item uqDsDesktop={8} xs={12}>
                                             <Grid container>
                                                 {canSeeLearningResourcesPanel(account) && (
-                                                    <StyledGridItemLoggedIn item xs={12} data-testid="learning-resources-panel">
-                                                        <LearningResourcesPanel account={account} history={history}/>
+                                                    <StyledGridItemLoggedIn
+                                                        item
+                                                        xs={12}
+                                                        data-testid="learning-resources-panel"
+                                                    >
+                                                        <LearningResourcesPanel account={account} history={history} />
                                                     </StyledGridItemLoggedIn>
                                                 )}
 
                                                 <Grid item uqDsDesktop={6} xs={12}>
                                                     <Grid container>
-                                                        <StyledGridItemLoggedIn  item xs={12} data-testid="referencing-panel">
+                                                        <StyledGridItemLoggedIn
+                                                            item
+                                                            xs={12}
+                                                            data-testid="referencing-panel"
+                                                        >
                                                             <ReferencingPanel account={account} />
                                                         </StyledGridItemLoggedIn>
                                                         {canSeeReadPublish(account) && (
-                                                            <StyledGridItemLoggedIn  item xs={12} data-testid="readpublish-panel">
+                                                            <StyledGridItemLoggedIn
+                                                                item
+                                                                xs={12}
+                                                                data-testid="readpublish-panel"
+                                                            >
                                                                 <ReadPublish />
                                                             </StyledGridItemLoggedIn>
                                                         )}
@@ -296,7 +337,11 @@ export const Index = ({
                                                 <Grid item uqDsDesktop={6} xs={12}>
                                                     <Grid container>
                                                         {isEspaceAuthor(account, author) && (
-                                                            <StyledGridItemLoggedIn item xs={12} data-testid="espace-links-panel">
+                                                            <StyledGridItemLoggedIn
+                                                                item
+                                                                xs={12}
+                                                                data-testid="espace-links-panel"
+                                                            >
                                                                 <EspaceLinks
                                                                     author={author}
                                                                     possibleRecords={possibleRecords}
@@ -310,19 +355,23 @@ export const Index = ({
                                         </Grid>
                                     </>
                                 )}
-                        </Grid>
-                    </StandardPage>
-                </StyledGridWrapper>
-            )}
+                            </Grid>
+                        </StandardPage>
+                    </StyledGridWrapper>
+                )}
             </React.Suspense>
             <NavigationCardWrapper account={account} accountLoading={accountLoading} />
 
-            <LibraryUpdates drupalArticleList={drupalArticleList} drupalArticlesError={drupalArticlesError} drupalArticlesLoading={drupalArticlesLoading} />
+            <LibraryUpdates
+                drupalArticleList={drupalArticleList}
+                drupalArticlesError={drupalArticlesError}
+                drupalArticlesLoading={drupalArticlesLoading}
+            />
         </>
     );
 };
 
-Index.propTypes = {
+HomePage.propTypes = {
     account: PropTypes.object,
     accountLoading: PropTypes.bool,
     author: PropTypes.object,
@@ -350,4 +399,4 @@ Index.propTypes = {
     vemcountError: PropTypes.bool,
 };
 
-export default Index;
+export default HomePage;

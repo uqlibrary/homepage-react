@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from 'data/actions';
-import Index from '../components/Index';
+import HomePage from './HomePage';
 
 const mapStateToProps = state => {
     return {
@@ -18,6 +18,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-const IndexContainer = connect(mapStateToProps, mapDispatchToProps)(Index);
+const HomePageContainer = connect(mapStateToProps, mapDispatchToProps)(HomePage);
 
-export default IndexContainer;
+export default HomePageContainer;
