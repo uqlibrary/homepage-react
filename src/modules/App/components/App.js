@@ -66,7 +66,7 @@ export const App = ({ account, actions }) => {
         >
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
                 <uq-header hidelibrarymenuitem="true" />
-                <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink} showmenu>
+                <uq-site-header sitetitle={homepageLabel} siteurl={homepagelink}>
                     <span slot="site-utilities">
                         <auth-button />
                     </span>

@@ -49,7 +49,7 @@ const StyledUl = styled('ul')(({ theme }) => ({
                     color: '#fff',
                 },
             },
-            '& svg:first-child': {
+            '& svg:first-of-type': {
                 stroke: theme.palette.primary.light,
                 paddingRight: '12px',
             },
