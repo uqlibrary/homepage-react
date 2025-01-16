@@ -1,7 +1,7 @@
 export const printBalance = {
     'balance': '12.50',
     'cardNumber': '36122190182095876',
-    'email': 'k.lane@uq.edu.au',
+    'email': 'aUqAddress@example.com',
     'retrievedAt': '2020-11-25T11:50:15+00:00',
 };
 

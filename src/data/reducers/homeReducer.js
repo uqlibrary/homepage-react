@@ -3,6 +3,7 @@ import * as actions from 'data/actions/actionTypes';
 export const initialState = {
     printBalance: null,
     printBalanceLoading: null,
+    printBalanceError: null,
     loans: null,
     loansLoading: null,
     possibleRecords: null,
@@ -17,18 +18,21 @@ const handlers = {
         ...state,
         printBalance: null,
         printBalanceLoading: true,
+        printBalanceError: false,
     }),
 
     [actions.PRINT_BALANCE_LOADED]: (state, action) => ({
         ...state,
         printBalance: action.payload,
         printBalanceLoading: false,
+        printBalanceError: false,
     }),
 
     [actions.PRINT_BALANCE_FAILED]: state => ({
         ...state,
         printBalance: null,
         printBalanceLoading: false,
+        printBalanceError: true,
     }),
 
     // Loans

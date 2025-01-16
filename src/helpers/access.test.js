@@ -2,7 +2,6 @@ import {
     canSeeLearningResourcesPage,
     canSeeLearningResourcesPanel,
     canSeeLoans,
-    canSeePrintBalance,
     isAlertsAdminUser,
     isEspaceAuthor,
     isHdrStudent,
@@ -18,11 +17,6 @@ describe('access', () => {
     it('only the logged in user can see their loans', () => {
         expect(canSeeLoans({ id: 's123456' })).toEqual(true);
         expect(canSeeLoans({})).toEqual(false);
-    });
-
-    it('only the logged in user can see their print balance', () => {
-        expect(canSeePrintBalance({ id: 's123456' })).toEqual(true);
-        expect(canSeePrintBalance({})).toEqual(false);
     });
 
     it('only authors can see espace info', () => {

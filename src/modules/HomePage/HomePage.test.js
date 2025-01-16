@@ -1,4 +1,4 @@
-import { getUrlForLearningResourceSpecificTab } from './subComponents/LearningResourcesPanel';
+import { getUrlForLearningResourceSpecificTab } from './loggedinComponents/LearningResourcesPanel';
 
 describe('Learning Resources panel', () => {
     it('test urls correct', () => {
