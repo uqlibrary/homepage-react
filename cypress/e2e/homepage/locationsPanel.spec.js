@@ -23,7 +23,10 @@ const openCloseWorks = () => {
             function clickLabel() {
                 cy.get('#location-dialog-controller')
                     .should('be.visible')
-                    .click();
+                    .then($button => {
+                        // the ;label is in the middle of the  button
+                        cy.wrap($button).click($button.width() / 2, $button.height() / 2);
+                    });
             }
             cy.visit('/');
             cy.viewport(1300, 1000);
@@ -57,9 +60,13 @@ const openCloseWorks = () => {
         });
         it('clicking the button up-down arrow can open and close the dialog', () => {
             function clickChevron() {
-                cy.get('#location-dialog-controller svg')
+                cy.get('#location-dialog-controller')
                     .should('be.visible')
-                    .click();
+                    .then($button => {
+                        // the chevron is at the right of the button
+                        const paddingRight = parseFloat($button.css('padding-right'));
+                        cy.wrap($button).click(paddingRight / 2, $button.height() / 2);
+                    });
             }
             cy.visit('/');
             cy.viewport(1300, 1000);
@@ -91,15 +98,13 @@ const openCloseWorks = () => {
             // dialog is closed
             cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
         });
-        it('clicking the button icon can open and close the dialog', () => {
+        it('clicking the button map icon can open and close the dialog', () => {
             function clickIcon() {
                 cy.get('#location-dialog-controller')
-                    .should('be.visible') // Ensure the button is visible
+                    .should('be.visible')
                     .then($button => {
-                        // Calculate the position to click on the background icon
+                        // the map icon is at the left of the button
                         const paddingLeft = parseFloat($button.css('padding-left'));
-
-                        // Click within the left padding area
                         cy.wrap($button).click(paddingLeft / 2, $button.height() / 2);
                     });
             }

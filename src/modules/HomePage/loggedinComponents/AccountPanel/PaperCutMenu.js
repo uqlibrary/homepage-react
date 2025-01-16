@@ -213,7 +213,7 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
                 onClick={handleToggle}
                 id={'papercut-menu-button'}
                 data-testid={'papercut-menu-button'}
-                data-analyticsid={'papercut-tooltip'}
+                data-analyticsid={'pp-papercut-tooltip'}
                 title="Click to manage your print balance"
                 aria-haspopup="true"
                 aria-expanded={menuAnchorElement !== null ? 'true' : 'false'}
