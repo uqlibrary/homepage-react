@@ -34,9 +34,15 @@ const StyledMenuList = styled(List)(({ theme }) => ({
     '& li': {
         fontWeight: 400,
         padding: '8px 24px',
+        lineHeight: 'normal',
+        '& a': {
+            color: theme.palette.primary.light,
+            textDecoration: 'underline',
+            fontWeight: 500,
+        },
         '&:focus-visible': {
             backgroundColor: '#fff',
-            '& span': {
+            '& a': {
                 backgroundColor: theme.palette.primary.light,
                 color: '#fff',
             },
@@ -44,16 +50,13 @@ const StyledMenuList = styled(List)(({ theme }) => ({
         '&:hover': {
             backgroundColor: 'inherit',
             color: 'inherit',
-            '& span': {
+            '& a': {
                 backgroundColor: theme.palette.primary.light,
                 color: '#fff',
             },
         },
-        '& span': {
-            lineHeight: 'normal',
-            textDecoration: 'underline',
-            color: theme.palette.primary.light,
-            fontWeight: 500,
+        '& .MuiTouchRipple-root': {
+            display: 'none', // remove mui ripple
         },
     },
     '& .MuiTouchRipple-root': {
@@ -163,7 +166,7 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
         let tabTo = document.getElementById(nextElementId);
         if (!tabTo) {
             handleClose();
-            tabTo = document.getElementById('papercut-menu-button');
+            tabTo = document.querySelector('#papercut-menu-button a');
         }
         !!tabTo && tabTo.focus();
     };
@@ -192,20 +195,16 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
         }
         !!tabTo && tabTo.focus();
     };
-    const navigateToAboutPage = () => {
-        window.location.href = linkToDrupal('/library-and-student-it-help/print-scan-and-copy/your-printing-account ');
-        handleClose();
-    };
-    const navigateToTopUpUrl = topupAmount => {
+    const getTopUrl = topupAmount => {
         const papercutAddress =
             'https://payments.uq.edu.au/OneStopWeb/aspx/TranAdd.aspx?TRAN-TYPE=W361&username=[id]&unitamountinctax=[topupAmount]&email=[email]';
-        window.location.href = papercutAddress
+        return papercutAddress
             .replace('[id]', account.id)
             .replace('[topupAmount]', topupAmount)
             .replace('[email]', printBalance.email);
     };
-    const topupAmounts = [5, 10, 20];
 
+    const topupAmounts = [5, 10, 20];
     return (
         <>
             <StyledPrintBalanceButton
@@ -276,10 +275,9 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
                                         id={`papercut-item-button-${index + 1}`}
                                         key={`papercut-item-button-${index + 1}`}
                                         data-testid={`papercut-item-button-${index + 1}`}
-                                        onClick={() => navigateToTopUpUrl(topupAmount)}
                                         onKeyDown={handlePapercutTabNextKeyDown}
                                     >
-                                        <span>{topUpLabel(topupAmount)}</span>
+                                        <a href={getTopUrl(topupAmount)}>{topUpLabel(topupAmount)}</a>
                                     </MenuItem>
                                 );
                             });
@@ -290,10 +288,15 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
                         id={`papercut-item-button-${topupAmounts.length + 1}`}
                         data-testid={`papercut-item-button-${topupAmounts.length + 1}`}
                         data-analyticsid={`papercut-item-button-${topupAmounts.length + 1}`}
-                        onClick={() => navigateToAboutPage()}
                         onKeyDown={handlePapercutTabOutKeyDown}
                     >
-                        <span>More about your printing account</span>
+                        <a
+                            href={linkToDrupal(
+                                '/library-and-student-it-help/print-scan-and-copy/your-printing-account ',
+                            )}
+                        >
+                            More about your printing account
+                        </a>
                     </MenuItem>
                 </StyledMenuList>
             </Popper>
