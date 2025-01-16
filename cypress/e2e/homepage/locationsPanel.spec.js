@@ -359,15 +359,12 @@ describe('Locations Panel', () => {
             cy.get('[data-testid="hours-item-duhig-study"] > div:first-child a').should(
                 'have.attr',
                 'aria-label',
-                'The Duhig Tower Library study space is open 24 hours. This space is currently quite busy.',
+                'The Duhig Tower Library study space is open 24 hours.',
             );
             cy.get('[data-testid="hours-item-duhig-study"] > div:nth-child(2)').contains('24 Hours');
-            cy.get('[data-testid="hours-item-duhig-study"] > div:nth-child(3) span')
+            cy.get('[data-testid="hours-item-duhig-study"] > div:nth-child(3) div.occupancyText')
                 .should('exist')
-                .should('have.attr', 'aria-valuenow', '54');
-            cy.get('[data-testid="hours-item-duhig-study"] > div:nth-child(3) span')
-                .should('exist')
-                .should('have.attr', 'aria-label', 'Quite busy');
+                .contains('Data not available');
 
             cy.get('[data-testid="hours-item-dutton-park"] > div:first-child').contains('Dutton Park Health Sciences');
             cy.get('[data-testid="hours-item-dutton-park"] > div:first-child a').should(

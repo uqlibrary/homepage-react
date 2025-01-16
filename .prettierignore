@@ -8,4 +8,4 @@ cypress/screenshots/
 **/mock/data/**/*.js
 src/modules/Pages/AlertsList/components/alertsadmin.locale.js
 src/modules/App/components/pages.js
-src/modules/Index/components/Index.js
+src/modules/HomePage/components/HomePage.js

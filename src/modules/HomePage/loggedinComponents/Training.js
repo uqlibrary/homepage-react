@@ -247,6 +247,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                         href={linkToDrupal(
                             '/study-and-learning-support/training-and-workshops/online-and-person-workshops',
                         )}
+                        id="training-event-detail-more-training-button"
                         data-analyticsid="training-event-detail-more-training-button"
                         data-testid="seeAllTrainingLink"
                     >

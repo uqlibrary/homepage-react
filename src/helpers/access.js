@@ -172,8 +172,6 @@ export const isLibraryStaff = account => isLoggedInUser(account) && ['LIBRARYSTA
 
 export const canSeeLoans = account => isLoggedInUser(account);
 
-export const canSeePrintBalance = account => isLoggedInUser(account);
-
 const userHasAdGroup = (ADGroupName, account) =>
     !!account && !!account.groups && !!account.groups.find(group => group.includes(ADGroupName));
 

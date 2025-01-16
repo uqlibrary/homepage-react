@@ -374,7 +374,7 @@ const Locations = ({
                     if (vemcountBusynessPercent === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING) {
                         calculatedBusyness = vemcountBusynessPercent;
                     } else if (!!isNaN(vemcountBusynessPercent)) {
-                        calculatedBusyness = null;
+                        calculatedBusyness = VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING;
                     } else if (vemcountBusynessPercent < minimumDisplayedPercentage) {
                         // don't let the bar go below what shows as a small curve on the left
                         calculatedBusyness = minimumDisplayedPercentage;
