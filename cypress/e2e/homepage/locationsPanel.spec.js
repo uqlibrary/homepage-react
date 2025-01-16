@@ -19,9 +19,45 @@ const openCloseWorks = () => {
             // dialog is closed
             cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
         });
+        it('clicking the button can open and close the dialog', () => {
+            function clickButton() {
+                cy.get('[data-testid="hours-accordion-open"]')
+                    .should('be.visible')
+                    .click();
+            }
+            cy.visit('/');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+            // open dialog
+            clickButton();
+
+            // confirm dialog is open
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="hours-item-askus"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('AskUs chat hours'),
+            );
+
+            // re-click button
+            clickButton();
+            // dialog is closed
+            cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
+
+            // re-click button
+            clickButton();
+            // dialog is open
+            cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('be.visible');
+
+            // re-click button
+            clickButton();
+            // dialog is closed
+            cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
+        });
         it('clicking the button label can open and close the dialog', () => {
             function clickLabel() {
-                cy.get('#location-dialog-controller')
+                cy.get('[data-testid="hours-accordion-open"]')
                     .should('be.visible')
                     .then($button => {
                         // the ;label is in the middle of the  button
@@ -60,7 +96,7 @@ const openCloseWorks = () => {
         });
         it('clicking the button up-down arrow can open and close the dialog', () => {
             function clickChevron() {
-                cy.get('#location-dialog-controller')
+                cy.get('[data-testid="hours-accordion-open"]')
                     .should('be.visible')
                     .then($button => {
                         // the chevron is at the right of the button
@@ -100,7 +136,7 @@ const openCloseWorks = () => {
         });
         it('clicking the button map icon can open and close the dialog', () => {
             function clickIcon() {
-                cy.get('#location-dialog-controller')
+                cy.get('[data-testid="hours-accordion-open"]')
                     .should('be.visible')
                     .then($button => {
                         // the map icon is at the left of the button

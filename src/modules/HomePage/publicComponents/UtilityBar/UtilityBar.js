@@ -95,15 +95,39 @@ const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
     '& .MuiTouchRipple-root': {
         display: 'none', // remove mui ripple
     },
-    '& span span': {
+    '& span': {
         textDecoration: 'underline',
+        lineHeight: 'normal',
+        outlineOffset: '1px',
+        outlineStyle: 'auto',
+        outlineWidth: '1px',
+        outlineColor: 'transparent',
     },
-    '&:hover': {
-        backgroundColor: 'white',
-    },
-    '&:hover span span, &:focus span span': {
+    '&:hover span': {
         backgroundColor: theme.palette.primary.light,
         color: 'white',
+    },
+    '&.panel-open span': {
+        backgroundColor: theme.palette.primary.light,
+        color: 'white',
+    },
+    '&:focus-within span': {
+        backgroundColor: theme.palette.primary.light,
+    },
+    '&.panel-open:focus-within span': {
+        backgroundColor: theme.palette.primary.light,
+        color: 'white',
+    },
+    '&.panel-closed:focus-within span': {
+        backgroundColor: 'white',
+        color: theme.palette.primary.light,
+    },
+    '&.panel-closed:focus-within:hover span': {
+        backgroundColor: theme.palette.primary.light,
+        color: 'white',
+    },
+    '&.panel-closed:focus-visible span': {
+        outlineColor: 'rgb(0, 95, 204)',
     },
 }));
 
