@@ -8,7 +8,7 @@ import Popper from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
 
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import SvgIcon from '@mui/material/SvgIcon';
 
 import { linkToDrupal } from 'helpers/general';
 
@@ -225,9 +225,14 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
                     Print balance {markedPrintBalance()}
                 </span>
                 {menuAnchorElement !== null ? (
-                    <ExpandLessIcon data-analyticsid="papercut-accordion-arrow-opener" className={'openClose'} />
+                    <ExpandLessIcon className={'openClose'} />
                 ) : (
-                    <ExpandMoreIcon data-analyticsid="papercut-accordion-arrow-closer" className={'openClose'} />
+                    <SvgIcon data-analyticsid="papercut-accordion-arrow-closer" className={'openClose'}>
+                        <path
+                            d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                            data-analyticsid="papercut-accordion-arrow-closer"
+                        />
+                    </SvgIcon>
                 )}
             </StyledPrintBalanceButton>
             <Popper

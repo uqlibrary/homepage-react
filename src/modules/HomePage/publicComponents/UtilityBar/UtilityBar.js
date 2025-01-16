@@ -9,7 +9,7 @@ import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import SvgIcon from '@mui/material/SvgIcon';
 
 import { isEscapeKeyPressed, lazyRetry } from 'helpers/general';
 
@@ -231,7 +231,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                     <StyledLocationOpenerButton
                         id="location-dialog-controller"
                         data-testid="hours-accordion-open"
-                        data-analyticsid="hours-accordion-open"
+                        data-analyticsid="hours-accordion"
                         onClick={showHideLocationPanel}
                         onKeyDown={handleLocationButtonKeyDown}
                         aria-haspopup="true"
@@ -239,13 +239,18 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                         aria-controls="locations-wrapper"
                         aria-label="Show/hide Locations and hours panel"
                     >
-                        <span id="location-dialog-controller-label" data-analyticsid="hours-accordion-word">
+                        <span id="location-dialog-controller-label" data-analyticsid="hours-accordion">
                             Locations and hours
                         </span>
                         {!!locationOpen ? (
-                            <ExpandLessIcon data-analyticsid="hours-accordion-arrow" />
+                            <ExpandLessIcon />
                         ) : (
-                            <ExpandMoreIcon data-analyticsid="hours-accordion-arrow" />
+                            <SvgIcon data-analyticsid="hours-accordion">
+                                <path
+                                    d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                                    data-analyticsid="hours-accordion"
+                                />
+                            </SvgIcon>
                         )}
                     </StyledLocationOpenerButton>
                     <StyledBookingLink
