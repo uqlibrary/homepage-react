@@ -32,7 +32,7 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     marginTop: '-3px',
     zIndex: 999,
     position: 'absolute',
-    top: 102,
+    top: 97,
     maxWidth: '100%',
     [theme.breakpoints.up('uqDsTablet')]: {
         marginLeft: '-28px',
