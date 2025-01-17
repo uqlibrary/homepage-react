@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 
-import { isEscapeKeyPressed, lazyRetry } from 'helpers/general';
+import { addClass, isEscapeKeyPressed, lazyRetry, removeClass } from 'helpers/general';
 
 const Locations = lazy(() => lazyRetry(() => import('./Locations')));
 
@@ -127,7 +127,7 @@ const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
         color: 'white',
     },
     '&.panel-closed:focus-visible span': {
-        outlineColor: 'rgb(0, 95, 204)',
+        outlineColor: '-webkit-focus-ring-color',
     },
 }));
 
@@ -139,14 +139,6 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
     // handle the location opener
     const [locationOpen, setLocationOpen] = React.useState(null);
     const locationsRef = React.useRef(null);
-
-    function removeClass(element, className) {
-        !!element && element.classList.contains(className) && element.classList.remove(className);
-    }
-
-    function addClass(element, className) {
-        !!element && !element.classList.contains(className) && element.classList.add(className);
-    }
 
     function setLocationPanelAsClosed() {
         const locationsPanel = document.getElementById('locations-wrapper');

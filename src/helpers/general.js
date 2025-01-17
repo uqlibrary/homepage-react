@@ -149,3 +149,11 @@ export function isReturnKeyPressed(e) {
 export function isEscapeKeyPressed(e) {
     return isKeyPressed(e, 'Escape', 27);
 }
+
+export function removeClass(element, className) {
+    !!element && element.classList.contains(className) && element.classList.remove(className);
+}
+
+export function addClass(element, className) {
+    !!element && !element.classList.contains(className) && element.classList.add(className);
+}
