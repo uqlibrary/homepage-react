@@ -56,6 +56,7 @@ const StyledBookingLink = styled(Link)(({ theme }) => ({
     },
 }));
 const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
+    backgroundColor: 'transparent !important',
     color: theme.palette.primary.light,
     [theme.breakpoints.up('uqDsTablet')]: {
         backgroundImage:
@@ -64,7 +65,7 @@ const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
         backgroundPosition: 'left center',
         backgroundRepeat: 'no-repeat',
         backgroundSize: '18px 26px',
-        paddingLeft: '26px', // 18px wide + 8px padding between icon and text}
+        paddingLeft: '26px', // 18px wide + 8px padding between icon and text
     },
     '&.panel-closed::after': {
         backgroundImage:
