@@ -1,698 +1,277 @@
 export const libHours = {
     "locations": [{
-    "lid": 3823,
-    "name": "Architecture & Music Library",
-    "category": "library",
-    "desc": "",
-    "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/architecture-music-library",
-    "contact": "",
-    "lat": "",
-    "long": "",
-    "color": "#1C6DBD",
-    "fn": "",
-    "day": "Tuesday",
-    "times": {
-        "status": "not-set"
-    },
-    "rendered": "",
-    "abbr": "Arch Music",
-    "departments": [{
-        "lid": 10451,
-        "name": "Collections & space",
-        "category": "department",
-        "desc": "",
-        "url": "",
-        "contact": "",
-        "lat": "",
-        "long": "",
-        "color": "#000000",
-        "parent_lid": 3823,
-        "day": "Tuesday",
-        "times": {
-            "status": "open",
-            "hours": [{
-                "from": "7:30am",
-                "to": "7:30pm"
-            }],
-            "currently_open": true
-        },
-        "rendered": "7:30am - 7:30pm",
-        "open": "07:30:00",
-        "close": "19:30:00"
-    },
-        {
+        "lid": 3823,
+        "display_name": "Architecture and Music",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/architecture-and-music-library",
+        "vemcount_zone_id": 7877,
+        "campus_name": "St Lucia",
+        "opening_hours": "7:30am - 7:30pm",
+        "currently_open": true,
+        "departments": [{
+            "lid": 10451,
+            "name": "Collections and space",
+            "times": {
+                "currently_open": true
+            },
+            "rendered": "7:30am - 7:30pm"
+        }, {
             "lid": 10779,
             "name": "AskUs desk",
-            "category": "department",
-            "desc": "",
-            "url": "",
-            "contact": "",
-            "lat": "",
-            "long": "",
-            "color": "#000000",
-            "parent_lid": 3823,
-            "day": "Tuesday",
-            "times": {"status": "text", "text": "8am\u20137:30pm Virtual Service", "currently_open": false},
+            "times": {
+                "currently_open": false
+            },
             "rendered": "8am\u20137:30pm Virtual Service"
-        }
-    ]
-},
-    {
+        }]
+    }, {
         "lid": 4986,
-        "name": "AskUs chat & phone assistance",
-        "category": "library",
-        "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/contact-us",
-        "contact": "",
-        "lat": "",
-        "long": "",
-        "color": "#000000",
-        "fn": "",
-        "day": "Tuesday",
-        "times": {
-            "status": "not-set"
-        },
-        "rendered": "",
-        "abbr": "AskUs",
+        "display_name": "AskUs chat hours",
+        "url": "https:\/\/web.library.uq.edu.au\/about\/contact-us",
+        "vemcount_zone_id": null,
+        "campus_name": "Online",
+        "opening_hours": "8am - 8pm",
+        "currently_open": true,
         "departments": [{
             "lid": 4987,
             "name": "Chat",
-            "category": "department",
-            "desc": "",
-            "url": "",
-            "contact": "",
-            "lat": "",
-            "long": "",
-            "color": "#000000",
-            "parent_lid": 4986,
-            "day": "Tuesday",
             "times": {
-                "status": "open",
-                "hours": [{
-                    "from": "8am",
-                    "to": "8pm"
-                }],
                 "currently_open": true
             },
             "rendered": "8am - 8pm",
-            "open": "08:00:00",
-            "close": "20:00:00"
-        },
-            {
-                "lid": 10490,
-                "name": "Phone",
-                "category": "department",
-                "desc": "",
-                "url": "",
-                "contact": "",
-                "lat": "",
-                "long": "",
-                "color": "#000000",
-                "parent_lid": 4986,
-                "day": "Tuesday",
-                "times": {
-                    "status": "open",
-                    "hours": [{
-                        "from": "8am",
-                        "to": "8pm"
-                    }],
-                    "currently_open": true
-                },
-                "rendered": "8am - 8pm",
-                "open": "08:00:00",
-                "close": "20:00:00"
-            }
-        ]
-    },
-    {
+        }, {
+            "lid": 10490,
+            "name": "Phone",
+            "times": {
+                "currently_open": true
+            },
+            "rendered": "8am - 8pm",
+        }]
+    }, {
         "lid": 3824,
-        "name": "Biological Sciences Library",
-        "category": "library",
-        "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/biological-sciences-library",
-        "contact": "",
-        "lat": "",
-        "long": "",
-        "color": "#0E6E0E",
-        "fn": "UQ ID card access after hours. Touch your card to the reader for entry.",
-        "day": "Tuesday",
-        "times": {
-            "status": "not-set"
-        },
-        "rendered": "",
-        "abbr": "Biol Sci",
+        "display_name": "Biological Sciences",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/biological-sciences-library",
+        "vemcount_zone_id": 7878,
+        "campus_name": "St Lucia",
+        "opening_hours": "24 Hours",
+        "currently_open": true,
         "departments": [{
             "lid": 3829,
             "name": "Study space",
-            "category": "department",
-            "desc": "",
-            "url": "",
-            "contact": "",
-            "lat": "",
-            "long": "",
-            "color": "#000000",
-            "parent_lid": 3824,
-            "day": "Tuesday",
             "times": {
-                "status": "24hours",
                 "currently_open": true
             },
             "rendered": "24 Hours",
-            "open": "00:00:00",
-            "close": "24:00:00"
-        },
-            {
-                "lid": 10792,
-                "name": "AskUs desk",
-                "category": "department",
-                "desc": "",
-                "url": "",
-                "contact": "",
-                "lat": "",
-                "long": "",
-                "color": "#000000",
-                "parent_lid": 3824,
-                "day": "Tuesday",
-                "times": {
-                    "status": "text",
-                    "text": "8am\u20138pm Virtual Service",
-                    "currently_open": false
-                },
-                "rendered": "8am\u20138pm Virtual Service"
-            }
-        ]
-    },
-    {
+        }, {
+            "lid": 10792,
+            "name": "AskUs desk",
+            "times": {
+                "currently_open": false
+            },
+            "rendered": "8am\u20138pm Virtual Service"
+        }]
+    }, {
         "lid": 3842,
-        "name": "Central Library",
-        "category": "library",
-        "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/central-library",
-        "contact": "",
-        "lat": "",
-        "long": "",
-        "color": "#0E6E0E",
-        "fn": "UQ ID card access to the building after hours. Touch your card to the reader for entry.",
-        "day": "Tuesday",
-        "times": {
-            "status": "not-set"
-        },
-        "rendered": "",
-        "abbr": "Central",
+        "display_name": "Central",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/central-library",
+        "vemcount_zone_id": 7665,
+        "campus_name": "St Lucia",
+        "opening_hours": "24 Hours",
+        "currently_open": true,
         "departments": [{
             "lid": 10457,
-            "name": "Collections & space",
-            "category": "department",
-            "desc": "",
-            "url": "",
-            "contact": "",
-            "lat": "",
-            "long": "",
-            "color": "#000000",
-            "parent_lid": 3842,
-            "day": "Tuesday",
+            "name": "Collections and space",
             "times": {
-                "status": "24hours",
                 "currently_open": true
             },
             "rendered": "24 Hours",
-            "open": "00:00:00",
-            "close": "24:00:00"
-        },
-            {
-                "lid": 3843,
-                "name": "AskUs desk",
-                "category": "department",
-                "desc": "",
-                "url": "",
-                "contact": "",
-                "lat": "",
-                "long": "",
-                "color": "#000000",
-                "parent_lid": 3842,
-                "day": "Tuesday",
-                "times": {
-                    "status": "open",
-                    "hours": [{
-                        "from": "8am",
-                        "to": "6pm"
-                    }],
-                    "currently_open": true
-                },
-                "rendered": "8am - 6pm",
-                "open": "08:00:00",
-                "close": "18:00:00"
-            }
-        ]
-    },
-    {
+        }, {
+            "lid": 3843,
+            "name": "AskUs desk",
+            "times": {
+                "currently_open": true
+            },
+            "rendered": "8am - 6pm",
+        }]
+    }, {
         "lid": 3825,
-        "name": "Dorothy Hill Engineering and Sciences Library",
-        "category": "library",
-        "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/dorothy-hill-engineering-and-sciences-library",
-        "contact": "",
-        "lat": "",
-        "long": "",
-        "color": "#1C6DBD",
-        "fn": "",
-        "day": "Tuesday",
-        "times": {
-            "status": "not-set"
-        },
-        "rendered": "",
-        "abbr": "DHEngSci",
+        "display_name": "Dorothy Hill Engineering and Sciences",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/dorothy-hill-engineering-and-sciences-library",
+        "vemcount_zone_id": 7879,
+        "campus_name": "St Lucia",
+        "opening_hours": "24 Hours",
+        "currently_open": true,
         "departments": [{
             "lid": 10458,
             "name": "Study space",
-            "category": "department",
-            "desc": "",
-            "url": "",
-            "contact": "",
-            "lat": "",
-            "long": "",
-            "color": "#000000",
-            "parent_lid": 3825,
-            "day": "Tuesday",
             "times": {
-                "status": "24hours",
                 "currently_open": true
             },
             "rendered": "24 Hours",
-            "open": "00:00:00",
-            "close": "24:00:00"
-        },
-            {
-                "lid": 9419,
-                "name": "High Use collection",
-                "category": "department",
-                "desc": "",
-                "url": "",
-                "contact": "",
-                "lat": "",
-                "long": "",
-                "color": "#000000",
-                "parent_lid": 3825,
-                "day": "Tuesday",
-                "times": {
-                    "status": "24hours",
-                    "currently_open": true
-                },
-                "rendered": "24 Hours",
-                "open": "00:00:00",
-                "close": "24:00:00"
+        }, {
+            "lid": 9419,
+            "name": "High Use collection",
+            "times": {
+                "currently_open": true
             },
-            {
-                "lid": 3826,
-                "name": "AskUs desk",
-                "category": "department",
-                "desc": "",
-                "url": "",
-                "contact": "",
-                "lat": "",
-                "long": "",
-                "color": "#000000",
-                "parent_lid": 3825,
-                "day": "Tuesday",
-                "times": {
-                    "status": "open",
-                    "hours": [{
-                        "from": "9am",
-                        "to": "5pm"
-                    }],
-                    "currently_open": true
-                },
-                "rendered": "9am - 5pm",
-                "open": "09:00:00",
-                "close": "17:00:00"
-            }
-        ]
-    },
-    {
+            "rendered": "24 Hours",
+        }, {
+            "lid": 3826,
+            "name": "AskUs desk",
+            "times": {
+                "currently_open": true
+            },
+            "rendered": "9am - 5pm",
+        }]
+    }, {
         "lid": 3830,
-        "name": "Duhig Tower",
-        "category": "library",
-        "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/duhig-tower",
-        "contact": "",
-        "lat": "",
-        "long": "",
-        "color": "#0E6E0E",
-        "fn": "",
-        "day": "Tuesday",
-        "times": {
-            "status": "not-set"
-        },
-        "rendered": "",
-        "abbr": "Duhig Study",
+        "display_name": "Duhig Tower",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/duhig-tower",
+        "vemcount_zone_id": 7411,
+        "campus_name": "St Lucia",
+        "opening_hours": "24 Hours",
+        "currently_open": true,
         "departments": [{
             "lid": 3831,
             "name": "Study space",
-            "category": "department",
-            "desc": "",
-            "url": "",
-            "contact": "",
-            "lat": "",
-            "long": "",
-            "color": "#000000",
-            "parent_lid": 3830,
-            "day": "Tuesday",
             "times": {
-                "status": "24hours",
                 "currently_open": true
             },
             "rendered": "24 Hours",
-            "open": "00:00:00",
-            "close": "24:00:00"
         }]
-    },
-    {
+    }, {
         "lid": 3967,
-        "name": "Dutton Park Health Sciences Library",
-        "category": "library",
-        "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/dutton-park-health-sciences-library",
-        "contact": "",
-        "lat": "",
-        "long": "",
-        "color": "#1C6DBD",
-        "fn": "Access to the building after hours is via the level 4 entry on Cornwall Street only.",
-        "day": "Tuesday",
-        "times": {
-            "status": "not-set"
-        },
-        "rendered": "",
-        "abbr": "Dutton Park",
+        "display_name": "Dutton Park Health Sciences",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/dutton-park-health-sciences-library",
+        "vemcount_zone_id": 7880,
+        "campus_name": "Dutton Park",
+        "opening_hours": "7am - 10:30am",
+        "currently_open": false,
         "departments": [{
             "lid": 3970,
-            "name": "Collections & space",
-            "category": "department",
-            "desc": "",
-            "url": "",
-            "contact": "",
-            "lat": "",
-            "long": "",
-            "color": "#000000",
-            "parent_lid": 3967,
-            "day": "Tuesday",
+            "name": "Collections and space",
             "times": {
-                "status": "open",
-                "hours": [{
-                    "from": "7am",
-                    "to": "10:30am"
-                }],
                 "currently_open": false
             },
             "rendered": "7am - 10:30am",
-            "open": "07:00:00",
-            "close": "22:30:00"
-        },
-            {
-                "lid": 3969,
-                "name": "AskUs desk",
-                "category": "department",
-                "desc": "",
-                "url": "",
-                "contact": "",
-                "lat": "",
-                "long": "",
-                "color": "#000000",
-                "parent_lid": 3967,
-                "day": "Tuesday",
-                "times": {
-                    "status": "open",
-                    "hours": [{
-                        "from": "9am",
-                        "to": "5pm"
-                    }],
-                    "currently_open": true
-                },
-                "rendered": "9am - 5pm",
-                "open": "09:00:00",
-                "close": "17:00:00"
-            }
-        ]
-    },
-    {
+        }, {
+            "lid": 3969,
+            "name": "AskUs desk",
+            "times": {
+                "currently_open": true
+            },
+            "rendered": "9am - 5pm",
+        }]
+    }, {
         "lid": 3832,
-        "name": "FW Robinson Reading Room",
-        "category": "library",
-        "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/fw-robinson-reading-room",
-        "contact": "",
-        "lat": "",
-        "long": "",
-        "color": "#1C6DBD",
-        "fn": "The reading room is by appointment only.",
-        "day": "Tuesday",
-        "times": {
-            "status": "not-set"
-        },
-        "rendered": "",
-        "abbr": "Fryer",
+        "display_name": "FW Robinson Reading Room (Fryer)",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/fryer-library-and-fw-robinson-reading-room",
+        "vemcount_zone_id": null,
+        "campus_name": "St Lucia",
+        "opening_hours": "By appointment",
+        "currently_open": false,
         "departments": [{
             "lid": 3851,
-            "name": "Service & collections",
-            "category": "department",
-            "desc": "",
-            "url": "",
-            "contact": "",
-            "lat": "",
-            "long": "",
-            "color": "#000000",
-            "parent_lid": 3832,
-            "day": "Tuesday",
+            "name": "Service and collections",
             "times": {
-                "status": "ByApp",
                 "currently_open": true
             },
             "rendered": "By Appointment"
         }]
-    },
-    {
+    }, {
         "lid": 3833,
-        "name": "JK Murray (UQ Gatton)",
-        "category": "library",
-        "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/uq-gatton-library-jk-murray-library",
-        "contact": "",
-        "lat": "",
-        "long": "",
-        "color": "#0E6E0E",
-        "fn": "UQ ID card access after hours. Touch your card to the reader for entry.",
-        "day": "Tuesday",
-        "times": {
-            "status": "not-set"
-        },
-        "rendered": "",
-        "abbr": "Gatton Library",
+        "display_name": "JK Murray (UQ Gatton)",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/jk-murray-library-uq-gatton",
+        "vemcount_zone_id": 7884,
+        "campus_name": "Gatton",
+        "opening_hours": "24 Hours",
+        "currently_open": true,
         "departments": [{
             "lid": 8867,
-            "name": "Collections & space",
-            "category": "department",
-            "desc": "",
-            "url": "",
-            "contact": "",
-            "lat": "",
-            "long": "",
-            "color": "#000000",
-            "parent_lid": 3833,
-            "day": "Tuesday",
+            "name": "Collections and space",
             "times": {
-                "status": "24hours",
                 "currently_open": true
             },
             "rendered": "24 Hours",
-            "open": "00:00:00",
-            "close": "24:00:00"
-        },
-            {
-                "lid": 3834,
-                "name": "AskUs desk",
-                "category": "department",
-                "desc": "",
-                "url": "",
-                "contact": "",
-                "lat": "",
-                "long": "",
-                "color": "#000000",
-                "parent_lid": 3833,
-                "day": "Tuesday",
-                "times": {
-                    "status": "open",
-                    "hours": [{
-                        "from": "9am",
-                        "to": "5pm"
-                    }],
-                    "currently_open": true
-                },
-                "rendered": "9am - 5pm",
-                "open": "09:00:00",
-                "close": "17:00:00"
-            }
-        ]
-    },
-    {
+        }, {
+            "lid": 3834,
+            "name": "AskUs desk",
+            "times": {
+                "currently_open": true
+            },
+            "rendered": "9am - 5pm",
+        }]
+    }, {
         "lid": 3838,
-        "name": "Herston Health Sciences Library",
-        "category": "library",
-        "desc": "<p style=\"box-sizing: border-box; color: rgb(34, 34, 34); font-family: Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;\">The library provides resources and services to support the teaching, learning and research needs of:<\/p>\r\n\r\n<ul style=\"box-sizing: border-box; color: rgb(34, 34, 34); font-family: Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;\">\r\n\t<li style=\"box-sizing: border-box;\">UQ staff and students<\/li>\r\n\t<li style=\"box-sizing: border-box;\">Staff of the Royal Brisbane and Women&#39;s Hospital (RBWH) and the<\/li>\r\n\t<li style=\"box-sizing: border-box;\">Lady Cilento Children&#39;s Hospital<\/li>\r\n<\/ul>\r\n\r\n<p style=\"box-sizing: border-box; color: rgb(34, 34, 34); font-family: Roboto, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;\">RBWH &amp; Lady Cilento Children&#39;s Hospital&nbsp;staff see&nbsp;<a href=\"https:\/\/web.library.uq.edu.au\/library-services\/services-hospital-staff\" style=\"box-sizing: border-box; color: rgb(35, 119, 203); text-decoration: none; background-color: transparent;\">services for hospital staff<\/a>&nbsp;for more information.<\/p>",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/herston-health-sciences-library",
-        "contact": "",
-        "lat": "",
-        "long": "",
-        "color": "#0E6E0E",
-        "fn": "After hours swipe card access to the 24\/7 space from external corridor.",
-        "day": "Tuesday",
-        "times": {
-            "status": "not-set"
-        },
-        "rendered": "",
-        "abbr": "Herston",
+        "display_name": "Herston Health Sciences",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/herston-health-sciences-library",
+        "vemcount_zone_id": 7883,
+        "campus_name": "Herston",
+        "opening_hours": "8am - 5pm",
+        "currently_open": true,
         "departments": [{
             "lid": 10726,
-            "name": "Collections & space",
-            "category": "department",
-            "desc": "",
-            "url": "",
-            "contact": "",
-            "lat": "",
-            "long": "",
-            "color": "#000000",
-            "parent_lid": 3838,
-            "day": "Tuesday",
+            "name": "Collections and space",
             "times": {
-                "status": "open",
-                "hours": [{
-                    "from": "8am",
-                    "to": "5pm"
-                }],
                 "currently_open": true
             },
             "rendered": "8am - 5pm",
-            "open": "08:00:00",
-            "close": "17:00:00"
-        },
-            {
-                "lid": 10727,
-                "name": "AskUs desk",
-                "category": "department",
-                "desc": "",
-                "url": "",
-                "contact": "",
-                "lat": "",
-                "long": "",
-                "color": "#000000",
-                "parent_lid": 3838,
-                "day": "Tuesday",
-                "times": {
-                    "status": "open",
-                    "hours": [{
-                        "from": "8am",
-                        "to": "5pm"
-                    }],
-                    "currently_open": true
-                },
-                "rendered": "8am - 5pm",
-                "open": "08:00:00",
-                "close": "17:00:00"
+        }, {
+            "lid": 10727,
+            "name": "AskUs desk",
+            "times": {
+                "currently_open": true
             },
-            {
-                "lid": 3840,
-                "name": "Training room",
-                "category": "department",
-                "desc": "",
-                "url": "",
-                "contact": "",
-                "lat": "",
-                "long": "",
-                "color": "#000000",
-                "parent_lid": 3838,
-                "day": "Tuesday",
-                "times": {
-                    "status": "24hours",
-                    "currently_open": true
-                },
-                "rendered": "24 Hours",
-                "open": "00:00:00",
-                "close": "24:00:00"
-            }
-        ]
-    },
-    {
+            "rendered": "8am - 5pm",
+        }, {
+            "lid": 3840,
+            "name": "Training room",
+            "times": {
+                "currently_open": true
+            },
+            "rendered": "24 Hours",
+        }]
+    }, {
         "lid": 3841,
-        "name": "Law Library",
-        "category": "library",
-        "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/law-library-walter-harrison-library",
-        "contact": "",
-        "lat": "",
-        "long": "",
-        "color": "#1C6DBD",
-        "fn": "UQ ID card access after hours. Touch your card to the reader for entry.",
-        "day": "Tuesday",
-        "times": {
-            "status": "not-set"
-        },
-        "rendered": "",
-        "abbr": "Law",
-        "departments": [{
-        //     "lid": 4801,
-        //     "name": "Collections & space",
-        //     "category": "department",
-        //     "desc": "",
-        //     "url": "",
-        //     "contact": "",
-        //     "lat": "",
-        //     "long": "",
-        //     "color": "#000000",
-        //     "parent_lid": 3841,
-        //     "day": "Tuesday",
-        //     "times": {
-        //         "status": "24hours",
-        //         "currently_open": true
-        //     },
-        //     "rendered": "24 Hours",
-        //     "open": "00:00:00",
-        //     "close": "24:00:00"
-        // }, {
-                "lid": 10780,
-                "name": "AskUs desk",
-                "category": "department",
-                "desc": "",
-                "url": "",
-                "contact": "",
-                "lat": "",
-                "long": "",
-                "color": "#000000",
-                "parent_lid": 3841,
-                "day": "Tuesday",
-                "times": {
-                    "status": "text",
-                    "text": "8am\u20138pm Virtual Service",
-                    "currently_open": false
-                },
-                "rendered": "8am\u20138pm Virtual Service"
-            }
-        ]
+        "display_name": "Walter Harrison Law",
+        "url": "https:\/\/web.library.uq.edu.au\/visit\/walter-harrison-law-library",
+        "vemcount_zone_id": 7882,
+        "campus_name": "St Lucia",
+        "opening_hours": null,
+        "currently_open": true,
+        "departments": [
+            // {
+            //     "lid": 4801,
+            //     "name": "Collections & space",
+            //     "times": {
+            //         "currently_open": true
+            //     },
+            //     "rendered": "24 Hours",
+            // },
+        {
+            "lid": 10780,
+            "name": "AskUs desk",
+            "times": {
+                "currently_open": false
+            },
+            "rendered": "8am\u20138pm Virtual Service"
+        }]
     },
     {
         "lid": 3966,
-        "name": "Whitty building, Mater",
-        "category": "library",
-        "desc": "",
-        "url": "https:\/\/web.library.uq.edu.au\/locations-hours",
-        "contact": "",
-        "lat": "",
-        "long": "",
-        "color": "#0E6E0E",
-        "fn": "Access to Whitty Building is restricted to UQ Mater students on clinical placement.",
-        "day": "Tuesday",
-        "times": {
-            "status": "not-set"
-        },
-        "rendered": "",
-        "abbr": "Whitty Mater"
+        "display_name": "Whitty building, Mater",
+        "url": "https:\/\/web.library.uq.edu.au\/visit",
+        "vemcount_zone_id": null,
+        "campus_name": "Other",
+        "opening_hours": "6:30am - 10pm",
+        "currently_open": true,
+        "departments": [{
+                "lid": 4384,
+                "name": "Study space",
+                "times": {
+                    "currently_open": true
+                },
+                "rendered": "6:30am - 10pm",
+            }
+        ]
     }
 ]
 };

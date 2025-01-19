@@ -18,7 +18,7 @@ function setup(testProps = {}) {
 
 beforeAll(() => {
     delete global.window.location;
-    global.window.location = { href: jest.fn(), assign: jest.fn() };
+    global.window.location = { href: '', replace: jest.fn(), assign: jest.fn() };
 });
 
 describe('Component Masquerade', () => {
@@ -32,7 +32,7 @@ describe('Component Masquerade', () => {
     it('should not masquerade if Esc key is pressed', () => {
         const { getByTestId, getByLabelText } = setup();
         fireEvent.change(getByLabelText(/Enter a UQ staff or student username/i), { target: { value: 'uqtest' } });
-        fireEvent.keyPress(getByTestId('masquerade-userName'), { key: 'Escape', keyCode: 27 });
+        fireEvent.keyUp(getByTestId('masquerade-submit'), { key: 'Escape', keyCode: 27 });
 
         expect(getByTestId('masquerade-submit')).toBeEnabled();
     });
@@ -40,7 +40,7 @@ describe('Component Masquerade', () => {
     it('should masquerade if Enter is pressed and username is set', () => {
         const { getByTestId, getByLabelText } = setup();
         fireEvent.change(getByLabelText(/Enter a UQ staff or student username/i), { target: { value: 'uqtest' } });
-        fireEvent.keyPress(getByTestId('masquerade-userName'), { key: 'Enter', keyCode: 13 });
+        fireEvent.keyUp(getByTestId('masquerade-submit'), { key: 'Enter', keyCode: 13 });
 
         expect(getByTestId('masquerade-submit')).toBeDisabled();
     });

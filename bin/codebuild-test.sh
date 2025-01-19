@@ -102,7 +102,7 @@ case "$PIPE_NUM" in
         echo "updating package.json to exclude non-admin pages from coverage"
         FILE_REFERENCES=( \
           "src/modules/App/\*\*" \
-          "src/modules/Index/\*\*" \
+          "src/modules/HomePage/\*\*" \
           "src/modules/Pages/BookExamBooth/\*\*" \
           "src/modules/Pages/DigitalLearningObjects/\*\*" \
           "src/modules/Pages/PastExamPaperSearch/\*\*" \

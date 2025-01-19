@@ -47,5 +47,5 @@ export const PastExamPaperList = lazy(() => lazyRetry(() => import('modules/Page
 
 export const DLONew = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Objects/DLOAddContainer')));
 // always load components
-export { IndexContainer as Index } from 'modules/Index';
+export { HomePageContainer as Index } from 'modules/HomePage';
 export { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
