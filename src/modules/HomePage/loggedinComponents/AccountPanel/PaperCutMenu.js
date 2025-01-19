@@ -201,7 +201,6 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
         if (e?.key !== 'Tab') {
             return;
         }
-        console.log('handlePapercutTabNextKeyDown current=', e?.target?.id);
 
         e.preventDefault();
 
@@ -210,7 +209,6 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
         const nextElementId = e.shiftKey
             ? `${elementPrefix}${elementCount - 1}`
             : `${elementPrefix}${elementCount + 1}`;
-        console.log('handlePapercutTabNextKeyDown=', nextElementId, e.shiftKey);
 
         let tabTo = document.getElementById(nextElementId);
         if (!tabTo) {
@@ -274,16 +272,6 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
                 <span data-testid="papercut-print-balance" data-analyticsid="papercut-accordion-label">
                     Print balance {markedPrintBalance()}
                 </span>
-                {/* {menuAnchorElement !== null ? (*/}
-                {/*    <ExpandLessIcon className={'openClose'} />*/}
-                {/* ) : (*/}
-                {/*    <SvgIcon data-analyticsid="papercut-accordion-arrow-closer" className={'openClose'}>*/}
-                {/*        <path*/}
-                {/*            d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"*/}
-                {/*            data-analyticsid="papercut-accordion-arrow-closer"*/}
-                {/*        />*/}
-                {/*    </SvgIcon>*/}
-                {/* )}*/}
             </StyledPrintBalanceButton>
             <Popper
                 id={'papercut-menu'}
@@ -330,6 +318,7 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
                                         id={`papercut-item-button-${index + 1}`}
                                         key={`papercut-item-button-${index + 1}`}
                                         data-testid={`papercut-item-button-${index + 1}`}
+                                        data-analyticsid={`pp-papercut-item-button-${index + 1}`}
                                         onKeyDown={handlePapercutTabNextKeyDown}
                                     >
                                         <a href={getTopUrl(topupAmount)}>{topUpLabel(topupAmount)}</a>
@@ -342,7 +331,7 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
                     <MenuItem
                         id={`papercut-item-button-${topupAmounts.length + 1}`}
                         data-testid={`papercut-item-button-${topupAmounts.length + 1}`}
-                        data-analyticsid={`papercut-item-button-${topupAmounts.length + 1}`}
+                        data-analyticsid={`pp-papercut-item-button-${topupAmounts.length + 1}`}
                         onKeyDown={handlePapercutTabOutKeyDown}
                     >
                         <a

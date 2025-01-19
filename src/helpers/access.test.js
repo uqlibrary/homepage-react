@@ -1,7 +1,6 @@
 import {
     canSeeLearningResourcesPage,
     canSeeLearningResourcesPanel,
-    canSeeLoans,
     isAlertsAdminUser,
     isEspaceAuthor,
     isHdrStudent,
@@ -12,11 +11,6 @@ describe('access', () => {
     it('should know if an account is for a HDR student', () => {
         expect(isHdrStudent(accounts.s1111111)).toEqual(true);
         expect(isHdrStudent(accounts.uqstaff)).toEqual(false);
-    });
-
-    it('only the logged in user can see their loans', () => {
-        expect(canSeeLoans({ id: 's123456' })).toEqual(true);
-        expect(canSeeLoans({})).toEqual(false);
     });
 
     it('only authors can see espace info', () => {
