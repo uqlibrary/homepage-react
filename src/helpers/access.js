@@ -168,14 +168,9 @@ export const canSeeEndnoteReferencing = account => {
     );
 };
 
-export const isLibraryStaff = account =>
-    isLoggedInUser(account) &&
-    (['uqlkeati', 'uqthalin'].includes(account.id) || // marketing staff, required for 2024 dev
-        ['LIBRARYSTAFFB'].includes(account.user_group));
+export const isLibraryStaff = account => isLoggedInUser(account) && ['LIBRARYSTAFFB'].includes(account.user_group);
 
 export const canSeeLoans = account => isLoggedInUser(account);
-
-export const canSeePrintBalance = account => isLoggedInUser(account);
 
 const userHasAdGroup = (ADGroupName, account) =>
     !!account && !!account.groups && !!account.groups.find(group => group.includes(ADGroupName));

@@ -60,6 +60,23 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     '& .dueText': {
         textAlign: 'center',
     },
+    '& .dashboard-link': {
+        '&:hover': {
+            backgroundColor: 'transparent',
+        },
+        '& div ': {
+            backgroundColor: 'transparent',
+            color: '#51247A',
+            '& span': {
+                display: 'inline',
+                fontWeight: 500,
+                '&:hover': {
+                    backgroundColor: '#51247A',
+                    color: 'white',
+                },
+            },
+        },
+    },
 }));
 
 const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, dashboardConfigError }) => {
@@ -362,6 +379,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                                             to={link.path}
                                                             id={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
                                                             data-testid={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
+                                                            className={'dashboard-link'}
                                                         >
                                                             {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
                                                             <ListItemText primary={link.title} />
@@ -376,6 +394,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                                         to={link.path}
                                                         id={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
                                                         data-testid={`${componentId}-${pageLocale.panel.reporting.id}-${link.id}-link`}
+                                                        className={'dashboard-link'}
                                                     >
                                                         {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
                                                         <ListItemText primary={link.title} />
@@ -423,6 +442,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                                             to={link.path}
                                                             id={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
                                                             data-testid={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
+                                                            className={'dashboard-link'}
                                                         >
                                                             {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
                                                             <ListItemText primary={link.title} />
@@ -437,6 +457,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                                         to={link.path}
                                                         id={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
                                                         data-testid={`${componentId}-${pageLocale.panel.management.id}-${link.id}-link`}
+                                                        className={'dashboard-link'}
                                                     >
                                                         {link.icon && <ListItemIcon>{link.icon}</ListItemIcon>}
                                                         <ListItemText primary={link.title} />
