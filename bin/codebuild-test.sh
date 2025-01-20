@@ -42,6 +42,8 @@ fi
 printf "(Build of branch \"$CI_BRANCH\")\n"
 
 function checkCodeStyle {
+    printf "\n--- \e[1mRUNNING CODE STYLE CHECKS\e[0m ---\n"
+
     FILES=$(npm run codestyles:files -s)
     if [[ "$?" == 0 ]]; then
         printf "\n\e[92mLooks good! Well done.\e[0m\n\n"
@@ -69,7 +71,6 @@ case "$PIPE_NUM" in
         npm run test:e2e:ci1
         sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
     else
-        printf "\n--- \e[1mRUNNING CODE STYLE CHECKS\e[0m ---\n"
         checkCodeStyle
         set -e
         printf "\n--- \e[1mRUNNING UNIT TESTS 1\e[0m ---\n"
@@ -95,7 +96,6 @@ case "$PIPE_NUM" in
 "3")
     export JEST_HTML_REPORTER_OUTPUT_PATH=coverage/jest-serial/jest-html-report.html
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
-        printf "\n--- \e[1mRUNNING CODE STYLE CHECKS\e[0m ---\n"
         checkCodeStyle
         set -e
         printf "\n--- \e[1mRUNNING UNIT TESTS\e[0m ---\n"
