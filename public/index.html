@@ -78,5 +78,15 @@
             </div>
         </div>
         <script type="text/javascript" src="<%= htmlWebpackPlugin.options.reusablejs %>" defer></script>
+        <script
+                id="oit-loader"
+                src="https://<%= htmlWebpackPlugin.options.crmLocationScript %>/s/oit/latest/common/v0/libs/oit/loader.js" async>
+        </script>
+
+        <inlay-oracle-chat-embedded
+                id="chatInlay"
+                class="inlay"
+                site-url="<%= htmlWebpackPlugin.options.crmLocationEmbed %>" >
+        </inlay-oracle-chat-embedded>
     </body>
 </html>
