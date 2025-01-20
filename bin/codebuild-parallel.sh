@@ -5,6 +5,8 @@
 # The script assumes that the test spec files are located in the
 # cypress/integration directory and its subdirectories.
 
+printf "\n ### Running codebuild-parallel.sh ### \n\n"
+
 spec_files=$(find cypress/integration -name '*.spec.js')
 num_specs=$(echo "$spec_files" | wc -l)
 group_size=$((num_specs / 2))

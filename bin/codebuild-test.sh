@@ -31,6 +31,7 @@ if [[ ($CI_BRANCH == "master" || $CI_BRANCH == "staging" || $CI_BRANCH == "produ
   # (Putting * around the test-string gives a test for inclusion of the substring rather than exact match)
     CODE_COVERAGE_REQUIRED=true
 fi
+printf "CODE_COVERAGE_REQUIRED = \"$CODE_COVERAGE_REQUIRED\")\n"
 
 export TZ='Australia/Brisbane'
 
@@ -63,6 +64,7 @@ npm run pretest:unit:ci
 
 case "$PIPE_NUM" in
 "1")
+    printf "\n ### PIPELINE 1 ### \n\n"
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
         set -e
         printf "\n--- \e[1mRUNNING E2E TESTS GROUP 1\e[0m ---\n"
@@ -78,6 +80,7 @@ case "$PIPE_NUM" in
     fi
 ;;
 "2")
+    printf "\n ### PIPELINE 2 ### \n\n"
     set -e
 
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
@@ -94,6 +97,8 @@ case "$PIPE_NUM" in
     fi
 ;;
 "3")
+    printf "\n ### PIPELINE 1 ### \n\n"
+
     export JEST_HTML_REPORTER_OUTPUT_PATH=coverage/jest-serial/jest-html-report.html
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
         checkCodeStyle
