@@ -188,6 +188,7 @@
         "test:e2e": "start-server-and-test 'npm run start:mock' http-get://localhost:2020 'cypress run --record false'",
         "pretest:e2e:cc": "rm -rf .nyc_output coverage/cypress",
         "test:e2e:cc": "cross-env NODE_ENV=cc npm run test:e2e",
+        "pretest:unit:ci": "rm -rf coverage",
         "pretest:cc": "rm -rf .nyc_output && rm -rf coverage",
         "test:cc": "npm run test:unit:ci && npm run test:e2e:cc && npm run cc:reportAll",
         "test:e2e:ci": "cross-env NODE_ENV=cc start-server-and-test 'npm run start:mock' http-get://localhost:2020",
