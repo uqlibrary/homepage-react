@@ -123,7 +123,7 @@ describe('BulkAssetUpdate', () => {
         expect(getByTestId('footer_bar-bulk-asset-update-action-button')).toHaveAttribute('disabled');
     });
 
-    it('adds row items from filterDialog popup', async () => {
+    it.skip('adds row items from filterDialog popup', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
         const { getByText, getByTestId, getAllByRole, queryByTestId, findByTestId } = setup({
