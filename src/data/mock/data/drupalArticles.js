@@ -2,7 +2,7 @@ export const drupalArticles = [
   {
     "title": "Rae and George Hammer memorial",
     "description": "Visiting research fellowship: up to $2,500 for students from universities outside of Brisbane to access our Fryer library collections",
-    "canonical_url": "https://live-library-uq.pantheonsite.io/stories/rae-and-george-hammer-memorial",
+    "canonical_url": "https://dev-library-uq.pantheonsite.io/stories/rae-and-george-hammer-memorial",
     "image": "/images/Rae-George-Hammer.jpg?h=cdbb3bd1&itok=TCOrFqaN",
     "promoted": false,
     "sticky": false,
@@ -19,7 +19,7 @@ export const drupalArticles = [
   {
     "title": "Building works at Biological Sciences Library, April to December 2024",
     "description": "",
-    "canonical_url": "https://live-library-uq.pantheonsite.io/stories/building-works-biological-sciences-library-april-december-2024",
+    "canonical_url": "https://dev-library-uq.pantheonsite.io/stories/building-works-biological-sciences-library-april-december-2024",
     "image": "/images/teaser-biological-sciences-library-building-works.jpg?h=a81fead4&itok=BfGhvM9v",
     "promoted": false,
     "sticky": false,
@@ -36,7 +36,7 @@ export const drupalArticles = [
   {
     "title": "Teaching",
     "description": "",
-    "canonical_url": "https://live-library-uq.pantheonsite.io/stories/teaching-and-learning-academics-update-your-course-reading-lists-semester-2",
+    "canonical_url": "https://dev-library-uq.pantheonsite.io/stories/teaching-and-learning-academics-update-your-course-reading-lists-semester-2",
     "image": null,
     "promoted": true,
     "sticky": false,
@@ -53,7 +53,7 @@ export const drupalArticles = [
   {
     "title": "Digital Essentials: This article has a failed image",
     "description": "",
-    "canonical_url": "https://live-library-uq.pantheonsite.io/stories/digital-essentials-accessibility-create-accessible-content",
+    "canonical_url": "https://dev-library-uq.pantheonsite.io/stories/digital-essentials-accessibility-create-accessible-content",
     "image": "/images/this_image_doesnt_exist.jpg",
     "promoted": false,
     "sticky": false,

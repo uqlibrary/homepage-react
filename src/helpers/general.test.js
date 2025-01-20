@@ -77,15 +77,16 @@ describe('general helpers', () => {
 
     it('shows the correct drupal domain name', () => {
         // actual usage
-        expect(linkToDrupal('/research')).toEqual('https://web-live.library.uq.edu.au/research'); // test env domain name is homepage-staging.library.uq.edu.au
+        expect(linkToDrupal('/research')).toEqual('https://dev-library-uq.pantheonsite.io/research'); // unit tests assume homepage-staging.library.uq.edu.au
 
-        // test coverage usage
-        expect(linkToDrupal('/visit', 'localhost')).toEqual('https://web-live.library.uq.edu.au/visit');
-        expect(linkToDrupal('/about', 'homepage-development.library.uq.edu.au')).toEqual(
-            'https://web-live.library.uq.edu.au/about',
-        );
+        // test coverage usage - options not currrently used
+        // expect(linkToDrupal('/visit', 'localhost')).toEqual('https://dev-library-uq.pantheonsite.io/visit');
+        // expect(linkToDrupal('/about', 'homepage-development.library.uq.edu.au')).toEqual(
+        //     'https://dev-library-uq.pantheonsite.io/about',
+        // );
+
         expect(linkToDrupal('/about', 'homepage-staging.library.uq.edu.au')).toEqual(
-            'https://web-live.library.uq.edu.au/about',
+            'https://dev-library-uq.pantheonsite.io/about',
         );
         expect(linkToDrupal('/support', 'somethingelse.library.uq.edu.au')).toEqual(
             'https://web.library.uq.edu.au/support',

@@ -1,22 +1,29 @@
 /* eslint max-len: 0 */
-import React, { useEffect } from 'react';
-import { lazy } from 'react';
+import React, { lazy, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Fade from '@mui/material/Fade';
 import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-import { isEscapeKeyPressed, lazyRetry } from 'helpers/general';
+import { addClass, isEscapeKeyPressed, lazyRetry, removeClass } from 'helpers/general';
 
 const Locations = lazy(() => lazyRetry(() => import('./Locations')));
 
-const StyledWrapperDiv = styled('div')(({ theme }) => ({
+const StyledWrapperDiv = styled('div')(() => ({
+    position: 'relative',
+    '&.layout-card': {
+        '& .locations-wrapper': {
+            opacity: 0,
+        },
+        '& .locations-wrapper.locations-wrapper-open': {
+            opacity: 1,
+        },
+    },
+}));
+
+const StyledButtonAreaDiv = styled('div')(({ theme }) => ({
     position: 'relative',
     display: 'flex',
     flexWrap: 'wrap',
@@ -49,6 +56,7 @@ const StyledBookingLink = styled(Link)(({ theme }) => ({
     },
 }));
 const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
+    backgroundColor: 'transparent !important',
     color: theme.palette.primary.light,
     [theme.breakpoints.up('uqDsTablet')]: {
         backgroundImage:
@@ -58,6 +66,25 @@ const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
         backgroundRepeat: 'no-repeat',
         backgroundSize: '18px 26px',
         paddingLeft: '26px', // 18px wide + 8px padding between icon and text
+    },
+    '&.panel-closed::after': {
+        backgroundImage:
+            // expand more icon
+            "url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cpath d=%22M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z%22/%3E%3C/svg%3E')",
+    },
+    '&.panel-open::after': {
+        backgroundImage:
+            // expand less icon
+            "url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cpath d=%22m12 8-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z%22/%3E%3C/svg%3E')",
+    },
+    '&::after': {
+        backgroundPosition: 'right center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: '18px 26px',
+        content: '""',
+        display: 'inline-block',
+        width: '24px',
+        height: '24px',
     },
     fontSize: '18px',
     fontWeight: 500,
@@ -69,39 +96,68 @@ const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
     '& .MuiTouchRipple-root': {
         display: 'none', // remove mui ripple
     },
-    '& span span': {
+    '& span': {
         textDecoration: 'underline',
+        lineHeight: 'normal',
+        outlineOffset: '1px',
+        outlineStyle: 'auto',
+        outlineWidth: '1px',
+        outlineColor: 'transparent',
     },
-    '&:hover': {
-        backgroundColor: 'white',
-    },
-    '&:hover span span, &:focus span span': {
+    '&:hover span': {
         backgroundColor: theme.palette.primary.light,
         color: 'white',
+    },
+    '&.panel-open span': {
+        backgroundColor: theme.palette.primary.light,
+        color: 'white',
+    },
+    '&:focus-within span': {
+        backgroundColor: theme.palette.primary.light,
+    },
+    '&.panel-open:focus-within span': {
+        backgroundColor: theme.palette.primary.light,
+        color: 'white',
+    },
+    '&.panel-closed:focus-within span': {
+        backgroundColor: 'white',
+        color: theme.palette.primary.light,
+    },
+    '&.panel-closed:focus-within:hover span': {
+        backgroundColor: theme.palette.primary.light,
+        color: 'white',
+    },
+    '&.panel-closed:focus-visible span': {
+        outlineColor: '-webkit-focus-ring-color',
     },
 }));
 
 const StyledLocationBox = styled(Box)(() => ({
     marginLeft: 0,
-    opacity: 0,
 }));
 
 export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcountLoading, vemcountError }) => {
     // handle the location opener
-    const [locationOpen, setLocationOpen2] = React.useState(null);
-    const setLocationOpen = v => {
-        setLocationOpen2(v);
-    };
+    const [locationOpen, setLocationOpen] = React.useState(null);
     const locationsRef = React.useRef(null);
 
     function setLocationPanelAsClosed() {
         const locationsPanel = document.getElementById('locations-wrapper');
         !!locationsPanel && locationsPanel.setAttribute('inert', 'true');
+        !!locationsPanel && removeClass(locationsPanel, 'locations-wrapper-open');
+        const openerButton = document.getElementById('location-dialog-controller');
+        !!openerButton && removeClass(openerButton, 'panel-open');
+        !!openerButton && addClass(openerButton, 'panel-closed');
     }
 
     function setLocationPanelAsOpen() {
         const locationsPanel = document.getElementById('locations-wrapper');
         !!locationsPanel && locationsPanel.removeAttribute('inert');
+        !!locationsPanel && addClass(locationsPanel, 'locations-wrapper-open');
+        // change icon
+        const openerButton = document.getElementById('location-dialog-controller');
+        !!openerButton && addClass(openerButton, 'panel-open');
+        !!openerButton && removeClass(openerButton, 'panel-closed');
     }
 
     const showHideLocationPanel = () => {
@@ -147,11 +203,12 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
 
     useEffect(() => {
         const closeOnClickOutsideDialog = e => {
-            // Don't include the label the opens or closes the hours - because it already has one - no need to fire twice.
+            // Don't include the label that opens or closes the hours - because it already has one - don't fire twice.
             if (
                 locationOpen &&
                 locationsRef.current &&
                 !locationsRef.current.contains(e.target) &&
+                !((e.target?.id || 'NONE') === 'location-dialog-controller') &&
                 !((e.target?.id || 'NONE') === 'location-dialog-controller-label')
             ) {
                 showHideLocationPanel();
@@ -202,8 +259,6 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
         };
     }, [locationOpen]);
 
-    const isLocationOpen = Boolean(locationOpen);
-
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader && siteHeader.removeAttribute('secondleveltitle');
@@ -214,29 +269,23 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
     // so they don't tab to the booking link after clicking the locations open
     return (
         <div style={{ borderBottom: '1px solid hsla(203, 50%, 30%, 0.15)' }}>
-            <div className="layout-card" style={{ position: 'relative' }}>
-                <StyledWrapperDiv>
+            <StyledWrapperDiv className="layout-card">
+                <StyledButtonAreaDiv>
                     <StyledLocationOpenerButton
                         id="location-dialog-controller"
                         data-testid="hours-accordion-open"
-                        data-analyticsid="hours-accordion-open"
+                        data-analyticsid="hours-accordion"
                         onClick={showHideLocationPanel}
                         onKeyDown={handleLocationButtonKeyDown}
                         aria-haspopup="true"
                         aria-expanded={locationOpen ? 'true' : 'false'}
                         aria-controls="locations-wrapper"
                         aria-label="Show/hide Locations and hours panel"
+                        className={'panel-closed'}
                     >
-                        <span>
-                            <span id="location-dialog-controller-label" data-analyticsid="hours-accordion-word">
-                                Locations and hours
-                            </span>
+                        <span id="location-dialog-controller-label" data-analyticsid="hours-accordion">
+                            Locations and hours
                         </span>
-                        {!!locationOpen ? (
-                            <ExpandLessIcon data-analyticsid="hours-accordion-arrow" />
-                        ) : (
-                            <ExpandMoreIcon data-analyticsid="hours-accordion-arrow" />
-                        )}
                     </StyledLocationOpenerButton>
                     <StyledBookingLink
                         href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
@@ -245,29 +294,28 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                     >
                         <span>Book a room</span>
                     </StyledBookingLink>
-                </StyledWrapperDiv>
-                <Fade in={!!isLocationOpen}>
-                    <StyledLocationBox
-                        id={'locations-wrapper'}
-                        data-testid="locations-wrapper"
-                        aria-labelledby="location-dialog-controller"
-                        ref={locationsRef}
-                        role={'dialog'}
-                        aria-live={locationOpen ? 'assertive' : 'off'}
-                        inert="true"
-                    >
-                        <Locations
-                            libHours={libHours}
-                            libHoursLoading={libHoursLoading}
-                            libHoursError={libHoursError}
-                            vemcount={vemcount}
-                            vemcountLoading={vemcountLoading}
-                            vemcountError={vemcountError}
-                            closePanel={showHideLocationPanel}
-                        />
-                    </StyledLocationBox>
-                </Fade>
-            </div>
+                </StyledButtonAreaDiv>
+                <StyledLocationBox
+                    id={'locations-wrapper'}
+                    className={'locations-wrapper'}
+                    data-testid="locations-wrapper"
+                    aria-labelledby="location-dialog-controller"
+                    ref={locationsRef}
+                    role={'dialog'}
+                    aria-live={locationOpen ? 'assertive' : 'off'}
+                    inert="true"
+                >
+                    <Locations
+                        libHours={libHours}
+                        libHoursLoading={libHoursLoading}
+                        libHoursError={libHoursError}
+                        vemcount={vemcount}
+                        vemcountLoading={vemcountLoading}
+                        vemcountError={vemcountError}
+                        closePanel={showHideLocationPanel}
+                    />
+                </StyledLocationBox>
+            </StyledWrapperDiv>
         </div>
     );
 };
