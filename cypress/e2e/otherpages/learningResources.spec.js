@@ -329,7 +329,6 @@ context('Learning Resources Access', () => {
 });
 
 context('The Learning Resources Page', () => {
-    // NOTE: purely for coverage, this test is duplicated into cypress/adminPages/learning-resources
     it('has breadcrumbs', () => {
         cy.visit('/learning-resources?user=s1111111');
         cy.viewport(1300, 1000);
