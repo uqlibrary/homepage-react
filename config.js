@@ -16,6 +16,8 @@ const deployment = {
         // reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents-development/[BRANCH_NAME]/uq-lib-reusable.min.js', // dev
         reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
         removeConsoleLog: false,
+        crmLocationScript: 'uqcurrent.crm.test.uq.edu.au',
+        crmLocationEmbed: 'uqcurrent--tst.widget.custhelp.com',
     },
     staging: {
         url: () => 'https://homepage-staging.library.uq.edu.au/',
@@ -32,6 +34,8 @@ const deployment = {
         publicPath: '/',
         reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/uq-lib-reusable.min.js',
         removeConsoleLog: true,
+        crmLocationScript: 'uqcurrent.crm.test.uq.edu.au',
+        crmLocationEmbed: 'uqcurrent--tst.widget.custhelp.com',
     },
     production: {
         url: () => 'https://homepage-production.library.uq.edu.au/',
@@ -48,6 +52,8 @@ const deployment = {
         publicPath: '/',
         reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
         removeConsoleLog: true,
+        crmLocationScript: 'uqcurrent.crm.test.uq.edu.au',
+        crmLocationEmbed: 'uqcurrent--tst.widget.custhelp.com',
     },
 };
 

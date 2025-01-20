@@ -114,6 +114,8 @@ module.exports = {
             filename: 'index.html',
             reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
             // reusablejs: 'http://localhost:8080/uq-lib-reusable.min.js', // swap if needed in dev
+            crmLocationScript: 'https://uqcurrent.crm.test.uq.edu.au/s/oit/latest/common/v0/libs/oit/loader.js',
+            crmLocationEmbed: 'uqcurrent--tst.widget.custhelp.com',
             inject: true,
             template: join(__dirname, 'public', 'index.html'),
         }),

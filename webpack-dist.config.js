@@ -95,6 +95,8 @@ const webpackConfig = {
             title: config.title,
             gtm: config.gtm,
             reusablejs: config.reusablejs,
+            crmLocationScript: config.crmLocationScript,
+            crmLocationEmbed: config.crmLocationEmbed,
             inject: true,
             template: resolve(__dirname, './public', 'index.html'),
         }),
