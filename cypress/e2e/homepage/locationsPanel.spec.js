@@ -252,6 +252,7 @@ describe('Locations Panel', () => {
                     const spaceBetweenGattonAndLaw = lawTop - gattonBottom;
                     const spaceBetweenLawAndAskus = askusTop - lawBottom;
                     expect(spaceBetweenLawAndAskus).to.be.greaterThan(spaceBetweenGattonAndLaw * 1.5);
+                    // just rough "distinct difference" rather than precise number
                 });
         });
     });
@@ -305,6 +306,66 @@ describe('Locations Panel', () => {
             cy.get('[data-testid="location-item-arch-music-hours"]').should('not.exist');
             cy.get('[data-testid="locations-hours-disclaimer"]').should('not.exist');
             cy.get('[data-testid="hours-item-askus-link"]').should('not.exist');
+        });
+        context('the open Locations panel butts up against the Utility bar', () => {
+            it('at very wide desktop', () => {
+                cy.visit('/');
+                cy.viewport(2300, 800);
+            });
+            it('at wide desktop', () => {
+                cy.visit('/');
+                cy.viewport(1300, 800);
+            });
+            it('at minimal desktop', () => {
+                cy.visit('/');
+                cy.viewport(1000, 800);
+            });
+            it('at tablet landscape', () => {
+                cy.visit('/');
+                cy.viewport(800, 600);
+            });
+            it('at tablet portrait', () => {
+                cy.visit('/');
+                cy.viewport(600, 800);
+            });
+            afterEach(() => {
+                cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+                cy.get('[data-testid="hours-accordion-open"]').click();
+                cy.waitUntil(() =>
+                    cy
+                        .get('[data-testid="homepage-hours-weeklyhours-link"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('See all Library and AskUs hours'),
+                );
+
+                // cy.get('[data-testid="utility-bar"]').within(() => {
+                let utilityBarBottom;
+                cy.get('[data-testid="hours-accordion-open"]')
+                    .parent()
+                    .should('be.visible')
+                    .then($utilityBar => {
+                        utilityBarBottom = $utilityBar.position().top + $utilityBar.outerHeight();
+                    });
+
+                let locationsPanelTop;
+                cy.get('[data-testid="locations-panel"]')
+                    .should('be.visible')
+                    .then($locationsPanel => {
+                        locationsPanelTop = $locationsPanel.position().top;
+                        expect(utilityBarBottom - locationsPanelTop).to.be.lessThan(0.02);
+
+                        // test fails? drop this in the webpage console to get the change:
+                        // const utilityBar = document.querySelector('[data-testid="utility-bar-button-wrapper"]');
+                        // const locationPanel = document.querySelector('[data-testid="locations-panel"]');
+                        // const utilityBarBoundingBox = utilityBar.getBoundingClientRect();
+                        // const utilityBarBottom = utilityBarBoundingBox.top + utilityBarBoundingBox.height;
+                        // const locationPanelBoundingBox = locationPanel.getBoundingClientRect();
+                        // const diff = utilityBarBottom - locationPanelBoundingBox.top;
+                        // console.log('change `top` of StyledStandardCard in Locations.js by ', diff, 'px');
+                    });
+                // });
+            });
         });
         it('can navigate to weekly hours page from the library name cell', () => {
             cy.intercept('GET', 'https://web.library.uq.edu.au/visit/architecture-and-music-library', {
