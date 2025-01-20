@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+
 import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { canSeeLoans, canSeePrintBalance, isTestTagUser } from 'helpers/access';
+import { isTestTagUser } from 'helpers/access';
 import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
-import { linkToDrupal } from 'helpers/general';
+import PaperCutMenu from './PaperCutMenu';
 
 const StyledAlertDiv = styled('div')(() => ({
     display: 'flex',
@@ -21,12 +22,41 @@ const StyledAlertDiv = styled('div')(() => ({
     },
 }));
 
-const StyledUl = styled('ul')(() => ({
+const StyledUl = styled('ul')(({ theme }) => ({
     marginBottom: 0,
     '& li': {
         paddingBottom: '16px',
         marginLeft: '-20px',
         listStyleType: 'none',
+        '& button': {
+            color: theme.palette.primary.light,
+            fontWeight: 500,
+            fontSize: '16px',
+            textAlign: 'left',
+            textTransform: 'none',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            lineHeight: 'normal',
+            padding: '0 4px',
+            '&:hover': {
+                backgroundColor: 'inherit',
+            },
+            '& span': {
+                textDecoration: 'underline',
+                '&:hover': {
+                    backgroundColor: theme.palette.primary.light,
+                    color: '#fff',
+                },
+            },
+            '& svg:first-of-type': {
+                stroke: theme.palette.primary.light,
+                paddingRight: '12px',
+            },
+            '& .MuiTouchRipple-root': {
+                display: 'none', // remove mui ripple
+            },
+        },
         '& a': {
             display: 'inline-flex',
             alignItems: 'center',
@@ -37,12 +67,12 @@ const StyledUl = styled('ul')(() => ({
                 textDecorationColor: 'white',
             },
             '& svg': {
-                stroke: '#51247A',
+                stroke: theme.palette.primary.light,
                 paddingRight: '12px',
             },
             '&:hover span': {
                 color: '#fff',
-                backgroundColor: '#51247A',
+                backgroundColor: theme.palette.primary.light,
             },
             '&:hover svg': {
                 color: 'inherit',
@@ -55,30 +85,6 @@ const StyledUl = styled('ul')(() => ({
         },
     },
 }));
-
-const dsDiscountDollarDashIcon = (
-    <svg width="22" height="22" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-        <g id="Discount-Dollar-Dash--Streamline-Streamline--3.0 1" clipPath="url(#clip0_1183_3145)">
-            <path
-                d="M1.01562 10C1.01563 12.3828 1.96219 14.668 3.64709 16.3529C5.33198 18.0378 7.6172 18.9844 10 18.9844C12.3828 18.9844 14.668 18.0378 16.3529 16.3529C18.0378 14.668 18.9844 12.3828 18.9844 10C18.9844 7.6172 18.0378 5.33198 16.3529 3.64709C14.668 1.96219 12.3828 1.01563 10 1.01562C7.6172 1.01563 5.33198 1.96219 3.64709 3.64709C1.96219 5.33198 1.01563 7.6172 1.01562 10Z"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-            <path
-                d="M8.20313 11.7969C8.20313 12.1523 8.30851 12.4997 8.50595 12.7952C8.7034 13.0907 8.98403 13.321 9.31237 13.457C9.6407 13.593 10.002 13.6286 10.3506 13.5592C10.6991 13.4899 11.0193 13.3188 11.2706 13.0675C11.5219 12.8162 11.693 12.496 11.7623 12.1474C11.8317 11.7989 11.7961 11.4376 11.6601 11.1092C11.5241 10.7809 11.2938 10.5003 10.9983 10.3028C10.7028 10.1054 10.3554 10 10 10C9.64461 10 9.29721 9.89462 9.00171 9.69717C8.70622 9.49973 8.47591 9.2191 8.33991 8.89076C8.2039 8.56242 8.16832 8.20113 8.23765 7.85257C8.30698 7.50401 8.47812 7.18384 8.72942 6.93254C8.98072 6.68125 9.30089 6.51011 9.64945 6.44078C9.99801 6.37144 10.3593 6.40703 10.6876 6.54303C11.016 6.67903 11.2966 6.90934 11.494 7.20484C11.6915 7.50033 11.7969 7.84774 11.7969 8.20313"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-            <path d="M10 5.20825V6.40617" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M10 13.5938V14.7917" strokeLinecap="round" strokeLinejoin="round" />
-        </g>
-        <defs>
-            <clipPath>
-                <rect width="20" height="20" fill="white" />
-            </clipPath>
-        </defs>
-    </svg>
-);
 
 const dsStarIcon = (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
@@ -215,7 +221,14 @@ const dsChecklistIcon = (
     </svg>
 );
 
-export const AccountPanel = ({ account, loans, loansLoading, printBalance, printBalanceLoading }) => {
+export const AccountPanel = ({
+    account,
+    loans,
+    loansLoading,
+    printBalance,
+    printBalanceLoading,
+    printBalanceError,
+}) => {
     function totalFines(fines) {
         return fines.reduce((sum, fine) => {
             return sum + (typeof fine.fineAmount === 'number' ? fine.fineAmount : /* istanbul ignore next */ 0);
@@ -234,13 +247,6 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
             return null;
         }
         return <> ({`${loans?.total_holds_count}`})</>;
-    }
-
-    function markedPrintBalance() {
-        if (!!printBalanceLoading || !printBalance?.hasOwnProperty('balance')) {
-            return null;
-        }
-        return <> (${printBalance?.balance})</>;
     }
 
     return (
@@ -262,19 +268,21 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
                     </Link>
                 </li>
                 <li data-testid={'show-loans'}>
-                    <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
+                    <Link
+                        to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US"
+                        data-analyticsid={'pp-loans-menu-button'}
+                    >
                         {dsBookCloseBookmarkIcon} <span>Loans {markedLoanQuantity()}</span>
                     </Link>
                 </li>
-                {canSeePrintBalance(account) && (
-                    <li data-testid={'show-papercut'}>
-                        <Link
-                            to={linkToDrupal('/library-and-student-it-help/print-scan-and-copy/your-printing-account')}
-                        >
-                            {dsDiscountDollarDashIcon} <span>Print balance {markedPrintBalance()}</span>
-                        </Link>
-                    </li>
-                )}
+                <li data-testid={'show-papercut'}>
+                    <PaperCutMenu
+                        account={account}
+                        printBalance={printBalance}
+                        printBalanceLoading={printBalanceLoading}
+                        printBalanceError={printBalanceError}
+                    />
+                </li>
                 {isTestTagUser(account) &&
                 /* istanbul ignore next */ !['uqldegro', 'uqslanca', 'uqjtilse'].includes(account.id) && ( // hide until end of 2024 dev(
                         <li data-testid={'show-testntag'}>
@@ -285,10 +293,14 @@ export const AccountPanel = ({ account, loans, loansLoading, printBalance, print
                         </li>
                     )}
             </StyledUl>
-            {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
+            {!!loans && loans.total_fines_count > 0 && (
                 <StyledAlertDiv data-testid={'show-fines'}>
                     <UserAttention titleText={'Fines and charges'}>
-                        <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
+                        <Link
+                            to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US"
+                            id="fines-and-charges-link"
+                            data-analyticsid={'pp-fines-tooltip'}
+                        >
                             <span>${`${totalFines(loans?.fines)}`} payable</span>
                         </Link>
                     </UserAttention>
@@ -304,6 +316,7 @@ AccountPanel.propTypes = {
     loansLoading: PropTypes.bool,
     printBalance: PropTypes.object,
     printBalanceLoading: PropTypes.bool,
+    printBalanceError: PropTypes.bool,
 };
 
 export default AccountPanel;

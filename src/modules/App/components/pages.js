@@ -44,5 +44,5 @@ export const PastExamPaperSearch = lazy(() => lazyRetry(() => import('modules/Pa
 export const PastExamPaperList = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperList/PastExamPaperListContainer')));
 
 // always load components
-export { IndexContainer as Index } from 'modules/Index';
+export { HomePageContainer as Index } from 'modules/HomePage';
 export { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
