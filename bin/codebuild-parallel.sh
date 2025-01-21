@@ -10,7 +10,7 @@ printf "\n ### Running codebuild-parallel.sh ### \n\n"
 spec_files=$(find cypress/e2e -name '*.spec.js')
 printf "\n spec_files:\n"
 echo "$spec_files"
-print_f "\n"
+printf "\n"
 
 num_specs=$(echo "$spec_files" | wc -l)
 group_size_1=$((num_specs / 2))
