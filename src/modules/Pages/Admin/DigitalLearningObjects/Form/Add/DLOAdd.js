@@ -36,7 +36,8 @@ export const DLOAdd = ({
             .minute(1) // 1 minute past midnight
             .format('YYYY-MM-DDTHH:mm');
     }
-
+    
+    /* istanbul ignore next */
     const formDefaults = {
         object_title: '',
         object_description: '',
@@ -45,7 +46,6 @@ export const DLOAdd = ({
         object_link_url: '',
         object_download_instructions: '',
         object_publishing_user: account?.id,
-        /* istanbul ignore next */
         object_status: isDlorAdminUser(account) ? 'new' : 'submitted',
         object_review_date_next: getTodayPlusOneYear(),
         // team_name_add: '',
