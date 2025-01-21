@@ -122,13 +122,6 @@ case "$PIPE_NUM" in
         printf "\n--- \e[1mRUNNING UNIT TESTS\e[0m ---\n"
 
 # if we end up needing some tests run in band, then add then to jest-serial.txt and return this section
-#        # Unit tests which require --runInBand
-#        npm run test:unit:ci:serial
-#        # Replace codebuild source path as we'll compile multiple of these together to get the final code coverage
-#        sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/jest/coverage-final.json
-#        mv coverage/jest/coverage-final.json coverage-final.json
-
-        # All other unit tests
         export JEST_HTML_REPORTER_OUTPUT_PATH=coverage/jest/jest-html-report.html
         npm run test:unit:ci
         sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/jest/coverage-final.json
