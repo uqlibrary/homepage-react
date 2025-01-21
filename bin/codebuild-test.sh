@@ -132,21 +132,14 @@ case "$PIPE_NUM" in
         npm run test:unit:ci
         sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/jest/coverage-final.json
 
-        pwd # debug
-        ls # debug
+        pwd
 
-        echo '### coverage'
-        ls coverage # debug
-        echo '### coverage/jest'
-        ls coverage/jest # debug
-        echo '###  \n### coverage/jest/coverage-final.json'
+        echo "###  \n### coverage/jest/coverage-final.json"
         ls coverage/jest/coverage-final.json # debug
-        echo '### coverage/jest-serial'
 
         mkdir -p coverage/jest-serial
-        ls coverage/jest-serial # debug
         echo '### mv'
-        mv coverage-final.json coverage/jest-serial/coverage-final.json
+        mv coverage/jest/coverage-final.json coverage/jest-serial/coverage-final.json
 #    fi
 ;;
 *)
