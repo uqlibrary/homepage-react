@@ -29,11 +29,11 @@ echo "split done\n"
 
 # for later:
 # # most files in pipeline 1 & 2, some in pipeline 3 after the unit tests have run
-#    mod = NR % 5
-#    if (mod == 1 || mod == 2) {
+#    mod = NR % 37
+#    if (mod < 15) {
 #        print > "bin/group1.txt"
-#    } else if (mod == 3 || mod == 4) {
+#    } else if (mod < 30) {
 #        print > "bin/group2.txt"
-#    } else if (mod == 0) {
+#    } else {
 #        print > "bin/group3.txt"
 #    }
