@@ -17,16 +17,11 @@ printf "\n"
 echo "start \n"
 index=0
 # split the file list so an even run time is likely
-echo $spec_files |
-{
-  while IFS= read -r file; do
-    echo "handle $file \n"
-    if (( index % 2 == 0 )); then
-      echo "$file" > bin/group1.txt
-    else
-      echo "$file" > bin/group2.txt
-    fi
-    ((index++));
-  done
-}
+echo "$spec_files" | awk '{
+    if (NR % 2 == 1) {
+        print > "bin/group1.txt"
+    } else {
+        print > "bin/group2.txt"
+    }
+}'
 echo "split done\n"
