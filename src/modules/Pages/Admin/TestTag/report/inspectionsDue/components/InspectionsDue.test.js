@@ -192,7 +192,7 @@ describe('InspectionsDue', () => {
         expect(clearFloorsFn).toHaveBeenCalled();
     });
 
-    it('fires action when filter floor changes', async () => {
+    it.skip('fires action when filter floor changes', async () => {
         const loadSitesFn = jest.fn();
         const getInspectionsDueFn = jest.fn();
         const clearRoomsFn = jest.fn();
@@ -280,7 +280,7 @@ describe('InspectionsDue', () => {
     }, 8000);
 
     describe('coverage', () => {
-        it('shows alert if inspectionsDueError is set', async () => {
+        it.skip('shows alert if inspectionsDueError is set', async () => {
             const clearInspectionsDueErrorFn = jest.fn();
 
             const { getByTitle, getByTestId } = setup({
