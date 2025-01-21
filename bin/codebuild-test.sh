@@ -70,19 +70,13 @@ case "$PIPE_NUM" in
         printf "\n--- \e[1mRUNNING E2E TESTS GROUP 1\e[0m ---\n"
         # Split the Cypress E2E tests into two groups and in this pipeline run only the ones in the first group
         source bin/codebuild-parallel.sh
-        npm run test:e2e:ci1
 
-        pwd # debug
-        ls # debug
-        echo '###'
-        ls coverage # debug
-        echo '###'
-        ls coverage/cypress # debug
-        echo '###'
-        ls coverage/cypress/coverage-final.json # debug
-        echo '###'
-
-        sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
+        if [ -s "group1.txt" ]; then
+          npm run test:e2e:ci1
+          sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
+        else
+          echo "group1.txt is empty - no tests to run"
+        fi
 #    else
 #        checkCodeStyle
 #        set -e
@@ -98,19 +92,13 @@ case "$PIPE_NUM" in
         # Split the Cypress E2E tests into two groups and in this pipeline run only the ones in the second group
         source bin/codebuild-parallel.sh
         printf "\n--- \e[1mRUNNING E2E TESTS GROUP 2\e[0m ---\n"
-        npm run test:e2e:ci2
 
-        pwd # debug
-        ls # debug
-        echo '###'
-        ls coverage # debug
-        echo '###'
-        ls coverage/cypress # debug
-        echo '###'
-        ls coverage/cypress/coverage-final.json # debug
-        echo '###'
-
-        sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
+        if [ -s "group2.txt" ]; then
+          npm run test:e2e:ci2
+          sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
+        else
+          echo "group2.txt is empty - no tests to run."
+        fi
 #    else
 ##        printf "\n--- \e[1mRUNNING SERIAL UNIT TESTS\e[0m ---\n"
 ##        npm run test:unit:ci:serial:nocoverage
@@ -127,7 +115,6 @@ case "$PIPE_NUM" in
         set -e
         printf "\n--- \e[1mRUNNING UNIT TESTS\e[0m ---\n"
 
-# if we end up needing some tests run in band, then add then to jest-serial.txt and return this section
         export JEST_HTML_REPORTER_OUTPUT_PATH=coverage/jest/jest-html-report.html
         npm run test:unit:ci
         sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/jest/coverage-final.json
@@ -140,6 +127,14 @@ case "$PIPE_NUM" in
         mkdir -p coverage/jest-serial
         echo '### mv'
         mv coverage/jest/coverage-final.json coverage/jest-serial/coverage-final.json
+
+        # now run the smaller set of tests in group3, to balance out the time between pipelines
+        if [ -s "group3.txt" ]; then
+          npm run test:e2e:ci3
+          sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
+        else
+          echo "group3.txt is empty - no tests to run."
+        fi
 #    fi
 ;;
 *)
