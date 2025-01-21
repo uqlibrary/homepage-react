@@ -78,6 +78,9 @@ case "$PIPE_NUM" in
         ls coverage # debug
         echo '###'
         ls coverage/cypress # debug
+        echo '###'
+        ls coverage/cypress/coverage-final.json # debug
+        echo '###'
 
         sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
 #    else
@@ -103,6 +106,9 @@ case "$PIPE_NUM" in
         ls coverage # debug
         echo '###'
         ls coverage/cypress # debug
+        echo '###'
+        ls coverage/cypress/coverage-final.json # debug
+        echo '###'
 
         sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
 #    else
@@ -129,12 +135,18 @@ case "$PIPE_NUM" in
         pwd # debug
         ls # debug
 
-        echo '###'
+        echo '### coverage'
         ls coverage # debug
-        echo '###'
+        echo '### coverage/jest'
         ls coverage/jest # debug
+        echo '###  \n### coverage/jest/coverage-final.json'
+        ls coverage/jest/coverage-final.json # debug
+        echo '### coverage/jest-serial'
 
-        mkdir -p coverage/jest-serial && mv coverage-final.json coverage/jest-serial/coverage-final.json
+        mkdir -p coverage/jest-serial
+        ls coverage/jest-serial # debug
+        echo '### mv'
+        mv coverage-final.json coverage/jest-serial/coverage-final.json
 #    fi
 ;;
 *)
