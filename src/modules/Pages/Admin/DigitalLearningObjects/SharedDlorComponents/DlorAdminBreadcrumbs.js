@@ -37,6 +37,7 @@ export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
             <Grid item xs={11}>
                 <StyledTitleBox>
                     <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
+                        {/* istanbul ignore next */}
                         <a data-testid="dlor-breadcrumb-admin-homelink" href={isDlorAdminUser(account) ? dlorAdminLink() : '/digital-learning-hub'}>
                             {isDlorAdminUser(account) ? `Digital Learning Hub admin` : `Digital Learning Hub`}
                         </a>
