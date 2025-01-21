@@ -20,16 +20,16 @@ index=0
 # split the file list so an even run time is likely
 # lots in pipelines 1 & 2 and then a small number to run after the unit tests in pipeline 3
 echo "$spec_files" | awk '{
-    mod = NR % 5
-    if (mod == 1 || mod == 2) {
-        print "Placing " $0 " in group1.txt"
+    if (NR % 5 == 1) {
         print > "bin/group1.txt"
-    } else if (mod == 3 || mod == 4) {
-        print "Placing " $0 " in group2.txt"
+    } else if (NR % 5 == 2) {
         print > "bin/group2.txt"
-    } else {
-        print "Placing " $0 " in group3.txt"
+    } else if (NR % 5 == 3) {
         print > "bin/group3.txt"
+    } else if (NR % 5 == 4) {
+        print > "bin/group1.txt"
+    } else {
+        print > "bin/group2.txt"
     }
 }'
-echo "split done\n"
+printf "split done \n"
