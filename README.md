@@ -365,7 +365,7 @@ admin - on author record (AUTHOR_DETAILS_API) eg <https://api.library.uq.edu.au/
 
 ## Reviewing
 
-A Self-review checklist is [here](https://docs.google.com/document/d/1RTW8gdNcgZC4dNiHV3IeMcZkECftFqQ-3RLqyV8ieSw) in
+A Self-review checklist is [here](https://uq.sharepoint.com/:w:/r/teams/lbf4g4a1/LTSDevelopers%20Documents/Standards/React%20self%20code%20review%20checklist.docx?d=w0b91b7dfd85d4f14bf624da7c4de1821&csf=1&web=1&e=RZs5Ka) in
 the ISRS Collection.
 
 Ask for review from team-mates if you'd like other eyes on your changes.
@@ -375,10 +375,10 @@ Ask for review from team-mates if you'd like other eyes on your changes.
 Application deployment is 100% automated using AWS Codebuild (and Codepipeline), and is hosted in S3. All testing and deployment commands and configuration are stored in the buildspec yaml files in the repo. All secrets (access keys and tokens for PT, Cypress, Sentry and Google) are stored in AWS Parameter Store, and then populated into ENV variables in those buildspec yaml files.
 Deployment pipelines are setup for branches: "master", "staging, "production" and several key branches starting with "feature-".
 
-- Master branch is always deployed to staging/production
-- Deployments to production are hosted on <https://homepage-production.library.uq.edu.au/> and <https://www.library.uq.edu.au/>
-- Deployments to staging are hosted on <https://homepage-staging.library.uq.edu.au/>
-- Some other branches are deployed on <https://homepage-development.library.uq.edu.au/branchName/>. (Only certain branches are deployed now we are using AWS - [How to create a new CodePipeline](https://docs.google.com/document/d/1uyHOE5eOdPuVkjElNv8xNQJN-A5VU3iV7KOne72UoK8/edit))
+- You must always copy Master branch to staging/production (idally, staging before master and alow the e2es to run before yu go to master and prod)
+- Deployments to production are visitable on <https://homepage-production.library.uq.edu.au/> and <https://www.library.uq.edu.au/>
+- Deployments to staging are visitable on <https://homepage-staging.library.uq.edu.au/>
+- Some other branches are visitable on <https://homepage-development.library.uq.edu.au/branchName/>. (Only certain branches are deployed now we are using AWS - [How to create a new CodePipeline](https://uq.sharepoint.com/:w:/r/teams/lbf4g4a1/LTSDevelopers%20Documents/How-to/(needs%20revision)%20Create%20a%20new%20CodePipeline.docx?d=wf0198aaec9ad4037b408a224cc8497b6&csf=1&web=1&e=JkoB3W))
 - Note: avoid certain words in your branch name, eg exams - Cloudfront overrides these routes and you won't be able to view the deployment.
   See [Cloudfront list of reserved routes](https://us-east-1.console.aws.amazon.com/cloudfront/v3/home?region=us-east-1&skipRegion=true#/distributions/E34LPPV7N4XONM/behaviors)
 - Homepage branch staging is used to test changes to repo reusable-webcomponents that affect Homepage by calling the *staging* branch of reusable. All other branches of homepage display the *production* branch of reusable. Instructions:
