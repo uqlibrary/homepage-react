@@ -25,3 +25,15 @@ echo "$spec_files" | awk '{
     }
 }'
 echo "split done\n"
+
+
+# for later:
+# # most files in pipeline 1 & 2, some in pipeline 3 after the unit tests have run
+#    mod = NR % 5
+#    if (mod == 1 || mod == 2) {
+#        print > "bin/group1.txt"
+#    } else if (mod == 3 || mod == 4) {
+#        print > "bin/group2.txt"
+#    } else if (mod == 0) {
+#        print > "bin/group3.txt"
+#    }
