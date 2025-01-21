@@ -10,7 +10,7 @@ const mapStateToProps = state => {
         ...state.get('dlorSeriesSingleReducer'),
         ...state.get('dlorUpdateReducer'),
         ...state.get('dlorListReducer'),
-        mode: 'EDIT'
+        mode: 'ADD'
     };
 };
 

@@ -25,6 +25,8 @@ export const DLOTeamEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admi
 export const DLOTeamAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamAddContainer')));
 export const DLOSeriesList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Series/DLOSeriesListContainer')));
 export const DLOSeriesEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Series/DLOSeriesEditContainer')));
+export const SeriesView = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Series/SeriesViewContainer')));
+export const DLOSeriesAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Series/DLOSeriesAddContainer')));
 
 export const TestTagDashboard = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Dashboard/containers/Dashboard')));
 export const TestTagInspection = lazy(() => lazyRetry(() => import('modules/Pages/Admin/TestTag/Inspection/containers/Inspection')));
@@ -43,6 +45,7 @@ export const Masquerade = lazy(() => lazyRetry(() => import('modules/Pages/Admin
 export const PastExamPaperSearch = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperSearch/PastExamPaperSearchContainer')));
 export const PastExamPaperList = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperList/PastExamPaperListContainer')));
 
+export const DLONew = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Objects/DLOAddContainer')));
 // always load components
 export { HomePageContainer as Index } from 'modules/HomePage';
 export { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';

@@ -90,6 +90,11 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
             label: 'Deleted',
             isChecked: false,
         },
+        {
+            type: 'submitted',
+            label: 'User Submitted',
+            isChecked: false,
+        },
     ];
     const [checkedStatusType, setCheckedStatusType] = useState(statusTypes.map(status => status.isChecked));
 
@@ -129,6 +134,10 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
 
     const navigateToSeriesListPage = () => {
         window.location.href = dlorAdminLink('/series/manage');
+    };
+
+    const navigateToAddSeriesPage = () => {
+        window.location.href = dlorAdminLink('/series/add');
     };
 
     const navigateToEditPage = uuid => {
@@ -284,6 +293,13 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
             />
             <Grid container spacing={2} sx={{ marginBottom: '25px' }}>
                 <Grid item xs={12} sx={{ textAlign: 'right' }}>
+                <Button
+                        children="Add series"
+                        color="primary"
+                        data-testid="admin-dlor-visit-add-series-button"
+                        onClick={() => navigateToAddSeriesPage()}
+                        variant="contained"
+                    />{' '}
                     <Button
                         children="Manage series"
                         color="primary"

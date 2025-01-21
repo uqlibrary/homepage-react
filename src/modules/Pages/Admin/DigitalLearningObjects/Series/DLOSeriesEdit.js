@@ -28,6 +28,9 @@ import {
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { breadcrumbs } from 'config/routes';
 
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 const StyledDraggableListItem = styled('li')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
@@ -61,7 +64,17 @@ export const DLOSeriesEdit = ({
     dlorList,
     dlorListLoading,
     dlorListError,
+    dlorSeries,
+    mode
 }) => {
+    const handleEditorChange = (fieldname, newContent) => {
+        // setSummarySuggestionOpen(true);
+        // amalgamate new value into data set
+        const newValues = { ...formValues, [fieldname]: newContent };
+
+        setFormValues(newValues);
+    };
+
     const { dlorSeriesId } = useParams();
     const [cookies, setCookie] = useCookies();
 
@@ -72,9 +85,31 @@ export const DLOSeriesEdit = ({
     const [confirmationOpen, setConfirmationOpen] = useState(false);
     const [formValues, setFormValues] = useState({
         series_name: '',
+        series_description: '',
         object_list_linked: [],
         object_list_unassigned: [],
     });
+    const editorConfig = {
+        removePlugins: [
+            'Image',
+            'ImageCaption',
+            'ImageStyle',
+            'ImageToolbar',
+            'ImageUpload',
+            'EasyImage',
+            'CKFinder',
+            'BlockQuote',
+            'Table',
+            'MediaEmbed',
+        ],
+        heading: {
+            options: [
+                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                { model: 'heading1', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                { model: 'heading2', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+            ],
+        },
+    };
 
     useEffect(() => {
         setConfirmationOpen(!dlorItemUpdating && (!!dlorUpdatedItemError || !!dlorUpdatedItem));
@@ -96,21 +131,35 @@ export const DLOSeriesEdit = ({
         /* istanbul ignore else */
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
+            if (dlorSeriesId) {
+                console.log("Loading DLOR Series");
+                actions.loadDlorSeries(dlorSeriesId)
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        if (!dlorListLoading && !dlorListError && !!dlorList) {
+        console.log("DLOR SERIES", dlorSeries)
+        if (!dlorListLoading && !dlorListError && (!!dlorList || !!dlorSeries?.series_name)) {
             setConfirmationOpen(false);
-
-            const seriesDetail = dlorList.find(s => s.object_series_id === Number(dlorSeriesId));
-            setOriginalSeriesDetails({
+            let seriesDetail = !!dlorList && dlorList?.find(s => s.object_series_id === Number(dlorSeriesId)) || {};
+            if (Object.keys(seriesDetail).length === 0) {
+                console.log("Doing the things")
+                seriesDetail.object_series_id = dlorSeriesId;
+                seriesDetail.object_series_name = dlorSeries?.series_name,
+                seriesDetail.object_series_description = dlorSeries?.series_description
+            }
+            mode === "EDIT" && setOriginalSeriesDetails({
                 series_id: seriesDetail?.object_series_id,
                 series_name: seriesDetail?.object_series_name,
+                series_description: seriesDetail?.object_series_description
             });
+            console.log("About to set the values", seriesDetail, dlorSeries)
+            //mode === "EDIT" && 
             setFormValues({
                 series_name: seriesDetail?.object_series_name,
+                series_description: seriesDetail?.object_series_description,
                 object_list_linked:
                     dlorList?.length > 0
                         ? dlorList?.filter(o => {
@@ -125,7 +174,7 @@ export const DLOSeriesEdit = ({
                         : /* istanbul ignore next */ [],
             });
         }
-    }, [dlorSeriesId, dlorList, dlorListError, dlorListLoading, actions]);
+    }, [dlorSeriesId, dlorList, dlorListError, dlorListLoading, actions, dlorSeries]);
 
     function closeConfirmationBox() {
         setConfirmationOpen(false);
@@ -147,9 +196,9 @@ export const DLOSeriesEdit = ({
 
     const locale = {
         successMessage: {
-            confirmationTitle: 'Changes have been saved',
+            confirmationTitle: mode == "EDIT" ? 'Changes have been saved' : 'Series has been created',
             confirmationMessage: '',
-            cancelButtonLabel: 'Re-edit Series',
+            cancelButtonLabel: mode == "EDIT" ? 'Re-edit Series' : 'Add a new Series',
             confirmButtonLabel: 'Return to Admin Series page',
         },
         errorMessage: {
@@ -161,7 +210,6 @@ export const DLOSeriesEdit = ({
 
     const handleChange = prop => e => {
         const theNewValue = e.target.value;
-
         let newValues;
         let linked = formValues.object_list_linked;
         let unassigned = formValues.object_list_unassigned;
@@ -169,40 +217,48 @@ export const DLOSeriesEdit = ({
         if (prop.startsWith('linked_object_series_order-')) {
             const uuid = prop.replace('linked_object_series_order-', '');
             const thisdlor = linked.find(d => d.object_public_uuid === uuid);
+            const indexToRemove = linked.findIndex(d => d.object_public_uuid === uuid);
             thisdlor.object_series_order = e.target.value;
-
-            if (e.target.value === 0) {
+            if (e.target.value === "0") {
                 // remove thisdlor from linked group
-                linked = linked.filter(d => d.object_public_uuid !== uuid);
+                if (indexToRemove !== -1) {
+                    linked.splice(indexToRemove, 1);
+                }
                 // add thisdlor to unassigned group
+                thisdlor.object_series_order = null;
                 unassigned.push(thisdlor);
             } else {
                 // move within linked group
                 linked.map(d => d.object_public_uuid === uuid && (d.object_series_order = e.target.value));
             }
             linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
-            unassigned = unassigned.sort((a, b) => a.object_series_order - b.object_series_order);
-
+            unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
             newValues = {
                 series_name: formValues.series_name,
+                series_description: formValues.series_description,
                 object_list_linked: linked,
                 object_list_unassigned: unassigned,
             };
         } else if (prop.startsWith('unassigned_object_series_order-')) {
             const uuid = prop.replace('unassigned_object_series_order-', '');
             const thisdlor = unassigned.find(d => d.object_public_uuid === uuid);
+            const indexToRemove = unassigned.findIndex(d => d.object_public_uuid === uuid);
             thisdlor.object_series_order = e.target.value;
 
             if (e.target.value !== 0) {
                 // remove thisdlor from unassigned group
-                unassigned = unassigned.filter(d => d.object_public_uuid !== uuid);
+                //unassigned = unassigned.filter(d => d.object_public_uuid !== uuid);
+                if (indexToRemove !== -1) {
+                    unassigned.splice(indexToRemove, 1);
+                }
                 // add thisdlor to linked group
                 linked.push(thisdlor);
             }
             linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
-            unassigned = unassigned.sort((a, b) => a.object_series_order - b.object_series_order);
+            unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
             newValues = {
                 series_name: formValues.series_name,
+                series_description: formValues.series_description,
                 object_list_linked: linked,
                 object_list_unassigned: unassigned,
             };
@@ -217,6 +273,7 @@ export const DLOSeriesEdit = ({
     const saveChanges = () => {
         const valuesToSend = {
             series_name: formValues.series_name,
+            series_description: formValues.series_description,
             series_list: formValues.object_list_linked
                 .filter(item => Number(item.object_series_order) > 0)
                 .map(item => ({
@@ -229,12 +286,22 @@ export const DLOSeriesEdit = ({
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
-
-        actions.updateDlorSeries(dlorSeriesId, valuesToSend);
+        if (mode === "EDIT") {
+            actions.updateDlorSeries(dlorSeriesId, valuesToSend);
+        } else {
+            actions.createDlorSeries(valuesToSend);
+        }
+        
     };
 
+    function toProperCase(text) {
+        return text.replace(/\w\S*/g, function(txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); 
+        });
+      }
+
     return (
-        <StandardPage title="Digital Learning Hub - Edit Series">
+        <StandardPage title={`Digital Learning Hub - ${toProperCase(mode)} Series`}>
             <DlorAdminBreadcrumbs
                 breadCrumbList={[
                     {
@@ -242,7 +309,7 @@ export const DLOSeriesEdit = ({
                         title: 'Series management',
                     },
                     {
-                        title: `Edit series: ${originalSeriesDetails.series_name || ''}`,
+                        title: `${toProperCase(mode)} series: ${originalSeriesDetails.series_name || ''}`,
                         id: 'edit-series',
                     },
                 ]}
@@ -291,8 +358,8 @@ export const DLOSeriesEdit = ({
                                                 !!dlorUpdatedItemError ? locale.errorMessage : locale.successMessage
                                             }
                                         />
-
-                                        <StyledSeriesEditForm id="dlor-editSeries-form">
+                                        <StyledSeriesEditForm id={`dlor-${mode.toLowerCase()}Series-form`}>
+                                        {/* <form id="dlor-editSeries-form"> */}
                                             <Grid item xs={12}>
                                                 <FormControl variant="standard" fullWidth>
                                                     <InputLabel htmlFor="series_name">Series name *</InputLabel>
@@ -311,8 +378,33 @@ export const DLOSeriesEdit = ({
                                                         This series name is not valid.
                                                     </StyledErrorMessageBox>
                                                 )}
+                                               
                                             </Grid>
-                                        </StyledSeriesEditForm>
+                                      
+                                            {!!dlorList && !!isValidSeriesName(formValues?.series_name) && (
+                                                <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
+                                                    <InputLabel htmlFor="object_description">Description of Series</InputLabel>
+                                                        <CKEditor
+                                                        id="object_description"
+                                                        data-testid="object-description"
+                                                        sx={{ width: '100%' }}
+                                                        editor={ClassicEditor}
+                                                        config={editorConfig}
+                                                        data={formValues?.series_description || ""}
+                                                        onReady={editor => {
+                                                            editor.editing.view.change(writer => {
+                                                                writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
+                                                            });
+                                                        }}
+                                                        onChange={(event, editor) => {
+                                                            const htmlData = editor.getData();
+                                                            handleEditorChange('series_description', htmlData);
+                                                        }}
+                                                    />
+                                                </FormControl>
+                                             )} 
+                                        </StyledSeriesEditForm>   
+                                        {/* </form> */}
                                     </Grid>
                                 </Grid>
 
@@ -380,14 +472,13 @@ export const DLOSeriesEdit = ({
                                         </Typography>
                                         <StyledSeriesList>
                                             {formValues?.object_list_unassigned?.map(f => {
-                                                // console.log('dragLandingAarea 2 f=', f);
                                                 return (
                                                     <StyledDraggableListItem
                                                         key={f.object_id}
                                                         // className={classes.draggableItem}
                                                     >
                                                         <span
-                                                            data-testid={`dlor-series-edit-draggable-title-${convertSnakeCaseToKebabCase(
+                                                            data-testid={`dlor-series-${mode.toLowerCase()}-draggable-title-${convertSnakeCaseToKebabCase(
                                                                 f?.object_public_uuid,
                                                             )}`}
                                                         >
@@ -459,6 +550,7 @@ DLOSeriesEdit.propTypes = {
     dlorList: PropTypes.array,
     dlorListLoading: PropTypes.bool,
     dlorListError: PropTypes.any,
+    mode: PropTypes.string
 };
 
 export default DLOSeriesEdit;

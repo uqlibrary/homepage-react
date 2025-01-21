@@ -139,6 +139,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
 
             const expectedValues = {
                 series_name: 'Advanced literature searching xxx',
+                series_description: 'Advanced literature description',
                 series_list: [
                     {
                         object_public_uuid: '98s0_dy5k3_98h4',
@@ -207,6 +208,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
 
             const expectedValues = {
                 series_name: 'Advanced literature searching yyy',
+                series_description: 'Advanced literature description',
                 series_list: [
                     {
                         object_public_uuid: '98s0_dy5k3_98h4',

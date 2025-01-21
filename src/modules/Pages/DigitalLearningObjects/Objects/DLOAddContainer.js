@@ -2,15 +2,16 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from 'data/actions';
 
-import DLOSeriesEdit from 'modules/Pages/Admin/DigitalLearningObjects/Series/DLOSeriesEdit';
+import DLOAdd from '../../Admin/DigitalLearningObjects/Form/Add/DLOAdd';
 
 const mapStateToProps = state => {
     return {
         ...state.get('accountReducer'),
-        ...state.get('dlorSeriesSingleReducer'),
-        ...state.get('dlorUpdateReducer'),
         ...state.get('dlorListReducer'),
-        mode: 'EDIT'
+        ...state.get('dlorFileTypeListReducer'),
+        ...state.get('dlorFilterListReducer'),
+        ...state.get('dlorTeamListReducer'),
+        ...state.get('dlorCreateReducer'),
     };
 };
 
@@ -20,6 +21,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-const SeriesListContainer = connect(mapStateToProps, mapDispatchToProps)(DLOSeriesEdit);
+const DLOAddContainer = connect(mapStateToProps, mapDispatchToProps)(DLOAdd);
 
-export default SeriesListContainer;
+export default DLOAddContainer;

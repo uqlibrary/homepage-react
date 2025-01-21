@@ -2,15 +2,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from 'data/actions';
 
-import DLOSeriesEdit from 'modules/Pages/Admin/DigitalLearningObjects/Series/DLOSeriesEdit';
+import SeriesView from './SeriesView';
 
 const mapStateToProps = state => {
     return {
-        ...state.get('accountReducer'),
         ...state.get('dlorSeriesSingleReducer'),
-        ...state.get('dlorUpdateReducer'),
         ...state.get('dlorListReducer'),
-        mode: 'EDIT'
     };
 };
 
@@ -20,6 +17,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-const SeriesListContainer = connect(mapStateToProps, mapDispatchToProps)(DLOSeriesEdit);
+const SeriesViewContainer = connect(mapStateToProps, mapDispatchToProps)(SeriesView);
 
-export default SeriesListContainer;
+export default SeriesViewContainer;

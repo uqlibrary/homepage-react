@@ -804,5 +804,37 @@ describe('Digital Learning Hub View page', () => {
             );
             cy.get('[data-testid="detailpage-admin-edit-button"]').should('not.exist');
         });
+        
     });
+    context('Graduate Attribute helpers on homepage', () => {
+        it('Graduate attribute detailed information shows on the index page, and can be shown / hid', () => {
+            cy.visit('digital-learning-hub?filters=10%2C11%2C12%2C13%2C14');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="graduate-attribute-10-name"]')
+                    .should('exist')
+                    .contains('Accomplished scholars'),
+            );
+            cy.get('#accomplished-scholars-dlor-filter-checkbox').should('be.checked');
+            cy.get('#connected-citizens-dlor-filter-checkbox').should('be.checked');
+            cy.get('#courageous-thinkers-dlor-filter-checkbox').should('be.checked');
+            cy.get('#culturally-capable-dlor-filter-checkbox').should('be.checked'); 
+            cy.get('[data-testid="graduate-attribute-10-name"]')
+                .should('exist')
+            cy.get('#accomplished-scholars-dlor-filter-checkbox').click();
+            cy.get('[data-testid="graduate-attribute-10-name"]')
+                .should('not.exist')
+            cy.get('#connected-citizens-dlor-filter-checkbox').click();
+            cy.get('[data-testid="graduate-attribute-11-name"]')
+                .should('not.exist')
+            cy.get('#courageous-thinkers-dlor-filter-checkbox').click();
+            cy.get('[data-testid="graduate-attribute-12-name"]')
+                .should('not.exist')
+            cy.get('#culturally-capable-dlor-filter-checkbox').click();
+            cy.get('[data-testid="graduate-attribute-13-name"]')
+                .should('not.exist')
+        });
+    })
+
 });

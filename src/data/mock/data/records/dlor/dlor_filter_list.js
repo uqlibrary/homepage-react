@@ -62,19 +62,19 @@ export default {
                 {
                     "facet_id": 10,
                     "facet_name": "Accomplished scholars",
-                    "facet_help": "",
+                    "facet_help": "Graduates will have a well-founded knowledge of their field of study and an understanding of how it relates to other disciplines. They will have the ability to engage with different traditions of thought and apply this knowledge in multi-disciplinary and global settings and contexts to enact a positive difference in their world.",
                 }, {
                     "facet_id": 11,
                     "facet_name": "Connected citizens",
-                    "facet_help": "",
+                    "facet_help": "Graduates will have a well-founded knowledge of their field of study and an understanding of how it relates to other disciplines. They will have the ability to engage with different traditions of thought and apply this knowledge in multi-disciplinary and global settings and contexts to enact a positive difference in their world.",
                 }, {
                     "facet_id": 12,
                     "facet_name": "Courageous thinkers",
-                    "facet_help": "",
+                    "facet_help": "Graduates will have a well-founded knowledge of their field of study and an understanding of how it relates to other disciplines. They will have the ability to engage with different traditions of thought and apply this knowledge in multi-disciplinary and global settings and contexts to enact a positive difference in their world.",
                 }, {
                     "facet_id": 13,
                     "facet_name": "Culturally capable",
-                    "facet_help": "",
+                    "facet_help": "Graduates will have a well-founded knowledge of their field of study and an understanding of how it relates to other disciplines. They will have the ability to engage with different traditions of thought and apply this knowledge in multi-disciplinary and global settings and contexts to enact a positive difference in their world.",
                 }, {
                     "facet_id": 14,
                     "facet_name": "Influential communicators",

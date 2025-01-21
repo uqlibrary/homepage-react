@@ -4,6 +4,7 @@ import {
     DLOR_ALL_API,
     DLOR_ALL_CURRENT_API,
     DLOR_CREATE_API,
+    DLOR_REQUEST_API,
     DLOR_DEMOGRAPHICS_SAVE_API,
     DLOR_DESTROY_API,
     DLOR_FILE_TYPE_LIST_API,
@@ -22,6 +23,7 @@ import {
     DLOR_UPDATE_API,
     DLOR_UNSUBSCRIBE_API,
     DLOR_UNSUBSCRIBE_FIND_API,
+    DLOR_SERIES_LOAD_API
 } from 'repositories/routes';
 
 const checkExpireSession = (dispatch, error) => {
@@ -118,17 +120,20 @@ export function clearADlor() {
     };
 }
 
-export function createDlor(request) {
+export function createDlor(request, isDlorAdminUser = true) {
+    // isDlorAdminUser is overriden to false when creating a request by a non-admin user
+    // used to determine the API endpoint to use. Default is true.
     return async dispatch => {
         dispatch({ type: actions.DLOR_CREATING });
-        return post(DLOR_CREATE_API(), request)
+        console.log("POINT CHECK")
+        return post(isDlorAdminUser ? DLOR_CREATE_API() : DLOR_REQUEST_API(), request)
             .then(data => {
                 dispatch({
                     type: actions.DLOR_CREATED,
                     payload: data,
                 });
-                // refresh the list after change
-                dispatch(loadAllDLORs());
+                // refresh the list after change, only if the user is an admin
+                !!isDlorAdminUser && dispatch(loadAllDLORs());
             })
             .catch(error => {
                 dispatch({
@@ -361,6 +366,26 @@ export function loadDlorSeriesList() {
     };
 }
 
+export function loadDlorSeries(seriesId) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_SERIES_LOADING });
+        return get(DLOR_SERIES_LOAD_API(seriesId))
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_SERIES_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_SERIES_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
 export function updateDlorSeries(seriesId, request) {
     return dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
@@ -385,11 +410,11 @@ export function updateDlorSeries(seriesId, request) {
 
 export function createDlorSeries(request) {
     return async dispatch => {
-        dispatch({ type: actions.DLOR_CREATING });
+        dispatch({ type: actions.DLOR_UPDATING });
         return post(DLOR_SERIES_CREATE_API(), request)
             .then(data => {
                 dispatch({
-                    type: actions.DLOR_CREATED,
+                    type: actions.DLOR_UPDATED,
                     payload: data,
                 });
                 // refresh the list after change
@@ -397,7 +422,7 @@ export function createDlorSeries(request) {
             })
             .catch(error => {
                 dispatch({
-                    type: actions.DLOR_CREATE_FAILED,
+                    type: actions.DLOR_UPDATE_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
