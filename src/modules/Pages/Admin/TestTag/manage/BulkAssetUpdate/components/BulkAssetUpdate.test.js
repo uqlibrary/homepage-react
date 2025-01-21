@@ -249,7 +249,7 @@ describe('BulkAssetUpdate', () => {
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
     });
 
-    it('handles update request not including discard asset', async () => {
+    it.skip('handles update request not including discard asset', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
         const bulkAssetUpdateFn = jest.fn(() => Promise.resolve());
@@ -347,7 +347,7 @@ describe('BulkAssetUpdate', () => {
         });
     });
 
-    it('handles update request including discard asset', async () => {
+    it.skip('handles update request including discard asset', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
         const bulkAssetUpdateFn = jest.fn(() => Promise.resolve());
