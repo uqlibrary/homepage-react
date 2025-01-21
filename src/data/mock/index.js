@@ -517,6 +517,15 @@ mock.onGet(/dlor\/public\/find\/.*/)
             return getSpecificDlorObject('98j3-fgf95-8j34'); //any old id
         }
     })
+    .onPost('dlor/auth/object')
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else {
+            // return [200, { data: getSpecificDlorObject('98j3-fgf95-8j34') }]; //any old id
+            return getSpecificDlorObject('98j3-fgf95-8j34'); //any old id
+        }
+    })
     .onDelete(/dlor\/admin\/object\/.*/)
     .reply(config => {
         if (responseType === 'deleteError') {
