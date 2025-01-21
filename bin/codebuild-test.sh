@@ -74,13 +74,17 @@ case "$PIPE_NUM" in
 
         pwd # debug
         ls # debug
+        echo '###'
+        ls coverage # debug
+        echo '###'
+        ls coverage/cypress # debug
 
         sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
 #    else
 #        checkCodeStyle
 #        set -e
 #        printf "\n--- \e[1mRUNNING UNIT TESTS 1\e[0m ---\n"
-#        npm run test:unit:ci1:nocoverage
+#        npm run test:unit:ci:nocoverage
 #    fi
 ;;
 "2")
@@ -95,6 +99,10 @@ case "$PIPE_NUM" in
 
         pwd # debug
         ls # debug
+        echo '###'
+        ls coverage # debug
+        echo '###'
+        ls coverage/cypress # debug
 
         sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
 #    else
@@ -130,6 +138,8 @@ case "$PIPE_NUM" in
 
         echo '###'
         ls coverage # debug
+        echo '###'
+        ls coverage/jest # debug
 
         mkdir -p coverage/jest-serial && mv coverage-final.json coverage/jest-serial/coverage-final.json
 #    fi

@@ -237,7 +237,7 @@ Note: Ensure your .env is configured to use API_URL `https://api.library.uq.edu.
 
 Before pushing to a branch make sure to run `npm run test:all`. This runs the unit and cypress tests.
 
-Codeship runs `npm run test:e2e:dashboard` as it spins up a webpack-dev-server and serves the frontend with mock data to run tests for now until we have API integration with docker, but only in `master` branch.
+AWS pipeline runs `npm run test:e2e:ci` as it spins up a webpack-dev-server and serves the frontend with mock data to run tests for now until we have API integration with docker, but only in `master` branch.
 
 You can watch video recordings of any failed test runs and view some debug messages via the [Cypress dashboard](https://dashboard.cypress.io/projects/mvfnrv/runs). We have open-source license which allows unlimited runs.
 
