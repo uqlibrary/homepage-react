@@ -105,7 +105,7 @@ case "$PIPE_NUM" in
 #    fi
 ;;
 "3")
-    printf "\n ### PIPELINE 1 ### \n\n"
+    printf "\n ### PIPELINE 3 ### \n\n"
 
     export JEST_HTML_REPORTER_OUTPUT_PATH=coverage/jest-serial/jest-html-report.html
 #    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
@@ -127,6 +127,9 @@ case "$PIPE_NUM" in
 
         pwd # debug
         ls # debug
+
+        echo '###'
+        ls coverage # debug
 
         mkdir -p coverage/jest-serial && mv coverage-final.json coverage/jest-serial/coverage-final.json
 #    fi
