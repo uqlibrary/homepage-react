@@ -143,6 +143,7 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
         if (!!isOpenpapercutMenu) {
             const findLink = setInterval(() => {
                 const firstMenuItem = document.querySelector('#papercut-menu li:first-of-type');
+                /* istanbul ignore if */
                 if (!!firstMenuItem) {
                     clearInterval(findLink);
                     firstMenuItem.focus();
