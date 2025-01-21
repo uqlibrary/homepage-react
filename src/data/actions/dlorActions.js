@@ -125,6 +125,7 @@ export function createDlor(request, isDlorAdminUser = true) {
     // used to determine the API endpoint to use. Default is true.
     return async dispatch => {
         dispatch({ type: actions.DLOR_CREATING });
+        console.log("POINT CHECK")
         return post(isDlorAdminUser ? DLOR_CREATE_API() : DLOR_REQUEST_API(), request)
             .then(data => {
                 dispatch({
