@@ -8,15 +8,9 @@
 printf "\n ### Running codebuild-parallel.sh ### \n\n"
 
 spec_files=$(find cypress/e2e -name '*.spec.js')
-printf "\n spec_files:\n"
-echo "$spec_files"
-printf "\n"
-
 num_specs=$(echo "$spec_files" | wc -l)
 group_size_1=$((num_specs / 2))
-echo "group_size_1 = $group_size_1"
 group_size_2=$((num_specs - group_size_1))
-echo "group_size_2 = $group_size_2"
 group1=$(echo "$spec_files" | head -n $group_size_1)
 group2=$(echo "$spec_files" | tail -n +$(($group_size_2)))
 echo "$group1" > bin/group1.txt
