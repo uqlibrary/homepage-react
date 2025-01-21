@@ -9,7 +9,6 @@ import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
-import preview from 'jest-preview';
 import userEvent from '@testing-library/user-event';
 
 import { getStore } from '../src/config/store';
@@ -50,6 +49,5 @@ module.exports = {
     rtlRender,
     WithRouter,
     WithReduxStore,
-    preview,
     userEvent,
 };
