@@ -8,10 +8,15 @@
 printf "\n ### Running codebuild-parallel.sh ### \n\n"
 
 spec_files=$(find cypress/e2e -name '*.spec.js')
-num_specs=$(echo "$spec_files" | wc -l)
-group_size_1=$((num_specs / 2))
-group_size_2=$((num_specs - group_size_1))
-group1=$(echo "$spec_files" | head -n $group_size_1)
-group2=$(echo "$spec_files" | tail -n +$(($group_size_2)))
-echo "$group1" > bin/group1.txt
-echo "$group2" > bin/group2.txt
+> bin/group1.txt
+> bin/group2.txt
+index=0
+# split the file list so an even run time is likely
+while IFS= read -r file; do
+  if (( index % 2 == 0 )); then
+    echo "$file" >> bin/group1.txt
+  else
+    echo "$file" >> bin/group2.txt
+  fi
+  ((index++))
+done <<< "$spec_files"
