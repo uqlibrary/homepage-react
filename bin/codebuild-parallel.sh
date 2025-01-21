@@ -8,15 +8,25 @@
 printf "\n ### Running codebuild-parallel.sh ### \n\n"
 
 spec_files=$(find cypress/e2e -name '*.spec.js')
+printf "\n spec_files:\n"
+echo "$spec_files"
+printf "\n"
+
 > bin/group1.txt
 > bin/group2.txt
+echo "start \n"
 index=0
 # split the file list so an even run time is likely
-while IFS= read -r file; do
-  if (( index % 2 == 0 )); then
-    echo "$file" >> bin/group1.txt
-  else
-    echo "$file" >> bin/group2.txt
-  fi
-  ((index++))
-done <<< "$spec_files"
+echo $spec_files |
+{
+  while IFS= read -r file; do
+    echo "handle $file \n"
+    if (( index % 2 == 0 )); then
+      echo "$file" > bin/group1.txt
+    else
+      echo "$file" > bin/group2.txt
+    fi
+    ((index++));
+  done
+}
+echo "split done\n"
