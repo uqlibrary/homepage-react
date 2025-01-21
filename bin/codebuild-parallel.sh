@@ -22,10 +22,13 @@ index=0
 echo "$spec_files" | awk '{
     mod = NR % 5
     if (mod == 1 || mod == 2) {
+        print "Placing " $0 " in group1.txt"
         print > "bin/group1.txt"
     } else if (mod == 3 || mod == 4) {
+        print "Placing " $0 " in group2.txt"
         print > "bin/group2.txt"
     } else {
+        print "Placing " $0 " in group3.txt"
         print > "bin/group3.txt"
     }
 }'
