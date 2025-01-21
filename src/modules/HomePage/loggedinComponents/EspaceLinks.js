@@ -102,6 +102,7 @@ const EspaceOrcid = () => {
                 data-testid="espace-orcid"
                 target="_blank"
                 rel="noopener noreferrer"
+                data-analyticsid={'pp-espace-orcid-tooltip'}
             >
                 Link ORCiD account
             </MuiLink>
@@ -118,6 +119,7 @@ const EspaceNTROs = ({ recordCount }) => {
                 data-testid="espace-ntro"
                 target="_blank"
                 rel="noopener noreferrer"
+                data-analyticsid={'pp-espace-ntro-tooltip'}
             >
                 {'Complete [totalRecords] NTRO [records]'
                     .replace('[totalRecords]', recordCount)
@@ -152,7 +154,12 @@ export const EspaceLinks = ({ author, possibleRecords, incompleteNTRORecords }) 
                         <UserAttention titleText="Update the following items:">
                             <StyledActionsUl>
                                 {authorIsMissingOrcid && <EspaceOrcid />}
-                                {authorNeedsToUpdateRecords && <EspacePossible recordCount={possibleRecords.total} />}
+                                {authorNeedsToUpdateRecords && (
+                                    <EspacePossible
+                                        recordCount={possibleRecords.total}
+                                        data-analyticsid={'pp-espace-possible-tooltip'}
+                                    />
+                                )}
                                 {authorHasIncompleteNtro && <EspaceNTROs recordCount={incompleteNTRORecords.total} />}
                             </StyledActionsUl>
                         </UserAttention>

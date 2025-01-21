@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { canSeeLoans, isTestTagUser } from 'helpers/access';
+import { isTestTagUser } from 'helpers/access';
 import UserAttention from 'modules/SharedComponents/Toolbox/UserAttention';
 import PaperCutMenu from './PaperCutMenu';
 
@@ -268,7 +268,10 @@ export const AccountPanel = ({
                     </Link>
                 </li>
                 <li data-testid={'show-loans'}>
-                    <Link to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US">
+                    <Link
+                        to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US"
+                        data-analyticsid={'pp-loans-menu-button'}
+                    >
                         {dsBookCloseBookmarkIcon} <span>Loans {markedLoanQuantity()}</span>
                     </Link>
                 </li>
@@ -290,12 +293,13 @@ export const AccountPanel = ({
                         </li>
                     )}
             </StyledUl>
-            {canSeeLoans(account) && !!loans && loans.total_fines_count > 0 && (
+            {!!loans && loans.total_fines_count > 0 && (
                 <StyledAlertDiv data-testid={'show-fines'}>
                     <UserAttention titleText={'Fines and charges'}>
                         <Link
                             to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US"
                             id="fines-and-charges-link"
+                            data-analyticsid={'pp-fines-tooltip'}
                         >
                             <span>${`${totalFines(loans?.fines)}`} payable</span>
                         </Link>

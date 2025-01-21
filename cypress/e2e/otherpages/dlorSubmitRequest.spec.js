@@ -121,7 +121,7 @@ describe('Request an object addition to the Digital Learning Hub', () => {
                 // no notify checkbox
                 cy.get('[data-testid="choose-notify"] input').should('not.exist');
             });
-            it.only('validates fields correctly for non admin user', () => {
+            it('validates fields correctly for non admin user', () => {
                 // first enter all the fields and show the save button doesn't enable until all the fields are entered
 
                 // team starts off valid so click on to the second panel, description

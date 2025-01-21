@@ -516,6 +516,7 @@ const Locations = ({
                                                         data-testid={`${librarySlug}-link`}
                                                         aria-label={ariaLabelForLocation(location)}
                                                         onKeyDown={index === 0 ? handleFirstLinkKeyDown : null}
+                                                        data-analyticsid={`hours-item-${index}`}
                                                     >
                                                         {location.displayName}
                                                     </Link>
