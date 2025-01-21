@@ -19,11 +19,50 @@ const openCloseWorks = () => {
             // dialog is closed
             cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
         });
-        it('clicking the button label can open and close the dialog', () => {
-            function clickLabel() {
-                cy.get('#location-dialog-controller')
+        it('clicking the button can open and close the dialog', () => {
+            function clickButton() {
+                cy.get('[data-testid="hours-accordion-open"]')
                     .should('be.visible')
                     .click();
+            }
+            cy.visit('/');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+            // open dialog
+            clickButton();
+
+            // confirm dialog is open
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="hours-item-askus"]')
+                    .should('exist')
+                    .should('be.visible')
+                    .contains('AskUs chat hours'),
+            );
+
+            // re-click button
+            clickButton();
+            // dialog is closed
+            cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
+
+            // re-click button
+            clickButton();
+            // dialog is open
+            cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('be.visible');
+
+            // re-click button
+            clickButton();
+            // dialog is closed
+            cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
+        });
+        it('clicking the button label can open and close the dialog', () => {
+            function clickLabel() {
+                cy.get('[data-testid="hours-accordion-open"]')
+                    .should('be.visible')
+                    .then($button => {
+                        // the ;label is in the middle of the  button
+                        cy.wrap($button).click($button.width() / 2, $button.height() / 2);
+                    });
             }
             cy.visit('/');
             cy.viewport(1300, 1000);
@@ -57,9 +96,13 @@ const openCloseWorks = () => {
         });
         it('clicking the button up-down arrow can open and close the dialog', () => {
             function clickChevron() {
-                cy.get('#location-dialog-controller svg')
+                cy.get('[data-testid="hours-accordion-open"]')
                     .should('be.visible')
-                    .click();
+                    .then($button => {
+                        // the chevron is at the right of the button
+                        const paddingRight = parseFloat($button.css('padding-right'));
+                        cy.wrap($button).click(paddingRight / 2, $button.height() / 2);
+                    });
             }
             cy.visit('/');
             cy.viewport(1300, 1000);
@@ -91,15 +134,13 @@ const openCloseWorks = () => {
             // dialog is closed
             cy.get('[data-testid="homepage-hours-weeklyhours-link"]').should('not.be.visible');
         });
-        it('clicking the button icon can open and close the dialog', () => {
+        it('clicking the button map icon can open and close the dialog', () => {
             function clickIcon() {
-                cy.get('#location-dialog-controller')
-                    .should('be.visible') // Ensure the button is visible
+                cy.get('[data-testid="hours-accordion-open"]')
+                    .should('be.visible')
                     .then($button => {
-                        // Calculate the position to click on the background icon
+                        // the map icon is at the left of the button
                         const paddingLeft = parseFloat($button.css('padding-left'));
-
-                        // Click within the left padding area
                         cy.wrap($button).click(paddingLeft / 2, $button.height() / 2);
                     });
             }
@@ -211,6 +252,7 @@ describe('Locations Panel', () => {
                     const spaceBetweenGattonAndLaw = lawTop - gattonBottom;
                     const spaceBetweenLawAndAskus = askusTop - lawBottom;
                     expect(spaceBetweenLawAndAskus).to.be.greaterThan(spaceBetweenGattonAndLaw * 1.5);
+                    // just rough "distinct difference" rather than precise number
                 });
         });
     });
@@ -264,6 +306,66 @@ describe('Locations Panel', () => {
             cy.get('[data-testid="location-item-arch-music-hours"]').should('not.exist');
             cy.get('[data-testid="locations-hours-disclaimer"]').should('not.exist');
             cy.get('[data-testid="hours-item-askus-link"]').should('not.exist');
+        });
+        context('the open Locations panel butts up against the Utility bar', () => {
+            it('at very wide desktop', () => {
+                cy.visit('/');
+                cy.viewport(2300, 800);
+            });
+            it('at wide desktop', () => {
+                cy.visit('/');
+                cy.viewport(1300, 800);
+            });
+            it('at minimal desktop', () => {
+                cy.visit('/');
+                cy.viewport(1000, 800);
+            });
+            it('at tablet landscape', () => {
+                cy.visit('/');
+                cy.viewport(800, 600);
+            });
+            it('at tablet portrait', () => {
+                cy.visit('/');
+                cy.viewport(600, 800);
+            });
+            afterEach(() => {
+                cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+                cy.get('[data-testid="hours-accordion-open"]').click();
+                cy.waitUntil(() =>
+                    cy
+                        .get('[data-testid="homepage-hours-weeklyhours-link"]')
+                        .should('exist')
+                        .should('be.visible')
+                        .contains('See all Library and AskUs hours'),
+                );
+
+                // cy.get('[data-testid="utility-bar"]').within(() => {
+                let utilityBarBottom;
+                cy.get('[data-testid="hours-accordion-open"]')
+                    .parent()
+                    .should('be.visible')
+                    .then($utilityBar => {
+                        utilityBarBottom = $utilityBar.position().top + $utilityBar.outerHeight();
+                    });
+
+                let locationsPanelTop;
+                cy.get('[data-testid="locations-panel"]')
+                    .should('be.visible')
+                    .then($locationsPanel => {
+                        locationsPanelTop = $locationsPanel.position().top;
+                        expect(utilityBarBottom - locationsPanelTop).to.be.lessThan(0.02);
+
+                        // test fails? drop this in the webpage console to get the change:
+                        // const utilityBar = document.querySelector('[data-testid="utility-bar-button-wrapper"]');
+                        // const locationPanel = document.querySelector('[data-testid="locations-panel"]');
+                        // const utilityBarBoundingBox = utilityBar.getBoundingClientRect();
+                        // const utilityBarBottom = utilityBarBoundingBox.top + utilityBarBoundingBox.height;
+                        // const locationPanelBoundingBox = locationPanel.getBoundingClientRect();
+                        // const diff = utilityBarBottom - locationPanelBoundingBox.top;
+                        // console.log('change `top` of StyledStandardCard in Locations.js by ', diff, 'px');
+                    });
+                // });
+            });
         });
         it('can navigate to weekly hours page from the library name cell', () => {
             cy.intercept('GET', 'https://web.library.uq.edu.au/visit/architecture-and-music-library', {

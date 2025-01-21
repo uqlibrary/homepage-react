@@ -32,7 +32,7 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     marginTop: '-3px',
     zIndex: 999,
     position: 'absolute',
-    top: 102,
+    top: 97,
     maxWidth: '100%',
     [theme.breakpoints.up('uqDsTablet')]: {
         marginLeft: '-28px',
@@ -516,6 +516,7 @@ const Locations = ({
                                                         data-testid={`${librarySlug}-link`}
                                                         aria-label={ariaLabelForLocation(location)}
                                                         onKeyDown={index === 0 ? handleFirstLinkKeyDown : null}
+                                                        data-analyticsid={`hours-item-${index}`}
                                                     >
                                                         {location.displayName}
                                                     </Link>

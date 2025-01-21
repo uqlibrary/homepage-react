@@ -7,10 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Popper from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
 
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-import { linkToDrupal } from 'helpers/general';
+import { addClass, linkToDrupal, removeClass } from 'helpers/general';
 
 const StyledPrintBalanceButton = styled(Button)(({ theme }) => ({
     '&[aria-expanded="true"] span': {
@@ -21,8 +18,47 @@ const StyledPrintBalanceButton = styled(Button)(({ theme }) => ({
     '&:focus-visible': {
         outline: '-webkit-focus-ring-color auto 1px',
     },
-    '& svg.openClose': {
-        marginTop: '2px',
+    '&.panel-closed::after': {
+        backgroundImage:
+            // expand more icon
+            "url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cpath d=%22M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z%22/%3E%3C/svg%3E')",
+    },
+    '&.panel-open::after': {
+        backgroundImage:
+            // expand less icon
+            "url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cpath d=%22m12 8-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z%22/%3E%3C/svg%3E')",
+    },
+    '&::after': {
+        backgroundPosition: 'right center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: '18px 26px',
+        content: '""',
+        display: 'inline-block',
+        width: '24px',
+        height: '24px',
+    },
+    '&:hover span': {
+        backgroundColor: theme.palette.primary.light,
+        color: 'white',
+    },
+    '&.panel-open span': {
+        backgroundColor: theme.palette.primary.light,
+        color: 'white',
+    },
+    '&:focus-within span': {
+        backgroundColor: theme.palette.primary.light,
+    },
+    '&.panel-open:focus-within span': {
+        backgroundColor: theme.palette.primary.light,
+        color: 'white',
+    },
+    '&.panel-closed:focus-within span': {
+        backgroundColor: 'white',
+        color: theme.palette.primary.light,
+    },
+    '&.panel-closed:focus-within:hover span': {
+        backgroundColor: theme.palette.primary.light,
+        color: 'white',
     },
 }));
 
@@ -39,12 +75,15 @@ const StyledMenuList = styled(List)(({ theme }) => ({
             color: theme.palette.primary.light,
             textDecoration: 'underline',
             fontWeight: 500,
+            outlineOffset: '1px',
+            outlineStyle: 'auto',
+            outlineWidth: '1px',
+            outlineColor: 'transparent',
         },
         '&:focus-visible': {
             backgroundColor: '#fff',
             '& a': {
-                backgroundColor: theme.palette.primary.light,
-                color: '#fff',
+                outlineColor: 'blue', // '-webkit-focus-ring-color',
             },
         },
         '&:hover': {
@@ -114,10 +153,18 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
 
     const handleClose = () => {
         setMenuAnchorElement(null);
+
+        const openerButton = document.getElementById('papercut-menu-button');
+        !!openerButton && removeClass(openerButton, 'panel-open');
+        !!openerButton && addClass(openerButton, 'panel-closed');
     };
     const handleToggle = event => {
         if (menuAnchorElement === null) {
             setMenuAnchorElement(event.currentTarget);
+
+            const openerButton = document.getElementById('papercut-menu-button');
+            !!openerButton && addClass(openerButton, 'panel-open');
+            !!openerButton && removeClass(openerButton, 'panel-closed');
         } else {
             handleClose();
         }
@@ -166,7 +213,7 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
         let tabTo = document.getElementById(nextElementId);
         if (!tabTo) {
             handleClose();
-            tabTo = document.querySelector('#papercut-menu-button a');
+            tabTo = document.querySelector('#papercut-menu-button');
         }
         !!tabTo && tabTo.focus();
     };
@@ -210,10 +257,11 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
             <StyledPrintBalanceButton
                 fullWidth
                 classes={{ root: 'menuItemRoot' }}
+                className={'panel-closed'}
                 onClick={handleToggle}
                 id={'papercut-menu-button'}
                 data-testid={'papercut-menu-button'}
-                data-analyticsid={'papercut-tooltip'}
+                data-analyticsid={'pp-papercut-tooltip'}
                 title="Click to manage your print balance"
                 aria-haspopup="true"
                 aria-expanded={menuAnchorElement !== null ? 'true' : 'false'}
@@ -224,11 +272,6 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
                 <span data-testid="papercut-print-balance" data-analyticsid="papercut-accordion-label">
                     Print balance {markedPrintBalance()}
                 </span>
-                {menuAnchorElement !== null ? (
-                    <ExpandLessIcon data-analyticsid="papercut-accordion-arrow-opener" className={'openClose'} />
-                ) : (
-                    <ExpandMoreIcon data-analyticsid="papercut-accordion-arrow-closer" className={'openClose'} />
-                )}
             </StyledPrintBalanceButton>
             <Popper
                 id={'papercut-menu'}
@@ -275,6 +318,7 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
                                         id={`papercut-item-button-${index + 1}`}
                                         key={`papercut-item-button-${index + 1}`}
                                         data-testid={`papercut-item-button-${index + 1}`}
+                                        data-analyticsid={`pp-papercut-item-button-${index + 1}`}
                                         onKeyDown={handlePapercutTabNextKeyDown}
                                     >
                                         <a href={getTopUrl(topupAmount)}>{topUpLabel(topupAmount)}</a>
@@ -287,7 +331,7 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
                     <MenuItem
                         id={`papercut-item-button-${topupAmounts.length + 1}`}
                         data-testid={`papercut-item-button-${topupAmounts.length + 1}`}
-                        data-analyticsid={`papercut-item-button-${topupAmounts.length + 1}`}
+                        data-analyticsid={`pp-papercut-item-button-${topupAmounts.length + 1}`}
                         onKeyDown={handlePapercutTabOutKeyDown}
                     >
                         <a
