@@ -7,21 +7,6 @@ export const libHours = {
         "campus_name": "St Lucia",
         "opening_hours": "7:30am - 7:30pm",
         "currently_open": true,
-        "departments": [{
-            "lid": 10451,
-            "name": "Collections and space",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "7:30am - 7:30pm"
-        }, {
-            "lid": 10779,
-            "name": "AskUs desk",
-            "times": {
-                "currently_open": false
-            },
-            "rendered": "8am\u20137:30pm Virtual Service"
-        }]
     }, {
         "lid": 4986,
         "display_name": "AskUs chat hours",
@@ -30,21 +15,6 @@ export const libHours = {
         "campus_name": "Online",
         "opening_hours": "8am - 8pm",
         "currently_open": true,
-        "departments": [{
-            "lid": 4987,
-            "name": "Chat",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "8am - 8pm",
-        }, {
-            "lid": 10490,
-            "name": "Phone",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "8am - 8pm",
-        }]
     }, {
         "lid": 3824,
         "display_name": "Biological Sciences",
@@ -53,21 +23,6 @@ export const libHours = {
         "campus_name": "St Lucia",
         "opening_hours": "24 Hours",
         "currently_open": true,
-        "departments": [{
-            "lid": 3829,
-            "name": "Study space",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "24 Hours",
-        }, {
-            "lid": 10792,
-            "name": "AskUs desk",
-            "times": {
-                "currently_open": false
-            },
-            "rendered": "8am\u20138pm Virtual Service"
-        }]
     }, {
         "lid": 3842,
         "display_name": "Central",
@@ -76,21 +31,6 @@ export const libHours = {
         "campus_name": "St Lucia",
         "opening_hours": "24 Hours",
         "currently_open": true,
-        "departments": [{
-            "lid": 10457,
-            "name": "Collections and space",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "24 Hours",
-        }, {
-            "lid": 3843,
-            "name": "AskUs desk",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "8am - 6pm",
-        }]
     }, {
         "lid": 3825,
         "display_name": "Dorothy Hill Engineering and Sciences",
@@ -99,28 +39,6 @@ export const libHours = {
         "campus_name": "St Lucia",
         "opening_hours": "24 Hours",
         "currently_open": true,
-        "departments": [{
-            "lid": 10458,
-            "name": "Study space",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "24 Hours",
-        }, {
-            "lid": 9419,
-            "name": "High Use collection",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "24 Hours",
-        }, {
-            "lid": 3826,
-            "name": "AskUs desk",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "9am - 5pm",
-        }]
     }, {
         "lid": 3830,
         "display_name": "Duhig Tower",
@@ -129,14 +47,6 @@ export const libHours = {
         "campus_name": "St Lucia",
         "opening_hours": "24 Hours",
         "currently_open": true,
-        "departments": [{
-            "lid": 3831,
-            "name": "Study space",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "24 Hours",
-        }]
     }, {
         "lid": 3967,
         "display_name": "Dutton Park Health Sciences",
@@ -145,21 +55,6 @@ export const libHours = {
         "campus_name": "Dutton Park",
         "opening_hours": "7am - 10:30am",
         "currently_open": false,
-        "departments": [{
-            "lid": 3970,
-            "name": "Collections and space",
-            "times": {
-                "currently_open": false
-            },
-            "rendered": "7am - 10:30am",
-        }, {
-            "lid": 3969,
-            "name": "AskUs desk",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "9am - 5pm",
-        }]
     }, {
         "lid": 3832,
         "display_name": "FW Robinson Reading Room (Fryer)",
@@ -168,14 +63,6 @@ export const libHours = {
         "campus_name": "St Lucia",
         "opening_hours": "By appointment",
         "currently_open": false,
-        "departments": [{
-            "lid": 3851,
-            "name": "Service and collections",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "By Appointment"
-        }]
     }, {
         "lid": 3833,
         "display_name": "JK Murray (UQ Gatton)",
@@ -184,21 +71,6 @@ export const libHours = {
         "campus_name": "Gatton",
         "opening_hours": "24 Hours",
         "currently_open": true,
-        "departments": [{
-            "lid": 8867,
-            "name": "Collections and space",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "24 Hours",
-        }, {
-            "lid": 3834,
-            "name": "AskUs desk",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "9am - 5pm",
-        }]
     }, {
         "lid": 3838,
         "display_name": "Herston Health Sciences",
@@ -207,28 +79,6 @@ export const libHours = {
         "campus_name": "Herston",
         "opening_hours": "8am - 5pm",
         "currently_open": true,
-        "departments": [{
-            "lid": 10726,
-            "name": "Collections and space",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "8am - 5pm",
-        }, {
-            "lid": 10727,
-            "name": "AskUs desk",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "8am - 5pm",
-        }, {
-            "lid": 3840,
-            "name": "Training room",
-            "times": {
-                "currently_open": true
-            },
-            "rendered": "24 Hours",
-        }]
     }, {
         "lid": 3841,
         "display_name": "Walter Harrison Law",
@@ -237,23 +87,6 @@ export const libHours = {
         "campus_name": "St Lucia",
         "opening_hours": null,
         "currently_open": true,
-        "departments": [
-            // {
-            //     "lid": 4801,
-            //     "name": "Collections & space",
-            //     "times": {
-            //         "currently_open": true
-            //     },
-            //     "rendered": "24 Hours",
-            // },
-        {
-            "lid": 10780,
-            "name": "AskUs desk",
-            "times": {
-                "currently_open": false
-            },
-            "rendered": "8am\u20138pm Virtual Service"
-        }]
     },
     {
         "lid": 3966,
@@ -263,15 +96,6 @@ export const libHours = {
         "campus_name": "Other",
         "opening_hours": "6:30am - 10pm",
         "currently_open": true,
-        "departments": [{
-                "lid": 4384,
-                "name": "Study space",
-                "times": {
-                    "currently_open": true
-                },
-                "rendered": "6:30am - 10pm",
-            }
-        ]
     }
 ]
 };
