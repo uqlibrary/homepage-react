@@ -63,7 +63,6 @@ describe('EventPanel', () => {
 
         expect(getByText(locale.pages.inspect.form.event.title)).toBeInTheDocument();
         expect(setLocation).toHaveBeenCalledWith({ site: 1 });
-        preview.debug();
         expect(getByTestId('event_panel-event-date-input')).toBeInTheDocument();
         expect(getByTestId('location_picker-event-panel-site')).toBeInTheDocument();
         expect(getByTestId('location_picker-event-panel-building')).toBeInTheDocument();

@@ -47,11 +47,18 @@ phases:
     #commands:
       # - command
       # - command
-#reports:
-  #coverage-report:
+reports:
+  coverage-report:
+    files:
+      - 'coverage/cobertura-coverage.xml'
+    file-format: 'COBERTURAXML'
+  #report-name-or-arn:
     #files:
-     # - 'coverage/cobertura-coverage.xml'
-    #file-format: 'COBERTURAXML'
+      # - location
+      # - location
+    #base-directory: location
+    #discard-paths: yes
+    #file-format: JunitXml | CucumberJson
 artifacts:
   files:
     - '**/*'
