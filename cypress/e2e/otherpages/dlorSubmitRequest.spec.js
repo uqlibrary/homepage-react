@@ -18,6 +18,23 @@ describe('Request an object addition to the Digital Learning Hub', () => {
     }
 
     context('Request a new object', () => {
+        context('interface link', () => {
+            it('opens the form', () => {
+                cy.visit('digital-learning-hub');
+               
+                cy.get(
+                    '[data-testid="sidebar-filter-request-new-button"]',
+                ).contains('Request a new item')
+                .click();
+                cy.get('a[data-testid="dlor-breadcrumb-admin-homelink"]')
+                    .contains('Digital Learning Hub')
+                    .should('have.attr', 'href', `/digital-learning-hub`);
+                cy.get(
+                    '[data-testid="dlor-breadcrumb-create-an-object-for-the-digital-learning-hub-label-0"]',
+                ).contains('Create an Object for the Digital Learning Hub');
+
+            });
+        });
         context('successfully', () => {
             beforeEach(() => {
                 cy.visit(`http://localhost:2020/digital-learning-hub/submit`);

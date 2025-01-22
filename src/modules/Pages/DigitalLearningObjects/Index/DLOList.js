@@ -1235,7 +1235,7 @@ export const DLOList = ({
                         {/* Request new item container */}
                         {!!account?.id && !!!isDlorAdminUser(account) && (
                             <UQActionButton
-                                data-testid="sidebar-filter-reset-button"
+                                data-testid="sidebar-filter-request-new-button"
                                 onClick={handleRequestNewItem}
                                 aria-label="Request new digital object"
                                 sx={{ textTransform: 'none' }}
