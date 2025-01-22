@@ -60,63 +60,36 @@ function checkCodeStyle {
     fi
 }
 
+echo "pwd "
+pwd
+
 npm run pretest:unit:ci
+
+# Split the Cypress E2E tests into three groups and in this pipeline run only the ones in the first group
+source bin/codebuild-parallel.sh
 
 case "$PIPE_NUM" in
 "1")
     printf "\n ### PIPELINE 1 ### \n\n"
-#    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
-        set -e
-        printf "\n--- \e[1mRUNNING E2E TESTS GROUP 1\e[0m ---\n"
-        # Split the Cypress E2E tests into two groups and in this pipeline run only the ones in the first group
-        source bin/codebuild-parallel.sh
-          npm run test:e2e:ci1
+    set -e
 
-        pwd # debug
-        ls # debug
-        echo '###'
-        ls coverage # debug
-        echo '###'
-        ls coverage/cypress # debug
-        echo '###'
-        ls coverage/cypress/coverage-final.json # debug
-        echo '###'
+    printf "\n--- \e[1mRUNNING E2E TESTS GROUP 1\e[0m ---\n"
+    npm run test:e2e:ci1
 
-          sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
-#    else
-#        checkCodeStyle
-#        set -e
-#        printf "\n--- \e[1mRUNNING UNIT TESTS 1\e[0m ---\n"
-#        npm run test:unit:ci:nocoverage
-#    fi
+    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+      sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
+    fi
 ;;
 "2")
     printf "\n ### PIPELINE 2 ### \n\n"
     set -e
 
-#    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
-        # Split the Cypress tests into two groups and in this pipeline run only the ones in the second group
-        source bin/codebuild-parallel.sh
-        printf "\n--- \e[1mRUNNING Cypress TESTS GROUP 2\e[0m ---\n"
-        npm run test:e2e:ci2
+    printf "\n--- \e[1mRUNNING Cypress TESTS GROUP 2\e[0m ---\n"
+    npm run test:e2e:ci2
 
-        pwd # debug
-        ls # debug
-        echo '###'
-        ls coverage # debug
-        echo '###'
-        ls coverage/cypress # debug
-        echo '###'
-        ls coverage/cypress/coverage-final.json # debug
-        echo '###'
-
+    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
         sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
-#    else
-##        printf "\n--- \e[1mRUNNING SERIAL UNIT TESTS\e[0m ---\n"
-##        npm run test:unit:ci:serial:nocoverage
-#        printf "\n--- \e[1mRUNNING UNIT TESTS 2\e[0m ---\n"
-#        npm run test:unit:ci2:nocoverage
-#    fi
+    fi
 ;;
 "3")
     printf "\n ### PIPELINE 3 ### \n\n"
@@ -125,12 +98,12 @@ case "$PIPE_NUM" in
     echo "$ npm install -g jest"
     npm install -g jest
 
-    export JEST_HTML_REPORTER_OUTPUT_PATH=coverage/jest-serial/jest-html-report.html
-#    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
-        checkCodeStyle
-        set -e
-        printf "\n--- \e[1mRUNNING UNIT TESTS\e[0m ---\n"
+    checkCodeStyle
+    set -e
+    printf "\n--- \e[1mRUNNING UNIT TESTS\e[0m ---\n"
 
+    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+        export JEST_HTML_REPORTER_OUTPUT_PATH=coverage/jest-serial/jest-html-report.html
         export JEST_HTML_REPORTER_OUTPUT_PATH=coverage/jest/jest-html-report.html
         npm run test:unit:ci
         sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/jest/coverage-final.json
@@ -141,20 +114,21 @@ case "$PIPE_NUM" in
         ls coverage/jest/coverage-final.json # debug
 
         mkdir -p coverage/jest-serial
-        echo '### mv'
         mv coverage/jest/coverage-final.json coverage/jest-serial/coverage-final.json
+    else
+        npm run test:unit:ci:nocoverage
+    fi
 
-        # now run the smaller set of tests in group3, to balance out the time between pipelines
-        printf "\n--- \e[1mRUNNING Cypress TESTS GROUP 2\e[0m ---\n"
-        source bin/codebuild-parallel.sh
-
-        npm run test:e2e:ci3
-        sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
-#    fi
+    npm run test:e2e:ci3
+    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+       sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
+    fi
 ;;
 *)
 ;;
 esac
 
 # Copy empty file to prevent a build failure as we only report on combined cobertura coverage when $TEST_COVERAGE=1
-mkdir -p coverage && cp cobertura-sample-coverage.xml coverage/cobertura-coverage.xml
+if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+    mkdir -p coverage && cp cobertura-sample-coverage.xml coverage/cobertura-coverage.xml
+fi
