@@ -276,7 +276,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         };
 
         if (defaults.type === 'edit') {
-            actions.saveAlertChange(newValues);
+            actions.saveAlertChange({ ...newValues, start: dateList[0]?.startDate, end: dateList[0]?.endDate });
         } else {
             const saveableValues = [];
             dateList.forEach(dateset => {
