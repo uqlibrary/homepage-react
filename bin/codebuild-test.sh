@@ -65,8 +65,34 @@ pwd
 
 npm run pretest:unit:ci
 
-# Split the Cypress E2E tests into three groups and in this pipeline run only the ones in the first group
-source bin/codebuild-parallel.sh
+# Split the Cypress E2E tests into n groups with roughly equal numbers of files in each group, and writes the testfile
+# paths for each group to separate text files (bin/groupn.txt).
+# Assumes that the test spec files are located in the cypress/e2e directory and its subdirectories.
+
+printf "\n ### Splitting cypress tests into pipeline groups ### \n\n"
+
+spec_files=$(find cypress/e2e -name '*.spec.js')
+printf "\n spec_files:\n"
+echo "$spec_files"
+printf "\n"
+
+> bin/group1.txt
+> bin/group2.txt
+> bin/group3.txt
+echo "start \n"
+index=0
+# split the file list so an even run time is likely
+# lots in pipelines 1 & 2 and then a small number to run after the unit tests in pipeline 3
+echo "$spec_files" | awk '{
+    if (NR % 8 == 1 || NR % 8 == 4 || NR % 8 == 7) {
+        print > "bin/group1.txt"
+    } else if (NR % 8 == 3 || NR % 8 == 6) {
+        print > "bin/group3.txt"
+    } else {
+        print > "bin/group2.txt"
+    }
+}'
+printf "split done \n"
 
 case "$PIPE_NUM" in
 "1")
@@ -108,17 +134,14 @@ case "$PIPE_NUM" in
         npm run test:unit:ci
         sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/jest/coverage-final.json
 
-        pwd
-
-        echo "###  \n### coverage/jest/coverage-final.json"
-        ls coverage/jest/coverage-final.json # debug
-
         mkdir -p coverage/jest-serial
         mv coverage/jest/coverage-final.json coverage/jest-serial/coverage-final.json
     else
         npm run test:unit:ci:nocoverage
     fi
 
+    printf "\n--- \e[1mRUNNING Cypress TESTS GROUP 3\e[0m ---\n"
+    set -e
     npm run test:e2e:ci3
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
        sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
