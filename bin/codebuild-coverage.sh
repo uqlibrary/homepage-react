@@ -27,6 +27,7 @@ printf "coverage: after 2\n"
 printf "coverage: after 3\n"
 [[ -e $CODEBUILD_SRC_DIR_TestArtifact3/jest-serial/coverage-final.json ]] && printf "$CODEBUILD_SRC_DIR_TestArtifact3/jest-serial/coverage-final.json found\n"
 [[ -e $CODEBUILD_SRC_DIR_TestArtifact3/jest-serial/coverage-final.json ]] && cp $CODEBUILD_SRC_DIR_TestArtifact3/jest-serial/coverage-final.json coverage/all/jest-serial.json
+[[ -e $CODEBUILD_SRC_DIR_TestArtifact3/cypress/coverage-final.json ]] && cp $CODEBUILD_SRC_DIR_TestArtifact3/cypress/coverage-final.json coverage/all/cypress-3.json
 printf "moving coverage files complete\n"
 
 # Combine reports into single json file
