@@ -46,6 +46,7 @@ import {
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { isEscapeKeyPressed, isReturnKeyPressed } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
+import { isDlorAdminUser } from 'helpers/access';
 
 const StyledSkipLinkButton = styled(Button)(({ theme }) => ({
     // hidden when not focused
@@ -400,6 +401,10 @@ export const DLOList = ({
         handleKeywordChange();
         updateUrl('keyword');
     };
+
+    const handleRequestNewItem = () => {
+        window.location.href = '/digital-learning-hub/submit';
+    }
 
     const handleKeywordCharacterEntry = e => {
         const keyword = e.target.value;
@@ -1227,6 +1232,17 @@ export const DLOList = ({
                                 return displayFilterSidebarContents();
                             }
                         })()}
+                        {/* Request new item container */}
+                        {!!account?.id && !!!isDlorAdminUser(account) && (
+                            <UQActionButton
+                                data-testid="sidebar-filter-reset-button"
+                                onClick={handleRequestNewItem}
+                                aria-label="Request new digital object"
+                                sx={{ textTransform: 'none' }}
+                            >
+                                Request a new item
+                            </UQActionButton>
+                        )}
                     </StyledFilterSidebarGrid>
                     <Grid item xs={12} md={9}>
                         <TextField
