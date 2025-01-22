@@ -557,7 +557,7 @@ describe('Locations Panel', () => {
                     .contains('See all Library and AskUs hours'),
             );
 
-            cy.get('[data-testid="hours-item-whitty-mater"]').should('not.exist');
+            cy.get('[data-testid="hours-item-whitty-mater"]').should('exist');
         });
 
         context('all close methods work', () => {

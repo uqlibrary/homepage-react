@@ -147,7 +147,7 @@ describe('LibraryUpdates', () => {
             cy.visit('/');
             cy.viewport(390, 736);
             cy.get('[data-testid="drupal-article-0"]')
-                .should('exist')
+                .should('not.exist')
                 .contains('Rae and George Hammer memorial');
 
             cy.get('[data-testid="library-updates-parent"] > div').should('have.length', 4 + 1); // 4 news stories and a heading
