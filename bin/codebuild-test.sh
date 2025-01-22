@@ -140,6 +140,15 @@ case "$PIPE_NUM" in
         mkdir -p coverage/jest-serial
         echo '### mv'
         mv coverage/jest/coverage-final.json coverage/jest-serial/coverage-final.json
+
+        # now run the smaller set of tests in group3, to balance out the time between pipelines
+        source bin/codebuild-parallel.sh
+        if [ -s "group3.txt" ]; then
+          npm run test:e2e:ci3
+          sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
+        else
+          echo "group3.txt is empty - no tests to run."
+        fi
 #    fi
 ;;
 *)
