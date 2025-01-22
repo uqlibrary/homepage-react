@@ -40,10 +40,6 @@ if [[ $TEST_COVERAGE == 1 ]]; then
     source bin/codebuild-coverage.sh
 fi
 
-printf "\n\n--- INSTALL JEST ---\n"
-echo "$ npm install -g jest"
-npm install -g jest
-
 printf "(Build of branch \"$CI_BRANCH\")\n"
 
 function checkCodeStyle {
@@ -124,6 +120,10 @@ case "$PIPE_NUM" in
 ;;
 "3")
     printf "\n ### PIPELINE 3 ### \n\n"
+
+    printf "\n\n--- INSTALL JEST ---\n"
+    echo "$ npm install -g jest"
+    npm install -g jest
 
     export JEST_HTML_REPORTER_OUTPUT_PATH=coverage/jest-serial/jest-html-report.html
 #    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
