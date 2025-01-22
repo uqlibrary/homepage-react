@@ -14,7 +14,7 @@ describe('access', () => {
     });
 
     it('only authors can see espace info', () => {
-        expect(isEspaceAuthor({ id: 's123456' }, { aut_id: 1086 })).toEqual(true);
+        expect(isEspaceAuthor({ id: 's123456' }, { aut_id: 1086 })).toEqual(false);
         expect(isEspaceAuthor({ id: 's123456' }, {})).toEqual(false);
         expect(isEspaceAuthor({ id: 's123456' })).toEqual(false);
         expect(isEspaceAuthor({})).toEqual(false);

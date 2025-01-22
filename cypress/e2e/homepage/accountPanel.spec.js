@@ -140,7 +140,7 @@ describe('Account panel', () => {
             openPapercutPopup();
 
             cy.get('[data-testid="papercut-item-button-4"]')
-                .should('not.exist')
+                .should('exist')
                 .should('be.visible')
                 .contains('More about your printing account');
 
