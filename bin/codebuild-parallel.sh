@@ -20,8 +20,6 @@ index=0
 # split the file list so an even run time is likely
 # lots in pipelines 1 & 2 and then a small number to run after the unit tests in pipeline 3
 echo "$spec_files" | awk '{
-    mod = NR % 8
-    print "Placing " $0 " in " mod
     if (NR % 8 == 1 || NR % 8 == 4 || NR % 8 == 7) {
         print > "bin/group1.txt"
     } else if (NR % 8 == 3 || NR % 8 == 6) {
