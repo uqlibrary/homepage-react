@@ -13,6 +13,10 @@ fi
 
 printf "\n coverage required\n"
 
+printf "\n\n--- INSTALL NYC ---\n"
+echo "$ npm install -g nyc"
+npm install -g nyc
+
 # Clean processing directories
 npm run pretest:unit:ci
 

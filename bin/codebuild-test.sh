@@ -35,10 +35,14 @@ printf "CODE_COVERAGE_REQUIRED = \"$CODE_COVERAGE_REQUIRED\")\n"
 
 export TZ='Australia/Brisbane'
 
+printf "\n\n--- INSTALL JEST ---\n"
+echo "$ npm install -g jest"
+npm install -g jest
+
 # Run CC check only (this occurs after test pipelines have finished and output test coverage artifacts)
-if [[ $TEST_COVERAGE == 1 ]]; then
+#if [[ $TEST_COVERAGE == 1 ]]; then
     source bin/codebuild-coverage.sh
-fi
+#fi
 
 printf "(Build of branch \"$CI_BRANCH\")\n"
 
