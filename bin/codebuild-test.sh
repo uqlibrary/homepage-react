@@ -31,18 +31,18 @@ if [[ ($CI_BRANCH == "master" || $CI_BRANCH == "staging" || $CI_BRANCH == "produ
   # (Putting * around the test-string gives a test for inclusion of the substring rather than exact match)
     CODE_COVERAGE_REQUIRED=true
 fi
-printf "CODE_COVERAGE_REQUIRED = \"$CODE_COVERAGE_REQUIRED\")\n"
+printf "CODE_COVERAGE_REQUIRED = \"$CODE_COVERAGE_REQUIRED\"\n"
 
 export TZ='Australia/Brisbane'
+
+# Run CC check only (this occurs after test pipelines have finished and output test coverage artifacts)
+if [[ $TEST_COVERAGE == 1 ]]; then
+    source bin/codebuild-coverage.sh
+fi
 
 printf "\n\n--- INSTALL JEST ---\n"
 echo "$ npm install -g jest"
 npm install -g jest
-
-# Run CC check only (this occurs after test pipelines have finished and output test coverage artifacts)
-#if [[ $TEST_COVERAGE == 1 ]]; then
-    source bin/codebuild-coverage.sh
-#fi
 
 printf "(Build of branch \"$CI_BRANCH\")\n"
 
