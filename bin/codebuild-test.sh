@@ -72,9 +72,6 @@ npm run pretest:unit:ci
 printf "\n ### Splitting cypress tests into pipeline groups ### \n\n"
 
 spec_files=$(find cypress/e2e -name '*.spec.js')
-printf "\n spec_files:\n"
-echo "$spec_files"
-printf "\n"
 
 > bin/group1.txt
 > bin/group2.txt
@@ -93,7 +90,6 @@ echo "$spec_files" | awk '{
         print > "bin/group2.txt"
     }
 }'
-printf "split done \n"
 
 case "$PIPE_NUM" in
 "1")
@@ -121,22 +117,19 @@ case "$PIPE_NUM" in
 "3")
     printf "\n ### PIPELINE 3 ### \n\n"
 
+    checkCodeStyle
+
     printf "\n\n--- INSTALL JEST ---\n"
     echo "$ npm install -g jest"
     npm install -g jest
-
-    checkCodeStyle
     set -e
+
     printf "\n--- \e[1mRUNNING UNIT TESTS\e[0m ---\n"
 
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
-        export JEST_HTML_REPORTER_OUTPUT_PATH=coverage/jest-serial/jest-html-report.html
         export JEST_HTML_REPORTER_OUTPUT_PATH=coverage/jest/jest-html-report.html
         npm run test:unit:ci
         sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/jest/coverage-final.json
-
-        mkdir -p coverage/jest-serial
-        mv coverage/jest/coverage-final.json coverage/jest-serial/coverage-final.json
     else
         npm run test:unit:ci:nocoverage
     fi
