@@ -355,11 +355,18 @@ export const SeriesView = ({
                                         
                             </StyledHeaderDiv>
                             {
-                                !!dlorList && dlorList.map((item, index) => {
-                                    if(item.object_series_id && item.object_series_id == seriesId) {
-                                        return displayItemPanel(item, index)
-                                    }
-                                }) 
+                                !!dlorList && dlorList
+                                    .filter(item => item.object_series_id && item.object_series_id == seriesId)
+                                    .sort((a, b) => {
+                                        /* istanbul ignore next */
+                                        const orderA = a.object_series_order !== undefined ? a.object_series_order : Number.MAX_SAFE_INTEGER;
+                                        /* istanbul ignore next */
+                                        const orderB = b.object_series_order !== undefined ? b.object_series_order : Number.MAX_SAFE_INTEGER;
+                                        return orderA - orderB;
+                                    })
+                                    .map((item, index) => {
+                                        return displayItemPanel(item, index);
+                                    })
                             }
                         </Grid>
                     </StyledContentGrid>
