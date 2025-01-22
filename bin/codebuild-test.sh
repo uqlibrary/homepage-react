@@ -1,8 +1,5 @@
 #!/bin/bash
 
-#export CI_BRANCH="$CODEBUILD_SOURCE_VERSION"
-#export CI_COMMIT_ID="$CODEBUILD_RESOLVED_SOURCE_VERSION"
-#export CI_BUILD_NUMBER="$CODEBUILD_BUILD_ID"
 export CI_NAME=CodeBuild
 export COMMIT_INFO_AUTHOR=$(git show ${CI_COMMIT_ID} --no-patch --pretty=format:"%an")
 export COMMIT_INFO_EMAIL=$(git show ${CI_COMMIT_ID} --no-patch --pretty=format:"%ae")
@@ -16,135 +13,39 @@ echo
 echo
 
 echo "COMMIT_INFO vars:"
-set |grep COMMIT_INFO
+set | grep COMMIT_INFO
 echo
 
 if [[ -z $CI_BUILD_NUMBER ]]; then
-  printf "(CI_BUILD_NUMBER is not defined. Build stopped.)\n"
-  exit 1
+    printf "(CI_BUILD_NUMBER is not defined. Build stopped.)\n"
+    exit 1
 fi
 
 if [[ -z $CI_BRANCH ]]; then
-  CI_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    CI_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 fi
 
 # Not running code coverage check for feature branches.
 CODE_COVERAGE_REQUIRED=false
-if [[ ($CI_BRANCH == "master" || $CI_BRANCH == "staging" || $CI_BRANCH == "production" || $CI_BRANCH == "codebuild" || $CI_BRANCH == *"coverage"* || $CI_BRANCH == "feature-react-18") ]]; then
-    # (Putting * around the test-string gives a test for inclusion of the substring rather than exact match)
+if [[ ($CI_BRANCH == "master" || $CI_BRANCH == "staging" || $CI_BRANCH == "production" || $CI_BRANCH == "prodtest" || $CI_BRANCH == "codebuild" || $CI_BRANCH == *"coverage"*) ]]; then
+  # (Putting * around the test-string gives a test for inclusion of the substring rather than exact match)
     CODE_COVERAGE_REQUIRED=true
 fi
+printf "CODE_COVERAGE_REQUIRED = \"$CODE_COVERAGE_REQUIRED\"\n"
 
 export TZ='Australia/Brisbane'
 
-if [[ -z $PIPE_NUM ]]; then
-  PIPE_NUM=1
+# Run CC check only (this occurs after test pipelines have finished and output test coverage artifacts)
+if [[ $TEST_COVERAGE == 1 ]]; then
+    source bin/codebuild-coverage.sh
 fi
 
-printf "Jest v"; jest --version
+printf "(Build of branch \"$CI_BRANCH\")\n"
 
-function checkCoverage {
-     npm run cc:reportAll
-
-     # four instances of `<span class="strong">100% </span>` indicates 100% code coverage
-     NUM_FULL_COVERAGE=$(grep -c class=\"strong\"\>100\% coverage/index.html)
-     if [[ $NUM_FULL_COVERAGE == 4 ]]; then
-         echo "Coverage 100%";
-         echo ""
-         echo '            ,-""-.'
-         echo "           :======:"
-         echo "           :======:"
-         echo "            '-..-"
-         echo "              ||"
-         echo "            _,  --.    _____"
-         echo "           \(/ __   '._|"
-         echo "          ((_/_)\     |"
-         echo "           (____)'.___|"
-         echo "            (___)____.|_____"
-         echo "Human, your code coverage was found to be satisfactory. Great job!"
-     else
-         echo "                     ____________________"
-         echo "                    /                    \ "
-         echo "                    |      Coverage       | "
-         echo "                    |      NOT 100%       | "
-         echo "                    \____________________/ "
-         echo "                             !  !"
-         echo "                             !  !"
-         echo "                             L_ !"
-         echo "                            / _)!"
-         echo "                           / /__L"
-         echo "                     _____/ (____)"
-         echo "                            (____)"
-         echo "                     _____  (____)"
-         echo "                          \_(____)"
-         echo "                             !  !"
-         echo "                             !  !"
-         echo "                             \__/"
-         echo ""
-         echo "Human, your code coverage was found to be lacking... Do not commit again until it is fixed."
-         # show actual coverage numbers
-         grep -A 2 class=\"strong\"\> coverage/index.html
-         echo "Run your tests locally with npm run test:cc then load coverage/index.html to determine where the coverage gaps are"
-         exit 1;
-     fi;
-}
-
-case "$PIPE_NUM" in
-"1")
-    # pipeline #1: test the admin pages
-    set -e
-
-    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
-        # a code coverage run is split between admin pages and non admin
-        # as we dont have enough resources(?) for one big run (cypress randomly fails tests)
-        # and it is just waaaay too slow.
-        # To do this, we need to change the package.json coverage
-        echo "updating package.json to exclude non-admin pages from coverage"
-        FILE_REFERENCES=( \
-          "src/modules/App/\*\*" \
-          "src/modules/HomePage/\*\*" \
-          "src/modules/Pages/BookExamBooth/\*\*" \
-          "src/modules/Pages/DigitalLearningObjects/\*\*" \
-          "src/modules/Pages/PastExamPaperSearch/\*\*" \
-          "src/modules/Pages/PastExamPaperList/\*\*" \
-          "src/modules/Pages/LearningResources/\*\*" \
-          "src/modules/Pages/NotFound/\*\*" \
-          "src/modules/Pages/PaymentReceipt/\*\*" \
-          "src/modules/SharedComponents/\*\*" \
-        )
-        for filepath in "${FILE_REFERENCES[@]}"
-        do
-            sed -in "s+\!${filepath}+${filepath}+" package.json
-        done
-
-        echo "############### PACKAGE.JSON ####################"
-        cat package.json
-        echo "############### / PACKAGE.JSON ####################"
-
-        printf "\n--- \e[1mRUNNING JEST UNIT TESTS for code coverage check on admin pages\e[0m ---\n"
-        npm run test:unit:ci
-
-        printf "\n--- \e[1mRUNNING CYPRESS TESTS for code coverage check on admin pages\e[0m ---\n"
-        npm run test:e2e:cc:admin
-
-        checkCoverage
-    else
-        printf "(Build of feature branch \"$CI_BRANCH\" SKIPS code coverage check)\n"
-        printf "\n--- \e[1mRUNNING JEST UNIT TESTS\e[0m ---\n"
-        npm run test:unit:ci1:skipcoverage
-
-        # Second runner for e2e. The first one is in the other pipeline.
-        printf "\n--- \e[1mRUNNING CYPRESS TESTS\e[0m ---\n"
-        npm run test:e2e:dashboard
-    fi
-
-;;
-"2")
-    # pipeline #2: test the non-admin pages
+function checkCodeStyle {
     printf "\n--- \e[1mRUNNING CODE STYLE CHECKS\e[0m ---\n"
-    printf "\n$ npm run codestyles:files -s\n"
-    FILES=$(npm run codestyles:files -s)
 
+    FILES=$(npm run codestyles:files -s)
     if [[ "$?" == 0 ]]; then
         printf "\n\e[92mLooks good! Well done.\e[0m\n\n"
     else
@@ -157,56 +58,101 @@ case "$PIPE_NUM" in
         printf "\n* You can run '\e[1m npm run eslint \e[0m' to view ESLint code quality issues, if any.\n\n"
         exit 1
     fi
+}
 
-    # Set this after the codestyle checks above, so that this script doesn't exit before any failures can be printed
+echo "pwd "
+pwd
+
+npm run pretest:unit:ci
+
+# Split the Cypress E2E tests into n groups with roughly equal numbers of files in each group, and writes the testfile
+# paths for each group to separate text files (bin/groupn.txt).
+# Assumes that the test spec files are located in the cypress/e2e directory and its subdirectories.
+
+printf "\n ### Splitting cypress tests into pipeline groups ### \n\n"
+
+spec_files=$(find cypress/e2e -name '*.spec.js')
+printf "\n spec_files:\n"
+echo "$spec_files"
+printf "\n"
+
+> bin/group1.txt
+> bin/group2.txt
+> bin/group3.txt
+echo "start \n"
+index=0
+# split the file list so an even run time is likely
+# lots in pipelines 1 & 2 and then a small number to run after the unit tests in pipeline 3
+# this may need rebalancing from time to time, if we add or remove test suites
+echo "$spec_files" | awk '{
+    if (NR % 8 == 3 || NR % 8 == 4 || NR % 8 == 5) {
+        print > "bin/group1.txt"
+    } else if (NR % 8 == 0 || NR % 8 == 6) {
+        print > "bin/group3.txt"
+    } else {
+        print > "bin/group2.txt"
+    }
+}'
+printf "split done \n"
+
+case "$PIPE_NUM" in
+"1")
+    printf "\n ### PIPELINE 1 ### \n\n"
     set -e
+
+    printf "\n--- \e[1mRUNNING E2E TESTS GROUP 1\e[0m ---\n"
+    npm run test:e2e:ci1
 
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
-        # a code coverage run is split between admin pages and non admin
-        # as we dont have enough resources(?) for one big run (cypress randomly fails tests)
-        # and it is just waaaay too slow.
-        # To do this, we need to change the package.json coverage
-        echo "updating package.json to exclude admin pages from coverage"
-        FILE_REFERENCES=( \
-          "src/modules/App/\*\*" \
-          "src\/modules\/Pages\/Admin/\*\*"
-        )
-        for filepath in "${FILE_REFERENCES[@]}"
-        do
-            sed -in "s+\!${filepath}+${filepath}+" package.json
-        done
-
-        echo "############### PACKAGE.JSON ####################"
-        cat package.json
-        echo "############### / PACKAGE.JSON ####################"
-
-        printf "\n--- \e[1mRUNNING JEST UNIT TESTS for code coverage check on non-admin pages\e[0m ---\n"
-        npm run test:unit:ci
-
-        printf "\n--- \e[1mRUNNING CYPRESS TESTS for code coverage check on non-admin pages\e[0m ---\n"
-        npm run test:e2e:cc:nonadmin
-
-        checkCoverage
-
-    else
-        printf "(Build of feature branch \"$CI_BRANCH\" SKIPS code coverage check)\n"
-        printf "\n--- \e[1mRUNNING JEST UNIT TESTS\e[0m ---\n"
-        npm run test:unit:ci2
-
-        # Runner for cypress. More is in other pipelines.
-        printf "\n--- \e[1mRUNNING CYPRESS TESTS\e[0m ---\n"
-        npm run test:e2e:dashboard
+      sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
     fi
-
 ;;
-*)
+"2")
+    printf "\n ### PIPELINE 2 ### \n\n"
     set -e
 
-    if [[ $CODE_COVERAGE_REQUIRED == false ]]; then
-        # Additional dynamic pipelines for cypress tests
-        printf "\n--- \e[1mRUNNING CYPRESS TESTS\e[0m ---\n"
-        npm run test:e2e:dashboard
+    printf "\n--- \e[1mRUNNING Cypress TESTS GROUP 2\e[0m ---\n"
+    npm run test:e2e:ci2
+
+    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+        sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
     fi
 ;;
+"3")
+    printf "\n ### PIPELINE 3 ### \n\n"
+
+    printf "\n\n--- INSTALL JEST ---\n"
+    echo "$ npm install -g jest"
+    npm install -g jest
+
+    checkCodeStyle
+    set -e
+    printf "\n--- \e[1mRUNNING UNIT TESTS\e[0m ---\n"
+
+    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+        export JEST_HTML_REPORTER_OUTPUT_PATH=coverage/jest-serial/jest-html-report.html
+        export JEST_HTML_REPORTER_OUTPUT_PATH=coverage/jest/jest-html-report.html
+        npm run test:unit:ci
+        sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/jest/coverage-final.json
+
+        mkdir -p coverage/jest-serial
+        mv coverage/jest/coverage-final.json coverage/jest-serial/coverage-final.json
+    else
+        npm run test:unit:ci:nocoverage
+    fi
+
+    printf "\n--- \e[1mRUNNING Cypress TESTS GROUP 3\e[0m ---\n"
+    set -e
+    npm run test:e2e:ci3
+    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+       sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
+    fi
+;;
+*)
+;;
 esac
-echo "#### AFTER"
+
+# Copy empty file to prevent a build failure as we only report on combined cobertura coverage when $TEST_COVERAGE=1
+if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+    mkdir -p coverage && cp cobertura-sample-coverage.xml coverage/cobertura-coverage.xml
+fi
