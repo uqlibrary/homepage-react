@@ -24,6 +24,7 @@ fi
 if [[ -z $CI_BRANCH ]]; then
     CI_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 fi
+printf "CI_BRANCH = \"$CI_BRANCH\"\n"
 
 # Not running code coverage check for feature branches.
 CODE_COVERAGE_REQUIRED=false
