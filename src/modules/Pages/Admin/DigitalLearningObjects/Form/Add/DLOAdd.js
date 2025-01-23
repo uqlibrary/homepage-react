@@ -37,7 +37,6 @@ export const DLOAdd = ({
             .format('YYYY-MM-DDTHH:mm');
     }
     
-    /* istanbul ignore next */
     const formDefaults = {
         object_title: '',
         object_description: '',
