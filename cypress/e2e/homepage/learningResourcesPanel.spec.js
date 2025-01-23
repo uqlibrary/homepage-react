@@ -64,7 +64,6 @@ context('The Homepage Learning Resource Panel', () => {
         cy.get(`div[data-testid="classpanel-${classIndex}"] h2`).contains(specificClass.SUBJECT);
     });
 
-    // NOTE: this test is duplicated into cypress/adminPages/learning-resources - this is purely for coverage
     it('The Learning resources panel searches correctly', () => {
         cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);

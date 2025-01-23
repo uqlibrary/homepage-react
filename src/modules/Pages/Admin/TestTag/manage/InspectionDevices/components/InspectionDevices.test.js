@@ -107,7 +107,6 @@ describe('InspectionDevices', () => {
         // max="2017-06-30"
         await userEvent.type(getByTestId('device_calibrated_date_last-input'), '2017-06-01');
 
-        // preview.debug();
         // commit the change
         await act(async () => {
             await fireEvent.click(getByTestId('update_dialog-action-button'));
