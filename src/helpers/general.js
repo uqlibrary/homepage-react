@@ -135,27 +135,24 @@ export const linkToDrupal = (pathname, requestedDomainName = null) => {
     return `${origin}${pathname}`;
 };
 
-/* istanbul ignore next */
 export function isKeyPressed(e, charKeyInput, numericKeyInput) {
     const keyNumeric = e.charCode || e.keyCode;
     const keyChar = e.key || /* istanbul ignore next */ e.code;
     return keyChar === charKeyInput || keyNumeric === numericKeyInput;
 }
-/* istanbul ignore next */
+
 export function isReturnKeyPressed(e) {
     return isKeyPressed(e, 'Enter', 13);
 }
-/* istanbul ignore next */
+
 export function isEscapeKeyPressed(e) {
     return isKeyPressed(e, 'Escape', 27);
 }
 
-/* istanbul ignore next */
 export function removeClass(element, className) {
     !!element && element.classList.contains(className) && element.classList.remove(className);
 }
 
-/* istanbul ignore next */
 export function addClass(element, className) {
     !!element && !element.classList.contains(className) && element.classList.add(className);
 }

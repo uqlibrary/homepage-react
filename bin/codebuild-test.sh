@@ -24,6 +24,7 @@ fi
 if [[ -z $CI_BRANCH ]]; then
     CI_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 fi
+printf "CI_BRANCH = \"$CI_BRANCH\"\n"
 
 export TZ='Australia/Brisbane'
 
