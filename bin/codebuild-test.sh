@@ -74,9 +74,9 @@ index=0
 # lots in pipelines 1 & 2 and then a small number to run after the unit tests in pipeline 3
 # this may need rebalancing from time to time, if we add or remove test suites
 echo "$spec_files" | awk '{
-    if (NR % 8 == 3 || NR % 8 == 4 || NR % 8 == 5) {
+    if (NR % 8 == 2 || NR % 8 == 3 || NR % 8 == 7) {
         print > "bin/group1.txt"
-    } else if (NR % 8 == 0 || NR % 8 == 6) {
+    } else if (NR % 8 == 1 || NR % 8 == 5) {
         print > "bin/group3.txt"
     } else {
         print > "bin/group2.txt"
