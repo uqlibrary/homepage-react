@@ -25,14 +25,6 @@ if [[ -z $CI_BRANCH ]]; then
     CI_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 fi
 
-# Not running code coverage check for feature branches.
-CODE_COVERAGE_REQUIRED=false
-if [[ ($CI_BRANCH == "master" || $CI_BRANCH == "staging" || $CI_BRANCH == "production" || $CI_BRANCH == "prodtest" || $CI_BRANCH == "codebuild" || $CI_BRANCH == *"coverage"*) ]]; then
-  # (Putting * around the test-string gives a test for inclusion of the substring rather than exact match)
-    CODE_COVERAGE_REQUIRED=true
-fi
-printf "CODE_COVERAGE_REQUIRED = \"$CODE_COVERAGE_REQUIRED\"\n"
-
 export TZ='Australia/Brisbane'
 
 # Run CC check only (this occurs after test pipelines have finished and output test coverage artifacts)
@@ -72,9 +64,6 @@ npm run pretest:unit:ci
 printf "\n ### Splitting cypress tests into pipeline groups ### \n\n"
 
 spec_files=$(find cypress/e2e -name '*.spec.js')
-printf "\n spec_files:\n"
-echo "$spec_files"
-printf "\n"
 
 > bin/group1.txt
 > bin/group2.txt
@@ -93,7 +82,6 @@ echo "$spec_files" | awk '{
         print > "bin/group2.txt"
     }
 }'
-printf "split done \n"
 
 case "$PIPE_NUM" in
 "1")
@@ -103,7 +91,7 @@ case "$PIPE_NUM" in
     printf "\n--- \e[1mRUNNING E2E TESTS GROUP 1\e[0m ---\n"
     npm run test:e2e:ci1
 
-    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+    if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
       sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
     fi
 ;;
@@ -114,29 +102,26 @@ case "$PIPE_NUM" in
     printf "\n--- \e[1mRUNNING Cypress TESTS GROUP 2\e[0m ---\n"
     npm run test:e2e:ci2
 
-    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+    if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
         sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
     fi
 ;;
 "3")
     printf "\n ### PIPELINE 3 ### \n\n"
 
+    checkCodeStyle
+
     printf "\n\n--- INSTALL JEST ---\n"
     echo "$ npm install -g jest"
     npm install -g jest
-
-    checkCodeStyle
     set -e
+
     printf "\n--- \e[1mRUNNING UNIT TESTS\e[0m ---\n"
 
-    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
-        export JEST_HTML_REPORTER_OUTPUT_PATH=coverage/jest-serial/jest-html-report.html
+    if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
         export JEST_HTML_REPORTER_OUTPUT_PATH=coverage/jest/jest-html-report.html
         npm run test:unit:ci
         sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/jest/coverage-final.json
-
-        mkdir -p coverage/jest-serial
-        mv coverage/jest/coverage-final.json coverage/jest-serial/coverage-final.json
     else
         npm run test:unit:ci:nocoverage
     fi
@@ -144,7 +129,7 @@ case "$PIPE_NUM" in
     printf "\n--- \e[1mRUNNING Cypress TESTS GROUP 3\e[0m ---\n"
     set -e
     npm run test:e2e:ci3
-    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+    if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
        sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
     fi
 ;;
@@ -153,6 +138,6 @@ case "$PIPE_NUM" in
 esac
 
 # Copy empty file to prevent a build failure as we only report on combined cobertura coverage when $TEST_COVERAGE=1
-if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
     mkdir -p coverage && cp cobertura-sample-coverage.xml coverage/cobertura-coverage.xml
 fi
