@@ -303,8 +303,24 @@ describe('Locations Panel', () => {
             cy.visit('/');
             cy.viewport(414, 736);
 
-            cy.get('[data-testid="location-item-arch-music-hours"]').should('not.exist');
-            cy.get('[data-testid="locations-hours-disclaimer"]').should('not.exist');
+            cy.waitUntil(() => cy.get('[data-testid="hours-accordion-open"]').should('exist'));
+            cy.get('[data-testid="hours-accordion-open"]').click();
+
+            // name shows, hours does not, busy appears
+            // assume if columns are right in this row then are other rows are right
+            cy.get('[data-testid="hours-item-arch-music-link"]').contains('Architecture');
+            cy.get('[data-testid="location-item-arch-music-hours"]')
+                .should('exist')
+                .should('not.be.visible');
+            cy.get('[data-testid="hours-item-busy-arch-music"] span')
+                .should('exist')
+                .should('have.attr', 'aria-valuenow', '85');
+
+            // askus hidden (it only has hours, no point having the row with no hours)
+            cy.get('[data-testid="locations-hours-disclaimer"]')
+                .should('exist')
+                .should('not.be.visible');
+            // hours disclaimer hidden (if no hours displayed, then no point in disclaimer)
             cy.get('[data-testid="hours-item-askus-link"]').should('not.exist');
         });
         context('the open Locations panel butts up against the Utility bar', () => {
