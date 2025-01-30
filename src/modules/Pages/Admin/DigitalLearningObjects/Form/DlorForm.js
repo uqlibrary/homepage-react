@@ -1494,9 +1494,12 @@ export const DlorForm = ({
             : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend);
     };
 
+    const confirmationTitleAdmin = mode === 'add' ? 'The object has been created' : 'Changes have been saved';
+    const confirmationTitle = isDlorAdminUser(account) ? confirmationTitleAdmin : 'Your request has been submitted';  
+
     const locale = {
         successMessage: {
-            confirmationTitle: mode === 'add' ? 'The object has been created' : 'Changes have been saved',
+            confirmationTitle: confirmationTitle,
             confirmationMessage: '',
             cancelButtonLabel: mode === 'add' ? 'Add another Object' : 'Re-edit Object',
             confirmButtonLabel: 'Return to list page',
