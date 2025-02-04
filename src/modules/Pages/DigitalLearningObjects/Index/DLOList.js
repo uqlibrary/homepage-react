@@ -1203,18 +1203,19 @@ export const DLOList = ({
                             </StyledSkipLinkButton>
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} md="auto" sx={{ textAlign: 'right' }}>
-                        <UqActionLink
-                            data-testid="dlor-homepage-contact"
-                            href={contactFormLink}
-                            target="_blank"
-                            title="Load a contact form, in a new window"
-                            sx={{ maxWidth: '8em', display: 'flex', alignItems: 'center' }}
-                        >
-                            Contact us&nbsp;
-                            <OpenInNewIcon />
-                        </UqActionLink>
-                    </Grid>
+                    {!!account?.id && !!!isDlorAdminUser(account) && (
+                        <Grid item xs={12} md="auto" sx={{ textAlign: 'right' }}>
+                            <UqActionLink
+                                data-testid="dlor-homepage-request-new-item"
+                                onClick={handleRequestNewItem}
+                                title="Request a new item"
+                                sx={{display: 'flex', alignItems: 'center' }}
+                            >
+                                Submit new object request&nbsp;
+                                {/* <OpenInNewIcon /> */}
+                            </UqActionLink>
+                        </Grid>
+                    )}
                     <Grid item xs={12} sx={{ marginTop: '20px' }}>
                         <LoginPrompt account={account} />
                     </Grid>
@@ -1233,7 +1234,7 @@ export const DLOList = ({
                             }
                         })()}
                         {/* Request new item container */}
-                        {!!account?.id && !!!isDlorAdminUser(account) && (
+                        {/* {!!account?.id && !!!isDlorAdminUser(account) && (
                             <UQActionButton
                                 data-testid="sidebar-filter-request-new-button"
                                 onClick={handleRequestNewItem}
@@ -1242,7 +1243,7 @@ export const DLOList = ({
                             >
                                 Request a new item
                             </UQActionButton>
-                        )}
+                        )} */}
                     </StyledFilterSidebarGrid>
                     <Grid item xs={12} md={9}>
                         <TextField

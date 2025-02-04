@@ -7,6 +7,8 @@ import { useAccountContext } from 'context';
 import DlorForm from 'modules/Pages/Admin/DigitalLearningObjects/Form/DlorForm';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 import { isDlorAdminUser } from 'helpers/access';
+import InformationBox from 'modules/Pages/DigitalLearningObjects/SharedComponents/InformationBox';
+import { Typography } from '@mui/material';
 
 const moment = require('moment-timezone');
 
@@ -71,6 +73,17 @@ export const DLOAdd = ({
                     ]}
                 />
                 <section aria-live="assertive">
+                    {!!!isDlorAdminUser(account) && (
+                        <InformationBox
+                            prompt="Submit this form to request your digital learning object to be added to the Digital Learning Hub."
+                            identifier="UserAdd"
+                            linkUrl='https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects#s-lg-box-22746342'
+                            linkText='Submit an object has instructions and information.'
+                        />
+                    )}
+                    <Typography component="p" variant="body2" sx={{ marginBottom: '20px', color: '#992222', fontWeight: 'bold' }}>
+                        * = Required fields
+                    </Typography>
                     <DlorForm
                         actions={actions}
                         dlorItemSaving={dlorItemCreating}

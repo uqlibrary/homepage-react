@@ -79,7 +79,9 @@ export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
                 </StyledTitleBox>
             </Grid>
             <Grid item xs={1}>
-                <VisitHomepage />
+                { isDlorAdminUser(account) && (
+                    <VisitHomepage />
+                )}
             </Grid>
         </Grid>
     );
