@@ -81,7 +81,7 @@ export const DLOAdd = ({
                             linkText='Submit an object has instructions and information.'
                         />
                     )}
-                    <Typography component="p" variant="body2" sx={{ marginBottom: '20px', color: '#dd6666', fontWeight: 'bold' }}>
+                    <Typography component="p" variant="body2" sx={{ marginBottom: '20px', color: '#992222', fontWeight: 'bold' }}>
                         * = Required fields
                     </Typography>
                     <DlorForm

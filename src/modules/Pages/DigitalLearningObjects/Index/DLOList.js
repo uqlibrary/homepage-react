@@ -1216,6 +1216,9 @@ export const DLOList = ({
                             </UqActionLink>
                         </Grid>
                     )}
+                    <Grid item xs={12} sx={{ marginTop: '20px' }}>
+                        <LoginPrompt account={account} />
+                    </Grid>
                 </Grid>
                 <Grid container>
                     <StyledFilterSidebarGrid item xs={12} md={3} id="filterSidebar" data-testid="filter-sidebar">
