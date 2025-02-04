@@ -46,6 +46,7 @@ export const PastExamPaperSearch = lazy(() => lazyRetry(() => import('modules/Pa
 export const PastExamPaperList = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperList/PastExamPaperListContainer')));
 
 export const DLONew = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Objects/DLOAddContainer')));
+export const DLOFilterManage = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Filters/DLOFilterManageContainer')));
 // always load components
 export { HomePageContainer as Index } from 'modules/HomePage';
 export { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
