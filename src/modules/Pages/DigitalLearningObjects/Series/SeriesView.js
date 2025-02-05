@@ -170,7 +170,6 @@ export const SeriesView = ({
 
     useEffect(() => {
         if (seriesId !== previousSeriesId) {
-            console.log("USEEFFECT", dlorSeries, seriesId);
             actions.loadDlorSeries(seriesId);
         }
     }, [seriesId, previousSeriesId]);
