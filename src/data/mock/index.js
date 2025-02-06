@@ -57,6 +57,8 @@ import dlor_filter_list from './data/records/dlor/dlor_filter_list';
 import dlor_team_list from './data/records/dlor/dlor_team_list';
 import dlor_file_type_list from './data/records/dlor/dlor_file_type_list';
 import dlor_series_all from './data/records/dlor/dlor_series_all';
+import dlor_series_view from './data/records/dlor/dlor_series_view';
+import dlor_series_view_nodescription from './data/records/dlor/dlor_series_view_nodescription';
 import { drupalArticles } from './data/drupalArticles';
 import {
     journalSearchFavourites,
@@ -515,6 +517,15 @@ mock.onGet(/dlor\/public\/find\/.*/)
             return getSpecificDlorObject('98j3-fgf95-8j34'); //any old id
         }
     })
+    .onPost('dlor/auth/object')
+    .reply(() => {
+        if (responseType === 'saveError') {
+            return [500, {}];
+        } else {
+            // return [200, { data: getSpecificDlorObject('98j3-fgf95-8j34') }]; //any old id
+            return getSpecificDlorObject('98j3-fgf95-8j34'); //any old id
+        }
+    })
     .onDelete(/dlor\/admin\/object\/.*/)
     .reply(config => {
         if (responseType === 'deleteError') {
@@ -544,6 +555,26 @@ mock.onGet(/dlor\/public\/find\/.*/)
             return [500, {}];
         } else {
             return [200, dlor_series_all];
+        }
+    })
+    .onGet(/dlor\/public\/series\/find\/5/)
+    .reply(config => {
+            return [500, {}];
+    })
+    .onGet(/dlor\/public\/series\/find\/9/)
+    .reply(config => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else {
+            return [200, dlor_series_view_nodescription];
+        }
+    })
+    .onGet(/dlor\/public\/series\/find\/.*/)
+    .reply(config => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else {
+            return [200, dlor_series_view];
         }
     })
     .onDelete(/dlor\/admin\/series\/.*/)

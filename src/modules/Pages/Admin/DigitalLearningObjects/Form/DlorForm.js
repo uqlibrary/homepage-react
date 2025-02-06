@@ -36,6 +36,8 @@ import { scrollToTopOfPage } from 'helpers/general';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import { useAccountContext } from 'context';
+
 
 import {
     convertFileSizeToKb,
@@ -53,6 +55,7 @@ import {
     splitStringToArrayOnComma,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { isDlorAdminUser } from 'helpers/access';
 import { breadcrumbs } from 'config/routes';
 import { pluralise } from 'helpers/general';
 
@@ -124,7 +127,9 @@ export const DlorForm = ({
     formDefaults,
     mode,
 }) => {
+    console.log("Form Defaults form", formDefaults);
     const [cookies, setCookie] = useCookies();
+    const { account } = useAccountContext();
 
     const [confirmationOpen, setConfirmationOpen] = useState(false);
 
@@ -207,6 +212,15 @@ export const DlorForm = ({
         }
     }, [dlorTeamList, dlorTeamListError, dlorTeamListLoading, mode]);
 
+
+    // useEffect(() => {
+    //     console.log("UseEffect formDefaults", formDefaults, formValues);
+    //     if (!!!formDefaults.object_publishing_user) {
+    //         console.log("SETTING FORM DEFAULTS");
+    //         setFormValues({...formValues, object_publishing_user: formDefaults.object_publishing_user});
+    //     }
+    // }, [formDefaults]);
+
     // these match the values in dlor cypress admin tests
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
@@ -253,12 +267,14 @@ export const DlorForm = ({
     };
 
     const isValidUsername = testUserName => {
+        console.log("TEST THE USERNAME, ", testUserName);
         return testUserName?.length >= 4 && testUserName?.length <= 8;
     };
 
     function validatePanelOwnership(currentValues) {
         let firstPanelErrorCount = 0;
         // valid user id is 8 or 9 char
+        console.log("currentValues", currentValues);
         !isValidUsername(currentValues?.object_publishing_user) && firstPanelErrorCount++;
         if (teamSelectRef.current === 'new') {
             if (
@@ -463,7 +479,9 @@ export const DlorForm = ({
         setFormValues(newValues);
     };
 
-    const stepPanelContentOwnership = (
+    console.log("IS ADMIN", isDlorAdminUser(account));
+
+    const stepPanelContentOwnership = React.useMemo(() => (
         <>
             <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth>
@@ -472,6 +490,7 @@ export const DlorForm = ({
                         id="object_publishing_user"
                         data-testid="object-publishing-user"
                         required
+                        disabled={!isDlorAdminUser(account)}
                         value={formValues?.object_publishing_user || ''}
                         onChange={handleChange('object_publishing_user')}
                         sx={{ width: '20em' }}
@@ -614,19 +633,30 @@ export const DlorForm = ({
                     </FormControl>
                 </Grid>
             )}
-            <Grid item xs={12}>
-                {mode === 'edit' ? (
-                    <Typography component={'p'}>
-                        Next Review Date: {formValues?.object_review_date_next} (edit to come)
-                    </Typography>
-                ) : (
-                    <Typography component={'p'}>
-                        Next Review Date: {formValues?.object_review_date_next} (setting to come)
-                    </Typography>
-                )}
-            </Grid>
+            {isDlorAdminUser(account) && (
+                <Grid item xs={12}>
+                    {mode === 'edit' ? (
+                        <Typography component={'p'}>
+                            Next Review Date: {formValues?.object_review_date_next} (edit to come)
+                        </Typography>
+                    ) : (
+                        <Typography component={'p'}>
+                            Next Review Date: {formValues?.object_review_date_next} (setting to come)
+                        </Typography>
+                    )}
+                </Grid>
+            )}
         </>
-    );
+    ), [formValues, showTeamForm, teamSelectRef.current, dlorTeamList, mode, formDefaults]);
+
+    useEffect(() => {
+        if (formDefaults?.object_publishing_user !== formValues?.object_publishing_user) {
+            setFormValues(prevValues => ({
+                ...prevValues,
+                object_publishing_user: formDefaults.object_publishing_user,
+            }));
+        }
+    }, [formDefaults?.object_publishing_user]);
 
     const suggestSummary = (enteredDescription, requiredLength = 150) => {
         const plainSummary = html2text.fromString(enteredDescription);
@@ -696,6 +726,7 @@ export const DlorForm = ({
                         characterCount(formValues?.object_title?.length, titleMinimumLength, 'object_title')}
                 </FormControl>
             </Grid>
+            {console.log("THE FORM VALUES:", formValues)}
             <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
@@ -773,44 +804,48 @@ export const DlorForm = ({
                     )}
                 </FormControl>
             </Grid>
-            <Grid item xs={12}>
-                <FormControl variant="standard" fullWidth>
-                    <FormLabel id="object_status_label">Object publication status</FormLabel>
-                    <RadioGroup
-                        aria-labelledby="demo-radio-object_status_label-group-label"
-                        defaultValue="new"
-                        name="object_status_radio-buttons-group"
-                        row
-                        value={formValues?.object_status || 'new'}
-                        onChange={handleChange('object_status')}
-                    >
-                        <FormControlLabel
-                            value="current"
-                            control={<Radio />}
-                            label="Published"
-                            selected={formValues?.object_status === 'current'}
+            {!!isDlorAdminUser(account) && (
+            <>
+                <Grid item xs={12}>
+                    <FormControl variant="standard" fullWidth>
+                        <FormLabel id="object_status_label">Object publication status</FormLabel>
+                        <RadioGroup
+                            aria-labelledby="demo-radio-object_status_label-group-label"
+                            defaultValue="new"
+                            name="object_status_radio-buttons-group"
+                            row
+                            value={formValues?.object_status || 'new'}
+                            onChange={handleChange('object_status')}
+                        >
+                            <FormControlLabel
+                                value="current"
+                                control={<Radio />}
+                                label="Published"
+                                selected={formValues?.object_status === 'current'}
+                            />
+                            <FormControlLabel
+                                value="new"
+                                control={<Radio />}
+                                label="Draft"
+                                selected={formValues?.object_status === 'new'}
+                            />
+                        </RadioGroup>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                    <FormLabel>Featured object?</FormLabel>
+                    <InputLabel>
+                        <Checkbox
+                            checked={!!formValues?.object_is_featured}
+                            data-testid="object-is-featured"
+                            onChange={handleChange('object_is_featured')}
+                            sx={{ paddingLeft: 0 }}
                         />
-                        <FormControlLabel
-                            value="new"
-                            control={<Radio />}
-                            label="Draft"
-                            selected={formValues?.object_status === 'new'}
-                        />
-                    </RadioGroup>
-                </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-                <FormLabel>Featured object?</FormLabel>
-                <InputLabel>
-                    <Checkbox
-                        checked={!!formValues?.object_is_featured}
-                        data-testid="object-is-featured"
-                        onChange={handleChange('object_is_featured')}
-                        sx={{ paddingLeft: 0 }}
-                    />
-                    Feature this Object at the top of the list page
-                </InputLabel>
-            </Grid>
+                        Feature this Object at the top of the list page
+                    </InputLabel>
+                </Grid>
+            </>
+            )}
             <Grid item xs={12}>
                 <FormLabel>Cultural advice?</FormLabel>
                 <InputLabel>
@@ -873,186 +908,190 @@ export const DlorForm = ({
                         )}
                 </FormControl>
             </Grid>
-            <Grid item xs={12}>
-                <InputLabel id="object_link_interaction_type-label" htmlFor="object_link_interaction_type">
-                    Message advising about link
-                </InputLabel>
-                <Grid container>
-                    <Grid item xs={4}>
-                        <FormControl>
-                            <span>&nbsp;</span>
-                            <Select
-                                variant="standard"
-                                labelId="object_link_interaction_type-label"
-                                id="object_link_interaction_type"
-                                data-testid="object-link-interaction-type"
-                                value={linkInteractionTypeSelectRef.current}
-                                onChange={handleChange('object_link_interaction_type')}
-                                sx={{ width: '100%' }}
-                            >
-                                <MenuItem
-                                    value={linkInteractionTypeDOWNLOAD}
-                                    data-testid="object-link-interaction-type-download"
-                                    selected={linkInteractionTypeSelectRef.current === linkInteractionTypeDOWNLOAD}
+            {isDlorAdminUser(account) && (
+                <Grid item xs={12}>
+                    <InputLabel id="object_link_interaction_type-label" htmlFor="object_link_interaction_type">
+                        Message advising about link
+                    </InputLabel>
+                    <Grid container>
+                        <Grid item xs={4}>
+                            <FormControl>
+                                <span>&nbsp;</span>
+                                <Select
+                                    variant="standard"
+                                    labelId="object_link_interaction_type-label"
+                                    id="object_link_interaction_type"
+                                    data-testid="object-link-interaction-type"
+                                    value={linkInteractionTypeSelectRef.current}
+                                    onChange={handleChange('object_link_interaction_type')}
+                                    sx={{ width: '100%' }}
                                 >
-                                    can Download
-                                </MenuItem>
-                                <MenuItem
-                                    value={linkInteractionTypeVIEW}
-                                    data-testid="object-link-interaction-type-view"
-                                    selected={linkInteractionTypeSelectRef.current === linkInteractionTypeVIEW}
-                                >
-                                    can View
-                                </MenuItem>
-                                <MenuItem
-                                    value={linkInteractionTypeNONE}
-                                    data-testid="object-link-interaction-type-none"
-                                    selected={
-                                        ![linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
-                                            linkInteractionTypeSelectRef.current,
-                                        )
-                                    }
-                                >
-                                    No message
-                                </MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <FormControl sx={{ minWidth: '10em' }}>
-                            {[linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
-                                linkInteractionTypeSelectRef.current,
-                            ) && (
-                                <>
-                                    <InputLabel htmlFor="object_link_file_type">File type *</InputLabel>
-                                    <Select
-                                        variant="standard"
-                                        labelId="object_link_file_type"
-                                        id="object_link_file_type"
-                                        data-testid="object-link-file-type"
-                                        value={linkFileTypeSelectRef.current}
-                                        onChange={handleChange('object_link_file_type')}
-                                        sx={{ width: '100%', marginTop: '20px' }}
+                                    <MenuItem
+                                        value={linkInteractionTypeDOWNLOAD}
+                                        data-testid="object-link-interaction-type-download"
+                                        selected={linkInteractionTypeSelectRef.current === linkInteractionTypeDOWNLOAD}
                                     >
-                                        {getFileTypeList.map(type => (
-                                            <MenuItem
-                                                key={type.object_link_file_type}
-                                                data-testid={`object-link-file-type-${convertSnakeCaseToKebabCase(
-                                                    type.object_link_file_type,
-                                                )}`}
-                                                value={type.object_link_file_type}
-                                                selected={type.object_link_file_type === linkFileTypeSelectRef.current}
-                                            >
-                                                {type.object_link_file_type}
-                                            </MenuItem>
-                                        ))}
-                                        <MenuItem
-                                            data-testid={'object-link-file-type-new'}
-                                            value="new"
-                                            selected={linkFileTypeSelectRef.current === 'new'}
+                                        can Download
+                                    </MenuItem>
+                                    <MenuItem
+                                        value={linkInteractionTypeVIEW}
+                                        data-testid="object-link-interaction-type-view"
+                                        selected={linkInteractionTypeSelectRef.current === linkInteractionTypeVIEW}
+                                    >
+                                        can View
+                                    </MenuItem>
+                                    <MenuItem
+                                        value={linkInteractionTypeNONE}
+                                        data-testid="object-link-interaction-type-none"
+                                        selected={
+                                            ![linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
+                                                linkInteractionTypeSelectRef.current,
+                                            )
+                                        }
+                                    >
+                                        No message
+                                    </MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <FormControl sx={{ minWidth: '10em' }}>
+                                {[linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
+                                    linkInteractionTypeSelectRef.current,
+                                ) && (
+                                    <>
+                                        <InputLabel htmlFor="object_link_file_type">File type *</InputLabel>
+                                        <Select
+                                            variant="standard"
+                                            labelId="object_link_file_type"
+                                            id="object_link_file_type"
+                                            data-testid="object-link-file-type"
+                                            value={linkFileTypeSelectRef.current}
+                                            onChange={handleChange('object_link_file_type')}
+                                            sx={{ width: '100%', marginTop: '20px' }}
                                         >
-                                            New type
-                                        </MenuItem>
-                                    </Select>
-                                    {showFileTypeCreationForm && (
-                                        <Grid item xs={12}>
-                                            <FormControl variant="standard" fullWidth>
-                                                <InputLabel htmlFor="new_file_type">New File Type (abbrev)</InputLabel>
+                                            {getFileTypeList.map(type => (
+                                                <MenuItem
+                                                    key={type.object_link_file_type}
+                                                    data-testid={`object-link-file-type-${convertSnakeCaseToKebabCase(
+                                                        type.object_link_file_type,
+                                                    )}`}
+                                                    value={type.object_link_file_type}
+                                                    selected={type.object_link_file_type === linkFileTypeSelectRef.current}
+                                                >
+                                                    {type.object_link_file_type}
+                                                </MenuItem>
+                                            ))}
+                                            <MenuItem
+                                                data-testid={'object-link-file-type-new'}
+                                                value="new"
+                                                selected={linkFileTypeSelectRef.current === 'new'}
+                                            >
+                                                New type
+                                            </MenuItem>
+                                        </Select>
+                                        {showFileTypeCreationForm && (
+                                            <Grid item xs={12}>
+                                                <FormControl variant="standard" fullWidth>
+                                                    <InputLabel htmlFor="new_file_type">New File Type (abbrev)</InputLabel>
+                                                    <Input
+                                                        id="new_file_type"
+                                                        data-testid="dlor-admin-form-new-file-type"
+                                                        value={formValues?.new_file_type || ''}
+                                                        onChange={handleChange('new_file_type')}
+                                                    />
+                                                </FormControl>
+                                            </Grid>
+                                        )}{' '}
+                                    </>
+                                )}
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <StyledViewDurationBox>
+                                {!!showLinkTimeForm && (
+                                    <>
+                                        <InputLabel id="object_link_duration-label">Run time *</InputLabel>
+                                        <div>
+                                            <FormControl>
                                                 <Input
-                                                    id="new_file_type"
-                                                    data-testid="dlor-admin-form-new-file-type"
-                                                    value={formValues?.new_file_type || ''}
-                                                    onChange={handleChange('new_file_type')}
+                                                    id="object_link_duration_minutes"
+                                                    aria-labelledby="object_link_duration-label object_link_duration_minutes"
+                                                    data-testid="object-link-duration-minutes"
+                                                    required
+                                                    value={formValues?.object_link_duration_minutes || ''}
+                                                    onChange={handleChange('object_link_duration_minutes')}
                                                 />
                                             </FormControl>
-                                        </Grid>
-                                    )}{' '}
-                                </>
-                            )}
-                        </FormControl>
+                                            <StyledDurationSpan id="object_link_duration_minutes-label">
+                                                minutes
+                                            </StyledDurationSpan>
+                                            <StyledDurationSpan> and </StyledDurationSpan>
+                                            <FormControl>
+                                                <Input
+                                                    id="object_link_duration_seconds"
+                                                    aria-labelledby="object_link_duration-label object_link_duration_seconds-label"
+                                                    data-testid="object-link-duration-seconds"
+                                                    required
+                                                    value={formValues?.object_link_duration_seconds || ''}
+                                                    onChange={handleChange('object_link_duration_seconds')}
+                                                />
+                                            </FormControl>
+                                            <span id="object_link_duration_seconds-label">seconds</span>
+                                        </div>
+                                    </>
+                                )}
+                                {!!showLinkSizeForm && (
+                                    <>
+                                        <InputLabel id="object_link_file_size-label">File Size *</InputLabel>
+                                        <div>
+                                            <FormControl>
+                                                <Input
+                                                    id="object_link_size_amount"
+                                                    aria-labelledby="object_link_file_size-label"
+                                                    data-testid="object-link-size-amount"
+                                                    required
+                                                    value={formValues?.object_link_size_amount || ''}
+                                                    onChange={handleChange('object_link_size_amount')}
+                                                />
+                                            </FormControl>
+                                            <FormControl>
+                                                <Select
+                                                    variant="standard"
+                                                    labelId="object_link_size_units"
+                                                    id="object_link_size_units"
+                                                    data-testid="object-link-size-units"
+                                                    value={formValues?.object_link_size_units}
+                                                    onChange={handleChange('object_link_size_units')}
+                                                >
+                                                    {validFileSizeUnits.map(unit => (
+                                                        <MenuItem
+                                                            key={unit}
+                                                            id={`object_link_size_units-${unit}`}
+                                                            data-testid={`object-link-size-units-${unit}`}
+                                                            value={unit}
+                                                            selected={unit === formValues?.object_link_size_units}
+                                                        >
+                                                            {unit}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </div>
+                                    </>
+                                )}
+                            </StyledViewDurationBox>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={4}>
-                        <StyledViewDurationBox>
-                            {!!showLinkTimeForm && (
-                                <>
-                                    <InputLabel id="object_link_duration-label">Run time *</InputLabel>
-                                    <div>
-                                        <FormControl>
-                                            <Input
-                                                id="object_link_duration_minutes"
-                                                aria-labelledby="object_link_duration-label object_link_duration_minutes"
-                                                data-testid="object-link-duration-minutes"
-                                                required
-                                                value={formValues?.object_link_duration_minutes || ''}
-                                                onChange={handleChange('object_link_duration_minutes')}
-                                            />
-                                        </FormControl>
-                                        <StyledDurationSpan id="object_link_duration_minutes-label">
-                                            minutes
-                                        </StyledDurationSpan>
-                                        <StyledDurationSpan> and </StyledDurationSpan>
-                                        <FormControl>
-                                            <Input
-                                                id="object_link_duration_seconds"
-                                                aria-labelledby="object_link_duration-label object_link_duration_seconds-label"
-                                                data-testid="object-link-duration-seconds"
-                                                required
-                                                value={formValues?.object_link_duration_seconds || ''}
-                                                onChange={handleChange('object_link_duration_seconds')}
-                                            />
-                                        </FormControl>
-                                        <span id="object_link_duration_seconds-label">seconds</span>
-                                    </div>
-                                </>
-                            )}
-                            {!!showLinkSizeForm && (
-                                <>
-                                    <InputLabel id="object_link_file_size-label">File Size *</InputLabel>
-                                    <div>
-                                        <FormControl>
-                                            <Input
-                                                id="object_link_size_amount"
-                                                aria-labelledby="object_link_file_size-label"
-                                                data-testid="object-link-size-amount"
-                                                required
-                                                value={formValues?.object_link_size_amount || ''}
-                                                onChange={handleChange('object_link_size_amount')}
-                                            />
-                                        </FormControl>
-                                        <FormControl>
-                                            <Select
-                                                variant="standard"
-                                                labelId="object_link_size_units"
-                                                id="object_link_size_units"
-                                                data-testid="object-link-size-units"
-                                                value={formValues?.object_link_size_units}
-                                                onChange={handleChange('object_link_size_units')}
-                                            >
-                                                {validFileSizeUnits.map(unit => (
-                                                    <MenuItem
-                                                        key={unit}
-                                                        id={`object_link_size_units-${unit}`}
-                                                        data-testid={`object-link-size-units-${unit}`}
-                                                        value={unit}
-                                                        selected={unit === formValues?.object_link_size_units}
-                                                    >
-                                                        {unit}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-                                    </div>
-                                </>
-                            )}
-                        </StyledViewDurationBox>
-                    </Grid>
-                </Grid>
-            </Grid>
+                </Grid>  
+                
+            )}
+            
             <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     {/* yes, this looks too big locally, but looks correct live. No, I dont know why */}
                     <InputLabel htmlFor="object_download_instructions" sx={{ fontSize: 20 }}>
-                        Download Instructions
+                        Instructions
                     </InputLabel>
                     <CKEditor
                         id="download_instructions"
@@ -1177,6 +1216,11 @@ export const DlorForm = ({
                     );
                 })}
             <Grid item xs={12}>
+                <Typography component={'h2'} variant={'h6'}>
+                    Keywords
+                </Typography>
+            </Grid>
+            <Grid item xs={12} style={{paddingTop: 0}}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_keywords">
                         Keywords - enter a comma separated list of keywords *
@@ -1457,13 +1501,16 @@ export const DlorForm = ({
         }
 
         return mode === 'add'
-            ? actions.createDlor(valuesToSend)
+            ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
             : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend);
     };
 
+    const confirmationTitleAdmin = mode === 'add' ? 'The object has been created' : 'Changes have been saved';
+    const confirmationTitle = isDlorAdminUser(account) ? confirmationTitleAdmin : 'Your request has been submitted';  
+
     const locale = {
         successMessage: {
-            confirmationTitle: mode === 'add' ? 'The object has been created' : 'Changes have been saved',
+            confirmationTitle: confirmationTitle,
             confirmationMessage: '',
             cancelButtonLabel: mode === 'add' ? 'Add another Object' : 'Re-edit Object',
             confirmButtonLabel: 'Return to list page',

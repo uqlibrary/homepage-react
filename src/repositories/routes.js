@@ -229,7 +229,8 @@ export const DLOR_UNSUBSCRIBE_API = ({ id }) => ({ apiUrl: `dlor/public/${id}/co
 export const DLOR_TEAM_LIST_API = () => ({ apiUrl: 'dlor/public/teams/list' });
 
 export const DLOR_DEMOGRAPHICS_SAVE_API = () => ({ apiUrl: 'dlor/auth/demographics' });
-
+/* istanbul ignore next */
+export const DLOR_REQUEST_API = () => ({ apiUrl: 'dlor/auth/object' });
 // dlor admin routes
 export const DLOR_CREATE_API = () => ({ apiUrl: 'dlor/admin/object' });
 export const DLOR_UPDATE_API = id => ({ apiUrl: `dlor/admin/object/${id}` });
@@ -242,6 +243,8 @@ export const DLOR_FILE_TYPE_LIST_API = () => ({ apiUrl: 'dlor/admin/file_types/l
 export const DLOR_SERIES_DELETE_API = id => ({ apiUrl: `dlor/admin/series/${id}` });
 export const DLOR_SERIES_UPDATE_API = id => ({ apiUrl: `dlor/admin/series/${id}` });
 export const DLOR_SERIES_CREATE_API = () => ({ apiUrl: 'dlor/admin/series' });
+export const DLOR_SERIES_LOAD_API = id => ({ apiUrl: `dlor/public/series/find/${id}` });
+
 
 const productionRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage';
 const stagingRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage';

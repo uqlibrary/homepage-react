@@ -504,7 +504,14 @@ describe('BulkAssetUpdate', () => {
 
             await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
 
-            await waitForElementToBeRemoved(() => queryByTestId('filter_dialog-bulk-asset-update'));
+            try {
+                await waitForElementToBeRemoved(() => queryByTestId('filter_dialog-bulk-asset-update'));
+            } catch (error) {
+                // If the element is already removed, we can safely ignore the error
+                if (queryByTestId('filter_dialog-bulk-asset-update') !== null) {
+                    throw error;
+                }
+            }
 
             await waitFor(() =>
                 expect(getByTestId('bulk_asset_update-count-alert')).toHaveTextContent(

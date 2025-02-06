@@ -17,6 +17,7 @@ export const flattedPathConfigExact = [
     '/admin/dlor',
     '/admin/dlor/add',
     '/admin/dlor/series/manage',
+    '/admin/dlor/series/add',
     '/admin/dlor/team/manage',
     '/admin/dlor/team/add',
     '/admin/masquerade',
@@ -45,6 +46,7 @@ export const flattedPathConfig = [
     '/admin/dlor/edit',
     '/admin/dlor/series/edit',
     '/admin/dlor/team/edit',
+    '/admin/dlor/series/add',
     '/digital-learning-hub/view',
     '/digital-learning-hub/confirm/subscribe',
     '/digital-learning-hub/confirm/unsubscribe',
@@ -55,6 +57,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
     const examSearchCourseHint = ':courseHint';
 
     const dlorId = ':dlorId';
+    const seriesId = ':seriesId';
     const confirmationId = ':confirmationId';
 
     const publicPages = [
@@ -88,6 +91,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: 'Digital Learning Object Repository',
         },
         {
+            path: pathConfig.dlorViewSeries(seriesId),
+            element: <components.SeriesView />,
+            exact: true,
+            pageTitle: 'Digital Learning Object Repository - View Series',
+        },
+        {
             path: pathConfig.dlorSubscriptionConfirmation(confirmationId),
             element: <components.DLOConfirmSubscription />,
             // exact: true,
@@ -109,6 +118,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             element: <components.PastExamPaperSearch />,
             exact: false,
             pageTitle: locale.pages.pastExamPaperSearch.title,
+        },
+        {
+            path: pathConfig.dlorSubmit,
+            element: <components.DLONew />,
+            exact: false,
+            pageTitle: 'Submit request for new object',
         },
     ];
 
@@ -211,6 +226,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             element: <components.DLOSeriesEdit />,
             exact: true,
             pageTitle: 'Edit a Series for the Digital Learning Hub',
+        },
+        {
+            path: pathConfig.admin.dlorseriesadd,
+            element: <components.DLOSeriesAdd />,
+            exact: true,
+            pageTitle: 'Create a new Series',
         },
     ];
 
