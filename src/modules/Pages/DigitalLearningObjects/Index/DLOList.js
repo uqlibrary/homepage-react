@@ -289,24 +289,19 @@ export const DLOList = ({
     const [paginationPage, setPaginationPage] = React.useState(1);
 
     const FilterGraduateAttributes = (filterList, filterId, mode) => {
-        console.log("FILTER LIST TO CHECK", filterList, filterId, mode)
         if (mode === "push") {
-            console.log("FILTER FUNCTION", filterId, filterList);
             const ga = filterList.filter(item => item.facet_type_name === "Graduate attributes").flatMap(item => item.facet_list);
             console.log("GA", ga, filterId)
             const filteredGraduateAttributes = ga.filter(
                  facet => Number(facet.facet_id) === Number(filterId)
                );   
                
-            console.log("Just before setting", filteredGraduateAttributes)
             setSelectedGradAttributes([...selectedGradAttributes, ...filteredGraduateAttributes])
-            console.log("Filtered element", filteredGraduateAttributes, selectedGradAttributes)
         } else {
             const filteredGraduateAttributes = selectedGradAttributes.filter(
                 facet => Number(facet.facet_id) !== Number(filterId)
             );
             setSelectedGradAttributes(filteredGraduateAttributes);
-            console.log("Filtered element", filteredGraduateAttributes, selectedGradAttributes)
         }
         
     }
@@ -661,7 +656,6 @@ export const DLOList = ({
 
         if (e?.target?.checked) {
             const updateFilters = [...selectedFilters, individualFilterId];
-            console.log("updateFilters", updateFilters)
             setSelectedFilters(updateFilters);
             FilterGraduateAttributes(filterListTrimmed, facetId, "push");
             window.dataLayer.push({
@@ -1203,18 +1197,19 @@ export const DLOList = ({
                             </StyledSkipLinkButton>
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} md="auto" sx={{ textAlign: 'right' }}>
-                        <UqActionLink
-                            data-testid="dlor-homepage-contact"
-                            href={contactFormLink}
-                            target="_blank"
-                            title="Load a contact form, in a new window"
-                            sx={{ maxWidth: '8em', display: 'flex', alignItems: 'center' }}
-                        >
-                            Contact us&nbsp;
-                            <OpenInNewIcon />
-                        </UqActionLink>
-                    </Grid>
+                    {!!account?.id && !!!isDlorAdminUser(account) && (
+                        <Grid item xs={12} md="auto" sx={{ textAlign: 'right' }}>
+                            <UqActionLink
+                                data-testid="dlor-homepage-request-new-item"
+                                onClick={handleRequestNewItem}
+                                title="Request a new item"
+                                sx={{display: 'flex', alignItems: 'center' }}
+                            >
+                                Submit new object request&nbsp;
+                                {/* <OpenInNewIcon /> */}
+                            </UqActionLink>
+                        </Grid>
+                    )}
                     <Grid item xs={12} sx={{ marginTop: '20px' }}>
                         <LoginPrompt account={account} />
                     </Grid>
@@ -1233,7 +1228,7 @@ export const DLOList = ({
                             }
                         })()}
                         {/* Request new item container */}
-                        {!!account?.id && !!!isDlorAdminUser(account) && (
+                        {/* {!!account?.id && !!!isDlorAdminUser(account) && (
                             <UQActionButton
                                 data-testid="sidebar-filter-request-new-button"
                                 onClick={handleRequestNewItem}
@@ -1242,7 +1237,7 @@ export const DLOList = ({
                             >
                                 Request a new item
                             </UQActionButton>
-                        )}
+                        )} */}
                     </StyledFilterSidebarGrid>
                     <Grid item xs={12} md={9}>
                         <TextField
@@ -1284,8 +1279,6 @@ export const DLOList = ({
                             inputRef={keyWordSearchRef}
                         />
                         {/* Graduate attribute container */}
-                        {console.log("Filter List", filterListTrimmed, selectedFilters, selectedGradAttributes)}
-                       
                         {containsGraduateAttributes ? (
                             <div style={{padding: '0px 12px 0px 12px', display: 'flex', flexWrap: 'wrap'}}>
                                 {
@@ -1295,7 +1288,7 @@ export const DLOList = ({
                                             <div key={`item__${item.facet_id}`} style={{flex: '0 0 100%', backgroundColor: '#FAFAFA', padding: '0 -24px 0px 12px'}}>
                                                 <div style={{paddingLeft: '12px'}}>
                                                     <h3 key={`name_${item.facet_id}`} style={{color: '#51247a', marginBottom: '5px', paddingBottom: 0}} data-testid={`graduate-attribute-${item.facet_id}-name`}>{item.facet_name}</h3>
-                                                    <p key={`help_${item.facet_id}`} style={{color: '#555', fontStyle: 'italic', paddingTop: '0px', marginTop: 0}} data-testid={`graduate-attribute-${item.facet_id}-description`}>{item.facet_help && parse(item.facet_help) || 'no help for this graduate attribute at this time'}</p>
+                                                    <p key={`help_${item.facet_id}`} style={{color: '#555', paddingTop: '0px', marginTop: 0}} data-testid={`graduate-attribute-${item.facet_id}-description`}>{item.facet_help && parse(item.facet_help) || 'no help for this graduate attribute at this time'}</p>
                                                 </div>
                                             </div>
                                         )

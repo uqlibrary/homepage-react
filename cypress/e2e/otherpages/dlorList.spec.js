@@ -795,19 +795,15 @@ describe('Digital Learning Hub', () => {
                 .children()
                 .should('have.length', 1 + numExtraButtons);
         });
-        it('contact us works', () => {
-            cy.intercept('GET', /forms.office.com/, {
-                statusCode: 200,
-                body: 'user has navigated to the contact form',
-            });
-            cy.get('[data-testid="dlor-homepage-contact"]')
+        it('create new object works', () => {
+            cy.get('[data-testid="dlor-homepage-request-new-item"]')
                 .should('be.visible')
                 .then($a => {
                     // Change the target attribute to _self for testing
                     $a.attr('target', '_self');
                 })
                 .click();
-            cy.get('body').contains('user has navigated to the contact form');
+            cy.get('[data-testid="dlor-UserAdd-helper"]').should('exist').should('be.visible');
         });
     });
     context('url reflects filtering changes', () => {
