@@ -185,23 +185,37 @@ export const DLOFilterManage = ({
                         {!!facetType.facet_list && facetType.facet_list.length > 0 && facetType.facet_list.map((facet, index) => (
                             <React.Fragment key={facet.facet_name}>
                                 <Grid
-                                    item
-                                    xs={10}
+                                    container
                                     sx={{ backgroundColor: index % 2 === 0 ? 'white' : '#f0f0f0' }}
                                 >
-                                    <Typography component='p'>
-                                        {facet?.facet_name ?? 'No facet name'}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                                    <IconButton color='primary' onClick={() => console.log('Edit facet')}>
-                                        <EditIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                                    <IconButton color='secondary' onClick={() => console.log('Delete facet')}>
-                                        <DeleteIcon />
-                                    </IconButton>
+                                    <Grid
+                                        item
+                                        xs={8}
+                                        sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}
+                                    >
+                                        <Typography component='p'>
+                                            {facet?.facet_name ?? 'No facet name'}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid
+                                        item
+                                        xs={2}
+                                        sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}
+                                    >
+                                        <Typography component='p'>
+                                            {facet?.facet_use_count || 0} {facet?.facet_use_count === 1 ? 'object' : 'objects'}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                        <IconButton color='secondary' onClick={() => console.log('Edit facet')}>
+                                            <EditIcon />
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                        <IconButton color='secondary' onClick={() => console.log('Delete facet')}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Grid>
                                 </Grid>
                             </React.Fragment>
                         ))}
