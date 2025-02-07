@@ -83,10 +83,19 @@
                 src="https://<%= htmlWebpackPlugin.options.crmLocationScript %>/s/oit/latest/common/v0/libs/oit/loader.js" async>
         </script>
 
+        <!-- from https://uqemployee.crm.test.uq.edu.au/s/oit/latest/ > inlays > embedded chat -->
+        <!-- https://community.oracle.com/customerconnect/discussion/552678/sample-file-for-chat-inlay-attribute-launch-form-fields -->
         <inlay-oracle-chat-embedded
-                id="chatInlay"
-                class="inlay"
-                site-url="<%= htmlWebpackPlugin.options.crmLocationEmbed %>" >
+            id="chatInlay"
+            class="inlay"
+            site-url="<%= htmlWebpackPlugin.options.crmLocationEmbed %>"
+            launch-form-fields='["FIRST_NAME", {
+                "hidden": false,
+                "name": "EMAIL",
+                "required": true,
+                "value": "uqldegro@uq.edu.au"
+              }, "SUBJECT"]'
+        >
         </inlay-oracle-chat-embedded>
     </body>
 </html>
