@@ -66,13 +66,13 @@ describe('Digital Learning Hub', () => {
                 'contain',
                 'Accessibility - Digital Essentials',
             );
-            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(3) article h2').should(
+            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(4) article h2').should(
                 'contain',
                 'UQ has a Blak History',
             );
-            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(4) article h2').should(
+            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(5) article h2').should(
                 'contain',
-                'Advanced literature searching',
+                'Artificial Intelligence',
             );
 
             // article 1 contents correct
@@ -117,8 +117,8 @@ describe('Digital Learning Hub', () => {
                 'contain',
                 'Advanced literature searching',
             );
-            cy.get('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4-cultural-advice"]').should('not.exist');
-            cy.get('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4-featured"]').should('not.exist');
+            cy.get('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4-cultural-advice"]').should('exist');
+            cy.get('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4-featured"]').should('exist');
             cy.get('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4-object-series-name"]')
                 .should('exist')
                 .contains('Series: Advanced literature searching');
@@ -795,19 +795,15 @@ describe('Digital Learning Hub', () => {
                 .children()
                 .should('have.length', 1 + numExtraButtons);
         });
-        it('contact us works', () => {
-            cy.intercept('GET', /forms.office.com/, {
-                statusCode: 200,
-                body: 'user has navigated to the contact form',
-            });
-            cy.get('[data-testid="dlor-homepage-contact"]')
+        it('create new object works', () => {
+            cy.get('[data-testid="dlor-homepage-request-new-item"]')
                 .should('be.visible')
                 .then($a => {
                     // Change the target attribute to _self for testing
                     $a.attr('target', '_self');
                 })
                 .click();
-            cy.get('body').contains('user has navigated to the contact form');
+            cy.get('[data-testid="dlor-UserAdd-helper"]').should('exist').should('be.visible');
         });
     });
     context('url reflects filtering changes', () => {

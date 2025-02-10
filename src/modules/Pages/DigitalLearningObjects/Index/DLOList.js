@@ -46,6 +46,7 @@ import {
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { isEscapeKeyPressed, isReturnKeyPressed } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
+import { isDlorAdminUser } from 'helpers/access';
 
 const StyledSkipLinkButton = styled(Button)(({ theme }) => ({
     // hidden when not focused
@@ -278,6 +279,7 @@ export const DLOList = ({
     account,
 }) => {
     const [selectedFilters, setSelectedFilters] = useState([]);
+    const [selectedGradAttributes, setSelectedGradAttributes] = useState([]);
     const [filterListTrimmed, setFilterListTrimmed] = useState([]);
     const checkBoxArrayRef = useRef([]);
     const [keywordSearch, setKeywordSearch] = useState('');
@@ -285,6 +287,24 @@ export const DLOList = ({
     const keyWordSearchRef = useRef('');
 
     const [paginationPage, setPaginationPage] = React.useState(1);
+
+    const FilterGraduateAttributes = (filterList, filterId, mode) => {
+        if (mode === "push") {
+            const ga = filterList.filter(item => item.facet_type_name === "Graduate attributes").flatMap(item => item.facet_list);
+            console.log("GA", ga, filterId)
+            const filteredGraduateAttributes = ga.filter(
+                 facet => Number(facet.facet_id) === Number(filterId)
+               );   
+               
+            setSelectedGradAttributes([...selectedGradAttributes, ...filteredGraduateAttributes])
+        } else {
+            const filteredGraduateAttributes = selectedGradAttributes.filter(
+                facet => Number(facet.facet_id) !== Number(filterId)
+            );
+            setSelectedGradAttributes(filteredGraduateAttributes);
+        }
+        
+    }
 
     /* istanbul ignore next */
     function skipToElement() {
@@ -376,6 +396,10 @@ export const DLOList = ({
         handleKeywordChange();
         updateUrl('keyword');
     };
+
+    const handleRequestNewItem = () => {
+        window.location.href = '/digital-learning-hub/submit';
+    }
 
     const handleKeywordCharacterEntry = e => {
         const keyword = e.target.value;
@@ -498,7 +522,19 @@ export const DLOList = ({
                     return null; // In case the facetId is not found
                 })
                 .filter(Boolean);
+
+            // capture any graduate attributes at URL time for help display
+            let selectedGraduateAttributes = [];
+            facetids.map(facetId => {
+                    const ga = dlorFilterList.filter(item => item.facet_type_name === "Graduate attributes").flatMap(item => item.facet_list);
+                    
+                    const filteredGraduateAttributes = ga.filter(
+                        facet => Number(facet.facet_id) === Number(facetId)
+                    ); 
+                    selectedGraduateAttributes = [...selectedGraduateAttributes, ...filteredGraduateAttributes]
+            })
             setSelectedFilters(facettypelist);
+            setSelectedGradAttributes(selectedGraduateAttributes);
             checkBoxArrayRef.current = facettypelist;
         }
 
@@ -621,6 +657,7 @@ export const DLOList = ({
         if (e?.target?.checked) {
             const updateFilters = [...selectedFilters, individualFilterId];
             setSelectedFilters(updateFilters);
+            FilterGraduateAttributes(filterListTrimmed, facetId, "push");
             window.dataLayer.push({
                 event: 'reusable_component_event_click',
                 'custom_event.data-analyticsid': `${e.target.labels[0].innerText} DLOR filter click`,
@@ -631,7 +668,8 @@ export const DLOList = ({
             // unchecking a filter checkbox
             const updateFilters = selectedFilters.filter(f2 => f2 !== individualFilterId);
             setSelectedFilters(updateFilters);
-
+            FilterGraduateAttributes(filterListTrimmed, facetId, "pop");
+            
             checkBoxArrayRef.current = checkBoxArrayRef.current.filter(id => id !== checkboxId);
         }
         setPaginationPage(1);
@@ -1123,6 +1161,12 @@ export const DLOList = ({
     // this will eventually be an internal form
     const contactFormLink = 'https://forms.office.com/r/8t0ugSZgE7';
 
+    const containsGraduateAttributes = selectedFilters.some(filter => filter.includes("graduate_attributes"));
+    // sort the grad attributes display set in alpha order.
+    selectedGradAttributes.sort((a, b) => {
+        return a.facet_name.localeCompare(b.facet_name);
+    })
+
     return (
         <>
             <HeroCard
@@ -1153,18 +1197,19 @@ export const DLOList = ({
                             </StyledSkipLinkButton>
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} md="auto" sx={{ textAlign: 'right' }}>
-                        <UqActionLink
-                            data-testid="dlor-homepage-contact"
-                            href={contactFormLink}
-                            target="_blank"
-                            title="Load a contact form, in a new window"
-                            sx={{ maxWidth: '8em', display: 'flex', alignItems: 'center' }}
-                        >
-                            Contact us&nbsp;
-                            <OpenInNewIcon />
-                        </UqActionLink>
-                    </Grid>
+                    {!!account?.id && !!!isDlorAdminUser(account) && (
+                        <Grid item xs={12} md="auto" sx={{ textAlign: 'right' }}>
+                            <UqActionLink
+                                data-testid="dlor-homepage-request-new-item"
+                                onClick={handleRequestNewItem}
+                                title="Request a new item"
+                                sx={{display: 'flex', alignItems: 'center' }}
+                            >
+                                Submit new object request&nbsp;
+                                {/* <OpenInNewIcon /> */}
+                            </UqActionLink>
+                        </Grid>
+                    )}
                     <Grid item xs={12} sx={{ marginTop: '20px' }}>
                         <LoginPrompt account={account} />
                     </Grid>
@@ -1182,6 +1227,17 @@ export const DLOList = ({
                                 return displayFilterSidebarContents();
                             }
                         })()}
+                        {/* Request new item container */}
+                        {/* {!!account?.id && !!!isDlorAdminUser(account) && (
+                            <UQActionButton
+                                data-testid="sidebar-filter-request-new-button"
+                                onClick={handleRequestNewItem}
+                                aria-label="Request new digital object"
+                                sx={{ textTransform: 'none' }}
+                            >
+                                Request a new item
+                            </UQActionButton>
+                        )} */}
                     </StyledFilterSidebarGrid>
                     <Grid item xs={12} md={9}>
                         <TextField
@@ -1222,6 +1278,25 @@ export const DLOList = ({
                             }}
                             inputRef={keyWordSearchRef}
                         />
+                        {/* Graduate attribute container */}
+                        {containsGraduateAttributes ? (
+                            <div style={{padding: '0px 12px 0px 12px', display: 'flex', flexWrap: 'wrap'}}>
+                                {
+                                    
+                                   selectedGradAttributes.map(item => {
+                                        return (
+                                            <div key={`item__${item.facet_id}`} style={{flex: '0 0 100%', backgroundColor: '#FAFAFA', padding: '0 -24px 0px 12px'}}>
+                                                <div style={{paddingLeft: '12px'}}>
+                                                    <h3 key={`name_${item.facet_id}`} style={{color: '#51247a', marginBottom: '5px', paddingBottom: 0}} data-testid={`graduate-attribute-${item.facet_id}-name`}>{item.facet_name}</h3>
+                                                    <p key={`help_${item.facet_id}`} style={{color: '#555', paddingTop: '0px', marginTop: 0}} data-testid={`graduate-attribute-${item.facet_id}-description`}>{item.facet_help && parse(item.facet_help) || 'no help for this graduate attribute at this time'}</p>
+                                                </div>
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
+                            ) : null
+                        }
                         {(() => {
                             if (!!dlorListError) {
                                 return (

@@ -54,7 +54,7 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
                     <span>{dlorUpdatedItemError}</span>
                 </Typography>
             );
-        } else if (dlorUpdatedItem.response === 'ok') {
+        } else if (dlorUpdatedItem?.response === 'ok') {
             return (
                 <>
                     <Typography component={'p'} data-testid="dlor-confirm-line-1">
@@ -74,7 +74,7 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
                     </ul>
                 </>
             );
-        } else if (dlorUpdatedItem.response === 'expired') {
+        } else if (dlorUpdatedItem?.response === 'expired') {
             return (
                 <>
                     <Typography component={'p'} data-testid="dlor-confirm-line-1">
@@ -95,7 +95,7 @@ export const DLOConfirmSubscription = ({ actions, dlorUpdatedItem, dlorItemUpdat
                     </ul>
                 </>
             );
-        } else if (dlorUpdatedItem.response === 'used') {
+        } else if (dlorUpdatedItem?.response === 'used') {
             return (
                 <>
                     <Typography component={'p'} data-testid="dlor-confirm-line-1">

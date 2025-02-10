@@ -6,6 +6,9 @@ import { useAccountContext } from 'context';
 
 import DlorForm from 'modules/Pages/Admin/DigitalLearningObjects/Form/DlorForm';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
+import { isDlorAdminUser } from 'helpers/access';
+import InformationBox from 'modules/Pages/DigitalLearningObjects/SharedComponents/InformationBox';
+import { Typography } from '@mui/material';
 
 const moment = require('moment-timezone');
 
@@ -25,6 +28,7 @@ export const DLOAdd = ({
     dlorFilterListError,
 }) => {
     const { account } = useAccountContext();
+    console.log("ACCOUNT", account)
 
     function getTodayPlusOneYear(baseDate = null) {
         const today = baseDate || moment();
@@ -34,7 +38,7 @@ export const DLOAdd = ({
             .minute(1) // 1 minute past midnight
             .format('YYYY-MM-DDTHH:mm');
     }
-
+    
     const formDefaults = {
         object_title: '',
         object_description: '',
@@ -43,7 +47,7 @@ export const DLOAdd = ({
         object_link_url: '',
         object_download_instructions: '',
         object_publishing_user: account?.id,
-        object_status: 'new',
+        object_status: isDlorAdminUser(account) ? 'new' : 'submitted',
         object_review_date_next: getTodayPlusOneYear(),
         // team_name_add: '',
         // team_manager_add: '',
@@ -56,6 +60,8 @@ export const DLOAdd = ({
         notificationText: '',
     };
 
+    console.log("Form Defaults", formDefaults)
+
     return (
         <Fragment>
             <StandardPage title="Digital Learning Hub Management">
@@ -67,6 +73,17 @@ export const DLOAdd = ({
                     ]}
                 />
                 <section aria-live="assertive">
+                    {!!!isDlorAdminUser(account) && (
+                        <InformationBox
+                            prompt="Submit this form to request your digital learning object to be added to the Digital Learning Hub."
+                            identifier="UserAdd"
+                            linkUrl='https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects#s-lg-box-22746342'
+                            linkText='Submit an object has instructions and information.'
+                        />
+                    )}
+                    <Typography component="p" variant="body2" sx={{ marginBottom: '20px', color: '#992222', fontWeight: 'bold' }}>
+                        * = Required fields
+                    </Typography>
                     <DlorForm
                         actions={actions}
                         dlorItemSaving={dlorItemCreating}
