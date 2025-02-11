@@ -15,7 +15,12 @@ const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
 
 // creates an empty robots file, which tells crawlers to crawl anything on the site
 const robotsTxtOptions = {
-    policy: [{}],
+    policy: [
+        {
+            userAgent: '*',
+            allow: ['/'],
+        },
+    ],
 };
 
 // get branch name for current build, if running build locally CI_BRANCH is not set
