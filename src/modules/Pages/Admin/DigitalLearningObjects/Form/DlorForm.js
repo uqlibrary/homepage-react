@@ -1593,7 +1593,7 @@ export const DlorForm = ({
                 actionButtonColor="primary"
                 actionButtonVariant="contained"
                 confirmationBoxId="dlor-save-outcome"
-                onAction={() => navigateToDlorAdminHomePage()}
+                onAction={() => isDlorAdminUser(account) ? navigateToDlorAdminHomePage() : clearForm()}
                 hideCancelButton={!locale.successMessage.cancelButtonLabel}
                 cancelButtonLabel={locale.successMessage.cancelButtonLabel}
                 onCancelAction={() => clearForm()}
