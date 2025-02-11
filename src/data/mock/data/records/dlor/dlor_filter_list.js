@@ -12,16 +12,19 @@ export default {
             "facet_list": [
                 {
                     "facet_id": 1,
+                    "facet_order": 1,
                     "facet_name": "Aboriginal and Torres Strait Islander",
                     "facet_help": "",
                     "facet_use_count": 2
                 }, {
                     "facet_id": 2,
+                    "facet_order": 2,
                     "facet_name": "Assignments",
                     "facet_help": "",
                     "facet_use_count": 1
                 }, {
                     "facet_id": 3,
+                    "facet_order": 3,
                     "facet_name": "Digital skills",
                     "facet_use_count": 0
                 }, {

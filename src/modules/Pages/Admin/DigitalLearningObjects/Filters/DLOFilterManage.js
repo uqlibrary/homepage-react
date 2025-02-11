@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -23,7 +23,9 @@ import { useConfirmationState } from 'hooks';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 import { pluralise } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
-import { Button } from '@mui/material';
+import { Button, FormControl, Input, InputLabel, Modal } from '@mui/material';
+import { set } from 'js-cookie';
+import { setIn } from 'immutable';
 
 const StyledObjectDetails = styled('details')(() => ({
     marginLeft: '20px',
@@ -47,6 +49,7 @@ export const DLOFilterManage = ({
     dlorFilterList,
 }) => {
 
+    console.log("actions", actions)
     useEffect(() => {
         console.log(dlorFilterList, dlorFilterListLoading, dlorFilterListError);
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
@@ -54,110 +57,34 @@ export const DLOFilterManage = ({
         }
     }, [dlorFilterList, dlorFilterListLoading, dlorFilterListError]); 
 
-    // const DELETION_STEP_NULL = null;
-    // const DELETION_STEP_ONE_CONFIRM = 1;
-    // const DELETION_STEP_TWO_HAPPENING = 2;
+    const [editBoxOpened, setEditBoxOpened] = useState(false);    
+    const [inputValue, setInputValue] = useState('');
+    const [facetOrder, setFacetOrder] = useState(0);  
+    const [facetHelp, setFacetHelp] = useState('');
+    const [facetId, setFacetId] = useState(null);
 
-    // const [seriesToDelete, setObjectToDelete] = React.useState(null);
-    // const [deleteStep, setDeleteStep] = React.useState(DELETION_STEP_NULL);
-    // const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
-      
-    // React.useEffect(() => {
-    //     const siteHeader = document.querySelector('uq-site-header');
-    //     !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
-    //     !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dloradmin.pathname);
-    // }, []);
+    const handleChange = (event) => {
+        setInputValue(event.target.value);
+    };
+    const handleFacetOrderChange = (event) => {
+        setFacetOrder(event.target.value || 0);
+    };
+    const handleFacetHelpChange = (event) => {
+        setFacetHelp(event.target.value || '');
+    };
 
-    // useEffect(() => {
-    //     if (!dlorSeriesListError && !dlorSeriesListLoading && !dlorSeriesList) {
-    //         actions.loadDlorSeriesList();
-    //     }
-    // }, [actions, dlorSeriesList, dlorSeriesListError, dlorSeriesListLoading]);
+    const updateFacet = (id) => {
+        const payload = {
+            facet_name: inputValue,
+            facet_order: facetOrder,
+            facet_help: facetHelp,
+        };
+        actions.updateFacet(id, payload)
+        .then(
+            setEditBoxOpened(false)
+        )
 
-    // useEffect(() => {
-    //     if (!dlorListError && !dlorListLoading && !dlorList) {
-    //         actions.loadAllDLORs();
-    //     }
-    // }, [actions, dlorList, dlorListError, dlorListLoading]);
-
-    // useEffect(() => {
-    //     if (!!dlorSeriesDeleteError && deleteStep === DELETION_STEP_TWO_HAPPENING) {
-    //         // delete failed
-    //         showDeleteConfirmation();
-    //     } else if (!dlorSeriesDeleting && !!dlorSeriesDeleted && deleteStep === DELETION_STEP_TWO_HAPPENING) {
-    //         // success
-    //         showDeleteConfirmation();
-    //     }
-    // }, [dlorSeriesDeleting, dlorSeriesDeleted, dlorSeriesDeleteError, deleteStep, showDeleteConfirmation]);
-
-    // const deleteADlorSeries = seriesId => {
-    //     return actions.deleteDlorSeries(seriesId);
-    // };
-    // const requestUserToConfirmDelete = seriesId => {
-    //     setObjectToDelete(seriesId);
-    //     setDeleteStep(DELETION_STEP_ONE_CONFIRM);
-    //     showDeleteConfirmation();
-    // };
-    // const deleteSelectedObject = () => {
-    //     setDeleteStep(DELETION_STEP_TWO_HAPPENING);
-    //     !!seriesToDelete &&
-    //         deleteADlorSeries(seriesToDelete)
-    //             .then(() => {
-    //                 setObjectToDelete('');
-    //                 actions.loadDlorSeriesList();
-    //             })
-    //             .catch(() => {
-    //                 setObjectToDelete('');
-    //                 showDeleteConfirmation();
-    //             });
-    // };
-
-    // const navigateToSeriesEditPage = seriesId => {
-    //     window.location.href = dlorAdminLink(`/series/edit/${seriesId}`);
-    // };
-    // const deletionConfirmationBoxLocale = {
-    //     confirmItMessage: {
-    //         confirmationTitle: 'Do you want to delete this series?',
-    //         confirmationMessage: '',
-    //         cancelButtonLabel: 'No',
-    //         confirmButtonLabel: 'Yes',
-    //     },
-    //     successMessage: {
-    //         confirmationTitle: 'The series has been deleted.',
-    //         confirmationMessage: '',
-    //         confirmButtonLabel: 'Close',
-    //     },
-    //     errorMessage: {
-    //         confirmationTitle: dlorSeriesDeleteError?.message || dlorSeriesDeleteError,
-    //         confirmationMessage: '',
-    //         confirmButtonLabel: 'Close',
-    //     },
-    // };
-
-    // function getLocale() {
-    //     if (!!dlorSeriesDeleteError) {
-    //         return deletionConfirmationBoxLocale.errorMessage;
-    //     }
-    //     if (!!dlorSeriesDeleted && deleteStep === DELETION_STEP_TWO_HAPPENING) {
-    //         return deletionConfirmationBoxLocale.successMessage;
-    //     }
-    //     return deletionConfirmationBoxLocale.confirmItMessage;
-    // }
-
-    // function localHideDeleteConfirmation() {
-    //     setDeleteStep(null);
-    //     return hideDeleteConfirmation();
-    // }
-
-    // const noSeriesName = 'Not in a series';
-    // const unSeriedObjectDone = dlorSeriesList?.find(s => s.series_name === noSeriesName);
-    // !unSeriedObjectDone &&
-    //     !!dlorSeriesList &&
-    //     dlorSeriesList.length > 0 &&
-    //     dlorSeriesList.push({
-    //         series_id: null,
-    //         series_name: noSeriesName,
-    //     });
+    }
 
     return (
         <StandardPage title="Digital Learning Hub - Facet Management">
@@ -184,7 +111,7 @@ export const DLOFilterManage = ({
                        
                         {!!facetType.facet_list && facetType.facet_list.length > 0 && facetType.facet_list.map((facet, index) => (
                             <React.Fragment key={facet.facet_name}>
-                                <Grid
+                                 <Grid
                                     container
                                     sx={{ backgroundColor: index % 2 === 0 ? 'white' : '#f0f0f0' }}
                                 >
@@ -207,7 +134,13 @@ export const DLOFilterManage = ({
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                                        <IconButton color='secondary' onClick={() => console.log('Edit facet')}>
+                                        <IconButton color='secondary' onClick={() => {
+                                            setEditBoxOpened(true); 
+                                            setInputValue(facet.facet_name);
+                                            setFacetOrder(facet.facet_order || 0);
+                                            setFacetHelp(facet.facet_help || '');
+                                            setFacetId(facet.facet_id);
+                                            }}>
                                             <EditIcon />
                                         </IconButton>
                                     </Grid>
@@ -222,6 +155,85 @@ export const DLOFilterManage = ({
                     </React.Fragment>
                 ))}
             </Grid>
+            {/* The modal form */}
+            <Modal
+                open={editBoxOpened}
+                onClose={() => setEditBoxOpened(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <div
+                    style={{
+                        backgroundColor: 'white',
+                        color: 'black',
+                        padding: '16px',
+                        borderRadius: '8px',
+                        boxShadow: 24,
+                        width: '400px',
+                        margin: 'auto',
+                        marginTop: '20vh',
+                        height: 'auto',
+                    }}
+                >
+                    <Typography variant="h4" id="modal-modal-title">
+                        Edit facet name
+                    </Typography>
+                    <Typography variant="p" id="modal-modal-existingName" sx={{ marginBottom: '20px', display: 'block' }}>
+                        Original Name: <b>{inputValue}</b>
+                    </Typography>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel htmlFor="facet_name">New facet name *</InputLabel>
+                        <Input
+                            id="facet_name"
+                            data-testid="facet-name"
+                            required
+                            value={inputValue}
+                            onChange={handleChange}
+                            fullWidth
+                        />
+                    </FormControl>
+                    <FormControl variant="standard" fullWidth sx={{ marginTop: '16px' }}>
+                        <InputLabel htmlFor="facet_order">Facet Order</InputLabel>
+                        <Input
+                            id="facet_order"
+                            type="number"
+                            value={facetOrder}
+                            onChange={handleFacetOrderChange}
+                            fullWidth
+                            inputProps={{ min: 0 }}
+                        />
+                    </FormControl>
+                    <FormControl variant="standard" fullWidth sx={{ marginTop: '16px' }}>
+                        <InputLabel htmlFor="facet_order">Facet Help</InputLabel>
+                        <Input
+                            id="facet_help"
+                            value={facetHelp}
+                            onChange={handleFacetHelpChange}
+                            fullWidth
+                            inputProps={{ min: 0 }}
+                        />
+                    </FormControl>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
+                        <Button
+                            color="secondary"
+                            data-testid="admin-dlor-filter-cancel-button"
+                            data-analyticsid="admin-dlor-filter-cancel-button"
+                            variant="contained"
+                            children="Cancel"
+                            onClick={() => { setEditBoxOpened(false); console.log('Cancel') }}
+                        />
+                        <Button
+                            color="primary"
+                            data-testid="admin-dlor-filter-confirm-button"
+                            data-analyticsid="admin-dlor-filter-confirm-button"
+                            variant="contained"
+                            children="Confirm"
+                            disabled = {!inputValue}
+                            onClick={() => { console.log('Confirm'); updateFacet(facetId); }}
+                        />
+                    </Box>
+                </div>
+            </Modal>
         </StandardPage>
     );
 };
