@@ -1529,6 +1529,14 @@ export const DlorForm = ({
         window.location.href = dlorAdminLink();
         scrollToTopOfPage();
     };
+
+    const navigateToPrimaryPage = () => {
+        setConfirmationOpen(false);
+        actions.clearADlor();
+        window.location.href = '/digital-learning-hub'();
+        scrollToTopOfPage();
+    };
+
     const navigateToPreviousPage = () => {
         window.location.href = dlorAdminLink();
     };
@@ -1593,7 +1601,7 @@ export const DlorForm = ({
                 actionButtonColor="primary"
                 actionButtonVariant="contained"
                 confirmationBoxId="dlor-save-outcome"
-                onAction={() => isDlorAdminUser(account) ? navigateToDlorAdminHomePage() : clearForm()}
+                onAction={() => isDlorAdminUser(account) ? navigateToDlorAdminHomePage() : navigateToPrimaryPage()}
                 hideCancelButton={!locale.successMessage.cancelButtonLabel}
                 cancelButtonLabel={locale.successMessage.cancelButtonLabel}
                 onCancelAction={() => clearForm()}
