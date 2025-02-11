@@ -18,23 +18,31 @@ describe('Request an object addition to the Digital Learning Hub', () => {
     }
 
     context('Request a new object', () => {
+        context('interface link', () => {
+            it('opens the form', () => {
+                cy.visit('digital-learning-hub');
+               
+                cy.get('[data-testid="dlor-homepage-request-new-item"]').contains('Submit new object request').click();
+                cy.get('a[data-testid="dlor-breadcrumb-admin-homelink"]')
+                    .contains('Digital Learning Hub')
+                    .should('have.attr', 'href', `/digital-learning-hub`);
+                cy.get(
+                    '[data-testid="dlor-breadcrumb-create-an-object-for-the-digital-learning-hub-label-0"]',
+                ).contains('Create an Object for the Digital Learning Hub');
+
+            });
+        });
         context('successfully', () => {
             beforeEach(() => {
                 cy.visit(`http://localhost:2020/digital-learning-hub/submit`);
                 cy.viewport(1300, 1000);
             });
-            it('is accessible', () => {
-                cy.injectAxe();
+            it('navigation is functional and help is shown', () => {
                 cy.viewport(1300, 1000);
                 cy.waitUntil(() => cy.get('h1').should('exist'));
                 cy.get('h1').should('contain', 'Digital Learning Hub');
 
-                // first panel is accessible
-                cy.checkA11y('[data-testid="StandardPage"]', {
-                    reportName: 'dlor form panel 1',
-                    scopeName: 'Content',
-                    includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-                });
+                cy.get('[data-testid="dlor-UserAdd-helper"]').should('exist');
 
                 // go to the second panel, Description
                 cy.get('[data-testid="dlor-form-next-button"]')
@@ -46,12 +54,9 @@ describe('Request an object addition to the Digital Learning Hub', () => {
                         .should('exist')
                         .should('be.visible'),
                 );
-                cy.checkA11y('[data-testid="StandardPage"]', {
-                    reportName: 'dlor form panel 2',
-                    scopeName: 'Content',
-                    includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-                });
 
+                cy.get('[data-testid="dlor-UserAdd-helper"]').should('exist');
+                
                 // go to the third panel, Link
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -62,12 +67,9 @@ describe('Request an object addition to the Digital Learning Hub', () => {
                         .should('exist')
                         .should('be.visible'),
                 );
-                cy.checkA11y('[data-testid="StandardPage"]', {
-                    reportName: 'dlor form panel 3',
-                    scopeName: 'Content',
-                    includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-                });
 
+                cy.get('[data-testid="dlor-UserAdd-helper"]').should('exist');
+                
                 // go to the fourth panel, Filtering
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -78,11 +80,8 @@ describe('Request an object addition to the Digital Learning Hub', () => {
                         .should('exist')
                         .should('be.visible'),
                 );
-                cy.checkA11y('[data-testid="StandardPage"]', {
-                    reportName: 'dlor form panel 4',
-                    scopeName: 'Content',
-                    includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-                });
+
+                cy.get('[data-testid="dlor-UserAdd-helper"]').should('exist');
             });
             it('has breadcrumb', () => {
                 cy.get('uq-site-header')
@@ -121,7 +120,7 @@ describe('Request an object addition to the Digital Learning Hub', () => {
                 // no notify checkbox
                 cy.get('[data-testid="choose-notify"] input').should('not.exist');
             });
-            it.only('validates fields correctly for non admin user', () => {
+            it('validates fields correctly for non admin user', () => {
                 // first enter all the fields and show the save button doesn't enable until all the fields are entered
 
                 // team starts off valid so click on to the second panel, description

@@ -1,4 +1,4 @@
-describe('Digital Learning Hub Series page', () => {
+describe('Digital Learning Hub Series page.', () => {
     context('series page', () => {
         it('appears as expected', () => {
             

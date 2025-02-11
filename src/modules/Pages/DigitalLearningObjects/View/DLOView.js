@@ -292,8 +292,6 @@ export const DLOView = ({
             theNewValue = !!e.target.checked;
         }
         const newValues = { ...formValues, [prop]: theNewValue };
-        // console.log('handleChange', prop, theNewValue, newValues);
-
        
         setFormValues(newValues);
     };
