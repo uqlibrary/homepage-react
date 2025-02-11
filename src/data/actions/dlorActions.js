@@ -24,7 +24,9 @@ import {
     DLOR_UNSUBSCRIBE_API,
     DLOR_UNSUBSCRIBE_FIND_API,
     DLOR_SERIES_LOAD_API,
-    DLOR_UPDATE_FACET_API
+    DLOR_UPDATE_FACET_API,
+    DLOR_DELETE_FACET_API,
+    DLOR_CREATE_FACET_API
 } from 'repositories/routes';
 
 const checkExpireSession = (dispatch, error) => {
@@ -516,6 +518,48 @@ export function updateFacet(filterId, payload) {
     return dispatch => {
         dispatch({ type: actions.DLOR_FILTER_UPDATING });
         return put(DLOR_UPDATE_FACET_API(filterId), payload)
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_FILTER_UPDATED,
+                    payload: response,
+                });
+                dispatch(loadAllFilters());
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_FILTER_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function createFacet(payload) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_FILTER_UPDATING });
+        return post(DLOR_CREATE_FACET_API(), payload)
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_FILTER_UPDATED,
+                    payload: response,
+                });
+                dispatch(loadAllFilters());
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_FILTER_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function deleteFacet(filterId) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_FILTER_UPDATING });
+        return destroy(DLOR_DELETE_FACET_API(filterId))
             .then(response => {
                 dispatch({
                     type: actions.DLOR_FILTER_UPDATED,

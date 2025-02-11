@@ -726,7 +726,15 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .reply(() => {
         return [400, { error: 'something went wrong' }];
     })
+    .onPost('dlor/admin/facet')
+    .reply(() => {
+        return [200, { data: { response: 'ok' } }];
+    })
     .onPut(/dlor\/admin\/facet\/\d+/)
+    .reply(() => {
+        return [200, { data: { response: 'ok' } }];
+    })
+    .onDelete(/dlor\/admin\/facet\/\d+/)
     .reply(() => {
         return [200, { data: { response: 'ok' } }];
     });
