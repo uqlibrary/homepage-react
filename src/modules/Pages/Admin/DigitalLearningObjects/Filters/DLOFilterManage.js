@@ -87,6 +87,7 @@ export const DLOFilterManage = ({
             facet_name: inputValue,
             facet_type_id: facetTypeId,
             facet_order: facetOrder,
+            facet_slug: '',
             facet_help: facetHelp,
         };
         actions.createFacet(payload)
