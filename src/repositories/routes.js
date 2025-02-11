@@ -245,8 +245,9 @@ export const DLOR_SERIES_UPDATE_API = id => ({ apiUrl: `dlor/admin/series/${id}`
 export const DLOR_SERIES_CREATE_API = () => ({ apiUrl: 'dlor/admin/series' });
 export const DLOR_SERIES_LOAD_API = id => ({ apiUrl: `dlor/public/series/find/${id}` });
 
+export const DLOR_CREATE_FACET_API = () => ({ apiUrl: `dlor/admin/facet` });
 export const DLOR_UPDATE_FACET_API = id => ({ apiUrl: `dlor/admin/facet/${id}` });
-
+export const DLOR_DELETE_FACET_API = id => ({ apiUrl: `dlor/admin/facet/${id}` });
 
 const productionRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage';
 const stagingRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage';
