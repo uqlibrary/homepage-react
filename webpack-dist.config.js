@@ -18,7 +18,7 @@ const robotsTxtOptions = {
     policy: [
         {
             userAgent: '*',
-            allow: ['/'],
+            disallow: [''],
         },
     ],
 };
