@@ -378,6 +378,7 @@ describe('Request an object addition to the Digital Learning Hub', () => {
                     .should('not.be.disabled')
                     .click();
                 cy.get('[data-testid="message-title"]').should('exist'); // wording to come after review
+                cy.get('[data-testid="confirm-dlor-save-outcome"]').should('exist').click();
 
             });
             it('shows character minimums', () => {
