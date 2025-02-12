@@ -50,6 +50,7 @@ export const flattedPathConfig = [
     '/digital-learning-hub/view',
     '/digital-learning-hub/confirm/subscribe',
     '/digital-learning-hub/confirm/unsubscribe',
+    '/digital-learning-hub/submit',
     '/exams/course',
 ];
 
