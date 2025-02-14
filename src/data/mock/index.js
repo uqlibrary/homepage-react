@@ -725,7 +725,21 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .onGet(routes.DLOR_SUBSCRIPTION_CONFIRMATION_API({ id: 'a_conf_code_that_throws_an_error' }).apiUrl)
     .reply(() => {
         return [400, { error: 'something went wrong' }];
+    })
+    .onPost('dlor/admin/facet')
+    .reply(() => {
+        return [200, { data: { response: 'ok' } }];
+    })
+    .onPut(/dlor\/admin\/facet\/\d+/)
+    .reply(() => {
+        return [200, { data: { response: 'ok' } }];
+    })
+    .onDelete(/dlor\/admin\/facet\/\d+/)
+    .reply(() => {
+        return [200, { data: { response: 'ok' } }];
     });
+    
+
 
 mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
