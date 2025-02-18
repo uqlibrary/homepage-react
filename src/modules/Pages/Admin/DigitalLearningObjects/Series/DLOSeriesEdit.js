@@ -36,6 +36,11 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 const StyledDraggableListItem = styled('li')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
+    marginBottom: '10px', // Add margin to the bottom
+    padding: '10px', // Add padding for better spacing
+    backgroundColor: '#f9f9f9', // Optional: Add background color for better visibility
+    border: '1px solid #ddd', // Optional: Add border for better visibility
+    borderRadius: '4px', // Optional: Add border radius for better visibility
     [theme.breakpoints.up('lg')]: {
         marginLeft: '-50px',
         marginRight: '50px',
