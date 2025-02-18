@@ -15,6 +15,8 @@ import Typography from '@mui/material/Typography';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { styled } from '@mui/material/styles';
 
+import { IconButton } from '@mui/material';
+import { AddCircle, DeleteForever } from '@mui/icons-material';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -36,14 +38,15 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 const StyledDraggableListItem = styled('li')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-    marginBottom: '10px', // Add margin to the bottom
-    padding: '10px', // Add padding for better spacing
+    // Remove margin and padding
     backgroundColor: '#f9f9f9', // Optional: Add background color for better visibility
     border: '1px solid #ddd', // Optional: Add border for better visibility
     borderRadius: '4px', // Optional: Add border radius for better visibility
+    marginBottom: '5px', // Add margin to the bottom
+    padding: '5px', // Add padding for better spacing
     [theme.breakpoints.up('lg')]: {
-        marginLeft: '-50px',
-        marginRight: '50px',
+       // marginLeft: '-50px',
+       // marginRight: '50px',
     },
 }));
 
@@ -53,6 +56,8 @@ const StyledSeriesEditForm = styled('form')(() => ({
 
 const StyledSeriesList = styled('ul')(() => ({
     listStyleType: 'none',
+    marginLeft: 0,
+    paddingLeft: 0,
 }));
 
 const StyledErrorMessageBox = styled(Box)(({ theme }) => ({
@@ -64,11 +69,11 @@ const StyledErrorMessageBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-const DraggableListItem = React.memo(({ item, index, moveItem, handleChange }) => {
+const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, handleDelete }) => {
     const ref = React.useRef(null);
     const [, drop] = useDrop({
         accept: 'LIST_ITEM',
-        hover(draggedItem) {
+        drop(draggedItem) {
             if (draggedItem.index !== index) {
                 moveItem(draggedItem.index, index);
                 draggedItem.index = index;
@@ -87,25 +92,52 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange }) =
     drag(drop(ref));
 
     return (
-        <StyledDraggableListItem ref={ref} style={{ opacity: isDragging ? 0.5 : 1 }}>
+        <li ref={ref} style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            backgroundColor: '#f9f9f9', // Optional: Add background color for better visibility
+            border: '1px solid #ddd', // Optional: Add border for better visibility
+            borderRadius: '4px', // Optional: Add border radius for better visibility
+            opacity: isDragging ? 0.5 : 1,
+            marginBottom: '5px', // Add margin to the bottom
+            padding: '5px', // Add padding for better spacing
+            alignItems: 'center', // Center items vertically
+        }}>
             <span data-testid={`dlor-series-edit-draggable-title-${item?.object_public_uuid}`}>
                 {item.object_title}{' '}
                 {item.object_status !== 'current' && <b>{`(${toTitleCase(item.object_status)})`}</b>}
             </span>
-            <div>
-                <Input
+            <div style={{ display: 'flex', alignItems: 'center' }}> {/* Center items vertically */}
+                {/* <Input
                     id={`object_series_order-${item.object_public_uuid}`}
                     data-testid={`object-series-order-${convertSnakeCaseToKebabCase(item.object_public_uuid)}`}
                     required
+                    // disabled
                     value={item.object_series_order}
                     onChange={handleChange(`linked_object_series_order-${item.object_public_uuid}`)}
                     sx={{ marginRight: '10px' }}
-                />
-                <a href={getDlorViewPageUrl(item?.object_public_uuid)} data-testid={`dlor-series-edit-view-${item.object_id}`} target="_blank">
+                /> */}
+                <IconButton
+                    data-testid={`admin-series-remove-object-button-${index}`}
+                    onClick={() => { handleDelete(index, item.object_public_uuid) }}
+                    title={'Remove object from series'}
+                    style={{ minWidth: 60 }}
+                    aria-label="Add a date set"
+                    size="large"
+                    color='secondary'
+                    sx={{
+                        '&:hover': {
+                            backgroundColor: 'transparent', // Remove hover background effect
+                        },
+                    }}
+                >
+                    <DeleteForever />
+                </IconButton>
+                <a style={{paddingTop: '3px' }} href={getDlorViewPageUrl(item?.object_public_uuid)} data-testid={`dlor-series-edit-view-${item.object_id}`} target="_blank">
                     <VisibilityIcon sx={{ color: 'black' }} />
                 </a>
             </div>
-        </StyledDraggableListItem>
+        </li>
     );
 });
 
@@ -268,6 +300,55 @@ export const DLOSeriesEdit = ({
             confirmButtonLabel: 'Close',
         },
     };
+
+    const handleDelete = (index, uuid) => { 
+        let newValues;
+        let linked = formValues.object_list_linked;
+        let unassigned = formValues.object_list_unassigned;
+        const indexToRemove = linked.findIndex(d => d.object_public_uuid === uuid);
+        const thisdlor = linked.find(d => d.object_public_uuid === uuid);
+        if (indexToRemove !== -1) {
+            linked.splice(indexToRemove, 1);
+        }
+        thisdlor.object_series_order = null;
+        unassigned.push(thisdlor);
+        console.log('index', index, 'uuid', uuid, indexToRemove);
+        linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
+            unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
+            newValues = {
+                series_name: formValues.series_name,
+                series_description: formValues.series_description,
+                object_list_linked: linked,
+                object_list_unassigned: unassigned,
+            };
+        setFormValues(newValues);
+    }
+
+    const handleAdd = (uuid) => {
+        let newValues;
+        console.log(uuid);
+        let linked = formValues.object_list_linked;
+        let unassigned = formValues.object_list_unassigned;
+        const thisdlor = unassigned.find(d => d.object_public_uuid === uuid);
+        const indexToRemove = unassigned.findIndex(d => d.object_public_uuid === uuid);
+        thisdlor.object_series_order = linked.length + 1;
+
+        if (indexToRemove !== -1) {
+            unassigned.splice(indexToRemove, 1);
+        }
+        linked.push(thisdlor);
+        linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
+        unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
+        newValues = {
+            series_name: formValues.series_name,
+            series_description: formValues.series_description,
+            object_list_linked: linked,
+            object_list_unassigned: unassigned,
+        };
+        setFormValues(newValues);
+     }
+
+
 
     const handleChange = prop => e => {
         const theNewValue = e.target.value;
@@ -469,6 +550,7 @@ export const DLOSeriesEdit = ({
                                                             index={index}
                                                             moveItem={moveItem}
                                                             handleChange={handleChange}
+                                                            handleDelete={handleDelete}
                                                         />
                                                     ))}
                                             </StyledSeriesList>
@@ -492,6 +574,7 @@ export const DLOSeriesEdit = ({
                                                     return (
                                                         <StyledDraggableListItem
                                                             key={f.object_id}
+                                                            style={{ display: 'flex', alignItems: 'center' }}
                                                         >
                                                             <span
                                                                 data-testid={`dlor-series-${mode.toLowerCase()}-draggable-title-${convertSnakeCaseToKebabCase(
@@ -503,8 +586,8 @@ export const DLOSeriesEdit = ({
                                                                     <b>{`(${toTitleCase(f.object_status)})`}</b>
                                                                 )}
                                                             </span>
-                                                            <div>
-                                                                <Input
+                                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                                {/* <Input
                                                                     id={`object_series_order-${f.object_public_uuid}`}
                                                                     data-testid={`object-series-order-${convertSnakeCaseToKebabCase(
                                                                         f.object_public_uuid,
@@ -515,8 +598,24 @@ export const DLOSeriesEdit = ({
                                                                         `unassigned_object_series_order-${f.object_public_uuid}`,
                                                                     )}
                                                                     sx={{ marginRight: '10px' }}
-                                                                />
-                                                                <a href={getDlorViewPageUrl(f?.object_public_uuid)}>
+                                                                /> */}
+                                                                <IconButton
+                                                                    data-testid={`admin-series-add-object-button-${f.object_id}`}
+                                                                    onClick={() => { handleAdd(f.object_public_uuid) }}
+                                                                    title={'Add object to series'}
+                                                                    style={{ minWidth: 60 }}
+                                                                    aria-label="Add object to series"
+                                                                    size="large"
+                                                                    color='secondary'
+                                                                    sx={{
+                                                                        '&:hover': {
+                                                                            backgroundColor: 'transparent', // Remove hover background effect
+                                                                        },
+                                                                    }}
+                                                                >
+                                                                    <AddCircle />
+                                                                </IconButton>
+                                                                <a style={{paddingTop: '3px' }} href={getDlorViewPageUrl(f?.object_public_uuid)}>
                                                                     <VisibilityIcon sx={{ color: 'black' }} />
                                                                 </a>
                                                             </div>
