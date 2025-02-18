@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -39,12 +41,15 @@ const StyledDraggableListItem = styled('li')(({ theme }) => ({
         marginRight: '50px',
     },
 }));
+
 const StyledSeriesEditForm = styled('form')(() => ({
     width: '100%',
 }));
+
 const StyledSeriesList = styled('ul')(() => ({
     listStyleType: 'none',
 }));
+
 const StyledErrorMessageBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
@@ -54,13 +59,56 @@ const StyledErrorMessageBox = styled(Box)(({ theme }) => ({
     },
 }));
 
+const DraggableListItem = React.memo(({ item, index, moveItem, handleChange }) => {
+    const ref = React.useRef(null);
+    const [, drop] = useDrop({
+        accept: 'LIST_ITEM',
+        hover(draggedItem) {
+            if (draggedItem.index !== index) {
+                moveItem(draggedItem.index, index);
+                draggedItem.index = index;
+            }
+        },
+    });
+
+    const [{ isDragging }, drag] = useDrag({
+        type: 'LIST_ITEM',
+        item: { index },
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        }),
+    });
+
+    drag(drop(ref));
+
+    return (
+        <StyledDraggableListItem ref={ref} style={{ opacity: isDragging ? 0.5 : 1 }}>
+            <span data-testid={`dlor-series-edit-draggable-title-${item?.object_public_uuid}`}>
+                {item.object_title}{' '}
+                {item.object_status !== 'current' && <b>{`(${toTitleCase(item.object_status)})`}</b>}
+            </span>
+            <div>
+                <Input
+                    id={`object_series_order-${item.object_public_uuid}`}
+                    data-testid={`object-series-order-${convertSnakeCaseToKebabCase(item.object_public_uuid)}`}
+                    required
+                    value={item.object_series_order}
+                    onChange={handleChange(`linked_object_series_order-${item.object_public_uuid}`)}
+                    sx={{ marginRight: '10px' }}
+                />
+                <a href={getDlorViewPageUrl(item?.object_public_uuid)} data-testid={`dlor-series-edit-view-${item.object_id}`} target="_blank">
+                    <VisibilityIcon sx={{ color: 'black' }} />
+                </a>
+            </div>
+        </StyledDraggableListItem>
+    );
+});
+
 export const DLOSeriesEdit = ({
     actions,
-    // saving changes
     dlorItemUpdating,
     dlorUpdatedItemError,
     dlorUpdatedItem,
-    // get object-child-of-series data
     dlorList,
     dlorListLoading,
     dlorListError,
@@ -68,10 +116,7 @@ export const DLOSeriesEdit = ({
     mode
 }) => {
     const handleEditorChange = (fieldname, newContent) => {
-        // setSummarySuggestionOpen(true);
-        // amalgamate new value into data set
         const newValues = { ...formValues, [fieldname]: newContent };
-
         setFormValues(newValues);
     };
 
@@ -89,6 +134,20 @@ export const DLOSeriesEdit = ({
         object_list_linked: [],
         object_list_unassigned: [],
     });
+
+    const moveItem = (fromIndex, toIndex) => {
+        const updatedList = [...formValues.object_list_linked];
+        const [movedItem] = updatedList.splice(fromIndex, 1);
+        updatedList.splice(toIndex, 0, movedItem);
+
+        // Update the object_series_order property
+        updatedList.forEach((item, index) => {
+            item.object_series_order = index + 1;
+        });
+
+        setFormValues({ ...formValues, object_list_linked: updatedList });
+    };
+
     const editorConfig = {
         removePlugins: [
             'Image',
@@ -128,7 +187,6 @@ export const DLOSeriesEdit = ({
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dloradmin.pathname);
 
-        /* istanbul ignore else */
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
             if (dlorSeriesId) {
@@ -136,7 +194,6 @@ export const DLOSeriesEdit = ({
                 actions.loadDlorSeries(dlorSeriesId)
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -156,7 +213,6 @@ export const DLOSeriesEdit = ({
                 series_description: seriesDetail?.object_series_description
             });
             console.log("About to set the values", seriesDetail, dlorSeries)
-            //mode === "EDIT" && 
             setFormValues({
                 series_name: seriesDetail?.object_series_name,
                 series_description: seriesDetail?.object_series_description,
@@ -165,13 +221,13 @@ export const DLOSeriesEdit = ({
                         ? dlorList?.filter(o => {
                               return o.object_series_id === Number(dlorSeriesId);
                           })
-                        : /* istanbul ignore next */ [],
+                        : [],
                 object_list_unassigned:
                     dlorList?.length > 0
                         ? dlorList?.filter(d => {
                               return !(d?.object_series_id > 0);
                           })
-                        : /* istanbul ignore next */ [],
+                        : [],
             });
         }
     }, [dlorSeriesId, dlorList, dlorListError, dlorListLoading, actions, dlorSeries]);
@@ -213,22 +269,18 @@ export const DLOSeriesEdit = ({
         let newValues;
         let linked = formValues.object_list_linked;
         let unassigned = formValues.object_list_unassigned;
-        /* istanbul ignore next */
         if (prop.startsWith('linked_object_series_order-')) {
             const uuid = prop.replace('linked_object_series_order-', '');
             const thisdlor = linked.find(d => d.object_public_uuid === uuid);
             const indexToRemove = linked.findIndex(d => d.object_public_uuid === uuid);
             thisdlor.object_series_order = e.target.value;
             if (e.target.value === "0") {
-                // remove thisdlor from linked group
                 if (indexToRemove !== -1) {
                     linked.splice(indexToRemove, 1);
                 }
-                // add thisdlor to unassigned group
                 thisdlor.object_series_order = null;
                 unassigned.push(thisdlor);
             } else {
-                // move within linked group
                 linked.map(d => d.object_public_uuid === uuid && (d.object_series_order = e.target.value));
             }
             linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
@@ -246,12 +298,9 @@ export const DLOSeriesEdit = ({
             thisdlor.object_series_order = e.target.value;
 
             if (e.target.value !== 0) {
-                // remove thisdlor from unassigned group
-                //unassigned = unassigned.filter(d => d.object_public_uuid !== uuid);
                 if (indexToRemove !== -1) {
                     unassigned.splice(indexToRemove, 1);
                 }
-                // add thisdlor to linked group
                 linked.push(thisdlor);
             }
             linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
@@ -263,7 +312,6 @@ export const DLOSeriesEdit = ({
                 object_list_unassigned: unassigned,
             };
         } else {
-            // series name edited
             newValues = { ...formValues, [prop]: theNewValue };
         }
 
@@ -291,7 +339,6 @@ export const DLOSeriesEdit = ({
         } else {
             actions.createDlorSeries(valuesToSend);
         }
-        
     };
 
     function toProperCase(text) {
@@ -301,135 +348,156 @@ export const DLOSeriesEdit = ({
       }
 
     return (
-        <StandardPage title={`Digital Learning Hub - ${toProperCase(mode)} Series`}>
-            <DlorAdminBreadcrumbs
-                breadCrumbList={[
-                    {
-                        link: dlorAdminLink('/series/manage'),
-                        title: 'Series management',
-                    },
-                    {
-                        title: `${toProperCase(mode)} series: ${originalSeriesDetails.series_name || ''}`,
-                        id: 'edit-series',
-                    },
-                ]}
-            />
-            <Grid container spacing={2}>
-                {(() => {
-                    /* istanbul ignore else */
-                    if (!!dlorItemUpdating || !!dlorListLoading) {
-                        return (
-                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
-                                <Box sx={{ minHeight: '600sx=' }}>
-                                    <InlineLoader message="Loading" />
-                                </Box>
-                            </Grid>
-                        );
-                    } else if (!!dlorListError) {
-                        return (
-                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
-                                <Typography variant="body1" data-testid="dlor-seriesItem-error">
-                                    {dlorListError}
-                                </Typography>
-                            </Grid>
-                        );
-                    } else if (!!originalSeriesDetails) {
-                        return (
-                            <>
-                                <Grid item xs={12} data-testid="dlor-series-item-list">
-                                    <Grid container key={`list-series-${originalSeriesDetails.series_id}`}>
-                                        <ConfirmationBox
-                                            actionButtonColor="primary"
-                                            actionButtonVariant="contained"
-                                            confirmationBoxId="dlor-series-save-outcome"
-                                            onAction={() => {
-                                                !!dlorUpdatedItemError
-                                                    ? closeConfirmationBox()
-                                                    : navigateToSeriesManagementHomePage();
-                                            }}
-                                            hideCancelButton={
-                                                !!dlorUpdatedItemError || !locale.successMessage.cancelButtonLabel
-                                            }
-                                            cancelButtonLabel={locale.successMessage.cancelButtonLabel}
-                                            onCancelAction={() => clearForm()}
-                                            onClose={closeConfirmationBox}
-                                            isOpen={confirmationOpen}
-                                            locale={
-                                                !!dlorUpdatedItemError ? locale.errorMessage : locale.successMessage
-                                            }
-                                        />
-                                        <StyledSeriesEditForm id={`dlor-${mode.toLowerCase()}Series-form`}>
-                                        {/* <form id="dlor-editSeries-form"> */}
-                                            <Grid item xs={12}>
-                                                <FormControl variant="standard" fullWidth>
-                                                    <InputLabel htmlFor="series_name">Series name *</InputLabel>
-                                                    <Input
-                                                        id="series_name"
-                                                        data-testid="series-name"
-                                                        required
-                                                        value={formValues?.series_name}
-                                                        onChange={handleChange('series_name')}
-                                                        error={!isValidSeriesName(formValues?.series_name)}
-                                                    />
-                                                </FormControl>
-                                                {/* dlorList to stop it flashing an error */}
-                                                {!!dlorList && !isValidSeriesName(formValues?.series_name) && (
-                                                    <StyledErrorMessageBox data-testid="error-message-series-name">
-                                                        This series name is not valid.
-                                                    </StyledErrorMessageBox>
-                                                )}
-                                               
-                                            </Grid>
-                                      
-                                            {!!dlorList && !!isValidSeriesName(formValues?.series_name) && (
-                                                <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
-                                                    <InputLabel htmlFor="object_description">Description of Series</InputLabel>
-                                                        <CKEditor
-                                                        id="object_description"
-                                                        data-testid="object-description"
-                                                        sx={{ width: '100%' }}
-                                                        editor={ClassicEditor}
-                                                        config={editorConfig}
-                                                        data={formValues?.series_description || ""}
-                                                        onReady={editor => {
-                                                            editor.editing.view.change(writer => {
-                                                                writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
-                                                            });
-                                                        }}
-                                                        onChange={(event, editor) => {
-                                                            const htmlData = editor.getData();
-                                                            handleEditorChange('series_description', htmlData);
-                                                        }}
-                                                    />
-                                                </FormControl>
-                                             )} 
-                                        </StyledSeriesEditForm>   
-                                        {/* </form> */}
-                                    </Grid>
+        <DndProvider backend={HTML5Backend}>
+            <StandardPage title={`Digital Learning Hub - ${toProperCase(mode)} Series`}>
+                <DlorAdminBreadcrumbs
+                    breadCrumbList={[
+                        {
+                            link: dlorAdminLink('/series/manage'),
+                            title: 'Series management',
+                        },
+                        {
+                            title: `${toProperCase(mode)} series: ${originalSeriesDetails.series_name || ''}`,
+                            id: 'edit-series',
+                        },
+                    ]}
+                />
+                <Grid container spacing={2}>
+                    {(() => {
+                        if (!!dlorItemUpdating || !!dlorListLoading) {
+                            return (
+                                <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                                    <Box sx={{ minHeight: '600sx=' }}>
+                                        <InlineLoader message="Loading" />
+                                    </Box>
                                 </Grid>
+                            );
+                        } else if (!!dlorListError) {
+                            return (
+                                <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                                    <Typography variant="body1" data-testid="dlor-seriesItem-error">
+                                        {dlorListError}
+                                    </Typography>
+                                </Grid>
+                            );
+                        } else if (!!originalSeriesDetails) {
+                            return (
+                                <>
+                                    <Grid item xs={12} data-testid="dlor-series-item-list">
+                                        <Grid container key={`list-series-${originalSeriesDetails.series_id}`}>
+                                            <ConfirmationBox
+                                                actionButtonColor="primary"
+                                                actionButtonVariant="contained"
+                                                confirmationBoxId="dlor-series-save-outcome"
+                                                onAction={() => {
+                                                    !!dlorUpdatedItemError
+                                                        ? closeConfirmationBox()
+                                                        : navigateToSeriesManagementHomePage();
+                                                }}
+                                                hideCancelButton={
+                                                    !!dlorUpdatedItemError || !locale.successMessage.cancelButtonLabel
+                                                }
+                                                cancelButtonLabel={locale.successMessage.cancelButtonLabel}
+                                                onCancelAction={() => clearForm()}
+                                                onClose={closeConfirmationBox}
+                                                isOpen={confirmationOpen}
+                                                locale={
+                                                    !!dlorUpdatedItemError ? locale.errorMessage : locale.successMessage
+                                                }
+                                            />
+                                            <StyledSeriesEditForm id={`dlor-${mode.toLowerCase()}Series-form`}>
+                                                <Grid item xs={12}>
+                                                    <FormControl variant="standard" fullWidth>
+                                                        <InputLabel htmlFor="series_name">Series name *</InputLabel>
+                                                        <Input
+                                                            id="series_name"
+                                                            data-testid="series-name"
+                                                            required
+                                                            value={formValues?.series_name}
+                                                            onChange={handleChange('series_name')}
+                                                            error={!isValidSeriesName(formValues?.series_name)}
+                                                        />
+                                                    </FormControl>
+                                                    {!!dlorList && !isValidSeriesName(formValues?.series_name) && (
+                                                        <StyledErrorMessageBox data-testid="error-message-series-name">
+                                                            This series name is not valid.
+                                                        </StyledErrorMessageBox>
+                                                    )}
+                                                </Grid>
+                                                {!!dlorList && !!isValidSeriesName(formValues?.series_name) && (
+                                                    <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
+                                                        <InputLabel htmlFor="object_description">Description of Series</InputLabel>
+                                                        <CKEditor
+                                                            id="object_description"
+                                                            data-testid="object-description"
+                                                            sx={{ width: '100%' }}
+                                                            editor={ClassicEditor}
+                                                            config={editorConfig}
+                                                            data={formValues?.series_description || ""}
+                                                            onReady={editor => {
+                                                                editor.editing.view.change(writer => {
+                                                                    writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
+                                                                });
+                                                            }}
+                                                            onChange={(event, editor) => {
+                                                                const htmlData = editor.getData();
+                                                                handleEditorChange('series_description', htmlData);
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                )}
+                                            </StyledSeriesEditForm>
+                                        </Grid>
+                                    </Grid>
 
-                                <Grid item xs={12}>
-                                    <h2>Objects in this series</h2>
-                                    <div id="dragLandingAarea">
-                                        {formValues?.object_list_linked?.length === 0 && <p>(None yet)</p>}
-                                        <StyledSeriesList>
-                                            {formValues?.object_list_linked
-                                                ?.sort((a, b) => a.object_series_order - b.object_series_order)
-                                                .map(f => {
+                                    <Grid item xs={12}>
+                                        <h2>Objects in this series</h2>
+                                        <div id="dragLandingAarea">
+                                            {formValues?.object_list_linked?.length === 0 && <p>(None yet)</p>}
+                                            <StyledSeriesList>
+                                                {formValues?.object_list_linked
+                                                    ?.sort((a, b) => a.object_series_order - b.object_series_order)
+                                                    .map((item, index) => (
+                                                        <DraggableListItem
+                                                            key={item.object_id}
+                                                            item={item}
+                                                            index={index}
+                                                            moveItem={moveItem}
+                                                            handleChange={handleChange}
+                                                        />
+                                                    ))}
+                                            </StyledSeriesList>
+                                        </div>
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <details>
+                                            <Typography
+                                                component={'summary'}
+                                                sx={{
+                                                    fontSize: '1.3em',
+                                                    fontWeight: 'bold',
+                                                }}
+                                                data-testid="admin-dlor-series-summary-button"
+                                            >
+                                                Objects available to add to this series
+                                            </Typography>
+                                            <StyledSeriesList>
+                                                {formValues?.object_list_unassigned?.map(f => {
                                                     return (
                                                         <StyledDraggableListItem
                                                             key={f.object_id}
-                                                            // className={classes.draggableItem}
                                                         >
                                                             <span
-                                                                data-testid={`dlor-series-edit-draggable-title-${f?.object_public_uuid}`}
+                                                                data-testid={`dlor-series-${mode.toLowerCase()}-draggable-title-${convertSnakeCaseToKebabCase(
+                                                                    f?.object_public_uuid,
+                                                                )}`}
                                                             >
                                                                 {f.object_title}{' '}
                                                                 {f.object_status !== 'current' && (
                                                                     <b>{`(${toTitleCase(f.object_status)})`}</b>
                                                                 )}
                                                             </span>
-
                                                             <div>
                                                                 <Input
                                                                     id={`object_series_order-${f.object_public_uuid}`}
@@ -439,106 +507,48 @@ export const DLOSeriesEdit = ({
                                                                     required
                                                                     value={f.object_series_order}
                                                                     onChange={handleChange(
-                                                                        `linked_object_series_order-${f.object_public_uuid}`,
+                                                                        `unassigned_object_series_order-${f.object_public_uuid}`,
                                                                     )}
                                                                     sx={{ marginRight: '10px' }}
                                                                 />
-                                                                <a
-                                                                    href={getDlorViewPageUrl(f?.object_public_uuid)}
-                                                                    data-testid={`dlor-series-edit-view-${f.object_id}`}
-                                                                    target="_blank"
-                                                                >
+                                                                <a href={getDlorViewPageUrl(f?.object_public_uuid)}>
                                                                     <VisibilityIcon sx={{ color: 'black' }} />
                                                                 </a>
                                                             </div>
                                                         </StyledDraggableListItem>
                                                     );
                                                 })}
-                                        </StyledSeriesList>
-                                    </div>
-                                </Grid>
+                                            </StyledSeriesList>
+                                        </details>
+                                    </Grid>
 
-                                <Grid item xs={12}>
-                                    <details>
-                                        <Typography
-                                            component={'summary'}
-                                            sx={{
-                                                fontSize: '1.3em',
-                                                fontWeight: 'bold',
-                                            }}
-                                            data-testid="admin-dlor-series-summary-button"
-                                        >
-                                            Objects available to add to this series
-                                        </Typography>
-                                        <StyledSeriesList>
-                                            {formValues?.object_list_unassigned?.map(f => {
-                                                return (
-                                                    <StyledDraggableListItem
-                                                        key={f.object_id}
-                                                        // className={classes.draggableItem}
-                                                    >
-                                                        <span
-                                                            data-testid={`dlor-series-${mode.toLowerCase()}-draggable-title-${convertSnakeCaseToKebabCase(
-                                                                f?.object_public_uuid,
-                                                            )}`}
-                                                        >
-                                                            {f.object_title}{' '}
-                                                            {f.object_status !== 'current' && (
-                                                                <b>{`(${toTitleCase(f.object_status)})`}</b>
-                                                            )}
-                                                        </span>
-                                                        <div>
-                                                            <Input
-                                                                id={`object_series_order-${f.object_public_uuid}`}
-                                                                data-testid={`object-series-order-${convertSnakeCaseToKebabCase(
-                                                                    f.object_public_uuid,
-                                                                )}`}
-                                                                required
-                                                                value={f.object_series_order}
-                                                                onChange={handleChange(
-                                                                    `unassigned_object_series_order-${f.object_public_uuid}`,
-                                                                )}
-                                                                sx={{ marginRight: '10px' }}
-                                                            />
-                                                            <a href={getDlorViewPageUrl(f?.object_public_uuid)}>
-                                                                <VisibilityIcon sx={{ color: 'black' }} />
-                                                            </a>
-                                                        </div>
-                                                    </StyledDraggableListItem>
-                                                );
-                                            })}
-                                        </StyledSeriesList>
-                                    </details>
-                                </Grid>
-
-                                <Grid item xs={3} align="left">
-                                    <Button
-                                        color="secondary"
-                                        children="Cancel"
-                                        data-testid="admin-dlor-series-form-button-cancel"
-                                        onClick={() => navigateToPreviousPage()}
-                                        variant="contained"
-                                    />
-                                </Grid>
-                                <Grid item xs={9} align="right">
-                                    <Button
-                                        color="primary"
-                                        data-testid="admin-dlor-series-form-save-button"
-                                        variant="contained"
-                                        children="Save"
-                                        disabled={!isValidForm(formValues)}
-                                        onClick={saveChanges}
-                                        // className={classes.saveButton}
-                                    />
-                                </Grid>
-                            </>
-                        );
-                    }
-                    /* istanbul ignore next */
-                    return <></>;
-                })()}
-            </Grid>
-        </StandardPage>
+                                    <Grid item xs={3} align="left">
+                                        <Button
+                                            color="secondary"
+                                            children="Cancel"
+                                            data-testid="admin-dlor-series-form-button-cancel"
+                                            onClick={() => navigateToPreviousPage()}
+                                            variant="contained"
+                                        />
+                                    </Grid>
+                                    <Grid item xs={9} align="right">
+                                        <Button
+                                            color="primary"
+                                            data-testid="admin-dlor-series-form-save-button"
+                                            variant="contained"
+                                            children="Save"
+                                            disabled={!isValidForm(formValues)}
+                                            onClick={saveChanges}
+                                        />
+                                    </Grid>
+                                </>
+                            );
+                        }
+                        return <></>;
+                    })()}
+                </Grid>
+            </StandardPage>
+        </DndProvider>
     );
 };
 
