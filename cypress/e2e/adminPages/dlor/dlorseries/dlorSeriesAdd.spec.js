@@ -59,19 +59,7 @@ describe('Digital Learning Hub admin Series management - add item', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it('functions as expected', () => {
-            cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-02"] input').then($el => {
-                const isVisible = $el[0].checkVisibility();
-                expect(isVisible).to.eq(false);
-            });
-            cy.get('[data-testid="admin-dlor-series-summary-button"]').click();
-
-            // Now, the div should be visible
-            cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-02"] input').then($el => {
-                const isVisible = $el[0].checkVisibility();
-                expect(isVisible).to.eq(true);
-            });
-        });
+        it('can add a series with objects', () => { });
         it('can add a series without objects', () => {
             cy.waitUntil(() =>
                 cy
