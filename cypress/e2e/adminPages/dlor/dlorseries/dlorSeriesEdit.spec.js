@@ -40,32 +40,32 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 .should('exist')
                 .should('have.value', 'Advanced literature searching');
             // linked
-            cy.get('[data-testid="object-series-order-98s0-dy5k3-98h4"] input')
-                .should('exist')
-                .should('be.visible')
-                .should('have.value', 1);
-            cy.get('[data-testid="object-series-order-9bc1894a-8b0d-46da-a25e-02d26e2e056c"] input')
-                .should('exist')
-                .should('be.visible')
-                .should('have.value', 2);
+            // cy.get('[data-testid="object-series-order-98s0-dy5k3-98h4"] input')
+            //     .should('exist')
+            //     .should('be.visible')
+            //     .should('have.value', 1);
+            // cy.get('[data-testid="object-series-order-9bc1894a-8b0d-46da-a25e-02d26e2e056c"] input')
+            //     .should('exist')
+            //     .should('be.visible')
+            //     .should('have.value', 2);
             cy.get('[data-testid="dlor-series-edit-draggable-title-9bc1894a-8b0d-46da-a25e-02d26e2e056c"]')
                 .should('exist')
                 .contains('(Deprecated)');
             // unaffiliated
-            cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-01"] input')
-                .should('exist')
-                .should('have.value', '');
-            cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-01"] input').then($el => {
-                const isVisible = $el[0].checkVisibility();
-                expect(isVisible).to.eq(false);
-            });
-            cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-02"] input')
-                .should('exist')
-                .should('have.value', '');
-            cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-02"] input').then($el => {
-                const isVisible = $el[0].checkVisibility();
-                expect(isVisible).to.eq(false);
-            });
+            // cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-01"] input')
+            //     .should('exist')
+            //     .should('have.value', '');
+            // cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-01"] input').then($el => {
+            //     const isVisible = $el[0].checkVisibility();
+            //     expect(isVisible).to.eq(false);
+            // });
+            // cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-02"] input')
+            //     .should('exist')
+            //     .should('have.value', '');
+            // cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-02"] input').then($el => {
+            //     const isVisible = $el[0].checkVisibility();
+            //     expect(isVisible).to.eq(false);
+            // });
             // there are more, but thats probably enough
         });
         it('is accessible', () => {
@@ -80,18 +80,30 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it('functions as expected', () => {
-            cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-02"] input').then($el => {
-                const isVisible = $el[0].checkVisibility();
-                expect(isVisible).to.eq(false);
-            });
-            cy.get('[data-testid="admin-dlor-series-summary-button"]').click();
+        it('drag drop functions as expected', () => {
+            // Select the first and second draggable items
+            const firstItem = '[data-testid="dlor-series-edit-draggable-title-98s0_dy5k3_98h4"]';
+            const secondItem = '[data-testid="dlor-series-edit-draggable-title-9bc1894a-8b0d-46da-a25e-02d26e2e056c"]';
 
-            // Now, the div should be visible
-            cy.get('[data-testid="object-series-order-9bc192a8-324c-4f6b-ac50-02"] input').then($el => {
-                const isVisible = $el[0].checkVisibility();
-                expect(isVisible).to.eq(true);
-            });
+            // Get the parent elements of the first and second items
+            cy.get(firstItem).parent().as('firstItemParent');
+            cy.get(secondItem).parent().as('secondItemParent');
+
+            // Trigger the drag-and-drop action
+            cy.get('@firstItemParent').trigger('dragstart', { dataTransfer: new DataTransfer() });
+            cy.get('@secondItemParent').trigger('drop', { dataTransfer: new DataTransfer() });
+
+            // Verify that the items have been reordered
+            cy.get('#dragLandingAarea li').first().should('contain', 'for science');
+            cy.get('#dragLandingAarea li').eq(1).should('contain', 'Advanced literature searching');
+
+            // Trigger the drag-and-drop action
+            cy.get('@firstItemParent').trigger('dragstart', { dataTransfer: new DataTransfer() });
+            cy.get('@secondItemParent').trigger('drop', { dataTransfer: new DataTransfer() });
+
+            // Verify that the items have been reordered
+            cy.get('#dragLandingAarea li').eq(1).should('contain', 'for science');
+            cy.get('#dragLandingAarea li').first().should('contain', 'Advanced literature searching');
         });
         it('has a working "cancel edit" button', () => {
             cy.waitUntil(() =>
@@ -116,6 +128,30 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
             cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/view/98s0_dy5k3_98h4?user=dloradmn');
         });
     });
+    context('Series management', () => {
+        beforeEach(() => {
+            cy.visit(`http://localhost:2020/admin/dlor/series/edit/1?user=${DLOR_ADMIN_USER}`);
+            cy.viewport(1300, 1000);
+        });
+        it('can add a series with objects', () => {
+            cy.get('[data-testid="admin-dlor-series-summary-button"]').click();
+            // add new objects
+            cy.get('[data-testid="admin-series-add-object-button-980"]').click();
+            cy.get('[data-testid="admin-series-add-object-button-881"]').click();
+            // delete objects
+            cy.get('[data-testid="admin-series-remove-object-button-2"]').click();
+            cy.get('[data-testid="admin-series-remove-object-button-2"]').click();
+            // checking objects
+            cy.get('#dragLandingAarea li').eq(1).should('contain', 'for science');
+            cy.get('#dragLandingAarea li').first().should('contain', 'Advanced literature searching');
+            // adjust the name
+            cy.get('#series_name').clear().type('Advanced literature searching xxx');
+            // save it.
+            cy.get('[data-testid="admin-dlor-series-form-save-button"]').click();
+            cy.get('[data-testid="message-title"]').should('contain', 'Changes have been saved');
+        });
+    });
+
     context('successfully mock to db', () => {
         beforeEach(() => {
             cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
