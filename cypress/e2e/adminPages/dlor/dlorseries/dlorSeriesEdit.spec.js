@@ -128,6 +128,30 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
             cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/view/98s0_dy5k3_98h4?user=dloradmn');
         });
     });
+    context('Series management', () => {
+        beforeEach(() => {
+            cy.visit(`http://localhost:2020/admin/dlor/series/edit/1?user=${DLOR_ADMIN_USER}`);
+            cy.viewport(1300, 1000);
+        });
+        it('can add a series with objects', () => {
+            cy.get('[data-testid="admin-dlor-series-summary-button"]').click();
+            // add new objects
+            cy.get('[data-testid="admin-series-add-object-button-980"]').click();
+            cy.get('[data-testid="admin-series-add-object-button-881"]').click();
+            // delete objects
+            cy.get('[data-testid="admin-series-remove-object-button-2"]').click();
+            cy.get('[data-testid="admin-series-remove-object-button-2"]').click();
+            // checking objects
+            cy.get('#dragLandingAarea li').eq(1).should('contain', 'for science');
+            cy.get('#dragLandingAarea li').first().should('contain', 'Advanced literature searching');
+            // adjust the name
+            cy.get('#series_name').clear().type('Advanced literature searching xxx');
+            // save it.
+            cy.get('[data-testid="admin-dlor-series-form-save-button"]').click();
+            cy.get('[data-testid="message-title"]').should('contain', 'Changes have been saved');
+        });
+    });
+
     context('successfully mock to db', () => {
         beforeEach(() => {
             cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db

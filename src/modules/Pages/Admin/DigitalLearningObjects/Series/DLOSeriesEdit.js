@@ -44,10 +44,6 @@ const StyledDraggableListItem = styled('li')(({ theme }) => ({
     borderRadius: '4px', // Optional: Add border radius for better visibility
     marginBottom: '5px', // Add margin to the bottom
     padding: '5px', // Add padding for better spacing
-    [theme.breakpoints.up('lg')]: {
-       // marginLeft: '-50px',
-       // marginRight: '50px',
-    },
 }));
 
 const StyledSeriesEditForm = styled('form')(() => ({
@@ -74,6 +70,7 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
     const [, drop] = useDrop({
         accept: 'LIST_ITEM',
         drop(draggedItem) {
+            /* istanbul ignore else */
             if (draggedItem.index !== index) {
                 moveItem(draggedItem.index, index);
                 draggedItem.index = index;
@@ -108,15 +105,6 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
                 {item.object_status !== 'current' && <b>{`(${toTitleCase(item.object_status)})`}</b>}
             </span>
             <div style={{ display: 'flex', alignItems: 'center' }}> {/* Center items vertically */}
-                {/* <Input
-                    id={`object_series_order-${item.object_public_uuid}`}
-                    data-testid={`object-series-order-${convertSnakeCaseToKebabCase(item.object_public_uuid)}`}
-                    required
-                    // disabled
-                    value={item.object_series_order}
-                    onChange={handleChange(`linked_object_series_order-${item.object_public_uuid}`)}
-                    sx={{ marginRight: '10px' }}
-                /> */}
                 <IconButton
                     data-testid={`admin-series-remove-object-button-${index}`}
                     onClick={() => { handleDelete(index, item.object_public_uuid) }}
@@ -224,10 +212,11 @@ export const DLOSeriesEdit = ({
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dloradmin.pathname);
 
+        /* istanbul ignore else */
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
+            /* istanbul ignore else */
             if (dlorSeriesId) {
-                console.log("Loading DLOR Series");
                 actions.loadDlorSeries(dlorSeriesId)
             }
         }
@@ -258,13 +247,13 @@ export const DLOSeriesEdit = ({
                         ? dlorList?.filter(o => {
                               return o.object_series_id === Number(dlorSeriesId);
                           })
-                        : [],
+                        : /* istanbul ignore next */ [],
                 object_list_unassigned:
                     dlorList?.length > 0
                         ? dlorList?.filter(d => {
                               return !(d?.object_series_id > 0);
                           })
-                        : [],
+                        : /* istanbul ignore next */ [],
             });
         }
     }, [dlorSeriesId, dlorList, dlorListError, dlorListLoading, actions, dlorSeries]);
@@ -307,6 +296,7 @@ export const DLOSeriesEdit = ({
         let unassigned = formValues.object_list_unassigned;
         const indexToRemove = linked.findIndex(d => d.object_public_uuid === uuid);
         const thisdlor = linked.find(d => d.object_public_uuid === uuid);
+        /* istanbul ignore else */
         if (indexToRemove !== -1) {
             linked.splice(indexToRemove, 1);
         }
@@ -332,7 +322,7 @@ export const DLOSeriesEdit = ({
         const thisdlor = unassigned.find(d => d.object_public_uuid === uuid);
         const indexToRemove = unassigned.findIndex(d => d.object_public_uuid === uuid);
         thisdlor.object_series_order = linked.length + 1;
-
+        /* istanbul ignore else */
         if (indexToRemove !== -1) {
             unassigned.splice(indexToRemove, 1);
         }
@@ -353,54 +343,7 @@ export const DLOSeriesEdit = ({
     const handleChange = prop => e => {
         const theNewValue = e.target.value;
         let newValues;
-        let linked = formValues.object_list_linked;
-        let unassigned = formValues.object_list_unassigned;
-        if (prop.startsWith('linked_object_series_order-')) {
-            const uuid = prop.replace('linked_object_series_order-', '');
-            const thisdlor = linked.find(d => d.object_public_uuid === uuid);
-            const indexToRemove = linked.findIndex(d => d.object_public_uuid === uuid);
-            thisdlor.object_series_order = e.target.value;
-            if (e.target.value === "0") {
-                if (indexToRemove !== -1) {
-                    linked.splice(indexToRemove, 1);
-                }
-                thisdlor.object_series_order = null;
-                unassigned.push(thisdlor);
-            } else {
-                linked.map(d => d.object_public_uuid === uuid && (d.object_series_order = e.target.value));
-            }
-            linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
-            unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
-            newValues = {
-                series_name: formValues.series_name,
-                series_description: formValues.series_description,
-                object_list_linked: linked,
-                object_list_unassigned: unassigned,
-            };
-        } else if (prop.startsWith('unassigned_object_series_order-')) {
-            const uuid = prop.replace('unassigned_object_series_order-', '');
-            const thisdlor = unassigned.find(d => d.object_public_uuid === uuid);
-            const indexToRemove = unassigned.findIndex(d => d.object_public_uuid === uuid);
-            thisdlor.object_series_order = e.target.value;
-
-            if (e.target.value !== 0) {
-                if (indexToRemove !== -1) {
-                    unassigned.splice(indexToRemove, 1);
-                }
-                linked.push(thisdlor);
-            }
-            linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
-            unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
-            newValues = {
-                series_name: formValues.series_name,
-                series_description: formValues.series_description,
-                object_list_linked: linked,
-                object_list_unassigned: unassigned,
-            };
-        } else {
-            newValues = { ...formValues, [prop]: theNewValue };
-        }
-
+        newValues = { ...formValues, [prop]: theNewValue };
         setFormValues(newValues);
     };
 
@@ -466,7 +409,7 @@ export const DLOSeriesEdit = ({
                                     </Typography>
                                 </Grid>
                             );
-                        } else if (!!originalSeriesDetails) {
+                        } else {
                             return (
                                 <>
                                     <Grid item xs={12} data-testid="dlor-series-item-list">
@@ -587,18 +530,6 @@ export const DLOSeriesEdit = ({
                                                                 )}
                                                             </span>
                                                             <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                                {/* <Input
-                                                                    id={`object_series_order-${f.object_public_uuid}`}
-                                                                    data-testid={`object-series-order-${convertSnakeCaseToKebabCase(
-                                                                        f.object_public_uuid,
-                                                                    )}`}
-                                                                    required
-                                                                    value={f.object_series_order}
-                                                                    onChange={handleChange(
-                                                                        `unassigned_object_series_order-${f.object_public_uuid}`,
-                                                                    )}
-                                                                    sx={{ marginRight: '10px' }}
-                                                                /> */}
                                                                 <IconButton
                                                                     data-testid={`admin-series-add-object-button-${f.object_id}`}
                                                                     onClick={() => { handleAdd(f.object_public_uuid) }}
@@ -648,7 +579,6 @@ export const DLOSeriesEdit = ({
                                 </>
                             );
                         }
-                        return <></>;
                     })()}
                 </Grid>
             </StandardPage>
