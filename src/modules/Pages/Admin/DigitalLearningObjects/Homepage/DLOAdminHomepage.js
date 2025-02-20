@@ -132,6 +132,10 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
         window.location.href = dlorAdminLink('/team/manage');
     };
 
+    const navigateToFilterManagePage = () => {
+        window.location.href = dlorAdminLink('/filters');
+    };
+
     const navigateToSeriesListPage = () => {
         window.location.href = dlorAdminLink('/series/manage');
     };
@@ -312,6 +316,13 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                         color="primary"
                         data-testid="admin-dlor-visit-manage-teams-button"
                         onClick={() => navigateToTeamsListPage()}
+                        variant="contained"
+                    />{' '}
+                    <Button
+                        children="Manage filters"
+                        color="primary"
+                        data-testid="admin-dlor-visit-manage-filters-button"
+                        onClick={() => navigateToFilterManagePage()}
                         variant="contained"
                     />{' '}
                     <Button

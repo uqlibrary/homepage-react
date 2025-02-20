@@ -5,7 +5,13 @@ describe('Digital Learning Hub admin filter management', () => {
     beforeEach(() => {
         cy.clearCookies();
     });
-
+    context('Admin page', () => {
+        it('navigates to the filter management page', () => {
+            cy.visit(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
+            cy.get('[data-testid="admin-dlor-visit-manage-filters-button"]').click();
+            cy.get('[data-testid="StandardPage-title"]').should('contain', 'Digital Learning Hub - Facet Management');
+        });
+    });
     context('filters list', () => {
         beforeEach(() => {
             cy.visit(`http://localhost:2020/admin/dlor/filters?user=${DLOR_ADMIN_USER}`);
