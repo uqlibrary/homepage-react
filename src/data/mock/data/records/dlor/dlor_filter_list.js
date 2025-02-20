@@ -12,40 +12,51 @@ export default {
             "facet_list": [
                 {
                     "facet_id": 1,
+                    "facet_order": 1,
                     "facet_name": "Aboriginal and Torres Strait Islander",
                     "facet_help": "",
+                    "facet_use_count": 2
                 }, {
                     "facet_id": 2,
+                    "facet_order": 2,
                     "facet_name": "Assignments",
                     "facet_help": "",
+                    "facet_use_count": 1
                 }, {
                     "facet_id": 3,
+                    "facet_order": 3,
                     "facet_name": "Digital skills",
-
+                    "facet_use_count": 0
                 }, {
                     "facet_id": 4,
                     "facet_name": "Employability",
                     "facet_help": "",
+                    "facet_use_count": 0
                 }, {
                     "facet_id": 5,
                     "facet_name": "Information literacy",
                     "facet_help": "",
+                    "facet_use_count": 0
                 }, {
                     "facet_id": 6,
                     "facet_name": "Referencing",
                     "facet_help": "",
+                    "facet_use_count": 0
                 }, {
                     "facet_id": 7,
                     "facet_name": "Research",
                     "facet_help": "",
+                    "facet_use_count": 0
                 }, {
                     "facet_id": 8,
                     "facet_name": "Software",
                     "facet_help": "",
+                    "facet_use_count": 0
                 }, {
                     "facet_id": 9,
                     "facet_name": "Other",
                     "facet_help": "",
+                    "facet_use_count": 0
                 }
             ]
         },
@@ -63,26 +74,32 @@ export default {
                     "facet_id": 10,
                     "facet_name": "Accomplished scholars",
                     "facet_help": "Graduates will have a well-founded knowledge of their field of study and an understanding of how it relates to other disciplines. They will have the ability to engage with different traditions of thought and apply this knowledge in multi-disciplinary and global settings and contexts to enact a positive difference in their world.",
+                    "facet_use_count": 0
                 }, {
                     "facet_id": 11,
                     "facet_name": "Connected citizens",
                     "facet_help": "Graduates will have a well-founded knowledge of their field of study and an understanding of how it relates to other disciplines. They will have the ability to engage with different traditions of thought and apply this knowledge in multi-disciplinary and global settings and contexts to enact a positive difference in their world.",
+                    "facet_use_count": 1
                 }, {
                     "facet_id": 12,
                     "facet_name": "Courageous thinkers",
                     "facet_help": "Graduates will have a well-founded knowledge of their field of study and an understanding of how it relates to other disciplines. They will have the ability to engage with different traditions of thought and apply this knowledge in multi-disciplinary and global settings and contexts to enact a positive difference in their world.",
+                    "facet_use_count": 2
                 }, {
                     "facet_id": 13,
                     "facet_name": "Culturally capable",
                     "facet_help": "Graduates will have a well-founded knowledge of their field of study and an understanding of how it relates to other disciplines. They will have the ability to engage with different traditions of thought and apply this knowledge in multi-disciplinary and global settings and contexts to enact a positive difference in their world.",
+                    "facet_use_count": 0
                 }, {
                     "facet_id": 14,
                     "facet_name": "Influential communicators",
                     "facet_help": "",
+                    "facet_use_count": 0
                 }, {
                     "facet_id": 15,
                     "facet_name": "Respectful leaders",
                     "facet_help": "",
+                    "facet_use_count": 0
                 }
             ]
         },
@@ -137,50 +154,62 @@ export default {
                     "facet_id": 22,
                     "facet_name": "Audio",
                     "facet_help": "",
+                    "facet_use_count": 0
                 }, {
                     "facet_id": 23,
                     "facet_name": "Dataset",
                     "facet_help": "",
+                    "facet_use_count": 1
                 }, {
                     "facet_id": 24,
                     "facet_name": "H5P",
                     "facet_help": "",
+                    "facet_use_count": 2
                 }, {
                     "facet_id": 25,
                     "facet_name": "Image",
                     "facet_help": "",
+                    "facet_use_count": 3
                 }, {
                     "facet_id": 26,
                     "facet_name": "PowerPoint",
                     "facet_help": "",
+                    "facet_use_count": 0
                 }, {
                     "facet_id": 27,
                     "facet_name": "Pressbook",
                     "facet_help": "",
+                    "facet_use_count": 0
                 }, {
                     "facet_id": 28,
                     "facet_name": "PDF",
                     "facet_help": "",
+                    "facet_use_count": 0
                 }, {
                     "facet_id": 29,
                     "facet_name": "Spreadsheet",
                     "facet_help": "",
+                    "facet_use_count": 0
                 }, {
                     "facet_id": 30,
                     "facet_name": "Video",
                     "facet_help": "",
+                    "facet_use_count": 0
                 }, {
                     "facet_id": 31,
                     "facet_name": "Webpage",
                     "facet_help": "",
+                    "facet_use_count": 1
                 }, {
                     "facet_id": 32,
                     "facet_name": "Word document",
                     "facet_help": "",
+                    "facet_use_count": 0
                 }, {
                     "facet_id": 33,
                     "facet_name": "Other",
                     "facet_help": "",
+                    "facet_use_count": 0
                 }
             ]
         },
