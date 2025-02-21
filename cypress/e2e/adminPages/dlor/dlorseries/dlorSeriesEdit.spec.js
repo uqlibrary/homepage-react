@@ -86,24 +86,36 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
             const secondItem = '[data-testid="dlor-series-edit-draggable-title-9bc1894a-8b0d-46da-a25e-02d26e2e056c"]';
 
             // Get the parent elements of the first and second items
-            cy.get(firstItem).parent().as('firstItemParent');
-            cy.get(secondItem).parent().as('secondItemParent');
+            cy.get(firstItem)
+                .parent()
+                .as('firstItemParent');
+            cy.get(secondItem)
+                .parent()
+                .as('secondItemParent');
 
             // Trigger the drag-and-drop action
             cy.get('@firstItemParent').trigger('dragstart', { dataTransfer: new DataTransfer() });
             cy.get('@secondItemParent').trigger('drop', { dataTransfer: new DataTransfer() });
 
             // Verify that the items have been reordered
-            cy.get('#dragLandingAarea li').first().should('contain', 'for science');
-            cy.get('#dragLandingAarea li').eq(1).should('contain', 'Advanced literature searching');
+            cy.get('#dragLandingAarea li')
+                .first()
+                .should('contain', 'for science');
+            cy.get('#dragLandingAarea li')
+                .eq(1)
+                .should('contain', 'Advanced literature searching');
 
             // Trigger the drag-and-drop action
             cy.get('@firstItemParent').trigger('dragstart', { dataTransfer: new DataTransfer() });
             cy.get('@secondItemParent').trigger('drop', { dataTransfer: new DataTransfer() });
 
             // Verify that the items have been reordered
-            cy.get('#dragLandingAarea li').eq(1).should('contain', 'for science');
-            cy.get('#dragLandingAarea li').first().should('contain', 'Advanced literature searching');
+            cy.get('#dragLandingAarea li')
+                .eq(1)
+                .should('contain', 'for science');
+            cy.get('#dragLandingAarea li')
+                .first()
+                .should('contain', 'Advanced literature searching');
         });
         it('has a working "cancel edit" button', () => {
             cy.waitUntil(() =>
@@ -142,10 +154,16 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
             cy.get('[data-testid="admin-series-remove-object-button-2"]').click();
             cy.get('[data-testid="admin-series-remove-object-button-2"]').click();
             // checking objects
-            cy.get('#dragLandingAarea li').eq(1).should('contain', 'for science');
-            cy.get('#dragLandingAarea li').first().should('contain', 'Advanced literature searching');
+            cy.get('#dragLandingAarea li')
+                .eq(1)
+                .should('contain', 'for science');
+            cy.get('#dragLandingAarea li')
+                .first()
+                .should('contain', 'Advanced literature searching');
             // adjust the name
-            cy.get('#series_name').clear().type('Advanced literature searching xxx');
+            cy.get('#series_name')
+                .clear()
+                .type('Advanced literature searching xxx');
             // save it.
             cy.get('[data-testid="admin-dlor-series-form-save-button"]').click();
             cy.get('[data-testid="message-title"]').should('contain', 'Changes have been saved');

@@ -1,6 +1,5 @@
 import { DLOR_ADMIN_USER } from '../../../../support/constants';
 
-
 function TypeCKEditor(content, keepExisting = false) {
     return cy
         .get('.ck-content')
@@ -35,17 +34,13 @@ describe('Digital Learning Hub admin Series management - add item', () => {
             cy.get('a[data-testid="dlor-breadcrumb-series-management-link-0"]')
                 .contains('Series management')
                 .should('have.attr', 'href', `http://localhost:2020/admin/dlor/series/manage?user=${DLOR_ADMIN_USER}`);
-            
 
             // series name input shows correctly
-            cy.get('[data-testid="series-name"] input')
-                .should('exist');
+            cy.get('[data-testid="series-name"] input').should('exist');
             // CKEditor should show
-            cy.get('[class="ck ck-editor__main"]')
-                .should('exist')
-            //should have no current objects already in the series
-            cy.get('#dragLandingAarea')
-                .should('contain', '(None yet)')
+            cy.get('[class="ck ck-editor__main"]').should('exist');
+            // should have no current objects already in the series
+            cy.get('#dragLandingAarea').should('contain', '(None yet)');
         });
         it('is accessible', () => {
             cy.injectAxe();
@@ -59,7 +54,7 @@ describe('Digital Learning Hub admin Series management - add item', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it('can add a series with objects', () => { });
+        it('can add a series with objects', () => {});
         it('can add a series without objects', () => {
             cy.waitUntil(() =>
                 cy
@@ -68,15 +63,13 @@ describe('Digital Learning Hub admin Series management - add item', () => {
                     .contains('Cancel'),
             );
             cy.get('[data-testid="series-name"] input').type('Series without objects');
-            TypeCKEditor("This is a series without any objects");
-            //should have no current objects already in the series
-            cy.get('#dragLandingAarea')
-                .should('contain', '(None yet)');
+            TypeCKEditor('This is a series without any objects');
+            // should have no current objects already in the series
+            cy.get('#dragLandingAarea').should('contain', '(None yet)');
 
             cy.get('[data-testid="admin-dlor-series-form-save-button"]').click();
 
-            cy.get('[data-testid="message-title"]').should('contain', 'Series has been created')
-
+            cy.get('[data-testid="message-title"]').should('contain', 'Series has been created');
         });
         it('can navigate to and from the add series page', () => {
             cy.waitUntil(() =>
@@ -87,12 +80,10 @@ describe('Digital Learning Hub admin Series management - add item', () => {
             );
             cy.get('[data-testid="dlor-breadcrumb-admin-homelink"]').click();
             cy.get('[data-testid="admin-dlor-visit-add-series-button"]').click();
-           
+
             cy.get('[data-testid="StandardPage-title"]')
                 .should('exist')
                 .should('contain', 'Digital Learning Hub - Add Series');
-
         });
-        
     });
 });

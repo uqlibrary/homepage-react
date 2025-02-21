@@ -108,7 +108,7 @@ describe('Digital Learning Hub admin homepage', () => {
             cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) h2')
                 .should('exist')
                 .should('contain', 'Advanced literature searching');
-            cy.get('[data-testid="dlor-homepage-featured-98s0_dy5k3_98h4"]').should('exist'); 
+            cy.get('[data-testid="dlor-homepage-featured-98s0_dy5k3_98h4"]').should('exist');
             cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) div:nth-child(3) p:first-child').contains(
                 'uqjsmith',
             );
@@ -518,6 +518,28 @@ describe('Digital Learning Hub admin homepage', () => {
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
             cy.get('h1').should('contain', 'Digital Learning Hub Management');
+        });
+    });
+    context('object export', () => {
+        beforeEach(() => {
+            // Visit the page where the Export to CSV button is located
+            cy.visit(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
+        });
+
+        it('should trigger a download when the Export to CSV button is clicked', () => {
+            // Stub the URL.createObjectURL method
+            // cy.wait(4000);
+
+            cy.get('[data-testid="dlor-homepage-panel-987y-isjgt-9866"]').should('exist');
+            cy.window().then(win => {
+                cy.stub(win.URL, 'createObjectURL').as('createObjectURL');
+            });
+
+            // Click the Export to CSV button
+            cy.get('[data-testid="admin-dlor-export-data-button"]').click();
+
+            // Verify that the URL.createObjectURL method was called
+            cy.get('@createObjectURL').should('be.called');
         });
     });
 });
