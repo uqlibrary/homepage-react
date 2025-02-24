@@ -33,6 +33,8 @@ import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects/SharedDlor
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { breadcrumbs } from 'config/routes';
 
+const moment = require('moment');
+
 const StyledPageListItemGridContainer = styled(Grid)(() => ({
     paddingTop: '10px',
     paddingLeft: '6px',
@@ -62,6 +64,138 @@ const StyleObjectDetailGridItem = styled(Grid)(({ theme }) => ({
         marginRight: '50px',
     },
 }));
+
+function ExportToCsvButton({ data, filename }) {
+    const exportToCSV = () => {
+        /* istanbul ignore next */
+        if (!data || data.length === 0) {
+            console.error('No data to export.');
+            return;
+        }
+
+        const headerNameMap = {
+            object_id: 'Object ID',
+            object_public_uuid: 'Public UUID',
+            object_title: 'Title',
+            object_description: 'Description',
+            object_summary: 'Summary',
+            object_review_date_next: 'Next Review Date',
+            object_status: 'Status',
+            object_owning_team_id: 'Team ID',
+            publishing_user_name: 'Publishing User',
+            team_name: 'Team Name',
+            object_download_instructions: 'Download Instructions',
+            object_keywords: 'Keywords',
+            object_link_interaction_type: 'Interaction Type',
+            graduate_attributes: 'Graduate Attributes',
+            // ... add all other mappings here
+        };
+
+        const headers = Object.keys(data[0]).filter(key => key !== 'object_filters');
+        const filterTypes = new Set();
+
+        data.forEach(item => {
+            /* istanbul ignore else */
+            if (item.object_filters) {
+                item.object_filters.forEach(filter => {
+                    filterTypes.add(filter.filter_key);
+                });
+            }
+        });
+
+        const allHeaders = [...headers, ...Array.from(filterTypes), 'publishing_user_name', 'team_name'].filter(
+            header => header !== 'owner',
+        );
+        const csvRows = [];
+
+        // Use the map function to transform headers with custom names
+        csvRows.push(allHeaders.map(header => headerNameMap[header] || header).join(','));
+
+        data.forEach(item => {
+            const values = allHeaders.map(header => {
+                let value;
+
+                if (header === 'publishing_user_name') {
+                    value = item.owner?.publishing_user_username || /* istanbul ignore next */ '';
+                } else if (header === 'team_name') {
+                    value = item.owner?.team_name || /* istanbul ignore next */ '';
+                } else if (item.object_filters && filterTypes.has(header)) {
+                    const matchingFilter = item.object_filters.find(filter => filter.filter_key === header);
+                    value = matchingFilter ? matchingFilter.filter_values.map(fv => fv.name).join(';') : '';
+                } else {
+                    value = item[header];
+                    // *** boolean fields value conversion ***
+                    const booleanHeaders = ['object_is_featured', 'object_cultural_advice'];
+                    if (booleanHeaders.includes(header)) {
+                        value = value === 1 ? 'yes' : 'no';
+                    }
+                    // *** DATE FORMATTING LOGIC ***
+                    const dateHeaders = ['date', 'created_at'];
+
+                    if (dateHeaders.some(dateHeader => header.includes(dateHeader))) {
+                        // Check if the header contains "date" (adjust as needed)
+                        /* istanbul ignore else */
+                        if (value) {
+                            const date = moment(value); // Use moment.js to parse the date
+                            /* istanbul ignore else */
+                            if (date.isValid()) {
+                                value = date.format('MMMM DD, YYYY'); // Format the date (customize format as needed)
+                            } else {
+                                value = 'Invalid Date'; // Handle invalid dates gracefully
+                            }
+                        }
+                    }
+
+                    if (Array.isArray(value)) {
+                        value = value
+                            .map(v => {
+                                /* istanbul ignore next */
+                                if (typeof v === 'object') {
+                                    /* istanbul ignore next */
+                                    return JSON.stringify(v);
+                                }
+                                return v;
+                            })
+                            .join(';');
+                    } else if (typeof value === 'object') {
+                        value = JSON.stringify(value);
+                    }
+
+                    if (typeof value === 'string') {
+                        value = value.replace(/"/g, '""');
+                        value = `"${value}"`;
+                    }
+                }
+                return value;
+            });
+            csvRows.push(values.join(','));
+        });
+
+        const csvString = csvRows.join('\r\n');
+        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.setAttribute('data-testid', 'download-link'); // Add data-testid attribute
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
+    return (
+        <Button
+            children="Export to CSV"
+            color="primary"
+            data-testid="admin-dlor-export-data-button"
+            onClick={() => exportToCSV()}
+            variant="contained"
+            sx={{ marginRight: '6px' }}
+        />
+    );
+}
 
 export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListError, dlorItemDeleteError }) => {
     const statusTypes = [
@@ -122,7 +256,7 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
         }
-    }, [dlorList]);
+    }, [actions, dlorList, dlorListError, dlorListLoading]);
 
     const navigateToAddPage = () => {
         window.location.href = dlorAdminLink('/add');
@@ -297,7 +431,7 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
             />
             <Grid container spacing={2} sx={{ marginBottom: '25px' }}>
                 <Grid item xs={12} sx={{ textAlign: 'right' }}>
-                <Button
+                    <Button
                         children="Add series"
                         color="primary"
                         data-testid="admin-dlor-visit-add-series-button"
@@ -333,6 +467,7 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                         variant="contained"
                         sx={{ marginRight: '6px' }}
                     />
+                    <ExportToCsvButton data={dlorList} filename="dlor_data.csv" />
                     <VisitHomepage />
                 </Grid>
             </Grid>

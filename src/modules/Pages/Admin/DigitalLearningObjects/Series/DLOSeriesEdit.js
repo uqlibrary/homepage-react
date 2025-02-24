@@ -81,7 +81,7 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
     const [{ isDragging }, drag] = useDrag({
         type: 'LIST_ITEM',
         item: { index },
-        collect: (monitor) => ({
+        collect: monitor => ({
             isDragging: monitor.isDragging(),
         }),
     });
@@ -89,30 +89,37 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
     drag(drop(ref));
 
     return (
-        <li ref={ref} style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            backgroundColor: '#f9f9f9', // Optional: Add background color for better visibility
-            border: '1px solid #ddd', // Optional: Add border for better visibility
-            borderRadius: '4px', // Optional: Add border radius for better visibility
-            opacity: isDragging ? 0.5 : 1,
-            marginBottom: '5px', // Add margin to the bottom
-            padding: '5px', // Add padding for better spacing
-            alignItems: 'center', // Center items vertically
-        }}>
+        <li
+            ref={ref}
+            style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                backgroundColor: '#f9f9f9', // Optional: Add background color for better visibility
+                border: '1px solid #ddd', // Optional: Add border for better visibility
+                borderRadius: '4px', // Optional: Add border radius for better visibility
+                opacity: isDragging ? 0.5 : 1,
+                marginBottom: '5px', // Add margin to the bottom
+                padding: '5px', // Add padding for better spacing
+                alignItems: 'center', // Center items vertically
+            }}
+        >
             <span data-testid={`dlor-series-edit-draggable-title-${item?.object_public_uuid}`}>
                 {item.object_title}{' '}
                 {item.object_status !== 'current' && <b>{`(${toTitleCase(item.object_status)})`}</b>}
             </span>
-            <div style={{ display: 'flex', alignItems: 'center' }}> {/* Center items vertically */}
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                {' '}
+                {/* Center items vertically */}
                 <IconButton
                     data-testid={`admin-series-remove-object-button-${index}`}
-                    onClick={() => { handleDelete(index, item.object_public_uuid) }}
+                    onClick={() => {
+                        handleDelete(index, item.object_public_uuid);
+                    }}
                     title={'Remove object from series'}
                     style={{ minWidth: 60 }}
                     aria-label="Add a date set"
                     size="large"
-                    color='secondary'
+                    color="secondary"
                     sx={{
                         '&:hover': {
                             backgroundColor: 'transparent', // Remove hover background effect
@@ -121,7 +128,12 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
                 >
                     <DeleteForever />
                 </IconButton>
-                <a style={{paddingTop: '3px' }} href={getDlorViewPageUrl(item?.object_public_uuid)} data-testid={`dlor-series-edit-view-${item.object_id}`} target="_blank">
+                <a
+                    style={{ paddingTop: '3px' }}
+                    href={getDlorViewPageUrl(item?.object_public_uuid)}
+                    data-testid={`dlor-series-edit-view-${item.object_id}`}
+                    target="_blank"
+                >
                     <VisibilityIcon sx={{ color: 'black' }} />
                 </a>
             </div>
@@ -138,7 +150,7 @@ export const DLOSeriesEdit = ({
     dlorListLoading,
     dlorListError,
     dlorSeries,
-    mode
+    mode,
 }) => {
     const handleEditorChange = (fieldname, newContent) => {
         const newValues = { ...formValues, [fieldname]: newContent };
@@ -217,28 +229,29 @@ export const DLOSeriesEdit = ({
             actions.loadAllDLORs();
             /* istanbul ignore else */
             if (dlorSeriesId) {
-                actions.loadDlorSeries(dlorSeriesId)
+                actions.loadDlorSeries(dlorSeriesId);
             }
         }
     }, []);
 
     useEffect(() => {
-        console.log("DLOR SERIES", dlorSeries)
+        console.log('DLOR SERIES', dlorSeries);
         if (!dlorListLoading && !dlorListError && (!!dlorList || !!dlorSeries?.series_name)) {
             setConfirmationOpen(false);
-            let seriesDetail = !!dlorList && dlorList?.find(s => s.object_series_id === Number(dlorSeriesId)) || {};
+            const seriesDetail = (!!dlorList && dlorList?.find(s => s.object_series_id === Number(dlorSeriesId))) || {};
             if (Object.keys(seriesDetail).length === 0) {
-                console.log("Doing the things")
+                console.log('Doing the things');
                 seriesDetail.object_series_id = dlorSeriesId;
-                seriesDetail.object_series_name = dlorSeries?.series_name,
-                seriesDetail.object_series_description = dlorSeries?.series_description
+                (seriesDetail.object_series_name = dlorSeries?.series_name),
+                    (seriesDetail.object_series_description = dlorSeries?.series_description);
             }
-            mode === "EDIT" && setOriginalSeriesDetails({
-                series_id: seriesDetail?.object_series_id,
-                series_name: seriesDetail?.object_series_name,
-                series_description: seriesDetail?.object_series_description
-            });
-            console.log("About to set the values", seriesDetail, dlorSeries)
+            mode === 'EDIT' &&
+                setOriginalSeriesDetails({
+                    series_id: seriesDetail?.object_series_id,
+                    series_name: seriesDetail?.object_series_name,
+                    series_description: seriesDetail?.object_series_description,
+                });
+            console.log('About to set the values', seriesDetail, dlorSeries);
             setFormValues({
                 series_name: seriesDetail?.object_series_name,
                 series_description: seriesDetail?.object_series_description,
@@ -278,9 +291,9 @@ export const DLOSeriesEdit = ({
 
     const locale = {
         successMessage: {
-            confirmationTitle: mode == "EDIT" ? 'Changes have been saved' : 'Series has been created',
+            confirmationTitle: mode === 'EDIT' ? 'Changes have been saved' : 'Series has been created',
             confirmationMessage: '',
-            cancelButtonLabel: mode == "EDIT" ? 'Re-edit Series' : 'Add a new Series',
+            cancelButtonLabel: mode === 'EDIT' ? 'Re-edit Series' : 'Add a new Series',
             confirmButtonLabel: 'Return to Admin Series page',
         },
         errorMessage: {
@@ -290,10 +303,10 @@ export const DLOSeriesEdit = ({
         },
     };
 
-    const handleDelete = (index, uuid) => { 
+    const handleDelete = (index, uuid) => {
         let newValues;
         let linked = formValues.object_list_linked;
-        let unassigned = formValues.object_list_unassigned;
+        const unassigned = formValues.object_list_unassigned;
         const indexToRemove = linked.findIndex(d => d.object_public_uuid === uuid);
         const thisdlor = linked.find(d => d.object_public_uuid === uuid);
         /* istanbul ignore else */
@@ -304,21 +317,21 @@ export const DLOSeriesEdit = ({
         unassigned.push(thisdlor);
         console.log('index', index, 'uuid', uuid, indexToRemove);
         linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
-            unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
-            newValues = {
-                series_name: formValues.series_name,
-                series_description: formValues.series_description,
-                object_list_linked: linked,
-                object_list_unassigned: unassigned,
-            };
+        unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
+        newValues = {
+            series_name: formValues.series_name,
+            series_description: formValues.series_description,
+            object_list_linked: linked,
+            object_list_unassigned: unassigned,
+        };
         setFormValues(newValues);
-    }
+    };
 
-    const handleAdd = (uuid) => {
+    const handleAdd = uuid => {
         let newValues;
         console.log(uuid);
         let linked = formValues.object_list_linked;
-        let unassigned = formValues.object_list_unassigned;
+        const unassigned = formValues.object_list_unassigned;
         const thisdlor = unassigned.find(d => d.object_public_uuid === uuid);
         const indexToRemove = unassigned.findIndex(d => d.object_public_uuid === uuid);
         thisdlor.object_series_order = linked.length + 1;
@@ -336,9 +349,7 @@ export const DLOSeriesEdit = ({
             object_list_unassigned: unassigned,
         };
         setFormValues(newValues);
-     }
-
-
+    };
 
     const handleChange = prop => e => {
         const theNewValue = e.target.value;
@@ -363,7 +374,7 @@ export const DLOSeriesEdit = ({
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
-        if (mode === "EDIT") {
+        if (mode === 'EDIT') {
             actions.updateDlorSeries(dlorSeriesId, valuesToSend);
         } else {
             actions.createDlorSeries(valuesToSend);
@@ -372,9 +383,9 @@ export const DLOSeriesEdit = ({
 
     function toProperCase(text) {
         return text.replace(/\w\S*/g, function(txt) {
-          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); 
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
         });
-      }
+    }
 
     return (
         <DndProvider backend={HTML5Backend}>
@@ -454,18 +465,28 @@ export const DLOSeriesEdit = ({
                                                     )}
                                                 </Grid>
                                                 {!!dlorList && !!isValidSeriesName(formValues?.series_name) && (
-                                                    <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
-                                                        <InputLabel htmlFor="object_description">Description of Series</InputLabel>
+                                                    <FormControl
+                                                        variant="standard"
+                                                        fullWidth
+                                                        sx={{ paddingTop: '50px' }}
+                                                    >
+                                                        <InputLabel htmlFor="object_description">
+                                                            Description of Series
+                                                        </InputLabel>
                                                         <CKEditor
                                                             id="object_description"
                                                             data-testid="object-description"
                                                             sx={{ width: '100%' }}
                                                             editor={ClassicEditor}
                                                             config={editorConfig}
-                                                            data={formValues?.series_description || ""}
+                                                            data={formValues?.series_description || ''}
                                                             onReady={editor => {
                                                                 editor.editing.view.change(writer => {
-                                                                    writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
+                                                                    writer.setStyle(
+                                                                        'height',
+                                                                        '200px',
+                                                                        editor.editing.view.document.getRoot(),
+                                                                    );
                                                                 });
                                                             }}
                                                             onChange={(event, editor) => {
@@ -532,12 +553,14 @@ export const DLOSeriesEdit = ({
                                                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                                                 <IconButton
                                                                     data-testid={`admin-series-add-object-button-${f.object_id}`}
-                                                                    onClick={() => { handleAdd(f.object_public_uuid) }}
+                                                                    onClick={() => {
+                                                                        handleAdd(f.object_public_uuid);
+                                                                    }}
                                                                     title={'Add object to series'}
                                                                     style={{ minWidth: 60 }}
                                                                     aria-label="Add object to series"
                                                                     size="large"
-                                                                    color='secondary'
+                                                                    color="secondary"
                                                                     sx={{
                                                                         '&:hover': {
                                                                             backgroundColor: 'transparent', // Remove hover background effect
@@ -546,7 +569,10 @@ export const DLOSeriesEdit = ({
                                                                 >
                                                                     <AddCircle />
                                                                 </IconButton>
-                                                                <a style={{paddingTop: '3px' }} href={getDlorViewPageUrl(f?.object_public_uuid)}>
+                                                                <a
+                                                                    style={{ paddingTop: '3px' }}
+                                                                    href={getDlorViewPageUrl(f?.object_public_uuid)}
+                                                                >
                                                                     <VisibilityIcon sx={{ color: 'black' }} />
                                                                 </a>
                                                             </div>
@@ -594,7 +620,7 @@ DLOSeriesEdit.propTypes = {
     dlorList: PropTypes.array,
     dlorListLoading: PropTypes.bool,
     dlorListError: PropTypes.any,
-    mode: PropTypes.string
+    mode: PropTypes.string,
 };
 
 export default DLOSeriesEdit;
