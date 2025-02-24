@@ -124,7 +124,7 @@ function ExportToCsvButton({ data, filename }) {
                     value = matchingFilter ? matchingFilter.filter_values.map(fv => fv.name).join(';') : '';
                 } else {
                     value = item[header];
-                    // *** boolean fields value CONVERSION ***
+                    // *** boolean fields value conversion ***
                     const booleanHeaders = ['object_is_featured', 'object_cultural_advice'];
                     if (booleanHeaders.includes(header)) {
                         value = value === 1 ? 'yes' : 'no';
