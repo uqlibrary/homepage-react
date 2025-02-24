@@ -22,12 +22,14 @@ describe('Digital Learning Hub admin homepage', () => {
             });
         });
         it('has a working "visit public homepage" button', () => {
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
             cy.get('[data-testid="dlor-admin-public-homepage-link"]')
                 .should('exist')
                 .click();
             cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub');
         });
         it('has a working "add an object" button', () => {
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
             cy.get('[data-testid="admin-dlor-visit-add-button"]')
                 .should('exist')
                 .should('contain', 'Add object')
@@ -35,13 +37,23 @@ describe('Digital Learning Hub admin homepage', () => {
             cy.location('href').should('eq', `http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
         });
         it('has a working "manage teams" button', () => {
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
             cy.get('[data-testid="admin-dlor-visit-manage-teams-button"]')
                 .should('exist')
                 .should('contain', 'Manage teams')
                 .click();
             cy.location('href').should('eq', `http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
         });
+        it('has a working "add series" button', () => {
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
+            cy.get('[data-testid="admin-dlor-visit-add-series-button"]')
+                .should('exist')
+                .should('contain', 'Add series')
+                .click();
+            cy.location('href').should('eq', `http://localhost:2020/admin/dlor/series/add?user=${DLOR_ADMIN_USER}`);
+        });
         it('has a working "manage series" button', () => {
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
             cy.get('[data-testid="admin-dlor-visit-manage-series-button"]')
                 .should('exist')
                 .should('contain', 'Manage series')
@@ -536,6 +548,7 @@ describe('Digital Learning Hub admin homepage', () => {
             });
 
             // Click the Export to CSV button
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
             cy.get('[data-testid="admin-dlor-export-data-button"]').click();
 
             // Verify that the URL.createObjectURL method was called
