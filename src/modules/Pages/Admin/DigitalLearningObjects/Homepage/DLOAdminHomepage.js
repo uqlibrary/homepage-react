@@ -515,7 +515,6 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                         <MenuItem
                             component="a"
                             href={`${getPathRoot()}/digital-learning-hub`}
-                            target="_blank"
                             rel="noopener noreferrer"
                             onClick={handleMenuClose}
                             data-testid="dlor-admin-public-homepage-link"
