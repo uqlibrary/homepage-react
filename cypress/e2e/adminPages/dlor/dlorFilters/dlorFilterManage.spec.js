@@ -1,6 +1,5 @@
 import { DLOR_ADMIN_USER } from '../../../../support/constants';
 
-
 describe('Digital Learning Hub admin filter management', () => {
     beforeEach(() => {
         cy.clearCookies();
@@ -8,6 +7,7 @@ describe('Digital Learning Hub admin filter management', () => {
     context('Admin page', () => {
         it('navigates to the filter management page', () => {
             cy.visit(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
             cy.get('[data-testid="admin-dlor-visit-manage-filters-button"]').click();
             cy.get('[data-testid="StandardPage-title"]').should('contain', 'Digital Learning Hub - Facet Management');
         });
@@ -25,25 +25,30 @@ describe('Digital Learning Hub admin filter management', () => {
             cy.get('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                 .contains('Digital Learning Hub admin')
                 .should('have.attr', 'href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
-            cy.get('[data-testid="dlor-breadcrumb-facet-management-label-0"]')
-                .contains('Facet management')
+            cy.get('[data-testid="dlor-breadcrumb-facet-management-label-0"]').contains('Facet management');
 
             cy.get('[data-testid="facet-type-1-name"]').should('contain', 'Topic');
-            
-            cy.get('[data-testid="add-facet-1"]').should('exist').should('be.visible');
+
+            cy.get('[data-testid="add-facet-1"]')
+                .should('exist')
+                .should('be.visible');
         });
         it('Allows the creation of a new filter', () => {
             cy.get('[data-testid="StandardPage-title"]')
                 .should('exist')
                 .should('contain', 'Digital Learning Hub - Facet Management');
 
-            cy.get('[data-testid="add-facet-1"]').should('exist').click();
+            cy.get('[data-testid="add-facet-1"]')
+                .should('exist')
+                .click();
             // popup
             cy.get('#modal-modal-title').should('contain', 'Add new facet');
             cy.get('#modal-modal-existingName').should('contain', 'Topic');
             // content entry
             cy.get('#facet_name').type('New filter');
-            cy.get('#facet_order').invoke('val', '1').trigger('change');
+            cy.get('#facet_order')
+                .invoke('val', '1')
+                .trigger('change');
             cy.get('#facet_help').type('This is a new filter');
             cy.get('[data-testid="admin-dlor-filter-confirm-button"]').click();
             cy.get('#modal-modal-title').should('not.exist');
@@ -54,21 +59,34 @@ describe('Digital Learning Hub admin filter management', () => {
                 .should('exist')
                 .should('contain', 'Digital Learning Hub - Facet Management');
 
-            cy.get('[data-testid="edit-facet-1"]').should('exist').click();
+            cy.get('[data-testid="edit-facet-1"]')
+                .should('exist')
+                .click();
             // popup
             cy.get('#modal-modal-title').should('contain', 'Edit facet');
-            cy.get('#modal-modal-existingName').should('contain', 'Original Name')
+            cy.get('#modal-modal-existingName')
+                .should('contain', 'Original Name')
                 .should('contain', 'Aboriginal and Torres Strait Islander');
             // content entry
-            cy.get('#facet_name').clear().type('Adjusted Name');
+            cy.get('#facet_name')
+                .clear()
+                .type('Adjusted Name');
             // Original name should still reflect the original name
-            cy.get('#modal-modal-existingName').should('contain', 'Original Name')
+            cy.get('#modal-modal-existingName')
+                .should('contain', 'Original Name')
                 .should('contain', 'Aboriginal and Torres Strait Islander');
-            cy.get('#facet_order').invoke('val', '2').trigger('change');
+            cy.get('#facet_order')
+                .invoke('val', '2')
+                .trigger('change');
             // check input mechanism
-            cy.get('#facet_order').focus().type('{uparrow}').blur();
-            cy.get('#facet_order').focus().type('{downarrow}').blur();
-            
+            cy.get('#facet_order')
+                .focus()
+                .type('{uparrow}')
+                .blur();
+            cy.get('#facet_order')
+                .focus()
+                .type('{downarrow}');
+
             cy.get('#facet_help').clear();
             cy.get('[data-testid="admin-dlor-filter-confirm-button"]').click();
             cy.get('#modal-modal-title').should('not.exist');
@@ -79,16 +97,19 @@ describe('Digital Learning Hub admin filter management', () => {
                 .should('exist')
                 .should('contain', 'Digital Learning Hub - Facet Management');
 
-            cy.get('[data-testid="delete-facet-1"]').should('exist').click();
+            cy.get('[data-testid="delete-facet-1"]')
+                .should('exist')
+                .click();
             cy.get('[data-testid="message-title"]').should('contain', 'Delete facet');
             cy.get('[data-testid="message-content"]').should('contain', 'Aboriginal and Torres Strait Islander');
-            cy.get('[data-testid="confirm-alert-edit-save-succeeded"]').click()
-            cy.get('[data-testid="delete-facet-1"]').should('exist').click();
+            cy.get('[data-testid="confirm-alert-edit-save-succeeded"]').click();
+            cy.get('[data-testid="delete-facet-1"]')
+                .should('exist')
+                .click();
             cy.get('[data-testid="message-title"]').should('contain', 'Delete facet');
             cy.get('[data-testid="message-content"]').should('contain', 'Aboriginal and Torres Strait Islander');
-            cy.get('[data-testid="cancel-alert-edit-save-succeeded"]').click()
+            cy.get('[data-testid="cancel-alert-edit-save-succeeded"]').click();
             // popup
-           
         });
         // it('is accessible', () => {
         //     cy.injectAxe();
@@ -142,12 +163,11 @@ describe('Digital Learning Hub admin filter management', () => {
         //     );
         //     cy.get('[data-testid="dlor-breadcrumb-admin-homelink"]').click();
         //     cy.get('[data-testid="admin-dlor-visit-add-series-button"]').click();
-           
+
         //     cy.get('[data-testid="StandardPage-title"]')
         //         .should('exist')
         //         .should('contain', 'Digital Learning Hub - Add Series');
 
         // });
-        
     });
 });

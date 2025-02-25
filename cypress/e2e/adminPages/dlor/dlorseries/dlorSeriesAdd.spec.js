@@ -79,6 +79,7 @@ describe('Digital Learning Hub admin Series management - add item', () => {
                     .contains('Cancel'),
             );
             cy.get('[data-testid="dlor-breadcrumb-admin-homelink"]').click();
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
             cy.get('[data-testid="admin-dlor-visit-add-series-button"]').click();
 
             cy.get('[data-testid="StandardPage-title"]')
