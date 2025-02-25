@@ -513,13 +513,14 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                             Export to CSV
                         </MenuItem>
                         <MenuItem
-                            onClick={() => {
-                                navigateToHomePage();
-                                handleMenuClose();
-                            }}
+                            component="a"
+                            href={`${getPathRoot()}/digital-learning-hub`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={handleMenuClose}
                             data-testid="dlor-admin-public-homepage-link"
                         >
-                            View public hompage list
+                            View public homepage list
                         </MenuItem>
                     </Menu>
                     {/* <ExportToCsvButton data={dlorList} filename="dlor_data.csv" /> */}
