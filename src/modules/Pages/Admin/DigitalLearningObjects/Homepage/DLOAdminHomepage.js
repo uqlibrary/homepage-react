@@ -264,10 +264,6 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
         window.location.href = dlorAdminLink('/add');
     };
 
-    const navigateToHomePage = () => {
-        window.location.href = `${getPathRoot()}/digital-learning-hub`;
-    };
-
     const navigateToTeamsListPage = () => {
         window.location.href = dlorAdminLink('/team/manage');
     };
