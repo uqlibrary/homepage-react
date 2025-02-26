@@ -342,7 +342,7 @@ fetchMock.mock(
     subjectSearchSuggestions,
 );
 
-fetchMock.mock('https://b842968e7955.20f461b1.ap-southeast-2.token.awswaf.com/b842968e7955/report', {
+fetchMock.mock('begin://b842968e7955.20f461b1.ap-southeast-2.token.awswaf.com/', {
     status: 200,
     body: {},
 });
@@ -1336,6 +1336,6 @@ mock.onGet('exams/course/FREN1010/summary')
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });
 
-    //fetchMock.post('begin:https://b842968e7955.20f461b1.ap-southeast-2', 200);
-    //fetchMock.get('begin:https://b842968e7955.20f461b1.ap-southeast-2', 200);
+    fetchMock.post('begin:https://b842968e7955.20f461b1.ap-southeast-2', 200);
+    fetchMock.get('begin:https://b842968e7955.20f461b1.ap-southeast-2', 200);
     
