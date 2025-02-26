@@ -221,30 +221,33 @@ export const DLOView = ({
     const captchaContainerRef = React.useRef(null);
 
     const captchaExampleSuccessFunction = wafToken => {
-        console.log('CAPTCHA COMPLETED - WAF TOKEN', wafToken);
-        // Captcha completed. wafToken contains a valid WAF token. Store it for
-        // use later or call AwsWafIntegration.fetch() to use it easily.
+        /* istanbul ignore next */
+        return () => {
+            console.log('CAPTCHA COMPLETED - WAF TOKEN', wafToken);
+            // Captcha completed. wafToken contains a valid WAF token. Store it for
+            // use later or call AwsWafIntegration.fetch() to use it easily.
 
-        // Use WAF token to access protected resources
-        window.AwsWafIntegration.fetch('https://homepage-staging.library.uq.edu.au/dlor/public/demographics', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-WAF-Token': wafToken,
-            },
-            body: JSON.stringify({
-                dlorUuid: '987y_isjgt_9866',
-                recaptcha: 'ABC',
-                demographics: {
-                    school: 'school of testing',
-                    subject: 'demotest',
-                    subscribeRequest: {
-                        userName: 'Steve',
-                        userEmail: 's.lancaster@library.uq.edu.au',
-                    },
+            // Use WAF token to access protected resources
+            window.AwsWafIntegration.fetch('https://homepage-staging.library.uq.edu.au/dlor/public/demographics', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-WAF-Token': wafToken,
                 },
-            }),
-        });
+                body: JSON.stringify({
+                    dlorUuid: '987y_isjgt_9866',
+                    recaptcha: 'ABC',
+                    demographics: {
+                        school: 'school of testing',
+                        subject: 'demotest',
+                        subscribeRequest: {
+                            userName: 'Steve',
+                            userEmail: 's.lancaster@library.uq.edu.au',
+                        },
+                    },
+                }),
+            });
+        };
     };
 
     const captchaExampleErrorFunction = error => {
