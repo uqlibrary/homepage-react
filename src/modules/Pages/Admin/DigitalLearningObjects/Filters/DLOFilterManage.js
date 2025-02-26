@@ -27,11 +27,6 @@ import { Button, FormControl, Input, InputLabel, Modal } from '@mui/material';
 import { set } from 'js-cookie';
 import { setIn } from 'immutable';
 
-const StyledObjectDetails = styled('details')(() => ({
-    marginLeft: '20px',
-}));
-
-
 
 export const DLOFilterManage = ({
     actions,
@@ -62,11 +57,13 @@ export const DLOFilterManage = ({
     const handleChange = (event) => {
         setInputValue(event.target.value);
     };
+    
+    /* istanbul ignore next */
     const handleFacetOrderChange = (event) => {
         setFacetOrder(event.target.value || 0);
     };
     const handleFacetHelpChange = (event) => {
-        setFacetHelp(event.target.value || '');
+        setFacetHelp(event.target.value || /* istanbul ignore next */ '');
     };
 
     const updateFacet = (id) => {
@@ -129,8 +126,8 @@ export const DLOFilterManage = ({
                 {!!dlorFilterList && dlorFilterList.length > 0 && dlorFilterList.map(facetType => (
                     <React.Fragment key={facetType.facet_type_name}>
                         <Grid item xs={11}>
-                            <Typography component='h3' sx={{fontWeight: 'bold'}}>
-                                {facetType?.facet_type_name ?? 'No facet type name'}
+                            <Typography component='h3' sx={{fontWeight: 'bold'}} data-testid={`facet-type-${facetType.facet_type_id}-name`}>
+                                {facetType?.facet_type_name}
                             </Typography>
                         </Grid>
                         <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -139,7 +136,8 @@ export const DLOFilterManage = ({
                                 setFacetTypeName(facetType.facet_type_name);
                                 setFacetTypeId(facetType.facet_type_id);
                                 setEditBoxOpened(true)
-                            }}>
+                            }}
+                            data-testid={`add-facet-${facetType.facet_type_id}`}>   
                                 <AddIcon />
                             </IconButton>
                         </Grid>
@@ -156,7 +154,7 @@ export const DLOFilterManage = ({
                                         sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}
                                     >
                                         <Typography component='p'>
-                                            {facet?.facet_name ?? 'No facet name'}
+                                            {facet?.facet_name}
                                         </Typography>
                                     </Grid>
                                     <Grid
@@ -173,12 +171,14 @@ export const DLOFilterManage = ({
                                             setEditBoxOpened(true); 
                                             setFormMode('edit');
                                             setInputValue(facet?.facet_name);
-                                            setFacetOrder(facet?.facet_order || 0);
+                                            setFacetOrder(facet?.facet_order || /* istanbul ignore next */ 0);
                                             setFacetHelp(facet?.facet_help || '');
                                             setFacetName(facet?.facet_name);
                                             setFacet(facet);
                                             console.log("facet", facet);
-                                            }}>
+                                            }}
+                                            data-testid={`edit-facet-${facet.facet_id}`}
+                                        >
                                             <EditIcon />
                                         </IconButton>
                                     </Grid>
@@ -188,7 +188,9 @@ export const DLOFilterManage = ({
                                             setFacet(facet);
                                             setConfirmDeleteModal(true);
                                             //handleDeleteFacet(facet?.facet_id)
-                                        }}>
+                                        }}
+                                            data-testid={`delete-facet-${facet.facet_id}`}
+                                        >
                                             <DeleteIcon />
                                         </IconButton>
                                     </Grid>

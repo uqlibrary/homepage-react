@@ -1533,7 +1533,7 @@ export const DlorForm = ({
     const navigateToPrimaryPage = () => {
         setConfirmationOpen(false);
         actions.clearADlor();
-        window.location.href = '/digital-learning-hub'();
+        window.location.href = '/digital-learning-hub';
         scrollToTopOfPage();
     };
 

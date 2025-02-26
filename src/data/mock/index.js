@@ -1332,3 +1332,7 @@ mock.onGet('exams/course/FREN1010/summary')
         console.log('url not mocked...', config.url);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });
+
+    fetchMock.post('begin:https://b842968e7955.20f461b1.ap-southeast-2', 200);
+    //fetchMock.get('begin:https://b842968e7955.20f461b1.ap-southeast-2', 200);
+    
