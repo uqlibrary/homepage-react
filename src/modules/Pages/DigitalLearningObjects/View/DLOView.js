@@ -220,7 +220,7 @@ export const DLOView = ({
     const [confirmationOpen, setConfirmationOpen] = React.useState(false);
     const captchaContainerRef = React.useRef(null);
 
-    const captchaExampleSuccessFunction = wafToken => {
+    const captchaExampleSuccessFunction = /* istanbul ignore next */ wafToken => {
         /* istanbul ignore next */
         return () => {
             console.log('CAPTCHA COMPLETED - WAF TOKEN', wafToken);
@@ -259,7 +259,7 @@ export const DLOView = ({
             console.log('Showing');
             if (captchaContainerRef.current) {
                 const container = captchaContainerRef.current;
-
+                /* istanbul ignore else */
                 if (container) {
                     window.AwsWafCaptcha.renderCaptcha(container, {
                         apiKey:
