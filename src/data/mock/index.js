@@ -342,6 +342,11 @@ fetchMock.mock(
     subjectSearchSuggestions,
 );
 
+fetchMock.mock('https://b842968e7955.20f461b1.ap-southeast-2.token.awswaf.com/b842968e7955/report', {
+    status: 200,
+    body: {},
+});
+
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
     {
         key: '123456-123456-123456-123456-123456',
@@ -738,8 +743,6 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .reply(() => {
         return [200, { data: { response: 'ok' } }];
     });
-    
-
 
 mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
@@ -1333,6 +1336,6 @@ mock.onGet('exams/course/FREN1010/summary')
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });
 
-    fetchMock.post('begin:https://b842968e7955.20f461b1.ap-southeast-2', 200);
+    //fetchMock.post('begin:https://b842968e7955.20f461b1.ap-southeast-2', 200);
     //fetchMock.get('begin:https://b842968e7955.20f461b1.ap-southeast-2', 200);
     
