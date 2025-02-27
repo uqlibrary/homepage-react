@@ -1,9 +1,21 @@
 describe('Digital Learning Hub View page', () => {
     context('details page', () => {
+        beforeEach(() => {
+            cy.intercept('GET', 'https://b842968e7955.edge.captcha-sdk.awswaf.com/b842968e7955/jsapi.js', {
+                statusCode: 404,
+                body: 'Not Found',
+            });
+        });
         it('appears as expected', () => {
             cy.intercept('GET', /uq.h5p.com/, {
                 statusCode: 200,
                 body: 'user has navigated to pressbook link',
+            });
+
+            // Intercept the aws captcha request - return a 404
+            cy.intercept('GET', 'https://b842968e7955.edge.captcha-sdk.awswaf.com/b842968e7955/jsapi.js', {
+                statusCode: 404,
+                body: 'Not Found',
             });
 
             cy.visit('digital-learning-hub/view/938h_4986_654f');
@@ -49,7 +61,7 @@ describe('Digital Learning Hub View page', () => {
                 .should('contain', 'Assignments');
             // not effective.
             cy.get('[data-testid="detailpage-filter-topic"] ul li:first-child a:nth-of-type(2)').should('not.exist'); // no help link
-            
+
             cy.get('[data-testid="detailpage-filter-topic"] ul li:nth-child(2)')
                 .should('exist')
                 .should('contain', 'Software');
@@ -64,7 +76,9 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="detailpage-filter-item-type"] ul li:first-child')
                 .should('exist')
                 .should('contain', 'Module');
-            cy.get('[data-testid="detailpage-filter-item-type"] ul li:first-child a:nth-of-type(2)').should('not.exist'); // no help link
+            cy.get('[data-testid="detailpage-filter-item-type"] ul li:first-child a:nth-of-type(2)').should(
+                'not.exist',
+            ); // no help link
 
             cy.get('[data-testid="detailpage-filter-media-format"] h3')
                 .should('exist')
@@ -76,7 +90,9 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="detailpage-filter-media-format"] ul li:first-child')
                 .should('exist')
                 .should('contain', 'H5P');
-            cy.get('[data-testid="detailpage-filter-media-format"] ul li:first-child a:nth-of-type(2)').should('not.exist'); // no help link
+            cy.get('[data-testid="detailpage-filter-media-format"] ul li:first-child a:nth-of-type(2)').should(
+                'not.exist',
+            ); // no help link
 
             cy.get('[data-testid="detailpage-filter-subject"] h3')
                 .should('exist')
@@ -115,7 +131,9 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="detailpage-filter-graduate-attributes"] ul li:first-child')
                 .should('exist')
                 .should('contain', 'Accomplished scholars');
-            cy.get('[data-testid="detailpage-filter-graduate-attributes"] ul li:first-child a:nth-of-type(2)').should('not.exist'); // no help link
+            cy.get('[data-testid="detailpage-filter-graduate-attributes"] ul li:first-child a:nth-of-type(2)').should(
+                'not.exist',
+            ); // no help link
             cy.get('[data-testid="detailpage-filter-graduate-attributes"] ul li:nth-child(2)')
                 .should('exist')
                 .should('contain', 'Influential communicators');
@@ -210,7 +228,12 @@ describe('Digital Learning Hub View page', () => {
     context('demographics & notifications send properly', () => {
         beforeEach(() => {
             cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
+            cy.intercept('GET', 'https://b842968e7955.edge.captcha-sdk.awswaf.com/b842968e7955/jsapi.js', {
+                statusCode: 404,
+                body: 'Not Found',
+            });
         });
+
         it('can visit the object link without gathering demographics', () => {
             cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
             cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597');
@@ -723,6 +746,12 @@ describe('Digital Learning Hub View page', () => {
         });
     });
     context('"Access it" units show properly', () => {
+        beforeEach(() => {
+            cy.intercept('GET', 'https://b842968e7955.edge.captcha-sdk.awswaf.com/b842968e7955/jsapi.js', {
+                statusCode: 404,
+                body: 'Not Found',
+            });
+        });
         it('A watchable object shows the correct units on the Get It button', () => {
             cy.visit('digital-learning-hub/view/987y_isjgt_9866');
             cy.viewport(1300, 1000);
@@ -749,6 +778,12 @@ describe('Digital Learning Hub View page', () => {
         });
     });
     context('user-level privilege', () => {
+        beforeEach(() => {
+            cy.intercept('GET', 'https://b842968e7955.edge.captcha-sdk.awswaf.com/b842968e7955/jsapi.js', {
+                statusCode: 404,
+                body: 'Not Found',
+            });
+        });
         it('the non-logged in user is prompted to login', () => {
             cy.visit('digital-learning-hub/view/987y_isjgt_9866?user=public');
             cy.viewport(1300, 1000);
@@ -804,9 +839,14 @@ describe('Digital Learning Hub View page', () => {
             );
             cy.get('[data-testid="detailpage-admin-edit-button"]').should('not.exist');
         });
-        
     });
     context('Graduate Attribute helpers on homepage', () => {
+        beforeEach(() => {
+            cy.intercept('GET', 'https://b842968e7955.edge.captcha-sdk.awswaf.com/b842968e7955/jsapi.js', {
+                statusCode: 404,
+                body: 'Not Found',
+            });
+        });
         it('Graduate attribute detailed information shows on the index page, and can be shown / hid', () => {
             cy.visit('digital-learning-hub?filters=10%2C11%2C12%2C13%2C14');
             cy.viewport(1300, 1000);
@@ -819,22 +859,16 @@ describe('Digital Learning Hub View page', () => {
             cy.get('#accomplished-scholars-dlor-filter-checkbox').should('be.checked');
             cy.get('#connected-citizens-dlor-filter-checkbox').should('be.checked');
             cy.get('#courageous-thinkers-dlor-filter-checkbox').should('be.checked');
-            cy.get('#culturally-capable-dlor-filter-checkbox').should('be.checked'); 
-            cy.get('[data-testid="graduate-attribute-10-name"]')
-                .should('exist')
+            cy.get('#culturally-capable-dlor-filter-checkbox').should('be.checked');
+            cy.get('[data-testid="graduate-attribute-10-name"]').should('exist');
             cy.get('#accomplished-scholars-dlor-filter-checkbox').click();
-            cy.get('[data-testid="graduate-attribute-10-name"]')
-                .should('not.exist')
+            cy.get('[data-testid="graduate-attribute-10-name"]').should('not.exist');
             cy.get('#connected-citizens-dlor-filter-checkbox').click();
-            cy.get('[data-testid="graduate-attribute-11-name"]')
-                .should('not.exist')
+            cy.get('[data-testid="graduate-attribute-11-name"]').should('not.exist');
             cy.get('#courageous-thinkers-dlor-filter-checkbox').click();
-            cy.get('[data-testid="graduate-attribute-12-name"]')
-                .should('not.exist')
+            cy.get('[data-testid="graduate-attribute-12-name"]').should('not.exist');
             cy.get('#culturally-capable-dlor-filter-checkbox').click();
-            cy.get('[data-testid="graduate-attribute-13-name"]')
-                .should('not.exist')
+            cy.get('[data-testid="graduate-attribute-13-name"]').should('not.exist');
         });
-    })
-
+    });
 });
