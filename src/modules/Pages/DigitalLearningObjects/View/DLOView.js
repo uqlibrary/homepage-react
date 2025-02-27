@@ -203,6 +203,8 @@ const StyledFilterLink = styled(Link)(() => ({
     color: '#3872a8 !important',
 }));
 
+window.captchaScriptLoaded = window.captchaScriptLoaded || false;
+
 export const DLOView = ({
     actions,
     // get viewed dlor item
@@ -214,11 +216,13 @@ export const DLOView = ({
     dlorItemUpdating,
     dlorUpdatedItemError,
 }) => {
+    console.log('PROCESS', process.env.NODE_ENV);
     const { account } = useAccountContext();
     const { dlorId } = useParams();
     const [cookies, setCookie] = useCookies();
     const [confirmationOpen, setConfirmationOpen] = React.useState(false);
     const captchaContainerRef = React.useRef(null);
+    const [captchaLoaded, setCaptchaLoaded] = React.useState(false);
 
     const captchaExampleSuccessFunction = /* istanbul ignore next */ wafToken => {
         /* istanbul ignore next */
@@ -254,10 +258,35 @@ export const DLOView = ({
         /* Do something with the error */
         console.error('Captcha error:', error);
     };
+
     useEffect(() => {
-        if (dlorItem) {
+        if (document.getElementById('captcha-script')) return;
+
+        const script = document.createElement('script');
+        script.src = 'https://b842968e7955.edge.captcha-sdk.awswaf.com/b842968e7955/jsapi.js';
+        script.type = 'text/javascript';
+        script.async = false;
+        script.defer = false;
+        script.id = 'captcha-script';
+
+        script.onload = () => {
+            window.captchaScriptLoaded = true;
+            setCaptchaLoaded(true);
+        };
+
+        script.onerror = () => {
+            console.error('Failed to load captcha script.');
+        };
+
+        document.head.appendChild(script);
+    }, []);
+
+    useEffect(() => {
+        /* istanbul ignore else */
+        if (dlorItem && captchaLoaded) {
             const showMyCaptcha = () => {
                 console.log('Showing', dlorItem);
+                /* istanbul ignore else */
                 if (captchaContainerRef.current) {
                     const container = captchaContainerRef.current;
                     /* istanbul ignore else */
@@ -277,13 +306,8 @@ export const DLOView = ({
 
             // Call showMyCaptcha when the component mounts
             showMyCaptcha();
-
-            // Cleanup function (optional)
-            return () => {
-                // Any cleanup code if needed
-            };
         }
-    }, [dlorItem]);
+    }, [dlorItem, captchaLoaded]);
 
     // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
     // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);

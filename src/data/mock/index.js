@@ -342,6 +342,18 @@ fetchMock.mock(
     subjectSearchSuggestions,
 );
 
+fetchMock.get(
+    'end:jsapi.js',
+    {
+        status: 200,
+        headers: { 'Content-Type': 'application/javascript' },
+        body: '// Mocked script content\nconsole.log("Mocked captcha script loaded!");\nwindow.AwsWafCaptcha = { renderCaptcha: () => {} };',
+    },
+    { overwriteRoutes: true },
+);
+
+//mock.onGet('https://b842968e7955.edge.captcha-sdk.awswaf.com/b842968e7955/jsapi.js', 404)
+
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
     {
         key: '123456-123456-123456-123456-123456',
@@ -1334,5 +1346,5 @@ mock.onGet('exams/course/FREN1010/summary')
     });
 
     fetchMock.post('begin:https://b842968e7955.20f461b1.ap-southeast-2', 200);
-    //fetchMock.get('begin:https://b842968e7955.20f461b1.ap-southeast-2', 200);
+   
     
