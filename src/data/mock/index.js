@@ -342,6 +342,10 @@ fetchMock.mock(
     subjectSearchSuggestions,
 );
 
+
+
+//mock.onGet('https://b842968e7955.edge.captcha-sdk.awswaf.com/b842968e7955/jsapi.js', 404)
+
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
     {
         key: '123456-123456-123456-123456-123456',
@@ -1332,3 +1336,7 @@ mock.onGet('exams/course/FREN1010/summary')
         console.log('url not mocked...', config.url);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });
+
+    fetchMock.post('begin:https://b842968e7955.20f461b1.ap-southeast-2', 200);
+   
+    

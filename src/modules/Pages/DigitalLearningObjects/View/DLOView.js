@@ -200,8 +200,10 @@ const StyledSidebarHeadingTypography = styled(Typography)(() => ({
 }));
 
 const StyledFilterLink = styled(Link)(() => ({
-    color: '#3872a8 !important'
+    color: '#3872a8 !important',
 }));
+
+window.captchaScriptLoaded = window.captchaScriptLoaded || false;
 
 export const DLOView = ({
     actions,
@@ -214,14 +216,102 @@ export const DLOView = ({
     dlorItemUpdating,
     dlorUpdatedItemError,
 }) => {
+    console.log('PROCESS', process.env.NODE_ENV);
     const { account } = useAccountContext();
     const { dlorId } = useParams();
     const [cookies, setCookie] = useCookies();
     const [confirmationOpen, setConfirmationOpen] = React.useState(false);
+    const captchaContainerRef = React.useRef(null);
+    const [captchaLoaded, setCaptchaLoaded] = React.useState(false);
+
+    const captchaExampleSuccessFunction = /* istanbul ignore next */ wafToken => {
+        /* istanbul ignore next */
+        return () => {
+            console.log('CAPTCHA COMPLETED - WAF TOKEN', wafToken);
+            // Captcha completed. wafToken contains a valid WAF token. Store it for
+            // use later or call AwsWafIntegration.fetch() to use it easily.
+
+            // Use WAF token to access protected resources
+            window.AwsWafIntegration.fetch('https://homepage-staging.library.uq.edu.au/dlor/public/demographics', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-WAF-Token': wafToken,
+                },
+                body: JSON.stringify({
+                    dlorUuid: '987y_isjgt_9866',
+                    recaptcha: 'ABC',
+                    demographics: {
+                        school: 'school of testing',
+                        subject: 'demotest',
+                        subscribeRequest: {
+                            userName: 'Steve',
+                            userEmail: 's.lancaster@library.uq.edu.au',
+                        },
+                    },
+                }),
+            });
+        };
+    };
+
+    const captchaExampleErrorFunction = error => {
+        /* Do something with the error */
+        console.error('Captcha error:', error);
+    };
+
+    useEffect(() => {
+        if (document.getElementById('captcha-script')) return;
+
+        const script = document.createElement('script');
+        script.src = 'https://b842968e7955.edge.captcha-sdk.awswaf.com/b842968e7955/jsapi.js';
+        script.type = 'text/javascript';
+        script.async = false;
+        script.defer = false;
+        script.id = 'captcha-script';
+
+        script.onload = () => {
+            window.captchaScriptLoaded = true;
+            setCaptchaLoaded(true);
+        };
+
+        script.onerror = () => {
+            console.error('Failed to load captcha script.');
+        };
+
+        document.head.appendChild(script);
+    }, []);
+
+    useEffect(() => {
+        /* istanbul ignore else */
+        if (dlorItem && captchaLoaded) {
+            const showMyCaptcha = () => {
+                console.log('Showing', dlorItem);
+                /* istanbul ignore else */
+                if (captchaContainerRef.current) {
+                    const container = captchaContainerRef.current;
+                    /* istanbul ignore else */
+                    if (container) {
+                        window.AwsWafCaptcha.renderCaptcha(container, {
+                            apiKey:
+                                'ju8dnzZ9MlFyG7HUBKXNhm2K15TY6OFh6j0AlKekdcGzetCBsTeTo0BOeiFV1NZ3nsOenj909pXtXhNiMzAuq+ckt+7oqZoVpXuehF7xTghwbqd7/4t2bNXklXXByZTyRxAxi0q/p0/LM+DPVqcE72LI9zRCuhFjvvrCfO6HLObT2dltCDQtNXtczV7eJrLgqetq/Lg01/UQZAD9UBtvOUbZbLwfHQXXraUTuYEvW/kv/OgI2k4w4yUKw0QMAg2rDpiF/hlmuftz3Vx6pZv+2nPYhyxxRso574M5yFf5Z4uN86+L0KduAYy/P0U/T63EBy6JYWC7ndYcBJciXkwfwCwdPA7aC3PEj39k6UpBHSxojj31GUTJQN/NPyVnuSWTZ8m3PleVtk/QqQO3E2SJiNV10iLjjGFIbnJLIeGVD05ZftAQShcZDPsqrW7et8X/EfTDo1bV+X1RBJwCP6fWpuOQ24WmKD+CGVVYP1wcM6YdtWmMXD4F+H/SkMWpYrO2MDqesyqSGSD8ZxZoeLbd/5GGpe+KWZQftaWmrFF3X5lJlJRzdAu5BcSYNZJnDQ9QNJWd5hLegXNiydkgxvy3H4CRTd6DFnvhAgdfi2hggfqJfhTM/RFwpoEbAO5EIaZ9OXwpmHqGYtBhVs6kbSpKUW7k+q6+qNu536/A/ZA47Ps=_1_1',
+                            onSuccess: captchaExampleSuccessFunction,
+                            onError: captchaExampleErrorFunction,
+                            // ...other configuration parameters as needed...
+                        });
+                    } else {
+                        console.error('Captcha container not found');
+                    }
+                }
+            };
+
+            // Call showMyCaptcha when the component mounts
+            showMyCaptcha();
+        }
+    }, [dlorItem, captchaLoaded]);
 
     // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
     // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
-    
+
     const isLoggedIn = !!account?.id;
 
     const [formValues, setFormValues] = React.useState({
@@ -237,21 +327,20 @@ export const DLOView = ({
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dlor.title);
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dlor.pathname);
     }, []);
-   // PENDING CHANGE - left in to merge when ticket for require login is built.
-  
+    // PENDING CHANGE - left in to merge when ticket for require login is built.
+
     // async function sha256(message) {
     //     // Encode as UTF-8
     //     const msgBuffer = new TextEncoder('utf-8').encode(message);
     //     // Hash the message
     //     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    //     // Convert ArrayBuffer to Array   
+    //     // Convert ArrayBuffer to Array
     //     const hashArray = Array.from(new Uint8Array(hashBuffer));
     //     // Convert bytes to hex string
-    //     const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');   
+    //     const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
     //     return hashHex;
     //   }
 
-   
     // useEffect(() => {
     //     if (dlorItem && dlorItem.object_public_uuid) {
     //         // check if they have access param requirement. If it doesnt match, reject.
@@ -268,10 +357,9 @@ export const DLOView = ({
     //                 }
     //             });
     //         }
-            
+
     //     }
     // }, [dlorItem]);
-
 
     useEffect(() => {
         if (!!account?.id) {
@@ -292,7 +380,7 @@ export const DLOView = ({
             theNewValue = !!e.target.checked;
         }
         const newValues = { ...formValues, [prop]: theNewValue };
-       
+
         setFormValues(newValues);
     };
 
@@ -315,7 +403,6 @@ export const DLOView = ({
                 page_title: dlorItem.object_title,
             });
             document.title = dlorItem.object_title;
-             
         }
     }, [dlorItem]);
 
@@ -384,7 +471,6 @@ export const DLOView = ({
     const saveAndNavigate = dlorItem => {
         // console.log('saveAndNavigate formValues', dlorItem.object_link_url, formValues);
 
-        
         if (formValues.schoolName.length > 0 || formValues.subjectCode.length > 0 || !!formValues.notify) {
             const valuestoSend = {
                 dlorUuid: dlorItem.object_public_uuid,
@@ -559,18 +645,20 @@ export const DLOView = ({
                                             </>
                                         )}
                                         {!!dlorItem?.object_series_name && dlorItem?.object_series?.length > 1 && (
-                                             <>
+                                            <>
                                                 <PlaylistAddCheckIcon
                                                     sx={{ fill: '#4aa74e', marginRight: '2px', width: 24 }}
                                                 />
                                                 <Link to={`/digital-learning-hub/series/${dlorItem.object_series_id}`}>
                                                     <StyledTagLabelSpan
-                                                        data-testid={'dlor-detailpage-object-series-name-custom-indicator'}
+                                                        data-testid={
+                                                            'dlor-detailpage-object-series-name-custom-indicator'
+                                                        }
                                                     >
                                                         Series: {dlorItem?.object_series_name}
                                                     </StyledTagLabelSpan>
                                                 </Link>
-                                                </>
+                                            </>
                                         )}
                                     </Typography>
                                 )}
@@ -798,7 +886,11 @@ export const DLOView = ({
                                                         filter.filter_values.map((value, subIndex) => {
                                                             return (
                                                                 <li key={subIndex}>
-                                                                    <StyledFilterLink to={`/digital-learning-hub?filters=${value.id}`} >{value.name}</StyledFilterLink>
+                                                                    <StyledFilterLink
+                                                                        to={`/digital-learning-hub?filters=${value.id}`}
+                                                                    >
+                                                                        {value.name}
+                                                                    </StyledFilterLink>
                                                                     {!!value?.help && value?.help.startsWith('http') && (
                                                                         <a
                                                                             href={value.help}
@@ -824,7 +916,14 @@ export const DLOView = ({
                                                 {dlorItem.object_keywords.map((keyword, index) => {
                                                     return (
                                                         <li key={index}>
-                                                            <StyledFilterLink to={`/digital-learning-hub?keyword=${keyword.charAt(0).toUpperCase() + keyword.slice(1).replace(/\s/g, '+')}`}>{keyword.charAt(0).toUpperCase() + keyword.slice(1)}</StyledFilterLink>
+                                                            <StyledFilterLink
+                                                                to={`/digital-learning-hub?keyword=${keyword
+                                                                    .charAt(0)
+                                                                    .toUpperCase() +
+                                                                    keyword.slice(1).replace(/\s/g, '+')}`}
+                                                            >
+                                                                {keyword.charAt(0).toUpperCase() + keyword.slice(1)}
+                                                            </StyledFilterLink>
                                                         </li>
                                                     );
                                                 })}
