@@ -406,9 +406,9 @@ export const DLOView = ({
         }
     }, [dlorItem]);
 
-    const navigateToObjectLink = React.useCallback(() => {
+    function navigateToObjectLink() {
         window.location.href = dlorItem?.object_link_url;
-    }, [dlorItem?.object_link_url]);
+    }
 
     useEffect(() => {
         // when the save attempt comes back...
@@ -759,8 +759,6 @@ export const DLOView = ({
                                             </>
                                         )}
 
-                                        <div ref={captchaContainerRef} id="my-captcha-container" />
-
                                         <div>
                                             <StyledUQActionButton>
                                                 <Button
@@ -935,9 +933,9 @@ export const DLOView = ({
                                 </>
                             )}
                         </Grid>
+                        <div ref={captchaContainerRef} id="my-captcha-container" />
                     </StyledContentGrid>
                 </div>
-                <div ref={captchaContainerRef} id="my-captcha-container" />
             </>
         </StandardPage>
     );
