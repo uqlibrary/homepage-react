@@ -256,6 +256,7 @@ export const DLOView = ({
 
     const captchaExampleErrorFunction = error => {
         /* Do something with the error */
+        /* istanbul ignore next */
         console.error('Captcha error:', error);
     };
 
