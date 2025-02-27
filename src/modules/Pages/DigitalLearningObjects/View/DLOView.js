@@ -933,6 +933,7 @@ export const DLOView = ({
                                 </>
                             )}
                         </Grid>
+                        <div ref={captchaContainerRef} id="my-captcha-container" />
                     </StyledContentGrid>
                 </div>
             </>
