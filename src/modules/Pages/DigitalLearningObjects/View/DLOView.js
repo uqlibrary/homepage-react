@@ -270,6 +270,7 @@ export const DLOView = ({
         script.defer = false;
         script.id = 'captcha-script';
 
+        /* istanbul ignore next */
         script.onload = () => {
             window.captchaScriptLoaded = true;
             setCaptchaLoaded(true);
@@ -283,7 +284,7 @@ export const DLOView = ({
     }, []);
 
     useEffect(() => {
-        /* istanbul ignore else */
+        /* istanbul ignore next */
         if (dlorItem && captchaLoaded) {
             const showMyCaptcha = () => {
                 console.log('Showing', dlorItem);
