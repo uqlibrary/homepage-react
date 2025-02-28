@@ -227,8 +227,8 @@ export const DLOView = ({
 
     const captchaExampleSuccessFunction = /* istanbul ignore next */ wafToken => {
         /* istanbul ignore next */
+        console.log('CAPTCHA COMPLETED - WAF TOKEN', wafToken);
         return () => {
-            console.log('CAPTCHA COMPLETED - WAF TOKEN', wafToken);
             // Captcha completed. wafToken contains a valid WAF token. Store it for
             // use later or call AwsWafIntegration.fetch() to use it easily.
 
@@ -252,6 +252,8 @@ export const DLOView = ({
                     },
                 }),
             });
+
+            console.log('My response:', myResponse);
         };
     };
 
