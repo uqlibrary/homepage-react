@@ -228,31 +228,37 @@ export const DLOView = ({
     const captchaExampleSuccessFunction = /* istanbul ignore next */ wafToken => {
         /* istanbul ignore next */
         console.log('CAPTCHA COMPLETED - WAF TOKEN', wafToken);
-        return () => {
-            // Captcha completed. wafToken contains a valid WAF token. Store it for
-            // use later or call AwsWafIntegration.fetch() to use it easily.
-
-            // Use WAF token to access protected resources
-            window.AwsWafIntegration.fetch('https://homepage-staging.library.uq.edu.au/dlor/public/demographics', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-WAF-Token': wafToken,
-                },
-                body: JSON.stringify({
-                    dlorUuid: '987y_isjgt_9866',
-                    recaptcha: 'ABC',
-                    demographics: {
-                        school: 'school of testing',
-                        subject: 'demotest',
-                        subscribeRequest: {
-                            userName: 'Steve',
-                            userEmail: 's.lancaster@library.uq.edu.au',
-                        },
+        window.AwsWafIntegration.fetch('https://homepage-staging.library.uq.edu.au/dlor/public/demographics', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-WAF-Token': wafToken,
+            },
+            body: JSON.stringify({
+                dlorUuid: '987y_isjgt_9866',
+                recaptcha: 'ABC',
+                demographics: {
+                    school: 'school of testing',
+                    subject: 'demotest',
+                    subscribeRequest: {
+                        userName: 'Steve',
+                        userEmail: 's.lancaster@library.uq.edu.au',
                     },
-                }),
+                },
+            }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json(); // Or response.text() if the API returns plain text
+            })
+            .then(data => {
+                console.log('API Response:', data); // Log the response data to the console
+            })
+            .catch(error => {
+                console.error('Fetch error:', error); // Log any errors to the console
             });
-        };
     };
 
     const captchaExampleErrorFunction = error => {
