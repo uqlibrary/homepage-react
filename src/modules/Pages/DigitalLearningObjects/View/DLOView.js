@@ -252,8 +252,6 @@ export const DLOView = ({
                     },
                 }),
             });
-
-            console.log('My response:', myResponse);
         };
     };
 
