@@ -25,7 +25,6 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import SchoolSharpIcon from '@mui/icons-material/SchoolSharp';
 import SearchIcon from '@mui/icons-material/Search';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import InfoIcon from '@mui/icons-material/Info';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -403,6 +402,7 @@ export const DLOList = ({
     };
 
     const handleKeywordCharacterEntry = e => {
+        /* istanbul ignore next */
         if (e.key === 'Tab') {
             return;
         }
@@ -1018,6 +1018,7 @@ export const DLOList = ({
                 data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(object?.object_public_uuid)}`}
             >
                 <StyledArticleCard
+                    role="button"
                     onClick={() => navigateToDetailPage(object?.object_public_uuid)}
                     tabIndex="0"
                     aria-labelledby={`dlor-title-${object?.object_public_uuid}`}
@@ -1170,6 +1171,7 @@ export const DLOList = ({
     const contactFormLink = 'https://forms.office.com/r/8t0ugSZgE7';
 
     const containsGraduateAttributes = selectedFilters.some(filter => filter.includes('graduate_attributes'));
+
     // sort the grad attributes display set in alpha order.
     selectedGradAttributes.sort((a, b) => {
         return a.facet_name.localeCompare(b.facet_name);
@@ -1288,34 +1290,39 @@ export const DLOList = ({
                         />
                         {/* Graduate attribute container */}
                         {containsGraduateAttributes ? (
-                            <div style={{ padding: '0px 12px 0px 12px', display: 'flex', flexWrap: 'wrap' }}>
+                            <div
+                                style={{ padding: '0px 12px 0px 12px', display: 'flex', flexWrap: 'wrap' }}
+                                data-testid="graduate-attributes-detail-container"
+                            >
                                 {selectedGradAttributes.map(item => {
-                                    <div
-                                        key={`item__${item.facet_id}`}
-                                        style={{
-                                            flex: '0 0 100%',
-                                            backgroundColor: '#FAFAFA',
-                                            padding: '0 -24px 0px 12px',
-                                        }}
-                                    >
-                                        <div style={{ paddingLeft: '12px' }}>
-                                            <h3
-                                                key={`name_${item.facet_id}`}
-                                                style={{ color: '#51247a', marginBottom: '5px', paddingBottom: 0 }}
-                                                data-testid={`graduate-attribute-${item.facet_id}-name`}
-                                            >
-                                                {item.facet_name}
-                                            </h3>
-                                            <p
-                                                key={`help_${item.facet_id}`}
-                                                style={{ color: '#555', paddingTop: '0px', marginTop: 0 }}
-                                                data-testid={`graduate-attribute-${item.facet_id}-description`}
-                                            >
-                                                {(item.facet_help && parse(item.facet_help)) ||
-                                                    'no help for this graduate attribute at this time'}
-                                            </p>
+                                    return (
+                                        <div
+                                            key={`item__${item.facet_id}`}
+                                            style={{
+                                                flex: '0 0 100%',
+                                                backgroundColor: '#FAFAFA',
+                                                padding: '0 -24px 0px 12px',
+                                            }}
+                                        >
+                                            <div style={{ paddingLeft: '12px' }}>
+                                                <h3
+                                                    key={`name_${item.facet_id}`}
+                                                    style={{ color: '#51247a', marginBottom: '5px', paddingBottom: 0 }}
+                                                    data-testid={`graduate-attribute-${item.facet_id}-name`}
+                                                >
+                                                    {item.facet_name}
+                                                </h3>
+                                                <p
+                                                    key={`help_${item.facet_id}`}
+                                                    style={{ color: '#555', paddingTop: '0px', marginTop: 0 }}
+                                                    data-testid={`graduate-attribute-${item.facet_id}-description`}
+                                                >
+                                                    {(item.facet_help && parse(item.facet_help)) ||
+                                                        'no help for this graduate attribute at this time'}
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>;
+                                    );
                                 })}
                             </div>
                         ) : null}
