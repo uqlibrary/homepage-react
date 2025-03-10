@@ -49,7 +49,7 @@ describe('Digital Learning Hub View page', () => {
                 .should('contain', 'Assignments');
             // not effective.
             cy.get('[data-testid="detailpage-filter-topic"] ul li:first-child a:nth-of-type(2)').should('not.exist'); // no help link
-            
+
             cy.get('[data-testid="detailpage-filter-topic"] ul li:nth-child(2)')
                 .should('exist')
                 .should('contain', 'Software');
@@ -64,7 +64,9 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="detailpage-filter-item-type"] ul li:first-child')
                 .should('exist')
                 .should('contain', 'Module');
-            cy.get('[data-testid="detailpage-filter-item-type"] ul li:first-child a:nth-of-type(2)').should('not.exist'); // no help link
+            cy.get('[data-testid="detailpage-filter-item-type"] ul li:first-child a:nth-of-type(2)').should(
+                'not.exist',
+            ); // no help link
 
             cy.get('[data-testid="detailpage-filter-media-format"] h3')
                 .should('exist')
@@ -76,7 +78,9 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="detailpage-filter-media-format"] ul li:first-child')
                 .should('exist')
                 .should('contain', 'H5P');
-            cy.get('[data-testid="detailpage-filter-media-format"] ul li:first-child a:nth-of-type(2)').should('not.exist'); // no help link
+            cy.get('[data-testid="detailpage-filter-media-format"] ul li:first-child a:nth-of-type(2)').should(
+                'not.exist',
+            ); // no help link
 
             cy.get('[data-testid="detailpage-filter-subject"] h3')
                 .should('exist')
@@ -115,7 +119,9 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="detailpage-filter-graduate-attributes"] ul li:first-child')
                 .should('exist')
                 .should('contain', 'Accomplished scholars');
-            cy.get('[data-testid="detailpage-filter-graduate-attributes"] ul li:first-child a:nth-of-type(2)').should('not.exist'); // no help link
+            cy.get('[data-testid="detailpage-filter-graduate-attributes"] ul li:first-child a:nth-of-type(2)').should(
+                'not.exist',
+            ); // no help link
             cy.get('[data-testid="detailpage-filter-graduate-attributes"] ul li:nth-child(2)')
                 .should('exist')
                 .should('contain', 'Influential communicators');
@@ -804,7 +810,6 @@ describe('Digital Learning Hub View page', () => {
             );
             cy.get('[data-testid="detailpage-admin-edit-button"]').should('not.exist');
         });
-        
     });
     context('Graduate Attribute helpers on homepage', () => {
         it('Graduate attribute detailed information shows on the index page, and can be shown / hid', () => {
@@ -819,22 +824,16 @@ describe('Digital Learning Hub View page', () => {
             cy.get('#accomplished-scholars-dlor-filter-checkbox').should('be.checked');
             cy.get('#connected-citizens-dlor-filter-checkbox').should('be.checked');
             cy.get('#courageous-thinkers-dlor-filter-checkbox').should('be.checked');
-            cy.get('#culturally-capable-dlor-filter-checkbox').should('be.checked'); 
-            cy.get('[data-testid="graduate-attribute-10-name"]')
-                .should('exist')
+            cy.get('#culturally-capable-dlor-filter-checkbox').should('be.checked');
+            cy.get('[data-testid="graduate-attribute-10-name"]').should('exist');
             cy.get('#accomplished-scholars-dlor-filter-checkbox').click();
-            cy.get('[data-testid="graduate-attribute-10-name"]')
-                .should('not.exist')
+            cy.get('[data-testid="graduate-attribute-10-name"]').should('not.exist');
             cy.get('#connected-citizens-dlor-filter-checkbox').click();
-            cy.get('[data-testid="graduate-attribute-11-name"]')
-                .should('not.exist')
+            cy.get('[data-testid="graduate-attribute-11-name"]').should('not.exist');
             cy.get('#courageous-thinkers-dlor-filter-checkbox').click();
-            cy.get('[data-testid="graduate-attribute-12-name"]')
-                .should('not.exist')
+            cy.get('[data-testid="graduate-attribute-12-name"]').should('not.exist');
             cy.get('#culturally-capable-dlor-filter-checkbox').click();
-            cy.get('[data-testid="graduate-attribute-13-name"]')
-                .should('not.exist')
+            cy.get('[data-testid="graduate-attribute-13-name"]').should('not.exist');
         });
-    })
-
+    });
 });
