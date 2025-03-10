@@ -415,9 +415,9 @@ export const DLOView = ({
         }
     }, [dlorItem]);
 
-    function navigateToObjectLink() {
+    const navigateToObjectLink = React.useCallback(() => {
         window.location.href = dlorItem?.object_link_url;
-    }
+    }, [dlorItem?.object_link_url]);
 
     useEffect(() => {
         // when the save attempt comes back...

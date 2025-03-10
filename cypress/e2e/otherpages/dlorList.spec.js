@@ -1,6 +1,6 @@
 describe('Digital Learning Hub', () => {
     const itemsPerPage = 10; // matches value in DLOList
-    const extraRowCount = 2; // pagination row + hidden mobile filter icon
+    const extraRowCount = 1; // pagination row + hidden mobile filter icon
     context('desktop homepage visits', () => {
         beforeEach(() => {
             cy.visit('digital-learning-hub');
@@ -76,7 +76,7 @@ describe('Digital Learning Hub', () => {
             );
 
             // article 1 contents correct
-            cy.get('[data-testid="dlor-homepage-panel-987y-isjgt-9866"] button').should('exist');
+            cy.get('[data-testid="dlor-homepage-panel-987y-isjgt-9866"] div').should('exist');
             cy.get('[data-testid="dlor-homepage-panel-987y-isjgt-9866"] article header h2').should(
                 'contain',
                 'Accessibility - Digital Essentials',
@@ -112,7 +112,7 @@ describe('Digital Learning Hub', () => {
                 .contains('Series: Indigenising curriculum');
 
             // article 3 contents correct
-            cy.get('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4"] button').should('exist');
+            cy.get('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4"] div').should('exist');
             cy.get('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4"] article header h2').should(
                 'contain',
                 'Advanced literature searching',
@@ -138,7 +138,7 @@ describe('Digital Learning Hub', () => {
             );
 
             // fourth panel
-            cy.get('[data-testid="dlor-homepage-panel-938h-4986-654f"] button').should('exist');
+            cy.get('[data-testid="dlor-homepage-panel-938h-4986-654f"] div').should('exist');
             cy.get('[data-testid="dlor-homepage-panel-938h-4986-654f"] article header h2').should(
                 'contain',
                 'Artificial Intelligence - Digital Essentials',
@@ -662,7 +662,7 @@ describe('Digital Learning Hub', () => {
         });
         it('has working site navigation - can move around the pages', () => {
             cy.waitUntil(() => cy.get('h1').should('exist'));
-            cy.get('[data-testid="dlor-homepage-panel-987y-isjgt-9866"] button')
+            cy.get('[data-testid="dlor-homepage-panel-987y-isjgt-9866"] div[role="button"]')
                 .should('exist')
                 .click();
             // the first detail page loads
@@ -678,7 +678,7 @@ describe('Digital Learning Hub', () => {
             cy.url().should('include', 'http://localhost:2020/digital-learning-hub');
 
             // check the second panel
-            cy.get('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4"] button')
+            cy.get('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4"] div[role="button"]')
                 .should('exist')
                 .click();
 
@@ -696,7 +696,7 @@ describe('Digital Learning Hub', () => {
             cy.url().should('include', 'http://localhost:2020/digital-learning-hub');
 
             // check the fourth panel
-            cy.get('[data-testid="dlor-homepage-panel-938h-4986-654f"] button')
+            cy.get('[data-testid="dlor-homepage-panel-938h-4986-654f"] div[role="button"]')
                 .should('exist')
                 .click();
 
@@ -745,10 +745,10 @@ describe('Digital Learning Hub', () => {
                 .should('have.class', 'Mui-selected');
 
             // the displayed entries are what is expected
-            cy.get('[data-testid="dlor-homepage-list"] button:first-child')
+            cy.get('[data-testid="dlor-homepage-list"] div[role="button"]:first-child')
                 .should('exist')
                 .should('be.visible');
-            cy.get('[data-testid="dlor-homepage-list"] button:first-child article header h2').should(
+            cy.get('[data-testid="dlor-homepage-list"] div[role="button"]:first-child article header h2').should(
                 'contain',
                 'Accessibility - Digital Essentials',
             );
@@ -764,10 +764,10 @@ describe('Digital Learning Hub', () => {
                 .click();
 
             // the displayed entries have updated
-            cy.get('[data-testid="dlor-homepage-list"] button:first-child')
+            cy.get('[data-testid="dlor-homepage-list"] div[role="button"]:first-child')
                 .should('exist')
                 .should('be.visible');
-            cy.get('[data-testid="dlor-homepage-list"] button:first-child article header h2').should(
+            cy.get('[data-testid="dlor-homepage-list"] div[role="button"]:first-child article header h2').should(
                 'contain',
                 'Dummy entry to increase list size 3',
             );
@@ -803,7 +803,9 @@ describe('Digital Learning Hub', () => {
                     $a.attr('target', '_self');
                 })
                 .click();
-            cy.get('[data-testid="dlor-UserAdd-helper"]').should('exist').should('be.visible');
+            cy.get('[data-testid="dlor-UserAdd-helper"]')
+                .should('exist')
+                .should('be.visible');
         });
     });
     context('url reflects filtering changes', () => {
@@ -981,7 +983,7 @@ describe('Digital Learning Hub', () => {
         });
         it('back button maintains filters', () => {
             // click on first Object
-            cy.get('[data-testid="dlor-homepage-panel-987y-isjgt-9866"] button')
+            cy.get('[data-testid="dlor-homepage-panel-987y-isjgt-9866"] div[role="button"]')
                 .should('exist')
                 .click();
             // the detail page loads
