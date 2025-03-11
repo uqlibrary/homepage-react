@@ -1021,9 +1021,7 @@ export const DLOList = ({
                     role="button"
                     onClick={() => navigateToDetailPage(object?.object_public_uuid)}
                     tabIndex="0"
-                    aria-labelledby={`dlor-title-${object?.object_public_uuid}`}
-                    aria-describedby={`dlor-description-${object?.object_public_uuid}`}
-                    // aria-label={`Click for more details on ${object.object_title}`}
+                    aria-label={`${object?.object_title}.  ${object?.object_summary}.`}
                     id={index === 0 ? 'first-panel-button' : null}
                 >
                     <article>
