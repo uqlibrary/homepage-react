@@ -1021,7 +1021,8 @@ export const DLOList = ({
                     role="button"
                     onClick={() => navigateToDetailPage(object?.object_public_uuid)}
                     tabIndex="0"
-                    aria-label={`${object?.object_title}.  ${object?.object_summary}.`}
+                    aria-label={`${object?.object_title} ${!!object?.object_series_name &&
+                        '(Series: ' + object.object_series_name + ')'} ${object?.object_summary}`}
                     id={index === 0 ? 'first-panel-button' : null}
                 >
                     <article>
