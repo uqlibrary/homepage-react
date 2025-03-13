@@ -1382,6 +1382,7 @@ export const DLOList = ({
                                                 data-testid="dlor-homepage-list"
                                                 id="dlor-homepage-list"
                                                 aria-live="polite"
+                                                aria-atomic="true"
                                             >
                                                 <StyledFilterSidebarIconBox
                                                     id="filterIconShowId"
