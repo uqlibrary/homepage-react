@@ -44,6 +44,8 @@ import {
 import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { breadcrumbs } from 'config/routes';
+import { Chip } from '@mui/material';
+import { Announcement, NotificationsActive } from '@mui/icons-material';
 
 const StyledUQActionButton = styled('div')(({ theme }) => ({
     marginBlock: '32px',
@@ -200,7 +202,7 @@ const StyledSidebarHeadingTypography = styled(Typography)(() => ({
 }));
 
 const StyledFilterLink = styled(Link)(() => ({
-    color: '#3872a8 !important'
+    color: '#3872a8 !important',
 }));
 
 export const DLOView = ({
@@ -221,7 +223,7 @@ export const DLOView = ({
 
     // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
     // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
-    
+
     const isLoggedIn = !!account?.id;
 
     const [formValues, setFormValues] = React.useState({
@@ -237,21 +239,20 @@ export const DLOView = ({
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dlor.title);
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dlor.pathname);
     }, []);
-   // PENDING CHANGE - left in to merge when ticket for require login is built.
-  
+    // PENDING CHANGE - left in to merge when ticket for require login is built.
+
     // async function sha256(message) {
     //     // Encode as UTF-8
     //     const msgBuffer = new TextEncoder('utf-8').encode(message);
     //     // Hash the message
     //     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    //     // Convert ArrayBuffer to Array   
+    //     // Convert ArrayBuffer to Array
     //     const hashArray = Array.from(new Uint8Array(hashBuffer));
     //     // Convert bytes to hex string
-    //     const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');   
+    //     const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
     //     return hashHex;
     //   }
 
-   
     // useEffect(() => {
     //     if (dlorItem && dlorItem.object_public_uuid) {
     //         // check if they have access param requirement. If it doesnt match, reject.
@@ -268,10 +269,9 @@ export const DLOView = ({
     //                 }
     //             });
     //         }
-            
+
     //     }
     // }, [dlorItem]);
-
 
     useEffect(() => {
         if (!!account?.id) {
@@ -292,7 +292,7 @@ export const DLOView = ({
             theNewValue = !!e.target.checked;
         }
         const newValues = { ...formValues, [prop]: theNewValue };
-       
+
         setFormValues(newValues);
     };
 
@@ -315,7 +315,6 @@ export const DLOView = ({
                 page_title: dlorItem.object_title,
             });
             document.title = dlorItem.object_title;
-             
         }
     }, [dlorItem]);
 
@@ -384,7 +383,6 @@ export const DLOView = ({
     const saveAndNavigate = dlorItem => {
         // console.log('saveAndNavigate formValues', dlorItem.object_link_url, formValues);
 
-        
         if (formValues.schoolName.length > 0 || formValues.subjectCode.length > 0 || !!formValues.notify) {
             const valuestoSend = {
                 dlorUuid: dlorItem.object_public_uuid,
@@ -559,18 +557,20 @@ export const DLOView = ({
                                             </>
                                         )}
                                         {!!dlorItem?.object_series_name && dlorItem?.object_series?.length > 1 && (
-                                             <>
+                                            <>
                                                 <PlaylistAddCheckIcon
                                                     sx={{ fill: '#4aa74e', marginRight: '2px', width: 24 }}
                                                 />
                                                 <Link to={`/digital-learning-hub/series/${dlorItem.object_series_id}`}>
                                                     <StyledTagLabelSpan
-                                                        data-testid={'dlor-detailpage-object-series-name-custom-indicator'}
+                                                        data-testid={
+                                                            'dlor-detailpage-object-series-name-custom-indicator'
+                                                        }
                                                     >
                                                         Series: {dlorItem?.object_series_name}
                                                     </StyledTagLabelSpan>
                                                 </Link>
-                                                </>
+                                            </>
                                         )}
                                     </Typography>
                                 )}
@@ -592,8 +592,78 @@ export const DLOView = ({
                                     words, terms, and descriptions.
                                 </Box>
                             )}
+
                             <StyledHeaderDiv data-testid="dlor-detailpage-description">
-                                {!!dlorItem?.object_description && parse(dlorItem.object_description)}
+                                <Grid container spacing={1}>
+                                    <Grid item xs={12} sm={8}>
+                                        {!!dlorItem?.object_description && parse(dlorItem.object_description)}
+                                    </Grid>
+                                    <Grid item xs={12} sm={4}>
+                                        {/* Demographics and notification buttons */}
+                                        <div style={{ backgroundColor: '#ddd', padding: '5px' }}>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    gap: '8px',
+                                                }}
+                                            >
+                                                <Typography variant="p" sx={{ marginTop: '0px', textAlign: 'center' }}>
+                                                    Keep up-to-date with this object
+                                                </Typography>
+                                                <Chip
+                                                    icon={<NotificationsActive />}
+                                                    label="Notify me of changes"
+                                                    sx={{
+                                                        backgroundColor: '#51247a',
+                                                        color: 'white',
+                                                        paddingLeft: '5px',
+                                                        '& .MuiChip-label': {
+                                                            color: 'white !important',
+                                                            fontWeight: 'bold',
+                                                        },
+                                                        '& .MuiChip-icon': {
+                                                            color: 'white !important',
+                                                        },
+                                                    }}
+                                                />
+                                            </Box>
+                                        </div>
+                                        <div style={{ backgroundColor: '#ddd', padding: '5px', marginTop: '10px' }}>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    gap: '8px',
+                                                }}
+                                            >
+                                                <Typography variant="p" sx={{ marginTop: '0px', textAlign: 'center' }}>
+                                                    Using this object?
+                                                </Typography>
+                                                <Chip
+                                                    icon={<Announcement />}
+                                                    label="Let us know!"
+                                                    sx={{
+                                                        paddingLeft: '5px',
+                                                        backgroundColor: '#51247a',
+                                                        color: 'white',
+                                                        '& .MuiChip-label': {
+                                                            color: 'white !important',
+                                                            fontWeight: 'bold',
+                                                        },
+                                                        '& .MuiChip-icon': {
+                                                            color: 'white !important',
+                                                        },
+                                                    }}
+                                                />
+                                            </Box>
+                                        </div>
+                                    </Grid>
+                                </Grid>
                             </StyledHeaderDiv>
 
                             {/* until we can implement a captcha, we can only take input from loggedin users :( */}
@@ -798,7 +868,11 @@ export const DLOView = ({
                                                         filter.filter_values.map((value, subIndex) => {
                                                             return (
                                                                 <li key={subIndex}>
-                                                                    <StyledFilterLink to={`/digital-learning-hub?filters=${value.id}`} >{value.name}</StyledFilterLink>
+                                                                    <StyledFilterLink
+                                                                        to={`/digital-learning-hub?filters=${value.id}`}
+                                                                    >
+                                                                        {value.name}
+                                                                    </StyledFilterLink>
                                                                     {!!value?.help && value?.help.startsWith('http') && (
                                                                         <a
                                                                             href={value.help}
@@ -824,7 +898,14 @@ export const DLOView = ({
                                                 {dlorItem.object_keywords.map((keyword, index) => {
                                                     return (
                                                         <li key={index}>
-                                                            <StyledFilterLink to={`/digital-learning-hub?keyword=${keyword.charAt(0).toUpperCase() + keyword.slice(1).replace(/\s/g, '+')}`}>{keyword.charAt(0).toUpperCase() + keyword.slice(1)}</StyledFilterLink>
+                                                            <StyledFilterLink
+                                                                to={`/digital-learning-hub?keyword=${keyword
+                                                                    .charAt(0)
+                                                                    .toUpperCase() +
+                                                                    keyword.slice(1).replace(/\s/g, '+')}`}
+                                                            >
+                                                                {keyword.charAt(0).toUpperCase() + keyword.slice(1)}
+                                                            </StyledFilterLink>
                                                         </li>
                                                     );
                                                 })}
