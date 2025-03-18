@@ -200,7 +200,7 @@ const StyledSidebarHeadingTypography = styled(Typography)(() => ({
 }));
 
 const StyledFilterLink = styled(Link)(() => ({
-    color: '#3872a8 !important'
+    color: '#3872a8 !important',
 }));
 
 export const DLOView = ({
@@ -221,7 +221,7 @@ export const DLOView = ({
 
     // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
     // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
-    
+
     const isLoggedIn = !!account?.id;
 
     const [formValues, setFormValues] = React.useState({
@@ -237,21 +237,20 @@ export const DLOView = ({
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dlor.title);
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dlor.pathname);
     }, []);
-   // PENDING CHANGE - left in to merge when ticket for require login is built.
-  
+    // PENDING CHANGE - left in to merge when ticket for require login is built.
+
     // async function sha256(message) {
     //     // Encode as UTF-8
     //     const msgBuffer = new TextEncoder('utf-8').encode(message);
     //     // Hash the message
     //     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    //     // Convert ArrayBuffer to Array   
+    //     // Convert ArrayBuffer to Array
     //     const hashArray = Array.from(new Uint8Array(hashBuffer));
     //     // Convert bytes to hex string
-    //     const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');   
+    //     const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
     //     return hashHex;
     //   }
 
-   
     // useEffect(() => {
     //     if (dlorItem && dlorItem.object_public_uuid) {
     //         // check if they have access param requirement. If it doesnt match, reject.
@@ -268,10 +267,9 @@ export const DLOView = ({
     //                 }
     //             });
     //         }
-            
+
     //     }
     // }, [dlorItem]);
-
 
     useEffect(() => {
         if (!!account?.id) {
@@ -292,7 +290,7 @@ export const DLOView = ({
             theNewValue = !!e.target.checked;
         }
         const newValues = { ...formValues, [prop]: theNewValue };
-       
+
         setFormValues(newValues);
     };
 
@@ -315,13 +313,12 @@ export const DLOView = ({
                 page_title: dlorItem.object_title,
             });
             document.title = dlorItem.object_title;
-             
         }
     }, [dlorItem]);
 
-    function navigateToObjectLink() {
+    const navigateToObjectLink = React.useCallback(() => {
         window.location.href = dlorItem?.object_link_url;
-    }
+    }, [dlorItem?.object_link_url]);
 
     useEffect(() => {
         // when the save attempt comes back...
@@ -384,7 +381,6 @@ export const DLOView = ({
     const saveAndNavigate = dlorItem => {
         // console.log('saveAndNavigate formValues', dlorItem.object_link_url, formValues);
 
-        
         if (formValues.schoolName.length > 0 || formValues.subjectCode.length > 0 || !!formValues.notify) {
             const valuestoSend = {
                 dlorUuid: dlorItem.object_public_uuid,
@@ -559,18 +555,20 @@ export const DLOView = ({
                                             </>
                                         )}
                                         {!!dlorItem?.object_series_name && dlorItem?.object_series?.length > 1 && (
-                                             <>
+                                            <>
                                                 <PlaylistAddCheckIcon
                                                     sx={{ fill: '#4aa74e', marginRight: '2px', width: 24 }}
                                                 />
                                                 <Link to={`/digital-learning-hub/series/${dlorItem.object_series_id}`}>
                                                     <StyledTagLabelSpan
-                                                        data-testid={'dlor-detailpage-object-series-name-custom-indicator'}
+                                                        data-testid={
+                                                            'dlor-detailpage-object-series-name-custom-indicator'
+                                                        }
                                                     >
                                                         Series: {dlorItem?.object_series_name}
                                                     </StyledTagLabelSpan>
                                                 </Link>
-                                                </>
+                                            </>
                                         )}
                                     </Typography>
                                 )}
@@ -798,7 +796,11 @@ export const DLOView = ({
                                                         filter.filter_values.map((value, subIndex) => {
                                                             return (
                                                                 <li key={subIndex}>
-                                                                    <StyledFilterLink to={`/digital-learning-hub?filters=${value.id}`} >{value.name}</StyledFilterLink>
+                                                                    <StyledFilterLink
+                                                                        to={`/digital-learning-hub?filters=${value.id}`}
+                                                                    >
+                                                                        {value.name}
+                                                                    </StyledFilterLink>
                                                                     {!!value?.help && value?.help.startsWith('http') && (
                                                                         <a
                                                                             href={value.help}
@@ -824,7 +826,14 @@ export const DLOView = ({
                                                 {dlorItem.object_keywords.map((keyword, index) => {
                                                     return (
                                                         <li key={index}>
-                                                            <StyledFilterLink to={`/digital-learning-hub?keyword=${keyword.charAt(0).toUpperCase() + keyword.slice(1).replace(/\s/g, '+')}`}>{keyword.charAt(0).toUpperCase() + keyword.slice(1)}</StyledFilterLink>
+                                                            <StyledFilterLink
+                                                                to={`/digital-learning-hub?keyword=${keyword
+                                                                    .charAt(0)
+                                                                    .toUpperCase() +
+                                                                    keyword.slice(1).replace(/\s/g, '+')}`}
+                                                            >
+                                                                {keyword.charAt(0).toUpperCase() + keyword.slice(1)}
+                                                            </StyledFilterLink>
                                                         </li>
                                                     );
                                                 })}

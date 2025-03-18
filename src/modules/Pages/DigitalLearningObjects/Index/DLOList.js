@@ -25,7 +25,6 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import SchoolSharpIcon from '@mui/icons-material/SchoolSharp';
 import SearchIcon from '@mui/icons-material/Search';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import InfoIcon from '@mui/icons-material/Info';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -140,7 +139,7 @@ const StyledFilterSidebarGrid = styled(Grid)(({ theme }) => ({
         display: 'none',
     },
 }));
-const StyledArticleCard = styled('button')(({ theme }) => ({
+const StyledArticleCard = styled('div')(({ theme }) => ({
     backgroundColor: '#fff',
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
     borderRadius: '4px',
@@ -289,22 +288,21 @@ export const DLOList = ({
     const [paginationPage, setPaginationPage] = React.useState(1);
 
     const FilterGraduateAttributes = (filterList, filterId, mode) => {
-        if (mode === "push") {
-            const ga = filterList.filter(item => item.facet_type_name === "Graduate attributes").flatMap(item => item.facet_list);
-            console.log("GA", ga, filterId)
-            const filteredGraduateAttributes = ga.filter(
-                 facet => Number(facet.facet_id) === Number(filterId)
-               );   
-               
-            setSelectedGradAttributes([...selectedGradAttributes, ...filteredGraduateAttributes])
+        if (mode === 'push') {
+            const ga = filterList
+                .filter(item => item.facet_type_name === 'Graduate attributes')
+                .flatMap(item => item.facet_list);
+            console.log('GA', ga, filterId);
+            const filteredGraduateAttributes = ga.filter(facet => Number(facet.facet_id) === Number(filterId));
+
+            setSelectedGradAttributes([...selectedGradAttributes, ...filteredGraduateAttributes]);
         } else {
             const filteredGraduateAttributes = selectedGradAttributes.filter(
-                facet => Number(facet.facet_id) !== Number(filterId)
+                facet => Number(facet.facet_id) !== Number(filterId),
             );
             setSelectedGradAttributes(filteredGraduateAttributes);
         }
-        
-    }
+    };
 
     /* istanbul ignore next */
     function skipToElement() {
@@ -367,7 +365,9 @@ export const DLOList = ({
         window.history.pushState({}, '', newPathSearch);
     };
 
-    const clearKeywordField = () => {
+    const clearKeywordField = e => {
+        console.log('e', e);
+        console.log('Testing if this was clicked');
         setKeywordSearch('');
         keyWordSearchRef.current.value = '';
         setPaginationPage(1); // set pagination back to page 1
@@ -399,9 +399,13 @@ export const DLOList = ({
 
     const handleRequestNewItem = () => {
         window.location.href = '/digital-learning-hub/submit';
-    }
+    };
 
     const handleKeywordCharacterEntry = e => {
+        /* istanbul ignore next */
+        if (e.key === 'Tab') {
+            return;
+        }
         const keyword = e.target.value;
         setIsKeywordClearable(true);
         if (isReturnKeyPressed(e)) {
@@ -526,13 +530,13 @@ export const DLOList = ({
             // capture any graduate attributes at URL time for help display
             let selectedGraduateAttributes = [];
             facetids.map(facetId => {
-                    const ga = dlorFilterList.filter(item => item.facet_type_name === "Graduate attributes").flatMap(item => item.facet_list);
-                    
-                    const filteredGraduateAttributes = ga.filter(
-                        facet => Number(facet.facet_id) === Number(facetId)
-                    ); 
-                    selectedGraduateAttributes = [...selectedGraduateAttributes, ...filteredGraduateAttributes]
-            })
+                const ga = dlorFilterList
+                    .filter(item => item.facet_type_name === 'Graduate attributes')
+                    .flatMap(item => item.facet_list);
+
+                const filteredGraduateAttributes = ga.filter(facet => Number(facet.facet_id) === Number(facetId));
+                selectedGraduateAttributes = [...selectedGraduateAttributes, ...filteredGraduateAttributes];
+            });
             setSelectedFilters(facettypelist);
             setSelectedGradAttributes(selectedGraduateAttributes);
             checkBoxArrayRef.current = facettypelist;
@@ -657,7 +661,7 @@ export const DLOList = ({
         if (e?.target?.checked) {
             const updateFilters = [...selectedFilters, individualFilterId];
             setSelectedFilters(updateFilters);
-            FilterGraduateAttributes(filterListTrimmed, facetId, "push");
+            FilterGraduateAttributes(filterListTrimmed, facetId, 'push');
             window.dataLayer.push({
                 event: 'reusable_component_event_click',
                 'custom_event.data-analyticsid': `${e.target.labels[0].innerText} DLOR filter click`,
@@ -668,8 +672,8 @@ export const DLOList = ({
             // unchecking a filter checkbox
             const updateFilters = selectedFilters.filter(f2 => f2 !== individualFilterId);
             setSelectedFilters(updateFilters);
-            FilterGraduateAttributes(filterListTrimmed, facetId, "pop");
-            
+            FilterGraduateAttributes(filterListTrimmed, facetId, 'pop');
+
             checkBoxArrayRef.current = checkBoxArrayRef.current.filter(id => id !== checkboxId);
         }
         setPaginationPage(1);
@@ -727,8 +731,8 @@ export const DLOList = ({
             topic: <TopicIcon aria-label={getPublicHelp(facetTypeSlug)} />,
             graduate_attributes: <SchoolSharpIcon aria-label={getPublicHelp(facetTypeSlug)} />,
             subject: <LocalLibrarySharpIcon aria-label={getPublicHelp(facetTypeSlug)} />,
-            audience: <PeopleOutlinedIcon aria-label={getPublicHelp(facetTypeSlug)} />, 
-            level: <CallMadeOutlinedIcon aria-label={getPublicHelp(facetTypeSlug)} />
+            audience: <PeopleOutlinedIcon aria-label={getPublicHelp(facetTypeSlug)} />,
+            level: <CallMadeOutlinedIcon aria-label={getPublicHelp(facetTypeSlug)} />,
         };
         return iconList[facetTypeSlug];
     };
@@ -1014,13 +1018,16 @@ export const DLOList = ({
                 data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(object?.object_public_uuid)}`}
             >
                 <StyledArticleCard
+                    role="button"
                     onClick={() => navigateToDetailPage(object?.object_public_uuid)}
-                    aria-label={`Click for more details on ${object.object_title}`}
+                    tabIndex="0"
+                    aria-label={`${object?.object_title} ${!!object?.object_series_name &&
+                        '(Series: ' + object.object_series_name + ')'} ${object?.object_summary}`}
                     id={index === 0 ? 'first-panel-button' : null}
                 >
                     <article>
                         <header>
-                            <Typography component={'h2'} variant={'h6'}>
+                            <Typography component={'h2'} variant={'h6'} id={`dlor-title-${object?.object_public_uuid}`}>
                                 <span>{object?.object_title}</span>
                             </Typography>
                             <>
@@ -1029,6 +1036,7 @@ export const DLOList = ({
                                     !!object?.object_series_name) && (
                                     <Typography
                                         component={'p'}
+                                        id={`dlor-description-${object?.object_public_uuid}`}
                                         sx={{
                                             display: 'flex',
                                             alignItems: 'center',
@@ -1161,11 +1169,12 @@ export const DLOList = ({
     // this will eventually be an internal form
     const contactFormLink = 'https://forms.office.com/r/8t0ugSZgE7';
 
-    const containsGraduateAttributes = selectedFilters.some(filter => filter.includes("graduate_attributes"));
+    const containsGraduateAttributes = selectedFilters.some(filter => filter.includes('graduate_attributes'));
+
     // sort the grad attributes display set in alpha order.
     selectedGradAttributes.sort((a, b) => {
         return a.facet_name.localeCompare(b.facet_name);
-    })
+    });
 
     return (
         <>
@@ -1203,7 +1212,7 @@ export const DLOList = ({
                                 data-testid="dlor-homepage-request-new-item"
                                 onClick={handleRequestNewItem}
                                 title="Request a new item"
-                                sx={{display: 'flex', alignItems: 'center' }}
+                                sx={{ display: 'flex', alignItems: 'center' }}
                             >
                                 Submit new object request&nbsp;
                                 {/* <OpenInNewIcon /> */}
@@ -1280,23 +1289,42 @@ export const DLOList = ({
                         />
                         {/* Graduate attribute container */}
                         {containsGraduateAttributes ? (
-                            <div style={{padding: '0px 12px 0px 12px', display: 'flex', flexWrap: 'wrap'}}>
-                                {
-                                    
-                                   selectedGradAttributes.map(item => {
-                                        return (
-                                            <div key={`item__${item.facet_id}`} style={{flex: '0 0 100%', backgroundColor: '#FAFAFA', padding: '0 -24px 0px 12px'}}>
-                                                <div style={{paddingLeft: '12px'}}>
-                                                    <h3 key={`name_${item.facet_id}`} style={{color: '#51247a', marginBottom: '5px', paddingBottom: 0}} data-testid={`graduate-attribute-${item.facet_id}-name`}>{item.facet_name}</h3>
-                                                    <p key={`help_${item.facet_id}`} style={{color: '#555', paddingTop: '0px', marginTop: 0}} data-testid={`graduate-attribute-${item.facet_id}-description`}>{item.facet_help && parse(item.facet_help) || 'no help for this graduate attribute at this time'}</p>
-                                                </div>
+                            <div
+                                style={{ padding: '0px 12px 0px 12px', display: 'flex', flexWrap: 'wrap' }}
+                                data-testid="graduate-attributes-detail-container"
+                            >
+                                {selectedGradAttributes.map(item => {
+                                    return (
+                                        <div
+                                            key={`item__${item.facet_id}`}
+                                            style={{
+                                                flex: '0 0 100%',
+                                                backgroundColor: '#FAFAFA',
+                                                padding: '0 -24px 0px 12px',
+                                            }}
+                                        >
+                                            <div style={{ paddingLeft: '12px' }}>
+                                                <h3
+                                                    key={`name_${item.facet_id}`}
+                                                    style={{ color: '#51247a', marginBottom: '5px', paddingBottom: 0 }}
+                                                    data-testid={`graduate-attribute-${item.facet_id}-name`}
+                                                >
+                                                    {item.facet_name}
+                                                </h3>
+                                                <p
+                                                    key={`help_${item.facet_id}`}
+                                                    style={{ color: '#555', paddingTop: '0px', marginTop: 0 }}
+                                                    data-testid={`graduate-attribute-${item.facet_id}-description`}
+                                                >
+                                                    {(item.facet_help && parse(item.facet_help)) ||
+                                                        'no help for this graduate attribute at this time'}
+                                                </p>
                                             </div>
-                                        )
-                                    })
-                                }
+                                        </div>
+                                    );
+                                })}
                             </div>
-                            ) : null
-                        }
+                        ) : null}
                         {(() => {
                             if (!!dlorListError) {
                                 return (
@@ -1347,23 +1375,30 @@ export const DLOList = ({
                                     );
                                 } else {
                                     return (
-                                        <StyledPanelGrid
-                                            container
-                                            spacing={3}
-                                            data-testid="dlor-homepage-list"
-                                            id="dlor-homepage-list"
-                                        >
-                                            <StyledFilterSidebarIconBox
-                                                id="filterIconShowId"
-                                                data-testid="sidebar-filter-icon"
+                                        <>
+                                            <StyledPanelGrid
+                                                container
+                                                spacing={3}
+                                                data-testid="dlor-homepage-list"
+                                                id="dlor-homepage-list"
+                                                aria-live="polite"
+                                                aria-atomic="true"
                                             >
-                                                <IconButton aria-label="Show the filters" onClick={() => showFilters()}>
-                                                    <FilterAltIcon />
-                                                </IconButton>
-                                            </StyledFilterSidebarIconBox>
-                                            {!!dlorData &&
-                                                dlorData.length > 0 &&
-                                                dlorData.map((o, index) => displayItemPanel(o, index))}
+                                                <StyledFilterSidebarIconBox
+                                                    id="filterIconShowId"
+                                                    data-testid="sidebar-filter-icon"
+                                                >
+                                                    <IconButton
+                                                        aria-label="Show the filters"
+                                                        onClick={() => showFilters()}
+                                                    >
+                                                        <FilterAltIcon />
+                                                    </IconButton>
+                                                </StyledFilterSidebarIconBox>
+                                                {!!dlorData &&
+                                                    dlorData.length > 0 &&
+                                                    dlorData.map((o, index) => displayItemPanel(o, index))}
+                                            </StyledPanelGrid>
                                             {!!dlorData && dlorData.length > 0 && (
                                                 <StyledPagination
                                                     count={paginationCount}
@@ -1373,7 +1408,7 @@ export const DLOList = ({
                                                     page={paginationPage}
                                                 />
                                             )}
-                                        </StyledPanelGrid>
+                                        </>
                                     );
                                 }
                             }
