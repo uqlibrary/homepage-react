@@ -44,11 +44,14 @@ import {
 import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { breadcrumbs } from 'config/routes';
-import { Chip } from '@mui/material';
+import { Chip, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { Announcement, NotificationsActive } from '@mui/icons-material';
+import { set } from 'js-cookie';
 
-const StyledUQActionButton = styled('div')(({ theme }) => ({
-    marginBlock: '32px',
+const StyledUQActionButton = styled('div')(({ theme, noMargin }) => ({
+    marginBlock: '0px',
+    width: '100%',
+    display: 'inline-block',
     '& button, & a': {
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.white.main,
@@ -58,6 +61,43 @@ const StyledUQActionButton = styled('div')(({ theme }) => ({
         borderRadius: '6px',
         padding: '8px 12px',
         fontWeight: 400,
+
+        '&:hover': {
+            backgroundColor: theme.palette.white.main,
+            color: theme.palette.primary.main,
+            textDecoration: 'none',
+        },
+    },
+    '& button.cancel, & a': {
+        backgroundColor: theme.palette.secondary.main,
+        color: theme.palette.white.main,
+        borderColor: theme.palette.secondary.main,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderRadius: '6px',
+        padding: '8px 12px',
+        fontWeight: 400,
+
+        '&:hover': {
+            backgroundColor: theme.palette.white.main,
+            color: theme.palette.primary.main,
+            textDecoration: 'none',
+        },
+    },
+    '& button.extended': {
+        width: '100%',
+        textTransform: 'uppercase',
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.white.main,
+        borderColor: theme.palette.primary.main,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderRadius: '6px',
+        padding: '12px 12px',
+        fontWeight: 400,
+        transition: 'all 0.3s',
+        boxSizing: 'border-box',
+        position: 'relative',
         '&:hover': {
             backgroundColor: theme.palette.white.main,
             color: theme.palette.primary.main,
@@ -67,7 +107,7 @@ const StyledUQActionButton = styled('div')(({ theme }) => ({
     '&:has(button)': {
         display: 'flex',
         justifyContent: 'flex-end',
-        marginTop: '12px',
+        marginTop: noMargin ? '0px' : '12px',
     },
 }));
 const StyledTitleTypography = styled(Typography)(({ theme }) => ({
@@ -220,7 +260,8 @@ export const DLOView = ({
     const { dlorId } = useParams();
     const [cookies, setCookie] = useCookies();
     const [confirmationOpen, setConfirmationOpen] = React.useState(false);
-
+    const [isDemographicsOpened, setIsDemographicsOpened] = React.useState(false);
+    const [demographicsConfirmation, setDemographicsConfirmation] = React.useState(false);
     // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
     // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
 
@@ -229,7 +270,9 @@ export const DLOView = ({
     const [formValues, setFormValues] = React.useState({
         subjectCode: '',
         schoolName: '',
+        otherComments: '',
         notify: false,
+        sendDemographics: false,
         preferredName: '',
         userEmail: '',
     });
@@ -325,14 +368,27 @@ export const DLOView = ({
     useEffect(() => {
         // when the save attempt comes back...
         // if they only sent demographics, we only wait for the "in progress" because we dont care what it responds
-        if (!!dlorItemUpdating && !formValues?.notify) {
-            navigateToObjectLink();
+        console.log('X');
+        if (!dlorItemUpdating && !!formValues?.sendDemographics) {
+            console.log('A');
+            setFormValues({ ...formValues, sendDemographics: false });
+            setIsDemographicsOpened(false);
+            setDemographicsConfirmation(true);
+            // navigateToObjectLink();
         }
         //  they sent a notify then we will show a dialog, either success or failure
         if (!dlorItemUpdating && (!!dlorUpdatedItem || !!dlorUpdatedItemError) && !!formValues?.notify) {
+            console.log('B');
             setConfirmationOpen(true);
         }
-    }, [dlorItemUpdating, dlorUpdatedItem, dlorUpdatedItemError, formValues?.notify, navigateToObjectLink]);
+    }, [
+        dlorItemUpdating,
+        dlorUpdatedItem,
+        dlorUpdatedItemError,
+        formValues?.notify,
+        navigateToObjectLink,
+        formValues?.sendDemographics,
+    ]);
 
     const deslugify = slug => {
         const words = slug?.replace(/_/g, ' ');
@@ -389,6 +445,7 @@ export const DLOView = ({
                 demographics: {
                     subject: formValues.subjectCode,
                     school: formValues.schoolName,
+                    comments: formValues.otherComments,
                 },
                 subscribeRequest: {
                     userName: !!formValues.notify ? formValues.preferredName : '',
@@ -414,6 +471,28 @@ export const DLOView = ({
         }
     };
 
+    const saveDemographics = dlorItem => {
+        console.debug();
+        const valuestoSend = {
+            dlorUuid: dlorItem.object_public_uuid,
+            demographics: {
+                subject: formValues.subjectCode,
+                school: formValues.schoolName,
+                comments: formValues.otherComments,
+            },
+            subscribeRequest: {
+                userName: null,
+                userEmail: null,
+            },
+        };
+        console.debug();
+        actions.saveDlorDemographics(valuestoSend).then(() => {
+            setFormValues({ ...formValues, sendDemographics: true });
+        });
+
+        /* istanbul ignore else */
+    };
+
     const finishNavigation = () => {
         setConfirmationOpen(false);
         navigateToObjectLink();
@@ -431,21 +510,45 @@ export const DLOView = ({
     function getItButtonLabel(dlorItem) {
         const interactionType = dlorItem?.object_link_interaction_type || /* istanbul ignore next */ null;
         const fileType = dlorItem?.object_link_file_type || null;
-
         let label = 'Access the object';
+        let details = '';
+
         if (interactionType === 'view') {
             const viewingTime = dlorItem?.object_link_size
                 ? getDurationString(dlorItem?.object_link_size)
                 : /* istanbul ignore next */ '';
-            label = `Access the object (${fileType} ${viewingTime})`;
+            if (fileType && viewingTime) {
+                details = `<br/>(${fileType} ${viewingTime})`; // Add line break
+            } else if (fileType) {
+                details = `(${fileType})`;
+            } else if (viewingTime) {
+                details = `(${viewingTime})`;
+            }
         } else if (interactionType === 'download') {
             const fileSize = !!dlorItem?.object_link_size
                 ? getFileSizeString(dlorItem?.object_link_size)
                 : /* istanbul ignore next */ null;
-            label = `Access the object (${fileType} ${fileSize})`;
+            if (fileType && fileSize) {
+                details = `<br/>(${fileType} ${fileSize})`; // Add line break
+            } else if (fileType) {
+                details = `(${fileType})`;
+            } else if (fileSize) {
+                details = `(${fileSize})`;
+            }
         }
-        return label;
+
+        if (details) {
+            label = `Access the object ${details}`;
+        }
+
+        return <>{parse(label)}</>;
     }
+
+    const demograpicsResponseLocale = {
+        confirmationTitle: 'Demographic information saved',
+        confirmationMessage: 'We will use this information to help improve our services.',
+        confirmButtonLabel: 'OK',
+    };
 
     let subscriptionResponseLocale = {};
     if (!dlorItemUpdating && (!!dlorUpdatedItem || !!dlorUpdatedItemError)) {
@@ -505,12 +608,77 @@ export const DLOView = ({
                     actionButtonColor="primary"
                     actionButtonVariant="contained"
                     confirmationBoxId="dlor-save-notification"
-                    onAction={() => finishNavigation()}
                     hideCancelButton
-                    onClose={finishNavigation}
                     isOpen={confirmationOpen}
                     locale={subscriptionResponseLocale}
                 />
+                <ConfirmationBox
+                    actionButtonColor="primary"
+                    actionButtonVariant="contained"
+                    confirmationBoxId="dlor-demographics-notification"
+                    hideCancelButton
+                    isOpen={demographicsConfirmation}
+                    locale={demograpicsResponseLocale}
+                    onAction={() => setDemographicsConfirmation(false)}
+                />
+                {/* Demographics questions dialog - move to seperate component */}
+                <Dialog open={isDemographicsOpened}>
+                    <DialogTitle>Help us understand how you will use this object</DialogTitle>
+                    <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                        <form>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel htmlFor="subjectCode">
+                                    What course or session are you using this object for?
+                                </InputLabel>
+                                <Input
+                                    id="subjectCode"
+                                    data-testid="view-demographics-subject-code"
+                                    value={formValues?.subjectCode}
+                                    onChange={handleChange('subjectCode')}
+                                />
+                            </FormControl>
+                            <FormControl variant="standard" fullWidth sx={{ marginTop: '10px' }}>
+                                <InputLabel htmlFor="schoolName">What is your school, faculty or unit?</InputLabel>
+                                <Input
+                                    id="schoolName"
+                                    data-testid="view-demographics-school-name"
+                                    value={formValues?.schoolName}
+                                    onChange={handleChange('schoolName')}
+                                />
+                            </FormControl>
+                            <FormControl variant="standard" fullWidth sx={{ marginTop: '10px' }}>
+                                <InputLabel htmlFor="otherComments">Other comments?</InputLabel>
+                                <Input
+                                    id="otherComments"
+                                    data-testid="view-demographics-other-comments"
+                                    value={formValues?.otherComments}
+                                    onChange={handleChange('otherComments')}
+                                />
+                            </FormControl>
+                        </form>
+                        <Box sx={{ display: 'flex', gap: '10px', mt: 2, justifyContent: 'flex-end' }}>
+                            <Button
+                                aria-label="Cancel"
+                                onClick={() => setIsDemographicsOpened(false)}
+                                data-testid="demographics-cancel"
+                                variant="contained"
+                                color="secondary"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                aria-label="Save my demographics"
+                                onClick={() => saveDemographics(dlorItem)}
+                                data-testid="demographics-capture"
+                                variant="contained"
+                                color="primary"
+                                disabled={!formValues?.subjectCode || !formValues?.schoolName}
+                            >
+                                Continue
+                            </Button>
+                        </Box>
+                    </DialogContent>
+                </Dialog>
                 <div>
                     {getTitleBlock()}
                     <StyledContentGrid container spacing={4} data-testid="dlor-detailpage">
@@ -600,7 +768,18 @@ export const DLOView = ({
                                     </Grid>
                                     <Grid item xs={12} sm={4}>
                                         {/* Demographics and notification buttons */}
-                                        <div style={{ backgroundColor: '#ddd', padding: '5px' }}>
+                                        <StyledUQActionButton noMargin>
+                                            <Button
+                                                aria-label="Click to access the object"
+                                                onClick={() => saveAndNavigate(dlorItem)}
+                                                data-testid="detailpage-clicklink"
+                                                disabled={formValues?.notify && !isValidEmail(formValues?.userEmail)}
+                                                class="extended"
+                                            >
+                                                {getItButtonLabel(dlorItem)}
+                                            </Button>
+                                        </StyledUQActionButton>
+                                        <div style={{ backgroundColor: '#ddd', padding: '5px', marginTop: '10px' }}>
                                             <Box
                                                 sx={{
                                                     display: 'flex',
@@ -611,11 +790,11 @@ export const DLOView = ({
                                                 }}
                                             >
                                                 <Typography variant="p" sx={{ marginTop: '0px', textAlign: 'center' }}>
-                                                    Keep up-to-date with this object
+                                                    Keep up-to-date
                                                 </Typography>
                                                 <Chip
                                                     icon={<NotificationsActive />}
-                                                    label="Notify me of changes"
+                                                    label="Notify me"
                                                     sx={{
                                                         backgroundColor: '#51247a',
                                                         color: 'white',
@@ -645,8 +824,8 @@ export const DLOView = ({
                                                     Using this object?
                                                 </Typography>
                                                 <Chip
-                                                    icon={<Announcement />}
-                                                    label="Let us know!"
+                                                    onClick={() => setIsDemographicsOpened(true)}
+                                                    label="Let us know"
                                                     sx={{
                                                         paddingLeft: '5px',
                                                         backgroundColor: '#51247a',
@@ -668,11 +847,11 @@ export const DLOView = ({
 
                             {/* until we can implement a captcha, we can only take input from loggedin users :( */}
                             {dlorItem?.object_link_url?.startsWith('http') && !account?.id && (
-                                <StyledUQActionButton data-testid="detailpage-getit-button">
+                                <StyledUQActionButton class="marginBlock" data-testid="detailpage-getit-button">
                                     <a href={dlorItem.object_link_url}>{getItButtonLabel(dlorItem)}</a>
                                 </StyledUQActionButton>
                             )}
-                            {dlorItem?.object_link_url?.startsWith('http') && account?.id && (
+                            {/* {dlorItem?.object_link_url?.startsWith('http') && account?.id && (
                                 <StyledDemographicsBox
                                     id="gatherDemographics"
                                     data-testid="detailpage-getit-and demographics"
@@ -699,7 +878,6 @@ export const DLOView = ({
                                                 onChange={handleChange('schoolName')}
                                             />
                                         </FormControl>
-
                                         <p>Would you like notifications when updates are made to this object?</p>
                                         <FormControlLabel
                                             control={
@@ -740,24 +918,23 @@ export const DLOView = ({
                                                 </FormControl>
                                             </>
                                         )}
-
                                         <div>
                                             <StyledUQActionButton>
                                                 <Button
                                                     aria-label="Click to access the object"
                                                     onClick={() => saveAndNavigate(dlorItem)}
-                                                    data-testid="detailpage-clicklink"
+                                                    data-testid="detailpage-clicklinkOLD"
                                                     disabled={
                                                         formValues?.notify && !isValidEmail(formValues?.userEmail)
                                                     }
                                                 >
-                                                    {getItButtonLabel(dlorItem)}
+                                                    Old button
                                                 </Button>
                                             </StyledUQActionButton>
                                         </div>
                                     </form>
                                 </StyledDemographicsBox>
-                            )}
+                            )} */}
 
                             {isPreviewableUrl(dlorItem.object_link_url) !== false && (
                                 <div data-testid="detailpage-preview">
