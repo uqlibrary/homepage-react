@@ -6,14 +6,13 @@ import { useCookies } from 'react-cookie';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import { NotificationsActive } from '@mui/icons-material';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -45,8 +44,6 @@ import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearning
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { breadcrumbs } from 'config/routes';
 import { Chip, Dialog, DialogContent, DialogTitle } from '@mui/material';
-import { Announcement, NotificationsActive } from '@mui/icons-material';
-import { set } from 'js-cookie';
 
 const StyledUQActionButton = styled('div')(({ theme, noMargin }) => ({
     marginBlock: '0px',
@@ -190,15 +187,7 @@ const StyledSeriesList = styled('ol')(() => ({
         },
     },
 }));
-const StyledDemographicsBox = styled(Box)(() => ({
-    border: '1px solid hsla(203, 50%, 30%, 0.15)',
-    borderRadius: '4px',
-    backgroundColor: 'white',
-    marginTop: '24px',
-    padding: '1em',
-    '& p': { marginLeft: '-8px' },
-    '& form': { margin: '-8px', '& p': { marginBlock: '3em 0', marginLeft: '2px' } },
-}));
+
 const StyledLayoutBox = styled(Box)(() => ({
     backgroundColor: 'white',
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
@@ -259,23 +248,30 @@ export const DLOView = ({
     const { account } = useAccountContext();
     const { dlorId } = useParams();
     const [cookies, setCookie] = useCookies();
-    const [confirmationOpen, setConfirmationOpen] = React.useState(false);
+    // const [confirmationOpen, setConfirmationOpen] = React.useState(false);
     const [isDemographicsOpened, setIsDemographicsOpened] = React.useState(false);
     const [demographicsConfirmation, setDemographicsConfirmation] = React.useState(false);
+    const [isNotifyOpened, setIsNotifyOpened] = React.useState(false);
+    // const [notifyType, setNotifyType] = React.useState('');
+    const [confirmLocale, setConfirmLocale] = React.useState({});
+
     // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
     // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
 
-    const isLoggedIn = !!account?.id;
+    // const isLoggedIn = !!account?.id;
 
-    const [formValues, setFormValues] = React.useState({
+    const defaultFormValues = {
         subjectCode: '',
         schoolName: '',
         otherComments: '',
         notify: false,
         sendDemographics: false,
+        sendNotify: false,
         preferredName: '',
         userEmail: '',
-    });
+    };
+
+    const [formValues, setFormValues] = React.useState(defaultFormValues);
 
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -328,12 +324,8 @@ export const DLOView = ({
     }, [account]);
 
     const handleChange = prop => e => {
-        let theNewValue =
-            e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
+        const theNewValue = e.target.value;
 
-        if (['notify'].includes(prop)) {
-            theNewValue = !!e.target.checked;
-        }
         const newValues = { ...formValues, [prop]: theNewValue };
 
         setFormValues(newValues);
@@ -365,22 +357,70 @@ export const DLOView = ({
         window.location.href = dlorItem?.object_link_url;
     }
 
+    const demograpicsResponseLocale = {
+        confirmationTitle: 'Demographic information saved',
+        confirmationMessage: 'We will use this information to help improve our services.',
+        confirmButtonLabel: 'OK',
+    };
+
+    // const notifyResponseLocale = {
+    //     confirmationTitle: 'Notification request saved',
+    //     confirmationMessage: 'Please check your email to confirm your subscription request.',
+    //     confirmButtonLabel: 'OK',
+    // };
+
+    // const subscriptionResponseLocale = notifyType === 'demographics' ? demograpicsResponseLocale : notifyResponseLocale;
+
     useEffect(() => {
         // when the save attempt comes back...
         // if they only sent demographics, we only wait for the "in progress" because we dont care what it responds
-        console.log('X');
-        if (!dlorItemUpdating && !!formValues?.sendDemographics) {
+
+        if (!dlorItemUpdating && !!formValues?.sendDemographics && !dlorUpdatedItemError) {
             console.log('A');
-            setFormValues({ ...formValues, sendDemographics: false });
+            setFormValues({ ...defaultFormValues, preferredName: account?.firstName, userEmail: account?.mail });
+            setConfirmLocale(demograpicsResponseLocale);
             setIsDemographicsOpened(false);
+            setIsNotifyOpened(false);
             setDemographicsConfirmation(true);
             // navigateToObjectLink();
         }
-        //  they sent a notify then we will show a dialog, either success or failure
-        if (!dlorItemUpdating && (!!dlorUpdatedItem || !!dlorUpdatedItemError) && !!formValues?.notify) {
+        if (!dlorItemUpdating && !!formValues?.sendNotify && !dlorUpdatedItemError) {
             console.log('B');
-            setConfirmationOpen(true);
+            const updatingMessage =
+                dlorUpdatedItem?.data?.subscription === false
+                    ? 'You are already subscribed'
+                    : 'Please check your email to confirm your subscription request.';
+            const getConfirmationTitle = !!dlorUpdatedItem
+                ? updatingMessage
+                : /* istanbul ignore next */ 'There was a problem saving your subscription request - please try again later.';
+            setConfirmLocale({
+                confirmationTitle: getConfirmationTitle,
+                confirmationMessage: '',
+                confirmButtonLabel: 'OK',
+            });
+            setFormValues({ ...defaultFormValues, preferredName: account?.firstName, userEmail: account?.mail });
+            setIsDemographicsOpened(false);
+            setIsNotifyOpened(false);
+            setDemographicsConfirmation(true);
+            // navigateToObjectLink();
         }
+        if (!!dlorUpdatedItemError && (!!formValues?.sendDemographics || !!formValues?.sendNotify)) {
+            console.log('ERROR IF');
+            setFormValues({ ...formValues, sendDemographics: false, sendNotify: false });
+            setConfirmLocale({
+                confirmationTitle: 'There was a problem saving your supplied information - please try again later.',
+                confirmationMessage: '',
+                confirmButtonLabel: 'OK',
+            });
+            setIsDemographicsOpened(false);
+            setIsNotifyOpened(false);
+            setDemographicsConfirmation(true);
+        }
+        //  they sent a notify then we will show a dialog, either success or failure
+        // if (!dlorItemUpdating && (!!dlorUpdatedItem || !!dlorUpdatedItemError) && !!formValues?.notify) {
+        //     console.log('C');
+        //     setConfirmationOpen(true);
+        // }
     }, [
         dlorItemUpdating,
         dlorUpdatedItem,
@@ -436,66 +476,83 @@ export const DLOView = ({
         window.location.href = dlorAdminLink(`/edit/${uuid}`);
     };
 
-    const saveAndNavigate = dlorItem => {
-        // console.log('saveAndNavigate formValues', dlorItem.object_link_url, formValues);
+    // const saveAndNavigate = dlorItem => {
+    //     // console.log('saveAndNavigate formValues', dlorItem.object_link_url, formValues);
 
-        if (formValues.schoolName.length > 0 || formValues.subjectCode.length > 0 || !!formValues.notify) {
-            const valuestoSend = {
-                dlorUuid: dlorItem.object_public_uuid,
-                demographics: {
-                    subject: formValues.subjectCode,
-                    school: formValues.schoolName,
-                    comments: formValues.otherComments,
-                },
-                subscribeRequest: {
-                    userName: !!formValues.notify ? formValues.preferredName : '',
-                    userEmail: !!formValues.notify ? formValues.userEmail : '',
-                },
-            };
-            /* istanbul ignore else */
-            if (!!account.id) {
-                valuestoSend.subscribeRequest.loggedin = true;
-            }
+    //     if (formValues.schoolName.length > 0 || formValues.subjectCode.length > 0 || !!formValues.notify) {
+    //         const valuestoSend = {
+    //             dlorUuid: dlorItem.object_public_uuid,
+    //             demographics: {
+    //                 subject: formValues.subjectCode,
+    //                 school: formValues.schoolName,
+    //                 comments: formValues.otherComments,
+    //             },
+    //             subscribeRequest: {
+    //                 userName: !!formValues.notify ? formValues.preferredName : '',
+    //                 userEmail: !!formValues.notify ? formValues.userEmail : '',
+    //             },
+    //         };
+    //         /* istanbul ignore else */
+    //         if (!!account.id) {
+    //             valuestoSend.subscribeRequest.loggedin = true;
+    //         }
 
-            const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
-                ? cookies.CYPRESS_TEST_DATA
-                : /* istanbul ignore next */ null;
-            /* istanbul ignore else */
-            if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
-                setCookie('CYPRESS_DATA_SAVED', valuestoSend);
-            }
-            actions.saveDlorDemographics(valuestoSend);
-            // navigation to link happens when the save has started via useEffect on dlorItemUpdating}
-        } else {
-            navigateToObjectLink();
-        }
-    };
+    //         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+    //             ? cookies.CYPRESS_TEST_DATA
+    //             : /* istanbul ignore next */ null;
+    //         /* istanbul ignore else */
+    //         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+    //             setCookie('CYPRESS_DATA_SAVED', valuestoSend);
+    //         }
+    //         actions.saveDlorDemographics(valuestoSend);
+    //         // navigation to link happens when the save has started via useEffect on dlorItemUpdating}
+    //     } else {
+    //         navigateToObjectLink();
+    //     }
+    // };
 
-    const saveDemographics = dlorItem => {
-        console.debug();
+    const saveDemographicsAndNotify = dlorItem => {
         const valuestoSend = {
             dlorUuid: dlorItem.object_public_uuid,
             demographics: {
-                subject: formValues.subjectCode,
-                school: formValues.schoolName,
-                comments: formValues.otherComments,
+                subject: isDemographicsOpened ? formValues?.subjectCode : '',
+                school: isDemographicsOpened ? formValues.schoolName : '',
+                comments: isDemographicsOpened ? formValues.otherComments : '',
             },
             subscribeRequest: {
-                userName: null,
-                userEmail: null,
+                userName: isNotifyOpened ? formValues?.preferredName : '',
+                userEmail: isNotifyOpened ? formValues?.userEmail : '',
             },
         };
-        console.debug();
+        /* istanbul ignore else */
+        if (!!account.id) {
+            valuestoSend.subscribeRequest.loggedin = true;
+        }
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+            ? cookies.CYPRESS_TEST_DATA
+            : /* istanbul ignore next */ null;
+        /* istanbul ignore else */
+        if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuestoSend);
+        }
         actions.saveDlorDemographics(valuestoSend).then(() => {
-            setFormValues({ ...formValues, sendDemographics: true });
+            setFormValues({
+                ...formValues,
+                sendDemographics: valuestoSend.demographics.subject.length > 0,
+                sendNotify: valuestoSend.subscribeRequest.userName.length > 0,
+                demographics: {
+                    subjectCode: '',
+                    schoolName: '',
+                    otherComments: '',
+                },
+                subscribeRequest: {
+                    userName: '',
+                    userEmail: '',
+                },
+            });
         });
 
         /* istanbul ignore else */
-    };
-
-    const finishNavigation = () => {
-        setConfirmationOpen(false);
-        navigateToObjectLink();
     };
 
     const getYoutubeEmbeddableUrl = urlIn => {
@@ -508,12 +565,14 @@ export const DLOView = ({
     };
 
     function getItButtonLabel(dlorItem) {
+        console.log('GetItButtonLabel', dlorItem);
         const interactionType = dlorItem?.object_link_interaction_type || /* istanbul ignore next */ null;
         const fileType = dlorItem?.object_link_file_type || null;
         let label = 'Access the object';
         let details = '';
 
         if (interactionType === 'view') {
+            console.log('item', dlorItem);
             const viewingTime = dlorItem?.object_link_size
                 ? getDurationString(dlorItem?.object_link_size)
                 : /* istanbul ignore next */ '';
@@ -521,8 +580,11 @@ export const DLOView = ({
                 details = `<br/>(${fileType} ${viewingTime})`; // Add line break
             } else if (fileType) {
                 details = `(${fileType})`;
-            } else if (viewingTime) {
-                details = `(${viewingTime})`;
+            } else {
+                /* istanbul ignore else */
+                if (viewingTime) {
+                    details = `(${viewingTime})`;
+                }
             }
         } else if (interactionType === 'download') {
             const fileSize = !!dlorItem?.object_link_size
@@ -532,8 +594,11 @@ export const DLOView = ({
                 details = `<br/>(${fileType} ${fileSize})`; // Add line break
             } else if (fileType) {
                 details = `(${fileType})`;
-            } else if (fileSize) {
-                details = `(${fileSize})`;
+            } else {
+                /* istanbul ignore else */
+                if (fileSize) {
+                    details = `(${fileSize})`;
+                }
             }
         }
 
@@ -542,29 +607,6 @@ export const DLOView = ({
         }
 
         return <>{parse(label)}</>;
-    }
-
-    const demograpicsResponseLocale = {
-        confirmationTitle: 'Demographic information saved',
-        confirmationMessage: 'We will use this information to help improve our services.',
-        confirmButtonLabel: 'OK',
-    };
-
-    let subscriptionResponseLocale = {};
-    if (!dlorItemUpdating && (!!dlorUpdatedItem || !!dlorUpdatedItemError)) {
-        // console.log('dlorUpdatedItem=', dlorUpdatedItem);
-        const updatingMessage =
-            dlorUpdatedItem?.data?.subscription === false
-                ? 'You are already subscribed'
-                : 'Please check your email to confirm your subscription request.';
-        const getConfirmationTitle = !!dlorUpdatedItem
-            ? updatingMessage
-            : 'There was a problem saving your subscription request - please try again later.';
-        subscriptionResponseLocale = {
-            confirmationTitle: getConfirmationTitle,
-            confirmationMessage: '',
-            confirmButtonLabel: 'Visit link now',
-        };
     }
 
     if (!!dlorItemLoading || dlorItemLoading === null || !!dlorItemUpdating) {
@@ -609,18 +651,19 @@ export const DLOView = ({
                     actionButtonVariant="contained"
                     confirmationBoxId="dlor-save-notification"
                     hideCancelButton
-                    isOpen={confirmationOpen}
-                    locale={subscriptionResponseLocale}
+                    isOpen={demographicsConfirmation}
+                    locale={confirmLocale}
+                    onAction={() => setDemographicsConfirmation(false)}
                 />
-                <ConfirmationBox
+                {/* <ConfirmationBox
                     actionButtonColor="primary"
                     actionButtonVariant="contained"
                     confirmationBoxId="dlor-demographics-notification"
                     hideCancelButton
                     isOpen={demographicsConfirmation}
-                    locale={demograpicsResponseLocale}
+                    locale={notifyType === 'demographics' ? demograpicsResponseLocale : notifyResponseLocale}
                     onAction={() => setDemographicsConfirmation(false)}
-                />
+                /> */}
                 {/* Demographics questions dialog - move to seperate component */}
                 <Dialog open={isDemographicsOpened}>
                     <DialogTitle>Help us understand how you will use this object</DialogTitle>
@@ -668,11 +711,64 @@ export const DLOView = ({
                             </Button>
                             <Button
                                 aria-label="Save my demographics"
-                                onClick={() => saveDemographics(dlorItem)}
+                                onClick={() => saveDemographicsAndNotify(dlorItem)}
                                 data-testid="demographics-capture"
                                 variant="contained"
                                 color="primary"
                                 disabled={!formValues?.subjectCode || !formValues?.schoolName}
+                            >
+                                Continue
+                            </Button>
+                        </Box>
+                    </DialogContent>
+                </Dialog>
+                {/* Notification dialog */}
+                <Dialog open={isNotifyOpened}>
+                    <DialogTitle>Notify you of any changes to this object</DialogTitle>
+                    <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                        <form>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel htmlFor="preferredName">Your name</InputLabel>
+                                <Input
+                                    id="preferredName"
+                                    data-testid="view-notify-preferredName"
+                                    value={formValues?.preferredName}
+                                    onChange={handleChange('preferredName')}
+                                />
+                            </FormControl>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel htmlFor="emailAddress">Your email address *</InputLabel>
+                                <Input
+                                    id="userEmail"
+                                    required
+                                    data-testid="view-notify-userEmail"
+                                    value={formValues?.userEmail}
+                                    onChange={handleChange('userEmail')}
+                                />
+                                {!isValidEmail(formValues?.userEmail) && (
+                                    <div data-testid="dlor-form-error-message-object-publishing-user">
+                                        This email address is not valid.
+                                    </div>
+                                )}
+                            </FormControl>
+                        </form>
+                        <Box sx={{ display: 'flex', gap: '10px', mt: 2, justifyContent: 'flex-end' }}>
+                            <Button
+                                aria-label="Cancel"
+                                onClick={() => setIsNotifyOpened(false)}
+                                data-testid="notifications-cancel"
+                                variant="contained"
+                                color="secondary"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                aria-label="Notify Me"
+                                onClick={() => saveDemographicsAndNotify(dlorItem)}
+                                data-testid="notifications-capture"
+                                variant="contained"
+                                color="primary"
+                                disabled={!isValidEmail(formValues?.userEmail) || !formValues?.preferredName}
                             >
                                 Continue
                             </Button>
@@ -771,9 +867,8 @@ export const DLOView = ({
                                         <StyledUQActionButton noMargin>
                                             <Button
                                                 aria-label="Click to access the object"
-                                                onClick={() => saveAndNavigate(dlorItem)}
+                                                onClick={() => navigateToObjectLink()}
                                                 data-testid="detailpage-clicklink"
-                                                disabled={formValues?.notify && !isValidEmail(formValues?.userEmail)}
                                                 class="extended"
                                             >
                                                 {getItButtonLabel(dlorItem)}
@@ -793,6 +888,8 @@ export const DLOView = ({
                                                     Keep up-to-date
                                                 </Typography>
                                                 <Chip
+                                                    data-testid="detailpage-notify-button"
+                                                    onClick={() => setIsNotifyOpened(true)}
                                                     icon={<NotificationsActive />}
                                                     label="Notify me"
                                                     sx={{
@@ -825,6 +922,7 @@ export const DLOView = ({
                                                 </Typography>
                                                 <Chip
                                                     onClick={() => setIsDemographicsOpened(true)}
+                                                    data-testid="detailpage-demographics-button"
                                                     label="Let us know"
                                                     sx={{
                                                         paddingLeft: '5px',
