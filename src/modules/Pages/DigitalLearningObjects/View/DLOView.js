@@ -7,14 +7,13 @@ import { useCookies } from 'react-cookie';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import { NotificationsActive } from '@mui/icons-material';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -45,9 +44,12 @@ import {
 import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { breadcrumbs } from 'config/routes';
+import { Chip, Dialog, DialogContent, DialogTitle } from '@mui/material';
 
-const StyledUQActionButton = styled('div')(({ theme }) => ({
-    marginBlock: '32px',
+const StyledUQActionButton = styled('div')(({ theme, noMargin }) => ({
+    marginBlock: '0px',
+    width: '100%',
+    display: 'inline-block',
     '& button, & a': {
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.white.main,
@@ -57,6 +59,43 @@ const StyledUQActionButton = styled('div')(({ theme }) => ({
         borderRadius: '6px',
         padding: '8px 12px',
         fontWeight: 400,
+
+        '&:hover': {
+            backgroundColor: theme.palette.white.main,
+            color: theme.palette.primary.main,
+            textDecoration: 'none',
+        },
+    },
+    '& button.cancel, & a': {
+        backgroundColor: theme.palette.secondary.main,
+        color: theme.palette.white.main,
+        borderColor: theme.palette.secondary.main,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderRadius: '6px',
+        padding: '8px 12px',
+        fontWeight: 400,
+
+        '&:hover': {
+            backgroundColor: theme.palette.white.main,
+            color: theme.palette.primary.main,
+            textDecoration: 'none',
+        },
+    },
+    '& button.extended': {
+        width: '100%',
+        textTransform: 'uppercase',
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.white.main,
+        borderColor: theme.palette.primary.main,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderRadius: '6px',
+        padding: '12px 12px',
+        fontWeight: 400,
+        transition: 'all 0.3s',
+        boxSizing: 'border-box',
+        position: 'relative',
         '&:hover': {
             backgroundColor: theme.palette.white.main,
             color: theme.palette.primary.main,
@@ -66,7 +105,7 @@ const StyledUQActionButton = styled('div')(({ theme }) => ({
     '&:has(button)': {
         display: 'flex',
         justifyContent: 'flex-end',
-        marginTop: '12px',
+        marginTop: noMargin ? '0px' : '12px',
     },
 }));
 const StyledTitleTypography = styled(Typography)(({ theme }) => ({
@@ -149,15 +188,7 @@ const StyledSeriesList = styled('ol')(() => ({
         },
     },
 }));
-const StyledDemographicsBox = styled(Box)(() => ({
-    border: '1px solid hsla(203, 50%, 30%, 0.15)',
-    borderRadius: '4px',
-    backgroundColor: 'white',
-    marginTop: '24px',
-    padding: '1em',
-    '& p': { marginLeft: '-8px' },
-    '& form': { margin: '-8px', '& p': { marginBlock: '3em 0', marginLeft: '2px' } },
-}));
+
 const StyledLayoutBox = styled(Box)(() => ({
     backgroundColor: 'white',
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
@@ -221,115 +252,30 @@ export const DLOView = ({
     const { account } = useAccountContext();
     const { dlorId } = useParams();
     const [cookies, setCookie] = useCookies();
-    const [confirmationOpen, setConfirmationOpen] = React.useState(false);
-    const captchaContainerRef = React.useRef(null);
-    const [captchaLoaded, setCaptchaLoaded] = React.useState(false);
-
-    const captchaExampleSuccessFunction = /* istanbul ignore next */ wafToken => {
-        /* istanbul ignore next */
-        console.log('CAPTCHA COMPLETED - WAF TOKEN', wafToken);
-        window.AwsWafIntegration.fetch('https://homepage-staging.library.uq.edu.au/dlor/public/demographics', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-WAF-Token': wafToken,
-            },
-            body: JSON.stringify({
-                dlorUuid: '987y_isjgt_9866',
-                recaptcha: 'ABC',
-                demographics: {
-                    school: 'school of testing',
-                    subject: 'demotest',
-                    subscribeRequest: {
-                        userName: 'Steve',
-                        userEmail: 's.lancaster@library.uq.edu.au',
-                    },
-                },
-            }),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json(); // Or response.text() if the API returns plain text
-            })
-            .then(data => {
-                console.log('API Response:', data); // Log the response data to the console
-            })
-            .catch(error => {
-                console.error('Fetch error:', error); // Log any errors to the console
-            });
-    };
-
-    const captchaExampleErrorFunction = error => {
-        /* Do something with the error */
-        /* istanbul ignore next */
-        console.error('Captcha error:', error);
-    };
-
-    useEffect(() => {
-        if (document.getElementById('captcha-script')) return;
-
-        const script = document.createElement('script');
-        script.src = 'https://b842968e7955.edge.captcha-sdk.awswaf.com/b842968e7955/jsapi.js';
-        script.type = 'text/javascript';
-        script.async = false;
-        script.defer = false;
-        script.id = 'captcha-script';
-
-        /* istanbul ignore next */
-        script.onload = () => {
-            window.captchaScriptLoaded = true;
-            setCaptchaLoaded(true);
-        };
-
-        script.onerror = () => {
-            console.error('Failed to load captcha script.');
-        };
-
-        document.head.appendChild(script);
-    }, []);
-
-    useEffect(() => {
-        /* istanbul ignore next */
-        if (dlorItem && captchaLoaded) {
-            const showMyCaptcha = () => {
-                console.log('Showing', dlorItem);
-                /* istanbul ignore else */
-                if (captchaContainerRef.current) {
-                    const container = captchaContainerRef.current;
-                    /* istanbul ignore else */
-                    if (container) {
-                        window.AwsWafCaptcha.renderCaptcha(container, {
-                            apiKey:
-                                'ju8dnzZ9MlFyG7HUBKXNhm2K15TY6OFh6j0AlKekdcGzetCBsTeTo0BOeiFV1NZ3nsOenj909pXtXhNiMzAuq+ckt+7oqZoVpXuehF7xTghwbqd7/4t2bNXklXXByZTyRxAxi0q/p0/LM+DPVqcE72LI9zRCuhFjvvrCfO6HLObT2dltCDQtNXtczV7eJrLgqetq/Lg01/UQZAD9UBtvOUbZbLwfHQXXraUTuYEvW/kv/OgI2k4w4yUKw0QMAg2rDpiF/hlmuftz3Vx6pZv+2nPYhyxxRso574M5yFf5Z4uN86+L0KduAYy/P0U/T63EBy6JYWC7ndYcBJciXkwfwCwdPA7aC3PEj39k6UpBHSxojj31GUTJQN/NPyVnuSWTZ8m3PleVtk/QqQO3E2SJiNV10iLjjGFIbnJLIeGVD05ZftAQShcZDPsqrW7et8X/EfTDo1bV+X1RBJwCP6fWpuOQ24WmKD+CGVVYP1wcM6YdtWmMXD4F+H/SkMWpYrO2MDqesyqSGSD8ZxZoeLbd/5GGpe+KWZQftaWmrFF3X5lJlJRzdAu5BcSYNZJnDQ9QNJWd5hLegXNiydkgxvy3H4CRTd6DFnvhAgdfi2hggfqJfhTM/RFwpoEbAO5EIaZ9OXwpmHqGYtBhVs6kbSpKUW7k+q6+qNu536/A/ZA47Ps=_1_1',
-                            onSuccess: captchaExampleSuccessFunction,
-                            onError: captchaExampleErrorFunction,
-                            // ...other configuration parameters as needed...
-                        });
-                    } else {
-                        console.error('Captcha container not found');
-                    }
-                }
-            };
-
-            // Call showMyCaptcha when the component mounts
-            showMyCaptcha();
-        }
-    }, [dlorItem, captchaLoaded]);
+    // const [confirmationOpen, setConfirmationOpen] = React.useState(false);
+    const [isDemographicsOpened, setIsDemographicsOpened] = React.useState(false);
+    const [demographicsConfirmation, setDemographicsConfirmation] = React.useState(false);
+    const [isNotifyOpened, setIsNotifyOpened] = React.useState(false);
+    // const [notifyType, setNotifyType] = React.useState('');
+    const [confirmLocale, setConfirmLocale] = React.useState({});
 
     // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
     // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
 
-    const isLoggedIn = !!account?.id;
+    // const isLoggedIn = !!account?.id;
 
-    const [formValues, setFormValues] = React.useState({
+    const defaultFormValues = {
         subjectCode: '',
         schoolName: '',
+        otherComments: '',
         notify: false,
+        sendDemographics: false,
+        sendNotify: false,
         preferredName: '',
         userEmail: '',
-    });
+    };
+
+    const [formValues, setFormValues] = React.useState(defaultFormValues);
 
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -382,12 +328,8 @@ export const DLOView = ({
     }, [account]);
 
     const handleChange = prop => e => {
-        let theNewValue =
-            e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
+        const theNewValue = e.target.value;
 
-        if (['notify'].includes(prop)) {
-            theNewValue = !!e.target.checked;
-        }
         const newValues = { ...formValues, [prop]: theNewValue };
 
         setFormValues(newValues);
@@ -419,17 +361,78 @@ export const DLOView = ({
         window.location.href = dlorItem?.object_link_url;
     }, [dlorItem?.object_link_url]);
 
+    const demograpicsResponseLocale = {
+        confirmationTitle: 'Demographic information saved',
+        confirmationMessage: 'We will use this information to help improve our services.',
+        confirmButtonLabel: 'OK',
+    };
+
+    // const notifyResponseLocale = {
+    //     confirmationTitle: 'Notification request saved',
+    //     confirmationMessage: 'Please check your email to confirm your subscription request.',
+    //     confirmButtonLabel: 'OK',
+    // };
+
+    // const subscriptionResponseLocale = notifyType === 'demographics' ? demograpicsResponseLocale : notifyResponseLocale;
+
     useEffect(() => {
         // when the save attempt comes back...
         // if they only sent demographics, we only wait for the "in progress" because we dont care what it responds
-        if (!!dlorItemUpdating && !formValues?.notify) {
-            navigateToObjectLink();
+
+        if (!dlorItemUpdating && !!formValues?.sendDemographics && !dlorUpdatedItemError) {
+            console.log('A');
+            setFormValues({ ...defaultFormValues, preferredName: account?.firstName, userEmail: account?.mail });
+            setConfirmLocale(demograpicsResponseLocale);
+            setIsDemographicsOpened(false);
+            setIsNotifyOpened(false);
+            setDemographicsConfirmation(true);
+            // navigateToObjectLink();
+        }
+        if (!dlorItemUpdating && !!formValues?.sendNotify && !dlorUpdatedItemError) {
+            console.log('B');
+            const updatingMessage =
+                dlorUpdatedItem?.data?.subscription === false
+                    ? 'You are already subscribed'
+                    : 'Please check your email to confirm your subscription request.';
+            const getConfirmationTitle = !!dlorUpdatedItem
+                ? updatingMessage
+                : /* istanbul ignore next */ 'There was a problem saving your subscription request - please try again later.';
+            setConfirmLocale({
+                confirmationTitle: getConfirmationTitle,
+                confirmationMessage: '',
+                confirmButtonLabel: 'OK',
+            });
+            setFormValues({ ...defaultFormValues, preferredName: account?.firstName, userEmail: account?.mail });
+            setIsDemographicsOpened(false);
+            setIsNotifyOpened(false);
+            setDemographicsConfirmation(true);
+            // navigateToObjectLink();
+        }
+        if (!!dlorUpdatedItemError && (!!formValues?.sendDemographics || !!formValues?.sendNotify)) {
+            console.log('ERROR IF');
+            setFormValues({ ...formValues, sendDemographics: false, sendNotify: false });
+            setConfirmLocale({
+                confirmationTitle: 'There was a problem saving your supplied information - please try again later.',
+                confirmationMessage: '',
+                confirmButtonLabel: 'OK',
+            });
+            setIsDemographicsOpened(false);
+            setIsNotifyOpened(false);
+            setDemographicsConfirmation(true);
         }
         //  they sent a notify then we will show a dialog, either success or failure
-        if (!dlorItemUpdating && (!!dlorUpdatedItem || !!dlorUpdatedItemError) && !!formValues?.notify) {
-            setConfirmationOpen(true);
-        }
-    }, [dlorItemUpdating, dlorUpdatedItem, dlorUpdatedItemError, formValues?.notify, navigateToObjectLink]);
+        // if (!dlorItemUpdating && (!!dlorUpdatedItem || !!dlorUpdatedItemError) && !!formValues?.notify) {
+        //     console.log('C');
+        //     setConfirmationOpen(true);
+        // }
+    }, [
+        dlorItemUpdating,
+        dlorUpdatedItem,
+        dlorUpdatedItemError,
+        formValues?.notify,
+        navigateToObjectLink,
+        formValues?.sendDemographics,
+    ]);
 
     const deslugify = slug => {
         const words = slug?.replace(/_/g, ' ');
@@ -477,43 +480,83 @@ export const DLOView = ({
         window.location.href = dlorAdminLink(`/edit/${uuid}`);
     };
 
-    const saveAndNavigate = dlorItem => {
-        // console.log('saveAndNavigate formValues', dlorItem.object_link_url, formValues);
+    // const saveAndNavigate = dlorItem => {
+    //     // console.log('saveAndNavigate formValues', dlorItem.object_link_url, formValues);
 
-        if (formValues.schoolName.length > 0 || formValues.subjectCode.length > 0 || !!formValues.notify) {
-            const valuestoSend = {
-                dlorUuid: dlorItem.object_public_uuid,
+    //     if (formValues.schoolName.length > 0 || formValues.subjectCode.length > 0 || !!formValues.notify) {
+    //         const valuestoSend = {
+    //             dlorUuid: dlorItem.object_public_uuid,
+    //             demographics: {
+    //                 subject: formValues.subjectCode,
+    //                 school: formValues.schoolName,
+    //                 comments: formValues.otherComments,
+    //             },
+    //             subscribeRequest: {
+    //                 userName: !!formValues.notify ? formValues.preferredName : '',
+    //                 userEmail: !!formValues.notify ? formValues.userEmail : '',
+    //             },
+    //         };
+    //         /* istanbul ignore else */
+    //         if (!!account.id) {
+    //             valuestoSend.subscribeRequest.loggedin = true;
+    //         }
+
+    //         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+    //             ? cookies.CYPRESS_TEST_DATA
+    //             : /* istanbul ignore next */ null;
+    //         /* istanbul ignore else */
+    //         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+    //             setCookie('CYPRESS_DATA_SAVED', valuestoSend);
+    //         }
+    //         actions.saveDlorDemographics(valuestoSend);
+    //         // navigation to link happens when the save has started via useEffect on dlorItemUpdating}
+    //     } else {
+    //         navigateToObjectLink();
+    //     }
+    // };
+
+    const saveDemographicsAndNotify = dlorItem => {
+        const valuestoSend = {
+            dlorUuid: dlorItem.object_public_uuid,
+            demographics: {
+                subject: isDemographicsOpened ? formValues?.subjectCode : '',
+                school: isDemographicsOpened ? formValues.schoolName : '',
+                comments: isDemographicsOpened ? formValues.otherComments : '',
+            },
+            subscribeRequest: {
+                userName: isNotifyOpened ? formValues?.preferredName : '',
+                userEmail: isNotifyOpened ? formValues?.userEmail : '',
+            },
+        };
+        /* istanbul ignore else */
+        if (!!account.id) {
+            valuestoSend.subscribeRequest.loggedin = true;
+        }
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+            ? cookies.CYPRESS_TEST_DATA
+            : /* istanbul ignore next */ null;
+        /* istanbul ignore else */
+        if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuestoSend);
+        }
+        actions.saveDlorDemographics(valuestoSend).then(() => {
+            setFormValues({
+                ...formValues,
+                sendDemographics: valuestoSend.demographics.subject.length > 0,
+                sendNotify: valuestoSend.subscribeRequest.userName.length > 0,
                 demographics: {
-                    subject: formValues.subjectCode,
-                    school: formValues.schoolName,
+                    subjectCode: '',
+                    schoolName: '',
+                    otherComments: '',
                 },
                 subscribeRequest: {
-                    userName: !!formValues.notify ? formValues.preferredName : '',
-                    userEmail: !!formValues.notify ? formValues.userEmail : '',
+                    userName: '',
+                    userEmail: '',
                 },
-            };
-            /* istanbul ignore else */
-            if (!!account.id) {
-                valuestoSend.subscribeRequest.loggedin = true;
-            }
+            });
+        });
 
-            const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
-                ? cookies.CYPRESS_TEST_DATA
-                : /* istanbul ignore next */ null;
-            /* istanbul ignore else */
-            if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
-                setCookie('CYPRESS_DATA_SAVED', valuestoSend);
-            }
-            actions.saveDlorDemographics(valuestoSend);
-            // navigation to link happens when the save has started via useEffect on dlorItemUpdating}
-        } else {
-            navigateToObjectLink();
-        }
-    };
-
-    const finishNavigation = () => {
-        setConfirmationOpen(false);
-        navigateToObjectLink();
+        /* istanbul ignore else */
     };
 
     const getYoutubeEmbeddableUrl = urlIn => {
@@ -526,39 +569,48 @@ export const DLOView = ({
     };
 
     function getItButtonLabel(dlorItem) {
+        console.log('GetItButtonLabel', dlorItem);
         const interactionType = dlorItem?.object_link_interaction_type || /* istanbul ignore next */ null;
         const fileType = dlorItem?.object_link_file_type || null;
-
         let label = 'Access the object';
+        let details = '';
+
         if (interactionType === 'view') {
+            console.log('item', dlorItem);
             const viewingTime = dlorItem?.object_link_size
                 ? getDurationString(dlorItem?.object_link_size)
                 : /* istanbul ignore next */ '';
-            label = `Access the object (${fileType} ${viewingTime})`;
+            if (fileType && viewingTime) {
+                details = `<br/>(${fileType} ${viewingTime})`; // Add line break
+            } else if (fileType) {
+                details = `(${fileType})`;
+            } else {
+                /* istanbul ignore else */
+                if (viewingTime) {
+                    details = `(${viewingTime})`;
+                }
+            }
         } else if (interactionType === 'download') {
             const fileSize = !!dlorItem?.object_link_size
                 ? getFileSizeString(dlorItem?.object_link_size)
                 : /* istanbul ignore next */ null;
-            label = `Access the object (${fileType} ${fileSize})`;
+            if (fileType && fileSize) {
+                details = `<br/>(${fileType} ${fileSize})`; // Add line break
+            } else if (fileType) {
+                details = `(${fileType})`;
+            } else {
+                /* istanbul ignore else */
+                if (fileSize) {
+                    details = `(${fileSize})`;
+                }
+            }
         }
-        return label;
-    }
 
-    let subscriptionResponseLocale = {};
-    if (!dlorItemUpdating && (!!dlorUpdatedItem || !!dlorUpdatedItemError)) {
-        // console.log('dlorUpdatedItem=', dlorUpdatedItem);
-        const updatingMessage =
-            dlorUpdatedItem?.data?.subscription === false
-                ? 'You are already subscribed'
-                : 'Please check your email to confirm your subscription request.';
-        const getConfirmationTitle = !!dlorUpdatedItem
-            ? updatingMessage
-            : 'There was a problem saving your subscription request - please try again later.';
-        subscriptionResponseLocale = {
-            confirmationTitle: getConfirmationTitle,
-            confirmationMessage: '',
-            confirmButtonLabel: 'Visit link now',
-        };
+        if (details) {
+            label = `Access the object ${details}`;
+        }
+
+        return <>{parse(label)}</>;
     }
 
     if (!!dlorItemLoading || dlorItemLoading === null || !!dlorItemUpdating) {
@@ -602,12 +654,131 @@ export const DLOView = ({
                     actionButtonColor="primary"
                     actionButtonVariant="contained"
                     confirmationBoxId="dlor-save-notification"
-                    onAction={() => finishNavigation()}
                     hideCancelButton
-                    onClose={finishNavigation}
-                    isOpen={confirmationOpen}
-                    locale={subscriptionResponseLocale}
+                    isOpen={demographicsConfirmation}
+                    locale={confirmLocale}
+                    onAction={() => setDemographicsConfirmation(false)}
                 />
+                {/* <ConfirmationBox
+                    actionButtonColor="primary"
+                    actionButtonVariant="contained"
+                    confirmationBoxId="dlor-demographics-notification"
+                    hideCancelButton
+                    isOpen={demographicsConfirmation}
+                    locale={notifyType === 'demographics' ? demograpicsResponseLocale : notifyResponseLocale}
+                    onAction={() => setDemographicsConfirmation(false)}
+                /> */}
+                {/* Demographics questions dialog - move to seperate component */}
+                <Dialog open={isDemographicsOpened}>
+                    <DialogTitle>Help us understand how you will use this object</DialogTitle>
+                    <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                        <form>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel htmlFor="subjectCode">
+                                    What course or session are you using this object for?
+                                </InputLabel>
+                                <Input
+                                    id="subjectCode"
+                                    data-testid="view-demographics-subject-code"
+                                    value={formValues?.subjectCode}
+                                    onChange={handleChange('subjectCode')}
+                                />
+                            </FormControl>
+                            <FormControl variant="standard" fullWidth sx={{ marginTop: '10px' }}>
+                                <InputLabel htmlFor="schoolName">What is your school, faculty or unit?</InputLabel>
+                                <Input
+                                    id="schoolName"
+                                    data-testid="view-demographics-school-name"
+                                    value={formValues?.schoolName}
+                                    onChange={handleChange('schoolName')}
+                                />
+                            </FormControl>
+                            <FormControl variant="standard" fullWidth sx={{ marginTop: '10px' }}>
+                                <InputLabel htmlFor="otherComments">Other comments?</InputLabel>
+                                <Input
+                                    id="otherComments"
+                                    data-testid="view-demographics-other-comments"
+                                    value={formValues?.otherComments}
+                                    onChange={handleChange('otherComments')}
+                                />
+                            </FormControl>
+                        </form>
+                        <Box sx={{ display: 'flex', gap: '10px', mt: 2, justifyContent: 'flex-end' }}>
+                            <Button
+                                aria-label="Cancel"
+                                onClick={() => setIsDemographicsOpened(false)}
+                                data-testid="demographics-cancel"
+                                variant="contained"
+                                color="secondary"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                aria-label="Save my demographics"
+                                onClick={() => saveDemographicsAndNotify(dlorItem)}
+                                data-testid="demographics-capture"
+                                variant="contained"
+                                color="primary"
+                                disabled={!formValues?.subjectCode || !formValues?.schoolName}
+                            >
+                                Continue
+                            </Button>
+                        </Box>
+                    </DialogContent>
+                </Dialog>
+                {/* Notification dialog */}
+                <Dialog open={isNotifyOpened}>
+                    <DialogTitle>Notify you of any changes to this object</DialogTitle>
+                    <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                        <form>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel htmlFor="preferredName">Your name</InputLabel>
+                                <Input
+                                    id="preferredName"
+                                    data-testid="view-notify-preferredName"
+                                    value={formValues?.preferredName}
+                                    onChange={handleChange('preferredName')}
+                                />
+                            </FormControl>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel htmlFor="emailAddress">Your email address *</InputLabel>
+                                <Input
+                                    id="userEmail"
+                                    required
+                                    data-testid="view-notify-userEmail"
+                                    value={formValues?.userEmail}
+                                    onChange={handleChange('userEmail')}
+                                />
+                                {!isValidEmail(formValues?.userEmail) && (
+                                    <div data-testid="dlor-form-error-message-object-publishing-user">
+                                        This email address is not valid.
+                                    </div>
+                                )}
+                            </FormControl>
+                        </form>
+                        <Box sx={{ display: 'flex', gap: '10px', mt: 2, justifyContent: 'flex-end' }}>
+                            <Button
+                                aria-label="Cancel"
+                                onClick={() => setIsNotifyOpened(false)}
+                                data-testid="notifications-cancel"
+                                variant="contained"
+                                color="secondary"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                aria-label="Notify Me"
+                                onClick={() => saveDemographicsAndNotify(dlorItem)}
+                                data-testid="notifications-capture"
+                                variant="contained"
+                                color="primary"
+                                disabled={!isValidEmail(formValues?.userEmail) || !formValues?.preferredName}
+                            >
+                                Continue
+                            </Button>
+                        </Box>
+                    </DialogContent>
+                </Dialog>
                 <div>
                     {getTitleBlock()}
                     <StyledContentGrid container spacing={4} data-testid="dlor-detailpage">
@@ -689,17 +860,100 @@ export const DLOView = ({
                                     words, terms, and descriptions.
                                 </Box>
                             )}
+
                             <StyledHeaderDiv data-testid="dlor-detailpage-description">
-                                {!!dlorItem?.object_description && parse(dlorItem.object_description)}
+                                <Grid container spacing={1}>
+                                    <Grid item xs={12} sm={8}>
+                                        {!!dlorItem?.object_description && parse(dlorItem.object_description)}
+                                    </Grid>
+                                    <Grid item xs={12} sm={4}>
+                                        {/* Demographics and notification buttons */}
+                                        <StyledUQActionButton noMargin>
+                                            <Button
+                                                aria-label="Click to access the object"
+                                                onClick={() => navigateToObjectLink()}
+                                                data-testid="detailpage-clicklink"
+                                                class="extended"
+                                            >
+                                                {getItButtonLabel(dlorItem)}
+                                            </Button>
+                                        </StyledUQActionButton>
+                                        <div style={{ backgroundColor: '#ddd', padding: '5px', marginTop: '10px' }}>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    gap: '8px',
+                                                }}
+                                            >
+                                                <Typography variant="p" sx={{ marginTop: '0px', textAlign: 'center' }}>
+                                                    Keep up-to-date
+                                                </Typography>
+                                                <Chip
+                                                    data-testid="detailpage-notify-button"
+                                                    onClick={() => setIsNotifyOpened(true)}
+                                                    icon={<NotificationsActive />}
+                                                    label="Notify me"
+                                                    sx={{
+                                                        backgroundColor: '#51247a',
+                                                        color: 'white',
+                                                        paddingLeft: '5px',
+                                                        '& .MuiChip-label': {
+                                                            color: 'white !important',
+                                                            fontWeight: 'bold',
+                                                        },
+                                                        '& .MuiChip-icon': {
+                                                            color: 'white !important',
+                                                        },
+                                                    }}
+                                                />
+                                            </Box>
+                                        </div>
+                                        <div style={{ backgroundColor: '#ddd', padding: '5px', marginTop: '10px' }}>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    gap: '8px',
+                                                }}
+                                            >
+                                                <Typography variant="p" sx={{ marginTop: '0px', textAlign: 'center' }}>
+                                                    Using this object?
+                                                </Typography>
+                                                <Chip
+                                                    onClick={() => setIsDemographicsOpened(true)}
+                                                    data-testid="detailpage-demographics-button"
+                                                    label="Let us know"
+                                                    sx={{
+                                                        paddingLeft: '5px',
+                                                        backgroundColor: '#51247a',
+                                                        color: 'white',
+                                                        '& .MuiChip-label': {
+                                                            color: 'white !important',
+                                                            fontWeight: 'bold',
+                                                        },
+                                                        '& .MuiChip-icon': {
+                                                            color: 'white !important',
+                                                        },
+                                                    }}
+                                                />
+                                            </Box>
+                                        </div>
+                                    </Grid>
+                                </Grid>
                             </StyledHeaderDiv>
 
                             {/* until we can implement a captcha, we can only take input from loggedin users :( */}
                             {dlorItem?.object_link_url?.startsWith('http') && !account?.id && (
-                                <StyledUQActionButton data-testid="detailpage-getit-button">
+                                <StyledUQActionButton class="marginBlock" data-testid="detailpage-getit-button">
                                     <a href={dlorItem.object_link_url}>{getItButtonLabel(dlorItem)}</a>
                                 </StyledUQActionButton>
                             )}
-                            {dlorItem?.object_link_url?.startsWith('http') && account?.id && (
+                            {/* {dlorItem?.object_link_url?.startsWith('http') && account?.id && (
                                 <StyledDemographicsBox
                                     id="gatherDemographics"
                                     data-testid="detailpage-getit-and demographics"
@@ -726,7 +980,6 @@ export const DLOView = ({
                                                 onChange={handleChange('schoolName')}
                                             />
                                         </FormControl>
-
                                         <p>Would you like notifications when updates are made to this object?</p>
                                         <FormControlLabel
                                             control={
@@ -767,24 +1020,23 @@ export const DLOView = ({
                                                 </FormControl>
                                             </>
                                         )}
-
                                         <div>
                                             <StyledUQActionButton>
                                                 <Button
                                                     aria-label="Click to access the object"
                                                     onClick={() => saveAndNavigate(dlorItem)}
-                                                    data-testid="detailpage-clicklink"
+                                                    data-testid="detailpage-clicklinkOLD"
                                                     disabled={
                                                         formValues?.notify && !isValidEmail(formValues?.userEmail)
                                                     }
                                                 >
-                                                    {getItButtonLabel(dlorItem)}
+                                                    Old button
                                                 </Button>
                                             </StyledUQActionButton>
                                         </div>
                                     </form>
                                 </StyledDemographicsBox>
-                            )}
+                            )} */}
 
                             {isPreviewableUrl(dlorItem.object_link_url) !== false && (
                                 <div data-testid="detailpage-preview">
@@ -942,7 +1194,6 @@ export const DLOView = ({
                                 </>
                             )}
                         </Grid>
-                        <div ref={captchaContainerRef} id="my-captcha-container" />
                     </StyledContentGrid>
                 </div>
             </>
