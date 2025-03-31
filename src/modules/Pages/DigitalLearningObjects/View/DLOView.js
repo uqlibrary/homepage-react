@@ -715,7 +715,7 @@ export const DLOView = ({
                                 data-testid="demographics-capture"
                                 variant="contained"
                                 color="primary"
-                                disabled={!formValues?.subjectCode || !formValues?.schoolName}
+                                disabled={!account.id || !formValues?.subjectCode || !formValues?.schoolName}
                             >
                                 Continue
                             </Button>
@@ -889,6 +889,7 @@ export const DLOView = ({
                                                 </Typography>
                                                 <Chip
                                                     data-testid="detailpage-notify-button"
+                                                    disabled={!account?.id}
                                                     onClick={() => setIsNotifyOpened(true)}
                                                     icon={<NotificationsActive />}
                                                     label="Notify me"
@@ -921,6 +922,7 @@ export const DLOView = ({
                                                     Using this object?
                                                 </Typography>
                                                 <Chip
+                                                    disabled={!account?.id}
                                                     onClick={() => setIsDemographicsOpened(true)}
                                                     data-testid="detailpage-demographics-button"
                                                     label="Let us know"
@@ -944,11 +946,11 @@ export const DLOView = ({
                             </StyledHeaderDiv>
 
                             {/* until we can implement a captcha, we can only take input from loggedin users :( */}
-                            {dlorItem?.object_link_url?.startsWith('http') && !account?.id && (
+                            {/* {dlorItem?.object_link_url?.startsWith('http') && !account?.id && (
                                 <StyledUQActionButton class="marginBlock" data-testid="detailpage-getit-button">
                                     <a href={dlorItem.object_link_url}>{getItButtonLabel(dlorItem)}</a>
                                 </StyledUQActionButton>
-                            )}
+                            )} */}
                             {/* {dlorItem?.object_link_url?.startsWith('http') && account?.id && (
                                 <StyledDemographicsBox
                                     id="gatherDemographics"
