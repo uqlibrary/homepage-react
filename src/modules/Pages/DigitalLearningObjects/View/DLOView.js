@@ -715,7 +715,7 @@ export const DLOView = ({
                                 data-testid="demographics-capture"
                                 variant="contained"
                                 color="primary"
-                                disabled={!formValues?.subjectCode || !formValues?.schoolName}
+                                disabled={!account.id || !formValues?.subjectCode || !formValues?.schoolName}
                             >
                                 Continue
                             </Button>
