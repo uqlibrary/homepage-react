@@ -944,11 +944,11 @@ export const DLOView = ({
                             </StyledHeaderDiv>
 
                             {/* until we can implement a captcha, we can only take input from loggedin users :( */}
-                            {dlorItem?.object_link_url?.startsWith('http') && !account?.id && (
+                            {/* {dlorItem?.object_link_url?.startsWith('http') && !account?.id && (
                                 <StyledUQActionButton class="marginBlock" data-testid="detailpage-getit-button">
                                     <a href={dlorItem.object_link_url}>{getItButtonLabel(dlorItem)}</a>
                                 </StyledUQActionButton>
-                            )}
+                            )} */}
                             {/* {dlorItem?.object_link_url?.startsWith('http') && account?.id && (
                                 <StyledDemographicsBox
                                     id="gatherDemographics"
