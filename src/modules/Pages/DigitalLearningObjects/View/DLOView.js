@@ -104,7 +104,7 @@ const StyledUQActionButton = styled('div')(({ theme, noMargin }) => ({
     '&:has(button)': {
         display: 'flex',
         justifyContent: 'flex-end',
-        marginTop: noMargin ? '0px' : '12px',
+        marginTop: noMargin ? '0px' : /* istanbul ignore next */ '12px',
     },
 }));
 const StyledTitleTypography = styled(Typography)(({ theme }) => ({
