@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useParams } from 'react-router-dom';
@@ -235,8 +234,6 @@ const StyledFilterLink = styled(Link)(() => ({
     color: '#3872a8 !important',
 }));
 
-window.captchaScriptLoaded = window.captchaScriptLoaded || false;
-
 export const DLOView = ({
     actions,
     // get viewed dlor item
@@ -248,7 +245,6 @@ export const DLOView = ({
     dlorItemUpdating,
     dlorUpdatedItemError,
 }) => {
-    console.log('PROCESS', process.env.NODE_ENV);
     const { account } = useAccountContext();
     const { dlorId } = useParams();
     const [cookies, setCookie] = useCookies();
@@ -357,9 +353,9 @@ export const DLOView = ({
         }
     }, [dlorItem]);
 
-    const navigateToObjectLink = React.useCallback(() => {
+    function navigateToObjectLink() {
         window.location.href = dlorItem?.object_link_url;
-    }, [dlorItem?.object_link_url]);
+    }
 
     const demograpicsResponseLocale = {
         confirmationTitle: 'Demographic information saved',
