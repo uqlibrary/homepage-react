@@ -515,12 +515,14 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="dlor-homepage-loginprompt"]')
                 .should('exist')
                 .contains('for extra features');
+            cy.get('[data-testid="detailpage-notify-button"]').should('have.attr', 'aria-disabled', 'true');
+            cy.get('[data-testid="detailpage-demographics-button"]').should('have.attr', 'aria-disabled', 'true');
 
             // the logged OUT user is not prompted to enter fields (until we have a captcha)
-            cy.get('[data-testid="detailpage-getit-button"]')
-                .should('exist')
-                .contains('Access the object');
-            cy.get('[data-testid="detailpage-getit-and demographics"]').should('not.exist');
+            // cy.get('[data-testid="detailpage-getit-button"]')
+            //     .should('exist')
+            //     .contains('Access the object');
+            // cy.get('[data-testid="detailpage-getit-and demographics"]').should('not.exist');
         });
         it('Loggedin user sees demographics/notify prompt', () => {
             cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4?user=s2222222');
