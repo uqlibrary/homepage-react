@@ -42,4 +42,5 @@ export const pathConfig = {
     pastExamPaperSearch: '/exams',
     help: 'https://guides.library.uq.edu.au/for-researchers/research-publications-guide',
     dlorSubmit: '/digital-learning-hub/submit',
+    dlorOwnObjectEdit: dlorId => `/digital-learning-hub/edit/${dlorId}`,
 };

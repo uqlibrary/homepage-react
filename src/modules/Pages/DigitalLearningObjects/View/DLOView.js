@@ -26,7 +26,7 @@ import StarIcon from '@mui/icons-material/Star';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { isDlorAdminUser } from 'helpers/access';
+import { isDlorAdminUser, isDlorOwner } from 'helpers/access';
 import { useAccountContext } from 'context';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
@@ -473,7 +473,9 @@ export const DLOView = ({
     };
 
     const navigateToEditPage = uuid => {
-        window.location.href = dlorAdminLink(`/edit/${uuid}`);
+        window.location.href = isDlorAdminUser(account)
+            ? dlorAdminLink(`/edit/${uuid}`)
+            : `/digital-learning-hub/edit/${uuid}`;
     };
 
     // const saveAndNavigate = dlorItem => {
@@ -1111,7 +1113,7 @@ export const DLOView = ({
                         <Grid item xs={12} md={3} data-testid="detailpage-metadata">
                             {dlorItem?.object_filters?.length > 0 && (
                                 <>
-                                    {isDlorAdminUser(account) && (
+                                    {(isDlorAdminUser(account) || isDlorOwner(account, dlorItem)) && (
                                         <Button
                                             onClick={() => navigateToEditPage(dlorItem?.object_public_uuid)}
                                             data-testid="detailpage-admin-edit-button"

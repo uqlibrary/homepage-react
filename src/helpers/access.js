@@ -179,10 +179,12 @@ export const isAlertsAdminUser = account =>
     isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
 
 export const isDlorAdminUser = account =>
-    isLoggedInUser(account) &&
-    userHasAdGroup('lib_dlor_admins', account) && !!!account?.masqueradingId; 
+    isLoggedInUser(account) && userHasAdGroup('lib_dlor_admins', account) && !!!account?.masqueradingId;
 
-    export const isHospitalUser = account =>
+export const isDlorOwner = (account, object) =>
+    isLoggedInUser(account) && object?.owner?.publishing_user_username === account.id;
+
+export const isHospitalUser = account =>
     isLoggedInUser(account) && !!account.user_group && account.user_group === EXTRAMURAL_HOSPITAL;
 
 export const isHdrStudent = account =>
