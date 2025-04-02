@@ -1,4 +1,17 @@
 describe('Digital Learning Hub View page', () => {
+    function TypeCKEditor(content, keepExisting = false) {
+        return cy
+            .get('.ck-content')
+            .should('exist')
+            .then(el => {
+                const editor = el[0].ckeditorInstance;
+                editor.setData(keepExisting ? editor.getData() + content : content);
+            });
+        // cy.get('.ck-content')
+        //     .parent.should('exist')
+        //     .setData(content);
+        // // .type(content);
+    }
     context('details page', () => {
         it('appears as expected', () => {
             cy.intercept('GET', /uq.h5p.com/, {
@@ -586,6 +599,37 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="graduate-attribute-12-name"]').should('not.exist');
             cy.get('#culturally-capable-dlor-filter-checkbox').click();
             cy.get('[data-testid="graduate-attribute-13-name"]').should('not.exist');
+        });
+    });
+    context('User can edit their own objects', () => {
+        it('User sees edit on objects they own', () => {
+            cy.visit('digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=s1111111');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="detailpage-admin-edit-button"]')
+                .should('exist')
+                .contains('Edit');
+            cy.get('[data-testid="detailpage-admin-edit-button"]').click();
+            cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01');
+            cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]').should('contain', 'Dummy entry');
+            cy.visit('digital-learning-hub/view/kj5t_8yg4_kj4f?user=s1111111');
+            cy.get('[data-testid="detailpage-admin-edit-button"]').should('not.exist');
+        });
+        it('User can edit the object they own', () => {
+            const testData =
+                'This is a test. This information is not used in the real system. This is simply content that is big enough to test the CKEditor - it is at least sufficient characters long for the editor to accept the content.';
+            cy.visit('digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=s1111111');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="detailpage-admin-edit-button"]').click();
+            cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01');
+            cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]').should('contain', 'Dummy entry');
+            cy.get('[data-testid="dlor-form-next-button"]').click();
+            TypeCKEditor(testData, false);
+            cy.get('[data-testid="dlor-form-next-button"]').click();
+            cy.get('[data-testid="dlor-form-next-button"]').click();
+            cy.get('[data-testid="admin-dlor-save-button-submit"]').click();
+            cy.get('[data-testid="message-title"]')
+                .should('exist')
+                .contains('Your request has been submitted');
         });
     });
 });
