@@ -1,6 +1,6 @@
 // these constants must match the constants, eg titleMinimumLength in Dlor Admin components
 import { DLOR_ADMIN_USER } from '../../../support/constants';
-
+import moment from 'moment-timezone';
 const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
 describe('Edit an object on the Digital Learning Hub', () => {
@@ -371,6 +371,22 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.visit(
                     `http://localhost:2020/admin/dlor/edit/9bc192a8-324c-4f6b-ac50-07e7ff2df240?user=${DLOR_ADMIN_USER}`,
                 );
+
+                const today = moment().format('DD/MM/YYYY'); // Australian format to match the display format
+
+                cy.get('[data-testid="object-review-date"] input')
+                    .click()
+                    .clear()
+                    .type(today)
+                    .blur() // Force blur event
+                    .wait(500) // Add small wait to allow state to update
+                    .then(() => {
+                        // Force a change event
+                        cy.get('[data-testid="object-review-date"] input')
+                            .trigger('change', { force: true })
+                            .should('have.value', today);
+                    });
+
                 // go to panel 2
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -447,6 +463,21 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
 
                 cy.visit(`http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=${DLOR_ADMIN_USER}`);
+
+                const today = moment().format('DD/MM/YYYY'); // Australian format to match the display format
+
+                cy.get('[data-testid="object-review-date"] input')
+                    .click()
+                    .clear()
+                    .type(today)
+                    .blur() // Force blur event
+                    .wait(500) // Add small wait to allow state to update
+                    .then(() => {
+                        // Force a change event
+                        cy.get('[data-testid="object-review-date"] input')
+                            .trigger('change', { force: true })
+                            .should('have.value', today);
+                    });
                 // go to panel 2
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -552,6 +583,21 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="object-form-teamid-new"]')
                     .should('exist')
                     .click();
+
+                const today = moment().format('DD/MM/YYYY'); // Australian format to match the display format
+
+                cy.get('[data-testid="object-review-date"] input')
+                    .click()
+                    .clear()
+                    .type(today)
+                    .blur() // Force blur event
+                    .wait(500) // Add small wait to allow state to update
+                    .then(() => {
+                        // Force a change event
+                        cy.get('[data-testid="object-review-date"] input')
+                            .trigger('change', { force: true })
+                            .should('have.value', today);
+                    });
 
                 // enter a new team
                 cy.get('[data-testid="dlor-form-team-name-new"]')
@@ -812,6 +858,21 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('exist')
                     .click();
 
+                const today = moment().format('DD/MM/YYYY'); // Australian format to match the display format
+
+                cy.get('[data-testid="object-review-date"] input')
+                    .click()
+                    .clear()
+                    .type(today)
+                    .blur() // Force blur event
+                    .wait(500) // Add small wait to allow state to update
+                    .then(() => {
+                        // Force a change event
+                        cy.get('[data-testid="object-review-date"] input')
+                            .trigger('change', { force: true })
+                            .should('have.value', today);
+                    });
+
                 // go to the second panel, Description
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -1014,6 +1075,21 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     expect(cookie).to.exist;
                     expect(cookie.value).to.equal('active');
                 });
+
+                const today = moment().format('DD/MM/YYYY'); // Australian format to match the display format
+
+                cy.get('[data-testid="object-review-date"] input')
+                    .click()
+                    .clear()
+                    .type(today)
+                    .blur() // Force blur event
+                    .wait(500) // Add small wait to allow state to update
+                    .then(() => {
+                        // Force a change event
+                        cy.get('[data-testid="object-review-date"] input')
+                            .trigger('change', { force: true })
+                            .should('have.value', today);
+                    });
 
                 // go to the second panel, Description
                 cy.get('[data-testid="dlor-form-next-button"]')
@@ -1245,7 +1321,20 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.visit(
                     `http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}&responseType=saveError`,
                 );
+                const today = moment().format('DD/MM/YYYY'); // Australian format to match the display format
 
+                cy.get('[data-testid="object-review-date"] input')
+                    .click()
+                    .clear()
+                    .type(today)
+                    .blur() // Force blur event
+                    .wait(500) // Add small wait to allow state to update
+                    .then(() => {
+                        // Force a change event
+                        cy.get('[data-testid="object-review-date"] input')
+                            .trigger('change', { force: true })
+                            .should('have.value', today);
+                    });
                 // team is valid as is, so go to the second panel, Description
                 cy.waitUntil(() => cy.get('[data-testid="dlor-form-next-button"]').should('exist'));
                 cy.get('[data-testid="dlor-form-next-button"]').click();
