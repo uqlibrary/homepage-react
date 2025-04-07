@@ -1,4 +1,17 @@
 describe('Digital Learning Hub View page', () => {
+    function TypeCKEditor(content, keepExisting = false) {
+        return cy
+            .get('.ck-content')
+            .should('exist')
+            .then(el => {
+                const editor = el[0].ckeditorInstance;
+                editor.setData(keepExisting ? editor.getData() + content : content);
+            });
+        // cy.get('.ck-content')
+        //     .parent.should('exist')
+        //     .setData(content);
+        // // .type(content);
+    }
     context('details page', () => {
         it('appears as expected', () => {
             cy.intercept('GET', /uq.h5p.com/, {
@@ -165,6 +178,37 @@ describe('Digital Learning Hub View page', () => {
                 .click();
             cy.get('body').contains('user has navigated to pressbook link');
         });
+
+        it('shows correct button for different types of records', () => {
+            cy.visit('/digital-learning-hub/view/987y-dfgrf4-76gsg-16');
+            cy.get('[data-testid="detailpage-clicklink"]')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', 'Access the object (205m 45s)');
+
+            cy.visit('/digital-learning-hub/view/987y-dfgrf4-76gsg-15');
+            cy.get('[data-testid="detailpage-clicklink"]')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', '(video)');
+            cy.visit('/digital-learning-hub/view/987y-dfgrf4-76gsg-14');
+            cy.get('[data-testid="detailpage-clicklink"]')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', '(123.5 MB)');
+            cy.visit('/digital-learning-hub/view/987y-dfgrf4-76gsg-13');
+            cy.get('[data-testid="detailpage-clicklink"]')
+                .should('exist')
+                .should('be.visible')
+                .should('contain', '(video)');
+            // ensure cancel button works.
+            cy.get('[data-testid="detailpage-demographics-button"]').click();
+            cy.get('[data-testid="demographics-cancel"]').click();
+            cy.get('[data-testid="demographics-cancel"]').should('not.exist');
+            cy.get('[data-testid="detailpage-notify-button"]').click();
+            cy.get('[data-testid="notifications-cancel"]').click();
+            cy.get('[data-testid="notifications-cancel"]').should('not.exist');
+        });
         it('has expected cultural advice', () => {
             // custom indicators appears
             cy.visit('http://localhost:2020/digital-learning-hub/view/kj5t_8yg4_kj4f');
@@ -234,61 +278,57 @@ describe('Digital Learning Hub View page', () => {
             cy.url().should('eq', 'http://localhost:2020/exams');
         });
 
-        it('subscription requires you to enter an email address', () => {
+        it('Notify requires you to enter an email address', () => {
             cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597?user=s2222222');
             cy.viewport(1300, 1000);
 
             // enter a subject so that something is sent even thoiught they uncheck notify
-            cy.get('[data-testid="view-demographics-subject-code"] input')
-                .should('exist')
-                .type('a subject');
+            cy.get('[data-testid="detailpage-notify-button"]').click();
 
-            // reveal the notify fields
-            cy.get('[data-testid="checkbox-notify"] input')
-                .should('exist')
-                .should('not.be.checked')
-                .check();
-
-            cy.get('[data-testid="detailpage-clicklink"]').should('not.have.attr', 'disabled');
+            cy.get('[data-testid="notifications-capture"]').should('not.have.attr', 'disabled');
 
             cy.wait(1000);
             cy.get('#userEmail')
                 .should('exist')
                 .clear();
 
-            cy.get('[data-testid="detailpage-clicklink"]').should('have.attr', 'disabled');
+            cy.get('[data-testid="notifications-capture"]').should('have.attr', 'disabled');
 
             cy.get('#userEmail').type('joe');
 
-            cy.get('[data-testid="detailpage-clicklink"]').should('have.attr', 'disabled');
-
-            cy.get('[data-testid="checkbox-notify"] input')
-                .should('exist')
-                .should('be.checked')
-                .uncheck();
-
-            cy.get('[data-testid="detailpage-clicklink"]').should('not.have.attr', 'disabled');
+            cy.get('[data-testid="notifications-capture"]').should('have.attr', 'disabled');
+            cy.get('#userEmail')
+                .clear()
+                .type('joe@joe.com');
+            cy.get('[data-testid="notifications-capture"]').should('not.have.attr', 'disabled');
+            cy.get('#userEmail')
+                .clear()
+                .type('thisfails');
+            cy.get('[data-testid="notifications-capture"]').should('have.attr', 'disabled');
         });
-        it('sends a demographic without notify properly', () => {
+        it('sends demographics correctly', () => {
             cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597');
             cy.viewport(1300, 1000);
 
             const typeSubject = 'PHIL1001';
             const typeSchoolName = 'School of Mathematics';
-
+            cy.get('[data-testid="detailpage-demographics-button"]').click();
             cy.get('[data-testid="view-demographics-subject-code"] input')
                 .should('exist')
                 .type(typeSubject);
             cy.get('[data-testid="view-demographics-school-name"] input')
                 .should('exist')
                 .type(typeSchoolName);
-            cy.get('[data-testid="detailpage-clicklink"]')
+            cy.get('[data-testid="demographics-capture"]').should('not.have.attr', 'disabled');
+            cy.get('[data-testid="demographics-capture"]').click();
+            cy.get('[data-testid="message-title"]')
                 .should('exist')
-                .click();
+                .contains('Demographic information saved');
 
             const expectedValues = {
                 dlorUuid: '9bc174f7-5326-4a8b-bfab-d5081c688597',
                 demographics: {
+                    comments: '',
                     subject: typeSubject,
                     school: typeSchoolName,
                 },
@@ -312,80 +352,15 @@ describe('Digital Learning Hub View page', () => {
                 cy.clearCookie('CYPRESS_TEST_DATA');
             });
 
-            cy.url().should('eq', 'http://localhost:2020/exams');
+            // cy.url().should('eq', 'http://localhost:2020/exams');
         });
-        it('can hide-show the notify dialog, it doesnt send entered values if hidden', () => {
-            cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597?user=s2222222');
-            cy.viewport(1300, 1000);
 
-            // enter a subject so that something is sent even thoiught they uncheck notify
-            cy.get('[data-testid="view-demographics-subject-code"] input')
-                .should('exist')
-                .type('a subject');
-
-            // reveal the notify fields
-            cy.get('[data-testid="checkbox-notify"] input')
-                .should('exist')
-                .should('not.be.checked')
-                .check();
-            cy.get('[data-testid="view-notify-preferredName"]')
-                .should('exist')
-                .should('have.value', '') // logged out
-                .type('Joe');
-            cy.get('[data-testid="view-notify-userEmail"]')
-                .should('exist')
-                .should('have.value', '') // logged out
-                .type('joe@example.com');
-
-            // hide the notify fields
-            cy.get('[data-testid="checkbox-notify"] input')
-                .should('exist')
-                .should('be.checked')
-                .uncheck();
-            cy.get('[data-testid="view-notify-preferredName"]').should('not.exist');
-            cy.get('[data-testid="view-notify-userEmail"]').should('not.exist');
-
-            cy.get('[data-testid="detailpage-clicklink"]')
-                .should('exist')
-                .click();
-
-            const expectedValues = {
-                dlorUuid: '9bc174f7-5326-4a8b-bfab-d5081c688597',
-                demographics: {
-                    subject: 'a subject',
-                    school: '',
-                },
-                subscribeRequest: {
-                    userName: '',
-                    userEmail: '',
-                    loggedin: true,
-                },
-            };
-            cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
-                expect(cookie).to.exist;
-                const decodedValue = decodeURIComponent(cookie.value);
-                const sentValues = JSON.parse(decodedValue);
-
-                // console.log('sentValues=', sentValues);
-                // console.log('expectedValues=', expectedValues);
-
-                expect(sentValues).to.deep.equal(expectedValues);
-
-                cy.clearCookie('CYPRESS_DATA_SAVED');
-                cy.clearCookie('CYPRESS_TEST_DATA');
-            });
-
-            cy.url().should('eq', 'http://localhost:2020/exams');
-        });
-        it('sends a notify without demographic properly when logged IN without change', () => {
+        it('sends notifications correctly', () => {
             cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597?user=digiteamMember');
             cy.viewport(1300, 1000);
 
-            // reveal the notify fields
-            cy.get('[data-testid="checkbox-notify"] input')
-                .should('exist')
-                .should('not.be.checked')
-                .check();
+            cy.get('[data-testid="detailpage-notify-button"]').click();
+
             cy.get('[data-testid="view-notify-preferredName"] input')
                 .should('exist')
                 .should('have.value', 'Caroline');
@@ -393,13 +368,14 @@ describe('Digital Learning Hub View page', () => {
                 .should('exist')
                 .should('have.value', 'j.Researcher@uq.edu.au');
 
-            cy.get('[data-testid="detailpage-clicklink"]')
+            cy.get('[data-testid="notifications-capture"]')
                 .should('exist')
                 .click();
 
             const expectedValues = {
                 dlorUuid: '9bc174f7-5326-4a8b-bfab-d5081c688597',
                 demographics: {
+                    comments: '',
                     subject: '',
                     school: '',
                 },
@@ -428,213 +404,10 @@ describe('Digital Learning Hub View page', () => {
                 'Please check your email to confirm your subscription request',
             );
             cy.get('[data-testid="cancel-dlor-save-notification"]').should('not.exist');
-            cy.get('[data-testid="confirm-dlor-save-notification"]')
-                .should('exist')
-                .contains('Visit link now')
-                .click();
 
-            cy.url().should('eq', 'http://localhost:2020/exams');
+            // cy.url().should('eq', 'http://localhost:2020/exams');
         });
-        it.skip('sends a notify without demographic properly when logged IN with change', () => {
-            cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597?user=digiteamMember');
-            cy.viewport(1300, 1000);
 
-            // reveal the notify fields
-            cy.get('[data-testid="checkbox-notify"] input')
-                .should('exist')
-                .should('not.be.checked')
-                .check();
-            cy.get('[data-testid="view-notify-preferredName"] input')
-                .should('exist')
-                .should('have.value', 'Caroline')
-                .clear()
-                .type('Caro');
-            cy.get('[data-testid="view-notify-userEmail"] input')
-                .should('exist')
-                .should('have.value', 'j.Researcher@uq.edu.au')
-                .clear()
-                .type('caro@example.com');
-
-            cy.get('[data-testid="detailpage-clicklink"]')
-                .should('exist')
-                .click();
-
-            const expectedValues = {
-                dlorUuid: '9bc174f7-5326-4a8b-bfab-d5081c688597',
-                demographics: {
-                    subject: '',
-                    school: '',
-                },
-                subscribeRequest: {
-                    userName: 'Caro',
-                    userEmail: 'caro@example.com',
-                    loggedin: true,
-                },
-            };
-            cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
-                expect(cookie).to.exist;
-                const decodedValue = decodeURIComponent(cookie.value);
-                const sentValues = JSON.parse(decodedValue);
-
-                // console.log('sentValues=', sentValues);
-                // console.log('expectedValues=', expectedValues);
-
-                expect(sentValues.dlorUuid).to.deep.equal(expectedValues.dlorUuid);
-                expect(sentValues.demographics).to.deep.equal(expectedValues.demographics);
-                // console.log('sentValues.subscribeRequest=', sentValues.subscribeRequest);
-                // console.log('expectedValues.subscribeRequest=', expectedValues.subscribeRequest);
-                // expect(sentValues.subscribeRequest).to.deep.equal(expectedValues.subscribeRequest);
-                // expect(sentValues).to.deep.equal(expectedValues);
-
-                cy.clearCookie('CYPRESS_DATA_SAVED');
-                cy.clearCookie('CYPRESS_TEST_DATA');
-            });
-
-            cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-save-notification"]').should('exist'));
-            cy.get('[data-testid="dialogbox-dlor-save-notification"]').contains(
-                'Please check your email to confirm your subscription request',
-            );
-            cy.get('[data-testid="cancel-dlor-save-notification"]').should('not.exist');
-            cy.get('[data-testid="confirm-dlor-save-notification"]')
-                .should('exist')
-                .contains('Visit link now')
-                .click();
-
-            cy.url().should('eq', 'http://localhost:2020/exams');
-        });
-        it('sends a demographic with notify properly when logged IN without change', () => {
-            cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597?user=digiteamMember');
-            cy.viewport(1300, 1000);
-
-            cy.get('[data-testid="view-demographics-subject-code"] input')
-                .should('exist')
-                .type('MATH3001');
-            cy.get('[data-testid="view-demographics-school-name"] input')
-                .should('exist')
-                .type('School of Geology');
-
-            // reveal the notify fields
-            cy.get('[data-testid="checkbox-notify"] input')
-                .should('exist')
-                .should('not.be.checked')
-                .check();
-            cy.get('[data-testid="view-notify-preferredName"] input')
-                .should('exist')
-                .should('have.value', 'Caroline');
-            cy.get('[data-testid="view-notify-userEmail"] input')
-                .should('exist')
-                .should('have.value', 'j.Researcher@uq.edu.au');
-
-            cy.get('[data-testid="detailpage-clicklink"]')
-                .should('exist')
-                .click();
-
-            const expectedValues = {
-                dlorUuid: '9bc174f7-5326-4a8b-bfab-d5081c688597',
-                demographics: {
-                    subject: 'MATH3001',
-                    school: 'School of Geology',
-                },
-                subscribeRequest: {
-                    userName: 'Caroline',
-                    userEmail: 'j.Researcher@uq.edu.au',
-                    loggedin: true,
-                },
-            };
-            cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
-                expect(cookie).to.exist;
-                const decodedValue = decodeURIComponent(cookie.value);
-                const sentValues = JSON.parse(decodedValue);
-
-                // console.log('sentValues=', sentValues);
-                // console.log('expectedValues=', expectedValues);
-
-                expect(sentValues).to.deep.equal(expectedValues);
-
-                cy.clearCookie('CYPRESS_DATA_SAVED');
-                cy.clearCookie('CYPRESS_TEST_DATA');
-            });
-
-            cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-save-notification"]').should('exist'));
-            cy.get('[data-testid="dialogbox-dlor-save-notification"]').contains(
-                'Please check your email to confirm your subscription request',
-            );
-            cy.get('[data-testid="cancel-dlor-save-notification"]').should('not.exist');
-            cy.get('[data-testid="confirm-dlor-save-notification"]')
-                .should('exist')
-                .contains('Visit link now')
-                .click();
-
-            cy.url().should('eq', 'http://localhost:2020/exams');
-        });
-        it.skip('sends a demographic with notify properly when logged IN with change', () => {
-            cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597?user=digiteamMember');
-            cy.viewport(1300, 1000);
-
-            cy.get('[data-testid="view-demographics-subject-code"] input')
-                .should('exist')
-                .type('MATH3001');
-            cy.get('[data-testid="view-demographics-school-name"] input')
-                .should('exist')
-                .type('School of Geology');
-
-            // reveal the notify fields
-            cy.get('[data-testid="checkbox-notify"] input')
-                .should('exist')
-                .should('not.be.checked')
-                .check();
-            cy.get('[data-testid="view-notify-preferredName"] input')
-                .should('exist')
-                .should('have.value', 'Caroline')
-                .type(' Smith');
-            cy.get('[data-testid="view-notify-userEmail"] input')
-                .should('exist')
-                .should('have.value', 'j.Researcher@uq.edu.au')
-                .clear()
-                .type('cda@example.com');
-
-            cy.get('[data-testid="detailpage-clicklink"]')
-                .should('exist')
-                .click();
-
-            const expectedValues = {
-                dlorUuid: '9bc174f7-5326-4a8b-bfab-d5081c688597',
-                demographics: {
-                    subject: 'MATH3001',
-                    school: 'School of Geology',
-                },
-                subscribeRequest: {
-                    userName: 'Caroline Smith',
-                    userEmail: 'cda@example.com',
-                    loggedin: true,
-                },
-            };
-            cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
-                expect(cookie).to.exist;
-                const decodedValue = decodeURIComponent(cookie.value);
-                const sentValues = JSON.parse(decodedValue);
-
-                // console.log('sentValues=', sentValues);
-                // console.log('expectedValues=', expectedValues);
-
-                expect(sentValues).to.deep.equal(expectedValues);
-
-                cy.clearCookie('CYPRESS_DATA_SAVED');
-                cy.clearCookie('CYPRESS_TEST_DATA');
-            });
-
-            cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-save-notification"]').should('exist'));
-            cy.get('[data-testid="dialogbox-dlor-save-notification"]').contains(
-                'Please check your email to confirm your subscription request',
-            );
-            cy.get('[data-testid="cancel-dlor-save-notification"]').should('not.exist');
-            cy.get('[data-testid="confirm-dlor-save-notification"]')
-                .should('exist')
-                .contains('Visit link now')
-                .click();
-
-            cy.url().should('eq', 'http://localhost:2020/exams');
-        });
         it('handles a failure to save notify properly', () => {
             cy.visit(
                 'digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597?user=digiteamMember&responseType=notifyError',
@@ -642,10 +415,8 @@ describe('Digital Learning Hub View page', () => {
             cy.viewport(1300, 1000);
 
             // reveal the notify fields
-            cy.get('[data-testid="checkbox-notify"] input')
-                .should('exist')
-                .should('not.be.checked')
-                .check();
+            cy.get('[data-testid="detailpage-notify-button"]').click();
+
             cy.get('[data-testid="view-notify-preferredName"] input')
                 .should('exist')
                 .should('have.value', 'Caroline');
@@ -653,13 +424,14 @@ describe('Digital Learning Hub View page', () => {
                 .should('exist')
                 .should('have.value', 'j.Researcher@uq.edu.au');
 
-            cy.get('[data-testid="detailpage-clicklink"]')
+            cy.get('[data-testid="notifications-capture"]')
                 .should('exist')
                 .click();
 
             const expectedValues = {
                 dlorUuid: '9bc174f7-5326-4a8b-bfab-d5081c688597',
                 demographics: {
+                    comments: '',
                     subject: '',
                     school: '',
                 },
@@ -684,16 +456,14 @@ describe('Digital Learning Hub View page', () => {
             });
 
             cy.waitUntil(() => cy.get('[data-testid="dialogbox-dlor-save-notification"]').should('exist'));
-            cy.get('[data-testid="dialogbox-dlor-save-notification"]').contains(
-                'There was a problem saving your subscription request - please try again later',
-            );
+            cy.get('[data-testid="dialogbox-dlor-save-notification"]').contains('There was a problem');
             cy.get('[data-testid="cancel-dlor-save-notification"]').should('not.exist');
             cy.get('[data-testid="confirm-dlor-save-notification"]')
                 .should('exist')
-                .contains('Visit link now')
+                .contains('OK')
                 .click();
 
-            cy.url().should('eq', 'http://localhost:2020/exams');
+            // cy.url().should('eq', 'http://localhost:2020/exams');
         });
         it('handles where the user was already subscribed', () => {
             cy.visit(
@@ -701,11 +471,7 @@ describe('Digital Learning Hub View page', () => {
             );
             cy.viewport(1300, 1000);
 
-            // reveal the notify fields
-            cy.get('[data-testid="checkbox-notify"] input')
-                .should('exist')
-                .should('not.be.checked')
-                .check();
+            cy.get('[data-testid="detailpage-notify-button"]').click();
             cy.get('[data-testid="view-notify-preferredName"] input')
                 .should('exist')
                 .should('have.value', 'Caroline');
@@ -713,7 +479,7 @@ describe('Digital Learning Hub View page', () => {
                 .should('exist')
                 .should('have.value', 'j.Researcher@uq.edu.au');
 
-            cy.get('[data-testid="detailpage-clicklink"]')
+            cy.get('[data-testid="notifications-capture"]')
                 .should('exist')
                 .click();
 
@@ -722,10 +488,10 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="cancel-dlor-save-notification"]').should('not.exist');
             cy.get('[data-testid="confirm-dlor-save-notification"]')
                 .should('exist')
-                .contains('Visit link now')
+                .contains('OK')
                 .click();
 
-            cy.url().should('eq', 'http://localhost:2020/exams');
+            // cy.url().should('eq', 'http://localhost:2020/exams');
         });
     });
     context('"Access it" units show properly', () => {
@@ -762,27 +528,26 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="dlor-homepage-loginprompt"]')
                 .should('exist')
                 .contains('for extra features');
+            cy.get('[data-testid="detailpage-notify-button"]').should('have.attr', 'aria-disabled', 'true');
+            cy.get('[data-testid="detailpage-demographics-button"]').should('have.attr', 'aria-disabled', 'true');
 
             // the logged OUT user is not prompted to enter fields (until we have a captcha)
-            cy.get('[data-testid="detailpage-getit-button"]')
-                .should('exist')
-                .contains('Access the object');
-            cy.get('[data-testid="detailpage-getit-and demographics"]').should('not.exist');
+            // cy.get('[data-testid="detailpage-getit-button"]')
+            //     .should('exist')
+            //     .contains('Access the object');
+            // cy.get('[data-testid="detailpage-getit-and demographics"]').should('not.exist');
         });
         it('Loggedin user sees demographics/notify prompt', () => {
             cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4?user=s2222222');
 
             // the logged in user is prompted to enter fields
             cy.get('[data-testid="detailpage-getit-button"]').should('not.exist');
-            cy.get('[data-testid="detailpage-getit-and demographics"]')
+            cy.get('[data-testid="detailpage-clicklink"]')
                 .should('exist')
                 .contains('Access the object');
 
             // reveal the notify fields
-            cy.get('[data-testid="checkbox-notify"] input')
-                .should('exist')
-                .should('not.be.checked')
-                .check();
+            cy.get('[data-testid="detailpage-notify-button"]').click();
             cy.get('[data-testid="view-notify-preferredName"] input')
                 .should('exist')
                 .should('have.value', 'Jane');
@@ -834,6 +599,37 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="graduate-attribute-12-name"]').should('not.exist');
             cy.get('#culturally-capable-dlor-filter-checkbox').click();
             cy.get('[data-testid="graduate-attribute-13-name"]').should('not.exist');
+        });
+    });
+    context('User can edit their own objects', () => {
+        it('User sees edit on objects they own', () => {
+            cy.visit('digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=s1111111');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="detailpage-admin-edit-button"]')
+                .should('exist')
+                .contains('Edit');
+            cy.get('[data-testid="detailpage-admin-edit-button"]').click();
+            cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01');
+            cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]').should('contain', 'Dummy entry');
+            cy.visit('digital-learning-hub/view/kj5t_8yg4_kj4f?user=s1111111');
+            cy.get('[data-testid="detailpage-admin-edit-button"]').should('not.exist');
+        });
+        it('User can edit the object they own', () => {
+            const testData =
+                'This is a test. This information is not used in the real system. This is simply content that is big enough to test the CKEditor - it is at least sufficient characters long for the editor to accept the content.';
+            cy.visit('digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=s1111111');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="detailpage-admin-edit-button"]').click();
+            cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01');
+            cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]').should('contain', 'Dummy entry');
+            cy.get('[data-testid="dlor-form-next-button"]').click();
+            TypeCKEditor(testData, false);
+            cy.get('[data-testid="dlor-form-next-button"]').click();
+            cy.get('[data-testid="dlor-form-next-button"]').click();
+            cy.get('[data-testid="admin-dlor-save-button-submit"]').click();
+            cy.get('[data-testid="message-title"]')
+                .should('exist')
+                .contains('Your request has been submitted');
         });
     });
 });

@@ -53,6 +53,7 @@ export const flattedPathConfig = [
     '/digital-learning-hub/confirm/subscribe',
     '/digital-learning-hub/confirm/unsubscribe',
     '/digital-learning-hub/submit',
+    '/digital-learning-hub/edit',
     '/exams/course',
 ];
 
@@ -127,6 +128,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             element: <components.DLONew />,
             exact: false,
             pageTitle: 'Submit request for new object',
+        },
+        {
+            path: pathConfig.dlorOwnObjectEdit(dlorId),
+            element: <components.DLOOwnEdit />,
+            exact: false,
+            pageTitle: 'Edit details of your object',
         },
     ];
 
