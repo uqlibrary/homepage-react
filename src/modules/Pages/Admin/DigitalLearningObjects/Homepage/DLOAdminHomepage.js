@@ -142,8 +142,8 @@ const exportToCSV = (data, filename) => {
                 value = item.owner?.team_name || /* istanbul ignore next */ '';
             } else if (item.object_filters && filterTypes.has(header)) {
                 const matchingFilter = item.object_filters.find(filter => filter.filter_key === header);
-                // First join the array elements with semicolons, then escape the entire string
-                value = matchingFilter ? escapeCSVField(matchingFilter.filter_values.map(fv => fv.name).join(';')) : '';
+                // Just join the values with semicolons, escape at the end
+                value = matchingFilter ? matchingFilter.filter_values.map(fv => fv.name).join(';') : '';
             } else {
                 value = item[header];
                 // *** boolean fields value conversion ***
@@ -155,15 +155,14 @@ const exportToCSV = (data, filename) => {
                 const dateHeaders = ['date', 'created_at'];
 
                 if (dateHeaders.some(dateHeader => header.includes(dateHeader))) {
-                    // Check if the header contains "date" (adjust as needed)
                     /* istanbul ignore else */
                     if (value) {
                         const date = moment(value); // Use moment.js to parse the date
                         /* istanbul ignore else */
                         if (date.isValid()) {
-                            value = date.format('MMMM DD, YYYY'); // Format the date (customize format as needed)
+                            value = date.format('MMMM DD, YYYY');
                         } else {
-                            value = 'Invalid Date'; // Handle invalid dates gracefully
+                            value = 'Invalid Date';
                         }
                     }
                 }
@@ -174,18 +173,17 @@ const exportToCSV = (data, filename) => {
                             /* istanbul ignore next */
                             if (typeof v === 'object') {
                                 /* istanbul ignore next */
-                                return escapeCSVField(JSON.stringify(v));
+                                return JSON.stringify(v);
                             }
-                            return escapeCSVField(v);
+                            return v;
                         })
                         .join(';');
                 } else if (typeof value === 'object') {
                     value = JSON.stringify(value);
                 }
-
-                value = escapeCSVField(value);
             }
-            return value;
+            // Single escape at the end
+            return escapeCSVField(value);
         });
         csvRows.push(values.join(','));
     });
