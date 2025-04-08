@@ -69,6 +69,24 @@ const StyleObjectDetailGridItem = styled(Grid)(({ theme }) => ({
     },
 }));
 
+const escapeCSVField = field => {
+    if (field === null || field === undefined) {
+        return '';
+    }
+
+    // Convert to string
+    const stringField = String(field);
+
+    // If field contains quotes, commas, or newlines, it needs to be escaped
+    if (stringField.includes('"') || stringField.includes(',') || stringField.includes('\n')) {
+        // 1. Replace double quotes with two double quotes (escape quotes)
+        // 2. Wrap the entire field in quotes
+        return `"${stringField.replace(/"/g, '""')}"`;
+    }
+
+    return stringField;
+};
+
 const exportToCSV = (data, filename) => {
     /* istanbul ignore next */
     if (!data || data.length === 0) {
@@ -164,10 +182,7 @@ const exportToCSV = (data, filename) => {
                     value = JSON.stringify(value);
                 }
 
-                if (typeof value === 'string') {
-                    value = value.replace(/"/g, '""');
-                    value = `"${value}"`;
-                }
+                value = escapeCSVField(value);
             }
             return value;
         });
