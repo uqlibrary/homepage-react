@@ -142,7 +142,7 @@ const exportToCSV = (data, filename) => {
                 value = item.owner?.team_name || /* istanbul ignore next */ '';
             } else if (item.object_filters && filterTypes.has(header)) {
                 const matchingFilter = item.object_filters.find(filter => filter.filter_key === header);
-                value = matchingFilter ? matchingFilter.filter_values.map(fv => fv.name).join(';') : '';
+                value = matchingFilter ? matchingFilter.filter_values.map(fv => escapeCSVField(fv.name)).join(';') : '';
             } else {
                 value = item[header];
                 // *** boolean fields value conversion ***
@@ -173,9 +173,9 @@ const exportToCSV = (data, filename) => {
                             /* istanbul ignore next */
                             if (typeof v === 'object') {
                                 /* istanbul ignore next */
-                                return JSON.stringify(v);
+                                return escapeCSVField(JSON.stringify(v));
                             }
-                            return v;
+                            return escapeCSVField(v);
                         })
                         .join(';');
                 } else if (typeof value === 'object') {
