@@ -240,7 +240,6 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .should('be.visible')
                 .click();
-            cy.get('[data-testid="panel-downarrow-licence"]').click(); // DEBUG ONLY
             // check UQ copyright
             cy.get('[data-testid="checkbox-licence-uq-copyright"] input[type=checkbox]')
                 .should('exist')
@@ -285,7 +284,6 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .should('be.visible')
                 .click();
-            cy.get('[data-testid="panel-downarrow-item-type"]').click(); // DEBUG ONLY
             cy.get('[data-testid="panel-minimisation-icon-item-type"]')
                 .should('exist')
                 .should('have.attr', 'aria-label', 'Close this filter section');
@@ -571,7 +569,6 @@ describe('Digital Learning Hub', () => {
                 .should('not.be.visible');
             // expand a filter panel
             cy.get('[data-testid="panel-downarrow-item-type"]').click();
-            cy.get('[data-testid="panel-downarrow-item-type"]').click(); // DEBUG ONLY
             // now the element appears
             cy.get('[data-testid="checkbox-item-type-interactive"]')
                 .should('exist')

@@ -473,19 +473,20 @@ export const DLOList = ({
     }
 
     function showHidePanel(facetTypeId) {
+        const facetPanel = document.getElementById(panelId(facetTypeId));
         const upArrowIcon = document.getElementById(UpArrowId(facetTypeId));
         const downArrowIcon = document.getElementById(DownArrowId(facetTypeId));
+
         /* istanbul ignore else */
         if (
-            (!!downArrowIcon && downArrowIcon.style.display === 'none') ||
-            (!!upArrowIcon && upArrowIcon.style.display !== 'none')
-        ) {
-            hidePanel(facetTypeId);
-        } else if (
-            (!!downArrowIcon && downArrowIcon.style.display !== 'none') ||
-            (!!upArrowIcon && upArrowIcon.style.display === 'none')
+            // Check both dynamic styles and initial sx prop state
+            facetPanel.style.visibility === 'hidden' ||
+            facetPanel.style.display === 'none' ||
+            getComputedStyle(facetPanel).display === 'none'
         ) {
             showPanel(facetTypeId);
+        } else {
+            hidePanel(facetTypeId);
         }
     }
 
