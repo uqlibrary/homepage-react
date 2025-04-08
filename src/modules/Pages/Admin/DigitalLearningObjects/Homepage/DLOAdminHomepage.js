@@ -142,7 +142,8 @@ const exportToCSV = (data, filename) => {
                 value = item.owner?.team_name || /* istanbul ignore next */ '';
             } else if (item.object_filters && filterTypes.has(header)) {
                 const matchingFilter = item.object_filters.find(filter => filter.filter_key === header);
-                value = matchingFilter ? matchingFilter.filter_values.map(fv => escapeCSVField(fv.name)).join(';') : '';
+                // First join the array elements with semicolons, then escape the entire string
+                value = matchingFilter ? escapeCSVField(matchingFilter.filter_values.map(fv => fv.name).join(';')) : '';
             } else {
                 value = item[header];
                 // *** boolean fields value conversion ***
