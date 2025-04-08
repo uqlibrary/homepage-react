@@ -69,6 +69,24 @@ const StyleObjectDetailGridItem = styled(Grid)(({ theme }) => ({
     },
 }));
 
+const escapeCSVField = field => {
+    if (field === null || field === undefined) {
+        return '';
+    }
+
+    // Convert to string
+    const stringField = String(field);
+
+    // If field contains quotes, commas, or newlines, it needs to be escaped
+    if (stringField.includes('"') || stringField.includes(',') || stringField.includes('\n')) {
+        // 1. Replace double quotes with two double quotes (escape quotes)
+        // 2. Wrap the entire field in quotes
+        return `"${stringField.replace(/"/g, '""')}"`;
+    }
+
+    return stringField;
+};
+
 const exportToCSV = (data, filename) => {
     /* istanbul ignore next */
     if (!data || data.length === 0) {
@@ -124,6 +142,7 @@ const exportToCSV = (data, filename) => {
                 value = item.owner?.team_name || /* istanbul ignore next */ '';
             } else if (item.object_filters && filterTypes.has(header)) {
                 const matchingFilter = item.object_filters.find(filter => filter.filter_key === header);
+                // Just join the values with semicolons, escape at the end
                 value = matchingFilter ? matchingFilter.filter_values.map(fv => fv.name).join(';') : '';
             } else {
                 value = item[header];
@@ -136,15 +155,14 @@ const exportToCSV = (data, filename) => {
                 const dateHeaders = ['date', 'created_at'];
 
                 if (dateHeaders.some(dateHeader => header.includes(dateHeader))) {
-                    // Check if the header contains "date" (adjust as needed)
                     /* istanbul ignore else */
                     if (value) {
                         const date = moment(value); // Use moment.js to parse the date
                         /* istanbul ignore else */
                         if (date.isValid()) {
-                            value = date.format('MMMM DD, YYYY'); // Format the date (customize format as needed)
+                            value = date.format('MMMM DD, YYYY');
                         } else {
-                            value = 'Invalid Date'; // Handle invalid dates gracefully
+                            value = 'Invalid Date';
                         }
                     }
                 }
@@ -163,13 +181,9 @@ const exportToCSV = (data, filename) => {
                 } else if (typeof value === 'object') {
                     value = JSON.stringify(value);
                 }
-
-                if (typeof value === 'string') {
-                    value = value.replace(/"/g, '""');
-                    value = `"${value}"`;
-                }
             }
-            return value;
+            // Single escape at the end
+            return escapeCSVField(value);
         });
         csvRows.push(values.join(','));
     });
