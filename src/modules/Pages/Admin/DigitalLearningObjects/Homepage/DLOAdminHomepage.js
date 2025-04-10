@@ -2,13 +2,16 @@ import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
+import { getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
-import { Pagination } from '@mui/material';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { Divider, Pagination } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -21,6 +24,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import SearchIcon from '@mui/icons-material/Search';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { useConfirmationState } from 'hooks';
 
@@ -32,6 +36,8 @@ import { convertSnakeCaseToKebabCase } from 'modules/Pages/DigitalLearningObject
 import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects/SharedDlorComponents/VisitHomepage';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { breadcrumbs } from 'config/routes';
+
+const moment = require('moment');
 
 const StyledPageListItemGridContainer = styled(Grid)(() => ({
     paddingTop: '10px',
@@ -62,6 +68,139 @@ const StyleObjectDetailGridItem = styled(Grid)(({ theme }) => ({
         marginRight: '50px',
     },
 }));
+
+const escapeCSVField = field => {
+    if (field === null || field === undefined) {
+        return '';
+    }
+
+    // Convert to string
+    const stringField = String(field);
+
+    // If field contains quotes, commas, or newlines, it needs to be escaped
+    if (stringField.includes('"') || stringField.includes(',') || stringField.includes('\n')) {
+        // 1. Replace double quotes with two double quotes (escape quotes)
+        // 2. Wrap the entire field in quotes
+        return `"${stringField.replace(/"/g, '""')}"`;
+    }
+
+    return stringField;
+};
+
+const exportToCSV = (data, filename) => {
+    /* istanbul ignore next */
+    if (!data || data.length === 0) {
+        console.error('No data to export.');
+        return;
+    }
+
+    const headerNameMap = {
+        object_id: 'Object ID',
+        object_public_uuid: 'Public UUID',
+        object_title: 'Title',
+        object_description: 'Description',
+        object_summary: 'Summary',
+        object_review_date_next: 'Next Review Date',
+        object_status: 'Status',
+        object_owning_team_id: 'Team ID',
+        publishing_user_name: 'Publishing User',
+        team_name: 'Team Name',
+        object_download_instructions: 'Download Instructions',
+        object_keywords: 'Keywords',
+        object_link_interaction_type: 'Interaction Type',
+        graduate_attributes: 'Graduate Attributes',
+        // ... add all other mappings here
+    };
+
+    const headers = Object.keys(data[0]).filter(key => key !== 'object_filters');
+    const filterTypes = new Set();
+
+    data.forEach(item => {
+        /* istanbul ignore else */
+        if (item.object_filters) {
+            item.object_filters.forEach(filter => {
+                filterTypes.add(filter.filter_key);
+            });
+        }
+    });
+
+    const allHeaders = [...headers, ...Array.from(filterTypes), 'publishing_user_name', 'team_name'].filter(
+        header => header !== 'owner',
+    );
+    const csvRows = [];
+
+    // Use the map function to transform headers with custom names
+    csvRows.push(allHeaders.map(header => headerNameMap[header] || header).join(','));
+
+    data.forEach(item => {
+        const values = allHeaders.map(header => {
+            let value;
+
+            if (header === 'publishing_user_name') {
+                value = item.owner?.publishing_user_username || /* istanbul ignore next */ '';
+            } else if (header === 'team_name') {
+                value = item.owner?.team_name || /* istanbul ignore next */ '';
+            } else if (item.object_filters && filterTypes.has(header)) {
+                const matchingFilter = item.object_filters.find(filter => filter.filter_key === header);
+                // Just join the values with semicolons, escape at the end
+                value = matchingFilter ? matchingFilter.filter_values.map(fv => fv.name).join(';') : '';
+            } else {
+                value = item[header];
+                // *** boolean fields value conversion ***
+                const booleanHeaders = ['object_is_featured', 'object_cultural_advice'];
+                if (booleanHeaders.includes(header)) {
+                    value = value === 1 ? 'yes' : 'no';
+                }
+                // *** DATE FORMATTING LOGIC ***
+                const dateHeaders = ['date', 'created_at'];
+
+                if (dateHeaders.some(dateHeader => header.includes(dateHeader))) {
+                    /* istanbul ignore else */
+                    if (value) {
+                        const date = moment(value); // Use moment.js to parse the date
+                        /* istanbul ignore else */
+                        if (date.isValid()) {
+                            value = date.format('MMMM DD, YYYY');
+                        } else {
+                            value = 'Invalid Date';
+                        }
+                    }
+                }
+
+                if (Array.isArray(value)) {
+                    value = value
+                        .map(v => {
+                            /* istanbul ignore next */
+                            if (typeof v === 'object') {
+                                /* istanbul ignore next */
+                                return JSON.stringify(v);
+                            }
+                            return v;
+                        })
+                        .join(';');
+                } else if (typeof value === 'object') {
+                    value = JSON.stringify(value);
+                }
+            }
+            // Single escape at the end
+            return escapeCSVField(value);
+        });
+        csvRows.push(values.join(','));
+    });
+
+    const csvString = csvRows.join('\r\n');
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.setAttribute('data-testid', 'download-link'); // Add data-testid attribute
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+};
 
 export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListError, dlorItemDeleteError }) => {
     const statusTypes = [
@@ -112,6 +251,17 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
         hideDeleteFailureConfirmation,
     ] = useConfirmationState();
 
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
+    const handleMenuClick = event => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
@@ -122,7 +272,7 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
         }
-    }, [dlorList]);
+    }, [actions, dlorList, dlorListError, dlorListLoading]);
 
     const navigateToAddPage = () => {
         window.location.href = dlorAdminLink('/add');
@@ -130,6 +280,10 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
 
     const navigateToTeamsListPage = () => {
         window.location.href = dlorAdminLink('/team/manage');
+    };
+
+    const navigateToFilterManagePage = () => {
+        window.location.href = dlorAdminLink('/filters');
     };
 
     const navigateToSeriesListPage = () => {
@@ -293,36 +447,93 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
             />
             <Grid container spacing={2} sx={{ marginBottom: '25px' }}>
                 <Grid item xs={12} sx={{ textAlign: 'right' }}>
-                <Button
-                        children="Add series"
+                    <IconButton
                         color="primary"
-                        data-testid="admin-dlor-visit-add-series-button"
-                        onClick={() => navigateToAddSeriesPage()}
-                        variant="contained"
-                    />{' '}
-                    <Button
-                        children="Manage series"
-                        color="primary"
-                        data-testid="admin-dlor-visit-manage-series-button"
-                        onClick={() => navigateToSeriesListPage()}
-                        variant="contained"
-                    />{' '}
-                    <Button
-                        children="Manage teams"
-                        color="primary"
-                        data-testid="admin-dlor-visit-manage-teams-button"
-                        onClick={() => navigateToTeamsListPage()}
-                        variant="contained"
-                    />{' '}
-                    <Button
-                        children="Add object"
-                        color="primary"
-                        data-testid="admin-dlor-visit-add-button"
-                        onClick={() => navigateToAddPage()}
-                        variant="contained"
-                        sx={{ marginRight: '6px' }}
-                    />
-                    <VisitHomepage />
+                        aria-controls={open ? 'admin-dlor-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? 'true' : undefined}
+                        onClick={handleMenuClick}
+                        data-testid="admin-dlor-menu-button"
+                        aria-label="Admin menu"
+                    >
+                        <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                        id="admin-dlor-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleMenuClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'admin-dlor-menu-button',
+                        }}
+                    >
+                        <MenuItem
+                            onClick={() => {
+                                navigateToAddSeriesPage();
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-visit-add-series-button"
+                        >
+                            Add series
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                navigateToSeriesListPage();
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-visit-manage-series-button"
+                        >
+                            Manage series
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                navigateToTeamsListPage();
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-visit-manage-teams-button"
+                        >
+                            Manage teams
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                navigateToFilterManagePage();
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-visit-manage-filters-button"
+                        >
+                            Manage filters
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                navigateToAddPage();
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-visit-add-button"
+                        >
+                            Add object
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem
+                            onClick={() => {
+                                exportToCSV(dlorList, 'dlor_data.csv');
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-export-data-button"
+                        >
+                            Export to CSV
+                        </MenuItem>
+                        <MenuItem
+                            component="a"
+                            href={`${getPathRoot()}/digital-learning-hub`}
+                            rel="noopener noreferrer"
+                            onClick={handleMenuClose}
+                            data-testid="dlor-admin-public-homepage-link"
+                        >
+                            View public homepage list
+                        </MenuItem>
+                    </Menu>
+                    {/* <ExportToCsvButton data={dlorList} filename="dlor_data.csv" /> */}
+                    {/* <VisitHomepage /> */}
                 </Grid>
             </Grid>
             <Grid container spacing={2}>

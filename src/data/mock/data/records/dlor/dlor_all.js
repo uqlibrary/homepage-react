@@ -3316,7 +3316,9 @@ export default {
                 "team_email": "team1@uq.edu.au",
                 "team_manager": "Steve Lancaster"
             },
-            "object_link_interaction_type": "none",
+            "object_link_interaction_type": "download",
+            "object_link_file_type": "video",
+            "object_link_size": "", // 47m44s
             "object_is_featured": 0,
             "object_series_id": null,
             "object_series_name": null,
@@ -3399,7 +3401,9 @@ export default {
                 "team_email": "team1@uq.edu.au",
                 "team_manager": "Steve Lancaster"
             },
-            "object_link_interaction_type": "none",
+            "object_link_interaction_type": "download",
+            "object_link_file_type": "",
+            "object_link_size": "123456", // 47m44s
             "object_is_featured": 0,
             "object_series_id": null,
             "object_series_name": null,
@@ -3475,6 +3479,9 @@ export default {
                     }]
                 },
             ],
+            "object_link_interaction_type": "view",
+            "object_link_file_type": "video",
+            "object_link_size": "", // 47m44s
             "owner": {
                 "publishing_user_username": "uqmsato",
                 "team_id": 1,
@@ -3482,7 +3489,6 @@ export default {
                 "team_email": "team1@uq.edu.au",
                 "team_manager": "Steve Lancaster"
             },
-            "object_link_interaction_type": "none",
             "object_is_featured": 0,
             "object_series_id": null,
             "object_series_name": null,
@@ -3565,7 +3571,9 @@ export default {
                 "team_email": "team1@uq.edu.au",
                 "team_manager": "Steve Lancaster"
             },
-            "object_link_interaction_type": "none",
+            "object_link_interaction_type": "view",
+            "object_link_file_type": "",
+            "object_link_size": "12345", // 47m44s
             "object_is_featured": 0,
             "object_series_id": null,
             "object_series_name": null,
@@ -3642,7 +3650,7 @@ export default {
                 },
             ],
             "owner": {
-                "publishing_user_username": "uqmsato",
+                "publishing_user_username": "s1111111",
                 "team_id": 1,
                 "team_name": "LIB DX Digital Content",
                 "team_email": "team1@uq.edu.au",

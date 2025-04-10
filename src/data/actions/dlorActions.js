@@ -23,7 +23,11 @@ import {
     DLOR_UPDATE_API,
     DLOR_UNSUBSCRIBE_API,
     DLOR_UNSUBSCRIBE_FIND_API,
-    DLOR_SERIES_LOAD_API
+    DLOR_SERIES_LOAD_API,
+    DLOR_UPDATE_FACET_API,
+    DLOR_DELETE_FACET_API,
+    DLOR_CREATE_FACET_API,
+    DLOR_OWNED_UPDATE_API,
 } from 'repositories/routes';
 
 const checkExpireSession = (dispatch, error) => {
@@ -125,7 +129,7 @@ export function createDlor(request, isDlorAdminUser = true) {
     // used to determine the API endpoint to use. Default is true.
     return async dispatch => {
         dispatch({ type: actions.DLOR_CREATING });
-        console.log("POINT CHECK")
+        console.log('POINT CHECK');
         return post(isDlorAdminUser ? DLOR_CREATE_API() : DLOR_REQUEST_API(), request)
             .then(data => {
                 dispatch({
@@ -145,17 +149,17 @@ export function createDlor(request, isDlorAdminUser = true) {
     };
 }
 
-export function updateDlor(dlorId, request) {
+export function updateDlor(dlorId, request, isDlorAdminUser = true) {
     return dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
-        return put(DLOR_UPDATE_API(dlorId), request)
+        return put(isDlorAdminUser ? DLOR_UPDATE_API(dlorId) : DLOR_OWNED_UPDATE_API(dlorId), request)
             .then(response => {
                 dispatch({
                     type: actions.DLOR_UPDATED,
                     payload: response,
                 });
                 // refresh the list after change
-                dispatch(loadAllDLORs());
+                !!isDlorAdminUser && dispatch(loadAllDLORs());
             })
             .catch(error => {
                 dispatch({
@@ -504,6 +508,69 @@ export function loadDlorFindObjectDetailsByUnsubscribeId(confirmationId) {
             .catch(error => {
                 dispatch({
                     type: actions.DLOR_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function updateFacet(filterId, payload) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_FILTER_UPDATING });
+        return put(DLOR_UPDATE_FACET_API(filterId), payload)
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_FILTER_UPDATED,
+                    payload: response,
+                });
+                dispatch(loadAllFilters());
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_FILTER_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function createFacet(payload) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_FILTER_UPDATING });
+        return post(DLOR_CREATE_FACET_API(), payload)
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_FILTER_UPDATED,
+                    payload: response,
+                });
+                dispatch(loadAllFilters());
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_FILTER_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function deleteFacet(filterId) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_FILTER_UPDATING });
+        return destroy(DLOR_DELETE_FACET_API(filterId))
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_FILTER_UPDATED,
+                    payload: response,
+                });
+                dispatch(loadAllFilters());
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_FILTER_UPDATE_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);

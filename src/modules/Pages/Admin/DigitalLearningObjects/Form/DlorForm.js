@@ -38,7 +38,6 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { useAccountContext } from 'context';
 
-
 import {
     convertFileSizeToKb,
     convertSnakeCaseToKebabCase,
@@ -127,7 +126,7 @@ export const DlorForm = ({
     formDefaults,
     mode,
 }) => {
-    console.log("Form Defaults form", formDefaults);
+    console.log('Form Defaults form', formDefaults);
     const [cookies, setCookie] = useCookies();
     const { account } = useAccountContext();
 
@@ -212,7 +211,6 @@ export const DlorForm = ({
         }
     }, [dlorTeamList, dlorTeamListError, dlorTeamListLoading, mode]);
 
-
     // useEffect(() => {
     //     console.log("UseEffect formDefaults", formDefaults, formValues);
     //     if (!!!formDefaults.object_publishing_user) {
@@ -267,14 +265,14 @@ export const DlorForm = ({
     };
 
     const isValidUsername = testUserName => {
-        console.log("TEST THE USERNAME, ", testUserName);
+        console.log('TEST THE USERNAME, ', testUserName);
         return testUserName?.length >= 4 && testUserName?.length <= 8;
     };
 
     function validatePanelOwnership(currentValues) {
         let firstPanelErrorCount = 0;
         // valid user id is 8 or 9 char
-        console.log("currentValues", currentValues);
+        console.log('currentValues', currentValues);
         !isValidUsername(currentValues?.object_publishing_user) && firstPanelErrorCount++;
         if (teamSelectRef.current === 'new') {
             if (
@@ -479,175 +477,178 @@ export const DlorForm = ({
         setFormValues(newValues);
     };
 
-    console.log("IS ADMIN", isDlorAdminUser(account));
+    console.log('IS ADMIN', isDlorAdminUser(account));
 
-    const stepPanelContentOwnership = React.useMemo(() => (
-        <>
-            <Grid item xs={12}>
-                <FormControl variant="standard" fullWidth>
-                    <InputLabel htmlFor="object_publishing_user">Publishing user *</InputLabel>
-                    <Input
-                        id="object_publishing_user"
-                        data-testid="object-publishing-user"
-                        required
-                        disabled={!isDlorAdminUser(account)}
-                        value={formValues?.object_publishing_user || ''}
-                        onChange={handleChange('object_publishing_user')}
-                        sx={{ width: '20em' }}
-                        error={!isValidUsername(formValues?.object_publishing_user)}
-                    />
-                    <Box
-                        sx={{
-                            fontSize: '0.9em',
-                            marginTop: '4px',
-                        }}
-                    >
-                        This must be the person's UQ username
-                    </Box>
-                    {!isValidUsername(formValues?.object_publishing_user) && (
-                        <StyledErrorMessageBox data-testid="dlor-form-error-message-object-publishing-user">
-                            This username is not valid.
-                        </StyledErrorMessageBox>
-                    )}
-                </FormControl>
-            </Grid>
-            <Grid item xs={12} sx={{ minHeight: '95px' }}>
-                <InputLabel id="object_owning_team_label">Owning Team</InputLabel>
-                <Select
-                    variant="standard"
-                    labelId="object_owning_team_label"
-                    id="object_owning_team"
-                    data-testid="object-owning-team"
-                    value={teamSelectRef.current ?? 1}
-                    onChange={handleChange('object_owning_team_id')}
-                    sx={{ minWidth: '20em' }}
-                >
-                    {dlorTeamList?.map((t, index) => {
-                        return (
-                            <MenuItem
-                                key={t.team_id}
-                                value={t.team_id}
-                                selected={t.team_id === teamSelectRef.current}
-                                data-testid={`object-owning-team-${t.team_id}`}
-                                divider={index === dlorTeamList.length - 1}
-                            >
-                                {t.team_name}
-                            </MenuItem>
-                        );
-                    })}
-                    <MenuItem
-                        value="new"
-                        data-testid="object-form-teamid-new"
-                        selected={teamSelectRef.current === 'new'}
-                    >
-                        Create a team
-                    </MenuItem>
-                </Select>
-                {/* the user can only edit team details for the current Team - this is just a convenience form */}
-                {mode === 'edit' && formDefaults?.object_owning_team_id === teamSelectRef.current && (
-                    <Button
-                        onClick={() => controlEditTeamDialog()}
-                        sx={{ marginLeft: '10px' }}
-                        data-testid="object-form-teamid-change"
-                    >
-                        {showTeamForm === false ? 'Update contact' : 'Close'}
-                    </Button>
-                )}
-            </Grid>
-            {showTeamForm !== false && teamSelectRef.current === 'new' && (
-                <Grid item xs={5}>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel htmlFor="team_name_new">Name of new Team *</InputLabel>
-                        <Input
-                            id="team_name_new"
-                            data-testid="dlor-form-team-name-new"
-                            value={formValues?.team_name_new || ''}
-                            onChange={handleChange('team_name_new')}
-                        />
-                    </FormControl>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel htmlFor="team_manager_new">Name of Team manager *</InputLabel>
-                        <Input
-                            id="team_manager_new"
-                            data-testid="dlor-form-team-manager-new"
-                            required
-                            value={formValues?.team_manager_new || ''}
-                            onChange={handleChange('team_manager_new')}
-                        />
-                    </FormControl>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel htmlFor="team_email_new">Team email *</InputLabel>
-                        <Input
-                            id="team_email_new"
-                            data-testid="dlor-form-team-email-new"
-                            required
-                            value={formValues?.team_email_new || ''}
-                            onChange={handleChange('team_email_new')}
-                            type="email"
-                            error={!isValidEmail(formValues?.team_email_new)}
-                        />
-                        {!isValidEmail(formValues?.team_email_new) && (
-                            <StyledErrorMessageBox data-testid="error-message-team-email-new">
-                                This email address is not valid.
-                            </StyledErrorMessageBox>
-                        )}
-                    </FormControl>
-                </Grid>
-            )}
-            {showTeamForm !== false && teamSelectRef.current !== 'new' && (
-                <Grid item xs={5}>
-                    <Box sx={{ fontStyle: 'italic', marginBlock: '-16px 16px' }}>
-                        A change here will affect all Objects for this team.
-                        <br />
-                        You can also{' '}
-                        <a target="_blank" href={dlorAdminLink('/team/manage')}>
-                            Manage Teams
-                        </a>
-                    </Box>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel htmlFor="team_manager_edit">Name of Team manager *</InputLabel>
-                        <Input
-                            id="team_manager_edit"
-                            data-testid="dlor-form-team-manager-edit"
-                            required
-                            value={formValues?.team_manager_edit || /* istanbul ignore next */ ''}
-                            onChange={handleChange('team_manager_edit')}
-                        />
-                    </FormControl>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel htmlFor="team_email_edit">Team email *</InputLabel>
-                        <Input
-                            id="team_email_edit"
-                            data-testid="dlor-form-team-email-edit"
-                            required
-                            value={formValues?.team_email_edit || ''}
-                            onChange={handleChange('team_email_edit')}
-                            type="email"
-                            error={!isValidEmail(formValues?.team_email_edit)}
-                        />
-                        {!isValidEmail(formValues?.team_email_edit) && (
-                            <StyledErrorMessageBox data-testid="error-message-team-email-edit">
-                                This email address is not valid.
-                            </StyledErrorMessageBox>
-                        )}
-                    </FormControl>
-                </Grid>
-            )}
-            {isDlorAdminUser(account) && (
+    const stepPanelContentOwnership = React.useMemo(
+        () => (
+            <>
                 <Grid item xs={12}>
-                    {mode === 'edit' ? (
-                        <Typography component={'p'}>
-                            Next Review Date: {formValues?.object_review_date_next} (edit to come)
-                        </Typography>
-                    ) : (
-                        <Typography component={'p'}>
-                            Next Review Date: {formValues?.object_review_date_next} (setting to come)
-                        </Typography>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel htmlFor="object_publishing_user">Publishing user *</InputLabel>
+                        <Input
+                            id="object_publishing_user"
+                            data-testid="object-publishing-user"
+                            required
+                            disabled={!isDlorAdminUser(account)}
+                            value={formValues?.object_publishing_user || ''}
+                            onChange={handleChange('object_publishing_user')}
+                            sx={{ width: '20em' }}
+                            error={!isValidUsername(formValues?.object_publishing_user)}
+                        />
+                        <Box
+                            sx={{
+                                fontSize: '0.9em',
+                                marginTop: '4px',
+                            }}
+                        >
+                            This must be the person's UQ username
+                        </Box>
+                        {!isValidUsername(formValues?.object_publishing_user) && (
+                            <StyledErrorMessageBox data-testid="dlor-form-error-message-object-publishing-user">
+                                This username is not valid.
+                            </StyledErrorMessageBox>
+                        )}
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12} sx={{ minHeight: '95px' }}>
+                    <InputLabel id="object_owning_team_label">Owning Team</InputLabel>
+                    <Select
+                        variant="standard"
+                        labelId="object_owning_team_label"
+                        id="object_owning_team"
+                        data-testid="object-owning-team"
+                        value={teamSelectRef.current ?? 1}
+                        onChange={handleChange('object_owning_team_id')}
+                        sx={{ minWidth: '20em' }}
+                    >
+                        {dlorTeamList?.map((t, index) => {
+                            return (
+                                <MenuItem
+                                    key={t.team_id}
+                                    value={t.team_id}
+                                    selected={t.team_id === teamSelectRef.current}
+                                    data-testid={`object-owning-team-${t.team_id}`}
+                                    divider={index === dlorTeamList.length - 1}
+                                >
+                                    {t.team_name}
+                                </MenuItem>
+                            );
+                        })}
+                        <MenuItem
+                            value="new"
+                            data-testid="object-form-teamid-new"
+                            selected={teamSelectRef.current === 'new'}
+                        >
+                            Create a team
+                        </MenuItem>
+                    </Select>
+                    {/* the user can only edit team details for the current Team - this is just a convenience form */}
+                    {mode === 'edit' && formDefaults?.object_owning_team_id === teamSelectRef.current && (
+                        <Button
+                            onClick={() => controlEditTeamDialog()}
+                            sx={{ marginLeft: '10px' }}
+                            data-testid="object-form-teamid-change"
+                        >
+                            {showTeamForm === false ? 'Update contact' : 'Close'}
+                        </Button>
                     )}
                 </Grid>
-            )}
-        </>
-    ), [formValues, showTeamForm, teamSelectRef.current, dlorTeamList, mode, formDefaults]);
+                {showTeamForm !== false && teamSelectRef.current === 'new' && (
+                    <Grid item xs={5}>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="team_name_new">Name of new Team *</InputLabel>
+                            <Input
+                                id="team_name_new"
+                                data-testid="dlor-form-team-name-new"
+                                value={formValues?.team_name_new || ''}
+                                onChange={handleChange('team_name_new')}
+                            />
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="team_manager_new">Name of Team manager *</InputLabel>
+                            <Input
+                                id="team_manager_new"
+                                data-testid="dlor-form-team-manager-new"
+                                required
+                                value={formValues?.team_manager_new || ''}
+                                onChange={handleChange('team_manager_new')}
+                            />
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="team_email_new">Team email *</InputLabel>
+                            <Input
+                                id="team_email_new"
+                                data-testid="dlor-form-team-email-new"
+                                required
+                                value={formValues?.team_email_new || ''}
+                                onChange={handleChange('team_email_new')}
+                                type="email"
+                                error={!isValidEmail(formValues?.team_email_new)}
+                            />
+                            {!isValidEmail(formValues?.team_email_new) && (
+                                <StyledErrorMessageBox data-testid="error-message-team-email-new">
+                                    This email address is not valid.
+                                </StyledErrorMessageBox>
+                            )}
+                        </FormControl>
+                    </Grid>
+                )}
+                {showTeamForm !== false && teamSelectRef.current !== 'new' && (
+                    <Grid item xs={5}>
+                        <Box sx={{ fontStyle: 'italic', marginBlock: '-16px 16px' }}>
+                            A change here will affect all Objects for this team.
+                            <br />
+                            You can also{' '}
+                            <a target="_blank" href={dlorAdminLink('/team/manage')}>
+                                Manage Teams
+                            </a>
+                        </Box>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="team_manager_edit">Name of Team manager *</InputLabel>
+                            <Input
+                                id="team_manager_edit"
+                                data-testid="dlor-form-team-manager-edit"
+                                required
+                                value={formValues?.team_manager_edit || /* istanbul ignore next */ ''}
+                                onChange={handleChange('team_manager_edit')}
+                            />
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="team_email_edit">Team email *</InputLabel>
+                            <Input
+                                id="team_email_edit"
+                                data-testid="dlor-form-team-email-edit"
+                                required
+                                value={formValues?.team_email_edit || ''}
+                                onChange={handleChange('team_email_edit')}
+                                type="email"
+                                error={!isValidEmail(formValues?.team_email_edit)}
+                            />
+                            {!isValidEmail(formValues?.team_email_edit) && (
+                                <StyledErrorMessageBox data-testid="error-message-team-email-edit">
+                                    This email address is not valid.
+                                </StyledErrorMessageBox>
+                            )}
+                        </FormControl>
+                    </Grid>
+                )}
+                {isDlorAdminUser(account) && (
+                    <Grid item xs={12}>
+                        {mode === 'edit' ? (
+                            <Typography component={'p'}>
+                                Next Review Date: {formValues?.object_review_date_next} (edit to come)
+                            </Typography>
+                        ) : (
+                            <Typography component={'p'}>
+                                Next Review Date: {formValues?.object_review_date_next} (setting to come)
+                            </Typography>
+                        )}
+                    </Grid>
+                )}
+            </>
+        ),
+        [formValues, showTeamForm, teamSelectRef.current, dlorTeamList, mode, formDefaults],
+    );
 
     useEffect(() => {
         if (formDefaults?.object_publishing_user !== formValues?.object_publishing_user) {
@@ -726,7 +727,7 @@ export const DlorForm = ({
                         characterCount(formValues?.object_title?.length, titleMinimumLength, 'object_title')}
                 </FormControl>
             </Grid>
-            {console.log("THE FORM VALUES:", formValues)}
+            {console.log('THE FORM VALUES:', formValues)}
             <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
@@ -805,46 +806,46 @@ export const DlorForm = ({
                 </FormControl>
             </Grid>
             {!!isDlorAdminUser(account) && (
-            <>
-                <Grid item xs={12}>
-                    <FormControl variant="standard" fullWidth>
-                        <FormLabel id="object_status_label">Object publication status</FormLabel>
-                        <RadioGroup
-                            aria-labelledby="demo-radio-object_status_label-group-label"
-                            defaultValue="new"
-                            name="object_status_radio-buttons-group"
-                            row
-                            value={formValues?.object_status || 'new'}
-                            onChange={handleChange('object_status')}
-                        >
-                            <FormControlLabel
-                                value="current"
-                                control={<Radio />}
-                                label="Published"
-                                selected={formValues?.object_status === 'current'}
+                <>
+                    <Grid item xs={12}>
+                        <FormControl variant="standard" fullWidth>
+                            <FormLabel id="object_status_label">Object publication status</FormLabel>
+                            <RadioGroup
+                                aria-labelledby="demo-radio-object_status_label-group-label"
+                                defaultValue="new"
+                                name="object_status_radio-buttons-group"
+                                row
+                                value={formValues?.object_status || 'new'}
+                                onChange={handleChange('object_status')}
+                            >
+                                <FormControlLabel
+                                    value="current"
+                                    control={<Radio />}
+                                    label="Published"
+                                    selected={formValues?.object_status === 'current'}
+                                />
+                                <FormControlLabel
+                                    value="new"
+                                    control={<Radio />}
+                                    label="Draft"
+                                    selected={formValues?.object_status === 'new'}
+                                />
+                            </RadioGroup>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <FormLabel>Featured object?</FormLabel>
+                        <InputLabel>
+                            <Checkbox
+                                checked={!!formValues?.object_is_featured}
+                                data-testid="object-is-featured"
+                                onChange={handleChange('object_is_featured')}
+                                sx={{ paddingLeft: 0 }}
                             />
-                            <FormControlLabel
-                                value="new"
-                                control={<Radio />}
-                                label="Draft"
-                                selected={formValues?.object_status === 'new'}
-                            />
-                        </RadioGroup>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                    <FormLabel>Featured object?</FormLabel>
-                    <InputLabel>
-                        <Checkbox
-                            checked={!!formValues?.object_is_featured}
-                            data-testid="object-is-featured"
-                            onChange={handleChange('object_is_featured')}
-                            sx={{ paddingLeft: 0 }}
-                        />
-                        Feature this Object at the top of the list page
-                    </InputLabel>
-                </Grid>
-            </>
+                            Feature this Object at the top of the list page
+                        </InputLabel>
+                    </Grid>
+                </>
             )}
             <Grid item xs={12}>
                 <FormLabel>Cultural advice?</FormLabel>
@@ -977,7 +978,9 @@ export const DlorForm = ({
                                                         type.object_link_file_type,
                                                     )}`}
                                                     value={type.object_link_file_type}
-                                                    selected={type.object_link_file_type === linkFileTypeSelectRef.current}
+                                                    selected={
+                                                        type.object_link_file_type === linkFileTypeSelectRef.current
+                                                    }
                                                 >
                                                     {type.object_link_file_type}
                                                 </MenuItem>
@@ -993,7 +996,9 @@ export const DlorForm = ({
                                         {showFileTypeCreationForm && (
                                             <Grid item xs={12}>
                                                 <FormControl variant="standard" fullWidth>
-                                                    <InputLabel htmlFor="new_file_type">New File Type (abbrev)</InputLabel>
+                                                    <InputLabel htmlFor="new_file_type">
+                                                        New File Type (abbrev)
+                                                    </InputLabel>
                                                     <Input
                                                         id="new_file_type"
                                                         data-testid="dlor-admin-form-new-file-type"
@@ -1083,10 +1088,9 @@ export const DlorForm = ({
                             </StyledViewDurationBox>
                         </Grid>
                     </Grid>
-                </Grid>  
-                
+                </Grid>
             )}
-            
+
             <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     {/* yes, this looks too big locally, but looks correct live. No, I dont know why */}
@@ -1220,7 +1224,7 @@ export const DlorForm = ({
                     Keywords
                 </Typography>
             </Grid>
-            <Grid item xs={12} style={{paddingTop: 0}}>
+            <Grid item xs={12} style={{ paddingTop: 0 }}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_keywords">
                         Keywords - enter a comma separated list of keywords *
@@ -1502,11 +1506,11 @@ export const DlorForm = ({
 
         return mode === 'add'
             ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
-            : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend);
+            : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend, isDlorAdminUser(account));
     };
 
     const confirmationTitleAdmin = mode === 'add' ? 'The object has been created' : 'Changes have been saved';
-    const confirmationTitle = isDlorAdminUser(account) ? confirmationTitleAdmin : 'Your request has been submitted';  
+    const confirmationTitle = isDlorAdminUser(account) ? confirmationTitleAdmin : 'Your request has been submitted';
 
     const locale = {
         successMessage: {
@@ -1529,6 +1533,14 @@ export const DlorForm = ({
         window.location.href = dlorAdminLink();
         scrollToTopOfPage();
     };
+
+    const navigateToPrimaryPage = () => {
+        setConfirmationOpen(false);
+        actions.clearADlor();
+        window.location.href = '/digital-learning-hub';
+        scrollToTopOfPage();
+    };
+
     const navigateToPreviousPage = () => {
         window.location.href = dlorAdminLink();
     };
@@ -1593,7 +1605,7 @@ export const DlorForm = ({
                 actionButtonColor="primary"
                 actionButtonVariant="contained"
                 confirmationBoxId="dlor-save-outcome"
-                onAction={() => navigateToDlorAdminHomePage()}
+                onAction={() => (isDlorAdminUser(account) ? navigateToDlorAdminHomePage() : navigateToPrimaryPage())}
                 hideCancelButton={!locale.successMessage.cancelButtonLabel}
                 cancelButtonLabel={locale.successMessage.cancelButtonLabel}
                 onCancelAction={() => clearForm()}
