@@ -20,6 +20,7 @@ describe('Digital Learning Hub View page', () => {
             });
 
             cy.visit('digital-learning-hub/view/938h_4986_654f');
+            cy.waitUntil(() => cy.get('[data-testid="dlor-detailpage"] h1').should('exist'));
             cy.get('[data-testid="dlor-detailpage"] h1').should(
                 'contain',
                 'Artificial Intelligence - Digital Essentials',
@@ -181,10 +182,13 @@ describe('Digital Learning Hub View page', () => {
 
         it('shows correct button for different types of records', () => {
             cy.visit('/digital-learning-hub/view/987y-dfgrf4-76gsg-16');
-            cy.get('[data-testid="detailpage-clicklink"]')
-                .should('exist')
-                .should('be.visible')
-                .should('contain', 'Access the object (205m 45s)');
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="detailpage-clicklink"]')
+                    .should('exist')
+                    .should('be.visible'),
+            );
+            cy.get('[data-testid="detailpage-clicklink"]').should('contain', 'Access the object (205m 45s)');
 
             cy.visit('/digital-learning-hub/view/987y-dfgrf4-76gsg-15');
             cy.get('[data-testid="detailpage-clicklink"]')
@@ -212,9 +216,11 @@ describe('Digital Learning Hub View page', () => {
         it('has expected cultural advice', () => {
             // custom indicators appears
             cy.visit('http://localhost:2020/digital-learning-hub/view/kj5t_8yg4_kj4f');
-            cy.get('[data-testid="dlor-detailpage-cultural-advice-custom-indicator"]')
-                .should('exist')
-                .contains('Cultural advice');
+            cy.waitUntil(() =>
+                cy.get('[data-testid="dlor-detailpage-cultural-advice-custom-indicator"]').should('exist'),
+            );
+
+            cy.get('[data-testid="dlor-detailpage-cultural-advice-custom-indicator"]').contains('Cultural advice');
             cy.get('[data-testid="dlor-detailpage-featured-custom-indicator"]')
                 .should('exist')
                 .contains('Featured');
@@ -227,8 +233,8 @@ describe('Digital Learning Hub View page', () => {
             cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4');
             cy.injectAxe();
             cy.viewport(1300, 1000);
-
             cy.waitUntil(() => cy.get('[data-testid="dlor-detailpage"] h1').should('exist'));
+
             cy.get('[data-testid="dlor-detailpage"] h1').should('contain', 'Advanced literature searching');
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'dlor',
@@ -238,23 +244,29 @@ describe('Digital Learning Hub View page', () => {
         });
         it('a view page without keywords has a sensible sidebar', () => {
             cy.visit('digital-learning-hub/view/9k45_hgr4_876h');
+            cy.waitUntil(() => cy.get('[data-testid="dlor-detailpage"] h1').should('exist'));
+
             cy.get('[data-testid="dlor-detailpage"] h1').should('contain', 'EndNote 20: Getting started');
             cy.get('[data-testid="detailpage-metadata-keywords"]').should('not.exist');
         });
         it('can handle an error', () => {
             cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4?responseType=error');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="dlor-detailpage-error"]')
-                .should('exist')
-                .contains('An error has occurred during the request and this request cannot be processed');
+            cy.waitUntil(() => cy.get('[data-testid="dlor-detailpage-error"]').should('exist'));
+
+            cy.get('[data-testid="dlor-detailpage-error"]').contains(
+                'An error has occurred during the request and this request cannot be processed',
+            );
         });
         it('can handle an empty result', () => {
             // this should never happen. Maybe immediately after initial upload
             cy.visit('digital-learning-hub/view/missingRecord');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="dlor-detailpage-empty"]')
-                .should('exist')
-                .contains('We could not find the requested entry - please check the web address.');
+            cy.waitUntil(() => cy.get('[data-testid="dlor-detailpage-empty"]').should('exist'));
+
+            cy.get('[data-testid="dlor-detailpage-empty"]').contains(
+                'We could not find the requested entry - please check the web address.',
+            );
         });
     });
     context('demographics & notifications send properly', () => {
@@ -265,11 +277,10 @@ describe('Digital Learning Hub View page', () => {
             cy.setCookie('CYPRESS_TEST_DATA', 'active'); // setup so we can check what we "sent" to the db
             cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597');
             cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="detailpage-clicklink"]').should('exist'));
 
             // user chooses not to enter data
-            cy.get('[data-testid="detailpage-clicklink"]')
-                .should('exist')
-                .click();
+            cy.get('[data-testid="detailpage-clicklink"]').click();
 
             cy.getCookie('CYPRESS_DATA_SAVED').then(cookie => {
                 expect(cookie).not.to.exist;
@@ -281,6 +292,7 @@ describe('Digital Learning Hub View page', () => {
         it('Notify requires you to enter an email address', () => {
             cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597?user=s2222222');
             cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="dlor-detailpage"] h1').should('exist'));
 
             // enter a subject so that something is sent even thoiught they uncheck notify
             cy.get('[data-testid="detailpage-notify-button"]').click();
@@ -309,6 +321,7 @@ describe('Digital Learning Hub View page', () => {
         it('sends demographics correctly', () => {
             cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597');
             cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="detailpage-demographics-button"]').should('exist'));
 
             const typeSubject = 'PHIL1001';
             const typeSchoolName = 'School of Mathematics';
@@ -358,6 +371,7 @@ describe('Digital Learning Hub View page', () => {
         it('sends notifications correctly', () => {
             cy.visit('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597?user=digiteamMember');
             cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="detailpage-notify-button"]').should('exist'));
 
             cy.get('[data-testid="detailpage-notify-button"]').click();
 
@@ -413,6 +427,7 @@ describe('Digital Learning Hub View page', () => {
                 'digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597?user=digiteamMember&responseType=notifyError',
             );
             cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="detailpage-notify-button"]').should('exist'));
 
             // reveal the notify fields
             cy.get('[data-testid="detailpage-notify-button"]').click();
@@ -470,6 +485,7 @@ describe('Digital Learning Hub View page', () => {
                 'digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597?user=digiteamMember&responseType=alreadysubscribed',
             );
             cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="detailpage-notify-button"]').should('exist'));
 
             cy.get('[data-testid="detailpage-notify-button"]').click();
             cy.get('[data-testid="view-notify-preferredName"] input')
@@ -498,36 +514,34 @@ describe('Digital Learning Hub View page', () => {
         it('A watchable object shows the correct units on the Get It button', () => {
             cy.visit('digital-learning-hub/view/987y_isjgt_9866');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="detailpage-clicklink"]')
-                .should('exist')
-                .should('have.text', 'Access the object (video 47m 44s)');
+            cy.waitUntil(() => cy.get('[data-testid="detailpage-clicklink"]').should('exist'));
+
+            cy.get('[data-testid="detailpage-clicklink"]').should('have.text', 'Access the object (video 47m 44s)');
         });
 
         it('A downloadable object shows the correct units on the Get It button', () => {
             cy.visit('digital-learning-hub/view/9bc192a8-324c-4f6b-ac50-07e7ff2df240');
-
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="detailpage-clicklink"]')
-                .should('exist')
-                .should('have.text', 'Access the object (XLS 3.4 GB)');
+            cy.waitUntil(() => cy.get('[data-testid="detailpage-clicklink"]').should('exist'));
+
+            cy.get('[data-testid="detailpage-clicklink"]').should('have.text', 'Access the object (XLS 3.4 GB)');
         });
 
         it('A neither watchable nor downloadable object shows just "Access the object" on the Get It button', () => {
             cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="detailpage-clicklink"]')
-                .should('exist')
-                .should('have.text', 'Access the object');
+            cy.waitUntil(() => cy.get('[data-testid="detailpage-clicklink"]').should('exist'));
+
+            cy.get('[data-testid="detailpage-clicklink"]').should('have.text', 'Access the object');
         });
     });
     context('user-level privilege', () => {
         it('the non-logged in user is prompted to login', () => {
             cy.visit('digital-learning-hub/view/987y_isjgt_9866?user=public');
             cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="dlor-homepage-loginprompt"]').should('exist'));
 
-            cy.get('[data-testid="dlor-homepage-loginprompt"]')
-                .should('exist')
-                .contains('for extra features');
+            cy.get('[data-testid="dlor-homepage-loginprompt"]').contains('for extra features');
             cy.get('[data-testid="detailpage-notify-button"]').should('have.attr', 'aria-disabled', 'true');
             cy.get('[data-testid="detailpage-demographics-button"]').should('have.attr', 'aria-disabled', 'true');
 
@@ -539,12 +553,11 @@ describe('Digital Learning Hub View page', () => {
         });
         it('Loggedin user sees demographics/notify prompt', () => {
             cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4?user=s2222222');
+            cy.waitUntil(() => cy.get('[data-testid="detailpage-clicklink"]').should('exist'));
 
             // the logged in user is prompted to enter fields
             cy.get('[data-testid="detailpage-getit-button"]').should('not.exist');
-            cy.get('[data-testid="detailpage-clicklink"]')
-                .should('exist')
-                .contains('Access the object');
+            cy.get('[data-testid="detailpage-clicklink"]').contains('Access the object');
 
             // reveal the notify fields
             cy.get('[data-testid="detailpage-notify-button"]').click();
@@ -558,9 +571,9 @@ describe('Digital Learning Hub View page', () => {
         it('Admin sees an edit button', () => {
             cy.visit('digital-learning-hub/view/98s0_dy5k3_98h4?user=dloradmn');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="detailpage-admin-edit-button"]')
-                .should('exist')
-                .contains('Edit');
+            cy.waitUntil(() => cy.get('[data-testid="detailpage-admin-edit-button"]').should('exist'));
+
+            cy.get('[data-testid="detailpage-admin-edit-button"]').contains('Edit');
             cy.get('[data-testid="detailpage-admin-edit-button"]').click();
             cy.url().should('eq', 'http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=dloradmn');
         });
@@ -605,9 +618,9 @@ describe('Digital Learning Hub View page', () => {
         it('User sees edit on objects they own', () => {
             cy.visit('digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=s1111111');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="detailpage-admin-edit-button"]')
-                .should('exist')
-                .contains('Edit');
+            cy.waitUntil(() => cy.get('[data-testid="detailpage-admin-edit-button"]').should('exist'));
+
+            cy.get('[data-testid="detailpage-admin-edit-button"]').contains('Edit');
             cy.get('[data-testid="detailpage-admin-edit-button"]').click();
             cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01');
             cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]').should('contain', 'Dummy entry');
@@ -619,6 +632,8 @@ describe('Digital Learning Hub View page', () => {
                 'This is a test. This information is not used in the real system. This is simply content that is big enough to test the CKEditor - it is at least sufficient characters long for the editor to accept the content.';
             cy.visit('digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=s1111111');
             cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="detailpage-admin-edit-button"]').should('exist'));
+
             cy.get('[data-testid="detailpage-admin-edit-button"]').click();
             cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01');
             cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]').should('contain', 'Dummy entry');
