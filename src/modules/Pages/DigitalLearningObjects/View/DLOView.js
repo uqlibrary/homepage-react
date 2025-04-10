@@ -345,6 +345,7 @@ export const DLOView = ({
         // Google Analytics to push pageView for object
         /* istanbul ignore else */
         if (!!dlorItem && !!dlorItem.object_title) {
+            window.dataLayer = window.dataLayer || []; // for tests
             window.dataLayer.push({
                 event: 'pageview',
                 page_title: dlorItem.object_title,
