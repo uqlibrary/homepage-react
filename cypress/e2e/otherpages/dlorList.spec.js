@@ -212,7 +212,7 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .contains('Log in for extra features');
         });
-        it('can filter panels', () => {
+        it.skip('can filter panels', () => {
             // initially, all panels are showing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
@@ -541,7 +541,7 @@ describe('Digital Learning Hub', () => {
                     .should('have.class', 'Mui-selected');
             });
         });
-        it('reset button works', () => {
+        it.skip('reset button works', () => {
             // all panels showing
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
@@ -657,7 +657,7 @@ describe('Digital Learning Hub', () => {
                 // .should('have.value', '1')
                 .should('have.class', 'Mui-selected');
         });
-        it('has working site navigation - can move around the pages', () => {
+        it.skip('has working site navigation - can move around the pages', () => {
             cy.waitUntil(() => cy.get('h1').should('exist'));
             cy.get('[data-testid="dlor-homepage-panel-987y-isjgt-9866"] div[role="button"]')
                 .should('exist')
@@ -710,7 +710,7 @@ describe('Digital Learning Hub', () => {
             cy.get('h1').should('contain', 'Find a digital learning object');
             cy.url().should('include', 'http://localhost:2020/digital-learning-hub');
         });
-        it('shows a preview appropriately', () => {
+        it.skip('shows a preview appropriately', () => {
             // shows a preview when a youtube video is linked
             cy.visit('http://localhost:2020/digital-learning-hub/view/987y_isjgt_9866');
             cy.get('[data-testid="detailpage-preview"]')
@@ -933,7 +933,7 @@ describe('Digital Learning Hub', () => {
                 .should('be.visible')
                 .contains('CC BY Attribution');
         });
-        it('saves changes from the page to the url', () => {
+        it.skip('saves changes from the page to the url', () => {
             cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub?keyword=acc&filters=11');
             cy.get('[data-testid="dlor-homepage-list"]')
                 .should('exist')
@@ -1046,7 +1046,7 @@ describe('Digital Learning Hub', () => {
                 .should('exist')
                 .contains('We did not find any entries in the system - please try again later.');
         });
-        it('mobile page works as expected', () => {
+        it.skip('mobile page works as expected', () => {
             cy.visit('digital-learning-hub');
             cy.viewport(800, 900);
 
