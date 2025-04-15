@@ -1,3 +1,5 @@
+import moment from 'moment-timezone';
+
 describe('Digital Learning Hub View page', () => {
     function TypeCKEditor(content, keepExisting = false) {
         return cy
@@ -637,6 +639,21 @@ describe('Digital Learning Hub View page', () => {
             cy.get('[data-testid="detailpage-admin-edit-button"]').click();
             cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01');
             cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]').should('contain', 'Dummy entry');
+            const today = moment().format('DD/MM/YYYY'); // Australian format to match the display format
+
+            cy.get('[data-testid="object-review-date"] input')
+                .click()
+                .clear()
+                .type(today)
+                .blur() // Force blur event
+                .wait(500) // Add small wait to allow state to update
+                .then(() => {
+                    // Force a change event
+                    cy.get('[data-testid="object-review-date"] input')
+                        .trigger('change', { force: true })
+                        .should('have.value', today);
+                });
+            cy.wait(10000);
             cy.get('[data-testid="dlor-form-next-button"]').click();
             TypeCKEditor(testData, false);
             cy.get('[data-testid="dlor-form-next-button"]').click();

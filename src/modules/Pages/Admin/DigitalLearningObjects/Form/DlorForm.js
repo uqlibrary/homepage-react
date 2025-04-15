@@ -57,6 +57,9 @@ import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { isDlorAdminUser } from 'helpers/access';
 import { breadcrumbs } from 'config/routes';
 import { pluralise } from 'helpers/general';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+const moment = require('moment');
 
 const StyledErrorCountBadge = styled(Badge)(() => ({
     '& span': {
@@ -274,6 +277,15 @@ export const DlorForm = ({
         // valid user id is 8 or 9 char
         console.log('currentValues', currentValues);
         !isValidUsername(currentValues?.object_publishing_user) && firstPanelErrorCount++;
+
+        if (
+            !currentValues?.object_review_date_next ||
+            !moment(currentValues.object_review_date_next).isValid() ||
+            moment(currentValues.object_review_date_next).isAfter(moment()) ||
+            moment(currentValues.object_review_date_next).isBefore(moment().subtract(12, 'months'))
+        ) {
+            firstPanelErrorCount++;
+        }
         if (teamSelectRef.current === 'new') {
             if (
                 currentValues?.team_name_new === undefined ||
@@ -381,6 +393,13 @@ export const DlorForm = ({
         // amalgamate new value into data set
         const newValues = { ...formValues, [fieldname]: newContent };
 
+        setFormValues(newValues);
+    };
+
+    const handleDateChange = newValue => {
+        console.log('Date Changed here');
+        const formattedDate = moment(newValue).format('YYYY-MM-DD');
+        const newValues = { ...formValues, object_review_date_next: formattedDate };
         setFormValues(newValues);
     };
 
@@ -632,19 +651,47 @@ export const DlorForm = ({
                         </FormControl>
                     </Grid>
                 )}
-                {isDlorAdminUser(account) && (
-                    <Grid item xs={12}>
-                        {mode === 'edit' ? (
-                            <Typography component={'p'}>
-                                Next Review Date: {formValues?.object_review_date_next} (edit to come)
-                            </Typography>
-                        ) : (
-                            <Typography component={'p'}>
-                                Next Review Date: {formValues?.object_review_date_next} (setting to come)
-                            </Typography>
-                        )}
-                    </Grid>
-                )}
+                <Grid item xs={12}>
+                    {mode === 'edit' ? (
+                        <>
+                            {/* <Typography component={'p'}>
+                                    Next Review Date: {formValues?.object_review_date_next} (edit to come)
+                                </Typography> */}
+                            <DatePicker
+                                slotProps={{
+                                    textField: {
+                                        'data-testid': 'object-review-date',
+                                    },
+                                }}
+                                label="Last Review Date"
+                                value={moment(formValues?.object_review_date_next)}
+                                onChange={newValue => handleDateChange(newValue)}
+                                maxDate={moment()}
+                                minDate={moment().subtract(12, 'months')}
+                                format="DD/MM/YYYY"
+                            />
+                        </>
+                    ) : (
+                        <>
+                            {/* <Typography component={'p'}>
+                                    Next Review Date: {formValues?.object_review_date_next} (setting to come)
+                                </Typography> */}
+                            <DatePicker
+                                label="Last Review Date"
+                                slotProps={{
+                                    textField: {
+                                        'data-testid': 'object-review-date',
+                                    },
+                                }}
+                                value={moment(formValues?.object_review_date_next)}
+                                onChange={newValue => handleDateChange(newValue)}
+                                maxDate={moment()}
+                                minDate={moment().subtract(12, 'months')}
+                                format="DD/MM/YYYY"
+                            />
+                        </>
+                    )}
+                </Grid>
             </>
         ),
         [formValues, showTeamForm, teamSelectRef.current, dlorTeamList, mode, formDefaults],
