@@ -46,7 +46,7 @@ describe('Digital Learning Hub View page', () => {
                 'contain',
                 'Types of AI, implications for society, using AI in your studies and how UQ is involved. (longer lines)',
             );
-            cy.get('[data-testid="dlor-detailpage"] h2').should('contain', 'How to use this object');
+            cy.get('[data-testid="dlor-detailpage"] h2').should('contain', 'Add the object to your course');
             // cy.get('[data-testid="dlor-massaged-download-instructions"]').should(
             //     'contain',
             //     'Download the Common Cartridge file and H5P quiz to embed in Blackboard',

@@ -1069,7 +1069,7 @@ export const DLOView = ({
                             {!!dlorItem?.object_download_instructions && (
                                 <StyledLayoutBox>
                                     <StyledTitleTypography component={'h2'} variant={'h6'}>
-                                        How to use this object
+                                        Add the object to your course
                                     </StyledTitleTypography>
                                     {!!dlorItem?.object_download_instructions &&
                                         displayDownloadInstructions(dlorItem.object_download_instructions)}
