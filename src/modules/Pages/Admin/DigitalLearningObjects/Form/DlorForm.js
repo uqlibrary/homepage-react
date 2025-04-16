@@ -1564,27 +1564,34 @@ export const DlorForm = ({
             confirmationTitle: confirmationTitle,
             confirmationMessage: '',
             cancelButtonLabel: mode === 'add' ? 'Add another Object' : 'Re-edit Object',
-            confirmButtonLabel: 'Return to list page',
+            confirmButtonLabel: mode === 'add' ? 'Return to list page' : 'View Object',
         },
         errorMessage: {
             confirmationTitle: dlorSavedItemError,
             confirmationMessage: '',
             cancelButtonLabel: mode === 'add' ? 'Add another Object' : 'Re-edit Object',
-            confirmButtonLabel: 'Return to list page',
+            confirmButtonLabel: mode === 'add' ? 'Return to list page' : 'View Object',
         },
     };
 
-    const navigateToDlorAdminHomePage = () => {
+    const navigateToObject = uuid => {
         setConfirmationOpen(false);
         actions.clearADlor();
-        window.location.href = dlorAdminLink();
+        window.location.href = getDlorViewPageUrl(uuid);
         scrollToTopOfPage();
     };
 
-    const navigateToPrimaryPage = () => {
+    // const navigateToDlorAdminHomePage = () => {
+    //     setConfirmationOpen(false);
+    //     actions.clearADlor();
+    //     window.location.href = dlorAdminLink();
+    //     scrollToTopOfPage();
+    // };
+
+    const navigateToListPage = isAdmin => {
         setConfirmationOpen(false);
         actions.clearADlor();
-        window.location.href = '/digital-learning-hub';
+        window.location.href = isAdmin ? dlorAdminLink() : '/digital-learning-hub';
         scrollToTopOfPage();
     };
 
@@ -1652,7 +1659,12 @@ export const DlorForm = ({
                 actionButtonColor="primary"
                 actionButtonVariant="contained"
                 confirmationBoxId="dlor-save-outcome"
-                onAction={() => (isDlorAdminUser(account) ? navigateToDlorAdminHomePage() : navigateToPrimaryPage())}
+                // onAction={() => (isDlorAdminUser(account) ? navigateToDlorAdminHomePage() : navigateToPrimaryPage())}
+                onAction={() =>
+                    mode === 'edit'
+                        ? navigateToObject(dlorItem?.object_public_uuid)
+                        : navigateToListPage(isDlorAdminUser(account))
+                }
                 hideCancelButton={!locale.successMessage.cancelButtonLabel}
                 cancelButtonLabel={locale.successMessage.cancelButtonLabel}
                 onCancelAction={() => clearForm()}
