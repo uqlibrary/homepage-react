@@ -441,7 +441,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
                 cy.get('[data-testid="confirm-dlor-save-outcome"]')
                     .should('exist')
-                    .contains('Return to list page');
+                    .contains('View Object');
                 cy.get('[data-testid="cancel-dlor-save-outcome"]')
                     .should('exist')
                     .contains('Re-edit Object');
@@ -532,7 +532,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('Changes have been saved');
                 cy.get('[data-testid="confirm-dlor-save-outcome"]')
                     .should('exist')
-                    .contains('Return to list page');
+                    .contains('View Object');
                 cy.get('[data-testid="cancel-dlor-save-outcome"]')
                     .should('exist')
                     .contains('Re-edit Object');
@@ -742,7 +742,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('Changes have been saved');
                 cy.get('[data-testid="confirm-dlor-save-outcome"]')
                     .should('exist')
-                    .contains('Return to list page');
+                    .contains('View Object');
                 cy.get('[data-testid="cancel-dlor-save-outcome"]')
                     .should('exist')
                     .contains('Re-edit Object');
@@ -810,22 +810,25 @@ describe('Edit an object on the Digital Learning Hub', () => {
 
                 // check save-confirmation popup
                 cy.waitUntil(() => cy.get('[data-testid="cancel-dlor-save-outcome"]').should('exist'));
-                cy.get('[data-testid="confirm-dlor-save-outcome"]').should('contain', 'Return to list page');
+                cy.get('[data-testid="confirm-dlor-save-outcome"]').should('contain', 'View Object');
                 cy.get('[data-testid="confirm-dlor-save-outcome"]')
                     .should('exist')
-                    .contains('Return to list page');
+                    .contains('View Object');
                 cy.get('[data-testid="cancel-dlor-save-outcome"]')
                     .should('exist')
                     .contains('Re-edit Object');
 
                 // and navigate back to the list page
                 cy.get('[data-testid="confirm-dlor-save-outcome"]')
-                    .should('contain', 'Return to list page')
+                    .should('contain', 'View Object')
                     .click();
-                cy.url().should('eq', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
-                cy.get('[data-testid="StandardPage-title"]')
+                cy.url().should(
+                    'eq',
+                    `http://localhost:2020/digital-learning-hub/view/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`,
+                );
+                cy.get('[data-testid="dlor-detailpage"]')
                     .should('exist')
-                    .should('contain', 'Digital Learning Hub Management');
+                    .should('contain', 'Advanced literature searching');
             });
             it('admin can edit, edit the current team, choose a different existing team and re-edit', () => {
                 cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
@@ -975,7 +978,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('Changes have been saved');
                 cy.get('[data-testid="confirm-dlor-save-outcome"]')
                     .should('exist')
-                    .contains('Return to list page');
+                    .contains('View Object');
                 cy.get('[data-testid="cancel-dlor-save-outcome"]')
                     .should('exist')
                     .contains('Re-edit Object');
@@ -1049,7 +1052,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('Changes have been saved');
                 cy.get('[data-testid="confirm-dlor-save-outcome"]')
                     .should('exist')
-                    .contains('Return to list page');
+                    .contains('View Object');
                 cy.get('[data-testid="cancel-dlor-save-outcome"]')
                     .should('exist')
                     .contains('Re-edit Object');
@@ -1219,7 +1222,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('Changes have been saved');
                 cy.get('[data-testid="confirm-dlor-save-outcome"]')
                     .should('exist')
-                    .contains('Return to list page');
+                    .contains('View Object');
                 cy.get('[data-testid="cancel-dlor-save-outcome"]')
                     .should('exist')
                     .contains('Re-edit Object');
@@ -1292,7 +1295,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="dialogbox-dlor-save-outcome"] h2').contains('Changes have been saved');
                 cy.get('[data-testid="confirm-dlor-save-outcome"]')
                     .should('exist')
-                    .contains('Return to list page');
+                    .contains('View Object');
                 cy.get('[data-testid="cancel-dlor-save-outcome"]')
                     .should('exist')
                     .contains('Re-edit Object');
@@ -1364,7 +1367,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 );
                 cy.get('[data-testid="confirm-dlor-save-outcome"]')
                     .should('exist')
-                    .contains('Return to list page');
+                    .contains('View Object');
                 cy.get('[data-testid="cancel-dlor-save-outcome"]')
                     .should('exist')
                     .contains('Re-edit Object');
