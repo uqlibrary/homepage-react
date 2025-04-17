@@ -34,10 +34,12 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 
 import { convertSnakeCaseToKebabCase } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects/SharedDlorComponents/VisitHomepage';
-import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import {
+    dlorAdminLink,
+    exportDemographicsToCSV,
+    exportDLORDataToCSV,
+} from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { breadcrumbs } from 'config/routes';
-
-const moment = require('moment');
 
 const StyledPageListItemGridContainer = styled(Grid)(() => ({
     paddingTop: '10px',
@@ -69,140 +71,16 @@ const StyleObjectDetailGridItem = styled(Grid)(({ theme }) => ({
     },
 }));
 
-const escapeCSVField = field => {
-    if (field === null || field === undefined) {
-        return '';
-    }
-
-    // Convert to string
-    const stringField = String(field);
-
-    // If field contains quotes, commas, or newlines, it needs to be escaped
-    if (stringField.includes('"') || stringField.includes(',') || stringField.includes('\n')) {
-        // 1. Replace double quotes with two double quotes (escape quotes)
-        // 2. Wrap the entire field in quotes
-        return `"${stringField.replace(/"/g, '""')}"`;
-    }
-
-    return stringField;
-};
-
-const exportToCSV = (data, filename) => {
-    /* istanbul ignore next */
-    if (!data || data.length === 0) {
-        console.error('No data to export.');
-        return;
-    }
-
-    const headerNameMap = {
-        object_id: 'Object ID',
-        object_public_uuid: 'Public UUID',
-        object_title: 'Title',
-        object_description: 'Description',
-        object_summary: 'Summary',
-        object_review_date_next: 'Next Review Date',
-        object_status: 'Status',
-        object_owning_team_id: 'Team ID',
-        publishing_user_name: 'Publishing User',
-        team_name: 'Team Name',
-        object_download_instructions: 'Download Instructions',
-        object_keywords: 'Keywords',
-        object_link_interaction_type: 'Interaction Type',
-        graduate_attributes: 'Graduate Attributes',
-        // ... add all other mappings here
-    };
-
-    const headers = Object.keys(data[0]).filter(key => key !== 'object_filters');
-    const filterTypes = new Set();
-
-    data.forEach(item => {
-        /* istanbul ignore else */
-        if (item.object_filters) {
-            item.object_filters.forEach(filter => {
-                filterTypes.add(filter.filter_key);
-            });
-        }
-    });
-
-    const allHeaders = [...headers, ...Array.from(filterTypes), 'publishing_user_name', 'team_name'].filter(
-        header => header !== 'owner',
-    );
-    const csvRows = [];
-
-    // Use the map function to transform headers with custom names
-    csvRows.push(allHeaders.map(header => headerNameMap[header] || header).join(','));
-
-    data.forEach(item => {
-        const values = allHeaders.map(header => {
-            let value;
-
-            if (header === 'publishing_user_name') {
-                value = item.owner?.publishing_user_username || /* istanbul ignore next */ '';
-            } else if (header === 'team_name') {
-                value = item.owner?.team_name || /* istanbul ignore next */ '';
-            } else if (item.object_filters && filterTypes.has(header)) {
-                const matchingFilter = item.object_filters.find(filter => filter.filter_key === header);
-                // Just join the values with semicolons, escape at the end
-                value = matchingFilter ? matchingFilter.filter_values.map(fv => fv.name).join(';') : '';
-            } else {
-                value = item[header];
-                // *** boolean fields value conversion ***
-                const booleanHeaders = ['object_is_featured', 'object_cultural_advice'];
-                if (booleanHeaders.includes(header)) {
-                    value = value === 1 ? 'yes' : 'no';
-                }
-                // *** DATE FORMATTING LOGIC ***
-                const dateHeaders = ['date', 'created_at'];
-
-                if (dateHeaders.some(dateHeader => header.includes(dateHeader))) {
-                    /* istanbul ignore else */
-                    if (value) {
-                        const date = moment(value); // Use moment.js to parse the date
-                        /* istanbul ignore else */
-                        if (date.isValid()) {
-                            value = date.format('MMMM DD, YYYY');
-                        } else {
-                            value = 'Invalid Date';
-                        }
-                    }
-                }
-
-                if (Array.isArray(value)) {
-                    value = value
-                        .map(v => {
-                            /* istanbul ignore next */
-                            if (typeof v === 'object') {
-                                /* istanbul ignore next */
-                                return JSON.stringify(v);
-                            }
-                            return v;
-                        })
-                        .join(';');
-                } else if (typeof value === 'object') {
-                    value = JSON.stringify(value);
-                }
-            }
-            // Single escape at the end
-            return escapeCSVField(value);
-        });
-        csvRows.push(values.join(','));
-    });
-
-    const csvString = csvRows.join('\r\n');
-    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.setAttribute('data-testid', 'download-link'); // Add data-testid attribute
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-};
-
-export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListError, dlorItemDeleteError }) => {
+export const DLOAdminHomepage = ({
+    actions,
+    dlorList,
+    dlorListLoading,
+    dlorListError,
+    dlorItemDeleteError,
+    dlorDemographics,
+    dlorDemographicsLoading,
+    dlorDemographicsError,
+}) => {
     const statusTypes = [
         {
             type: 'new',
@@ -261,6 +139,12 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
     const handleMenuClose = () => {
         setAnchorEl(null);
     };
+
+    React.useEffect(() => {
+        if (!dlorDemographics && !dlorDemographicsLoading && !dlorDemographicsError) {
+            actions.loadDlorDemographics();
+        }
+    }, [actions, dlorDemographics, dlorDemographicsError, dlorDemographicsLoading]);
 
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -515,13 +399,23 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
                         <Divider />
                         <MenuItem
                             onClick={() => {
-                                exportToCSV(dlorList, 'dlor_data.csv');
+                                exportDLORDataToCSV(dlorList, 'dlor_data.csv');
                                 handleMenuClose();
                             }}
-                            data-testid="admin-dlor-export-data-button"
+                            data-testid="admin-dlor-export-dlordata-button"
                         >
-                            Export to CSV
+                            Export Object Data to CSV
                         </MenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                exportDemographicsToCSV(dlorDemographics, 'dlor_demographics.csv');
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-export-demographicsdata-button"
+                        >
+                            Export Demographics Data to CSV
+                        </MenuItem>
+                        <Divider />
                         <MenuItem
                             component="a"
                             href={`${getPathRoot()}/digital-learning-hub`}
@@ -778,6 +672,9 @@ DLOAdminHomepage.propTypes = {
     dlorListLoading: PropTypes.bool,
     dlorListError: PropTypes.any,
     dlorItemDeleteError: PropTypes.any,
+    dlorDemographics: PropTypes.array,
+    dlorDemographicsLoading: PropTypes.bool,
+    dlorDemographicsError: PropTypes.any,
 };
 
 export default DLOAdminHomepage;

@@ -28,6 +28,7 @@ import {
     DLOR_DELETE_FACET_API,
     DLOR_CREATE_FACET_API,
     DLOR_OWNED_UPDATE_API,
+    DLOR_DEMOGRAPHICS_REPORT_API,
 } from 'repositories/routes';
 
 const checkExpireSession = (dispatch, error) => {
@@ -574,6 +575,25 @@ export function deleteFacet(filterId) {
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function loadDlorDemographics() {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_DEMOGRAPHICS_LOADING });
+        return get(DLOR_DEMOGRAPHICS_REPORT_API())
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_DEMOGRAPHICS_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_DEMOGRAPHICS_FAILED,
+                    payload: error.message,
+                });
             });
     };
 }

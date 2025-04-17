@@ -729,7 +729,7 @@ export const DLOView = ({
                 <Dialog open={isNotifyOpened}>
                     <DialogTitle>Notify you of any changes to this object</DialogTitle>
                     <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                        <form>
+                        <form style={{ width: '100%' }}>
                             <FormControl variant="standard" fullWidth>
                                 <InputLabel htmlFor="preferredName">Your name</InputLabel>
                                 <Input
@@ -739,7 +739,7 @@ export const DLOView = ({
                                     onChange={handleChange('preferredName')}
                                 />
                             </FormControl>
-                            <FormControl variant="standard" fullWidth>
+                            <FormControl variant="standard" fullWidth sx={{ marginTop: '10px' }}>
                                 <InputLabel htmlFor="emailAddress">Your email address *</InputLabel>
                                 <Input
                                     id="userEmail"
