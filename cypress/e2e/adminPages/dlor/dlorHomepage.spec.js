@@ -532,7 +532,7 @@ describe('Digital Learning Hub admin homepage', () => {
             cy.get('h1').should('contain', 'Digital Learning Hub Management');
         });
     });
-    context('object export', () => {
+    context('DLOR exports', () => {
         beforeEach(() => {
             // Visit the page where the Export to CSV button is located
             cy.visit(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
@@ -550,6 +550,22 @@ describe('Digital Learning Hub admin homepage', () => {
             // Click the Export to CSV button
             cy.get('[data-testid="admin-dlor-menu-button"]').click();
             cy.get('[data-testid="admin-dlor-export-dlordata-button"]').click();
+
+            // Verify that the URL.createObjectURL method was called
+            cy.get('@createObjectURL').should('be.called');
+        });
+        it('should trigger a download when the Export Demographics to CSV button is clicked', () => {
+            // Stub the URL.createObjectURL method
+            // cy.wait(4000);
+
+            cy.get('[data-testid="dlor-homepage-panel-987y-isjgt-9866"]').should('exist');
+            cy.window().then(win => {
+                cy.stub(win.URL, 'createObjectURL').as('createObjectURL');
+            });
+
+            // Click the Export to CSV button
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
+            cy.get('[data-testid="admin-dlor-export-demographicsdata-button"]').click();
 
             // Verify that the URL.createObjectURL method was called
             cy.get('@createObjectURL').should('be.called');

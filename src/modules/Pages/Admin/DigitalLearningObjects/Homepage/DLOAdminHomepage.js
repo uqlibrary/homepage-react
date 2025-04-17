@@ -71,24 +71,6 @@ const StyleObjectDetailGridItem = styled(Grid)(({ theme }) => ({
     },
 }));
 
-const escapeCSVField = field => {
-    if (field === null || field === undefined) {
-        return '';
-    }
-
-    // Convert to string
-    const stringField = String(field);
-
-    // If field contains quotes, commas, or newlines, it needs to be escaped
-    if (stringField.includes('"') || stringField.includes(',') || stringField.includes('\n')) {
-        // 1. Replace double quotes with two double quotes (escape quotes)
-        // 2. Wrap the entire field in quotes
-        return `"${stringField.replace(/"/g, '""')}"`;
-    }
-
-    return stringField;
-};
-
 export const DLOAdminHomepage = ({
     actions,
     dlorList,
