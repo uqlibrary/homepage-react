@@ -704,7 +704,7 @@ export const DlorForm = ({
                 object_publishing_user: formDefaults.object_publishing_user,
             }));
         }
-    }, [formDefaults?.object_publishing_user]);
+    }, [formDefaults.object_publishing_user, formValues?.object_publishing_user]);
 
     const suggestSummary = (enteredDescription, requiredLength = 150) => {
         const plainSummary = html2text.fromString(enteredDescription);
@@ -852,7 +852,7 @@ export const DlorForm = ({
                     )}
                 </FormControl>
             </Grid>
-            {!!isDlorAdminUser(account) && (
+            {(!!isDlorAdminUser(account) || (mode === 'edit' && formValues?.object_status !== 'submitted')) && (
                 <>
                     <Grid item xs={12}>
                         <FormControl variant="standard" fullWidth>
@@ -876,6 +876,12 @@ export const DlorForm = ({
                                     control={<Radio />}
                                     label="Draft"
                                     selected={formValues?.object_status === 'new'}
+                                />
+                                <FormControlLabel
+                                    value="deprecated"
+                                    control={<Radio />}
+                                    label="Unpublished (deprecated)"
+                                    selected={formValues?.object_status === 'deprecated'}
                                 />
                             </RadioGroup>
                         </FormControl>
