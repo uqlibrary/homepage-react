@@ -93,7 +93,7 @@ export const exportDemographicsToCSV = (data, filename) => {
     const csvRows = [];
 
     // Add headers
-    csvRows.push(headers.map(header => headerNameMap[header] || header).join(','));
+    csvRows.push(headers.map(header => headerNameMap[header]).join(','));
 
     // Add data rows
     data.forEach(item => {
