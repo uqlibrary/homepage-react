@@ -538,7 +538,7 @@ describe('Digital Learning Hub admin homepage', () => {
             cy.visit(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
         });
 
-        it('should trigger a download when the Export to CSV button is clicked', () => {
+        it('should trigger a download when the Export Objects to CSV button is clicked', () => {
             // Stub the URL.createObjectURL method
             // cy.wait(4000);
 
@@ -549,7 +549,7 @@ describe('Digital Learning Hub admin homepage', () => {
 
             // Click the Export to CSV button
             cy.get('[data-testid="admin-dlor-menu-button"]').click();
-            cy.get('[data-testid="admin-dlor-export-data-button"]').click();
+            cy.get('[data-testid="admin-dlor-export-dlordata-button"]').click();
 
             // Verify that the URL.createObjectURL method was called
             cy.get('@createObjectURL').should('be.called');
