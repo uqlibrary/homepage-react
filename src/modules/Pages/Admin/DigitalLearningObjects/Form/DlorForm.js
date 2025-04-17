@@ -445,6 +445,8 @@ export const DlorForm = ({
         let theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
 
+        console.log('The new value', theNewValue);
+
         if (['object_is_featured', 'object_cultural_advice'].includes(prop)) {
             theNewValue = !!e.target.checked ? 1 : 0;
         }
@@ -475,6 +477,8 @@ export const DlorForm = ({
 
         // amalgamate new value into data set
         const newValues = { ...formValues, [prop]: theNewValue };
+
+        console.log('The new values are', newValues);
 
         setFormValues(newValues);
     };
@@ -704,7 +708,7 @@ export const DlorForm = ({
                 object_publishing_user: formDefaults.object_publishing_user,
             }));
         }
-    }, [formDefaults.object_publishing_user, formValues?.object_publishing_user]);
+    }, [formDefaults.object_publishing_user]);
 
     const suggestSummary = (enteredDescription, requiredLength = 150) => {
         const plainSummary = html2text.fromString(enteredDescription);
