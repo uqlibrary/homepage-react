@@ -44,7 +44,7 @@ import {
 import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { breadcrumbs } from 'config/routes';
-import { Chip, Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { Chip, Dialog, DialogContent, DialogTitle, Tooltip } from '@mui/material';
 
 const StyledUQActionButton = styled('div')(({ theme, noMargin }) => ({
     marginBlock: '0px',
@@ -313,6 +313,12 @@ export const DLOView = ({
 
     //     }
     // }, [dlorItem]);
+
+    useEffect(() => {
+        if (!dlorFavouritesList) {
+            actions.loadDlorFavourites();
+        }
+    }, [actions, dlorFavouritesList]);
 
     useEffect(() => {
         if (!!account?.id) {
@@ -785,10 +791,44 @@ export const DLOView = ({
                     <StyledContentGrid container spacing={4} data-testid="dlor-detailpage">
                         <Grid item xs={12} md={9}>
                             <LoginPrompt account={account} instyle={{ marginBottom: '12px' }} />
-                            <Box sx={{ marginBottom: '12px' }}>
+                            <Box
+                                sx={{
+                                    marginBottom: '12px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
                                 <StyledTitleTypography component={'h1'} variant={'h4'}>
                                     {dlorItem?.object_title}
                                 </StyledTitleTypography>
+                                {dlorFavouritesList?.some(
+                                    fav => fav.object_public_uuid === dlorItem?.object_public_uuid,
+                                ) ? (
+                                    <Tooltip title="Remove from Favourites" arrow>
+                                        <StarIcon
+                                            onClick={() => actions.removeFavourite(dlorItem?.object_public_uuid)}
+                                            sx={{
+                                                fill: '#FFD700',
+                                                cursor: 'pointer',
+                                                fontSize: '2rem',
+                                            }}
+                                            data-testid="favorite-star-icon"
+                                        />
+                                    </Tooltip>
+                                ) : (
+                                    <Tooltip title="Add to Favourites" arrow>
+                                        <StarBorderIcon
+                                            onClick={() => actions.addFavourite(dlorItem?.object_public_uuid)}
+                                            sx={{
+                                                fill: '#666',
+                                                cursor: 'pointer',
+                                                fontSize: '2rem',
+                                            }}
+                                            data-testid="favorite-star-outline-icon"
+                                        />
+                                    </Tooltip>
+                                )}
                             </Box>
                             <>
                                 {(!!dlorItem?.object_cultural_advice ||
