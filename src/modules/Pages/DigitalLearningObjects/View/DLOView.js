@@ -22,6 +22,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import InfoIcon from '@mui/icons-material/Info';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -244,6 +245,7 @@ export const DLOView = ({
     dlorUpdatedItem,
     dlorItemUpdating,
     dlorUpdatedItemError,
+    dlorFavouritesList,
 }) => {
     const { account } = useAccountContext();
     const { dlorId } = useParams();
@@ -1211,6 +1213,7 @@ DLOView.propTypes = {
     dlorItemUpdating: PropTypes.bool,
     dlorUpdatedItemError: PropTypes.any,
     account: PropTypes.object,
+    dlorFavouritesList: PropTypes.array,
 };
 
 export default React.memo(DLOView);
