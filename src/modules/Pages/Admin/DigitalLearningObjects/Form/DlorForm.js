@@ -165,7 +165,6 @@ export const DlorForm = ({
 
         return facetType?.facet_list?.map(facet => facet.facet_id) || /* istanbul ignore next */ [];
     }
-
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);

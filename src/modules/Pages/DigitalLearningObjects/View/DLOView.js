@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useParams } from 'react-router-dom';
 import parse from 'html-react-parser';
@@ -22,6 +22,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import InfoIcon from '@mui/icons-material/Info';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -43,7 +44,7 @@ import {
 import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { breadcrumbs } from 'config/routes';
-import { Chip, Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { Chip, Dialog, DialogContent, DialogTitle, Tooltip } from '@mui/material';
 
 const StyledUQActionButton = styled('div')(({ theme, noMargin }) => ({
     marginBlock: '0px',
@@ -244,6 +245,7 @@ export const DLOView = ({
     dlorUpdatedItem,
     dlorItemUpdating,
     dlorUpdatedItemError,
+    dlorFavouritesList,
 }) => {
     const { account } = useAccountContext();
     const { dlorId } = useParams();
@@ -254,6 +256,9 @@ export const DLOView = ({
     const [isNotifyOpened, setIsNotifyOpened] = React.useState(false);
     // const [notifyType, setNotifyType] = React.useState('');
     const [confirmLocale, setConfirmLocale] = React.useState({});
+
+    // Add this state near your other useState declarations
+    const [isFavoriteActionInProgress, setIsFavoriteActionInProgress] = useState(false);
 
     // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
     // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
@@ -313,6 +318,12 @@ export const DLOView = ({
     // }, [dlorItem]);
 
     useEffect(() => {
+        if (!dlorFavouritesList) {
+            actions.loadDlorFavourites();
+        }
+    }, [actions, dlorFavouritesList]);
+
+    useEffect(() => {
         if (!!account?.id) {
             const tempForm = {
                 ...formValues,
@@ -369,9 +380,6 @@ export const DLOView = ({
     //     confirmationMessage: 'Please check your email to confirm your subscription request.',
     //     confirmButtonLabel: 'OK',
     // };
-
-    // const subscriptionResponseLocale = notifyType === 'demographics' ? demograpicsResponseLocale : notifyResponseLocale;
-
     useEffect(() => {
         // when the save attempt comes back...
         // if they only sent demographics, we only wait for the "in progress" because we dont care what it responds
@@ -612,6 +620,23 @@ export const DLOView = ({
         return <>{parse(label)}</>;
     }
 
+    // Create a handler function for the favorite actions
+    const handleFavoriteAction = async (action, uuid) => {
+        // debouncer - not required to verify via test
+        /* istanbul ignore next */
+        if (isFavoriteActionInProgress) return;
+
+        setIsFavoriteActionInProgress(true);
+        try {
+            await actions[action](uuid);
+        } finally {
+            // Re-enable after 1 second
+            setTimeout(() => {
+                setIsFavoriteActionInProgress(false);
+            }, 1000);
+        }
+    };
+
     if (!!dlorItemLoading || dlorItemLoading === null || !!dlorItemUpdating) {
         return (
             <Box sx={{ minHeight: 600 }}>
@@ -783,10 +808,48 @@ export const DLOView = ({
                     <StyledContentGrid container spacing={4} data-testid="dlor-detailpage">
                         <Grid item xs={12} md={9}>
                             <LoginPrompt account={account} instyle={{ marginBottom: '12px' }} />
-                            <Box sx={{ marginBottom: '12px' }}>
+                            <Box
+                                sx={{
+                                    marginBottom: '12px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
                                 <StyledTitleTypography component={'h1'} variant={'h4'}>
                                     {dlorItem?.object_title}
                                 </StyledTitleTypography>
+                                {dlorFavouritesList?.some(
+                                    fav => fav.object_public_uuid === dlorItem?.object_public_uuid,
+                                ) ? (
+                                    <Tooltip title="Remove from Favourites" arrow>
+                                        <StarIcon
+                                            onClick={() =>
+                                                handleFavoriteAction('removeFavourite', dlorItem?.object_public_uuid)
+                                            }
+                                            sx={{
+                                                fill: '#FFD700',
+                                                cursor: isFavoriteActionInProgress ? 'not-allowed' : 'pointer',
+                                                fontSize: '2rem',
+                                            }}
+                                            data-testid="favorite-star-icon"
+                                        />
+                                    </Tooltip>
+                                ) : (
+                                    <Tooltip title="Add to Favourites" arrow>
+                                        <StarBorderIcon
+                                            onClick={() =>
+                                                handleFavoriteAction('addFavourite', dlorItem?.object_public_uuid)
+                                            }
+                                            sx={{
+                                                fill: '#666',
+                                                cursor: isFavoriteActionInProgress ? 'not-allowed' : 'pointer',
+                                                fontSize: '2rem',
+                                            }}
+                                            data-testid="favorite-star-outline-icon"
+                                        />
+                                    </Tooltip>
+                                )}
                             </Box>
                             <>
                                 {(!!dlorItem?.object_cultural_advice ||
@@ -1211,6 +1274,7 @@ DLOView.propTypes = {
     dlorItemUpdating: PropTypes.bool,
     dlorUpdatedItemError: PropTypes.any,
     account: PropTypes.object,
+    dlorFavouritesList: PropTypes.array,
 };
 
 export default React.memo(DLOView);
