@@ -247,6 +247,7 @@ export const DLOR_SERIES_DELETE_API = id => ({ apiUrl: `dlor/admin/series/${id}`
 export const DLOR_SERIES_UPDATE_API = id => ({ apiUrl: `dlor/admin/series/${id}` });
 export const DLOR_SERIES_CREATE_API = () => ({ apiUrl: 'dlor/admin/series' });
 export const DLOR_SERIES_LOAD_API = id => ({ apiUrl: `dlor/public/series/find/${id}` });
+export const DLOR_FAVOURITES_API = () => ({ apiUrl: 'dlor/auth/favourites' });
 
 export const DLOR_CREATE_FACET_API = () => ({ apiUrl: 'dlor/admin/facet' });
 export const DLOR_UPDATE_FACET_API = id => ({ apiUrl: `dlor/admin/facet/${id}` });

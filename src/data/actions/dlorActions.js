@@ -28,6 +28,7 @@ import {
     DLOR_DELETE_FACET_API,
     DLOR_CREATE_FACET_API,
     DLOR_OWNED_UPDATE_API,
+    DLOR_FAVOURITES_API,
     DLOR_DEMOGRAPHICS_REPORT_API,
 } from 'repositories/routes';
 
@@ -572,6 +573,71 @@ export function deleteFacet(filterId) {
             .catch(error => {
                 dispatch({
                     type: actions.DLOR_FILTER_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function loadDlorFavourites() {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_FAVOURITES_LOADING });
+        return get(DLOR_FAVOURITES_API())
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_FAVOURITES_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_FAVOURITES_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function addFavourite(uuid) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_FAVOURITES_LOADING });
+        return post(DLOR_FAVOURITES_API(), {
+            object_public_uuid: uuid,
+        })
+            .then(response => {
+                const payload = Array.isArray(response.data) ? response.data : [response.data];
+                dispatch({
+                    type: actions.DLOR_FAVOURITES_LOADED,
+                    payload,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_FAVOURITES_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function removeFavourite(uuid) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_FAVOURITES_LOADING });
+        return destroy(DLOR_FAVOURITES_API(), {
+            object_public_uuid: uuid,
+        })
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_FAVOURITES_LOADED,
+                    payload: response.data || [],
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_FAVOURITES_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
