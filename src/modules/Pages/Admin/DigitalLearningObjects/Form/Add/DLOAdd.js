@@ -43,7 +43,7 @@ export const DLOAdd = ({
         return moment()
             .hour(0)
             .minute(1)
-            .format('YYYY-MM-DDTHH:mm');
+            .format('YYYY-MM-DD');
     }
 
     const formDefaults = {
