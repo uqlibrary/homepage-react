@@ -263,7 +263,7 @@ export const DLOView = ({
     // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
     // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
 
-    // const isLoggedIn = !!account?.id;
+    const isLoggedIn = !!account?.id;
 
     const defaultFormValues = {
         subjectCode: '',
@@ -819,36 +819,46 @@ export const DLOView = ({
                                 <StyledTitleTypography component={'h1'} variant={'h4'}>
                                     {dlorItem?.object_title}
                                 </StyledTitleTypography>
-                                {dlorFavouritesList?.some(
-                                    fav => fav.object_public_uuid === dlorItem?.object_public_uuid,
-                                ) ? (
-                                    <Tooltip title="Remove from Favourites" arrow>
-                                        <StarIcon
-                                            onClick={() =>
-                                                handleFavoriteAction('removeFavourite', dlorItem?.object_public_uuid)
-                                            }
-                                            sx={{
-                                                fill: '#FFD700',
-                                                cursor: isFavoriteActionInProgress ? 'not-allowed' : 'pointer',
-                                                fontSize: '2rem',
-                                            }}
-                                            data-testid="favorite-star-icon"
-                                        />
-                                    </Tooltip>
-                                ) : (
-                                    <Tooltip title="Add to Favourites" arrow>
-                                        <StarBorderIcon
-                                            onClick={() =>
-                                                handleFavoriteAction('addFavourite', dlorItem?.object_public_uuid)
-                                            }
-                                            sx={{
-                                                fill: '#666',
-                                                cursor: isFavoriteActionInProgress ? 'not-allowed' : 'pointer',
-                                                fontSize: '2rem',
-                                            }}
-                                            data-testid="favorite-star-outline-icon"
-                                        />
-                                    </Tooltip>
+                                {!!isLoggedIn && (
+                                    <>
+                                        {dlorFavouritesList?.some(
+                                            fav => fav.object_public_uuid === dlorItem?.object_public_uuid,
+                                        ) ? (
+                                            <Tooltip title="Remove from Favourites" arrow>
+                                                <StarIcon
+                                                    onClick={() =>
+                                                        handleFavoriteAction(
+                                                            'removeFavourite',
+                                                            dlorItem?.object_public_uuid,
+                                                        )
+                                                    }
+                                                    sx={{
+                                                        fill: '#FFD700',
+                                                        cursor: isFavoriteActionInProgress ? 'not-allowed' : 'pointer',
+                                                        fontSize: '2rem',
+                                                    }}
+                                                    data-testid="favorite-star-icon"
+                                                />
+                                            </Tooltip>
+                                        ) : (
+                                            <Tooltip title="Add to Favourites" arrow>
+                                                <StarBorderIcon
+                                                    onClick={() =>
+                                                        handleFavoriteAction(
+                                                            'addFavourite',
+                                                            dlorItem?.object_public_uuid,
+                                                        )
+                                                    }
+                                                    sx={{
+                                                        fill: '#666',
+                                                        cursor: isFavoriteActionInProgress ? 'not-allowed' : 'pointer',
+                                                        fontSize: '2rem',
+                                                    }}
+                                                    data-testid="favorite-star-outline-icon"
+                                                />
+                                            </Tooltip>
+                                        )}
+                                    </>
                                 )}
                             </Box>
                             <>
