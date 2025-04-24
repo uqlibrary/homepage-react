@@ -606,9 +606,10 @@ export function addFavourite(uuid) {
             object_public_uuid: uuid,
         })
             .then(response => {
+                const payload = Array.isArray(response.data) ? response.data : [response.data];
                 dispatch({
                     type: actions.DLOR_FAVOURITES_LOADED,
-                    payload: [response.data],
+                    payload,
                 });
             })
             .catch(error => {

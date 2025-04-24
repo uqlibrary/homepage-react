@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useParams } from 'react-router-dom';
 import parse from 'html-react-parser';
@@ -257,6 +257,9 @@ export const DLOView = ({
     // const [notifyType, setNotifyType] = React.useState('');
     const [confirmLocale, setConfirmLocale] = React.useState({});
 
+    // Add this state near your other useState declarations
+    const [isFavoriteActionInProgress, setIsFavoriteActionInProgress] = useState(false);
+
     // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
     // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
 
@@ -377,9 +380,6 @@ export const DLOView = ({
     //     confirmationMessage: 'Please check your email to confirm your subscription request.',
     //     confirmButtonLabel: 'OK',
     // };
-
-    // const subscriptionResponseLocale = notifyType === 'demographics' ? demograpicsResponseLocale : notifyResponseLocale;
-
     useEffect(() => {
         // when the save attempt comes back...
         // if they only sent demographics, we only wait for the "in progress" because we dont care what it responds
@@ -620,6 +620,23 @@ export const DLOView = ({
         return <>{parse(label)}</>;
     }
 
+    // Create a handler function for the favorite actions
+    const handleFavoriteAction = async (action, uuid) => {
+        // debouncer - not required to verify via test
+        /* istanbul ignore next */
+        if (isFavoriteActionInProgress) return;
+
+        setIsFavoriteActionInProgress(true);
+        try {
+            await actions[action](uuid);
+        } finally {
+            // Re-enable after 1 second
+            setTimeout(() => {
+                setIsFavoriteActionInProgress(false);
+            }, 1000);
+        }
+    };
+
     if (!!dlorItemLoading || dlorItemLoading === null || !!dlorItemUpdating) {
         return (
             <Box sx={{ minHeight: 600 }}>
@@ -807,10 +824,12 @@ export const DLOView = ({
                                 ) ? (
                                     <Tooltip title="Remove from Favourites" arrow>
                                         <StarIcon
-                                            onClick={() => actions.removeFavourite(dlorItem?.object_public_uuid)}
+                                            onClick={() =>
+                                                handleFavoriteAction('removeFavourite', dlorItem?.object_public_uuid)
+                                            }
                                             sx={{
                                                 fill: '#FFD700',
-                                                cursor: 'pointer',
+                                                cursor: isFavoriteActionInProgress ? 'not-allowed' : 'pointer',
                                                 fontSize: '2rem',
                                             }}
                                             data-testid="favorite-star-icon"
@@ -819,10 +838,12 @@ export const DLOView = ({
                                 ) : (
                                     <Tooltip title="Add to Favourites" arrow>
                                         <StarBorderIcon
-                                            onClick={() => actions.addFavourite(dlorItem?.object_public_uuid)}
+                                            onClick={() =>
+                                                handleFavoriteAction('addFavourite', dlorItem?.object_public_uuid)
+                                            }
                                             sx={{
                                                 fill: '#666',
-                                                cursor: 'pointer',
+                                                cursor: isFavoriteActionInProgress ? 'not-allowed' : 'pointer',
                                                 fontSize: '2rem',
                                             }}
                                             data-testid="favorite-star-outline-icon"

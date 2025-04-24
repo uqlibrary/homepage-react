@@ -753,6 +753,26 @@ mock.onGet(/dlor\/public\/find\/.*/)
                 "favourite_username": "uqslanca" 
             }
         ]}];
+    })
+    .onPost('dlor/auth/favourites')
+    .reply(() => {
+        console.log('POST FAVOURITES');
+        return [200, {data: [
+            {
+                "favourite_id": 3,
+                "object_public_uuid": "9k45_hgr4_876h",
+                "favourite_username": "uqslanca"
+            },
+            {
+            "favourite_id": 2,
+                "object_public_uuid": "kj5t_8yg4_kj4f",
+                "favourite_username": "uqslanca" 
+            }
+        ]}];
+    })
+    .onDelete('dlor/auth/favourites')
+    .reply(() => {
+        return [200, {data: []}];
     });
     
 
