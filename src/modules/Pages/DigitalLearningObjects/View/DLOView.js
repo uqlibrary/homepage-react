@@ -961,7 +961,7 @@ export const DLOView = ({
                                                 }}
                                             >
                                                 <Typography variant="p" sx={{ marginTop: '0px', textAlign: 'center' }}>
-                                                    Keep up-to-date
+                                                    Keep up to date
                                                 </Typography>
                                                 <Chip
                                                     data-testid="detailpage-notify-button"

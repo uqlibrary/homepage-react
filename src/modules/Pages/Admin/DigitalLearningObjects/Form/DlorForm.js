@@ -883,7 +883,7 @@ export const DlorForm = ({
                                 <FormControlLabel
                                     value="deprecated"
                                     control={<Radio />}
-                                    label="Unpublished (deprecated)"
+                                    label="Unpublished"
                                     selected={formValues?.object_status === 'deprecated'}
                                 />
                             </RadioGroup>
