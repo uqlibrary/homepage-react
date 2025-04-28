@@ -12,7 +12,7 @@ describe('Digital Learning Hub', () => {
 
             cy.waitUntil(() =>
                 cy
-                    .get('[data-testid="dlor-homepage-list"] div:nth-child(2) article h2')
+                    .get('[data-testid="dlor-homepage-list"] div:nth-child(4) article h2')
                     .should('exist')
                     .should('be.visible')
                     .should('contain', 'Accessibility - Digital Essentials'),
@@ -62,15 +62,15 @@ describe('Digital Learning Hub', () => {
                 .contains('Use the Digital Learning Hub to find modules, videos and guides for teaching and study.');
 
             // sorts properly
-            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(2) article h2').should(
+            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(4) article h2').should(
                 'contain',
                 'Accessibility - Digital Essentials',
             );
-            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(4) article h2').should(
+            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(1) article h2').should(
                 'contain',
                 'UQ has a Blak History',
             );
-            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(5) article h2').should(
+            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(6) article h2').should(
                 'contain',
                 'Artificial Intelligence',
             );

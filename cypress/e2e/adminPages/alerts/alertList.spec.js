@@ -257,6 +257,7 @@ describe('Alert Admin List page', () => {
     });
     it('the footer paginator navigates between pages', () => {
         cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1–5 of 78');
+        cy.wait(1000);
         cy.get('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(3)')
             .should('exist')
             .click();

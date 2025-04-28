@@ -165,7 +165,6 @@ export const DlorForm = ({
 
         return facetType?.facet_list?.map(facet => facet.facet_id) || /* istanbul ignore next */ [];
     }
-
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
@@ -445,6 +444,8 @@ export const DlorForm = ({
         let theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
 
+        console.log('The new value', theNewValue);
+
         if (['object_is_featured', 'object_cultural_advice'].includes(prop)) {
             theNewValue = !!e.target.checked ? 1 : 0;
         }
@@ -475,6 +476,8 @@ export const DlorForm = ({
 
         // amalgamate new value into data set
         const newValues = { ...formValues, [prop]: theNewValue };
+
+        console.log('The new values are', newValues);
 
         setFormValues(newValues);
     };
@@ -704,7 +707,7 @@ export const DlorForm = ({
                 object_publishing_user: formDefaults.object_publishing_user,
             }));
         }
-    }, [formDefaults?.object_publishing_user]);
+    }, [formDefaults.object_publishing_user]);
 
     const suggestSummary = (enteredDescription, requiredLength = 150) => {
         const plainSummary = html2text.fromString(enteredDescription);
@@ -852,7 +855,7 @@ export const DlorForm = ({
                     )}
                 </FormControl>
             </Grid>
-            {!!isDlorAdminUser(account) && (
+            {(!!isDlorAdminUser(account) || (mode === 'edit' && formValues?.object_status !== 'submitted')) && (
                 <>
                     <Grid item xs={12}>
                         <FormControl variant="standard" fullWidth>
@@ -876,6 +879,12 @@ export const DlorForm = ({
                                     control={<Radio />}
                                     label="Draft"
                                     selected={formValues?.object_status === 'new'}
+                                />
+                                <FormControlLabel
+                                    value="deprecated"
+                                    control={<Radio />}
+                                    label="Unpublished"
+                                    selected={formValues?.object_status === 'deprecated'}
                                 />
                             </RadioGroup>
                         </FormControl>
@@ -1564,27 +1573,34 @@ export const DlorForm = ({
             confirmationTitle: confirmationTitle,
             confirmationMessage: '',
             cancelButtonLabel: mode === 'add' ? 'Add another Object' : 'Re-edit Object',
-            confirmButtonLabel: 'Return to list page',
+            confirmButtonLabel: mode === 'add' ? 'Return to list page' : 'View Object',
         },
         errorMessage: {
             confirmationTitle: dlorSavedItemError,
             confirmationMessage: '',
             cancelButtonLabel: mode === 'add' ? 'Add another Object' : 'Re-edit Object',
-            confirmButtonLabel: 'Return to list page',
+            confirmButtonLabel: mode === 'add' ? 'Return to list page' : 'View Object',
         },
     };
 
-    const navigateToDlorAdminHomePage = () => {
+    const navigateToObject = uuid => {
         setConfirmationOpen(false);
         actions.clearADlor();
-        window.location.href = dlorAdminLink();
+        window.location.href = getDlorViewPageUrl(uuid);
         scrollToTopOfPage();
     };
 
-    const navigateToPrimaryPage = () => {
+    // const navigateToDlorAdminHomePage = () => {
+    //     setConfirmationOpen(false);
+    //     actions.clearADlor();
+    //     window.location.href = dlorAdminLink();
+    //     scrollToTopOfPage();
+    // };
+
+    const navigateToListPage = isAdmin => {
         setConfirmationOpen(false);
         actions.clearADlor();
-        window.location.href = '/digital-learning-hub';
+        window.location.href = isAdmin ? dlorAdminLink() : '/digital-learning-hub';
         scrollToTopOfPage();
     };
 
@@ -1652,7 +1668,12 @@ export const DlorForm = ({
                 actionButtonColor="primary"
                 actionButtonVariant="contained"
                 confirmationBoxId="dlor-save-outcome"
-                onAction={() => (isDlorAdminUser(account) ? navigateToDlorAdminHomePage() : navigateToPrimaryPage())}
+                // onAction={() => (isDlorAdminUser(account) ? navigateToDlorAdminHomePage() : navigateToPrimaryPage())}
+                onAction={() =>
+                    mode === 'edit'
+                        ? navigateToObject(dlorItem?.object_public_uuid)
+                        : navigateToListPage(isDlorAdminUser(account))
+                }
                 hideCancelButton={!locale.successMessage.cancelButtonLabel}
                 cancelButtonLabel={locale.successMessage.cancelButtonLabel}
                 onCancelAction={() => clearForm()}

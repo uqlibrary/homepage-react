@@ -32,6 +32,7 @@ import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import CallMadeOutlinedIcon from '@mui/icons-material/CallMadeOutlined';
+import StarIcon from '@mui/icons-material/Star';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -276,6 +277,9 @@ export const DLOList = ({
     dlorFilterListLoading,
     dlorFilterListError,
     account,
+    dlorFavouritesList,
+    dlorFavouritesLoading,
+    dlorFavouritesError,
 }) => {
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [selectedGradAttributes, setSelectedGradAttributes] = useState([]);
@@ -303,7 +307,6 @@ export const DLOList = ({
             setSelectedGradAttributes(filteredGraduateAttributes);
         }
     };
-
     /* istanbul ignore next */
     function skipToElement() {
         const skipNavLander = document.querySelector('#first-panel-button');
@@ -320,6 +323,10 @@ export const DLOList = ({
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dlor.title);
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dlor.pathname);
     }, []);
+
+    useEffect(() => {
+        actions.loadDlorFavourites();
+    }, [actions]);
 
     useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
@@ -934,15 +941,24 @@ export const DLOList = ({
     const numberItemsPerPage = 10;
 
     function filterDlorList() {
+        // First sort by featured status
         const sortedList = dlorList.sort((a, b) => b.object_is_featured - a.object_is_featured);
 
-        if (
-            (!selectedFilters || selectedFilters.length === 0) &&
-            (!keywordSearch || !keywordIsSearchable(keywordSearch))
-        ) {
-            return sortedList;
+        // Helper function to check if an item is favorited
+        function isFavorited(item) {
+            return dlorFavouritesList?.some(fav => fav.object_public_uuid === item.object_public_uuid);
         }
 
+        // Helper function to sort array putting favorites first
+        function sortByFavorites(items) {
+            return items.sort((a, b) => {
+                const aFav = isFavorited(a);
+                const bFav = isFavorited(b);
+                if (aFav && !bFav) return -1;
+                if (!aFav && bFav) return 1;
+                return 0;
+            });
+        }
         function parseSelectedFilters(selectedFilters) {
             return selectedFilters?.reduce((acc, filter) => {
                 const [facetTypeSlug, facetId] = filter?.split('-');
@@ -966,10 +982,19 @@ export const DLOList = ({
             );
         }
 
+        if (
+            (!selectedFilters || selectedFilters.length === 0) &&
+            (!keywordSearch || !keywordIsSearchable(keywordSearch))
+        ) {
+            // Even with no filters, we want to prioritize favorites
+            return sortByFavorites(sortedList);
+        }
+
         // Group selectedFilters by facetTypeSlug
         const groupedFilters = parseSelectedFilters(selectedFilters);
 
-        return sortedList?.filter(d => {
+        // Filter the list then sort by favorites
+        const filteredList = sortedList?.filter(d => {
             const passesCheckboxFilter = filterDlor(d, groupedFilters);
             const passesKeyWordFilter =
                 !keywordSearch || // keyword not supplied - don't block
@@ -977,10 +1002,15 @@ export const DLOList = ({
                 !!keywordFoundIn(d, keywordSearch); // DO block the Object by keyword
             return passesCheckboxFilter && passesKeyWordFilter;
         });
+
+        // Return the filtered list with favorites first
+        return sortByFavorites(filteredList);
     }
 
     const paginateDlorList = pageloadShown => {
         const filteredDlorList = filterDlorList();
+
+        console.log('filteredDlorList', filteredDlorList);
 
         const paginatedFilteredDlorList = filteredDlorList?.filter((_, index) => {
             const startIndex = (pageloadShown - 1) * numberItemsPerPage;
@@ -1035,7 +1065,10 @@ export const DLOList = ({
                             <>
                                 {(!!object?.object_cultural_advice ||
                                     !!object?.object_is_featured ||
-                                    !!object?.object_series_name) && (
+                                    !!object?.object_series_name ||
+                                    !!dlorFavouritesList?.some(
+                                        fav => fav.object_public_uuid === object?.object_public_uuid,
+                                    )) && (
                                     <Typography
                                         component={'p'}
                                         id={`dlor-description-${object?.object_public_uuid}`}
@@ -1047,6 +1080,27 @@ export const DLOList = ({
                                             marginBottom: '6px',
                                         }}
                                     >
+                                        {!!dlorFavouritesList?.some(
+                                            fav => fav.object_public_uuid === object?.object_public_uuid,
+                                        ) && (
+                                            <>
+                                                <StarIcon
+                                                    sx={{
+                                                        fill: '#FFD700',
+                                                        marginRight: '2px',
+                                                        width: '20px',
+                                                    }}
+                                                />
+                                                <StyledTagLabel
+                                                    data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                        object?.object_public_uuid,
+                                                    )}-favourite`}
+                                                    sx={{ marginLeft: '-2px' }}
+                                                >
+                                                    Favourite
+                                                </StyledTagLabel>
+                                            </>
+                                        )}
                                         {!!object?.object_is_featured && (
                                             <>
                                                 <BookmarkIcon
@@ -1430,6 +1484,9 @@ DLOList.propTypes = {
     dlorFilterList: PropTypes.array,
     dlorFilterListLoading: PropTypes.bool,
     dlorFilterListError: PropTypes.any,
+    dlorFavouritesList: PropTypes.array,
+    dlorFavouritesLoading: PropTypes.bool,
+    dlorFavouritesError: PropTypes.any,
     account: PropTypes.object,
 };
 
