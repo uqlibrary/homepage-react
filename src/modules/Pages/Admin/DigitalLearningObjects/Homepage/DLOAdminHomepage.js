@@ -38,6 +38,7 @@ import {
     dlorAdminLink,
     exportDemographicsToCSV,
     exportDLORDataToCSV,
+    fetchAndExportFavouritesToCSV,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { breadcrumbs } from 'config/routes';
 
@@ -114,7 +115,7 @@ export const DLOAdminHomepage = ({
         },
     ];
     const [checkedStatusType, setCheckedStatusType] = useState(statusTypes.map(status => status.isChecked));
-
+    const [isExportingFavourites, setIsExportingFavourites] = useState(false);
     const [objectToDelete, setObjectToDelete] = useState(null);
 
     const [paginationPage, setPaginationPage] = useState(1);
@@ -414,6 +415,23 @@ export const DLOAdminHomepage = ({
                             data-testid="admin-dlor-export-demographicsdata-button"
                         >
                             Export Demographics Data to CSV
+                        </MenuItem>
+                        <MenuItem
+                            onClick={async () => {
+                                try {
+                                    setIsExportingFavourites(true);
+                                    await fetchAndExportFavouritesToCSV('dlor_favourites.csv');
+                                } catch (error) {
+                                    console.error('Failed to export favourites:', error);
+                                } finally {
+                                    setIsExportingFavourites(false);
+                                    handleMenuClose();
+                                }
+                            }}
+                            disabled={isExportingFavourites}
+                            data-testid="admin-dlor-export-favourites-button"
+                        >
+                            {isExportingFavourites ? 'Exporting...' : 'Export Favourites Data to CSV'}
                         </MenuItem>
                         <Divider />
                         <MenuItem
