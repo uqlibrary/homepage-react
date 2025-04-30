@@ -1,4 +1,6 @@
 import { getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { DLOR_FAVOURITES_REPORT_API } from 'repositories/routes';
+import { get } from 'repositories/generic';
 const moment = require('moment');
 export function splitStringToArrayOnComma(keywordString) {
     let splitStringToArrayOnComma = '';
@@ -118,6 +120,60 @@ export const exportDemographicsToCSV = (data, filename) => {
     URL.revokeObjectURL(url);
 };
 
+const exportFavouritesToCSV = (data, filename) => {
+    /* istanbul ignore next */
+    if (!data || data.length === 0) {
+        console.error('No favourites data to export.');
+        return;
+    }
+
+    const headerNameMap = {
+        public_uuid: 'Object ID',
+        username: 'User Name',
+        title: 'Object Title',
+        description: 'Object Description',
+    };
+
+    const headers = Object.keys(data[0]);
+    const csvRows = [];
+
+    // Add headers
+    csvRows.push(headers.map(header => headerNameMap[header]).join(','));
+
+    // Add data rows
+    data.forEach(item => {
+        const values = headers.map(header => {
+            const value = item[header] || '';
+            return escapeCSVField(value);
+        });
+        csvRows.push(values.join(','));
+    });
+
+    const csvString = csvRows.join('\r\n');
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.setAttribute('data-testid', 'download-demographics-link');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+};
+
+export const fetchAndExportFavouritesToCSV = async filename => {
+    try {
+        const { data } = await get(DLOR_FAVOURITES_REPORT_API());
+        const favouritesData = data.data || data;
+        exportFavouritesToCSV(favouritesData, filename);
+    } catch (error) {
+        console.error('Error exporting favourites:', error);
+        throw error;
+    }
+};
+
 export const exportDLORDataToCSV = (data, filename) => {
     /* istanbul ignore next */
     if (!data || data.length === 0) {
@@ -140,7 +196,6 @@ export const exportDLORDataToCSV = (data, filename) => {
         object_keywords: 'Keywords',
         object_link_interaction_type: 'Interaction Type',
         graduate_attributes: 'Graduate Attributes',
-        // ... add all other mappings here
     };
 
     const headers = Object.keys(data[0]).filter(key => key !== 'object_filters');

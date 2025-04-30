@@ -60,6 +60,7 @@ import dlor_series_all from './data/records/dlor/dlor_series_all';
 import dlor_series_view from './data/records/dlor/dlor_series_view';
 import dlor_series_view_nodescription from './data/records/dlor/dlor_series_view_nodescription';
 import { dlor_demographics_report } from './data/dlorDemographics';
+import { dlor_favourites_report } from './data/dlorFavourites';
 import { drupalArticles } from './data/drupalArticles';
 import {
     journalSearchFavourites,
@@ -778,6 +779,10 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .onGet(routes.DLOR_DEMOGRAPHICS_REPORT_API().apiUrl)
     .reply(() => {
         return [200, { data: dlor_demographics_report }];
+    })
+    .onGet(routes.DLOR_FAVOURITES_REPORT_API().apiUrl)
+    .reply(() => {
+        return [200, { data: dlor_favourites_report }];
     })
     ;
     
