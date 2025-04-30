@@ -782,10 +782,12 @@ mock.onGet(/dlor\/public\/find\/.*/)
     })
     .onGet(routes.DLOR_FAVOURITES_REPORT_API().apiUrl)
     .reply(() => {
-        return [200, { data: dlor_favourites_report }];
+        if (responseType === 'loadError') {
+            return [500, {}];
+        } else {
+            return [200, { data: dlor_favourites_report }];
+        }
     })
-    ;
-    
 
 
 mock.onGet('exams/course/FREN1010/summary')

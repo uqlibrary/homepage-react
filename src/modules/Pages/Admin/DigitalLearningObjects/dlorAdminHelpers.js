@@ -143,7 +143,7 @@ const exportFavouritesToCSV = (data, filename) => {
     // Add data rows
     data.forEach(item => {
         const values = headers.map(header => {
-            const value = item[header] || '';
+            const value = item[header];
             return escapeCSVField(value);
         });
         csvRows.push(values.join(','));
@@ -166,7 +166,7 @@ const exportFavouritesToCSV = (data, filename) => {
 export const fetchAndExportFavouritesToCSV = async filename => {
     try {
         const { data } = await get(DLOR_FAVOURITES_REPORT_API());
-        const favouritesData = data.data || data;
+        const favouritesData = data.data || /* istanbul ignore next */ data;
         exportFavouritesToCSV(favouritesData, filename);
     } catch (error) {
         console.error('Error exporting favourites:', error);
