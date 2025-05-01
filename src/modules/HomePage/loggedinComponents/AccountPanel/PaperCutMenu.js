@@ -267,7 +267,7 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
                 aria-haspopup="true"
                 aria-expanded={menuAnchorElement !== null ? 'true' : 'false'}
                 aria-controls="papercut-menu"
-                aria-label="Show/hide Locations and hours panel"
+                aria-label="Show/hide menu for printing topup choices"
             >
                 {dsDiscountDollarDashIcon}{' '}
                 <span data-testid="papercut-print-balance" data-analyticsid="papercut-accordion-label">

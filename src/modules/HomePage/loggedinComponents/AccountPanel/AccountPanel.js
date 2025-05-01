@@ -297,7 +297,7 @@ export const AccountPanel = ({
                 <StyledAlertDiv data-testid={'show-fines'}>
                     <UserAttention titleText={'Fines and charges'}>
                         <Link
-                            to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US"
+                            to="https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=fines&lang=en_US"
                             id="fines-and-charges-link"
                             data-analyticsid={'pp-fines-tooltip'}
                         >
