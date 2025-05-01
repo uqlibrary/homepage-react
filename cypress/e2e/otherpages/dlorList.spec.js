@@ -1119,4 +1119,17 @@ describe('Digital Learning Hub', () => {
                 .should('not.be.visible');
         });
     });
+    context('authenticated page', () => {
+        it('can handle non authenticated request to forced auth page', () => {
+            cy.visit('digital-learning-hub-list?user=public');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="StandardPage-title"]').should('contain', 'Authentication required');
+        });
+        it('can handle authenticated request to forced auth page', () => {
+            cy.visit('digital-learning-hub-list');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('h1').should('exist'));
+            cy.get('h1').should('contain', 'Find a digital learning object');
+        });
+    });
 });
