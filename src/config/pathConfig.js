@@ -33,6 +33,7 @@ export const pathConfig = {
         testntagmanageusers: '/admin/testntag/manage/users',
     },
     bookExamBooth: '/book-exam-booth',
+    dlorProtected: '/digital-learning-hub-list',
     dlorHome: '/digital-learning-hub',
     dlorView: dlorId => `/digital-learning-hub/view/${dlorId}`,
     dlorViewSeries: seriesId => `/digital-learning-hub/series/${seriesId}`,
