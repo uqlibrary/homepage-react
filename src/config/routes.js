@@ -258,6 +258,11 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: true,
             pageTitle: 'Digital Learning Object Repository',
         },
+        {
+            path: pathConfig.dlorViewSecure(dlorId),
+            element: <components.DLOView />,
+            pageTitle: 'Digital Learning Object Repository - View Object',
+        },
     ];
 
     const testntagDisplay = [
