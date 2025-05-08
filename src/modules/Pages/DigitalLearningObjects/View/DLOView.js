@@ -1211,7 +1211,7 @@ export const DLOView = ({
                                         }}
                                         data-testid="detailpage-last-updated"
                                     >
-                                        <strong>Last updated:</strong> {formatDate(dlorItem?.object_review_date_next)}
+                                        <strong>Last reviewed:</strong> {formatDate(dlorItem?.object_review_date_next)}
                                     </Typography>
                                     <Typography
                                         component={'p'}
