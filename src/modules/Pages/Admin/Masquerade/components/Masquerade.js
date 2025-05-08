@@ -24,6 +24,8 @@ const Masquerade = ({ account }) => {
 
         setLoading(true);
 
+        sessionStorage.removeItem('userAccount');
+
         let redirectUrl = `${window.location.protocol}//${window.location.hostname}`;
         const isDevBranch = window.location.hostname === 'homepage-development.library.uq.edu.au';
         redirectUrl += isDevBranch ? /* istanbul ignore next */ window.location.pathname : '/';
