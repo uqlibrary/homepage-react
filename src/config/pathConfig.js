@@ -36,6 +36,7 @@ export const pathConfig = {
     dlorProtected: '/digital-learning-hub-list',
     dlorHome: '/digital-learning-hub',
     dlorView: dlorId => `/digital-learning-hub/view/${dlorId}`,
+    dlorViewSecure: dlorId => `/digital-learning-hub/view-secure/${dlorId}`,
     dlorViewSeries: seriesId => `/digital-learning-hub/series/${seriesId}`,
     dlorSubscriptionConfirmation: confirmationId => `/digital-learning-hub/confirm/subscribe/${confirmationId}`,
     dlorUnsubscribe: confirmationId => `/digital-learning-hub/confirm/unsubscribe/${confirmationId}`,

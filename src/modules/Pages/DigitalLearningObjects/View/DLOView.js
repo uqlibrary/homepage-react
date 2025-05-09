@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link, useParams } from 'react-router-dom';
 import parse from 'html-react-parser';
 import { useCookies } from 'react-cookie';
+import { pathConfig } from 'config/pathConfig';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -277,6 +278,24 @@ export const DLOView = ({
     };
 
     const [formValues, setFormValues] = React.useState(defaultFormValues);
+
+    const formatDate = dateString => {
+        /* istanbul ignore next */ if (!dateString) return '';
+
+        const date = new Date(dateString);
+        const options = {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+        };
+
+        return date
+            .toLocaleString('en-AU', options)
+            .replace(',', '') // Remove comma after day
+            .replace(/\s+/g, ' ') // Normalize spaces
+            .replace(/(\d{4})/, ', $1') // Add comma before year
+            .replace(/\s,/, ','); // Remove space before comma
+    };
 
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -932,7 +951,6 @@ export const DLOView = ({
                                     words, terms, and descriptions.
                                 </Box>
                             )}
-
                             <StyledHeaderDiv data-testid="dlor-detailpage-description">
                                 <Grid container spacing={1}>
                                     <Grid item xs={12} sm={8}>
@@ -1020,7 +1038,6 @@ export const DLOView = ({
                                     </Grid>
                                 </Grid>
                             </StyledHeaderDiv>
-
                             {/* until we can implement a captcha, we can only take input from loggedin users :( */}
                             {/* {dlorItem?.object_link_url?.startsWith('http') && !account?.id && (
                                 <StyledUQActionButton class="marginBlock" data-testid="detailpage-getit-button">
@@ -1111,7 +1128,6 @@ export const DLOView = ({
                                     </form>
                                 </StyledDemographicsBox>
                             )} */}
-
                             {isPreviewableUrl(dlorItem.object_link_url) !== false && (
                                 <div data-testid="detailpage-preview">
                                     <StyledTitleTypography component={'h2'} variant={'h6'}>
@@ -1181,6 +1197,44 @@ export const DLOView = ({
                                                 );
                                             })}
                                     </StyledSeriesList>
+                                </StyledLayoutBox>
+                            )}
+                            {!!isLoggedIn && (
+                                <StyledLayoutBox>
+                                    <Typography
+                                        component={'p'}
+                                        sx={{
+                                            marginTop: '0px',
+                                            marginBottom: '0px',
+                                            fontSize: '0.9rem',
+                                            color: '#666',
+                                        }}
+                                        data-testid="detailpage-last-updated"
+                                    >
+                                        <strong>Last reviewed:</strong> {formatDate(dlorItem?.object_review_date_next)}
+                                    </Typography>
+                                    <Typography
+                                        component={'p'}
+                                        sx={{
+                                            marginTop: '0px',
+                                            marginBottom: '0px',
+                                            fontSize: '0.9rem',
+                                            color: '#666',
+                                        }}
+                                        data-testid="detailpage-authenticated-link"
+                                    >
+                                        <strong>Secure URL: </strong>
+                                        <a
+                                            href={pathConfig.dlorViewSecure(dlorItem.object_public_uuid)}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            data-testid="detailpage-authenticated-link-url"
+                                        >
+                                            {`${window.location.origin}${pathConfig.dlorViewSecure(
+                                                dlorItem.object_public_uuid,
+                                            )}`}
+                                        </a>
+                                    </Typography>
                                 </StyledLayoutBox>
                             )}
                         </Grid>
