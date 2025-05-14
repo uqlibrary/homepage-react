@@ -1199,44 +1199,72 @@ export const DLOView = ({
                                     </StyledSeriesList>
                                 </StyledLayoutBox>
                             )}
-                            {!!isLoggedIn && (
-                                <StyledLayoutBox>
-                                    <Typography
-                                        component={'p'}
-                                        sx={{
-                                            marginTop: '0px',
-                                            marginBottom: '0px',
-                                            fontSize: '0.9rem',
-                                            color: '#666',
-                                        }}
-                                        data-testid="detailpage-last-updated"
-                                    >
-                                        <strong>Last reviewed:</strong> {formatDate(dlorItem?.object_review_date_next)}
-                                    </Typography>
-                                    <Typography
-                                        component={'p'}
-                                        sx={{
-                                            marginTop: '0px',
-                                            marginBottom: '0px',
-                                            fontSize: '0.9rem',
-                                            color: '#666',
-                                        }}
-                                        data-testid="detailpage-authenticated-link"
-                                    >
-                                        <strong>Secure URL: </strong>
-                                        <a
-                                            href={pathConfig.dlorViewSecure(dlorItem.object_public_uuid)}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            data-testid="detailpage-authenticated-link-url"
+                            <StyledLayoutBox>
+                                {!!isLoggedIn && (
+                                    <>
+                                        <Typography
+                                            component={'p'}
+                                            sx={{
+                                                marginTop: '0px',
+                                                marginBottom: '0px',
+                                                fontSize: '0.9rem',
+                                                color: '#666',
+                                            }}
+                                            data-testid="detailpage-last-updated"
                                         >
-                                            {`${window.location.origin}${pathConfig.dlorViewSecure(
-                                                dlorItem.object_public_uuid,
-                                            )}`}
-                                        </a>
-                                    </Typography>
-                                </StyledLayoutBox>
-                            )}
+                                            <strong>Last reviewed:</strong>{' '}
+                                            {formatDate(dlorItem?.object_review_date_next)}
+                                        </Typography>
+                                        <Typography
+                                            component={'p'}
+                                            sx={{
+                                                marginTop: '0px',
+                                                marginBottom: '0px',
+                                                fontSize: '0.9rem',
+                                                color: '#666',
+                                            }}
+                                            data-testid="detailpage-authenticated-link"
+                                        >
+                                            <strong>Secure URL: </strong>
+                                            <a
+                                                href={pathConfig.dlorViewSecure(dlorItem.object_public_uuid)}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                data-testid="detailpage-authenticated-link-url"
+                                            >
+                                                {`${window.location.origin}${pathConfig.dlorViewSecure(
+                                                    dlorItem.object_public_uuid,
+                                                )}`}
+                                            </a>
+                                        </Typography>
+                                    </>
+                                )}
+                                <Typography
+                                    component={'p'}
+                                    sx={{
+                                        marginTop: '0px',
+                                        marginBottom: '0px',
+                                        fontSize: '0.9rem',
+                                        color: '#666',
+                                    }}
+                                    data-testid="detailpage-visibility"
+                                >
+                                    <strong>Visibility: </strong>
+                                    {(() => {
+                                        switch (dlorItem?.object_restrict_to) {
+                                            case 'uquser':
+                                                return 'This object is available to UQ staff and students.';
+                                            case 'uqstaff':
+                                                return 'This object is available to UQ staff members only.';
+                                            case 'uqlibrarystaff':
+                                                return 'This object is available to UQ Library staff members only.';
+                                            case 'none':
+                                            default:
+                                                return 'Anyone can access this object.';
+                                        }
+                                    })()}
+                                </Typography>
+                            </StyledLayoutBox>
                         </Grid>
                         <Grid item xs={12} md={3} data-testid="detailpage-metadata">
                             {dlorItem?.object_filters?.length > 0 && (

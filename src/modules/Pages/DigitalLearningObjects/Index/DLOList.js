@@ -46,7 +46,7 @@ import {
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { isEscapeKeyPressed, isReturnKeyPressed } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
-import { isDlorAdminUser } from 'helpers/access';
+import { isDlorAdminUser, isLibraryStaff, isUQOnlyUser, isStaff } from 'helpers/access';
 
 const StyledSkipLinkButton = styled(Button)(({ theme }) => ({
     // hidden when not focused
@@ -281,6 +281,7 @@ export const DLOList = ({
     dlorFavouritesLoading,
     dlorFavouritesError,
 }) => {
+    // console.log('permissions', isLibraryStaff(account), isStaff(account), isUQOnlyUser(account));
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [selectedGradAttributes, setSelectedGradAttributes] = useState([]);
     const [filterListTrimmed, setFilterListTrimmed] = useState([]);
@@ -942,7 +943,23 @@ export const DLOList = ({
 
     function filterDlorList() {
         // First sort by featured status
-        const sortedList = dlorList.sort((a, b) => b.object_is_featured - a.object_is_featured);
+        const sortedList = dlorList
+            // First filter by permissions
+            .filter(d => {
+                switch (d.object_restrict_to) {
+                    case 'uqlibrarystaff':
+                        return isLibraryStaff(account);
+                    case 'uqstaff':
+                        return isStaff(account);
+                    case 'uquser':
+                        return isUQOnlyUser(account);
+                    case 'none':
+                    default:
+                        return true; // No restriction
+                }
+            })
+            // Then sort by featured status
+            .sort((a, b) => b.object_is_featured - a.object_is_featured);
 
         // Helper function to check if an item is favorited
         function isFavorited(item) {
@@ -994,6 +1011,15 @@ export const DLOList = ({
         const groupedFilters = parseSelectedFilters(selectedFilters);
 
         // Filter the list then sort by favorites
+        // const filteredList = sortedList?.filter(d => {
+        //     const passesCheckboxFilter = filterDlor(d, groupedFilters);
+        //     const passesKeyWordFilter =
+        //         !keywordSearch || // keyword not supplied - don't block
+        //         !keywordIsSearchable(keywordSearch) || // keyword too short to be useful - don't block
+        //         !!keywordFoundIn(d, keywordSearch); // DO block the Object by keyword
+        //     return passesCheckboxFilter && passesKeyWordFilter;
+        // });
+
         const filteredList = sortedList?.filter(d => {
             const passesCheckboxFilter = filterDlor(d, groupedFilters);
             const passesKeyWordFilter =
@@ -1009,8 +1035,6 @@ export const DLOList = ({
 
     const paginateDlorList = pageloadShown => {
         const filteredDlorList = filterDlorList();
-
-        console.log('filteredDlorList', filteredDlorList);
 
         const paginatedFilteredDlorList = filteredDlorList?.filter((_, index) => {
             const startIndex = (pageloadShown - 1) * numberItemsPerPage;

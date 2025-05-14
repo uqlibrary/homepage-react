@@ -1246,6 +1246,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     object_publishing_user: 'uqldegro',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'current',
+                    object_restrict_to: 'none',
                     object_owning_team_id: 1,
                     facets: [
                         3, // Topic : Digital skills

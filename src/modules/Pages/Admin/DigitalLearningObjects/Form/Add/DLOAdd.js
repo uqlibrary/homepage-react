@@ -56,6 +56,7 @@ export const DLOAdd = ({
         object_publishing_user: account?.id,
         object_status: isDlorAdminUser(account) ? 'new' : 'submitted',
         object_review_date_next: getToday(), // This will be changing to review_date_last.
+        object_restrict_to: 'none',
         // team_name_add: '',
         // team_manager_add: '',
         // team_email_add: '',
