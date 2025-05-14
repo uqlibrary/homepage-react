@@ -692,6 +692,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
+                    object_restrict_to: 'none',
                     object_owning_team_id: 3,
                     object_keywords: ['cat', 'dog'],
                     facets: [
@@ -906,6 +907,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
+                    object_restrict_to: 'none',
                     team_email: 'john@example.com',
                     team_manager: 'john Manager',
                     team_name: 'new team name',
@@ -1108,6 +1110,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
+                    object_restrict_to: 'none',
                     object_owning_team_id: 2,
                     facets: [
                         3, // digital_skills
@@ -1297,6 +1300,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
+                    object_restrict_to: 'none',
                     object_summary: 'x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'),
                     object_title: 'x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'),
                     object_keywords: ['cat', 'dog'],
@@ -1451,6 +1455,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
+                    object_restrict_to: 'none',
                     object_summary: 'x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'),
                     object_title: 'x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'),
                     object_keywords: ['cat', 'dog'],

@@ -903,6 +903,33 @@ export const DlorForm = ({
                     </Grid>
                 </>
             )}
+            <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                    <FormLabel id="object-restriction-label">Object Restriction</FormLabel>
+                    <Select
+                        labelId="object-restriction-label"
+                        id="object_restrict_to"
+                        data-testid="object-restrict-to"
+                        value={formValues?.object_restrict_to || 'none'}
+                        onChange={handleChange('object_restrict_to')}
+                        aria-labelledby="object-restriction-label"
+                        sx={{ width: '100%' }}
+                    >
+                        <MenuItem value="none" data-testid="object-restrict-to-none">
+                            None
+                        </MenuItem>
+                        <MenuItem value="uquser" data-testid="object-restrict-to-uquser">
+                            UQ Only
+                        </MenuItem>
+                        <MenuItem value="uqstaff" data-testid="object-restrict-to-uqstaff">
+                            UQ Staff Only
+                        </MenuItem>
+                        <MenuItem value="uqlibrarystaff" data-testid="object-restrict-to-uqlibrarystaff">
+                            UQ Library Staff Only
+                        </MenuItem>
+                    </Select>
+                </FormControl>
+            </Grid>
             <Grid item xs={12}>
                 <FormLabel>Cultural advice?</FormLabel>
                 <InputLabel>

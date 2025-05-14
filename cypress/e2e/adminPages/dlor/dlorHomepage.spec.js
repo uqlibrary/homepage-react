@@ -346,7 +346,7 @@ describe('Digital Learning Hub admin homepage', () => {
         });
         it('can filter objects', () => {
             const numDraft = 1;
-            const numPublished = 23;
+            const numPublished = 26;
             const numRejected = 16;
             const numDeprecated = 1;
             const numDeleted = 1;
@@ -635,6 +635,54 @@ describe('Digital Learning Hub admin homepage', () => {
                 .click();
             cy.get('[data-testid="favorite-star-icon"]').should('be.visible');
             cy.get('.MuiTooltip-tooltip').should('contain', 'Remove from Favourites');
+        });
+    });
+    context('Object Restrictions', () => {
+        it('Restrictions for UQ Staff only', () => {
+            cy.visit('http://localhost:2020/digital-learning-hub/?user=uqsfc');
+
+            cy.get('.MuiPagination-ul > :nth-child(5)')
+                .should('be.visible')
+                .click();
+            cy.contains('Staff Restricted Object').should('not.exist');
+            cy.visit('http://localhost:2020/digital-learning-hub/?user=uqstaff');
+            cy.get('.MuiPagination-ul > :nth-child(5)')
+                .should('be.visible')
+                .click();
+            cy.contains('Staff Restricted Object').should('be.visible');
+        });
+        it('Restrictions for library Staff only', () => {
+            cy.visit('http://localhost:2020/digital-learning-hub/?user=uqsfc');
+
+            cy.get('.MuiPagination-ul > :nth-child(5)')
+                .should('be.visible')
+                .click();
+            cy.contains('Staff (library) Restricted Object').should('not.exist');
+            cy.visit('http://localhost:2020/digital-learning-hub/?user=uqstaff');
+            cy.get('.MuiPagination-ul > :nth-child(5)')
+                .should('be.visible')
+                .click();
+            cy.contains('Staff (library) Restricted Object').should('be.visible');
+        });
+        it('Restrictions for UQ only', () => {
+            cy.visit('http://localhost:2020/digital-learning-hub/?user=vanilla');
+
+            cy.get('.MuiPagination-ul > :nth-child(5)')
+                .should('be.visible')
+                .click();
+            cy.contains('UQ Only Restricted Object').should('be.visible');
+
+            cy.visit('http://localhost:2020/digital-learning-hub/?user=uqstaff');
+            cy.get('.MuiPagination-ul > :nth-child(5)')
+                .should('be.visible')
+                .click();
+            cy.contains('UQ Only Restricted Object').should('be.visible');
+
+            cy.visit('http://localhost:2020/digital-learning-hub/?user=public');
+            cy.get('.MuiPagination-ul > :nth-child(5)')
+                .should('be.visible')
+                .click();
+            cy.contains('UQ Only Restricted Object').should('not.exist');
         });
     });
 });
