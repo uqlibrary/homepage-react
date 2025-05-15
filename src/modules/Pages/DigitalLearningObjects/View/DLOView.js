@@ -676,10 +676,8 @@ export const DLOView = ({
                 return 'You need to be a UQ Library staff member to access this object';
             case 'uqstaff':
                 return 'You need to be a UQ staff member to access this object';
-            case 'uquser':
-                return 'You need to be a UQ staff or student to access this object';
             default:
-                return "You don't have permission to access this object";
+                return 'You need to be a UQ staff or student to access this object';
         }
     };
 
