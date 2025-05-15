@@ -1256,43 +1256,19 @@ export const DLOView = ({
                                 )}
                                 <StyledLayoutBox>
                                     {!!isLoggedIn && (
-                                        <>
-                                            <Typography
-                                                component={'p'}
-                                                sx={{
-                                                    marginTop: '0px',
-                                                    marginBottom: '0px',
-                                                    fontSize: '0.9rem',
-                                                    color: '#666',
-                                                }}
-                                                data-testid="detailpage-last-updated"
-                                            >
-                                                <strong>Last reviewed:</strong>{' '}
-                                                {formatDate(dlorItem?.object_review_date_next)}
-                                            </Typography>
-                                            <Typography
-                                                component={'p'}
-                                                sx={{
-                                                    marginTop: '0px',
-                                                    marginBottom: '0px',
-                                                    fontSize: '0.9rem',
-                                                    color: '#666',
-                                                }}
-                                                data-testid="detailpage-authenticated-link"
-                                            >
-                                                <strong>Secure URL: </strong>
-                                                <a
-                                                    href={pathConfig.dlorViewSecure(dlorItem.object_public_uuid)}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    data-testid="detailpage-authenticated-link-url"
-                                                >
-                                                    {`${window.location.origin}${pathConfig.dlorViewSecure(
-                                                        dlorItem.object_public_uuid,
-                                                    )}`}
-                                                </a>
-                                            </Typography>
-                                        </>
+                                        <Typography
+                                            component={'p'}
+                                            sx={{
+                                                marginTop: '0px',
+                                                marginBottom: '0px',
+                                                fontSize: '0.9rem',
+                                                color: '#666',
+                                            }}
+                                            data-testid="detailpage-last-updated"
+                                        >
+                                            <strong>Last reviewed:</strong>{' '}
+                                            {formatDate(dlorItem?.object_review_date_next)}
+                                        </Typography>
                                     )}
                                     <Typography
                                         component={'p'}
@@ -1304,7 +1280,7 @@ export const DLOView = ({
                                         }}
                                         data-testid="detailpage-visibility"
                                     >
-                                        <strong>Visibility: </strong>
+                                        <strong>Access: </strong>
                                         {(() => {
                                             switch (dlorItem?.object_restrict_to) {
                                                 case 'uquser':
@@ -1319,6 +1295,30 @@ export const DLOView = ({
                                             }
                                         })()}
                                     </Typography>
+                                    {!!isLoggedIn && (
+                                        <Typography
+                                            component={'p'}
+                                            sx={{
+                                                marginTop: '0px',
+                                                marginBottom: '0px',
+                                                fontSize: '0.9rem',
+                                                color: '#666',
+                                            }}
+                                            data-testid="detailpage-authenticated-link"
+                                        >
+                                            <strong>Secure URL: </strong>
+                                            <a
+                                                href={pathConfig.dlorViewSecure(dlorItem.object_public_uuid)}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                data-testid="detailpage-authenticated-link-url"
+                                            >
+                                                {`${window.location.origin}${pathConfig.dlorViewSecure(
+                                                    dlorItem.object_public_uuid,
+                                                )}`}
+                                            </a>
+                                        </Typography>
+                                    )}
                                 </StyledLayoutBox>
                             </Grid>
                             <Grid item xs={12} md={3} data-testid="detailpage-metadata">

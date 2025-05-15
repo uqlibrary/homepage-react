@@ -919,13 +919,13 @@ export const DlorForm = ({
                             None
                         </MenuItem>
                         <MenuItem value="uquser" data-testid="object-restrict-to-uquser">
-                            UQ Only
+                            UQ staff and students
                         </MenuItem>
                         <MenuItem value="uqstaff" data-testid="object-restrict-to-uqstaff">
-                            UQ Staff Only
+                            UQ staff only
                         </MenuItem>
                         <MenuItem value="uqlibrarystaff" data-testid="object-restrict-to-uqlibrarystaff">
-                            UQ Library Staff Only
+                            UQ Library staff only
                         </MenuItem>
                     </Select>
                 </FormControl>
