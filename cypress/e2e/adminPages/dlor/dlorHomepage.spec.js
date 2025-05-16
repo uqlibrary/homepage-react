@@ -613,7 +613,7 @@ describe('Digital Learning Hub admin homepage', () => {
             );
         });
     });
-    context.only('Favourites', () => {
+    context('Favourites', () => {
         beforeEach(() => {
             // Visit the page where the Export to CSV button is located
             cy.visit('http://localhost:2020/digital-learning-hub/view/9k45_hgr4_876h');
