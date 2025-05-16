@@ -2,14 +2,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from 'data/actions';
 
-import DLOList from './DLOList';
+import DLOEdit from '../../Admin/DigitalLearningObjects/Form/Edit/DLOEdit';
 
 const mapStateToProps = state => {
     return {
         ...state.get('accountReducer'),
-        ...state.get('dlorListReducer'),
         ...state.get('dlorFilterListReducer'),
-        ...state.get('dlorFavouritesReducer'),
+        ...state.get('dlorGetSingleReducer'),
+        ...state.get('dlorTeamListReducer'),
+        ...state.get('dlorUpdateReducer'),
     };
 };
 
@@ -19,6 +20,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-const DLOListContainer = connect(mapStateToProps, mapDispatchToProps)(DLOList);
+const DLOEditContainer = connect(mapStateToProps, mapDispatchToProps)(DLOEdit);
 
-export default DLOListContainer;
+export default DLOEditContainer;

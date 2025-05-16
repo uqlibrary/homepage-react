@@ -299,7 +299,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 .should('exist')
                 .contains('Re-edit Series');
 
-            // choose to return to list page
+            // choose to View Object
             cy.get('[data-testid="confirm-dlor-series-save-outcome"]')
                 .should('exist')
                 .click();
