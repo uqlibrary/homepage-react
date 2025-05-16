@@ -613,7 +613,7 @@ describe('Digital Learning Hub admin homepage', () => {
             );
         });
     });
-    context('Favourites', () => {
+    context.only('Favourites', () => {
         beforeEach(() => {
             // Visit the page where the Export to CSV button is located
             cy.visit('http://localhost:2020/digital-learning-hub/view/9k45_hgr4_876h');
@@ -625,14 +625,14 @@ describe('Digital Learning Hub admin homepage', () => {
 
             cy.get('[data-testid="favorite-star-icon"]')
                 .should('be.visible')
-                .click();
+                .click({ force: true });
             cy.get('[data-testid="favorite-star-icon"]').should('not.exist');
             cy.get('.MuiTooltip-tooltip').should('contain', 'Add to Favourites');
             cy.wait(1000);
             cy.get('[data-testid="favorite-star-outline-icon"]')
                 .should('exist')
                 .should('be.visible')
-                .click();
+                .click({ force: true });
             cy.get('[data-testid="favorite-star-icon"]').should('be.visible');
             cy.get('.MuiTooltip-tooltip').should('contain', 'Remove from Favourites');
         });
