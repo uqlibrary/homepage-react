@@ -282,16 +282,24 @@ export const DLOView = ({
             }),
         })
             .then(response => {
+                console.log('Full response:', response); // Log entire response object
+                console.log('Response headers:', response.headers);
+                console.log('Response status:', response.status);
+
                 if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+                    // Get the error message from CloudFront if available
+                    return response.text().then(errorText => {
+                        console.log('Error response body:', errorText);
+                        throw new Error(`HTTP error! Status: ${response.status}, Body: ${errorText}`);
+                    });
                 }
-                return response.json(); // Or response.text() if the API returns plain text
-            })
-            .then(data => {
-                console.log('API Response:', data); // Log the response data to the console
+                return response.json();
             })
             .catch(error => {
-                console.error('Fetch error:', error); // Log any errors to the console
+                console.error('Detailed fetch error:', {
+                    message: error.message,
+                    stack: error.stack,
+                });
             });
     };
 
