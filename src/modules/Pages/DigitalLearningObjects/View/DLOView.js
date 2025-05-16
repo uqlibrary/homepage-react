@@ -228,7 +228,7 @@ export const DLOView = ({
     const captchaExampleSuccessFunction = /* istanbul ignore next */ wafToken => {
         /* istanbul ignore next */
         console.log('CAPTCHA COMPLETED - WAF TOKEN', wafToken);
-        window.AwsWafIntegration.fetch('https://homepage-staging.library.uq.edu.au/dlor/public/demographics', {
+        window.AwsWafIntegration.fetch('https://api.library.uq.edu.au/staging/dlor/public/demographics', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -302,7 +302,7 @@ export const DLOView = ({
                     if (container) {
                         window.AwsWafCaptcha.renderCaptcha(container, {
                             apiKey:
-                                'ju8dnzZ9MlFyG7HUBKXNhm2K15TY6OFh6j0AlKekdcGzetCBsTeTo0BOeiFV1NZ3nsOenj909pXtXhNiMzAuq+ckt+7oqZoVpXuehF7xTghwbqd7/4t2bNXklXXByZTyRxAxi0q/p0/LM+DPVqcE72LI9zRCuhFjvvrCfO6HLObT2dltCDQtNXtczV7eJrLgqetq/Lg01/UQZAD9UBtvOUbZbLwfHQXXraUTuYEvW/kv/OgI2k4w4yUKw0QMAg2rDpiF/hlmuftz3Vx6pZv+2nPYhyxxRso574M5yFf5Z4uN86+L0KduAYy/P0U/T63EBy6JYWC7ndYcBJciXkwfwCwdPA7aC3PEj39k6UpBHSxojj31GUTJQN/NPyVnuSWTZ8m3PleVtk/QqQO3E2SJiNV10iLjjGFIbnJLIeGVD05ZftAQShcZDPsqrW7et8X/EfTDo1bV+X1RBJwCP6fWpuOQ24WmKD+CGVVYP1wcM6YdtWmMXD4F+H/SkMWpYrO2MDqesyqSGSD8ZxZoeLbd/5GGpe+KWZQftaWmrFF3X5lJlJRzdAu5BcSYNZJnDQ9QNJWd5hLegXNiydkgxvy3H4CRTd6DFnvhAgdfi2hggfqJfhTM/RFwpoEbAO5EIaZ9OXwpmHqGYtBhVs6kbSpKUW7k+q6+qNu536/A/ZA47Ps=_1_1',
+                                'RBZU8IWC5aE9Yu8JJBeFlZYOTjQGvZodLGvr7/Xnmt169UkbVbvqp4G3FKtULv1A3WoYUGuqIGTvfFCJX8MvYILjQOWdMTnj4u+46mmWr9QXEL/iEurBd19fZSIFCrNonkWon74i9G8Q5cnMbQNy59WuYnqWpbzewRygF4+UMhwcI8CmZieiPVNqFAVSvff5J+J8htfTLFn0ED2ehzncXAhE5tDc5XMfNGlyx6e8Mgqs5zulYds1aLZ/ELvvcMyr5aqWY3AWDyArm2+7x4MoCLFFFo+pAtJPUOlUDdbILaso9K7bumpR4VorQ3gsMbxNj9NEaIqYalEJJxS8NaibODAwzQCPoVpaeLzYPOiwOWRtya0RZAdyA6YZ5RQzl7VCmBZ4STULlL5QUCmRczMHd7zD4acaGwQyoyjnU3vlEBisFOgZhydNYHwxSAnzF7jMKcIhGtIWrh3IRotOFBWljlIJUFRanqOPoJgl14mHVXKNIQNabNFCRoGLTxRsLuDmaQzjwq2nDLk5wpBqwedfGzAn14s5D1qyIhG730qkU7UoFx7vUeBkAXGBwgUU3Kgz4PPp+c+DtCHQk8wRzs1VnodIbu/8ZlHoDCfbM0HI8i4mv7JQQAXol6xPwJHXO9Uj6qbicjt1ll6HYv2h4NRBKot8d9QmbFoKM4JPCpM2Pq4=_1_1',
                             onSuccess: captchaExampleSuccessFunction,
                             onError: captchaExampleErrorFunction,
                             // ...other configuration parameters as needed...
