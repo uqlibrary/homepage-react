@@ -33,8 +33,10 @@ export const pathConfig = {
         testntagmanageusers: '/admin/testntag/manage/users',
     },
     bookExamBooth: '/book-exam-booth',
+    dlorProtected: '/digital-learning-hub-list',
     dlorHome: '/digital-learning-hub',
     dlorView: dlorId => `/digital-learning-hub/view/${dlorId}`,
+    dlorViewSecure: dlorId => `/digital-learning-hub/view-secure/${dlorId}`,
     dlorViewSeries: seriesId => `/digital-learning-hub/series/${seriesId}`,
     dlorSubscriptionConfirmation: confirmationId => `/digital-learning-hub/confirm/subscribe/${confirmationId}`,
     dlorUnsubscribe: confirmationId => `/digital-learning-hub/confirm/unsubscribe/${confirmationId}`,
@@ -42,4 +44,5 @@ export const pathConfig = {
     pastExamPaperSearch: '/exams',
     help: 'https://guides.library.uq.edu.au/for-researchers/research-publications-guide',
     dlorSubmit: '/digital-learning-hub/submit',
+    dlorOwnObjectEdit: dlorId => `/digital-learning-hub/edit/${dlorId}`,
 };

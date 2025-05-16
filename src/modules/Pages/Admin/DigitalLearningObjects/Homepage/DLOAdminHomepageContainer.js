@@ -9,6 +9,7 @@ const mapStateToProps = state => {
         ...state.get('accountReducer'),
         ...state.get('dlorListReducer'),
         ...state.get('dlorDeleteReducer'),
+        ...state.get('dlorDemographicsReducer'),
     };
 };
 

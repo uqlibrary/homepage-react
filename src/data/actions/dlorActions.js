@@ -26,7 +26,10 @@ import {
     DLOR_SERIES_LOAD_API,
     DLOR_UPDATE_FACET_API,
     DLOR_DELETE_FACET_API,
-    DLOR_CREATE_FACET_API
+    DLOR_CREATE_FACET_API,
+    DLOR_OWNED_UPDATE_API,
+    DLOR_FAVOURITES_API,
+    DLOR_DEMOGRAPHICS_REPORT_API,
 } from 'repositories/routes';
 
 const checkExpireSession = (dispatch, error) => {
@@ -128,7 +131,7 @@ export function createDlor(request, isDlorAdminUser = true) {
     // used to determine the API endpoint to use. Default is true.
     return async dispatch => {
         dispatch({ type: actions.DLOR_CREATING });
-        console.log("POINT CHECK")
+        console.log('POINT CHECK');
         return post(isDlorAdminUser ? DLOR_CREATE_API() : DLOR_REQUEST_API(), request)
             .then(data => {
                 dispatch({
@@ -148,17 +151,17 @@ export function createDlor(request, isDlorAdminUser = true) {
     };
 }
 
-export function updateDlor(dlorId, request) {
+export function updateDlor(dlorId, request, isDlorAdminUser = true) {
     return dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
-        return put(DLOR_UPDATE_API(dlorId), request)
+        return put(isDlorAdminUser ? DLOR_UPDATE_API(dlorId) : DLOR_OWNED_UPDATE_API(dlorId), request)
             .then(response => {
                 dispatch({
                     type: actions.DLOR_UPDATED,
                     payload: response,
                 });
                 // refresh the list after change
-                dispatch(loadAllDLORs());
+                !!isDlorAdminUser && dispatch(loadAllDLORs());
             })
             .catch(error => {
                 dispatch({
@@ -573,6 +576,90 @@ export function deleteFacet(filterId) {
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function loadDlorFavourites() {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_FAVOURITES_LOADING });
+        return get(DLOR_FAVOURITES_API())
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_FAVOURITES_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_FAVOURITES_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function addFavourite(uuid) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_FAVOURITES_LOADING });
+        return post(DLOR_FAVOURITES_API(), {
+            object_public_uuid: uuid,
+        })
+            .then(response => {
+                const payload = Array.isArray(response.data) ? response.data : [response.data];
+                dispatch({
+                    type: actions.DLOR_FAVOURITES_LOADED,
+                    payload,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_FAVOURITES_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function removeFavourite(uuid) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_FAVOURITES_LOADING });
+        return destroy(DLOR_FAVOURITES_API(), {
+            object_public_uuid: uuid,
+        })
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_FAVOURITES_LOADED,
+                    payload: response.data || [],
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_FAVOURITES_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function loadDlorDemographics() {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_DEMOGRAPHICS_LOADING });
+        return get(DLOR_DEMOGRAPHICS_REPORT_API())
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_DEMOGRAPHICS_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_DEMOGRAPHICS_FAILED,
+                    payload: error.message,
+                });
             });
     };
 }

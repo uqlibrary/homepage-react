@@ -59,6 +59,8 @@ import dlor_file_type_list from './data/records/dlor/dlor_file_type_list';
 import dlor_series_all from './data/records/dlor/dlor_series_all';
 import dlor_series_view from './data/records/dlor/dlor_series_view';
 import dlor_series_view_nodescription from './data/records/dlor/dlor_series_view_nodescription';
+import { dlor_demographics_report } from './data/dlorDemographics';
+import { dlor_favourites_report } from './data/dlorFavourites';
 import { drupalArticles } from './data/drupalArticles';
 import {
     journalSearchFavourites,
@@ -529,9 +531,10 @@ mock.onGet(/dlor\/public\/find\/.*/)
             return getSpecificDlorObject('98j3-fgf95-8j34'); //any old id
         }
     })
-    .onPost('dlor/auth/object')
+    .onPut(/dlor\/auth\/object\/.*/)
     .reply(() => {
         if (responseType === 'saveError') {
+            console.log("SAVE ERROR? WHY?")
             return [500, {}];
         } else {
             // return [200, { data: getSpecificDlorObject('98j3-fgf95-8j34') }]; //any old id
@@ -749,8 +752,54 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .onDelete(/dlor\/admin\/facet\/\d+/)
     .reply(() => {
         return [200, { data: { response: 'ok' } }];
-    });
-    
+    })
+    .onGet('dlor/auth/favourites')
+    .reply(() => {
+        return [200, {data: [
+            {
+                "favourite_id": 3,
+                "object_public_uuid": "9k45_hgr4_876h",
+                "favourite_username": "uqslanca"
+            },
+            {
+            "favourite_id": 2,
+                "object_public_uuid": "kj5t_8yg4_kj4f",
+                "favourite_username": "uqslanca" 
+            }
+        ]}];
+    })
+    .onPost('dlor/auth/favourites')
+    .reply(() => {
+        console.log('POST FAVOURITES');
+        return [200, {data: [
+            {
+                "favourite_id": 3,
+                "object_public_uuid": "9k45_hgr4_876h",
+                "favourite_username": "uqslanca"
+            },
+            {
+            "favourite_id": 2,
+                "object_public_uuid": "kj5t_8yg4_kj4f",
+                "favourite_username": "uqslanca" 
+            }
+        ]}];
+    })
+    .onDelete('dlor/auth/favourites')
+    .reply(() => {
+        return [200, {data: []}];
+    })
+    .onGet(routes.DLOR_DEMOGRAPHICS_REPORT_API().apiUrl)
+    .reply(() => {
+        return [200, { data: dlor_demographics_report }];
+    })
+    .onGet(routes.DLOR_FAVOURITES_REPORT_API().apiUrl)
+    .reply(() => {
+        if (responseType === 'loadError') {
+            return [500, {}];
+        } else {
+            return [200, { data: dlor_favourites_report }];
+        }
+    })
 
 
 mock.onGet('exams/course/FREN1010/summary')

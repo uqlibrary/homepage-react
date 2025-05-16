@@ -83,7 +83,6 @@ function getTitleBlock(detailTitle = 'View a series') {
     );
 }
 
-
 const StyledTagLabel = styled('span')(() => ({
     fontVariant: 'small-caps',
     textTransform: 'lowercase',
@@ -154,7 +153,13 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
 }));
 
 export const SeriesView = ({
-    actions, dlorSeries, dlorSeriesLoading, dlorSeriesError, dlorList,  dlorListError, dlorListLoading,
+    actions,
+    dlorSeries,
+    dlorSeriesLoading,
+    dlorSeriesError,
+    dlorList,
+    dlorListError,
+    dlorListLoading,
 }) => {
     const { seriesId } = useParams();
 
@@ -174,14 +179,18 @@ export const SeriesView = ({
         }
     }, [seriesId, previousSeriesId]);
 
+    useEffect(() => {
+        document.title = dlorSeries?.series_name ?? 'Digital Learning Object Series';
+    }, [dlorSeries]);
+
     const getFacetTypeIcon = facetTypeSlug => {
         const iconList = {
-            item_type: <LaptopIcon aria-label={`Describes the item type`} />,
-            media_format: <DescriptionIcon aria-label={`Describes the media format`} />,
-            licence: <CopyrightIcon aria-label={`Describes the copyright licence type`} />,
-            topic: <TopicIcon aria-label={`Describes the item topic`} />,
-            graduate_attributes: <SchoolSharpIcon aria-label={`Describes the graduate attributes applied`} />,
-            subject: <LocalLibrarySharpIcon aria-label={`Describes the subject`} />,
+            item_type: <LaptopIcon aria-label={'Describes the item type'} />,
+            media_format: <DescriptionIcon aria-label={'Describes the media format'} />,
+            licence: <CopyrightIcon aria-label={'Describes the copyright licence type'} />,
+            topic: <TopicIcon aria-label={'Describes the item topic'} />,
+            graduate_attributes: <SchoolSharpIcon aria-label={'Describes the graduate attributes applied'} />,
+            subject: <LocalLibrarySharpIcon aria-label={'Describes the subject'} />,
         };
         return iconList[facetTypeSlug];
     };
@@ -191,14 +200,14 @@ export const SeriesView = ({
             const f = object?.object_filters?.filter(o => o.filter_key === facetTypeSlug);
             return !(!f || f.length === 0);
         }
-    
+
         const getConcatenatedFilterLabels = (facetTypeSlug, wrapInParam = false) => {
             const f = object?.object_filters?.filter(o => o?.filter_key === facetTypeSlug);
             const output = f?.pop();
             const facetNames = output?.filter_values?.map(item => item.name)?.join(', ');
             return !!wrapInParam ? /* istanbul ignore next */ `(${facetNames})` : facetNames;
         };
-    
+
         return (
             <Grid
                 item
@@ -280,7 +289,7 @@ export const SeriesView = ({
                                 )}
                             </>
                         </header>
-    
+
                         <div>
                             <p>{object?.object_summary}</p>
                         </div>
@@ -327,12 +336,12 @@ export const SeriesView = ({
             </Grid>
         );
     }
-    
+
     useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadCurrentDLORs();
         }
-    }, [dlorList,  dlorListError, dlorListLoading,  actions]);
+    }, [dlorList, dlorListError, dlorListLoading, actions]);
 
     function navigateToDetailPage(uuid) {
         window.location.href = getDlorViewPageUrl(uuid);
@@ -341,46 +350,48 @@ export const SeriesView = ({
     return (
         <StandardPage>
             {getTitleBlock()}
-                {!!dlorSeries && !dlorSeriesLoading && (
-                    <StyledContentGrid container spacing={4} data-testid="dlor-seriespage">
-                        <Grid item xs={12}>
-                            <Box sx={{ marginBottom: '12px' }}>
-                                <StyledTitleTypography component={'h1'} variant={'h4'}>
-                                    {dlorSeries?.series_name}
-                                </StyledTitleTypography>
-                            </Box>
-                            <StyledHeaderDiv data-testid="dlor-seriespage-description">
-                                        {!!dlorSeries?.series_description ? parse(dlorSeries?.series_description) : "This series does not have a detailed description at this time."}
-                                        
-                            </StyledHeaderDiv>
-                            {
-                                !!dlorList && dlorList
-                                    .filter(item => item.object_series_id && item.object_series_id == seriesId)
-                                    .sort((a, b) => {
-                                        /* istanbul ignore next */
-                                        const orderA = a.object_series_order !== undefined ? a.object_series_order : Number.MAX_SAFE_INTEGER;
-                                        /* istanbul ignore next */
-                                        const orderB = b.object_series_order !== undefined ? b.object_series_order : Number.MAX_SAFE_INTEGER;
-                                        return orderA - orderB;
-                                    })
-                                    .map((item, index) => {
-                                        return displayItemPanel(item, index);
-                                    })
-                            }
-                        </Grid>
-                    </StyledContentGrid>
-                )}
-                
-                {!!dlorListLoading && (
-                    <ContentLoader />
-                )}
-                {!!dlorSeriesError && (
-                    <StyledHeaderDiv data-testid="dlor-seriespage-loadError">
-                        <StyledTitleTypography component={'p'}>
-                            {dlorSeriesError}
-                        </StyledTitleTypography>
-                    </StyledHeaderDiv>
-                )}
+            {!!dlorSeries && !dlorSeriesLoading && (
+                <StyledContentGrid container spacing={4} data-testid="dlor-seriespage">
+                    <Grid item xs={12}>
+                        <Box sx={{ marginBottom: '12px' }}>
+                            <StyledTitleTypography component={'h1'} variant={'h4'}>
+                                {dlorSeries?.series_name}
+                            </StyledTitleTypography>
+                        </Box>
+                        <StyledHeaderDiv data-testid="dlor-seriespage-description">
+                            {!!dlorSeries?.series_description
+                                ? parse(dlorSeries?.series_description)
+                                : 'This series does not have a detailed description at this time.'}
+                        </StyledHeaderDiv>
+                        {!!dlorList &&
+                            dlorList
+                                .filter(item => item.object_series_id && item.object_series_id == seriesId)
+                                .sort((a, b) => {
+                                    /* istanbul ignore next */
+                                    const orderA =
+                                        a.object_series_order !== undefined
+                                            ? a.object_series_order
+                                            : Number.MAX_SAFE_INTEGER;
+                                    /* istanbul ignore next */
+                                    const orderB =
+                                        b.object_series_order !== undefined
+                                            ? b.object_series_order
+                                            : Number.MAX_SAFE_INTEGER;
+                                    return orderA - orderB;
+                                })
+                                .map((item, index) => {
+                                    return displayItemPanel(item, index);
+                                })}
+                    </Grid>
+                </StyledContentGrid>
+            )}
+
+            {!!dlorListLoading && <ContentLoader />}
+            {!!dlorSeriesError && (
+                <StyledHeaderDiv data-testid="dlor-seriespage-loadError">
+                    <StyledTitleTypography component={'p'}>{dlorSeriesError}</StyledTitleTypography>
+                </StyledHeaderDiv>
+            )}
         </StandardPage>
     );
 };
@@ -388,12 +399,11 @@ export const SeriesView = ({
 SeriesView.propTypes = {
     dlorSeries: PropTypes.any,
     dlorList: PropTypes.any,
-    dlorListError: PropTypes.bool, 
+    dlorListError: PropTypes.bool,
     dlorListLoading: PropTypes.bool,
     dlorSeriesError: PropTypes.any,
     dlorSeriesLoading: PropTypes.bool,
-    actions: PropTypes.any
-
+    actions: PropTypes.any,
 };
 
 export default React.memo(SeriesView);
