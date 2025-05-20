@@ -251,22 +251,24 @@ export const DLOView = ({
     dlorUpdatedItemError,
     dlorFavouritesList,
 }) => {
-    console.log('PROCESS', process.env.NODE_ENV);
+    console.log('PROCESS', process.env.BRANCH);
     const { account } = useAccountContext();
     const { dlorId } = useParams();
     const [cookies, setCookie] = useCookies();
     const [confirmationOpen, setConfirmationOpen] = React.useState(false);
     const captchaContainerRef = React.useRef(null);
     const [captchaLoaded, setCaptchaLoaded] = React.useState(false);
+    const [isDemographicsOpened, setIsDemographicsOpened] = React.useState(false);
+    const [demographicsConfirmation, setDemographicsConfirmation] = React.useState(false);
 
-    const captchaExampleSuccessFunction = /* istanbul ignore next */ wafToken => {
-        /* istanbul ignore next */
-        console.log('CAPTCHA COMPLETED - WAF TOKEN', wafToken, CAPTCHA_DEMOGRAPHICS_API().apiUrl);
-        window.AwsWafIntegration.fetch(CAPTCHA_DEMOGRAPHICS_API().apiUrl, {
+    async function sendDemographics() {
+        // Attempt to fetch a resource that's configured to trigger a CAPTCHA
+        // action if the rule matches. The CAPTCHA response has status=HTTP 405.
+        const result = await window.AwsWafIntegration.fetch(CAPTCHA_DEMOGRAPHICS_API().apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-WAF-Token': wafToken,
+                // 'X-WAF-Token': wafToken,
             },
             body: JSON.stringify({
                 dlorUuid: '987y_isjgt_9866',
@@ -280,34 +282,116 @@ export const DLOView = ({
                     },
                 },
             }),
-        })
-            .then(response => {
-                console.log('Full response:', response); // Log entire response object
-                console.log('Response headers:', response.headers);
-                console.log('Response status:', response.status);
+        });
+        // If the action was CAPTCHA, render the CAPTCHA and return
 
-                if (!response.ok) {
-                    // Get the error message from CloudFront if available
-                    return response.text().then(errorText => {
-                        console.log('Error response body:', errorText);
-                        throw new Error(`HTTP error! Status: ${response.status}, Body: ${errorText}`);
-                    });
-                }
-                return response.json();
-            })
-            .catch(error => {
-                console.error('Detailed fetch error:', {
-                    message: error.message,
-                    stack: error.stack,
-                });
+        // NOTE: If the endpoint you're calling in the fetch call responds with HTTP 405
+        // as an expected response status code, then this check won't be able to tell the
+        // difference between that and the CAPTCHA rule action response.
+
+        if (result.status === 405) {
+            const container = document.querySelector('#my-captcha-container');
+            window.AwsWafCaptcha.renderCaptcha(container, {
+                apiKey:
+                    'RBZU8IWC5aE9Yu8JJBeFlZYOTjQGvZodLGvr7/Xnmt169UkbVbvqp4G3FKtULv1A3WoYUGuqIGTvfFCJX8MvYILjQOWdMTnj4u+46mmWr9QXEL/iEurBd19fZSIFCrNonkWon74i9G8Q5cnMbQNy59WuYnqWpbzewRygF4+UMhwcI8CmZieiPVNqFAVSvff5J+J8htfTLFn0ED2ehzncXAhE5tDc5XMfNGlyx6e8Mgqs5zulYds1aLZ/ELvvcMyr5aqWY3AWDyArm2+7x4MoCLFFFo+pAtJPUOlUDdbILaso9K7bumpR4VorQ3gsMbxNj9NEaIqYalEJJxS8NaibODAwzQCPoVpaeLzYPOiwOWRtya0RZAdyA6YZ5RQzl7VCmBZ4STULlL5QUCmRczMHd7zD4acaGwQyoyjnU3vlEBisFOgZhydNYHwxSAnzF7jMKcIhGtIWrh3IRotOFBWljlIJUFRanqOPoJgl14mHVXKNIQNabNFCRoGLTxRsLuDmaQzjwq2nDLk5wpBqwedfGzAn14s5D1qyIhG730qkU7UoFx7vUeBkAXGBwgUU3Kgz4PPp+c+DtCHQk8wRzs1VnodIbu/8ZlHoDCfbM0HI8i4mv7JQQAXol6xPwJHXO9Uj6qbicjt1ll6HYv2h4NRBKot8d9QmbFoKM4JPCpM2Pq4=_1_1',
+                onSuccess: async token => {
+                    try {
+                        console.log('CAPTCHA token received:', token);
+
+                        // Let AWS WAF validate the token
+                        await window.ChallengeScript.submitCaptcha(token);
+                        console.log('Token submitted to AWS WAF');
+
+                        // Now retry your original request
+                        const response = await window.AwsWafIntegration.fetch(CAPTCHA_DEMOGRAPHICS_API().apiUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                dlorUuid: '987y_isjgt_9866',
+                                recaptcha: 'ABC',
+                                demographics: {
+                                    school: 'school of testing',
+                                    subject: 'demotest',
+                                    subscribeRequest: {
+                                        userName: 'Steve',
+                                        userEmail: 's.lancaster@library.uq.edu.au',
+                                    },
+                                },
+                            }),
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        console.log('Success response:', data);
+                        return data;
+                    } catch (error) {
+                        console.error('CAPTCHA Error:', error);
+                        throw error;
+                    }
+                },
             });
-    };
+            return;
+        }
 
-    const captchaExampleErrorFunction = error => {
-        /* Do something with the error */
-        /* istanbul ignore next */
-        console.error('Captcha error:', error);
-    };
+        const response = await result.text();
+        console.log('RESPONSE', response);
+    }
+
+    // const captchaExampleSuccessFunction = /* istanbul ignore next */ wafToken => {
+    //     /* istanbul ignore next */
+    //     console.log('CAPTCHA COMPLETED - WAF TOKEN', wafToken, CAPTCHA_DEMOGRAPHICS_API().apiUrl);
+    //     window.AwsWafIntegration.fetch(CAPTCHA_DEMOGRAPHICS_API().apiUrl, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'X-WAF-Token': wafToken,
+    //         },
+    //         body: JSON.stringify({
+    //             dlorUuid: '987y_isjgt_9866',
+    //             recaptcha: 'ABC',
+    //             demographics: {
+    //                 school: 'school of testing',
+    //                 subject: 'demotest',
+    //                 subscribeRequest: {
+    //                     userName: 'Steve',
+    //                     userEmail: 's.lancaster@library.uq.edu.au',
+    //                 },
+    //             },
+    //         }),
+    //     })
+    //         .then(response => {
+    //             console.log('Full response:', response); // Log entire response object
+    //             console.log('Response headers:', response.headers);
+    //             console.log('Response status:', response.status);
+
+    //             if (!response.ok) {
+    //                 // Get the error message from CloudFront if available
+    //                 return response.text().then(errorText => {
+    //                     console.log('Error response body:', errorText);
+    //                     throw new Error(`HTTP error! Status: ${response.status}, Body: ${errorText}`);
+    //                 });
+    //             }
+    //             console.log('Success response:', response);
+    //             return null; // Around here I should fire actual dispatches, etc. I wont be returning anything as such
+    //         })
+    //         .catch(error => {
+    //             console.error('Detailed fetch error:', {
+    //                 message: error.message,
+    //                 stack: error.stack,
+    //             });
+    //         });
+    // };
+
+    // const captchaExampleErrorFunction = error => {
+    //     /* Do something with the error */
+    //     /* istanbul ignore next */
+    //     console.error('Captcha error:', error);
+    // };
 
     useEffect(() => {
         if (document.getElementById('captcha-script')) return;
@@ -332,48 +416,34 @@ export const DLOView = ({
         document.head.appendChild(script);
     }, []);
 
-    useEffect(() => {
-        /* istanbul ignore next */
-        if (dlorItem && captchaLoaded) {
-            const showMyCaptcha = () => {
-                console.log('Showing', dlorItem);
-                /* istanbul ignore else */
-                if (captchaContainerRef.current) {
-                    const container = captchaContainerRef.current;
-                    /* istanbul ignore else */
-                    if (container) {
-                        window.AwsWafCaptcha.renderCaptcha(container, {
-                            apiKey:
-                                'RBZU8IWC5aE9Yu8JJBeFlZYOTjQGvZodLGvr7/Xnmt169UkbVbvqp4G3FKtULv1A3WoYUGuqIGTvfFCJX8MvYILjQOWdMTnj4u+46mmWr9QXEL/iEurBd19fZSIFCrNonkWon74i9G8Q5cnMbQNy59WuYnqWpbzewRygF4+UMhwcI8CmZieiPVNqFAVSvff5J+J8htfTLFn0ED2ehzncXAhE5tDc5XMfNGlyx6e8Mgqs5zulYds1aLZ/ELvvcMyr5aqWY3AWDyArm2+7x4MoCLFFFo+pAtJPUOlUDdbILaso9K7bumpR4VorQ3gsMbxNj9NEaIqYalEJJxS8NaibODAwzQCPoVpaeLzYPOiwOWRtya0RZAdyA6YZ5RQzl7VCmBZ4STULlL5QUCmRczMHd7zD4acaGwQyoyjnU3vlEBisFOgZhydNYHwxSAnzF7jMKcIhGtIWrh3IRotOFBWljlIJUFRanqOPoJgl14mHVXKNIQNabNFCRoGLTxRsLuDmaQzjwq2nDLk5wpBqwedfGzAn14s5D1qyIhG730qkU7UoFx7vUeBkAXGBwgUU3Kgz4PPp+c+DtCHQk8wRzs1VnodIbu/8ZlHoDCfbM0HI8i4mv7JQQAXol6xPwJHXO9Uj6qbicjt1ll6HYv2h4NRBKot8d9QmbFoKM4JPCpM2Pq4=_1_1',
-                            onSuccess: captchaExampleSuccessFunction,
-                            onError: captchaExampleErrorFunction,
-                            // ...other configuration parameters as needed...
-                        });
-                    } else {
-                        console.error('Captcha container not found');
-                    }
-                }
-            };
+    // useEffect(() => {
+    //     /* istanbul ignore next */
+    //     if (dlorItem && captchaLoaded) {
+    //         const showMyCaptcha = () => {
+    //             console.log('Showing', dlorItem);
+    //             /* istanbul ignore else */
+    //             if (captchaContainerRef.current) {
+    //                 const container = captchaContainerRef.current;
+    //                 /* istanbul ignore else */
+    //                 if (container) {
+    //                     window.AwsWafCaptcha.renderCaptcha(container, {
+    //                         apiKey:
+    //                             'RBZU8IWC5aE9Yu8JJBeFlZYOTjQGvZodLGvr7/Xnmt169UkbVbvqp4G3FKtULv1A3WoYUGuqIGTvfFCJX8MvYILjQOWdMTnj4u+46mmWr9QXEL/iEurBd19fZSIFCrNonkWon74i9G8Q5cnMbQNy59WuYnqWpbzewRygF4+UMhwcI8CmZieiPVNqFAVSvff5J+J8htfTLFn0ED2ehzncXAhE5tDc5XMfNGlyx6e8Mgqs5zulYds1aLZ/ELvvcMyr5aqWY3AWDyArm2+7x4MoCLFFFo+pAtJPUOlUDdbILaso9K7bumpR4VorQ3gsMbxNj9NEaIqYalEJJxS8NaibODAwzQCPoVpaeLzYPOiwOWRtya0RZAdyA6YZ5RQzl7VCmBZ4STULlL5QUCmRczMHd7zD4acaGwQyoyjnU3vlEBisFOgZhydNYHwxSAnzF7jMKcIhGtIWrh3IRotOFBWljlIJUFRanqOPoJgl14mHVXKNIQNabNFCRoGLTxRsLuDmaQzjwq2nDLk5wpBqwedfGzAn14s5D1qyIhG730qkU7UoFx7vUeBkAXGBwgUU3Kgz4PPp+c+DtCHQk8wRzs1VnodIbu/8ZlHoDCfbM0HI8i4mv7JQQAXol6xPwJHXO9Uj6qbicjt1ll6HYv2h4NRBKot8d9QmbFoKM4JPCpM2Pq4=_1_1',
+    //                         onSuccess: captchaExampleSuccessFunction,
+    //                         onError: captchaExampleErrorFunction,
+    //                         // ...other configuration parameters as needed...
+    //                     });
+    //                 } else {
+    //                     console.error('Captcha container not found');
+    //                 }
+    //             }
+    //         };
 
-            // Call showMyCaptcha when the component mounts
-            showMyCaptcha();
-        }
-    }, [dlorItem, captchaLoaded]);
+    //         // Call showMyCaptcha when the component mounts
+    //         showMyCaptcha();
+    //     }
+    // }, [dlorItem, captchaLoaded]);
     // const [confirmationOpen, setConfirmationOpen] = React.useState(false);
-    const [isDemographicsOpened, setIsDemographicsOpened] = React.useState(false);
-    const [demographicsConfirmation, setDemographicsConfirmation] = React.useState(false);
-    const [isNotifyOpened, setIsNotifyOpened] = React.useState(false);
-    // const [notifyType, setNotifyType] = React.useState('');
-    const [confirmLocale, setConfirmLocale] = React.useState({});
-
-    // Add this state near your other useState declarations
-    const [isFavoriteActionInProgress, setIsFavoriteActionInProgress] = useState(false);
-
-    // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
-    // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
-
-    const isLoggedIn = !!account?.id;
-
     const defaultFormValues = {
         subjectCode: '',
         schoolName: '',
@@ -386,6 +456,106 @@ export const DLOView = ({
     };
 
     const [formValues, setFormValues] = React.useState(defaultFormValues);
+    const [isNotifyOpened, setIsNotifyOpened] = React.useState(false);
+    // const [notifyType, setNotifyType] = React.useState('');
+    const [confirmLocale, setConfirmLocale] = React.useState({});
+    // useEffect(() => {
+    //     if (document.getElementById('captcha-script')) return;
+    //     if (!dlorItem) return;
+
+    //     const script = document.createElement('script');
+    //     script.src = 'https://b842968e7955.edge.captcha-sdk.awswaf.com/b842968e7955/jsapi.js';
+    //     script.type = 'text/javascript';
+    //     script.async = false;
+    //     script.defer = true;
+    //     script.id = 'captcha-script';
+
+    //     script.onload = () => {
+    //         // Wait for the script to be fully loaded and initialized
+    //         setTimeout(() => {
+    //             if (window.AwsWafIntegration && window.AwsWafCaptcha) {
+    //                 window.AwsWafIntegration.saveReferrer();
+    //                 const container = captchaContainerRef.current;
+    //                 if (container) {
+    //                     window.AwsWafCaptcha.renderCaptcha(container, {
+    //                         apiKey:
+    //                             'RBZU8IWC5aE9Yu8JJBeFlZYOTjQGvZodLGvr7/Xnmt169UkbVbvqp4G3FKtULv1A3WoYUGuqIGTvfFCJX8MvYILjQOWdMTnj4u+46mmWr9QXEL/iEurBd19fZSIFCrNonkWon74i9G8Q5cnMbQNy59WuYnqWpbzewRygF4+UMhwcI8CmZieiPVNqFAVSvff5J+J8htfTLFn0ED2ehzncXAhE5tDc5XMfNGlyx6e8Mgqs5zulYds1aLZ/ELvvcMyr5aqWY3AWDyArm2+7x4MoCLFFFo+pAtJPUOlUDdbILaso9K7bumpR4VorQ3gsMbxNj9NEaIqYalEJJxS8NaibODAwzQCPoVpaeLzYPOiwOWRtya0RZAdyA6YZ5RQzl7VCmBZ4STULlL5QUCmRczMHd7zD4acaGwQyoyjnU3vlEBisFOgZhydNYHwxSAnzF7jMKcIhGtIWrh3IRotOFBWljlIJUFRanqOPoJgl14mHVXKNIQNabNFCRoGLTxRsLuDmaQzjwq2nDLk5wpBqwedfGzAn14s5D1qyIhG730qkU7UoFx7vUeBkAXGBwgUU3Kgz4PPp+c+DtCHQk8wRzs1VnodIbu/8ZlHoDCfbM0HI8i4mv7JQQAXol6xPwJHXO9Uj6qbicjt1ll6HYv2h4NRBKot8d9QmbFoKM4JPCpM2Pq4=_1_1',
+    //                         onSuccess: async voucher => {
+    //                             try {
+    //                                 const response = await window.AwsWafIntegration.fetch(
+    //                                     CAPTCHA_DEMOGRAPHICS_API().apiUrl,
+    //                                     {
+    //                                         method: 'POST',
+    //                                         headers: {
+    //                                             'Content-Type': 'application/json',
+    //                                         },
+    //                                         body: JSON.stringify({
+    //                                             dlorUuid: dlorItem?.object_public_uuid,
+    //                                             recaptcha: 'ABC',
+    //                                             demographics: {
+    //                                                 school: formValues?.schoolName || '',
+    //                                                 subject: formValues?.subjectCode || '',
+    //                                                 subscribeRequest: {
+    //                                                     userName: formValues?.preferredName || '',
+    //                                                     userEmail: formValues?.userEmail || '',
+    //                                                 },
+    //                                             },
+    //                                         }),
+    //                                     },
+    //                                 );
+
+    //                                 console.log('Full response:', response);
+    //                                 console.log('Response headers:', response.headers);
+    //                                 console.log('Response status:', response.status);
+
+    //                                 if (!response.ok) {
+    //                                     const errorText = await response.text();
+    //                                     console.log('Error response body:', errorText);
+    //                                     throw new Error(`HTTP error! Status: ${response.status}, Body: ${errorText}`);
+    //                                 }
+
+    //                                 console.log('Success response:', response);
+    //                                 setDemographicsConfirmation(true);
+    //                                 setFormValues(defaultFormValues);
+    //                             } catch (error) {
+    //                                 console.error('Detailed fetch error:', {
+    //                                     message: error.message,
+    //                                     stack: error.stack,
+    //                                 });
+    //                             }
+    //                         },
+    //                         onError: error => {
+    //                             console.error('Captcha error:', error);
+    //                         },
+    //                     });
+    //                 }
+    //             } else {
+    //                 console.error('AWS WAF CAPTCHA SDK not properly initialized');
+    //             }
+    //         }, 1000); // Give the script time to initialize
+    //     };
+
+    //     script.onerror = error => {
+    //         console.error('Failed to load CAPTCHA script:', error);
+    //     };
+
+    //     document.head.appendChild(script);
+
+    //     // Cleanup
+    //     return () => {
+    //         const scriptElement = document.getElementById('captcha-script');
+    //         if (scriptElement) {
+    //             document.head.removeChild(scriptElement);
+    //         }
+    //     };
+    // }, [dlorItem]);
+    // Add this state near your other useState declarations
+    const [isFavoriteActionInProgress, setIsFavoriteActionInProgress] = useState(false);
+
+    // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
+    // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
+
+    const isLoggedIn = !!account?.id;
 
     const formatDate = dateString => {
         /* istanbul ignore next */ if (!dateString) return '';
@@ -1519,6 +1689,9 @@ export const DLOView = ({
                     )}
                 </div>
             </>
+            <Button onClick={sendDemographics} variant="contained" color="primary" data-testid="send-demographics-test">
+                Test CAPTCHA
+            </Button>
         </StandardPage>
     );
 };
