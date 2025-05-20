@@ -664,4 +664,62 @@ describe('Digital Learning Hub View page', () => {
                 .contains('Your request has been submitted');
         });
     });
+    context('Component shows correct visibility information', () => {
+        it('Freely available object', () => {
+            cy.visit('digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=s1111111');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="detailpage-clicklink"]').should('exist'));
+            cy.get('[data-testid="detailpage-visibility"]').should('contain', 'Anyone can access this object.');
+        });
+        it('UQ users only object', () => {
+            cy.visit('digital-learning-hub/view/987y-dfgrf4-76gsg-01-uqonly?user=dloradmn');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="detailpage-clicklink"]').should('exist'));
+            cy.get('[data-testid="detailpage-visibility"]').should(
+                'contain',
+                'This object is available to UQ staff and students.',
+            );
+        });
+        it('UQ staff only object', () => {
+            cy.visit('digital-learning-hub/view/987y-dfgrf4-76gsg-01-staff?user=dloradmn');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="detailpage-clicklink"]').should('exist'));
+            cy.get('[data-testid="detailpage-visibility"]').should(
+                'contain',
+                'This object is available to UQ staff members only.',
+            );
+        });
+        it('UQ Library Staff only', () => {
+            cy.visit('digital-learning-hub/view/987y-dfgrf4-76gsg-01-libstaff?user=dloradmn');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="detailpage-clicklink"]').should('exist'));
+            cy.get('[data-testid="detailpage-visibility"]').should(
+                'contain',
+                'This object is available to UQ Library staff members only.',
+            );
+        });
+        it('Access Denied messages', () => {
+            cy.visit('digital-learning-hub/view/987y-dfgrf4-76gsg-01-libstaff?user=anon');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="access-denied-message"]').should('exist'));
+            cy.get('[data-testid="access-denied-message"]').should(
+                'contain',
+                'You need to be a UQ Library staff member to access this object',
+            );
+            cy.visit('digital-learning-hub/view/987y-dfgrf4-76gsg-01-staff?user=anon');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="access-denied-message"]').should('exist'));
+            cy.get('[data-testid="access-denied-message"]').should(
+                'contain',
+                'You need to be a UQ staff member to access this object',
+            );
+            cy.visit('digital-learning-hub/view/987y-dfgrf4-76gsg-01-uqonly?user=anon');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('[data-testid="access-denied-message"]').should('exist'));
+            cy.get('[data-testid="access-denied-message"]').should(
+                'contain',
+                'You need to be a UQ staff or student to access this object',
+            );
+        });
+    });
 });
