@@ -31,7 +31,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { isDlorAdminUser, isDlorOwner, isStaff, isLibraryStaff, isUQOnlyUser } from 'helpers/access';
 import { useAccountContext } from 'context';
-
+import { CAPTCHA_DEMOGRAPHICS_API } from 'repositories/routes';
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import {
     getDurationString,
@@ -261,8 +261,8 @@ export const DLOView = ({
 
     const captchaExampleSuccessFunction = /* istanbul ignore next */ wafToken => {
         /* istanbul ignore next */
-        console.log('CAPTCHA COMPLETED - WAF TOKEN', wafToken);
-        window.AwsWafIntegration.fetch('https://api.library.uq.edu.au/staging/dlor/public/demographics', {
+        console.log('CAPTCHA COMPLETED - WAF TOKEN', wafToken, CAPTCHA_DEMOGRAPHICS_API().apiUrl);
+        window.AwsWafIntegration.fetch(CAPTCHA_DEMOGRAPHICS_API().apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

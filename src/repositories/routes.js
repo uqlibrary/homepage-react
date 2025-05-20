@@ -280,3 +280,13 @@ export const LOANS_API = () => ({
     apiUrl: 'account/loans',
     options: { params: { ts: `${new Date().getTime()}` } },
 });
+
+export const CAPTCHA_DEMOGRAPHICS_API = () => {
+    const endPoint = 'dlor/public/demographics';
+    const isProduction = process.env.BRANCH === 'production';
+    return {
+        apiUrl: isProduction
+            ? `https://api.library.uq.edu.au/v1/${endPoint}`
+            : `https://api.library.uq.edu.au/staging/${endPoint}`,
+    };
+};
