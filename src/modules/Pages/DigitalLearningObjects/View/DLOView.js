@@ -262,10 +262,15 @@ export const DLOView = ({
     const [demographicsConfirmation, setDemographicsConfirmation] = React.useState(false);
 
     async function sendDemographics() {
-        const container = document.querySelector('#my-captcha-container'); // Ensure this container exists in your HTML
+        const container = document.querySelector('#my-captcha-container');
+        if (!container) {
+            console.error("CAPTCHA container element '#my-captcha-container' not found in the DOM.");
+            // Consider disabling the submit button or showing an error message
+            return;
+        }
+
         const demographicsData = {
             dlorUuid: '987y_isjgt_9866',
-            // 'recaptcha: 'ABC', is likely not needed if using AWS WAF CAPTCHA exclusively
             demographics: {
                 school: 'school of testing',
                 subject: 'demotest',
@@ -279,22 +284,34 @@ export const DLOView = ({
         let captchaToken = null; // Initialize token
 
         try {
-            // Step 1: Proactively render CAPTCHA and wait for resolution
-            console.log('Attempting to render CAPTCHA...');
-            const captchaResult = await window.AwsWafCaptcha.renderCaptcha(container, {
-                apiKey:
-                    'RBZU8IWC5aE9Yu8JJBeFlZYOTjQGvZodLGvr7/Xnmt169UkbVbvqp4G3FKtULv1A3WoYUGuqIGTvfFCJX8MvYILjQOWdMTnj4u+46mmWr9QXEL/iEurBd19fZSIFCrNonkWon74i9G8Q5cnMbQNy59WuYnqWpbzewRygF4+UMhwcI8CmZieiPVNqFAVSvff5J+J8htfTLFn0ED2ehzncXAhE5tDc5XMfNGlyx6e8Mgqs5zulYds1aLZ/ELvvcMyr5aqWY3AWDyArm2+7x4MoCLFFFo+pAtJPUOlUDdbILaso9K7bumpR4VorQ3gsMbxNj9NEaIqYalEJJxS8NaibODAwzQCPoVpaeLzYPOiwOWRtya0RZAdyA6YZ5RQzl7VCmBZ4STULlL5QUCmRczMHd7zD4acaGwQyoyjnU3vlEBisFOgZhydNYHwxSAnzF7jMKcIhGtIWrh3IRotOFBWljlIJUFRanpOPoJgl14mHVXKNIQNabNFCRoGLTxRsLuDmaQzjwq2nDLk5wpBqwedfGzAn14s5D1qyIhG730qkU7UoFx7vUeBkAXGBwgUU3Kgz4PPp+c+DtCHQk8wRzs1VnodIbu/8ZlHoDCfbM0HI8i4mv7JQQAXol6xPwJHXO9Uj6qbicjt1ll6HYv2h4NRBKot8d9QmbFoKM4JPCpM2Pq4=_1_1',
+            console.log('Attempting to get CAPTCHA token...');
+
+            // Step 1: Wrap the callback-based renderCaptcha in a Promise
+            captchaToken = await new Promise((resolve, reject) => {
+                window.AwsWafCaptcha.renderCaptcha(container, {
+                    apiKey:
+                        'RBZU8IWC5aE9Yu8JJBeFlZYOTjQGvZodLGvr7/Xnmt169UkbVbvqp4G3FKtULv1A3WoYUGuqIGTvfFCJX8MvYILjQOWdMTnj4u+46mmWr9QXEL/iEurBd19fZSIFCrNonkWon74i9G8Q5cnMbQNy59WuYnqWpbzewRygF4+UMhwcI8CmZieiPVNqFAVSvff5J+J8htjTLFn0ED2ehzncXAhE5tDc5XMfNGlyx6e8Mgqs5zulYds1aLZ/ELvvcMyr5aqWY3AWDyArm2+7x4MoCLFFFo+pAtJPUOlUDdbILaso9K7bumpR4VorQ3gsMbxNj9NEaIqYalEJJxS8NaibODAwzQCPoVpaeLzYPOiwOWRtya0RZAdyA6YZ5RQzl7VCmBZ4STULlL5QUCmRczMHd7zD4acaGwQyoyjnU3vlEBisFOgZhydNYHwxSAnzF7jMKcIhGtIWrh3IRotOFBWljlIJUFRanpOPoJgl14mHVXKNIQNabNFCRoGLTxRsLuDmaQzjwq2nDLk5wpBqwedfGzAn14s5D1qyIhG730qkU7UoFx7vUeBkAXGBwgUU3Kgz4PPp+c+DtCHQk8wRzs1VnodIbu/8ZlHoDCfbM0HI8i4mv7JQQAXol6xPwJHXO9Uj6qbicjt1ll6HYv2h4NRBKot8d9QmbFoKM4JPCpM2Pq4=_1_1',
+                    // This is the CRITICAL part: the success and error callbacks
+                    onSuccess: token => {
+                        console.log('CAPTCHA solved successfully, token received:', token);
+                        resolve(token); // Resolve the wrapper Promise with the token
+                    },
+                    onError: error => {
+                        console.error('CAPTCHA error:', error);
+                        reject(error); // Reject the wrapper Promise with the error
+                    },
+                });
             });
 
-            captchaToken = captchaResult.token;
-            console.log('CAPTCHA solved, token obtained:', captchaToken);
+            // If we reach here, the CAPTCHA was successful and captchaToken has a value
 
             // Step 2: Send the POST request with the obtained CAPTCHA token
             const response = await fetch(CAPTCHA_DEMOGRAPHICS_API().apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'x-aws-waf-token': captchaToken, // Include the WAF token here!
+                    // Only add the header if captchaToken is valid (it should be here)
+                    ...(captchaToken && { 'x-aws-waf-token': captchaToken }),
                 },
                 body: JSON.stringify(demographicsData),
             });
@@ -308,23 +325,21 @@ export const DLOView = ({
                 const errorText = await response.text(); // Get more details if not ok
                 console.error(`Failed to submit demographics. Status: ${response.status}, Details: ${errorText}`);
                 // Implement your error UI/logic here
-                // Note: If WAF blocks it *after* a valid token (e.g., another rule), it might still be 403.
             }
         } catch (error) {
-            // Step 4: Handle CAPTCHA errors (user cancellation, puzzle failure, API issues)
-            console.error('An error occurred during CAPTCHA challenge or submission:', error);
+            // Step 4: Handle errors (from CAPTCHA or the fetch call)
+            console.error('An error occurred during submission:', error);
 
-            if (error.code === 'USER_CANCELLED') {
+            // You can check error.code if onError passes specific codes
+            if (error && error.code === 'USER_CANCELLED') {
+                // Assuming SDK provides 'USER_CANCELLED' for cancellation
                 console.log('CAPTCHA challenge cancelled by user.');
-                // Inform the user that the action requires solving the CAPTCHA
-            } else if (error.code === 'CAPTCHA_CHALLENGE_FAILED') {
+            } else if (error && error.code === 'CAPTCHA_CHALLENGE_FAILED') {
                 console.log('CAPTCHA challenge failed (e.g., incorrect solution).');
-                // Inform the user they need to try again
             } else {
-                // Other errors (network, WAF JS SDK errors, etc.)
                 console.error('Unhandled CAPTCHA or network error:', error);
             }
-            // You might want to display a user-friendly message on the UI
+            // Display a user-friendly message on the UI
         }
     }
 
