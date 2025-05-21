@@ -307,6 +307,8 @@ export const DLOView = ({
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
+                                'X-WAF-Token': token,
+                                'x-aws-waf-token': token,
                             },
                             body: JSON.stringify({
                                 dlorUuid: '987y_isjgt_9866',
