@@ -281,10 +281,9 @@ export const DLOView = ({
         try {
             // Step 1: Proactively render CAPTCHA and wait for resolution
             console.log('Attempting to render CAPTCHA...');
-            const captchaResult = await window.AwsWafCaptcha.renderCaptcha({
+            const captchaResult = await window.AwsWafCaptcha.renderCaptcha(container, {
                 apiKey:
                     'RBZU8IWC5aE9Yu8JJBeFlZYOTjQGvZodLGvr7/Xnmt169UkbVbvqp4G3FKtULv1A3WoYUGuqIGTvfFCJX8MvYILjQOWdMTnj4u+46mmWr9QXEL/iEurBd19fZSIFCrNonkWon74i9G8Q5cnMbQNy59WuYnqWpbzewRygF4+UMhwcI8CmZieiPVNqFAVSvff5J+J8htfTLFn0ED2ehzncXAhE5tDc5XMfNGlyx6e8Mgqs5zulYds1aLZ/ELvvcMyr5aqWY3AWDyArm2+7x4MoCLFFFo+pAtJPUOlUDdbILaso9K7bumpR4VorQ3gsMbxNj9NEaIqYalEJJxS8NaibODAwzQCPoVpaeLzYPOiwOWRtya0RZAdyA6YZ5RQzl7VCmBZ4STULlL5QUCmRczMHd7zD4acaGwQyoyjnU3vlEBisFOgZhydNYHwxSAnzF7jMKcIhGtIWrh3IRotOFBWljlIJUFRanpOPoJgl14mHVXKNIQNabNFCRoGLTxRsLuDmaQzjwq2nDLk5wpBqwedfGzAn14s5D1qyIhG730qkU7UoFx7vUeBkAXGBwgUU3Kgz4PPp+c+DtCHQk8wRzs1VnodIbu/8ZlHoDCfbM0HI8i4mv7JQQAXol6xPwJHXO9Uj6qbicjt1ll6HYv2h4NRBKot8d9QmbFoKM4JPCpM2Pq4=_1_1',
-                container: container,
             });
 
             captchaToken = captchaResult.token;
