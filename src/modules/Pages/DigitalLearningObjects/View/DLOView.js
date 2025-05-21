@@ -291,53 +291,40 @@ export const DLOView = ({
 
         if (result.status === 405) {
             const container = document.querySelector('#my-captcha-container');
-            window.AwsWafCaptcha.renderCaptcha(container, {
+            const captchaResult = window.AwsWafCaptcha.renderCaptcha({
                 apiKey:
                     'RBZU8IWC5aE9Yu8JJBeFlZYOTjQGvZodLGvr7/Xnmt169UkbVbvqp4G3FKtULv1A3WoYUGuqIGTvfFCJX8MvYILjQOWdMTnj4u+46mmWr9QXEL/iEurBd19fZSIFCrNonkWon74i9G8Q5cnMbQNy59WuYnqWpbzewRygF4+UMhwcI8CmZieiPVNqFAVSvff5J+J8htfTLFn0ED2ehzncXAhE5tDc5XMfNGlyx6e8Mgqs5zulYds1aLZ/ELvvcMyr5aqWY3AWDyArm2+7x4MoCLFFFo+pAtJPUOlUDdbILaso9K7bumpR4VorQ3gsMbxNj9NEaIqYalEJJxS8NaibODAwzQCPoVpaeLzYPOiwOWRtya0RZAdyA6YZ5RQzl7VCmBZ4STULlL5QUCmRczMHd7zD4acaGwQyoyjnU3vlEBisFOgZhydNYHwxSAnzF7jMKcIhGtIWrh3IRotOFBWljlIJUFRanqOPoJgl14mHVXKNIQNabNFCRoGLTxRsLuDmaQzjwq2nDLk5wpBqwedfGzAn14s5D1qyIhG730qkU7UoFx7vUeBkAXGBwgUU3Kgz4PPp+c+DtCHQk8wRzs1VnodIbu/8ZlHoDCfbM0HI8i4mv7JQQAXol6xPwJHXO9Uj6qbicjt1ll6HYv2h4NRBKot8d9QmbFoKM4JPCpM2Pq4=_1_1',
-                onSuccess: async token => {
-                    try {
-                        console.log('CAPTCHA token received:', token);
-
-                        // Let AWS WAF validate the token
-                        await window.ChallengeScript.submitCaptcha(token);
-                        console.log('Token submitted to AWS WAF');
-
-                        // Now retry your original request
-                        const response = await window.AwsWafIntegration.fetch(CAPTCHA_DEMOGRAPHICS_API().apiUrl, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                // 'X-WAF-Token': token,
-                                // 'x-aws-waf-token': token,
-                            },
-                            body: JSON.stringify({
-                                dlorUuid: '987y_isjgt_9866',
-                                recaptcha: 'ABC',
-                                demographics: {
-                                    school: 'school of testing',
-                                    subject: 'demotest',
-                                    subscribeRequest: {
-                                        userName: 'Steve',
-                                        userEmail: 's.lancaster@library.uq.edu.au',
-                                    },
-                                },
-                            }),
-                        });
-
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
-
-                        const data = await response.json();
-                        console.log('Success response:', data);
-                        return data;
-                    } catch (error) {
-                        console.error('CAPTCHA Error:', error);
-                        throw error;
-                    }
-                },
+                container: container,
             });
-            return;
+
+            const captchaToken = captchaResult.token;
+
+            const response = await fetch(CAPTCHA_DEMOGRAPHICS_API().apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-aws-waf-token': captchaToken,
+                },
+                body: JSON.stringify({
+                    dlorUuid: '987y_isjgt_9866',
+                    recaptcha: 'ABC',
+                    demographics: {
+                        school: 'school of testing',
+                        subject: 'demotest',
+                        subscribeRequest: {
+                            userName: 'Steve',
+                            userEmail: 's.lancaster@library.uq.edu.au',
+                        },
+                    },
+                }),
+            });
+            if (response.ok) {
+                console.log('Demographics submitted successfully!', response);
+                // Handle success (e.g., show a success message, clear form)
+            } else {
+                console.error('Failed to submit demographics:', response.statusText);
+                // Handle error
+            }
         }
 
         const response = await result.text();
