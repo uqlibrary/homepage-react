@@ -302,16 +302,16 @@ export const DLOView = ({
                     },
                 });
             });
-
-            await window.ChallengeScript.submitCaptcha(captchaToken);
+            console.log('CAPTCHA token:', captchaToken);
+            // await window.ChallengeScript.submitCaptcha(captchaToken);
 
             // Step 2: Send the POST request with the obtained CAPTCHA token
-            const response = await fetch(CAPTCHA_DEMOGRAPHICS_API().apiUrl, {
+            const response = await window.AwsWafIntegration.fetch(CAPTCHA_DEMOGRAPHICS_API().apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     // Only add the header if captchaToken is valid (it should be here)
-                    ...(captchaToken && { 'x-aws-waf-token': captchaToken }),
+                    // ...(captchaToken && { 'x-aws-waf-token': captchaToken }),
                 },
                 body: JSON.stringify(demographicsData),
             });
