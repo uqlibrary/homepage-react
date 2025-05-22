@@ -303,7 +303,7 @@ export const DLOView = ({
                 });
             });
 
-            // If we reach here, the CAPTCHA was successful and captchaToken has a value
+            await window.ChallengeScript.submitCaptcha(captchaToken);
 
             // Step 2: Send the POST request with the obtained CAPTCHA token
             const response = await fetch(CAPTCHA_DEMOGRAPHICS_API().apiUrl, {
