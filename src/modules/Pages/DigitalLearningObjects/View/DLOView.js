@@ -293,7 +293,7 @@ export const DLOView = ({
                     // This is the CRITICAL part: the success and error callbacks
                     onSuccess: token => {
                         console.log('CAPTCHA solved successfully, token received:', token);
-                        document.cookie = `x-aws-waf-token=${token}; path=/; domain=library.uq.edu.au`;
+                        // document.cookie = `x-aws-waf-token=${token}; path=/; domain=library.uq.edu.au`;
                         resolve(token); // Resolve the wrapper Promise with the token
                     },
                     onError: error => {
