@@ -285,7 +285,6 @@ export const DLOView = ({
 
         try {
             console.log('Attempting to get CAPTCHA token...');
-
             // Step 1: Wrap the callback-based renderCaptcha in a Promise
             captchaToken = await new Promise((resolve, reject) => {
                 window.AwsWafCaptcha.renderCaptcha(container, {
@@ -294,6 +293,7 @@ export const DLOView = ({
                     // This is the CRITICAL part: the success and error callbacks
                     onSuccess: token => {
                         console.log('CAPTCHA solved successfully, token received:', token);
+                        document.cookie = `x-aws-waf-token=${token}; path=/; domain=library.uq.edu.au`;
                         resolve(token); // Resolve the wrapper Promise with the token
                     },
                     onError: error => {
