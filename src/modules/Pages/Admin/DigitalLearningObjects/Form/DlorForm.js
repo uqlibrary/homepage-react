@@ -506,7 +506,7 @@ export const DlorForm = ({
             <>
                 <Grid item xs={12}>
                     <FormControl variant="standard" fullWidth>
-                        <InputLabel htmlFor="object_publishing_user">Publishing user *</InputLabel>
+                        <InputLabel htmlFor="object_publishing_user">Object owner *</InputLabel>
                         <Input
                             id="object_publishing_user"
                             data-testid="object-publishing-user"
