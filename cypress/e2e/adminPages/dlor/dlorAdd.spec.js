@@ -686,7 +686,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     object_summary: 'new summary xxxxxxxx',
                     object_link_interaction_type: 'none',
                     object_link_url: 'http://example.com',
-                    object_download_instructions: '',
+                    object_download_instructions: 'Add this object to your course.',
                     object_is_featured: 1,
                     object_cultural_advice: 0,
                     object_publishing_user: 'dloradmn',
