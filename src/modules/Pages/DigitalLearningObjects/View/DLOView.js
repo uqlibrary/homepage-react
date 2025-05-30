@@ -1210,15 +1210,17 @@ export const DLOView = ({
                                         </Box>
                                     </div>
                                 )}
-                                {!!dlorItem?.object_download_instructions && (
-                                    <StyledLayoutBox>
-                                        <StyledTitleTypography component={'h2'} variant={'h6'}>
-                                            Add the object to your course
-                                        </StyledTitleTypography>
-                                        {!!dlorItem?.object_download_instructions &&
-                                            displayDownloadInstructions(dlorItem.object_download_instructions)}
-                                    </StyledLayoutBox>
-                                )}
+
+                                <StyledLayoutBox>
+                                    <StyledTitleTypography component={'h2'} variant={'h6'}>
+                                        Add the object to your course
+                                    </StyledTitleTypography>
+                                    {displayDownloadInstructions(
+                                        dlorItem?.object_download_instructions ||
+                                            'Add a link to the object to share it in your course.',
+                                    )}
+                                </StyledLayoutBox>
+
                                 {!!dlorItem?.object_series_name && dlorItem?.object_series?.length > 1 && (
                                     <StyledLayoutBox>
                                         <StyledTitleTypography component="h2" variant="h6">
