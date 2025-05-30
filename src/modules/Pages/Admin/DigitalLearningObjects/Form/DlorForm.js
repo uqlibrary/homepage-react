@@ -59,6 +59,19 @@ import { breadcrumbs } from 'config/routes';
 import { pluralise } from 'helpers/general';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import parse from 'html-react-parser';
+
 const moment = require('moment');
 
 const StyledErrorCountBadge = styled(Badge)(() => ({
@@ -126,6 +139,10 @@ export const DlorForm = ({
     dlorFileTypeList,
     dlorFileTypeListLoading,
     dlorFileTypeListError,
+    dlorAdminNotesLoading,
+    dlorAdminNotesLoaded,
+    dlorAdminNotesLoadError,
+    dlorAdminNotes,
     formDefaults,
     mode,
 }) => {
@@ -155,6 +172,26 @@ export const DlorForm = ({
     const teamSelectRef = useRef(null);
     const linkInteractionTypeSelectRef = useRef(formValues?.object_link_interaction_type || 'none');
     const linkFileTypeSelectRef = useRef(formValues.object_link_file_type || 'new');
+
+    const adminNotes = [
+        {
+            object_admin_note_id: 4,
+            object_public_uuid: '987y_isjgt_9866',
+            object_admin_username: 'uqtest1',
+            object_admin_note_content: 'This is a test from postman',
+            created_at: '27/05/2025 00:14',
+            updated_at: '27/05/2025 00:14',
+        },
+        {
+            object_admin_note_id: 3,
+            object_public_uuid: '987y_isjgt_9866',
+            object_admin_username: 'uqabcdef',
+            object_admin_note_content:
+                'This is a <strong>note</strong> for object 987y_isjgt_9866 by uqabcdef. <br /> <i>Again.</i><br />',
+            created_at: '27/05/2025 00:04',
+            updated_at: '27/05/2025 00:04',
+        },
+    ];
 
     const flatMapFacets = facetList => {
         return facetList?.flatMap(facet => facet?.filter_values?.map(value => value?.id)).sort((a, b) => a - b);
@@ -386,6 +423,12 @@ export const DlorForm = ({
             });
         return fourthPanelErrorCount;
     }
+
+    const handleAdminNotesEditorChange = (fieldname, newContent) => {
+        const newValues = { ...formValues, [fieldname]: newContent };
+
+        setFormValues(newValues);
+    };
 
     const handleEditorChange = (fieldname, newContent) => {
         setSummarySuggestionOpen(true);
@@ -695,6 +738,71 @@ export const DlorForm = ({
                         </>
                     )}
                 </Grid>
+                {isDlorAdminUser(account) && (
+                    <>
+                        <Grid item xs={12}>
+                            <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
+                                <InputLabel htmlFor="object_admin_notes">Admin Notes</InputLabel>
+                                <CKEditor
+                                    id="object_admin_notes"
+                                    data-testid="object-admin-notes"
+                                    sx={{ width: '100%' }}
+                                    editor={ClassicEditor}
+                                    config={editorConfig}
+                                    data={formValues?.object_admin_notes || ''}
+                                    onReady={editor => {
+                                        editor.editing.view.change(writer => {
+                                            writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
+                                        });
+                                    }}
+                                    onChange={(event, editor) => {
+                                        const htmlData = editor.getData();
+                                        handleAdminNotesEditorChange('object_admin_notes', htmlData);
+                                    }}
+                                />
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Accordion sx={{ marginTop: 2 }}>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                    <Typography variant="h6">Admin Notes</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <TableContainer component={Paper}>
+                                        <Table size="small">
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell>
+                                                        <strong>Username</strong>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <strong>User Note</strong>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <strong>Date</strong>
+                                                    </TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {adminNotes.map((note, idx) => (
+                                                    <TableRow key={idx}>
+                                                        <TableCell>{note.object_admin_username}</TableCell>
+                                                        <TableCell>{parse(note.object_admin_note_content)}</TableCell>
+                                                        <TableCell>
+                                                            {moment(note.created_at, 'DD/MM/YYYY HH:mm').format(
+                                                                'DD/MM/YYYY, h:mm A',
+                                                            )}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </AccordionDetails>
+                            </Accordion>
+                        </Grid>
+                    </>
+                )}
             </>
         ),
         [formValues, showTeamForm, teamSelectRef.current, dlorTeamList, mode, formDefaults],
@@ -1234,7 +1342,7 @@ export const DlorForm = ({
             const radioGroupName = !!filterItem && `object_facet_${filterItem.facet_type_slug}_radio-buttons-group`;
             result = (
                 <RadioGroup
-                    aria-labelledby={`demo-radio-object_${filterItem.facet_type_slug}_label-group-label`}
+                    aria-labelledby={`demo-radio-object_${filterItem.facet_type_slug}_label-group`}
                     name={radioGroupName}
                     value={filterItem.facet_id}
                     onChange={handleFacetChange(filterItem.id)}
@@ -1808,6 +1916,10 @@ DlorForm.propTypes = {
     dlorSavedItem: PropTypes.object,
     dlorItemSaving: PropTypes.bool,
     dlorSavedItemError: PropTypes.any,
+    dlorAdminNotesLoading: PropTypes.bool,
+    dlorAdminNotesLoaded: PropTypes.bool,
+    dlorAdminNotesLoadError: PropTypes.any,
+    dlorAdminNotes: PropTypes.array,
     formDefaults: PropTypes.object,
     mode: PropTypes.string,
 };

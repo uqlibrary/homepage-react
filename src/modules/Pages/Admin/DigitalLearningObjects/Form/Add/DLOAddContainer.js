@@ -12,6 +12,7 @@ const mapStateToProps = state => {
         ...state.get('dlorFilterListReducer'),
         ...state.get('dlorTeamListReducer'),
         ...state.get('dlorCreateReducer'),
+        ...state.get('dlorAdminNotesReducer'),
     };
 };
 
