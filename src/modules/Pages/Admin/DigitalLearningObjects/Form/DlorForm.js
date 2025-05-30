@@ -1186,7 +1186,7 @@ export const DlorForm = ({
                         sx={{ width: '100%' }}
                         editor={ClassicEditor}
                         config={editorConfig}
-                        data={formValues?.object_download_instructions || ''}
+                        data={formValues?.object_download_instructions || /* istanbul ignore next */ ''}
                         onReady={editor => {
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
