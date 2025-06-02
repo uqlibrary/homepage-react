@@ -140,7 +140,7 @@ const StyledFilterSidebarGrid = styled(Grid)(({ theme }) => ({
         display: 'none',
     },
 }));
-const StyledArticleCard = styled('div')(({ theme }) => ({
+const StyledArticleCard = styled('div')(({ theme, isAccessible }) => ({
     backgroundColor: '#fff',
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
     borderRadius: '4px',
@@ -150,10 +150,10 @@ const StyledArticleCard = styled('div')(({ theme }) => ({
     textAlign: 'left',
     width: '100%',
     '&:hover': {
-        cursor: 'pointer',
+        cursor: isAccessible ? 'pointer' : 'not-allowed',
         textDecoration: 'none',
         '& > article': {
-            backgroundColor: '#f2f2f2',
+            backgroundColor: isAccessible ? '#f2f2f2' : '#f7f7f7',
         },
     },
     '& article': {
@@ -942,24 +942,39 @@ export const DLOList = ({
     const numberItemsPerPage = 10;
 
     function filterDlorList() {
-        // First sort by featured status
         const sortedList = dlorList
-            // First filter by permissions
-            .filter(d => {
+            // Then sort by featured status
+            .sort((a, b) => b.object_is_featured - a.object_is_featured)
+            // Add restriction message if needed
+            .map(d => {
+                let restrictionMessage = '';
+                let isAccessible = true;
+
                 switch (d.object_restrict_to) {
                     case 'uqlibrarystaff':
-                        return isLibraryStaff(account);
+                        isAccessible = isLibraryStaff(account);
+                        restrictionMessage = !isAccessible ? 'You need to be UQ Library staff to view this object' : '';
+                        break;
                     case 'uqstaff':
-                        return isStaff(account);
+                        isAccessible = isStaff(account);
+                        restrictionMessage = !isAccessible ? 'You need to be UQ staff to view this object' : '';
+                        break;
                     case 'uquser':
-                        return isUQOnlyUser(account);
-                    case 'none':
+                        isAccessible = isUQOnlyUser(account);
+                        restrictionMessage = !isAccessible
+                            ? 'You need to be a UQ staff or student user to view this object'
+                            : '';
+                        break;
                     default:
-                        return true; // No restriction
+                        break;
                 }
-            })
-            // Then sort by featured status
-            .sort((a, b) => b.object_is_featured - a.object_is_featured);
+
+                return {
+                    ...d,
+                    restrictionMessage,
+                    isAccessible,
+                };
+            });
 
         // Helper function to check if an item is favorited
         function isFavorited(item) {
@@ -1069,16 +1084,25 @@ export const DLOList = ({
                     paddingLeft: '16px',
                     paddingBottom: '16px',
                     paddingTop: '0 !important',
+                    opacity: !object.isAccessible ? 0.5 : 1, // Make restricted items appear faded
                 }}
                 key={object?.object_id}
                 data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(object?.object_public_uuid)}`}
             >
                 <StyledArticleCard
                     role="button"
-                    onClick={() => navigateToDetailPage(object?.object_public_uuid)}
-                    tabIndex="0"
+                    onClick={() => object.isAccessible && navigateToDetailPage(object?.object_public_uuid)}
+                    tabIndex={object.isAccessible ? '0' : '-1'}
+                    isAccessible={object.isAccessible}
+                    aria-disabled={!object.isAccessible}
                     aria-label={`${object?.object_title} ${!!object?.object_series_name &&
                         '(Series: ' + object.object_series_name + ')'} ${object?.object_summary}`}
+                    sx={{
+                        cursor: object.isAccessible ? 'pointer' : 'not-allowed',
+                    }}
+                    {...(!object.isAccessible && {
+                        'aria-label': `${object?.object_title} - ${object.restrictionMessage}`,
+                    })}
                     id={index === 0 ? 'first-panel-button' : null}
                 >
                     <article>
@@ -1172,7 +1196,7 @@ export const DLOList = ({
                         </header>
 
                         <div>
-                            <p>{object?.object_summary}</p>
+                            <p>{!!object.restrictionMessage ? object.restrictionMessage : object.object_summary}</p>
                         </div>
                         <footer>
                             {!!hasTopicFacet('item_type') && (
