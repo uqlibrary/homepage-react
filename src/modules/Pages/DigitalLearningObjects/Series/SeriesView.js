@@ -23,6 +23,8 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { useAccountContext } from 'context';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
+import { isLibraryStaff, isStaff, isUQOnlyUser } from 'helpers/access';
+
 import {
     getDlorViewPageUrl,
     getPathRoot,
@@ -90,7 +92,7 @@ const StyledTagLabel = styled('span')(() => ({
     marginRight: 10,
     color: '#333',
 }));
-const StyledArticleCard = styled('button')(({ theme }) => ({
+const StyledArticleCard = styled('button')(({ theme, isAccessible }) => ({
     backgroundColor: '#fff',
     borderColor: 'transparent',
     fontFamily: 'Roboto, sans-serif',
@@ -98,7 +100,7 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
     textAlign: 'left',
     width: '100%',
     '&:hover': {
-        cursor: 'pointer',
+        cursor: isAccessible ? 'pointer' : 'not-allowed',
         textDecoration: 'none',
         borderTopColor: '#f2f2f2',
         borderLeftColor: '#f2f2f2',
@@ -161,6 +163,7 @@ export const SeriesView = ({
     dlorListError,
     dlorListLoading,
 }) => {
+    const { account } = useAccountContext(); // Add this line
     const { seriesId } = useParams();
 
     function usePrevious(value) {
@@ -196,6 +199,27 @@ export const SeriesView = ({
     };
 
     function displayItemPanel(object, index) {
+        // Add restriction check
+        let restrictionMessage = '';
+        let isAccessible = true;
+
+        switch (object.object_restrict_to) {
+            case 'uqlibrarystaff':
+                isAccessible = isLibraryStaff(account);
+                restrictionMessage = !isAccessible ? 'You need to be UQ Library staff to view this object' : '';
+                break;
+            case 'uqstaff':
+                isAccessible = isStaff(account);
+                restrictionMessage = !isAccessible ? 'You need to be UQ staff to view this object' : '';
+                break;
+            case 'uquser':
+                isAccessible = isUQOnlyUser(account);
+                restrictionMessage = !isAccessible ? 'You need to be a UQ staff or student to view this object' : '';
+                break;
+            default:
+                break;
+        }
+
         function hasTopicFacet(facetTypeSlug) {
             const f = object?.object_filters?.filter(o => o.filter_key === facetTypeSlug);
             return !(!f || f.length === 0);
@@ -216,13 +240,19 @@ export const SeriesView = ({
                     // paddingLeft: '16px',
                     paddingBottom: '16px',
                     paddingTop: '0 !important',
+                    opacity: !isAccessible ? 0.5 : 1,
                 }}
                 key={object?.object_id}
                 data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(object?.object_public_uuid)}`}
             >
                 <StyledArticleCard
-                    onClick={() => navigateToDetailPage(object?.object_public_uuid)}
-                    aria-label={`Click for more details on ${object.object_title}`}
+                    onClick={() => isAccessible && navigateToDetailPage(object?.object_public_uuid)}
+                    tabIndex={isAccessible ? '0' : '-1'}
+                    aria-disabled={!isAccessible}
+                    isAccessible={isAccessible}
+                    {...(!isAccessible && {
+                        'aria-label': `${object?.object_title} - ${restrictionMessage}`,
+                    })}
                     id={index === 0 ? 'first-panel-button' : null}
                 >
                     <article>
@@ -291,7 +321,7 @@ export const SeriesView = ({
                         </header>
 
                         <div>
-                            <p>{object?.object_summary}</p>
+                            <p>{!!restrictionMessage ? restrictionMessage : object?.object_summary}</p>
                         </div>
                         <footer>
                             {!!hasTopicFacet('item_type') && (

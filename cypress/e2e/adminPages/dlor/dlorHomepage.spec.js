@@ -644,7 +644,10 @@ describe('Digital Learning Hub admin homepage', () => {
             cy.get('.MuiPagination-ul > :nth-child(5)')
                 .should('be.visible')
                 .click();
-            cy.contains('Staff Restricted Object').should('not.exist');
+            cy.contains('Staff Restricted Object')
+                .parents('article')
+                .should('exist')
+                .should('contain', 'You need to be UQ staff to view this object');
             cy.visit('http://localhost:2020/digital-learning-hub/?user=uqstaff');
             cy.get('.MuiPagination-ul > :nth-child(5)')
                 .should('be.visible')
@@ -657,7 +660,10 @@ describe('Digital Learning Hub admin homepage', () => {
             cy.get('.MuiPagination-ul > :nth-child(5)')
                 .should('be.visible')
                 .click();
-            cy.contains('Staff (library) Restricted Object').should('not.exist');
+            cy.contains('Staff (library) Restricted Object')
+                .parents('article')
+                .should('exist')
+                .should('contain', 'You need to be UQ Library staff to view this object');
             cy.visit('http://localhost:2020/digital-learning-hub/?user=uqstaff');
             cy.get('.MuiPagination-ul > :nth-child(5)')
                 .should('be.visible')
@@ -682,7 +688,10 @@ describe('Digital Learning Hub admin homepage', () => {
             cy.get('.MuiPagination-ul > :nth-child(5)')
                 .should('be.visible')
                 .click();
-            cy.contains('UQ Only Restricted Object').should('not.exist');
+            cy.contains('UQ Only Restricted Object')
+                .should('exist')
+                .parents('article')
+                .should('contain', 'You need to be a UQ staff or student user to view this object');
         });
     });
 });

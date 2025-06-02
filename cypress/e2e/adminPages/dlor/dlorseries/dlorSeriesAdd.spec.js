@@ -54,7 +54,6 @@ describe('Digital Learning Hub admin Series management - add item', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it('can add a series with objects', () => {});
         it('can add a series without objects', () => {
             cy.waitUntil(() =>
                 cy

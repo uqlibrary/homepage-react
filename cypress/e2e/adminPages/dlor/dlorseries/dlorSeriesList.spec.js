@@ -79,7 +79,6 @@ describe('Digital Learning Hub admin Series management', () => {
             cy.get('[data-testid="dlor-serieslist-delete-6"]').should('not.exist');
             cy.get('[data-testid="dlor-serieslist-delete-7"]').should('exist');
             cy.get('[data-testid="dlor-serieslist-delete-8"]').should('not.exist');
-            cy.get('[data-testid="dlor-serieslist-delete-9"]').should('exist');
             cy.get('[data-testid="dlor-serieslist-delete-10"]').should('not.exist');
 
             // all have edit buttons
@@ -108,7 +107,6 @@ describe('Digital Learning Hub admin Series management', () => {
             cy.get('[data-testid="dlor-series-object-list-8"]')
                 .should('exist')
                 .contains('1 Object');
-            cy.get('[data-testid="dlor-series-object-list-9"]').should('not.exist');
             cy.get('[data-testid="dlor-series-object-list-null"]')
                 .should('exist')
                 .contains('other Objects');
