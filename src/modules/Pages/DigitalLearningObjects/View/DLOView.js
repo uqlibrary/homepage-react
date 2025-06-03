@@ -310,6 +310,7 @@ export const DLOView = ({
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Accept: 'application/json',
                     // Only add the header if captchaToken is valid (it should be here)
                     // ...(captchaToken && { 'x-aws-waf-token': captchaToken }),
                 },
