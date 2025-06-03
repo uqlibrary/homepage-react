@@ -524,7 +524,7 @@ describe('Digital Learning Hub', () => {
                 cy.get('[data-testid="dlor-homepage-list"]')
                     .should('exist')
                     .children()
-                    .should('have.length', 8 + extraRowCount);
+                    .should('have.length', 7 + extraRowCount);
                 // we are on second page of pagination
                 cy.get('nav[aria-label="pagination navigation"] li:nth-child(4) button')
                     .should('exist')

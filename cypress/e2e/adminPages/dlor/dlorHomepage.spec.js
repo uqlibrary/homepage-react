@@ -660,10 +660,7 @@ describe('Digital Learning Hub admin homepage', () => {
             cy.get('.MuiPagination-ul > :nth-child(5)')
                 .should('be.visible')
                 .click();
-            cy.contains('Staff (library) Restricted Object')
-                .parents('article')
-                .should('exist')
-                .should('contain', 'You need to be UQ Library staff to view this object');
+            cy.contains('Staff (library) Restricted Object').should('not.exist');
             cy.visit('http://localhost:2020/digital-learning-hub/?user=uqstaff');
             cy.get('.MuiPagination-ul > :nth-child(5)')
                 .should('be.visible')
