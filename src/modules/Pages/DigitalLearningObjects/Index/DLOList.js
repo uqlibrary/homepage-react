@@ -943,18 +943,18 @@ export const DLOList = ({
 
     function filterDlorList() {
         const sortedList = dlorList
-            // Then sort by featured status
+            .filter(item => {
+                if (item.object_restrict_to === 'uqlibrarystaff') {
+                    return isLibraryStaff(account);
+                }
+                return true;
+            })
             .sort((a, b) => b.object_is_featured - a.object_is_featured)
-            // Add restriction message if needed
             .map(d => {
                 let restrictionMessage = '';
                 let isAccessible = true;
 
                 switch (d.object_restrict_to) {
-                    case 'uqlibrarystaff':
-                        isAccessible = isLibraryStaff(account);
-                        restrictionMessage = !isAccessible ? 'You need to be UQ Library staff to view this object' : '';
-                        break;
                     case 'uqstaff':
                         isAccessible = isStaff(account);
                         restrictionMessage = !isAccessible ? 'You need to be UQ staff to view this object' : '';
