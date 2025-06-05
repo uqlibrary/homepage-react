@@ -402,6 +402,7 @@ export default {
             "object_review_date_next": "2050-01-01T00:01",
             "object_status": "current",
             "object_owning_team_id": 1,
+            "object_restrict_to": "uqstaff",
             "created_at": "2024-01-01T00:00:00.000000Z",
             "updated_at": "2024-03-03T23:48:01.000000Z",
             "object_download_instructions": "<p>Download the Common Cartridge file and H5P quiz to embed in Blackboard</p>",
@@ -3743,8 +3744,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "object_series_id": null,
-            "object_series_name": null,
+            "object_series_id": 9,
+            "object_series_name": "Subject guides",
         },
         {
             "object_id": 882,
@@ -3827,8 +3828,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "object_series_id": null,
-            "object_series_name": null,
+            "object_series_id": 9,
+            "object_series_name": "Subject guides",
         },
         {
             "object_id": 883,
@@ -3911,8 +3912,8 @@ export default {
             },
             "object_link_interaction_type": "none",
             "object_is_featured": 0,
-            "object_series_id": null,
-            "object_series_name": null,
+            "object_series_id": 9,
+            "object_series_name": "Subject guides",
         }
 
     ]

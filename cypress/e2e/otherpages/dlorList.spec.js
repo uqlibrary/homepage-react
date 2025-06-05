@@ -524,7 +524,7 @@ describe('Digital Learning Hub', () => {
                 cy.get('[data-testid="dlor-homepage-list"]')
                     .should('exist')
                     .children()
-                    .should('have.length', 6 + extraRowCount);
+                    .should('have.length', 7 + extraRowCount);
                 // we are on second page of pagination
                 cy.get('nav[aria-label="pagination navigation"] li:nth-child(4) button')
                     .should('exist')
@@ -1130,6 +1130,18 @@ describe('Digital Learning Hub', () => {
             cy.viewport(1300, 1000);
             cy.waitUntil(() => cy.get('h1').should('exist'));
             cy.get('h1').should('contain', 'Find a digital learning object');
+        });
+    });
+    context('unavailable objects', () => {
+        it('unavailable objects are shown correctly in list', () => {
+            cy.visit('digital-learning-hub?user=public');
+            cy.viewport(1300, 1000);
+            cy.get('[aria-label="Go to page 3"]').click();
+            cy.contains('Staff Restricted Object')
+                .parents('article')
+                .trigger('mouseover')
+                .should('exist')
+                .should('contain', 'You need to be UQ staff to view this object');
         });
     });
 });
