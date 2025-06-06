@@ -68,6 +68,7 @@ import {
     journalSearchNoFavourites,
 } from './data/journalSearchFavourites';
 import { vemcountData } from './data/vemcount';
+import dlor_admin_notes from './data/records/dlor/dlor_admin_notes';
 
 const moment = require('moment');
 
@@ -788,6 +789,10 @@ mock.onGet(/dlor\/public\/find\/.*/)
             return [200, { data: dlor_favourites_report }];
         }
     })
+    .onGet(/dlor\/admin\/object\/notes\/.*/)
+    .reply(() => {
+        return[200, dlor_admin_notes];
+    });
 
 
 mock.onGet('exams/course/FREN1010/summary')

@@ -30,6 +30,7 @@ import {
     DLOR_OWNED_UPDATE_API,
     DLOR_FAVOURITES_API,
     DLOR_DEMOGRAPHICS_REPORT_API,
+    DLOR_ADMIN_NOTES_API,
 } from 'repositories/routes';
 
 const checkExpireSession = (dispatch, error) => {
@@ -660,6 +661,27 @@ export function loadDlorDemographics() {
                     type: actions.DLOR_DEMOGRAPHICS_FAILED,
                     payload: error.message,
                 });
+            });
+    };
+}
+
+export function loadDlorAdminNotes(uuid) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_ADMIN_NOTES_LOADING });
+        return get(DLOR_ADMIN_NOTES_API({ id: uuid }))
+            .then(response => {
+                console.log('DLOR Admin Notes Response', response);
+                dispatch({
+                    type: actions.DLOR_ADMIN_NOTES_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_ADMIN_NOTES_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
             });
     };
 }

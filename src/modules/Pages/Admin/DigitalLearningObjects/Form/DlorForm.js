@@ -147,6 +147,7 @@ export const DlorForm = ({
     mode,
 }) => {
     console.log('Form Defaults form', formDefaults);
+    console.log('Admin notes', dlorAdminNotes);
     const [cookies, setCookie] = useCookies();
     const { account } = useAccountContext();
 
@@ -172,26 +173,6 @@ export const DlorForm = ({
     const teamSelectRef = useRef(null);
     const linkInteractionTypeSelectRef = useRef(formValues?.object_link_interaction_type || 'none');
     const linkFileTypeSelectRef = useRef(formValues.object_link_file_type || 'new');
-
-    const adminNotes = [
-        {
-            object_admin_note_id: 4,
-            object_public_uuid: '987y_isjgt_9866',
-            object_admin_username: 'uqtest1',
-            object_admin_note_content: 'This is a test from postman',
-            created_at: '27/05/2025 00:14',
-            updated_at: '27/05/2025 00:14',
-        },
-        {
-            object_admin_note_id: 3,
-            object_public_uuid: '987y_isjgt_9866',
-            object_admin_username: 'uqabcdef',
-            object_admin_note_content:
-                'This is a <strong>note</strong> for object 987y_isjgt_9866 by uqabcdef. <br /> <i>Again.</i><br />',
-            created_at: '27/05/2025 00:04',
-            updated_at: '27/05/2025 00:04',
-        },
-    ];
 
     const flatMapFacets = facetList => {
         return facetList?.flatMap(facet => facet?.filter_values?.map(value => value?.id)).sort((a, b) => a - b);
@@ -249,6 +230,13 @@ export const DlorForm = ({
             }
         }
     }, [dlorTeamList, dlorTeamListError, dlorTeamListLoading, mode]);
+
+    useEffect(() => {
+        if (dlorItem && dlorItem?.object_public_uuid) {
+            actions.loadDlorAdminNotes(dlorItem.object_public_uuid);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dlorItem, actions]);
 
     // useEffect(() => {
     //     console.log("UseEffect formDefaults", formDefaults, formValues);
@@ -784,17 +772,20 @@ export const DlorForm = ({
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                                {adminNotes.map((note, idx) => (
-                                                    <TableRow key={idx}>
-                                                        <TableCell>{note.object_admin_username}</TableCell>
-                                                        <TableCell>{parse(note.object_admin_note_content)}</TableCell>
-                                                        <TableCell>
-                                                            {moment(note.created_at, 'DD/MM/YYYY HH:mm').format(
-                                                                'DD/MM/YYYY, h:mm A',
-                                                            )}
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))}
+                                                {!!dlorAdminNotes &&
+                                                    dlorAdminNotes.map((note, idx) => (
+                                                        <TableRow key={idx}>
+                                                            <TableCell>{note.object_admin_username}</TableCell>
+                                                            <TableCell>
+                                                                {parse(note.object_admin_note_content)}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {moment(note.created_at, 'DD/MM/YYYY HH:mm').format(
+                                                                    'DD/MM/YYYY, h:mm A',
+                                                                )}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    ))}
                                             </TableBody>
                                         </Table>
                                     </TableContainer>
