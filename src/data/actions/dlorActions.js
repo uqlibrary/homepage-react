@@ -668,7 +668,33 @@ export function loadDlorDemographics() {
 export function loadDlorAdminNotes(uuid) {
     return dispatch => {
         dispatch({ type: actions.DLOR_ADMIN_NOTES_LOADING });
-        return get(DLOR_ADMIN_NOTES_API({ id: uuid }))
+        return get(DLOR_ADMIN_NOTES_API(uuid))
+            .then(response => {
+                console.log('DLOR Admin Notes Response', response);
+                dispatch({
+                    type: actions.DLOR_ADMIN_NOTES_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_ADMIN_NOTES_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+// eslint-disable-next-line camelcase
+export function saveDlorAdminNote(uuid, object_admin_note_content) {
+    return dispatch => {
+        console.log('Saving Dlor Admin Note', uuid, object_admin_note_content);
+        dispatch({ type: actions.DLOR_ADMIN_NOTES_LOADING });
+        return post(DLOR_ADMIN_NOTES_API(uuid), {
+            // eslint-disable-next-line camelcase
+            object_admin_note_content,
+        })
             .then(response => {
                 console.log('DLOR Admin Notes Response', response);
                 dispatch({

@@ -792,6 +792,10 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .onGet(/dlor\/admin\/object\/notes\/.*/)
     .reply(() => {
         return[200, dlor_admin_notes];
+    })
+    .onPost(/dlor\/admin\/object\/notes\/.*/)
+    .reply(() => {
+        return[200, dlor_admin_notes];
     });
 
 

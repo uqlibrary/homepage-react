@@ -753,7 +753,7 @@ export const DlorForm = ({
                         <Grid item xs={12}>
                             <Accordion sx={{ marginTop: 2 }}>
                                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                    <Typography variant="h6">Admin Notes</Typography>
+                                    <Typography variant="p">Admin Notes</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     <TableContainer component={Paper}>
@@ -960,7 +960,7 @@ export const DlorForm = ({
                         <FormControl variant="standard" fullWidth>
                             <FormLabel id="object_status_label">Object publication status</FormLabel>
                             <RadioGroup
-                                aria-labelledby="demo-radio-object_status_label-group-label"
+                                aria-labelledby="demo-radio-object_status_label-group"
                                 defaultValue="new"
                                 name="object_status_radio-buttons-group"
                                 row
@@ -1392,7 +1392,7 @@ export const DlorForm = ({
                             <Typography
                                 component={'h3'}
                                 variant={'h7'}
-                                id={`demo-radio-object_${filterItem.facet_type_slug}_label-group-label`}
+                                id={`demo-radio-object_${filterItem.facet_type_slug}_label-group`}
                             >
                                 {!!filterItem.facet_type_name && filterItem.facet_type_name}{' '}
                                 {filterItem?.facet_type_required && <span title="Required field">*</span>}
@@ -1686,9 +1686,24 @@ export const DlorForm = ({
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
-        return mode === 'add'
-            ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
-            : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend, isDlorAdminUser(account));
+        const saveDlorPromise =
+            mode === 'add'
+                ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
+                : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend, isDlorAdminUser(account));
+
+        return saveDlorPromise.then(() => {
+            // Save admin notes after DLO is created or updated
+            if (
+                isDlorAdminUser(account) &&
+                formValues.object_admin_notes !==
+                    (mode === 'edit' ? dlorItem?.object_admin_notes : /* istanbul ignore next */ '')
+            ) {
+                const objectUuid =
+                    mode === 'edit' ? dlorItem?.object_public_uuid : dlorSavedItem?.data?.object_public_uuid;
+                const noteContent = formValues.object_admin_notes;
+                actions.saveDlorAdminNote(objectUuid, noteContent);
+            }
+        });
     };
 
     const confirmationTitleAdmin = mode === 'add' ? 'The object has been created' : 'Changes have been saved';
