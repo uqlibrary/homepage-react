@@ -289,11 +289,17 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                                         target="_blank"
                                                                                     >
                                                                                         {!!paper.examType && (
-                                                                                            <div>{paper.examType}</div>
+                                                                                            <span>
+                                                                                                {paper.examType}
+                                                                                                <br />
+                                                                                            </span>
                                                                                         )}
-                                                                                        {paper.courseCode}
+                                                                                        <span>{paper.courseCode}</span>
                                                                                         {!!paper.examNote && (
-                                                                                            <div>{paper.examNote}</div>
+                                                                                            <span>
+                                                                                                <br />
+                                                                                                {paper.examNote}
+                                                                                            </span>
                                                                                         )}
                                                                                     </a>
                                                                                 ) : null}
