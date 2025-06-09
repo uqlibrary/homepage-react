@@ -91,7 +91,7 @@ context('Personalised Homepage', () => {
     it('when session cookie auto expires the user logs out', () => {
         expectUserToDisplayCorrectFirstName('s1111111', 'Michael');
 
-        hasAccountPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
+        hasAccountPanelOptions(['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut', 'fines']);
 
         cy.clearCookie('UQLID');
         cy.rendersALoggedoutUser();
