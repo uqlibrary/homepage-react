@@ -9,8 +9,19 @@ const chalk = require('chalk');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // npm i -D webpack-bundle-analyzer@3.6.1 to re-enable bundle treemap
+const RobotstxtPlugin = require('robotstxt-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
+
+// creates an empty robots file, which tells crawlers to crawl anything on the site
+const robotsTxtOptions = {
+    policy: [
+        {
+            userAgent: '*',
+            disallow: [''],
+        },
+    ],
+};
 
 // get branch name for current build, if running build locally CI_BRANCH is not set
 // (it is available when run in AWS codebuild)
@@ -149,6 +160,7 @@ const webpackConfig = {
         //     analyzerMode: config.environment === 'production' ? 'disabled' : 'static',
         //     openAnalyzer: !process.env.CI_BRANCH,
         // }),
+        new RobotstxtPlugin(robotsTxtOptions),
         new MomentTimezoneDataPlugin({
             matchZones: /^Australia\/Brisbane/,
         }),

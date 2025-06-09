@@ -36,6 +36,7 @@ import { scrollToTopOfPage } from 'helpers/general';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import { useAccountContext } from 'context';
 
 import {
     convertFileSizeToKb,
@@ -53,8 +54,12 @@ import {
     splitStringToArrayOnComma,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { isDlorAdminUser } from 'helpers/access';
 import { breadcrumbs } from 'config/routes';
 import { pluralise } from 'helpers/general';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+const moment = require('moment');
 
 const StyledErrorCountBadge = styled(Badge)(() => ({
     '& span': {
@@ -124,7 +129,9 @@ export const DlorForm = ({
     formDefaults,
     mode,
 }) => {
+    console.log('Form Defaults form', formDefaults);
     const [cookies, setCookie] = useCookies();
+    const { account } = useAccountContext();
 
     const [confirmationOpen, setConfirmationOpen] = useState(false);
 
@@ -158,7 +165,6 @@ export const DlorForm = ({
 
         return facetType?.facet_list?.map(facet => facet.facet_id) || /* istanbul ignore next */ [];
     }
-
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
@@ -207,6 +213,14 @@ export const DlorForm = ({
         }
     }, [dlorTeamList, dlorTeamListError, dlorTeamListLoading, mode]);
 
+    // useEffect(() => {
+    //     console.log("UseEffect formDefaults", formDefaults, formValues);
+    //     if (!!!formDefaults.object_publishing_user) {
+    //         console.log("SETTING FORM DEFAULTS");
+    //         setFormValues({...formValues, object_publishing_user: formDefaults.object_publishing_user});
+    //     }
+    // }, [formDefaults]);
+
     // these match the values in dlor cypress admin tests
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
@@ -253,13 +267,24 @@ export const DlorForm = ({
     };
 
     const isValidUsername = testUserName => {
+        console.log('TEST THE USERNAME, ', testUserName);
         return testUserName?.length >= 4 && testUserName?.length <= 8;
     };
 
     function validatePanelOwnership(currentValues) {
         let firstPanelErrorCount = 0;
         // valid user id is 8 or 9 char
+        console.log('currentValues', currentValues);
         !isValidUsername(currentValues?.object_publishing_user) && firstPanelErrorCount++;
+
+        if (
+            !currentValues?.object_review_date_next ||
+            !moment(currentValues.object_review_date_next).isValid() ||
+            moment(currentValues.object_review_date_next).isAfter(moment()) ||
+            moment(currentValues.object_review_date_next).isBefore(moment().subtract(12, 'months'))
+        ) {
+            firstPanelErrorCount++;
+        }
         if (teamSelectRef.current === 'new') {
             if (
                 currentValues?.team_name_new === undefined ||
@@ -370,6 +395,13 @@ export const DlorForm = ({
         setFormValues(newValues);
     };
 
+    const handleDateChange = newValue => {
+        console.log('Date Changed here');
+        const formattedDate = moment(newValue).format('YYYY-MM-DD');
+        const newValues = { ...formValues, object_review_date_next: formattedDate };
+        setFormValues(newValues);
+    };
+
     const handleFacetChange = () => e => {
         let newValues;
 
@@ -412,6 +444,8 @@ export const DlorForm = ({
         let theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
 
+        console.log('The new value', theNewValue);
+
         if (['object_is_featured', 'object_cultural_advice'].includes(prop)) {
             theNewValue = !!e.target.checked ? 1 : 0;
         }
@@ -443,6 +477,8 @@ export const DlorForm = ({
         // amalgamate new value into data set
         const newValues = { ...formValues, [prop]: theNewValue };
 
+        console.log('The new values are', newValues);
+
         setFormValues(newValues);
     };
 
@@ -463,170 +499,215 @@ export const DlorForm = ({
         setFormValues(newValues);
     };
 
-    const stepPanelContentOwnership = (
-        <>
-            <Grid item xs={12}>
-                <FormControl variant="standard" fullWidth>
-                    <InputLabel htmlFor="object_publishing_user">Publishing user *</InputLabel>
-                    <Input
-                        id="object_publishing_user"
-                        data-testid="object-publishing-user"
-                        required
-                        value={formValues?.object_publishing_user || ''}
-                        onChange={handleChange('object_publishing_user')}
-                        sx={{ width: '20em' }}
-                        error={!isValidUsername(formValues?.object_publishing_user)}
-                    />
-                    <Box
-                        sx={{
-                            fontSize: '0.9em',
-                            marginTop: '4px',
-                        }}
+    console.log('IS ADMIN', isDlorAdminUser(account));
+
+    const stepPanelContentOwnership = React.useMemo(
+        () => (
+            <>
+                <Grid item xs={12}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel htmlFor="object_publishing_user">Object owner *</InputLabel>
+                        <Input
+                            id="object_publishing_user"
+                            data-testid="object-publishing-user"
+                            required
+                            disabled={!isDlorAdminUser(account)}
+                            value={formValues?.object_publishing_user || ''}
+                            onChange={handleChange('object_publishing_user')}
+                            sx={{ width: '20em' }}
+                            error={!isValidUsername(formValues?.object_publishing_user)}
+                        />
+                        <Box
+                            sx={{
+                                fontSize: '0.9em',
+                                marginTop: '4px',
+                            }}
+                        >
+                            This must be the person's UQ username
+                        </Box>
+                        {!isValidUsername(formValues?.object_publishing_user) && (
+                            <StyledErrorMessageBox data-testid="dlor-form-error-message-object-publishing-user">
+                                This username is not valid.
+                            </StyledErrorMessageBox>
+                        )}
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12} sx={{ minHeight: '95px' }}>
+                    <InputLabel id="object_owning_team_label">Owning Team</InputLabel>
+                    <Select
+                        variant="standard"
+                        labelId="object_owning_team_label"
+                        id="object_owning_team"
+                        data-testid="object-owning-team"
+                        value={teamSelectRef.current ?? 1}
+                        onChange={handleChange('object_owning_team_id')}
+                        sx={{ minWidth: '20em' }}
                     >
-                        This must be the person's UQ username
-                    </Box>
-                    {!isValidUsername(formValues?.object_publishing_user) && (
-                        <StyledErrorMessageBox data-testid="dlor-form-error-message-object-publishing-user">
-                            This username is not valid.
-                        </StyledErrorMessageBox>
+                        {dlorTeamList?.map((t, index) => {
+                            return (
+                                <MenuItem
+                                    key={t.team_id}
+                                    value={t.team_id}
+                                    selected={t.team_id === teamSelectRef.current}
+                                    data-testid={`object-owning-team-${t.team_id}`}
+                                    divider={index === dlorTeamList.length - 1}
+                                >
+                                    {t.team_name}
+                                </MenuItem>
+                            );
+                        })}
+                        <MenuItem
+                            value="new"
+                            data-testid="object-form-teamid-new"
+                            selected={teamSelectRef.current === 'new'}
+                        >
+                            Create a team
+                        </MenuItem>
+                    </Select>
+                    {/* the user can only edit team details for the current Team - this is just a convenience form */}
+                    {mode === 'edit' && formDefaults?.object_owning_team_id === teamSelectRef.current && (
+                        <Button
+                            onClick={() => controlEditTeamDialog()}
+                            sx={{ marginLeft: '10px' }}
+                            data-testid="object-form-teamid-change"
+                        >
+                            {showTeamForm === false ? 'Update contact' : 'Close'}
+                        </Button>
                     )}
-                </FormControl>
-            </Grid>
-            <Grid item xs={12} sx={{ minHeight: '95px' }}>
-                <InputLabel id="object_owning_team_label">Owning Team</InputLabel>
-                <Select
-                    variant="standard"
-                    labelId="object_owning_team_label"
-                    id="object_owning_team"
-                    data-testid="object-owning-team"
-                    value={teamSelectRef.current ?? 1}
-                    onChange={handleChange('object_owning_team_id')}
-                    sx={{ minWidth: '20em' }}
-                >
-                    {dlorTeamList?.map((t, index) => {
-                        return (
-                            <MenuItem
-                                key={t.team_id}
-                                value={t.team_id}
-                                selected={t.team_id === teamSelectRef.current}
-                                data-testid={`object-owning-team-${t.team_id}`}
-                                divider={index === dlorTeamList.length - 1}
-                            >
-                                {t.team_name}
-                            </MenuItem>
-                        );
-                    })}
-                    <MenuItem
-                        value="new"
-                        data-testid="object-form-teamid-new"
-                        selected={teamSelectRef.current === 'new'}
-                    >
-                        Create a team
-                    </MenuItem>
-                </Select>
-                {/* the user can only edit team details for the current Team - this is just a convenience form */}
-                {mode === 'edit' && formDefaults?.object_owning_team_id === teamSelectRef.current && (
-                    <Button
-                        onClick={() => controlEditTeamDialog()}
-                        sx={{ marginLeft: '10px' }}
-                        data-testid="object-form-teamid-change"
-                    >
-                        {showTeamForm === false ? 'Update contact' : 'Close'}
-                    </Button>
-                )}
-            </Grid>
-            {showTeamForm !== false && teamSelectRef.current === 'new' && (
-                <Grid item xs={5}>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel htmlFor="team_name_new">Name of new Team *</InputLabel>
-                        <Input
-                            id="team_name_new"
-                            data-testid="dlor-form-team-name-new"
-                            value={formValues?.team_name_new || ''}
-                            onChange={handleChange('team_name_new')}
-                        />
-                    </FormControl>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel htmlFor="team_manager_new">Name of Team manager *</InputLabel>
-                        <Input
-                            id="team_manager_new"
-                            data-testid="dlor-form-team-manager-new"
-                            required
-                            value={formValues?.team_manager_new || ''}
-                            onChange={handleChange('team_manager_new')}
-                        />
-                    </FormControl>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel htmlFor="team_email_new">Team email *</InputLabel>
-                        <Input
-                            id="team_email_new"
-                            data-testid="dlor-form-team-email-new"
-                            required
-                            value={formValues?.team_email_new || ''}
-                            onChange={handleChange('team_email_new')}
-                            type="email"
-                            error={!isValidEmail(formValues?.team_email_new)}
-                        />
-                        {!isValidEmail(formValues?.team_email_new) && (
-                            <StyledErrorMessageBox data-testid="error-message-team-email-new">
-                                This email address is not valid.
-                            </StyledErrorMessageBox>
-                        )}
-                    </FormControl>
                 </Grid>
-            )}
-            {showTeamForm !== false && teamSelectRef.current !== 'new' && (
-                <Grid item xs={5}>
-                    <Box sx={{ fontStyle: 'italic', marginBlock: '-16px 16px' }}>
-                        A change here will affect all Objects for this team.
-                        <br />
-                        You can also{' '}
-                        <a target="_blank" href={dlorAdminLink('/team/manage')}>
-                            Manage Teams
-                        </a>
-                    </Box>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel htmlFor="team_manager_edit">Name of Team manager *</InputLabel>
-                        <Input
-                            id="team_manager_edit"
-                            data-testid="dlor-form-team-manager-edit"
-                            required
-                            value={formValues?.team_manager_edit || /* istanbul ignore next */ ''}
-                            onChange={handleChange('team_manager_edit')}
-                        />
-                    </FormControl>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel htmlFor="team_email_edit">Team email *</InputLabel>
-                        <Input
-                            id="team_email_edit"
-                            data-testid="dlor-form-team-email-edit"
-                            required
-                            value={formValues?.team_email_edit || ''}
-                            onChange={handleChange('team_email_edit')}
-                            type="email"
-                            error={!isValidEmail(formValues?.team_email_edit)}
-                        />
-                        {!isValidEmail(formValues?.team_email_edit) && (
-                            <StyledErrorMessageBox data-testid="error-message-team-email-edit">
-                                This email address is not valid.
-                            </StyledErrorMessageBox>
-                        )}
-                    </FormControl>
-                </Grid>
-            )}
-            <Grid item xs={12}>
-                {mode === 'edit' ? (
-                    <Typography component={'p'}>
-                        Next Review Date: {formValues?.object_review_date_next} (edit to come)
-                    </Typography>
-                ) : (
-                    <Typography component={'p'}>
-                        Next Review Date: {formValues?.object_review_date_next} (setting to come)
-                    </Typography>
+                {showTeamForm !== false && teamSelectRef.current === 'new' && (
+                    <Grid item xs={5}>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="team_name_new">Name of new Team *</InputLabel>
+                            <Input
+                                id="team_name_new"
+                                data-testid="dlor-form-team-name-new"
+                                value={formValues?.team_name_new || ''}
+                                onChange={handleChange('team_name_new')}
+                            />
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="team_manager_new">Name of Team manager *</InputLabel>
+                            <Input
+                                id="team_manager_new"
+                                data-testid="dlor-form-team-manager-new"
+                                required
+                                value={formValues?.team_manager_new || ''}
+                                onChange={handleChange('team_manager_new')}
+                            />
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="team_email_new">Team email *</InputLabel>
+                            <Input
+                                id="team_email_new"
+                                data-testid="dlor-form-team-email-new"
+                                required
+                                value={formValues?.team_email_new || ''}
+                                onChange={handleChange('team_email_new')}
+                                type="email"
+                                error={!isValidEmail(formValues?.team_email_new)}
+                            />
+                            {!isValidEmail(formValues?.team_email_new) && (
+                                <StyledErrorMessageBox data-testid="error-message-team-email-new">
+                                    This email address is not valid.
+                                </StyledErrorMessageBox>
+                            )}
+                        </FormControl>
+                    </Grid>
                 )}
-            </Grid>
-        </>
+                {showTeamForm !== false && teamSelectRef.current !== 'new' && (
+                    <Grid item xs={5}>
+                        <Box sx={{ fontStyle: 'italic', marginBlock: '-16px 16px' }}>
+                            A change here will affect all Objects for this team.
+                            <br />
+                            You can also{' '}
+                            <a target="_blank" href={dlorAdminLink('/team/manage')}>
+                                Manage Teams
+                            </a>
+                        </Box>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="team_manager_edit">Name of Team manager *</InputLabel>
+                            <Input
+                                id="team_manager_edit"
+                                data-testid="dlor-form-team-manager-edit"
+                                required
+                                value={formValues?.team_manager_edit || /* istanbul ignore next */ ''}
+                                onChange={handleChange('team_manager_edit')}
+                            />
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="team_email_edit">Team email *</InputLabel>
+                            <Input
+                                id="team_email_edit"
+                                data-testid="dlor-form-team-email-edit"
+                                required
+                                value={formValues?.team_email_edit || ''}
+                                onChange={handleChange('team_email_edit')}
+                                type="email"
+                                error={!isValidEmail(formValues?.team_email_edit)}
+                            />
+                            {!isValidEmail(formValues?.team_email_edit) && (
+                                <StyledErrorMessageBox data-testid="error-message-team-email-edit">
+                                    This email address is not valid.
+                                </StyledErrorMessageBox>
+                            )}
+                        </FormControl>
+                    </Grid>
+                )}
+                <Grid item xs={12}>
+                    {mode === 'edit' ? (
+                        <>
+                            {/* <Typography component={'p'}>
+                                    Next Review Date: {formValues?.object_review_date_next} (edit to come)
+                                </Typography> */}
+                            <DatePicker
+                                slotProps={{
+                                    textField: {
+                                        'data-testid': 'object-review-date',
+                                    },
+                                }}
+                                label="Last Review Date"
+                                value={moment(formValues?.object_review_date_next)}
+                                onChange={newValue => handleDateChange(newValue)}
+                                maxDate={moment()}
+                                minDate={moment().subtract(12, 'months')}
+                                format="DD/MM/YYYY"
+                            />
+                        </>
+                    ) : (
+                        <>
+                            {/* <Typography component={'p'}>
+                                    Next Review Date: {formValues?.object_review_date_next} (setting to come)
+                                </Typography> */}
+                            <DatePicker
+                                label="Last Review Date"
+                                slotProps={{
+                                    textField: {
+                                        'data-testid': 'object-review-date',
+                                    },
+                                }}
+                                value={moment(formValues?.object_review_date_next)}
+                                onChange={newValue => handleDateChange(newValue)}
+                                maxDate={moment()}
+                                minDate={moment().subtract(12, 'months')}
+                                format="DD/MM/YYYY"
+                            />
+                        </>
+                    )}
+                </Grid>
+            </>
+        ),
+        [formValues, showTeamForm, teamSelectRef.current, dlorTeamList, mode, formDefaults],
     );
+
+    useEffect(() => {
+        if (formDefaults?.object_publishing_user !== formValues?.object_publishing_user) {
+            setFormValues(prevValues => ({
+                ...prevValues,
+                object_publishing_user: formDefaults.object_publishing_user,
+            }));
+        }
+    }, [formDefaults.object_publishing_user]);
 
     const suggestSummary = (enteredDescription, requiredLength = 150) => {
         const plainSummary = html2text.fromString(enteredDescription);
@@ -696,6 +777,7 @@ export const DlorForm = ({
                         characterCount(formValues?.object_title?.length, titleMinimumLength, 'object_title')}
                 </FormControl>
             </Grid>
+            {console.log('THE FORM VALUES:', formValues)}
             <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
@@ -773,43 +855,80 @@ export const DlorForm = ({
                     )}
                 </FormControl>
             </Grid>
-            <Grid item xs={12}>
-                <FormControl variant="standard" fullWidth>
-                    <FormLabel id="object_status_label">Object publication status</FormLabel>
-                    <RadioGroup
-                        aria-labelledby="demo-radio-object_status_label-group-label"
-                        defaultValue="new"
-                        name="object_status_radio-buttons-group"
-                        row
-                        value={formValues?.object_status || 'new'}
-                        onChange={handleChange('object_status')}
+            {(!!isDlorAdminUser(account) || (mode === 'edit' && formValues?.object_status !== 'submitted')) && (
+                <>
+                    <Grid item xs={12}>
+                        <FormControl variant="standard" fullWidth>
+                            <FormLabel id="object_status_label">Object publication status</FormLabel>
+                            <RadioGroup
+                                aria-labelledby="demo-radio-object_status_label-group-label"
+                                defaultValue="new"
+                                name="object_status_radio-buttons-group"
+                                row
+                                value={formValues?.object_status || 'new'}
+                                onChange={handleChange('object_status')}
+                            >
+                                <FormControlLabel
+                                    value="current"
+                                    control={<Radio />}
+                                    label="Published"
+                                    selected={formValues?.object_status === 'current'}
+                                />
+                                <FormControlLabel
+                                    value="new"
+                                    control={<Radio />}
+                                    label="Draft"
+                                    selected={formValues?.object_status === 'new'}
+                                />
+                                <FormControlLabel
+                                    value="deprecated"
+                                    control={<Radio />}
+                                    label="Unpublished"
+                                    selected={formValues?.object_status === 'deprecated'}
+                                />
+                            </RadioGroup>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <FormLabel>Featured object?</FormLabel>
+                        <InputLabel>
+                            <Checkbox
+                                checked={!!formValues?.object_is_featured}
+                                data-testid="object-is-featured"
+                                onChange={handleChange('object_is_featured')}
+                                sx={{ paddingLeft: 0 }}
+                            />
+                            Feature this Object at the top of the list page
+                        </InputLabel>
+                    </Grid>
+                </>
+            )}
+            <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                    <FormLabel id="object-restriction-label">Object Restriction</FormLabel>
+                    <Select
+                        labelId="object-restriction-label"
+                        id="object_restrict_to"
+                        data-testid="object-restrict-to"
+                        value={formValues?.object_restrict_to || 'none'}
+                        onChange={handleChange('object_restrict_to')}
+                        aria-labelledby="object-restriction-label"
+                        sx={{ width: '100%' }}
                     >
-                        <FormControlLabel
-                            value="current"
-                            control={<Radio />}
-                            label="Published"
-                            selected={formValues?.object_status === 'current'}
-                        />
-                        <FormControlLabel
-                            value="new"
-                            control={<Radio />}
-                            label="Draft"
-                            selected={formValues?.object_status === 'new'}
-                        />
-                    </RadioGroup>
+                        <MenuItem value="none" data-testid="object-restrict-to-none">
+                            None
+                        </MenuItem>
+                        <MenuItem value="uquser" data-testid="object-restrict-to-uquser">
+                            UQ staff and students
+                        </MenuItem>
+                        <MenuItem value="uqstaff" data-testid="object-restrict-to-uqstaff">
+                            UQ staff only
+                        </MenuItem>
+                        <MenuItem value="uqlibrarystaff" data-testid="object-restrict-to-uqlibrarystaff">
+                            UQ Library staff only
+                        </MenuItem>
+                    </Select>
                 </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-                <FormLabel>Featured object?</FormLabel>
-                <InputLabel>
-                    <Checkbox
-                        checked={!!formValues?.object_is_featured}
-                        data-testid="object-is-featured"
-                        onChange={handleChange('object_is_featured')}
-                        sx={{ paddingLeft: 0 }}
-                    />
-                    Feature this Object at the top of the list page
-                </InputLabel>
             </Grid>
             <Grid item xs={12}>
                 <FormLabel>Cultural advice?</FormLabel>
@@ -873,186 +992,193 @@ export const DlorForm = ({
                         )}
                 </FormControl>
             </Grid>
-            <Grid item xs={12}>
-                <InputLabel id="object_link_interaction_type-label" htmlFor="object_link_interaction_type">
-                    Message advising about link
-                </InputLabel>
-                <Grid container>
-                    <Grid item xs={4}>
-                        <FormControl>
-                            <span>&nbsp;</span>
-                            <Select
-                                variant="standard"
-                                labelId="object_link_interaction_type-label"
-                                id="object_link_interaction_type"
-                                data-testid="object-link-interaction-type"
-                                value={linkInteractionTypeSelectRef.current}
-                                onChange={handleChange('object_link_interaction_type')}
-                                sx={{ width: '100%' }}
-                            >
-                                <MenuItem
-                                    value={linkInteractionTypeDOWNLOAD}
-                                    data-testid="object-link-interaction-type-download"
-                                    selected={linkInteractionTypeSelectRef.current === linkInteractionTypeDOWNLOAD}
+            {isDlorAdminUser(account) && (
+                <Grid item xs={12}>
+                    <InputLabel id="object_link_interaction_type-label" htmlFor="object_link_interaction_type">
+                        Message advising about link
+                    </InputLabel>
+                    <Grid container>
+                        <Grid item xs={4}>
+                            <FormControl>
+                                <span>&nbsp;</span>
+                                <Select
+                                    variant="standard"
+                                    labelId="object_link_interaction_type-label"
+                                    id="object_link_interaction_type"
+                                    data-testid="object-link-interaction-type"
+                                    value={linkInteractionTypeSelectRef.current}
+                                    onChange={handleChange('object_link_interaction_type')}
+                                    sx={{ width: '100%' }}
                                 >
-                                    can Download
-                                </MenuItem>
-                                <MenuItem
-                                    value={linkInteractionTypeVIEW}
-                                    data-testid="object-link-interaction-type-view"
-                                    selected={linkInteractionTypeSelectRef.current === linkInteractionTypeVIEW}
-                                >
-                                    can View
-                                </MenuItem>
-                                <MenuItem
-                                    value={linkInteractionTypeNONE}
-                                    data-testid="object-link-interaction-type-none"
-                                    selected={
-                                        ![linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
-                                            linkInteractionTypeSelectRef.current,
-                                        )
-                                    }
-                                >
-                                    No message
-                                </MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <FormControl sx={{ minWidth: '10em' }}>
-                            {[linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
-                                linkInteractionTypeSelectRef.current,
-                            ) && (
-                                <>
-                                    <InputLabel htmlFor="object_link_file_type">File type *</InputLabel>
-                                    <Select
-                                        variant="standard"
-                                        labelId="object_link_file_type"
-                                        id="object_link_file_type"
-                                        data-testid="object-link-file-type"
-                                        value={linkFileTypeSelectRef.current}
-                                        onChange={handleChange('object_link_file_type')}
-                                        sx={{ width: '100%', marginTop: '20px' }}
+                                    <MenuItem
+                                        value={linkInteractionTypeDOWNLOAD}
+                                        data-testid="object-link-interaction-type-download"
+                                        selected={linkInteractionTypeSelectRef.current === linkInteractionTypeDOWNLOAD}
                                     >
-                                        {getFileTypeList.map(type => (
-                                            <MenuItem
-                                                key={type.object_link_file_type}
-                                                data-testid={`object-link-file-type-${convertSnakeCaseToKebabCase(
-                                                    type.object_link_file_type,
-                                                )}`}
-                                                value={type.object_link_file_type}
-                                                selected={type.object_link_file_type === linkFileTypeSelectRef.current}
-                                            >
-                                                {type.object_link_file_type}
-                                            </MenuItem>
-                                        ))}
-                                        <MenuItem
-                                            data-testid={'object-link-file-type-new'}
-                                            value="new"
-                                            selected={linkFileTypeSelectRef.current === 'new'}
+                                        can Download
+                                    </MenuItem>
+                                    <MenuItem
+                                        value={linkInteractionTypeVIEW}
+                                        data-testid="object-link-interaction-type-view"
+                                        selected={linkInteractionTypeSelectRef.current === linkInteractionTypeVIEW}
+                                    >
+                                        can View
+                                    </MenuItem>
+                                    <MenuItem
+                                        value={linkInteractionTypeNONE}
+                                        data-testid="object-link-interaction-type-none"
+                                        selected={
+                                            ![linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
+                                                linkInteractionTypeSelectRef.current,
+                                            )
+                                        }
+                                    >
+                                        No message
+                                    </MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <FormControl sx={{ minWidth: '10em' }}>
+                                {[linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
+                                    linkInteractionTypeSelectRef.current,
+                                ) && (
+                                    <>
+                                        <InputLabel htmlFor="object_link_file_type">File type *</InputLabel>
+                                        <Select
+                                            variant="standard"
+                                            labelId="object_link_file_type"
+                                            id="object_link_file_type"
+                                            data-testid="object-link-file-type"
+                                            value={linkFileTypeSelectRef.current}
+                                            onChange={handleChange('object_link_file_type')}
+                                            sx={{ width: '100%', marginTop: '20px' }}
                                         >
-                                            New type
-                                        </MenuItem>
-                                    </Select>
-                                    {showFileTypeCreationForm && (
-                                        <Grid item xs={12}>
-                                            <FormControl variant="standard" fullWidth>
-                                                <InputLabel htmlFor="new_file_type">New File Type (abbrev)</InputLabel>
+                                            {getFileTypeList.map(type => (
+                                                <MenuItem
+                                                    key={type.object_link_file_type}
+                                                    data-testid={`object-link-file-type-${convertSnakeCaseToKebabCase(
+                                                        type.object_link_file_type,
+                                                    )}`}
+                                                    value={type.object_link_file_type}
+                                                    selected={
+                                                        type.object_link_file_type === linkFileTypeSelectRef.current
+                                                    }
+                                                >
+                                                    {type.object_link_file_type}
+                                                </MenuItem>
+                                            ))}
+                                            <MenuItem
+                                                data-testid={'object-link-file-type-new'}
+                                                value="new"
+                                                selected={linkFileTypeSelectRef.current === 'new'}
+                                            >
+                                                New type
+                                            </MenuItem>
+                                        </Select>
+                                        {showFileTypeCreationForm && (
+                                            <Grid item xs={12}>
+                                                <FormControl variant="standard" fullWidth>
+                                                    <InputLabel htmlFor="new_file_type">
+                                                        New File Type (abbrev)
+                                                    </InputLabel>
+                                                    <Input
+                                                        id="new_file_type"
+                                                        data-testid="dlor-admin-form-new-file-type"
+                                                        value={formValues?.new_file_type || ''}
+                                                        onChange={handleChange('new_file_type')}
+                                                    />
+                                                </FormControl>
+                                            </Grid>
+                                        )}{' '}
+                                    </>
+                                )}
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <StyledViewDurationBox>
+                                {!!showLinkTimeForm && (
+                                    <>
+                                        <InputLabel id="object_link_duration-label">Run time *</InputLabel>
+                                        <div>
+                                            <FormControl>
                                                 <Input
-                                                    id="new_file_type"
-                                                    data-testid="dlor-admin-form-new-file-type"
-                                                    value={formValues?.new_file_type || ''}
-                                                    onChange={handleChange('new_file_type')}
+                                                    id="object_link_duration_minutes"
+                                                    aria-labelledby="object_link_duration-label object_link_duration_minutes"
+                                                    data-testid="object-link-duration-minutes"
+                                                    required
+                                                    value={formValues?.object_link_duration_minutes || ''}
+                                                    onChange={handleChange('object_link_duration_minutes')}
                                                 />
                                             </FormControl>
-                                        </Grid>
-                                    )}{' '}
-                                </>
-                            )}
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <StyledViewDurationBox>
-                            {!!showLinkTimeForm && (
-                                <>
-                                    <InputLabel id="object_link_duration-label">Run time *</InputLabel>
-                                    <div>
-                                        <FormControl>
-                                            <Input
-                                                id="object_link_duration_minutes"
-                                                aria-labelledby="object_link_duration-label object_link_duration_minutes"
-                                                data-testid="object-link-duration-minutes"
-                                                required
-                                                value={formValues?.object_link_duration_minutes || ''}
-                                                onChange={handleChange('object_link_duration_minutes')}
-                                            />
-                                        </FormControl>
-                                        <StyledDurationSpan id="object_link_duration_minutes-label">
-                                            minutes
-                                        </StyledDurationSpan>
-                                        <StyledDurationSpan> and </StyledDurationSpan>
-                                        <FormControl>
-                                            <Input
-                                                id="object_link_duration_seconds"
-                                                aria-labelledby="object_link_duration-label object_link_duration_seconds-label"
-                                                data-testid="object-link-duration-seconds"
-                                                required
-                                                value={formValues?.object_link_duration_seconds || ''}
-                                                onChange={handleChange('object_link_duration_seconds')}
-                                            />
-                                        </FormControl>
-                                        <span id="object_link_duration_seconds-label">seconds</span>
-                                    </div>
-                                </>
-                            )}
-                            {!!showLinkSizeForm && (
-                                <>
-                                    <InputLabel id="object_link_file_size-label">File Size *</InputLabel>
-                                    <div>
-                                        <FormControl>
-                                            <Input
-                                                id="object_link_size_amount"
-                                                aria-labelledby="object_link_file_size-label"
-                                                data-testid="object-link-size-amount"
-                                                required
-                                                value={formValues?.object_link_size_amount || ''}
-                                                onChange={handleChange('object_link_size_amount')}
-                                            />
-                                        </FormControl>
-                                        <FormControl>
-                                            <Select
-                                                variant="standard"
-                                                labelId="object_link_size_units"
-                                                id="object_link_size_units"
-                                                data-testid="object-link-size-units"
-                                                value={formValues?.object_link_size_units}
-                                                onChange={handleChange('object_link_size_units')}
-                                            >
-                                                {validFileSizeUnits.map(unit => (
-                                                    <MenuItem
-                                                        key={unit}
-                                                        id={`object_link_size_units-${unit}`}
-                                                        data-testid={`object-link-size-units-${unit}`}
-                                                        value={unit}
-                                                        selected={unit === formValues?.object_link_size_units}
-                                                    >
-                                                        {unit}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-                                    </div>
-                                </>
-                            )}
-                        </StyledViewDurationBox>
+                                            <StyledDurationSpan id="object_link_duration_minutes-label">
+                                                minutes
+                                            </StyledDurationSpan>
+                                            <StyledDurationSpan> and </StyledDurationSpan>
+                                            <FormControl>
+                                                <Input
+                                                    id="object_link_duration_seconds"
+                                                    aria-labelledby="object_link_duration-label object_link_duration_seconds-label"
+                                                    data-testid="object-link-duration-seconds"
+                                                    required
+                                                    value={formValues?.object_link_duration_seconds || ''}
+                                                    onChange={handleChange('object_link_duration_seconds')}
+                                                />
+                                            </FormControl>
+                                            <span id="object_link_duration_seconds-label">seconds</span>
+                                        </div>
+                                    </>
+                                )}
+                                {!!showLinkSizeForm && (
+                                    <>
+                                        <InputLabel id="object_link_file_size-label">File Size *</InputLabel>
+                                        <div>
+                                            <FormControl>
+                                                <Input
+                                                    id="object_link_size_amount"
+                                                    aria-labelledby="object_link_file_size-label"
+                                                    data-testid="object-link-size-amount"
+                                                    required
+                                                    value={formValues?.object_link_size_amount || ''}
+                                                    onChange={handleChange('object_link_size_amount')}
+                                                />
+                                            </FormControl>
+                                            <FormControl>
+                                                <Select
+                                                    variant="standard"
+                                                    labelId="object_link_size_units"
+                                                    id="object_link_size_units"
+                                                    data-testid="object-link-size-units"
+                                                    value={formValues?.object_link_size_units}
+                                                    onChange={handleChange('object_link_size_units')}
+                                                >
+                                                    {validFileSizeUnits.map(unit => (
+                                                        <MenuItem
+                                                            key={unit}
+                                                            id={`object_link_size_units-${unit}`}
+                                                            data-testid={`object-link-size-units-${unit}`}
+                                                            value={unit}
+                                                            selected={unit === formValues?.object_link_size_units}
+                                                        >
+                                                            {unit}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </div>
+                                    </>
+                                )}
+                            </StyledViewDurationBox>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
+            )}
+
             <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     {/* yes, this looks too big locally, but looks correct live. No, I dont know why */}
                     <InputLabel htmlFor="object_download_instructions" sx={{ fontSize: 20 }}>
-                        Download Instructions
+                        Instructions
                     </InputLabel>
                     <CKEditor
                         id="download_instructions"
@@ -1060,7 +1186,7 @@ export const DlorForm = ({
                         sx={{ width: '100%' }}
                         editor={ClassicEditor}
                         config={editorConfig}
-                        data={formValues?.object_download_instructions || ''}
+                        data={formValues?.object_download_instructions || /* istanbul ignore next */ ''}
                         onReady={editor => {
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
@@ -1177,6 +1303,11 @@ export const DlorForm = ({
                     );
                 })}
             <Grid item xs={12}>
+                <Typography component={'h2'} variant={'h6'}>
+                    Keywords
+                </Typography>
+            </Grid>
+            <Grid item xs={12} style={{ paddingTop: 0 }}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_keywords">
                         Keywords - enter a comma separated list of keywords *
@@ -1457,31 +1588,49 @@ export const DlorForm = ({
         }
 
         return mode === 'add'
-            ? actions.createDlor(valuesToSend)
-            : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend);
+            ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
+            : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend, isDlorAdminUser(account));
     };
+
+    const confirmationTitleAdmin = mode === 'add' ? 'The object has been created' : 'Changes have been saved';
+    const confirmationTitle = isDlorAdminUser(account) ? confirmationTitleAdmin : 'Your request has been submitted';
 
     const locale = {
         successMessage: {
-            confirmationTitle: mode === 'add' ? 'The object has been created' : 'Changes have been saved',
+            confirmationTitle: confirmationTitle,
             confirmationMessage: '',
             cancelButtonLabel: mode === 'add' ? 'Add another Object' : 'Re-edit Object',
-            confirmButtonLabel: 'Return to list page',
+            confirmButtonLabel: mode === 'add' ? 'Return to list page' : 'View Object',
         },
         errorMessage: {
             confirmationTitle: dlorSavedItemError,
             confirmationMessage: '',
             cancelButtonLabel: mode === 'add' ? 'Add another Object' : 'Re-edit Object',
-            confirmButtonLabel: 'Return to list page',
+            confirmButtonLabel: mode === 'add' ? 'Return to list page' : 'View Object',
         },
     };
 
-    const navigateToDlorAdminHomePage = () => {
+    const navigateToObject = uuid => {
         setConfirmationOpen(false);
         actions.clearADlor();
-        window.location.href = dlorAdminLink();
+        window.location.href = getDlorViewPageUrl(uuid);
         scrollToTopOfPage();
     };
+
+    // const navigateToDlorAdminHomePage = () => {
+    //     setConfirmationOpen(false);
+    //     actions.clearADlor();
+    //     window.location.href = dlorAdminLink();
+    //     scrollToTopOfPage();
+    // };
+
+    const navigateToListPage = isAdmin => {
+        setConfirmationOpen(false);
+        actions.clearADlor();
+        window.location.href = isAdmin ? dlorAdminLink() : '/digital-learning-hub';
+        scrollToTopOfPage();
+    };
+
     const navigateToPreviousPage = () => {
         window.location.href = dlorAdminLink();
     };
@@ -1546,7 +1695,12 @@ export const DlorForm = ({
                 actionButtonColor="primary"
                 actionButtonVariant="contained"
                 confirmationBoxId="dlor-save-outcome"
-                onAction={() => navigateToDlorAdminHomePage()}
+                // onAction={() => (isDlorAdminUser(account) ? navigateToDlorAdminHomePage() : navigateToPrimaryPage())}
+                onAction={() =>
+                    mode === 'edit'
+                        ? navigateToObject(dlorItem?.object_public_uuid)
+                        : navigateToListPage(isDlorAdminUser(account))
+                }
                 hideCancelButton={!locale.successMessage.cancelButtonLabel}
                 cancelButtonLabel={locale.successMessage.cancelButtonLabel}
                 onCancelAction={() => clearForm()}

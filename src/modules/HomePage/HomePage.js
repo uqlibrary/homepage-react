@@ -21,6 +21,7 @@ import {
     loadDrupalArticles,
     loadLoans,
     loadVemcountList,
+    loadPrimoStatus,
 } from 'data/actions';
 import { canSeeLearningResourcesPanel, isEspaceAuthor, canSeeReadPublish, canSeeTrainingPanel } from 'helpers/access';
 import UtilityBar from './publicComponents/UtilityBar/UtilityBar';
@@ -121,6 +122,8 @@ export const HomePage = ({
     printBalance,
     printBalanceLoading,
     printBalanceError,
+    primoStatus,
+    primoStatusLoading,
     possibleRecords,
     possibleRecordsLoading,
     incompleteNTRO,
@@ -154,6 +157,7 @@ export const HomePage = ({
         if (accountLoading === false) {
             dispatch(loadLibHours());
             dispatch(loadVemcountList());
+            dispatch(loadPrimoStatus());
         }
     }, [accountLoading, dispatch]);
 
@@ -242,6 +246,8 @@ export const HomePage = ({
                                                 printBalance={printBalance}
                                                 printBalanceLoading={printBalanceLoading}
                                                 printBalanceError={printBalanceError}
+                                                primoStatus={primoStatus}
+                                                primoStatusLoading={primoStatusLoading}
                                             />
                                         </StyledGridItemLoggedInLeftMost>
                                         {canSeeTrainingPanel(account) && (
@@ -285,6 +291,8 @@ export const HomePage = ({
                                                         printBalance={printBalance}
                                                         printBalanceLoading={printBalanceLoading}
                                                         printBalanceError={printBalanceError}
+                                                        primoStatus={primoStatus}
+                                                        primoStatusLoading={primoStatusLoading}
                                                     />
                                                 </StyledGridItemLoggedInLeftMost>
                                                 {canSeeTrainingPanel(account) && (
@@ -393,6 +401,8 @@ HomePage.propTypes = {
     loansLoading: PropTypes.bool,
     printBalance: PropTypes.any,
     printBalanceLoading: PropTypes.bool,
+    primoStatus: PropTypes.any,
+    primoStatusLoading: PropTypes.bool,
     printBalanceError: PropTypes.bool,
     vemcount: PropTypes.object,
     vemcountLoading: PropTypes.bool,

@@ -43,6 +43,6 @@ export default {
         {
             "series_id": 9,
             "series_name": "Subject guides",
-            "objects_count": 0
+            "objects_count": 3
         },
 ]};

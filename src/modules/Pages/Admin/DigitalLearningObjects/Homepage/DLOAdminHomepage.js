@@ -2,13 +2,16 @@ import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
+import { getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
-import { Pagination } from '@mui/material';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { Divider, Pagination } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -21,6 +24,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import SearchIcon from '@mui/icons-material/Search';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { useConfirmationState } from 'hooks';
 
@@ -30,7 +34,12 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 
 import { convertSnakeCaseToKebabCase } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import VisitHomepage from 'modules/Pages/Admin/DigitalLearningObjects/SharedDlorComponents/VisitHomepage';
-import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import {
+    dlorAdminLink,
+    exportDemographicsToCSV,
+    exportDLORDataToCSV,
+    fetchAndExportFavouritesToCSV,
+} from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { breadcrumbs } from 'config/routes';
 
 const StyledPageListItemGridContainer = styled(Grid)(() => ({
@@ -63,7 +72,16 @@ const StyleObjectDetailGridItem = styled(Grid)(({ theme }) => ({
     },
 }));
 
-export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListError, dlorItemDeleteError }) => {
+export const DLOAdminHomepage = ({
+    actions,
+    dlorList,
+    dlorListLoading,
+    dlorListError,
+    dlorItemDeleteError,
+    dlorDemographics,
+    dlorDemographicsLoading,
+    dlorDemographicsError,
+}) => {
     const statusTypes = [
         {
             type: 'new',
@@ -90,9 +108,14 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
             label: 'Deleted',
             isChecked: false,
         },
+        {
+            type: 'submitted',
+            label: 'User Submitted',
+            isChecked: false,
+        },
     ];
     const [checkedStatusType, setCheckedStatusType] = useState(statusTypes.map(status => status.isChecked));
-
+    const [isExportingFavourites, setIsExportingFavourites] = useState(false);
     const [objectToDelete, setObjectToDelete] = useState(null);
 
     const [paginationPage, setPaginationPage] = useState(1);
@@ -107,6 +130,23 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
         hideDeleteFailureConfirmation,
     ] = useConfirmationState();
 
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
+    const handleMenuClick = event => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    React.useEffect(() => {
+        if (!dlorDemographics && !dlorDemographicsLoading && !dlorDemographicsError) {
+            actions.loadDlorDemographics();
+        }
+    }, [actions, dlorDemographics, dlorDemographicsError, dlorDemographicsLoading]);
+
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
@@ -117,7 +157,7 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadAllDLORs();
         }
-    }, [dlorList]);
+    }, [actions, dlorList, dlorListError, dlorListLoading]);
 
     const navigateToAddPage = () => {
         window.location.href = dlorAdminLink('/add');
@@ -127,8 +167,16 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
         window.location.href = dlorAdminLink('/team/manage');
     };
 
+    const navigateToFilterManagePage = () => {
+        window.location.href = dlorAdminLink('/filters');
+    };
+
     const navigateToSeriesListPage = () => {
         window.location.href = dlorAdminLink('/series/manage');
+    };
+
+    const navigateToAddSeriesPage = () => {
+        window.location.href = dlorAdminLink('/series/add');
     };
 
     const navigateToEditPage = uuid => {
@@ -284,29 +332,120 @@ export const DLOAdminHomepage = ({ actions, dlorList, dlorListLoading, dlorListE
             />
             <Grid container spacing={2} sx={{ marginBottom: '25px' }}>
                 <Grid item xs={12} sx={{ textAlign: 'right' }}>
-                    <Button
-                        children="Manage series"
+                    <IconButton
                         color="primary"
-                        data-testid="admin-dlor-visit-manage-series-button"
-                        onClick={() => navigateToSeriesListPage()}
-                        variant="contained"
-                    />{' '}
-                    <Button
-                        children="Manage teams"
-                        color="primary"
-                        data-testid="admin-dlor-visit-manage-teams-button"
-                        onClick={() => navigateToTeamsListPage()}
-                        variant="contained"
-                    />{' '}
-                    <Button
-                        children="Add object"
-                        color="primary"
-                        data-testid="admin-dlor-visit-add-button"
-                        onClick={() => navigateToAddPage()}
-                        variant="contained"
-                        sx={{ marginRight: '6px' }}
-                    />
-                    <VisitHomepage />
+                        aria-controls={open ? 'admin-dlor-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? 'true' : undefined}
+                        onClick={handleMenuClick}
+                        data-testid="admin-dlor-menu-button"
+                        aria-label="Admin menu"
+                    >
+                        <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                        id="admin-dlor-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleMenuClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'admin-dlor-menu-button',
+                        }}
+                    >
+                        <MenuItem
+                            onClick={() => {
+                                navigateToAddSeriesPage();
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-visit-add-series-button"
+                        >
+                            Add series
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                navigateToSeriesListPage();
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-visit-manage-series-button"
+                        >
+                            Manage series
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                navigateToTeamsListPage();
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-visit-manage-teams-button"
+                        >
+                            Manage teams
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                navigateToFilterManagePage();
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-visit-manage-filters-button"
+                        >
+                            Manage filters
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                navigateToAddPage();
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-visit-add-button"
+                        >
+                            Add object
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem
+                            onClick={() => {
+                                exportDLORDataToCSV(dlorList, 'dlor_data.csv');
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-export-dlordata-button"
+                        >
+                            Export Object Data to CSV
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                exportDemographicsToCSV(dlorDemographics, 'dlor_demographics.csv');
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-export-demographicsdata-button"
+                        >
+                            Export Demographics Data to CSV
+                        </MenuItem>
+                        <MenuItem
+                            onClick={async () => {
+                                try {
+                                    setIsExportingFavourites(true);
+                                    await fetchAndExportFavouritesToCSV('dlor_favourites.csv');
+                                } catch (error) {
+                                    console.error('Failed to export favourites:', error);
+                                } finally {
+                                    setIsExportingFavourites(false);
+                                    handleMenuClose();
+                                }
+                            }}
+                            disabled={isExportingFavourites}
+                            data-testid="admin-dlor-export-favourites-button"
+                        >
+                            {isExportingFavourites ? 'Exporting...' : 'Export Favourites Data to CSV'}
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem
+                            component="a"
+                            href={`${getPathRoot()}/digital-learning-hub`}
+                            rel="noopener noreferrer"
+                            onClick={handleMenuClose}
+                            data-testid="dlor-admin-public-homepage-link"
+                        >
+                            View public homepage list
+                        </MenuItem>
+                    </Menu>
+                    {/* <ExportToCsvButton data={dlorList} filename="dlor_data.csv" /> */}
+                    {/* <VisitHomepage /> */}
                 </Grid>
             </Grid>
             <Grid container spacing={2}>
@@ -551,6 +690,9 @@ DLOAdminHomepage.propTypes = {
     dlorListLoading: PropTypes.bool,
     dlorListError: PropTypes.any,
     dlorItemDeleteError: PropTypes.any,
+    dlorDemographics: PropTypes.array,
+    dlorDemographicsLoading: PropTypes.bool,
+    dlorDemographicsError: PropTypes.any,
 };
 
 export default DLOAdminHomepage;

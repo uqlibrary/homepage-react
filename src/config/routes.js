@@ -17,8 +17,10 @@ export const flattedPathConfigExact = [
     '/admin/dlor',
     '/admin/dlor/add',
     '/admin/dlor/series/manage',
+    '/admin/dlor/series/add',
     '/admin/dlor/team/manage',
     '/admin/dlor/team/add',
+    '/admin/dlor/filters',
     '/admin/masquerade',
     '/admin/masquerade/',
     '/admin/testntag',
@@ -37,6 +39,7 @@ export const flattedPathConfigExact = [
     '/exams/',
     '/digital-learning-hub',
     'https://www.library.uq.edu.au/404.js',
+    '/digital-learning-hub-list',
 ];
 export const flattedPathConfig = [
     '/admin/alerts/edit',
@@ -45,9 +48,13 @@ export const flattedPathConfig = [
     '/admin/dlor/edit',
     '/admin/dlor/series/edit',
     '/admin/dlor/team/edit',
+    '/admin/dlor/series/add',
+    '/admin/dlor/filters/edit',
     '/digital-learning-hub/view',
     '/digital-learning-hub/confirm/subscribe',
     '/digital-learning-hub/confirm/unsubscribe',
+    '/digital-learning-hub/submit',
+    '/digital-learning-hub/edit',
     '/exams/course',
 ];
 
@@ -55,6 +62,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
     const examSearchCourseHint = ':courseHint';
 
     const dlorId = ':dlorId';
+    const seriesId = ':seriesId';
     const confirmationId = ':confirmationId';
 
     const publicPages = [
@@ -88,6 +96,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: 'Digital Learning Object Repository',
         },
         {
+            path: pathConfig.dlorViewSeries(seriesId),
+            element: <components.SeriesView />,
+            exact: true,
+            pageTitle: 'Digital Learning Object Repository - View Series',
+        },
+        {
             path: pathConfig.dlorSubscriptionConfirmation(confirmationId),
             element: <components.DLOConfirmSubscription />,
             // exact: true,
@@ -109,6 +123,18 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             element: <components.PastExamPaperSearch />,
             exact: false,
             pageTitle: locale.pages.pastExamPaperSearch.title,
+        },
+        {
+            path: pathConfig.dlorSubmit,
+            element: <components.DLONew />,
+            exact: false,
+            pageTitle: 'Submit request for new object',
+        },
+        {
+            path: pathConfig.dlorOwnObjectEdit(dlorId),
+            element: <components.DLOOwnEdit />,
+            exact: false,
+            pageTitle: 'Edit details of your object',
         },
     ];
 
@@ -212,6 +238,31 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: true,
             pageTitle: 'Edit a Series for the Digital Learning Hub',
         },
+        {
+            path: pathConfig.admin.dlorseriesadd,
+            element: <components.DLOSeriesAdd />,
+            exact: true,
+            pageTitle: 'Create a new Series',
+        },
+        {
+            path: pathConfig.admin.dlorfiltersmanage,
+            element: <components.DLOFilterManage />,
+            exact: true,
+            pageTitle: 'Manage Filters',
+        },
+    ];
+    const authenticatedDlorDisplay = [
+        {
+            path: pathConfig.dlorProtected,
+            element: <components.DLOList />,
+            exact: true,
+            pageTitle: 'Digital Learning Object Repository',
+        },
+        {
+            path: pathConfig.dlorViewSecure(dlorId),
+            element: <components.DLOView />,
+            pageTitle: 'Digital Learning Object Repository - View Object',
+        },
     ];
 
     const testntagDisplay = [
@@ -296,6 +347,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isDlorAdminUser(account) ? dlorAdminDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
         ...(account && isTestTagUser(account) ? testntagDisplay : []),
+        ...(account ? authenticatedDlorDisplay : []),
         {
             path: '*',
             element: <components.NotFound />,

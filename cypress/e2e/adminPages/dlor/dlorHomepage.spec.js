@@ -22,12 +22,14 @@ describe('Digital Learning Hub admin homepage', () => {
             });
         });
         it('has a working "visit public homepage" button', () => {
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
             cy.get('[data-testid="dlor-admin-public-homepage-link"]')
                 .should('exist')
                 .click();
             cy.location('href').should('eq', 'http://localhost:2020/digital-learning-hub');
         });
         it('has a working "add an object" button', () => {
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
             cy.get('[data-testid="admin-dlor-visit-add-button"]')
                 .should('exist')
                 .should('contain', 'Add object')
@@ -35,13 +37,23 @@ describe('Digital Learning Hub admin homepage', () => {
             cy.location('href').should('eq', `http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
         });
         it('has a working "manage teams" button', () => {
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
             cy.get('[data-testid="admin-dlor-visit-manage-teams-button"]')
                 .should('exist')
                 .should('contain', 'Manage teams')
                 .click();
             cy.location('href').should('eq', `http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
         });
+        it('has a working "add series" button', () => {
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
+            cy.get('[data-testid="admin-dlor-visit-add-series-button"]')
+                .should('exist')
+                .should('contain', 'Add series')
+                .click();
+            cy.location('href').should('eq', `http://localhost:2020/admin/dlor/series/add?user=${DLOR_ADMIN_USER}`);
+        });
         it('has a working "manage series" button', () => {
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
             cy.get('[data-testid="admin-dlor-visit-manage-series-button"]')
                 .should('exist')
                 .should('contain', 'Manage series')
@@ -90,29 +102,29 @@ describe('Digital Learning Hub admin homepage', () => {
                 'CDS DX Digital Content',
             );
 
-            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) h2')
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) h2')
                 .should('exist')
                 .should('contain', 'UQ has a Blak History');
-            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) svg path').should(
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) svg path').should(
                 'have.attr',
                 'd',
                 'M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z',
             ); // has green tick
-            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) div:nth-child(3) p:first-child').contains(
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) div:nth-child(3) p:first-child').contains(
                 'uquser1',
             );
-            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) div:nth-child(3) p:nth-child(2)').contains(
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) div:nth-child(3) p:nth-child(2)').contains(
                 'CDS DX Digital Content',
             );
 
-            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) h2')
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) h2')
                 .should('exist')
                 .should('contain', 'Advanced literature searching');
-            cy.get('[data-testid="dlor-homepage-featured-98s0_dy5k3_98h4"]').should('not.exist'); // unfeatured: no green tick
-            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) div:nth-child(3) p:first-child').contains(
+            cy.get('[data-testid="dlor-homepage-featured-98s0_dy5k3_98h4"]').should('exist');
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) div:nth-child(3) p:first-child').contains(
                 'uqjsmith',
             );
-            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(3) div:nth-child(3) p:nth-child(2)').contains(
+            cy.get('[data-testid="dlor-homepage-list"] > div:nth-child(2) div:nth-child(3) p:nth-child(2)').contains(
                 'Faculty Services Librarians',
             );
         });
@@ -334,7 +346,7 @@ describe('Digital Learning Hub admin homepage', () => {
         });
         it('can filter objects', () => {
             const numDraft = 1;
-            const numPublished = 23;
+            const numPublished = 26;
             const numRejected = 16;
             const numDeprecated = 1;
             const numDeleted = 1;
@@ -518,6 +530,165 @@ describe('Digital Learning Hub admin homepage', () => {
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
             cy.get('h1').should('contain', 'Digital Learning Hub Management');
+        });
+    });
+    context('DLOR exports', () => {
+        beforeEach(() => {
+            // Visit the page where the Export to CSV button is located
+            cy.visit(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
+        });
+
+        it('should trigger a download when the Export Objects to CSV button is clicked', () => {
+            // Stub the URL.createObjectURL method
+            // cy.wait(4000);
+
+            cy.get('[data-testid="dlor-homepage-panel-987y-isjgt-9866"]').should('exist');
+            cy.window().then(win => {
+                cy.stub(win.URL, 'createObjectURL').as('createObjectURL');
+            });
+
+            // Click the Export to CSV button
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
+            cy.get('[data-testid="admin-dlor-export-dlordata-button"]').click();
+
+            // Verify that the URL.createObjectURL method was called
+            cy.get('@createObjectURL').should('be.called');
+        });
+        it('should trigger a download when the Export Demographics to CSV button is clicked', () => {
+            // Stub the URL.createObjectURL method
+            // cy.wait(4000);
+
+            cy.get('[data-testid="dlor-homepage-panel-987y-isjgt-9866"]').should('exist');
+            cy.window().then(win => {
+                cy.stub(win.URL, 'createObjectURL').as('createObjectURL');
+            });
+
+            // Click the Export to CSV button
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
+            cy.get('[data-testid="admin-dlor-export-demographicsdata-button"]').click();
+
+            // Verify that the URL.createObjectURL method was called
+            cy.get('@createObjectURL').should('be.called');
+        });
+        it('should trigger a download when the Export Favourites to CSV button is clicked', () => {
+            // Stub the URL.createObjectURL method
+            // cy.wait(4000);
+
+            cy.get('[data-testid="dlor-homepage-panel-987y-isjgt-9866"]').should('exist');
+            cy.window().then(win => {
+                cy.stub(win.URL, 'createObjectURL').as('createObjectURL');
+            });
+
+            // Click the Export to CSV button
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
+            cy.get('[data-testid="admin-dlor-export-favourites-button"]').click();
+
+            // Verify that the URL.createObjectURL method was called
+            cy.get('@createObjectURL').should('be.called');
+        });
+
+        it('should handle errors when exporting favourites to CSV fails', () => {
+            cy.visit(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}&responseType=loadError`);
+
+            cy.get('[data-testid="dlor-homepage-panel-987y-isjgt-9866"]').should('exist');
+
+            cy.window().then(win => {
+                cy.stub(win.console, 'error').as('consoleError');
+            });
+
+            cy.get('[data-testid="admin-dlor-menu-button"]').click();
+            cy.get('[data-testid="admin-dlor-export-favourites-button"]')
+                .should('be.visible')
+                .click();
+
+            cy.get('[data-testid="admin-dlor-export-favourites-button"]').should(
+                'contain',
+                'Export Favourites Data to CSV',
+            );
+
+            cy.get('@consoleError').should(
+                'have.been.calledWith',
+                'Failed to export favourites:',
+                Cypress.sinon.match.any,
+            );
+        });
+    });
+    context('Favourites', () => {
+        beforeEach(() => {
+            // Visit the page where the Export to CSV button is located
+            cy.visit('http://localhost:2020/digital-learning-hub/view/9k45_hgr4_876h');
+        });
+
+        it('should be able to favourite and unfavourite an object', () => {
+            // Stub the URL.createObjectURL method
+            // cy.wait(4000);
+
+            cy.get('[data-testid="favorite-star-icon"]')
+                .should('be.visible')
+                .click();
+            cy.get('[data-testid="favorite-star-icon"]').should('not.exist');
+            cy.get('.MuiTooltip-tooltip').should('contain', 'Add to Favourites');
+            cy.wait(1000);
+            cy.get('[data-testid="favorite-star-outline-icon"]')
+                .should('exist')
+                .should('be.visible')
+                .click();
+            cy.get('[data-testid="favorite-star-icon"]').should('be.visible');
+            cy.get('.MuiTooltip-tooltip').should('contain', 'Remove from Favourites');
+        });
+    });
+    context('Object Restrictions', () => {
+        it('Restrictions for UQ Staff only', () => {
+            cy.visit('http://localhost:2020/digital-learning-hub/?user=uqsfc');
+
+            cy.get('.MuiPagination-ul > :nth-child(5)')
+                .should('be.visible')
+                .click();
+            cy.contains('Staff Restricted Object')
+                .parents('article')
+                .should('exist')
+                .should('contain', 'You need to be UQ staff to view this object');
+            cy.visit('http://localhost:2020/digital-learning-hub/?user=uqstaff');
+            cy.get('.MuiPagination-ul > :nth-child(5)')
+                .should('be.visible')
+                .click();
+            cy.contains('Staff Restricted Object').should('be.visible');
+        });
+        it('Restrictions for library Staff only', () => {
+            cy.visit('http://localhost:2020/digital-learning-hub/?user=uqsfc');
+
+            cy.get('.MuiPagination-ul > :nth-child(5)')
+                .should('be.visible')
+                .click();
+            cy.contains('Staff (library) Restricted Object').should('not.exist');
+            cy.visit('http://localhost:2020/digital-learning-hub/?user=uqstaff');
+            cy.get('.MuiPagination-ul > :nth-child(5)')
+                .should('be.visible')
+                .click();
+            cy.contains('Staff (library) Restricted Object').should('be.visible');
+        });
+        it('Restrictions for UQ only', () => {
+            cy.visit('http://localhost:2020/digital-learning-hub/?user=vanilla');
+
+            cy.get('.MuiPagination-ul > :nth-child(5)')
+                .should('be.visible')
+                .click();
+            cy.contains('UQ Only Restricted Object').should('be.visible');
+
+            cy.visit('http://localhost:2020/digital-learning-hub/?user=uqstaff');
+            cy.get('.MuiPagination-ul > :nth-child(5)')
+                .should('be.visible')
+                .click();
+            cy.contains('UQ Only Restricted Object').should('be.visible');
+
+            cy.visit('http://localhost:2020/digital-learning-hub/?user=public');
+            cy.get('.MuiPagination-ul > :nth-child(5)')
+                .should('be.visible')
+                .click();
+            cy.contains('UQ Only Restricted Object')
+                .should('exist')
+                .parents('article')
+                .should('contain', 'You need to be a UQ staff or student user to view this object');
         });
     });
 });

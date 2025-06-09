@@ -170,6 +170,22 @@ export const canSeeEndnoteReferencing = account => {
 
 export const isLibraryStaff = account => isLoggedInUser(account) && ['LIBRARYSTAFFB'].includes(account.user_group);
 
+export const isStaff = account =>
+    isLoggedInUser(account) &&
+    (isLibraryStaff(account) || ['STAFF', 'AURION', 'HON', 'ATH', 'ASSOCIATE'].includes(account.user_group));
+
+export const isUQOnlyUser = account =>
+    isLoggedInUser(account) &&
+    ![
+        'COMMU', // Community users
+        'ALUMNI', // Former students
+        'HOSP', // Hospital staff
+        'FRYVISITOR', // Fryer Library special members
+        'VET', // Vocational Education and Training students
+        'SFC', // Short Form Credential course students
+        'REMSFC', // Remote Short Form Credential course students
+    ].includes(account.user_group);
+
 const userHasAdGroup = (ADGroupName, account) =>
     !!account && !!account.groups && !!account.groups.find(group => group.includes(ADGroupName));
 
@@ -178,7 +194,11 @@ export const isTestTagUser = account => isLoggedInUser(account) && userHasAdGrou
 export const isAlertsAdminUser = account =>
     isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
 
-export const isDlorAdminUser = account => isLoggedInUser(account) && userHasAdGroup('lib_dlor_admins', account);
+export const isDlorAdminUser = account =>
+    isLoggedInUser(account) && userHasAdGroup('lib_dlor_admins', account) && !!!account?.masqueradingId;
+
+export const isDlorOwner = (account, object) =>
+    isLoggedInUser(account) && object?.owner?.publishing_user_username === account.id;
 
 export const isHospitalUser = account =>
     isLoggedInUser(account) && !!account.user_group && account.user_group === EXTRAMURAL_HOSPITAL;
