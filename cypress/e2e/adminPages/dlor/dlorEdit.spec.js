@@ -51,6 +51,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
                 });
 
+                TypeCKEditor('This is the admin notes');
                 // go to panel 2
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -610,6 +611,8 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('exist')
                     .type('john@example.com');
 
+                TypeCKEditor('This is the admin notes');
+
                 // go to the second panel, Description
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -751,6 +754,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 // acts as check of what we sent to api
 
                 const expectedValues = {
+                    object_admin_notes: '<p>This is the admin notes</p>',
                     object_title: 'Advanced literature searchingxx',
                     object_description:
                         '<p>new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>',
