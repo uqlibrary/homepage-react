@@ -15,6 +15,12 @@ export const TRAINING_API = (numEvents = 6, filterId = 104) => ({
     options: { params: { take: numEvents, 'filterIds[]': filterId, ts: `${new Date().getTime()}` } },
 });
 
+// Primo status API
+export const PRIMO_STATUS_API = () => ({
+    apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage/searchportal-status.json',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
 // Papercut balance API
 export const PRINTING_API = () => ({
     apiUrl: 'papercut/balance',
@@ -247,10 +253,13 @@ export const DLOR_SERIES_DELETE_API = id => ({ apiUrl: `dlor/admin/series/${id}`
 export const DLOR_SERIES_UPDATE_API = id => ({ apiUrl: `dlor/admin/series/${id}` });
 export const DLOR_SERIES_CREATE_API = () => ({ apiUrl: 'dlor/admin/series' });
 export const DLOR_SERIES_LOAD_API = id => ({ apiUrl: `dlor/public/series/find/${id}` });
+export const DLOR_FAVOURITES_API = () => ({ apiUrl: 'dlor/auth/favourites' });
 
 export const DLOR_CREATE_FACET_API = () => ({ apiUrl: 'dlor/admin/facet' });
 export const DLOR_UPDATE_FACET_API = id => ({ apiUrl: `dlor/admin/facet/${id}` });
 export const DLOR_DELETE_FACET_API = id => ({ apiUrl: `dlor/admin/facet/${id}` });
+export const DLOR_DEMOGRAPHICS_REPORT_API = () => ({ apiUrl: 'dlor/admin/demographics/all' });
+export const DLOR_FAVOURITES_REPORT_API = () => ({ apiUrl: 'dlor/admin/favourites' });
 
 const productionRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage';
 const stagingRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage';

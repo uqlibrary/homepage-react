@@ -57,6 +57,9 @@ import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { isDlorAdminUser } from 'helpers/access';
 import { breadcrumbs } from 'config/routes';
 import { pluralise } from 'helpers/general';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+const moment = require('moment');
 
 const StyledErrorCountBadge = styled(Badge)(() => ({
     '& span': {
@@ -162,7 +165,6 @@ export const DlorForm = ({
 
         return facetType?.facet_list?.map(facet => facet.facet_id) || /* istanbul ignore next */ [];
     }
-
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
@@ -274,6 +276,15 @@ export const DlorForm = ({
         // valid user id is 8 or 9 char
         console.log('currentValues', currentValues);
         !isValidUsername(currentValues?.object_publishing_user) && firstPanelErrorCount++;
+
+        if (
+            !currentValues?.object_review_date_next ||
+            !moment(currentValues.object_review_date_next).isValid() ||
+            moment(currentValues.object_review_date_next).isAfter(moment()) ||
+            moment(currentValues.object_review_date_next).isBefore(moment().subtract(12, 'months'))
+        ) {
+            firstPanelErrorCount++;
+        }
         if (teamSelectRef.current === 'new') {
             if (
                 currentValues?.team_name_new === undefined ||
@@ -384,6 +395,13 @@ export const DlorForm = ({
         setFormValues(newValues);
     };
 
+    const handleDateChange = newValue => {
+        console.log('Date Changed here');
+        const formattedDate = moment(newValue).format('YYYY-MM-DD');
+        const newValues = { ...formValues, object_review_date_next: formattedDate };
+        setFormValues(newValues);
+    };
+
     const handleFacetChange = () => e => {
         let newValues;
 
@@ -426,6 +444,8 @@ export const DlorForm = ({
         let theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
 
+        console.log('The new value', theNewValue);
+
         if (['object_is_featured', 'object_cultural_advice'].includes(prop)) {
             theNewValue = !!e.target.checked ? 1 : 0;
         }
@@ -457,6 +477,8 @@ export const DlorForm = ({
         // amalgamate new value into data set
         const newValues = { ...formValues, [prop]: theNewValue };
 
+        console.log('The new values are', newValues);
+
         setFormValues(newValues);
     };
 
@@ -484,7 +506,7 @@ export const DlorForm = ({
             <>
                 <Grid item xs={12}>
                     <FormControl variant="standard" fullWidth>
-                        <InputLabel htmlFor="object_publishing_user">Publishing user *</InputLabel>
+                        <InputLabel htmlFor="object_publishing_user">Object owner *</InputLabel>
                         <Input
                             id="object_publishing_user"
                             data-testid="object-publishing-user"
@@ -632,19 +654,47 @@ export const DlorForm = ({
                         </FormControl>
                     </Grid>
                 )}
-                {isDlorAdminUser(account) && (
-                    <Grid item xs={12}>
-                        {mode === 'edit' ? (
-                            <Typography component={'p'}>
-                                Next Review Date: {formValues?.object_review_date_next} (edit to come)
-                            </Typography>
-                        ) : (
-                            <Typography component={'p'}>
-                                Next Review Date: {formValues?.object_review_date_next} (setting to come)
-                            </Typography>
-                        )}
-                    </Grid>
-                )}
+                <Grid item xs={12}>
+                    {mode === 'edit' ? (
+                        <>
+                            {/* <Typography component={'p'}>
+                                    Next Review Date: {formValues?.object_review_date_next} (edit to come)
+                                </Typography> */}
+                            <DatePicker
+                                slotProps={{
+                                    textField: {
+                                        'data-testid': 'object-review-date',
+                                    },
+                                }}
+                                label="Last Review Date"
+                                value={moment(formValues?.object_review_date_next)}
+                                onChange={newValue => handleDateChange(newValue)}
+                                maxDate={moment()}
+                                minDate={moment().subtract(12, 'months')}
+                                format="DD/MM/YYYY"
+                            />
+                        </>
+                    ) : (
+                        <>
+                            {/* <Typography component={'p'}>
+                                    Next Review Date: {formValues?.object_review_date_next} (setting to come)
+                                </Typography> */}
+                            <DatePicker
+                                label="Last Review Date"
+                                slotProps={{
+                                    textField: {
+                                        'data-testid': 'object-review-date',
+                                    },
+                                }}
+                                value={moment(formValues?.object_review_date_next)}
+                                onChange={newValue => handleDateChange(newValue)}
+                                maxDate={moment()}
+                                minDate={moment().subtract(12, 'months')}
+                                format="DD/MM/YYYY"
+                            />
+                        </>
+                    )}
+                </Grid>
             </>
         ),
         [formValues, showTeamForm, teamSelectRef.current, dlorTeamList, mode, formDefaults],
@@ -657,7 +707,7 @@ export const DlorForm = ({
                 object_publishing_user: formDefaults.object_publishing_user,
             }));
         }
-    }, [formDefaults?.object_publishing_user]);
+    }, [formDefaults.object_publishing_user]);
 
     const suggestSummary = (enteredDescription, requiredLength = 150) => {
         const plainSummary = html2text.fromString(enteredDescription);
@@ -805,7 +855,7 @@ export const DlorForm = ({
                     )}
                 </FormControl>
             </Grid>
-            {!!isDlorAdminUser(account) && (
+            {(!!isDlorAdminUser(account) || (mode === 'edit' && formValues?.object_status !== 'submitted')) && (
                 <>
                     <Grid item xs={12}>
                         <FormControl variant="standard" fullWidth>
@@ -830,6 +880,12 @@ export const DlorForm = ({
                                     label="Draft"
                                     selected={formValues?.object_status === 'new'}
                                 />
+                                <FormControlLabel
+                                    value="deprecated"
+                                    control={<Radio />}
+                                    label="Unpublished"
+                                    selected={formValues?.object_status === 'deprecated'}
+                                />
                             </RadioGroup>
                         </FormControl>
                     </Grid>
@@ -847,6 +903,33 @@ export const DlorForm = ({
                     </Grid>
                 </>
             )}
+            <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                    <FormLabel id="object-restriction-label">Object Restriction</FormLabel>
+                    <Select
+                        labelId="object-restriction-label"
+                        id="object_restrict_to"
+                        data-testid="object-restrict-to"
+                        value={formValues?.object_restrict_to || 'none'}
+                        onChange={handleChange('object_restrict_to')}
+                        aria-labelledby="object-restriction-label"
+                        sx={{ width: '100%' }}
+                    >
+                        <MenuItem value="none" data-testid="object-restrict-to-none">
+                            None
+                        </MenuItem>
+                        <MenuItem value="uquser" data-testid="object-restrict-to-uquser">
+                            UQ staff and students
+                        </MenuItem>
+                        <MenuItem value="uqstaff" data-testid="object-restrict-to-uqstaff">
+                            UQ staff only
+                        </MenuItem>
+                        <MenuItem value="uqlibrarystaff" data-testid="object-restrict-to-uqlibrarystaff">
+                            UQ Library staff only
+                        </MenuItem>
+                    </Select>
+                </FormControl>
+            </Grid>
             <Grid item xs={12}>
                 <FormLabel>Cultural advice?</FormLabel>
                 <InputLabel>
@@ -1103,7 +1186,7 @@ export const DlorForm = ({
                         sx={{ width: '100%' }}
                         editor={ClassicEditor}
                         config={editorConfig}
-                        data={formValues?.object_download_instructions || ''}
+                        data={formValues?.object_download_instructions || /* istanbul ignore next */ ''}
                         onReady={editor => {
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
@@ -1517,27 +1600,34 @@ export const DlorForm = ({
             confirmationTitle: confirmationTitle,
             confirmationMessage: '',
             cancelButtonLabel: mode === 'add' ? 'Add another Object' : 'Re-edit Object',
-            confirmButtonLabel: 'Return to list page',
+            confirmButtonLabel: mode === 'add' ? 'Return to list page' : 'View Object',
         },
         errorMessage: {
             confirmationTitle: dlorSavedItemError,
             confirmationMessage: '',
             cancelButtonLabel: mode === 'add' ? 'Add another Object' : 'Re-edit Object',
-            confirmButtonLabel: 'Return to list page',
+            confirmButtonLabel: mode === 'add' ? 'Return to list page' : 'View Object',
         },
     };
 
-    const navigateToDlorAdminHomePage = () => {
+    const navigateToObject = uuid => {
         setConfirmationOpen(false);
         actions.clearADlor();
-        window.location.href = dlorAdminLink();
+        window.location.href = getDlorViewPageUrl(uuid);
         scrollToTopOfPage();
     };
 
-    const navigateToPrimaryPage = () => {
+    // const navigateToDlorAdminHomePage = () => {
+    //     setConfirmationOpen(false);
+    //     actions.clearADlor();
+    //     window.location.href = dlorAdminLink();
+    //     scrollToTopOfPage();
+    // };
+
+    const navigateToListPage = isAdmin => {
         setConfirmationOpen(false);
         actions.clearADlor();
-        window.location.href = '/digital-learning-hub';
+        window.location.href = isAdmin ? dlorAdminLink() : '/digital-learning-hub';
         scrollToTopOfPage();
     };
 
@@ -1605,7 +1695,12 @@ export const DlorForm = ({
                 actionButtonColor="primary"
                 actionButtonVariant="contained"
                 confirmationBoxId="dlor-save-outcome"
-                onAction={() => (isDlorAdminUser(account) ? navigateToDlorAdminHomePage() : navigateToPrimaryPage())}
+                // onAction={() => (isDlorAdminUser(account) ? navigateToDlorAdminHomePage() : navigateToPrimaryPage())}
+                onAction={() =>
+                    mode === 'edit'
+                        ? navigateToObject(dlorItem?.object_public_uuid)
+                        : navigateToListPage(isDlorAdminUser(account))
+                }
                 hideCancelButton={!locale.successMessage.cancelButtonLabel}
                 cancelButtonLabel={locale.successMessage.cancelButtonLabel}
                 onCancelAction={() => clearForm()}

@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useParams } from 'react-router-dom';
 import parse from 'html-react-parser';
 import { useCookies } from 'react-cookie';
+import { pathConfig } from 'config/pathConfig';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -22,11 +23,12 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import InfoIcon from '@mui/icons-material/Info';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { isDlorAdminUser, isDlorOwner } from 'helpers/access';
+import { isDlorAdminUser, isDlorOwner, isStaff, isLibraryStaff, isUQOnlyUser } from 'helpers/access';
 import { useAccountContext } from 'context';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
@@ -43,7 +45,7 @@ import {
 import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { breadcrumbs } from 'config/routes';
-import { Chip, Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { Chip, Dialog, DialogContent, DialogTitle, Tooltip } from '@mui/material';
 
 const StyledUQActionButton = styled('div')(({ theme, noMargin }) => ({
     marginBlock: '0px',
@@ -244,6 +246,7 @@ export const DLOView = ({
     dlorUpdatedItem,
     dlorItemUpdating,
     dlorUpdatedItemError,
+    dlorFavouritesList,
 }) => {
     const { account } = useAccountContext();
     const { dlorId } = useParams();
@@ -255,10 +258,13 @@ export const DLOView = ({
     // const [notifyType, setNotifyType] = React.useState('');
     const [confirmLocale, setConfirmLocale] = React.useState({});
 
+    // Add this state near your other useState declarations
+    const [isFavoriteActionInProgress, setIsFavoriteActionInProgress] = useState(false);
+
     // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
     // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
 
-    // const isLoggedIn = !!account?.id;
+    const isLoggedIn = !!account?.id;
 
     const defaultFormValues = {
         subjectCode: '',
@@ -272,6 +278,24 @@ export const DLOView = ({
     };
 
     const [formValues, setFormValues] = React.useState(defaultFormValues);
+
+    const formatDate = dateString => {
+        /* istanbul ignore next */ if (!dateString) return '';
+
+        const date = new Date(dateString);
+        const options = {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+        };
+
+        return date
+            .toLocaleString('en-AU', options)
+            .replace(',', '') // Remove comma after day
+            .replace(/\s+/g, ' ') // Normalize spaces
+            .replace(/(\d{4})/, ', $1') // Add comma before year
+            .replace(/\s,/, ','); // Remove space before comma
+    };
 
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -313,6 +337,12 @@ export const DLOView = ({
     // }, [dlorItem]);
 
     useEffect(() => {
+        if (!dlorFavouritesList) {
+            actions.loadDlorFavourites();
+        }
+    }, [actions, dlorFavouritesList]);
+
+    useEffect(() => {
         if (!!account?.id) {
             const tempForm = {
                 ...formValues,
@@ -345,7 +375,7 @@ export const DLOView = ({
         // Google Analytics to push pageView for object
         /* istanbul ignore else */
         if (!!dlorItem && !!dlorItem.object_title) {
-            window.dataLayer = window.dataLayer || [];
+            window.dataLayer = window.dataLayer || /* istanbul ignore next */ []; // for tests
             window.dataLayer.push({
                 event: 'pageview',
                 page_title: dlorItem.object_title,
@@ -369,9 +399,6 @@ export const DLOView = ({
     //     confirmationMessage: 'Please check your email to confirm your subscription request.',
     //     confirmButtonLabel: 'OK',
     // };
-
-    // const subscriptionResponseLocale = notifyType === 'demographics' ? demograpicsResponseLocale : notifyResponseLocale;
-
     useEffect(() => {
         // when the save attempt comes back...
         // if they only sent demographics, we only wait for the "in progress" because we dont care what it responds
@@ -612,6 +639,48 @@ export const DLOView = ({
         return <>{parse(label)}</>;
     }
 
+    // Create a handler function for the favorite actions
+    const handleFavoriteAction = async (action, uuid) => {
+        // debouncer - not required to verify via test
+        /* istanbul ignore next */
+        if (isFavoriteActionInProgress) return;
+
+        setIsFavoriteActionInProgress(true);
+        try {
+            await actions[action](uuid);
+        } finally {
+            // Re-enable after 1 second
+            setTimeout(() => {
+                setIsFavoriteActionInProgress(false);
+            }, 1000);
+        }
+    };
+
+    const canUserAccessObject = (account, restrictTo) => {
+        switch (restrictTo) {
+            case 'uqlibrarystaff':
+                return isLibraryStaff(account);
+            case 'uqstaff':
+                return isStaff(account);
+            case 'uquser':
+                return isUQOnlyUser(account);
+            case 'none':
+            default:
+                return true;
+        }
+    };
+
+    const getAccessDeniedMessage = restrictTo => {
+        switch (restrictTo) {
+            case 'uqlibrarystaff':
+                return 'You need to be a UQ Library staff member to access this object';
+            case 'uqstaff':
+                return 'You need to be a UQ staff member to access this object';
+            default:
+                return 'You need to be a UQ staff or student to access this object';
+        }
+    };
+
     if (!!dlorItemLoading || dlorItemLoading === null || !!dlorItemUpdating) {
         return (
             <Box sx={{ minHeight: 600 }}>
@@ -729,7 +798,7 @@ export const DLOView = ({
                 <Dialog open={isNotifyOpened}>
                     <DialogTitle>Notify you of any changes to this object</DialogTitle>
                     <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                        <form>
+                        <form style={{ width: '100%' }}>
                             <FormControl variant="standard" fullWidth>
                                 <InputLabel htmlFor="preferredName">Your name</InputLabel>
                                 <Input
@@ -739,7 +808,7 @@ export const DLOView = ({
                                     onChange={handleChange('preferredName')}
                                 />
                             </FormControl>
-                            <FormControl variant="standard" fullWidth>
+                            <FormControl variant="standard" fullWidth sx={{ marginTop: '10px' }}>
                                 <InputLabel htmlFor="emailAddress">Your email address *</InputLabel>
                                 <Input
                                     id="userEmail"
@@ -780,422 +849,567 @@ export const DLOView = ({
                 </Dialog>
                 <div>
                     {getTitleBlock()}
-                    <StyledContentGrid container spacing={4} data-testid="dlor-detailpage">
-                        <Grid item xs={12} md={9}>
-                            <LoginPrompt account={account} instyle={{ marginBottom: '12px' }} />
-                            <Box sx={{ marginBottom: '12px' }}>
-                                <StyledTitleTypography component={'h1'} variant={'h4'}>
-                                    {dlorItem?.object_title}
-                                </StyledTitleTypography>
-                            </Box>
-                            <>
-                                {(!!dlorItem?.object_cultural_advice ||
-                                    !!dlorItem?.object_is_featured ||
-                                    !!dlorItem?.object_series_name) && (
-                                    <Typography
-                                        component={'p'}
-                                        sx={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            marginLeft: '-4px',
-                                            marginTop: '-4px',
-                                            marginBottom: '6px',
-                                        }}
-                                    >
-                                        {!!dlorItem?.object_is_featured && (
-                                            <>
-                                                <BookmarkIcon sx={{ fill: '#51247A', marginRight: '2px', width: 20 }} />
-                                                <StyledTagLabelSpan
-                                                    data-testid={'dlor-detailpage-featured-custom-indicator'}
-                                                    sx={{ marginLeft: '-2px' }}
-                                                >
-                                                    Featured
-                                                </StyledTagLabelSpan>
-                                            </>
-                                        )}
-                                        {!!dlorItem?.object_cultural_advice && (
-                                            <>
-                                                <InfoIcon sx={{ fill: '#2377CB', marginRight: '2px', width: 20 }} />
-                                                <StyledTagLabelSpan
-                                                    data-testid={'dlor-detailpage-cultural-advice-custom-indicator'}
-                                                >
-                                                    Cultural advice
-                                                </StyledTagLabelSpan>
-                                            </>
-                                        )}
-                                        {!!dlorItem?.object_series_name && dlorItem?.object_series?.length > 1 && (
-                                            <>
-                                                <PlaylistAddCheckIcon
-                                                    sx={{ fill: '#4aa74e', marginRight: '2px', width: 24 }}
-                                                />
-                                                <Link to={`/digital-learning-hub/series/${dlorItem.object_series_id}`}>
-                                                    <StyledTagLabelSpan
-                                                        data-testid={
-                                                            'dlor-detailpage-object-series-name-custom-indicator'
-                                                        }
-                                                    >
-                                                        Series: {dlorItem?.object_series_name}
-                                                    </StyledTagLabelSpan>
-                                                </Link>
-                                            </>
-                                        )}
-                                    </Typography>
-                                )}
-                            </>
-                            {!!dlorItem?.object_cultural_advice && (
+                    {console.log('Can Access object?', canUserAccessObject(account, dlorItem?.object_restrict_to))}
+                    {!canUserAccessObject(account, dlorItem?.object_restrict_to) ? (
+                        <Box
+                            sx={{
+                                padding: '1em',
+                                marginBottom: '12px',
+                                borderColor: '#f8d7da',
+                                backgroundColor: '#f8d7da',
+                                color: '#721c24',
+                                borderRadius: '3px',
+                            }}
+                            data-testid="access-denied-message"
+                        >
+                            <Typography>{getAccessDeniedMessage(dlorItem?.object_restrict_to)}</Typography>
+                            <LoginPrompt account={account} instyle={{ marginTop: '12px' }} />
+                        </Box>
+                    ) : (
+                        <StyledContentGrid container spacing={4} data-testid="dlor-detailpage">
+                            <Grid item xs={12} md={9}>
+                                <LoginPrompt account={account} instyle={{ marginBottom: '12px' }} />
                                 <Box
-                                    data-testid="dlor-detailpage-cultural-advice"
                                     sx={{
-                                        padding: '1em',
-                                        borderColor: 'rgb(187, 216, 245)',
-                                        color: 'rgb(0, 0, 0)',
-                                        backgroundColor: 'rgb(187, 216, 245)',
-                                        borderRadius: '3px',
+                                        marginBottom: '12px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
                                     }}
                                 >
-                                    Aboriginal and Torres Strait Islander peoples are warned that this resource may
-                                    contain images, transcripts or names of Aboriginal and Torres Strait Islander
-                                    peoples now deceased. It may also contain historically and culturally sensitive
-                                    words, terms, and descriptions.
+                                    <StyledTitleTypography component={'h1'} variant={'h4'}>
+                                        {dlorItem?.object_title}
+                                    </StyledTitleTypography>
+                                    {!!isLoggedIn && (
+                                        <>
+                                            {dlorFavouritesList?.some(
+                                                fav => fav.object_public_uuid === dlorItem?.object_public_uuid,
+                                            ) ? (
+                                                <Tooltip title="Remove from Favourites" arrow>
+                                                    <StarIcon
+                                                        onClick={() =>
+                                                            handleFavoriteAction(
+                                                                'removeFavourite',
+                                                                dlorItem?.object_public_uuid,
+                                                            )
+                                                        }
+                                                        sx={{
+                                                            fill: '#FFD700',
+                                                            cursor: isFavoriteActionInProgress
+                                                                ? 'not-allowed'
+                                                                : 'pointer',
+                                                            fontSize: '2rem',
+                                                        }}
+                                                        data-testid="favorite-star-icon"
+                                                    />
+                                                </Tooltip>
+                                            ) : (
+                                                <Tooltip title="Add to Favourites" arrow>
+                                                    <StarBorderIcon
+                                                        onClick={() =>
+                                                            handleFavoriteAction(
+                                                                'addFavourite',
+                                                                dlorItem?.object_public_uuid,
+                                                            )
+                                                        }
+                                                        sx={{
+                                                            fill: '#666',
+                                                            cursor: isFavoriteActionInProgress
+                                                                ? 'not-allowed'
+                                                                : 'pointer',
+                                                            fontSize: '2rem',
+                                                        }}
+                                                        data-testid="favorite-star-outline-icon"
+                                                    />
+                                                </Tooltip>
+                                            )}
+                                        </>
+                                    )}
                                 </Box>
-                            )}
-
-                            <StyledHeaderDiv data-testid="dlor-detailpage-description">
-                                <Grid container spacing={1}>
-                                    <Grid item xs={12} sm={8}>
-                                        {!!dlorItem?.object_description && parse(dlorItem.object_description)}
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        {/* Demographics and notification buttons */}
-                                        <StyledUQActionButton noMargin>
-                                            <Button
-                                                aria-label="Click to access the object"
-                                                onClick={() => navigateToObjectLink()}
-                                                data-testid="detailpage-clicklink"
-                                                class="extended"
-                                            >
-                                                {getItButtonLabel(dlorItem)}
-                                            </Button>
-                                        </StyledUQActionButton>
-                                        <div style={{ backgroundColor: '#ddd', padding: '5px', marginTop: '10px' }}>
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    gap: '8px',
-                                                }}
-                                            >
-                                                <Typography variant="p" sx={{ marginTop: '0px', textAlign: 'center' }}>
-                                                    Keep up-to-date
-                                                </Typography>
-                                                <Chip
-                                                    data-testid="detailpage-notify-button"
-                                                    disabled={!account?.id}
-                                                    onClick={() => setIsNotifyOpened(true)}
-                                                    icon={<NotificationsActive />}
-                                                    label="Notify me"
-                                                    sx={{
-                                                        backgroundColor: '#51247a',
-                                                        color: 'white',
-                                                        paddingLeft: '5px',
-                                                        '& .MuiChip-label': {
-                                                            color: 'white !important',
-                                                            fontWeight: 'bold',
-                                                        },
-                                                        '& .MuiChip-icon': {
-                                                            color: 'white !important',
-                                                        },
-                                                    }}
-                                                />
-                                            </Box>
-                                        </div>
-                                        <div style={{ backgroundColor: '#ddd', padding: '5px', marginTop: '10px' }}>
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    gap: '8px',
-                                                }}
-                                            >
-                                                <Typography variant="p" sx={{ marginTop: '0px', textAlign: 'center' }}>
-                                                    Using this object?
-                                                </Typography>
-                                                <Chip
-                                                    disabled={!account?.id}
-                                                    onClick={() => setIsDemographicsOpened(true)}
-                                                    data-testid="detailpage-demographics-button"
-                                                    label="Let us know"
-                                                    sx={{
-                                                        paddingLeft: '5px',
-                                                        backgroundColor: '#51247a',
-                                                        color: 'white',
-                                                        '& .MuiChip-label': {
-                                                            color: 'white !important',
-                                                            fontWeight: 'bold',
-                                                        },
-                                                        '& .MuiChip-icon': {
-                                                            color: 'white !important',
-                                                        },
-                                                    }}
-                                                />
-                                            </Box>
-                                        </div>
-                                    </Grid>
-                                </Grid>
-                            </StyledHeaderDiv>
-
-                            {/* until we can implement a captcha, we can only take input from loggedin users :( */}
-                            {/* {dlorItem?.object_link_url?.startsWith('http') && !account?.id && (
-                                <StyledUQActionButton class="marginBlock" data-testid="detailpage-getit-button">
-                                    <a href={dlorItem.object_link_url}>{getItButtonLabel(dlorItem)}</a>
-                                </StyledUQActionButton>
-                            )} */}
-                            {/* {dlorItem?.object_link_url?.startsWith('http') && account?.id && (
-                                <StyledDemographicsBox
-                                    id="gatherDemographics"
-                                    data-testid="detailpage-getit-and demographics"
-                                >
-                                    <p>(Optional) Help us understand how you will use this object. Please tell us: </p>
-                                    <form>
-                                        <FormControl variant="standard" fullWidth>
-                                            <InputLabel htmlFor="subjectCode">
-                                                Your relevant course, program or session
-                                            </InputLabel>
-                                            <Input
-                                                id="subjectCode"
-                                                data-testid="view-demographics-subject-code"
-                                                value={formValues?.subjectCode}
-                                                onChange={handleChange('subjectCode')}
-                                            />
-                                        </FormControl>
-                                        <FormControl variant="standard" fullWidth sx={{ marginTop: '10px' }}>
-                                            <InputLabel htmlFor="schoolName">Your school, faculty or unit</InputLabel>
-                                            <Input
-                                                id="schoolName"
-                                                data-testid="view-demographics-school-name"
-                                                value={formValues?.schoolName}
-                                                onChange={handleChange('schoolName')}
-                                            />
-                                        </FormControl>
-                                        <p>Would you like notifications when updates are made to this object?</p>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    onChange={handleChange('notify')}
-                                                    aria-label={'Notify?'}
-                                                    checked={formValues?.notify}
-                                                    data-testid={'checkbox-notify'}
-                                                />
-                                            }
-                                            label="Notify me!"
-                                        />
-                                        {!!formValues.notify && (
-                                            <>
-                                                <FormControl variant="standard" fullWidth>
-                                                    <InputLabel htmlFor="preferredName">Your name</InputLabel>
-                                                    <Input
-                                                        id="preferredName"
-                                                        data-testid="view-notify-preferredName"
-                                                        value={formValues?.preferredName}
-                                                        onChange={handleChange('preferredName')}
-                                                    />
-                                                </FormControl>
-                                                <FormControl variant="standard" fullWidth>
-                                                    <InputLabel htmlFor="emailAddress">Your email address *</InputLabel>
-                                                    <Input
-                                                        id="userEmail"
-                                                        required
-                                                        data-testid="view-notify-userEmail"
-                                                        value={formValues?.userEmail}
-                                                        onChange={handleChange('userEmail')}
-                                                    />
-                                                    {!isValidEmail(formValues?.userEmail) && (
-                                                        <div data-testid="dlor-form-error-message-object-publishing-user">
-                                                            This email address is not valid.
-                                                        </div>
-                                                    )}
-                                                </FormControl>
-                                            </>
-                                        )}
-                                        <div>
-                                            <StyledUQActionButton>
-                                                <Button
-                                                    aria-label="Click to access the object"
-                                                    onClick={() => saveAndNavigate(dlorItem)}
-                                                    data-testid="detailpage-clicklinkOLD"
-                                                    disabled={
-                                                        formValues?.notify && !isValidEmail(formValues?.userEmail)
-                                                    }
-                                                >
-                                                    Old button
-                                                </Button>
-                                            </StyledUQActionButton>
-                                        </div>
-                                    </form>
-                                </StyledDemographicsBox>
-                            )} */}
-
-                            {isPreviewableUrl(dlorItem.object_link_url) !== false && (
-                                <div data-testid="detailpage-preview">
-                                    <StyledTitleTypography component={'h2'} variant={'h6'}>
-                                        Preview
-                                    </StyledTitleTypography>
-                                    <Box
-                                        sx={{
-                                            overflow: 'hidden',
-                                            paddingBottom: '56.25%',
-                                            position: 'relative',
-                                            height: 0,
-                                        }}
-                                    >
-                                        {!!getYoutubeEmbeddableUrl(dlorItem.object_link_url) !== false && (
-                                            <StyledIframe
-                                                width="853"
-                                                height="480"
-                                                src={getYoutubeEmbeddableUrl(dlorItem.object_link_url)}
-                                                frameBorder="0"
-                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                allowFullScreen
-                                                title="Embedded youtube"
-                                            />
-                                        )}
-                                    </Box>
-                                </div>
-                            )}
-                            {!!dlorItem?.object_download_instructions && (
-                                <StyledLayoutBox>
-                                    <StyledTitleTypography component={'h2'} variant={'h6'}>
-                                        How to use this object
-                                    </StyledTitleTypography>
-                                    {!!dlorItem?.object_download_instructions &&
-                                        displayDownloadInstructions(dlorItem.object_download_instructions)}
-                                </StyledLayoutBox>
-                            )}
-                            {!!dlorItem?.object_series_name && dlorItem?.object_series?.length > 1 && (
-                                <StyledLayoutBox>
-                                    <StyledTitleTypography component="h2" variant="h6">
-                                        Part of a series: {dlorItem.object_series_name}
-                                    </StyledTitleTypography>
-                                    <StyledSeriesList>
-                                        {dlorItem?.object_series
-                                            ?.sort((a, b) => a.series_object_order - b.series_object_order)
-                                            .map((s, index) => {
-                                                return (
-                                                    <li
-                                                        key={`dlor-view-series-item-${s.series_object_uuid}`}
-                                                        data-testid={`dlor-view-series-item-${convertSnakeCaseToKebabCase(
-                                                            s.series_object_uuid,
-                                                        )}-order-${index}`}
-                                                    >
-                                                        {s.series_object_uuid === dlorItem?.object_public_uuid ? (
-                                                            <span>
-                                                                <StarIcon />
-                                                                <span>{s.series_object_title}</span>
-                                                            </span>
-                                                        ) : (
-                                                            <a
-                                                                href={getDlorViewPageUrl(s?.series_object_uuid)}
-                                                                rel="noopener noreferrer"
-                                                            >
-                                                                {s.series_object_title}
-                                                            </a>
-                                                        )}
-                                                    </li>
-                                                );
-                                            })}
-                                    </StyledSeriesList>
-                                </StyledLayoutBox>
-                            )}
-                        </Grid>
-                        <Grid item xs={12} md={3} data-testid="detailpage-metadata">
-                            {dlorItem?.object_filters?.length > 0 && (
                                 <>
-                                    {(isDlorAdminUser(account) || isDlorOwner(account, dlorItem)) && (
-                                        <Button
-                                            onClick={() => navigateToEditPage(dlorItem?.object_public_uuid)}
-                                            data-testid="detailpage-admin-edit-button"
+                                    {(!!dlorItem?.object_cultural_advice ||
+                                        !!dlorItem?.object_is_featured ||
+                                        !!dlorItem?.object_series_name) && (
+                                        <Typography
+                                            component={'p'}
                                             sx={{
-                                                backgroundColor: '#2377cb',
-                                                color: '#fff',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                marginLeft: '-4px',
+                                                marginTop: '-4px',
                                                 marginBottom: '6px',
-                                                paddingInline: '24px',
                                             }}
                                         >
-                                            <EditIcon /> &nbsp; Edit
-                                        </Button>
+                                            {!!dlorItem?.object_is_featured && (
+                                                <>
+                                                    <BookmarkIcon
+                                                        sx={{ fill: '#51247A', marginRight: '2px', width: 20 }}
+                                                    />
+                                                    <StyledTagLabelSpan
+                                                        data-testid={'dlor-detailpage-featured-custom-indicator'}
+                                                        sx={{ marginLeft: '-2px' }}
+                                                    >
+                                                        Featured
+                                                    </StyledTagLabelSpan>
+                                                </>
+                                            )}
+                                            {!!dlorItem?.object_cultural_advice && (
+                                                <>
+                                                    <InfoIcon sx={{ fill: '#2377CB', marginRight: '2px', width: 20 }} />
+                                                    <StyledTagLabelSpan
+                                                        data-testid={'dlor-detailpage-cultural-advice-custom-indicator'}
+                                                    >
+                                                        Cultural advice
+                                                    </StyledTagLabelSpan>
+                                                </>
+                                            )}
+                                            {!!dlorItem?.object_series_name && dlorItem?.object_series?.length > 1 && (
+                                                <>
+                                                    <PlaylistAddCheckIcon
+                                                        sx={{ fill: '#4aa74e', marginRight: '2px', width: 24 }}
+                                                    />
+                                                    <Link
+                                                        to={`/digital-learning-hub/series/${dlorItem.object_series_id}`}
+                                                    >
+                                                        <StyledTagLabelSpan
+                                                            data-testid={
+                                                                'dlor-detailpage-object-series-name-custom-indicator'
+                                                            }
+                                                        >
+                                                            Series: {dlorItem?.object_series_name}
+                                                        </StyledTagLabelSpan>
+                                                    </Link>
+                                                </>
+                                            )}
+                                        </Typography>
                                     )}
-                                    <StyledSidebarHeadingTypography component={'h2'} variant={'h6'}>
-                                        <BookmarksIcon />
-                                        Details
-                                    </StyledSidebarHeadingTypography>
-                                    {dlorItem?.object_filters?.map(filter => {
-                                        return (
-                                            <div
-                                                key={filter?.filter_key}
-                                                data-testid={`detailpage-filter-${convertSnakeCaseToKebabCase(
-                                                    filter?.filter_key,
-                                                )}`}
-                                            >
-                                                <StyledTitleTypography component={'h3'} variant={'h6'}>
-                                                    {deslugify(filter?.filter_key)}
-                                                </StyledTitleTypography>
-                                                <StyledSidebarList>
-                                                    {!!filter.filter_values &&
-                                                        filter.filter_values.map((value, subIndex) => {
-                                                            return (
-                                                                <li key={subIndex}>
-                                                                    <StyledFilterLink
-                                                                        to={`/digital-learning-hub?filters=${value.id}`}
-                                                                    >
-                                                                        {value.name}
-                                                                    </StyledFilterLink>
-                                                                    {!!value?.help && value?.help.startsWith('http') && (
-                                                                        <a
-                                                                            href={value.help}
-                                                                            target="_blank"
-                                                                            title="View the help for this filter"
-                                                                        >
-                                                                            <HelpOutlineIcon size="small" />
-                                                                        </a>
-                                                                    )}
-                                                                </li>
-                                                            );
-                                                        })}
-                                                </StyledSidebarList>
+                                </>
+                                {!!dlorItem?.object_cultural_advice && (
+                                    <Box
+                                        data-testid="dlor-detailpage-cultural-advice"
+                                        sx={{
+                                            padding: '1em',
+                                            borderColor: 'rgb(187, 216, 245)',
+                                            color: 'rgb(0, 0, 0)',
+                                            backgroundColor: 'rgb(187, 216, 245)',
+                                            borderRadius: '3px',
+                                        }}
+                                    >
+                                        Aboriginal and Torres Strait Islander peoples are warned that this resource may
+                                        contain images, transcripts or names of Aboriginal and Torres Strait Islander
+                                        peoples now deceased. It may also contain historically and culturally sensitive
+                                        words, terms, and descriptions.
+                                    </Box>
+                                )}
+                                <StyledHeaderDiv data-testid="dlor-detailpage-description">
+                                    <Grid container spacing={1}>
+                                        <Grid item xs={12} sm={8}>
+                                            {!!dlorItem?.object_description && parse(dlorItem.object_description)}
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            {/* Demographics and notification buttons */}
+                                            <StyledUQActionButton noMargin>
+                                                <Button
+                                                    aria-label="Click to access the object"
+                                                    onClick={() => navigateToObjectLink()}
+                                                    data-testid="detailpage-clicklink"
+                                                    class="extended"
+                                                >
+                                                    {getItButtonLabel(dlorItem)}
+                                                </Button>
+                                            </StyledUQActionButton>
+                                            <div style={{ backgroundColor: '#ddd', padding: '5px', marginTop: '10px' }}>
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        gap: '8px',
+                                                    }}
+                                                >
+                                                    <Typography
+                                                        variant="p"
+                                                        sx={{ marginTop: '0px', textAlign: 'center' }}
+                                                    >
+                                                        Keep up to date
+                                                    </Typography>
+                                                    <Chip
+                                                        data-testid="detailpage-notify-button"
+                                                        disabled={!account?.id}
+                                                        onClick={() => setIsNotifyOpened(true)}
+                                                        icon={<NotificationsActive />}
+                                                        label="Notify me"
+                                                        sx={{
+                                                            backgroundColor: '#51247a',
+                                                            color: 'white',
+                                                            paddingLeft: '5px',
+                                                            '& .MuiChip-label': {
+                                                                color: 'white !important',
+                                                                fontWeight: 'bold',
+                                                            },
+                                                            '& .MuiChip-icon': {
+                                                                color: 'white !important',
+                                                            },
+                                                        }}
+                                                    />
+                                                </Box>
                                             </div>
-                                        );
-                                    })}
-                                    {!!dlorItem?.object_keywords && (
-                                        <div data-testid="detailpage-metadata-keywords">
-                                            <StyledTitleTypography component={'h3'} variant={'h6'}>
-                                                Keywords
-                                            </StyledTitleTypography>
-                                            <StyledKeywordList>
-                                                {dlorItem.object_keywords.map((keyword, index) => {
+                                            <div style={{ backgroundColor: '#ddd', padding: '5px', marginTop: '10px' }}>
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        gap: '8px',
+                                                    }}
+                                                >
+                                                    <Typography
+                                                        variant="p"
+                                                        sx={{ marginTop: '0px', textAlign: 'center' }}
+                                                    >
+                                                        Using this object?
+                                                    </Typography>
+                                                    <Chip
+                                                        disabled={!account?.id}
+                                                        onClick={() => setIsDemographicsOpened(true)}
+                                                        data-testid="detailpage-demographics-button"
+                                                        label="Let us know"
+                                                        sx={{
+                                                            paddingLeft: '5px',
+                                                            backgroundColor: '#51247a',
+                                                            color: 'white',
+                                                            '& .MuiChip-label': {
+                                                                color: 'white !important',
+                                                                fontWeight: 'bold',
+                                                            },
+                                                            '& .MuiChip-icon': {
+                                                                color: 'white !important',
+                                                            },
+                                                        }}
+                                                    />
+                                                </Box>
+                                            </div>
+                                        </Grid>
+                                    </Grid>
+                                </StyledHeaderDiv>
+                                {/* until we can implement a captcha, we can only take input from loggedin users :( */}
+                                {/* {dlorItem?.object_link_url?.startsWith('http') && !account?.id && (
+                                    <StyledUQActionButton class="marginBlock" data-testid="detailpage-getit-button">
+                                        <a href={dlorItem.object_link_url}>{getItButtonLabel(dlorItem)}</a>
+                                    </StyledUQActionButton>
+                                )} */}
+                                {/* {dlorItem?.object_link_url?.startsWith('http') && account?.id && (
+                                    <StyledDemographicsBox
+                                        id="gatherDemographics"
+                                        data-testid="detailpage-getit-and demographics"
+                                    >
+                                        <p>(Optional) Help us understand how you will use this object. Please tell us: </p>
+                                        <form>
+                                            <FormControl variant="standard" fullWidth>
+                                                <InputLabel htmlFor="subjectCode">
+                                                    Your relevant course, program or session
+                                                </InputLabel>
+                                                <Input
+                                                    id="subjectCode"
+                                                    data-testid="view-demographics-subject-code"
+                                                    value={formValues?.subjectCode}
+                                                    onChange={handleChange('subjectCode')}
+                                                />
+                                            </FormControl>
+                                            <FormControl variant="standard" fullWidth sx={{ marginTop: '10px' }}>
+                                                <InputLabel htmlFor="schoolName">Your school, faculty or unit</InputLabel>
+                                                <Input
+                                                    id="schoolName"
+                                                    data-testid="view-demographics-school-name"
+                                                    value={formValues?.schoolName}
+                                                    onChange={handleChange('schoolName')}
+                                                />
+                                            </FormControl>
+                                            <p>Would you like notifications when updates are made to this object?</p>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        onChange={handleChange('notify')}
+                                                        aria-label={'Notify?'}
+                                                        checked={formValues?.notify}
+                                                        data-testid={'checkbox-notify'}
+                                                    />
+                                                }
+                                                label="Notify me!"
+                                            />
+                                            {!!formValues.notify && (
+                                                <>
+                                                    <FormControl variant="standard" fullWidth>
+                                                        <InputLabel htmlFor="preferredName">Your name</InputLabel>
+                                                        <Input
+                                                            id="preferredName"
+                                                            data-testid="view-notify-preferredName"
+                                                            value={formValues?.preferredName}
+                                                            onChange={handleChange('preferredName')}
+                                                        />
+                                                    </FormControl>
+                                                    <FormControl variant="standard" fullWidth>
+                                                        <InputLabel htmlFor="emailAddress">Your email address *</InputLabel>
+                                                        <Input
+                                                            id="userEmail"
+                                                            required
+                                                            data-testid="view-notify-userEmail"
+                                                            value={formValues?.userEmail}
+                                                            onChange={handleChange('userEmail')}
+                                                        />
+                                                        {!isValidEmail(formValues?.userEmail) && (
+                                                            <div data-testid="dlor-form-error-message-object-publishing-user">
+                                                                This email address is not valid.
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                )}
+                                                <div>
+                                                    <StyledUQActionButton>
+                                                        <Button
+                                                            aria-label="Click to access the object"
+                                                            onClick={() => saveAndNavigate(dlorItem)}
+                                                            data-testid="detailpage-clicklinkOLD"
+                                                            disabled={
+                                                                formValues?.notify && !isValidEmail(formValues?.userEmail)
+                                                            }
+                                                        >
+                                                            Old button
+                                                        </Button>
+                                                    </StyledUQActionButton>
+                                                </div>
+                                            </form>
+                                        </StyledDemographicsBox>
+                                    )} */}
+                                {isPreviewableUrl(dlorItem.object_link_url) !== false && (
+                                    <div data-testid="detailpage-preview">
+                                        <StyledTitleTypography component={'h2'} variant={'h6'}>
+                                            Preview
+                                        </StyledTitleTypography>
+                                        <Box
+                                            sx={{
+                                                overflow: 'hidden',
+                                                paddingBottom: '56.25%',
+                                                position: 'relative',
+                                                height: 0,
+                                            }}
+                                        >
+                                            {!!getYoutubeEmbeddableUrl(dlorItem.object_link_url) !== false && (
+                                                <StyledIframe
+                                                    width="853"
+                                                    height="480"
+                                                    src={getYoutubeEmbeddableUrl(dlorItem.object_link_url)}
+                                                    frameBorder="0"
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                    allowFullScreen
+                                                    title="Embedded youtube"
+                                                />
+                                            )}
+                                        </Box>
+                                    </div>
+                                )}
+
+                                <StyledLayoutBox>
+                                    <StyledTitleTypography component={'h2'} variant={'h6'}>
+                                        Add the object to your course
+                                    </StyledTitleTypography>
+                                    {displayDownloadInstructions(
+                                        dlorItem?.object_download_instructions ||
+                                            'Add a link to the object to share it in your course.',
+                                    )}
+                                </StyledLayoutBox>
+
+                                {!!dlorItem?.object_series_name && dlorItem?.object_series?.length > 1 && (
+                                    <StyledLayoutBox>
+                                        <StyledTitleTypography component="h2" variant="h6">
+                                            Part of a series: {dlorItem.object_series_name}
+                                        </StyledTitleTypography>
+                                        <StyledSeriesList>
+                                            {dlorItem?.object_series
+                                                ?.sort((a, b) => a.series_object_order - b.series_object_order)
+                                                .map((s, index) => {
                                                     return (
-                                                        <li key={index}>
-                                                            <StyledFilterLink
-                                                                to={`/digital-learning-hub?keyword=${keyword
-                                                                    .charAt(0)
-                                                                    .toUpperCase() +
-                                                                    keyword.slice(1).replace(/\s/g, '+')}`}
-                                                            >
-                                                                {keyword.charAt(0).toUpperCase() + keyword.slice(1)}
-                                                            </StyledFilterLink>
+                                                        <li
+                                                            key={`dlor-view-series-item-${s.series_object_uuid}`}
+                                                            data-testid={`dlor-view-series-item-${convertSnakeCaseToKebabCase(
+                                                                s.series_object_uuid,
+                                                            )}-order-${index}`}
+                                                        >
+                                                            {s.series_object_uuid === dlorItem?.object_public_uuid ? (
+                                                                <span>
+                                                                    <StarIcon />
+                                                                    <span>{s.series_object_title}</span>
+                                                                </span>
+                                                            ) : (
+                                                                <a
+                                                                    href={getDlorViewPageUrl(s?.series_object_uuid)}
+                                                                    rel="noopener noreferrer"
+                                                                >
+                                                                    {s.series_object_title}
+                                                                </a>
+                                                            )}
                                                         </li>
                                                     );
                                                 })}
-                                            </StyledKeywordList>
-                                        </div>
+                                        </StyledSeriesList>
+                                    </StyledLayoutBox>
+                                )}
+                                <StyledLayoutBox>
+                                    {!!isLoggedIn && (
+                                        <Typography
+                                            component={'p'}
+                                            sx={{
+                                                marginTop: '0px',
+                                                marginBottom: '0px',
+                                                fontSize: '0.9rem',
+                                                color: '#666',
+                                            }}
+                                            data-testid="detailpage-last-updated"
+                                        >
+                                            <strong>Last reviewed:</strong>{' '}
+                                            {formatDate(dlorItem?.object_review_date_next)}
+                                        </Typography>
                                     )}
-                                </>
-                            )}
-                        </Grid>
-                    </StyledContentGrid>
+                                    <Typography
+                                        component={'p'}
+                                        sx={{
+                                            marginTop: '0px',
+                                            marginBottom: '0px',
+                                            fontSize: '0.9rem',
+                                            color: '#666',
+                                        }}
+                                        data-testid="detailpage-visibility"
+                                    >
+                                        <strong>Access: </strong>
+                                        {(() => {
+                                            switch (dlorItem?.object_restrict_to) {
+                                                case 'uquser':
+                                                    return 'This object is available to UQ staff and students.';
+                                                case 'uqstaff':
+                                                    return 'This object is available to UQ staff members only.';
+                                                case 'uqlibrarystaff':
+                                                    return 'This object is available to UQ Library staff members only.';
+                                                case 'none':
+                                                default:
+                                                    return 'Anyone can access this object.';
+                                            }
+                                        })()}
+                                    </Typography>
+                                    {!!isLoggedIn && (
+                                        <Typography
+                                            component={'p'}
+                                            sx={{
+                                                marginTop: '0px',
+                                                marginBottom: '0px',
+                                                fontSize: '0.9rem',
+                                                color: '#666',
+                                            }}
+                                            data-testid="detailpage-authenticated-link"
+                                        >
+                                            <strong>Secure URL: </strong>
+                                            <a
+                                                href={pathConfig.dlorViewSecure(dlorItem.object_public_uuid)}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                data-testid="detailpage-authenticated-link-url"
+                                            >
+                                                {`${window.location.origin}${pathConfig.dlorViewSecure(
+                                                    dlorItem.object_public_uuid,
+                                                )}`}
+                                            </a>
+                                        </Typography>
+                                    )}
+                                </StyledLayoutBox>
+                            </Grid>
+                            <Grid item xs={12} md={3} data-testid="detailpage-metadata">
+                                {dlorItem?.object_filters?.length > 0 && (
+                                    <>
+                                        {(isDlorAdminUser(account) || isDlorOwner(account, dlorItem)) && (
+                                            <Button
+                                                onClick={() => navigateToEditPage(dlorItem?.object_public_uuid)}
+                                                data-testid="detailpage-admin-edit-button"
+                                                sx={{
+                                                    backgroundColor: '#2377cb',
+                                                    color: '#fff',
+                                                    marginBottom: '6px',
+                                                    paddingInline: '24px',
+                                                }}
+                                            >
+                                                <EditIcon /> &nbsp; Edit
+                                            </Button>
+                                        )}
+                                        <StyledSidebarHeadingTypography component={'h2'} variant={'h6'}>
+                                            <BookmarksIcon />
+                                            Details
+                                        </StyledSidebarHeadingTypography>
+                                        {dlorItem?.object_filters?.map(filter => {
+                                            return (
+                                                <div
+                                                    key={filter?.filter_key}
+                                                    data-testid={`detailpage-filter-${convertSnakeCaseToKebabCase(
+                                                        filter?.filter_key,
+                                                    )}`}
+                                                >
+                                                    <StyledTitleTypography component={'h3'} variant={'h6'}>
+                                                        {deslugify(filter?.filter_key)}
+                                                    </StyledTitleTypography>
+                                                    <StyledSidebarList>
+                                                        {!!filter.filter_values &&
+                                                            filter.filter_values.map((value, subIndex) => {
+                                                                return (
+                                                                    <li key={subIndex}>
+                                                                        <StyledFilterLink
+                                                                            to={`/digital-learning-hub?filters=${value.id}`}
+                                                                        >
+                                                                            {value.name}
+                                                                        </StyledFilterLink>
+                                                                        {!!value?.help &&
+                                                                            value?.help.startsWith('http') && (
+                                                                                <a
+                                                                                    href={value.help}
+                                                                                    target="_blank"
+                                                                                    title="View the help for this filter"
+                                                                                >
+                                                                                    <HelpOutlineIcon size="small" />
+                                                                                </a>
+                                                                            )}
+                                                                    </li>
+                                                                );
+                                                            })}
+                                                    </StyledSidebarList>
+                                                </div>
+                                            );
+                                        })}
+                                        {!!dlorItem?.object_keywords && (
+                                            <div data-testid="detailpage-metadata-keywords">
+                                                <StyledTitleTypography component={'h3'} variant={'h6'}>
+                                                    Keywords
+                                                </StyledTitleTypography>
+                                                <StyledKeywordList>
+                                                    {dlorItem.object_keywords.map((keyword, index) => {
+                                                        return (
+                                                            <li key={index}>
+                                                                <StyledFilterLink
+                                                                    to={`/digital-learning-hub?keyword=${keyword
+                                                                        .charAt(0)
+                                                                        .toUpperCase() +
+                                                                        keyword.slice(1).replace(/\s/g, '+')}`}
+                                                                >
+                                                                    {keyword.charAt(0).toUpperCase() + keyword.slice(1)}
+                                                                </StyledFilterLink>
+                                                            </li>
+                                                        );
+                                                    })}
+                                                </StyledKeywordList>
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                            </Grid>
+                        </StyledContentGrid>
+                    )}
                 </div>
             </>
         </StandardPage>
@@ -1211,6 +1425,7 @@ DLOView.propTypes = {
     dlorItemUpdating: PropTypes.bool,
     dlorUpdatedItemError: PropTypes.any,
     account: PropTypes.object,
+    dlorFavouritesList: PropTypes.array,
 };
 
 export default React.memo(DLOView);

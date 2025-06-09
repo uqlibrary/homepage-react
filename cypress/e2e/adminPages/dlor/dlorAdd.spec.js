@@ -1,6 +1,6 @@
 // these constants must match the constants, eg titleMinimumLength in Dlor Admin components
 import { DLOR_ADMIN_USER } from '../../../support/constants';
-
+import moment from 'moment-timezone';
 const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
 const REQUIRED_LENGTH_SUMMARY = 20;
@@ -38,6 +38,21 @@ describe('Add an object to the Digital Learning Hub', () => {
                     scopeName: 'Content',
                     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
                 });
+
+                const today = moment().format('DD/MM/YYYY'); // Australian format to match the display format
+
+                cy.get('[data-testid="object-review-date"] input')
+                    .click()
+                    .clear()
+                    .type(today)
+                    .blur() // Force blur event
+                    .wait(500) // Add small wait to allow state to update
+                    .then(() => {
+                        // Force a change event
+                        cy.get('[data-testid="object-review-date"] input')
+                            .trigger('change', { force: true })
+                            .should('have.value', today);
+                    });
 
                 // go to the second panel, Description
                 cy.get('[data-testid="dlor-form-next-button"]')
@@ -128,7 +143,23 @@ describe('Add an object to the Digital Learning Hub', () => {
                 // first enter all the fields and show the save button doesn't enable until all the fields are entered
 
                 // team starts off valid so click on to the second panel, description
+
+                const today = moment().format('DD/MM/YYYY'); // Australian format to match the display format
+
                 cy.get('[data-testid="dlor-panel-validity-indicator-1"] span').should('not.exist');
+
+                cy.get('[data-testid="object-review-date"] input')
+                    .click()
+                    .clear()
+                    .type(today)
+                    .blur() // Force blur event
+                    .wait(500) // Add small wait to allow state to update
+                    .then(() => {
+                        // Force a change event
+                        cy.get('[data-testid="object-review-date"] input')
+                            .trigger('change', { force: true })
+                            .should('have.value', today);
+                    });
 
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -655,12 +686,13 @@ describe('Add an object to the Digital Learning Hub', () => {
                     object_summary: 'new summary xxxxxxxx',
                     object_link_interaction_type: 'none',
                     object_link_url: 'http://example.com',
-                    object_download_instructions: '',
+                    object_download_instructions: 'Add this object to your course.',
                     object_is_featured: 1,
                     object_cultural_advice: 0,
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
+                    object_restrict_to: 'none',
                     object_owning_team_id: 3,
                     object_keywords: ['cat', 'dog'],
                     facets: [
@@ -875,6 +907,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
+                    object_restrict_to: 'none',
                     team_email: 'john@example.com',
                     team_manager: 'john Manager',
                     team_name: 'new team name',
@@ -1077,6 +1110,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
+                    object_restrict_to: 'none',
                     object_owning_team_id: 2,
                     facets: [
                         3, // digital_skills
@@ -1266,6 +1300,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
+                    object_restrict_to: 'none',
                     object_summary: 'x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'),
                     object_title: 'x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'),
                     object_keywords: ['cat', 'dog'],
@@ -1420,6 +1455,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                     object_publishing_user: 'dloradmn',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
+                    object_restrict_to: 'none',
                     object_summary: 'x'.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'),
                     object_title: 'x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'),
                     object_keywords: ['cat', 'dog'],

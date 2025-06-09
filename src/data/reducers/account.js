@@ -155,6 +155,23 @@ const handlers = {
         trainingEventsLoading: false,
         trainingEventsError: true,
     }),
+
+    [actions.PRIMO_STATUS_LOADING]: state => ({
+        ...state,
+        primoStatusLoading: true,
+    }),
+
+    [actions.PRIMO_STATUS_LOADED]: (state, action) => ({
+        ...state,
+        primoStatusLoading: false,
+        primoStatus: action.payload,
+    }),
+
+    [actions.PRIMO_STATUS_FAILED]: state => ({
+        ...state,
+        primoStatusLoading: false,
+        primoStatus: null,
+    }),
 };
 
 export default function accountReducer(state = initialState, action) {

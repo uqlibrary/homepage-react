@@ -23,6 +23,8 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { useAccountContext } from 'context';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
+import { isLibraryStaff, isStaff, isUQOnlyUser } from 'helpers/access';
+
 import {
     getDlorViewPageUrl,
     getPathRoot,
@@ -83,7 +85,6 @@ function getTitleBlock(detailTitle = 'View a series') {
     );
 }
 
-
 const StyledTagLabel = styled('span')(() => ({
     fontVariant: 'small-caps',
     textTransform: 'lowercase',
@@ -91,7 +92,7 @@ const StyledTagLabel = styled('span')(() => ({
     marginRight: 10,
     color: '#333',
 }));
-const StyledArticleCard = styled('button')(({ theme }) => ({
+const StyledArticleCard = styled('button')(({ theme, isAccessible }) => ({
     backgroundColor: '#fff',
     borderColor: 'transparent',
     fontFamily: 'Roboto, sans-serif',
@@ -99,7 +100,7 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
     textAlign: 'left',
     width: '100%',
     '&:hover': {
-        cursor: 'pointer',
+        cursor: isAccessible ? 'pointer' : 'not-allowed',
         textDecoration: 'none',
         borderTopColor: '#f2f2f2',
         borderLeftColor: '#f2f2f2',
@@ -154,8 +155,15 @@ const StyledArticleCard = styled('button')(({ theme }) => ({
 }));
 
 export const SeriesView = ({
-    actions, dlorSeries, dlorSeriesLoading, dlorSeriesError, dlorList,  dlorListError, dlorListLoading,
+    actions,
+    dlorSeries,
+    dlorSeriesLoading,
+    dlorSeriesError,
+    dlorList,
+    dlorListError,
+    dlorListLoading,
 }) => {
+    const { account } = useAccountContext(); // Add this line
     const { seriesId } = useParams();
 
     function usePrevious(value) {
@@ -174,31 +182,56 @@ export const SeriesView = ({
         }
     }, [seriesId, previousSeriesId]);
 
+    useEffect(() => {
+        document.title = dlorSeries?.series_name ?? 'Digital Learning Object Series';
+    }, [dlorSeries]);
+
     const getFacetTypeIcon = facetTypeSlug => {
         const iconList = {
-            item_type: <LaptopIcon aria-label={`Describes the item type`} />,
-            media_format: <DescriptionIcon aria-label={`Describes the media format`} />,
-            licence: <CopyrightIcon aria-label={`Describes the copyright licence type`} />,
-            topic: <TopicIcon aria-label={`Describes the item topic`} />,
-            graduate_attributes: <SchoolSharpIcon aria-label={`Describes the graduate attributes applied`} />,
-            subject: <LocalLibrarySharpIcon aria-label={`Describes the subject`} />,
+            item_type: <LaptopIcon aria-label={'Describes the item type'} />,
+            media_format: <DescriptionIcon aria-label={'Describes the media format'} />,
+            licence: <CopyrightIcon aria-label={'Describes the copyright licence type'} />,
+            topic: <TopicIcon aria-label={'Describes the item topic'} />,
+            graduate_attributes: <SchoolSharpIcon aria-label={'Describes the graduate attributes applied'} />,
+            subject: <LocalLibrarySharpIcon aria-label={'Describes the subject'} />,
         };
         return iconList[facetTypeSlug];
     };
 
     function displayItemPanel(object, index) {
+        // Add restriction check
+        let restrictionMessage = '';
+        let isAccessible = true;
+
+        switch (object.object_restrict_to) {
+            case 'uqlibrarystaff':
+                isAccessible = isLibraryStaff(account);
+                restrictionMessage = !isAccessible ? 'You need to be UQ Library staff to view this object' : '';
+                break;
+            case 'uqstaff':
+                isAccessible = isStaff(account);
+                restrictionMessage = !isAccessible ? 'You need to be UQ staff to view this object' : '';
+                break;
+            case 'uquser':
+                isAccessible = isUQOnlyUser(account);
+                restrictionMessage = !isAccessible ? 'You need to be a UQ staff or student to view this object' : '';
+                break;
+            default:
+                break;
+        }
+
         function hasTopicFacet(facetTypeSlug) {
             const f = object?.object_filters?.filter(o => o.filter_key === facetTypeSlug);
             return !(!f || f.length === 0);
         }
-    
+
         const getConcatenatedFilterLabels = (facetTypeSlug, wrapInParam = false) => {
             const f = object?.object_filters?.filter(o => o?.filter_key === facetTypeSlug);
             const output = f?.pop();
             const facetNames = output?.filter_values?.map(item => item.name)?.join(', ');
             return !!wrapInParam ? /* istanbul ignore next */ `(${facetNames})` : facetNames;
         };
-    
+
         return (
             <Grid
                 item
@@ -207,13 +240,19 @@ export const SeriesView = ({
                     // paddingLeft: '16px',
                     paddingBottom: '16px',
                     paddingTop: '0 !important',
+                    opacity: !isAccessible ? 0.5 : 1,
                 }}
                 key={object?.object_id}
                 data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(object?.object_public_uuid)}`}
             >
                 <StyledArticleCard
-                    onClick={() => navigateToDetailPage(object?.object_public_uuid)}
-                    aria-label={`Click for more details on ${object.object_title}`}
+                    onClick={() => isAccessible && navigateToDetailPage(object?.object_public_uuid)}
+                    tabIndex={isAccessible ? '0' : '-1'}
+                    aria-disabled={!isAccessible}
+                    isAccessible={isAccessible}
+                    {...(!isAccessible && {
+                        'aria-label': `${object?.object_title} - ${restrictionMessage}`,
+                    })}
                     id={index === 0 ? 'first-panel-button' : null}
                 >
                     <article>
@@ -280,9 +319,9 @@ export const SeriesView = ({
                                 )}
                             </>
                         </header>
-    
+
                         <div>
-                            <p>{object?.object_summary}</p>
+                            <p>{!!restrictionMessage ? restrictionMessage : object?.object_summary}</p>
                         </div>
                         <footer>
                             {!!hasTopicFacet('item_type') && (
@@ -327,12 +366,12 @@ export const SeriesView = ({
             </Grid>
         );
     }
-    
+
     useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
             actions.loadCurrentDLORs();
         }
-    }, [dlorList,  dlorListError, dlorListLoading,  actions]);
+    }, [dlorList, dlorListError, dlorListLoading, actions]);
 
     function navigateToDetailPage(uuid) {
         window.location.href = getDlorViewPageUrl(uuid);
@@ -341,46 +380,48 @@ export const SeriesView = ({
     return (
         <StandardPage>
             {getTitleBlock()}
-                {!!dlorSeries && !dlorSeriesLoading && (
-                    <StyledContentGrid container spacing={4} data-testid="dlor-seriespage">
-                        <Grid item xs={12}>
-                            <Box sx={{ marginBottom: '12px' }}>
-                                <StyledTitleTypography component={'h1'} variant={'h4'}>
-                                    {dlorSeries?.series_name}
-                                </StyledTitleTypography>
-                            </Box>
-                            <StyledHeaderDiv data-testid="dlor-seriespage-description">
-                                        {!!dlorSeries?.series_description ? parse(dlorSeries?.series_description) : "This series does not have a detailed description at this time."}
-                                        
-                            </StyledHeaderDiv>
-                            {
-                                !!dlorList && dlorList
-                                    .filter(item => item.object_series_id && item.object_series_id == seriesId)
-                                    .sort((a, b) => {
-                                        /* istanbul ignore next */
-                                        const orderA = a.object_series_order !== undefined ? a.object_series_order : Number.MAX_SAFE_INTEGER;
-                                        /* istanbul ignore next */
-                                        const orderB = b.object_series_order !== undefined ? b.object_series_order : Number.MAX_SAFE_INTEGER;
-                                        return orderA - orderB;
-                                    })
-                                    .map((item, index) => {
-                                        return displayItemPanel(item, index);
-                                    })
-                            }
-                        </Grid>
-                    </StyledContentGrid>
-                )}
-                
-                {!!dlorListLoading && (
-                    <ContentLoader />
-                )}
-                {!!dlorSeriesError && (
-                    <StyledHeaderDiv data-testid="dlor-seriespage-loadError">
-                        <StyledTitleTypography component={'p'}>
-                            {dlorSeriesError}
-                        </StyledTitleTypography>
-                    </StyledHeaderDiv>
-                )}
+            {!!dlorSeries && !dlorSeriesLoading && (
+                <StyledContentGrid container spacing={4} data-testid="dlor-seriespage">
+                    <Grid item xs={12}>
+                        <Box sx={{ marginBottom: '12px' }}>
+                            <StyledTitleTypography component={'h1'} variant={'h4'}>
+                                {dlorSeries?.series_name}
+                            </StyledTitleTypography>
+                        </Box>
+                        <StyledHeaderDiv data-testid="dlor-seriespage-description">
+                            {!!dlorSeries?.series_description
+                                ? parse(dlorSeries?.series_description)
+                                : 'This series does not have a detailed description at this time.'}
+                        </StyledHeaderDiv>
+                        {!!dlorList &&
+                            dlorList
+                                .filter(item => item.object_series_id && item.object_series_id == seriesId)
+                                .sort((a, b) => {
+                                    /* istanbul ignore next */
+                                    const orderA =
+                                        a.object_series_order !== undefined
+                                            ? a.object_series_order
+                                            : Number.MAX_SAFE_INTEGER;
+                                    /* istanbul ignore next */
+                                    const orderB =
+                                        b.object_series_order !== undefined
+                                            ? b.object_series_order
+                                            : Number.MAX_SAFE_INTEGER;
+                                    return orderA - orderB;
+                                })
+                                .map((item, index) => {
+                                    return displayItemPanel(item, index);
+                                })}
+                    </Grid>
+                </StyledContentGrid>
+            )}
+
+            {!!dlorListLoading && <ContentLoader />}
+            {!!dlorSeriesError && (
+                <StyledHeaderDiv data-testid="dlor-seriespage-loadError">
+                    <StyledTitleTypography component={'p'}>{dlorSeriesError}</StyledTitleTypography>
+                </StyledHeaderDiv>
+            )}
         </StandardPage>
     );
 };
@@ -388,12 +429,11 @@ export const SeriesView = ({
 SeriesView.propTypes = {
     dlorSeries: PropTypes.any,
     dlorList: PropTypes.any,
-    dlorListError: PropTypes.bool, 
+    dlorListError: PropTypes.bool,
     dlorListLoading: PropTypes.bool,
     dlorSeriesError: PropTypes.any,
     dlorSeriesLoading: PropTypes.bool,
-    actions: PropTypes.any
-
+    actions: PropTypes.any,
 };
 
 export default React.memo(SeriesView);

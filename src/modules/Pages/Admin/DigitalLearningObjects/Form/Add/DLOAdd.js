@@ -28,27 +28,35 @@ export const DLOAdd = ({
     dlorFilterListError,
 }) => {
     const { account } = useAccountContext();
-    console.log("ACCOUNT", account)
+    console.log('ACCOUNT', account);
 
-    function getTodayPlusOneYear(baseDate = null) {
-        const today = baseDate || moment();
-        return today
-            .add(1, 'year')
+    // function getTodayPlusOneYear(baseDate = null) {
+    //     const today = baseDate || moment();
+    //     return today
+    //         .add(1, 'year')
+    //         .hour(0)
+    //         .minute(1) // 1 minute past midnight
+    //         .format('YYYY-MM-DDTHH:mm');
+    // }
+
+    function getToday() {
+        return moment()
             .hour(0)
-            .minute(1) // 1 minute past midnight
-            .format('YYYY-MM-DDTHH:mm');
+            .minute(1)
+            .format('YYYY-MM-DD');
     }
-    
+
     const formDefaults = {
         object_title: '',
         object_description: '',
         object_summary: '',
         object_owning_team_id: 1,
         object_link_url: '',
-        object_download_instructions: '',
+        object_download_instructions: 'Add this object to your course.',
         object_publishing_user: account?.id,
         object_status: isDlorAdminUser(account) ? 'new' : 'submitted',
-        object_review_date_next: getTodayPlusOneYear(),
+        object_review_date_next: getToday(), // This will be changing to review_date_last.
+        object_restrict_to: 'none',
         // team_name_add: '',
         // team_manager_add: '',
         // team_email_add: '',
@@ -60,7 +68,7 @@ export const DLOAdd = ({
         notificationText: '',
     };
 
-    console.log("Form Defaults", formDefaults)
+    console.log('Form Defaults', formDefaults);
 
     return (
         <Fragment>
@@ -77,11 +85,15 @@ export const DLOAdd = ({
                         <InformationBox
                             prompt="Submit this form to request your digital learning object to be added to the Digital Learning Hub."
                             identifier="UserAdd"
-                            linkUrl='https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects#s-lg-box-22746342'
-                            linkText='Submit an object has instructions and information.'
+                            linkUrl="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects#s-lg-box-22746342"
+                            linkText="Submit an object has instructions and information."
                         />
                     )}
-                    <Typography component="p" variant="body2" sx={{ marginBottom: '20px', color: '#992222', fontWeight: 'bold' }}>
+                    <Typography
+                        component="p"
+                        variant="body2"
+                        sx={{ marginBottom: '20px', color: '#992222', fontWeight: 'bold' }}
+                    >
                         * = Required fields
                     </Typography>
                     <DlorForm

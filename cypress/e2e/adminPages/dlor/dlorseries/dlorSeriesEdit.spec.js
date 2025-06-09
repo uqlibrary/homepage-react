@@ -149,7 +149,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
             cy.get('[data-testid="admin-dlor-series-summary-button"]').click();
             // add new objects
             cy.get('[data-testid="admin-series-add-object-button-980"]').click();
-            cy.get('[data-testid="admin-series-add-object-button-881"]').click();
+            cy.get('[data-testid="admin-series-add-object-button-981"]').click();
             // delete objects
             cy.get('[data-testid="admin-series-remove-object-button-2"]').click();
             cy.get('[data-testid="admin-series-remove-object-button-2"]').click();
@@ -299,7 +299,7 @@ describe('Digital Learning Hub admin Series management - edit item', () => {
                 .should('exist')
                 .contains('Re-edit Series');
 
-            // choose to return to list page
+            // choose to View Object
             cy.get('[data-testid="confirm-dlor-series-save-outcome"]')
                 .should('exist')
                 .click();

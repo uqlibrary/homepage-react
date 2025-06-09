@@ -8,6 +8,7 @@ const mapStateToProps = state => {
     return {
         ...state.get('dlorGetSingleReducer'),
         ...state.get('dlorUpdateReducer'),
+        ...state.get('dlorFavouritesReducer'),
     };
 };
 

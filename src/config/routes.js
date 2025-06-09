@@ -39,6 +39,7 @@ export const flattedPathConfigExact = [
     '/exams/',
     '/digital-learning-hub',
     'https://www.library.uq.edu.au/404.js',
+    '/digital-learning-hub-list',
 ];
 export const flattedPathConfig = [
     '/admin/alerts/edit',
@@ -250,6 +251,19 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: 'Manage Filters',
         },
     ];
+    const authenticatedDlorDisplay = [
+        {
+            path: pathConfig.dlorProtected,
+            element: <components.DLOList />,
+            exact: true,
+            pageTitle: 'Digital Learning Object Repository',
+        },
+        {
+            path: pathConfig.dlorViewSecure(dlorId),
+            element: <components.DLOView />,
+            pageTitle: 'Digital Learning Object Repository - View Object',
+        },
+    ];
 
     const testntagDisplay = [
         {
@@ -333,6 +347,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isDlorAdminUser(account) ? dlorAdminDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
         ...(account && isTestTagUser(account) ? testntagDisplay : []),
+        ...(account ? authenticatedDlorDisplay : []),
         {
             path: '*',
             element: <components.NotFound />,

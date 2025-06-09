@@ -23,7 +23,7 @@ describe('Digital Learning Hub Series page.', () => {
                 .should('contain', 'An error has occurred during the request and this request cannot be processed');
         });
 
-        it.skip('navigates to the correct location', () => {
+        it('navigates to the correct location', () => {
             cy.visit('digital-learning-hub/series/1');
             cy.get('[data-testid="dlor-seriespage"] h1').should('contain', 'Series Name');
             cy.get('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4"] button').click();
@@ -42,6 +42,38 @@ describe('Digital Learning Hub Series page.', () => {
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
+        });
+        it('shows correct object definitions for a series', () => {
+            cy.visit('digital-learning-hub/series/9?user=public');
+            cy.injectAxe();
+            cy.viewport(1300, 1000);
+
+            cy.contains('Staff Restricted Object')
+                .children('article')
+                .should('contain', 'You need to be UQ staff to view this object');
+            cy.contains('Staff (library) Restricted Object')
+                .children('article')
+                .should('contain', 'You need to be UQ Library staff to view this object');
+            cy.contains('UQ Only Restricted Object')
+                .children('article')
+                .should('contain', 'You need to be a UQ staff or student to view this object');
+
+            cy.visit('digital-learning-hub/series/9?user=dloradmn');
+            cy.injectAxe();
+            cy.viewport(1300, 1000);
+
+            cy.contains('Staff Restricted Object')
+                .should('exist')
+                .children('article')
+                .should('contain', 'Staff Only');
+            cy.contains('Staff (library) Restricted Object')
+                .should('exist')
+                .children('article')
+                .should('contain', 'Staff (library) Only');
+            cy.contains('UQ Only Restricted Object')
+                .should('exist')
+                .children('article')
+                .should('contain', 'UQ Only');
         });
     });
 });

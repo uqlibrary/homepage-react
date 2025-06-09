@@ -59,6 +59,8 @@ import dlor_file_type_list from './data/records/dlor/dlor_file_type_list';
 import dlor_series_all from './data/records/dlor/dlor_series_all';
 import dlor_series_view from './data/records/dlor/dlor_series_view';
 import dlor_series_view_nodescription from './data/records/dlor/dlor_series_view_nodescription';
+import { dlor_demographics_report } from './data/dlorDemographics';
+import { dlor_favourites_report } from './data/dlorFavourites';
 import { drupalArticles } from './data/drupalArticles';
 import {
     journalSearchFavourites,
@@ -137,6 +139,16 @@ mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl).reply(() => {
         return [200, mockData.accounts[user]];
     }
     return [404, {}];
+});
+
+mock.onGet(routes.PRIMO_STATUS_API().apiUrl).reply(() => {
+    if (responseType === 've') {
+        return [200, { status: 've' }];
+    }
+    if (responseType === 'statusFIleNotPublic') {
+        return [403, {}];
+    }
+    return [200, { status: 'bo' }];
 });
 
 mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl).reply(() => {
@@ -520,7 +532,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .onPut(/dlor\/auth\/object\/.*/)
     .reply(() => {
         if (responseType === 'saveError') {
-            console.log("SAVE ERROR? WHY?")
+            console.log('SAVE ERROR? WHY?');
             return [500, {}];
         } else {
             // return [200, { data: getSpecificDlorObject('98j3-fgf95-8j34') }]; //any old id
@@ -560,7 +572,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
     })
     .onGet(/dlor\/public\/series\/find\/5/)
     .reply(config => {
-            return [500, {}];
+        return [500, {}];
     })
     .onGet(/dlor\/public\/series\/find\/9/)
     .reply(config => {
@@ -738,9 +750,64 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .onDelete(/dlor\/admin\/facet\/\d+/)
     .reply(() => {
         return [200, { data: { response: 'ok' } }];
+    })
+    .onGet('dlor/auth/favourites')
+    .reply(() => {
+        return [
+            200,
+            {
+                data: [
+                    {
+                        favourite_id: 3,
+                        object_public_uuid: '9k45_hgr4_876h',
+                        favourite_username: 'uqslanca',
+                    },
+                    {
+                        favourite_id: 2,
+                        object_public_uuid: 'kj5t_8yg4_kj4f',
+                        favourite_username: 'uqslanca',
+                    },
+                ],
+            },
+        ];
+    })
+    .onPost('dlor/auth/favourites')
+    .reply(() => {
+        console.log('POST FAVOURITES');
+        return [
+            200,
+            {
+                data: [
+                    {
+                        favourite_id: 3,
+                        object_public_uuid: '9k45_hgr4_876h',
+                        favourite_username: 'uqslanca',
+                    },
+                    {
+                        favourite_id: 2,
+                        object_public_uuid: 'kj5t_8yg4_kj4f',
+                        favourite_username: 'uqslanca',
+                    },
+                ],
+            },
+        ];
+    })
+    .onDelete('dlor/auth/favourites')
+    .reply(() => {
+        return [200, { data: [] }];
+    })
+    .onGet(routes.DLOR_DEMOGRAPHICS_REPORT_API().apiUrl)
+    .reply(() => {
+        return [200, { data: dlor_demographics_report }];
+    })
+    .onGet(routes.DLOR_FAVOURITES_REPORT_API().apiUrl)
+    .reply(() => {
+        if (responseType === 'loadError') {
+            return [500, {}];
+        } else {
+            return [200, { data: dlor_favourites_report }];
+        }
     });
-    
-
 
 mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {

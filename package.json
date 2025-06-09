@@ -109,7 +109,7 @@
         "webpack-dev-server": "^4.15.1"
     },
     "dependencies": {
-        "@babel/runtime": "^7.23.9",
+        "@babel/runtime": "^7.27.0",
         "@ckeditor/ckeditor5-build-classic": "^35.2.1",
         "@ckeditor/ckeditor5-react": "^5.0.2",
         "@date-io/moment": "^2.17.0",
@@ -124,10 +124,10 @@
         "@sentry/browser": "^8.51.0",
         "@sentry/react": "^8.51.0",
         "@webcomponents/webcomponentsjs": "^2.8.0",
-        "axios": "^0.28.1",
+        "axios": "^1.8.4",
         "axios-cache-interceptor": "^0.10.2",
         "babel-plugin-add-module-exports": "^1.0.4",
-        "copy-webpack-plugin": "^6.4.1",
+        "copy-webpack-plugin": "^12.0.2",
         "core-js": "^3.36.0",
         "history": "^4.7.2",
         "html-react-parser": "^3.0.16",

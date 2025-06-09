@@ -32,6 +32,7 @@ import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import CallMadeOutlinedIcon from '@mui/icons-material/CallMadeOutlined';
+import StarIcon from '@mui/icons-material/Star';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -45,7 +46,7 @@ import {
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { isEscapeKeyPressed, isReturnKeyPressed } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
-import { isDlorAdminUser } from 'helpers/access';
+import { isDlorAdminUser, isLibraryStaff, isUQOnlyUser, isStaff } from 'helpers/access';
 
 const StyledSkipLinkButton = styled(Button)(({ theme }) => ({
     // hidden when not focused
@@ -139,7 +140,7 @@ const StyledFilterSidebarGrid = styled(Grid)(({ theme }) => ({
         display: 'none',
     },
 }));
-const StyledArticleCard = styled('div')(({ theme }) => ({
+const StyledArticleCard = styled('div')(({ theme, isAccessible }) => ({
     backgroundColor: '#fff',
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
     borderRadius: '4px',
@@ -149,10 +150,10 @@ const StyledArticleCard = styled('div')(({ theme }) => ({
     textAlign: 'left',
     width: '100%',
     '&:hover': {
-        cursor: 'pointer',
+        cursor: isAccessible ? 'pointer' : 'not-allowed',
         textDecoration: 'none',
         '& > article': {
-            backgroundColor: '#f2f2f2',
+            backgroundColor: isAccessible ? '#f2f2f2' : '#f7f7f7',
         },
     },
     '& article': {
@@ -276,7 +277,11 @@ export const DLOList = ({
     dlorFilterListLoading,
     dlorFilterListError,
     account,
+    dlorFavouritesList,
+    dlorFavouritesLoading,
+    dlorFavouritesError,
 }) => {
+    // console.log('permissions', isLibraryStaff(account), isStaff(account), isUQOnlyUser(account));
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [selectedGradAttributes, setSelectedGradAttributes] = useState([]);
     const [filterListTrimmed, setFilterListTrimmed] = useState([]);
@@ -303,7 +308,6 @@ export const DLOList = ({
             setSelectedGradAttributes(filteredGraduateAttributes);
         }
     };
-
     /* istanbul ignore next */
     function skipToElement() {
         const skipNavLander = document.querySelector('#first-panel-button');
@@ -320,6 +324,10 @@ export const DLOList = ({
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dlor.title);
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.dlor.pathname);
     }, []);
+
+    useEffect(() => {
+        actions.loadDlorFavourites();
+    }, [actions]);
 
     useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
@@ -663,7 +671,7 @@ export const DLOList = ({
             const updateFilters = [...selectedFilters, individualFilterId];
             setSelectedFilters(updateFilters);
             FilterGraduateAttributes(filterListTrimmed, facetId, 'push');
-            window.dataLayer = window.dataLayer || [];
+            window.dataLayer = window.dataLayer || /* istanbul ignore next */ []; // for tests
             window.dataLayer.push({
                 event: 'reusable_component_event_click',
                 'custom_event.data-analyticsid': `${e.target.labels[0].innerText} DLOR filter click`,
@@ -934,15 +942,55 @@ export const DLOList = ({
     const numberItemsPerPage = 10;
 
     function filterDlorList() {
-        const sortedList = dlorList.sort((a, b) => b.object_is_featured - a.object_is_featured);
+        const sortedList = dlorList
+            .filter(item => {
+                if (item.object_restrict_to === 'uqlibrarystaff') {
+                    return isLibraryStaff(account);
+                }
+                return true;
+            })
+            .sort((a, b) => b.object_is_featured - a.object_is_featured)
+            .map(d => {
+                let restrictionMessage = '';
+                let isAccessible = true;
 
-        if (
-            (!selectedFilters || selectedFilters.length === 0) &&
-            (!keywordSearch || !keywordIsSearchable(keywordSearch))
-        ) {
-            return sortedList;
+                switch (d.object_restrict_to) {
+                    case 'uqstaff':
+                        isAccessible = isStaff(account);
+                        restrictionMessage = !isAccessible ? 'You need to be UQ staff to view this object' : '';
+                        break;
+                    case 'uquser':
+                        isAccessible = isUQOnlyUser(account);
+                        restrictionMessage = !isAccessible
+                            ? 'You need to be a UQ staff or student user to view this object'
+                            : '';
+                        break;
+                    default:
+                        break;
+                }
+
+                return {
+                    ...d,
+                    restrictionMessage,
+                    isAccessible,
+                };
+            });
+
+        // Helper function to check if an item is favorited
+        function isFavorited(item) {
+            return dlorFavouritesList?.some(fav => fav.object_public_uuid === item.object_public_uuid);
         }
 
+        // Helper function to sort array putting favorites first
+        function sortByFavorites(items) {
+            return items.sort((a, b) => {
+                const aFav = isFavorited(a);
+                const bFav = isFavorited(b);
+                if (aFav && !bFav) return -1;
+                if (!aFav && bFav) return 1;
+                return 0;
+            });
+        }
         function parseSelectedFilters(selectedFilters) {
             return selectedFilters?.reduce((acc, filter) => {
                 const [facetTypeSlug, facetId] = filter?.split('-');
@@ -966,10 +1014,28 @@ export const DLOList = ({
             );
         }
 
+        if (
+            (!selectedFilters || selectedFilters.length === 0) &&
+            (!keywordSearch || !keywordIsSearchable(keywordSearch))
+        ) {
+            // Even with no filters, we want to prioritize favorites
+            return sortByFavorites(sortedList);
+        }
+
         // Group selectedFilters by facetTypeSlug
         const groupedFilters = parseSelectedFilters(selectedFilters);
 
-        return sortedList?.filter(d => {
+        // Filter the list then sort by favorites
+        // const filteredList = sortedList?.filter(d => {
+        //     const passesCheckboxFilter = filterDlor(d, groupedFilters);
+        //     const passesKeyWordFilter =
+        //         !keywordSearch || // keyword not supplied - don't block
+        //         !keywordIsSearchable(keywordSearch) || // keyword too short to be useful - don't block
+        //         !!keywordFoundIn(d, keywordSearch); // DO block the Object by keyword
+        //     return passesCheckboxFilter && passesKeyWordFilter;
+        // });
+
+        const filteredList = sortedList?.filter(d => {
             const passesCheckboxFilter = filterDlor(d, groupedFilters);
             const passesKeyWordFilter =
                 !keywordSearch || // keyword not supplied - don't block
@@ -977,6 +1043,9 @@ export const DLOList = ({
                 !!keywordFoundIn(d, keywordSearch); // DO block the Object by keyword
             return passesCheckboxFilter && passesKeyWordFilter;
         });
+
+        // Return the filtered list with favorites first
+        return sortByFavorites(filteredList);
     }
 
     const paginateDlorList = pageloadShown => {
@@ -1015,16 +1084,25 @@ export const DLOList = ({
                     paddingLeft: '16px',
                     paddingBottom: '16px',
                     paddingTop: '0 !important',
+                    opacity: !object.isAccessible ? 0.5 : 1, // Make restricted items appear faded
                 }}
                 key={object?.object_id}
                 data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(object?.object_public_uuid)}`}
             >
                 <StyledArticleCard
                     role="button"
-                    onClick={() => navigateToDetailPage(object?.object_public_uuid)}
-                    tabIndex="0"
+                    onClick={() => object.isAccessible && navigateToDetailPage(object?.object_public_uuid)}
+                    tabIndex={object.isAccessible ? '0' : '-1'}
+                    isAccessible={object.isAccessible}
+                    aria-disabled={!object.isAccessible}
                     aria-label={`${object?.object_title} ${!!object?.object_series_name &&
                         '(Series: ' + object.object_series_name + ')'} ${object?.object_summary}`}
+                    sx={{
+                        cursor: object.isAccessible ? 'pointer' : 'not-allowed',
+                    }}
+                    {...(!object.isAccessible && {
+                        'aria-label': `${object?.object_title} - ${object.restrictionMessage}`,
+                    })}
                     id={index === 0 ? 'first-panel-button' : null}
                 >
                     <article>
@@ -1035,7 +1113,10 @@ export const DLOList = ({
                             <>
                                 {(!!object?.object_cultural_advice ||
                                     !!object?.object_is_featured ||
-                                    !!object?.object_series_name) && (
+                                    !!object?.object_series_name ||
+                                    !!dlorFavouritesList?.some(
+                                        fav => fav.object_public_uuid === object?.object_public_uuid,
+                                    )) && (
                                     <Typography
                                         component={'p'}
                                         id={`dlor-description-${object?.object_public_uuid}`}
@@ -1047,6 +1128,27 @@ export const DLOList = ({
                                             marginBottom: '6px',
                                         }}
                                     >
+                                        {!!dlorFavouritesList?.some(
+                                            fav => fav.object_public_uuid === object?.object_public_uuid,
+                                        ) && (
+                                            <>
+                                                <StarIcon
+                                                    sx={{
+                                                        fill: '#FFD700',
+                                                        marginRight: '2px',
+                                                        width: '20px',
+                                                    }}
+                                                />
+                                                <StyledTagLabel
+                                                    data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                        object?.object_public_uuid,
+                                                    )}-favourite`}
+                                                    sx={{ marginLeft: '-2px' }}
+                                                >
+                                                    Favourite
+                                                </StyledTagLabel>
+                                            </>
+                                        )}
                                         {!!object?.object_is_featured && (
                                             <>
                                                 <BookmarkIcon
@@ -1094,7 +1196,7 @@ export const DLOList = ({
                         </header>
 
                         <div>
-                            <p>{object?.object_summary}</p>
+                            <p>{!!object.restrictionMessage ? object.restrictionMessage : object.object_summary}</p>
                         </div>
                         <footer>
                             {!!hasTopicFacet('item_type') && (
@@ -1430,6 +1532,9 @@ DLOList.propTypes = {
     dlorFilterList: PropTypes.array,
     dlorFilterListLoading: PropTypes.bool,
     dlorFilterListError: PropTypes.any,
+    dlorFavouritesList: PropTypes.array,
+    dlorFavouritesLoading: PropTypes.bool,
+    dlorFavouritesError: PropTypes.any,
     account: PropTypes.object,
 };
 

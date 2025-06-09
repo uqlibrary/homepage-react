@@ -12,7 +12,7 @@ describe('Digital Learning Hub', () => {
 
             cy.waitUntil(() =>
                 cy
-                    .get('[data-testid="dlor-homepage-list"] div:nth-child(2) article h2')
+                    .get('[data-testid="dlor-homepage-list"] div:nth-child(4) article h2')
                     .should('exist')
                     .should('be.visible')
                     .should('contain', 'Accessibility - Digital Essentials'),
@@ -62,15 +62,15 @@ describe('Digital Learning Hub', () => {
                 .contains('Use the Digital Learning Hub to find modules, videos and guides for teaching and study.');
 
             // sorts properly
-            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(2) article h2').should(
+            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(4) article h2').should(
                 'contain',
                 'Accessibility - Digital Essentials',
             );
-            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(4) article h2').should(
+            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(1) article h2').should(
                 'contain',
                 'UQ has a Blak History',
             );
-            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(5) article h2').should(
+            cy.get('[data-testid="dlor-homepage-list"] div:nth-child(6) article h2').should(
                 'contain',
                 'Artificial Intelligence',
             );
@@ -524,7 +524,7 @@ describe('Digital Learning Hub', () => {
                 cy.get('[data-testid="dlor-homepage-list"]')
                     .should('exist')
                     .children()
-                    .should('have.length', 5 + extraRowCount);
+                    .should('have.length', 7 + extraRowCount);
                 // we are on second page of pagination
                 cy.get('nav[aria-label="pagination navigation"] li:nth-child(4) button')
                     .should('exist')
@@ -1117,6 +1117,31 @@ describe('Digital Learning Hub', () => {
             cy.get('[data-testid="filter-sidebar"]')
                 .should('exist')
                 .should('not.be.visible');
+        });
+    });
+    context('authenticated page', () => {
+        it('can handle non authenticated request to forced auth page', () => {
+            cy.visit('digital-learning-hub-list?user=public');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="StandardPage-title"]').should('contain', 'Authentication required');
+        });
+        it('can handle authenticated request to forced auth page', () => {
+            cy.visit('digital-learning-hub-list');
+            cy.viewport(1300, 1000);
+            cy.waitUntil(() => cy.get('h1').should('exist'));
+            cy.get('h1').should('contain', 'Find a digital learning object');
+        });
+    });
+    context('unavailable objects', () => {
+        it('unavailable objects are shown correctly in list', () => {
+            cy.visit('digital-learning-hub?user=public');
+            cy.viewport(1300, 1000);
+            cy.get('[aria-label="Go to page 3"]').click();
+            cy.contains('Staff Restricted Object')
+                .parents('article')
+                .trigger('mouseover')
+                .should('exist')
+                .should('contain', 'You need to be UQ staff to view this object');
         });
     });
 });
