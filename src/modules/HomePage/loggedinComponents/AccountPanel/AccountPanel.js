@@ -334,9 +334,7 @@ export const AccountPanel = ({
             {!!loans && loans.total_fines_count > 0 && (
                 <StyledAlertDiv data-testid={'show-fines'}>
                     <UserAttention titleText={'Fines and charges'}>
-                        {!!primoStatusLoading ? (
-                            <SpacerWhilePrimoStatusLoads />
-                        ) : (
+                        {!primoStatusLoading && (
                             <Link to={showFinesLink} id="fines-and-charges-link" data-analyticsid={'pp-fines-tooltip'}>
                                 <span>${`${totalFines(loans?.fines)}`} payable</span>
                             </Link>
