@@ -780,9 +780,10 @@ export const DlorForm = ({
                                                                 {parse(note.object_admin_note_content)}
                                                             </TableCell>
                                                             <TableCell>
-                                                                {moment(note.created_at, 'DD/MM/YYYY HH:mm').format(
-                                                                    'DD/MM/YYYY, h:mm A',
-                                                                )}
+                                                                {moment
+                                                                    .utc(note.created_at)
+                                                                    .local()
+                                                                    .format('DD/MM/YYYY, h:mm A')}
                                                             </TableCell>
                                                         </TableRow>
                                                     ))}
