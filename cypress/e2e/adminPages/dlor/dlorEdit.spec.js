@@ -124,6 +124,20 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     'Edit object: Advanced literature searching',
                 );
 
+                // Admin notes
+                // Check Open.
+                cy.get('[data-testid="ExpandMoreIcon"]')
+                    .should('exist')
+                    .click();
+                // Check Note 1.
+                cy.get('[data-testid="admin-note-username-0"]')
+                    .should('exist')
+                    .contains('uqtest1');
+                // Check Note 2.
+                cy.get('[data-testid="admin-note-username-1"]')
+                    .should('exist')
+                    .contains('uqabcdef');
+
                 // team editor
 
                 // swap teams and the edit button doesnt exist
