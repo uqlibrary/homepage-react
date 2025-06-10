@@ -782,7 +782,7 @@ export const DlorForm = ({
                                                             <TableCell>
                                                                 {moment
                                                                     .utc(note.created_at)
-                                                                    .local()
+                                                                    .tz('Australia/Brisbane')
                                                                     .format('DD/MM/YYYY, h:mm A')}
                                                             </TableCell>
                                                         </TableRow>
