@@ -26,6 +26,10 @@ export const DLOAdd = ({
     dlorFilterList,
     dlorFilterListLoading,
     dlorFilterListError,
+    dlorAdminNotesLoading,
+    dlorAdminNotesLoaded,
+    dlorAdminNotesLoadError,
+    dlorAdminNotes,
 }) => {
     const { account } = useAccountContext();
     console.log('ACCOUNT', account);
@@ -111,6 +115,10 @@ export const DLOAdd = ({
                         dlorFileTypeList={dlorFileTypeList}
                         dlorFileTypeListLoading={dlorFileTypeListLoading}
                         dlorFileTypeListError={dlorFileTypeListError}
+                        dlorAdminNotesLoading={dlorAdminNotesLoading}
+                        dlorAdminNotesLoaded={dlorAdminNotesLoaded}
+                        dlorAdminNotesLoadError={dlorAdminNotesLoadError}
+                        dlorAdminNotes={dlorAdminNotes}
                         mode="add"
                     />
                 </section>
@@ -133,6 +141,10 @@ DLOAdd.propTypes = {
     dlorFilterList: PropTypes.array,
     dlorFilterListLoading: PropTypes.bool,
     dlorFilterListError: PropTypes.any,
+    dlorAdminNotesLoading: PropTypes.bool,
+    dlorAdminNotesLoaded: PropTypes.bool,
+    dlorAdminNotesLoadError: PropTypes.any,
+    dlorAdminNotes: PropTypes.array,
 };
 
 export default DLOAdd;
