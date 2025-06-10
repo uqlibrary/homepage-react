@@ -775,11 +775,13 @@ export const DlorForm = ({
                                                 {!!dlorAdminNotes &&
                                                     dlorAdminNotes.map((note, idx) => (
                                                         <TableRow key={idx}>
-                                                            <TableCell>{note.object_admin_username}</TableCell>
-                                                            <TableCell>
+                                                            <TableCell data-testid={`admin-note-username-${idx}`}>
+                                                                {note.object_admin_username}
+                                                            </TableCell>
+                                                            <TableCell data-testid={`admin-note-content-${idx}`}>
                                                                 {parse(note.object_admin_note_content)}
                                                             </TableCell>
-                                                            <TableCell>
+                                                            <TableCell data-testid={`admin-note-date-${idx}`}>
                                                                 {moment(note.created_at, 'DD/MM/YYYY HH:mm')
                                                                     .tz('Australia/Brisbane')
                                                                     .add(10, 'hours')
