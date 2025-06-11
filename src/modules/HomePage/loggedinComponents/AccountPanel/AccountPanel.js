@@ -260,13 +260,13 @@ export const AccountPanel = ({
         : 'https://search.library.uq.edu.au/discovery/favorites?vid=61UQ_INST:61UQ&lang=en&section=queries';
     const showRequestsLink = useBOLink
         ? 'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=requests&lang=en_US'
-        : 'https://search.library.uq.edu.au/discovery/account?vid=61UQ_INST:61UQ_APPDEV&section=requests&lang=en';
+        : 'https://search.library.uq.edu.au/discovery/account?vid=61UQ_INST:61UQ&section=requests&lang=en';
     const showLoansLink = useBOLink
         ? 'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US'
-        : 'https://search.library.uq.edu.au/discovery/account?vid=61UQ_INST:61UQ_APPDEV&section=loans&lang=en';
+        : 'https://search.library.uq.edu.au/discovery/account?vid=61UQ_INST:61UQ&section=loans&lang=en';
     const showFinesLink = useBOLink
         ? 'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=fines&lang=en_US'
-        : 'https://search.library.uq.edu.au/discovery/account?vid=61UQ_INST:61UQ_APPDEV&section=fines&lang=en';
+        : 'https://search.library.uq.edu.au/discovery/account?vid=61UQ_INST:61UQ&section=fines&lang=en';
 
     const SpacerWhilePrimoStatusLoads = () => <div style={{ height: '30px' }} />;
     return (
