@@ -143,12 +143,12 @@ mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl).reply(() => {
 
 mock.onGet(routes.PRIMO_STATUS_API().apiUrl).reply(() => {
     if (responseType === 've') {
-        return [200, { status: 've' }];
+        return [200, { homepageStatus: 've' }];
     }
     if (responseType === 'statusFIleNotPublic') {
         return [403, {}];
     }
-    return [200, { status: 'bo' }];
+    return [200, { homepageStatus: 'bo' }];
 });
 
 mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl).reply(() => {
