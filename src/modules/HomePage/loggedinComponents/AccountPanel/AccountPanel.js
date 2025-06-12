@@ -251,7 +251,7 @@ export const AccountPanel = ({
         }
         return <> ({`${loans?.total_holds_count}`})</>;
     }
-    const useBOLink = !primoStatus?.status || primoStatus?.status === 'bo';
+    const useBOLink = !primoStatus?.homepageStatus || primoStatus?.homepageStatus === 'bo';
     const searchHistoryLink = useBOLink
         ? 'https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=search_history'
         : 'https://search.library.uq.edu.au/discovery/favorites?vid=61UQ_INST:61UQ&lang=en&section=search_history';
