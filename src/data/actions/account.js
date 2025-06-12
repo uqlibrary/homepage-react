@@ -7,6 +7,7 @@ import {
     LIB_HOURS_API,
     LOANS_API,
     POSSIBLE_RECORDS_API,
+    PRIMO_STATUS_API,
     PRINTING_API,
     TRAINING_API,
     VEMCOUNT_API,
@@ -367,4 +368,24 @@ export function loadLoans() {
             });
         };
     }
+}
+
+export function loadPrimoStatus() {
+    return dispatch => {
+        dispatch({ type: actions.PRIMO_STATUS_LOADING });
+        const url = PRIMO_STATUS_API();
+        return get(url)
+            .then(availResponse => {
+                dispatch({
+                    type: actions.PRIMO_STATUS_LOADED,
+                    payload: availResponse,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.PRIMO_STATUS_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
 }
