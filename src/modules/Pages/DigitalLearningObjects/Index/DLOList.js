@@ -1114,6 +1114,7 @@ export const DLOList = ({
                             <>
                                 {(!!object?.object_cultural_advice ||
                                     !!object?.object_is_featured ||
+                                    !!object?.is_popular ||
                                     !!object?.object_series_name ||
                                     !!dlorFavouritesList?.some(
                                         fav => fav.object_public_uuid === object?.object_public_uuid,
