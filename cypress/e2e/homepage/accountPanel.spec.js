@@ -272,4 +272,58 @@ describe('Account panel', () => {
             // back tab out of first menu item, menu closes, focus is on Print balance        })
         });
     });
+
+    describe('homepage shows correct primo links', () => {
+        it('homepage shows Backoffice link when primo status returns BO', () => {
+            cy.visit('http://localhost:2020/');
+            cy.viewport(1280, 900);
+
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="show-searchhistory"]')
+                    .should('exist')
+                    .contains('Search history'),
+            );
+            cy.get('li[data-testid="show-searchhistory"] a')
+                .should('have.attr', 'href')
+                .and(
+                    'include',
+                    'https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=search_history',
+                );
+        });
+        it('homepage shows VE link when primo status returns VE', () => {
+            cy.visit('http://localhost:2020/?user=uqstaff&responseType=ve');
+            cy.viewport(1280, 900);
+
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="show-searchhistory"]')
+                    .should('exist')
+                    .contains('Search history'),
+            );
+            cy.get('li[data-testid="show-searchhistory"] a')
+                .should('have.attr', 'href')
+                .and(
+                    'include',
+                    'https://search.library.uq.edu.au/discovery/favorites?vid=61UQ_INST:61UQ&lang=en&section=search_history',
+                );
+        });
+        it('homepage shows BO link when primo status does not get a 200', () => {
+            cy.visit('http://localhost:2020/?user=uqstaff&responseType=statusFIleNotPublic');
+            cy.viewport(1280, 900);
+
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="show-searchhistory"]')
+                    .should('exist')
+                    .contains('Search history'),
+            );
+            cy.get('[data-testid="show-searchhistory"] a')
+                .should('have.attr', 'href')
+                .and(
+                    'include',
+                    'https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=search_history',
+                );
+        });
+    });
 });
