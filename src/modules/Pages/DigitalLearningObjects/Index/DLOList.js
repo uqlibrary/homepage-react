@@ -47,6 +47,7 @@ import {
 import { isEscapeKeyPressed, isReturnKeyPressed } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
 import { isDlorAdminUser, isLibraryStaff, isUQOnlyUser, isStaff } from 'helpers/access';
+import { LocalFireDepartment } from '@mui/icons-material';
 
 const StyledSkipLinkButton = styled(Button)(({ theme }) => ({
     // hidden when not focused
@@ -949,7 +950,7 @@ export const DLOList = ({
                 }
                 return true;
             })
-            .sort((a, b) => b.object_is_featured - a.object_is_featured)
+            // .sort((a, b) => b.object_is_featured - a.object_is_featured)
             .map(d => {
                 let restrictionMessage = '';
                 let isAccessible = true;
@@ -1113,6 +1114,7 @@ export const DLOList = ({
                             <>
                                 {(!!object?.object_cultural_advice ||
                                     !!object?.object_is_featured ||
+                                    !!object?.is_popular ||
                                     !!object?.object_series_name ||
                                     !!dlorFavouritesList?.some(
                                         fav => fav.object_public_uuid === object?.object_public_uuid,
@@ -1161,6 +1163,21 @@ export const DLOList = ({
                                                     sx={{ marginLeft: '-2px' }}
                                                 >
                                                     Featured
+                                                </StyledTagLabel>
+                                            </>
+                                        )}
+                                        {!!object?.is_popular && (
+                                            <>
+                                                <LocalFireDepartment
+                                                    sx={{ fill: '#FFA500', marginRight: '2px', width: '20px' }}
+                                                />
+                                                <StyledTagLabel
+                                                    data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
+                                                        object?.object_public_uuid,
+                                                    )}-featured`}
+                                                    sx={{ marginLeft: '-2px' }}
+                                                >
+                                                    Popular
                                                 </StyledTagLabel>
                                             </>
                                         )}
