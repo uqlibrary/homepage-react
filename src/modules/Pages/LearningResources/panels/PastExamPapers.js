@@ -16,8 +16,19 @@ const StyledItem = styled(Grid)(() => ({
     borderTop: '1px solid #e8e8e8',
     paddingBlock: '15px',
     '& a': {
+        display: 'inline',
+    },
+    '& a:has(span)': {
         display: 'flex',
         alignItems: 'center',
+        '&:hover': {
+            color: 'inherit',
+            backgroundColor: 'inherit',
+            '& span': {
+                color: '#fff',
+                backgroundColor: '#51247A',
+            },
+        },
     },
 }));
 
@@ -72,7 +83,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                         <StyledItem item xs={12}>
                             <a href={locale.myCourses.examPapers.footer.noPastExams.linkOut}>
                                 <SpacedArrowForwardIcon />
-                                {locale.myCourses.examPapers.footer.noPastExams.linkLabel}
+                                <span>{locale.myCourses.examPapers.footer.noPastExams.linkLabel}</span>
                             </a>
                         </StyledItem>
                     </React.Fragment>
@@ -92,7 +103,9 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                                     href={paper.url}
                                     key={`exam-${index}`}
                                 >
-                                    {paper.period} ({_extractExtension(paper.url)})
+                                    <span>
+                                        {paper.period} ({_extractExtension(paper.url)})
+                                    </span>
                                 </a>
                             </StyledItem>
                         );
@@ -101,9 +114,11 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                     <StyledItem item xs={12} data-testid="exam-more-link">
                         <a href={_courseLink(subject, locale.myCourses.examPapers.footer.morePastExams.linkOutPattern)}>
                             <SpacedArrowForwardIcon />
-                            {locale.myCourses.examPapers.footer.morePastExams.linkLabel
-                                .replace('[numberExcessExams]', numberExcessExams)
-                                .replace('[examNumber]', _pluralise('paper', numberExcessExams))}
+                            <span>
+                                {locale.myCourses.examPapers.footer.morePastExams.linkLabel
+                                    .replace('[numberExcessExams]', numberExcessExams)
+                                    .replace('[examNumber]', _pluralise('paper', numberExcessExams))}
+                            </span>
                         </a>
                     </StyledItem>
                 )}

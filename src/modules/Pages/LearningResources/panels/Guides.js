@@ -14,8 +14,19 @@ const StyledItem = styled(Grid)(() => ({
     borderTop: '1px solid #e8e8e8',
     padding: '15px 0',
     '& a': {
+        display: 'inline',
+    },
+    '& a:has(span)': {
         display: 'flex',
         alignItems: 'center',
+        '&:hover': {
+            color: 'inherit',
+            backgroundColor: 'inherit',
+            '& span': {
+                color: '#fff',
+                backgroundColor: '#51247A',
+            },
+        },
     },
 }));
 
@@ -77,7 +88,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                                 <StyledItem item key={`studylink-${index}`} xs={12}>
                                     <a data-testid={dataTestId} id={dataTestId} href={item.linkTo}>
                                         {!!item.icon && item.icon}
-                                        {item.linkLabel}
+                                        <span>{item.linkLabel}</span>
                                     </a>
                                 </StyledItem>
                             )

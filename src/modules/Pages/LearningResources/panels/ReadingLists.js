@@ -17,6 +17,14 @@ const StyledItem = styled(Grid)(() => ({
     '& a': {
         display: 'flex',
         alignItems: 'center',
+        '&:hover': {
+            color: 'inherit',
+            backgroundColor: 'inherit',
+            '& span': {
+                color: '#fff',
+                backgroundColor: '#51247A',
+            },
+        },
     },
     '& .presentLabel': {
         lineHeight: 1.3,
@@ -77,10 +85,9 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                         <StyledItem item xs={12} data-testid="reading-list-link">
                             <a href={listOfReadingLists[0].url}>
                                 <SpacedArrowForwardIcon />
-                                {`${courseCode} Reading list (contains ${listOfReadingLists[0].totalCount} ${_pluralise(
-                                    'item',
-                                    listOfReadingLists[0].totalCount,
-                                )})`}
+                                <span>{`${courseCode} Reading list (contains ${
+                                    listOfReadingLists[0].totalCount
+                                } ${_pluralise('item', listOfReadingLists[0].totalCount)})`}</span>
                             </a>
                         </StyledItem>
                     </React.Fragment>
