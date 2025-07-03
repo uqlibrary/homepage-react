@@ -265,6 +265,20 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const dlorTeamAdminDisplay = [
+        {
+            path: pathConfig.dlorOwnTeamList,
+            element: <components.DLOOwnTeamList />,
+            exact: true,
+            pageTitle: 'Digital Learning Object Repository - Team Management',
+        },
+        {
+            path: pathConfig.dlorOwnTeamEdit(dlorTeamId),
+            element: <components.DLOOwnTeamEdit />,
+            pageTitle: 'Digital Learning Object Repository - Edit Team',
+        },
+    ];
+
     const testntagDisplay = [
         {
             path: pathConfig.admin.testntagdashboard,
@@ -347,6 +361,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isDlorAdminUser(account) ? dlorAdminDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
         ...(account && isTestTagUser(account) ? testntagDisplay : []),
+        ...(account ? dlorTeamAdminDisplay : []),
         ...(account ? authenticatedDlorDisplay : []),
         {
             path: '*',

@@ -203,6 +203,7 @@ export const DLOTeamList = ({
                             </Grid>
                         );
                     } else {
+                        console.log('dlorTeamList', dlorTeamList);
                         return (
                             <>
                                 <Grid item sx={{ width: '100%' }} data-testid="dlor-teamlist-list">

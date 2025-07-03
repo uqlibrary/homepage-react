@@ -1026,16 +1026,6 @@ export const DLOList = ({
         // Group selectedFilters by facetTypeSlug
         const groupedFilters = parseSelectedFilters(selectedFilters);
 
-        // Filter the list then sort by favorites
-        // const filteredList = sortedList?.filter(d => {
-        //     const passesCheckboxFilter = filterDlor(d, groupedFilters);
-        //     const passesKeyWordFilter =
-        //         !keywordSearch || // keyword not supplied - don't block
-        //         !keywordIsSearchable(keywordSearch) || // keyword too short to be useful - don't block
-        //         !!keywordFoundIn(d, keywordSearch); // DO block the Object by keyword
-        //     return passesCheckboxFilter && passesKeyWordFilter;
-        // });
-
         const filteredList = sortedList?.filter(d => {
             const passesCheckboxFilter = filterDlor(d, groupedFilters);
             const passesKeyWordFilter =
