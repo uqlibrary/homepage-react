@@ -28,7 +28,14 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { isDlorAdminUser, isDlorOwner, isStaff, isLibraryStaff, isUQOnlyUser } from 'helpers/access';
+import {
+    isDlorAdminUser,
+    isDlorOwner,
+    isStaff,
+    isLibraryStaff,
+    isUQOnlyUser,
+    isInDLOROwningTeam,
+} from 'helpers/access';
 import { useAccountContext } from 'context';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
@@ -247,6 +254,9 @@ export const DLOView = ({
     dlorItemUpdating,
     dlorUpdatedItemError,
     dlorFavouritesList,
+    dlorTeamList,
+    dlorTeamListLoading,
+    dlorTeamListError,
 }) => {
     const { account } = useAccountContext();
     const { dlorId } = useParams();
@@ -276,6 +286,12 @@ export const DLOView = ({
         preferredName: '',
         userEmail: '',
     };
+
+    useEffect(() => {
+        if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {
+            actions.loadOwningTeams();
+        }
+    }, [actions, dlorTeamList, dlorTeamListError, dlorTeamListLoading]);
 
     const [formValues, setFormValues] = React.useState(defaultFormValues);
 
@@ -501,9 +517,8 @@ export const DLOView = ({
     };
 
     const navigateToEditPage = uuid => {
-        window.location.href = isDlorAdminUser(account)
-            ? dlorAdminLink(`/edit/${uuid}`)
-            : `/digital-learning-hub/edit/${uuid}`;
+        window.location.href = 
+             dlorAdminLink(`/edit/${uuid}`, account);
     };
 
     // const saveAndNavigate = dlorItem => {
@@ -714,6 +729,8 @@ export const DLOView = ({
             </StandardPage>
         );
     }
+
+    console.log('account is from reducer', account);
 
     return (
         <StandardPage>
@@ -1337,22 +1354,24 @@ export const DLOView = ({
                                 </StyledLayoutBox>
                             </Grid>
                             <Grid item xs={12} md={3} data-testid="detailpage-metadata">
+                                {(isDlorAdminUser(account) ||
+                                    isDlorOwner(account, dlorItem) ||
+                                    isInDLOROwningTeam(account, dlorItem, dlorTeamList)) && (
+                                    <Button
+                                        onClick={() => navigateToEditPage(dlorItem?.object_public_uuid)}
+                                        data-testid="detailpage-admin-edit-button"
+                                        sx={{
+                                            backgroundColor: '#2377cb',
+                                            color: '#fff',
+                                            marginBottom: '6px',
+                                            paddingInline: '24px',
+                                        }}
+                                    >
+                                        <EditIcon /> &nbsp; Edit
+                                    </Button>
+                                )}
                                 {dlorItem?.object_filters?.length > 0 && (
                                     <>
-                                        {(isDlorAdminUser(account) || isDlorOwner(account, dlorItem)) && (
-                                            <Button
-                                                onClick={() => navigateToEditPage(dlorItem?.object_public_uuid)}
-                                                data-testid="detailpage-admin-edit-button"
-                                                sx={{
-                                                    backgroundColor: '#2377cb',
-                                                    color: '#fff',
-                                                    marginBottom: '6px',
-                                                    paddingInline: '24px',
-                                                }}
-                                            >
-                                                <EditIcon /> &nbsp; Edit
-                                            </Button>
-                                        )}
                                         <StyledSidebarHeadingTypography component={'h2'} variant={'h6'}>
                                             <BookmarksIcon />
                                             Details
@@ -1439,6 +1458,9 @@ DLOView.propTypes = {
     dlorUpdatedItemError: PropTypes.any,
     account: PropTypes.object,
     dlorFavouritesList: PropTypes.array,
+    dlorTeamList: PropTypes.array,
+    dlorTeamListLoading: PropTypes.bool,
+    dlorTeamListError: PropTypes.any,
 };
 
 export default React.memo(DLOView);

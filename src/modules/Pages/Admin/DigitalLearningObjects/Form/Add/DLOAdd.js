@@ -2,14 +2,13 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { useAccountContext } from 'context';
 
 import DlorForm from 'modules/Pages/Admin/DigitalLearningObjects/Form/DlorForm';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 import { isDlorAdminUser } from 'helpers/access';
 import InformationBox from 'modules/Pages/DigitalLearningObjects/SharedComponents/InformationBox';
 import { Typography } from '@mui/material';
-
+import { useAccountContext } from 'context';
 const moment = require('moment-timezone');
 
 export const DLOAdd = ({
@@ -101,6 +100,7 @@ export const DLOAdd = ({
                         * = Required fields
                     </Typography>
                     <DlorForm
+                        account={account}
                         actions={actions}
                         dlorItemSaving={dlorItemCreating}
                         dlorSavedItemError={dlorCreatedItemError}

@@ -38,7 +38,7 @@ export const DlorAdminBreadcrumbs = ({ breadCrumbList }) => {
                 <StyledTitleBox>
                     <Typography component={'p'} variant={'h6'} data-testid="dlor-detailpage-sitelabel">
                         {/* istanbul ignore next */}
-                        <a data-testid="dlor-breadcrumb-admin-homelink" href={isDlorAdminUser(account) ? /* istanbul ignore next */ dlorAdminLink() : /* istanbul ignore next */ '/digital-learning-hub'}>
+                        <a data-testid="dlor-breadcrumb-admin-homelink" href={ dlorAdminLink(undefined, account) }>
                             {isDlorAdminUser(account) ? /* istanbul ignore next */ `Digital Learning Hub admin` : /* istanbul ignore next */ `Digital Learning Hub`}
                         </a>
                         {breadCrumbList.map((b, index) => {

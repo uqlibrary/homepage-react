@@ -18,6 +18,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { scrollToTopOfPage } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
+import { useAccountContext } from 'context';
 
 const StyledForm = styled('form')(() => ({
     width: '100%',
@@ -34,6 +35,7 @@ export const DLOTeamForm = ({
     dlorSavedTeam,
     mode,
 }) => {
+    const { account } = useAccountContext();
     const { dlorTeamId } = useParams();
     const [cookies, setCookie] = useCookies();
 
@@ -72,11 +74,11 @@ export const DLOTeamForm = ({
 
     const navigateToTeamManagementHomePage = () => {
         closeConfirmationBox();
-        window.location.href = dlorAdminLink('/team/manage');
+        window.location.href = dlorAdminLink('/team/manage', account);
         scrollToTopOfPage();
     };
     const navigateToPreviousPage = () => {
-        window.location.href = dlorAdminLink('/team/manage');
+        window.location.href = dlorAdminLink('/team/manage', account);
     };
 
     const clearForm = () => {

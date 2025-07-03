@@ -21,6 +21,7 @@ import { useConfirmationState } from 'hooks';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 import { pluralise } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
+import { useAccountContext } from 'context';
 
 const StyledObjectDetails = styled('details')(() => ({
     marginLeft: '20px',
@@ -38,6 +39,7 @@ export const DLOSeriesList = ({
     dlorSeriesDeleted,
     dlorSeriesDeleteError,
 }) => {
+    const { account } = useAccountContext();
     const DELETION_STEP_NULL = null;
     const DELETION_STEP_ONE_CONFIRM = 1;
     const DELETION_STEP_TWO_HAPPENING = 2;
@@ -97,7 +99,7 @@ export const DLOSeriesList = ({
     };
 
     const navigateToSeriesEditPage = seriesId => {
-        window.location.href = dlorAdminLink(`/series/edit/${seriesId}`);
+        window.location.href = dlorAdminLink(`/series/edit/${seriesId}`, account);
     };
     const deletionConfirmationBoxLocale = {
         confirmItMessage: {

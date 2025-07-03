@@ -1,6 +1,8 @@
 import { getPathRoot } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { DLOR_FAVOURITES_REPORT_API } from 'repositories/routes';
 import { get } from 'repositories/generic';
+import { isDlorAdminUser } from 'helpers/access';
+
 const moment = require('moment');
 export function splitStringToArrayOnComma(keywordString) {
     let splitStringToArrayOnComma = '';
@@ -46,9 +48,11 @@ export function getUserPostfix(appendType = '?') {
     return userString;
 }
 
-export const dlorAdminLink = (dlorPath = '') => {
+export const dlorAdminLink = (dlorPath = '', account = null) => {
     const userString = getUserPostfix();
-    return `${getPathRoot()}/admin/dlor${dlorPath}${userString}`;
+    return isDlorAdminUser(account)
+        ? `${getPathRoot()}/admin/dlor${dlorPath}${userString}`
+        : `${getPathRoot()}/digital-learning-hub${dlorPath}${userString}`;
 };
 
 export const isValidEmail = testEmail => {

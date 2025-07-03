@@ -652,7 +652,7 @@ export const DlorForm = ({
                             A change here will affect all Objects for this team.
                             <br />
                             You can also{' '}
-                            <a target="_blank" href={dlorAdminLink('/team/manage')}>
+                            <a target="_blank" href={dlorAdminLink('/team/manage', account)}>
                                 Manage Teams
                             </a>
                         </Box>
@@ -1618,6 +1618,30 @@ export const DlorForm = ({
         }
     }, [dlorSavedItem, dlorSavedItemError]);
 
+    // Helper function to check access
+    const userHasEditAccess = account => {
+        // 1. DLOR Admin
+        console.log('account=', account, ' formDefaults=', formDefaults, 'teanlist=', dlorTeamList);
+        if (isDlorAdminUser(account)) return true;
+
+        // 2. Owner of the object
+        if (formDefaults?.object_publishing_user && account?.id === formDefaults.object_publishing_user) return true;
+
+        // 3. In the team that owns the object
+        if (Array.isArray(dlorTeamList) && formDefaults?.object_owning_team_id) {
+            const owningTeam = dlorTeamList.find(t => t.team_id === formDefaults.object_owning_team_id);
+            if (
+                owningTeam &&
+                Array.isArray(owningTeam.team_members) &&
+                owningTeam.team_members.some(member => member.team_admin_username === account?.id)
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
     const saveDlor = () => {
         const valuesToSend = { ...formValues };
         // somehow in localhost this is already an array of ids, but on feature branch its the original facets
@@ -1744,12 +1768,12 @@ export const DlorForm = ({
     const navigateToListPage = isAdmin => {
         setConfirmationOpen(false);
         actions.clearADlor();
-        window.location.href = isAdmin ? dlorAdminLink() : '/digital-learning-hub';
+        window.location.href = dlorAdminLink(undefined, account);
         scrollToTopOfPage();
     };
 
     const navigateToPreviousPage = () => {
-        window.location.href = dlorAdminLink();
+        window.location.href = dlorAdminLink(undefined, account);
     };
 
     function closeConfirmationBox() {
@@ -1804,6 +1828,14 @@ export const DlorForm = ({
             // index must = 3
             return validatePanelFiltering(formValues);
         }
+    }
+
+    if (!userHasEditAccess(account)) {
+        return (
+            <Typography variant="body1" color="error" data-testid="dlor-form-no-access">
+                You do not have permission to edit this object. If you believe this is an error, please contact support.
+            </Typography>
+        );
     }
 
     return (
