@@ -62,11 +62,15 @@ const StyledSimpleViewWrapper = styled('div')(() => ({
         verticalAlign: 'top',
     },
     '& .zebra': {
-        /* stripe alternate rows in movile view */
+        /* stripe alternate rows on simple view */
         backgroundColor: colourPaneBackground,
-        paddingTop: '1rem',
+        paddingTop: '0.5rem',
         paddingBottom: '1rem',
         marginBottom: '1rem',
+        marginTop: '1rem',
+    },
+    '& .plain': {
+        marginTop: '1rem',
     },
     h3: {
         color: colourBlack,
@@ -126,7 +130,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     return (
                         <div
                             key={`exampaper-${formatType}-row-${cc}`}
-                            className={cc % 2 && 'zebra'}
+                            className={cc % 2 ? 'zebra' : 'plain'}
                             data-testid={`exampaper-${formatType}-line`}
                         >
                             <Typography
