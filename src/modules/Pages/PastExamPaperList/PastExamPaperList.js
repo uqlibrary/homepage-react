@@ -18,10 +18,35 @@ import useTheme from '@mui/material/styles/useTheme';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { noResultsFoundBlock, MESSAGE_EXAMCODE_404 } from 'modules/Pages/PastExamPaperSearch/pastExamPapers.helpers';
+import { MESSAGE_EXAMCODE_404, noResultsFoundBlock } from 'modules/Pages/PastExamPaperSearch/pastExamPapers.helpers';
 import { styled } from '@mui/material/styles';
 import { breadcrumbs } from 'config/routes';
 import { linkToDrupal } from 'helpers/general';
+
+const colourBlack = '#19151c';
+const colourPaneBackground = '#f3f3f4';
+
+const StyledStandardCard = styled(StandardCard)(() => ({
+    border: 'none',
+}));
+const StyledExplanation = styled('p')(({ theme }) => ({
+    marginBottom: 32,
+    '& a': {
+        color: theme.palette.primary.light,
+        textDecoration: 'underline',
+        fontWeight: 500,
+        '&:hover': {
+            color: '#fff',
+            backgroundColor: theme.palette.primary.light,
+        },
+    },
+}));
+const StyledTableLeftCell = styled(TableCell)(() => ({
+    backgroundColor: colourPaneBackground,
+    left: 0,
+    position: 'sticky',
+    verticalAlign: 'top',
+}));
 
 const StyledTableCell = styled(TableCell)(() => ({
     textAlign: 'center',
@@ -31,26 +56,20 @@ const StyledTableCell = styled(TableCell)(() => ({
     },
 }));
 
-const StyledMobileViewWrapper = styled('div')(() => ({
+const StyledSimpleViewWrapper = styled('div')(() => ({
+    marginTop: '1rem',
     '& .bodyCell': {
-        textAlign: 'center',
         verticalAlign: 'top',
-    },
-    '& .mobileLink': {
-        '& > div': {
-            marginTop: 20,
-            marginBottom: 20,
-        },
     },
     '& .zebra': {
         /* stripe alternate rows in movile view */
-        backgroundColor: '#fafafa',
+        backgroundColor: colourPaneBackground,
         paddingTop: '1rem',
         paddingBottom: '1rem',
         marginBottom: '1rem',
     },
     h3: {
-        color: 'charcoal',
+        color: colourBlack,
     },
 }));
 
@@ -97,237 +116,316 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
     const is404Error = !!examSearchListError && examSearchListError === MESSAGE_EXAMCODE_404;
     const isNon404Error = !!examSearchListError && examSearchListError !== MESSAGE_EXAMCODE_404;
 
+    // eslint-disable-next-line react/prop-types
+    const SimpleLayout = ({ examSearchList, showMobileView, showFullDetails }) => {
+        let formatType = showMobileView ? 'mobile' : 'desktop';
+        formatType = showFullDetails ? `${formatType}-original` : `${formatType}-sample`;
+        return (
+            <StyledSimpleViewWrapper>
+                {examSearchList.papers.map((course, cc) => {
+                    return (
+                        <div
+                            key={`exampaper-${formatType}-row-${cc}`}
+                            className={cc % 2 && 'zebra'}
+                            data-testid={`exampaper-${formatType}-line`}
+                        >
+                            <Typography
+                                variant="h3"
+                                style={{
+                                    fontSize: 16,
+                                    fontWeight: 500,
+                                    marginTop: 6,
+                                    paddingLeft: 6,
+                                    color: colourBlack,
+                                }}
+                            >
+                                {getCourseCode(course)}
+                            </Typography>
+                            {course.map((semester, ss) => {
+                                return (
+                                    <div
+                                        className={'bodyCell'}
+                                        style={{
+                                            textAlign: showMobileView ? 'center' : 'left',
+                                            marginLeft: showMobileView ? 'auto' : '3rem',
+                                        }}
+                                        key={`exampaper-${formatType}-${ss}`}
+                                    >
+                                        {semester.map((paper, pp) => {
+                                            let display = `${paper.courseCode} ${paper.examPeriod} ${paper.examYear}`;
+                                            const simplifiedExamType = showFullDetails
+                                                ? paper.examType
+                                                : paper.examType?.replace(/\b(sample)\b/, () => '');
+                                            display +=
+                                                !!paper.examType && !!showFullDetails ? ` (${simplifiedExamType})` : '';
+                                            display += !!paper.examNote ? ` ${paper.examNote}` : '';
+                                            display += !paper.examNote && semester.length > 1 ? ` Paper ${pp + 1}` : '';
+                                            return (
+                                                <div key={`exampaper-${formatType}-detail-${pp}`}>
+                                                    {!!paper.paperUrl && (
+                                                        <div
+                                                            style={{
+                                                                marginTop: showMobileView ? 20 : 0,
+                                                                marginBottom: showMobileView ? 20 : 0,
+                                                            }}
+                                                        >
+                                                            <a
+                                                                href={paper.paperUrl}
+                                                                data-testid={`exampaper-${formatType}-link-${cc}-${ss}-${pp}`}
+                                                                target="_blank"
+                                                            >
+                                                                {display}
+                                                            </a>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    );
+                })}
+            </StyledSimpleViewWrapper>
+        );
+    };
+
+    const DesktopTableHeader = ({ examSearchList }) => {
+        return (
+            <TableRow data-testid="exampaper-desktop-originals-table-header">
+                <TableCell
+                    component="th"
+                    scope="col"
+                    sx={{ position: 'sticky', left: 0, zIndex: 10 }}
+                    style={{ backgroundColor: colourPaneBackground }}
+                >
+                    {' '}
+                </TableCell>
+                {examSearchList.periods.map((semester, ss) => {
+                    const parts = semester.split(' || ');
+                    return (
+                        <TableCell
+                            component="th"
+                            sx={{ textAlign: 'center' }}
+                            key={`exampaper-desktop-originals-headercell-${ss}`}
+                            style={{ fontSize: 16, fontWeight: 500, backgroundColor: colourPaneBackground }}
+                            scope="col"
+                        >
+                            {parts.map((part, ii) => (
+                                <div key={`exampaper-desktop-originals-headercell-part-${ii}`}>{part}</div>
+                            ))}
+                        </TableCell>
+                    );
+                })}
+            </TableRow>
+        );
+    };
+
+    // eslint-disable-next-line react/prop-types
+    const DesktopTableCells = ({ cc, course }) => {
+        return (
+            <>
+                <StyledTableLeftCell component="th" scope="row">
+                    <Typography variant="h3" style={{ fontSize: 16, fontWeight: 500 }}>
+                        {getCourseCode(course)}
+                    </Typography>
+                </StyledTableLeftCell>
+                {course.map((semester, ss) => {
+                    return (
+                        <StyledTableCell key={`exampaper-desktop-originals-${ss}`}>
+                            {semester.map((paper, pp) => {
+                                return (
+                                    <div
+                                        key={`exampaper-desktop-originals-detail-${pp}`}
+                                        className={pp > 0 ? 'secondaryExamDetail' : null}
+                                    >
+                                        {!!paper.paperUrl ? (
+                                            <a
+                                                data-testid={`exampaper-desktop-originals-link-${cc}-${ss}-${pp}`}
+                                                href={paper.paperUrl}
+                                                target="_blank"
+                                            >
+                                                {!!paper.examType && (
+                                                    <span>
+                                                        {paper.examType}
+                                                        <br />
+                                                    </span>
+                                                )}
+                                                <span>{paper.courseCode}</span>
+                                                {!!paper.examNote && (
+                                                    <span>
+                                                        <br />
+                                                        {paper.examNote}
+                                                    </span>
+                                                )}
+                                            </a>
+                                        ) : null}
+                                    </div>
+                                );
+                            })}
+                        </StyledTableCell>
+                    );
+                })}
+            </>
+        );
+    };
+
+    const DesktopLayout = ({ examSearchList }) => {
+        return (
+            <TableContainer sx={{ maxHeight: 600, marginTop: '1rem' }} component={Paper}>
+                <Table stickyHeader aria-label={listTitle} aria-describedby="examResultsDescription">
+                    <TableHead>
+                        <DesktopTableHeader examSearchList={examSearchList} />
+                    </TableHead>
+                    <tbody data-testid="exampaper-desktop-originals-table-body">
+                        {examSearchList.papers.map((course, cc) => {
+                            return (
+                                <TableRow key={`exampaper-desktop-originals-row-${cc}`}>
+                                    <DesktopTableCells cc={cc} course={course} />
+                                </TableRow>
+                            );
+                        })}
+                    </tbody>
+                </Table>
+            </TableContainer>
+        );
+    };
+
+    const UserInstructions = () => {
+        return (
+            <StyledExplanation id="examResultsDescription">
+                <a href={linkToDrupal('/study-and-learning-support/coursework/past-exam-papers')}>
+                    Read more about past exam papers
+                </a>
+            </StyledExplanation>
+        );
+    };
+    function splitIntoSamplePapersAndNot(data, equality = true) {
+        const result = { ...data };
+
+        if (result.papers && Array.isArray(result.papers)) {
+            result.papers = result.papers
+                .map(courseGroup => {
+                    return courseGroup.filter(examGroup => {
+                        if (Array.isArray(examGroup)) {
+                            const hasSample = examGroup.some(
+                                exam => exam.examType && exam.examType.toUpperCase() === 'SAMPLE',
+                            );
+
+                            return equality ? hasSample : !hasSample;
+                        } else {
+                            const hasSample = examGroup.examType && examGroup.examType.toUpperCase() === 'SAMPLE';
+
+                            return equality ? hasSample : !hasSample;
+                        }
+                    });
+                })
+                .filter(courseGroup => courseGroup.length > 0); // Remove empty course groups
+        }
+        // console.log('splitIntoSamplePapersAndNot result=', result);
+        // console.log('splitIntoSamplePapersAndNot result XXXXX =', JSON.stringify(result));
+
+        return result;
+    }
+
     return (
         <StandardPage title={listTitle}>
-            <StandardCard>
-                {!!examSearchListLoading && (
-                    <Grid container>
-                        <Grid item xs={'auto'}>
-                            <CircularProgress
-                                color="primary"
-                                size={20}
-                                id="loading-suggestions"
-                                aria-label="Loading Past exam papers"
-                            />
-                        </Grid>
-                    </Grid>
-                )}
-                {!!isNon404Error && (
-                    <Grid container spacing={2} className={'searchPanel'} data-testid={'past-exam-paper-error'}>
-                        <Grid item xs={12} sm={12} md className={'searchPanelInfo'}>
-                            <span>Past exam paper search is currently unavailable - please try again later</span>
-                        </Grid>
-                    </Grid>
-                )}
-                {!examSearchListLoading &&
+            <UserInstructions />
+            {(() => {
+                if (!!examSearchListLoading) {
+                    return (
+                        <StyledStandardCard noHeader>
+                            <Grid container>
+                                <Grid item xs={'auto'}>
+                                    <CircularProgress
+                                        color="primary"
+                                        size={20}
+                                        id="loading-suggestions"
+                                        aria-label="Loading Past exam papers"
+                                    />
+                                </Grid>
+                            </Grid>
+                        </StyledStandardCard>
+                    );
+                } else if (!!isNon404Error) {
+                    return (
+                        <StyledStandardCard noHeader>
+                            <Grid container spacing={2} className={'searchPanel'} data-testid={'past-exam-paper-error'}>
+                                <Grid item xs={12} sm={12} md className={'searchPanelInfo'}>
+                                    <span>
+                                        Past exam paper search is currently unavailable - please try again later
+                                    </span>
+                                </Grid>
+                            </Grid>
+                        </StyledStandardCard>
+                    );
+                } else if (
+                    !examSearchListLoading &&
                     !isNon404Error &&
                     ((!!examSearchList && !!examSearchList.papers && examSearchList.papers.length === 0) ||
                         !examSearchList ||
                         !examSearchList.papers ||
-                        !!is404Error) && (
-                        <Grid container>
-                            <Grid item xs={12} data-testid="past-exam-paper-missing">
-                                {noResultsFoundBlock(displayedCourseHint)}
+                        !!is404Error)
+                ) {
+                    return (
+                        <StyledStandardCard noHeader>
+                            <Grid container>
+                                <Grid item xs={12} data-testid="past-exam-paper-missing">
+                                    {noResultsFoundBlock(displayedCourseHint)}
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    )}
-                {!examSearchListLoading &&
+                        </StyledStandardCard>
+                    );
+                } else if (
+                    !examSearchListLoading &&
                     !examSearchListError &&
-                    !!examSearchList &&
-                    !!examSearchList.papers &&
-                    !!examSearchList.periods &&
-                    !!examSearchList.papers.length > 0 && (
-                        <React.Fragment>
-                            <div id="examResultsDescription">
-                                <p>
-                                    This table shows only the last five years, and only for semesters where exams are
-                                    recorded.
-                                </p>
-                                <p>
-                                    Past exam papers are actual papers from previous examination periods, and do not
-                                    include answers.
-                                </p>
-                                <p>
-                                    They may not be an accurate reflection of the format or content of any future exam
-                                    paper.
-                                </p>
-                                <p>
-                                    Where actual papers are restricted, sample papers provided by the school may be
-                                    found in the column for the semester supplied.
-                                </p>
-                            </div>
-                            {isMobileView ? (
-                                <StyledMobileViewWrapper>
-                                    {examSearchList.papers.map((course, cc) => {
-                                        return (
-                                            <div key={`exampaper-results-row-${cc}`} className={cc % 2 && 'zebra'}>
-                                                <Typography
-                                                    variant="h3"
-                                                    style={{ fontSize: 20, marginTop: 6, paddingLeft: 6 }}
-                                                >
-                                                    {getCourseCode(course)}
-                                                </Typography>
-                                                {course.map((semester, ss) => {
-                                                    return (
-                                                        <div
-                                                            className={'bodyCell'}
-                                                            key={`exampaper-results-bodycell-${ss}`}
-                                                            data-testid={`exampaper-results-bodycell-${cc}-${ss}`}
-                                                        >
-                                                            {semester.map((paper, pp) => {
-                                                                let display = `${paper.courseCode} ${paper.examPeriod} ${paper.examYear}`;
-                                                                display += !!paper.examType
-                                                                    ? ` (${paper.examType})`
-                                                                    : '';
-                                                                display += !!paper.examNote ? ` ${paper.examNote}` : '';
-                                                                display +=
-                                                                    !paper.examNote && semester.length > 1
-                                                                        ? ` Paper ${pp + 1}`
-                                                                        : '';
-                                                                return (
-                                                                    <div
-                                                                        key={`exampaper-results-bodycell-detail-${pp}`}
-                                                                        className={'mobileLink'}
-                                                                    >
-                                                                        {!!paper.paperUrl && (
-                                                                            <div>
-                                                                                <a
-                                                                                    href={paper.paperUrl}
-                                                                                    data-testid={`exampaper-mobilelink-${cc}-${ss}-${pp}`}
-                                                                                    target="_blank"
-                                                                                >
-                                                                                    {display}
-                                                                                </a>
-                                                                            </div>
-                                                                        )}
-                                                                    </div>
-                                                                );
-                                                            })}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        );
-                                    })}
-                                </StyledMobileViewWrapper>
-                            ) : (
-                                <TableContainer sx={{ maxHeight: 600 }} component={Paper}>
-                                    <Table
-                                        stickyHeader
-                                        aria-label={listTitle}
-                                        aria-describedby="examResultsDescription"
-                                        data-testid="exampaper-results-table"
+                    !!examSearchList?.papers &&
+                    !!examSearchList?.periods &&
+                    !!examSearchList.papers.length > 0
+                ) {
+                    const examSearchListSansSample = splitIntoSamplePapersAndNot(examSearchList, false);
+                    const samplePapers = splitIntoSamplePapersAndNot(examSearchList, true);
+                    console.log('samplePapers=', samplePapers?.papers?.length);
+                    return (
+                        <>
+                            {samplePapers?.papers?.length > 0 && (
+                                <StyledStandardCard noHeader style={{ margin: '-16px -16px 6.5rem -16px' }}>
+                                    <Typography
+                                        variant="h2"
+                                        style={{ fontSize: 32, fontWeight: 500, color: colourBlack }}
                                     >
-                                        <TableHead>
-                                            <TableRow data-testid="exampaper-results-table-header">
-                                                <TableCell
-                                                    component="th"
-                                                    scope="col"
-                                                    sx={{ position: 'sticky', left: 0, zIndex: 10 }}
-                                                >
-                                                    {' '}
-                                                </TableCell>
-                                                {examSearchList.periods.map((semester, ss) => {
-                                                    const parts = semester.split(' || ');
-                                                    return (
-                                                        <TableCell
-                                                            component="th"
-                                                            sx={{ textAlign: 'center' }}
-                                                            key={`exampaper-results-headercell-${ss}`}
-                                                            scope="col"
-                                                        >
-                                                            {parts.map((part, ii) => (
-                                                                <div key={`exampaper-results-headercell-part-${ii}`}>
-                                                                    {part}
-                                                                </div>
-                                                            ))}
-                                                        </TableCell>
-                                                    );
-                                                })}
-                                            </TableRow>
-                                        </TableHead>
-                                        <tbody data-testid="exampaper-results-table-body">
-                                            {examSearchList.papers.map((course, cc) => {
-                                                return (
-                                                    <TableRow
-                                                        data-testid={`exampaper-results-row-${cc}`}
-                                                        key={`exampaper-results-row-${cc}`}
-                                                    >
-                                                        <TableCell
-                                                            component="th"
-                                                            scope="row"
-                                                            sx={{
-                                                                backgroundColor: '#fafafa',
-                                                                left: 0,
-                                                                position: 'sticky',
-                                                                verticalAlign: 'top',
-                                                            }}
-                                                            data-testid={`exampaper-results-label-${cc}`}
-                                                        >
-                                                            {getCourseCode(course)}
-                                                        </TableCell>
-                                                        {course.map((semester, ss) => {
-                                                            return (
-                                                                <StyledTableCell
-                                                                    key={`exampaper-results-bodycell-${ss}`}
-                                                                    data-testid={`exampaper-results-bodycell-${cc}-${ss}`}
-                                                                >
-                                                                    {semester.map((paper, pp) => {
-                                                                        return (
-                                                                            <div
-                                                                                key={`exampaper-results-bodycell-detail-${pp}`}
-                                                                                className={
-                                                                                    pp > 0
-                                                                                        ? 'secondaryExamDetail'
-                                                                                        : null
-                                                                                }
-                                                                            >
-                                                                                {!!paper.paperUrl ? (
-                                                                                    <a
-                                                                                        data-testid={`exampaper-results-bodycell-link-${cc}-${ss}-${pp}`}
-                                                                                        href={paper.paperUrl}
-                                                                                        target="_blank"
-                                                                                    >
-                                                                                        {!!paper.examType && (
-                                                                                            <span>
-                                                                                                {paper.examType}
-                                                                                                <br />
-                                                                                            </span>
-                                                                                        )}
-                                                                                        <span>{paper.courseCode}</span>
-                                                                                        {!!paper.examNote && (
-                                                                                            <span>
-                                                                                                <br />
-                                                                                                {paper.examNote}
-                                                                                            </span>
-                                                                                        )}
-                                                                                    </a>
-                                                                                ) : null}
-                                                                            </div>
-                                                                        );
-                                                                    })}
-                                                                </StyledTableCell>
-                                                            );
-                                                        })}
-                                                    </TableRow>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </Table>
-                                </TableContainer>
+                                        Sample past exam papers
+                                    </Typography>
+                                    <SimpleLayout
+                                        examSearchList={samplePapers}
+                                        showMobileView={isMobileView}
+                                        showFullDetails={false}
+                                    />
+                                </StyledStandardCard>
                             )}
-                        </React.Fragment>
-                    )}
-                <Grid container>
-                    <Grid item xs={'auto'}>
-                        <p className={'aboutLink'}>
-                            <a href={linkToDrupal('/study-and-learning-support/coursework/past-exam-papers')}>
-                                Read more about searching for past exam papers
-                            </a>
-                        </p>
-                    </Grid>
-                </Grid>
-            </StandardCard>
+                            <StyledStandardCard noHeader style={{ margin: '-32px -16px 80px -16px' }}>
+                                <Typography
+                                    variant="h2"
+                                    style={{ fontSize: 32, fontWeight: 500, color: colourBlack }}
+                                    data-testid="exampapers-original-heading"
+                                >
+                                    Original past exam papers
+                                </Typography>
+                                {isMobileView && (
+                                    <SimpleLayout
+                                        examSearchList={examSearchListSansSample}
+                                        showMobileView
+                                        showFullDetails
+                                    />
+                                )}
+                                {!isMobileView && <DesktopLayout examSearchList={examSearchListSansSample} />}
+                            </StyledStandardCard>
+                        </>
+                    );
+                }
+                return null;
+            })()}
         </StandardPage>
     );
 };

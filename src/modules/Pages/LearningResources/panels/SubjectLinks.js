@@ -16,6 +16,14 @@ const StyledItem = styled(Grid)(() => ({
     '& a': {
         display: 'flex',
         alignItems: 'center',
+        '&:hover': {
+            color: 'inherit',
+            backgroundColor: 'inherit',
+            '& span': {
+                color: '#fff',
+                backgroundColor: '#51247A',
+            },
+        },
     },
 }));
 
@@ -48,7 +56,7 @@ export const SubjectLinks = ({ subject, headingLevel }) => {
                                         href={_courseLink(subject.classnumber, item.linkOutPattern)}
                                     >
                                         {!!item.icon && item.icon}
-                                        {item.linkLabel}
+                                        <span>{item.linkLabel}</span>
                                     </a>
                                 </StyledItem>
                             )

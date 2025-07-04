@@ -9,6 +9,7 @@ export default {
             "object_review_date_next": "2050-01-01",
             "object_restrict_to": "none",
             "object_status": "current",
+            "is_popular": 1,
             "object_owning_team_id": 1,
             "created_at": "2024-01-01T00:00:00.000000Z",
             "updated_at": "2024-03-03T23:48:01.000000Z",

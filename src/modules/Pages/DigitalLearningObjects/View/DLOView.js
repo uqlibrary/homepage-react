@@ -13,7 +13,7 @@ import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { NotificationsActive } from '@mui/icons-material';
+import { LocalFireDepartment, NotificationsActive } from '@mui/icons-material';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -950,6 +950,19 @@ export const DLOView = ({
                                                         sx={{ marginLeft: '-2px' }}
                                                     >
                                                         Featured
+                                                    </StyledTagLabelSpan>
+                                                </>
+                                            )}
+                                            {!!dlorItem?.is_popular && (
+                                                <>
+                                                    <LocalFireDepartment
+                                                        sx={{ fill: '#FFA500', marginRight: '2px', width: '20px' }}
+                                                    />
+                                                    <StyledTagLabelSpan
+                                                        data-testid={'dlor-detailpage-popular-custom-indicator'}
+                                                        sx={{ marginLeft: '-2px' }}
+                                                    >
+                                                        Popular
                                                     </StyledTagLabelSpan>
                                                 </>
                                             )}
