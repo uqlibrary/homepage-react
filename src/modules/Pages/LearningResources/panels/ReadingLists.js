@@ -71,7 +71,7 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                         <StyledItem item xs={12}>
                             <a href={talisSubjectUrl(courseCode)}>
                                 <SpacedArrowForwardIcon />
-                                View older lists
+                                <span>View older lists</span>
                             </a>
                         </StyledItem>
                     </React.Fragment>
@@ -100,10 +100,10 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                         <StyledItem item xs={12} data-testid="reading-list-link">
                             <a href={talisSubjectUrl(courseCode)}>
                                 <SpacedArrowForwardIcon />
-                                {`${courseCode} (has ${listOfReadingLists.length} ${_pluralise(
+                                <span>{`${courseCode} (has ${listOfReadingLists.length} ${_pluralise(
                                     'reading list',
                                     listOfReadingLists.length,
-                                )})`}
+                                )})`}</span>
                             </a>
                         </StyledItem>
                     </React.Fragment>
