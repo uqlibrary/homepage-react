@@ -89,7 +89,7 @@ export const DLOAdd = ({
                         <InformationBox
                             prompt="Submit this form to request your digital learning object to be added to the Digital Learning Hub."
                             identifier="UserAdd"
-                            linkUrl="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects#s-lg-box-22746342"
+                            linkUrl="https://guides.library.uq.edu.au/research-and-teaching-staff/link-embed-resources/digital-learning-objects#instructions"
                             linkText="Submit an object has instructions and information."
                         />
                     )}
