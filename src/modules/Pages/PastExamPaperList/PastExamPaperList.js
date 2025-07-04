@@ -394,7 +394,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     return (
                         <>
                             {samplePapers?.papers?.length > 0 && (
-                                <StyledStandardCard noHeader style={{ margin: '-16px -16px 6.5rem -16px' }}>
+                                <StyledStandardCard noHeader style={{ margin: '-16px -16px 4.5rem -16px' }}>
                                     <Typography
                                         variant="h2"
                                         style={{ fontSize: 32, fontWeight: 500, color: colourBlack }}
