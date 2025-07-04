@@ -61,17 +61,20 @@ function exams_panel_loads_correctly_for_a_subject_with_many_exams(
     cy.get('[data-testid="learning-resource-subject-exams"]')
         .find(`${headerLevel}`)
         .contains(`${locale.myCourses.examPapers.title} (${totalExamItems} items)`);
-    cy.get('[data-testid="learning-resource-subject-exams"]')
-        .find('a')
-        .contains(`${examPeriod} (${examPaperLink.slice(-3).toUpperCase()})`)
-        .should('have.attr', 'href', examPaperLink);
-    cy.get('div[data-testid=exam-more-link] a')
-        .contains(
-            locale.myCourses.examPapers.footer.morePastExams.linkLabel
-                .replace('[numberExcessExams]', numberExcessExams)
-                .replace('[examNumber]', _pluralise('paper', numberExcessExams)),
-        )
-        .should('have.attr', 'href', `http://localhost:2020/exams/course/${courseCode}?user=${username}`);
+    cy.get('[data-testid="learning-resource-subject-exams"] a').should('have.attr', 'href', examPaperLink);
+    cy.get('[data-testid="learning-resource-subject-exams"] span').contains(
+        `${examPeriod} (${examPaperLink.slice(-3).toUpperCase()})`,
+    );
+    cy.get('div[data-testid=exam-more-link] span').contains(
+        locale.myCourses.examPapers.footer.morePastExams.linkLabel
+            .replace('[numberExcessExams]', numberExcessExams)
+            .replace('[examNumber]', _pluralise('paper', numberExcessExams)),
+    );
+    cy.get('div[data-testid=exam-more-link] a').should(
+        'have.attr',
+        'href',
+        `http://localhost:2020/exams/course/${courseCode}?user=${username}`,
+    );
 }
 
 function guides_panel_has_correct_Library_Guides_footer_links_for_a_subject_page() {
@@ -80,9 +83,8 @@ function guides_panel_has_correct_Library_Guides_footer_links_for_a_subject_page
         const guideTitle = link.linkLabel || 'mock data is missing';
         const guideLink = link.linkTo || 'mock data is missing';
 
-        cy.get(`a[data-testid=${guideId}]`)
-            .contains(guideTitle)
-            .should('have.attr', 'href', guideLink);
+        cy.get(`a[data-testid=${guideId}] span`).contains(guideTitle);
+        cy.get(`a[data-testid=${guideId}]`).should('have.attr', 'href', guideLink);
     });
 }
 
@@ -111,9 +113,12 @@ function course_links_panel_loads_correctly_for_a_subject(courseReadingList) {
     expect(locale.myCourses.courseLinks.links).to.be.an('array');
     expect(locale.myCourses.courseLinks.links.length).to.not.equals(0);
     locale.myCourses.courseLinks.links.map(item => {
-        cy.get(`a[data-testid=${item.id}-${courseCode}]`)
-            .contains(item.linkLabel)
-            .should('have.attr', 'href', _courseLink(courseCode, item.linkOutPattern));
+        cy.get(`a[data-testid=${item.id}-${courseCode}] span`).contains(item.linkLabel);
+        cy.get(`a[data-testid=${item.id}-${courseCode}]`).should(
+            'have.attr',
+            'href',
+            _courseLink(courseCode, item.linkOutPattern),
+        );
     });
 }
 
