@@ -27,6 +27,7 @@ import { training_object, training_object_hospital } from './data/training';
 import { espaceSearchResponse, loans, printBalance } from './data/general';
 import { alertList } from './data/alertsLong';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
+import examSearch_PHYS1001 from './data/records/learningResources/examSearch_PHYS1001';
 import examSearch_DENT80 from './data/records/learningResources/examSearch_DENT80';
 import testTag_user from './data/records/testAndTag/test_tag_user';
 import testTag_user_UQPF from './data/records/testAndTag/test_tag_userUQPF';
@@ -811,13 +812,12 @@ mock.onGet(/dlor\/public\/find\/.*/)
     })
     .onGet(/dlor\/admin\/object\/notes\/.*/)
     .reply(() => {
-        return[200, dlor_admin_notes];
+        return [200, dlor_admin_notes];
     })
     .onPost(/dlor\/admin\/object\/notes\/.*/)
     .reply(() => {
-        return[200, dlor_admin_notes];
+        return [200, dlor_admin_notes];
     });
-
 
 mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
@@ -940,6 +940,10 @@ mock.onGet('exams/course/FREN1010/summary')
     .onGet('exams/suggestions/XYZA')
     .reply(() => {
         return [200, []];
+    })
+    .onGet('exams/search/PHYS1001')
+    .reply(() => {
+        return [200, examSearch_PHYS1001];
     })
     .onGet('exams/search/FREN')
     .reply(() => {
