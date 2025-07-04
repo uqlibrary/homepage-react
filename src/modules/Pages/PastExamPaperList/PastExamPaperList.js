@@ -18,7 +18,7 @@ import useTheme from '@mui/material/styles/useTheme';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { noResultsFoundBlock, MESSAGE_EXAMCODE_404 } from 'modules/Pages/PastExamPaperSearch/pastExamPapers.helpers';
+import { MESSAGE_EXAMCODE_404, noResultsFoundBlock } from 'modules/Pages/PastExamPaperSearch/pastExamPapers.helpers';
 import { styled } from '@mui/material/styles';
 import { breadcrumbs } from 'config/routes';
 import { linkToDrupal } from 'helpers/general';
@@ -31,7 +31,11 @@ const StyledTableCell = styled(TableCell)(() => ({
     },
 }));
 
+const colourBlack = '#19151c';
+
 const StyledMobileViewWrapper = styled('div')(() => ({
+    marginBottom: '6rem',
+    marginTop: '1rem',
     '& .bodyCell': {
         textAlign: 'center',
         verticalAlign: 'top',
@@ -44,13 +48,13 @@ const StyledMobileViewWrapper = styled('div')(() => ({
     },
     '& .zebra': {
         /* stripe alternate rows in movile view */
-        backgroundColor: '#fafafa',
+        backgroundColor: '#f3f3f4',
         paddingTop: '1rem',
         paddingBottom: '1rem',
         marginBottom: '1rem',
     },
     h3: {
-        color: 'charcoal',
+        color: colourBlack,
     },
 }));
 
@@ -163,7 +167,13 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                             <div key={`exampaper-results-row-${cc}`} className={cc % 2 && 'zebra'}>
                                                 <Typography
                                                     variant="h3"
-                                                    style={{ fontSize: 20, marginTop: 6, paddingLeft: 6 }}
+                                                    style={{
+                                                        fontSize: 16,
+                                                        fontWeight: 500,
+                                                        marginTop: 6,
+                                                        paddingLeft: 6,
+                                                        color: colourBlack,
+                                                    }}
                                                 >
                                                     {getCourseCode(course)}
                                                 </Typography>
@@ -211,7 +221,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                     })}
                                 </StyledMobileViewWrapper>
                             ) : (
-                                <TableContainer sx={{ maxHeight: 600 }} component={Paper}>
+                                <TableContainer sx={{ maxHeight: 600, marginTop: '1rem' }} component={Paper}>
                                     <Table
                                         stickyHeader
                                         aria-label={listTitle}
@@ -223,7 +233,8 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                 <TableCell
                                                     component="th"
                                                     scope="col"
-                                                    sx={{ position: 'sticky', left: 0, zIndex: 10 }}
+                                                    sx={{ position: 'sticky', left: 0, zIndex: 10, border: 'none' }}
+                                                    style={{ backgroundColor: '#f3f3f4' }}
                                                 >
                                                     {' '}
                                                 </TableCell>
@@ -235,6 +246,11 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                             sx={{ textAlign: 'center' }}
                                                             key={`exampaper-results-headercell-${ss}`}
                                                             scope="col"
+                                                            style={{
+                                                                fontSize: 16,
+                                                                fontWeight: 500,
+                                                                backgroundColor: '#f3f3f4',
+                                                            }}
                                                         >
                                                             {parts.map((part, ii) => (
                                                                 <div key={`exampaper-results-headercell-part-${ii}`}>
@@ -257,14 +273,19 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                             component="th"
                                                             scope="row"
                                                             sx={{
-                                                                backgroundColor: '#fafafa',
+                                                                backgroundColor: '#f3f3f4',
                                                                 left: 0,
                                                                 position: 'sticky',
                                                                 verticalAlign: 'top',
                                                             }}
                                                             data-testid={`exampaper-results-label-${cc}`}
                                                         >
-                                                            {getCourseCode(course)}
+                                                            <Typography
+                                                                variant="h3"
+                                                                style={{ fontSize: 16, fontWeight: 500 }}
+                                                            >
+                                                                {getCourseCode(course)}
+                                                            </Typography>
                                                         </TableCell>
                                                         {course.map((semester, ss) => {
                                                             return (
