@@ -624,7 +624,7 @@ describe('Digital Learning Hub View page', () => {
 
             cy.get('[data-testid="detailpage-admin-edit-button"]').contains('Edit');
             cy.get('[data-testid="detailpage-admin-edit-button"]').click();
-            cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01');
+            cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01?user=s1111111');
             cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]').should('contain', 'Dummy entry');
             cy.visit('digital-learning-hub/view/kj5t_8yg4_kj4f?user=s1111111');
             cy.get('[data-testid="detailpage-admin-edit-button"]').should('not.exist');
@@ -637,7 +637,7 @@ describe('Digital Learning Hub View page', () => {
             cy.waitUntil(() => cy.get('[data-testid="detailpage-admin-edit-button"]').should('exist'));
 
             cy.get('[data-testid="detailpage-admin-edit-button"]').click();
-            cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01');
+            cy.url().should('eq', 'http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01?user=s1111111');
             cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]').should('contain', 'Dummy entry');
             const today = moment().format('DD/MM/YYYY'); // Australian format to match the display format
 
