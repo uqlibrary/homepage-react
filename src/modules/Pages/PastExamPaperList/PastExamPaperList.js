@@ -29,6 +29,19 @@ const colourPaneBackground = '#f3f3f4';
 const StyledStandardCard = styled(StandardCard)(() => ({
     border: 'none',
 }));
+const StyledH3Typography = styled(Typography)(() => ({
+    fontSize: '1rem',
+    fontWeight: 500,
+    color: colourBlack,
+}));
+const StyledBodyText = styled('p')(() => ({
+    marginTop: '1rem',
+    marginBottom: '2rem',
+    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+    fontSize: '1rem',
+    fontWeight: 400,
+    lineHeight: 1.6,
+}));
 const StyledExplanation = styled('p')(({ theme }) => ({
     marginBottom: 32,
     '& a': {
@@ -133,18 +146,12 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                             className={cc % 2 ? 'zebra' : 'plain'}
                             data-testid={`exampaper-${formatType}-line`}
                         >
-                            <Typography
+                            <StyledH3Typography
                                 variant="h3"
-                                style={{
-                                    fontSize: 16,
-                                    fontWeight: 500,
-                                    marginTop: 6,
-                                    paddingLeft: 6,
-                                    color: colourBlack,
-                                }}
+                                style={{ marginTop: 6, marginBottom: '0.5rem', paddingLeft: 6 }}
                             >
                                 {getCourseCode(course)}
-                            </Typography>
+                            </StyledH3Typography>
                             {course.map((semester, ss) => {
                                 return (
                                     <div
@@ -231,9 +238,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         return (
             <>
                 <StyledTableLeftCell component="th" scope="row">
-                    <Typography variant="h3" style={{ fontSize: 16, fontWeight: 500 }}>
-                        {getCourseCode(course)}
-                    </Typography>
+                    <StyledH3Typography variant="h3">{getCourseCode(course)}</StyledH3Typography>
                 </StyledTableLeftCell>
                 {course.map((semester, ss) => {
                     return (
@@ -401,6 +406,9 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                     >
                                         Sample past exam papers
                                     </Typography>
+                                    <StyledBodyText>
+                                        Note: Sample papers may apply for up to three years.
+                                    </StyledBodyText>
                                     <SimpleLayout
                                         examSearchList={samplePapers}
                                         showMobileView={isMobileView}
