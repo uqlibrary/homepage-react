@@ -16,6 +16,7 @@ import {
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 
 export const DLOEdit = ({
+    account,
     actions,
     dlorItemLoading,
     dlorItemError,
@@ -125,6 +126,7 @@ export const DLOEdit = ({
                 />
                 <section aria-live="assertive">
                     <DlorForm
+                        account={account}
                         actions={actions}
                         dlorItemSaving={dlorItemUpdating}
                         dlorSavedItemError={dlorUpdatedItemError}
@@ -152,6 +154,7 @@ export const DLOEdit = ({
 };
 
 DLOEdit.propTypes = {
+    account: PropTypes.object,
     actions: PropTypes.any,
     dlorItemLoading: PropTypes.bool,
     dlorItemError: PropTypes.any,

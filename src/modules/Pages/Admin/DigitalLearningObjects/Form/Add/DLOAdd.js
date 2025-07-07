@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { useAccountContext } from 'context';
 
 import DlorForm from 'modules/Pages/Admin/DigitalLearningObjects/Form/DlorForm';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
@@ -13,6 +12,7 @@ import { Typography } from '@mui/material';
 const moment = require('moment-timezone');
 
 export const DLOAdd = ({
+    account,
     actions,
     dlorItemCreating,
     dlorCreatedItemError,
@@ -31,7 +31,6 @@ export const DLOAdd = ({
     dlorAdminNotesLoadError,
     dlorAdminNotes,
 }) => {
-    const { account } = useAccountContext();
     console.log('ACCOUNT', account);
 
     // function getTodayPlusOneYear(baseDate = null) {
@@ -101,6 +100,7 @@ export const DLOAdd = ({
                         * = Required fields
                     </Typography>
                     <DlorForm
+                        account={account}
                         actions={actions}
                         dlorItemSaving={dlorItemCreating}
                         dlorSavedItemError={dlorCreatedItemError}
@@ -128,6 +128,7 @@ export const DLOAdd = ({
 };
 
 DLOAdd.propTypes = {
+    account: PropTypes.object,
     actions: PropTypes.any,
     dlorItemCreating: PropTypes.bool,
     dlorCreatedItemError: PropTypes.any,
