@@ -76,7 +76,7 @@ export const DLOTeamList = ({
     }, [dlorTeamDeleting, dlorTeamDeleted, dlorTeamDeleteError, deleteStep]);
 
     const navigateToAddPage = () => {
-        window.location.href = dlorAdminLink('/team/add');
+        window.location.href = dlorAdminLink('/team/add', account);
     };
 
     const deleteADlorTeam = teamId => {
@@ -102,7 +102,7 @@ export const DLOTeamList = ({
     };
 
     const navigateToTeamEditPage = teamId => {
-        window.location.href = dlorAdminLink(`/team/edit/${teamId}`);
+        window.location.href = dlorAdminLink(`/team/edit/${teamId}`, account);
     };
     const deletionConfirmationBoxLocale = {
         confirmItMessage: {

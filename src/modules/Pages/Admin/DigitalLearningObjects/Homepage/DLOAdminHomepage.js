@@ -41,6 +41,7 @@ import {
     fetchAndExportFavouritesToCSV,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { breadcrumbs } from 'config/routes';
+import { useAccountContext } from 'context';
 
 const StyledPageListItemGridContainer = styled(Grid)(() => ({
     paddingTop: '10px',
@@ -82,6 +83,7 @@ export const DLOAdminHomepage = ({
     dlorDemographicsLoading,
     dlorDemographicsError,
 }) => {
+    const { account } = useAccountContext();
     const statusTypes = [
         {
             type: 'new',
@@ -160,27 +162,27 @@ export const DLOAdminHomepage = ({
     }, [actions, dlorList, dlorListError, dlorListLoading]);
 
     const navigateToAddPage = () => {
-        window.location.href = dlorAdminLink('/add');
+        window.location.href = dlorAdminLink('/add', account);
     };
 
     const navigateToTeamsListPage = () => {
-        window.location.href = dlorAdminLink('/team/manage');
+        window.location.href = dlorAdminLink('/team/manage', account);
     };
 
     const navigateToFilterManagePage = () => {
-        window.location.href = dlorAdminLink('/filters');
+        window.location.href = dlorAdminLink('/filters', account);
     };
 
     const navigateToSeriesListPage = () => {
-        window.location.href = dlorAdminLink('/series/manage');
+        window.location.href = dlorAdminLink('/series/manage', account);
     };
 
     const navigateToAddSeriesPage = () => {
-        window.location.href = dlorAdminLink('/series/add');
+        window.location.href = dlorAdminLink('/series/add', account);
     };
 
     const navigateToEditPage = uuid => {
-        window.location.href = dlorAdminLink(`/edit/${uuid}`);
+        window.location.href = dlorAdminLink(`/edit/${uuid}`, account);
     };
 
     const confirmDelete = objectUuid => {

@@ -14,9 +14,9 @@ import {
     getSecondsFromTotalSeconds,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
+import { useAccountContext } from 'context';
 
 export const DLOEdit = ({
-    account,
     actions,
     dlorItemLoading,
     dlorItemError,
@@ -35,6 +35,7 @@ export const DLOEdit = ({
     dlorAdminNotesLoadError,
     dlorAdminNotes,
 }) => {
+    const { account } = useAccountContext();
     const { dlorId } = useParams();
 
     React.useEffect(() => {
@@ -112,7 +113,6 @@ export const DLOEdit = ({
         object_cultural_advice: dlorItem?.object_cultural_advice,
         notificationText: '',
     };
-
     return (
         <Fragment>
             <StandardPage title="Digital Learning Hub - Edit Object">
@@ -154,7 +154,6 @@ export const DLOEdit = ({
 };
 
 DLOEdit.propTypes = {
-    account: PropTypes.object,
     actions: PropTypes.any,
     dlorItemLoading: PropTypes.bool,
     dlorItemError: PropTypes.any,

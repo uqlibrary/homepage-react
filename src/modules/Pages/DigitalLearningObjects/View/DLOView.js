@@ -244,7 +244,6 @@ const StyledFilterLink = styled(Link)(() => ({
 }));
 
 export const DLOView = ({
-    account,
     actions,
     // get viewed dlor item
     dlorItem,
@@ -259,6 +258,7 @@ export const DLOView = ({
     dlorTeamListLoading,
     dlorTeamListError,
 }) => {
+    const { account } = useAccountContext();
     const { dlorId } = useParams();
     const [cookies, setCookie] = useCookies();
     // const [confirmationOpen, setConfirmationOpen] = React.useState(false);
@@ -517,9 +517,8 @@ export const DLOView = ({
     };
 
     const navigateToEditPage = uuid => {
-        window.location.href = isDlorAdminUser(account)
-            ? dlorAdminLink(`/edit/${uuid}`)
-            : `/digital-learning-hub/edit/${uuid}`;
+        window.location.href = 
+             dlorAdminLink(`/edit/${uuid}`, account);
     };
 
     // const saveAndNavigate = dlorItem => {

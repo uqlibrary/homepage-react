@@ -652,7 +652,7 @@ export const DlorForm = ({
                             A change here will affect all Objects for this team.
                             <br />
                             You can also{' '}
-                            <a target="_blank" href={dlorAdminLink('/team/manage')}>
+                            <a target="_blank" href={dlorAdminLink('/team/manage', account)}>
                                 Manage Teams
                             </a>
                         </Box>
@@ -1768,12 +1768,12 @@ export const DlorForm = ({
     const navigateToListPage = isAdmin => {
         setConfirmationOpen(false);
         actions.clearADlor();
-        window.location.href = isAdmin ? dlorAdminLink() : '/digital-learning-hub';
+        window.location.href = dlorAdminLink(undefined, account);
         scrollToTopOfPage();
     };
 
     const navigateToPreviousPage = () => {
-        window.location.href = dlorAdminLink();
+        window.location.href = dlorAdminLink(undefined, account);
     };
 
     function closeConfirmationBox() {

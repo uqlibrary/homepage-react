@@ -8,11 +8,10 @@ import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//Sh
 import { isDlorAdminUser } from 'helpers/access';
 import InformationBox from 'modules/Pages/DigitalLearningObjects/SharedComponents/InformationBox';
 import { Typography } from '@mui/material';
-
+import { useAccountContext } from 'context';
 const moment = require('moment-timezone');
 
 export const DLOAdd = ({
-    account,
     actions,
     dlorItemCreating,
     dlorCreatedItemError,
@@ -31,6 +30,7 @@ export const DLOAdd = ({
     dlorAdminNotesLoadError,
     dlorAdminNotes,
 }) => {
+    const { account } = useAccountContext();
     console.log('ACCOUNT', account);
 
     // function getTodayPlusOneYear(baseDate = null) {
@@ -128,7 +128,6 @@ export const DLOAdd = ({
 };
 
 DLOAdd.propTypes = {
-    account: PropTypes.object,
     actions: PropTypes.any,
     dlorItemCreating: PropTypes.bool,
     dlorCreatedItemError: PropTypes.any,
