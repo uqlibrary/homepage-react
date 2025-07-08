@@ -174,8 +174,8 @@ describe('Past Exam Papers Pages', () => {
             cy.get('[data-testid="exampaper-desktop-originals-table-body"]')
                 .children()
                 .should('have.length', 22);
-            cy.get('[data-testid="exampaper-desktop-originals-link-1-2-0"]').contains('FREN2010');
-            cy.get('[data-testid="exampaper-desktop-originals-link-1-2-0"]').contains('Final');
+            cy.get('[data-testid="exampaper-desktop-originals-link-1-1-0"]').contains('FREN2010');
+            cy.get('[data-testid="exampaper-desktop-originals-link-1-1-0"]').contains('Final');
         });
         it('the past exam paper result mobile page is correct', () => {
             cy.visit('/exams/course/fren');

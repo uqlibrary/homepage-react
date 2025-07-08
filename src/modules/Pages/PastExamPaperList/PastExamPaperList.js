@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 
@@ -91,7 +91,10 @@ const StyledSimpleViewWrapper = styled('div')(() => ({
 }));
 
 export const PastExamPaperList = ({ actions, examSearchListError, examSearchList, examSearchListLoading }) => {
+    examSearchListLoading === false && console.log('start examSearchList=', examSearchList);
     const { courseHint } = useParams();
+    const [originalExamPaperList, setOriginalExamPaperList] = useState([]);
+    const [sampleExamPaperList, setSampleExamPaperList] = useState([]);
     const listTitle =
         !!examSearchList && !!examSearchList.minYear && !!examSearchList.maxYear && !!courseHint
             ? `Past Exam Papers from ${examSearchList.minYear} to ${
@@ -106,32 +109,6 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.exampapers.title);
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.exampapers.pathname);
     }, []);
-
-    useEffect(() => {
-        /* istanbul ignore else */
-        if (!!courseHint) {
-            actions.loadExamSearch(courseHint);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [courseHint]);
-
-    function getCourseCode(course2) {
-        const course = JSON.parse(JSON.stringify(course2));
-        const firstCourse = course.find((paper, pp) => pp === 0);
-        const firstSemester = !!firstCourse && firstCourse.pop();
-        return !!firstSemester && !!firstSemester.courseCode
-            ? firstSemester.courseCode
-            : /* istanbul ignore next */ null;
-    }
-
-    // don't display the input unless it is shown to be valid
-    const displayedCourseHint = examSearchListError === false && courseHint.length > 0 ? `"${courseHint}"` : '';
-
-    const theme = useTheme();
-    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
-
-    const is404Error = !!examSearchListError && examSearchListError === MESSAGE_EXAMCODE_404;
-    const isNon404Error = !!examSearchListError && examSearchListError !== MESSAGE_EXAMCODE_404;
 
     function splitIntoSamplePapersAndNot(data, displayType) {
         const result = { ...data };
@@ -172,14 +149,47 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
     function getOriginalPapers(data) {
         return splitIntoSamplePapersAndNot(data, 'original');
     }
+    useEffect(() => {
+        if (examSearchListLoading === false) {
+            console.log('LOADING COMPLETE');
+            setOriginalExamPaperList(getOriginalPapers(examSearchList));
+            setSampleExamPaperList(getSamplePapers(examSearchList));
+        }
+    }, [examSearchListLoading]);
+
+    useEffect(() => {
+        /* istanbul ignore else */
+        if (!!courseHint) {
+            actions.loadExamSearch(courseHint);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [courseHint]);
+
+    function getCourseCode(courseDetails) {
+        const course = JSON.parse(JSON.stringify(courseDetails));
+        const firstCourse = course.find((paper, pp) => pp === 0);
+        const firstSemester = !!firstCourse && firstCourse.pop();
+        return !!firstSemester && !!firstSemester.courseCode
+            ? firstSemester.courseCode
+            : /* istanbul ignore next */ null;
+    }
+
+    // don't display the input unless it is shown to be valid
+    const displayedCourseHint = examSearchListError === false && courseHint.length > 0 ? `"${courseHint}"` : '';
+
+    const theme = useTheme();
+    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
+
+    const is404Error = !!examSearchListError && examSearchListError === MESSAGE_EXAMCODE_404;
+    const isNon404Error = !!examSearchListError && examSearchListError !== MESSAGE_EXAMCODE_404;
 
     // eslint-disable-next-line react/prop-types
-    const SimpleLayout = ({ examSearchList, showMobileView, showFullDetails }) => {
+    const SimpleLayout = ({ examList, showMobileView, showFullDetails }) => {
         let formatType = showMobileView ? 'mobile' : 'desktop';
         formatType = showFullDetails ? `${formatType}-original` : `${formatType}-sample`;
         return (
             <StyledSimpleViewWrapper>
-                {examSearchList.papers.map((course, cc) => {
+                {examList?.papers?.map((course, cc) => {
                     return (
                         <div
                             key={`exampaper-${formatType}-row-${cc}`}
@@ -243,7 +253,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         );
     };
 
-    const DesktopTableHeader = ({ examSearchList }) => {
+    const DesktopTableHeader = ({ examList }) => {
         return (
             <TableRow data-testid="exampaper-desktop-originals-table-header">
                 <TableCell
@@ -254,7 +264,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                 >
                     {' '}
                 </TableCell>
-                {examSearchList.periods.map((semester, ss) => {
+                {examList?.periods?.map((semester, ss) => {
                     const parts = semester.split(' || ');
                     return (
                         <TableCell
@@ -321,7 +331,9 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         );
     };
 
-    const DesktopLayout = ({ originalPapers }) => {
+    // eslint-disable-next-line react/prop-types
+    const DesktopLayout = ({ examList }) => {
+        examSearchListLoading === false && console.log('DesktopLayout examList=', examList);
         return (
             <TableContainer
                 sx={{ maxHeight: 600, marginTop: '1rem' }}
@@ -330,10 +342,10 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
             >
                 <Table stickyHeader aria-label={listTitle} aria-describedby="examResultsDescription">
                     <TableHead>
-                        <DesktopTableHeader examSearchList={examSearchList} />
+                        <DesktopTableHeader examList={examList} />
                     </TableHead>
                     <tbody data-testid="exampaper-desktop-originals-table-body">
-                        {examSearchList.papers.map((course, cc) => {
+                        {examList?.papers?.map((course, cc) => {
                             return (
                                 <TableRow key={`exampaper-desktop-originals-row-${cc}`}>
                                     <DesktopTableCells cc={cc} course={course} />
@@ -360,7 +372,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         <StandardPage title={listTitle}>
             <UserInstructions />
             {(() => {
-                if (!!examSearchListLoading) {
+                if (examSearchListLoading !== false) {
                     return (
                         <StyledStandardCard noHeader>
                             <Grid container>
@@ -388,7 +400,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                         </StyledStandardCard>
                     );
                 } else if (
-                    !examSearchListLoading &&
+                    examSearchListLoading === false &&
                     !isNon404Error &&
                     ((!!examSearchList && !!examSearchList.papers && examSearchList.papers.length === 0) ||
                         !examSearchList ||
@@ -405,17 +417,19 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                         </StyledStandardCard>
                     );
                 } else if (
-                    !examSearchListLoading &&
+                    examSearchListLoading === false &&
                     !examSearchListError &&
                     !!examSearchList?.papers &&
                     !!examSearchList?.periods &&
                     !!examSearchList.papers.length > 0
                 ) {
-                    const originalPapers = getOriginalPapers(examSearchList);
-                    const samplePapers = getSamplePapers(examSearchList);
+                    // const originalPapers = getOriginalPapers(examSearchList);
+                    console.log('originalExamPaperList', originalExamPaperList);
+                    // const samplePapers = getSamplePapers(examSearchList);
+                    console.log('sampleExamPaperList', sampleExamPaperList);
                     return (
                         <>
-                            {samplePapers?.papers?.length > 0 && (
+                            {sampleExamPaperList?.papers?.length > 0 && (
                                 <StyledStandardCard noHeader style={{ margin: '-16px -16px 4.5rem -16px' }}>
                                     <Typography
                                         variant="h2"
@@ -428,7 +442,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                         Note: Multiple sample papers may contain the same content.
                                     </StyledBodyText>
                                     <SimpleLayout
-                                        examSearchList={samplePapers}
+                                        examList={sampleExamPaperList}
                                         showMobileView={isMobileView}
                                         showFullDetails={false}
                                     />
@@ -442,20 +456,21 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                 >
                                     Original past exam papers
                                 </Typography>
-                                {originalPapers.papers.length === 0 ? (
+                                {originalExamPaperList?.papers?.length === 0 ? (
                                     <StyledBodyText data-testid="no-original-papers-provided">
                                         No original papers provided.
                                     </StyledBodyText>
                                 ) : (
                                     <>
-                                        {isMobileView && (
+                                        {isMobileView ? (
                                             <SimpleLayout
-                                                examSearchList={originalPapers}
+                                                examList={originalExamPaperList}
                                                 showMobileView
                                                 showFullDetails
                                             />
+                                        ) : (
+                                            <DesktopLayout examList={originalExamPaperList} />
                                         )}
-                                        {!isMobileView && <DesktopLayout examSearchList={originalPapers} />}
                                     </>
                                 )}
                             </StyledStandardCard>
