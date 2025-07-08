@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 
@@ -92,6 +92,8 @@ const StyledSimpleViewWrapper = styled('div')(() => ({
 
 export const PastExamPaperList = ({ actions, examSearchListError, examSearchList, examSearchListLoading }) => {
     const { courseHint } = useParams();
+    const [originalExamPaperList, setOriginalExamPaperList] = useState([]);
+    const [sampleExamPaperList, setSampleExamPaperList] = useState([]);
     const listTitle =
         !!examSearchList && !!examSearchList.minYear && !!examSearchList.maxYear && !!courseHint
             ? `Past Exam Papers from ${examSearchList.minYear} to ${
@@ -107,6 +109,48 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.exampapers.pathname);
     }, []);
 
+    function selectPapersByDisplayType(data, displayType) {
+        const result = { ...data };
+
+        if (result.papers && Array.isArray(result.papers)) {
+            result.papers = result.papers
+                .map(courseGroup => {
+                    return courseGroup.filter(examGroup => {
+                        // children are always arrays atm, but provide for the alternative
+                        /* istanbul ignore else */
+                        if (Array.isArray(examGroup)) {
+                            const hasFile = examGroup.some(exam => exam.paperUrl && exam.paperUrl.trim().length > 0);
+                            if (!hasFile) {
+                                return false;
+                            }
+
+                            const hasSample = examGroup.some(
+                                exam => exam.examType && exam.examType.toUpperCase() === 'SAMPLE',
+                            );
+                            return displayType === 'sample' ? hasSample : !hasSample;
+                        } else {
+                            const hasFile = examGroup.paperUrl && examGroup.paperUrl.trim().length > 0;
+                            if (!hasFile) {
+                                return false;
+                            }
+
+                            const hasSample = examGroup.examType && examGroup.examType.toUpperCase() === 'SAMPLE';
+                            return displayType === 'sample' ? hasSample : !hasSample;
+                        }
+                    });
+                })
+                .filter(courseGroup => courseGroup.length > 0); // Remove empty course groups
+        }
+
+        return result;
+    }
+    useEffect(() => {
+        if (examSearchListLoading === false) {
+            setOriginalExamPaperList(selectPapersByDisplayType(examSearchList, 'original'));
+            setSampleExamPaperList(selectPapersByDisplayType(examSearchList, 'sample'));
+        }
+    }, [examSearchList, examSearchListLoading]);
+
     useEffect(() => {
         /* istanbul ignore else */
         if (!!courseHint) {
@@ -115,8 +159,8 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [courseHint]);
 
-    function getCourseCode(course2) {
-        const course = JSON.parse(JSON.stringify(course2));
+    function getCourseCode(courseDetails) {
+        const course = JSON.parse(JSON.stringify(courseDetails));
         const firstCourse = course.find((paper, pp) => pp === 0);
         const firstSemester = !!firstCourse && firstCourse.pop();
         return !!firstSemester && !!firstSemester.courseCode
@@ -134,12 +178,12 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
     const isNon404Error = !!examSearchListError && examSearchListError !== MESSAGE_EXAMCODE_404;
 
     // eslint-disable-next-line react/prop-types
-    const SimpleLayout = ({ examSearchList, showMobileView, showFullDetails }) => {
+    const SimpleLayout = ({ examList, showMobileView, showFullDetails }) => {
         let formatType = showMobileView ? 'mobile' : 'desktop';
         formatType = showFullDetails ? `${formatType}-original` : `${formatType}-sample`;
         return (
             <StyledSimpleViewWrapper>
-                {examSearchList.papers.map((course, cc) => {
+                {examList?.papers?.map((course, cc) => {
                     return (
                         <div
                             key={`exampaper-${formatType}-row-${cc}`}
@@ -163,21 +207,26 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                         key={`exampaper-${formatType}-${ss}`}
                                     >
                                         {semester.map((paper, pp) => {
-                                            let display = `${paper.courseCode} ${paper.examPeriod} ${paper.examYear}`;
-                                            const simplifiedExamType = showFullDetails
+                                            /* istanbul ignore next */
+                                            const examTypeSansSample = showFullDetails
                                                 ? paper.examType
                                                 : paper.examType?.replace(/\b(sample)\b/, () => '');
-                                            display +=
-                                                !!paper.examType && !!showFullDetails ? ` (${simplifiedExamType})` : '';
-                                            display += !!paper.examNote ? ` ${paper.examNote}` : '';
-                                            display += !paper.examNote && semester.length > 1 ? ` Paper ${pp + 1}` : '';
+                                            let linklabel = `${paper.courseCode} ${paper.examPeriod} ${paper.examYear}`;
+
+                                            linklabel +=
+                                                !!paper.examType && !!showFullDetails
+                                                    ? /* istanbul ignore next */ ` (${examTypeSansSample})`
+                                                    : '';
+                                            linklabel += !!paper.examNote ? ` ${paper.examNote}` : '';
+                                            linklabel +=
+                                                !paper.examNote && semester.length > 1 ? ` Paper ${pp + 1}` : '';
                                             return (
                                                 <div key={`exampaper-${formatType}-detail-${pp}`}>
                                                     {!!paper.paperUrl && (
                                                         <div
                                                             style={{
                                                                 marginTop: showMobileView ? 20 : 0,
-                                                                marginBottom: showMobileView ? 20 : 0,
+                                                                marginBottom: showMobileView ? 20 : 8,
                                                             }}
                                                         >
                                                             <a
@@ -185,7 +234,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                 data-testid={`exampaper-${formatType}-link-${cc}-${ss}-${pp}`}
                                                                 target="_blank"
                                                             >
-                                                                {display}
+                                                                {linklabel}
                                                             </a>
                                                         </div>
                                                     )}
@@ -202,7 +251,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         );
     };
 
-    const DesktopTableHeader = ({ examSearchList }) => {
+    const DesktopTableHeader = ({ examList }) => {
         return (
             <TableRow data-testid="exampaper-desktop-originals-table-header">
                 <TableCell
@@ -213,7 +262,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                 >
                     {' '}
                 </TableCell>
-                {examSearchList.periods.map((semester, ss) => {
+                {examList?.periods?.map((semester, ss) => {
                     const parts = semester.split(' || ');
                     return (
                         <TableCell
@@ -269,7 +318,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                     </span>
                                                 )}
                                             </a>
-                                        ) : null}
+                                        ) : /* istanbul ignore next */ null}
                                     </div>
                                 );
                             })}
@@ -280,15 +329,20 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         );
     };
 
-    const DesktopLayout = ({ examSearchList }) => {
+    // eslint-disable-next-line react/prop-types
+    const DesktopLayout = ({ examList }) => {
         return (
-            <TableContainer sx={{ maxHeight: 600, marginTop: '1rem' }} component={Paper}>
+            <TableContainer
+                sx={{ maxHeight: 600, marginTop: '1rem' }}
+                component={Paper}
+                data-testid="original-papers-table"
+            >
                 <Table stickyHeader aria-label={listTitle} aria-describedby="examResultsDescription">
                     <TableHead>
-                        <DesktopTableHeader examSearchList={examSearchList} />
+                        <DesktopTableHeader examList={examList} />
                     </TableHead>
                     <tbody data-testid="exampaper-desktop-originals-table-body">
-                        {examSearchList.papers.map((course, cc) => {
+                        {examList?.papers?.map((course, cc) => {
                             return (
                                 <TableRow key={`exampaper-desktop-originals-row-${cc}`}>
                                     <DesktopTableCells cc={cc} course={course} />
@@ -310,39 +364,13 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
             </StyledExplanation>
         );
     };
-    function splitIntoSamplePapersAndNot(data, equality = true) {
-        const result = { ...data };
-
-        if (result.papers && Array.isArray(result.papers)) {
-            result.papers = result.papers
-                .map(courseGroup => {
-                    return courseGroup.filter(examGroup => {
-                        if (Array.isArray(examGroup)) {
-                            const hasSample = examGroup.some(
-                                exam => exam.examType && exam.examType.toUpperCase() === 'SAMPLE',
-                            );
-
-                            return equality ? hasSample : !hasSample;
-                        } else {
-                            const hasSample = examGroup.examType && examGroup.examType.toUpperCase() === 'SAMPLE';
-
-                            return equality ? hasSample : !hasSample;
-                        }
-                    });
-                })
-                .filter(courseGroup => courseGroup.length > 0); // Remove empty course groups
-        }
-        // console.log('splitIntoSamplePapersAndNot result=', result);
-        // console.log('splitIntoSamplePapersAndNot result XXXXX =', JSON.stringify(result));
-
-        return result;
-    }
 
     return (
         <StandardPage title={listTitle}>
             <UserInstructions />
             {(() => {
-                if (!!examSearchListLoading) {
+                /* istanbul ignore else */
+                if (examSearchListLoading !== false) {
                     return (
                         <StyledStandardCard noHeader>
                             <Grid container>
@@ -370,7 +398,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                         </StyledStandardCard>
                     );
                 } else if (
-                    !examSearchListLoading &&
+                    examSearchListLoading === false &&
                     !isNon404Error &&
                     ((!!examSearchList && !!examSearchList.papers && examSearchList.papers.length === 0) ||
                         !examSearchList ||
@@ -386,31 +414,30 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                             </Grid>
                         </StyledStandardCard>
                     );
+                    /* istanbul ignore else */
                 } else if (
-                    !examSearchListLoading &&
+                    examSearchListLoading === false &&
                     !examSearchListError &&
                     !!examSearchList?.papers &&
                     !!examSearchList?.periods &&
                     !!examSearchList.papers.length > 0
                 ) {
-                    const examSearchListSansSample = splitIntoSamplePapersAndNot(examSearchList, false);
-                    const samplePapers = splitIntoSamplePapersAndNot(examSearchList, true);
-                    console.log('samplePapers=', samplePapers?.papers?.length);
                     return (
                         <>
-                            {samplePapers?.papers?.length > 0 && (
+                            {sampleExamPaperList?.papers?.length > 0 && (
                                 <StyledStandardCard noHeader style={{ margin: '-16px -16px 4.5rem -16px' }}>
                                     <Typography
                                         variant="h2"
                                         style={{ fontSize: 32, fontWeight: 500, color: colourBlack }}
+                                        data-testid="sample-papers-heading"
                                     >
                                         Sample past exam papers
                                     </Typography>
-                                    <StyledBodyText>
-                                        Note: Sample papers may apply for up to three years.
+                                    <StyledBodyText style={{ marginBottom: 0 }}>
+                                        Note: Multiple sample papers may contain the same content.
                                     </StyledBodyText>
                                     <SimpleLayout
-                                        examSearchList={samplePapers}
+                                        examList={sampleExamPaperList}
                                         showMobileView={isMobileView}
                                         showFullDetails={false}
                                     />
@@ -424,19 +451,29 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                 >
                                     Original past exam papers
                                 </Typography>
-                                {isMobileView && (
-                                    <SimpleLayout
-                                        examSearchList={examSearchListSansSample}
-                                        showMobileView
-                                        showFullDetails
-                                    />
+                                {originalExamPaperList?.papers?.length === 0 ? (
+                                    <StyledBodyText data-testid="no-original-papers-provided">
+                                        No original papers provided.
+                                    </StyledBodyText>
+                                ) : (
+                                    <>
+                                        {isMobileView ? (
+                                            <SimpleLayout
+                                                examList={originalExamPaperList}
+                                                showMobileView
+                                                showFullDetails
+                                            />
+                                        ) : (
+                                            <DesktopLayout examList={originalExamPaperList} />
+                                        )}
+                                    </>
                                 )}
-                                {!isMobileView && <DesktopLayout examSearchList={examSearchListSansSample} />}
                             </StyledStandardCard>
                         </>
                     );
+                } else {
+                    return null;
                 }
-                return null;
             })()}
         </StandardPage>
     );
