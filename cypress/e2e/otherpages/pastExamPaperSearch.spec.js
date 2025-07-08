@@ -197,7 +197,7 @@ describe('Past Exam Papers Pages', () => {
                 'FREN1010 Sem.1 2020 Paper B',
             );
             cy.get('[data-testid="exampaper-mobile-original-link-1-0-0"]').should('contain', 'FREN2010 Sem.1 2021');
-            cy.get('[data-testid="exampaper-mobile-original-link-1-2-0"]').should(
+            cy.get('[data-testid="exampaper-mobile-original-link-1-1-0"]').should(
                 'contain',
                 'FREN2010 Sem.1 2019 Final',
             );
@@ -221,6 +221,27 @@ describe('Past Exam Papers Pages', () => {
 
             cy.get('[data-testid="exampaper-desktop-originals-table-body"]').should('exist');
             cy.get('[data-testid="exampaper-desktop-sample-line"]').should('not.exist');
+        });
+        it('a subject with no original papers reports that', () => {
+            cy.visit('/exams/course/dent1050?user=s1111111');
+            cy.waitUntil(() =>
+                cy
+                    .get('[data-testid="exampapers-original-heading"]')
+                    .should('exist')
+                    .contains('Original past exam papers'),
+            );
+
+            cy.get('[data-testid="no-original-papers-provided"]')
+                .should('exist')
+                .contains('No original papers provided.');
+            cy.get('[data-testid="original-papers-table"]').should('not.exist');
+
+            cy.get('[data-testid="sample-papers-heading"]')
+                .should('exist')
+                .contains('Sample past exam papers');
+            cy.get('[data-testid="exampaper-desktop-sample-link-0-0-0"]')
+                .should('exist')
+                .contains('DENT1050 Sem.2 2022');
         });
     });
     context('search errors', () => {

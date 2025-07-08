@@ -945,6 +945,10 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [200, examSearch_PHYS1001];
     })
+    .onGet('exams/search/PHYS100')
+    .reply(() => {
+        return [200, examSearch_PHYS1001];
+    })
     .onGet('exams/search/FREN')
     .reply(() => {
         return [200, examSearch_FREN];
@@ -980,6 +984,20 @@ mock.onGet('exams/course/FREN1010/summary')
     .onGet('exams/search/dent')
     .reply(() => {
         return [200, examSearch_DENT80];
+    })
+    .onGet('exams/search/dent1050')
+    .reply(() => {
+        return [
+            200,
+            {
+                ...examSearch_DENT80,
+                papers: [
+                    ...examSearch_DENT80.papers.filter(course =>
+                        course.some(s => s.some(p => p.courseCode.toLowerCase() === 'dent1050')),
+                    ),
+                ],
+            },
+        ];
     })
     .onGet('exams/search/mock404')
     .reply(() => {
