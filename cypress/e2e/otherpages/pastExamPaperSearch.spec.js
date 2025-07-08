@@ -176,6 +176,12 @@ describe('Past Exam Papers Pages', () => {
                 .should('have.length', 22);
             cy.get('[data-testid="exampaper-desktop-originals-link-1-1-0"]').contains('FREN2010');
             cy.get('[data-testid="exampaper-desktop-originals-link-1-1-0"]').contains('Final');
+
+            cy.get('[data-testid="exampaper-desktop-originals-link-4-1-0"]').contains('FREN2082');
+            cy.get('[data-testid="exampaper-desktop-originals-link-4-1-0"]').contains('a special french paper');
+
+            cy.get('[data-testid="exampaper-desktop-originals-link-4-0-0"]').contains('FREN2082');
+            cy.get('[data-testid="exampaper-desktop-originals-link-4-0-0"] span:first-child').contains('Final Paper');
         });
         it('the past exam paper result mobile page is correct', () => {
             cy.visit('/exams/course/fren');
@@ -208,6 +214,10 @@ describe('Past Exam Papers Pages', () => {
             cy.get('[data-testid="exampaper-mobile-original-link-4-1-1"]').should(
                 'contain',
                 'FREN2082 Sem.1 2020 Paper 2',
+            );
+            cy.get('[data-testid="exampaper-mobile-original-link-4-0-0"]').should(
+                'contain',
+                'FREN2082 Sem.1 2021 (Final Paper)',
             );
         });
         it('a subject with no sample papers does not show the sample section', () => {

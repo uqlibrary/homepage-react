@@ -120,7 +120,7 @@ export default {
                     "courseCode": "FREN2082",
                     "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
                     "examNote": "",
-                    "examType": "",
+                    "examType": "Final Paper",
                     "examYear": "2021",
                     "examPeriod": "Sem.1",
                     "matchPeriod": "2020 || Sem.2"
