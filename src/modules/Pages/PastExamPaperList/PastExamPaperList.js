@@ -91,7 +91,6 @@ const StyledSimpleViewWrapper = styled('div')(() => ({
 }));
 
 export const PastExamPaperList = ({ actions, examSearchListError, examSearchList, examSearchListLoading }) => {
-    examSearchListLoading === false && console.log('start examSearchList=', examSearchList);
     const { courseHint } = useParams();
     const [originalExamPaperList, setOriginalExamPaperList] = useState([]);
     const [sampleExamPaperList, setSampleExamPaperList] = useState([]);
@@ -110,7 +109,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.exampapers.pathname);
     }, []);
 
-    function splitIntoSamplePapersAndNot(data, displayType) {
+    function selectPapersByDisplayType(data, displayType) {
         const result = { ...data };
 
         if (result.papers && Array.isArray(result.papers)) {
@@ -145,19 +144,12 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
 
         return result;
     }
-    function getSamplePapers(data) {
-        return splitIntoSamplePapersAndNot(data, 'sample');
-    }
-    function getOriginalPapers(data) {
-        return splitIntoSamplePapersAndNot(data, 'original');
-    }
     useEffect(() => {
         if (examSearchListLoading === false) {
-            console.log('LOADING COMPLETE');
-            setOriginalExamPaperList(getOriginalPapers(examSearchList));
-            setSampleExamPaperList(getSamplePapers(examSearchList));
+            setOriginalExamPaperList(selectPapersByDisplayType(examSearchList, 'original'));
+            setSampleExamPaperList(selectPapersByDisplayType(examSearchList, 'sample'));
         }
-    }, [examSearchListLoading]);
+    }, [examSearchList, examSearchListLoading]);
 
     useEffect(() => {
         /* istanbul ignore else */
@@ -339,7 +331,6 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
 
     // eslint-disable-next-line react/prop-types
     const DesktopLayout = ({ examList }) => {
-        examSearchListLoading === false && console.log('DesktopLayout examList=', examList);
         return (
             <TableContainer
                 sx={{ maxHeight: 600, marginTop: '1rem' }}
@@ -431,10 +422,6 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     !!examSearchList?.periods &&
                     !!examSearchList.papers.length > 0
                 ) {
-                    // const originalPapers = getOriginalPapers(examSearchList);
-                    console.log('originalExamPaperList', originalExamPaperList);
-                    // const samplePapers = getSamplePapers(examSearchList);
-                    console.log('sampleExamPaperList', sampleExamPaperList);
                     return (
                         <>
                             {sampleExamPaperList?.papers?.length > 0 && (
