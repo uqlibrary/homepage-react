@@ -84,9 +84,9 @@ export const MyCourses = ({
 
     // based on https://material-ui.com/components/tabs/#automatic-scroll-buttons
     return (
-        <Fragment>
+        <>
             {!!account && !!account.current_classes && account.current_classes.length > 0 ? (
-                <Fragment>
+                <>
                     <StyledAppBar position="static" component="div">
                         <Tabs
                             onChange={handleCourseTabChange}
@@ -128,18 +128,19 @@ export const MyCourses = ({
                             </StyledTabPanel>
                         );
                     })}
-                </Fragment>
+                </>
             ) : (
                 <Grid container spacing={3} data-testid="no-classes" className={'noreadingLists'}>
                     <Grid item>
-                        <Typography variant={'h5'}>{locale.myCourses.none.title}</Typography>
+                        <Typography variant={'h5'}>No enrolled courses available</Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        {locale.myCourses.none.description}
+                        <p>Your enrolled courses will appear here three weeks prior to the start of the semester.</p>
+                        <p>Search for learning resources using the &apos;Course search&apos; tab, above.</p>
                     </Grid>
                 </Grid>
             )}
-        </Fragment>
+        </>
     );
 };
 

@@ -60,7 +60,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
     const examAriaLabel = paper => `past exam paper for ${paper.period} format ${_extractExtension(paper.url)}`;
 
     const itemCountLabel = _pluralise('item', examTotalCount);
-    const examPaperTitle = `${locale.myCourses.examPapers.title} ${
+    const examPaperTitle = `Past exam papers ${
         !examListError && !examListLoading && examTotalCount > 0 ? `(${examTotalCount} ${itemCountLabel})` : ''
     }`;
 
@@ -78,7 +78,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
             <Grid container className={'exams'} data-testid="exam-list-wrapper">
                 {!!examListError && (
                     /* istanbul ignore next */
-                    <StyledBodyText>{locale.myCourses.examPapers.unavailable}</StyledBodyText>
+                    <StyledBodyText>Exam papers list currently unavailable</StyledBodyText>
                 )}
 
                 {!examListError && !!examListLoading && (
@@ -96,13 +96,13 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                     <React.Fragment>
                         <StyledItem item xs={12}>
                             <StyledBodyText style={{ marginBlock: 0 }} data-testid="no-exam-papers">
-                                {locale.myCourses.examPapers.none}
+                                No Past Exam Papers for this course.
                             </StyledBodyText>
                         </StyledItem>
                         <StyledItem item xs={12}>
-                            <a href={locale.myCourses.examPapers.footer.noPastExams.linkOut}>
+                            <a href="https://www.library.uq.edu.au/exams/">
                                 <SpacedArrowForwardIcon />
-                                <span>{locale.myCourses.examPapers.footer.noPastExams.linkLabel}</span>
+                                <span>Search for other exam papers</span>
                             </a>
                         </StyledItem>
                     </React.Fragment>
@@ -132,10 +132,10 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                     })}
                 {!examListError && !examListLoading && !!numberExcessExams && numberExcessExams > 0 && (
                     <StyledItem item xs={12} data-testid="exam-more-link">
-                        <a href={_courseLink(subject, locale.myCourses.examPapers.footer.morePastExams.linkOutPattern)}>
+                        <a href={_courseLink(subject, 'https://www.library.uq.edu.au/exams/course/[courseCode]')}>
                             <SpacedArrowForwardIcon />
                             <span>
-                                {locale.myCourses.examPapers.footer.morePastExams.linkLabel
+                                {'[numberExcessExams] more past [examNumber]'
                                     .replace('[numberExcessExams]', numberExcessExams)
                                     .replace('[examNumber]', _pluralise('paper', numberExcessExams))}
                             </span>

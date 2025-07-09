@@ -9,6 +9,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
+import { SpacedArrowForwardIcon } from '../shared/SpacedArrowForwardIcon';
 
 const StyledItem = styled(Grid)(() => ({
     borderTop: '1px solid #e8e8e8',
@@ -29,39 +30,43 @@ const StyledItem = styled(Grid)(() => ({
 
 export const SubjectLinks = ({ subject, headingLevel }) => {
     // on the first render, add Legal Research Essentials to the Course Links for LAWS subjects
-    /* istanbul ignore next */
-    !locale.myCourses.courseLinks.links.find(i => i.id === 'legalResearchEssentials') &&
-        subject.classnumber.startsWith('LAWS') &&
-        locale.myCourses.courseLinks.links.push(locale.myCourses.courseLinks.legalResearchEssentials);
-
     return (
         <StandardCard fullHeight noHeader standardCardId={`subject-links-${subject.classnumber}`}>
             <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 500 }}>
-                {locale.myCourses.courseLinks.title}
+                Course links
             </Typography>
             <Grid container className={'CourseLinks'}>
-                {!!locale.myCourses.courseLinks.links &&
-                    locale.myCourses.courseLinks.links.length > 0 &&
-                    locale.myCourses.courseLinks.links.map((item, index) => {
-                        /* istanbul ignore next */
-                        const dataTestid =
-                            (!!item.id && subject.classnumber && `${item.id}-${subject.classnumber}`) || null;
-                        return (
-                            item.linkOutPattern &&
-                            item.linkLabel && (
-                                <StyledItem item key={`studylink-${index}`} xs={12}>
-                                    <a
-                                        data-testid={dataTestid}
-                                        id={dataTestid}
-                                        href={_courseLink(subject.classnumber, item.linkOutPattern)}
-                                    >
-                                        {!!item.icon && item.icon}
-                                        <span>{item.linkLabel}</span>
-                                    </a>
-                                </StyledItem>
-                            )
-                        );
-                    })}
+                <StyledItem item xs={12}>
+                    <a data-testid="blackboard" id="blackboard" href="https://learn.uq.edu.au/">
+                        <SpacedArrowForwardIcon />
+                        <span>Learn.UQ (Blackboard)</span>
+                    </a>
+                </StyledItem>
+                <StyledItem item xs={12}>
+                    <a
+                        data-testid="ecp"
+                        id="ecp"
+                        href={_courseLink(
+                            subject.classnumber,
+                            'https://www.uq.edu.au/study/course.html?course_code=[courseCode]',
+                        )}
+                    >
+                        <SpacedArrowForwardIcon />
+                        <span>Electronic Course Profile</span>
+                    </a>
+                </StyledItem>
+                {subject.classnumber.startsWith('LAWS') && (
+                    <StyledItem item xs={12}>
+                        <a
+                            data-testid="legalResearchEssentials"
+                            id="legalResearchEssentials"
+                            href="https://web.library.uq.edu.au/study-and-learning-support/training-and-workshops/legal-research-essentials"
+                        >
+                            <SpacedArrowForwardIcon />
+                            <span>Legal Research Essentials</span>
+                        </a>
+                    </StyledItem>
+                )}
             </Grid>
         </StandardCard>
     );
