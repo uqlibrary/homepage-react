@@ -17,7 +17,7 @@ import { default as subjectSearchSuggestions } from '../../../src/data/mock/data
 function the_user_lands_on_the_My_Classes_tab(courseReadingList, panelId = 0) {
     const title = courseReadingList.course_title || 'mock data is missing';
 
-    cy.get('div[data-testid="learning-resources"]').contains(locale.myCourses.title);
+    cy.get('div[data-testid="learning-resources"]').contains('Your courses');
 
     cy.get(`div[data-testid=classpanel-${panelId}] h2`).contains(title);
 }
@@ -28,7 +28,7 @@ function the_user_lands_on_the_Search_tab() {
 
 function the_user_clicks_on_the_My_Courses_tab() {
     cy.get('button#topmenu-0')
-        .contains(locale.myCourses.title)
+        .contains('Your courses')
         .click();
 }
 
@@ -60,13 +60,17 @@ function exams_panel_loads_correctly_for_a_subject_with_many_exams(
     const totalExamItems = examPapers.list.length + numberExcessExams;
     cy.get('[data-testid="learning-resource-subject-exams"]')
         .find(`${headerLevel}`)
-        .contains(`${locale.myCourses.examPapers.title} (${totalExamItems} items)`);
-    cy.get('[data-testid="learning-resource-subject-exams"] a').should('have.attr', 'href', examPaperLink);
+        .contains(`Past exam papers (${totalExamItems} items)`);
+    cy.get('[data-testid="learning-resource-subject-exams"] a[data-testid="examPaperItem-0"]').should(
+        'have.attr',
+        'href',
+        examPaperLink,
+    );
     cy.get('[data-testid="learning-resource-subject-exams"] span').contains(
         `${examPeriod} (${examPaperLink.slice(-3).toUpperCase()})`,
     );
     cy.get('div[data-testid=exam-more-link] span').contains(
-        locale.myCourses.examPapers.footer.morePastExams.linkLabel
+        '[numberExcessExams] more past [examNumber]'
             .replace('[numberExcessExams]', numberExcessExams)
             .replace('[examNumber]', _pluralise('paper', numberExcessExams)),
     );
@@ -78,14 +82,14 @@ function exams_panel_loads_correctly_for_a_subject_with_many_exams(
 }
 
 function guides_panel_has_correct_Library_Guides_footer_links_for_a_subject_page() {
-    locale.myCourses.guides.footer.links.map(link => {
-        const guideId = link.id || 'mock-data-is-missing';
-        const guideTitle = link.linkLabel || 'mock data is missing';
-        const guideLink = link.linkTo || 'mock data is missing';
-
-        cy.get(`a[data-testid=${guideId}] span`).contains(guideTitle);
-        cy.get(`a[data-testid=${guideId}]`).should('have.attr', 'href', guideLink);
-    });
+    cy.get('a[data-testid="referencingGuides"] span').contains('Referencing guides');
+    cy.get('a[data-testid="referencingGuides"]').should(
+        'have.attr',
+        'href',
+        'https://guides.library.uq.edu.au/referencing',
+    );
+    cy.get('a[data-testid="all-guides"] span').contains('All library guides');
+    cy.get('a[data-testid="all-guides"]').should('have.attr', 'href', 'https://guides.library.uq.edu.au/all-guides');
 }
 
 function guides_panel_loads_correctly_for_a_subject_with_one_guide(guides, coursecode, displayType = 'mycourses') {
@@ -95,7 +99,7 @@ function guides_panel_loads_correctly_for_a_subject_with_one_guide(guides, cours
     const guideTitle = guide.title || 'mock data is missing';
     const guideLink = guide.url || 'mock data is missing';
 
-    cy.get(`[data-testid=guides-${coursecode}] ${headerLevel}`).contains(locale.myCourses.guides.title);
+    cy.get(`[data-testid=guides-${coursecode}] ${headerLevel}`).contains('Subject guides');
     cy.get(`div[data-testid=guides-${coursecode}] a`)
         .contains(guideTitle)
         .should('have.attr', 'href', guideLink);
@@ -110,16 +114,19 @@ function guides_panel_loads_correctly_for_a_subject_with_one_guide(guides, cours
 function course_links_panel_loads_correctly_for_a_subject(courseReadingList) {
     const courseCode = courseReadingList.coursecode || 'mock data is missing';
 
-    expect(locale.myCourses.courseLinks.links).to.be.an('array');
-    expect(locale.myCourses.courseLinks.links.length).to.not.equals(0);
-    locale.myCourses.courseLinks.links.map(item => {
-        cy.get(`a[data-testid=${item.id}-${courseCode}] span`).contains(item.linkLabel);
-        cy.get(`a[data-testid=${item.id}-${courseCode}]`).should(
-            'have.attr',
-            'href',
-            _courseLink(courseCode, item.linkOutPattern),
-        );
-    });
+    cy.get('a[data-testid=blackboard] span').contains('Learn.UQ (Blackboard)');
+    cy.get('a[data-testid=blackboard]').should(
+        'have.attr',
+        'href',
+        _courseLink(courseCode, 'https://learn.uq.edu.au/'),
+    );
+
+    cy.get('a[data-testid=ecp] span').contains('Electronic Course Profile');
+    cy.get('a[data-testid=ecp]').should(
+        'have.attr',
+        'href',
+        _courseLink(courseCode, 'https://www.uq.edu.au/study/course.html?course_code=[courseCode]'),
+    );
 }
 
 function load_a_subject_in_learning_resource_page_search_tab(
@@ -201,7 +208,7 @@ function a_user_can_use_the_search_bar_to_load_a_subject(
 }
 
 function a_user_with_no_classes_sees_notice_of_same_in_courses_list() {
-    cy.get('div[data-testid=no-classes]').contains(locale.myCourses.none.title);
+    cy.get('div[data-testid=no-classes]').contains('No enrolled courses available');
 }
 
 function the_user_sees_the_search_form() {
@@ -459,7 +466,7 @@ context('The Learning Resources Page', () => {
             cy.get('[data-testid="guides-false-content"]')
                 .should('exist')
                 .contains('No subject guides');
-            cy.get('[data-testid="legalResearchEssentials-LAWS7107"]').should('not.exist');
+            cy.get('[data-testid="legalResearchEssentials"]').should('not.exist');
         }
 
         function ACCT1101LoadsProperly() {
@@ -473,7 +480,7 @@ context('The Learning Resources Page', () => {
             cy.get('[data-testid="guides-ACCT1101-content"]')
                 .should('exist')
                 .contains('Accounting');
-            cy.get('[data-testid="legalResearchEssentials-LAWS7107"]').should('not.exist');
+            cy.get('[data-testid="legalResearchEssentials"]').should('not.exist');
         }
 
         cy.visit('/learning-resources?user=s3333333');
@@ -581,7 +588,17 @@ context('The Learning Resources Page', () => {
 
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'HIST1201');
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'The Australian Experience');
-        cy.get('[data-testid="past-exams-HIST1201-content"] > div')
+
+        cy.get('[data-testid="exams-readmore"] a')
+            .should('exist')
+            .contains('Read more about past exam papers')
+            .should(
+                'have.attr',
+                'href',
+                'https://web.library.uq.edu.au/study-and-learning-support/coursework/past-exam-papers',
+            );
+
+        cy.get('[data-testid="exam-list-wrapper"]')
             .children()
             .should('have.length', 1);
         cy.get('[data-testid="examPaperItem-0"]').should('contain', 'Semester 1 2016');
@@ -600,7 +617,16 @@ context('The Learning Resources Page', () => {
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'FREN1010');
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'Introductory French 1');
 
-        cy.get('[data-testid="past-exams-FREN1010-content"] > div')
+        cy.get('[data-testid="exams-readmore"] a')
+            .should('exist')
+            .contains('Read more about past exam papers')
+            .should(
+                'have.attr',
+                'href',
+                'https://web.library.uq.edu.au/study-and-learning-support/coursework/past-exam-papers',
+            );
+
+        cy.get('[data-testid="exam-list-wrapper"]')
             .children()
             .should('have.length', 3);
         cy.get('[data-testid="examPaperItem-0"]').should('contain', 'Semester 2 2019');
@@ -625,7 +651,16 @@ context('The Learning Resources Page', () => {
             'PHIL1002 - Introduction to Philosophy: What is Philosophy?',
         );
 
-        cy.get('[data-testid="past-exams-PHIL1002-content"] > div')
+        cy.get('[data-testid="exams-readmore"] a')
+            .should('exist')
+            .contains('Read more about past exam papers')
+            .should(
+                'have.attr',
+                'href',
+                'https://web.library.uq.edu.au/study-and-learning-support/coursework/past-exam-papers',
+            );
+
+        cy.get('[data-testid="exam-list-wrapper"]')
             .children()
             .should('have.length', 2);
         cy.get('[data-testid="no-exam-papers"]').should('contain', 'No Past Exam Papers for this course');
@@ -657,8 +692,22 @@ context('The Learning Resources Page', () => {
 
         searchFor('LAWS', 'LAWS7107');
 
-        cy.get('[data-testid="legalResearchEssentials-LAWS7107"]')
+        cy.get('[data-testid="legalResearchEssentials"]')
             .should('exist')
             .contains('Legal Research Essentials');
+    });
+
+    it('when springshare returns an error, guides panel appears correctly', () => {
+        cy.visit(
+            '/learning-resources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020&responseType=springshareError',
+        );
+        cy.waitUntil(() =>
+            cy.get('[data-testid="reading-list-link"]').contains('FREN1010 Reading list (contains 2 items)'),
+        );
+
+        cy.get('[data-testid="guides-springshare-error"]')
+            .scrollIntoView()
+            .should('exist')
+            .contains('Subject guides list currently unavailable');
     });
 });

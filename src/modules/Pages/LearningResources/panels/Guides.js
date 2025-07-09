@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import locale from '../shared/learningResources.locale';
-
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
+
+import DocumentIcon from '@mui/icons-material/Description';
+
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { SpacedArrowForwardIcon } from '../shared/SpacedArrowForwardIcon';
 
 const StyledItem = styled(Grid)(() => ({
     borderTop: '1px solid #e8e8e8',
@@ -29,18 +30,27 @@ const StyledItem = styled(Grid)(() => ({
         },
     },
 }));
+const StyledBodyText = styled(Typography)(() => ({
+    marginTop: '1rem',
+    marginBottom: '2rem',
+    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+    fontSize: '1rem',
+    fontWeight: 400,
+    lineHeight: 1.6,
+}));
 
 export const Guides = ({ headingLevel, guideList, guideListLoading, guideListError }) => {
     const coursecode = !!guideList && !!guideList.length > 0 && guideList[0].coursecode;
     return (
         <StandardCard fullHeight noHeader standardCardId={`guides-${coursecode}`}>
             <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 500 }}>
-                {locale.myCourses.guides.title}
+                Subject guides
             </Typography>
             <Grid container className={'guides'}>
                 {!!guideListError && (
-                    /* istanbul ignore next */
-                    <Typography>{locale.myCourses.guides.unavailable}</Typography>
+                    <StyledBodyText data-testid="guides-springshare-error">
+                        Subject guides list currently unavailable
+                    </StyledBodyText>
                 )}
                 {!guideListError && !!guideListLoading && (
                     <Grid item xs={12} style={{ width: 80, opacity: 0.3 }}>
@@ -54,14 +64,14 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                 )}
                 {!guideListError && !guideListLoading && (!guideList || guideList.length === 0) && (
                     <StyledItem item xs={12} data-testid="no-guides">
-                        <Typography>{locale.myCourses.guides.none}</Typography>
+                        <StyledBodyText>No subject guides for this course.</StyledBodyText>
                     </StyledItem>
                 )}
                 {!guideListError &&
                     !guideListLoading &&
                     !!guideList &&
                     guideList.length > 0 &&
-                    guideList.slice(0, locale.myCourses.guides.visibleItemsCount).map((guide, index) => {
+                    guideList.slice(0, 3).map((guide, index) => {
                         return (
                             <StyledItem item xs={12} key={`guides-${index}`}>
                                 <a
@@ -77,23 +87,23 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                             </StyledItem>
                         );
                     })}
+                <StyledItem item key={'studylink-0'} xs={12}>
+                    <a
+                        data-testid="referencingGuides"
+                        id="referencingGuides"
+                        href="https://guides.library.uq.edu.au/referencing"
+                    >
+                        <DocumentIcon style={{ marginRight: 6 }} />
+                        <span>Referencing guides</span>
+                    </a>
+                </StyledItem>
                 {/* guides doesnt display a 'view N more' link because Guides doesnt have a search-by-course-code fn*/}
-                {!!locale.myCourses.guides.footer.links &&
-                    locale.myCourses.guides.footer.links.length > 0 &&
-                    locale.myCourses.guides.footer.links.map((item, index) => {
-                        const dataTestId = item.id || /* istanbul ignore next */ null;
-                        return (
-                            item.linkTo &&
-                            item.linkLabel && (
-                                <StyledItem item key={`studylink-${index}`} xs={12}>
-                                    <a data-testid={dataTestId} id={dataTestId} href={item.linkTo}>
-                                        {!!item.icon && item.icon}
-                                        <span>{item.linkLabel}</span>
-                                    </a>
-                                </StyledItem>
-                            )
-                        );
-                    })}
+                <StyledItem item key={'studylink-1'} xs={12}>
+                    <a data-testid="all-guides" id="all-guides" href="https://guides.library.uq.edu.au/all-guides">
+                        <SpacedArrowForwardIcon />
+                        <span>All library guides</span>
+                    </a>
+                </StyledItem>
             </Grid>
         </StandardCard>
     );

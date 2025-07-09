@@ -10,7 +10,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+
 import { styled } from '@mui/material/styles';
+import { linkToDrupal } from 'helpers/general';
 
 const StyledItem = styled(Grid)(() => ({
     borderTop: '1px solid #e8e8e8',
@@ -31,6 +34,14 @@ const StyledItem = styled(Grid)(() => ({
         },
     },
 }));
+const StyledBodyText = styled(Typography)(() => ({
+    marginTop: '1rem',
+    marginBottom: '2rem',
+    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+    fontSize: '1rem',
+    fontWeight: 400,
+    lineHeight: 1.6,
+}));
 
 export const PastExamPapers = ({ examList, examListLoading, examListError, headingLevel }) => {
     const subject = !!examList && examList.coursecode;
@@ -49,7 +60,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
     const examAriaLabel = paper => `past exam paper for ${paper.period} format ${_extractExtension(paper.url)}`;
 
     const itemCountLabel = _pluralise('item', examTotalCount);
-    const examPaperTitle = `${locale.myCourses.examPapers.title} ${
+    const examPaperTitle = `Past exam papers ${
         !examListError && !examListLoading && examTotalCount > 0 ? `(${examTotalCount} ${itemCountLabel})` : ''
     }`;
 
@@ -58,10 +69,16 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
             <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 500 }}>
                 {examPaperTitle}
             </Typography>
-            <Grid container className={'exams'}>
+            <StyledItem item xs={12} style={{ display: 'flex', alignItems: 'center' }} data-testid="exams-readmore">
+                <QuestionMarkIcon style={{ marginRight: 6 }} />
+                <a href={linkToDrupal('/study-and-learning-support/coursework/past-exam-papers')}>
+                    Read more about past exam papers
+                </a>
+            </StyledItem>
+            <Grid container className={'exams'} data-testid="exam-list-wrapper">
                 {!!examListError && (
                     /* istanbul ignore next */
-                    <Typography>{locale.myCourses.examPapers.unavailable}</Typography>
+                    <StyledBodyText>Exam papers list currently unavailable</StyledBodyText>
                 )}
 
                 {!examListError && !!examListLoading && (
@@ -78,12 +95,14 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                 {!examListError && !examListLoading && (!listOfExams || listOfExams.length === 0) && (
                     <React.Fragment>
                         <StyledItem item xs={12}>
-                            <Typography data-testid="no-exam-papers">{locale.myCourses.examPapers.none}</Typography>
+                            <StyledBodyText style={{ marginBlock: 0 }} data-testid="no-exam-papers">
+                                No Past Exam Papers for this course.
+                            </StyledBodyText>
                         </StyledItem>
                         <StyledItem item xs={12}>
-                            <a href={locale.myCourses.examPapers.footer.noPastExams.linkOut}>
+                            <a href="https://www.library.uq.edu.au/exams/">
                                 <SpacedArrowForwardIcon />
-                                <span>{locale.myCourses.examPapers.footer.noPastExams.linkLabel}</span>
+                                <span>Search for other exam papers</span>
                             </a>
                         </StyledItem>
                     </React.Fragment>
@@ -93,6 +112,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                     !!listOfExams &&
                     listOfExams.length > 0 &&
                     listOfExams.map((paper, index) => {
+                        const sampleIndicator = paper.paperType.toLowerCase().includes('sample') ? '(Sample)' : '';
                         return (
                             <StyledItem item xs={12} key={`examPapers-${index}`}>
                                 <a
@@ -104,7 +124,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                                     key={`exam-${index}`}
                                 >
                                     <span>
-                                        {paper.period} ({_extractExtension(paper.url)})
+                                        {paper.period} ({_extractExtension(paper.url)}) {sampleIndicator}
                                     </span>
                                 </a>
                             </StyledItem>
@@ -112,10 +132,10 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                     })}
                 {!examListError && !examListLoading && !!numberExcessExams && numberExcessExams > 0 && (
                     <StyledItem item xs={12} data-testid="exam-more-link">
-                        <a href={_courseLink(subject, locale.myCourses.examPapers.footer.morePastExams.linkOutPattern)}>
+                        <a href={_courseLink(subject, 'https://www.library.uq.edu.au/exams/course/[courseCode]')}>
                             <SpacedArrowForwardIcon />
                             <span>
-                                {locale.myCourses.examPapers.footer.morePastExams.linkLabel
+                                {'[numberExcessExams] more past [examNumber]'
                                     .replace('[numberExcessExams]', numberExcessExams)
                                     .replace('[examNumber]', _pluralise('paper', numberExcessExams))}
                             </span>
