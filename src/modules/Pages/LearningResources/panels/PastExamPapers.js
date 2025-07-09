@@ -93,6 +93,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                     !!listOfExams &&
                     listOfExams.length > 0 &&
                     listOfExams.map((paper, index) => {
+                        const sampleIndicator = paper.paperType.toLowerCase().includes('sample') ? '(Sample)' : '';
                         return (
                             <StyledItem item xs={12} key={`examPapers-${index}`}>
                                 <a
@@ -104,7 +105,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                                     key={`exam-${index}`}
                                 >
                                     <span>
-                                        {paper.period} ({_extractExtension(paper.url)})
+                                        {paper.period} ({_extractExtension(paper.url)}) {sampleIndicator}
                                     </span>
                                 </a>
                             </StyledItem>
