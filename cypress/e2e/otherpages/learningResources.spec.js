@@ -693,4 +693,18 @@ context('The Learning Resources Page', () => {
             .should('exist')
             .contains('Legal Research Essentials');
     });
+
+    it('when springshare returns an error, guides panel appears correctly', () => {
+        cy.visit(
+            '/learning-resources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020&responseType=springshareError',
+        );
+        cy.waitUntil(() =>
+            cy.get('[data-testid="reading-list-link"]').contains('FREN1010 Reading list (contains 2 items)'),
+        );
+
+        cy.get('[data-testid="guides-springshare-error"]')
+            .scrollIntoView()
+            .should('exist')
+            .contains('Subject guides list currently unavailable');
+    });
 });

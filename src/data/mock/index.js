@@ -842,6 +842,9 @@ mock.onGet('exams/course/FREN1010/summary')
 
     .onGet('library_guides/FREN1010')
     .reply(() => {
+        if (responseType === 'springshareError') {
+            return [500, {}];
+        }
         return [200, libraryGuides_FREN1010];
     })
     .onGet('library_guides/FREN1011')

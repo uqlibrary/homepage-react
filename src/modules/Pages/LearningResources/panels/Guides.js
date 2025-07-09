@@ -46,7 +46,11 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                 {locale.myCourses.guides.title}
             </Typography>
             <Grid container className={'guides'}>
-                {!!guideListError && <StyledBodyText>{locale.myCourses.guides.unavailable}</StyledBodyText>}
+                {!!guideListError && (
+                    <StyledBodyText data-testid="guides-springshare-error">
+                        {locale.myCourses.guides.unavailable}
+                    </StyledBodyText>
+                )}
                 {!guideListError && !!guideListLoading && (
                     <Grid item xs={12} style={{ width: 80, opacity: 0.3 }}>
                         <CircularProgress
