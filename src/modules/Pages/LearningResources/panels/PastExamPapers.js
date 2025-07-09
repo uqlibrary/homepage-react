@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import locale from '../shared/learningResources.locale';
 import { _courseLink, _pluralise } from '../shared/learningResourcesHelpers';
 import { SpacedArrowForwardIcon } from '../shared/SpacedArrowForwardIcon';
 

@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
-import locale from '../shared/learningResources.locale';
+
 import { a11yProps, reverseA11yProps } from '../shared/learningResourcesHelpers';
 import { getCampusByCode } from 'helpers/general';
 import { SubjectBody } from '../shared/SubjectBody';

@@ -677,9 +677,8 @@ context('The Learning Resources Page', () => {
         cy.visit(
             '/learning-resources?user=s3333333&coursecode=PHYS1101E&campus=St%20Lucia&semester=Semester%202%202020',
         );
-        cy.waitUntil(() =>
-            cy.get('[data-testid="reading-list-PHYS1101E-content"]').contains('No Reading list for this course'),
-        );
+        cy.waitUntil(() => cy.get('[data-testid="reading-list-PHYS1101E-content"]').should('exist'));
+        cy.get('[data-testid="reading-list-PHYS1101E-content"]').contains('No Reading list for this course');
     });
 
     it('A user sees an extra link on laws subjects', () => {

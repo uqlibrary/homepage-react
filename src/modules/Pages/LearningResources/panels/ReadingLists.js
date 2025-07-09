@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import locale from '../shared/learningResources.locale';
 import { _pluralise } from '../shared/learningResourcesHelpers';
 import { SpacedArrowForwardIcon } from '../shared/SpacedArrowForwardIcon';
 
@@ -15,7 +14,7 @@ const StyledItem = styled(Grid)(() => ({
     borderTop: '1px solid #e8e8e8',
     paddingBlock: '15px',
     '& a': {
-        display: 'flex',
+        display: 'inline-flex',
         alignItems: 'center',
         '&:hover': {
             color: 'inherit',
@@ -24,6 +23,12 @@ const StyledItem = styled(Grid)(() => ({
                 color: '#fff',
                 backgroundColor: '#51247A',
             },
+        },
+        '& p': {
+            marginBlock: 0,
+        },
+        '& span': {
+            marginBlock: 0,
         },
     },
     '& .presentLabel': {
@@ -95,23 +100,19 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                 {/* eslint-disable-next-line max-len */}
                 {!readingListError && !readingListLoading && !!listOfReadingLists && listOfReadingLists.length === 1 && (
                     <StyledItem item xs={12} data-testid="reading-list-link">
-                        <a href={listOfReadingLists[0].url} style={{ display: 'inline-flex', alignItems: 'center' }}>
+                        <a href={listOfReadingLists[0].url}>
                             <SpacedArrowForwardIcon />
-                            <StyledBodyText
-                                variant={'span'}
-                                style={{ marginBlock: 0 }}
-                            >{`${courseCode} Reading list (contains ${listOfReadingLists[0].totalCount} ${_pluralise(
-                                'item',
-                                listOfReadingLists[0].totalCount,
-                            )})`}</StyledBodyText>
+                            <StyledBodyText variant={'span'}>{`${courseCode} Reading list (contains ${
+                                listOfReadingLists[0].totalCount
+                            } ${_pluralise('item', listOfReadingLists[0].totalCount)})`}</StyledBodyText>
                         </a>
                     </StyledItem>
                 )}
                 {!readingListError && !readingListLoading && !!listOfReadingLists && listOfReadingLists.length > 1 && (
                     <StyledItem item xs={12} data-testid="reading-list-link">
-                        <a href={talisSubjectUrl(courseCode)} style={{ display: 'inline-flex', alignItems: 'center' }}>
+                        <a href={talisSubjectUrl(courseCode)}>
                             <SpacedArrowForwardIcon />
-                            <StyledBodyText variant={'span'} style={{ marginBlock: 0 }}>{`${courseCode} (has ${
+                            <StyledBodyText variant={'span'}>{`${courseCode} (has ${
                                 listOfReadingLists.length
                             } ${_pluralise('reading list', listOfReadingLists.length)})`}</StyledBodyText>
                         </a>
