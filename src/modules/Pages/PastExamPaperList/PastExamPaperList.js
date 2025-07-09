@@ -85,9 +85,6 @@ const StyledSimpleViewWrapper = styled('div')(() => ({
     '& .plain': {
         marginTop: '1rem',
     },
-    h3: {
-        color: colourBlack,
-    },
 }));
 
 export const PastExamPaperList = ({ actions, examSearchListError, examSearchList, examSearchListLoading }) => {

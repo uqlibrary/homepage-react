@@ -78,7 +78,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
             <Grid container className={'exams'} data-testid="exam-list-wrapper">
                 {!!examListError && (
                     /* istanbul ignore next */
-                    <Typography>{locale.myCourses.examPapers.unavailable}</Typography>
+                    <StyledBodyText>{locale.myCourses.examPapers.unavailable}</StyledBodyText>
                 )}
 
                 {!examListError && !!examListLoading && (

@@ -29,6 +29,14 @@ const StyledItem = styled(Grid)(() => ({
         },
     },
 }));
+const StyledBodyText = styled(Typography)(() => ({
+    marginTop: '1rem',
+    marginBottom: '2rem',
+    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+    fontSize: '1rem',
+    fontWeight: 400,
+    lineHeight: 1.6,
+}));
 
 export const Guides = ({ headingLevel, guideList, guideListLoading, guideListError }) => {
     const coursecode = !!guideList && !!guideList.length > 0 && guideList[0].coursecode;
@@ -38,10 +46,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                 {locale.myCourses.guides.title}
             </Typography>
             <Grid container className={'guides'}>
-                {!!guideListError && (
-                    /* istanbul ignore next */
-                    <Typography>{locale.myCourses.guides.unavailable}</Typography>
-                )}
+                {!!guideListError && <StyledBodyText>{locale.myCourses.guides.unavailable}</StyledBodyText>}
                 {!guideListError && !!guideListLoading && (
                     <Grid item xs={12} style={{ width: 80, opacity: 0.3 }}>
                         <CircularProgress
@@ -54,7 +59,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                 )}
                 {!guideListError && !guideListLoading && (!guideList || guideList.length === 0) && (
                     <StyledItem item xs={12} data-testid="no-guides">
-                        <Typography>{locale.myCourses.guides.none}</Typography>
+                        <StyledBodyText>{locale.myCourses.guides.none}</StyledBodyText>
                     </StyledItem>
                 )}
                 {!guideListError &&
