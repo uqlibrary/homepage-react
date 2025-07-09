@@ -87,7 +87,6 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                             </StyledItem>
                         );
                     })}
-                {/* guides doesnt display a 'view N more' link because Guides doesnt have a search-by-course-code fn*/}
                 <StyledItem item key={'studylink-0'} xs={12}>
                     <a
                         data-testid="referencingGuides"
@@ -98,8 +97,9 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                         <span>Referencing guides</span>
                     </a>
                 </StyledItem>
+                {/* guides doesnt display a 'view N more' link because Guides doesnt have a search-by-course-code fn*/}
                 <StyledItem item key={'studylink-1'} xs={12}>
-                    <a data-testid="all-guides" id="all-guides" href="https://guides.library.uq.edu.au">
+                    <a data-testid="all-guides" id="all-guides" href="https://guides.library.uq.edu.au/all-guides">
                         <SpacedArrowForwardIcon />
                         <span>All library guides</span>
                     </a>

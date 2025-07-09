@@ -89,7 +89,7 @@ function guides_panel_has_correct_Library_Guides_footer_links_for_a_subject_page
         'https://guides.library.uq.edu.au/referencing',
     );
     cy.get('a[data-testid="all-guides"] span').contains('All library guides');
-    cy.get('a[data-testid="all-guides"]').should('have.attr', 'href', 'https://guides.library.uq.edu.au');
+    cy.get('a[data-testid="all-guides"]').should('have.attr', 'href', 'https://guides.library.uq.edu.au/all-guides');
 }
 
 function guides_panel_loads_correctly_for_a_subject_with_one_guide(guides, coursecode, displayType = 'mycourses') {
