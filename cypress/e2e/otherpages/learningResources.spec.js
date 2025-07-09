@@ -61,7 +61,11 @@ function exams_panel_loads_correctly_for_a_subject_with_many_exams(
     cy.get('[data-testid="learning-resource-subject-exams"]')
         .find(`${headerLevel}`)
         .contains(`${locale.myCourses.examPapers.title} (${totalExamItems} items)`);
-    cy.get('[data-testid="learning-resource-subject-exams"] a').should('have.attr', 'href', examPaperLink);
+    cy.get('[data-testid="learning-resource-subject-exams"] a[data-testid="examPaperItem-0"]').should(
+        'have.attr',
+        'href',
+        examPaperLink,
+    );
     cy.get('[data-testid="learning-resource-subject-exams"] span').contains(
         `${examPeriod} (${examPaperLink.slice(-3).toUpperCase()})`,
     );
@@ -581,7 +585,17 @@ context('The Learning Resources Page', () => {
 
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'HIST1201');
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'The Australian Experience');
-        cy.get('[data-testid="past-exams-HIST1201-content"] > div')
+
+        cy.get('[data-testid="exams-readmore"] a')
+            .should('exist')
+            .contains('Read more about past exam papers')
+            .should(
+                'have.attr',
+                'href',
+                'https://web.library.uq.edu.au/study-and-learning-support/coursework/past-exam-papers',
+            );
+
+        cy.get('[data-testid="exam-list-wrapper"]')
             .children()
             .should('have.length', 1);
         cy.get('[data-testid="examPaperItem-0"]').should('contain', 'Semester 1 2016');
@@ -600,7 +614,16 @@ context('The Learning Resources Page', () => {
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'FREN1010');
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'Introductory French 1');
 
-        cy.get('[data-testid="past-exams-FREN1010-content"] > div')
+        cy.get('[data-testid="exams-readmore"] a')
+            .should('exist')
+            .contains('Read more about past exam papers')
+            .should(
+                'have.attr',
+                'href',
+                'https://web.library.uq.edu.au/study-and-learning-support/coursework/past-exam-papers',
+            );
+
+        cy.get('[data-testid="exam-list-wrapper"]')
             .children()
             .should('have.length', 3);
         cy.get('[data-testid="examPaperItem-0"]').should('contain', 'Semester 2 2019');
@@ -625,7 +648,16 @@ context('The Learning Resources Page', () => {
             'PHIL1002 - Introduction to Philosophy: What is Philosophy?',
         );
 
-        cy.get('[data-testid="past-exams-PHIL1002-content"] > div')
+        cy.get('[data-testid="exams-readmore"] a')
+            .should('exist')
+            .contains('Read more about past exam papers')
+            .should(
+                'have.attr',
+                'href',
+                'https://web.library.uq.edu.au/study-and-learning-support/coursework/past-exam-papers',
+            );
+
+        cy.get('[data-testid="exam-list-wrapper"]')
             .children()
             .should('have.length', 2);
         cy.get('[data-testid="no-exam-papers"]').should('contain', 'No Past Exam Papers for this course');

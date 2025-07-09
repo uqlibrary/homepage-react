@@ -10,7 +10,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+
 import { styled } from '@mui/material/styles';
+import { linkToDrupal } from 'helpers/general';
 
 const StyledItem = styled(Grid)(() => ({
     borderTop: '1px solid #e8e8e8',
@@ -30,6 +33,14 @@ const StyledItem = styled(Grid)(() => ({
             },
         },
     },
+}));
+const StyledBodyText = styled(Typography)(() => ({
+    marginTop: '1rem',
+    marginBottom: '2rem',
+    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+    fontSize: '1rem',
+    fontWeight: 400,
+    lineHeight: 1.6,
 }));
 
 export const PastExamPapers = ({ examList, examListLoading, examListError, headingLevel }) => {
@@ -58,7 +69,13 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
             <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 500 }}>
                 {examPaperTitle}
             </Typography>
-            <Grid container className={'exams'}>
+            <StyledItem item xs={12} style={{ display: 'flex', alignItems: 'center' }} data-testid="exams-readmore">
+                <QuestionMarkIcon style={{ marginRight: 6 }} />
+                <a href={linkToDrupal('/study-and-learning-support/coursework/past-exam-papers')}>
+                    Read more about past exam papers
+                </a>
+            </StyledItem>
+            <Grid container className={'exams'} data-testid="exam-list-wrapper">
                 {!!examListError && (
                     /* istanbul ignore next */
                     <Typography>{locale.myCourses.examPapers.unavailable}</Typography>
@@ -78,7 +95,9 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                 {!examListError && !examListLoading && (!listOfExams || listOfExams.length === 0) && (
                     <React.Fragment>
                         <StyledItem item xs={12}>
-                            <Typography data-testid="no-exam-papers">{locale.myCourses.examPapers.none}</Typography>
+                            <StyledBodyText style={{ marginBlock: 0 }} data-testid="no-exam-papers">
+                                {locale.myCourses.examPapers.none}
+                            </StyledBodyText>
                         </StyledItem>
                         <StyledItem item xs={12}>
                             <a href={locale.myCourses.examPapers.footer.noPastExams.linkOut}>
