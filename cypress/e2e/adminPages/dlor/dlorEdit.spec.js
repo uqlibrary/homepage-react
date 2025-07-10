@@ -1406,7 +1406,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
             cy.get('h1').should('be.visible');
             cy.get('h1').contains('Permission denied');
         });
-        it.only('displays correct page for admin users (list)', () => {
+        it('displays correct page for admin users (list)', () => {
             cy.visit(`http://localhost:2020/digital-learning-hub/edit/kj5t_8yg4_kj4f?user=${DLOR_ADMIN_USER}`);
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
