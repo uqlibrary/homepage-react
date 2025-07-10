@@ -63,84 +63,99 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
         !examListError && !examListLoading && examTotalCount > 0 ? `(${examTotalCount} ${itemCountLabel})` : ''
     }`;
 
+    const showLinkToPaper = (paper, index) => {
+        const sampleIndicator = paper.paperType.toLowerCase().includes('sample') ? '(Sample)' : '';
+        return (
+            <a
+                aria-label={examAriaLabel(paper)}
+                className="exam-paper-item"
+                data-title="examPaperItem"
+                data-testid={`examPaperItem-${index}`}
+                href={paper.url}
+                key={`exam-${index}`}
+            >
+                <span>
+                    {paper.period} ({_extractExtension(paper.url)}) {sampleIndicator}
+                </span>
+            </a>
+        );
+    };
+    const showLinkToExamPaperSearch = (
+        <a href={_courseLink(subject, 'https://www.library.uq.edu.au/exams/course/[courseCode]')}>
+            <SpacedArrowForwardIcon />
+            <span>{`${numberExcessExams} more past ` + _pluralise('paper', numberExcessExams)}</span>
+        </a>
+    );
+
     return (
         <StandardCard fullHeight noHeader standardCardId={`past-exams-${subject}`}>
             <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 500 }}>
                 {examPaperTitle}
             </Typography>
-            <StyledItem item xs={12} style={{ display: 'flex', alignItems: 'center' }} data-testid="exams-readmore">
-                <QuestionMarkIcon style={{ marginRight: 6 }} />
+            <StyledItem item xs={12} data-testid="exams-readmore">
                 <a href={linkToDrupal('/study-and-learning-support/coursework/past-exam-papers')}>
-                    Read more about past exam papers
+                    <QuestionMarkIcon style={{ marginRight: 6 }} />
+                    <span>Read more about past exam papers</span>
                 </a>
             </StyledItem>
             <Grid container className={'exams'} data-testid="exam-list-wrapper">
-                {!!examListError && (
-                    /* istanbul ignore next */
-                    <StyledBodyText>Exam papers list currently unavailable</StyledBodyText>
-                )}
-
-                {!examListError && !!examListLoading && (
-                    <Grid item xs={'auto'} style={{ width: 80, opacity: 0.3 }}>
-                        <CircularProgress
-                            color="primary"
-                            size={20}
-                            data-testid="loading-exampaper-suggestions"
-                            aria-label="loading Past exam papers"
-                        />
-                    </Grid>
-                )}
-
-                {!examListError && !examListLoading && (!listOfExams || listOfExams.length === 0) && (
-                    <React.Fragment>
-                        <StyledItem item xs={12}>
-                            <StyledBodyText style={{ marginBlock: 0 }} data-testid="no-exam-papers">
-                                No Past Exam Papers for this course.
-                            </StyledBodyText>
-                        </StyledItem>
-                        <StyledItem item xs={12}>
-                            <a href="https://www.library.uq.edu.au/exams/">
-                                <SpacedArrowForwardIcon />
-                                <span>Search for other exam papers</span>
-                            </a>
-                        </StyledItem>
-                    </React.Fragment>
-                )}
-                {!examListError &&
-                    !examListLoading &&
-                    !!listOfExams &&
-                    listOfExams.length > 0 &&
-                    listOfExams.map((paper, index) => {
-                        const sampleIndicator = paper.paperType.toLowerCase().includes('sample') ? '(Sample)' : '';
+                {(() => {
+                    if (examListLoading !== false) {
                         return (
-                            <StyledItem item xs={12} key={`examPapers-${index}`}>
-                                <a
-                                    aria-label={examAriaLabel(paper)}
-                                    className="exam-paper-item"
-                                    data-title="examPaperItem"
-                                    data-testid={`examPaperItem-${index}`}
-                                    href={paper.url}
-                                    key={`exam-${index}`}
-                                >
-                                    <span>
-                                        {paper.period} ({_extractExtension(paper.url)}) {sampleIndicator}
-                                    </span>
-                                </a>
-                            </StyledItem>
+                            <Grid item xs={'auto'} style={{ width: 80, opacity: 0.3 }}>
+                                <CircularProgress
+                                    color="primary"
+                                    size={20}
+                                    data-testid="loading-exampaper-suggestions"
+                                    aria-label="loading Past exam papers"
+                                />
+                            </Grid>
                         );
-                    })}
-                {!examListError && !examListLoading && !!numberExcessExams && numberExcessExams > 0 && (
-                    <StyledItem item xs={12} data-testid="exam-more-link">
-                        <a href={_courseLink(subject, 'https://www.library.uq.edu.au/exams/course/[courseCode]')}>
-                            <SpacedArrowForwardIcon />
-                            <span>
-                                {'[numberExcessExams] more past [examNumber]'
-                                    .replace('[numberExcessExams]', numberExcessExams)
-                                    .replace('[examNumber]', _pluralise('paper', numberExcessExams))}
-                            </span>
-                        </a>
-                    </StyledItem>
-                )}
+                    } else if (!!examListError) {
+                        return (
+                            <StyledBodyText data-testid="exams-springshare-error">
+                                Exam papers list currently unavailable
+                            </StyledBodyText>
+                        );
+                    } else if (!listOfExams || listOfExams.length === 0) {
+                        return (
+                            <>
+                                <StyledItem item xs={12}>
+                                    <StyledBodyText style={{ marginBlock: 0 }} data-testid="no-exam-papers">
+                                        No Past Exam Papers for this course.
+                                    </StyledBodyText>
+                                </StyledItem>
+                                <StyledItem item xs={12}>
+                                    <a href="https://www.library.uq.edu.au/exams/">
+                                        <SpacedArrowForwardIcon />
+                                        <span>Search for other exam papers</span>
+                                    </a>
+                                </StyledItem>
+                            </>
+                        );
+                    } else if (!!listOfExams && listOfExams.length > 0) {
+                        return (
+                            <>
+                                {!!listOfExams &&
+                                    listOfExams.length > 0 &&
+                                    listOfExams.map((paper, index) => {
+                                        return (
+                                            <StyledItem item xs={12} key={`examPapers-${index}`}>
+                                                {showLinkToPaper(paper, index)}
+                                            </StyledItem>
+                                        );
+                                    })}
+                                {!!numberExcessExams && numberExcessExams > 0 && (
+                                    <StyledItem item xs={12} data-testid="exam-more-link">
+                                        {showLinkToExamPaperSearch}
+                                    </StyledItem>
+                                )}
+                            </>
+                        );
+                    } else {
+                        return null;
+                    }
+                })()}
             </Grid>
         </StandardCard>
     );

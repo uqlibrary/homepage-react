@@ -564,6 +564,19 @@ context('The Learning Resources Page', () => {
             .should('have.length', 3 + 1);
     });
 
+    function hasExamReadMoreLink() {
+        cy.get('[data-testid="exams-readmore"] a span')
+            .should('exist')
+            .contains('Read more about past exam papers');
+        cy.get('[data-testid="exams-readmore"] a')
+            .should('exist')
+            .should(
+                'have.attr',
+                'href',
+                'https://web.library.uq.edu.au/study-and-learning-support/coursework/past-exam-papers',
+            );
+    }
+
     /**
      * Show a user with 3 classes can see all the variations correctly
      * The mock data has been selected to cover the display options:
@@ -589,14 +602,7 @@ context('The Learning Resources Page', () => {
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'HIST1201');
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'The Australian Experience');
 
-        cy.get('[data-testid="exams-readmore"] a')
-            .should('exist')
-            .contains('Read more about past exam papers')
-            .should(
-                'have.attr',
-                'href',
-                'https://web.library.uq.edu.au/study-and-learning-support/coursework/past-exam-papers',
-            );
+        hasExamReadMoreLink();
 
         cy.get('[data-testid="exam-list-wrapper"]')
             .children()
@@ -617,14 +623,7 @@ context('The Learning Resources Page', () => {
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'FREN1010');
         cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'Introductory French 1');
 
-        cy.get('[data-testid="exams-readmore"] a')
-            .should('exist')
-            .contains('Read more about past exam papers')
-            .should(
-                'have.attr',
-                'href',
-                'https://web.library.uq.edu.au/study-and-learning-support/coursework/past-exam-papers',
-            );
+        hasExamReadMoreLink();
 
         cy.get('[data-testid="exam-list-wrapper"]')
             .children()
@@ -651,14 +650,7 @@ context('The Learning Resources Page', () => {
             'PHIL1002 - Introduction to Philosophy: What is Philosophy?',
         );
 
-        cy.get('[data-testid="exams-readmore"] a')
-            .should('exist')
-            .contains('Read more about past exam papers')
-            .should(
-                'have.attr',
-                'href',
-                'https://web.library.uq.edu.au/study-and-learning-support/coursework/past-exam-papers',
-            );
+        hasExamReadMoreLink();
 
         cy.get('[data-testid="exam-list-wrapper"]')
             .children()
@@ -703,6 +695,10 @@ context('The Learning Resources Page', () => {
         cy.waitUntil(() =>
             cy.get('[data-testid="reading-list-link"]').contains('FREN1010 Reading list (contains 2 items)'),
         );
+
+        cy.get('[data-testid="exams-springshare-error"]')
+            .should('exist')
+            .contains('Exam papers list currently unavailable');
 
         cy.get('[data-testid="guides-springshare-error"]')
             .scrollIntoView()
