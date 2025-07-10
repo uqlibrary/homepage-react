@@ -227,5 +227,23 @@ describe('Digital Learning Hub admin Edit Team', () => {
             cy.get('h1').should('be.visible');
             cy.get('h1').should('contain', 'Digital Learning Hub - Edit Team');
         });
+        // Team list page for team MEMBERS - accessible, shows item list, but no team editing.
+        it('allows team members to view the team edit page, but not edit', () => {
+            cy.visit(`http://localhost:2020/digital-learning-hub/team/manage?user=uqstaff`);
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').should('contain', 'Digital Learning Hub - Team management');
+            cy.get('[data-testid="admin-dlor-team-form-save-button"]')
+                .should('not.exist');
+        });
+        it('disallows non-team members trying to view the team edit page', () => {
+            cy.visit(`http://localhost:2020/digital-learning-hub/team/manage?user=s1111111`);
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').should('contain', 'Digital Learning Hub - Team management');
+            cy.get('[data-testid="admin-dlor-team-form-save-button"]')
+                .should('not.exist');
+            cy.get('[data-testid="dlor-teamlist-no-access"]').should('exist');
+        });
     });
 });
