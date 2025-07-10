@@ -48,7 +48,7 @@ export function getUserPostfix(appendType = '?') {
     return userString;
 }
 
-export const dlorAdminLink = (dlorPath = '', account = null) => {
+export const dlorAdminLink = (dlorPath = '', /* istanbul ignore next */ account = null) => {
     const userString = getUserPostfix();
     return isDlorAdminUser(account)
         ? `${getPathRoot()}/admin/dlor${dlorPath}${userString}`

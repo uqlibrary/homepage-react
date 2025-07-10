@@ -1,4 +1,4 @@
-import { DLOR_ADMIN_USER } from '../../../../support/constants';
+import { DLOR_ADMIN_USER, DLOR_OBJECT_OWNER } from '../../../../support/constants';
 
 describe('Digital Learning Hub admin Teams management', () => {
     beforeEach(() => {
@@ -226,6 +226,14 @@ describe('Digital Learning Hub admin Teams management', () => {
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
             cy.get('h1').should('contain', 'Digital Learning Hub - Team management');
+        });
+        it('displays correct page for non admin users (list)', () => {
+            cy.visit(`http://localhost:2020/digital-learning-hub/team/manage?user=${DLOR_OBJECT_OWNER}`);
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').should('contain', 'Digital Learning Hub - Team management');
+            cy.get('[data-testid="dlor-teamlist-panel-1"]').should('exist');
+            cy.get('[data-testid="admin-dlor-visit-add-button"]').should('not.exist');
         });
     });
 });

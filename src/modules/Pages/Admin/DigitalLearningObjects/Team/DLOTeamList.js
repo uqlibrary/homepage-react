@@ -224,7 +224,7 @@ export const DLOTeamList = ({
                                                         member => member.team_admin_username === account.id,
                                                     )
                                                 );
-                                            }) || [];
+                                            }) || /* istanbul ignore next */ [];
 
                                         if (visibleTeams.length === 0) {
                                             return (

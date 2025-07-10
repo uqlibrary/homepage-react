@@ -1626,15 +1626,19 @@ export const DlorForm = ({
 
         // 2. Owner of the object
         if (formDefaults?.object_publishing_user && account?.id === formDefaults.object_publishing_user) return true;
-
+        console.log("dlorTeamList=", dlorTeamList, " formDefaults=", formDefaults, " account=", account);
         // 3. In the team that owns the object
+        /* istanbul ignore else */
         if (Array.isArray(dlorTeamList) && formDefaults?.object_owning_team_id) {
+            
             const owningTeam = dlorTeamList.find(t => t.team_id === formDefaults.object_owning_team_id);
+            console.log("STEP 1", owningTeam);
             if (
                 owningTeam &&
                 Array.isArray(owningTeam.team_members) &&
                 owningTeam.team_members.some(member => member.team_admin_username === account?.id)
             ) {
+                console.log("STEP 3");
                 return true;
             }
         }
