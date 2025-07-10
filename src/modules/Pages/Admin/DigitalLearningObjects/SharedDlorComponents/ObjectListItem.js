@@ -10,10 +10,13 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 
 import { getDlorViewPageUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { useAccountContext } from 'context';
+import { isDlorAdminUser } from 'helpers/access';
 
 export const ObjectListItem = ({ object, listParentName = 'team' }) => {
+    const { account } = useAccountContext();
     const navigateToDlorEditPage = uuid => {
-        window.location.href = dlorAdminLink(`/edit/${uuid}`);
+        window.location.href = dlorAdminLink(`/edit/${uuid}`, account)
     };
 
     return (

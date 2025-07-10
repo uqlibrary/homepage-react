@@ -11,8 +11,9 @@ describe('helpers', () => {
         expect(splitStringToArrayOnComma('')).toEqual('');
     });
     it('generates admin links correctly', () => {
-        expect(dlorAdminLink('/add')).toEqual('http://localhost/admin/dlor/add');
-        expect(dlorAdminLink()).toEqual('http://localhost/admin/dlor');
+        const account = { id: 'dloradmn', groups: ['lib_dlor_admins']};
+        expect(dlorAdminLink('/add', account)).toEqual('http://localhost/admin/dlor/add');
+        expect(dlorAdminLink(undefined, account)).toEqual('http://localhost/admin/dlor');
     });
     it('generates validates emails correctly', () => {
         expect(isValidEmail('blah')).toEqual(false); // simple

@@ -7,6 +7,7 @@ import DlOTeamForm from 'modules/Pages/Admin/DigitalLearningObjects/Team/DlOTeam
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 import { breadcrumbs } from 'config/routes';
+import { useAccountContext } from 'context';
 
 export const DLOTeamAdd = ({ actions, dlorItemCreating, dlorCreatedItemError, dlorCreatedItem }) => {
     const formDefaults = {
@@ -14,7 +15,7 @@ export const DLOTeamAdd = ({ actions, dlorItemCreating, dlorCreatedItemError, dl
         team_email: '',
         team_manager: '',
     };
-
+    const { account } = useAccountContext();
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.dloradmin.title);
@@ -26,7 +27,7 @@ export const DLOTeamAdd = ({ actions, dlorItemCreating, dlorCreatedItemError, dl
             <DlorAdminBreadcrumbs
                 breadCrumbList={[
                     {
-                        link: dlorAdminLink('/team/manage'),
+                        link: dlorAdminLink('/team/manage', account),
                         title: 'Team management',
                     },
                     {
