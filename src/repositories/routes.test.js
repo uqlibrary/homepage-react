@@ -306,7 +306,7 @@ describe('Backend routes method', () => {
             });
             expect(routes.TEST_TAG_USER_LIST_API()).toEqual({ apiUrl: 'test-and-tag/users/all' });
 
-            expect(routes.DLOR_ALL_API()).toEqual({ apiUrl: 'dlor/public/list/full' }); // is admin in staging
+            expect(routes.DLOR_ALL_API()).toEqual({ apiUrl: 'dlor/public/list/full' });
             expect(routes.DLOR_ALL_CURRENT_API()).toEqual({ apiUrl: 'dlor/public/list/current' });
             expect(routes.DLOR_GET_BY_ID_API({ id: 100 })).toEqual({ apiUrl: 'dlor/public/find/100' });
             expect(routes.DLOR_TEAM_LIST_API()).toEqual({ apiUrl: 'dlor/public/teams/list' });
