@@ -12,13 +12,23 @@ context('Training', () => {
 
         cy.get('[data-testid="training-event-detail-button-0"]')
             .should('exist')
-            .contains('EndNote: getting started');
+            .scrollIntoView();
+        cy.get('[data-testid="training-event-detail-button-0"]').contains('EndNote: getting started');
+        cy.get('[data-testid="training-event-date-range-0"]')
+            .should('exist')
+            .contains('24 November');
         cy.get('[data-testid="training-event-detail-button-1"]')
             .should('exist')
             .contains('UQRDM for researchers');
+        cy.get('[data-testid="training-event-date-range-1"]')
+            .should('exist')
+            .contains('24 - 25 November');
         cy.get('[data-testid="training-event-detail-button-2"]')
             .should('exist')
             .contains('SciFinder n');
+        cy.get('[data-testid="training-event-date-range-2"]')
+            .should('exist')
+            .contains('24 November - 1 December');
     });
 
     it('list is Accessible', () => {
@@ -63,7 +73,7 @@ context('Training', () => {
         });
     });
 
-    it('detail pane shows the number of places correctly', () => {
+    it('detail pane shows the details correctly', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
 
@@ -78,12 +88,18 @@ context('Training', () => {
         // when placesRemaining > 0 we see 'places available'
         cy.get('div[data-testid="training-events-detail-2824657"]').contains('Places still available');
         cy.get('[data-testid="training-event-detail-training-login-button"]').contains('Log in and book now');
+        // date is correct
+        cy.get('[data-testid="training-detail-date-range-2824657"]')
+            .should('exist')
+            .should('be.visible')
+            .contains('24 November at 10am');
+
         cy.get('button[data-testid="training-event-detail-close-button"]').click(); // close it
 
         cy.waitUntil(() =>
             cy.get('button[data-testid="training-event-detail-button-1"]').contains('UQRDM for researchers'),
         );
-        cy.get('button[data-testid="training-event-detail-button-1"]').click(); // open it
+        cy.get('button[data-testid="training-event-detail-button-1"]').click(); // open
 
         cy.waitUntil(() =>
             cy
@@ -95,6 +111,12 @@ context('Training', () => {
         );
         cy.get('div[data-testid="training-events-detail-2870806"]').contains('Event is fully booked');
         cy.get('[data-testid="training-event-detail-training-login-button"]').contains('Log in to join wait list');
+        // date is correct
+        cy.get('[data-testid="training-detail-date-range-2870806"]')
+            .should('exist')
+            .should('be.visible')
+            .contains('24 November at 9am - 25 November at 4pm');
+
         cy.get('button[data-testid="training-event-detail-close-button"]').click(); // close it
 
         cy.waitUntil(() => cy.get('button[data-testid="training-event-detail-button-2"]').contains('SciFinder n'));
@@ -108,6 +130,10 @@ context('Training', () => {
         );
         cy.get('div[data-testid="training-events-detail-2873532"]').contains('Booking is not required');
         cy.get('[data-testid="training-event-detail-training-login-button"]').contains('Log in for more details');
+        cy.get('[data-testid="training-detail-date-range-2873532"]')
+            .should('exist')
+            .should('be.visible')
+            .contains('24 November at 9am - 1 December at 3pm');
     });
 
     it('can close a detail pane from a click', () => {
