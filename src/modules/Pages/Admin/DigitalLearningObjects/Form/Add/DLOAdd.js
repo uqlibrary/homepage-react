@@ -26,6 +26,10 @@ export const DLOAdd = ({
     dlorFilterList,
     dlorFilterListLoading,
     dlorFilterListError,
+    dlorAdminNotesLoading,
+    dlorAdminNotesLoaded,
+    dlorAdminNotesLoadError,
+    dlorAdminNotes,
 }) => {
     const { account } = useAccountContext();
     console.log('ACCOUNT', account);
@@ -85,7 +89,7 @@ export const DLOAdd = ({
                         <InformationBox
                             prompt="Submit this form to request your digital learning object to be added to the Digital Learning Hub."
                             identifier="UserAdd"
-                            linkUrl="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects#s-lg-box-22746342"
+                            linkUrl="https://guides.library.uq.edu.au/research-and-teaching-staff/link-embed-resources/digital-learning-objects#instructions"
                             linkText="Submit an object has instructions and information."
                         />
                     )}
@@ -111,6 +115,10 @@ export const DLOAdd = ({
                         dlorFileTypeList={dlorFileTypeList}
                         dlorFileTypeListLoading={dlorFileTypeListLoading}
                         dlorFileTypeListError={dlorFileTypeListError}
+                        dlorAdminNotesLoading={dlorAdminNotesLoading}
+                        dlorAdminNotesLoaded={dlorAdminNotesLoaded}
+                        dlorAdminNotesLoadError={dlorAdminNotesLoadError}
+                        dlorAdminNotes={dlorAdminNotes}
                         mode="add"
                     />
                 </section>
@@ -133,6 +141,10 @@ DLOAdd.propTypes = {
     dlorFilterList: PropTypes.array,
     dlorFilterListLoading: PropTypes.bool,
     dlorFilterListError: PropTypes.any,
+    dlorAdminNotesLoading: PropTypes.bool,
+    dlorAdminNotesLoaded: PropTypes.bool,
+    dlorAdminNotesLoadError: PropTypes.any,
+    dlorAdminNotes: PropTypes.array,
 };
 
 export default DLOAdd;

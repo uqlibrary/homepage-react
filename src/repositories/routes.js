@@ -260,6 +260,7 @@ export const DLOR_UPDATE_FACET_API = id => ({ apiUrl: `dlor/admin/facet/${id}` }
 export const DLOR_DELETE_FACET_API = id => ({ apiUrl: `dlor/admin/facet/${id}` });
 export const DLOR_DEMOGRAPHICS_REPORT_API = () => ({ apiUrl: 'dlor/admin/demographics/all' });
 export const DLOR_FAVOURITES_REPORT_API = () => ({ apiUrl: 'dlor/admin/favourites' });
+export const DLOR_ADMIN_NOTES_API = uuid => ({ apiUrl: `dlor/admin/object/notes/${uuid}` });
 
 const productionRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage';
 const stagingRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage';

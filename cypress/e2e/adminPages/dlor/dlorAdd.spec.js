@@ -54,6 +54,8 @@ describe('Add an object to the Digital Learning Hub', () => {
                             .should('have.value', today);
                     });
 
+                TypeCKEditor('This is the admin notes');
+
                 // go to the second panel, Description
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -597,6 +599,8 @@ describe('Add an object to the Digital Learning Hub', () => {
                     .should('exist')
                     .type('john@example.com');
 
+                TypeCKEditor('This is the admin notes');
+
                 // go to the second panel, Description
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -680,6 +684,7 @@ describe('Add an object to the Digital Learning Hub', () => {
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
                 const expectedValues = {
+                    object_admin_notes: '<p>This is the admin notes</p>',
                     object_title: 'xxxxxxxx',
                     object_description:
                         '<p>new descriptionxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>',

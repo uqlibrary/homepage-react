@@ -196,18 +196,44 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
         setEventDetail(null);
     };
     moment.tz.setDefault('Australia/Brisbane');
-    const eventTimeLong = eventTime =>
-        moment(eventTime)
-            .calendar(null, {
-                sameDay: '[Today,] dddd D MMMM [at] h.mma',
-                nextDay: '[Tomorrow,] dddd D MMMM [at] h.mma',
-                nextWeek: 'dddd D MMMM [at] h.mma',
-                lastDay: '[Yesterday]  D MMMM [at] h.mma',
-                lastWeek: '[Last] dddd  D MMMM [at] h.mma',
-                sameElse: 'D MMMM [at] h.mma',
-            })
+    const eventTimeLong = eventInternals => {
+        const calendarOptions = {
+            sameDay: '[Today,] dddd D MMMM [at] h.mma',
+            nextDay: '[Tomorrow,] dddd D MMMM [at] h.mma',
+            nextWeek: 'dddd D MMMM [at] h.mma',
+            lastDay: '[Yesterday]  D MMMM [at] h.mma',
+            lastWeek: '[Last] dddd  D MMMM [at] h.mma',
+            sameElse: 'D MMMM [at] h.mma',
+        };
+        let dateString = moment(eventInternals.start)
+            .calendar(null, calendarOptions)
             .replace('.00', '');
-    const eventDate = eventTime => moment(eventTime).format('D MMMM');
+        const startDate = moment(eventInternals.start).format('MMDD');
+        const endDate = moment(eventInternals.end).format('MMDD');
+        if (startDate !== endDate) {
+            dateString +=
+                ' - ' +
+                moment(eventInternals.end)
+                    .calendar(null, calendarOptions)
+                    .replace('.00', '');
+        }
+        return dateString;
+    };
+    const eventDateRange = eventInternals => {
+        let response = moment(eventInternals.start).format('D MMMM');
+        const startDate = moment(eventInternals.start).format('MMDD');
+        const endDate = moment(eventInternals.end).format('MMDD');
+        if (startDate !== endDate) {
+            if (moment(eventInternals.start).format('MM') === moment(eventInternals.end).format('MM')) {
+                response =
+                    moment(eventInternals.start).format('D') + ' - ' + moment(eventInternals.end).format('D MMMM');
+            } else {
+                response += ' - ' + moment(eventInternals.end).format('D MMMM');
+            }
+        }
+        console.log('### dates:', startDate, endDate, response);
+        return response;
+    };
     const bookingText = ev => {
         /*
           if bookingSettings is null then bookings are not required
@@ -325,8 +351,11 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                             classes={{ root: 'linkButton' }}
                                                             fullWidth
                                                         >
-                                                            <div className={'listEventItem listEventDate'}>
-                                                                {eventDate(event.start)}
+                                                            <div
+                                                                className={'listEventItem listEventDate'}
+                                                                data-testid={`training-event-date-range-${index}`}
+                                                            >
+                                                                {eventDateRange(event)}
                                                             </div>
                                                             <div className={'listEventItem'}>
                                                                 <span className={'listEventTitle'}>
@@ -398,8 +427,13 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                 <EventIcon />
                                             </Tooltip>
                                         </Grid>
-                                        <Grid item xs={10} className={'detailMeta'}>
-                                            {eventTimeLong(eventDetail.start)}
+                                        <Grid
+                                            item
+                                            xs={10}
+                                            className={'detailMeta'}
+                                            data-testid={`training-detail-date-range-${eventDetail.entityId}`}
+                                        >
+                                            {eventTimeLong(eventDetail)}
                                         </Grid>
                                         <Grid item xs={1} className={'detailMeta'}>
                                             <Tooltip

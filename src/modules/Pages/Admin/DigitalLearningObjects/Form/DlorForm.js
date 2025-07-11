@@ -59,6 +59,19 @@ import { breadcrumbs } from 'config/routes';
 import { pluralise } from 'helpers/general';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import parse from 'html-react-parser';
+
 const moment = require('moment');
 
 const StyledErrorCountBadge = styled(Badge)(() => ({
@@ -126,10 +139,15 @@ export const DlorForm = ({
     dlorFileTypeList,
     dlorFileTypeListLoading,
     dlorFileTypeListError,
+    dlorAdminNotesLoading,
+    dlorAdminNotesLoaded,
+    dlorAdminNotesLoadError,
+    dlorAdminNotes,
     formDefaults,
     mode,
 }) => {
     console.log('Form Defaults form', formDefaults);
+    console.log('Admin notes', dlorAdminNotes);
     const [cookies, setCookie] = useCookies();
     const { account } = useAccountContext();
 
@@ -212,6 +230,13 @@ export const DlorForm = ({
             }
         }
     }, [dlorTeamList, dlorTeamListError, dlorTeamListLoading, mode]);
+
+    useEffect(() => {
+        if (dlorItem && dlorItem?.object_public_uuid) {
+            actions.loadDlorAdminNotes(dlorItem.object_public_uuid);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dlorItem, actions]);
 
     // useEffect(() => {
     //     console.log("UseEffect formDefaults", formDefaults, formValues);
@@ -386,6 +411,12 @@ export const DlorForm = ({
             });
         return fourthPanelErrorCount;
     }
+
+    const handleAdminNotesEditorChange = (fieldname, newContent) => {
+        const newValues = { ...formValues, [fieldname]: newContent };
+
+        setFormValues(newValues);
+    };
 
     const handleEditorChange = (fieldname, newContent) => {
         setSummarySuggestionOpen(true);
@@ -695,6 +726,77 @@ export const DlorForm = ({
                         </>
                     )}
                 </Grid>
+                {isDlorAdminUser(account) && (
+                    <>
+                        <Grid item xs={12}>
+                            <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
+                                <InputLabel htmlFor="object_admin_notes">Admin Notes</InputLabel>
+                                <CKEditor
+                                    id="object_admin_notes"
+                                    data-testid="object-admin-notes"
+                                    sx={{ width: '100%' }}
+                                    editor={ClassicEditor}
+                                    config={editorConfig}
+                                    data={formValues?.object_admin_notes || ''}
+                                    onReady={editor => {
+                                        editor.editing.view.change(writer => {
+                                            writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
+                                        });
+                                    }}
+                                    onChange={(event, editor) => {
+                                        const htmlData = editor.getData();
+                                        handleAdminNotesEditorChange('object_admin_notes', htmlData);
+                                    }}
+                                />
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Accordion sx={{ marginTop: 2 }}>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                    <Typography variant="p">Admin Notes</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <TableContainer component={Paper}>
+                                        <Table size="small">
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell>
+                                                        <strong>Username</strong>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <strong>User Note</strong>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <strong>Date</strong>
+                                                    </TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {!!dlorAdminNotes &&
+                                                    dlorAdminNotes.map((note, idx) => (
+                                                        <TableRow key={idx}>
+                                                            <TableCell data-testid={`admin-note-username-${idx}`}>
+                                                                {note.object_admin_username}
+                                                            </TableCell>
+                                                            <TableCell data-testid={`admin-note-content-${idx}`}>
+                                                                {parse(note.object_admin_note_content)}
+                                                            </TableCell>
+                                                            <TableCell data-testid={`admin-note-date-${idx}`}>
+                                                                {moment(note.created_at, 'DD/MM/YYYY HH:mm')
+                                                                    .tz('Australia/Brisbane')
+                                                                    .add(10, 'hours')
+                                                                    .format('DD/MM/YYYY, h:mm A')}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    ))}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </AccordionDetails>
+                            </Accordion>
+                        </Grid>
+                    </>
+                )}
             </>
         ),
         [formValues, showTeamForm, teamSelectRef.current, dlorTeamList, mode, formDefaults],
@@ -861,7 +963,7 @@ export const DlorForm = ({
                         <FormControl variant="standard" fullWidth>
                             <FormLabel id="object_status_label">Object publication status</FormLabel>
                             <RadioGroup
-                                aria-labelledby="demo-radio-object_status_label-group-label"
+                                aria-labelledby="demo-radio-object_status_label-group"
                                 defaultValue="new"
                                 name="object_status_radio-buttons-group"
                                 row
@@ -1234,7 +1336,7 @@ export const DlorForm = ({
             const radioGroupName = !!filterItem && `object_facet_${filterItem.facet_type_slug}_radio-buttons-group`;
             result = (
                 <RadioGroup
-                    aria-labelledby={`demo-radio-object_${filterItem.facet_type_slug}_label-group-label`}
+                    aria-labelledby={`demo-radio-object_${filterItem.facet_type_slug}_label-group`}
                     name={radioGroupName}
                     value={filterItem.facet_id}
                     onChange={handleFacetChange(filterItem.id)}
@@ -1293,7 +1395,7 @@ export const DlorForm = ({
                             <Typography
                                 component={'h3'}
                                 variant={'h7'}
-                                id={`demo-radio-object_${filterItem.facet_type_slug}_label-group-label`}
+                                id={`demo-radio-object_${filterItem.facet_type_slug}_label-group`}
                             >
                                 {!!filterItem.facet_type_name && filterItem.facet_type_name}{' '}
                                 {filterItem?.facet_type_required && <span title="Required field">*</span>}
@@ -1587,9 +1689,24 @@ export const DlorForm = ({
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
-        return mode === 'add'
-            ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
-            : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend, isDlorAdminUser(account));
+        const saveDlorPromise =
+            mode === 'add'
+                ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
+                : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend, isDlorAdminUser(account));
+
+        return saveDlorPromise.then(() => {
+            // Save admin notes after DLO is created or updated
+            if (
+                isDlorAdminUser(account) &&
+                formValues.object_admin_notes !==
+                    (mode === 'edit' ? dlorItem?.object_admin_notes : /* istanbul ignore next */ '')
+            ) {
+                const objectUuid =
+                    mode === 'edit' ? dlorItem?.object_public_uuid : dlorSavedItem?.data?.object_public_uuid;
+                const noteContent = formValues.object_admin_notes;
+                actions.saveDlorAdminNote(objectUuid, noteContent);
+            }
+        });
     };
 
     const confirmationTitleAdmin = mode === 'add' ? 'The object has been created' : 'Changes have been saved';
@@ -1808,6 +1925,10 @@ DlorForm.propTypes = {
     dlorSavedItem: PropTypes.object,
     dlorItemSaving: PropTypes.bool,
     dlorSavedItemError: PropTypes.any,
+    dlorAdminNotesLoading: PropTypes.bool,
+    dlorAdminNotesLoaded: PropTypes.bool,
+    dlorAdminNotesLoadError: PropTypes.any,
+    dlorAdminNotes: PropTypes.array,
     formDefaults: PropTypes.object,
     mode: PropTypes.string,
 };

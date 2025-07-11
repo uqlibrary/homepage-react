@@ -51,6 +51,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
                 });
 
+                TypeCKEditor('This is the admin notes');
                 // go to panel 2
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -122,6 +123,20 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]').contains(
                     'Edit object: Advanced literature searching',
                 );
+
+                // Admin notes
+                // Check Open.
+                cy.get('[data-testid="ExpandMoreIcon"]')
+                    .should('exist')
+                    .click();
+                // Check Note 1.
+                cy.get('[data-testid="admin-note-username-0"]')
+                    .should('exist')
+                    .contains('uqtest1');
+                // Check Note 2.
+                cy.get('[data-testid="admin-note-username-1"]')
+                    .should('exist')
+                    .contains('uqabcdef');
 
                 // team editor
 
@@ -610,6 +625,8 @@ describe('Edit an object on the Digital Learning Hub', () => {
                     .should('exist')
                     .type('john@example.com');
 
+                TypeCKEditor('This is the admin notes');
+
                 // go to the second panel, Description
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -751,6 +768,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
                 // acts as check of what we sent to api
 
                 const expectedValues = {
+                    object_admin_notes: '<p>This is the admin notes</p>',
                     object_title: 'Advanced literature searchingxx',
                     object_description:
                         '<p>new description xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>',
