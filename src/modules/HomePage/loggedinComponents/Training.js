@@ -231,7 +231,6 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                 response += ' - ' + moment(eventInternals.end).format('D MMMM');
             }
         }
-        console.log('### dates:', startDate, endDate, response);
         return response;
     };
     const bookingText = ev => {
