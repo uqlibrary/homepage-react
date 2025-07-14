@@ -821,6 +821,9 @@ mock.onGet(/dlor\/public\/find\/.*/)
 
 mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
+        if (responseType === 'springshareError') {
+            return [500, {}];
+        }
         return [200, exams_FREN1010];
     })
     .onGet('exams/course/FREN1011/summary')

@@ -419,6 +419,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     !!examSearchList?.periods &&
                     !!examSearchList.papers.length > 0
                 ) {
+                    console.log('originalExamPaperList?.papers?.length=', originalExamPaperList?.papers?.length);
                     return (
                         <>
                             {sampleExamPaperList?.papers?.length > 0 && (
@@ -448,11 +449,19 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                 >
                                     Original past exam papers
                                 </Typography>
-                                {originalExamPaperList?.papers?.length === 0 ? (
+                                {originalExamPaperList?.papers?.length === 0 && (
                                     <StyledBodyText data-testid="no-original-papers-provided">
                                         No original papers provided.
                                     </StyledBodyText>
-                                ) : (
+                                )}
+                                {originalExamPaperList?.papers?.length === 1 && (
+                                    <SimpleLayout
+                                        examList={originalExamPaperList}
+                                        showMobileView={isMobileView}
+                                        showFullDetails
+                                    />
+                                )}
+                                {originalExamPaperList?.papers?.length > 1 && (
                                     <>
                                         {isMobileView ? (
                                             <SimpleLayout
