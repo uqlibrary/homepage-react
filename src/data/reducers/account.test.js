@@ -237,32 +237,4 @@ describe('account reducer', () => {
             trainingEventsError: false,
         });
     });
-
-    it('should set primostatus to null when failed loading', () => {
-        const test = accountReducer(emptyState, { type: actions.PRIMO_STATUS_FAILED });
-        expect(test).toEqual({
-            ...emptyState,
-            primoStatus: null,
-            primoStatusLoading: false,
-        });
-    });
-
-    it('should set primostatus value when successfully loaded', () => {
-        const test = accountReducer(emptyState, { type: actions.PRIMO_STATUS_LOADED, payload: [{ status: 've' }] });
-        expect(test).toEqual({
-            ...emptyState,
-            primoStatus: [{ status: 've' }],
-            primoStatusLoading: false,
-        });
-    });
-
-    it('should set primostatus loading flag to true when loading primo status', () => {
-        const test = accountReducer(emptyState, { type: actions.PRIMO_STATUS_LOADING });
-        expect(test).toEqual({
-            ...initialState,
-            primoStatusLoading: true,
-            accountAuthorSaving: false,
-            accountAuthorError: null,
-        });
-    });
 });

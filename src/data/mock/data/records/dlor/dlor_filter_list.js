@@ -271,7 +271,7 @@ export default {
             "facet_type_order": 6,
             "facet_type_name": "Licence",
             "facet_type_slug": "licence",
-            "facet_type_help_public": "<span>Creative Commons (CC) Licences allow you to reuse the digital learning objects. Learn more about <a href=\"https://itali.uq.edu.au/teaching-guidance/curriculum-design-and-review/graduate-attributes\">CC licences</a>.</span>",
+            "facet_type_help_public": "<span>Creative Commons (CC) Licences allow you to reuse the digital learning objects. Learn more about <a href=\"https://guides.library.uq.edu.au/research-and-teaching-staff/open-educational-resources/creative-commons\">CC licences</a>.</span>",
             "facet_type_help_admin": "lic",
             "facet_type_required": true,
             "facet_type_number": 'exactly-one',
