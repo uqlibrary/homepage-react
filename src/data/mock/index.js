@@ -816,8 +816,19 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .onPost(/dlor\/admin\/object\/notes\/.*/)
     .reply(() => {
         return[200, dlor_admin_notes];
+    })
+    .onPost(/dlor\/admin\/teammember/)
+    .reply(() => {
+        return [200, { data: [] }];
+    })
+    .onPut(/dlor\/auth\/teammember\/\d+/)
+    .reply(() => {
+        return [200, { data: { success: true } }];
+    })
+    .onDelete(/dlor\/admin\/teammember\/\d+/)
+    .reply(() => {
+        return [200, { data: { success: true } }];
     });
-
 
 mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {

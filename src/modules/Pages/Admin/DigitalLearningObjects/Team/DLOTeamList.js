@@ -240,36 +240,38 @@ export const DLOTeamList = ({
                                                 <Grid container alignItems="center">
                                                     <Grid
                                                         item
-                                                        xs={isDlorAdminUser(account) ? 10 : 12}
+                                                        xs={10}
                                                         data-testid={`dlor-teamlist-panel-${team?.team_id}`}
                                                     >
                                                         <Typography variant="body1">{team?.team_name}</Typography>
                                                     </Grid>
-                                                    {isDlorAdminUser(account) && (
-                                                        <>
-                                                            <Grid item xs={1}>
-                                                                {team?.objects_count === 0 && (
-                                                                    <IconButton
-                                                                        data-testid={`dlor-teamlist-delete-${team?.team_id}`}
-                                                                        sx={{ height: '40px' }}
-                                                                        onClick={() => confirmDelete(team?.team_id)}
-                                                                    >
-                                                                        <DeleteForeverIcon />
-                                                                    </IconButton>
-                                                                )}
-                                                            </Grid>
-                                                            <Grid item xs={1}>
-                                                                <IconButton
-                                                                    data-testid={`dlor-teamlist-edit-${team?.team_id}`}
-                                                                    onClick={() =>
-                                                                        navigateToTeamEditPage(team?.team_id)
-                                                                    }
-                                                                >
-                                                                    <EditIcon />
-                                                                </IconButton>
-                                                            </Grid>
-                                                        </>
-                                                    )}
+                                                    <Grid item xs={1}>
+                                                        {team?.objects_count === 0 && (
+                                                            <IconButton
+                                                                data-testid={`dlor-teamlist-delete-${team?.team_id}`}
+                                                                sx={{ height: '40px' }}
+                                                                onClick={() => confirmDelete(team?.team_id)}
+                                                                disabled={!isDlorAdminUser(account)}
+                                                            >
+                                                                <DeleteForeverIcon />
+                                                            </IconButton>
+                                                        )}
+                                                    </Grid>
+                                                    <Grid item xs={1}>
+                                                        <IconButton
+                                                            data-testid={`dlor-teamlist-edit-${team?.team_id}`}
+                                                            onClick={() => navigateToTeamEditPage(team?.team_id)}
+                                                            disabled={
+                                                                !(
+                                                                    isDlorAdminUser(account) ||
+                                                                    (Array.isArray(team.team_members) &&
+                                                                        team.team_members.some(m => m.team_admin_username === account.id))
+                                                                )
+                                                            }
+                                                        >
+                                                            <EditIcon />
+                                                        </IconButton>
+                                                    </Grid>
                                                 </Grid>
                                                 <Grid container>
                                                     <Grid item xs={12} sx={{ marginBottom: '24px' }}>

@@ -262,6 +262,10 @@ export const DLOR_DEMOGRAPHICS_REPORT_API = () => ({ apiUrl: 'dlor/admin/demogra
 export const DLOR_FAVOURITES_REPORT_API = () => ({ apiUrl: 'dlor/admin/favourites' });
 export const DLOR_ADMIN_NOTES_API = uuid => ({ apiUrl: `dlor/admin/object/notes/${uuid}` });
 
+export const DLOR_CREATE_TEAM_ADMIN_API = () => ({apiUrl: `dlor/admin/teammember`});
+export const DLOR_EDIT_TEAM_ADMIN_API = id => ({apiUrl: `dlor/auth/teammember/${id}`});
+export const DLOR_DELETE_TEAM_ADMIN_API = id => ({apiUrl: `dlor/admin/teammember/${id}`});
+
 const productionRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage';
 const stagingRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage';
 export const DRUPAL_ARTICLE_API = () => {
