@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -229,8 +228,6 @@ export const AccountPanel = ({
     printBalance,
     printBalanceLoading,
     printBalanceError,
-    primoStatus,
-    primoStatusLoading,
 }) => {
     function totalFines(fines) {
         return fines.reduce((sum, fine) => {
@@ -251,67 +248,33 @@ export const AccountPanel = ({
         }
         return <> ({`${loans?.total_holds_count}`})</>;
     }
-    const useBOLink = !primoStatus?.homepageStatus || primoStatus?.homepageStatus === 'bo';
-    const searchHistoryLink = useBOLink
-        ? 'https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=search_history'
-        : 'https://search.library.uq.edu.au/discovery/favorites?vid=61UQ_INST:61UQ&lang=en&section=search_history';
-    const savedSearchesLink = useBOLink
-        ? 'https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=queries'
-        : 'https://search.library.uq.edu.au/discovery/favorites?vid=61UQ_INST:61UQ&lang=en&section=queries';
-    const showRequestsLink = useBOLink
-        ? 'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=requests&lang=en_US'
-        : 'https://search.library.uq.edu.au/discovery/account?vid=61UQ_INST:61UQ&section=requests&lang=en';
-    const showLoansLink = useBOLink
-        ? 'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US'
-        : 'https://search.library.uq.edu.au/discovery/account?vid=61UQ_INST:61UQ&section=loans&lang=en';
-    const showFinesLink = useBOLink
-        ? 'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=fines&lang=en_US'
-        : 'https://search.library.uq.edu.au/discovery/account?vid=61UQ_INST:61UQ&section=fines&lang=en';
 
-    const SpacerWhilePrimoStatusLoads = () => <div style={{ height: '30px' }} />;
+    const primoRoot = 'https://search.library.uq.edu.au/discovery';
     return (
         <StandardCard subCard noPadding primaryHeader standardCardId="catalogue-panel" title="Your library account">
             <StyledUl>
                 <li data-testid={'show-searchhistory'}>
-                    {!!primoStatusLoading ? (
-                        <CircularProgress
-                            color="inherit"
-                            size={20}
-                            id="accountPanel-progress"
-                            data-testid="accountPanel-building-progress"
-                        />
-                    ) : (
-                        <Link to={searchHistoryLink}>
-                            {dSTimeClockFileSearchIcon} <span>Search history</span>
-                        </Link>
-                    )}
+                    <Link to={`${primoRoot}/favorites?vid=61UQ_INST:61UQ&lang=en&section=search_history`}>
+                        {dSTimeClockFileSearchIcon} <span>Search history</span>
+                    </Link>
                 </li>
                 <li data-testid={'show-savedsearches'}>
-                    {!!primoStatusLoading ? (
-                        <SpacerWhilePrimoStatusLoads />
-                    ) : (
-                        <Link to={savedSearchesLink}>
-                            {dsStarIcon} <span>Saved searches</span>
-                        </Link>
-                    )}
+                    <Link to={`${primoRoot}/favorites?vid=61UQ_INST:61UQ&lang=en&section=queries`}>
+                        {dsStarIcon} <span>Saved searches</span>
+                    </Link>
                 </li>
                 <li data-testid={'show-requests'}>
-                    {!!primoStatusLoading ? (
-                        <SpacerWhilePrimoStatusLoads />
-                    ) : (
-                        <Link to={showRequestsLink}>
-                            {dsStudyBookIcon} <span>Requests {markedRequestQuantity()}</span>
-                        </Link>
-                    )}
+                    <Link to={`${primoRoot}/account?vid=61UQ_INST:61UQ&section=requests&lang=en`}>
+                        {dsStudyBookIcon} <span>Requests {markedRequestQuantity()}</span>
+                    </Link>
                 </li>
                 <li data-testid={'show-loans'}>
-                    {!!primoStatusLoading ? (
-                        <SpacerWhilePrimoStatusLoads />
-                    ) : (
-                        <Link to={showLoansLink} data-analyticsid={'pp-loans-menu-button'}>
-                            {dsBookCloseBookmarkIcon} <span>Loans {markedLoanQuantity()}</span>
-                        </Link>
-                    )}
+                    <Link
+                        to={`${primoRoot}/account?vid=61UQ_INST:61UQ&section=loans&lang=en`}
+                        data-analyticsid={'pp-loans-menu-button'}
+                    >
+                        {dsBookCloseBookmarkIcon} <span>Loans {markedLoanQuantity()}</span>
+                    </Link>
                 </li>
                 <li data-testid={'show-papercut'}>
                     <PaperCutMenu
@@ -334,11 +297,13 @@ export const AccountPanel = ({
             {!!loans && loans.total_fines_count > 0 && (
                 <StyledAlertDiv data-testid={'show-fines'}>
                     <UserAttention titleText={'Fines and charges'}>
-                        {!primoStatusLoading && (
-                            <Link to={showFinesLink} id="fines-and-charges-link" data-analyticsid={'pp-fines-tooltip'}>
-                                <span>${`${totalFines(loans?.fines)}`} payable</span>
-                            </Link>
-                        )}
+                        <Link
+                            to={`${primoRoot}/account?vid=61UQ_INST:61UQ&section=fines&lang=en`}
+                            id="fines-and-charges-link"
+                            data-analyticsid={'pp-fines-tooltip'}
+                        >
+                            <span>${`${totalFines(loans?.fines)}`} payable</span>
+                        </Link>
                     </UserAttention>
                 </StyledAlertDiv>
             )}
@@ -353,8 +318,6 @@ AccountPanel.propTypes = {
     printBalance: PropTypes.object,
     printBalanceLoading: PropTypes.bool,
     printBalanceError: PropTypes.bool,
-    primoStatus: PropTypes.object,
-    primoStatusLoading: PropTypes.bool,
 };
 
 export default AccountPanel;

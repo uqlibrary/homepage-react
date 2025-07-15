@@ -15,12 +15,6 @@ export const TRAINING_API = (numEvents = 6, filterId = 104) => ({
     options: { params: { take: numEvents, 'filterIds[]': filterId, ts: `${new Date().getTime()}` } },
 });
 
-// Primo status API
-export const PRIMO_STATUS_API = () => ({
-    apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage/searchportal-status.json',
-    options: { params: { ts: `${new Date().getTime()}` } },
-});
-
 // Papercut balance API
 export const PRINTING_API = () => ({
     apiUrl: 'papercut/balance',

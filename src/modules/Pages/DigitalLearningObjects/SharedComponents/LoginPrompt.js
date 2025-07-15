@@ -40,7 +40,7 @@ const LoginPrompt = ({ account, narrower = false, prompt = 'for extra features',
                         &nbsp;{prompt}
                         {'  '}&nbsp;
                         <a
-                            href="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects#s-lg-box-22922915"
+                            href="https://guides.library.uq.edu.au/research-and-teaching-staff/link-embed-resources/digital-learning-objects#s-lg-box-22922915"
                             target="_blank"
                             aria-label='Learn more about "Digital Learning Objects"'
                         >

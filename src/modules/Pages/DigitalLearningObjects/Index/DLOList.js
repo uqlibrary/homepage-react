@@ -1305,7 +1305,7 @@ export const DLOList = ({
                     <Grid item xs={12} md="auto">
                         <Typography component={'p'} sx={{ fontSize: '1.2em', fontWeight: 400 }}>
                             Find out{' '}
-                            <a href="https://guides.library.uq.edu.au/teaching/link-embed-resources/digital-learning-objects">
+                            <a href="https://guides.library.uq.edu.au/research-and-teaching-staff/link-embed-resources/digital-learning-objects">
                                 how to use our digital learning objects
                             </a>
                             .

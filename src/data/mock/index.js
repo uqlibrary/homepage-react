@@ -142,16 +142,6 @@ mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl).reply(() => {
     return [404, {}];
 });
 
-mock.onGet(routes.PRIMO_STATUS_API().apiUrl).reply(() => {
-    if (responseType === 've') {
-        return [200, { homepageStatus: 've' }];
-    }
-    if (responseType === 'statusFIleNotPublic') {
-        return [403, {}];
-    }
-    return [200, { homepageStatus: 'bo' }];
-});
-
 mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl).reply(() => {
     // mock current author details from fez
     if (user === 'anon') {
@@ -811,7 +801,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
     })
     .onGet(/dlor\/admin\/object\/notes\/.*/)
     .reply(() => {
-        return[200, dlor_admin_notes];
+        return [200, dlor_admin_notes];
     })
     .onPost(/dlor\/admin\/object\/notes\/.*/)
     .reply(() => {

@@ -11,7 +11,6 @@ import {
     loadTrainingEvents,
     getClassNumberFromPieces,
     loadVemcountList,
-    loadPrimoStatus,
 } from './account';
 import Cookies from 'js-cookie';
 
@@ -365,24 +364,6 @@ describe('Account action creators', () => {
         const expectedActions = [actions.VEMCOUNT_LOADING, actions.VEMCOUNT_FAILED];
 
         await mockActionsStore.dispatch(loadVemcountList());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when loading primo status succeeds', async () => {
-        mockApi.onGet(repositories.routes.PRIMO_STATUS_API().apiUrl).reply(200);
-
-        const expectedActions = [actions.PRIMO_STATUS_LOADING, actions.PRIMO_STATUS_LOADED];
-
-        await mockActionsStore.dispatch(loadPrimoStatus());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when loading primo status fails', async () => {
-        mockApi.onGet(repositories.routes.PRIMO_STATUS_API().apiUrl).reply(500);
-
-        const expectedActions = [actions.PRIMO_STATUS_LOADING, actions.PRIMO_STATUS_FAILED];
-
-        await mockActionsStore.dispatch(loadPrimoStatus());
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 });
