@@ -18,10 +18,14 @@ import useTheme from '@mui/material/styles/useTheme';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { MESSAGE_EXAMCODE_404, noResultsFoundBlock } from 'modules/Pages/PastExamPaperSearch/pastExamPapers.helpers';
+import {
+    MESSAGE_EXAMCODE_404,
+    noResultsFoundBlock,
+    StyledBodyText,
+    UserInstructions,
+} from 'modules/Pages/PastExamPaperSearch/pastExamPapers.helpers';
 import { styled } from '@mui/material/styles';
 import { breadcrumbs } from 'config/routes';
-import { linkToDrupal } from 'helpers/general';
 
 const colourBlack = '#19151c';
 const colourPaneBackground = '#f3f3f4';
@@ -33,26 +37,6 @@ const StyledH3Typography = styled(Typography)(() => ({
     fontSize: '1rem',
     fontWeight: 500,
     color: colourBlack,
-}));
-const StyledBodyText = styled('p')(() => ({
-    marginTop: '1rem',
-    marginBottom: '2rem',
-    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-    fontSize: '1rem',
-    fontWeight: 400,
-    lineHeight: 1.6,
-}));
-const StyledExplanation = styled('p')(({ theme }) => ({
-    marginBottom: 32,
-    '& a': {
-        color: theme.palette.primary.light,
-        textDecoration: 'underline',
-        fontWeight: 500,
-        '&:hover': {
-            color: '#fff',
-            backgroundColor: theme.palette.primary.light,
-        },
-    },
 }));
 const StyledTableLeftCell = styled(TableCell)(() => ({
     backgroundColor: colourPaneBackground,
@@ -166,7 +150,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
     }
 
     // don't display the input unless it is shown to be valid
-    const displayedCourseHint = examSearchListError === false && courseHint.length > 0 ? `"${courseHint}"` : '';
+    const displayedCourseHint = examSearchListError === false && courseHint.length > 0 ? courseHint : '';
 
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
@@ -352,19 +336,8 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         );
     };
 
-    const UserInstructions = () => {
-        return (
-            <StyledExplanation id="examResultsDescription">
-                <a href={linkToDrupal('/study-and-learning-support/coursework/past-exam-papers')}>
-                    Read more about past exam papers
-                </a>
-            </StyledExplanation>
-        );
-    };
-
     return (
         <StandardPage title={listTitle}>
-            <UserInstructions />
             {(() => {
                 /* istanbul ignore else */
                 if (examSearchListLoading !== false) {
@@ -392,6 +365,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                     </span>
                                 </Grid>
                             </Grid>
+                            <UserInstructions />
                         </StyledStandardCard>
                     );
                 } else if (
@@ -403,10 +377,10 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                         !!is404Error)
                 ) {
                     return (
-                        <StyledStandardCard noHeader>
+                        <StyledStandardCard style={{ marginInline: '-1rem' }} noHeader>
                             <Grid container>
                                 <Grid item xs={12} data-testid="past-exam-paper-missing">
-                                    {noResultsFoundBlock(displayedCourseHint)}
+                                    {noResultsFoundBlock(displayedCourseHint, StyledBodyText)}
                                 </Grid>
                             </Grid>
                         </StyledStandardCard>
@@ -419,9 +393,9 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     !!examSearchList?.periods &&
                     !!examSearchList.papers.length > 0
                 ) {
-                    console.log('originalExamPaperList?.papers?.length=', originalExamPaperList?.papers?.length);
                     return (
                         <>
+                            <UserInstructions />
                             {sampleExamPaperList?.papers?.length > 0 && (
                                 <StyledStandardCard noHeader style={{ margin: '-16px -16px 4.5rem -16px' }}>
                                     <Typography
