@@ -2,7 +2,7 @@ import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
     examLearningResourceList: null,
-    examLearningResourceListLoading: false,
+    examLearningResourceListLoading: null,
     examLearningResourceListError: null,
 };
 

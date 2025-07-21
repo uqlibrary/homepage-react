@@ -2,7 +2,7 @@ import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
     examSearchList: null,
-    examSearchListLoading: false,
+    examSearchListLoading: null,
     examSearchListError: null,
 };
 

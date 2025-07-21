@@ -151,41 +151,150 @@ describe('Past Exam Papers Pages', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it('the past exam paper result desktop page is correct', () => {
-            cy.visit('/exams/course/fren');
-            cy.get('uq-site-header')
-                .shadow()
-                .within(() => {
-                    cy.get('[data-testid="subsite-title"]')
+        context('a desktop page', () => {
+            it(' with multiple subjects displayed shows table view for Original papers', () => {
+                cy.visit('/exams/course/fren');
+                cy.get('uq-site-header')
+                    .shadow()
+                    .within(() => {
+                        cy.get('[data-testid="subsite-title"]')
+                            .should('exist')
+                            .should('be.visible')
+                            .contains('Past exam papers');
+                    });
+                cy.get('div[id="content-container"]').contains('Past Exam Papers from 2017 to 2022 for "FREN"');
+
+                // sample papers are correct
+                cy.waitUntil(() => cy.get('[data-testid="exampaper-desktop-sample-link-0-0-0"]').should('exist'));
+                cy.get('[data-testid="exampaper-desktop-sample-link-0-0-0"]').contains('FREN1010 Sem.2 2020');
+
+                // original papers are correct
+                cy.get('[data-testid="exampaper-desktop-originals-table-header"]')
+                    .children()
+                    .should('have.length', 4);
+                cy.get('[data-testid="exampaper-desktop-originals-table-body"]')
+                    .children()
+                    .should('have.length', 22);
+                cy.get('[data-testid="exampaper-desktop-originals-link-1-1-0"]').contains('FREN2010');
+                cy.get('[data-testid="exampaper-desktop-originals-link-1-1-0"]').contains('Final');
+
+                cy.get('[data-testid="exampaper-desktop-originals-link-4-1-0"]').contains('FREN2082');
+                cy.get('[data-testid="exampaper-desktop-originals-link-4-1-0"]').contains('a special french paper');
+
+                cy.get('[data-testid="exampaper-desktop-originals-link-4-0-0"]').contains('FREN2082');
+                cy.get('[data-testid="exampaper-desktop-originals-link-4-0-0"] span:first-child').contains(
+                    'Final Paper',
+                );
+            });
+            it('with one subject and no sample papers shows originals in Simple view', () => {
+                cy.visit('/exams/course/PHYS1001?user=s1111111');
+                cy.waitUntil(() =>
+                    cy
+                        .get('[data-testid="exampapers-original-heading"]')
                         .should('exist')
-                        .should('be.visible')
-                        .contains('Past exam papers');
-                });
-            cy.get('div[id="content-container"]').contains('Past Exam Papers from 2017 to 2022 for "FREN"');
-            cy.get('[data-testid="exampaper-results-table-header"]')
-                .children()
-                .should('have.length', 4);
-            cy.get('[data-testid="exampaper-results-table-body"]')
-                .children()
-                .should('have.length', 22);
-            cy.get('[data-testid="exampaper-results-bodycell-0-0"]').contains('FREN1010');
-            cy.get('[data-testid="exampaper-results-bodycell-0-0"]').contains('Sample');
-            cy.get('[data-testid="exampaper-results-bodycell-1-2"]').contains('FREN2010');
-            cy.get('[data-testid="exampaper-results-bodycell-1-2"]').contains('Final');
+                        .contains('Original past exam papers'),
+                );
+
+                cy.get('[data-testid="exampaper-desktop-original-line"]').should('exist');
+                cy.get('[data-testid="exampaper-desktop-sample-line"]').should('not.exist');
+            });
+            it('with no original papers and some sample papers shows Simple view', () => {
+                cy.visit('/exams/course/dent1050?user=s1111111');
+                cy.waitUntil(() =>
+                    cy
+                        .get('[data-testid="exampapers-original-heading"]')
+                        .should('exist')
+                        .contains('Original past exam papers'),
+                );
+
+                cy.get('[data-testid="no-original-papers-provided"]')
+                    .should('exist')
+                    .contains('No original papers provided.');
+                cy.get('[data-testid="original-papers-table"]').should('not.exist');
+
+                cy.get('[data-testid="sample-papers-heading"]')
+                    .should('exist')
+                    .contains('Sample past exam papers');
+                cy.get('[data-testid="exampaper-desktop-sample-link-0-0-0"]')
+                    .should('exist')
+                    .contains('DENT1050 Sem.2 2022');
+            });
         });
-        it('the past exam paper result mobile page is correct', () => {
-            cy.visit('/exams/course/fren');
-            cy.viewport(414, 736);
-            cy.get('[data-testid="exampaper-mobilelink-0-0-0"]').should('contain', 'FREN1010 Sem.2 2020 (Sample)');
-            cy.get('[data-testid="exampaper-mobilelink-0-1-0"]').should('contain', 'FREN1010 Sem.1 2020 Paper A');
-            cy.get('[data-testid="exampaper-mobilelink-0-1-1"]').should('contain', 'FREN1010 Sem.1 2020 Paper B');
-            cy.get('[data-testid="exampaper-mobilelink-1-0-0"]').should('contain', 'FREN2010 Sem.1 2021');
-            cy.get('[data-testid="exampaper-mobilelink-1-2-0"]').should('contain', 'FREN2010 Sem.1 2019 Final');
-            cy.get('[data-testid="exampaper-mobilelink-4-1-0"]').should(
-                'contain',
-                'FREN2082 Sem.1 2020 a special french paper',
-            );
-            cy.get('[data-testid="exampaper-mobilelink-4-1-1"]').should('contain', 'FREN2082 Sem.1 2020 Paper 2');
+        context('a mobile page', () => {
+            it(' with multiple subjects displayed shows simple view for Original papers', () => {
+                cy.visit('/exams/course/fren');
+                cy.viewport(414, 736);
+
+                // sample papers are correct
+                cy.waitUntil(() => cy.get('[data-testid="exampaper-mobile-sample-link-0-0-0"]').should('exist'));
+                cy.waitUntil(() =>
+                    cy
+                        .get('[data-testid="exampaper-mobile-sample-link-0-0-0"]')
+                        .should('contain', 'FREN1010 Sem.2 2020'),
+                );
+
+                // original papers are correct
+                cy.get('[data-testid="exampaper-mobile-original-link-0-0-0"]').should(
+                    'contain',
+                    'FREN1010 Sem.1 2020 Paper A',
+                );
+                cy.get('[data-testid="exampaper-mobile-original-link-0-0-1"]').should(
+                    'contain',
+                    'FREN1010 Sem.1 2020 Paper B',
+                );
+                cy.get('[data-testid="exampaper-mobile-original-link-1-0-0"]').should('contain', 'FREN2010 Sem.1 2021');
+                cy.get('[data-testid="exampaper-mobile-original-link-1-1-0"]').should(
+                    'contain',
+                    'FREN2010 Sem.1 2019 Final',
+                );
+                cy.get('[data-testid="exampaper-mobile-original-link-4-1-0"]').should(
+                    'contain',
+                    'FREN2082 Sem.1 2020 a special french paper',
+                );
+                cy.get('[data-testid="exampaper-mobile-original-link-4-1-1"]').should(
+                    'contain',
+                    'FREN2082 Sem.1 2020 Paper 2',
+                );
+                cy.get('[data-testid="exampaper-mobile-original-link-4-0-0"]').should(
+                    'contain',
+                    'FREN2082 Sem.1 2021 (Final Paper)',
+                );
+            });
+            it('with one subject and no sample papers shows originals in Simple view', () => {
+                cy.visit('/exams/course/PHYS1001?user=s1111111');
+                cy.viewport(414, 736);
+                cy.waitUntil(() =>
+                    cy
+                        .get('[data-testid="exampapers-original-heading"]')
+                        .should('exist')
+                        .contains('Original past exam papers'),
+                );
+
+                cy.get('[data-testid="exampaper-mobile-original-line"]').should('exist');
+                cy.get('[data-testid="exampaper-mobile-sample-line"]').should('not.exist');
+            });
+            it('with no original papers and some sample papers shows Simple view', () => {
+                cy.visit('/exams/course/dent1050?user=s1111111');
+                cy.viewport(414, 736);
+                cy.waitUntil(() =>
+                    cy
+                        .get('[data-testid="exampapers-original-heading"]')
+                        .should('exist')
+                        .contains('Original past exam papers'),
+                );
+
+                cy.get('[data-testid="no-original-papers-provided"]')
+                    .should('exist')
+                    .contains('No original papers provided.');
+                cy.get('[data-testid="original-papers-table"]').should('not.exist');
+
+                cy.get('[data-testid="sample-papers-heading"]')
+                    .should('exist')
+                    .contains('Sample past exam papers');
+                cy.get('[data-testid="exampaper-mobile-sample-link-0-0-0"]')
+                    .should('exist')
+                    .contains('DENT1050 Sem.2 2022');
+            });
         });
     });
     context('search errors', () => {
@@ -204,14 +313,14 @@ describe('Past Exam Papers Pages', () => {
             cy.visit('/exams/course/empt');
             cy.get('div[id="content-container"]').contains('Past Exam Papers from 2017 to 2022 for "EMPT"');
             cy.get('div[data-testid="past-exam-paper-missing"]').contains(
-                'We have not found any past exams for this course "EMPT" because either',
+                'We have not found any past exams for this course "EMPT".',
             );
         });
         it('a search for a true 404 shows a message', () => {
             cy.visit('/exams/course/mock404');
             cy.get('div[id="content-container"]').contains('Past Exam Papers by Subject');
             cy.get('div[data-testid="past-exam-paper-missing"]').contains(
-                'We have not found any past exams for this course because either',
+                'We have not found any past exams for this course.',
             );
         });
         it('when the api fails I get an appropriate error message', () => {
