@@ -363,7 +363,7 @@ export const LearningResources = ({
                                     <Tab
                                         className={topmenu === 'mycoursestab' ? 'TabSelected' : 'TabUnselected'}
                                         value="mycoursestab"
-                                        label={locale.myCourses.title}
+                                        label="Your courses"
                                         {...a11yProps('0')}
                                     />
                                     <Tab

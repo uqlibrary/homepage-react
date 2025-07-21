@@ -27,6 +27,7 @@ import { training_object, training_object_hospital } from './data/training';
 import { espaceSearchResponse, loans, printBalance } from './data/general';
 import { alertList } from './data/alertsLong';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
+import examSearch_PHYS1001 from './data/records/learningResources/examSearch_PHYS1001';
 import examSearch_DENT80 from './data/records/learningResources/examSearch_DENT80';
 import testTag_user from './data/records/testAndTag/test_tag_user';
 import testTag_user_UQPF from './data/records/testAndTag/test_tag_userUQPF';
@@ -810,6 +811,9 @@ mock.onGet(/dlor\/public\/find\/.*/)
 
 mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
+        if (responseType === 'springshareError') {
+            return [500, {}];
+        }
         return [200, exams_FREN1010];
     })
     .onGet('exams/course/FREN1011/summary')
@@ -831,6 +835,9 @@ mock.onGet('exams/course/FREN1010/summary')
 
     .onGet('library_guides/FREN1010')
     .reply(() => {
+        if (responseType === 'springshareError') {
+            return [500, {}];
+        }
         return [200, libraryGuides_FREN1010];
     })
     .onGet('library_guides/FREN1011')
@@ -930,6 +937,14 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [200, []];
     })
+    .onGet('exams/search/PHYS1001')
+    .reply(() => {
+        return [200, examSearch_PHYS1001];
+    })
+    .onGet('exams/search/PHYS100')
+    .reply(() => {
+        return [200, examSearch_PHYS1001];
+    })
     .onGet('exams/search/FREN')
     .reply(() => {
         return [200, examSearch_FREN];
@@ -965,6 +980,20 @@ mock.onGet('exams/course/FREN1010/summary')
     .onGet('exams/search/dent')
     .reply(() => {
         return [200, examSearch_DENT80];
+    })
+    .onGet('exams/search/dent1050')
+    .reply(() => {
+        return [
+            200,
+            {
+                ...examSearch_DENT80,
+                papers: [
+                    ...examSearch_DENT80.papers.filter(course =>
+                        course.some(s => s.some(p => p.courseCode.toLowerCase() === 'dent1050')),
+                    ),
+                ],
+            },
+        ];
     })
     .onGet('exams/search/mock404')
     .reply(() => {

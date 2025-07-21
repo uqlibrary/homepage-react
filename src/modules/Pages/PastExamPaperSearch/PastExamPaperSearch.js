@@ -14,7 +14,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import locale from './pastExamPaperSearch.locale';
 import { isRepeatingString, linkToDrupal } from 'helpers/general';
-import { noResultsFoundBlock } from './pastExamPapers.helpers';
+import { noResultsFoundBlock, StyledBodyText } from './pastExamPapers.helpers';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { breadcrumbs } from 'config/routes';
@@ -35,6 +35,13 @@ const StyledSearchPanel = styled('div')(() => ({
     paddingRight: 20,
     paddingBottom: 0,
     '& .searchPanelInfo': { color: 'red', paddingLeft: '2em' },
+}));
+
+export const StyledList = styled('ul')(() => ({
+    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+    fontSize: '1rem',
+    fontWeight: 400,
+    lineHeight: 1.6,
 }));
 
 export const PastExamPaperSearch = ({
@@ -134,11 +141,11 @@ export const PastExamPaperSearch = ({
             <StandardCard>
                 <Grid container alignItems={'flex-end'}>
                     <StyledAboutBlock item xs={12} sm>
-                        <p>
+                        <StyledBodyText>
                             Enter a full or partial course code (between 2 and 9 characters) to find available past exam
                             papers. For example:
-                        </p>
-                        <ul>
+                        </StyledBodyText>
+                        <StyledList>
                             <li>
                                 <strong>BIOL2001</strong> displays the exam papers for the course,
                             </li>
@@ -148,7 +155,7 @@ export const PastExamPaperSearch = ({
                             <li>
                                 <strong>BIOL</strong> displays all available Biological Sciences exam papers.
                             </li>
-                        </ul>
+                        </StyledList>
                     </StyledAboutBlock>
                 </Grid>
                 <form>

@@ -1,19 +1,46 @@
 import React from 'react';
+import { styled } from '@mui/material/styles';
+import { linkToDrupal } from 'helpers/general';
+
+export const StyledBodyText = styled('p')(() => ({
+    marginTop: '1rem',
+    marginBottom: '2rem',
+    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+    fontSize: '1rem',
+    fontWeight: 400,
+    lineHeight: 1.6,
+}));
+
+const StyledInstructions = styled('p')(({ theme }) => ({
+    marginBottom: 32,
+    '& a': {
+        color: theme.palette.primary.light,
+        textDecoration: 'underline',
+        fontWeight: 500,
+        '&:hover': {
+            color: '#fff',
+            backgroundColor: theme.palette.primary.light,
+        },
+    },
+}));
+
+export const UserInstructions = () => {
+    return (
+        <StyledInstructions id="examResultsDescription">
+            <a href={linkToDrupal('/study-and-learning-support/coursework/past-exam-papers')}>
+                Read more about past exam papers
+            </a>
+        </StyledInstructions>
+    );
+};
 
 export const noResultsFoundBlock = searchTerm => {
-    const capitalisedSearchTerm = searchTerm.toUpperCase();
+    const capitalisedSearchTerm =
+        !!searchTerm && searchTerm.trim().length > 0 ? ` "${searchTerm.trim().toUpperCase()}"` : '';
     return (
         <div>
-            <p>We have not found any past exams for this course {capitalisedSearchTerm} because either:</p>
-            <ul>
-                <li>there are no past exams available for this course in the last five years</li>
-                <li>{capitalisedSearchTerm || 'it'} is not a valid course code or course code prefix</li>
-                <li>the system is not functioning correctly.</li>
-            </ul>
-            <p>
-                Please check with your instructor, or report a problem via the <strong>AskUs</strong> button at the top
-                of the page.
-            </p>
+            <StyledBodyText>We have not found any past exams for this course{capitalisedSearchTerm}.</StyledBodyText>
+            <UserInstructions />
         </div>
     );
 };
