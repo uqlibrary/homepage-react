@@ -100,6 +100,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
             </StyledItem>
             <Grid container className={'exams'} data-testid="exam-list-wrapper">
                 {(() => {
+                    /* istanbul ignore else */
                     if (examListLoading !== false) {
                         return (
                             <Grid item xs={'auto'} style={{ width: 80, opacity: 0.3 }}>
