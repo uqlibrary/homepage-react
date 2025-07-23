@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 import { useLocation } from 'react-router-dom';
-import { throttle } from 'throttle-debounce';
 
 import locale from './shared/learningResources.locale';
 import global from 'locale/global';
@@ -145,30 +144,18 @@ export const LearningResources = ({
 
     // store a list of the Reading Lists that have been loaded, by subject
     const [currentReadingLists, updateReadingLists] = useState([]);
-
-    const throttledGuideLoad = useRef(throttle(1000, classnumber => actions.loadGuides(classnumber)));
-    const throttledExamsLoad = useRef(throttle(1000, classnumber => actions.loadExamLearningResources(classnumber)));
-    const throttledReadingListLoad = useRef(
-        throttle(1000, (classnumber, campus, semester) => actions.loadReadingLists(classnumber, campus, semester)),
-    );
     const loadNewSubject = React.useCallback(
-        (classnumber, campus, semester) => {
+        async (classnumber, campus, semester) => {
             const minLengthOfValidCourseCode = 8;
             if (!classnumber || classnumber.length < minLengthOfValidCourseCode || isRepeatingString(classnumber)) {
                 return;
             }
 
-            if (!currentGuidesList[classnumber]) {
-                throttledGuideLoad.current(classnumber);
-            }
-
-            if (!currentExamsList[classnumber]) {
-                throttledExamsLoad.current(classnumber);
-            }
-
-            if (!currentReadingLists[classnumber]) {
-                throttledReadingListLoad.current(classnumber, campus, semester);
-            }
+            await Promise.all([
+                actions.loadReadingLists(classnumber, campus, semester),
+                actions.loadGuides(classnumber),
+                actions.loadExamLearningResources(classnumber),
+            ]);
         },
         [currentGuidesList, currentExamsList, currentReadingLists],
     );
