@@ -591,7 +591,8 @@ context('The Learning Resources Page', () => {
      * ---------+-----------------------------------+---------------+----------------+
      */
     // a subject with one reading list which contains more than the minimum number displays correctly
-    it('the content on the history tab is correct', () => {
+    it("the content on a tab from url parameters is correct when it isnt the first one on the user's account", () => {
+        // and "the content on the history tab is correct"
         cy.visit(
             '/learning-resources?coursecode=HIST1201&campus=St%20Lucia&semester=Semester%202%202020&user=s1111111',
         );
