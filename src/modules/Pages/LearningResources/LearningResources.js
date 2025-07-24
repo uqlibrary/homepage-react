@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 import { useLocation } from 'react-router-dom';
-import { throttle } from 'throttle-debounce';
 
 import locale from './shared/learningResources.locale';
 import global from 'locale/global';
@@ -301,10 +300,6 @@ export const LearningResources = ({
         updateExamsSubjectList();
     }, [updateExamsSubjectList]);
 
-    const throttleFunc = throttle(1000, (coursecode, campus, semester) => {
-        loadNewSubject(coursecode, campus, semester, 'first subject in account');
-    });
-
     // load the data for the first class (it is automatically displayed if the user has classes). Should only run once
     React.useEffect(() => {
         console.log('useeffect load the data for the first class');
@@ -313,7 +308,7 @@ export const LearningResources = ({
         const coursecode = extractSubjectCodeFromName(
             (!!firstEnrolledClassNumber && account.current_classes[0].classnumber) || null,
         );
-        if (params.coursecode === coursecode) {
+        if (params.hasOwnProperty('coursecode') && params.coursecode !== coursecode) {
             console.log('course url param also in account, skip, for', coursecode);
             return;
         }
@@ -327,9 +322,7 @@ export const LearningResources = ({
             (!!firstEnrolledClassNumber && !!firstEnrolledClassNumber.semester && firstEnrolledClassNumber.semester) ||
             null;
 
-        // "first subject in account" and "subject from url params" try to load at the same time
-        // throttle one so both sets of info are available
-        throttleFunc(coursecode, campus, semester);
+        loadNewSubject(coursecode, campus, semester, 'first subject in account');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [account.current_classes, loadNewSubject]);
 
