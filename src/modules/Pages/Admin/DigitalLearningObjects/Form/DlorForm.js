@@ -742,6 +742,12 @@ export const DlorForm = ({
                                         editor.editing.view.change(writer => {
                                             writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
                                         });
+                                        editor.editing.view.document.on('mousedown', (evt, data) => {
+                                            const targetElement = data.target;
+                                            if (targetElement.is('a')) {
+                                                data.preventDefault(); // Prevent navigation
+                                            }
+                                        });
                                     }}
                                     onChange={(event, editor) => {
                                         const htmlData = editor.getData();
@@ -894,6 +900,12 @@ export const DlorForm = ({
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
                             });
+                             editor.editing.view.document.on('mousedown', (evt, data) => {
+                                            const targetElement = data.target;
+                                            if (targetElement.is('a')) {
+                                                data.preventDefault(); // Prevent navigation
+                                            }
+                                        });
                         }}
                         onChange={(event, editor) => {
                             const htmlData = editor.getData();
@@ -1293,6 +1305,12 @@ export const DlorForm = ({
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
                             });
+                             editor.editing.view.document.on('mousedown', (evt, data) => {
+                                            const targetElement = data.target;
+                                            if (targetElement.is('a')) {
+                                                data.preventDefault(); // Prevent navigation
+                                            }
+                                        });
                         }}
                         onChange={(event, editor) => {
                             const htmlData = editor.getData();
@@ -1512,6 +1530,12 @@ export const DlorForm = ({
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
                             });
+                             editor.editing.view.document.on('mousedown', (evt, data) => {
+                                            const targetElement = data.target;
+                                            if (targetElement.is('a')) {
+                                                data.preventDefault(); // Prevent navigation
+                                            }
+                                        });
                         }}
                         onChange={(event, editor) => {
                             const htmlData = editor.getData();
