@@ -92,12 +92,6 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
             <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 500 }}>
                 {examPaperTitle}
             </Typography>
-            <StyledItem item xs={12} data-testid="exams-readmore">
-                <a href={linkToDrupal('/study-and-learning-support/coursework/past-exam-papers')}>
-                    <QuestionMarkIcon style={{ marginRight: 6 }} />
-                    <span>Read more about past exam papers</span>
-                </a>
-            </StyledItem>
             <Grid container className={'exams'} data-testid="exam-list-wrapper">
                 {(() => {
                     /* istanbul ignore else */
@@ -158,6 +152,12 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                     }
                 })()}
             </Grid>
+            <StyledItem item xs={12} data-testid="exams-readmore">
+                <a href={linkToDrupal('/study-and-learning-support/coursework/past-exam-papers')}>
+                    <QuestionMarkIcon style={{ marginRight: 6 }} />
+                    <span>Read more about past exam papers</span>
+                </a>
+            </StyledItem>
         </StandardCard>
     );
 };
