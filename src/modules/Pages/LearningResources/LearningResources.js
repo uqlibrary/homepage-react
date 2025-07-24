@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 import { useLocation } from 'react-router-dom';
+import { throttle } from 'throttle-debounce';
 
 import locale from './shared/learningResources.locale';
 import global from 'locale/global';
@@ -118,6 +119,7 @@ export const LearningResources = ({
     readingListLoading,
     readingListError,
 }) => {
+    console.log('start LearningResources', readingListLoading, readingList);
     /**
      * The page consists of 2 sections:
      * - the user's enrolled courses (aka subjects), and
@@ -145,29 +147,32 @@ export const LearningResources = ({
     // store a list of the Reading Lists that have been loaded, by subject
     const [currentReadingLists, updateReadingLists] = useState([]);
     const loadNewSubject = React.useCallback(
-        async (classnumber, campus, semester) => {
+        async (classNumber, campus, semester, cause) => {
+            console.log(classNumber, 'cause=', cause);
             const minLengthOfValidCourseCode = 8;
-            if (!classnumber || classnumber.length < minLengthOfValidCourseCode || isRepeatingString(classnumber)) {
+            if (!classNumber || classNumber.length < minLengthOfValidCourseCode || isRepeatingString(classNumber)) {
                 return;
             }
 
             await Promise.all([
-                actions.loadReadingLists(classnumber, campus, semester),
-                actions.loadGuides(classnumber),
-                actions.loadExamLearningResources(classnumber),
+                actions.loadReadingLists(classNumber, campus, semester),
+                actions.loadGuides(classNumber),
+                actions.loadExamLearningResources(classNumber),
             ]);
         },
-        [currentGuidesList, currentExamsList, currentReadingLists],
+        [actions],
     );
 
     const params = getQueryParams(location.search);
     useEffect(() => {
         if (!!params.coursecode && !!params.campus && !!params.semester) {
+            /* istanbul ignore else */
             if (!currentReadingLists[params.coursecode]) {
-                loadNewSubject(params.coursecode, params.campus, params.semester);
+                loadNewSubject(params.coursecode, params.campus, params.semester, 'url change');
             }
         }
-    }, [params, currentReadingLists, loadNewSubject]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // url params change on page load
 
     const getInitialTopTabState = () => {
         let initialTopTabState = 'searchtab';
@@ -225,7 +230,7 @@ export const LearningResources = ({
             const semester =
                 (!!enrolledClass && !!enrolledClass.semester && enrolledClass.semester) ||
                 /* istanbul ignore next */ null;
-            loadNewSubject(coursecode, campus, semester);
+            loadNewSubject(coursecode, campus, semester, 'focus on tab');
         }
 
         setCurrentMenuTab(subjectTabId);
@@ -296,13 +301,23 @@ export const LearningResources = ({
         updateExamsSubjectList();
     }, [updateExamsSubjectList]);
 
+    const throttleFunc = throttle(1000, (coursecode, campus, semester) => {
+        loadNewSubject(coursecode, campus, semester, 'first subject in account');
+    });
+
     // load the data for the first class (it is automatically displayed if the user has classes). Should only run once
     React.useEffect(() => {
+        console.log('useeffect load the data for the first class');
         const firstEnrolledClassNumber =
             (!!account.current_classes && account.current_classes.length > 0 && account.current_classes[0]) || null;
         const coursecode = extractSubjectCodeFromName(
             (!!firstEnrolledClassNumber && account.current_classes[0].classnumber) || null,
         );
+        if (params.coursecode === coursecode) {
+            console.log('course url param also in account, skip, for', coursecode);
+            return;
+        }
+
         const campus =
             (!!firstEnrolledClassNumber &&
                 !!firstEnrolledClassNumber.CAMPUS &&
@@ -312,7 +327,10 @@ export const LearningResources = ({
             (!!firstEnrolledClassNumber && !!firstEnrolledClassNumber.semester && firstEnrolledClassNumber.semester) ||
             null;
 
-        loadNewSubject(coursecode, campus, semester);
+        // "first subject in account" and "subject from url params" try to load at the same time
+        // throttle one so both sets of info are available
+        throttleFunc(coursecode, campus, semester);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [account.current_classes, loadNewSubject]);
 
     const readingLists = {
