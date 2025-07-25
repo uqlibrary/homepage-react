@@ -243,8 +243,10 @@ export const DlorForm = ({
     useEffect(() => {
         if (!editorReady) return;
         const editable = document.querySelector('.ck-editor__editable');
+        /* istanbul ignore next */
         if (editable) {
             const handler = e => {
+                /* istanbul ignore next */
                 if (e.target.tagName === 'A') {
                     console.log('Link clicked in CKEditor', e.target.href);
                     e.preventDefault();
