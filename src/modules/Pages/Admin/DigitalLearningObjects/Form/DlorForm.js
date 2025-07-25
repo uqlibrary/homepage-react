@@ -289,6 +289,17 @@ export const DlorForm = ({
                 { model: 'heading2', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
             ],
         },
+        link: {
+            decorators: {
+                isEditing: {
+                    mode: 'manual',
+                    label: 'Editing',
+                    attributes: {
+                        href: 'javascript:void(0);'
+                    }
+                }
+            }
+        }
     };
 
     const isValidUsername = testUserName => {
@@ -744,10 +755,19 @@ export const DlorForm = ({
                                         });
                                         /* istanbul ignore next */
                                         editor.editing.view.document.on('mousedown', (evt, data) => {
-                                            const targetElement = data.target;
-                                            if (targetElement.is('a')) {
-                                                data.preventDefault(); // Prevent navigation
-                                            }
+                                          
+                                        const targetElement = data.domTarget || data.target;
+                                        console.log("CKEditor mousedown event", targetElement);
+
+                                        if (
+                                            (targetElement && typeof targetElement.is === 'function' && targetElement.is('a')) ||
+                                            (targetElement && targetElement.nodeName === 'A')
+                                        ) {
+                                            console.log("Anchor clicked", targetElement);
+                                            //data.preventDefault(); // Prevent navigation
+                                        } else {
+                                            console.log("Not an anchor");
+                                        }
                                         });
                                     }}
                                     onChange={(event, editor) => {
@@ -906,7 +926,7 @@ export const DlorForm = ({
                                             const targetElement = data.target;
                                            
                                             if (targetElement.is('a')) {
-                                                data.preventDefault(); // Prevent navigation
+                                                //data.preventDefault(); // Prevent navigation
                                             }
                                         });
                         }}
@@ -1313,7 +1333,7 @@ export const DlorForm = ({
                                             const targetElement = data.target;
                                            
                                             if (targetElement.is('a')) {
-                                                data.preventDefault(); // Prevent navigation
+                                                //data.preventDefault(); // Prevent navigation
                                             }
                                         });
                         }}
@@ -1540,7 +1560,7 @@ export const DlorForm = ({
                                             const targetElement = data.target;
                                             
                                             if (targetElement.is('a')) {
-                                                data.preventDefault(); // Prevent navigation
+                                                //data.preventDefault(); // Prevent navigation
                                             }
                                         });
                         }}
