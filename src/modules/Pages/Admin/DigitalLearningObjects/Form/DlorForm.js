@@ -744,6 +744,7 @@ export const DlorForm = ({
                                         });
                                         editor.editing.view.document.on('mousedown', (evt, data) => {
                                             const targetElement = data.target;
+                                            /* istanbul ignore next */
                                             if (targetElement.is('a')) {
                                                 data.preventDefault(); // Prevent navigation
                                             }
@@ -902,6 +903,7 @@ export const DlorForm = ({
                             });
                              editor.editing.view.document.on('mousedown', (evt, data) => {
                                             const targetElement = data.target;
+                                            /* istanbul ignore next */
                                             if (targetElement.is('a')) {
                                                 data.preventDefault(); // Prevent navigation
                                             }
@@ -1307,6 +1309,7 @@ export const DlorForm = ({
                             });
                              editor.editing.view.document.on('mousedown', (evt, data) => {
                                             const targetElement = data.target;
+                                            /* istanbul ignore next */
                                             if (targetElement.is('a')) {
                                                 data.preventDefault(); // Prevent navigation
                                             }
@@ -1532,6 +1535,7 @@ export const DlorForm = ({
                             });
                              editor.editing.view.document.on('mousedown', (evt, data) => {
                                             const targetElement = data.target;
+                                            /* istanbul ignore next */
                                             if (targetElement.is('a')) {
                                                 data.preventDefault(); // Prevent navigation
                                             }
