@@ -923,17 +923,10 @@ export const DlorForm = ({
                         config={editorConfig}
                         data={formValues?.object_description || ''}
                         onReady={editor => {
+                            setEditorReady(true);
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
                             });
-                             /* istanbul ignore next */
-                             editor.editing.view.document.on('mousedown', (evt, data) => {
-                                            const targetElement = data.target;
-                                           
-                                            if (targetElement.is('a')) {
-                                                //data.preventDefault(); // Prevent navigation
-                                            }
-                                        });
                         }}
                         onChange={(event, editor) => {
                             const htmlData = editor.getData();
@@ -1330,17 +1323,10 @@ export const DlorForm = ({
                         config={editorConfig}
                         data={formValues?.object_download_instructions || /* istanbul ignore next */ ''}
                         onReady={editor => {
+                            setEditorReady(true);
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
                             });
-                             /* istanbul ignore next */
-                             editor.editing.view.document.on('mousedown', (evt, data) => {
-                                            const targetElement = data.target;
-                                           
-                                            if (targetElement.is('a')) {
-                                                //data.preventDefault(); // Prevent navigation
-                                            }
-                                        });
                         }}
                         onChange={(event, editor) => {
                             const htmlData = editor.getData();
@@ -1557,17 +1543,10 @@ export const DlorForm = ({
                         config={editorConfig}
                         data={formValues?.notificationText || ''}
                         onReady={editor => {
+                            setEditorReady(true);
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
                             });
-                             /* istanbul ignore next */
-                             editor.editing.view.document.on('mousedown', (evt, data) => {
-                                            const targetElement = data.target;
-                                            
-                                            if (targetElement.is('a')) {
-                                                //data.preventDefault(); // Prevent navigation
-                                            }
-                                        });
                         }}
                         onChange={(event, editor) => {
                             const htmlData = editor.getData();
