@@ -164,6 +164,8 @@ export const DlorForm = ({
     const [showLinkTimeForm, setShowLinkTimeForm] = useState(false);
     const [showLinkSizeForm, setShowLinkSizeForm] = useState(false);
 
+    const [editorReady, setEditorReady] = useState(false);
+
     const [summarySuggestionOpen, setSummarySuggestionOpen] = useState(false);
     const [formValues, setFormValues] = useState(formDefaults);
     const [summaryContent, setSummaryContent] = useState('');
@@ -237,6 +239,22 @@ export const DlorForm = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorItem, actions]);
+
+    useEffect(() => {
+        if (!editorReady) return;
+        const editable = document.querySelector('.ck-editor__editable');
+        if (editable) {
+            const handler = e => {
+                if (e.target.tagName === 'A') {
+                    console.log('Link clicked in CKEditor', e.target.href);
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                }
+            };
+            editable.addEventListener('click', handler);
+            return () => editable.removeEventListener('click', handler);
+        }
+    }, [editorReady]);
 
     // useEffect(() => {
     //     console.log("UseEffect formDefaults", formDefaults, formValues);
@@ -750,24 +768,9 @@ export const DlorForm = ({
                                     config={editorConfig}
                                     data={formValues?.object_admin_notes || ''}
                                     onReady={editor => {
+                                        setEditorReady(true);
                                         editor.editing.view.change(writer => {
                                             writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
-                                        });
-                                        /* istanbul ignore next */
-                                        editor.editing.view.document.on('mousedown', (evt, data) => {
-                                          
-                                        const targetElement = data.domTarget || data.target;
-                                        console.log("CKEditor mousedown event", targetElement);
-
-                                        if (
-                                            (targetElement && typeof targetElement.is === 'function' && targetElement.is('a')) ||
-                                            (targetElement && targetElement.nodeName === 'A')
-                                        ) {
-                                            console.log("Anchor clicked", targetElement);
-                                            //data.preventDefault(); // Prevent navigation
-                                        } else {
-                                            console.log("Not an anchor");
-                                        }
                                         });
                                     }}
                                     onChange={(event, editor) => {
