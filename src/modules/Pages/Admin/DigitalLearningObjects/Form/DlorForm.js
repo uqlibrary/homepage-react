@@ -1796,8 +1796,14 @@ export const DlorForm = ({
         window.location.reload(false);
     };
 
-    const handleNext = () => setActiveStep(prevActiveStep => prevActiveStep + 1);
-    const handleBack = () => setActiveStep(prevActiveStep => prevActiveStep - 1);
+    const handleNext = () => {
+        setEditorReady(false);
+        setActiveStep(prevActiveStep => prevActiveStep + 1);
+    }
+    const handleBack = () => {
+        setEditorReady(false);
+        setActiveStep(prevActiveStep => prevActiveStep - 1);
+    }
 
     if (!!dlorTeamListLoading || dlorFilterListLoading || !!dlorItemSaving || !!dlorItemLoading) {
         return (
