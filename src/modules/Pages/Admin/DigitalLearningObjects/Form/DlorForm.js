@@ -164,6 +164,8 @@ export const DlorForm = ({
     const [showLinkTimeForm, setShowLinkTimeForm] = useState(false);
     const [showLinkSizeForm, setShowLinkSizeForm] = useState(false);
 
+    const [editorReady, setEditorReady] = useState(false);
+
     const [summarySuggestionOpen, setSummarySuggestionOpen] = useState(false);
     const [formValues, setFormValues] = useState(formDefaults);
     const [summaryContent, setSummaryContent] = useState('');
@@ -238,6 +240,24 @@ export const DlorForm = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorItem, actions]);
 
+    useEffect(() => {
+        if (!editorReady) return;
+        const editable = document.querySelector('.ck-editor__editable');
+        /* istanbul ignore next */
+        if (editable) {
+            const handler = e => {
+                /* istanbul ignore next */
+                if (e.target.tagName === 'A') {
+                    console.log('Link clicked in CKEditor', e.target.href);
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                }
+            };
+            editable.addEventListener('click', handler);
+            return () => editable.removeEventListener('click', handler);
+        }
+    }, [editorReady]);
+
     // useEffect(() => {
     //     console.log("UseEffect formDefaults", formDefaults, formValues);
     //     if (!!!formDefaults.object_publishing_user) {
@@ -289,6 +309,17 @@ export const DlorForm = ({
                 { model: 'heading2', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
             ],
         },
+        link: {
+            decorators: {
+                isEditing: {
+                    mode: 'manual',
+                    label: 'Editing',
+                    attributes: {
+                        href: 'javascript:void(0);'
+                    }
+                }
+            }
+        }
     };
 
     const isValidUsername = testUserName => {
@@ -739,6 +770,7 @@ export const DlorForm = ({
                                     config={editorConfig}
                                     data={formValues?.object_admin_notes || ''}
                                     onReady={editor => {
+                                        setEditorReady(true);
                                         editor.editing.view.change(writer => {
                                             writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
                                         });
@@ -891,6 +923,7 @@ export const DlorForm = ({
                         config={editorConfig}
                         data={formValues?.object_description || ''}
                         onReady={editor => {
+                            setEditorReady(true);
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
                             });
@@ -1290,6 +1323,7 @@ export const DlorForm = ({
                         config={editorConfig}
                         data={formValues?.object_download_instructions || /* istanbul ignore next */ ''}
                         onReady={editor => {
+                            setEditorReady(true);
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
                             });
@@ -1509,6 +1543,7 @@ export const DlorForm = ({
                         config={editorConfig}
                         data={formValues?.notificationText || ''}
                         onReady={editor => {
+                            setEditorReady(true);
                             editor.editing.view.change(writer => {
                                 writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
                             });
@@ -1761,8 +1796,14 @@ export const DlorForm = ({
         window.location.reload(false);
     };
 
-    const handleNext = () => setActiveStep(prevActiveStep => prevActiveStep + 1);
-    const handleBack = () => setActiveStep(prevActiveStep => prevActiveStep - 1);
+    const handleNext = () => {
+        setEditorReady(false);
+        setActiveStep(prevActiveStep => prevActiveStep + 1);
+    }
+    const handleBack = () => {
+        setEditorReady(false);
+        setActiveStep(prevActiveStep => prevActiveStep - 1);
+    }
 
     if (!!dlorTeamListLoading || dlorFilterListLoading || !!dlorItemSaving || !!dlorItemLoading) {
         return (
