@@ -16,32 +16,6 @@ import Cookies from 'js-cookie';
 
 jest.mock('@sentry/browser');
 
-const sessionStorageMock = (function createSessionStorageMock() {
-    let store = {};
-
-    return {
-        getItem(key) {
-            return store[key] || null;
-        },
-
-        setItem(key, value) {
-            store[key] = value;
-        },
-
-        clear() {
-            store = {};
-        },
-
-        removeItem(key) {
-            delete store[key];
-        },
-
-        getAll() {
-            console.log(store);
-        },
-    };
-})();
-
 describe('Account action creators', () => {
     const MockDate = require('mockdate');
     beforeEach(() => {
@@ -51,14 +25,12 @@ describe('Account action creators', () => {
         mockSessionApi = setupSessionMockAdapter();
 
         Cookies.get = jest.fn().mockImplementation(() => 'abc123');
-        Object.defineProperty(window, 'sessionStorage', { value: sessionStorageMock });
     });
 
     afterEach(() => {
         MockDate.reset();
         mockApi.reset();
         mockSessionApi.reset();
-        window.sessionStorage.clear();
     });
 
     it('should dispatch expected actions on successful fetch of user details', async () => {
@@ -377,14 +349,12 @@ describe('Account action creators', () => {
         mockSessionApi = setupSessionMockAdapter();
 
         Cookies.get = jest.fn().mockImplementation(() => '');
-        Object.defineProperty(window, 'sessionStorage', { value: sessionStorageMock });
     });
 
     afterEach(() => {
         MockDate.reset();
         mockApi.reset();
         mockSessionApi.reset();
-        window.sessionStorage.clear();
     });
 
     it('dispatches expected actions when loading papercut is unauthorised (fails with 403)', async () => {
