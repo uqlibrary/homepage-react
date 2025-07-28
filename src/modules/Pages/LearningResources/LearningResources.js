@@ -118,7 +118,6 @@ export const LearningResources = ({
     readingListLoading,
     readingListError,
 }) => {
-    console.log('start LearningResources', readingListLoading, readingList);
     /**
      * The page consists of 2 sections:
      * - the user's enrolled courses (aka subjects), and
@@ -146,8 +145,7 @@ export const LearningResources = ({
     // store a list of the Reading Lists that have been loaded, by subject
     const [currentReadingLists, updateReadingLists] = useState([]);
     const loadNewSubject = React.useCallback(
-        async (classNumber, campus, semester, cause) => {
-            console.log(classNumber, 'cause=', cause);
+        async (classNumber, campus, semester) => {
             const minLengthOfValidCourseCode = 8;
             if (!classNumber || classNumber.length < minLengthOfValidCourseCode || isRepeatingString(classNumber)) {
                 return;
@@ -167,7 +165,7 @@ export const LearningResources = ({
         if (!!params.coursecode && !!params.campus && !!params.semester) {
             /* istanbul ignore else */
             if (!currentReadingLists[params.coursecode]) {
-                loadNewSubject(params.coursecode, params.campus, params.semester, 'url change');
+                loadNewSubject(params.coursecode, params.campus, params.semester);
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -229,7 +227,7 @@ export const LearningResources = ({
             const semester =
                 (!!enrolledClass && !!enrolledClass.semester && enrolledClass.semester) ||
                 /* istanbul ignore next */ null;
-            loadNewSubject(coursecode, campus, semester, 'focus on tab');
+            loadNewSubject(coursecode, campus, semester);
         }
 
         setCurrentMenuTab(subjectTabId);
@@ -302,7 +300,6 @@ export const LearningResources = ({
 
     // load the data for the first class (it is automatically displayed if the user has classes). Should only run once
     React.useEffect(() => {
-        console.log('useeffect load the data for the first class');
         const firstEnrolledClassNumber =
             (!!account.current_classes && account.current_classes.length > 0 && account.current_classes[0]) || null;
         const coursecode = extractSubjectCodeFromName(
@@ -322,7 +319,7 @@ export const LearningResources = ({
             (!!firstEnrolledClassNumber && !!firstEnrolledClassNumber.semester && firstEnrolledClassNumber.semester) ||
             null;
 
-        loadNewSubject(coursecode, campus, semester, 'first subject in account');
+        loadNewSubject(coursecode, campus, semester);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [account.current_classes, loadNewSubject]);
 

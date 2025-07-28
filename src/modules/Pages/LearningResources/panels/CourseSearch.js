@@ -74,7 +74,7 @@ export const CourseSearch = ({
                 const campus = course.campus || '';
                 /* istanbul ignore next */
                 const semester = course.semester || '';
-                loadNewSubject(searchKeyword, campus, semester, 'course search focus on tab');
+                loadNewSubject(searchKeyword, campus, semester);
                 /* istanbul ignore else */
                 if (!listSearchedSubjects.includes(searchKeyword)) {
                     // function not called when listSearchedSubjects has keyword, so the `if` is only for paranoia
@@ -217,7 +217,7 @@ export const CourseSearch = ({
             ) &&
             isValidSubjectNumber(searchKeyword)
         ) {
-            loadNewSubject(searchKeyword, campus, semester, 'course search enrolled in subject');
+            loadNewSubject(searchKeyword, campus, semester);
             /* istanbul ignore else */
             if (!listSearchedSubjects.includes(searchKeyword)) {
                 updateSearchList(searchKeyword);
