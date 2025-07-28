@@ -312,7 +312,7 @@ export const DLOTeamForm = ({
                                             defaultExpanded={!!formDefaults?.team_members && formDefaults.team_members.length > 0}
                                         >
                                             <AccordionSummary expandIcon={<ExpandMore />}>
-                                                <Typography variant="p" data-testid='team-members-title'>Team Members</Typography>
+                                                <Typography variant="p" data-testid='team-members-title'>Team Admins</Typography>
                                             </AccordionSummary>
                                             <AccordionDetails>
                                                 <TableContainer component={Paper}>
@@ -387,7 +387,7 @@ export const DLOTeamForm = ({
                                                                             </TableCell>
                                                                             <TableCell>
                                                                                 <IconButton
-                                                                                    aria-label="Edit team member"
+                                                                                    aria-label="Edit team admin"
                                                                                     data-testid={`team-member-edit-${idx}`}
                                                                                     onClick={() => handleEditTeamMember(member, idx)}
                                                                                     size="small"
@@ -395,7 +395,7 @@ export const DLOTeamForm = ({
                                                                                     <EditIcon />
                                                                                 </IconButton>
                                                                                 <IconButton
-                                                                                    aria-label="Delete team member"
+                                                                                    aria-label="Delete team admin"
                                                                                     data-testid={`team-member-delete-${idx}`}
                                                                                     onClick={() => {
                                                                                         setMemberToDelete(member);
@@ -412,59 +412,61 @@ export const DLOTeamForm = ({
                                                             ) : (
                                                                 <TableRow>
                                                                     <TableCell colSpan={5} align="center">
-                                                                        No team members found.
+                                                                        No team admins found.
                                                                     </TableCell>
                                                                 </TableRow>
                                                             )}
                                                         </TableBody>
                                                     </Table>
                                                 </TableContainer>
-                                                <Grid item xs={12}>
-                                                    <Box sx={{ marginTop: 2 }}>
-                                                        <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
-                                                            Add Team Member
-                                                        </Typography>
-                                                        <Grid container spacing={2} alignItems="center">
-                                                            <Grid item xs={4}>
-                                                                <Input
-                                                                    placeholder="Username"
-                                                                    value={newMember.team_admin_username}
-                                                                    onChange={handleNewMemberChange('team_admin_username')}
-                                                                    fullWidth
-                                                                    data-testid="add-team-member-username"
-                                                                />
-                                                            </Grid>
-                                                            <Grid item xs={5}>
-                                                                <Input
-                                                                    placeholder="Email"
-                                                                    value={newMember.team_admin_email}
-                                                                    onChange={handleNewMemberChange('team_admin_email')}
-                                                                    fullWidth
-                                                                    data-testid="add-team-member-email"
-                                                                />
-                                                            </Grid>
-                                                            <Grid item xs={3}>
-                                                                <Button
-                                                                    color="primary"
-                                                                    variant="contained"
-                                                                    onClick={handleAddNewMember}
-                                                                    data-testid="add-team-member-button"
-                                                                    fullWidth
-                                                                    disabled={isAddButtonDisabled}
-                                                                >
-                                                                    Add
-                                                                </Button>
-                                                            </Grid>
-                                                            {addMemberError && (
-                                                                <Grid item xs={12}>
-                                                                    <Typography color="error" variant="body2" data-testid="add-team-member-error">
-                                                                        {addMemberError}
-                                                                    </Typography>
+                                                {mode === 'edit' && (
+                                                    <Grid item xs={12}>
+                                                        <Box sx={{ marginTop: 2 }}>
+                                                            <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
+                                                                Add Team Admin
+                                                            </Typography>
+                                                            <Grid container spacing={2} alignItems="center">
+                                                                <Grid item xs={4}>
+                                                                    <Input
+                                                                        placeholder="Username"
+                                                                        value={newMember.team_admin_username}
+                                                                        onChange={handleNewMemberChange('team_admin_username')}
+                                                                        fullWidth
+                                                                        data-testid="add-team-member-username"
+                                                                    />
                                                                 </Grid>
-                                                            )}
-                                                        </Grid>
-                                                    </Box>
-                                                </Grid>
+                                                                <Grid item xs={5}>
+                                                                    <Input
+                                                                        placeholder="Email"
+                                                                        value={newMember.team_admin_email}
+                                                                        onChange={handleNewMemberChange('team_admin_email')}
+                                                                        fullWidth
+                                                                        data-testid="add-team-member-email"
+                                                                    />
+                                                                </Grid>
+                                                                <Grid item xs={3}>
+                                                                    <Button
+                                                                        color="primary"
+                                                                        variant="contained"
+                                                                        onClick={handleAddNewMember}
+                                                                        data-testid="add-team-member-button"
+                                                                        fullWidth
+                                                                        disabled={isAddButtonDisabled}
+                                                                    >
+                                                                        Add
+                                                                    </Button>
+                                                                </Grid>
+                                                                {addMemberError && (
+                                                                    <Grid item xs={12}>
+                                                                        <Typography color="error" variant="body2" data-testid="add-team-member-error">
+                                                                            {addMemberError}
+                                                                        </Typography>
+                                                                    </Grid>
+                                                                )}
+                                                            </Grid>
+                                                        </Box>
+                                                    </Grid>
+                                                )}
                                             </AccordionDetails>
                                         </Accordion>
                                     </Grid>
@@ -497,7 +499,7 @@ export const DLOTeamForm = ({
                                     confirmationBoxId="dlor-team-member-delete-confirm"
                                     isOpen={deleteConfirmOpen}
                                     locale={{
-                                        confirmationTitle: "Delete Team Member",
+                                        confirmationTitle: "Delete Team Admin",
                                         confirmationMessage: `Are you sure you want to delete ${memberToDelete?.team_admin_username}?`,
                                         cancelButtonLabel: "Cancel",
                                         confirmButtonLabel: "Delete",
