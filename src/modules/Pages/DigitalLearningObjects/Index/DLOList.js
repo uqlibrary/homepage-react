@@ -291,15 +291,20 @@ export const DLOList = ({
     const [isKeywordClearable, setIsKeywordClearable] = useState(false);
     const keyWordSearchRef = useRef('');
 
+    // Looking into a potential flag for facets to indicate if they are candidate displays similar to graduate attributes.
+    // For now, using an array to store selected helper text display as graduate attribute style.
+
     const [paginationPage, setPaginationPage] = React.useState(1);
 
     const FilterGraduateAttributes = (filterList, filterId, mode) => {
+        console.log("FilterList", filterList, filterId, mode);
         if (mode === 'push') {
             const ga = filterList
                 .filter(item => item.facet_type_name === 'Graduate attributes')
                 .flatMap(item => item.facet_list);
-            console.log('GA', ga, filterId);
-            const filteredGraduateAttributes = ga.filter(facet => Number(facet.facet_id) === Number(filterId));
+            const gaAlternate = [...ga, ...filterFacetsWithShowHelp(filterList)]
+            console.log('GA', ga, gaAlternate, filterId);
+            const filteredGraduateAttributes = gaAlternate.filter(facet => Number(facet.facet_id) === Number(filterId));
 
             setSelectedGradAttributes([...selectedGradAttributes, ...filteredGraduateAttributes]);
         } else {
@@ -309,6 +314,16 @@ export const DLOList = ({
             setSelectedGradAttributes(filteredGraduateAttributes);
         }
     };
+
+    function filterFacetsWithShowHelp(data) {
+        console.log("filterFacetsWithShowHelp RAW DATA", data);
+    return data.flatMap(facetType =>
+        facetType.facet_list.filter(item => !!item.facet_show_help)
+    );
+}
+
+    console.log("filterFacetsWithShowHelp", filterFacetsWithShowHelp(dlorFilterList || []), dlorFilterList);
+
     /* istanbul ignore next */
     function skipToElement() {
         const skipNavLander = document.querySelector('#first-panel-button');
@@ -544,7 +559,9 @@ export const DLOList = ({
                     .filter(item => item.facet_type_name === 'Graduate attributes')
                     .flatMap(item => item.facet_list);
 
-                const filteredGraduateAttributes = ga.filter(facet => Number(facet.facet_id) === Number(facetId));
+                     const gaAlternate = [...ga, ...filterFacetsWithShowHelp(dlorFilterList)]
+
+                const filteredGraduateAttributes = gaAlternate.filter(facet => Number(facet.facet_id) === Number(facetId));
                 selectedGraduateAttributes = [...selectedGraduateAttributes, ...filteredGraduateAttributes];
             });
             setSelectedFilters(facettypelist);
@@ -1290,7 +1307,26 @@ export const DLOList = ({
     // this will eventually be an internal form
     const contactFormLink = 'https://forms.office.com/r/8t0ugSZgE7';
 
-    const containsGraduateAttributes = selectedFilters.some(filter => filter.includes('graduate_attributes'));
+    function containsFacetWithShowHelp(selectedFilters, filterListTrimmed) {
+    // Build a Set of all facet ids with facet_show_help === true
+    const facetIdsWithShowHelp = new Set(
+        filterListTrimmed.flatMap(facetType =>
+            facetType.facet_list
+                .filter(item => item.facet_show_help === true)
+                .map(item => String(item.facet_id))
+        )
+    );
+    // Check if any selected filter matches a facet id with show help
+    return selectedFilters.some(filter => {
+        const parts = filter.split('-');
+        const facetId = parts[1];
+        return facetIdsWithShowHelp.has(facetId);
+    });
+}
+
+    const containsGraduateAttributes = selectedFilters.some(filter => filter.includes('graduate_attributes') || containsFacetWithShowHelp(selectedFilters, filterListTrimmed));
+
+    console.log("selectedFilters", selectedFilters, selectedGradAttributes);
 
     // sort the grad attributes display set in alpha order.
     selectedGradAttributes.sort((a, b) => {
