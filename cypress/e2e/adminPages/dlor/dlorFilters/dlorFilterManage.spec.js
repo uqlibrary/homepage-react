@@ -87,7 +87,8 @@ describe('Digital Learning Hub admin filter management', () => {
                 .focus()
                 .type('{downarrow}');
 
-            cy.get('#facet_help').clear();
+            cy.get('#facet_show_help').click();
+            cy.get('#facet_help').clear().type('This is an adjusted filter');
             cy.get('[data-testid="admin-dlor-filter-confirm-button"]').click();
             cy.get('#modal-modal-title').should('not.exist');
         });
