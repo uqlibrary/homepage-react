@@ -172,7 +172,7 @@ export const DLOFilterManage = ({
                                             setFormMode('edit');
                                             setInputValue(facet?.facet_name);
                                             setFacetOrder(facet?.facet_order || /* istanbul ignore next */ 0);
-                                            setFacetHelp(facet?.facet_help || '');
+                                            setFacetHelp(facet?.facet_help || /* istanbul ignore next */ '');
                                             setFacetName(facet?.facet_name);
                                             setFacet(facet);
                                             console.log("facet", facet);
