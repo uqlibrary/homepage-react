@@ -14,8 +14,9 @@ export default {
                     "facet_id": 1,
                     "facet_order": 1,
                     "facet_name": "Aboriginal and Torres Strait Islander",
-                    "facet_help": "",
-                    "facet_use_count": 2
+                    "facet_help": "This is the displayed help text for Aboriginal and Torres Strait Islander.",
+                    "facet_use_count": 2,
+                    "facet_show_help": true
                 }, {
                     "facet_id": 2,
                     "facet_order": 2,
@@ -55,8 +56,9 @@ export default {
                 }, {
                     "facet_id": 9,
                     "facet_name": "Other",
-                    "facet_help": "",
-                    "facet_use_count": 0
+                    "facet_help": "test help",
+                    "facet_use_count": 0,
+                    "facet_show_help": true
                 }
             ]
         },
@@ -164,12 +166,14 @@ export default {
                     "facet_id": 24,
                     "facet_name": "H5P",
                     "facet_help": "",
-                    "facet_use_count": 2
+                    "facet_use_count": 2,
+                     "facet_show_help": true
                 }, {
                     "facet_id": 25,
                     "facet_name": "Image",
                     "facet_help": "",
-                    "facet_use_count": 3
+                    "facet_use_count": 3,
+                     "facet_show_help": true
                 }, {
                     "facet_id": 26,
                     "facet_name": "PowerPoint",
