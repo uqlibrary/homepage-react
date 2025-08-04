@@ -1,9 +1,6 @@
 {
     "compilerOptions": {
-        "baseUrl": "src",
-        "paths": {
-            "modules/*": ["modules/*"]
-        },
+        "baseUrl": "playwright",
         "target": "esnext",
         "jsx": "react-jsxdev",
         "module": "esnext",
@@ -21,6 +18,6 @@
         // for MUI types
         "lib": ["es6", "dom"]
     },
-    "include": ["src/**/*.tsx", "src/**/*.ts", "utils/**/*.ts"],
-    "exclude": ["node_modules", "custom_modules", "/src/mocks/", "dist" ]
+    "include": ["playwright/**/*.ts"],
+    "exclude": ["node_modules"]
 }
