@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "baseUrl": "playwright",
         "target": "esnext",
         "jsx": "react-jsxdev",
         "module": "esnext",
