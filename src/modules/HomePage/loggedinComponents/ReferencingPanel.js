@@ -36,7 +36,7 @@ export const ReferencingPanel = ({ account }) => {
                 {canSeeEndnoteReferencing(account) && (
                     <Grid item xs={12}>
                         <a
-                            href={'https://guides.library.uq.edu.au/referencing/endnote'}
+                            href={'https://guides.library.uq.edu.au/tools-and-techniques/endnote-referencing-software'}
                             data-testid={'referencing-endnote'}
                         >
                             Endnote referencing software
