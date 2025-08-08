@@ -22,7 +22,7 @@ import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearning
 import { scrollToTopOfPage } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
 import { useAccountContext } from 'context';
-import { Accordion, AccordionDetails, AccordionSummary, TableContainer } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Checkbox, TableContainer } from '@mui/material';
 import { ExpandMore, PausePresentation } from '@mui/icons-material';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -326,6 +326,9 @@ export const DLOTeamForm = ({
                                                                     <strong>Email</strong>
                                                                 </TableCell>
                                                                 <TableCell>
+                                                                    <strong>Notifications</strong>
+                                                                </TableCell>
+                                                                <TableCell>
                                                                     <strong>Date Added</strong>
                                                                 </TableCell>
                                                                 <TableCell>
@@ -350,6 +353,12 @@ export const DLOTeamForm = ({
                                                                                     value={editingMember.team_admin_email}
                                                                                     onChange={e => setEditingMember({ ...editingMember, team_admin_email: e.target.value })}
                                                                                     fullWidth
+                                                                                />
+                                                                            </TableCell>
+                                                                            <TableCell>
+                                                                                <Checkbox
+                                                                                    checked={editingMember.team_admin_receive_object_notifications}
+                                                                                    onChange={e => setEditingMember({ ...editingMember, team_admin_receive_object_notifications: e.target.checked })}
                                                                                 />
                                                                             </TableCell>
                                                                             <TableCell>
@@ -381,6 +390,12 @@ export const DLOTeamForm = ({
                                                                             </TableCell>
                                                                             <TableCell data-testid={`team-member-email-${idx}`}>
                                                                                 {member.team_admin_email}
+                                                                            </TableCell>
+                                                                            <TableCell>
+                                                                                <Checkbox
+                                                                                    checked={member.team_admin_receive_object_notifications}
+                                                                                    disabled
+                                                                                />
                                                                             </TableCell>
                                                                             <TableCell data-testid={`team-member-date-${idx}`}>
                                                                                 {moment(member.created_at).format('DD/MM/YYYY, h:mm A')}
