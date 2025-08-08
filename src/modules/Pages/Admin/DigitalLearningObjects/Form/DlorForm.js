@@ -54,7 +54,7 @@ import {
     splitStringToArrayOnComma,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
-import { isDlorAdminUser } from 'helpers/access';
+import { isDlorAdminUser, isInDLOROwningTeam } from 'helpers/access';
 import { breadcrumbs } from 'config/routes';
 import { pluralise } from 'helpers/general';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -573,7 +573,7 @@ export const DlorForm = ({
                             id="object_publishing_user"
                             data-testid="object-publishing-user"
                             required
-                            disabled={!isDlorAdminUser(account)}
+                            disabled={(!isDlorAdminUser(account) && !isInDLOROwningTeam(account, dlorItem, dlorTeamList ))}
                             value={formValues?.object_publishing_user || ''}
                             onChange={handleChange('object_publishing_user')}
                             sx={{ width: '20em' }}
