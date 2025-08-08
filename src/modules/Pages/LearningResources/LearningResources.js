@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 import { useLocation } from 'react-router-dom';
-import { throttle } from 'throttle-debounce';
 
 import locale from './shared/learningResources.locale';
 import global from 'locale/global';
@@ -145,42 +144,32 @@ export const LearningResources = ({
 
     // store a list of the Reading Lists that have been loaded, by subject
     const [currentReadingLists, updateReadingLists] = useState([]);
-
-    const throttledGuideLoad = useRef(throttle(1000, classnumber => actions.loadGuides(classnumber)));
-    const throttledExamsLoad = useRef(throttle(1000, classnumber => actions.loadExamLearningResources(classnumber)));
-    const throttledReadingListLoad = useRef(
-        throttle(1000, (classnumber, campus, semester) => actions.loadReadingLists(classnumber, campus, semester)),
-    );
     const loadNewSubject = React.useCallback(
-        (classnumber, campus, semester) => {
+        async (classNumber, campus, semester) => {
             const minLengthOfValidCourseCode = 8;
-            if (!classnumber || classnumber.length < minLengthOfValidCourseCode || isRepeatingString(classnumber)) {
+            if (!classNumber || classNumber.length < minLengthOfValidCourseCode || isRepeatingString(classNumber)) {
                 return;
             }
 
-            if (!currentGuidesList[classnumber]) {
-                throttledGuideLoad.current(classnumber);
-            }
-
-            if (!currentExamsList[classnumber]) {
-                throttledExamsLoad.current(classnumber);
-            }
-
-            if (!currentReadingLists[classnumber]) {
-                throttledReadingListLoad.current(classnumber, campus, semester);
-            }
+            await Promise.all([
+                actions.loadReadingLists(classNumber, campus, semester),
+                actions.loadGuides(classNumber),
+                actions.loadExamLearningResources(classNumber),
+            ]);
         },
-        [currentGuidesList, currentExamsList, currentReadingLists],
+        [actions],
     );
 
     const params = getQueryParams(location.search);
     useEffect(() => {
         if (!!params.coursecode && !!params.campus && !!params.semester) {
+            /* istanbul ignore else */
             if (!currentReadingLists[params.coursecode]) {
                 loadNewSubject(params.coursecode, params.campus, params.semester);
             }
         }
-    }, [params, currentReadingLists, loadNewSubject]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // url params change on page load
 
     const getInitialTopTabState = () => {
         let initialTopTabState = 'searchtab';
@@ -316,6 +305,11 @@ export const LearningResources = ({
         const coursecode = extractSubjectCodeFromName(
             (!!firstEnrolledClassNumber && account.current_classes[0].classnumber) || null,
         );
+        if (params.hasOwnProperty('coursecode') && params.coursecode !== coursecode) {
+            console.log('course url param also in account, skip, for', coursecode);
+            return;
+        }
+
         const campus =
             (!!firstEnrolledClassNumber &&
                 !!firstEnrolledClassNumber.CAMPUS &&
@@ -326,6 +320,7 @@ export const LearningResources = ({
             null;
 
         loadNewSubject(coursecode, campus, semester);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [account.current_classes, loadNewSubject]);
 
     const readingLists = {

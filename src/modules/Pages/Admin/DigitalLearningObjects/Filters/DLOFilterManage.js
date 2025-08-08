@@ -55,6 +55,7 @@ export const DLOFilterManage = ({
     const [facetTypeId, setFacetTypeId] = useState(null);
     const [facet, setFacet] = useState(null);
     const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
+    const [facetShowHelp, setFacetShowHelp] = useState(false);
 
     const handleChange = (event) => {
         setInputValue(event.target.value);
@@ -73,6 +74,7 @@ export const DLOFilterManage = ({
             facet_name: inputValue,
             facet_order: facetOrder,
             facet_help: facetHelp,
+            facet_show_help: facetShowHelp,
         };
         actions.updateFacet(id, payload)
         .then(
@@ -88,7 +90,9 @@ export const DLOFilterManage = ({
             facet_order: facetOrder,
             facet_slug: '',
             facet_help: facetHelp,
+            facet_show_help: facetShowHelp,
         };
+        console.log("THE PAYLOAD IS", payload);
         actions.createFacet(payload)
         .then(
             handleClose()
@@ -113,7 +117,21 @@ export const DLOFilterManage = ({
         setFacetName('');
         setFacetTypeId(null);
         setFacet(null);
+        setFacetShowHelp(false);
     };
+
+    const handleEditFacet = (facet) => {
+        setEditBoxOpened(true); 
+        setFormMode('edit');
+        setInputValue(facet?.facet_name);
+        setFacetOrder(facet?.facet_order || /* istanbul ignore next */ 0);
+        setFacetHelp(facet?.facet_help ||  /* istanbul ignore next */ '');
+        setFacetName(facet?.facet_name);
+        setFacet(facet);
+        setFacetShowHelp(!!facet?.facet_show_help);
+    };
+
+    
 
     return (
         <StandardPage title="Digital Learning Hub - Facet Management">
@@ -169,16 +187,7 @@ export const DLOFilterManage = ({
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                                        <IconButton color='secondary' onClick={() => {
-                                            setEditBoxOpened(true); 
-                                            setFormMode('edit');
-                                            setInputValue(facet?.facet_name);
-                                            setFacetOrder(facet?.facet_order || /* istanbul ignore next */ 0);
-                                            setFacetHelp(facet?.facet_help || '');
-                                            setFacetName(facet?.facet_name);
-                                            setFacet(facet);
-                                            console.log("facet", facet);
-                                            }}
+                                        <IconButton color='secondary' onClick={() => handleEditFacet(facet)}
                                             data-testid={`edit-facet-${facet.facet_id}`}
                                         >
                                             <EditIcon />
@@ -265,6 +274,18 @@ export const DLOFilterManage = ({
                             fullWidth
                             inputProps={{ min: 0 }}
                         />
+                    </FormControl>
+                    <FormControl variant="standard" fullWidth sx={{ marginTop: '16px' }}>
+                        <label>
+                            <input
+                                id='facet_show_help'
+                                type="checkbox"
+                                checked={facetShowHelp}
+                                onChange={e => setFacetShowHelp(e.target.checked)}
+                                data-testid="facet-show-help-checkbox"
+                            />
+                            Show facet help on list
+                        </label>
                     </FormControl>
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
                         <Button
