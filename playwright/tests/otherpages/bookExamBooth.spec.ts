@@ -6,17 +6,14 @@ import moment from 'moment';
 
 async function selectFirstLocation(page: Page) {
     const firstLocation = locale.locationDecider.locations[0];
-    await expect(page.locator(`[data-testid="display-location-option-${firstLocation.value}"]`)).toBeVisible();
     await page.locator(`[data-testid="display-location-option-${firstLocation.value}"]`).click();
 }
 
 async function selectProctoredExam(page: Page) {
-    await expect(page.locator('[data-testid="display-decider-option-yes"]')).toBeVisible();
     await page.locator('[data-testid="display-decider-option-yes"]').click();
 }
 
 async function selectNONProctoredExam(page: Page) {
-    await expect(page.locator('[data-testid="display-decider-option-no"]')).toBeVisible();
     await page.locator('[data-testid="display-decider-option-no"]').click();
 }
 
@@ -25,19 +22,15 @@ test.describe('Book Exam Booth Accessibility', () => {
         await page.goto('/book-exam-booth');
         await page.setViewportSize({ width: 1300, height: 1000 });
 
-        await expect(page.locator('[data-testid="standard-card-booking-options"]')).toBeVisible();
         await assertAccessibility(page, '[data-testid="standard-card-booking-options"]');
 
         await selectNONProctoredExam(page);
-        await expect(page.locator('[data-testid="no-booking-necessary"]')).toBeVisible();
         await assertAccessibility(page, '[data-testid="no-booking-necessary"]');
 
         await selectProctoredExam(page);
-        await expect(page.locator('[data-testid="standard-card-booking-options"]')).toBeVisible();
         await assertAccessibility(page, '[data-testid="standard-card-booking-options"]');
 
         await selectFirstLocation(page);
-        await expect(page.locator('[data-testid="booking-details"]')).toBeVisible();
         await assertAccessibility(page, '[data-testid="booking-details"]');
     });
 });
@@ -60,9 +53,6 @@ test.describe('Book Exam Booth page', () => {
     test('should display location selector on selecting "am sitting a ProctorU exam"', async ({ page }) => {
         await selectProctoredExam(page);
         await expect(
-            page.locator('[data-testid="standard-card-where-would-you-like-to-sit-your-exam?"]'),
-        ).toBeVisible();
-        await expect(
             page
                 .locator('[data-testid="standard-card-where-would-you-like-to-sit-your-exam?"]')
                 .getByText(locale.locationDecider.heading, { exact: false }),
@@ -73,7 +63,6 @@ test.describe('Book Exam Booth page', () => {
         await selectProctoredExam(page);
         await selectFirstLocation(page);
         const bookingDetails = page.locator('[data-testid="booking-details"]');
-        await expect(bookingDetails).toBeVisible();
         await expect(bookingDetails).toContainText(locale.examType.label);
         await expect(bookingDetails).toContainText(locale.sessionLength.label);
         await expect(bookingDetails).toContainText(locale.startDate.label);

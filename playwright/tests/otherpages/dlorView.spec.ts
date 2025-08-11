@@ -27,9 +27,6 @@ test.describe('Digital Learning Hub View page', () => {
             ).not.toBeVisible();
             await expect(page.locator('[data-testid="dlor-detailpage-featured-custom-indicator"]')).not.toBeVisible();
             await expect(
-                page.locator('[data-testid="dlor-detailpage-object-series-name-custom-indicator"]'),
-            ).toBeVisible();
-            await expect(
                 page
                     .locator('[data-testid="dlor-detailpage-object-series-name-custom-indicator"]')
                     .getByText(/Series: Digital Essentials/)
@@ -42,16 +39,13 @@ test.describe('Digital Learning Hub View page', () => {
                 page.locator('[data-testid="dlor-detailpage"] h2').getByText(/Add the object to your course/),
             ).toBeVisible();
             // meta data in sidebar is as expected
-            await expect(page.locator('[data-testid="detailpage-filter-topic"] h3')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="detailpage-filter-topic"] h3')
                     .getByText(/Topic/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="detailpage-filter-topic"] ul')).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-filter-topic"] ul').locator(' > *')).toHaveCount(2);
-            await expect(page.locator('[data-testid="detailpage-filter-topic"] ul li:first-child')).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-filter-topic"] ul li:first-child')).toHaveText(
                 /Assignments/,
             );
@@ -59,20 +53,16 @@ test.describe('Digital Learning Hub View page', () => {
             await expect(
                 page.locator('[data-testid="detailpage-filter-topic"] ul li:first-child a:nth-of-type(2)'),
             ).not.toBeVisible(); // no help link
-            await expect(page.locator('[data-testid="detailpage-filter-topic"] ul li:nth-child(2)')).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-filter-topic"] ul li:nth-child(2)')).toHaveText(
                 /Software/,
             );
-            await expect(page.locator('[data-testid="detailpage-filter-item-type"] h3')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="detailpage-filter-item-type"] h3')
                     .getByText(/Item type/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="detailpage-filter-item-type"] ul')).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-filter-item-type"] ul').locator('> *')).toHaveCount(1);
-            await expect(page.locator('[data-testid="detailpage-filter-item-type"] ul li:first-child')).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-filter-item-type"] ul li:first-child')).toHaveText(
                 /Module/,
             );
@@ -81,20 +71,15 @@ test.describe('Digital Learning Hub View page', () => {
             ).not.toBeVisible();
 
             // no help link
-            await expect(page.locator('[data-testid="detailpage-filter-media-format"] h3')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="detailpage-filter-media-format"] h3')
                     .getByText(/Media format/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="detailpage-filter-media-format"] ul')).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-filter-media-format"] ul').locator('> *')).toHaveCount(
                 1,
             );
-            await expect(
-                page.locator('[data-testid="detailpage-filter-media-format"] ul li:first-child'),
-            ).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-filter-media-format"] ul li:first-child')).toHaveText(
                 /H5P/,
             );
@@ -103,56 +88,44 @@ test.describe('Digital Learning Hub View page', () => {
             ).not.toBeVisible();
 
             // no help link
-            await expect(page.locator('[data-testid="detailpage-filter-subject"] h3')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="detailpage-filter-subject"] h3')
                     .getByText(/Subject/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="detailpage-filter-subject"] ul')).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-filter-subject"] ul').locator('> *')).toHaveCount(2);
-            await expect(page.locator('[data-testid="detailpage-filter-subject"] ul li:first-child')).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-filter-subject"] ul li:first-child')).toHaveText(
                 /Health; Behavioural Sciences/,
             );
             await expect(
                 page.locator('[data-testid="detailpage-filter-subject"] ul li:first-child a:nth-of-type(2)'),
             ).not.toBeVisible(); // no help link
-            await expect(page.locator('[data-testid="detailpage-filter-subject"] ul li:nth-child(2)')).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-filter-subject"] ul li:nth-child(2)')).toHaveText(
                 /Medicine; Biomedical Sciences/,
             );
-            await expect(page.locator('[data-testid="detailpage-filter-licence"] h3')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="detailpage-filter-licence"] h3')
                     .getByText(/Licence/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="detailpage-filter-licence"] ul')).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-filter-licence"] ul').locator('> *')).toHaveCount(1);
-            await expect(page.locator('[data-testid="detailpage-filter-licence"] ul li:first-child')).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-filter-licence"] ul li:first-child')).toHaveText(
                 /UQ copyright/,
             );
             await expect(
                 page.locator('[data-testid="detailpage-filter-licence"] ul li:first-child a:nth-of-type(2)'),
             ).toBeVisible(); // help link exists
-            await expect(page.locator('[data-testid="detailpage-filter-graduate-attributes"] h3')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="detailpage-filter-graduate-attributes"] h3')
                     .getByText(/Graduate attributes/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="detailpage-filter-graduate-attributes"] ul')).toBeVisible();
             await expect(
                 page.locator('[data-testid="detailpage-filter-graduate-attributes"] ul').locator('> *'),
             ).toHaveCount(2);
-            await expect(
-                page.locator('[data-testid="detailpage-filter-graduate-attributes"] ul li:first-child'),
-            ).toBeVisible();
             await expect(
                 page.locator('[data-testid="detailpage-filter-graduate-attributes"] ul li:first-child'),
             ).toHaveText(/Accomplished scholars/);
@@ -164,11 +137,7 @@ test.describe('Digital Learning Hub View page', () => {
             // no help link
             await expect(
                 page.locator('[data-testid="detailpage-filter-graduate-attributes"] ul li:nth-child(2)'),
-            ).toBeVisible();
-            await expect(
-                page.locator('[data-testid="detailpage-filter-graduate-attributes"] ul li:nth-child(2)'),
             ).toHaveText(/Influential communicators/);
-            await expect(page.locator('[data-testid="detailpage-metadata-keywords"]')).toBeVisible();
             {
                 const scope = page.locator('[data-testid="detailpage-metadata-keywords"]');
                 await expect(scope.locator('h3')).toHaveText(/Keywords/);
@@ -176,14 +145,12 @@ test.describe('Digital Learning Hub View page', () => {
                 await expect(scope.getByText(/Generative AI/).first()).toBeVisible();
             }
             // the series footer appears as expected (shows the sorting is working)
-            await expect(page.locator('[data-testid="dlor-view-series-item-98j3-fgf95-8j34-order-0"]')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="dlor-view-series-item-98j3-fgf95-8j34-order-0"]')
                     .getByText(/Digital security - Digital Essentials/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="dlor-view-series-item-938h-4986-654f-order-1"]')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="dlor-view-series-item-938h-4986-654f-order-1"]')
@@ -194,21 +161,18 @@ test.describe('Digital Learning Hub View page', () => {
             await expect(
                 page.locator('[data-testid="dlor-view-series-item-938h-4986-654f-order-1"] [data-testid="StarIcon"]'),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="dlor-view-series-item-0h4y-87f3-6js7-order-2"]')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="dlor-view-series-item-0h4y-87f3-6js7-order-2"]')
                     .getByText(/Choose the right tool - Digital Essentials/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="dlor-view-series-item-987y-isjgt-9866-order-3"]')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="dlor-view-series-item-987y-isjgt-9866-order-3"]')
                     .getByText(/Accessibility - Digital Essentials \(has Youtube link\)/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="dlor-view-series-item-0j45-87h4-23hd7-order-4"]')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="dlor-view-series-item-0j45-87h4-23hd7-order-4"]')
@@ -216,8 +180,6 @@ test.describe('Digital Learning Hub View page', () => {
                     .first(),
             ).toBeVisible();
             // the link can be clicked
-            await expect(page.locator('[data-testid="detailpage-clicklink"]')).toBeVisible();
-            await expect(page.locator('[data-testid="detailpage-clicklink"]')).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-clicklink"]')).toHaveText(/Access the object/);
             await page.locator('[data-testid="detailpage-clicklink"]').click();
             await expect(
@@ -234,13 +196,10 @@ test.describe('Digital Learning Hub View page', () => {
                 /Access the object \(205m 45s\)/,
             );
             await page.goto('/digital-learning-hub/view/987y-dfgrf4-76gsg-15');
-            await expect(page.locator('[data-testid="detailpage-clicklink"]')).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-clicklink"]')).toHaveText(/\(video\)/);
             await page.goto('/digital-learning-hub/view/987y-dfgrf4-76gsg-14');
-            await expect(page.locator('[data-testid="detailpage-clicklink"]')).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-clicklink"]')).toHaveText(/\(123\.5 MB\)/);
             await page.goto('/digital-learning-hub/view/987y-dfgrf4-76gsg-13');
-            await expect(page.locator('[data-testid="detailpage-clicklink"]')).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-clicklink"]')).toHaveText(/\(video\)/);
 
             // ensure cancel button works.
@@ -260,7 +219,6 @@ test.describe('Digital Learning Hub View page', () => {
                     .getByText(/Cultural advice/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="dlor-detailpage-featured-custom-indicator"]')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="dlor-detailpage-featured-custom-indicator"]')
@@ -270,7 +228,6 @@ test.describe('Digital Learning Hub View page', () => {
             await expect(
                 page.locator('[data-testid="dlor-detailpage-object-series-name-custom-indicator"]'),
             ).not.toBeVisible();
-            await expect(page.locator('[data-testid="dlor-detailpage-cultural-advice"]')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="dlor-detailpage-cultural-advice"]')
@@ -281,7 +238,6 @@ test.describe('Digital Learning Hub View page', () => {
         test('is accessible', async ({ page }) => {
             await page.goto('digital-learning-hub/view/98s0_dy5k3_98h4');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('[data-testid="dlor-detailpage"] h1')).toBeVisible();
             await expect(page.locator('[data-testid="dlor-detailpage"] h1')).toHaveText(
                 /Advanced literature searching/,
             );
@@ -289,7 +245,6 @@ test.describe('Digital Learning Hub View page', () => {
         });
         test('a view page without keywords has a sensible sidebar', async ({ page }) => {
             await page.goto('digital-learning-hub/view/9k45_hgr4_876h');
-            await expect(page.locator('[data-testid="dlor-detailpage"] h1')).toBeVisible();
             await expect(page.locator('[data-testid="dlor-detailpage"] h1')).toHaveText(/EndNote 20: Getting started/);
             await expect(page.locator('[data-testid="detailpage-metadata-keywords"]')).not.toBeVisible();
         });
@@ -351,8 +306,6 @@ test.describe('Digital Learning Hub View page', () => {
             await expect(page.getByTestId('notifications-capture')).not.toBeDisabled();
 
             const userEmailInput = page.locator('#userEmail');
-            await expect(userEmailInput).toBeVisible();
-
             await userEmailInput.clear();
             await expect(page.getByTestId('notifications-capture')).toBeDisabled();
             await userEmailInput.fill('joe');
@@ -374,22 +327,20 @@ test.describe('Digital Learning Hub View page', () => {
 
             await page.getByTestId('detailpage-demographics-button').click();
 
-            const subjectInput = page.getByTestId('view-demographics-subject-code').locator('input');
-            const schoolInput = page.getByTestId('view-demographics-school-name').locator('input');
-
-            await expect(subjectInput).toBeVisible();
-            await subjectInput.fill(typeSubject);
-            await expect(schoolInput).toBeVisible();
-            await schoolInput.fill(typeSchoolName);
+            await page
+                .getByTestId('view-demographics-subject-code')
+                .locator('input')
+                .fill(typeSubject);
+            await page
+                .getByTestId('view-demographics-school-name')
+                .locator('input')
+                .fill(typeSchoolName);
 
             const captureButton = page.getByTestId('demographics-capture');
             await expect(captureButton).not.toBeDisabled();
             await captureButton.click();
 
-            const messageTitle = page.getByTestId('message-title');
-            await expect(messageTitle).toBeVisible();
-            await expect(messageTitle).toContainText('Demographic information saved');
-
+            await expect(page.getByTestId('message-title')).toContainText('Demographic information saved');
             const expectedValues = {
                 dlorUuid: '9bc174f7-5326-4a8b-bfab-d5081c688597',
                 demographics: {
@@ -422,17 +373,12 @@ test.describe('Digital Learning Hub View page', () => {
 
             await page.getByTestId('detailpage-notify-button').click();
 
-            await expect(page.getByTestId('view-notify-preferredName').locator('input')).toBeVisible();
             await expect(page.getByTestId('view-notify-preferredName').locator('input')).toHaveValue('Caroline');
-            await expect(page.getByTestId('view-notify-userEmail').locator('input')).toBeVisible();
             await expect(page.getByTestId('view-notify-userEmail').locator('input')).toHaveValue(
                 'j.Researcher@uq.edu.au',
             );
 
-            const captureButton = page.getByTestId('notifications-capture');
-            await expect(captureButton).toBeVisible();
-            await captureButton.click();
-
+            await page.getByTestId('notifications-capture').click();
             const expectedValues = {
                 dlorUuid: '9bc174f7-5326-4a8b-bfab-d5081c688597',
                 demographics: {
@@ -462,7 +408,6 @@ test.describe('Digital Learning Hub View page', () => {
                     .getByTestId('dialogbox-dlor-save-notification')
                     .locator('text=/Please check your email to confirm your subscription request/'),
             ).toBeVisible();
-
             await expect(page.getByTestId('cancel-dlor-save-notification')).not.toBeVisible();
         });
 
@@ -474,17 +419,12 @@ test.describe('Digital Learning Hub View page', () => {
 
             await page.getByTestId('detailpage-notify-button').click();
 
-            await expect(page.getByTestId('view-notify-preferredName').locator('input')).toBeVisible();
             await expect(page.getByTestId('view-notify-preferredName').locator('input')).toHaveValue('Caroline');
-            await expect(page.getByTestId('view-notify-userEmail').locator('input')).toBeVisible();
             await expect(page.getByTestId('view-notify-userEmail').locator('input')).toHaveValue(
                 'j.Researcher@uq.edu.au',
             );
 
-            const captureButton = page.getByTestId('notifications-capture');
-            await expect(captureButton).toBeVisible();
-            await captureButton.click();
-
+            await page.getByTestId('notifications-capture').click();
             const expectedValues = {
                 dlorUuid: '9bc174f7-5326-4a8b-bfab-d5081c688597',
                 demographics: {
@@ -512,12 +452,8 @@ test.describe('Digital Learning Hub View page', () => {
             await expect(
                 page.getByTestId('dialogbox-dlor-save-notification').locator('text=/There was a problem/'),
             ).toBeVisible();
-
             await expect(page.getByTestId('cancel-dlor-save-notification')).not.toBeVisible();
-
-            const confirmButton = page.getByTestId('confirm-dlor-save-notification');
-            await expect(confirmButton).toBeVisible();
-            await confirmButton.click();
+            await page.getByTestId('confirm-dlor-save-notification').click();
         });
 
         test('handles where the user was already subscribed', async ({ page, context }) => {
@@ -528,25 +464,17 @@ test.describe('Digital Learning Hub View page', () => {
 
             await page.getByTestId('detailpage-notify-button').click();
 
-            await expect(page.getByTestId('view-notify-preferredName').locator('input')).toBeVisible();
             await expect(page.getByTestId('view-notify-preferredName').locator('input')).toHaveValue('Caroline');
-            await expect(page.getByTestId('view-notify-userEmail').locator('input')).toBeVisible();
             await expect(page.getByTestId('view-notify-userEmail').locator('input')).toHaveValue(
                 'j.Researcher@uq.edu.au',
             );
 
-            const captureButton = page.getByTestId('notifications-capture');
-            await expect(captureButton).toBeVisible();
-            await captureButton.click();
-
+            await page.getByTestId('notifications-capture').click();
             await expect(
                 page.getByTestId('dialogbox-dlor-save-notification').locator('text=/You are already subscribed/'),
             ).toBeVisible();
-
             await expect(page.getByTestId('cancel-dlor-save-notification')).not.toBeVisible();
-            const confirmButton = page.getByTestId('confirm-dlor-save-notification');
-            await expect(confirmButton).toBeVisible();
-            await confirmButton.click();
+            await page.getByTestId('confirm-dlor-save-notification').click();
         });
     });
     test.describe('"Access it" units show properly', () => {
@@ -606,9 +534,7 @@ test.describe('Digital Learning Hub View page', () => {
 
             // reveal the notify fields
             await page.locator('[data-testid="detailpage-notify-button"]').click();
-            await expect(page.locator('[data-testid="view-notify-preferredName"] input')).toBeVisible();
             await expect(page.locator('[data-testid="view-notify-preferredName"] input')).toHaveValue('Jane');
-            await expect(page.locator('[data-testid="view-notify-userEmail"] input')).toBeVisible();
             await expect(page.locator('[data-testid="view-notify-userEmail"] input')).toHaveValue(
                 'rhd@student.uq.edu.au',
             );
@@ -616,12 +542,6 @@ test.describe('Digital Learning Hub View page', () => {
         test('Admin sees an edit button', async ({ page }) => {
             await page.goto('digital-learning-hub/view/98s0_dy5k3_98h4?user=dloradmn');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(
-                page
-                    .locator('[data-testid="detailpage-admin-edit-button"]')
-                    .getByText(/Edit/)
-                    .first(),
-            ).toBeVisible();
             await page.locator('[data-testid="detailpage-admin-edit-button"]').click();
             await expect(page).toHaveURL('http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=dloradmn');
         });
@@ -653,7 +573,6 @@ test.describe('Digital Learning Hub View page', () => {
             await expect(page.locator('#connected-citizens-dlor-filter-checkbox')).toBeChecked();
             await expect(page.locator('#courageous-thinkers-dlor-filter-checkbox')).toBeChecked();
             await expect(page.locator('#culturally-capable-dlor-filter-checkbox')).toBeChecked();
-            await expect(page.locator('[data-testid="graduate-attribute-10-name"]')).toBeVisible();
             await page.locator('#accomplished-scholars-dlor-filter-checkbox').click();
             await expect(page.locator('[data-testid="graduate-attribute-10-name"]')).not.toBeVisible();
             await page.locator('#connected-citizens-dlor-filter-checkbox').click();
@@ -668,12 +587,6 @@ test.describe('Digital Learning Hub View page', () => {
         test('User sees edit on objects they own', async ({ page }) => {
             await page.goto('digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=s1111111');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(
-                page
-                    .locator('[data-testid="detailpage-admin-edit-button"]')
-                    .getByText(/Edit/)
-                    .first(),
-            ).toBeVisible();
             await page.locator('[data-testid="detailpage-admin-edit-button"]').click();
             await expect(page).toHaveURL('http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01');
             await expect(page.locator('[data-testid="dlor-breadcrumb-edit-object-label-0"]')).toHaveText(/Dummy entry/);
@@ -702,7 +615,6 @@ test.describe('Digital Learning Hub View page', () => {
             await page.locator('[data-testid="dlor-form-next-button"]').click();
             await page.locator('[data-testid="dlor-form-next-button"]').click();
             await page.locator('[data-testid="admin-dlor-save-button-submit"]').click();
-            await expect(page.locator('[data-testid="message-title"]')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="message-title"]')
@@ -753,7 +665,6 @@ test.describe('Digital Learning Hub View page', () => {
             );
             await page.goto('digital-learning-hub/view/987y-dfgrf4-76gsg-01-uqonly?user=anon');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('[data-testid="access-denied-message"]')).toBeVisible();
             await expect(page.locator('[data-testid="access-denied-message"]')).toHaveText(
                 /You need to be a UQ staff or student to access this object/,
             );

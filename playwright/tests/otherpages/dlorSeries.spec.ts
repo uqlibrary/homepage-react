@@ -18,7 +18,6 @@ test.describe('Digital Learning Hub Series page.', () => {
             );
             await page.goto('digital-learning-hub/series/5');
             await expect(page.locator('[data-testid="dlor-seriespage-description"]')).not.toBeVisible();
-            await expect(page.locator('[data-testid="dlor-seriespage-loadError"]')).toBeVisible();
             await expect(page.locator('[data-testid="dlor-seriespage-loadError"]')).toHaveText(
                 /An error has occurred during the request and this request cannot be processed/,
             );
@@ -61,14 +60,12 @@ test.describe('Digital Learning Hub Series page.', () => {
 
             await page.goto('digital-learning-hub/series/9?user=dloradmn');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByText(/Staff Restricted Object/).first()).toBeVisible();
             await expect(
                 page
                     .getByText(/Staff Restricted Object/)
                     .locator('../../..')
                     .getByText(/Staff Only/),
             ).toBeVisible();
-            await expect(page.getByText(/Staff \(library\) Restricted Object/).first()).toBeVisible();
             await expect(
                 page
                     .getByText(/Staff \(library\) Restricted Object/)

@@ -353,7 +353,6 @@ async function FREN1010LoadsProperly(page: Page) {
             .getByText(/FREN1010 - Introductory French 1/)
             .first(),
     ).toBeVisible();
-    await expect(page.locator('[data-testid="reading-list-FREN1010-content"]')).toBeVisible();
     await expect(
         page
             .locator('[data-testid="reading-list-FREN1010-content"]')
@@ -364,14 +363,12 @@ async function FREN1010LoadsProperly(page: Page) {
     await expect(page.locator('div[data-testid="reading-list-FREN1010"]')).not.toContainText(
         'Reading list currently unavailable',
     );
-    await expect(page.locator('[data-testid="past-exams-FREN1010-content"]')).toBeVisible();
     await expect(
         page
             .locator('[data-testid="past-exams-FREN1010-content"]')
             .getByText(/Past exam papers \(16 items\)/)
             .first(),
     ).toBeVisible();
-    await expect(page.locator('[data-testid="guides-FREN1010-content"]')).toBeVisible();
     await expect(
         page
             .locator('[data-testid="guides-FREN1010-content"]')
@@ -637,7 +634,6 @@ test.describe('The Learning Resources Page', () => {
                     .getByText(/HIST1201/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="reading-list-HIST1201-content"]')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="reading-list-HIST1201-content"]')
@@ -668,21 +664,18 @@ test.describe('The Learning Resources Page', () => {
                     .getByText(/ACCT1101/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="reading-list-ACCT1101-content"]')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="reading-list-ACCT1101-content"]')
                     .getByText(/ACCT1101 Reading list \(contains 2 items\)/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="past-exams-ACCT1101-content"]')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="past-exams-ACCT1101-content"]')
                     .getByText(/Past exam papers \(9 items\)/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="guides-ACCT1101-content"]')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="guides-ACCT1101-content"]')
@@ -705,21 +698,18 @@ test.describe('The Learning Resources Page', () => {
                 .getByText(/PHYS1101E/)
                 .first(),
         ).toBeVisible();
-        await expect(page.locator('[data-testid="reading-list-PHYS1101E-content"]')).toBeVisible();
         await expect(
             page
                 .locator('[data-testid="reading-list-PHYS1101E-content"]')
                 .getByText(/No Reading list for this course/)
                 .first(),
         ).toBeVisible();
-        await expect(page.locator('[data-testid="past-exams-false-content"]')).toBeVisible();
         await expect(
             page
                 .locator('[data-testid="past-exams-false-content"]')
                 .getByText(/No Past Exam Papers for this course/)
                 .first(),
         ).toBeVisible();
-        await expect(page.locator('[data-testid="no-guides"]')).toBeVisible();
         await expect(page.locator('[data-testid="no-guides"]')).toHaveText(/No subject guides for this course/);
 
         // swap tabs to FREN1010 - at one point swapping from an error to an ok wiped the ok :(
@@ -777,14 +767,12 @@ test.describe('The Learning Resources Page', () => {
     });
 
     async function hasExamReadMoreLink(page: Page) {
-        await expect(page.locator('[data-testid="exams-readmore"] a span')).toBeVisible();
         await expect(
             page
                 .locator('[data-testid="exams-readmore"] a span')
                 .getByText(/Read more about past exam papers/)
                 .first(),
         ).toBeVisible();
-        await expect(page.locator('[data-testid="exams-readmore"] a')).toBeVisible();
         await expect(page.locator('[data-testid="exams-readmore"] a')).toHaveAttribute(
             'href',
             'https://web.library.uq.edu.au/study-and-learning-support/coursework/past-exam-papers',
@@ -867,7 +855,6 @@ test.describe('The Learning Resources Page', () => {
         await page.goto(
             '/learning-resources?user=s3333333&coursecode=PHYS1101E&campus=St%20Lucia&semester=Semester%202%202020',
         );
-        await expect(page.locator('[data-testid="reading-list-PHYS1101E-content"]')).toBeVisible();
         await expect(
             page
                 .locator('[data-testid="reading-list-PHYS1101E-content"]')
@@ -881,7 +868,6 @@ test.describe('The Learning Resources Page', () => {
         await the_user_clicks_on_the_Search_tab(page);
         await the_user_sees_the_search_form(page);
         await searchFor(page, 'LAWS', 'LAWS7107');
-        await expect(page.locator('[data-testid="legalResearchEssentials"]')).toBeVisible();
         await expect(
             page
                 .locator('[data-testid="legalResearchEssentials"]')
@@ -907,7 +893,6 @@ test.describe('The Learning Resources Page', () => {
                 .first(),
         ).toBeVisible();
         await page.locator('[data-testid="guides-springshare-error"]').scrollIntoViewIfNeeded();
-        await expect(page.locator('[data-testid="guides-springshare-error"]')).toBeVisible();
         await expect(
             page
                 .locator('[data-testid="guides-springshare-error"]')

@@ -50,7 +50,6 @@ test.describe('authorisation errors', () => {
     test('page that requires Admin returns an error to unprivileged users', async ({ page }) => {
         await page.goto('/admin/alerts?user=s1111111');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('h1')).toBeVisible();
         await expect(
             page
                 .locator('h1')
