@@ -62,7 +62,7 @@ test.describe('authorisation errors', () => {
     }) => {
         await page.goto('/learning-resources?user=emcommunity');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('[data-testid=permission-denied]')).toBeVisible();
+        await expect(page.getByTestId('permission-denied')).toBeVisible();
         await expect(
             page
                 .locator('body')
@@ -73,7 +73,7 @@ test.describe('authorisation errors', () => {
     test('page that requires Admin does not return a not found error to privileged users', async ({ page }) => {
         await page.goto('/admin/alerts?user=uqstaff');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('[data-testid=page-not-found]')).not.toBeVisible();
+        await expect(page.getByTestId('page-not-found')).not.toBeVisible();
         await expect(page.locator('h1')).not.toContainText('Permission denied');
     });
     test('page that isnt available to all logged in users does not return an authorisation error for privileged users', async ({
@@ -81,7 +81,7 @@ test.describe('authorisation errors', () => {
     }) => {
         await page.goto('/learning-resources?user=s1111111');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('[data-testid=permission-denied]')).not.toBeVisible();
+        await expect(page.getByTestId('permission-denied')).not.toBeVisible();
         await expect(page.locator('h1')).not.toContainText('Permission denied');
     });
 });
@@ -89,7 +89,7 @@ test.describe('authentication errors', () => {
     test('page that requires login returns an authentication error for non-loggedin user', async ({ page }) => {
         await page.goto('/learning-resources?user=public');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('[data-testid=user-not-loggedin]')).toBeVisible();
+        await expect(page.getByTestId('user-not-loggedin')).toBeVisible();
         await expect(
             page
                 .locator('body')
@@ -100,7 +100,7 @@ test.describe('authentication errors', () => {
     test('page that requires login does not return an authentication error for loggedin user', async ({ page }) => {
         await page.goto('/learning-resources?user=uqstaff');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('[data-testid=user-not-loggedin]')).not.toBeVisible();
+        await expect(page.getByTestId('user-not-loggedin')).not.toBeVisible();
     });
 });
 test.describe('404 errors', () => {

@@ -91,7 +91,7 @@ async function exams_panel_loads_correctly_for_a_subject_with_many_exams(
     const numberExcessExams = examPapers.remainingCount || 0;
     const totalExamItems = examPapers.list.length + numberExcessExams;
 
-    const examsPanel = page.locator('[data-testid="learning-resource-subject-exams"]');
+    const examsPanel = page.getByTestId('learning-resource-subject-exams');
 
     // Check header
     await expect(
@@ -218,9 +218,9 @@ async function load_a_subject_in_learning_resource_page_search_tab(
         })
         .pop();
     await page.locator('div[data-testid=full-learningresource-autocomplete] input').fill('');
-    await expect(page.locator('[data-testid="noCoursesFound"]')).not.toBeVisible();
+    await expect(page.getByTestId('noCoursesFound')).not.toBeVisible();
     await page.locator('div[data-testid=full-learningresource-autocomplete] input').type(typeChar);
-    await expect(page.locator('[data-testid="noCoursesFound"]')).not.toBeVisible();
+    await expect(page.getByTestId('noCoursesFound')).not.toBeVisible();
     await expect(page.locator('ul#full-learningresource-autocomplete-listbox').locator(':scope > *')).toHaveCount(
         numberOfMatchingSubject + 1,
     ); // plus one for title
@@ -349,13 +349,13 @@ async function FREN1010_loads_properly_for_s111111_user(page: Page) {
 async function FREN1010LoadsProperly(page: Page) {
     await expect(
         page
-            .locator('[data-testid="learning-resource-subject-title"]')
+            .getByTestId('learning-resource-subject-title')
             .getByText(/FREN1010 - Introductory French 1/)
             .first(),
     ).toBeVisible();
     await expect(
         page
-            .locator('[data-testid="reading-list-FREN1010-content"]')
+            .getByTestId('reading-list-FREN1010-content')
             .getByText(/FREN1010 Reading list \(contains 2 items\)/)
             .first(),
     ).toBeVisible();
@@ -365,17 +365,17 @@ async function FREN1010LoadsProperly(page: Page) {
     );
     await expect(
         page
-            .locator('[data-testid="past-exams-FREN1010-content"]')
+            .getByTestId('past-exams-FREN1010-content')
             .getByText(/Past exam papers \(16 items\)/)
             .first(),
     ).toBeVisible();
     await expect(
         page
-            .locator('[data-testid="guides-FREN1010-content"]')
+            .getByTestId('guides-FREN1010-content')
             .getByText(/French Studies/)
             .first(),
     ).toBeVisible();
-    await expect(page.locator('[data-testid="legalResearchEssentials-LAWS7107"]')).not.toBeVisible();
+    await expect(page.getByTestId('legalResearchEssentials-LAWS7107')).not.toBeVisible();
 }
 
 async function searchFor(page: Page, searchFor = 'FREN', selectCourseCode: string) {
@@ -454,7 +454,7 @@ test.describe('Learning Resources Access', () => {
         );
         await expect(
             page
-                .locator('[data-testid="learning-resource-subject-title"]')
+                .getByTestId('learning-resource-subject-title')
                 .getByText(/PHYS1101E/)
                 .first(),
         ).toBeVisible();
@@ -465,7 +465,7 @@ test.describe('Learning Resources Access', () => {
         );
         await expect(
             page
-                .locator('[data-testid="learning-resource-subject-title"]')
+                .getByTestId('learning-resource-subject-title')
                 .getByText(/FREN1010/)
                 .first(),
         ).toBeVisible();
@@ -477,7 +477,7 @@ test.describe('The Learning Resources Page', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(
             page
-                .locator('[data-testid="subsite-title"]')
+                .getByTestId('subsite-title')
                 .getByText(/Learning resources/)
                 .first(),
         ).toBeVisible();
@@ -487,21 +487,21 @@ test.describe('The Learning Resources Page', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(
             page
-                .locator('[data-testid="learning-resource-subject-title"]')
+                .getByTestId('learning-resource-subject-title')
                 .getByText(/FREN1010 - Introductory French 1/)
                 .first(),
         ).toBeVisible();
         await click_on_a_subject_tab(page, 1, HIST1201ReadingList);
         await expect(
             page
-                .locator('[data-testid="learning-resource-subject-title"]')
+                .getByTestId('learning-resource-subject-title')
                 .getByText(/HIST1201 - The Australian Experience/)
                 .first(),
         ).toBeVisible();
         await click_on_a_subject_tab(page, 2, PHIL1002ReadingList);
         await expect(
             page
-                .locator('[data-testid=learning-resource-subject-title]')
+                .getByTestId('learning-resource-subject-title')
                 .getByText(/PHIL1002 - Introduction to Philosophy: What is Philosophy\?/)
                 .first(),
         ).toBeVisible();
@@ -509,7 +509,7 @@ test.describe('The Learning Resources Page', () => {
         await click_on_a_subject_tab(page, 1, HIST1201ReadingList);
         await expect(
             page
-                .locator('[data-testid="learning-resource-subject-title"]')
+                .getByTestId('learning-resource-subject-title')
                 .getByText(/HIST1201 - The Australian Experience/)
                 .first(),
         ).toBeVisible();
@@ -544,7 +544,7 @@ test.describe('The Learning Resources Page', () => {
         await the_user_lands_on_the_Search_tab(page);
         await expect(
             page
-                .locator('[data-testid="learning-resource-subject-title"]')
+                .getByTestId('learning-resource-subject-title')
                 .getByText(/ACCT1101 - Accounting for Decision Making/)
                 .first(),
         ).toBeVisible();
@@ -556,7 +556,7 @@ test.describe('The Learning Resources Page', () => {
         ).toBeVisible();
         await expect(
             page
-                .locator('[data-testid="reading-list-link"]')
+                .getByTestId('reading-list-link')
                 .getByText(/ACCT1101 Reading list \(contains 2 items\)/)
                 .first(),
         ).toBeVisible();
@@ -582,7 +582,7 @@ test.describe('The Learning Resources Page', () => {
         await the_user_lands_on_the_Search_tab(page);
         await expect(
             page
-                .locator('[data-testid="learning-resource-subject-title"]')
+                .getByTestId('learning-resource-subject-title')
                 .getByText(/FREN1011 - Introductory French 1 extended/)
                 .first(),
         ).toBeVisible();
@@ -594,7 +594,7 @@ test.describe('The Learning Resources Page', () => {
         ).toBeVisible();
         await expect(
             page
-                .locator('[data-testid="reading-list-link"]')
+                .getByTestId('reading-list-link')
                 .getByText(/FREN1011 Reading list \(contains 11 items\)/)
                 .first(),
         ).toBeVisible();
@@ -630,59 +630,59 @@ test.describe('The Learning Resources Page', () => {
         async function HIST1201LoadsProperly(page: Page) {
             await expect(
                 page
-                    .locator('[data-testid="learning-resource-subject-title"]')
+                    .getByTestId('learning-resource-subject-title')
                     .getByText(/HIST1201/)
                     .first(),
             ).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="reading-list-HIST1201-content"]')
+                    .getByTestId('reading-list-HIST1201-content')
                     .getByText(/HIST1201 Reading list \(contains 35 items\)/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="past-exams-HIST1201-content"]')).toBeVisible();
+            await expect(page.getByTestId('past-exams-HIST1201-content')).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="past-exams-HIST1201-content"]')
+                    .getByTestId('past-exams-HIST1201-content')
                     .getByText(/Past exam papers \(1 item\)/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="guides-false-content"]')).toBeVisible();
+            await expect(page.getByTestId('guides-false-content')).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="guides-false-content"]')
+                    .getByTestId('guides-false-content')
                     .getByText(/No subject guides/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="legalResearchEssentials"]')).not.toBeVisible();
+            await expect(page.getByTestId('legalResearchEssentials')).not.toBeVisible();
         }
 
         async function ACCT1101LoadsProperly(page: Page) {
             await expect(
                 page
-                    .locator('[data-testid="learning-resource-subject-title"]')
+                    .getByTestId('learning-resource-subject-title')
                     .getByText(/ACCT1101/)
                     .first(),
             ).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="reading-list-ACCT1101-content"]')
+                    .getByTestId('reading-list-ACCT1101-content')
                     .getByText(/ACCT1101 Reading list \(contains 2 items\)/)
                     .first(),
             ).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="past-exams-ACCT1101-content"]')
+                    .getByTestId('past-exams-ACCT1101-content')
                     .getByText(/Past exam papers \(9 items\)/)
                     .first(),
             ).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="guides-ACCT1101-content"]')
+                    .getByTestId('guides-ACCT1101-content')
                     .getByText(/Accounting/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="legalResearchEssentials"]')).not.toBeVisible();
+            await expect(page.getByTestId('legalResearchEssentials')).not.toBeVisible();
         }
 
         await page.goto('/learning-resources?user=s3333333');
@@ -694,27 +694,27 @@ test.describe('The Learning Resources Page', () => {
         await searchFor(page, 'PHYS', 'PHYS1101E');
         await expect(
             page
-                .locator('[data-testid="learning-resource-subject-title"]')
+                .getByTestId('learning-resource-subject-title')
                 .getByText(/PHYS1101E/)
                 .first(),
         ).toBeVisible();
         await expect(
             page
-                .locator('[data-testid="reading-list-PHYS1101E-content"]')
+                .getByTestId('reading-list-PHYS1101E-content')
                 .getByText(/No Reading list for this course/)
                 .first(),
         ).toBeVisible();
         await expect(
             page
-                .locator('[data-testid="past-exams-false-content"]')
+                .getByTestId('past-exams-false-content')
                 .getByText(/No Past Exam Papers for this course/)
                 .first(),
         ).toBeVisible();
-        await expect(page.locator('[data-testid="no-guides"]')).toHaveText(/No subject guides for this course/);
+        await expect(page.getByTestId('no-guides')).toHaveText(/No subject guides for this course/);
 
         // swap tabs to FREN1010 - at one point swapping from an error to an ok wiped the ok :(
         await page
-            .locator('[data-testid=classtab-FREN1010]')
+            .getByTestId('classtab-FREN1010')
             .getByText(/FREN1010/)
             .first()
             .click();
@@ -731,7 +731,7 @@ test.describe('The Learning Resources Page', () => {
         await ACCT1101LoadsProperly(page);
         // swap tabs to FREN1010
         await page
-            .locator('[data-testid=classtab-FREN1010]')
+            .getByTestId('classtab-FREN1010')
             .getByText(/FREN1010/)
             .first()
             .click();
@@ -744,7 +744,7 @@ test.describe('The Learning Resources Page', () => {
         await FREN1010LoadsProperly(page);
         // swap tabs to HIST1201
         await page
-            .locator('[data-testid=classtab-HIST1201]')
+            .getByTestId('classtab-HIST1201')
             .getByText(/HIST1201/)
             .first()
             .click();
@@ -787,19 +787,17 @@ test.describe('The Learning Resources Page', () => {
         );
         await expect(
             page
-                .locator('[data-testid="reading-list-link"]')
+                .getByTestId('reading-list-link')
                 .getByText(/HIST1201 Reading list \(contains 35 items\)/)
                 .first(),
         ).toBeVisible();
 
-        await expect(page.locator('[data-testid="learning-resource-subject-title"]')).toContainText('HIST1201');
-        await expect(page.locator('[data-testid="learning-resource-subject-title"]')).toContainText(
-            'The Australian Experience',
-        );
+        await expect(page.getByTestId('learning-resource-subject-title')).toContainText('HIST1201');
+        await expect(page.getByTestId('learning-resource-subject-title')).toContainText('The Australian Experience');
         await hasExamReadMoreLink(page);
-        await expect(page.locator('[data-testid="exam-list-wrapper"]').locator(':scope > *')).toHaveCount(1);
-        await expect(page.locator('[data-testid="examPaperItem-0"]')).toContainText('Semester 1 2016');
-        await expect(page.locator('[data-testid="no-guides"]')).toContainText('No subject guides for this course');
+        await expect(page.getByTestId('exam-list-wrapper').locator(':scope > *')).toHaveCount(1);
+        await expect(page.getByTestId('examPaperItem-0')).toContainText('Semester 1 2016');
+        await expect(page.getByTestId('no-guides')).toContainText('No subject guides for this course');
     });
     test('the content on the french tab is correct', async ({ page }) => {
         await page.goto(
@@ -807,24 +805,22 @@ test.describe('The Learning Resources Page', () => {
         );
         await expect(
             page
-                .locator('[data-testid="reading-list-link"]')
+                .getByTestId('reading-list-link')
                 .getByText(/FREN1010 Reading list \(contains 2 items\)/)
                 .first(),
         ).toBeVisible();
 
-        await expect(page.locator('[data-testid="learning-resource-subject-title"]')).toContainText('FREN1010');
-        await expect(page.locator('[data-testid="learning-resource-subject-title"]')).toContainText(
-            'Introductory French 1',
-        );
+        await expect(page.getByTestId('learning-resource-subject-title')).toContainText('FREN1010');
+        await expect(page.getByTestId('learning-resource-subject-title')).toContainText('Introductory French 1');
         await hasExamReadMoreLink(page);
-        await expect(page.locator('[data-testid="exam-list-wrapper"]').locator(':scope > *')).toHaveCount(3);
-        await expect(page.locator('[data-testid="examPaperItem-0"]')).toContainText('Semester 2 2019');
-        await expect(page.locator('[data-testid="examPaperItem-1"]')).toContainText('Semester 1 2019');
-        await expect(page.locator('[data-testid="exam-more-link"]')).toContainText('14 more past papers');
+        await expect(page.getByTestId('exam-list-wrapper').locator(':scope > *')).toHaveCount(3);
+        await expect(page.getByTestId('examPaperItem-0')).toContainText('Semester 2 2019');
+        await expect(page.getByTestId('examPaperItem-1')).toContainText('Semester 1 2019');
+        await expect(page.getByTestId('exam-more-link')).toContainText('14 more past papers');
         await expect(page.locator('[data-testid="guides-FREN1010-content"] > div').locator(':scope > *')).toHaveCount(
             3,
         );
-        await expect(page.locator('[data-testid="guide-0"]')).toContainText('French Studies');
+        await expect(page.getByTestId('guide-0')).toContainText('French Studies');
     });
     test('the content on the Philosophy tab is correct', async ({ page }) => {
         await page.goto(
@@ -832,24 +828,22 @@ test.describe('The Learning Resources Page', () => {
         );
         await expect(
             page
-                .locator('[data-testid="reading-list-link"]')
+                .getByTestId('reading-list-link')
                 .getByText(/PHIL1002 \(has 2 reading lists\)/)
                 .first(),
         ).toBeVisible();
-        await expect(page.locator('[data-testid="learning-resource-subject-title"]')).toContainText(
+        await expect(page.getByTestId('learning-resource-subject-title')).toContainText(
             'PHIL1002 - Introduction to Philosophy: What is Philosophy?',
         );
         await hasExamReadMoreLink(page);
-        await expect(page.locator('[data-testid="exam-list-wrapper"]').locator(':scope > *')).toHaveCount(2);
-        await expect(page.locator('[data-testid="no-exam-papers"]')).toContainText(
-            'No Past Exam Papers for this course',
-        );
+        await expect(page.getByTestId('exam-list-wrapper').locator(':scope > *')).toHaveCount(2);
+        await expect(page.getByTestId('no-exam-papers')).toContainText('No Past Exam Papers for this course');
         await expect(page.locator('[data-testid="guides-PHIL1002-content"] > div').locator(':scope > *')).toHaveCount(
             5,
         );
-        await expect(page.locator('[data-testid="guide-0"]')).toContainText('PHIL1002');
-        await expect(page.locator('[data-testid="guide-1"]')).toContainText('Philosophy');
-        await expect(page.locator('[data-testid="guide-2"]')).toContainText('Stuff');
+        await expect(page.getByTestId('guide-0')).toContainText('PHIL1002');
+        await expect(page.getByTestId('guide-1')).toContainText('Philosophy');
+        await expect(page.getByTestId('guide-2')).toContainText('Stuff');
     });
     test('a user who manages to load a subject that has no reading list informed so', async ({ page }) => {
         await page.goto(
@@ -857,7 +851,7 @@ test.describe('The Learning Resources Page', () => {
         );
         await expect(
             page
-                .locator('[data-testid="reading-list-PHYS1101E-content"]')
+                .getByTestId('reading-list-PHYS1101E-content')
                 .getByText(/No Reading list for this course/)
                 .first(),
         ).toBeVisible();
@@ -870,7 +864,7 @@ test.describe('The Learning Resources Page', () => {
         await searchFor(page, 'LAWS', 'LAWS7107');
         await expect(
             page
-                .locator('[data-testid="legalResearchEssentials"]')
+                .getByTestId('legalResearchEssentials')
                 .getByText(/Legal Research Essentials/)
                 .first(),
         ).toBeVisible();
@@ -881,21 +875,21 @@ test.describe('The Learning Resources Page', () => {
         );
         await expect(
             page
-                .locator('[data-testid="reading-list-link"]')
+                .getByTestId('reading-list-link')
                 .getByText(/FREN1010 Reading list \(contains 2 items\)/)
                 .first(),
         ).toBeVisible();
-        await expect(page.locator('[data-testid="exams-springshare-error"]')).toBeVisible();
+        await expect(page.getByTestId('exams-springshare-error')).toBeVisible();
         await expect(
             page
-                .locator('[data-testid="exams-springshare-error"]')
+                .getByTestId('exams-springshare-error')
                 .getByText(/Exam papers list currently unavailable/)
                 .first(),
         ).toBeVisible();
-        await page.locator('[data-testid="guides-springshare-error"]').scrollIntoViewIfNeeded();
+        await page.getByTestId('guides-springshare-error').scrollIntoViewIfNeeded();
         await expect(
             page
-                .locator('[data-testid="guides-springshare-error"]')
+                .getByTestId('guides-springshare-error')
                 .getByText(/Subject guides list currently unavailable/)
                 .first(),
         ).toBeVisible();

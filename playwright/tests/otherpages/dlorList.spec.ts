@@ -20,34 +20,34 @@ test.describe('Digital Learning Hub', () => {
         test('has breadcrumbs', async ({ page }) => {
             await expect(
                 page
-                    .locator('[data-testid="subsite-title"]')
+                    .getByTestId('subsite-title')
                     .getByText(/Digital learning hub/)
                     .first(),
             ).toBeVisible();
         });
         test('appears as expected', async ({ page }) => {
             await expect(page.getByTestId('hero-card-title')).toContainText('Find a digital learning object');
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > div')).toHaveCount(
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > div')).toHaveCount(
                 itemsPerPage + extraRowCount,
             );
             // hero card shows
-            const locator = page.locator('[data-testid="hero-card-image"]');
+            const locator = page.getByTestId('hero-card-image');
             await expect(locator).toBeVisible();
             const width = await locator.evaluate(el => {
                 const style = window.getComputedStyle(el);
                 return parseInt(style.width, 10);
             });
             expect(width).toBeGreaterThan(600);
-            await expect(page.locator('[data-testid="hero-card-title"]')).toBeVisible();
+            await expect(page.getByTestId('hero-card-title')).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="hero-card-title"]')
+                    .getByTestId('hero-card-title')
                     .getByText(/Find a digital learning object/)
                     .first(),
             ).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="hero-card-description"]')
+                    .getByTestId('hero-card-description')
                     .getByText(
                         /Use the Digital Learning Hub to find modules, videos and guides for teaching and study\./,
                     )
@@ -64,18 +64,16 @@ test.describe('Digital Learning Hub', () => {
             await expect(
                 page.locator('[data-testid="dlor-homepage-panel-987y-isjgt-9866"] article header h2'),
             ).toContainText('Accessibility - Digital Essentials');
-            await expect(
-                page.locator('[data-testid="dlor-homepage-panel-987y-isjgt-9866-cultural-advice"]'),
-            ).not.toBeVisible();
+            await expect(page.getByTestId('dlor-homepage-panel-987y-isjgt-9866-cultural-advice')).not.toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="dlor-homepage-panel-987y-isjgt-9866-featured"]')
+                    .getByTestId('dlor-homepage-panel-987y-isjgt-9866-featured')
                     .getByText(/Featured/)
                     .first(),
             ).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="dlor-homepage-panel-987y-isjgt-9866-object-series-name"]')
+                    .getByTestId('dlor-homepage-panel-987y-isjgt-9866-object-series-name')
                     .getByText(/Series: Digital Essentials/)
                     .first(),
             ).toBeVisible();
@@ -109,19 +107,19 @@ test.describe('Digital Learning Hub', () => {
             // article 2 has CA
             await expect(
                 page
-                    .locator('[data-testid="dlor-homepage-panel-kj5t-8yg4-kj4f-cultural-advice"]')
+                    .getByTestId('dlor-homepage-panel-kj5t-8yg4-kj4f-cultural-advice')
                     .getByText(/Cultural advice/)
                     .first(),
             ).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="dlor-homepage-panel-kj5t-8yg4-kj4f-featured"]')
+                    .getByTestId('dlor-homepage-panel-kj5t-8yg4-kj4f-featured')
                     .getByText(/Featured/)
                     .first(),
             ).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="dlor-homepage-panel-kj5t-8yg4-kj4f-object-series-name"]')
+                    .getByTestId('dlor-homepage-panel-kj5t-8yg4-kj4f-object-series-name')
                     .getByText(/Series: Indigenising curriculum/)
                     .first(),
             ).toBeVisible();
@@ -130,13 +128,11 @@ test.describe('Digital Learning Hub', () => {
             await expect(
                 page.locator('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4"] article header h2'),
             ).toContainText('Advanced literature searching');
-            await expect(
-                page.locator('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4-cultural-advice"]'),
-            ).toBeVisible();
-            await expect(page.locator('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4-featured"]')).toBeVisible();
+            await expect(page.getByTestId('dlor-homepage-panel-98s0-dy5k3-98h4-cultural-advice')).toBeVisible();
+            await expect(page.getByTestId('dlor-homepage-panel-98s0-dy5k3-98h4-featured')).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4-object-series-name"]')
+                    .getByTestId('dlor-homepage-panel-98s0-dy5k3-98h4-object-series-name')
                     .getByText(/Series: Advanced literature searching/)
                     .first(),
             ).toBeVisible();
@@ -149,15 +145,13 @@ test.describe('Digital Learning Hub', () => {
                     .locator('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4"] article footer')
                     .locator(':scope > *'),
             ).toHaveCount(6); // 3 svg, 3 spans-with-text
-            await expect(page.locator('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4-footer-type"]')).toContainText(
-                'Guide',
+            await expect(page.getByTestId('dlor-homepage-panel-98s0-dy5k3-98h4-footer-type')).toContainText('Guide');
+            await expect(page.getByTestId('dlor-homepage-panel-98s0-dy5k3-98h4-footer-media')).toContainText(
+                'Pressbook',
             );
-            await expect(
-                page.locator('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4-footer-media"]'),
-            ).toContainText('Pressbook');
-            await expect(
-                page.locator('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4-footer-topic"]'),
-            ).toContainText('Assignments, Research');
+            await expect(page.getByTestId('dlor-homepage-panel-98s0-dy5k3-98h4-footer-topic')).toContainText(
+                'Assignments, Research',
+            );
             // fourth panel
             await expect(
                 page.locator('[data-testid="dlor-homepage-panel-938h-4986-654f"] article header h2'),
@@ -168,13 +162,9 @@ test.describe('Digital Learning Hub', () => {
             await expect(
                 page.locator('[data-testid="dlor-homepage-panel-938h-4986-654f"] article footer').locator(':scope > *'),
             ).toHaveCount(6); // 3 svg, 3 spans-with-text
-            await expect(page.locator('[data-testid="dlor-homepage-panel-938h-4986-654f-footer-type"]')).toContainText(
-                'Module',
-            );
-            await expect(page.locator('[data-testid="dlor-homepage-panel-938h-4986-654f-footer-media"]')).toContainText(
-                'H5P',
-            );
-            await expect(page.locator('[data-testid="dlor-homepage-panel-938h-4986-654f-footer-topic"]')).toContainText(
+            await expect(page.getByTestId('dlor-homepage-panel-938h-4986-654f-footer-type')).toContainText('Module');
+            await expect(page.getByTestId('dlor-homepage-panel-938h-4986-654f-footer-media')).toContainText('H5P');
+            await expect(page.getByTestId('dlor-homepage-panel-938h-4986-654f-footer-topic')).toContainText(
                 'Assignments, Software',
             );
             // filter sidebar
@@ -188,53 +178,43 @@ test.describe('Digital Learning Hub', () => {
             // sidebar topic panel loads hidden
             await expect(
                 page
-                    .locator('[data-testid="sidebar-panel-topic"]')
+                    .getByTestId('sidebar-panel-topic')
                     .getByText(/Aboriginal and Torres Strait Islander/)
                     .first(),
             ).toBeVisible();
 
             // click button, hide panel
-            await page.locator('[data-testid="panel-minimisation-icon-topic"]').click();
-            await expect(page.locator('[data-testid="sidebar-panel-topic"]')).not.toBeVisible();
+            await page.getByTestId('panel-minimisation-icon-topic').click();
+            await expect(page.getByTestId('sidebar-panel-topic')).not.toBeVisible();
 
             // click button again, unhide
-            await page.locator('[data-testid="panel-minimisation-icon-topic"]').click();
+            await page.getByTestId('panel-minimisation-icon-topic').click();
             await expect(
                 page
-                    .locator('[data-testid="sidebar-panel-topic"]')
+                    .getByTestId('sidebar-panel-topic')
                     .getByText(/Aboriginal and Torres Strait Islander/)
                     .first(),
             ).toBeVisible();
 
             // filter item not in data is not in sidebar
-            await page.locator('[data-testid="panel-minimisation-icon-graduate-attributes"]').click();
-            await expect(
-                page.locator('[data-testid="sidebar-panel-graduate-attributes"]').locator(':scope > *'),
-            ).toHaveCount(5); // one filter removed
-            await expect(
-                page.locator('[data-testid="checkbox-graduate-attributes-respectful-leaders"]'),
-            ).not.toBeVisible();
-            await expect(
-                page.locator('[data-testid="checkbox-graduate-attributes-influential-communicators"]'),
-            ).toBeVisible();
-            await expect(page.locator('[data-testid="dlor-homepage-loginprompt"]')).not.toBeVisible();
+            await page.getByTestId('panel-minimisation-icon-graduate-attributes').click();
+            await expect(page.getByTestId('sidebar-panel-graduate-attributes').locator(':scope > *')).toHaveCount(5); // one filter removed
+            await expect(page.getByTestId('checkbox-graduate-attributes-respectful-leaders')).not.toBeVisible();
+            await expect(page.getByTestId('checkbox-graduate-attributes-influential-communicators')).toBeVisible();
+            await expect(page.getByTestId('dlor-homepage-loginprompt')).not.toBeVisible();
             // when the object doesn't have a particular facet type, it just doesn't appear in the panel footer item
             // (in practice, I think every object should have each of these)
-            await expect(
-                page.locator('[data-testid="dlor-homepage-panel-98j3-fgf95-8j34-footer-type"]'),
-            ).not.toBeVisible(); // MISSING FROM API RESULT
-            await expect(
-                page.locator('[data-testid="dlor-homepage-panel-98j3-fgf95-8j34-footer-media"]'),
-            ).toContainText('Pressbook');
+            await expect(page.getByTestId('dlor-homepage-panel-98j3-fgf95-8j34-footer-type')).not.toBeVisible(); // MISSING FROM API RESULT
+            await expect(page.getByTestId('dlor-homepage-panel-98j3-fgf95-8j34-footer-media')).toContainText(
+                'Pressbook',
+            );
             await page.goto('digital-learning-hub?user=public');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('[data-testid="dlor-homepage-loginprompt"]')).toContainText(
-                'Log in for extra features   ',
-            );
+            await expect(page.getByTestId('dlor-homepage-loginprompt')).toContainText('Log in for extra features   ');
         });
         test('can filter panels', async ({ page }) => {
             // initially, all panels are showing
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                 itemsPerPage + extraRowCount,
             );
             // select the "Assignments" checkbox
@@ -244,15 +224,13 @@ test.describe('Digital Learning Hub', () => {
             await page.locator('[data-testid="checkbox-topic-assignments"] input[type=checkbox]').check();
 
             // reduces panel count
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                4 + extraRowCount,
-            );
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(4 + extraRowCount);
             // open the Licence type panel
-            await expect(page.locator('[data-testid="panel-minimisation-icon-licence"]')).toHaveAttribute(
+            await expect(page.getByTestId('panel-minimisation-icon-licence')).toHaveAttribute(
                 'aria-label',
                 'Open this filter section',
             );
-            await page.locator('[data-testid="panel-downarrow-licence"]').click();
+            await page.getByTestId('panel-downarrow-licence').click();
 
             // check UQ copyright
             await expect(
@@ -261,9 +239,7 @@ test.describe('Digital Learning Hub', () => {
             await page.locator('[data-testid="checkbox-licence-uq-copyright"] input[type=checkbox]').check();
 
             // reduces panel count
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                1 + extraRowCount,
-            );
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(1 + extraRowCount);
             // add another checkbox: CC BY-NC Attribution NonCommercial
             await expect(
                 page.locator(
@@ -275,9 +251,7 @@ test.describe('Digital Learning Hub', () => {
                 .check();
 
             // INCREASES panel count!!!
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                3 + extraRowCount,
-            );
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(3 + extraRowCount);
             // uncheck UQ copyright
             await expect(
                 page.locator('[data-testid="checkbox-licence-uq-copyright"] input[type=checkbox]'),
@@ -285,9 +259,7 @@ test.describe('Digital Learning Hub', () => {
             await page.locator('[data-testid="checkbox-licence-uq-copyright"] input[type=checkbox]').uncheck();
 
             // reduces panel count
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                2 + extraRowCount,
-            );
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(2 + extraRowCount);
             // remove checkbox: CC BY-NC Attribution NonCommercial
             await expect(
                 page.locator(
@@ -299,12 +271,12 @@ test.describe('Digital Learning Hub', () => {
                 .uncheck();
 
             // open the Item type panel
-            await expect(page.locator('[data-testid="panel-minimisation-icon-item-type"]')).toHaveAttribute(
+            await expect(page.getByTestId('panel-minimisation-icon-item-type')).toHaveAttribute(
                 'aria-label',
                 'Open this filter section',
             );
-            await page.locator('[data-testid="panel-downarrow-item-type"]').click();
-            await expect(page.locator('[data-testid="panel-minimisation-icon-item-type"]')).toHaveAttribute(
+            await page.getByTestId('panel-downarrow-item-type').click();
+            await expect(page.getByTestId('panel-minimisation-icon-item-type')).toHaveAttribute(
                 'aria-label',
                 'Close this filter section',
             );
@@ -315,21 +287,17 @@ test.describe('Digital Learning Hub', () => {
             await page.locator('[data-testid="checkbox-item-type-module"] input[type=checkbox]').check();
 
             // 3 panels showing
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                3 + extraRowCount,
-            );
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(3 + extraRowCount);
             // UNcheck the "assignments" checkbox
             await page.locator('[data-testid="checkbox-topic-assignments"] input[type=checkbox]').uncheck();
 
             // 6 panels showing
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                6 + extraRowCount,
-            );
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(6 + extraRowCount);
             // UNcheck the "Media format, Module" checkbox
             await page.locator('[data-testid="checkbox-item-type-module"] input[type=checkbox]').uncheck();
 
             // all panels showing
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                 itemsPerPage + extraRowCount,
             );
             // check the "ATSIC" checkbox
@@ -343,9 +311,7 @@ test.describe('Digital Learning Hub', () => {
                 .check();
 
             // one panel showing
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                1 + extraRowCount,
-            );
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(1 + extraRowCount);
             // UNcheck the "ATSIC" checkbox
             await expect(
                 page.locator(
@@ -357,21 +323,19 @@ test.describe('Digital Learning Hub', () => {
                 .uncheck();
 
             // all panels showing again
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                 itemsPerPage + extraRowCount,
             );
             await page.locator('[data-testid="dlor-homepage-keyword"] input').fill('a');
             page.locator('[data-testid="dlor-homepage-keyword"] input').press('Enter');
             // a single character does nothing
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                 itemsPerPage + extraRowCount,
             );
             // one more char
             await page.locator('[data-testid="dlor-homepage-keyword"] input').pressSequentially('c');
             page.locator('[data-testid="dlor-homepage-keyword"] input').press('Enter');
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > div')).toHaveCount(
-                3 + extraRowCount,
-            );
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > div')).toHaveCount(3 + extraRowCount);
             // check the "Assignments" checkbox
             await expect(
                 page.locator('[data-testid="checkbox-topic-assignments"] input[type=checkbox]'),
@@ -381,7 +345,7 @@ test.describe('Digital Learning Hub', () => {
             // wipes all the panels
             await expect(
                 page
-                    .locator('[data-testid="dlor-homepage-empty"]')
+                    .getByTestId('dlor-homepage-empty')
                     .getByText(/Can't find what you are looking for\?/)
                     .first(),
             ).toBeVisible();
@@ -389,17 +353,15 @@ test.describe('Digital Learning Hub', () => {
             // use the clear button
             await expect(page.locator('[data-testid="checkbox-topic-assignments"] input[type=checkbox]')).toBeChecked();
             await page.locator('[data-testid="checkbox-topic-assignments"] input[type=checkbox]').uncheck();
-            await page.locator('[data-testid="keyword-clear"]').click();
+            await page.getByTestId('keyword-clear').click();
 
             // all panels showing again & keyword search field empty
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                 itemsPerPage + extraRowCount,
             );
             await page.locator('[data-testid="dlor-homepage-keyword"] input').fill('digital');
             page.locator('[data-testid="dlor-homepage-keyword"] input').press('Enter');
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                5 + extraRowCount,
-            );
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(5 + extraRowCount);
         });
         test.describe('keyword search bar filters correctly', () => {
             test('keyword filters on description', async ({ page }) => {
@@ -407,10 +369,10 @@ test.describe('Digital Learning Hub', () => {
                 await page.locator('[data-testid="dlor-homepage-keyword"] input').fill('involved');
                 page.locator('[data-testid="dlor-homepage-keyword"] input').press('Enter');
                 // now only one panel
-                await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+                await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                     1 + extraRowCount,
                 );
-                await expect(page.locator('[data-testid="dlor-homepage-panel-938h-4986-654f"]')).toHaveText(
+                await expect(page.getByTestId('dlor-homepage-panel-938h-4986-654f')).toHaveText(
                     /Artificial Intelligence - Digital Essentials/,
                 );
                 await expect(page).toHaveURL('http://localhost:2020/digital-learning-hub?keyword=involved');
@@ -420,36 +382,36 @@ test.describe('Digital Learning Hub', () => {
                 await page.locator('[data-testid="dlor-homepage-keyword"] input').fill('Digital security');
                 page.locator('[data-testid="dlor-homepage-keyword"] input').press('Enter');
                 // now only one panel
-                await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+                await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                     1 + extraRowCount,
                 );
-                await expect(page.locator('[data-testid="dlor-homepage-panel-98j3-fgf95-8j34"]')).toHaveText(
+                await expect(page.getByTestId('dlor-homepage-panel-98j3-fgf95-8j34')).toHaveText(
                     /Digital security - Digital Essentials/,
                 );
                 await expect(page).toHaveURL('http://localhost:2020/digital-learning-hub?keyword=Digital+security');
             });
             test('keyword filters on summary', async ({ page }) => {
                 await page.locator('[data-testid="dlor-homepage-keyword"] input').type('freeware tools');
-                await page.locator('[data-testid="keyword-submit"]').click();
+                await page.getByTestId('keyword-submit').click();
 
                 // now only one panels
-                await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+                await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                     1 + extraRowCount,
                 );
-                await expect(page.locator('[data-testid="dlor-homepage-panel-0h4y-87f3-6js7"]')).toHaveText(
+                await expect(page.getByTestId('dlor-homepage-panel-0h4y-87f3-6js7')).toHaveText(
                     /Choose the right tool - Digital Essentials/,
                 );
                 await expect(page).toHaveURL('http://localhost:2020/digital-learning-hub?keyword=freeware+tools');
             });
             test('keyword filters on keywords', async ({ page }) => {
                 await page.locator('[data-testid="dlor-homepage-keyword"] input').type('study hacks');
-                await page.locator('[data-testid="keyword-submit"]').click();
+                await page.getByTestId('keyword-submit').click();
 
                 // now only one panel
-                await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+                await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                     1 + extraRowCount,
                 );
-                await expect(page.locator('[data-testid="dlor-homepage-panel-987y-isjgt-9866"]')).toHaveText(
+                await expect(page.getByTestId('dlor-homepage-panel-987y-isjgt-9866')).toHaveText(
                     /Accessibility - Digital Essentials \(has Youtube link\)/,
                 );
                 await expect(page).toHaveURL('http://localhost:2020/digital-learning-hub?keyword=study+hacks');
@@ -459,14 +421,14 @@ test.describe('Digital Learning Hub', () => {
                 await page.locator('[data-testid="dlor-homepage-keyword"] input').fill('Implications');
                 page.locator('[data-testid="dlor-homepage-keyword"] input').press('Enter');
                 // num pages reduced
-                await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+                await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                     1 + extraRowCount,
                 );
                 // when the keyword clear button is clicked
-                await page.locator('[data-testid="keyword-clear"]').click();
+                await page.getByTestId('keyword-clear').click();
 
                 // then all panels showing again & keyword search field empty
-                await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+                await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                     itemsPerPage + extraRowCount,
                 );
                 await expect(page.locator('[data-testid="dlor-homepage-keyword"] input')).toHaveValue('');
@@ -475,7 +437,7 @@ test.describe('Digital Learning Hub', () => {
                 // given something is searched for
                 await page.locator('[data-testid="dlor-homepage-keyword"] input').fill('acc');
                 page.locator('[data-testid="dlor-homepage-keyword"] input').press('Enter');
-                await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+                await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                     2 + extraRowCount,
                 );
                 // when the user manually clears the keyword field
@@ -485,7 +447,7 @@ test.describe('Digital Learning Hub', () => {
                 await page.locator('[data-testid="dlor-homepage-keyword"] input').press('Backspace');
                 await page.locator('[data-testid="dlor-homepage-keyword"] input').press('Enter');
                 // then all panels showing again & keyword search field empty
-                await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+                await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                     itemsPerPage + extraRowCount,
                 );
                 await expect(page.locator('[data-testid="dlor-homepage-keyword"] input')).toHaveValue('');
@@ -494,12 +456,12 @@ test.describe('Digital Learning Hub', () => {
                 // performa search that returns more than one page of results
                 await page.locator('[data-testid="dlor-homepage-keyword"] input').fill('dummy');
                 page.locator('[data-testid="dlor-homepage-keyword"] input').press('Enter');
-                await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+                await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                     itemsPerPage + extraRowCount,
                 );
                 // click pagination for page 2
                 await page.locator('nav[aria-label="pagination navigation"] li:nth-child(4) button').click();
-                await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+                await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                     7 + extraRowCount,
                 );
                 // we are on second page of pagination
@@ -519,7 +481,7 @@ test.describe('Digital Learning Hub', () => {
         });
         test('reset button works', async ({ page }) => {
             // all panels showing
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                 itemsPerPage + extraRowCount,
             );
             await expect(page.locator('nav[aria-label="pagination navigation"] li:nth-child(5) button')).toBeVisible();
@@ -535,27 +497,25 @@ test.describe('Digital Learning Hub', () => {
                 .check();
 
             // 1 panel showing
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                1 + extraRowCount,
-            );
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(1 + extraRowCount);
             // Interactive not visible
-            await expect(page.locator('[data-testid="checkbox-item-type-interactive"]')).not.toBeVisible();
+            await expect(page.getByTestId('checkbox-item-type-interactive')).not.toBeVisible();
 
-            await page.locator('[data-testid="panel-downarrow-item-type"]').click();
+            await page.getByTestId('panel-downarrow-item-type').click();
             // now the element appears
-            await expect(page.locator('[data-testid="panel-help-close-graduate-attributes"]')).not.toBeVisible();
-            await page.locator('[data-testid="panel-help-icon-graduate-attributes"]').click();
-            await expect(page.locator('[data-testid="panel-help-close-graduate-attributes"]')).toBeVisible();
+            await expect(page.getByTestId('panel-help-close-graduate-attributes')).not.toBeVisible();
+            await page.getByTestId('panel-help-icon-graduate-attributes').click();
+            await expect(page.getByTestId('panel-help-close-graduate-attributes')).toBeVisible();
 
             // click reset
-            await page.locator('[data-testid="sidebar-filter-reset-button"]').click({
+            await page.getByTestId('sidebar-filter-reset-button').click({
                 force: true,
             });
             // popup help closes
-            await expect(page.locator('[data-testid="panel-help-close-graduate-attributes"]')).not.toBeVisible();
+            await expect(page.getByTestId('panel-help-close-graduate-attributes')).not.toBeVisible();
 
             // Interactive not visible
-            await expect(page.locator('[data-testid="checkbox-item-type-interactive"]')).not.toBeVisible();
+            await expect(page.getByTestId('checkbox-item-type-interactive')).not.toBeVisible();
             await expect(
                 page.locator(
                     '[data-testid="checkbox-topic-aboriginal-and-torres-strait-islander"] input[type=checkbox]',
@@ -563,22 +523,22 @@ test.describe('Digital Learning Hub', () => {
             ).not.toBeChecked();
 
             // all panels showing
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                 itemsPerPage + extraRowCount,
             );
             await expect(page.locator('nav[aria-label="pagination navigation"] li:nth-child(5) button')).toBeVisible();
 
             // click reset
-            await page.locator('[data-testid="sidebar-filter-reset-button"]').click({
+            await page.getByTestId('sidebar-filter-reset-button').click({
                 force: true,
             });
             // all panels showing
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                 itemsPerPage + extraRowCount,
             );
             await expect(page.locator('nav[aria-label="pagination navigation"] li:nth-child(5) button')).toBeVisible();
 
-            await page.locator('[data-testid="panel-minimisation-icon-licence"]').click();
+            await page.getByTestId('panel-minimisation-icon-licence').click();
             await expect(
                 page.locator('[data-testid="checkbox-licence-cc0public-domain"] input[type=checkbox]'),
             ).not.toBeChecked();
@@ -598,7 +558,7 @@ test.describe('Digital Learning Hub', () => {
             );
 
             // click reset
-            await page.locator('[data-testid="sidebar-filter-reset-button"]').click({
+            await page.getByTestId('sidebar-filter-reset-button').click({
                 force: true,
             });
             // has reset pagination to page 1
@@ -657,13 +617,13 @@ test.describe('Digital Learning Hub', () => {
             await page.goto('http://localhost:2020/digital-learning-hub/view/987y_isjgt_9866');
             await expect(
                 page
-                    .locator('[data-testid="detailpage-preview"]')
+                    .getByTestId('detailpage-preview')
                     .getByText(/Preview/)
                     .first(),
             ).toBeVisible();
             await expect(page.locator('[data-testid="detailpage-preview"] iframe')).toBeVisible();
             await page.goto('http://localhost:2020/digital-learning-hub/view/98s0_dy5k3_98h4');
-            await expect(page.locator('[data-testid="detailpage-preview"]')).not.toBeVisible();
+            await expect(page.getByTestId('detailpage-preview')).not.toBeVisible();
             await expect(page.locator('[data-testid="detailpage-preview"] iframe')).not.toBeVisible();
         });
         test('pagination works', async ({ page }) => {
@@ -713,17 +673,15 @@ test.describe('Digital Learning Hub', () => {
             // when we filter the content the number of pagination page buttons changes
             await page.locator('[data-testid="dlor-homepage-keyword"] input').fill('digital');
             page.locator('[data-testid="dlor-homepage-keyword"] input').press('Enter');
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                5 + extraRowCount,
-            );
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(5 + extraRowCount);
             // the number of available pages in pagination widget changes from 3 to 1
             await expect(page.locator('nav[aria-label="pagination navigation"] li').locator(':scope > *')).toHaveCount(
                 1 + numExtraButtons,
             );
         });
         test('create new object works', async ({ page }) => {
-            await page.locator('[data-testid="dlor-homepage-request-new-item"]').click();
-            await expect(page.locator('[data-testid="dlor-UserAdd-helper"]')).toBeVisible();
+            await page.getByTestId('dlor-homepage-request-new-item').click();
+            await expect(page.getByTestId('dlor-UserAdd-helper')).toBeVisible();
         });
     });
     test.describe('url reflects filtering changes', () => {
@@ -733,14 +691,12 @@ test.describe('Digital Learning Hub', () => {
         });
         test('loads filters correctly from url', async ({ page }) => {
             // has reduced number of panels
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                2 + extraRowCount,
-            );
-            await expect(page.locator('[data-testid="panel-minimisation-icon-topic"]')).toHaveAttribute(
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(2 + extraRowCount);
+            await expect(page.getByTestId('panel-minimisation-icon-topic')).toHaveAttribute(
                 'aria-label',
                 'Open this filter section',
             );
-            await expect(page.locator('[data-testid="panel-minimisation-icon-graduate-attributes"]')).toHaveAttribute(
+            await expect(page.getByTestId('panel-minimisation-icon-graduate-attributes')).toHaveAttribute(
                 'aria-label',
                 'Close this filter section',
             );
@@ -759,19 +715,19 @@ test.describe('Digital Learning Hub', () => {
             await expect(
                 page.locator('[data-testid="checkbox-graduate-attributes-influential-communicators"] input'),
             ).not.toBeChecked();
-            await expect(page.locator('[data-testid="panel-minimisation-icon-item-type"]')).toHaveAttribute(
+            await expect(page.getByTestId('panel-minimisation-icon-item-type')).toHaveAttribute(
                 'aria-label',
                 'Open this filter section',
             );
-            await expect(page.locator('[data-testid="panel-minimisation-icon-media-format"]')).toHaveAttribute(
+            await expect(page.getByTestId('panel-minimisation-icon-media-format')).toHaveAttribute(
                 'aria-label',
                 'Open this filter section',
             );
-            await expect(page.locator('[data-testid="panel-minimisation-icon-subject"]')).toHaveAttribute(
+            await expect(page.getByTestId('panel-minimisation-icon-subject')).toHaveAttribute(
                 'aria-label',
                 'Open this filter section',
             );
-            await expect(page.locator('[data-testid="panel-minimisation-icon-licence"]')).toHaveAttribute(
+            await expect(page.getByTestId('panel-minimisation-icon-licence')).toHaveAttribute(
                 'aria-label',
                 'Open this filter section',
             );
@@ -779,9 +735,7 @@ test.describe('Digital Learning Hub', () => {
         test('loads multiple filters correctly from url', async ({ page }) => {
             await page.goto('digital-learning-hub?user=public&filters=44%2C24%2C13');
             // has reduced number of panels
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                1 + extraRowCount,
-            );
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(1 + extraRowCount);
             await expect(
                 page
                     .locator('[data-testid="dlor-homepage-panel-kj5t-8yg4-kj4f"] h2')
@@ -789,13 +743,13 @@ test.describe('Digital Learning Hub', () => {
                     .first(),
             ).toBeVisible();
 
-            await expect(page.locator('[data-testid="panel-minimisation-icon-topic"]')).toHaveAttribute(
+            await expect(page.getByTestId('panel-minimisation-icon-topic')).toHaveAttribute(
                 'aria-label',
                 'Open this filter section',
             );
-            await expect(page.locator('[data-testid="sidebar-panel-topic"]')).not.toBeVisible();
+            await expect(page.getByTestId('sidebar-panel-topic')).not.toBeVisible();
 
-            await expect(page.locator('[data-testid="panel-minimisation-icon-graduate-attributes"]')).toHaveAttribute(
+            await expect(page.getByTestId('panel-minimisation-icon-graduate-attributes')).toHaveAttribute(
                 'aria-label',
                 'Close this filter section',
             );
@@ -806,13 +760,13 @@ test.describe('Digital Learning Hub', () => {
                     .first(),
             ).toBeVisible();
 
-            await expect(page.locator('[data-testid="panel-minimisation-icon-item-type"]')).toHaveAttribute(
+            await expect(page.getByTestId('panel-minimisation-icon-item-type')).toHaveAttribute(
                 'aria-label',
                 'Open this filter section',
             );
-            await expect(page.locator('[data-testid="sidebar-panel-item-type"]')).not.toBeVisible();
+            await expect(page.getByTestId('sidebar-panel-item-type')).not.toBeVisible();
 
-            await expect(page.locator('[data-testid="panel-minimisation-icon-media-format"]')).toHaveAttribute(
+            await expect(page.getByTestId('panel-minimisation-icon-media-format')).toHaveAttribute(
                 'aria-label',
                 'Close this filter section',
             );
@@ -823,13 +777,13 @@ test.describe('Digital Learning Hub', () => {
                     .first(),
             ).toBeVisible();
 
-            await expect(page.locator('[data-testid="panel-minimisation-icon-subject"]')).toHaveAttribute(
+            await expect(page.getByTestId('panel-minimisation-icon-subject')).toHaveAttribute(
                 'aria-label',
                 'Open this filter section',
             );
-            await expect(page.locator('[data-testid="sidebar-panel-subject"]')).not.toBeVisible();
+            await expect(page.getByTestId('sidebar-panel-subject')).not.toBeVisible();
 
-            await expect(page.locator('[data-testid="panel-minimisation-icon-licence"]')).toHaveAttribute(
+            await expect(page.getByTestId('panel-minimisation-icon-licence')).toHaveAttribute(
                 'aria-label',
                 'Close this filter section',
             );
@@ -842,15 +796,13 @@ test.describe('Digital Learning Hub', () => {
         });
         test('saves changes from the page to the url', async ({ page }) => {
             await expect(page).toHaveURL('http://localhost:2020/digital-learning-hub?keyword=acc&filters=11');
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                2 + extraRowCount,
-            );
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(2 + extraRowCount);
             // open the Topic type panel
-            await expect(page.locator('[data-testid="panel-minimisation-icon-topic"]')).toHaveAttribute(
+            await expect(page.getByTestId('panel-minimisation-icon-topic')).toHaveAttribute(
                 'aria-label',
                 'Open this filter section',
             );
-            await page.locator('[data-testid="panel-downarrow-topic"]').click();
+            await page.getByTestId('panel-downarrow-topic').click();
 
             // check Digital skills
             await expect(
@@ -859,19 +811,15 @@ test.describe('Digital Learning Hub', () => {
             await page.locator('[data-testid="checkbox-topic-digital-skills"] input[type=checkbox]').check();
 
             // has reduced number of panels
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                1 + extraRowCount,
-            );
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(1 + extraRowCount);
             // url has updated
             await expect(page).toHaveURL('http://localhost:2020/digital-learning-hub?keyword=acc&filters=11%2C3');
         });
         test('url and fields clear on reset', async ({ page }) => {
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                2 + extraRowCount,
-            );
-            await page.locator('[data-testid="sidebar-filter-reset-button"]').click();
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(2 + extraRowCount);
+            await page.getByTestId('sidebar-filter-reset-button').click();
             await expect(page).toHaveURL('http://localhost:2020/digital-learning-hub');
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > div')).toHaveCount(
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > div')).toHaveCount(
                 itemsPerPage + extraRowCount,
             );
         });
@@ -885,14 +833,12 @@ test.describe('Digital Learning Hub', () => {
             await page.goBack();
             // url contains the same values and the display is properly displayed and filtered
             await expect(page).toHaveURL('http://localhost:2020/digital-learning-hub?keyword=acc&filters=11');
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                2 + extraRowCount,
-            );
-            await expect(page.locator('[data-testid="panel-minimisation-icon-topic"]')).toHaveAttribute(
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(2 + extraRowCount);
+            await expect(page.getByTestId('panel-minimisation-icon-topic')).toHaveAttribute(
                 'aria-label',
                 'Open this filter section',
             );
-            await expect(page.locator('[data-testid="panel-minimisation-icon-graduate-attributes"]')).toHaveAttribute(
+            await expect(page.getByTestId('panel-minimisation-icon-graduate-attributes')).toHaveAttribute(
                 'aria-label',
                 'Close this filter section',
             );
@@ -905,12 +851,10 @@ test.describe('Digital Learning Hub', () => {
         });
         test('url and fields clear on reset with other values in the url', async ({ page }) => {
             await page.goto('digital-learning-hub?user=public&keyword=acc&filters=11');
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                2 + extraRowCount,
-            );
-            await page.locator('[data-testid="sidebar-filter-reset-button"]').click();
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(2 + extraRowCount);
+            await page.getByTestId('sidebar-filter-reset-button').click();
             await expect(page).toHaveURL('http://localhost:2020/digital-learning-hub?user=public');
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                 itemsPerPage + extraRowCount,
             );
         });
@@ -921,13 +865,13 @@ test.describe('Digital Learning Hub', () => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(
                 page
-                    .locator('[data-testid="dlor-homepage-error"]')
+                    .getByTestId('dlor-homepage-error')
                     .getByText(/An error has occurred during the request and this request cannot be processed/)
                     .first(),
             ).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="dlor-homepage-filter-error"]')
+                    .getByTestId('dlor-homepage-filter-error')
                     .getByText(/Filters currently unavailable - please try again later\./)
                     .first(),
             ).toBeVisible();
@@ -935,10 +879,10 @@ test.describe('Digital Learning Hub', () => {
         test('can handle an empty result', async ({ page }) => {
             await page.goto('digital-learning-hub?responseType=emptyResult');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('[data-testid="dlor-homepage-noresult"]')).toBeVisible();
+            await expect(page.getByTestId('dlor-homepage-noresult')).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="dlor-homepage-noresult"]')
+                    .getByTestId('dlor-homepage-noresult')
                     .getByText(/We did not find any entries in the system - please try again later\./)
                     .first(),
             ).toBeVisible();
@@ -949,13 +893,13 @@ test.describe('Digital Learning Hub', () => {
             // tablet/phone hero images should be full width
             await expect(
                 page
-                    .locator('[data-testid="hero-card-title"]')
+                    .getByTestId('hero-card-title')
                     .getByText(/Find a digital learning object/)
                     .first(),
             ).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="hero-card-description"]')
+                    .getByTestId('hero-card-description')
                     .getByText(
                         /Use the Digital Learning Hub to find modules, videos and guides for teaching and study\./,
                     )
@@ -963,15 +907,15 @@ test.describe('Digital Learning Hub', () => {
             ).toBeVisible();
 
             // filters correctly
-            await expect(page.locator('[data-testid="filter-sidebar"]')).not.toBeVisible();
+            await expect(page.getByTestId('filter-sidebar')).not.toBeVisible();
             await page
-                .locator('[data-testid="sidebar-filter-icon"]')
+                .getByTestId('sidebar-filter-icon')
                 .locator('button')
                 .click();
 
-            await page.locator('[data-testid="filter-sidebar"]').scrollIntoViewIfNeeded();
-            await expect(page.locator('[data-testid="sidebar-filter-icon"]')).not.toBeVisible();
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
+            await page.getByTestId('filter-sidebar').scrollIntoViewIfNeeded();
+            await expect(page.getByTestId('sidebar-filter-icon')).not.toBeVisible();
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
                 itemsPerPage + extraRowCount,
             );
             await expect(
@@ -982,22 +926,20 @@ test.describe('Digital Learning Hub', () => {
             await page
                 .locator('[data-testid="checkbox-topic-aboriginal-and-torres-strait-islander"] input[type=checkbox]')
                 .check();
-            await expect(page.locator('[data-testid="dlor-homepage-list"]').locator(':scope > *')).toHaveCount(
-                1 + extraRowCount,
-            );
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(1 + extraRowCount);
             // hide the filter section
             await page
-                .locator('[data-testid="sidebar-filter-icon-hide-id"]')
+                .getByTestId('sidebar-filter-icon-hide-id')
                 .locator('button')
                 .click();
-            await expect(page.locator('[data-testid="filter-sidebar"]')).not.toBeVisible();
+            await expect(page.getByTestId('filter-sidebar')).not.toBeVisible();
         });
     });
     test.describe('authenticated page', () => {
         test('can handle non authenticated request to forced auth page', async ({ page }) => {
             await page.goto('digital-learning-hub-list?user=public');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('[data-testid="StandardPage-title"]')).toContainText('Authentication required');
+            await expect(page.getByTestId('StandardPage-title')).toContainText('Authentication required');
         });
         test('can handle authenticated request to forced auth page', async ({ page }) => {
             await page.goto('digital-learning-hub-list');

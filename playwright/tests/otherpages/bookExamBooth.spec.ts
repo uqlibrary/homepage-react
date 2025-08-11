@@ -10,11 +10,11 @@ async function selectFirstLocation(page: Page) {
 }
 
 async function selectProctoredExam(page: Page) {
-    await page.locator('[data-testid="display-decider-option-yes"]').click();
+    await page.getByTestId('display-decider-option-yes').click();
 }
 
 async function selectNONProctoredExam(page: Page) {
-    await page.locator('[data-testid="display-decider-option-no"]').click();
+    await page.getByTestId('display-decider-option-no').click();
 }
 
 test.describe('Book Exam Booth Accessibility', () => {
@@ -41,20 +41,20 @@ test.describe('Book Exam Booth page', () => {
     });
 
     test('should show initial view', async ({ page }) => {
-        await expect(page.locator('[data-testid="StandardPage-title"]')).toHaveText(locale.pageTitle);
-        await expect(page.locator('[data-testid="subsite-title"]')).toHaveText(/Book an Exam booth/);
+        await expect(page.getByTestId('StandardPage-title')).toHaveText(locale.pageTitle);
+        await expect(page.getByTestId('subsite-title')).toHaveText(/Book an Exam booth/);
     });
 
     test('should show message on selecting "am not sitting a ProctorU exam"', async ({ page }) => {
         await selectNONProctoredExam(page);
-        await expect(page.locator('[data-testid="no-booking-necessary"]')).toBeVisible();
+        await expect(page.getByTestId('no-booking-necessary')).toBeVisible();
     });
 
     test('should display location selector on selecting "am sitting a ProctorU exam"', async ({ page }) => {
         await selectProctoredExam(page);
         await expect(
             page
-                .locator('[data-testid="standard-card-where-would-you-like-to-sit-your-exam?"]')
+                .getByTestId('standard-card-where-would-you-like-to-sit-your-exam?')
                 .getByText(locale.locationDecider.heading, { exact: false }),
         ).toBeVisible();
     });
@@ -62,7 +62,7 @@ test.describe('Book Exam Booth page', () => {
     test('should display form for booking details on selecting a location', async ({ page }) => {
         await selectProctoredExam(page);
         await selectFirstLocation(page);
-        const bookingDetails = page.locator('[data-testid="booking-details"]');
+        const bookingDetails = page.getByTestId('booking-details');
         await expect(bookingDetails).toContainText(locale.examType.label);
         await expect(bookingDetails).toContainText(locale.sessionLength.label);
         await expect(bookingDetails).toContainText(locale.startDate.label);
@@ -73,7 +73,7 @@ test.describe('Book Exam Booth page', () => {
         // Playwright allows for easier URL inspection without needing to stub.
         await selectProctoredExam(page);
         await selectFirstLocation(page);
-        await page.locator('[data-testid="booth-search-submit-button"]').click();
+        await page.getByTestId('booth-search-submit-button').click();
 
         const selectedDate = moment()
             .subtract(1, 'days')
@@ -92,11 +92,11 @@ test.describe('Book Exam Booth page', () => {
         await selectFirstLocation(page);
 
         // Opt to BYOD
-        await page.locator('[data-testid="exam-type-option-byod"]').click();
+        await page.getByTestId('exam-type-option-byod').click();
 
         // Choose 90 minute session length
-        await page.locator('[data-testid="session-length-select"]').click();
-        await page.locator('[data-testid="session-length-option-90"]').click();
+        await page.getByTestId('session-length-select').click();
+        await page.getByTestId('session-length-option-90').click();
 
         // Choose a custom date
         const intendedDate = '12';
@@ -110,9 +110,9 @@ test.describe('Book Exam Booth page', () => {
         const yesterday = moment().subtract(1, 'day');
         expect(defaultDateValue).toBe(yesterday.format('DD/MM/YYYY'));
 
-        await page.locator('[data-testid="start-date-button"]').click();
+        await page.getByTestId('start-date-button').click();
 
-        const nextMonthButton = page.locator('[data-testid="ArrowRightIcon"]');
+        const nextMonthButton = page.getByTestId('ArrowRightIcon');
         await nextMonthButton.click();
         if (moment().date() === 1) {
             // The field defaults to the previous day, which can be in the previous month.
@@ -128,11 +128,11 @@ test.describe('Book Exam Booth page', () => {
         expect(text).toBe(bookingDate.format('DD/MM/YYYY'));
 
         // Choose a custom time
-        await page.locator('[data-testid="start-time-hours"]').click();
-        await page.locator('[data-testid="start-time-hours-option-10"]').click();
-        await page.locator('[data-testid="start-time-minutes"]').click();
-        await page.locator('[data-testid="start-time-minutes-option-30"]').click();
-        await page.locator('[data-testid="booth-search-submit-button"]').click();
+        await page.getByTestId('start-time-hours').click();
+        await page.getByTestId('start-time-hours-option-10').click();
+        await page.getByTestId('start-time-minutes').click();
+        await page.getByTestId('start-time-minutes-option-30').click();
+        await page.getByTestId('booth-search-submit-button').click();
 
         await expect(page).toHaveURL(
             new RegExp(

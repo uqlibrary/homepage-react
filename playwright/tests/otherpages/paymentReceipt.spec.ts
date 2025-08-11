@@ -5,7 +5,7 @@ test.describe('Payment receipt', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(
             page
-                .locator('[data-testid="subsite-title"]')
+                .getByTestId('subsite-title')
                 .getByText(/Payment receipt/)
                 .first(),
         ).toBeVisible();

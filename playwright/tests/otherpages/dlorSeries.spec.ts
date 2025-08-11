@@ -7,18 +7,18 @@ test.describe('Digital Learning Hub Series page.', () => {
             await expect(page.locator('[data-testid="dlor-seriespage"] h1')).toContainText('Series Name');
             await page.goto('digital-learning-hub/series/2');
             await expect(page.locator('[data-testid="dlor-seriespage"] h1')).toContainText('Series Name');
-            await expect(page.locator('[data-testid="dlor-homepage-panel-987y-isjgt-9866"]')).toContainText(
+            await expect(page.getByTestId('dlor-homepage-panel-987y-isjgt-9866')).toContainText(
                 'Accessibility - Digital Essentials (has Youtube link)',
             );
             await page.goto('digital-learning-hub/series/2');
             await expect(page.locator('[data-testid="dlor-seriespage"] h1')).toContainText('Series Name');
             await page.goto('digital-learning-hub/series/9');
-            await expect(page.locator('[data-testid="dlor-seriespage-description"]')).toContainText(
+            await expect(page.getByTestId('dlor-seriespage-description')).toContainText(
                 'This series does not have a detailed description at this time.',
             );
             await page.goto('digital-learning-hub/series/5');
-            await expect(page.locator('[data-testid="dlor-seriespage-description"]')).not.toBeVisible();
-            await expect(page.locator('[data-testid="dlor-seriespage-loadError"]')).toHaveText(
+            await expect(page.getByTestId('dlor-seriespage-description')).not.toBeVisible();
+            await expect(page.getByTestId('dlor-seriespage-loadError')).toHaveText(
                 /An error has occurred during the request and this request cannot be processed/,
             );
         });
@@ -26,9 +26,7 @@ test.describe('Digital Learning Hub Series page.', () => {
             await page.goto('digital-learning-hub/series/1');
             await expect(page.locator('[data-testid="dlor-seriespage"] h1')).toContainText('Series Name');
             await page.locator('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4"] button').click();
-            await expect(page.locator('[data-testid="dlor-detailpage"]')).toContainText(
-                'Advanced literature searching',
-            );
+            await expect(page.getByTestId('dlor-detailpage')).toContainText('Advanced literature searching');
         });
         test('is accessible', async ({ page }) => {
             await page.goto('digital-learning-hub/series/1');
