@@ -1,7 +1,6 @@
-import { test, expect } from '@playwright/test';
-
+import { test, expect } from '@uqpw/test';
+import { assertAccessibility } from '@uqpw/lib/axe';
 import moment from 'moment-timezone';
-import { assertAccessibility } from '../../lib/axe';
 
 test.describe('Digital Learning Hub View page', () => {
     test.describe('details page', () => {

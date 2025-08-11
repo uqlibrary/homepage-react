@@ -1,6 +1,6 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect, Page } from '@uqpw/test';
 
-import { assertAccessibility } from '../../lib/axe';
+import { assertAccessibility } from '@uqpw/lib/axe';
 import locale from '../../../src/modules/Pages/BookExamBooth/bookExamBooth.locale';
 import moment from 'moment';
 

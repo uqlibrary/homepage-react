@@ -1,7 +1,8 @@
-import { test, expect } from '../../../../test';
-import { DLOR_ADMIN_USER } from '../../../../lib/constants';
-import { typeCKEditor } from '../../../../lib/ckeditor';
-import { assertAccessibility } from '../../../../lib/axe';
+import { test, expect } from '@uqpw/test';
+import { DLOR_ADMIN_USER } from '@uqpw/lib/constants';
+import { typeCKEditor } from '@uqpw/lib/ckeditor';
+import { assertAccessibility } from '@uqpw/lib/axe';
+
 test.describe('Digital Learning Hub admin Series management - add item', () => {
     test.beforeEach(async ({ page }) => {
         await page.context().clearCookies();

@@ -1,5 +1,6 @@
-import { test, expect } from '../../test';
-import { assertAccessibility } from '../../lib/axe';
+import { test, expect } from '@uqpw/test';
+import { assertAccessibility } from '@uqpw/lib/axe';
+
 test.describe('Past Exam Papers Pages', () => {
     test.describe('searching', () => {
         test('the past exam paper search page is accessible', async ({ page }) => {
