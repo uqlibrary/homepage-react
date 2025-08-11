@@ -1,6 +1,5 @@
 import { test, expect } from '../../test';
 import { assertAccessibility } from '../../lib/axe';
-import { getOpenedLink } from '../../lib/helpers';
 
 test.describe('Digital Learning Hub', () => {
     const itemsPerPage = 10; // matches value in DLOList
