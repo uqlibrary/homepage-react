@@ -1,5 +1,5 @@
-import { test, expect, Page } from '@uqpw/test';
-import { assertAccessibility } from '@uqpw/lib/axe';
+import { test, expect, Page } from '@uq/pw/test';
+import { assertAccessibility } from '@uq/pw/lib/axe';
 import { default as locale } from '../../../src/modules/Pages/LearningResources/shared/learningResources.locale';
 import { _courseLink, _pluralise } from '../../../src/modules/Pages/LearningResources/shared/learningResourcesHelpers';
 import { default as FREN1010ReadingList } from '../../../src/data/mock/data/records/learningResources/courseReadingList_FREN1010';

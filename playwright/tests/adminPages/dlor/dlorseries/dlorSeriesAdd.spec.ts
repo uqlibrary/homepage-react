@@ -1,7 +1,7 @@
-import { test, expect } from '@uqpw/test';
-import { DLOR_ADMIN_USER } from '@uqpw/lib/constants';
-import { typeCKEditor } from '@uqpw/lib/ckeditor';
-import { assertAccessibility } from '@uqpw/lib/axe';
+import { test, expect } from '@uq/pw/test';
+import { DLOR_ADMIN_USER } from '@uq/pw/lib/constants';
+import { typeCKEditor } from '@uq/pw/lib/ckeditor';
+import { assertAccessibility } from '@uq/pw/lib/axe';
 
 test.describe('Digital Learning Hub admin Series management - add item', () => {
     test.beforeEach(async ({ page }) => {

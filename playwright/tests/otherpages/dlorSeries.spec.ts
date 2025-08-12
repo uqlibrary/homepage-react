@@ -1,5 +1,5 @@
-import { test, expect } from '@uqpw/test';
-import { assertAccessibility } from '@uqpw/lib/axe';
+import { test, expect } from '@uq/pw/test';
+import { assertAccessibility } from '@uq/pw/lib/axe';
 
 test.describe('Digital Learning Hub Series page.', () => {
     test.describe('series page', () => {

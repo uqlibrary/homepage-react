@@ -1,5 +1,5 @@
-import { test, expect } from '@uqpw/test';
-import { typeCKEditor } from '@uqpw/lib/ckeditor';
+import { test, expect } from '@uq/pw/test';
+import { typeCKEditor } from '@uq/pw/lib/ckeditor';
 
 const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
