@@ -45,5 +45,5 @@ export const pathConfig = {
     dlorSubmit: '/digital-learning-hub/submit',
     dlorOwnObjectEdit: dlorId => `/digital-learning-hub/edit/${dlorId}`,
     dlorOwnTeamList: '/digital-learning-hub/team/manage',
-    // dlorOwnTeamEdit: dlorTeamId => `/digital-learning-hub/team/edit/${dlorTeamId}`,
+    dlorOwnTeamEdit: dlorTeamId => `/digital-learning-hub/team/edit/${dlorTeamId}`,
 };

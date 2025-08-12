@@ -272,11 +272,11 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: true,
             pageTitle: 'Digital Learning Object Repository - Team Management',
         },
-        // {
-        //     path: pathConfig.dlorOwnTeamEdit(dlorTeamId),
-        //     element: <components.DLOOwnTeamEdit />,
-        //     pageTitle: 'Digital Learning Object Repository - Edit Team',
-        // },
+        {
+            path: pathConfig.dlorOwnTeamEdit(dlorTeamId),
+            element: <components.DLOOwnTeamEdit />,
+            pageTitle: 'Digital Learning Object Repository - Edit Team',
+        },
     ];
 
     const testntagDisplay = [

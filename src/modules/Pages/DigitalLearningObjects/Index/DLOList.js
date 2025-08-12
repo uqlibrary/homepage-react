@@ -13,6 +13,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { Divider } from '@mui/material';
 
 import DescriptionIcon from '@mui/icons-material/Description';
 import LaptopIcon from '@mui/icons-material/Laptop';
@@ -46,8 +50,11 @@ import {
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { isEscapeKeyPressed, isReturnKeyPressed } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
-import { isDlorAdminUser, isLibraryStaff, isUQOnlyUser, isStaff } from 'helpers/access';
+import { isDlorAdminUser, isLibraryStaff, isUQOnlyUser, isStaff, isADlorTeamMember } from 'helpers/access';
+import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { LocalFireDepartment } from '@mui/icons-material';
+
+import {exportDLORDataToCSV} from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 
 const StyledSkipLinkButton = styled(Button)(({ theme }) => ({
     // hidden when not focused
@@ -281,6 +288,9 @@ export const DLOList = ({
     dlorFavouritesList,
     dlorFavouritesLoading,
     dlorFavouritesError,
+    dlorTeamList,
+    dlorTeamListLoading,
+    dlorTeamListError,
 }) => {
     // console.log('permissions', isLibraryStaff(account), isStaff(account), isUQOnlyUser(account));
     const [selectedFilters, setSelectedFilters] = useState([]);
@@ -291,8 +301,21 @@ export const DLOList = ({
     const [isKeywordClearable, setIsKeywordClearable] = useState(false);
     const keyWordSearchRef = useRef('');
 
+    const [anchorEl, setAnchorEl] = useState(null);
+    const menuOpen = Boolean(anchorEl);
+
+    const handleMenuClick = event => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
     // Looking into a potential flag for facets to indicate if they are candidate displays similar to graduate attributes.
     // For now, using an array to store selected helper text display as graduate attribute style.
+
+    console.log("TEAM LIST", dlorTeamList, dlorTeamListLoading, dlorTeamListError);
 
     const [paginationPage, setPaginationPage] = React.useState(1);
 
@@ -334,6 +357,12 @@ export const DLOList = ({
     const heroDescriptionDlor =
         'Use the Digital Learning Hub to find modules, videos and guides for teaching and study.';
     const heroBackgroundImageDlor = require('../../../../../public/images/digital-learning-hub-hero-shot-wide.png');
+
+    useEffect(() => {
+            if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {
+                actions.loadOwningTeams();
+            }
+        }, [actions, dlorTeamList, dlorTeamListError, dlorTeamListLoading]);
 
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -1338,7 +1367,7 @@ export const DLOList = ({
                     justifyContent="space-between"
                     sx={{ marginBlock: '2em 1em' }}
                 >
-                    <Grid item xs={12} md="auto">
+                    <Grid item xs={11} md="auto">
                         <Typography component={'p'} sx={{ fontSize: '1.2em', fontWeight: 400 }}>
                             Find out{' '}
                             <a href="https://guides.library.uq.edu.au/research-and-teaching-staff/link-embed-resources/digital-learning-objects">
@@ -1353,7 +1382,66 @@ export const DLOList = ({
                             </StyledSkipLinkButton>
                         </Typography>
                     </Grid>
-                    {!!account?.id && !!!isDlorAdminUser(account) && (
+                    {!!isADlorTeamMember(account, dlorTeamList) && (
+                        <Grid item xs={1} md="auto" sx={{ textAlign: 'right' }}>
+                            <IconButton
+                            color="primary"
+                            aria-controls={open ? 'team-admin-dlor-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? 'true' : undefined}
+                            onClick={handleMenuClick}
+                            data-testid="admin-dlor-team-admin-menu-button"
+                            aria-label="Team admin menu"
+                        >
+                            <MoreVertIcon />
+                            </IconButton>
+                            <Menu
+                                id="team-admin-dlor-menu"
+                                anchorEl={anchorEl}
+                                open={menuOpen}
+                                onClose={handleMenuClose}
+                                MenuListProps={{
+                                    'aria-labelledby': 'team-admin-dlor-menu-button',
+                                }}
+                            >
+                                <MenuItem
+                                    onClick={() => {
+                                        handleRequestNewItem();
+                                        handleMenuClose();
+                                    }}
+                                    data-testid="team-admin-submit-object-request"
+                                >
+                                    Submit new object request
+                                </MenuItem>
+                                <Divider />
+                                <MenuItem
+                                    onClick={() => {
+                                        window.location.href = dlorAdminLink('/team/manage', account);
+                                        handleMenuClose();
+                                    }}
+                                    data-testid="team-admin-details--button"
+                                >
+                                    My team(s) details
+                                </MenuItem>
+                                <Divider />
+                                <MenuItem
+                                    onClick={() => {
+                                       exportDLORDataToCSV(dlorList, 'dlor_data.csv');
+                                       handleMenuClose();
+                                    }}
+                                    data-testid="admin-dlor-export-team-objects--button"
+                                >
+                                    Export Object data to CSV
+                                </MenuItem>
+
+
+
+                                
+                                
+                            </Menu>
+                        </Grid>
+                    )}
+                    {!!account?.id && !!!isDlorAdminUser(account) && !!!isADlorTeamMember(account || null, dlorTeamList || null) && (
                         <Grid item xs={12} md="auto" sx={{ textAlign: 'right' }}>
                             <UqActionLink
                                 data-testid="dlor-homepage-request-new-item"
