@@ -1386,9 +1386,9 @@ export const DLOList = ({
                         <Grid item xs={1} md="auto" sx={{ textAlign: 'right' }}>
                             <IconButton
                             color="primary"
-                            aria-controls={open ? 'team-admin-dlor-menu' : undefined}
+                            aria-controls={menuOpen ? 'team-admin-dlor-menu' : undefined}
                             aria-haspopup="true"
-                            aria-expanded={open ? 'true' : undefined}
+                            aria-expanded={menuOpen ? 'true' : undefined}
                             onClick={handleMenuClick}
                             data-testid="admin-dlor-team-admin-menu-button"
                             aria-label="Team admin menu"
@@ -1441,7 +1441,7 @@ export const DLOList = ({
                             </Menu>
                         </Grid>
                     )}
-                    {!!account?.id && !!!isDlorAdminUser(account) && !!!isADlorTeamMember(account || null, dlorTeamList || null) && (
+                    {!!account?.id && !!!isDlorAdminUser(account) && !!!isADlorTeamMember(account || /* istanbul ignore next */ null, dlorTeamList || /* istanbul ignore next */ null) && (
                         <Grid item xs={12} md="auto" sx={{ textAlign: 'right' }}>
                             <UqActionLink
                                 data-testid="dlor-homepage-request-new-item"
