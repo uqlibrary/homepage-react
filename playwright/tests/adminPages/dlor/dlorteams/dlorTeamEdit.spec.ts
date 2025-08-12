@@ -18,16 +18,16 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
         test('has breadcrumbs', async ({ page }) => {
             await expect(
                 page
-                    .locator('[data-testid="subsite-title"]')
+                    .getByTestId('subsite-title')
                     .getByText(/Digital learning hub admin/)
                     .first(),
             ).toBeVisible();
         });
         test('appears as expected', async ({ page }) => {
-            await expect(page.locator('[data-testid="StandardPage-title"]')).toBeVisible();
+            await expect(page.getByTestId('StandardPage-title')).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="StandardPage-title"]')
+                    .getByTestId('StandardPage-title')
                     .getByText(/Digital Learning Hub - Edit Team/)
                     .first(),
             ).toBeVisible();
@@ -40,13 +40,9 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             await expect(page.locator('[data-testid="admin-dlor-team-form-team-email"] input')).toHaveValue(
                 'train@library.uq.edu',
             );
-            await expect(
-                page.locator('[data-testid="admin-dlor-team-form-error-message-team-name"]'),
-            ).not.toBeVisible();
-            await expect(
-                page.locator('[data-testid="admin-dlor-team-form-error-message-team-email"]'),
-            ).not.toBeVisible();
-            await expect(page.locator('[data-testid="admin-dlor-team-form-save-button"]')).toBeDisabled();
+            await expect(page.getByTestId('admin-dlor-team-form-error-message-team-name')).not.toBeVisible();
+            await expect(page.getByTestId('admin-dlor-team-form-error-message-team-email')).not.toBeVisible();
+            await expect(page.getByTestId('admin-dlor-team-form-save-button')).toBeDisabled();
             await expect(
                 page
                     .locator('a[data-testid="dlor-breadcrumb-admin-homelink"]')
@@ -65,79 +61,61 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             await page.locator('[data-testid="admin-dlor-team-form-team-name"] input').clear();
             await expect(
                 page
-                    .locator('[data-testid="admin-dlor-team-form-error-message-team-name"]')
+                    .getByTestId('admin-dlor-team-form-error-message-team-name')
                     .getByText(/This team name is not valid\./)
                     .first(),
             ).toHaveCSS('color', 'rgb(214, 41, 41)'); // #d62929
-            await expect(
-                page.locator('[data-testid="admin-dlor-team-form-error-message-team-email"]'),
-            ).not.toBeVisible();
-            await expect(page.locator('[data-testid="admin-dlor-team-form-save-button"]')).toBeDisabled();
+            await expect(page.getByTestId('admin-dlor-team-form-error-message-team-email')).not.toBeVisible();
+            await expect(page.getByTestId('admin-dlor-team-form-save-button')).toBeDisabled();
 
             await page.locator('[data-testid="admin-dlor-team-form-team-name"] input').fill('something');
-            await expect(
-                page.locator('[data-testid="admin-dlor-team-form-error-message-team-name"]'),
-            ).not.toBeVisible();
-            await expect(
-                page.locator('[data-testid="admin-dlor-team-form-error-message-team-email"]'),
-            ).not.toBeVisible();
-            await expect(page.locator('[data-testid="admin-dlor-team-form-save-button"]')).not.toBeDisabled();
+            await expect(page.getByTestId('admin-dlor-team-form-error-message-team-name')).not.toBeVisible();
+            await expect(page.getByTestId('admin-dlor-team-form-error-message-team-email')).not.toBeVisible();
+            await expect(page.getByTestId('admin-dlor-team-form-save-button')).not.toBeDisabled();
 
             // enter a partial email - invalid because not valid
             await page.locator('[data-testid="admin-dlor-team-form-team-email"] input').clear();
             await page.locator('[data-testid="admin-dlor-team-form-team-email"] input').fill('lea');
-            await expect(
-                page.locator('[data-testid="admin-dlor-team-form-error-message-team-name"]'),
-            ).not.toBeVisible();
-            await expect(page.locator('[data-testid="admin-dlor-team-form-error-message-team-email"]')).toBeVisible();
+            await expect(page.getByTestId('admin-dlor-team-form-error-message-team-name')).not.toBeVisible();
+            await expect(page.getByTestId('admin-dlor-team-form-error-message-team-email')).toBeVisible();
             await expect(
                 page
-                    .locator('[data-testid="admin-dlor-team-form-error-message-team-email"]')
+                    .getByTestId('admin-dlor-team-form-error-message-team-email')
                     .getByText(/This email address is not valid\./)
                     .first(),
             ).toHaveCSS('color', 'rgb(214, 41, 41)'); // #d62929;
-            await expect(page.locator('[data-testid="admin-dlor-team-form-save-button"]')).toBeDisabled();
+            await expect(page.getByTestId('admin-dlor-team-form-save-button')).toBeDisabled();
 
             // complete email - now valid
             await page
                 .locator('[data-testid="admin-dlor-team-form-team-email"] input')
                 .pressSequentially('@example.com');
-            await expect(
-                page.locator('[data-testid="admin-dlor-team-form-error-message-team-name"]'),
-            ).not.toBeVisible();
-            await expect(
-                page.locator('[data-testid="admin-dlor-team-form-error-message-team-email"]'),
-            ).not.toBeVisible();
-            await expect(page.locator('[data-testid="admin-dlor-team-form-save-button"]')).not.toBeDisabled();
+            await expect(page.getByTestId('admin-dlor-team-form-error-message-team-name')).not.toBeVisible();
+            await expect(page.getByTestId('admin-dlor-team-form-error-message-team-email')).not.toBeVisible();
+            await expect(page.getByTestId('admin-dlor-team-form-save-button')).not.toBeDisabled();
 
             // enter a manager, validity unaffected
             await page.locator('[data-testid="admin-dlor-team-form-team-manager"] input').fill('valid team manager');
-            await expect(
-                page.locator('[data-testid="admin-dlor-team-form-error-message-team-name"]'),
-            ).not.toBeVisible();
-            await expect(
-                page.locator('[data-testid="admin-dlor-team-form-error-message-team-email"]'),
-            ).not.toBeVisible();
-            await expect(page.locator('[data-testid="admin-dlor-team-form-save-button"]')).not.toBeDisabled();
+            await expect(page.getByTestId('admin-dlor-team-form-error-message-team-name')).not.toBeVisible();
+            await expect(page.getByTestId('admin-dlor-team-form-error-message-team-email')).not.toBeVisible();
+            await expect(page.getByTestId('admin-dlor-team-form-save-button')).not.toBeDisabled();
 
             // wipe team name - form invalid
             await page.locator('[data-testid="admin-dlor-team-form-team-name"] input').clear();
-            await expect(page.locator('[data-testid="admin-dlor-team-form-error-message-team-name"]')).toBeVisible();
-            await expect(
-                page.locator('[data-testid="admin-dlor-team-form-error-message-team-email"]'),
-            ).not.toBeVisible();
-            await expect(page.locator('[data-testid="admin-dlor-team-form-save-button"]')).toBeDisabled();
+            await expect(page.getByTestId('admin-dlor-team-form-error-message-team-name')).toBeVisible();
+            await expect(page.getByTestId('admin-dlor-team-form-error-message-team-email')).not.toBeVisible();
+            await expect(page.getByTestId('admin-dlor-team-form-save-button')).toBeDisabled();
         });
         test('has a working "cancel edit" button', async ({ page }) => {
             await expect(
                 page
-                    .locator('[data-testid="admin-dlor-team-form-button-cancel"]')
+                    .getByTestId('admin-dlor-team-form-button-cancel')
                     .getByText(/Cancel/)
                     .first(),
             ).toBeVisible();
 
             await page.getByTestId('admin-dlor-team-form-button-cancel').click();
-            await expect(page.locator('[data-testid="dlor-teamlist-edit-1"]')).toBeVisible();
+            await expect(page.getByTestId('dlor-teamlist-edit-1')).toBeVisible();
             await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
         });
     });
@@ -207,7 +185,7 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             await page.goto(`http://localhost:2020/admin/dlor/team/edit/1?user=${DLOR_ADMIN_USER}&responseType=error`);
             await expect(
                 page
-                    .locator('[data-testid="dlor-teamItem-error"]')
+                    .getByTestId('dlor-teamItem-error')
                     .getByText(/An error has occurred during the request/)
                     .first(),
             ).toBeVisible();
