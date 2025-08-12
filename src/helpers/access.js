@@ -211,6 +211,19 @@ export const isInDLOROwningTeam = (account, dlorItem, dlorTeamList) => {
     );
 };
 
+export const isADlorTeamMember = (account, dlorTeamList) => {
+    console.log('isADlorTeamMember: account=', account, ' dlorTeamList=', dlorTeamList);
+    for (const team of dlorTeamList) {
+        if (team.team_members && team.team_members.length > 0) {
+            if (team.team_members.some(member => member.team_admin_username === account?.id)) {
+                return true;
+            }
+        }
+    }
+
+  return false;
+};
+
 export const isHospitalUser = account =>
     isLoggedInUser(account) && !!account.user_group && account.user_group === EXTRAMURAL_HOSPITAL;
 
