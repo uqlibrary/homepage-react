@@ -65,7 +65,7 @@ test.describe('Training', () => {
         await expect(page.locator('h3 h3')).not.toBeVisible(); // we managed to nest the heading at one point
     });
 
-    test.skip('detail panel is accessible', async ({ page }) => {
+    test('detail panel is accessible', async ({ page }) => {
         await page.goto('/');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.locator('div[data-testid="training-panel"]')).toBeVisible();
