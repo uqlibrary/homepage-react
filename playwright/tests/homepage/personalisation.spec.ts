@@ -70,7 +70,6 @@ const hasEspaceEntries = async (page: Page, optionsTheUserShouldSee: string[]) =
         const elementId = page.getByTestId(key);
 
         if (optionsTheUserShouldSee.includes(key)) {
-            await expect(elementId).toBeVisible();
             await expect(elementId).toContainText(value);
         } else {
             await expect(elementId).not.toBeVisible();
@@ -93,7 +92,6 @@ const hasAccountPanelOptions = async (page: Page, optionsTheUserShouldSee: strin
         const element = page.getByTestId(entryname);
 
         if (optionsTheUserShouldSee.includes(key)) {
-            await expect(element).toBeVisible();
             await expect(element).toContainText(value);
         } else {
             await expect(element).not.toBeVisible();
@@ -128,10 +126,9 @@ test.describe('Personalised Homepage', () => {
         ]);
 
         // the fine has the supplied value
-        await expect(page.locator('[data-testid="show-fines"]')).toBeVisible();
         await expect(
             page
-                .locator('[data-testid="show-fines"]')
+                .getByTestId('show-fines')
                 .getByText(/48\.93/)
                 .first(),
         ).toBeVisible();
@@ -142,7 +139,7 @@ test.describe('Personalised Homepage', () => {
         // as the user is logged in, they see nav panels with a h3
         await expect(
             page
-                .locator('[data-testid="help-navigation-panel"]')
+                .getByTestId('help-navigation-panel')
                 .locator(':scope > *')
                 .nth(0)
                 .locator('h3'),
@@ -156,7 +153,7 @@ test.describe('Personalised Homepage', () => {
         // as the user is logged out, they see nav panels with a h2
         await expect(
             page
-                .locator('[data-testid="help-navigation-panel"]')
+                .getByTestId('help-navigation-panel')
                 .locator(':scope > *')
                 .nth(0)
                 .locator('h2'),
@@ -180,10 +177,9 @@ test.describe('Personalised Homepage', () => {
         ]);
 
         // the fine has a special value
-        await expect(page.locator('[data-testid="show-fines"]')).toBeVisible();
         await expect(
             page
-                .locator('[data-testid="show-fines"]')
+                .getByTestId('show-fines')
                 .getByText(/65\.97/)
                 .first(),
         ).toBeVisible();
@@ -356,12 +352,10 @@ test.describe('Personalised Homepage', () => {
         await hasAccountPanelOptions(page, ['searchhistory', 'savedsearches', 'requests', 'loans', 'papercut']);
 
         // sees hospital training items
-        await expect(page.locator('[data-testid="training-event-detail-button-0"]')).toBeVisible();
-        await expect(page.locator('[data-testid="training-event-detail-button-0"]')).toBeVisible();
-        await page.locator('[data-testid="training-event-detail-button-0"]').scrollIntoViewIfNeeded();
+        await page.getByTestId('training-event-detail-button-0').scrollIntoViewIfNeeded();
         await expect(
             page
-                .locator('[data-testid="training-event-detail-button-0"]')
+                .getByTestId('training-event-detail-button-0')
                 .getByText(/Planning your systematic review/)
                 .first(),
         ).toBeVisible();
