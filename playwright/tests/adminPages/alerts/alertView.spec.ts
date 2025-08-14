@@ -1,6 +1,6 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { clickButton, dateHasValue } from '../../../support/helpers';
+import { clickButton, dateHasValue } from '@uq/pw/lib/helpers';
 
 test.describe('Alerts Admin View Page', () => {
     test.beforeEach(async ({ page }) => {
