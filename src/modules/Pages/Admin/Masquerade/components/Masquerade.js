@@ -7,9 +7,12 @@ import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+import { useCookies } from 'react-cookie';
+
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import txt from './masquerade.locale';
+import { PREMASQUERADE_SESSION_COOKIE_NAME } from 'config/general';
 
 const StyledStandardCard = styled(StandardCard)(() => ({
     backgroundColor: 'white',
@@ -18,11 +21,19 @@ const StyledStandardCard = styled(StandardCard)(() => ({
 const Masquerade = ({ account }) => {
     const [userName, setUserName] = useState('');
     const [loading, setLoading] = useState(false);
+    const [cookies, setCookie] = useCookies();
 
     const masqueradeAs = event => {
         if ((event && event.key && event.key !== 'Enter') || userName.length === 0) return;
 
         setLoading(true);
+
+        // store the old cookie so we can end the masquerade (done in reusable)
+        const expirationDate = new Date();
+        expirationDate.setTime(expirationDate.getTime() + 24 * 60 * 60 * 1000);
+        // cookie lasts one day - arbitrary decision.
+        // If the masquerade is left in place after that, it will just log them out.
+        setCookie(PREMASQUERADE_SESSION_COOKIE_NAME, cookies.UQLID, { expires: expirationDate });
 
         let redirectUrl = `${window.location.protocol}//${window.location.hostname}`;
         const isDevBranch = window.location.hostname === 'homepage-development.library.uq.edu.au';
