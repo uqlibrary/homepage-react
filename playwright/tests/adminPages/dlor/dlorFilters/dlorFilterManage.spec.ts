@@ -72,7 +72,7 @@ test.describe('Digital Learning Hub admin filter management', () => {
             await page.locator('#facet_order').blur();
             await page.locator('#facet_order').focus();
             await page.locator('#facet_order').press('ArrowDown');
-            await page.locator('#facet_help').fill('');
+            await page.locator('#facet_help').clear();
             await page.getByTestId('admin-dlor-filter-confirm-button').click();
             await expect(page.locator('#modal-modal-title')).not.toBeVisible();
         });
