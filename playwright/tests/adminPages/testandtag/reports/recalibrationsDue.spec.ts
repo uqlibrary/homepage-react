@@ -1,19 +1,12 @@
-import { test, expect, Page } from '@uq/pw/test';
+import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
+import { forcePageRefresh, getFieldValue } from './helpers';
 import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
 test.describe('Test and Tag Report - RecalibrationsDue due', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('http://localhost:2020/admin/testntag/report/recalibrationsdue?user=uqtesttag');
     });
-
-    const getFieldValue = async (page: Page, dataField: string, rowIndex: number) =>
-        page.locator(`div[data-rowindex='${rowIndex}'] > div[data-field='${dataField}']`);
-
-    const forcePageRefresh = async (page: Page) => {
-        await page.getByTestId('test_tag_header-navigation-dashboard').click();
-        await page.goBack();
-    };
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
