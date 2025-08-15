@@ -1,6 +1,6 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { forcePageRefresh, getFieldValue } from '../helpers';
+import { assertTitles, forcePageRefresh, getFieldValue } from '../helpers';
 import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
 test.describe('Test and Tag Manage Users', () => {
@@ -10,10 +10,7 @@ test.describe('Test and Tag Manage Users', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('h1')).toContainText(locale.pages.general.pageTitle);
-        await expect(
-            page.locator('h2').getByText(locale.pages.manage.users.header.pageSubtitle('Library')),
-        ).toBeVisible();
+        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqjsmit');
         await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['aria-required-children'] });
@@ -25,10 +22,7 @@ test.describe('Test and Tag Manage Users', () => {
 
     test('base page edit controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('h1')).toContainText(locale.pages.general.pageTitle);
-        await expect(
-            page.locator('h2').getByText(locale.pages.manage.users.header.pageSubtitle('Library')),
-        ).toBeVisible();
+        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqjsmit');
 
@@ -70,10 +64,7 @@ test.describe('Test and Tag Manage Users', () => {
 
     test('base page add controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('h1')).toContainText(locale.pages.general.pageTitle);
-        await expect(
-            page.locator('h2').getByText(locale.pages.manage.users.header.pageSubtitle('Library')),
-        ).toBeVisible();
+        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqjsmit');
         // Add
@@ -110,10 +101,7 @@ test.describe('Test and Tag Manage Users', () => {
 
     test('base page delete controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('h1')).toContainText(locale.pages.general.pageTitle);
-        await expect(
-            page.locator('h2').getByText(locale.pages.manage.users.header.pageSubtitle('Library')),
-        ).toBeVisible();
+        await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqjsmit');
         // Delete

@@ -1,6 +1,6 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { forcePageRefresh, getFieldValue } from '../helpers';
+import { assertTitles, forcePageRefresh, getFieldValue } from '../helpers';
 import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
 test.describe('Test and Tag Report - Inspections due', () => {
@@ -10,10 +10,7 @@ test.describe('Test and Tag Report - Inspections due', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('h1')).toContainText(locale.pages.general.pageTitle);
-        await expect(
-            page.locator('h2').getByText(locale.pages.report.inspectionsDue.header.pageSubtitle('Library')),
-        ).toBeVisible();
+        await assertTitles(page, locale.pages.report.inspectionsDue.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000007');
         await expect(page.getByTestId('location_picker-inspections-due-site-input')).toHaveValue('All sites');
@@ -31,10 +28,7 @@ test.describe('Test and Tag Report - Inspections due', () => {
 
     test('page UI elements function as expected', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('h1')).toContainText(locale.pages.general.pageTitle);
-        await expect(
-            page.locator('h2').getByText(locale.pages.report.inspectionsDue.header.pageSubtitle('Library')),
-        ).toBeVisible();
+        await assertTitles(page, locale.pages.report.inspectionsDue.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000007');
         await expect(page.getByTestId('location_picker-inspections-due-site-input')).toHaveValue('All sites');
