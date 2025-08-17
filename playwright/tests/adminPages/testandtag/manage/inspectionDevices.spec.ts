@@ -23,58 +23,58 @@ test.describe('Test and Tag manage inspection devices', () => {
     });
 
     test('has breadcrumbs', async ({ page }) => {
-        await expect(page.locator('[data-testid="subsite-title"]')).toContainText('Test and tag');
+        await expect(page.getByTestId('subsite-title')).toContainText('Test and tag');
     });
 
     test('Add and Edit Inspection Device functions correctly', async ({ page }) => {
         await checkBaseline(page);
 
         // Adding an Inspection Device
-        await page.locator('[data-testid="add_toolbar-inspection-devices-add-button"]').click();
+        await page.getByTestId('add_toolbar-inspection-devices-add-button').click();
         await page.waitForTimeout(1000);
 
         await assertAccessibility(page, '[data-testid="StandardPage"]');
 
-        await page.locator('[data-testid="device_model_name-input"]').clear();
-        await page.locator('[data-testid="device_model_name-input"]').fill('Test Device');
-        await page.locator('[data-testid="device_serial_number-input"]').clear();
-        await page.locator('[data-testid="device_serial_number-input"]').fill('Test Serial No');
-        await page.locator('[data-testid="device_calibrated_by_last-input"]').clear();
-        await page.locator('[data-testid="device_calibrated_by_last-input"]').fill('Calibration Person');
-        await page.locator('[data-testid="update_dialog-action-button"]').click();
+        await page.getByTestId('device_model_name-input').clear();
+        await page.getByTestId('device_model_name-input').fill('Test Device');
+        await page.getByTestId('device_serial_number-input').clear();
+        await page.getByTestId('device_serial_number-input').fill('Test Serial No');
+        await page.getByTestId('device_calibrated_by_last-input').clear();
+        await page.getByTestId('device_calibrated_by_last-input').fill('Calibration Person');
+        await page.getByTestId('update_dialog-action-button').click();
         await expect(page.locator('.MuiAlert-message')).toContainText('Request successfully completed');
 
         // Editing an asset type
-        await page.locator('[data-testid="action_cell-2-edit-button"]').click();
+        await page.getByTestId('action_cell-2-edit-button').click();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
 
-        await page.locator('[data-testid="device_model_name-input"]').clear();
-        await page.locator('[data-testid="device_model_name-input"]').fill('Test Device Edited');
-        await page.locator('[data-testid="device_serial_number-input"]').clear();
-        await page.locator('[data-testid="device_serial_number-input"]').fill('Test Serial No Edited');
-        await page.locator('[data-testid="device_calibrated_by_last-input"]').clear();
-        await page.locator('[data-testid="device_calibrated_by_last-input"]').fill('Calibration Person Edited');
-        await page.locator('[data-testid="update_dialog-action-button"]').click();
+        await page.getByTestId('device_model_name-input').clear();
+        await page.getByTestId('device_model_name-input').fill('Test Device Edited');
+        await page.getByTestId('device_serial_number-input').clear();
+        await page.getByTestId('device_serial_number-input').fill('Test Serial No Edited');
+        await page.getByTestId('device_calibrated_by_last-input').clear();
+        await page.getByTestId('device_calibrated_by_last-input').fill('Calibration Person Edited');
+        await page.getByTestId('update_dialog-action-button').click();
         await expect(page.locator('.MuiAlert-message')).toContainText('Request successfully completed');
 
         // Cancel button - Add
-        await page.locator('[data-testid="add_toolbar-inspection-devices-add-button"]').click();
-        await page.locator('[data-testid="update_dialog-cancel-button"]').click();
+        await page.getByTestId('add_toolbar-inspection-devices-add-button').click();
+        await page.getByTestId('update_dialog-cancel-button').click();
         await expect(page.locator('.MuiAlert-message')).not.toBeVisible();
 
         // Cancel button - Edit
-        await page.locator('[data-testid="action_cell-2-edit-button"]').click();
-        await page.locator('[data-testid="update_dialog-cancel-button"]').click();
+        await page.getByTestId('action_cell-2-edit-button').click();
+        await page.getByTestId('update_dialog-cancel-button').click();
         await expect(page.locator('.MuiAlert-message')).not.toBeVisible();
 
         // Delete Button - Confirm
-        await page.locator('[data-testid="action_cell-2-delete-button"]').click();
-        await page.locator('[data-testid="confirm-inspection-devices"]').click();
+        await page.getByTestId('action_cell-2-delete-button').click();
+        await page.getByTestId('confirm-inspection-devices').click();
         await expect(page.locator('.MuiAlert-message')).toContainText('Request successfully completed');
 
         // Delete Button - Cancel
-        await page.locator('[data-testid="action_cell-2-delete-button"]').click();
-        await page.locator('[data-testid="cancel-inspection-devices"]').click();
+        await page.getByTestId('action_cell-2-delete-button').click();
+        await page.getByTestId('cancel-inspection-devices').click();
         await expect(page.locator('.MuiAlert-message')).not.toBeVisible();
     });
 });
