@@ -110,7 +110,7 @@ test.describe('Test and Tag Manage Locations', () => {
         await page.getByTestId('action_cell-1-edit-button').click();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
         // clear a required field - update button should disable
-        await page.getByTestId('site_id_displayed-input').fill('');
+        await page.getByTestId('site_id_displayed-input').clear();
         await expect(page.getByTestId('update_dialog-action-button')).toBeDisabled();
         // fill with data
         await page.getByTestId('site_id_displayed-input').fill('testing');
@@ -124,7 +124,7 @@ test.describe('Test and Tag Manage Locations', () => {
         await expect(await getFieldValue(page, 'building_id_displayed', 0)).toContainText('0001');
         await page.getByTestId('action_cell-1-edit-button').click();
         // clear a required field - update button should disable
-        await page.getByTestId('building_id_displayed-input').fill('');
+        await page.getByTestId('building_id_displayed-input').clear();
         await expect(page.getByTestId('update_dialog-action-button')).toBeDisabled();
         // fill with data
         await page.getByTestId('building_id_displayed-input').fill('testing');
@@ -138,7 +138,7 @@ test.describe('Test and Tag Manage Locations', () => {
         await expect(await getFieldValue(page, 'floor_id_displayed', 0)).toContainText('2');
         await page.getByTestId('action_cell-1-edit-button').click();
         // clear a required field - update button should disable
-        await page.getByTestId('floor_id_displayed-input').fill('');
+        await page.getByTestId('floor_id_displayed-input').clear();
         await expect(page.getByTestId('update_dialog-action-button')).toBeDisabled();
         // fill with data
         await page.getByTestId('floor_id_displayed-input').fill('testing');
@@ -152,7 +152,7 @@ test.describe('Test and Tag Manage Locations', () => {
         await expect(await getFieldValue(page, 'room_id_displayed', 0)).toContainText('W212');
         await page.getByTestId('action_cell-1-edit-button').click();
         // clear a required field - update button should disable
-        await page.getByTestId('room_id_displayed-input').fill('');
+        await page.getByTestId('room_id_displayed-input').clear();
         await expect(page.getByTestId('update_dialog-action-button')).toBeDisabled();
         // fill with data
         await page.getByTestId('room_id_displayed-input').fill('testing');
