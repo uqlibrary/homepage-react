@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '@uq/pw/test';
 import { Page } from '@uq/pw/test';
 
 const expectUserToDisplayCorrectFirstName = async (page: Page, username: string, firstname: string) => {

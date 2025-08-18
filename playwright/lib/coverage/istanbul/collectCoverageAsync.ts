@@ -1,4 +1,4 @@
-import { BrowserContext } from '@playwright/test';
+import { BrowserContext } from '@uq/pw/test';
 import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
