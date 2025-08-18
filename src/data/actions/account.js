@@ -12,7 +12,7 @@ import {
     VEMCOUNT_API,
 } from 'repositories/routes';
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
-import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME } from 'config/general';
+import { PREMASQUERADE_SESSION_COOKIE_NAME, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME } from 'config/general';
 import Cookies from 'js-cookie';
 
 // make the complete class number from the pieces supplied by API, eg FREN + 1010 = FREN1010
@@ -140,6 +140,15 @@ export function logout(reload = false) {
     };
 }
 
+function clearMasqueradeCookie() {
+    const expiryDate = new Date();
+    expiryDate.setTime(expiryDate.getTime() - 24 * 60 * 60 * 1000);
+
+    const endswith = window.location.hostname.endsWith('.library.uq.edu.au');
+    const cookieDomain = endswith ? /* istanbul ignore next */ 'domain=.library.uq.edu.au;path=/' : '';
+    document.cookie = `${PREMASQUERADE_SESSION_COOKIE_NAME}=; Path=/;expires=${expiryDate.toGMTString()};${cookieDomain};`;
+}
+
 /**
  * Loads the user's account and author details into the application
  * @returns {function(*)}
@@ -161,9 +170,15 @@ export function loadCurrentAccount() {
 
         let currentAuthor = null;
 
+        const cookieFound = cookieId => document.cookie.indexOf(`${cookieId}=`) > -1;
         // load UQL account (based on token)
         return get(CURRENT_ACCOUNT_API())
             .then(account => {
+                if (!account.hasOwnProperty('masqueradingId') && cookieFound(PREMASQUERADE_SESSION_COOKIE_NAME)) {
+                    // its probably harmless, but don't leave it lying around anyway
+                    console.log('clear masquerade cookie');
+                    clearMasqueradeCookie();
+                }
                 if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
                     return Promise.resolve(account);
                 } else {

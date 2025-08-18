@@ -31,7 +31,7 @@ const deployment = {
         basePath: '',
         publicPath: '/',
         reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/uq-lib-reusable.min.js',
-        removeConsoleLog: true,
+        removeConsoleLog: false,
     },
     production: {
         url: () => 'https://homepage-production.library.uq.edu.au/',
