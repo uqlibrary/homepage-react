@@ -31,7 +31,7 @@ exports[`ContentLoader snapshots tests renders loader 1`] = `
                 >
                   <span
                     aria-labelledby="loading-icon"
-                    class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1u7zxmb-MuiCircularProgress-root"
+                    class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-gml426-MuiCircularProgress-root"
                     role="progressbar"
                     style="width: 18px; height: 18px;"
                   >
