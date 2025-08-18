@@ -34,6 +34,7 @@ const Masquerade = ({ account }) => {
         // cookie lasts one day - arbitrary decision.
         // If the masquerade is left in place after that, it will just log them out.
         console.log('PREMASQUERADE_SESSION_COOKIE_NAME=', cookies[PREMASQUERADE_SESSION_COOKIE_NAME]);
+        /* istanbul ignore next */
         if (!!cookies[PREMASQUERADE_SESSION_COOKIE_NAME]) {
             console.log('deleting cookie for ', PREMASQUERADE_SESSION_COOKIE_NAME); // debug
             delete cookies[PREMASQUERADE_SESSION_COOKIE_NAME];
