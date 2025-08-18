@@ -11,37 +11,10 @@ import {
     loadTrainingEvents,
     getClassNumberFromPieces,
     loadVemcountList,
-    loadPrimoStatus,
 } from './account';
 import Cookies from 'js-cookie';
 
 jest.mock('@sentry/browser');
-
-const sessionStorageMock = (function createSessionStorageMock() {
-    let store = {};
-
-    return {
-        getItem(key) {
-            return store[key] || null;
-        },
-
-        setItem(key, value) {
-            store[key] = value;
-        },
-
-        clear() {
-            store = {};
-        },
-
-        removeItem(key) {
-            delete store[key];
-        },
-
-        getAll() {
-            console.log(store);
-        },
-    };
-})();
 
 describe('Account action creators', () => {
     const MockDate = require('mockdate');
@@ -52,14 +25,12 @@ describe('Account action creators', () => {
         mockSessionApi = setupSessionMockAdapter();
 
         Cookies.get = jest.fn().mockImplementation(() => 'abc123');
-        Object.defineProperty(window, 'sessionStorage', { value: sessionStorageMock });
     });
 
     afterEach(() => {
         MockDate.reset();
         mockApi.reset();
         mockSessionApi.reset();
-        window.sessionStorage.clear();
     });
 
     it('should dispatch expected actions on successful fetch of user details', async () => {
@@ -367,24 +338,6 @@ describe('Account action creators', () => {
         await mockActionsStore.dispatch(loadVemcountList());
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
-
-    it('dispatches expected actions when loading primo status succeeds', async () => {
-        mockApi.onGet(repositories.routes.PRIMO_STATUS_API().apiUrl).reply(200);
-
-        const expectedActions = [actions.PRIMO_STATUS_LOADING, actions.PRIMO_STATUS_LOADED];
-
-        await mockActionsStore.dispatch(loadPrimoStatus());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when loading primo status fails', async () => {
-        mockApi.onGet(repositories.routes.PRIMO_STATUS_API().apiUrl).reply(500);
-
-        const expectedActions = [actions.PRIMO_STATUS_LOADING, actions.PRIMO_STATUS_FAILED];
-
-        await mockActionsStore.dispatch(loadPrimoStatus());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
 });
 
 describe('Account action creators', () => {
@@ -396,14 +349,12 @@ describe('Account action creators', () => {
         mockSessionApi = setupSessionMockAdapter();
 
         Cookies.get = jest.fn().mockImplementation(() => '');
-        Object.defineProperty(window, 'sessionStorage', { value: sessionStorageMock });
     });
 
     afterEach(() => {
         MockDate.reset();
         mockApi.reset();
         mockSessionApi.reset();
-        window.sessionStorage.clear();
     });
 
     it('dispatches expected actions when loading papercut is unauthorised (fails with 403)', async () => {
