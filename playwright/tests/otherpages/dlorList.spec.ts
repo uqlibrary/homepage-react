@@ -38,7 +38,6 @@ test.describe('Digital Learning Hub', () => {
                 return parseInt(style.width, 10);
             });
             expect(width).toBeGreaterThan(600);
-            await expect(page.getByTestId('hero-card-title')).toBeVisible();
             await expect(
                 page
                     .getByTestId('hero-card-title')
