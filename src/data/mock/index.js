@@ -490,7 +490,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
             ];
         }
     })
-    .onPut(/dlor\/admin\/team\/.*/)
+    .onPut(/dlor\/auth\/team\/.*/)
     .reply(config => {
         const urlparts = config.url.split('/').pop();
         const teamId = urlparts.split('?')[0];
