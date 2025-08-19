@@ -395,7 +395,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
             return getSpecificDlorObject(dlorId);
         }
     })
-    .onGet(/dlor\/admin\/team\/.*/)
+    .onGet(/dlor\/auth\/team\/.*/)
     .reply(config => {
         const urlparts = config.url.split('/').pop();
         const teamId = urlparts.split('?')[0];
@@ -812,7 +812,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .reply(() => {
         return[200, dlor_admin_notes];
     })
-    .onPost(/dlor\/admin\/teammember/)
+    .onPost(/dlor\/auth\/teammember/)
     .reply(() => {
         return [200, { data: [] }];
     })
@@ -820,7 +820,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .reply(() => {
         return [200, { data: { success: true } }];
     })
-    .onDelete(/dlor\/admin\/teammember\/\d+/)
+    .onDelete(/dlor\/auth\/teammember\/\d+/)
     .reply(() => {
         return [200, { data: { success: true } }];
     });

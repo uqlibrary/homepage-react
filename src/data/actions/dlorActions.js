@@ -15,7 +15,7 @@ import {
     DLOR_TEAM_DELETE_API,
     DLOR_TEAM_LIST_API,
     DLOR_TEAM_SINGLE_GET_API,
-    DLOR_TEAM_UPDATE_API,
+    DLOR_ADMIN_TEAM_UPDATE_API,
     DLOR_SERIES_CREATE_API,
     DLOR_SERIES_DELETE_API,
     DLOR_SERIES_LIST_API,
@@ -33,7 +33,8 @@ import {
     DLOR_ADMIN_NOTES_API,
     DLOR_CREATE_TEAM_ADMIN_API,
     DLOR_EDIT_TEAM_ADMIN_API,
-    DLOR_DELETE_TEAM_ADMIN_API
+    DLOR_DELETE_TEAM_ADMIN_API,
+    DLOR_TEAM_MEMBER_SINGLE_GET_API
 } from 'repositories/routes';
 
 const checkExpireSession = (dispatch, error) => {
@@ -286,7 +287,7 @@ export function loadADLORTeam(dlorId) {
 export function updateDlorTeam(teamId, request) {
     return dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
-        return put(DLOR_TEAM_UPDATE_API(teamId), request)
+        return put(DLOR_ADMIN_TEAM_UPDATE_API(teamId), request)
             .then(response => {
                 dispatch({
                     type: actions.DLOR_UPDATED,

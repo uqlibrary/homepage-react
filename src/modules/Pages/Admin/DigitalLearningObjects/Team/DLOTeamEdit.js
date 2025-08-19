@@ -9,6 +9,7 @@ import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAd
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 import { breadcrumbs } from 'config/routes';
 import { useAccountContext } from 'context';
+import { isDlorAdminUser } from 'helpers/access';
 
 export const DLOTeamEdit = ({
     actions,
@@ -31,7 +32,7 @@ export const DLOTeamEdit = ({
     useEffect(() => {
         /* istanbul ignore else */
         if (!!dlorTeamId) {
-            actions.loadADLORTeam(dlorTeamId);
+            actions.loadADLORTeam(dlorTeamId); 
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorTeamId]);
