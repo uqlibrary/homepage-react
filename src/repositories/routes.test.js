@@ -329,7 +329,7 @@ describe('Backend routes method', () => {
             expect(routes.DLOR_DESTROY_API({ id: 100 })).toEqual({ apiUrl: 'dlor/admin/object/100' });
             expect(routes.DLOR_TEAM_DELETE_API(100)).toEqual({ apiUrl: 'dlor/admin/team/100' });
             expect(routes.DLOR_TEAM_SINGLE_GET_API({ id: 100 })).toEqual({ apiUrl: 'dlor/auth/team/100' });
-            expect(routes.DLOR_ADMIN_TEAM_UPDATE_API(100)).toEqual({ apiUrl: 'dlor/admin/team/100' });
+            expect(routes.DLOR_ADMIN_TEAM_UPDATE_API(100)).toEqual({ apiUrl: 'dlor/auth/team/100' });
             expect(routes.DLOR_TEAM_CREATE_API()).toEqual({ apiUrl: 'dlor/admin/team' });
             expect(routes.DLOR_FILE_TYPE_LIST_API()).toEqual({ apiUrl: 'dlor/admin/file_types/list' });
             expect(routes.DLOR_SERIES_DELETE_API(100)).toEqual({ apiUrl: 'dlor/admin/series/100' });
