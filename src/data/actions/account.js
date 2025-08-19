@@ -145,8 +145,8 @@ function clearCookie(cookieName) {
     expiryDate.setTime(expiryDate.getTime() - 24 * 60 * 60 * 1000);
 
     const endswith = window.location.hostname.endsWith('.library.uq.edu.au');
-    const cookieDomain = endswith ? /* istanbul ignore next */ 'domain=.library.uq.edu.au;path=/' : '';
-    const cookieClearString = `${cookieName}=; Path=/;expires=${expiryDate.toGMTString()};${cookieDomain};`;
+    const cookieDomain = endswith ? /* istanbul ignore next */ '.library.uq.edu.au;path=/' : 'localhost';
+    const cookieClearString = `${cookieName}=;path=/admin;domain=${cookieDomain};expires=Thu, 01 Jan 1970 00:00:01 GMT`;
     console.log('homepage/actions/account:: clear', cookieClearString);
     document.cookie = cookieClearString;
 }
@@ -172,17 +172,26 @@ export function loadCurrentAccount() {
 
         let currentAuthor = null;
 
-        const cookieFound = cookieId => document.cookie.indexOf(`${cookieId}=`) > -1;
         // load UQL account (based on token)
         return get(CURRENT_ACCOUNT_API())
             .then(account => {
-                if (!account.hasOwnProperty('masqueradingId') && cookieFound(PREMASQUERADE_SESSION_COOKIE_NAME)) {
-                    // we dont want an old one sitting around - will break login
+                console.log(
+                    'Cookies.get(PREMASQUERADE_SESSION_COOKIE_NAME)=',
+                    Cookies.get(PREMASQUERADE_SESSION_COOKIE_NAME),
+                );
+                console.log('Cookies.get(SESSION_COOKIE_NAME)=', Cookies.get(SESSION_COOKIE_NAME));
+                if (
+                    !!Cookies.get(PREMASQUERADE_SESSION_COOKIE_NAME) &&
+                    (!account.hasOwnProperty('masqueradingId') ||
+                        Cookies.get(PREMASQUERADE_SESSION_COOKIE_NAME) === Cookies.get(SESSION_COOKIE_NAME))
+                ) {
+                    // we don't want an old one sitting around - will break login
                     console.log(
                         'homepage/actions/account:: clear masquerade cookie',
-                        document.cookie.indexOf(`${PREMASQUERADE_SESSION_COOKIE_NAME}=`),
+                        Cookies.get(PREMASQUERADE_SESSION_COOKIE_NAME),
                     );
                     clearCookie(PREMASQUERADE_SESSION_COOKIE_NAME);
+                    // Cookies.remove(PREMASQUERADE_SESSION_COOKIE_NAME);
                 }
                 if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
                     return Promise.resolve(account);

@@ -45,6 +45,14 @@ const Masquerade = ({ account }) => {
             ); // debug
             delete cookies[PREMASQUERADE_SESSION_COOKIE_NAME];
         }
+        console.log('document.cookie=', document.cookie);
+        const cookies2 = document.cookie.split(';');
+        for (let i = 0; i < cookies2.length; ++i) {
+            const pair = cookies2[i].trim().split('=');
+            if (!!pair[0] && pair[0] === name) {
+                console.log('cookies: ', pair[0], ':', pair[1]);
+            }
+        }
         console.log('homepage/Maquerade/masqueradeAs:: setting cookie to ', cookies.UQLID); // debug
         setCookie(PREMASQUERADE_SESSION_COOKIE_NAME, cookies.UQLID, { expires: expirationDate });
 
