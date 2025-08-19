@@ -34,7 +34,7 @@ const deployment = {
         basePath: '',
         publicPath: '/',
         reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/uq-lib-reusable.min.js',
-        removeConsoleLog: true,
+        removeConsoleLog: false,
         crmLocationScript: 'uqcurrent.crm.test.uq.edu.au',
         crmLocationEmbed: 'uqcurrent--tst.widget.custhelp.com',
     },
