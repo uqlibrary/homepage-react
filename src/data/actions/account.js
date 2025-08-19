@@ -12,7 +12,7 @@ import {
     VEMCOUNT_API,
 } from 'repositories/routes';
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
-import { PREMASQUERADE_SESSION_COOKIE_NAME, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME } from 'config/general';
+import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME } from 'config/general';
 import Cookies from 'js-cookie';
 
 // make the complete class number from the pieces supplied by API, eg FREN + 1010 = FREN1010
@@ -140,17 +140,6 @@ export function logout(reload = false) {
     };
 }
 
-function clearCookie(cookieName) {
-    const expiryDate = new Date();
-    expiryDate.setTime(expiryDate.getTime() - 24 * 60 * 60 * 1000);
-
-    const endswith = window.location.hostname.endsWith('.library.uq.edu.au');
-    const cookieDomain = endswith ? /* istanbul ignore next */ '.library.uq.edu.au;path=/' : 'localhost';
-    const cookieClearString = `${cookieName}=;path=/admin;domain=${cookieDomain};expires=Thu, 01 Jan 1970 00:00:01 GMT`;
-    console.log('homepage/actions/account:: clear', cookieClearString);
-    document.cookie = cookieClearString;
-}
-
 /**
  * Loads the user's account and author details into the application
  * @returns {function(*)}
@@ -175,24 +164,6 @@ export function loadCurrentAccount() {
         // load UQL account (based on token)
         return get(CURRENT_ACCOUNT_API())
             .then(account => {
-                console.log(
-                    'Cookies.get(PREMASQUERADE_SESSION_COOKIE_NAME)=',
-                    Cookies.get(PREMASQUERADE_SESSION_COOKIE_NAME),
-                );
-                console.log('Cookies.get(SESSION_COOKIE_NAME)=', Cookies.get(SESSION_COOKIE_NAME));
-                if (
-                    !!Cookies.get(PREMASQUERADE_SESSION_COOKIE_NAME) &&
-                    (!account.hasOwnProperty('masqueradingId') ||
-                        Cookies.get(PREMASQUERADE_SESSION_COOKIE_NAME) === Cookies.get(SESSION_COOKIE_NAME))
-                ) {
-                    // we don't want an old one sitting around - will break login
-                    console.log(
-                        'homepage/actions/account:: clear masquerade cookie',
-                        Cookies.get(PREMASQUERADE_SESSION_COOKIE_NAME),
-                    );
-                    clearCookie(PREMASQUERADE_SESSION_COOKIE_NAME);
-                    // Cookies.remove(PREMASQUERADE_SESSION_COOKIE_NAME);
-                }
                 if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
                     return Promise.resolve(account);
                 } else {
