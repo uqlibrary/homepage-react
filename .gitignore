@@ -40,8 +40,6 @@ stats.json
 # Playwright
 /playwright/.results
 /playwright/.cache
-cypress/videos
-cypress/screenshots
 
 # Code Coverage checker temp dir
 .nyc_output

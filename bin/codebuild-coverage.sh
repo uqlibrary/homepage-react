@@ -17,22 +17,11 @@ printf "\n\n--- INSTALL NYC ---\n"
 echo "$ npm install -g nyc"
 npm install -g nyc
 
-# Clean processing directories
-npm run pretest:unit:ci
-
 # Copy output artifact test reports into common location
 mkdir -p coverage/all
-[[ -e $CODEBUILD_SRC_DIR_TestArtifact1/cypress/coverage-final.json ]] && cp $CODEBUILD_SRC_DIR_TestArtifact1/cypress/coverage-final.json coverage/all/cypress-1.json
-printf "coverage: after 1\n"
-[[ -e $CODEBUILD_SRC_DIR_TestArtifact2/cypress/coverage-final.json ]] && cp $CODEBUILD_SRC_DIR_TestArtifact2/cypress/coverage-final.json coverage/all/cypress-2.json
-printf "coverage: after 2\n"
-[[ -e $CODEBUILD_SRC_DIR_TestArtifact3/jest/coverage-final.json ]] && printf "$CODEBUILD_SRC_DIR_TestArtifact3/jest/coverage-final.json found\n"
-[[ -e $CODEBUILD_SRC_DIR_TestArtifact3/jest/coverage-final.json ]] && cp $CODEBUILD_SRC_DIR_TestArtifact3/jest/coverage-final.json coverage/all/jest.json
-printf "coverage: after 3\n"
-[[ -e $CODEBUILD_SRC_DIR_TestArtifact3/jest/coverage-final.json ]] && printf "$CODEBUILD_SRC_DIR_TestArtifact3/jest/coverage-final.json found\n"
-[[ -e $CODEBUILD_SRC_DIR_TestArtifact3/jest/coverage-final.json ]] && cp $CODEBUILD_SRC_DIR_TestArtifact3/jest/coverage-final.json coverage/all/jest.json
-[[ -e $CODEBUILD_SRC_DIR_TestArtifact3/cypress/coverage-final.json ]] && cp $CODEBUILD_SRC_DIR_TestArtifact3/cypress/coverage-final.json coverage/all/cypress-3.json
-printf "moving coverage files complete\n"
+[[ -e $CODEBUILD_SRC_DIR_TestArtifact1/coverage/playwright/coverage-final-1.json ]] && cp $CODEBUILD_SRC_DIR_TestArtifact1/coverage/playwright/coverage-final-1.json coverage/all/playwright-1.json
+[[ -e $CODEBUILD_SRC_DIR_TestArtifact2/coverage/playwright/coverage-final-2.json ]] && cp $CODEBUILD_SRC_DIR_TestArtifact2/coverage/playwright/coverage-final-2.json coverage/all/playwright-2.json
+[[ -e $CODEBUILD_SRC_DIR_TestArtifact3/coverage/jest/coverage-final.json ]] && cp $CODEBUILD_SRC_DIR_TestArtifact3/coverage/jest/coverage-final.json coverage/all/jest.json
 
 # Combine reports into single json file
 nyc merge coverage/all coverage/merged-coverage.json

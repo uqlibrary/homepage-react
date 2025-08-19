@@ -1,5 +1,21 @@
 import global from 'locale/global';
-const moment = require('moment');
+
+/* istanbul ignore next */
+const tryCatch = (callback, _default = undefined) => {
+    try {
+        return callback();
+    } catch (e) {
+        return _default;
+    }
+};
+
+export const isDevEnv = () => tryCatch(() => process.env.BRANCH === 'development', false);
+
+export const isJestTest = () => tryCatch(() => !!process.env.JEST_WORKER_ID, false);
+/* istanbul ignore next */
+export const isPlaywrightTest = () => tryCatch(() => !!process?.env?.PW_IS_RUNNING, false);
+
+export const isTest = () => isJestTest() || isPlaywrightTest();
 
 export const leftJoin = (objArr1, objArr2, key1, key2) => {
     if (!objArr2) {
