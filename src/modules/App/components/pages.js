@@ -48,6 +48,9 @@ export const PastExamPaperList = lazy(() => lazyRetry(() => import('modules/Page
 export const DLONew = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Objects/DLOAddContainer')));
 export const DLOOwnEdit = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Objects/DLOEditContainer')));
 export const DLOFilterManage = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Filters/DLOFilterManageContainer')));
+
+export const LocationSpaceList = lazy(() => lazyRetry(() => import('../../Pages/SpacesLocations/./SpacesLocationListContainer')));
+
 // always load components
 export { HomePageContainer as Index } from 'modules/HomePage';
 export { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';

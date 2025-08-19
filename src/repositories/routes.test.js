@@ -347,6 +347,8 @@ describe('Backend routes method', () => {
             expect(routes.JOURNAL_SEARCH_API()).toEqual({
                 apiUrl: 'https://api.library.uq.edu.au/v1/journals/favourites?sort=score',
             });
+
+            expect(routes.LOCATIONSPACE_ALL_API()).toEqual({ apiUrl: 'location-spaces' });
         });
     });
 

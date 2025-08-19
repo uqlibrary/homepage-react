@@ -2,6 +2,7 @@ import React from 'react';
 import { locale } from 'locale';
 import { canSeeLearningResourcesPage, isAlertsAdminUser, isDlorAdminUser, isTestTagUser } from 'helpers/access';
 import { pathConfig } from './pathConfig';
+import { LocationSpaceList } from '../modules/App/components/pages';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
 
@@ -40,6 +41,7 @@ export const flattedPathConfigExact = [
     '/digital-learning-hub',
     'https://www.library.uq.edu.au/404.js',
     '/digital-learning-hub-list',
+    '/spaces',
 ];
 export const flattedPathConfig = [
     '/admin/alerts/edit',
@@ -135,6 +137,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             element: <components.DLOOwnEdit />,
             exact: false,
             pageTitle: 'Edit details of your object',
+        },
+        {
+            path: pathConfig.spacesLocations,
+            element: <components.LocationSpaceList />,
+            exact: false,
+            pageTitle: 'Library spaces',
         },
     ];
 

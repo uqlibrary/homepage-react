@@ -70,6 +70,7 @@ import {
 } from './data/journalSearchFavourites';
 import { vemcountData } from './data/vemcount';
 import dlor_admin_notes from './data/records/dlor/dlor_admin_notes';
+import location_spaces_all from './data/records/locationSpaces/locationSpaces_all';
 
 const moment = require('moment');
 
@@ -1421,6 +1422,18 @@ mock.onGet('exams/course/FREN1010/summary')
                 return [200, { ...loans, total_loans_count: 7, total_holds_count: 0, total_fines_count: 0 }];
             default:
                 return [200, { ...loans, fines: [], total_fines_count: 0 }];
+        }
+    })
+    .onGet('location-spaces')
+    .reply(() => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (responseType === 'empty') {
+            return [200, []];
+        } else if (responseType === '404') {
+            return [404, {}];
+        } else {
+            return [200, location_spaces_all];
         }
     })
     .onAny()

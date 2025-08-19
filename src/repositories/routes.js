@@ -281,3 +281,8 @@ export const LOANS_API = () => ({
     apiUrl: 'account/loans',
     options: { params: { ts: `${new Date().getTime()}` } },
 });
+
+export const LOCATIONSPACE_ALL_API = () => ({
+    apiUrl: 'location-spaces',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
