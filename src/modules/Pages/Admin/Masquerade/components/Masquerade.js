@@ -15,6 +15,17 @@ const StyledStandardCard = styled(StandardCard)(() => ({
     backgroundColor: 'white',
 }));
 
+const StyledButton = styled(Button)(() => ({
+    border: '2px solid #51247a',
+    boxShadow: 'none',
+    '&:hover': {
+        backgroundColor: '#fff',
+        boxShadow: 'none',
+        color: '#51247a',
+        textDecoration: 'underline',
+    },
+}));
+
 const Masquerade = ({ account }) => {
     const [userName, setUserName] = useState('');
     const [loading, setLoading] = useState(false);
@@ -59,7 +70,7 @@ const Masquerade = ({ account }) => {
                         />
                     </Grid>
                     <Grid item xs={12} sm={'auto'}>
-                        <Button
+                        <StyledButton
                             variant="contained"
                             id="submitMasquerade"
                             data-analyticsid="submitMasquerade"
