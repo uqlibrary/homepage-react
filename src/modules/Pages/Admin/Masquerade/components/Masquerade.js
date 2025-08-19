@@ -30,9 +30,9 @@ const Masquerade = ({ account }) => {
 
         // store the old cookie so we can end the masquerade (done in reusable)
         const expirationDate = new Date();
-        expirationDate.setTime(expirationDate.getTime() + 24 * 60 * 60 * 1000);
-        // cookie lasts one day - arbitrary decision.
-        // If the masquerade is left in place after that, it will just log them out.
+        expirationDate.setTime(expirationDate.getTime() + 20 * 60 * 1000);
+        // cookie expiry period is a bit arbitrary
+        // If the masqueraded-session is left in place after cookie expiry, it will just log them out.
         console.log(
             'homepage/Maquerade/masqueradeAs:: PREMASQUERADE_SESSION_COOKIE_NAME=',
             cookies[PREMASQUERADE_SESSION_COOKIE_NAME],

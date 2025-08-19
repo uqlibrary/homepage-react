@@ -140,15 +140,15 @@ export function logout(reload = false) {
     };
 }
 
-function clearMasqueradeCookie() {
+function clearCookie(cookieName) {
     const expiryDate = new Date();
     expiryDate.setTime(expiryDate.getTime() - 24 * 60 * 60 * 1000);
 
     const endswith = window.location.hostname.endsWith('.library.uq.edu.au');
     const cookieDomain = endswith ? /* istanbul ignore next */ 'domain=.library.uq.edu.au;path=/' : '';
-    const cookieClearString = `${PREMASQUERADE_SESSION_COOKIE_NAME}=; Path=/;expires=${expiryDate.toGMTString()};${cookieDomain};`;
-    console.log('homepage/actions/account:: would clear', cookieClearString);
-    // document.cookie = cookieClearString;
+    const cookieClearString = `${cookieName}=; Path=/;expires=${expiryDate.toGMTString()};${cookieDomain};`;
+    console.log('homepage/actions/account:: clear', cookieClearString);
+    document.cookie = cookieClearString;
 }
 
 /**
@@ -177,9 +177,12 @@ export function loadCurrentAccount() {
         return get(CURRENT_ACCOUNT_API())
             .then(account => {
                 if (!account.hasOwnProperty('masqueradingId') && cookieFound(PREMASQUERADE_SESSION_COOKIE_NAME)) {
-                    // its probably harmless, but don't leave it lying around anyway
-                    console.log('homepage/actions/account:: clear masquerade cookie');
-                    clearMasqueradeCookie();
+                    // we dont want an old one sitting around - will break login
+                    console.log(
+                        'homepage/actions/account:: clear masquerade cookie',
+                        document.cookie.indexOf(`${PREMASQUERADE_SESSION_COOKIE_NAME}=`),
+                    );
+                    clearCookie(PREMASQUERADE_SESSION_COOKIE_NAME);
                 }
                 if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
                     return Promise.resolve(account);
