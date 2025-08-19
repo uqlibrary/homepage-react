@@ -33,12 +33,19 @@ const Masquerade = ({ account }) => {
         expirationDate.setTime(expirationDate.getTime() + 24 * 60 * 60 * 1000);
         // cookie lasts one day - arbitrary decision.
         // If the masquerade is left in place after that, it will just log them out.
-        console.log('PREMASQUERADE_SESSION_COOKIE_NAME=', cookies[PREMASQUERADE_SESSION_COOKIE_NAME]);
+        console.log(
+            'homepage/Maquerade/masqueradeAs:: PREMASQUERADE_SESSION_COOKIE_NAME=',
+            cookies[PREMASQUERADE_SESSION_COOKIE_NAME],
+        );
         /* istanbul ignore next */
         if (!!cookies[PREMASQUERADE_SESSION_COOKIE_NAME]) {
-            console.log('deleting cookie for ', PREMASQUERADE_SESSION_COOKIE_NAME); // debug
+            console.log(
+                'homepage/Maquerade/masqueradeAs:: deleting old masquerade cookie ',
+                PREMASQUERADE_SESSION_COOKIE_NAME,
+            ); // debug
             delete cookies[PREMASQUERADE_SESSION_COOKIE_NAME];
         }
+        console.log('homepage/Maquerade/masqueradeAs:: setting cookie to ', cookies.UQLID); // debug
         setCookie(PREMASQUERADE_SESSION_COOKIE_NAME, cookies.UQLID, { expires: expirationDate });
 
         let redirectUrl = `${window.location.protocol}//${window.location.hostname}`;
