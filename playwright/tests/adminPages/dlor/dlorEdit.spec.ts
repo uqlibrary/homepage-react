@@ -355,8 +355,10 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.getByTestId('object-link-file-type').click();
                 await page.getByTestId('object-link-file-type-something').click();
 
-                await page.locator('[data-testid="object-link-duration-minutes"] input').fill('3');
-                await page.locator('[data-testid="object-link-duration-seconds"] input').fill('1');
+                await page.locator('[data-testid="object-link-duration-minutes"] input').press('End');
+                await page.locator('[data-testid="object-link-duration-minutes"] input').pressSequentially('3');
+                await page.locator('[data-testid="object-link-duration-seconds"] input').press('End');
+                await page.locator('[data-testid="object-link-duration-seconds"] input').pressSequentially('1');
 
                 // go to panel 4
                 await page.getByTestId('dlor-form-next-button').click();
