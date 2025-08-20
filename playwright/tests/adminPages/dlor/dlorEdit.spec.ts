@@ -727,9 +727,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 }
 
                 // confirm save happened
-                await expect(page.getByTestId('dialogbox-dlor-save-outcome').locator('h2')).toContainText(
-                    'View Object',
-                );
+                await expect(page.getByTestId('dialogbox-dlor-save-outcome').getByText('View Object')).toBeVisible();
                 await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Re-edit Object');
 
                 // now clear the form to create another Object
