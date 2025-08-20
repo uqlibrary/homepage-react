@@ -34,7 +34,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
             await page.locator('body').click({ timeout: 500 });
             // Check the value of the dropdown
             await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('Third Testing user', {
-                timeout: 1000,
+                timeout: 500,
             });
         }).toPass();
         // Select a second user
@@ -43,10 +43,10 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
             await page.getByTestId('user_inspections-user-name-option-1').click({ timeout: 500 });
             await page.locator('body').click({ timeout: 500 });
             await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('Second Testing user', {
-                timeout: 1000,
+                timeout: 500,
             });
             await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('Third Testing user', {
-                timeout: 1000,
+                timeout: 500,
             });
         }).toPass();
         // Select third user
