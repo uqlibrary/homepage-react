@@ -85,6 +85,15 @@ describe('Digital Learning Hub admin Teams Members management', () => {
 
         });
     });
+     context('Teams member restrictions', () => {
+        it('team user management - no access', () => {
+            cy.visit('http://localhost:2020/digital-learning-hub/team/edit/2?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="dlor-teamItem-error-message"]')
+                .should('exist')
+                .should('contain', 'You are not a member of this team and cannot edit it.');
+        });
+     });
 });
 
 

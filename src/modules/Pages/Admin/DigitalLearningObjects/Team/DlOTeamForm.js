@@ -31,6 +31,7 @@ import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import moment from 'moment';
+import { isDlorAdminUser } from 'helpers/access';
 
 const StyledForm = styled('form')(() => ({
     width: '100%',
@@ -50,6 +51,8 @@ export const DLOTeamForm = ({
     const { account } = useAccountContext();
     const { dlorTeamId } = useParams();
     const [cookies, setCookie] = useCookies();
+
+    console.log("Account", account)
 
     const [formValues, setFormValues] = useState({
         team_name: '',
@@ -105,6 +108,12 @@ export const DLOTeamForm = ({
         closeConfirmationBox();
         /* istanbul ignore next */
         mode === 'edit' && window.location.reload(false);
+    };
+
+    const isCurrentUserTeamMember = () => {
+        if (isDlorAdminUser(account)) return true; // Admins can always edit teams
+        if (!formDefaults?.team_members || !account?.id) return false;
+        return formDefaults.team_members.some(member => member.team_admin_username === account.id);
     };
 
     const locale = {
@@ -219,6 +228,16 @@ export const DLOTeamForm = ({
                         </Grid>
                     );
                 } else if (!!formDefaults) {
+                    // Only render the form if the user is a team member
+                    if (!isCurrentUserTeamMember()) {
+                        return (
+                            <Grid item xs={12}>
+                                <Typography variant="body1" data-testid="dlor-teamItem-error-message">
+                                    You are not a member of this team and cannot edit it.
+                                </Typography>
+                            </Grid>
+                        );
+                    }
                     return (
                         <>
                             <Grid item xs={12} data-testid="dlor-team-item-list">
