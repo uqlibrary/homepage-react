@@ -70,7 +70,6 @@ test.describe('Book Exam Booth page', () => {
     });
 
     test('should redirect to expected url on submit without changing values', async ({ page }) => {
-        // Playwright allows for easier URL inspection without needing to stub.
         await selectProctoredExam(page);
         await selectFirstLocation(page);
         await page.getByTestId('booth-search-submit-button').click();
@@ -118,14 +117,15 @@ test.describe('Book Exam Booth page', () => {
             // The field defaults to the previous day, which can be in the previous month.
             await nextMonthButton.click();
         }
-        await page
-            .locator('.MuiPickersDay-root')
-            .getByText(intendedDate)
-            .first()
-            .click();
-        await page.keyboard.press('Escape');
-        const text = await dateInput.inputValue();
-        expect(text).toBe(bookingDate.format('DD/MM/YYYY'));
+        await expect(async () => {
+            await page
+                .locator('.MuiPickersDay-root')
+                .getByText(intendedDate)
+                .first()
+                .click({ timeout: 500 });
+            await page.keyboard.press('Escape');
+            expect(await dateInput.inputValue()).toBe(bookingDate.format('DD/MM/YYYY'));
+        }).toPass();
 
         // Choose a custom time
         await page.getByTestId('start-time-hours').click();

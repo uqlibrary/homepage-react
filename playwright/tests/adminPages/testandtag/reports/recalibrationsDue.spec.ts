@@ -27,13 +27,11 @@ test.describe('Test and Tag Report - RecalibrationsDue due', () => {
         await assertTitles(page, locale.pages.report.recalibrationsDue.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'device_model_name', 0)).toContainText('AV 025');
-
         // Change the sort order
         await page.locator('.MuiDataGrid-columnHeader--sorted [aria-label="Sort"]').click();
         await expect(await getFieldValue(page, 'device_model_name', 0)).toContainText('Visual inspection');
         await page.locator('.MuiDataGrid-columnHeader--sorted [aria-label="Sort"]').click();
         await expect(await getFieldValue(page, 'device_model_name', 0)).toContainText('AV 025');
-
         // Check for overdue icon
         const dueDateCell = await getFieldValue(page, 'device_calibration_due_date', 2);
         await expect(dueDateCell.locator('svg')).toBeVisible();

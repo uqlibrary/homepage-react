@@ -38,6 +38,7 @@ test.describe('The Homepage Learning Resource Panel', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         const currentClasses = accounts.s1111111.current_classes;
         expect(currentClasses.length).toBeGreaterThan(1); // the user has courses that we can click on
+
         await expect(
             page
                 .locator('div[data-testid=learning-resources-panel]')
@@ -118,12 +119,10 @@ test.describe('The Homepage Learning Resource Panel', () => {
             .getByText(/ACCT1101/)
             .first()
             .click();
-
         // user lands on appropriate learning resources page
         await expect(page).toHaveURL(
             /learning-resources\?user=s3333333&coursecode=ACCT1101&campus=St%20Lucia&semester=Semester%202%202020/,
         );
-
         const classPanelId = 'classpanel-0';
         await expect(
             page
@@ -136,22 +135,19 @@ test.describe('The Homepage Learning Resource Panel', () => {
     test('The Learning resources panel displays results correctly when the user has many classes', async ({ page }) => {
         await page.goto('?user=s5555555');
         await page.setViewportSize({ width: 1300, height: 1000 });
-
         await expect(page.locator('div[data-testid=learning-resources-panel]')).toContainText(
             locale.homepagePanel.title,
         );
-        await expect(page.getByTestId('staff-course-prompt')).toHaveCount(0);
 
+        await expect(page.getByTestId('staff-course-prompt')).not.toBeVisible();
         const yourCourses = page.getByTestId('your-courses');
         await expect(yourCourses.locator('> * > *')).toHaveCount(5 + 2);
-
         await expect(page.getByTestId('learning-resource-panel-course-multi-footer')).toContainText(
             'See all 10 classes',
         );
 
         const liItems = yourCourses.locator('li');
         await expect(liItems).toHaveCount(5);
-
         const firstItemLeft = await liItems
             .locator('.descriptor')
             .nth(0)

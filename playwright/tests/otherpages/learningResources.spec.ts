@@ -77,6 +77,7 @@ async function exams_panel_loads_correctly_for_a_subject_with_many_exams(
     username = 's1111111',
 ) {
     const headerLevel = displayType === 'mycourses' ? 'h3' : 'h4';
+
     const courseCode = examPapers.coursecode || 'mock data is missing';
 
     const examPaper = examPapers.list?.[0] || { period: '', url: '' };
@@ -92,26 +93,21 @@ async function exams_panel_loads_correctly_for_a_subject_with_many_exams(
     const totalExamItems = examPapers.list.length + numberExcessExams;
 
     const examsPanel = page.getByTestId('learning-resource-subject-exams');
-
     // Check header
     await expect(
         examsPanel.locator(`${headerLevel}:has-text("Past exam papers (${totalExamItems} items)")`),
     ).toBeVisible();
-
     // Check first paper link
     await expect(examsPanel.locator('a[data-testid="examPaperItem-0"]')).toHaveAttribute('href', examPaperLink);
-
     // Check exam period summary
     await expect(
         examsPanel.locator('span', {
             hasText: `${examPeriod} (${examPaperLink.slice(-3).toUpperCase()})`,
         }),
     ).toBeVisible();
-
     // Check "more past papers" summary
     const morePapersText = `${numberExcessExams} more past ${_pluralise('paper', numberExcessExams)}`;
     await expect(page.locator('div[data-testid=exam-more-link] span', { hasText: morePapersText })).toBeVisible();
-
     // Check "more link" URL
     await expect(page.locator('div[data-testid=exam-more-link] a')).toHaveAttribute(
         'href',
@@ -149,9 +145,11 @@ async function guides_panel_loads_correctly_for_a_subject_with_one_guide(
     displayType = 'mycourses',
 ) {
     const headerLevel = displayType === 'mycourses' ? 'h3' : 'h4';
+
     const guide = guides[0] || {};
     const guideTitle = guide.title || 'mock data is missing';
     const guideLink = guide.url || 'mock data is missing';
+
     await expect(
         page
             .locator(`[data-testid=guides-${courseCode}] ${headerLevel}`)
@@ -167,6 +165,7 @@ async function guides_panel_loads_correctly_for_a_subject_with_one_guide(
     await expect(page.locator(`div[data-testid="guides-${courseCode}"]`)).not.toContainText(
         'Subject guides list currently unavailable',
     );
+
     await guides_panel_has_correct_Library_Guides_footer_links_for_a_subject_page(page);
 }
 
@@ -177,7 +176,6 @@ interface CourseReadingList {
 async function course_links_panel_loads_correctly_for_a_subject(page: Page, courseReadingList: CourseReadingList) {
     const courseCode = courseReadingList.coursecode || 'mock data is missing';
 
-    // Blackboard link
     await expect(
         page.locator('a[data-testid=blackboard] span', {
             hasText: 'Learn.UQ (Blackboard)',
@@ -188,7 +186,6 @@ async function course_links_panel_loads_correctly_for_a_subject(page: Page, cour
         'href',
         _courseLink(courseCode, 'https://learn.uq.edu.au/', url.hostname, url.pathname),
     );
-    // ECP link
     await expect(
         page.locator('a[data-testid=ecp] span', {
             hasText: 'Electronic Course Profile',
@@ -210,7 +207,7 @@ async function load_a_subject_in_learning_resource_page_search_tab(
     courseCode: string,
     searchSuggestions: Array<{ name: string }>,
     typeChar = 'FREN',
-    numberOfMatchingSubject = 3,
+    numberOfMatchingSubject = 3, // autocomplete finds this many entries for typeChar
 ) {
     const frenchSearchSuggestion = searchSuggestions
         .filter(obj => {
@@ -264,6 +261,7 @@ async function a_user_can_use_the_search_bar_to_load_a_subject(
         typeChar,
         numberOfMatchingSubject,
     );
+
     // the tab loads and we see the title of the correct course
     await expect(
         page
@@ -408,6 +406,7 @@ test.describe('Learning Resources Accessibility', () => {
         await page.waitForTimeout(1000);
         await assertAccessibility(page, 'div[data-testid="learning-resources"]');
     });
+
     test('Responsive display is accessible', async ({ page }) => {
         await page.goto('/learning-resources?user=s1111111');
         await page.setViewportSize({ width: 414, height: 736 });
@@ -481,12 +480,16 @@ test.describe('The Learning Resources Page', () => {
     test('User with classes sees their classes', async ({ page }) => {
         await page.goto('/learning-resources?user=s1111111');
         await page.setViewportSize({ width: 1300, height: 1000 });
+
+        // FREN1010_loads_properly_for_s111111_user();
         await expect(
             page
                 .getByTestId('learning-resource-subject-title')
                 .getByText(/FREN1010 - Introductory French 1/)
                 .first(),
         ).toBeVisible();
+
+        // next tab - the user clicks on the HIST1201 subject tab
         await click_on_a_subject_tab(page, 1, HIST1201ReadingList);
         await expect(
             page
@@ -494,6 +497,8 @@ test.describe('The Learning Resources Page', () => {
                 .getByText(/HIST1201 - The Australian Experience/)
                 .first(),
         ).toBeVisible();
+
+        // user clicks on third subject tab, PHIL1002, loads as expected
         await click_on_a_subject_tab(page, 2, PHIL1002ReadingList);
         await expect(
             page
@@ -502,6 +507,7 @@ test.describe('The Learning Resources Page', () => {
                 .first(),
         ).toBeVisible();
 
+        // and back to the second tab (to load a tab where we don't need to reload the data)
         await click_on_a_subject_tab(page, 1, HIST1201ReadingList);
         await expect(
             page
@@ -509,15 +515,20 @@ test.describe('The Learning Resources Page', () => {
                 .getByText(/HIST1201 - The Australian Experience/)
                 .first(),
         ).toBeVisible();
+
+        // next tab
         await the_user_clicks_on_the_Search_tab(page);
         await the_user_sees_the_search_form(page);
     });
     test('User without classes sees the search field', async ({ page }) => {
         await page.goto('/learning-resources?user=s3333333');
         await page.setViewportSize({ width: 1300, height: 1000 });
+
         await the_user_lands_on_the_Search_tab(page);
+
         await a_user_can_use_the_search_bar_to_load_a_subject(page, FREN1010ReadingList, subjectSearchSuggestions);
         await FREN1010LoadsProperly(page);
+
         await the_user_clicks_on_the_My_Courses_tab(page);
         await a_user_with_no_classes_sees_notice_of_same_in_courses_list(page);
     });
@@ -528,6 +539,9 @@ test.describe('The Learning Resources Page', () => {
             '/learning-resources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
         );
         await page.setViewportSize({ width: 1300, height: 1000 });
+
+        await the_user_lands_on_the_My_Classes_tab(page, FREN1010ReadingList);
+
         await FREN1010_loads_properly_for_s111111_user(page);
     });
     test('A user who has arrived by searching for a course on the homepage gets the course they requested', async ({
@@ -537,13 +551,16 @@ test.describe('The Learning Resources Page', () => {
             '/learning-resources?user=s1111111&coursecode=ACCT1101&campus=St%20Lucia&semester=Semester%202%202020',
         );
         await page.setViewportSize({ width: 1300, height: 1000 });
+
         await the_user_lands_on_the_Search_tab(page);
+
         await expect(
             page
                 .getByTestId('learning-resource-subject-title')
                 .getByText(/ACCT1101 - Accounting for Decision Making/)
                 .first(),
         ).toBeVisible();
+
         await expect(
             page
                 .locator('[data-testid="reading-list-ACCT1101-content"] h4')
@@ -559,6 +576,7 @@ test.describe('The Learning Resources Page', () => {
         await expect(page.locator('div[data-testid="reading-list-ACCT1101"]')).not.toContainText(
             'Reading list currently unavailable',
         );
+
         await exams_panel_loads_correctly_for_a_subject_with_many_exams(page, ACCT1101Exam, 'searchresults');
 
         await guides_panel_loads_correctly_for_a_subject_with_one_guide(
@@ -575,7 +593,9 @@ test.describe('The Learning Resources Page', () => {
     }) => {
         await page.goto('/learning-resources?user=s3333333&coursecode=FREN1011&campus=&semester=Semester%202%202020');
         await page.setViewportSize({ width: 1300, height: 1000 });
+
         await the_user_lands_on_the_Search_tab(page);
+
         await expect(
             page
                 .getByTestId('learning-resource-subject-title')
@@ -594,18 +614,21 @@ test.describe('The Learning Resources Page', () => {
                 .getByText(/FREN1011 Reading list \(contains 11 items\)/)
                 .first(),
         ).toBeVisible();
+
         await exams_panel_loads_correctly_for_a_subject_with_many_exams(
             page,
             FREN1011Exam,
             'searchresults',
             's3333333',
         );
+
         await guides_panel_loads_correctly_for_a_subject_with_one_guide(
             page,
             FREN1010Guide,
             'FREN1011',
             'searchresults',
         );
+
         await course_links_panel_loads_correctly_for_a_subject(page, FREN1011ReadingList);
     });
     test('A user who searches for a subject they are enrolled in will be changed to the mycourses tab', async ({
@@ -613,13 +636,17 @@ test.describe('The Learning Resources Page', () => {
     }) => {
         await page.goto('/learning-resources?user=s1111111');
         await page.setViewportSize({ width: 1300, height: 1000 });
+
         await the_user_clicks_on_the_Search_tab(page);
+
         await the_user_sees_the_search_form(page);
+
         await load_a_subject_in_learning_resource_page_search_tab(
             page,
             FREN1010ReadingList.coursecode,
             subjectSearchSuggestions,
         );
+
         await FREN1010_loads_properly_for_s111111_user(page);
     });
     test('A user who searches for multiple subjects can switch between the tabs for each one', async ({ page }) => {
@@ -683,9 +710,13 @@ test.describe('The Learning Resources Page', () => {
 
         await page.goto('/learning-resources?user=s3333333');
         await page.setViewportSize({ width: 1300, height: 1000 });
+
         await the_user_lands_on_the_Search_tab(page);
+
+        // search for FREN1010
         await searchFor(page, 'FREN', 'FREN1010');
         await FREN1010LoadsProperly(page);
+
         // search for PHYS1101E
         await searchFor(page, 'PHYS', 'PHYS1101E');
         await expect(
@@ -721,10 +752,15 @@ test.describe('The Learning Resources Page', () => {
                 .first(),
         ).toBeVisible();
         await FREN1010LoadsProperly(page);
+
+        // search for HIST1201
         await searchFor(page, 'HIST', 'HIST1201');
         await HIST1201LoadsProperly(page);
+
+        // search for ACCT1101
         await searchFor(page, 'ACCT', 'ACCT1101');
         await ACCT1101LoadsProperly(page);
+
         // swap tabs to FREN1010
         await page
             .getByTestId('classtab-FREN1010')
@@ -738,14 +774,16 @@ test.describe('The Learning Resources Page', () => {
                 .first(),
         ).toBeVisible();
         await FREN1010LoadsProperly(page);
+
         // swap tabs to HIST1201
         await page
             .getByTestId('classtab-HIST1201')
             .getByText(/HIST1201/)
             .first()
             .click();
-
         await HIST1201LoadsProperly(page);
+
+        // swap tabs to ACCT1101
         await searchFor(page, 'ACCT', 'ACCT1101');
         await ACCT1101LoadsProperly(page);
         await expect(page.locator('header [role="tablist"] button')).toHaveCount(4);
@@ -753,6 +791,7 @@ test.describe('The Learning Resources Page', () => {
     test('A user putting a space in a search still gets their result on the full page', async ({ page }) => {
         await page.goto('/learning-resources?user=s3333333');
         await page.setViewportSize({ width: 1300, height: 1000 });
+
         // enter a repeating string
         await page.locator('input[data-testid="full-learningresource-autocomplete-input-wrapper"]').clear();
         await page.locator('input[data-testid="full-learningresource-autocomplete-input-wrapper"]').fill('FREN 1');
@@ -775,6 +814,20 @@ test.describe('The Learning Resources Page', () => {
         );
     }
 
+    /**
+     * Show a user with 3 classes can see all the variations correctly
+     * The mock data has been selected to cover the display options:
+     *
+     *          |  reading lists                    | exams         | guides         |
+     * ---------+-----------------------------------+---------------+----------------+
+     * FREN1010 | has 1 list with exactly 2 entries | has > 2 exams | has 1 guide    |
+     * ---------+-----------------------------------+---------------+----------------+
+     * HIST1201 | has 1 list with > 2 entries       | has 1 exams   | has 0 guides   |
+     * ---------+-----------------------------------+---------------+----------------+
+     * PHIL1002 | has > 1 list reading lists        | has 0 exams   | has > 2 guides |            |
+     * ---------+-----------------------------------+---------------+----------------+
+     */
+    // a subject with one reading list which contains more than the minimum number displays correctly
     test("the content on a tab from url parameters is correct when it isnt the first one on the user's account", async ({
         page,
     }) => {
@@ -790,11 +843,15 @@ test.describe('The Learning Resources Page', () => {
 
         await expect(page.getByTestId('learning-resource-subject-title')).toContainText('HIST1201');
         await expect(page.getByTestId('learning-resource-subject-title')).toContainText('The Australian Experience');
+
         await hasExamReadMoreLink(page);
+
         await expect(page.getByTestId('exam-list-wrapper').locator(':scope > *')).toHaveCount(1);
         await expect(page.getByTestId('examPaperItem-0')).toContainText('Semester 1 2016');
         await expect(page.getByTestId('no-guides')).toContainText('No subject guides for this course');
     });
+
+    // a subject with one reading list which has only the minimum number of items displays correctly
     test('the content on the french tab is correct', async ({ page }) => {
         await page.goto(
             '/learning-resources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
@@ -808,7 +865,9 @@ test.describe('The Learning Resources Page', () => {
 
         await expect(page.getByTestId('learning-resource-subject-title')).toContainText('FREN1010');
         await expect(page.getByTestId('learning-resource-subject-title')).toContainText('Introductory French 1');
+
         await hasExamReadMoreLink(page);
+
         await expect(page.getByTestId('exam-list-wrapper').locator(':scope > *')).toHaveCount(3);
         await expect(page.getByTestId('examPaperItem-0')).toContainText('Semester 2 2019');
         await expect(page.getByTestId('examPaperItem-1')).toContainText('Semester 1 2019');
@@ -818,6 +877,8 @@ test.describe('The Learning Resources Page', () => {
         );
         await expect(page.getByTestId('guide-0')).toContainText('French Studies');
     });
+
+    // a subject with multiple reading lists displays correctly
     test('the content on the Philosophy tab is correct', async ({ page }) => {
         await page.goto(
             '/learning-resources?user=s1111111&coursecode=PHIL1002&campus=St%20Lucia&semester=Semester%203%202020',
@@ -831,7 +892,9 @@ test.describe('The Learning Resources Page', () => {
         await expect(page.getByTestId('learning-resource-subject-title')).toContainText(
             'PHIL1002 - Introduction to Philosophy: What is Philosophy?',
         );
+
         await hasExamReadMoreLink(page);
+
         await expect(page.getByTestId('exam-list-wrapper').locator(':scope > *')).toHaveCount(2);
         await expect(page.getByTestId('no-exam-papers')).toContainText('No Past Exam Papers for this course');
         await expect(page.locator('[data-testid="guides-PHIL1002-content"] > div').locator(':scope > *')).toHaveCount(
@@ -852,12 +915,17 @@ test.describe('The Learning Resources Page', () => {
                 .first(),
         ).toBeVisible();
     });
+
     test('A user sees an extra link on laws subjects', async ({ page }) => {
         await page.goto('/learning-resources?user=s1111111');
         await page.setViewportSize({ width: 1300, height: 1000 });
+
         await the_user_clicks_on_the_Search_tab(page);
+
         await the_user_sees_the_search_form(page);
+
         await searchFor(page, 'LAWS', 'LAWS7107');
+
         await expect(
             page
                 .getByTestId('legalResearchEssentials')

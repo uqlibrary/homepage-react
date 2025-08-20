@@ -72,10 +72,6 @@ test.describe('Alerts Admin View Page', () => {
         await clickButton(page, 'button[data-testid="admin-alerts-view-button-save"]', 'Clone');
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245');
     });
-    test('has a Help button on the View page', async ({ page }) => {
-        // the reusable function doesnt work here - unclear why
-        // hasAWorkingHelpButton();
-    });
     test('can show a preview of an urgent-priority permanent alert with link', async ({ page }) => {
         await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alerttitle', 'Example alert:');
         await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('prioritytype', 'urgent');
@@ -92,6 +88,7 @@ test.describe('Alerts Admin View Page - other page tests', () => {
         await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alerttitle', 'Sample alert 2:');
         await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('prioritytype', 'info');
         await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alertmessage', 'Has mock data.');
+
         // the editing user displays correctly
         await expect(page.getByTestId('admin-alerts-view-created-by')).not.toBeVisible();
         await expect(page.getByTestId('admin-alerts-view-updated-by')).toContainText('Last Updated by: uqtest2');
@@ -122,6 +119,7 @@ test.describe('Alerts Admin View Page - other page tests', () => {
                 .first(),
         ).toBeVisible();
 
+        // the editing user displays correctly
         await expect(page.getByTestId('admin-alerts-view-created-by')).toContainText('Created by: uqtest1');
         await expect(page.getByTestId('admin-alerts-view-updated-by')).toContainText('Last Updated by: uqtest2');
     });
@@ -134,7 +132,6 @@ test.describe('Alerts Admin View Page - other page tests', () => {
                 .getByText(/Primo/)
                 .first(),
         ).toBeVisible();
-
         await expect(page.locator('[data-testid="admin-alerts-view-checkbox-system-primo"] input')).toBeChecked();
     });
 });

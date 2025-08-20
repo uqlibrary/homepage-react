@@ -149,8 +149,6 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
 
             // Wait for the save-confirmation popup to appear and check its content
             const dialog = page.getByTestId('dialogbox-dlor-team-save-outcome');
-            await dialog.waitFor({ state: 'visible' });
-
             await expect(dialog).toContainText('Changes have been saved');
             await expect(page.getByTestId('confirm-dlor-team-save-outcome')).toHaveText('Return to Admin Teams page');
             await expect(page.getByTestId('cancel-dlor-team-save-outcome')).toHaveText('Re-edit Team');

@@ -12,6 +12,7 @@ test.describe('header', () => {
                 const li = panel.locator('li');
                 await expect(li).toHaveCount(6);
 
+                // we have a 3 x 2 grid at desktop
                 const first = li.nth(0);
                 const { top: firstTop, left: firstLeft, bottom: firstBottom, right: firstRight } = await first.evaluate(
                     el => {
@@ -30,6 +31,7 @@ test.describe('header', () => {
                     const rect = el.getBoundingClientRect();
                     return { top: rect.top, left: rect.left, right: rect.left + rect.width };
                 });
+                // Ensure the second item is on the same row as the first
                 expect(secondTop).toBe(firstTop);
                 expect(secondLeft).toBeGreaterThan(firstLeft);
 
@@ -38,6 +40,7 @@ test.describe('header', () => {
                     const rect = el.getBoundingClientRect();
                     return { top: rect.top, left: rect.left, right: rect.left + rect.width };
                 });
+                // Ensure the third item is on the same row as the firs
                 expect(thirdTop).toBe(firstTop);
                 expect(thirdLeft).toBeGreaterThan(firstLeft);
 
@@ -46,6 +49,7 @@ test.describe('header', () => {
                     const rect = el.getBoundingClientRect();
                     return { top: rect.top, left: rect.left, right: rect.left + rect.width };
                 });
+                // Ensure the fourth item is on the next row, with a gap
                 expect(fourthTop).toBeGreaterThan(firstTop);
                 expect(fourthLeft).toBe(firstLeft);
                 expect(fourthRight).toBe(firstRight);
@@ -56,6 +60,7 @@ test.describe('header', () => {
                     const rect = el.getBoundingClientRect();
                     return { top: rect.top, left: rect.left, right: rect.left + rect.width };
                 });
+                // Ensure the fifth item is on the next row
                 expect(fifthTop).toBeGreaterThan(firstTop);
                 expect(fifthLeft).toBe(secondLeft);
                 expect(fifthRight).toBe(secondRight);
@@ -65,11 +70,12 @@ test.describe('header', () => {
                     const rect = el.getBoundingClientRect();
                     return { top: rect.top, left: rect.left, right: rect.left + rect.width };
                 });
+
+                // Ensure the sixth item is on the next row
                 expect(sixthTop).toBeGreaterThan(firstTop);
                 expect(sixthLeft).toBe(thirdLeft);
                 expect(sixthRight).toBe(thirdRight);
             });
-
             test('tablet displays correctly', async ({ page }) => {
                 await page.goto('http://localhost:2020/?user=public');
                 await page.setViewportSize({ width: 840, height: 900 });
@@ -96,6 +102,8 @@ test.describe('header', () => {
                     const rect = el.getBoundingClientRect();
                     return { top: rect.top, left: rect.left, right: rect.left + rect.width };
                 });
+
+                // Ensure the second item is on the same row as the first
                 expect(secondTop).toBe(firstTop);
                 expect(secondLeft).toBeGreaterThan(firstLeft);
 
@@ -104,6 +112,8 @@ test.describe('header', () => {
                     const rect = el.getBoundingClientRect();
                     return { top: rect.top, left: rect.left, right: rect.left + rect.width };
                 });
+
+                // Ensure the third item is on the second row
                 expect(thirdTop).toBeGreaterThan(firstTop);
                 expect(thirdLeft).toBe(firstLeft);
                 expect(thirdRight).toBe(firstRight);
@@ -113,6 +123,8 @@ test.describe('header', () => {
                     const rect = el.getBoundingClientRect();
                     return { top: rect.top, left: rect.left, right: rect.left + rect.width };
                 });
+
+                // Ensure the fourth item is on the second row, with a gap
                 expect(fourthTop).toBe(thirdTop);
                 expect(fourthLeft).toBe(secondLeft);
                 expect(fourthTop).toBeGreaterThan(firstBottom + 20);
@@ -123,6 +135,8 @@ test.describe('header', () => {
                     const rect = el.getBoundingClientRect();
                     return { top: rect.top, left: rect.left, right: rect.left + rect.width };
                 });
+
+                // Ensure the fifth item is on the third row
                 expect(fifthTop).toBeGreaterThan(secondTop);
                 expect(fifthLeft).toBe(firstLeft);
                 expect(fifthRight).toBe(firstRight);
@@ -132,6 +146,8 @@ test.describe('header', () => {
                     const rect = el.getBoundingClientRect();
                     return { top: rect.top, left: rect.left, right: rect.left + rect.width };
                 });
+
+                // Ensure the sixth item is on the third row
                 expect(sixthTop).toBe(fifthTop);
                 expect(sixthLeft).toBe(fourthLeft);
                 expect(sixthRight).toBe(secondRight);
@@ -144,8 +160,10 @@ test.describe('header', () => {
                 const panel = page.getByTestId('help-navigation-panel');
                 await panel.scrollIntoViewIfNeeded();
                 const li = panel.locator('li');
+                // Check that there are 6 items
                 await expect(li).toHaveCount(6);
 
+                // we have a 6 x 1 grid at mobile
                 const first = li.nth(0);
                 const { top: firstTop, left: firstLeft } = await first.evaluate(el => {
                     const rect = el.getBoundingClientRect();
@@ -157,6 +175,8 @@ test.describe('header', () => {
                     const rect = el.getBoundingClientRect();
                     return { top: rect.top, left: rect.left };
                 });
+
+                // Ensure the second item is below the first
                 expect(secondTop).toBeGreaterThan(firstTop);
                 expect(secondLeft).toBe(firstLeft);
 
@@ -165,6 +185,7 @@ test.describe('header', () => {
                     const rect = el.getBoundingClientRect();
                     return { top: rect.top, left: rect.left, bottom: rect.top + rect.height };
                 });
+                // Ensure the third item is below the second
                 expect(thirdTop).toBeGreaterThan(secondTop);
                 expect(thirdLeft).toBe(firstLeft);
 
@@ -173,6 +194,8 @@ test.describe('header', () => {
                     const rect = el.getBoundingClientRect();
                     return { top: rect.top };
                 });
+
+                // Ensure the fourth item is below the third, with a gap
                 expect(fourthTop).toBeGreaterThan(thirdTop);
                 expect(fourthTop).toBeGreaterThan(thirdBottom + 20);
 
@@ -181,6 +204,8 @@ test.describe('header', () => {
                     const rect = el.getBoundingClientRect();
                     return { top: rect.top, left: rect.left };
                 });
+
+                // Ensure the fifth item is on below the fourth
                 expect(fifthTop).toBeGreaterThan(fourthTop);
                 expect(fifthLeft).toBe(firstLeft);
 
@@ -189,6 +214,8 @@ test.describe('header', () => {
                     const rect = el.getBoundingClientRect();
                     return { top: rect.top, left: rect.left };
                 });
+
+                // Ensure the sixth item is on below the fifth
                 expect(sixthTop).toBeGreaterThan(fifthTop);
                 expect(sixthLeft).toBe(firstLeft);
             });

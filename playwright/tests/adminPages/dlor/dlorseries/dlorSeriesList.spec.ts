@@ -109,6 +109,7 @@ test.describe('Digital Learning Hub admin Series management', () => {
             await expect(page.getByTestId('dlor-serieslist-delete-7')).toBeVisible();
             await expect(page.getByTestId('dlor-serieslist-delete-8')).not.toBeVisible();
             await expect(page.getByTestId('dlor-serieslist-delete-10')).not.toBeVisible();
+
             // all have edit buttons
             for (let i = 1; i <= 9; i++) {
                 await expect(page.locator(`[data-testid="dlor-serieslist-edit-${i}"]`)).toBeVisible();
@@ -184,7 +185,6 @@ test.describe('Digital Learning Hub admin Series management', () => {
         test('can cancel deletion of a Series', async ({ page }) => {
             // click delete icon on first Object
             await page.getByTestId('dlor-serieslist-delete-4').click();
-
             // confirm delete box is open
             await expect(
                 page
@@ -192,7 +192,6 @@ test.describe('Digital Learning Hub admin Series management', () => {
                     .getByText(/Do you want to delete this series\?/)
                     .first(),
             ).toBeVisible();
-
             // say "no, I dont want to delete" and the dialog just closes
             await page
                 .getByTestId('cancel-dlor-series-delete-confirm')
@@ -204,7 +203,6 @@ test.describe('Digital Learning Hub admin Series management', () => {
         test('can delete a series', async ({ page }) => {
             // click delete icon on first Object
             await page.getByTestId('dlor-serieslist-delete-4').click();
-
             // "confirm delete" box is open
             await expect(
                 page
@@ -212,7 +210,6 @@ test.describe('Digital Learning Hub admin Series management', () => {
                     .getByText(/Do you want to delete this series\?/)
                     .first(),
             ).toBeVisible();
-
             // say "yes"
             await expect(
                 page
@@ -220,12 +217,8 @@ test.describe('Digital Learning Hub admin Series management', () => {
                     .getByText(/Yes/)
                     .first(),
             ).toBeVisible();
-
-            // new
-            // cy.wait(2000);
             await page.getByTestId('confirm-dlor-series-delete-confirm').click();
 
-            // "confirm delete" box is closed
             // it worked!
             await expect(
                 page
@@ -245,7 +238,6 @@ test.describe('Digital Learning Hub admin Series management', () => {
             // a second delete throws up the correct dialog boxes
             // (and doesnt think it is already done
             await page.getByTestId('dlor-serieslist-delete-4').click();
-
             // "confirm delete" box is open
             await expect(
                 page
@@ -253,7 +245,6 @@ test.describe('Digital Learning Hub admin Series management', () => {
                     .getByText(/Do you want to delete this series\?/)
                     .first(),
             ).toBeVisible();
-
             // say "yes"
             await page.getByTestId('confirm-dlor-series-delete-confirm').click();
 

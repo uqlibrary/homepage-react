@@ -225,17 +225,6 @@ test.describe('Alerts Admin Form Pages', () => {
             await page.locator('[data-testid="admin-alerts-form-link-title"] input').fill('Read more');
             await page.locator('[data-testid="admin-alerts-form-link-url"] input').fill('http://example.com/');
 
-            // TODO we dont seem to have access to the date field?
-            // from https://github.com/cypress-io/cypress/issues/1366
-            // cy.get('[data-testid="admin-alerts-form-start-date-0"] input')
-            //     .click()
-            //     .then(input => {
-            //         input[0].dispatchEvent(new Event('input', { bubbles: true }));
-            //         input.val('2031-04-30T13:00');
-            //     })
-            //     .click();
-            // cy.get('[data-testid="admin-alerts-form-end-date"] label')
-            //      .should('have.attr', 'style', 'color: #c80000;');
             await page.getByTestId('admin-alerts-form-button-save').click();
             await expect(page.getByTestId('confirm-alert-add-save-succeeded')).toBeVisible();
             await expect(
@@ -259,16 +248,6 @@ test.describe('Alerts Admin Form Pages', () => {
             await expect(page.locator('[data-testid="admin-alerts-form-body"] textarea').first()).toHaveValue('');
             await expect(page.getByTestId('confirm-alert-add-save-succeeded')).not.toBeVisible();
         });
-        // This test is flakey - the button isnt always available, which is bizarre
-        // Testing in jest instead see AlertsAdd.test.js
-        test.skip('the cancel button returns to the list page', async ({ page }) => {
-            await page.getByTestId('admin-alerts-form-button-cancel').click();
-            await page.waitForTimeout(50);
-            await expect(page).toHaveURL('http://localhost:2020/admin/alerts');
-            await expect(
-                page.locator('[data-testid="admin-alerts-list-future-list"] tbody').locator(':scope > *'),
-            ).toHaveCount(5 + numRowsHiddenAsNoDataInfo);
-        });
         test('has a working Help button on the Add page', async ({ page }) => {
             await hasAWorkingHelpButton(page);
         });
@@ -285,15 +264,19 @@ test.describe('Alerts Admin Form Pages', () => {
             }
 
             await PreviewButtonAvailableAndSaveDisabled(page);
+
             await page.locator('[data-testid="admin-alerts-form-title"] input').fill('alert title 5');
             await PreviewButtonAvailableAndSaveDisabled(page);
+
             await page
                 .locator('[data-testid="admin-alerts-form-body"] textarea')
                 .first()
                 .fill('body 5');
             await buttonsAreNOTDisabled(page);
+
             await page.locator('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').check();
             await PreviewButtonAvailableAndSaveDisabled(page);
+
             await page.locator('[data-testid="admin-alerts-form-link-title"] input').fill('read more');
             await PreviewButtonAvailableAndSaveDisabled(page);
 
@@ -456,7 +439,6 @@ test.describe('Alerts Admin Form Pages', () => {
                 'alertmessage',
                 'This alert can be edited in mock.[UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
             );
-
             // user can toggle the Preview
             await page.getByTestId('admin-alerts-form-button-preview').click();
             await expect(page.locator('uq-alert[id="alert-preview"]')).not.toBeVisible();
@@ -489,7 +471,6 @@ test.describe('Alerts Admin Form Pages', () => {
                 'alertmessage',
                 'This alert can be edited in mock.[UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
             );
-
             await clickButton(page, '[data-testid="admin-alerts-form-button-preview"]', 'Preview'); // hide preview
             await expect(page.locator('uq-alert[id="alert-preview"]')).not.toBeVisible();
             await clickButton(page, '[data-testid="admin-alerts-form-button-preview"]', 'Preview'); // show preview
@@ -539,7 +520,12 @@ test.describe('Alerts Admin Form Pages', () => {
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
         test('has breadcrumb', async ({ page }) => {
-            await expect(page.getByText(/Alerts admin/).first()).toBeVisible();
+            await expect(
+                page
+                    .getByTestId('subsite-title')
+                    .getByText(/Alerts admin/)
+                    .first(),
+            ).toBeVisible();
         });
         test('can clone an alert and return to list', async ({ page }) => {
             await expect(page.getByTestId('admin-alerts-form-checkbox-linkrequired')).toBeVisible();
@@ -593,7 +579,6 @@ test.describe('Alerts Admin Form Pages', () => {
             await expect(page).toHaveURL(
                 'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff',
             );
-
             // click "Add new"
             await page.getByTestId('admin-alerts-form-button-save').click();
             await expect(page.getByTestId('confirm-alert-clone-save-succeeded')).toBeVisible();
@@ -609,9 +594,7 @@ test.describe('Alerts Admin Form Pages', () => {
             await clickSVGButton(page, '[data-testid="admin-alerts-form-another-date-button-' + buttonId + '"]');
         }
 
-        // this test seems to be flakey now
-        // will have to figure out how much of it is really needed
-        test.skip('the "add a date set button" works', async ({ page }) => {
+        test('the "add a date set button" works', async ({ page }) => {
             await expect(page.locator('[data-testid="admin-alerts-form-start-date-0"] input')).toBeVisible();
             await expect(page.locator('[data-testid="admin-alerts-form-end-date-0"] input')).toBeVisible();
             await page.getByTestId('admin-alerts-form-another-date-button-0').click();

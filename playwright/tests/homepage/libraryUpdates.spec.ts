@@ -13,7 +13,6 @@ test.describe('LibraryUpdates', () => {
         test('loads as expected on desktop', async ({ page }) => {
             await page.goto('/');
             await page.setViewportSize({ width: 1300, height: 1000 });
-
             await expect(page.getByTestId('drupal-article-0')).toContainText('Rae and George Hammer memorial');
             await expect(page.getByTestId('drupal-article-1')).toContainText('Building works at Biological Sciences');
             await expect(page.getByTestId('drupal-article-2')).toContainText('Teaching');
@@ -21,6 +20,11 @@ test.describe('LibraryUpdates', () => {
 
             await expect(page.locator('[data-testid="library-updates-parent"] > div')).toHaveCount(5);
 
+            // at desktop, the articles are laid out like:
+            //  /----------------\
+            //  | XXXXXXXXXXXXXX |
+            //  \----------------/
+            //  XXXX   XXXX   XXXX
             const first = page.getByTestId('drupal-article-0');
             const firstBox = (await first.boundingBox()) as BoundingBox;
             expect(firstBox.x).toBeLessThan(77);
@@ -47,10 +51,16 @@ test.describe('LibraryUpdates', () => {
         test('loads as expected on tablet', async ({ page }) => {
             await page.goto('/');
             await page.setViewportSize({ width: 840, height: 900 });
-
             await expect(page.getByTestId('drupal-article-0')).toContainText('Rae and George Hammer memorial');
+
             await expect(page.locator('[data-testid="library-updates-parent"] > div')).toHaveCount(5);
 
+            // at tablet width, the articles are laid out:
+            //  /-----------\
+            //  | XXXXXXXXX |
+            //  \-----------/
+            //  XXXXX   XXXXX
+            //  XXXXX
             const first = page.getByTestId('drupal-article-0');
             const firstBox = (await first.boundingBox()) as BoundingBox;
             expect(firstBox.x).toBeLessThan(30);
@@ -65,16 +75,26 @@ test.describe('LibraryUpdates', () => {
             expect(thirdBox.y).toBe(secondBox.y);
             expect(thirdBox.y + thirdBox.height).toBe(secondBox.y + secondBox.height);
             expect(thirdBox.x).toBeGreaterThan(secondBox.x + secondBox.width);
-            expect(thirdBox.x + thirdBox.width).toBeGreaterThan(795);
+            expect(thirdBox.x + thirdBox.width).toBeGreaterThan(795); // near right edge of 840 width
+
+            // visually the fourth article drops down, but by the numbers it seems to sit on the right,
+            // same as desktop, so I'm not going to test it
         });
 
         test('loads as expected on mobile', async ({ page }) => {
             await page.goto('/');
             await page.setViewportSize({ width: 390, height: 736 });
-
             await expect(page.getByTestId('drupal-article-0')).toContainText('Rae and George Hammer memorial');
-            await expect(page.locator('[data-testid="library-updates-parent"] > div')).toHaveCount(5);
 
+            await expect(page.locator('[data-testid="library-updates-parent"] > div')).toHaveCount(5); // 4 news stories and a heading
+
+            // at mobile width, the articles are laid out:
+            //  /------\
+            //  | XXXX |
+            //  \------/
+            //    XXXX
+            //    XXXX
+            //    XXXX
             const first = page.getByTestId('drupal-article-0');
             const firstBox = (await first.boundingBox()) as BoundingBox;
             expect(firstBox.x).toBeLessThan(26);
@@ -115,7 +135,6 @@ test.describe('LibraryUpdates', () => {
         });
         test('is accessible at 550 750', async ({ page }) => {
             await page.goto('/');
-            await page.waitForTimeout(2000);
             await page.setViewportSize({ width: 550, height: 750 });
             await page.getByTestId('article-1-title').scrollIntoViewIfNeeded();
             await assertAccessibility(page, 'div[data-testid="library-updates-parent"]');

@@ -1,5 +1,6 @@
 import { test, expect } from '@uq/pw/test';
 import { DLOR_ADMIN_USER } from '@uq/pw/lib/constants';
+import { assertAccessibility } from '@uq/pw/lib/axe';
 
 test.describe('Digital Learning Hub admin homepage', () => {
     const itemsPerPage = 10; // matches value in DLOAdminHomepage
@@ -9,20 +10,16 @@ test.describe('Digital Learning Hub admin homepage', () => {
             await page.goto(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
         });
-
         test('is accessible', async ({ page }) => {
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await page.waitForSelector('h1');
-            const h1 = page.locator('h1').first();
-            await expect(h1).toContainText('Digital Learning Hub Management');
+            await expect(page.locator('h1').first()).toContainText('Digital Learning Hub Management');
+            await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['button-name'] });
         });
-
         test('has a working "visit public homepage" button', async ({ page }) => {
             await page.getByTestId('admin-dlor-menu-button').click();
             await page.getByTestId('dlor-admin-public-homepage-link').click();
             await expect(page).toHaveURL('http://localhost:2020/digital-learning-hub');
         });
-
         test('has a working "add an object" button', async ({ page }) => {
             await page.getByTestId('admin-dlor-menu-button').click();
             const addObjectButton = page.getByTestId('admin-dlor-visit-add-button');
@@ -30,7 +27,6 @@ test.describe('Digital Learning Hub admin homepage', () => {
             await addObjectButton.click();
             await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
         });
-
         test('has a working "manage teams" button', async ({ page }) => {
             await page.getByTestId('admin-dlor-menu-button').click();
             const manageTeamsButton = page.getByTestId('admin-dlor-visit-manage-teams-button');
@@ -38,7 +34,6 @@ test.describe('Digital Learning Hub admin homepage', () => {
             await manageTeamsButton.click();
             await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
         });
-
         test('has a working "add series" button', async ({ page }) => {
             await page.getByTestId('admin-dlor-menu-button').click();
             const addSeriesButton = page.getByTestId('admin-dlor-visit-add-series-button');
@@ -46,7 +41,6 @@ test.describe('Digital Learning Hub admin homepage', () => {
             await addSeriesButton.click();
             await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/series/add?user=${DLOR_ADMIN_USER}`);
         });
-
         test('has a working "manage series" button', async ({ page }) => {
             await page.getByTestId('admin-dlor-menu-button').click();
             const manageSeriesButton = page.getByTestId('admin-dlor-visit-manage-series-button');
@@ -54,7 +48,6 @@ test.describe('Digital Learning Hub admin homepage', () => {
             await manageSeriesButton.click();
             await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/series/manage?user=${DLOR_ADMIN_USER}`);
         });
-
         test('has a working "edit an object" button', async ({ page }) => {
             const editButton = page.getByTestId('dlor-homepage-edit-98s0_dy5k3_98h4');
             await editButton.click();
@@ -62,38 +55,34 @@ test.describe('Digital Learning Hub admin homepage', () => {
                 `http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`,
             );
         });
-
         test('has breadcrumbs', async ({ page }) => {
             await expect(page.locator('uq-site-header').getByTestId('subsite-title')).toContainText(
                 'Digital learning hub admin',
             );
         });
-
         test('shows a list of objects to manage', async ({ page }) => {
             const list = page.getByTestId('dlor-homepage-list');
             await expect(list.locator('> div')).toHaveCount(gridFromExpectedRowCount());
 
-            // Verify first item
+            // sorts properly ('UQ has a Blak History' moves from position 3 to 2)
             const firstItem = list.locator('> div').first();
             await expect(firstItem.locator('h2')).toContainText('Accessibility - Digital Essentials');
             await expect(firstItem.locator('svg path').first()).toHaveAttribute(
                 'd',
                 'M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z',
-            );
+            ); // has green tick
             await expect(firstItem.locator('div:nth-child(3) p').first()).toContainText('uqldegro');
             await expect(firstItem.locator('div:nth-child(3) p').nth(1)).toContainText('CDS DX Digital Content');
 
-            // Verify third item
             const thirdItem = list.locator('> div').nth(2);
             await expect(thirdItem.locator('h2')).toContainText('UQ has a Blak History');
             await expect(thirdItem.locator('svg path').first()).toHaveAttribute(
                 'd',
                 'M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z',
-            );
+            ); // has green tick
             await expect(thirdItem.locator('div:nth-child(3) p').first()).toContainText('uquser1');
             await expect(thirdItem.locator('div:nth-child(3) p').nth(1)).toContainText('CDS DX Digital Content');
 
-            // Verify second item
             const secondItem = list.locator('> div').nth(1);
             await expect(secondItem.locator('h2')).toContainText('Advanced literature searching');
             await expect(secondItem.getByTestId('dlor-homepage-featured-98s0_dy5k3_98h4')).toBeVisible();
@@ -102,77 +91,87 @@ test.describe('Digital Learning Hub admin homepage', () => {
         });
 
         test('pagination works', async ({ page }) => {
+            // no data-testids in pagination :(
+
             const numPages = 3;
             const numExtraButtons = 4; // first, prev, next, last
-
-            // Verify pagination buttons
+            // there are the expected number of buttons in pagination widget
             await expect(page.locator('nav[aria-label="pagination navigation"] li').locator('button')).toHaveCount(
                 numPages + numExtraButtons,
             );
 
-            // Verify first page is selected
+            // button 1 has focus
             const firstPageButton = page.locator('nav[aria-label="pagination navigation"] li:nth-child(3) button');
             await expect(firstPageButton).toHaveClass(/Mui-selected/);
 
-            // Verify first item on page
+            // the displayed entries are what is expected
             const list = page.getByTestId('dlor-homepage-list');
             await expect(list.locator('> div:nth-child(1) h2')).toContainText('Accessibility - Digital Essentials');
 
-            // Go to next page
+            // click pagination for next page
             await page.locator('nav[aria-label="pagination navigation"] li:nth-child(4) button').click();
+
+            // the displayed entries have updated
             await expect(list.locator('button').first()).toBeVisible();
             await expect(list.locator('> div:nth-child(1) h2')).toContainText('Dummy entry to increase list size 3');
 
-            // Go back to first page
+            // click pagination to go to first page
             await page.locator('nav[aria-label="pagination navigation"] li:first-child button').click();
         });
 
         test('can filter on keyword', async ({ page }) => {
-            const list = page.getByTestId('dlor-homepage-list');
-            await expect(list.locator('> div')).toHaveCount(gridFromExpectedRowCount());
-            await expect(list.locator('> div:nth-child(1) h2')).toContainText('Accessibility - Digital Essentials');
-
             const numExtraButtons = 4; // first, prev, next, last
+            const listLocator = page.getByTestId('dlor-homepage-list');
+            const firstItemTitle = listLocator.locator('> div:nth-child(1) h2');
+            const keywordInput = page.getByTestId('dlor-homepage-keyword');
+            const clearKeywordButton = page.getByTestId('keyword-clear');
             const paginationItems = page.locator('nav[aria-label="pagination navigation"] li');
-            await expect(paginationItems.locator('button')).toHaveCount(3 + numExtraButtons);
 
-            const keywordInput = page.getByTestId('dlor-homepage-keyword').locator('input');
-            // Type partial keyword
+            // Initial state verification
+            await expect(listLocator.locator('> div')).toHaveCount(gridFromExpectedRowCount());
+            await expect(firstItemTitle).toContainText('Accessibility - Digital Essentials');
+            await expect(paginationItems.locator('> *')).toHaveCount(3 + numExtraButtons);
+
+            // Test filtering with single character (shouldn't change results)
             await keywordInput.fill('d');
-            await expect(list.locator('> div')).toHaveCount(gridFromExpectedRowCount());
-            await expect(list.locator('> div:nth-child(1) h2')).toContainText('Accessibility - Digital Essentials');
+            await expect(listLocator.locator('> div')).toHaveCount(gridFromExpectedRowCount());
+            await expect(firstItemTitle).toContainText('Accessibility - Digital Essentials');
 
             // Filter on keyword in title
-            await keywordInput.pressSequentially('ummy');
-            await expect(list.locator('> div:nth-child(1) h2')).toContainText('Dummy entry to increase list size A');
-            await expect(paginationItems.locator('button')).toHaveCount(2 + numExtraButtons);
+            await keywordInput.fill('ummy');
+            await expect(firstItemTitle).toContainText('Dummy entry to increase list size A');
+            await expect(paginationItems.locator('> *')).toHaveCount(2 + numExtraButtons); // now only 2 pages
 
-            // Clear keyword
-            await page.getByTestId('keyword-clear').click();
+            // Clear keyword filter
+            await clearKeywordButton.click();
+            await expect(listLocator.locator('> div')).toHaveCount(gridFromExpectedRowCount());
 
             // Filter on keyword in description
             await keywordInput.fill('Implications');
-            await expect(list.locator('> div:nth-child(1) h2')).toContainText(
-                'Artificial Intelligence - Digital Essentials',
-            );
-            await expect(paginationItems.locator('button')).toHaveCount(1 + numExtraButtons);
-            await page.getByTestId('keyword-clear').click();
+            await expect(firstItemTitle).toContainText('Artificial Intelligence - Digital Essentials');
+            await expect(paginationItems.locator('> *')).toHaveCount(1 + numExtraButtons); // now only 1 page
+
+            // Clear keyword filter
+            await clearKeywordButton.click();
+            await expect(listLocator.locator('> div')).toHaveCount(gridFromExpectedRowCount());
 
             // Filter on keyword in summary
             await keywordInput.fill('freeware');
-            await expect(list.locator('> div:nth-child(1) h2')).toContainText(
-                'Choose the right tool - Digital Essentials',
-            );
-            await expect(paginationItems.locator('button')).toHaveCount(1 + numExtraButtons);
-            await page.getByTestId('keyword-clear').click();
+            await expect(firstItemTitle).toContainText('Choose the right tool - Digital Essentials');
+            await expect(paginationItems.locator('> *')).toHaveCount(1 + numExtraButtons); // now only 1 page
+
+            // Clear keyword filter
+            await clearKeywordButton.click();
+            await expect(listLocator.locator('> div')).toHaveCount(gridFromExpectedRowCount());
 
             // Filter on keyword in keyword list
             await keywordInput.fill('ethics');
-            await expect(list.locator('> div:nth-child(1) h2')).toContainText(
-                'Artificial Intelligence - Digital Essentials',
-            );
-            await expect(paginationItems.locator('button')).toHaveCount(1 + numExtraButtons);
-            await page.getByTestId('keyword-clear').click();
+            await expect(firstItemTitle).toContainText('Artificial Intelligence - Digital Essentials');
+            await expect(paginationItems.locator('> *')).toHaveCount(1 + numExtraButtons); // now only 1 page
+
+            // Clear keyword filter
+            await clearKeywordButton.click();
+            await expect(listLocator.locator('> div')).toHaveCount(gridFromExpectedRowCount());
         });
 
         test('can clear a keyword', async ({ page }) => {
@@ -461,8 +460,6 @@ test.describe('Digital Learning Hub admin homepage', () => {
 
             // Verify tooltip
             await expect(page.locator('.MuiTooltip-tooltip')).toContainText('Add to Favourites');
-
-            await page.waitForTimeout(1000);
 
             const favoriteOutline = page.getByTestId('favorite-star-outline-icon');
             await expect(favoriteOutline).toBeVisible();

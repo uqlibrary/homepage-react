@@ -47,6 +47,7 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
         });
 
         test('drag drop functions as expected', async ({ page }) => {
+            // Select the first and second draggable items
             const firstItem = page.getByTestId('dlor-series-edit-draggable-title-98s0_dy5k3_98h4');
             const secondItem = page.getByTestId(
                 'dlor-series-edit-draggable-title-9bc1894a-8b0d-46da-a25e-02d26e2e056c',
@@ -54,9 +55,6 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
 
             // Drag first item to second item's position
             await firstItem.dragTo(secondItem);
-
-            // Wait for the list to be updated
-            await page.waitForSelector('#dragLandingAarea li');
 
             const listItems = page.locator('#dragLandingAarea li');
             await expect(listItems.first()).toContainText('for science');
@@ -253,7 +251,6 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
             await expect(page.getByTestId('confirm-dlor-series-save-outcome')).toHaveText(/Close/);
             await page.getByTestId('confirm-dlor-series-save-outcome').click();
         });
-
         test('a failed api load shows correctly', async ({ page }) => {
             await page.goto(
                 `http://localhost:2020/admin/dlor/series/edit/1?user=${DLOR_ADMIN_USER}&responseType=fullListError`,
@@ -263,20 +260,17 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
             );
         });
     });
-
     test.describe('user access', () => {
         test('displays an "unauthorised" page to public users', async ({ page }) => {
             await page.goto('http://localhost:2020/admin/dlor/series/edit/1?user=public');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.locator('h1')).toHaveText(/Authentication required/);
         });
-
         test('displays an "unauthorised" page to non-authorised users', async ({ page }) => {
             await page.goto('http://localhost:2020/admin/dlor/series/edit/1?user=uqstaff');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.locator('h1')).toHaveText(/Permission denied/);
         });
-
         test('displays correct page for admin users (list)', async ({ page }) => {
             await page.goto(`http://localhost:2020/admin/dlor/series/edit/1?user=${DLOR_ADMIN_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
