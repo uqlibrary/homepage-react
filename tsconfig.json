@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "baseUrl": "./playwright",
         "esModuleInterop": true,
         "skipLibCheck": true,
         "strict": true,
@@ -9,7 +8,8 @@
         "noImplicitAny": true,
         "noEmit": true,
         "paths": {
-            "@uq/pw/*": ["*"]
+            "@uq/pw/*": ["playwright/*"]
         },
+        "include": ["playwright.config.ts", "playwright/**/*.spec.ts"]
     },
 }
