@@ -141,6 +141,16 @@ describe('Backend routes method', () => {
         MockDate.reset();
     });
 
+    it('should construct url for LOCATIONSPACE_ALL_API', () => {
+        const MockDate = require('mockdate');
+        MockDate.set('2020-01-01T00:00:00.000Z', 10);
+        expect(routes.LOCATIONSPACE_ALL_API()).toEqual({
+            apiUrl: 'location-spaces',
+            options: { params: { ts: '1577836800000' } },
+        });
+        MockDate.reset();
+    });
+
     it('should construct url for PRINTING_API', () => {
         const MockDate = require('mockdate');
         MockDate.set('2020-01-01T00:00:00.000Z', 10);
@@ -347,8 +357,6 @@ describe('Backend routes method', () => {
             expect(routes.JOURNAL_SEARCH_API()).toEqual({
                 apiUrl: 'https://api.library.uq.edu.au/v1/journals/favourites?sort=score',
             });
-
-            expect(routes.LOCATIONSPACE_ALL_API()).toEqual({ apiUrl: 'location-spaces' });
         });
     });
 
