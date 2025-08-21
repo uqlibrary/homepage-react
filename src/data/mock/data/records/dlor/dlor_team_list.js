@@ -13,7 +13,9 @@ export default {
                     "team_admin_username": "uqstaff",
                     "team_admin_email": "uqstaff@uq.edu.au",
                     "created_at": "2025-07-06T23:50:43.000000Z",
-                    "updated_at": "2025-07-06T23:50:43.000000Z"
+                    "updated_at": "2025-07-06T23:50:43.000000Z",
+                    "team_admin_receive_object_notifications": true,
+                    "team_admin_receive_overdue_notifications": true,
                 },
                 {
                     "team_admin_id": 2,
