@@ -29,8 +29,8 @@ export const libHours = {
         "url": "https:\/\/web.library.uq.edu.au\/visit\/central-library",
         "vemcount_zone_id": 7665,
         "campus_name": "St Lucia",
-        "opening_hours": "24 Hours",
-        "currently_open": true,
+        "opening_hours": "8am - 8pm",
+        "currently_open": false,
     }, {
         "lid": 3825,
         "display_name": "Dorothy Hill Engineering and Sciences",

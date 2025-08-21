@@ -7,7 +7,8 @@ export default [{
     location_photo: "https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg", // https://campuses.uq.edu.au/list-rooms
     location_photo_description: 'a large room with 6 large round tables, each wih multiple chairs',
     location_type: 'Collaborative space',
-    location_opening_hours_id: "3841", // bring back the Hours api, removed around Jan 2024, to get data from springshare for opening hours
+    location_opening_hours_id: 3841,
+    location_services_page: "https://web.library.uq.edu.au/visit/walter-harrison-law-library",
     created_at: "2025-08-01 10:00:00",
     updated_at: "2025-08-01 11:00:00",
     location_latitude: "-27.496955206561836",
@@ -30,7 +31,8 @@ export default [{
     location_photo: "",
     location_photo_description: "",
     location_type: 'Computer room',
-    location_opening_hours_id: "3842",
+    location_opening_hours_id: 3842,
+    location_services_page: "https://web.library.uq.edu.au/visit/central-library",
     created_at: "2025-08-01 10:00:00",
     updated_at: "2025-08-01 11:00:00",
     location_latitude: "-27.496955206561836",
@@ -54,6 +56,7 @@ export default [{
     location_photo_description: 'a large room with many tables, each wih 4 chairs',
     location_type: 'Computer room',
     location_opening_hours_id: null,
+    location_services_page: null,
     created_at: "2025-08-01 10:00:00",
     updated_at: "2025-08-01 11:00:00",
     location_latitude: "-27.50046410327122",

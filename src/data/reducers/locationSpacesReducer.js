@@ -36,6 +36,5 @@ export default function locationSpacesReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-    console.log('locationSpacesReducer', action.type, state, action);
     return handler(state, action);
 }

@@ -16,6 +16,9 @@ const StyledStandardCard = styled(StandardCard)(() => ({
         paddingBlock: 0,
     },
 }));
+const StyledBookableSpaceGridItem = styled(Grid)(() => ({
+    marginTop: '12px',
+}));
 const StyledLocationPhoto = styled('img')(() => ({
     maxWidth: '100%',
 }));
@@ -25,13 +28,60 @@ export const SpacesLocationList = ({
     locationSpaceList,
     locationSpaceListLoading,
     locationSpaceListError,
+    libHours,
+    libHoursLoading,
+    libHoursError,
 }) => {
     React.useEffect(() => {
         if (locationSpaceListError === null && locationSpaceListLoading === null && locationSpaceList === null) {
             actions.loadAllLocationSpaces();
         }
+        if (libHoursError === null && libHoursLoading === null && libHours === null) {
+            actions.loadLibHours();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const spaceOpeningHours = bookableSpace => {
+        if (!!libHoursError) {
+            return null; // <p>Opening hours currently unavailable - please try again later</p>;
+        }
+
+        const openingDetails = libHours?.locations?.find(openingHours => {
+            return openingHours.lid === bookableSpace.location_opening_hours_id;
+        });
+        if (!openingDetails || (openingDetails?.currently_open !== false && openingDetails?.currently_open !== true)) {
+            return null;
+        }
+        const openClosedString = openingDetails?.currently_open === false ? 'Not currently open' : 'Currently open'; // currently_open neither true nor false handld above
+        if (!!openingDetails?.opening_hours) {
+            return (
+                <p>
+                    {openClosedString} - Open {openingDetails?.opening_hours}
+                </p>
+            );
+        }
+        return <p>{openClosedString}</p>;
+    };
+
+    function spaceFacilities(bookableSpace) {
+        return (
+            <>
+                {bookableSpace?.facilities?.length > 0 && <h3>Facilities</h3>}
+                {bookableSpace?.facilities?.length > 0 && (
+                    <ul>
+                        {bookableSpace?.facilities?.map(facility => {
+                            return (
+                                <li key={`facility-${bookableSpace?.location_id}-${facility.facilityTypeId}`}>
+                                    {facility.facilityTypeDisplayName}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                )}
+            </>
+        );
+    }
 
     return (
         <StandardPage title="Library bookable locations">
@@ -39,54 +89,51 @@ export const SpacesLocationList = ({
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
                     <Grid container spacing={3}>
                         {(() => {
-                            if (!!locationSpaceListLoading) {
+                            if (!!locationSpaceListLoading || !!libHoursLoading) {
                                 return (
-                                    <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                                    <StyledBookableSpaceGridItem item xs={12} md={9}>
                                         <StyledStandardCard fullHeight>
                                             <InlineLoader message="Loading" />
                                         </StyledStandardCard>
-                                    </Grid>
+                                    </StyledBookableSpaceGridItem>
                                 );
                             } else if (!!locationSpaceListError) {
                                 return (
-                                    <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                                    <StyledBookableSpaceGridItem item xs={12} md={9}>
                                         <StyledStandardCard fullHeight>
                                             <p>Something went wrong - please try again later.</p>
                                         </StyledStandardCard>
-                                    </Grid>
+                                    </StyledBookableSpaceGridItem>
                                 );
                             } else if (!locationSpaceList || locationSpaceList.length === 0) {
                                 return (
-                                    <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                                    <StyledBookableSpaceGridItem item xs={12} md={9}>
                                         <StyledStandardCard fullHeight>
                                             <p>No locations found.</p>
                                         </StyledStandardCard>
-                                    </Grid>
+                                    </StyledBookableSpaceGridItem>
                                 );
                             } else {
-                                return locationSpaceList.map(object => {
+                                return locationSpaceList.map(bookableSpace => {
+                                    const key = `space-${bookableSpace?.location_id}`;
                                     return (
-                                        <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
-                                            <StyledStandardCard fullHeight title={object?.location_title}>
-                                                <p>{object?.location_description}</p>
-                                                {object?.location_photo && (
-                                                    <StyledLocationPhoto
-                                                        src={object?.location_photo}
-                                                        alt={object?.location_photo_description}
-                                                    />
-                                                )}
-                                                {object?.facilities?.length > 0 && (
+                                        <StyledBookableSpaceGridItem item xs={12} md={9} key={key}>
+                                            <StyledStandardCard fullHeight title={bookableSpace?.location_title}>
+                                                {
                                                     <>
-                                                        <h3>Facilities</h3>
-                                                        <ul>
-                                                            {object?.facilities?.map(facility => {
-                                                                return <li>{facility.facilityTypeDisplayName}</li>;
-                                                            })}
-                                                        </ul>
+                                                        <p>{bookableSpace?.location_description}</p>
+                                                        {bookableSpace?.location_photo && (
+                                                            <StyledLocationPhoto
+                                                                src={bookableSpace?.location_photo}
+                                                                alt={bookableSpace?.location_photo_description}
+                                                            />
+                                                        )}
+                                                        {spaceFacilities(bookableSpace)}
+                                                        {spaceOpeningHours(bookableSpace)}
                                                     </>
-                                                )}
+                                                }
                                             </StyledStandardCard>
-                                        </Grid>
+                                        </StyledBookableSpaceGridItem>
                                     );
                                 });
                             }
@@ -103,6 +150,9 @@ SpacesLocationList.propTypes = {
     locationSpaceList: PropTypes.array,
     locationSpaceListLoading: PropTypes.bool,
     locationSpaceListError: PropTypes.any,
+    libHours: PropTypes.any,
+    libHoursLoading: PropTypes.bool,
+    libHoursError: PropTypes.any,
 };
 
 export default React.memo(SpacesLocationList);

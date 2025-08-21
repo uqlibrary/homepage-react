@@ -88,6 +88,10 @@ let responseType = !!queryString
     ? queryString.get('responseType')
     : window.location.hash.substring(window.location.hash.indexOf('?')).responseType;
 responseType = responseType || 'ok';
+let hoursResponseType = !!queryString
+    ? queryString.get('hoursResponseType')
+    : window.location.hash.substring(window.location.hash.indexOf('?')).hoursResponseType;
+hoursResponseType = hoursResponseType || 'ok';
 
 // set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
@@ -188,16 +192,17 @@ mock.onGet(routes.PRINTING_API().apiUrl)
         return [200, printBalance];
     });
 
-mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
-// mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
-//     if (responseType === 'error') {
-//         return [500, {}];
-//     } else if (responseType === 'missing') {
-//         return [404, {}];
-//     } else {
-//         return [200, libHours];
-//     }
-// });
+// mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
+mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
+    console.log('hoursResponseType=', hoursResponseType);
+    if (hoursResponseType === 'error') {
+        return [500, {}];
+    } else if (hoursResponseType === 'missing') {
+        return [404, {}];
+    } else {
+        return [200, libHours];
+    }
+});
 
 // mock cant tell the difference between POSSIBLE_RECORDS_API and INCOMPLETE_NTRO_RECORDS_API calls :(
 mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(() => {
