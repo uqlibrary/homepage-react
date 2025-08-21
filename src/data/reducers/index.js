@@ -1,4 +1,4 @@
-export { default as accountReducer } from './account';
+export { default as accountReducer } from './accountReducer';
 export { default as alertsReducer } from './alertsReducer';
 export { default as alertReducer } from './alertReducer';
 export { default as homeReducer } from './homeReducer';

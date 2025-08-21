@@ -1,5 +1,5 @@
 import * as actions from 'data/actions/actionTypes';
-import accountReducer, { initialState, initSavingState } from './account';
+import accountReducer, { initialState, initSavingState } from './accountReducer';
 
 describe('account reducer', () => {
     let emptyState;
