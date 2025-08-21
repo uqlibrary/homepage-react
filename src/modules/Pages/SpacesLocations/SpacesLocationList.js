@@ -105,16 +105,19 @@ export const SpacesLocationList = ({
                                         </StyledStandardCard>
                                     </StyledBookableSpaceGridItem>
                                 );
-                            } else if (!locationSpaceList || locationSpaceList.length === 0) {
+                            } else if (
+                                !locationSpaceList?.data?.locations ||
+                                locationSpaceList?.data?.locations.length === 0
+                            ) {
                                 return (
                                     <StyledBookableSpaceGridItem item xs={12} md={9}>
                                         <StyledStandardCard fullHeight>
-                                            <p>No locations found.</p>
+                                            <p>No locations found - please try again soon.</p>
                                         </StyledStandardCard>
                                     </StyledBookableSpaceGridItem>
                                 );
                             } else {
-                                return locationSpaceList.map(bookableSpace => {
+                                return locationSpaceList?.data?.locations.map(bookableSpace => {
                                     const key = `space-${bookableSpace?.location_id}`;
                                     return (
                                         <StyledBookableSpaceGridItem item xs={12} md={9} key={key}>
