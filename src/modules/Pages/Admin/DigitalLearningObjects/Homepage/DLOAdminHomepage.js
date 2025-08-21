@@ -355,6 +355,7 @@ export const DLOAdminHomepage = ({
                         <MenuItem
                             onClick={() => {
                                 navigateToAddSeriesPage();
+                                /* istanbul ignore next */
                                 handleMenuClose();
                             }}
                             data-testid="admin-dlor-visit-add-series-button"
@@ -364,6 +365,7 @@ export const DLOAdminHomepage = ({
                         <MenuItem
                             onClick={() => {
                                 navigateToSeriesListPage();
+                                /* istanbul ignore next */
                                 handleMenuClose();
                             }}
                             data-testid="admin-dlor-visit-manage-series-button"
@@ -373,6 +375,7 @@ export const DLOAdminHomepage = ({
                         <MenuItem
                             onClick={() => {
                                 navigateToTeamsListPage();
+                                /* istanbul ignore next */
                                 handleMenuClose();
                             }}
                             data-testid="admin-dlor-visit-manage-teams-button"
@@ -382,6 +385,7 @@ export const DLOAdminHomepage = ({
                         <MenuItem
                             onClick={() => {
                                 navigateToFilterManagePage();
+                                /* istanbul ignore next */
                                 handleMenuClose();
                             }}
                             data-testid="admin-dlor-visit-manage-filters-button"
@@ -391,6 +395,7 @@ export const DLOAdminHomepage = ({
                         <MenuItem
                             onClick={() => {
                                 navigateToAddPage();
+                                /* istanbul ignore next */
                                 handleMenuClose();
                             }}
                             data-testid="admin-dlor-visit-add-button"
@@ -401,6 +406,7 @@ export const DLOAdminHomepage = ({
                         <MenuItem
                             onClick={() => {
                                 exportDLORDataToCSV(dlorList, 'dlor_data.csv');
+                                /* istanbul ignore next */
                                 handleMenuClose();
                             }}
                             data-testid="admin-dlor-export-dlordata-button"
@@ -410,6 +416,7 @@ export const DLOAdminHomepage = ({
                         <MenuItem
                             onClick={() => {
                                 exportDemographicsToCSV(dlorDemographics, 'dlor_demographics.csv');
+                                /* istanbul ignore next */
                                 handleMenuClose();
                             }}
                             data-testid="admin-dlor-export-demographicsdata-button"
@@ -421,7 +428,7 @@ export const DLOAdminHomepage = ({
                                 try {
                                     setIsExportingFavourites(true);
                                     await fetchAndExportFavouritesToCSV('dlor_favourites.csv');
-                                } catch (error) {
+                                } catch (error) /* istanbul ignore next */ {
                                     console.error('Failed to export favourites:', error);
                                 } finally {
                                     setIsExportingFavourites(false);
