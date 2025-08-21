@@ -216,7 +216,7 @@ export const DLOAdminHomepage = ({
         setCheckedStatusType(newStatusTypeSet);
     };
 
-    const numberItemsPerPage = 10; // value also set in cypress dlorHomepage.spec
+    const numberItemsPerPage = 10; // value also set in playwright dlorHomepage.spec
 
     function keywordIsSearchable(keyword) {
         // don't filter on something terribly short

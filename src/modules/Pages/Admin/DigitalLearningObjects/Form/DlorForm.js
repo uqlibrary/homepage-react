@@ -266,7 +266,7 @@ export const DlorForm = ({
     //     }
     // }, [formDefaults]);
 
-    // these match the values in dlor cypress admin tests
+    // these match the values in dlor playwright admin tests
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
     const summaryMinimumLength = 20;
