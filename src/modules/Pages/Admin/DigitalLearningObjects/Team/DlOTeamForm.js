@@ -348,6 +348,9 @@ export const DLOTeamForm = ({
                                                                     <strong>Notifications</strong>
                                                                 </TableCell>
                                                                 <TableCell>
+                                                                    <strong>Overdue Notifications</strong>
+                                                                </TableCell>
+                                                                <TableCell>
                                                                     <strong>Date Added</strong>
                                                                 </TableCell>
                                                                 <TableCell>
@@ -378,6 +381,12 @@ export const DLOTeamForm = ({
                                                                                 <Checkbox
                                                                                     checked={editingMember.team_admin_receive_object_notifications}
                                                                                     onChange={e => setEditingMember({ ...editingMember, team_admin_receive_object_notifications: e.target.checked })}
+                                                                                />
+                                                                            </TableCell>
+                                                                            <TableCell>
+                                                                                <Checkbox
+                                                                                    checked={editingMember.team_admin_receive_overdue_notifications}
+                                                                                    onChange={e => setEditingMember({ ...editingMember, team_admin_receive_overdue_notifications: e.target.checked })}
                                                                                 />
                                                                             </TableCell>
                                                                             <TableCell>
@@ -413,6 +422,12 @@ export const DLOTeamForm = ({
                                                                             <TableCell>
                                                                                 <Checkbox
                                                                                     checked={member.team_admin_receive_object_notifications}
+                                                                                    disabled
+                                                                                />
+                                                                            </TableCell>
+                                                                            <TableCell>
+                                                                                <Checkbox
+                                                                                    checked={member.team_admin_receive_overdue_notifications}
                                                                                     disabled
                                                                                 />
                                                                             </TableCell>
