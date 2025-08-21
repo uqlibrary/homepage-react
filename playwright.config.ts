@@ -5,7 +5,7 @@ import { baseURL, istanbulReportPartialsDir } from './playwright/lib/constants';
 export default defineConfig({
     outputDir: 'playwright/.results',
     testDir: 'playwright/tests',
-    timeout: 120_000,
+    timeout: 60_000,
     expect: {
         timeout: 10_000,
     },
@@ -30,6 +30,7 @@ export default defineConfig({
         trace: 'retain-on-failure',
         headless: process.env.PW_HEADED === 'true' ? false : true,
         ignoreHTTPSErrors: true,
+        bypassCSP: true,
         launchOptions: {
             args: ['--disable-web-security', '--disable-ipv6'],
         },

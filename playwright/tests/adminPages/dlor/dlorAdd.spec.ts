@@ -83,7 +83,9 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await expect(page.locator('[data-testid="choose-notify"] input')).not.toBeVisible();
             });
 
-            test('validates fields correctly', async ({ page }) => {
+            test('validates fields correctly', async ({ page }, testInfo) => {
+                test.setTimeout(testInfo.timeout + 30_000);
+
                 // first enter all the fields and show the save button doesn't enable until all the fields are entered
 
                 // team starts off valid so click on to the second panel, description

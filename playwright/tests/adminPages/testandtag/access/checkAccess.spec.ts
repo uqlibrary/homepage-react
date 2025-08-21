@@ -1,6 +1,10 @@
 import { test, expect, Page } from '@uq/pw/test';
 
 test.describe('Test and Tag Dashboard Access', () => {
+    test.beforeEach(async ({}, testInfo) => {
+        test.setTimeout(testInfo.timeout + 30_000);
+    });
+
     const visitDashboardPage = async (page: Page, user: string) => {
         await page.goto(`/admin/testntag?user=${user}`);
     };
