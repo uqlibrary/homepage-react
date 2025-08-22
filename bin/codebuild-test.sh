@@ -5,6 +5,7 @@ export COMMIT_INFO_AUTHOR=$(git show ${CI_COMMIT_ID} --no-patch --pretty=format:
 export COMMIT_INFO_EMAIL=$(git show ${CI_COMMIT_ID} --no-patch --pretty=format:"%ae")
 export COMMIT_INFO_MESSAGE=$(git show ${CI_COMMIT_ID} --no-patch --pretty=format:"%B")
 export CI_BUILD_URL="https://ap-southeast-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/fez-frontend/executions/${CI_BUILD_NUMBER}"
+export PW_SHARD_COUNT=10
 
 echo
 echo "Commit Info:"
@@ -67,25 +68,30 @@ function install_pw_deps() {
 function run_pw_tests() {
     set -e
     local SHARD_INDEX="$1"
+    local SHARD_COUNT="$2"
 
-    printf "\n--- \e[1mRUNNING E2E TESTS GROUP #$SHARD_INDEX [STARTING AT $(date)] 2\e[0m ---\n"
+    printf "\n--- \e[1mRUNNING E2E TESTS GROUP #$PIPE_NUM [STARTING AT $(date)] 2\e[0m ---\n"
 
-    run_pw_test_shard "${SHARD_INDEX}"
-    SHARD_INDEX=$((SHARD_INDEX + 1))
-    run_pw_test_shard "${SHARD_INDEX}"
+    COUNTER=1
+    while [ ${COUNTER} -le "${SHARD_COUNT}" ]
+    do
+      run_pw_test_shard "${SHARD_INDEX}"
+      ((SHARD_INDEX++))
+      ((COUNTER++))
+    done
 
-    printf "\n--- [ENDED RUNNING E2E TESTS GROUP #$SHARD_INDEX AT $(date)] \n"
+    printf "\n--- [ENDED RUNNING E2E TESTS GROUP #$PIPE_NUM AT $(date)] \n"
 }
 
 function run_pw_test_shard() {
   local SHARD_INDEX="$1"
   if [[ $CODE_COVERAGE_REQUIRED != 1 ]]; then
-     npm run test:e2e -- --shard="$SHARD_INDEX/5"
+     npm run test:e2e -- --shard="$SHARD_INDEX/${PW_SHARD_COUNT}"
      return 0
   fi
 
   export PW_CC_REPORT_FILENAME="coverage-final-${SHARD_INDEX}.json"
-  npm run test:e2e:cc -- -- --shard="$SHARD_INDEX/5"
+  npm run test:e2e:cc -- -- --shard="$SHARD_INDEX/${PW_SHARD_COUNT}"
   fix_coverage_report_paths "coverage/playwright/${PW_CC_REPORT_FILENAME}"
 }
 
@@ -97,11 +103,13 @@ echo "start \n"
 case "$PIPE_NUM" in
 "1")
     install_pw_deps
-    run_pw_tests 1
+    # run shard 1 to 4
+    run_pw_tests 1 4
 ;;
 "2")
     install_pw_deps
-    run_pw_tests 3
+    # run shard 5 to 7
+    run_pw_tests 5 3
 ;;
 "3")
     printf "\n ### PIPELINE 3 ### \n\n"
@@ -124,7 +132,8 @@ case "$PIPE_NUM" in
     fi
 
     install_pw_deps
-    run_pw_test_shard 5
+    # run shard 8 to 10
+    run_pw_tests 8 2
 ;;
 *)
 ;;
