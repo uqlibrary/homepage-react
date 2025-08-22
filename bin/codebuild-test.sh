@@ -67,17 +67,15 @@ function install_pw_deps() {
 
 function run_pw_tests() {
     set -e
-    local SHARD_INDEX="$1"
-    local SHARD_COUNT="$2"
+    local OFFSET="$1"
+    local LIMIT="$2"
 
     printf "\n--- \e[1mRUNNING E2E TESTS GROUP #$PIPE_NUM [STARTING AT $(date)] 2\e[0m ---\n"
 
-    COUNTER=1
-    while [ ${COUNTER} -le "${SHARD_COUNT}" ]
+    while (( OFFSET <= LIMIT ))
     do
-      run_pw_test_shard "${SHARD_INDEX}"
-      ((SHARD_INDEX++))
-      ((COUNTER++))
+      run_pw_test_shard "${OFFSET}"
+      ((OFFSET++))
     done
 
     printf "\n--- [ENDED RUNNING E2E TESTS GROUP #$PIPE_NUM AT $(date)] \n"
@@ -103,13 +101,11 @@ echo "start \n"
 case "$PIPE_NUM" in
 "1")
     install_pw_deps
-    # run shard 1 to 4
-    run_pw_tests 1 4
+    run_pw_tests 1 3
 ;;
 "2")
     install_pw_deps
-    # run shard 5 to 7
-    run_pw_tests 5 3
+    run_pw_tests 4 7
 ;;
 "3")
     printf "\n ### PIPELINE 3 ### \n\n"
@@ -132,8 +128,7 @@ case "$PIPE_NUM" in
     fi
 
     install_pw_deps
-    # run shard 8 to 10
-    run_pw_tests 8 2
+    run_pw_tests 8 10
 ;;
 *)
 ;;
