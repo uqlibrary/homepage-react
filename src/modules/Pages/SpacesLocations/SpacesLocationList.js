@@ -48,7 +48,7 @@ export const SpacesLocationList = ({
         }
 
         const openingDetails = libHours?.locations?.find(openingHours => {
-            return openingHours.lid === bookableSpace.location_opening_hours_id;
+            return openingHours.lid === bookableSpace.space_opening_hours_id;
         });
         if (!openingDetails || (openingDetails?.currently_open !== false && openingDetails?.currently_open !== true)) {
             return null;
@@ -72,7 +72,7 @@ export const SpacesLocationList = ({
                     <ul>
                         {bookableSpace?.facilities?.map(facility => {
                             return (
-                                <li key={`facility-${bookableSpace?.location_id}-${facility.facilityTypeId}`}>
+                                <li key={`facility-${bookableSpace?.space_id}-${facility.facilityTypeId}`}>
                                     {facility.facilityTypeDisplayName}
                                 </li>
                             );
@@ -84,7 +84,7 @@ export const SpacesLocationList = ({
     }
 
     return (
-        <StandardPage title="Library bookable locations">
+        <StandardPage title="Library bookable spaces">
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
                     <Grid container spacing={3}>
@@ -118,17 +118,17 @@ export const SpacesLocationList = ({
                                 );
                             } else {
                                 return locationSpaceList?.data?.locations.map(bookableSpace => {
-                                    const key = `space-${bookableSpace?.location_id}`;
+                                    const key = `space-${bookableSpace?.space_id}`;
                                     return (
                                         <StyledBookableSpaceGridItem item xs={12} md={9} key={key}>
-                                            <StyledStandardCard fullHeight title={bookableSpace?.location_title}>
+                                            <StyledStandardCard fullHeight title={bookableSpace?.space_title}>
                                                 {
                                                     <>
-                                                        <p>{bookableSpace?.location_description}</p>
-                                                        {bookableSpace?.location_photo && (
+                                                        <p>{bookableSpace?.space_description}</p>
+                                                        {bookableSpace?.space_photo_url && (
                                                             <StyledLocationPhoto
-                                                                src={bookableSpace?.location_photo}
-                                                                alt={bookableSpace?.location_photo_description}
+                                                                src={bookableSpace?.space_photo_url}
+                                                                alt={bookableSpace?.space_photo_description}
                                                             />
                                                         )}
                                                         {spaceFacilities(bookableSpace)}

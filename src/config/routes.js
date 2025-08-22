@@ -2,7 +2,6 @@ import React from 'react';
 import { locale } from 'locale';
 import { canSeeLearningResourcesPage, isAlertsAdminUser, isDlorAdminUser, isTestTagUser } from 'helpers/access';
 import { pathConfig } from './pathConfig';
-import { LocationSpaceList } from '../modules/App/components/pages';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
 
