@@ -64,21 +64,31 @@ function install_pw_deps() {
     printf "\n--- \e[ENDED INSTALLING PW DEPS AT $(date)] 1\e[0m ---\n"
 }
 
-function run_pw_test_shard() {
+function run_pw_tests() {
     set -e
 
+    local SHARD_INDEX="$1"
     install_pw_deps
 
-    local SHARD_INDEX="$1"
-    export PW_CC_REPORT_FILENAME="coverage-final-${SHARD_INDEX}.json"
     printf "\n--- \e[1mRUNNING E2E TESTS GROUP #$SHARD_INDEX [STARTING AT $(date)] 2\e[0m ---\n"
-    if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
-        npm run test:e2e:cc -- -- --shard="$SHARD_INDEX/2"
-        fix_coverage_report_paths "coverage/playwright/${PW_CC_REPORT_FILENAME}"
-    else
-        npm run test:e2e -- --shard="$SHARD_INDEX/2"
-    fi
+
+    run_pw_test_shard "${SHARD_INDEX}"
+    SHARD_INDEX=$((SHARD_INDEX + 1))
+    run_pw_test_shard "${SHARD_INDEX}"
+
     printf "\n--- [ENDED RUNNING E2E TESTS GROUP #$SHARD_INDEX AT $(date)] \n"
+}
+
+function run_pw_test_shard() {
+  local SHARD_INDEX="$1"
+  if [[ $CODE_COVERAGE_REQUIRED != 1 ]]; then
+     npm run test:e2e -- --shard="$SHARD_INDEX/5"
+     return 0
+  fi
+
+  export PW_CC_REPORT_FILENAME="coverage-final-${SHARD_INDEX}.json"
+  npm run test:e2e:cc -- -- --shard="$SHARD_INDEX/5"
+  fix_coverage_report_paths "coverage/playwright/${PW_CC_REPORT_FILENAME}"
 }
 
 echo "pwd "
@@ -88,10 +98,10 @@ echo "start \n"
 
 case "$PIPE_NUM" in
 "1")
-    run_pw_test_shard "$PIPE_NUM"
+    run_pw_tests 1
 ;;
 "2")
-    run_pw_test_shard "$PIPE_NUM"
+    run_pw_tests 3
 ;;
 "3")
     printf "\n ### PIPELINE 3 ### \n\n"
@@ -112,6 +122,8 @@ case "$PIPE_NUM" in
     else
         npm run test:unit:ci:nocoverage
     fi
+
+    run_pw_test_shard 5
 ;;
 *)
 ;;
