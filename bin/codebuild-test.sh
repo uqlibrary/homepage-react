@@ -67,30 +67,32 @@ function install_pw_deps() {
 
 function run_pw_tests() {
     set -e
-    local OFFSET="$1"
+    export PW_SHARD_INDEX="$1"
     local LIMIT="$2"
 
     printf "\n--- \e[1mRUNNING E2E TESTS GROUP #$PIPE_NUM [STARTING AT $(date)] 2\e[0m ---\n"
 
-    while (( OFFSET <= LIMIT ))
+    while (( PW_SHARD_INDEX <= LIMIT ))
     do
-      run_pw_test_shard "${OFFSET}"
-      ((OFFSET++))
+        if (( PW_SHARD_INDEX == LIMIT )); then
+            export PW_IS_LAST_SHARD=true
+        fi
+        run_pw_test_shard "${PW_SHARD_INDEX}"
+        ((PW_SHARD_INDEX++))
     done
 
     printf "\n--- [ENDED RUNNING E2E TESTS GROUP #$PIPE_NUM AT $(date)] \n"
 }
 
 function run_pw_test_shard() {
-  local SHARD_INDEX="$1"
-  if [[ $CODE_COVERAGE_REQUIRED != 1 ]]; then
-     npm run test:e2e -- --shard="$SHARD_INDEX/${PW_SHARD_COUNT}"
-     return 0
-  fi
+    local SHARD_INDEX="${1-PW_SHARD_INDEX}"
+    if [[ $CODE_COVERAGE_REQUIRED != 1 ]]; then
+        npm run test:e2e -- --shard="${SHARD_INDEX}/${PW_SHARD_COUNT}"
+        return 0
+    fi
 
-  export PW_CC_REPORT_FILENAME="coverage-final-${SHARD_INDEX}.json"
-  npm run test:e2e:cc -- -- --shard="$SHARD_INDEX/${PW_SHARD_COUNT}"
-  fix_coverage_report_paths "coverage/playwright/${PW_CC_REPORT_FILENAME}"
+    npm run test:e2e:cc -- -- --shard="${SHARD_INDEX}/${PW_SHARD_COUNT}"
+    fix_coverage_report_paths "coverage/playwright/coverage-final.json"
 }
 
 echo "pwd "

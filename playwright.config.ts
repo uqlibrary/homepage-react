@@ -17,7 +17,7 @@ export default defineConfig({
     reporter: [
         ['list'],
         [
-            './playwright/lib/coverage/istanbul/Reporter.ts',
+            './playwright/lib/coverage/istanbul/ReportMerger.ts',
             {
                 outputDir: 'coverage/playwright',
                 jsonPartialsDir: istanbulReportPartialsDir,
