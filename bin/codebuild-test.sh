@@ -77,7 +77,15 @@ function run_pw_tests() {
         if (( PW_SHARD_INDEX == LIMIT )); then
             export PW_IS_LAST_SHARD=true
         fi
+
         run_pw_test_shard "${PW_SHARD_INDEX}"
+
+        if (( PW_SHARD_INDEX == LIMIT )); then
+            # since we have set PW_IS_LAST_SHARD=true above,
+            # the cc report merger will take action and produce the file below
+            fix_coverage_report_paths "coverage/playwright/coverage-final.json"
+        fi
+
         ((PW_SHARD_INDEX++))
     done
 
@@ -92,7 +100,6 @@ function run_pw_test_shard() {
     fi
 
     npm run test:e2e:cc -- -- --shard="${SHARD_INDEX}/${PW_SHARD_COUNT}"
-    fix_coverage_report_paths "coverage/playwright/coverage-final.json"
 }
 
 echo "pwd "
