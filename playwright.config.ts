@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import { Config as IstanbulMergerConfig } from './playwright/lib/coverage/istanbul/Reporter';
+import { Config as IstanbulMergerConfig } from './playwright/lib/coverage/istanbul/ReportMerger';
 import { baseURL, istanbulReportPartialsDir } from './playwright/lib/constants';
 
 export default defineConfig({
