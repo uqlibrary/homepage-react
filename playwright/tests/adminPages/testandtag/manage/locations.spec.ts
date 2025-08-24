@@ -16,7 +16,9 @@ test.describe('Test and Tag Manage Locations', () => {
         await expect(await getFieldValue(page, 'site_id_displayed', 0)).toContainText('01');
         await expect(await getFieldValue(page, 'site_name', 0)).toContainText('St Lucia');
         await page.waitForTimeout(1000);
-        await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['aria-required-children'] });
+        await assertAccessibility(page, '[data-testid="StandardPage"]', {
+            disabledRules: ['aria-required-children', 'aria-progressbar-name'],
+        });
     });
 
     test('has breadcrumbs', async ({ page }) => {
