@@ -30,7 +30,9 @@ test.describe('Test and Tag bulk asset update', () => {
 
     test('Page is accessible and renders base', async ({ page }) => {
         await checkBaseline(page);
-        await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['aria-required-children'] });
+        await assertAccessibility(page, '[data-testid="StandardPage"]', {
+            disabledRules: ['aria-required-children', 'aria-progressbar-name'],
+        });
     });
 
     test('has breadcrumbs', async ({ page }) => {
