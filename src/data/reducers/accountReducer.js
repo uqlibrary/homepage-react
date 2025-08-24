@@ -92,6 +92,27 @@ const handlers = {
         isSessionExpired: null,
     }),
 
+    [actions.LIB_HOURS_LOADING]: state => ({
+        ...state,
+        libHours: null,
+        libHoursLoading: true,
+        libHoursError: false,
+    }),
+
+    [actions.LIB_HOURS_LOADED]: (state, action) => ({
+        ...state,
+        libHours: action.payload,
+        libHoursLoading: false,
+        libHoursError: false,
+    }),
+
+    [actions.LIB_HOURS_FAILED]: state => ({
+        ...state,
+        libHours: null,
+        libHoursLoading: false,
+        libHoursError: true,
+    }),
+
     [actions.VEMCOUNT_LOADING]: state => ({
         ...state,
         vemcount: null,
