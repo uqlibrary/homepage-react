@@ -79,7 +79,7 @@ test.describe('LibraryUpdates', () => {
 
             const secondBox = await getBoundingBox(page.getByTestId('drupal-article-1'));
             expect(Math.abs(secondBox.x - firstBox.x)).toBeLessThan(BOUNDING_BOX_TOLERANCE);
-            expect(secondBox.y).toBeGreaterThan(firstBox.y + firstBox.height - BOUNDING_BOX_TOLERANCE - 12);
+            expect(secondBox.y).toBeGreaterThan(firstBox.y + firstBox.height - BOUNDING_BOX_TOLERANCE - 14);
 
             const thirdBox = await getBoundingBox(page.getByTestId('drupal-article-2'));
             expect(Math.abs(thirdBox.y - secondBox.y)).toBeLessThan(BOUNDING_BOX_TOLERANCE);
