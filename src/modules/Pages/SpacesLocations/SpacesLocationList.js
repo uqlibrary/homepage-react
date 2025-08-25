@@ -213,9 +213,13 @@ export const SpacesLocationList = ({
                                     const locationKey = `space-${bookableSpace?.space_id}`;
                                     return (
                                         <StyledBookableSpaceGridItem item xs={12} md={9} key={locationKey}>
-                                            <StyledStandardCard fullHeight title={bookableSpace?.space_title}>
+                                            <StyledStandardCard
+                                                fullHeight
+                                                title={`${bookableSpace?.space_title} - ${bookableSpace?.space_type}`}
+                                            >
                                                 {
                                                     <>
+                                                        <p>{bookableSpace?.space_precise}</p>
                                                         <p>{bookableSpace?.space_description}</p>
                                                         {bookableSpace?.space_photo_url && (
                                                             <StyledLocationPhoto
