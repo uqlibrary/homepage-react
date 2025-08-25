@@ -1,9 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
 import { Config as IstanbulMergerConfig } from './playwright/lib/coverage/istanbul/ReportMerger';
 import { baseURL, istanbulReportPartialsDir } from './playwright/lib/constants';
+import * as process from 'node:process';
 
 export default defineConfig({
-    outputDir: 'playwright/.results',
+    outputDir: `playwright/.results/${process.env.PW_SHARD_INDEX || ''}`,
     testDir: 'playwright/tests',
     timeout: process.env.CI_BRANCH ? 90_000 : 60_000,
     expect: {
