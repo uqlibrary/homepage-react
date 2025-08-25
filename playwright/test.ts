@@ -7,12 +7,24 @@ export * from '@playwright/test';
 let test = base;
 
 test = test.extend({
-    // mock external API calls
+    // mock API calls
     page: async ({ page }, use) => {
-        await page.route('https://www.googletagmanager.com/gtm.js?id=*', route => {
+        await page.route('https://www.googletagmanager.com/gtm.js?id=**', route => {
             route.fulfill({
                 status: 204,
                 body: '',
+            });
+        });
+        await page.route('https://**.sentry.io/**', route => {
+            route.fulfill({
+                status: 200,
+                body: '{}',
+            });
+        });
+        await page.route(' https://api.library.uq.edu.au/**', route => {
+            route.fulfill({
+                status: 200,
+                body: '{}',
             });
         });
         // next
