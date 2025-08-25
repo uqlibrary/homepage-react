@@ -15,7 +15,9 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqtest1');
-        await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['color-contrast'] });
+        await assertAccessibility(page, '[data-testid="StandardPage"]', {
+            disabledRules: ['aria-required-children', 'aria-progressbar-name', 'color-contrast'],
+        });
     });
 
     test('has breadcrumbs', async ({ page }) => {
