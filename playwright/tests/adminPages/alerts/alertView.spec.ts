@@ -1,6 +1,6 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { clickButton, dateHasValue } from '@uq/pw/lib/helpers';
+import { dateHasValue } from '@uq/pw/lib/helpers';
 
 test.describe('Alerts Admin View Page', () => {
     test.beforeEach(async ({ page }) => {
@@ -62,14 +62,14 @@ test.describe('Alerts Admin View Page', () => {
         await expect(page.locator('[data-testid="admin-alerts-view-title"] input')).toHaveValue('Example alert:');
         await expect(page.getByTestId('admin-alerts-view-button-block').locator(':scope > *')).toHaveCount(2);
 
-        await clickButton(page, 'button[data-testid="admin-alerts-view-button-cancel"]', 'Cancel');
+        await page.locator('button[data-testid="admin-alerts-view-button-cancel"]').click();
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts');
     });
     test('can visit the clone page from the view page', async ({ page }) => {
         await expect(page.locator('[data-testid="admin-alerts-view-title"] input')).toHaveValue('Example alert:');
         await expect(page.getByTestId('admin-alerts-view-button-block').locator(':scope > *')).toHaveCount(2);
 
-        await clickButton(page, 'button[data-testid="admin-alerts-view-button-save"]', 'Clone');
+        await page.locator('button[data-testid="admin-alerts-view-button-save"]').click();
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245');
     });
     test('can show a preview of an urgent-priority permanent alert with link', async ({ page }) => {

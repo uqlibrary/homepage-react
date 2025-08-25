@@ -1,6 +1,6 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { hasAWorkingHelpButton, clickButton, clickSVGButton } from '@uq/pw/lib/helpers';
+import { hasAWorkingHelpButton } from '@uq/pw/lib/helpers';
 
 test.describe('Alert Admin List page', () => {
     const numRowsHiddenAsNoDataInfo = 1;
@@ -115,11 +115,7 @@ test.describe('Alert Admin List page', () => {
     });
 
     test('has a working Edit button on the List page', async ({ page }) => {
-        await clickButton(
-            page,
-            'button[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]',
-            'Edit',
-        );
+        await page.locator('button[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]').click();
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245');
     });
 
@@ -127,11 +123,7 @@ test.describe('Alert Admin List page', () => {
         await page
             .locator('button[data-testid="alert-list-item-edit-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]')
             .scrollIntoViewIfNeeded();
-        await clickButton(
-            page,
-            'button[data-testid="alert-list-item-edit-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]',
-            'Edit',
-        );
+        await page.locator('button[data-testid="alert-list-item-edit-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').click();
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts/edit/0aa12a30-996a-11eb-b009-3f6ded4fdb35');
         await expect(page.getByTestId('StandardPage').first()).toBeInViewport();
     });
@@ -199,10 +191,11 @@ test.describe('Alert Admin List page', () => {
                 .locator(':scope > *'),
         ).toHaveCount(1);
         // open the split button
-        await clickSVGButton(
-            page,
-            '[data-testid="alert-list-action-block-1db618c0-d897-11eb-a27e-df4e46db7245"] button:nth-of-type(2)',
-        );
+        await page
+            .locator(
+                '[data-testid="alert-list-action-block-1db618c0-d897-11eb-a27e-df4e46db7245"] button:nth-of-type(2)',
+            )
+            .click();
         await expect(
             page
                 .getByTestId('alert-list-arrowicon-1db618c0-d897-11eb-a27e-df4e46db7245')

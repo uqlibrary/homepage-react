@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { hasAWorkingHelpButton, clickButton, clickSVGButton, dateHasValue } from '@uq/pw/lib/helpers';
+import { hasAWorkingHelpButton, dateHasValue } from '@uq/pw/lib/helpers';
 
 async function selectPriorityType(page: Page, type: string) {
     // open the select
@@ -36,11 +36,11 @@ test.describe('Alerts Admin Form Pages', () => {
         }
 
         async function clickMinusButton(page: Page, buttonId: string) {
-            await clickSVGButton(page, '[data-testid="admin-alerts-form-remove-date-button-' + buttonId + '"]');
+            await page.getByTestId('admin-alerts-form-remove-date-button-' + buttonId).click();
         }
 
         async function clickPlusButton(page: Page, buttonId: string) {
-            await clickSVGButton(page, '[data-testid="admin-alerts-form-another-date-button-' + buttonId + '"]');
+            await page.getByTestId('admin-alerts-form-another-date-button-' + buttonId).click();
         }
 
         test('the "remove a date set button" works', async ({ page }) => {
@@ -297,7 +297,7 @@ test.describe('Alerts Admin Form Pages', () => {
             );
             await page.setViewportSize({ width: 1300, height: 1000 });
             // the ok button on the error returns to the list page
-            await clickButton(page, 'button[data-testid="confirm-alert-error"]');
+            await page.locator('button[data-testid="confirm-alert-error"]').click();
             await expect(page).toHaveURL('http://localhost:2020/admin/alerts');
             await expect(page.locator('button[data-testid="confirm-alert-error"]')).not.toBeVisible();
         });
@@ -464,16 +464,16 @@ test.describe('Alerts Admin Form Pages', () => {
         test('can show a preview of the original alert', async ({ page }) => {
             await expect(page.getByTestId('admin-alerts-form-checkbox-linkrequired')).toBeVisible();
             await expect(page.locator('uq-alert[id="alert-preview"]')).not.toBeVisible();
-            await clickButton(page, '[data-testid="admin-alerts-form-button-preview"]', 'Preview'); // show preview
+            await page.getByTestId('admin-alerts-form-button-preview').click(); // show preview
             await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alerttitle', 'Example alert:');
             await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('prioritytype', 'urgent');
             await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute(
                 'alertmessage',
                 'This alert can be edited in mock.[UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
             );
-            await clickButton(page, '[data-testid="admin-alerts-form-button-preview"]', 'Preview'); // hide preview
+            await page.getByTestId('admin-alerts-form-button-preview').click(); // hide preview
             await expect(page.locator('uq-alert[id="alert-preview"]')).not.toBeVisible();
-            await clickButton(page, '[data-testid="admin-alerts-form-button-preview"]', 'Preview'); // show preview
+            await page.getByTestId('admin-alerts-form-button-preview').click(); // show preview
             await expect(page.locator('uq-alert[id="alert-preview"]')).toBeVisible();
         });
         test('tells the user which systems the alert will appear on', async ({ page }) => {
@@ -591,7 +591,7 @@ test.describe('Alerts Admin Form Pages', () => {
         });
 
         async function clickPlusButton(page: Page, buttonId: string) {
-            await clickSVGButton(page, '[data-testid="admin-alerts-form-another-date-button-' + buttonId + '"]');
+            await page.getByTestId('admin-alerts-form-another-date-button-' + buttonId).click();
         }
 
         test('the "add a date set button" works', async ({ page }) => {
@@ -607,10 +607,10 @@ test.describe('Alerts Admin Form Pages', () => {
             await expect(page.getByTestId('admin-alerts-form-another-date-button-0')).not.toBeVisible();
             await expect(page.getByTestId('admin-alerts-form-another-date-button-1')).not.toBeVisible();
             await expect(page.getByTestId('admin-alerts-form-another-date-button-2')).toBeVisible();
-            await clickButton(page, 'button[data-testid="admin-alerts-form-button-save"]', 'Create');
+            await page.locator('button[data-testid="admin-alerts-form-button-save"]').click();
             await expect(page.getByTestId('confirm-alert-clone-save-succeeded')).toBeVisible();
 
-            await clickButton(page, '[data-testid="confirm-alert-clone-save-succeeded"]', 'Clone again');
+            await page.getByTestId('confirm-alert-clone-save-succeeded').click();
             await expect(page.locator('[data-testid="admin-alerts-form-start-date-0"] input')).toBeVisible();
             await expect(page.locator('[data-testid="admin-alerts-form-end-date-0"] input')).toBeVisible();
             await clickPlusButton(page, '0');
@@ -619,7 +619,7 @@ test.describe('Alerts Admin Form Pages', () => {
             await expect(page.getByTestId('admin-alerts-form-another-date-button-0')).not.toBeVisible();
             await expect(page.getByTestId('admin-alerts-form-another-date-button-1')).toBeVisible();
 
-            await clickButton(page, 'button[data-testid="admin-alerts-form-button-save"]', 'Create');
+            await page.locator('button[data-testid="admin-alerts-form-button-save"]').click();
             await expect(page.getByTestId('confirm-alert-clone-save-succeeded')).toBeVisible();
         });
 
