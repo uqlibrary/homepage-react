@@ -560,7 +560,7 @@ test.describe('Digital Learning Hub', () => {
                 /Mui-selected/,
             );
 
-            expect(async () => {
+            await expect(async () => {
                 // click reset
                 await page.getByTestId('sidebar-filter-reset-button').click({
                     force: true,
