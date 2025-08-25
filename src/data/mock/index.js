@@ -391,7 +391,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
             return getSpecificDlorObject(dlorId);
         }
     })
-    .onGet(/dlor\/admin\/team\/.*/)
+    .onGet(/dlor\/auth\/team\/.*/)
     .reply(config => {
         const urlparts = config.url.split('/').pop();
         const teamId = urlparts.split('?')[0];
@@ -417,7 +417,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
             return getSpecificDlorObject(dlorId);
         }
     })
-    .onGet('dlor/public/list/full')
+    .onGet(/dlor\/(admin|public)\/list\/full/)
     .reply(() => {
         if (responseType === 'fullListError') {
             return [500, {}];
@@ -490,7 +490,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
             ];
         }
     })
-    .onPut(/dlor\/admin\/team\/.*/)
+    .onPut(/dlor\/auth\/team\/.*/)
     .reply(config => {
         const urlparts = config.url.split('/').pop();
         const teamId = urlparts.split('?')[0];
@@ -806,7 +806,19 @@ mock.onGet(/dlor\/public\/find\/.*/)
     })
     .onPost(/dlor\/admin\/object\/notes\/.*/)
     .reply(() => {
-        return [200, dlor_admin_notes];
+        return[200, dlor_admin_notes];
+    })
+    .onPost(/dlor\/auth\/teammember/)
+    .reply(() => {
+        return [200, { data: [] }];
+    })
+    .onPut(/dlor\/auth\/teammember\/\d+/)
+    .reply(() => {
+        return [200, { data: { success: true } }];
+    })
+    .onDelete(/dlor\/auth\/teammember\/\d+/)
+    .reply(() => {
+        return [200, { data: { success: true } }];
     });
 
 mock.onGet('exams/course/FREN1010/summary')

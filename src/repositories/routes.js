@@ -239,8 +239,10 @@ export const DLOR_OWNED_UPDATE_API = id => ({ apiUrl: `dlor/auth/object/${id}` }
 
 export const DLOR_DESTROY_API = ({ id }) => ({ apiUrl: `dlor/admin/object/${id}` });
 export const DLOR_TEAM_DELETE_API = id => ({ apiUrl: `dlor/admin/team/${id}` });
-export const DLOR_TEAM_SINGLE_GET_API = ({ id }) => ({ apiUrl: `dlor/admin/team/${id}` });
-export const DLOR_TEAM_UPDATE_API = id => ({ apiUrl: `dlor/admin/team/${id}` });
+export const DLOR_TEAM_SINGLE_GET_API = ({ id }) => ({ apiUrl: `dlor/auth/team/${id}` });
+
+export const DLOR_ADMIN_TEAM_UPDATE_API = id => ({ apiUrl: `dlor/auth/team/${id}` });
+
 export const DLOR_TEAM_CREATE_API = () => ({ apiUrl: 'dlor/admin/team' });
 export const DLOR_FILE_TYPE_LIST_API = () => ({ apiUrl: 'dlor/admin/file_types/list' });
 export const DLOR_SERIES_DELETE_API = id => ({ apiUrl: `dlor/admin/series/${id}` });
@@ -255,6 +257,10 @@ export const DLOR_DELETE_FACET_API = id => ({ apiUrl: `dlor/admin/facet/${id}` }
 export const DLOR_DEMOGRAPHICS_REPORT_API = () => ({ apiUrl: 'dlor/admin/demographics/all' });
 export const DLOR_FAVOURITES_REPORT_API = () => ({ apiUrl: 'dlor/admin/favourites' });
 export const DLOR_ADMIN_NOTES_API = uuid => ({ apiUrl: `dlor/admin/object/notes/${uuid}` });
+
+export const DLOR_CREATE_TEAM_ADMIN_API = () => ({apiUrl: `dlor/auth/teammember`});
+export const DLOR_EDIT_TEAM_ADMIN_API = id => ({apiUrl: `dlor/auth/teammember/${id}`});
+export const DLOR_DELETE_TEAM_ADMIN_API = id => ({apiUrl: `dlor/auth/teammember/${id}`});
 
 const productionRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage';
 const stagingRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage';

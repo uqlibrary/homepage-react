@@ -14,6 +14,7 @@ import {
     getSecondsFromTotalSeconds,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
+import { useAccountContext } from 'context';
 
 export const DLOEdit = ({
     actions,
@@ -34,6 +35,7 @@ export const DLOEdit = ({
     dlorAdminNotesLoadError,
     dlorAdminNotes,
 }) => {
+    const { account } = useAccountContext();
     const { dlorId } = useParams();
 
     React.useEffect(() => {
@@ -111,7 +113,6 @@ export const DLOEdit = ({
         object_cultural_advice: dlorItem?.object_cultural_advice,
         notificationText: '',
     };
-
     return (
         <Fragment>
             <StandardPage title="Digital Learning Hub - Edit Object">
@@ -125,6 +126,7 @@ export const DLOEdit = ({
                 />
                 <section aria-live="assertive">
                     <DlorForm
+                        account={account}
                         actions={actions}
                         dlorItemSaving={dlorItemUpdating}
                         dlorSavedItemError={dlorUpdatedItemError}

@@ -227,5 +227,93 @@ describe('Digital Learning Hub admin Edit Team', () => {
             cy.get('h1').should('be.visible');
             cy.get('h1').should('contain', 'Digital Learning Hub - Edit Team');
         });
+        // Team list page for team MEMBERS - accessible, shows item list, but no team editing.
+        it('allows team members to view the team edit page, but not edit', () => {
+            cy.visit(`http://localhost:2020/digital-learning-hub/team/manage?user=uqstaff`);
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').should('contain', 'Digital Learning Hub - Team management');
+            cy.get('[data-testid="admin-dlor-team-form-save-button"]')
+                .should('not.exist');
+        });
+        it('disallows non-team members trying to view the team edit page', () => {
+            cy.visit(`http://localhost:2020/digital-learning-hub/team/manage?user=s1111111`);
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').should('contain', 'Digital Learning Hub - Team management');
+            cy.get('[data-testid="admin-dlor-team-form-save-button"]')
+                .should('not.exist');
+            cy.get('[data-testid="dlor-teamlist-no-access"]').should('exist');
+        });
     });
+    context('team admin functionality', () => {
+        it('has a team admin menu - object request', () => {
+            cy.visit('http://localhost:2020/digital-learning-hub?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-dlor-team-admin-menu-button"]')
+                .should('exist')
+                .should('be.visible')
+                .click();
+            cy.get('[data-testid="team-admin-submit-object-request"]')
+                .should('exist')
+                .should('be.visible')
+                .contains('Submit new object request');
+            cy.get('[data-testid="team-admin-details--button"]')
+                .should('exist')
+                .should('be.visible')
+                .contains('My team(s) details');
+            cy.get('[data-testid="team-admin-submit-object-request"]')
+                .click();
+            cy.get('[data-testid="StandardPage-title"]').should('exist')
+                .should('be.visible')
+                .contains('Digital Learning Hub Management');
+            cy.get('[data-testid="dlor-breadcrumb-create-an-object-for-the-digital-learning-hub-label-0"]')
+                .should('exist')
+                .should('be.visible')
+                .contains('Create an Object for the Digital Learning Hub');
+        })
+        it('has a team admin menu - team management', () => {
+            cy.visit('http://localhost:2020/digital-learning-hub?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-dlor-team-admin-menu-button"]')
+                .should('exist')
+                .should('be.visible')
+                .click();
+            cy.get('[data-testid="team-admin-details--button"]')
+                .should('exist')
+                .should('be.visible')
+                .contains('My team(s) details')
+                .click();
+            
+            cy.get('[data-testid="StandardPage-title"]').should('exist')
+            cy.wait(2000)
+            cy.get('[data-testid="dlor-detailpage-sitelabel"]').should('be.visible')
+                .contains('Team management');
+            cy.get('[data-testid="dlor-teamlist-edit-1"]')
+                .should('exist')
+                .should('be.visible')
+                .click();
+            
+           
+            cy.get('[data-testid="dlor-breadcrumb-edit-team-label-1"]').should('be.visible')
+                .contains('Edit team: LIB DX Digital Content');
+        })
+        it('has a team admin menu - object export', () => {
+            cy.visit('http://localhost:2020/digital-learning-hub?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-dlor-team-admin-menu-button"]')
+                .should('exist')
+                .should('be.visible')
+                .click();
+            cy.window().then(win => {
+                cy.stub(win.URL, 'createObjectURL').as('createObjectURL');
+            });
+
+            cy.get('[data-testid="admin-dlor-export-team-objects--button"]').click();
+
+            // Verify that the URL.createObjectURL method was called
+            cy.get('@createObjectURL').should('be.called');
+        })
+    })
+
 });

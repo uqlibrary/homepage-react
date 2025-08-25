@@ -27,6 +27,8 @@ import { Button, FormControl, Input, InputLabel, Modal } from '@mui/material';
 import { set } from 'js-cookie';
 import { setIn } from 'immutable';
 
+import { useAccountContext } from 'context';
+
 
 export const DLOFilterManage = ({
     actions,
@@ -34,7 +36,7 @@ export const DLOFilterManage = ({
     dlorFilterListError,
     dlorFilterList,
 }) => {
-
+    const { account } = useAccountContext();
     console.log("actions", actions)
     useEffect(() => {
         console.log(dlorFilterList, dlorFilterListLoading, dlorFilterListError);

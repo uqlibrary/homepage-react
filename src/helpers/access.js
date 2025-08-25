@@ -200,6 +200,30 @@ export const isDlorAdminUser = account =>
 export const isDlorOwner = (account, object) =>
     isLoggedInUser(account) && object?.owner?.publishing_user_username === account.id;
 
+export const isInDLOROwningTeam = (account, dlorItem, dlorTeamList) => {
+    console.log('isInDLOROwningTeam: account=', account, ' dlorItem=', dlorItem, ' dlorTeamList=', dlorTeamList);
+    if (!account?.id || !dlorItem?.object_owning_team_id || !Array.isArray(dlorTeamList)) return false;
+    const owningTeam = dlorTeamList.find(t => t.team_id === dlorItem.object_owning_team_id);
+    return (
+        owningTeam &&
+        Array.isArray(owningTeam.team_members) &&
+        owningTeam.team_members.some(member => member.team_admin_username === account.id)
+    );
+};
+
+export const isADlorTeamMember = (account, dlorTeamList) => {
+    console.log('isADlorTeamMember: account=', account, ' dlorTeamList=', dlorTeamList);
+    for (const team of dlorTeamList) {
+        if (team.team_members && team.team_members.length > 0) {
+            if (team.team_members.some(member => member.team_admin_username === account?.id)) {
+                return true;
+            }
+        }
+    }
+
+  return false;
+};
+
 export const isHospitalUser = account =>
     isLoggedInUser(account) && !!account.user_group && account.user_group === EXTRAMURAL_HOSPITAL;
 

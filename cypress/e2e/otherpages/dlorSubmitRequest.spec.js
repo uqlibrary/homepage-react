@@ -25,7 +25,8 @@ describe('Request an object addition to the Digital Learning Hub', () => {
                 cy.get('[data-testid="dlor-homepage-request-new-item"]').contains('Submit new object request').click();
                 cy.get('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                     .contains('Digital Learning Hub')
-                    .should('have.attr', 'href', `/digital-learning-hub`);
+                    .should('have.attr', 'href')
+                    .and('contain', '/digital-learning-hub');
                 cy.get(
                     '[data-testid="dlor-breadcrumb-create-an-object-for-the-digital-learning-hub-label-0"]',
                 ).contains('Create an Object for the Digital Learning Hub');
@@ -96,7 +97,8 @@ describe('Request an object addition to the Digital Learning Hub', () => {
             it('loads as expected', () => {
                 cy.get('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                     .contains('Digital Learning Hub')
-                    .should('have.attr', 'href', `/digital-learning-hub`);
+                    .should('have.attr', 'href')
+                    .and('contain', '/digital-learning-hub');
                 cy.get(
                     '[data-testid="dlor-breadcrumb-create-an-object-for-the-digital-learning-hub-label-0"]',
                 ).contains('Create an Object for the Digital Learning Hub');

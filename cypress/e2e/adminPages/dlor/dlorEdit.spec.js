@@ -1,5 +1,5 @@
 // these constants must match the constants, eg titleMinimumLength in Dlor Admin components
-import { DLOR_ADMIN_USER } from '../../../support/constants';
+import { DLOR_ADMIN_USER, DLOR_OBJECT_OWNER, DLOR_NO_EDIT_USER } from '../../../support/constants';
 import moment from 'moment-timezone';
 const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
@@ -1407,10 +1407,25 @@ describe('Edit an object on the Digital Learning Hub', () => {
             cy.get('h1').contains('Permission denied');
         });
         it('displays correct page for admin users (list)', () => {
-            cy.visit(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
+            cy.visit(`http://localhost:2020/digital-learning-hub/edit/kj5t_8yg4_kj4f?user=${DLOR_ADMIN_USER}`);
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
             cy.get('h1').should('contain', 'Digital Learning Hub - Edit Object');
+            cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]').should('exist').should('contain', 'UQ has a Blak History');
+        });
+        it('is accessible for a DLOR object owner', () => {
+            cy.visit(`http://localhost:2020/digital-learning-hub/edit/kj5t_8yg4_kj4f?user=${DLOR_OBJECT_OWNER}`);
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').should('contain', 'Digital Learning Hub - Edit Object');
+            cy.get('[data-testid="dlor-form-no-access"]').should('not.exist');
+            cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]').should('exist').should('contain', 'UQ has a Blak History');
+        });
+        it('is not accessible for a DLOR object owner with a different user', () => {
+            cy.visit(`http://localhost:2020/digital-learning-hub/edit/kj5t_8yg4_kj4f?user=${DLOR_NO_EDIT_USER}`);
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('[data-testid="dlor-form-no-access"]').should('be.visible');
         });
     });
 });
