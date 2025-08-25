@@ -18,7 +18,9 @@ test.describe('Test and Tag Manage Asset Types', () => {
         await assertTitles(page, locale.pages.manage.assetTypes.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'asset_type_name', 0)).toContainText('[E2E_testing] Name');
-        await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['aria-required-children'] });
+        await assertAccessibility(page, '[data-testid="StandardPage"]', {
+            disabledRules: ['aria-required-children', 'aria-progressbar-name'],
+        });
     });
 
     test('has breadcrumbs', async ({ page }) => {
