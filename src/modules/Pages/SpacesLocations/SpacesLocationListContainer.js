@@ -7,7 +7,7 @@ import LocationSpaceList from './SpacesLocationList';
 const mapStateToProps = state => {
     return {
         ...state.get('locationSpacesReducer'),
-        ...state.get('hoursReducer'),
+        ...state.get('weeklyHoursReducer'),
     };
 };
 

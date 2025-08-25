@@ -71,6 +71,7 @@ import {
 import { vemcountData } from './data/vemcount';
 import dlor_admin_notes from './data/records/dlor/dlor_admin_notes';
 import location_spaces_all from './data/records/locationSpaces/locationSpaces_all';
+import hours_weekly from './data/records/locationSpaces/hours_weekly_2';
 
 const moment = require('moment');
 
@@ -1439,6 +1440,18 @@ mock.onGet('exams/course/FREN1010/summary')
             return [404, {}];
         } else {
             return [200, location_spaces_all];
+        }
+    })
+    .onGet(routes.WEEKLYHOURS_API().apiUrl)
+    .reply(() => {
+        if (hoursResponseType === 'error') {
+            return [500, {}];
+        } else if (hoursResponseType === 'empty') {
+            return [200, []];
+        } else if (hoursResponseType === '404') {
+            return [404, {}];
+        } else {
+            return [200, hours_weekly];
         }
     })
     .onAny()

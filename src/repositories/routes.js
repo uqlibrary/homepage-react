@@ -15,6 +15,13 @@ export const TRAINING_API = (numEvents = 6, filterId = 104) => ({
     options: { params: { take: numEvents, 'filterIds[]': filterId, ts: `${new Date().getTime()}` } },
 });
 
+export const WEEKLYHOURS_API = () => {
+    return {
+        apiUrl: 'library_hours/week',
+        options: { params: { weeks: 2, ts: `${new Date().getTime()}` } },
+    };
+};
+
 // Papercut balance API
 export const PRINTING_API = () => ({
     apiUrl: 'papercut/balance',

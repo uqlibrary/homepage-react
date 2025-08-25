@@ -151,6 +151,16 @@ describe('Backend routes method', () => {
         MockDate.reset();
     });
 
+    it('should construct url for WEEKLYHOURS_API', () => {
+        const MockDate = require('mockdate');
+        MockDate.set('2020-01-01T00:00:00.000Z', 10);
+        expect(routes.WEEKLYHOURS_API()).toEqual({
+            apiUrl: 'library_hours/week',
+            options: { params: { week: 2, ts: '1577836800000' } },
+        });
+        MockDate.reset();
+    });
+
     it('should construct url for PRINTING_API', () => {
         const MockDate = require('mockdate');
         MockDate.set('2020-01-01T00:00:00.000Z', 10);
