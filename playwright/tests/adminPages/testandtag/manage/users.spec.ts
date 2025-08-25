@@ -13,9 +13,7 @@ test.describe('Test and Tag Manage Users', () => {
         await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqjsmit');
-        await assertAccessibility(page, '[data-testid="StandardPage"]', {
-            disabledRules: ['aria-required-children', 'aria-progressbar-name'],
-        });
+        await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
     test('has breadcrumbs', async ({ page }) => {

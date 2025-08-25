@@ -19,9 +19,7 @@ test.describe('Test and Tag Report - Inspections due', () => {
         await expect(page.getByTestId('location_picker-inspections-due-building-input')).toBeDisabled();
         await expect(page.getByTestId('location_picker-inspections-due-floor-input')).toBeDisabled();
         await expect(page.getByTestId('location_picker-inspections-due-room-input')).toBeDisabled();
-        await assertAccessibility(page, '[data-testid="StandardPage"]', {
-            disabledRules: ['aria-required-children', 'aria-progressbar-name'],
-        });
+        await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
     test('has breadcrumbs', async ({ page }) => {

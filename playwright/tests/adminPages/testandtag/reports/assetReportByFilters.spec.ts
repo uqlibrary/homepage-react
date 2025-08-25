@@ -15,9 +15,7 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
         await assertTitles(page, locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
-        await assertAccessibility(page, '[data-testid="StandardPage"]', {
-            disabledRules: ['aria-required-children'],
-        });
+        await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
     test('has breadcrumbs', async ({ page }) => {

@@ -17,9 +17,7 @@ test.describe('Test and Tag Manage Inspection Notes', () => {
     test('page is accessible and renders base', async ({ page }) => {
         await checkBaseline(page);
         await page.waitForTimeout(1000);
-        await assertAccessibility(page, '[data-testid="StandardPage"]', {
-            disabledRules: ['aria-required-children', 'aria-progressbar-name'],
-        });
+        await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
     test('has breadcrumbs', async ({ page }) => {
