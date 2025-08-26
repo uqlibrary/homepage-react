@@ -265,18 +265,18 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             await page.setViewportSize({ width: 1300, height: 1000 });
 
             await page.evaluate(() => {
-                const original = URL.createObjectURL;
+                const originalURLCreateObjectURL = URL.createObjectURL;
                 URL.createObjectURL = function() {
-                    window.wasCreateObjectURLCalled = true;
-                    return original.apply(this, arguments);
+                    window.wasURLCreateObjectURLCalled = true;
+                    return originalURLCreateObjectURL.apply(this, arguments);
                 };
             });
 
-            expect(await page.evaluate(() => window.wasCreateObjectURLCalled)).not.toBeTruthy();
+            expect(await page.evaluate(() => window.wasURLCreateObjectURLCalled)).not.toBeTruthy();
             await page.getByTestId('admin-dlor-team-admin-menu-button').click();
             await page.getByTestId('admin-dlor-export-team-objects--button').click();
             // Verify that the URL.createObjectURL method was called
-            expect(await page.evaluate(() => window.wasCreateObjectURLCalled)).toBeTruthy();
+            expect(await page.evaluate(() => window.wasURLCreateObjectURLCalled)).toBeTruthy();
         });
     });
 });

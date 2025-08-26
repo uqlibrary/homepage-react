@@ -15,7 +15,7 @@ test.describe('Digital Learning Hub admin Teams Members management', () => {
             await page.waitForSelector('h1');
             await expect(page.locator('h1')).toContainText('Digital Learning Hub - Team management');
 
-            await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['button-name'] });
+            await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
         test('team user management - add member', async ({ page }) => {
             await page.setViewportSize({ width: 1300, height: 1000 });

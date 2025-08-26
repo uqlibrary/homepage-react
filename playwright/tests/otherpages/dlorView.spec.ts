@@ -2,7 +2,6 @@ import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import moment from 'moment-timezone';
 import { typeCKEditor } from '@uq/pw/lib/ckeditor';
-import { DLOR_NO_EDIT_USER } from '@uq/pw/lib/constants';
 
 test.describe('Digital Learning Hub View page', () => {
     test.describe('details page', () => {
@@ -588,26 +587,22 @@ test.describe('Digital Learning Hub View page', () => {
     });
     test.describe('User can edit their own objects', () => {
         test('User sees edit on objects they own', async ({ page }) => {
-            await page.goto(`digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=${DLOR_NO_EDIT_USER}`);
+            await page.goto('digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=s1111111');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await page.getByTestId('detailpage-admin-edit-button').click();
-            await expect(page).toHaveURL(
-                `http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01?user=${DLOR_NO_EDIT_USER}`,
-            );
+            await expect(page).toHaveURL('http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01');
             await expect(page.getByTestId('dlor-breadcrumb-edit-object-label-0')).toHaveText(/Dummy entry/);
-            await page.goto(`digital-learning-hub/view/kj5t_8yg4_kj4f?user=${DLOR_NO_EDIT_USER}`);
+            await page.goto('digital-learning-hub/view/kj5t_8yg4_kj4f?user=s1111111');
             await expect(page.getByTestId('detailpage-admin-edit-button')).not.toBeVisible();
         });
         test('User can edit the object they own', async ({ page }) => {
             const testData =
                 'This is a test. This information is not used in the real system. This is simply content that is big enough to test the CKEditor - it is at least sufficient characters long for the editor to accept the content.';
-            await page.goto(`digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=${DLOR_NO_EDIT_USER}`);
+            await page.goto('digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=s1111111');
             await page.setViewportSize({ width: 1300, height: 1000 });
 
             await page.getByTestId('detailpage-admin-edit-button').click();
-            await expect(page).toHaveURL(
-                `http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01?user=${DLOR_NO_EDIT_USER}`,
-            );
+            await expect(page).toHaveURL('http://localhost:2020/digital-learning-hub/edit/987y-dfgrf4-76gsg-01');
             await expect(page.getByTestId('dlor-breadcrumb-edit-object-label-0')).toHaveText(/Dummy entry/);
             const today = moment().format('DD/MM/YYYY'); // Australian format to match the display format
 
@@ -633,7 +628,7 @@ test.describe('Digital Learning Hub View page', () => {
     });
     test.describe('Component shows correct visibility information', () => {
         test('Freely available object', async ({ page }) => {
-            await page.goto(`digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=${DLOR_NO_EDIT_USER}`);
+            await page.goto('digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=s1111111');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('detailpage-visibility')).toHaveText(/Anyone can access this object\./);
         });
