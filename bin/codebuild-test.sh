@@ -66,7 +66,9 @@ function install_pw_deps() {
 
 function run_pw_tests() {
     set -e
+
     local SHARD_INDEX="$1"
+    install_pw_deps
 
     printf "\n--- \e[1mRUNNING E2E TESTS GROUP #$SHARD_INDEX [STARTING AT $(date)] 2\e[0m ---\n"
 
@@ -96,11 +98,9 @@ echo "start \n"
 
 case "$PIPE_NUM" in
 "1")
-    install_pw_deps
     run_pw_tests 1
 ;;
 "2")
-    install_pw_deps
     run_pw_tests 3
 ;;
 "3")
@@ -123,7 +123,6 @@ case "$PIPE_NUM" in
         npm run test:unit:ci:nocoverage
     fi
 
-    install_pw_deps
     run_pw_test_shard 5
 ;;
 *)
