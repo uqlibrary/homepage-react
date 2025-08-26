@@ -4,8 +4,7 @@ __mocks__
 bin
 coverage
 custom_modules
-playwright/.results
-playwright/.cache
+cypress/examples
 dist
 node_modules
 scripts

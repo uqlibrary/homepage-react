@@ -2,8 +2,8 @@ node_modules
 dist
 coverage
 custom_modules
-playwright/.results
-playwright/.cache
+cypress/examples
+cypress/screenshots/
 *.json
 **/mock/data/**/*.js
 src/modules/Pages/AlertsList/components/alertsadmin.locale.js

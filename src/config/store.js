@@ -13,6 +13,10 @@ export const getStore = (initialState = Immutable.Map()) => {
         composeEnhancer(applyMiddleware(thunk, saveReducerOnSessionExpired)),
     );
 
+    if (window.Cypress) {
+        window.__store__ = store;
+    }
+
     return store;
 };
 
