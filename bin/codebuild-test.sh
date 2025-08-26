@@ -72,7 +72,7 @@ function run_pw_test_shard() {
     local SHARD_INDEX="$1"
     export PW_CC_REPORT_FILENAME="coverage-final-${SHARD_INDEX}.json"
     printf "\n--- \e[1mRUNNING E2E TESTS GROUP #$SHARD_INDEX [STARTING AT $(date)] 2\e[0m ---\n"
-    if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
+    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
         npm run test:e2e:cc -- -- --shard="$SHARD_INDEX/2"
         fix_coverage_report_paths "coverage/playwright/${PW_CC_REPORT_FILENAME}"
     else
