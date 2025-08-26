@@ -463,10 +463,8 @@ test.describe('Digital Learning Hub admin homepage', () => {
 
             const favoriteOutline = page.getByTestId('favorite-star-outline-icon');
             await expect(favoriteOutline).toBeVisible();
-            await expect(async () => {
-                await favoriteOutline.click({ timeout: 500 });
-                await expect(favoriteStar).toBeVisible({ timeout: 500 });
-            }).toPass();
+            await favoriteOutline.click();
+            await expect(favoriteStar).toBeVisible();
             await expect(page.locator('.MuiTooltip-tooltip')).toContainText('Remove from Favourites');
         });
     });
