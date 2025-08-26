@@ -1,12 +1,19 @@
-import { test, expect } from '@uq/pw/test';
+import { test, expect, Page } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { forcePageRefresh, getFieldValue } from './helpers';
 import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
 test.describe('Test and Tag Report - Inspections due', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('http://localhost:2020/admin/testntag/report/inspectionsdue?user=uqtesttag');
     });
+
+    const getFieldValue = async (page: Page, dataField: string, rowIndex: number) =>
+        page.locator(`div[data-rowindex='${rowIndex}'] > div[data-field='${dataField}']`);
+
+    const forcePageRefresh = async (page: Page) => {
+        await page.getByTestId('test_tag_header-navigation-dashboard').click();
+        await page.goBack();
+    };
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -15,6 +22,7 @@ test.describe('Test and Tag Report - Inspections due', () => {
             page.locator('h2').getByText(locale.pages.report.inspectionsDue.header.pageSubtitle('Library')),
         ).toBeVisible();
         await forcePageRefresh(page);
+        await page.waitForTimeout(1000);
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000007');
         await expect(page.getByTestId('location_picker-inspections-due-site-input')).toHaveValue('All sites');
         await expect(page.getByTestId('months_selector-inspections-due-select')).toContainText('3 months');
@@ -22,6 +30,7 @@ test.describe('Test and Tag Report - Inspections due', () => {
         await expect(page.getByTestId('location_picker-inspections-due-building-input')).toBeDisabled();
         await expect(page.getByTestId('location_picker-inspections-due-floor-input')).toBeDisabled();
         await expect(page.getByTestId('location_picker-inspections-due-room-input')).toBeDisabled();
+        await page.waitForTimeout(1000);
         await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['aria-required-children'] });
     });
 
@@ -36,6 +45,7 @@ test.describe('Test and Tag Report - Inspections due', () => {
             page.locator('h2').getByText(locale.pages.report.inspectionsDue.header.pageSubtitle('Library')),
         ).toBeVisible();
         await forcePageRefresh(page);
+        await page.waitForTimeout(1000);
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000007');
         await expect(page.getByTestId('location_picker-inspections-due-site-input')).toHaveValue('All sites');
         await expect(page.getByTestId('months_selector-inspections-due-select')).toContainText('3 months');

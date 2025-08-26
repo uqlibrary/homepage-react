@@ -217,7 +217,7 @@ async function load_a_subject_in_learning_resource_page_search_tab(
             return obj.name === courseCode;
         })
         .pop();
-    await page.locator('div[data-testid=full-learningresource-autocomplete] input').clear();
+    await page.locator('div[data-testid=full-learningresource-autocomplete] input').fill('');
     await expect(page.getByTestId('noCoursesFound')).not.toBeVisible();
     await page.locator('div[data-testid=full-learningresource-autocomplete] input').type(typeChar);
     await expect(page.getByTestId('noCoursesFound')).not.toBeVisible();

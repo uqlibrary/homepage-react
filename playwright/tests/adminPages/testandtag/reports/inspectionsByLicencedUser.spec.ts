@@ -1,6 +1,5 @@
-import { test, expect } from '@uq/pw/test';
+import { test, expect, Page } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { forcePageRefresh, getFieldValue } from './helpers';
 import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
 test.describe('Test and Tag Report - Inspections by Licenced User', () => {
@@ -10,6 +9,14 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         await page.goto('http://localhost:2020/admin/testntag/report/inspectionsbylicenceduser?user=uqtesttag');
     });
 
+    const getFieldValue = async (page: Page, dataField: string, rowIndex: number) =>
+        page.locator(`div[data-rowindex='${rowIndex}'] > div[data-field='${dataField}']`);
+
+    const forcePageRefresh = async (page: Page) => {
+        await page.getByTestId('test_tag_header-navigation-dashboard').click();
+        await page.goBack();
+    };
+
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.locator('h1')).toContainText(locale.pages.general.pageTitle);
@@ -17,7 +24,9 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
             page.locator('h2').getByText(locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library')),
         ).toBeVisible();
         await forcePageRefresh(page);
+        await page.waitForTimeout(1000);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqtest1');
+        await page.waitForTimeout(1000);
 
         // Note this a11y check ignores the date label elements
         await assertAccessibility(page, '[data-testid="StandardPage"]');
@@ -34,6 +43,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
             page.locator('h2').getByText(locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library')),
         ).toBeVisible();
         await forcePageRefresh(page);
+        await page.waitForTimeout(1000);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqtest1');
 
         await page.getByTestId('user_inspections-user-name').click();
@@ -43,11 +53,13 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         // Check the value of the dropdown
         await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('Third Testing user');
         // Select a second user
+        await page.waitForTimeout(1000);
         await page.getByTestId('user_inspections-user-name').click();
         await page.getByTestId('user_inspections-user-name-option-1').click();
         await page.locator('body').click();
         await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('Second Testing user');
         await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('Third Testing user');
+        await page.waitForTimeout(1000);
         // Select third user
         await page.getByTestId('user_inspections-user-name-select').click();
         await page.getByTestId('user_inspections-user-name-option-0').click();
@@ -67,11 +79,13 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
             page.locator('h2').getByText(locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library')),
         ).toBeVisible();
         await forcePageRefresh(page);
+        await page.waitForTimeout(1000);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqtest1');
 
         // Add a start date
         await page.getByTestId('user_inspections-tagged-start-button').click();
         await page.locator('.MuiPickersDay-root:has-text("11")').click();
+        await page.waitForTimeout(500);
         await page.locator('body').click();
         // Should require an end date here
         await expect(page.locator('#user_inspections-tagged-end-input-helper-text')).toContainText(
@@ -84,6 +98,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         await page.getByTestId('user_inspections-tagged-end-button').click();
         await page.locator('.MuiPaper-root[style*="opacity: 1"] .MuiPickersDay-root:has-text("12")').click();
         await page.locator('body').click();
+        await page.waitForTimeout(500);
         await expect(page.getByTestId('user_inspections-tagged-end-input')).toHaveValue(
             `${currentYear}-${currentMonth}-12`,
         );

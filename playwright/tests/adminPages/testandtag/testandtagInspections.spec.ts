@@ -100,12 +100,12 @@ test.describe('Test and Tag Admin Inspection page', () => {
                 await page.keyboard.press('Escape');
                 await expect(page.locator('[role="dialog"]')).not.toBeVisible();
 
-                await page.getByTestId('event_panel-event-date-input').clear();
+                await page.getByTestId('event_panel-event-date-input').fill('');
                 await page.getByTestId('event_panel-event-date-input').fill(invalidDate);
                 await expect(page.locator('#event_panel-event-date-input-helper-text')).toContainText(
                     locale.pages.inspect.form.event.date.maxDateMessage,
                 );
-                await page.getByTestId('event_panel-event-date-input').clear();
+                await page.getByTestId('event_panel-event-date-input').fill('');
                 // make sure if starts typing from day
                 await page.getByTestId('event_panel-event-date-input').press('ArrowLeft');
                 await page.getByTestId('event_panel-event-date-input').press('ArrowLeft');
