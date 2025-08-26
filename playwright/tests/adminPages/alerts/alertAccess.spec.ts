@@ -1,5 +1,4 @@
-import { test, expect } from '@uqpw/test';
-
+import { test, expect } from '../../../test';
 test.describe('Alerts Admin Page access', () => {
     test.describe('Alert Admin public access blocked', () => {
         test('displays an "unauthorised" page to public users', async ({ page }) => {

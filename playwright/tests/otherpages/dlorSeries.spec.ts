@@ -1,6 +1,5 @@
-import { test, expect } from '@uqpw/test';
-import { assertAccessibility } from '@uqpw/lib/axe';
-
+import { test, expect } from '../../test';
+import { assertAccessibility } from '../../lib/axe';
 test.describe('Digital Learning Hub Series page.', () => {
     test.describe('series page', () => {
         test('appears as expected', async ({ page }) => {

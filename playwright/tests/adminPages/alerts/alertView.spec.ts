@@ -1,7 +1,6 @@
-import { test, expect } from '@uqpw/test';
-import { assertAccessibility } from '@uqpw/lib/axe';
+import { test, expect } from '../../../test';
 import { clickButton, dateHasValue } from '../../../support/helpers';
-
+import { assertAccessibility } from '../../../lib/axe';
 test.describe('Alerts Admin View Page', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');

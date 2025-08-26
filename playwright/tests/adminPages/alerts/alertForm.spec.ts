@@ -1,7 +1,8 @@
-import { test, expect, Page } from '@uqpw/test';
-import { assertAccessibility } from '@uqpw/lib/axe';
+import { test, expect, Page } from '../../../test';
+
 import { hasAWorkingHelpButton } from '../../../support/alerts';
 import { clickButton, clickSVGButton, dateHasValue } from '../../../support/helpers';
+import { assertAccessibility } from '../../../lib/axe';
 
 async function selectPriorityType(page: Page, type: string) {
     // open the select

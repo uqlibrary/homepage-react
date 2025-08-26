@@ -1,7 +1,7 @@
-import { test, expect } from '@uqpw/test';
-import { DLOR_ADMIN_USER } from '@uqpw/lib/constants';
-import { assertAccessibility } from '@uqpw/lib/axe';
-import { getOpenedLink } from '@uqpw/lib/helpers';
+import { test, expect } from '../../../../test';
+import { DLOR_ADMIN_USER } from '../../../../lib/constants';
+import { assertAccessibility } from '../../../../lib/axe';
+import { getOpenedLink } from '../../../../lib/helpers';
 
 test.describe('Digital Learning Hub admin Series management - edit item', () => {
     test.beforeEach(async ({ context }) => {

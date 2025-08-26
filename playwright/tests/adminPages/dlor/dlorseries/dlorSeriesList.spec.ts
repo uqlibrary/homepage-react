@@ -1,7 +1,6 @@
-import { test, expect } from '@uqpw/test';
-import { DLOR_ADMIN_USER } from '@uqpw/lib/constants';
-import { assertAccessibility } from '@uqpw/lib/axe';
-
+import { test, expect } from '../../../../test';
+import { DLOR_ADMIN_USER } from '../../../../lib/constants';
+import { assertAccessibility } from '../../../../lib/axe';
 test.describe('Digital Learning Hub admin Series management', () => {
     test.beforeEach(async ({ page }) => {
         await page.context().clearCookies();

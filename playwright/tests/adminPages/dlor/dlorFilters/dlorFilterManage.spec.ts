@@ -1,5 +1,5 @@
-import { test, expect } from '@uqpw/test';
-import { DLOR_ADMIN_USER } from '@uqpw/lib/constants';
+import { test, expect } from '../../../../test';
+import { DLOR_ADMIN_USER } from '../../../../lib/constants';
 
 test.describe('Digital Learning Hub admin filter management', () => {
     test.beforeEach(async ({ page }) => {

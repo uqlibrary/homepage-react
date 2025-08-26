@@ -1,7 +1,7 @@
-import { test, expect } from '@uqpw/test';
-import { assertAccessibility } from '@uqpw/lib/axe';
+import { test, expect } from '@playwright/test';
 import { hasAWorkingHelpButton } from '../../../support/alerts';
 import { clickButton, clickSVGButton } from '../../../support/helpers';
+import { assertAccessibility } from '../../../lib/axe';
 
 test.describe('Alert Admin List page', () => {
     const numRowsHiddenAsNoDataInfo = 1;

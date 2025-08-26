@@ -1,5 +1,5 @@
-import { test, expect } from '@uqpw/test';
-import { assertAccessibility } from '@uqpw/lib/axe';
+import { test, expect } from '../../test';
+import { assertAccessibility } from '../../lib/axe';
 
 test.describe('Masquerade', () => {
     test('Masquerade Admin Accessibility', async ({ page }) => {

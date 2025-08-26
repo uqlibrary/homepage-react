@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@uqpw/test';
+import { test, expect, Page } from '../../test';
 
 test.describe('Chatbot', () => {
     const loadPage = async (page: Page) => {

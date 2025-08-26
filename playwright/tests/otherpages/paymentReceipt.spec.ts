@@ -1,5 +1,4 @@
-import { test, expect } from '@uqpw/test';
-
+import { test, expect } from '../../test';
 test.describe('Payment receipt', () => {
     test('Shows the correct messages for valid querystring', async ({ page }) => {
         await page.goto('payment-receipt?Success=1&Receipt=1234&AmountPaid=20');

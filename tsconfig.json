@@ -1,13 +1,22 @@
 {
     "compilerOptions": {
-        "baseUrl": "./playwright",
+        "target": "esnext",
+        "jsx": "react-jsxdev",
+        "module": "esnext",
+        "moduleResolution": "Bundler",
         "esModuleInterop": true,
         "skipLibCheck": true,
         "strict": true,
         "allowJs": true,
+        "checkJs": false,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "forceConsistentCasingInFileNames": true,
         "noImplicitAny": true,
-        "paths": {
-            "@uqpw/*": ["*"]
-        }
+        // for MUI types
+        "lib": ["es6", "dom"]
     },
+    "include": ["playwright/**/*.ts"],
+    "exclude": ["node_modules"]
 }

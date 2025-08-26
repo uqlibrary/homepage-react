@@ -1,7 +1,7 @@
-import { test, expect, Page } from '@uqpw/test';
-import { assertAccessibility } from '@uqpw/lib/axe';
+import { test, expect, Page } from '../../test';
 import { default as locale } from '../../../src/modules/Pages/LearningResources/shared/learningResources.locale';
 import { _courseLink, _pluralise } from '../../../src/modules/Pages/LearningResources/shared/learningResourcesHelpers';
+import { assertAccessibility } from '../../lib/axe';
 import { default as FREN1010ReadingList } from '../../../src/data/mock/data/records/learningResources/courseReadingList_FREN1010';
 import { default as FREN1011ReadingList } from '../../../src/data/mock/data/records/learningResources/courseReadinglist_FREN1011';
 import { default as FREN1010Guide } from '../../../src/data/mock/data/records/learningResources/libraryGuides_FREN1010';
