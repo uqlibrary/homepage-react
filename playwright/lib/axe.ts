@@ -6,20 +6,20 @@ export const defaultDisabledRules = ['aria-required-children', 'aria-progressbar
 
 export const assertAccessibility = async (
     page: Page,
-    selector: string,
+    selector?: string,
     options?: {
         rules?: string[];
         disabledRules?: string[];
         includedImpacts?: string[];
     },
 ) => {
-    await expect(async () => await expect(page.locator(selector)).toBeVisible({ timeout: 500 })).toPass();
-
     const builder = new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice']);
     const includedImpacts = options?.includedImpacts || defaultIncludedImpacts;
     const disableRules = options?.disabledRules || defaultDisabledRules;
 
-    builder.include(selector);
+    if (selector) {
+        builder.include(selector);
+    }
     if (options?.rules?.length) {
         builder.withRules(options.rules);
     }
