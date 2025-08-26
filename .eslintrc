@@ -232,7 +232,7 @@
     "jsx-a11y/no-onchange" : 2,
     "jsx-a11y/img-has-alt": "off",
     "jsx-a11y/onclick-has-focus" : "off",
-    "jsx-a11y/href-no-hash": "off",
+    "jsx-a11y/href-no-hash": "off"
   },
   "plugins": [
     "react",
@@ -249,10 +249,7 @@
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "prettier"
-      ],
-      "rules": {
-        "@typescript-eslint/ban-ts-comment": "off"
-      }
+      ]
     }
   ]
 }
