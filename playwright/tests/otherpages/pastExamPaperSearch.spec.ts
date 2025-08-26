@@ -28,7 +28,7 @@ test.describe('Past Exam Papers Pages', () => {
             await page.goto('/exams/course/empt');
             await expect(
                 page
-                    .getByTestId('subsite-title')
+                    .locator('[data-testid="subsite-title"]')
                     .getByText(/Past exam papers/)
                     .first(),
             ).toBeVisible();
@@ -37,20 +37,20 @@ test.describe('Past Exam Papers Pages', () => {
             page,
         }) => {
             await page.goto('/exams');
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('fren1');
+            await page.locator('[data-testid="past-exam-paper-search-autocomplete-input"]').fill('fren1');
             // suggestions load
             await expect(page.locator('.MuiAutocomplete-listbox').locator(':scope > *')).toHaveCount(3);
         });
         test('the suggestions list is accessible', async ({ page }) => {
             await page.goto('/exams');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('fren1');
+            await page.locator('[data-testid="past-exam-paper-search-autocomplete-input"]').fill('fren1');
             // suggestions load
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
         test('when I type an invalid course code fragment in the search bar, a hint shows', async ({ page }) => {
             await page.goto('/exams');
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('em');
+            await page.locator('[data-testid="past-exam-paper-search-autocomplete-input"]').fill('em');
             await expect(page.locator('.MuiAutocomplete-listbox')).toHaveCount(0);
             await expect(
                 page
@@ -61,7 +61,7 @@ test.describe('Past Exam Papers Pages', () => {
         });
         test('when I type too short a course code fragment in the search bar, a hint shows', async ({ page }) => {
             await page.goto('/exams');
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('f');
+            await page.locator('[data-testid="past-exam-paper-search-autocomplete-input"]').fill('f');
             await expect(page.locator('.MuiAutocomplete-listbox')).toHaveCount(0);
             await expect(
                 page
@@ -74,38 +74,38 @@ test.describe('Past Exam Papers Pages', () => {
             page,
         }) => {
             await page.goto('/exams');
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('f');
+            await page.locator('[data-testid="past-exam-paper-search-autocomplete-input"]').fill('f');
             await expect(page.locator('.MuiAutocomplete-listbox')).not.toBeVisible();
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').pressSequentially('ren');
+            await page.locator('[data-testid="past-exam-paper-search-autocomplete-input"]').pressSequentially('ren');
             await expect(page.locator('.MuiAutocomplete-listbox').locator('> *')).toHaveCount(17);
         });
         test('when I click on a suggestion from the list, the correct result page loads', async ({ page }) => {
             await page.goto('/exams');
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('fren');
+            await page.locator('[data-testid="past-exam-paper-search-autocomplete-input"]').fill('fren');
             await expect(page.locator('.MuiAutocomplete-listbox').locator(':scope > *')).toHaveCount(17);
             await page.locator('#exam-search-option-0').click({ force: true });
             await expect(page).toHaveURL(/exams\/course\/FREN/);
         });
         test('when I hit return on a search list, the result page for the first option loads', async ({ page }) => {
             await page.goto('/exams');
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('fren');
+            await page.locator('[data-testid="past-exam-paper-search-autocomplete-input"]').fill('fren');
             await expect(page.locator('.MuiAutocomplete-listbox').locator('> *')).toHaveCount(17);
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').press('Enter');
+            await page.locator('[data-testid="past-exam-paper-search-autocomplete-input"]').press('Enter');
             await expect(page).toHaveURL(/exams\/course\/FREN/);
         });
         test('when my search term matches the first result I do not get a "show all" prompt', async ({ page }) => {
             await page.goto('/exams');
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('fren101');
+            await page.locator('[data-testid="past-exam-paper-search-autocomplete-input"]').fill('fren101');
             await expect(page.locator('.MuiAutocomplete-listbox').locator(':scope > *')).toHaveCount(2);
             await expect(page.locator('#exam-search-option-0')).toContainText('View all exam papers for FREN101');
             await expect(page.locator('#exam-search-option-1')).toContainText('FREN1010');
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').pressSequentially('0');
+            await page.locator('[data-testid="past-exam-paper-search-autocomplete-input"]').pressSequentially('0');
             await expect(page.locator('.MuiAutocomplete-listbox').locator('> *')).toHaveCount(1);
             await expect(page.locator('#exam-search-option-0')).toContainText('FREN1010');
         });
         test('when the api fails I get an appropriate error message', async ({ page }) => {
             await page.goto('/exams');
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('fail');
+            await page.locator('[data-testid="past-exam-paper-search-autocomplete-input"]').fill('fail');
             await expect(page.locator('.MuiAutocomplete-listbox')).toHaveCount(0);
             await expect(
                 page
@@ -143,7 +143,7 @@ test.describe('Past Exam Papers Pages', () => {
                 await page.goto('/exams/course/fren');
                 await expect(
                     page
-                        .getByTestId('subsite-title')
+                        .locator('[data-testid="subsite-title"]')
                         .getByText(/Past exam papers/)
                         .first(),
                 ).toBeVisible();
@@ -156,44 +156,44 @@ test.describe('Past Exam Papers Pages', () => {
                 // sample papers are correct
                 await expect(
                     page
-                        .getByTestId('exampaper-desktop-sample-link-0-0-0')
+                        .locator('[data-testid="exampaper-desktop-sample-link-0-0-0"]')
                         .getByText(/FREN1010 Sem\.2 2020/)
                         .first(),
                 ).toBeVisible();
                 // original papers are correct
                 await expect(
-                    page.getByTestId('exampaper-desktop-originals-table-header').locator(':scope > *'),
+                    page.locator('[data-testid="exampaper-desktop-originals-table-header"]').locator(':scope > *'),
                 ).toHaveCount(4);
                 await expect(
-                    page.getByTestId('exampaper-desktop-originals-table-body').locator(':scope > *'),
+                    page.locator('[data-testid="exampaper-desktop-originals-table-body"]').locator(':scope > *'),
                 ).toHaveCount(22);
                 await expect(
                     page
-                        .getByTestId('exampaper-desktop-originals-link-1-1-0')
+                        .locator('[data-testid="exampaper-desktop-originals-link-1-1-0"]')
                         .getByText(/FREN2010/)
                         .first(),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-desktop-originals-link-1-1-0')
+                        .locator('[data-testid="exampaper-desktop-originals-link-1-1-0"]')
                         .getByText(/Final/)
                         .first(),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-desktop-originals-link-4-1-0')
+                        .locator('[data-testid="exampaper-desktop-originals-link-4-1-0"]')
                         .getByText(/FREN2082/)
                         .first(),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-desktop-originals-link-4-1-0')
+                        .locator('[data-testid="exampaper-desktop-originals-link-4-1-0"]')
                         .getByText(/a special french paper/)
                         .first(),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-desktop-originals-link-4-0-0')
+                        .locator('[data-testid="exampaper-desktop-originals-link-4-0-0"]')
                         .getByText(/FREN2082/)
                         .first(),
                 ).toBeVisible();
@@ -208,37 +208,37 @@ test.describe('Past Exam Papers Pages', () => {
                 await page.goto('/exams/course/PHYS1001?user=s1111111');
                 await expect(
                     page
-                        .getByTestId('exampapers-original-heading')
+                        .locator('[data-testid="exampapers-original-heading"]')
                         .getByText(/Original past exam papers/)
                         .first(),
                 ).toBeVisible();
-                await expect(page.getByTestId('exampaper-desktop-original-line')).toBeVisible();
-                await expect(page.getByTestId('exampaper-desktop-sample-line')).not.toBeVisible();
+                await expect(page.locator('[data-testid="exampaper-desktop-original-line"]')).toBeVisible();
+                await expect(page.locator('[data-testid="exampaper-desktop-sample-line"]')).not.toBeVisible();
             });
             test('with no original papers and some sample papers shows Simple view', async ({ page }) => {
                 await page.goto('/exams/course/dent1050?user=s1111111');
                 await expect(
                     page
-                        .getByTestId('exampapers-original-heading')
+                        .locator('[data-testid="exampapers-original-heading"]')
                         .getByText(/Original past exam papers/)
                         .first(),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('no-original-papers-provided')
+                        .locator('[data-testid="no-original-papers-provided"]')
                         .getByText(/No original papers provided\./)
                         .first(),
                 ).toBeVisible();
-                await expect(page.getByTestId('original-papers-table')).not.toBeVisible();
+                await expect(page.locator('[data-testid="original-papers-table"]')).not.toBeVisible();
                 await expect(
                     page
-                        .getByTestId('sample-papers-heading')
+                        .locator('[data-testid="sample-papers-heading"]')
                         .getByText(/Sample past exam papers/)
                         .first(),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-desktop-sample-link-0-0-0')
+                        .locator('[data-testid="exampaper-desktop-sample-link-0-0-0"]')
                         .getByText(/DENT1050 Sem\.2 2022/)
                         .first(),
                 ).toBeVisible();
@@ -249,27 +249,29 @@ test.describe('Past Exam Papers Pages', () => {
                 await page.goto('/exams/course/fren');
                 await page.setViewportSize({ width: 414, height: 736 });
                 // sample papers are correct
-                await expect(page.getByTestId('exampaper-mobile-sample-link-0-0-0')).toHaveText(/FREN1010 Sem\.2 2020/);
+                await expect(page.locator('[data-testid="exampaper-mobile-sample-link-0-0-0"]')).toHaveText(
+                    /FREN1010 Sem\.2 2020/,
+                );
 
-                await expect(page.getByTestId('exampaper-mobile-original-link-0-0-0')).toContainText(
+                await expect(page.locator('[data-testid="exampaper-mobile-original-link-0-0-0"]')).toContainText(
                     'FREN1010 Sem.1 2020 Paper A',
                 );
-                await expect(page.getByTestId('exampaper-mobile-original-link-0-0-1')).toContainText(
+                await expect(page.locator('[data-testid="exampaper-mobile-original-link-0-0-1"]')).toContainText(
                     'FREN1010 Sem.1 2020 Paper B',
                 );
-                await expect(page.getByTestId('exampaper-mobile-original-link-1-0-0')).toContainText(
+                await expect(page.locator('[data-testid="exampaper-mobile-original-link-1-0-0"]')).toContainText(
                     'FREN2010 Sem.1 2021',
                 );
-                await expect(page.getByTestId('exampaper-mobile-original-link-1-1-0')).toContainText(
+                await expect(page.locator('[data-testid="exampaper-mobile-original-link-1-1-0"]')).toContainText(
                     'FREN2010 Sem.1 2019 Final',
                 );
-                await expect(page.getByTestId('exampaper-mobile-original-link-4-1-0')).toContainText(
+                await expect(page.locator('[data-testid="exampaper-mobile-original-link-4-1-0"]')).toContainText(
                     'FREN2082 Sem.1 2020 a special french paper',
                 );
-                await expect(page.getByTestId('exampaper-mobile-original-link-4-1-1')).toContainText(
+                await expect(page.locator('[data-testid="exampaper-mobile-original-link-4-1-1"]')).toContainText(
                     'FREN2082 Sem.1 2020 Paper 2',
                 );
-                await expect(page.getByTestId('exampaper-mobile-original-link-4-0-0')).toContainText(
+                await expect(page.locator('[data-testid="exampaper-mobile-original-link-4-0-0"]')).toContainText(
                     'FREN2082 Sem.1 2021 (Final Paper)',
                 );
             });
@@ -278,38 +280,38 @@ test.describe('Past Exam Papers Pages', () => {
                 await page.setViewportSize({ width: 414, height: 736 });
                 await expect(
                     page
-                        .getByTestId('exampapers-original-heading')
+                        .locator('[data-testid="exampapers-original-heading"]')
                         .getByText(/Original past exam papers/)
                         .first(),
                 ).toBeVisible();
-                await expect(page.getByTestId('exampaper-mobile-original-line')).toBeVisible();
-                await expect(page.getByTestId('exampaper-mobile-sample-line')).not.toBeVisible();
+                await expect(page.locator('[data-testid="exampaper-mobile-original-line"]')).toBeVisible();
+                await expect(page.locator('[data-testid="exampaper-mobile-sample-line"]')).not.toBeVisible();
             });
             test('with no original papers and some sample papers shows Simple view', async ({ page }) => {
                 await page.goto('/exams/course/dent1050?user=s1111111');
                 await page.setViewportSize({ width: 414, height: 736 });
                 await expect(
                     page
-                        .getByTestId('exampapers-original-heading')
+                        .locator('[data-testid="exampapers-original-heading"]')
                         .getByText(/Original past exam papers/)
                         .first(),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('no-original-papers-provided')
+                        .locator('[data-testid="no-original-papers-provided"]')
                         .getByText(/No original papers provided\./)
                         .first(),
                 ).toBeVisible();
-                await expect(page.getByTestId('original-papers-table')).not.toBeVisible();
+                await expect(page.locator('[data-testid="original-papers-table"]')).not.toBeVisible();
                 await expect(
                     page
-                        .getByTestId('sample-papers-heading')
+                        .locator('[data-testid="sample-papers-heading"]')
                         .getByText(/Sample past exam papers/)
                         .first(),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-mobile-sample-link-0-0-0')
+                        .locator('[data-testid="exampaper-mobile-sample-link-0-0-0"]')
                         .getByText(/DENT1050 Sem\.2 2022/)
                         .first(),
                 ).toBeVisible();
@@ -321,7 +323,7 @@ test.describe('Past Exam Papers Pages', () => {
             await page.goto('/exams/course/empt');
             await expect(
                 page
-                    .getByTestId('subsite-title')
+                    .locator('[data-testid="subsite-title"]')
                     .getByText(/Past exam papers/)
                     .first(),
             ).toBeVisible();
