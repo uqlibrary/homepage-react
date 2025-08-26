@@ -21,20 +21,20 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 });
 
                 // open the "edit a team dialog"
-                await page.getByTestId('object-form-teamid-change').click();
+                await page.locator('[data-testid="object-form-teamid-change"]').click();
                 await assertAccessibility(page, '[data-testid="StandardPage"]');
                 await typeCKEditor(page, undefined, 'This is the admin notes');
 
                 // go to panel 2
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
                 await assertAccessibility(page, '[data-testid="StandardPage"]');
 
                 // go to panel 3
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
                 await assertAccessibility(page, '[data-testid="StandardPage"]');
 
                 // go to panel 4
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
                 await assertAccessibility(page, '[data-testid="StandardPage"]');
 
                 // open the notification lightbox
@@ -45,7 +45,9 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
             test('has breadcrumbs', async ({ page }) => {
                 await page.goto(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
                 await page.setViewportSize({ width: 1300, height: 1000 });
-                await expect(page.getByTestId('subsite-title').getByText('Digital learning hub admin')).toBeVisible();
+                await expect(
+                    page.locator('[data-testid="subsite-title"]').getByText('Digital learning hub admin'),
+                ).toBeVisible();
             });
 
             test('loads fields correctly', async ({ page }) => {
@@ -53,7 +55,9 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.setViewportSize({ width: 1300, height: 1000 });
 
                 await expect(page.locator('[data-testid="object-publishing-user"] input')).toHaveValue('uqjsmith');
-                await expect(page.getByTestId('dlor-form-team-message-object-publishing-user')).not.toBeVisible();
+                await expect(
+                    page.locator('[data-testid="dlor-form-team-message-object-publishing-user"]'),
+                ).not.toBeVisible();
 
                 const homeLink = page.locator('a[data-testid="dlor-breadcrumb-admin-homelink"]');
                 await expect(homeLink).toContainText('Digital Learning Hub admin');
@@ -62,50 +66,55 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`,
                 );
 
-                await expect(page.getByTestId('dlor-breadcrumb-edit-object-label-0')).toContainText(
+                await expect(page.locator('[data-testid="dlor-breadcrumb-edit-object-label-0"]')).toContainText(
                     'Edit object: Advanced literature searching',
                 );
 
                 // Admin notes
                 // Check Open.
-                await page.getByTestId('ExpandMoreIcon').click();
+                await page.locator('[data-testid="ExpandMoreIcon"]').click();
                 // Check Note 1.
-                await expect(page.getByTestId('admin-note-username-0')).toContainText('uqtest1');
+                await expect(page.locator('[data-testid="admin-note-username-0"]')).toContainText('uqtest1');
                 // Check Note 2.
-                await expect(page.getByTestId('admin-note-username-1')).toContainText('uqabcdef');
+                await expect(page.locator('[data-testid="admin-note-username-1"]')).toContainText('uqabcdef');
 
                 // team editor
-                await expect(page.getByTestId('object-form-teamid-change')).toContainText('Update contact');
+                await expect(page.locator('[data-testid="object-form-teamid-change"]')).toContainText('Update contact');
 
                 // swap to "team 1"
-                await page.getByTestId('object-owning-team').click();
-                await page.getByTestId('object-owning-team-1').click();
-                await expect(page.getByTestId('object-owning-team')).toContainText('LIB DX Digital Content');
-                await expect(page.getByTestId('object-form-teamid-change')).not.toBeVisible();
+                await page.locator('[data-testid="object-owning-team"]').click();
+                await page.locator('[data-testid="object-owning-team-1"]').click();
+                await expect(page.locator('[data-testid="object-owning-team"]')).toContainText(
+                    'LIB DX Digital Content',
+                );
+                await expect(page.locator('[data-testid="object-form-teamid-change"]')).not.toBeVisible();
 
                 // swap to "team 3"
-                await page.getByTestId('object-owning-team').click();
-                await page.getByTestId('object-owning-team-3').click();
-                await expect(page.getByTestId('object-owning-team')).toContainText('Library Indigenous Enquiries');
-                await expect(page.getByTestId('object-form-teamid-change')).not.toBeVisible();
+                await page.locator('[data-testid="object-owning-team"]').click();
+                await page.locator('[data-testid="object-owning-team-3"]').click();
+                await expect(page.locator('[data-testid="object-owning-team"]')).toContainText(
+                    'Library Indigenous Enquiries',
+                );
+                await expect(page.locator('[data-testid="object-form-teamid-change"]')).not.toBeVisible();
 
                 // back to "team 2", current Team
-                await page.getByTestId('object-owning-team').click();
-                await page.getByTestId('object-owning-team-2').click();
+                await page.locator('[data-testid="object-owning-team"]').click();
+                await page.locator('[data-testid="object-owning-team-2"]').click();
 
                 // can open the editor for this team
-                await expect(page.getByTestId('dlor-form-team-manager-edit')).not.toBeVisible();
-                await expect(page.getByTestId('dlor-form-team-email-edit')).not.toBeVisible();
-                await page.getByTestId('object-form-teamid-change').click();
-                await expect(page.getByTestId('dlor-form-team-email-edit')).toBeVisible();
+                await expect(page.locator('[data-testid="dlor-form-team-manager-edit"]')).not.toBeVisible();
+                await expect(page.locator('[data-testid="dlor-form-team-email-edit"]')).not.toBeVisible();
+                await page.locator('[data-testid="object-form-teamid-change"]').click();
+
+                await expect(page.locator('[data-testid="dlor-form-team-email-edit"]')).toBeVisible();
 
                 // check the Close button works
-                await page.getByTestId('object-form-teamid-change').click();
-                await expect(page.getByTestId('dlor-form-team-manager-edit')).not.toBeVisible();
-                await expect(page.getByTestId('dlor-form-team-email-edit')).not.toBeVisible();
+                await page.locator('[data-testid="object-form-teamid-change"]').click();
+                await expect(page.locator('[data-testid="dlor-form-team-manager-edit"]')).not.toBeVisible();
+                await expect(page.locator('[data-testid="dlor-form-team-email-edit"]')).not.toBeVisible();
 
                 // reopen edit team dialog
-                await page.getByTestId('object-form-teamid-change').click();
+                await page.locator('[data-testid="object-form-teamid-change"]').click();
 
                 await page.locator('[data-testid="dlor-form-team-manager-edit"] input').press('End');
                 await page.locator('[data-testid="dlor-form-team-manager-edit"] input').pressSequentially('111');
@@ -113,8 +122,8 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.locator('[data-testid="dlor-form-team-email-edit"] input').fill('lea@example.com');
 
                 // choose 'new' from the Owning team drop down
-                await page.getByTestId('object-owning-team').click();
-                await page.getByTestId('object-form-teamid-new').click();
+                await page.locator('[data-testid="object-owning-team"]').click();
+                await page.locator('[data-testid="object-form-teamid-new"]').click();
 
                 await expect(page.locator('[data-testid="dlor-form-team-name-new"] input')).toHaveValue('');
                 await page.locator('[data-testid="dlor-form-team-name-new"] input').fill('new team');
@@ -124,9 +133,9 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.locator('[data-testid="dlor-form-team-email-new"] input').fill('new@example.com');
 
                 // back to current team, team 2
-                await page.getByTestId('object-owning-team').click();
-                await page.getByTestId('object-owning-team-2').click();
-                await page.getByTestId('object-form-teamid-change').click();
+                await page.locator('[data-testid="object-owning-team"]').click();
+                await page.locator('[data-testid="object-owning-team-2"]').click();
+                await page.locator('[data-testid="object-form-teamid-change"]').click();
 
                 await expect(page.locator('[data-testid="dlor-form-team-manager-edit"] input')).toHaveValue(
                     'Jane Green111',
@@ -136,8 +145,8 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 );
 
                 // go back to the new form
-                await page.getByTestId('object-owning-team').click();
-                await page.getByTestId('object-form-teamid-new').click();
+                await page.locator('[data-testid="object-owning-team"]').click();
+                await page.locator('[data-testid="object-form-teamid-new"]').click();
                 await expect(page.locator('[data-testid="dlor-form-team-name-new"] input')).toHaveValue('new team');
                 await expect(page.locator('[data-testid="dlor-form-team-manager-new"] input')).toHaveValue('new name');
                 await expect(page.locator('[data-testid="dlor-form-team-email-new"] input')).toHaveValue(
@@ -145,7 +154,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 );
 
                 // go to panel 2
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
                 await expect(page.locator('[data-testid="object-title"] input')).toHaveValue(
                     'Advanced literature searching',
                 );
@@ -160,19 +169,19 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await expect(page.locator('[data-testid="object-cultural-advice"] input')).toBeChecked();
 
                 // go to panel 3
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
                 await expect(page.locator('[data-testid="object-link-url"] input')).toHaveValue(
                     'https://uq.h5p.com/content/1291624605868350759',
                 );
 
-                await expect(page.getByTestId('object-link-interaction-type')).toContainText('No message');
-                await expect(page.getByTestId('object-link-file-type')).not.toBeVisible();
-                await expect(page.getByTestId('object-link-duration')).not.toBeVisible();
-                await expect(page.getByTestId('object-link-file-size')).not.toBeVisible();
+                await expect(page.locator('[data-testid="object-link-interaction-type"]')).toContainText('No message');
+                await expect(page.locator('[data-testid="object-link-file-type"]')).not.toBeVisible();
+                await expect(page.locator('[data-testid="object-link-duration"]')).not.toBeVisible();
+                await expect(page.locator('[data-testid="object-link-file-size"]')).not.toBeVisible();
                 await expect(await readCKEditor(page)).toEqual('some download instructions');
 
                 // go to panel 4
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
                 await expect(page.locator('[data-testid="object-keywords"] textarea:first-child')).toHaveValue(
                     'search, evaluate, literature, strategy',
                 );
@@ -241,10 +250,14 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 }
 
                 // no extra filters
-                await expect(page.getByTestId('filter-group-topic').locator('> *')).toHaveCount(9 + 1);
-                await expect(page.getByTestId('filter-group-media-format').locator('> *')).toHaveCount(12 + 1);
-                await expect(page.getByTestId('filter-group-graduate-attributes').locator('> *')).toHaveCount(6 + 1);
-                await expect(page.getByTestId('filter-group-subject').locator('> *')).toHaveCount(10 + 1);
+                await expect(page.locator('[data-testid="filter-group-topic"]').locator('> *')).toHaveCount(9 + 1);
+                await expect(page.locator('[data-testid="filter-group-media-format"]').locator('> *')).toHaveCount(
+                    12 + 1,
+                );
+                await expect(
+                    page.locator('[data-testid="filter-group-graduate-attributes"]').locator('> *'),
+                ).toHaveCount(6 + 1);
+                await expect(page.locator('[data-testid="filter-group-subject"]').locator('> *')).toHaveCount(10 + 1);
                 await expect(page.locator('[data-testid="filter-group-item-type"] div').locator('> *')).toHaveCount(6);
                 await expect(page.locator('[data-testid="filter-group-licence"] div').locator('> *')).toHaveCount(8);
             });
@@ -273,43 +286,50 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await expect(reviewInput).toHaveValue(today);
 
                 // go to panel 2
-                await page.getByTestId('dlor-form-next-button').click();
+                await expect(page.locator('[data-testid="dlor-form-next-button"]')).toBeVisible();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
 
                 // go to panel 3
-                await page.getByTestId('dlor-form-next-button').click();
+                await expect(page.locator('[data-testid="dlor-form-next-button"]')).toBeVisible();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
 
                 // accessible link message is "no message"
-                await expect(page.getByTestId('object-link-interaction-type')).toContainText('can Download');
-                await expect(page.getByTestId('object-link-file-type')).toContainText('XLS');
+                await expect(page.locator('[data-testid="object-link-interaction-type"]')).toContainText(
+                    'can Download',
+                );
+                await expect(page.locator('[data-testid="object-link-file-type"]')).toContainText('XLS');
                 await expect(page.locator('[data-testid="object-link-size-amount"] input')).toHaveValue('3.4');
-                await expect(page.getByTestId('object-link-size-units')).toContainText('GB');
-                await expect(page.getByTestId('object-link-duration-minutes')).toHaveCount(0);
-                await expect(page.getByTestId('object-link-duration-seconds')).toHaveCount(0);
+                await expect(page.locator('[data-testid="object-link-size-units"]')).toContainText('GB');
+                await expect(page.locator('[data-testid="object-link-duration-minutes"]')).toHaveCount(0);
+                await expect(page.locator('[data-testid="object-link-duration-seconds"]')).toHaveCount(0);
 
                 // change file type
-                await page.getByTestId('object-link-file-type').click();
-                await page.getByTestId('object-link-file-type-PPT').click();
+                await page.locator('[data-testid="object-link-file-type"]').click();
+                await expect(page.locator('[data-testid="object-link-file-type-PPT"]')).toBeVisible();
+                await page.locator('[data-testid="object-link-file-type-PPT"]').click();
 
                 // change size
                 await page.locator('[data-testid="object-link-size-amount"] input').press('End');
                 await page.locator('[data-testid="object-link-size-amount"] input').pressSequentially('33');
-                await page.getByTestId('object-link-size-units').click();
-                await page.getByTestId('object-link-size-units-MB').click();
+                await page.locator('[data-testid="object-link-size-units"]').click();
+                await page.locator('[data-testid="object-link-size-units-MB"]').click();
 
                 // go to panel 4
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
 
                 // and save
-                await page.getByTestId('admin-dlor-save-button-submit').click();
+                await page.locator('[data-testid="admin-dlor-save-button-submit"]').click();
 
                 // wait for save outcome dialog
+                await expect(page.locator('[data-testid="dialogbox-dlor-save-outcome"]')).toBeVisible();
                 await expect(page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2')).toContainText(
                     'Changes have been saved',
                 );
 
                 // wait for save complete actions
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('View Object');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Re-edit Object');
+                await expect(page.locator('[data-testid="cancel-dlor-save-outcome"]')).toBeVisible();
+                await expect(page.locator('[data-testid="confirm-dlor-save-outcome"]')).toContainText('View Object');
+                await expect(page.locator('[data-testid="cancel-dlor-save-outcome"]')).toContainText('Re-edit Object');
 
                 // check cookie for sent values
                 const cookie = await context.cookies();
@@ -329,7 +349,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
             test('the form cancel button works', async ({ page }) => {
                 await page.goto(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
-                await page.getByTestId('admin-dlor-form-button-cancel').click();
+                await page.locator('[data-testid="admin-dlor-form-button-cancel"]').click();
                 await expect(page).toHaveURL(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
             });
         });
@@ -355,8 +375,8 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 expect(testCookie.value).toBe('active');
 
                 // open teams drop down
-                await page.getByTestId('object-owning-team').click();
-                await page.getByTestId('object-form-teamid-new').click();
+                await page.locator('[data-testid="object-owning-team"]').click();
+                await page.locator('[data-testid="object-form-teamid-new"]').click();
 
                 const today = moment().format('DD/MM/YYYY');
                 await page.locator('[data-testid="object-review-date"] input').click();
@@ -373,7 +393,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await typeCKEditor(page, undefined, 'This is the admin notes');
 
                 // go to the second panel, Description
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
                 await page.locator('[data-testid="object-title"] input').press('End');
                 await page.locator('[data-testid="object-title"] input').pressSequentially('xx');
                 await typeCKEditor(page, undefined, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
@@ -383,28 +403,28 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.locator('[data-testid="object-cultural-advice"] input').check();
 
                 // go to the third panel, Link
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
                 await page.locator('[data-testid="object-link-url"] input').press('End');
                 await page.locator('[data-testid="object-link-url"] input').pressSequentially('/page');
 
                 // select download as the url interaction type
-                await page.getByTestId('object-link-interaction-type').click();
-                await page.getByTestId('object-link-interaction-type-download').click();
+                await page.locator('[data-testid="object-link-interaction-type"]').click();
+                await page.locator('[data-testid="object-link-interaction-type-download"]').click();
 
                 // choose file type
-                await page.getByTestId('object-link-file-type').click();
+                await page.locator('[data-testid="object-link-file-type"]').click();
                 await page.locator('[data-value="XLS"]').click();
 
                 // enter file size
                 await page.locator('[data-testid="object-link-size-amount"] input').fill('36');
-                await page.getByTestId('object-link-size-units').click();
+                await page.locator('[data-testid="object-link-size-units"]').click();
                 await page.locator('[data-value="MB"]').click();
 
                 const typeableDownloadInstructions = 'xxx';
                 await typeCKEditor(page, undefined, typeableDownloadInstructions);
 
                 // go to the fourth panel, Filtering
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
 
                 await page.locator('[data-testid="filter-topic-assignments"] input').uncheck();
                 await page.locator('[data-testid="filter-topic-research"] input').uncheck();
@@ -426,19 +446,21 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 // add notification text
                 await page.locator('[data-testid="choose-notify"] input').check();
 
-                await expect(page.getByTestId('notify-lightbox-title')).toContainText('Object change notification');
+                await expect(page.locator('[data-testid="notify-lightbox-title"]')).toContainText(
+                    'Object change notification',
+                );
 
                 await typeCKEditor(page, undefined, 'the words that will go in the email');
 
-                await page.getByTestId('notify-lightbox-close-button').click();
+                await page.locator('[data-testid="notify-lightbox-close-button"]').click();
 
-                await page.getByTestId('admin-dlor-save-button-submit').click();
+                await page.locator('[data-testid="admin-dlor-save-button-submit"]').click();
 
                 await expect(
                     page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2').getByText('Changes have been saved'),
                 ).toBeVisible();
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('View Object');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Re-edit Object');
+                await expect(page.locator('[data-testid="confirm-dlor-save-outcome"]')).toContainText('View Object');
+                await expect(page.locator('[data-testid="cancel-dlor-save-outcome"]')).toContainText('Re-edit Object');
 
                 const expectedValues = {
                     object_admin_notes: '<p>This is the admin notes</p>',
@@ -499,15 +521,17 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 // check save-confirmation popup
 
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('View Object');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Re-edit Object');
+                await expect(page.locator('[data-testid="confirm-dlor-save-outcome"]')).toContainText('View Object');
+                await expect(page.locator('[data-testid="cancel-dlor-save-outcome"]')).toContainText('Re-edit Object');
 
                 // navigate back to the list page
-                await page.getByTestId('confirm-dlor-save-outcome').click();
+                await page.locator('[data-testid="confirm-dlor-save-outcome"]').click();
                 await expect(page).toHaveURL(
                     `http://localhost:2020/digital-learning-hub/view/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`,
                 );
-                await expect(page.getByTestId('dlor-detailpage')).toContainText('Advanced literature searching');
+                await expect(page.locator('[data-testid="dlor-detailpage"]')).toContainText(
+                    'Advanced literature searching',
+                );
             });
 
             test('admin can edit, edit the current team, choose a different existing team and re-edit', async ({
@@ -523,13 +547,13 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 expect(testCookie?.value).toBe('active');
 
                 // Edit team details for the current team
-                await page.getByTestId('object-form-teamid-change').click();
+                await page.locator('[data-testid="object-form-teamid-change"]').click();
                 await page.locator('[data-testid="dlor-form-team-manager-edit"] input').fill('manager name');
                 await page.locator('[data-testid="dlor-form-team-email-edit"] input').clear();
                 await page.locator('[data-testid="dlor-form-team-email-edit"] input').fill('lea@example.com');
 
                 // Change to a different team
-                await page.getByTestId('object-owning-team').click();
+                await page.locator('[data-testid="object-owning-team"]').click();
                 await page.locator('[data-value="3"]').click();
 
                 // Set review date
@@ -540,7 +564,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await expect(page.locator('[data-testid="object-review-date"] input')).toHaveValue(today);
 
                 // Go to Description panel
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
 
                 // Fill description fields
                 await page.locator('[data-testid="object-title"] input').press('End');
@@ -552,7 +576,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.locator('[data-testid="object-summary"] textarea:first-child').pressSequentially('xxx');
 
                 // Go to Link panel
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
                 const downloadInstructionText = 'updated download instructions';
 
                 // Set link URL
@@ -561,16 +585,17 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 // Set interaction type
 
-                await page.getByTestId('object-link-interaction-type').click();
-                await page.getByTestId('object-link-interaction-type-view').click();
+                await page.locator('[data-testid="object-link-interaction-type"]').click();
+                await page.locator('[data-testid="object-link-interaction-type-view"]').click();
 
                 // Verify panel state
-                await expect(page.getByTestId('object-link-file-type')).toBeVisible();
-                await expect(page.getByTestId('object-link-size-amount')).not.toBeVisible();
-                await expect(page.getByTestId('object-link-duration-minutes')).toBeVisible();
+                await expect(page.locator('[data-testid="object-link-file-type"]')).toBeVisible();
+                await expect(page.locator('[data-testid="object-link-size-amount"]')).not.toBeVisible();
+                await expect(page.locator('[data-testid="object-link-duration-minutes"]')).toBeVisible();
 
                 // Set file type and duration
-                await page.getByTestId('object-link-file-type').click();
+
+                await page.locator('[data-testid="object-link-file-type"]').click();
                 await page.locator('[data-value="video"]').click();
 
                 await page.locator('[data-testid="object-link-duration-minutes"] input').fill('6');
@@ -579,7 +604,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await typeCKEditor(page, undefined, downloadInstructionText);
 
                 // Go to Filtering panel
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
 
                 // Set filters
                 await page.locator('[data-testid="filter-topic-digital-skills"] input').check();
@@ -599,15 +624,15 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.locator('[data-testid="object-keywords"] textarea:first-child').fill('cat, dog');
 
                 // Save record
-                await page.getByTestId('admin-dlor-save-button-submit').click();
+                await page.locator('[data-testid="admin-dlor-save-button-submit"]').click();
 
                 // Verify save outcome
 
                 await expect(page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2')).toContainText(
                     'Changes have been saved',
                 );
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('View Object');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Re-edit Object');
+                await expect(page.locator('[data-testid="confirm-dlor-save-outcome"]')).toContainText('View Object');
+                await expect(page.locator('[data-testid="cancel-dlor-save-outcome"]')).toContainText('Re-edit Object');
 
                 // Check saved data
                 const expectedValues = {
@@ -656,11 +681,11 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.context().clearCookies();
 
                 // Re-edit the form
-                await page.getByTestId('cancel-dlor-save-outcome').click();
+                await page.locator('[data-testid="cancel-dlor-save-outcome"]').click();
 
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
 
-                await expect(page.getByTestId('dlor-detailpage-sitelabel')).toContainText(
+                await expect(page.locator('[data-testid="dlor-detailpage-sitelabel"]')).toContainText(
                     'Edit object: Advanced literature searching',
                 );
             });
@@ -685,7 +710,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await expect(reviewDateInput).toHaveValue(today);
 
                 // go to the second panel, Description
-                const nextButton = page.getByTestId('dlor-form-next-button');
+                const nextButton = page.locator('[data-testid="dlor-form-next-button"]');
                 await nextButton.click();
 
                 const isFeaturedCheckbox = page.locator('[data-testid="object-is-featured"] input');
@@ -697,9 +722,9 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 await expect(async () => {
                     // choose file type
-                    await page.getByTestId('object-link-file-type').click({ timeout: 500 });
+                    await page.locator('[data-testid="object-link-file-type"]').click({ timeout: 500 });
                     await page.getByTestId('object-link-file-type-something').click({ timeout: 500 });
-                    await page.getByTestId('object-link-file-type-new').click({ timeout: 500 });
+                    await page.locator('[data-testid="object-link-file-type-new"]').click({ timeout: 500 });
                     // panel invalidity count present
                     await expect(
                         page.locator('[data-testid="dlor-panel-validity-indicator-2"] span'),
@@ -710,10 +735,11 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 }).toPass();
 
                 // panel invalidity count no longer present
-                await expect(page.getByTestId('dlor-panel-validity-indicator-2')).toBeHidden();
+                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-2"]')).toBeHidden();
                 await typeCKEditor(page, undefined, 'word');
 
                 // go to the fourth panel, Filtering
+                await expect(nextButton).toBeVisible();
                 await nextButton.click();
 
                 // open the notification lightbox, type something and then uncheck the notify checkbox
@@ -722,21 +748,21 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await chooseNotifyInput.click();
 
                 // the lightbox opens
-                const notifyLightboxTitle = page.getByTestId('notify-lightbox-title');
+                const notifyLightboxTitle = page.locator('[data-testid="notify-lightbox-title"]');
                 await expect(notifyLightboxTitle).toContainText('Object change notification');
 
                 await typeCKEditor(page, undefined, 'the words that will go in the email');
 
-                const closeButton = page.getByTestId('notify-lightbox-close-button');
+                const closeButton = page.locator('[data-testid="notify-lightbox-close-button"]');
                 await expect(closeButton).toContainText('Close');
                 await closeButton.click();
 
                 // check the edit button reopens the lightbox
-                const reeditButton = page.getByTestId('notify-reedit-button');
+                const reeditButton = page.locator('[data-testid="notify-reedit-button"]');
                 await expect(reeditButton).toContainText('Edit');
                 await reeditButton.click();
                 // the lightbox is open
-                const lightboxModal = page.getByTestId('notify-lightbox-modal');
+                const lightboxModal = page.locator('[data-testid="notify-lightbox-modal"]');
                 await expect(notifyLightboxTitle).toContainText('Object change notification');
                 await expect(lightboxModal).toContainText('the words that will go in the email');
 
@@ -771,14 +797,14 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 }).toPass({ timeout: 5000 });
 
                 // save record
-                const saveButton = page.getByTestId('admin-dlor-save-button-submit');
+                const saveButton = page.locator('[data-testid="admin-dlor-save-button-submit"]');
                 await saveButton.click();
 
                 // confirm save happened
-                const cancelSaveOutcomeButton = page.getByTestId('cancel-dlor-save-outcome');
+                const cancelSaveOutcomeButton = page.locator('[data-testid="cancel-dlor-save-outcome"]');
                 const dialogTitle = page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2');
                 await expect(dialogTitle).toContainText('Changes have been saved');
-                const viewObjectButton = page.getByTestId('confirm-dlor-save-outcome');
+                const viewObjectButton = page.locator('[data-testid="confirm-dlor-save-outcome"]');
                 await expect(viewObjectButton).toContainText('View Object');
                 await expect(cancelSaveOutcomeButton).toContainText('Re-edit Object');
 
@@ -852,9 +878,10 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await expect(cancelSaveOutcomeButton).toContainText('Re-edit Object');
                 await cancelSaveOutcomeButton.click();
                 await expect(page.locator('[data-testid="object-publishing-user"] input')).toBeVisible();
+                await expect(nextButton).toBeVisible();
                 await nextButton.click();
 
-                await expect(page.getByTestId('dlor-detailpage-sitelabel')).toContainText(
+                await expect(page.locator('[data-testid="dlor-detailpage-sitelabel"]')).toContainText(
                     'Edit object: Accessibility - Digital Essentials (has Youtube link)',
                 );
             });
@@ -863,7 +890,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
         test.describe('fails correctly', () => {
             test('404 page return correctly', async ({ page }) => {
                 await page.goto(`http://localhost:2020/admin/dlor/edit/object_404?user=${DLOR_ADMIN_USER}`);
-                await expect(page.getByTestId('dlor-form-error')).toContainText(
+                await expect(page.locator('[data-testid="dlor-form-error"]')).toContainText(
                     'The requested page could not be found.',
                 );
             });
@@ -882,21 +909,21 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await expect(page.locator('[data-testid="object-review-date"] input')).toHaveValue(today);
 
                 // go to panel 2
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
 
                 // go to panel 3
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
 
                 // go to panel 4
-                await page.getByTestId('dlor-form-next-button').click();
+                await page.locator('[data-testid="dlor-form-next-button"]').click();
 
                 // save
-                await page.getByTestId('admin-dlor-save-button-submit').click();
+                await page.locator('[data-testid="admin-dlor-save-button-submit"]').click();
                 await expect(page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2')).toContainText(
                     'Request failed with status code 400',
                 );
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('View Object');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Re-edit Object');
+                await expect(page.locator('[data-testid="confirm-dlor-save-outcome"]')).toContainText('View Object');
+                await expect(page.locator('[data-testid="cancel-dlor-save-outcome"]')).toContainText('Re-edit Object');
             });
         });
     });
