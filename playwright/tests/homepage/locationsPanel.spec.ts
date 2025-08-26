@@ -254,19 +254,11 @@ test.describe('Locations Panel', () => {
                 '85',
             );
 
-            let retry = false;
-            await expect(async () => {
-                if (retry) {
-                    await page.setViewportSize({ width: 800, height: 736 });
-                    await page.waitForTimeout(500);
-                    await page.setViewportSize({ width: 414, height: 736 });
-                }
-                retry = true;
-                // askus hidden (it only has hours, no point having the row with no hours)
-                await expect(page.getByTestId('locations-hours-disclaimer')).not.toBeVisible({ timeout: 500 });
-                // hours disclaimer hidden (if no hours displayed, then no point in disclaimer)
-                await expect(page.getByTestId('hours-item-askus-link')).not.toBeVisible({ timeout: 500 });
-            }).toPass();
+            // askus hidden (it only has hours, no point having the row with no hours)
+            await expect(page.getByTestId('locations-hours-disclaimer')).not.toBeVisible();
+
+            // hours disclaimer hidden (if no hours displayed, then no point in disclaimer)
+            await expect(page.getByTestId('hours-item-askus-link')).not.toBeVisible();
         });
         test.describe('the open Locations panel butts up against the Utility bar', () => {
             test('at very wide desktop', async ({ page }) => {
