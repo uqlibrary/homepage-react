@@ -141,14 +141,15 @@ test.describe('The Homepage Learning Resource Panel', () => {
         await expect(page.locator('div[data-testid=learning-resources-panel]')).toContainText(
             locale.homepagePanel.title,
         );
-        await expect(page.getByTestId('staff-course-prompt')).toHaveCount(0);
+        await expect(page.locator('[data-testid="staff-course-prompt"]')).toHaveCount(0);
 
-        const yourCourses = page.getByTestId('your-courses');
+        const yourCourses = page.locator('[data-testid="your-courses"]');
+        await expect(yourCourses).toBeVisible();
         await expect(yourCourses.locator('> * > *')).toHaveCount(5 + 2);
 
-        await expect(page.getByTestId('learning-resource-panel-course-multi-footer')).toContainText(
-            'See all 10 classes',
-        );
+        const footer = page.locator('[data-testid="learning-resource-panel-course-multi-footer"]');
+        await expect(footer).toBeVisible();
+        await expect(footer).toContainText('See all 10 classes');
 
         const liItems = yourCourses.locator('li');
         await expect(liItems).toHaveCount(5);
@@ -219,23 +220,25 @@ test.describe('The Homepage Learning Resource Panel', () => {
 
     test('Staff see example courses', async ({ page }) => {
         await page.goto('/?user=uqstaff');
+        await expect(page.locator('[data-testid="staff-course-prompt"]')).toBeVisible();
         await expect(
             page
-                .getByTestId('staff-course-prompt')
+                .locator('[data-testid="staff-course-prompt"]')
                 .getByText(/Students see enrolled courses\. Example links below:/)
                 .first(),
         ).toBeVisible();
-        await expect(page.getByTestId('no-enrolled-courses')).not.toBeVisible();
+        await expect(page.locator('[data-testid="no-enrolled-courses"]')).not.toBeVisible();
         const numberOfBlocks = 3 + 1; // n classes + 1 header
         await expect(
             page
-                .getByTestId('your-courses')
+                .locator('[data-testid="your-courses"]')
                 .locator(':scope > *')
                 .locator(':scope > *'),
         ).toHaveCount(numberOfBlocks);
+        await expect(page.locator('[data-testid="hcr-0"]')).toBeVisible();
         await expect(
             page
-                .getByTestId('hcr-0')
+                .locator('[data-testid="hcr-0"]')
                 .getByText(/FREN1010/)
                 .first(),
         ).toBeVisible();
