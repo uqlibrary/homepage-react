@@ -22,7 +22,6 @@ mkdir -p coverage/all
 cp "${CODEBUILD_SRC_DIR_TestArtifact1}/coverage/playwright/*" coverage/all
 cp "${CODEBUILD_SRC_DIR_TestArtifact2}/coverage/playwright/*" coverage/all
 cp "${CODEBUILD_SRC_DIR_TestArtifact3}/coverage/jest/coverage-final.json" coverage/all/jest.json
-ls -la coverage/all
 
 # Combine reports into single json file
 nyc merge coverage/all coverage/merged-coverage.json

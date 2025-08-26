@@ -100,12 +100,10 @@ echo "start \n"
 
 case "$PIPE_NUM" in
 "1")
-    npm run start:mock &
     install_pw_deps
     run_pw_tests 1 3
 ;;
 "2")
-    npm run start:mock &
     install_pw_deps
     run_pw_tests 4 7
 ;;
@@ -129,7 +127,6 @@ case "$PIPE_NUM" in
         npm run test:unit:ci:nocoverage
     fi
 
-    npm run start:mock &
     install_pw_deps
     run_pw_tests 8 10
 ;;
