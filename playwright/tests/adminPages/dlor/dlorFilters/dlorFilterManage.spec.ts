@@ -74,7 +74,7 @@ test.describe('Digital Learning Hub admin filter management', () => {
             await page.locator('#facet_order').press('ArrowDown');
 
             await page.locator('#facet_show_help').click();
-            await page.locator('#facet_help').clear();
+            await page.locator('#facet_help').fill('');
             await page.locator('#facet_help').fill('This is an adjusted filter');
             await page.getByTestId('admin-dlor-filter-confirm-button').click();
             await expect(page.locator('#modal-modal-title')).not.toBeVisible();
