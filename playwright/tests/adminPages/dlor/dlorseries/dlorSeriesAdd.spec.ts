@@ -46,7 +46,7 @@ test.describe('Digital Learning Hub admin Series management - add item', () => {
             ).toBeVisible();
 
             await page.locator('[data-testid="series-name"] input').fill('Series without objects');
-            await typeCKEditor(page, 'This is a series without any objects');
+            await typeCKEditor(page, undefined, 'This is a series without any objects');
             await expect(page.locator('#dragLandingAarea')).toContainText('(None yet)');
             await page.getByTestId('admin-dlor-series-form-save-button').click();
             await expect(page.getByTestId('message-title')).toContainText('Series has been created');

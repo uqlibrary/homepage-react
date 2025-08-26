@@ -23,7 +23,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 // open the "edit a team dialog"
                 await page.getByTestId('object-form-teamid-change').click();
                 await assertAccessibility(page, '[data-testid="StandardPage"]');
-                await typeCKEditor(page, 'This is the admin notes');
+                await typeCKEditor(page, undefined, 'This is the admin notes');
 
                 // go to panel 2
                 await page.getByTestId('dlor-form-next-button').click();
@@ -370,13 +370,13 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.locator('[data-testid="dlor-form-team-name-new"] input').fill('new team name');
                 await page.locator('[data-testid="dlor-form-team-manager-new"] input').fill('john Manager');
                 await page.locator('[data-testid="dlor-form-team-email-new"] input').fill('john@example.com');
-                await typeCKEditor(page, 'This is the admin notes');
+                await typeCKEditor(page, undefined, 'This is the admin notes');
 
                 // go to the second panel, Description
                 await page.getByTestId('dlor-form-next-button').click();
                 await page.locator('[data-testid="object-title"] input').press('End');
                 await page.locator('[data-testid="object-title"] input').pressSequentially('xx');
-                await typeCKEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await typeCKEditor(page, undefined, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 await page.locator('[data-testid="object-summary"] textarea:first-child').press('End');
                 await page.locator('[data-testid="object-summary"] textarea:first-child').pressSequentially('xx');
                 await page.locator('[data-testid="object-is-featured"] input').check();
@@ -401,7 +401,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.locator('[data-value="MB"]').click();
 
                 const typeableDownloadInstructions = 'xxx';
-                await typeCKEditor(page, typeableDownloadInstructions);
+                await typeCKEditor(page, undefined, typeableDownloadInstructions);
 
                 // go to the fourth panel, Filtering
                 await page.getByTestId('dlor-form-next-button').click();
@@ -428,7 +428,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 await expect(page.getByTestId('notify-lightbox-title')).toContainText('Object change notification');
 
-                await typeCKEditor(page, 'the words that will go in the email');
+                await typeCKEditor(page, undefined, 'the words that will go in the email');
 
                 await page.getByTestId('notify-lightbox-close-button').click();
 
@@ -547,7 +547,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page
                     .locator('[data-testid="object-title"] input')
                     .pressSequentially('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                await typeCKEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await typeCKEditor(page, undefined, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 await page.locator('[data-testid="object-summary"] textarea:first-child').press('End');
                 await page.locator('[data-testid="object-summary"] textarea:first-child').pressSequentially('xxx');
 
@@ -576,7 +576,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.locator('[data-testid="object-link-duration-minutes"] input').fill('6');
                 await page.locator('[data-testid="object-link-duration-seconds"] input').fill('30');
 
-                await typeCKEditor(page, downloadInstructionText);
+                await typeCKEditor(page, undefined, downloadInstructionText);
 
                 // Go to Filtering panel
                 await page.getByTestId('dlor-form-next-button').click();
@@ -711,7 +711,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 // panel invalidity count no longer present
                 await expect(page.getByTestId('dlor-panel-validity-indicator-2')).toBeHidden();
-                await typeCKEditor(page, 'word');
+                await typeCKEditor(page, undefined, 'word');
 
                 // go to the fourth panel, Filtering
                 await nextButton.click();
@@ -725,7 +725,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 const notifyLightboxTitle = page.getByTestId('notify-lightbox-title');
                 await expect(notifyLightboxTitle).toContainText('Object change notification');
 
-                await typeCKEditor(page, 'the words that will go in the email');
+                await typeCKEditor(page, undefined, 'the words that will go in the email');
 
                 const closeButton = page.getByTestId('notify-lightbox-close-button');
                 await expect(closeButton).toContainText('Close');
