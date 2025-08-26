@@ -72,6 +72,32 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import parse from 'html-react-parser';
 
+import Fuse from 'fuse.js';
+import FuzzySearch from 'modules/Pages/DigitalLearningObjects/SharedComponents/FuzzySearch';
+const fuseData = [
+  {
+    keyword: "Aboriginal and Torres Strait Islander",
+    synonyms: ["ATSI", "Reconciliation", "Culture", "Indigenising curriculum"],
+    keyword_id: 1,
+  },
+  {
+    keyword: "Information Technology",
+    synonyms: ["AI", "Artificial Intelligence", "Web Crawling", "Programming", "Coding", "Software", "Hardware", "Computing"],
+    keyword_id: 2,
+  },
+  {
+    keyword: "Research Skills",
+    synonyms: ["Literature Review", "Data Analysis", "Academic Writing", "Referencing"],
+    keyword_id: 3,
+  },
+];
+const fuseOptions = {
+  includeScore: true,
+  threshold: 0.5,
+  keys: ['keyword', 'synonyms'],
+};
+
+
 const moment = require('moment');
 
 const StyledErrorCountBadge = styled(Badge)(() => ({
@@ -146,6 +172,11 @@ export const DlorForm = ({
     formDefaults,
     mode,
 }) => {
+    //const [inputValue, setInputValue] = useState('');
+    //const [searchOptions, setSearchOptions] = useState([]);
+    // const fuseResult = fuseTest.search("Cheeseburger");
+    // console.log('FUSE RESULT', fuseResult);
+
     console.log('Form Defaults form', formDefaults);
     console.log('Admin notes', dlorAdminNotes);
     const [cookies, setCookie] = useCookies();
@@ -1443,7 +1474,7 @@ export const DlorForm = ({
                     Keywords
                 </Typography>
             </Grid>
-            <Grid item xs={12} style={{ paddingTop: 0 }}>
+            {/* <Grid item xs={12} style={{ paddingTop: 0 }}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_keywords">
                         Keywords - enter a comma separated list of keywords *
@@ -1473,6 +1504,9 @@ export const DlorForm = ({
                         cat, "dog, dog", mouse
                     </Box>
                 </FormControl>
+            </Grid> */}
+            <Grid item xs={12} style={{ paddingTop: 20 }}>
+                <FuzzySearch data={fuseData} options={fuseOptions} delay={300} />
             </Grid>
             {mode === 'edit' && (
                 <Grid item xs={12}>
