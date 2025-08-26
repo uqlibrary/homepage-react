@@ -31,7 +31,7 @@ export default defineConfig({
         headless: process.env.PW_HEADED === 'true' ? false : true,
         ignoreHTTPSErrors: true,
         launchOptions: {
-            args: ['--disable-web-security', '--disable-ipv6'],
+            args: ['--disable-web-security'],
         },
     },
     projects: [
