@@ -12,6 +12,7 @@ test.describe('LibraryUpdates', () => {
     test.describe('content', () => {
         test('loads as expected on desktop', async ({ page }) => {
             await page.goto('/');
+            await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('drupal-article-0')).toContainText('Rae and George Hammer memorial');
             await expect(page.getByTestId('drupal-article-1')).toContainText('Building works at Biological Sciences');
             await expect(page.getByTestId('drupal-article-2')).toContainText('Teaching');
@@ -24,24 +25,23 @@ test.describe('LibraryUpdates', () => {
             //  | XXXXXXXXXXXXXX |
             //  \----------------/
             //  XXXX   XXXX   XXXX
-            let firstBox;
-            await expect(async () => {
-                await page.setViewportSize({ width: 1200, height: 1000 });
-                await page.setViewportSize({ width: 1300, height: 1000 });
-                firstBox = (await page.getByTestId('drupal-article-0').boundingBox()) as BoundingBox;
-                expect(firstBox.x).toBeLessThan(77);
-            }).toPass();
+            const first = page.getByTestId('drupal-article-0');
+            const firstBox = (await first.boundingBox()) as BoundingBox;
+            expect(firstBox.x).toBeLessThan(77);
 
-            const secondBox = (await page.getByTestId('drupal-article-1').boundingBox()) as BoundingBox;
+            const second = page.getByTestId('drupal-article-1');
+            const secondBox = (await second.boundingBox()) as BoundingBox;
             expect(secondBox.x).toBe(firstBox.x);
             expect(secondBox.y).toBeGreaterThan(firstBox.y + firstBox.height);
 
-            const thirdBox = (await page.getByTestId('drupal-article-2').boundingBox()) as BoundingBox;
+            const third = page.getByTestId('drupal-article-2');
+            const thirdBox = (await third.boundingBox()) as BoundingBox;
             expect(thirdBox.y).toBe(secondBox.y);
             expect(thirdBox.y + thirdBox.height).toBe(secondBox.y + secondBox.height);
             expect(thirdBox.x).toBeGreaterThan(secondBox.x + secondBox.width);
 
-            const fourthBox = (await page.getByTestId('drupal-article-3').boundingBox()) as BoundingBox;
+            const fourth = page.getByTestId('drupal-article-3');
+            const fourthBox = (await fourth.boundingBox()) as BoundingBox;
             expect(fourthBox.y).toBe(secondBox.y);
             expect(fourthBox.y + fourthBox.height).toBe(secondBox.y + secondBox.height);
             expect(fourthBox.x).toBeGreaterThan(thirdBox.x + thirdBox.width);

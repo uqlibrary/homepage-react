@@ -160,61 +160,61 @@ test.describe('Test and Tag Page Access', () => {
     const visitTestTagInspect = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/inspect?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+        await expect(standardPage).toContainText(expectedAllowed ? 'for Library' : 'Page unavailable');
     };
 
     const visitInspectionDueReport = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/report/inspectionsdue?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+        await expect(standardPage).toContainText(expectedAllowed ? 'for Library' : 'Page unavailable');
     };
 
     const visitInspectionDevicesRecalibration = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/report/recalibrationsdue?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+        await expect(standardPage).toContainText(expectedAllowed ? 'for Library' : 'Page unavailable');
     };
 
     const visitAssetsByFilterReport = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/report/assetsbyfilter?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+        await expect(standardPage).toContainText(expectedAllowed ? 'for Library' : 'Page unavailable');
     };
 
     const visitTestsByLicencedUserReport = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/report/inspectionsbylicenceduser?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+        await expect(standardPage).toContainText(expectedAllowed ? 'for Library' : 'Page unavailable');
     };
 
     const visitManageAssetTypes = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/manage/assettypes?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+        await expect(standardPage).toContainText(expectedAllowed ? 'for Library' : 'Page unavailable');
     };
 
     const visitBulkAssetUpdate = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/manage/bulkassetupdate?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+        await expect(standardPage).toContainText(expectedAllowed ? 'for Library' : 'Page unavailable');
     };
 
     const visitManageInspectionDetails = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/manage/inspectiondetails?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+        await expect(standardPage).toContainText(expectedAllowed ? 'for Library' : 'Page unavailable');
     };
 
     const visitManageLocations = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/manage/locations?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+        await expect(standardPage).toContainText(expectedAllowed ? 'for Library' : 'Page unavailable');
     };
 
     const visitManageUsers = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/manage/users?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+        await expect(standardPage).toContainText(expectedAllowed ? 'for Library' : 'Page unavailable');
     };
 
     test('verify default user pages', async ({ page }) => {

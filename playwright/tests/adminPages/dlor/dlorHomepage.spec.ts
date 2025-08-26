@@ -123,7 +123,7 @@ test.describe('Digital Learning Hub admin homepage', () => {
             const numExtraButtons = 4; // first, prev, next, last
             const listLocator = page.getByTestId('dlor-homepage-list');
             const firstItemTitle = listLocator.locator('> div:nth-child(1) h2');
-            const keywordInput = page.getByTestId('dlor-homepage-keyword').locator('input');
+            const keywordInput = page.getByTestId('dlor-homepage-keyword');
             const clearKeywordButton = page.getByTestId('keyword-clear');
             const paginationItems = page.locator('nav[aria-label="pagination navigation"] li');
 
@@ -138,8 +138,7 @@ test.describe('Digital Learning Hub admin homepage', () => {
             await expect(firstItemTitle).toContainText('Accessibility - Digital Essentials');
 
             // Filter on keyword in title
-            await keywordInput.focus();
-            await keywordInput.pressSequentially('ummy');
+            await keywordInput.fill('ummy');
             await expect(firstItemTitle).toContainText('Dummy entry to increase list size A');
             await expect(paginationItems.locator('> *')).toHaveCount(2 + numExtraButtons); // now only 2 pages
 
