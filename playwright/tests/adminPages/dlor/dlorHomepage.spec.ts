@@ -459,28 +459,19 @@ test.describe('Digital Learning Hub admin homepage', () => {
         });
 
         test('should be able to favourite and unfavourite an object', async ({ page }) => {
-            const addToFavoriteButton = page.getByTestId('favorite-star-outline-icon');
-            const removeFromFavoriteButton = page.getByTestId('favorite-star-icon');
+            const addToFavoriteButton = page.getByTestId('favorite-star-icon');
+            const removeFromFavoriteButton = page.getByTestId('favorite-star-outline-icon');
 
-            await removeFromFavoriteButton.click();
-            await expect(removeFromFavoriteButton).not.toBeVisible();
-            // Verify tooltip
-            await addToFavoriteButton.hover();
-            await expect(page.locator('.MuiTooltip-tooltip')).toContainText('Add to Favourites');
-
-            await expect(async () => {
-                if (await addToFavoriteButton.isVisible()) {
-                    await addToFavoriteButton.click({ timeout: 500 });
-                    await expect(removeFromFavoriteButton).toBeVisible({ timeout: 1000 });
-                    return;
-                }
-                if (await removeFromFavoriteButton.isVisible()) {
-                    await removeFromFavoriteButton.click({ timeout: 500 });
-                }
-            }).toPass();
-
+            await addToFavoriteButton.click();
+            await expect(addToFavoriteButton).not.toBeVisible();
             // Verify tooltip
             await removeFromFavoriteButton.hover();
+            await expect(page.locator('.MuiTooltip-tooltip')).toContainText('Add to Favourites');
+
+            await removeFromFavoriteButton.click();
+            await expect(addToFavoriteButton).toBeVisible();
+            // Verify tooltip
+            await addToFavoriteButton.hover();
             await expect(page.locator('.MuiTooltip-tooltip')).toContainText('Remove from Favourites');
         });
     });
