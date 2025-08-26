@@ -19,9 +19,7 @@ test.describe('Test and Tag manage inspection devices', () => {
         await checkBaseline(page);
         const dueDateCell = await getFieldValue(page, 'device_calibration_due_date', 2);
         await expect(dueDateCell.locator('svg')).toBeVisible();
-        await assertAccessibility(page, '[data-testid="StandardPage"]', {
-            disabledRules: ['aria-required-children', 'aria-progressbar-name'],
-        });
+        await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['aria-required-children'] });
     });
 
     test('has breadcrumbs', async ({ page }) => {
