@@ -560,17 +560,12 @@ test.describe('Digital Learning Hub', () => {
                 /Mui-selected/,
             );
 
-            expect(async () => {
-                // click reset
-                await page.getByTestId('sidebar-filter-reset-button').click({
-                    force: true,
-                    timeout: 500,
-                });
-                // has reset pagination to page 1
-                await expect(
-                    page.locator('nav[aria-label="pagination navigation"] button[aria-label="page 1"]'),
-                ).toBeVisible({ timeout: 500 });
-            }).toPass();
+            // click reset
+            await page.getByTestId('sidebar-filter-reset-button').click({
+                force: true,
+            });
+            // has reset pagination to page 1
+            await expect(page.locator('nav[aria-label="pagination navigation"] button.Mui-selected')).toBeVisible();
         });
         test('has working site navigation - can move around the pages', async ({ page }) => {
             await page.locator('[data-testid="dlor-homepage-panel-987y-isjgt-9866"] div[role="button"]').click();
