@@ -989,7 +989,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
             await page.goto(`http://localhost:2020/digital-learning-hub/edit/kj5t_8yg4_kj4f?user=${DLOR_ADMIN_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.locator('h1')).toContainText('Digital Learning Hub - Edit Object');
-            await expect(page.getByTestId('dlor-breadcrumb-edit-object-label-0')).toContainText(
+            await expect(page.locator('[data-testid="dlor-breadcrumb-edit-object-label-0"]')).toContainText(
                 'UQ has a Blak History',
             );
         });
@@ -997,8 +997,8 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
             await page.goto(`http://localhost:2020/digital-learning-hub/edit/kj5t_8yg4_kj4f?user=${DLOR_OBJECT_OWNER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.locator('h1')).toContainText('Digital Learning Hub - Edit Object');
-            await expect(page.getByTestId('dlor-form-no-access')).not.toBeVisible();
-            await expect(page.getByTestId('dlor-breadcrumb-edit-object-label-0')).toContainText(
+            await expect(page.locator('[data-testid="dlor-form-no-access"]')).not.toBeVisible();
+            await expect(page.locator('[data-testid="dlor-breadcrumb-edit-object-label-0"]')).toContainText(
                 'UQ has a Blak History',
             );
         });
@@ -1006,7 +1006,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
             await page.goto(`http://localhost:2020/digital-learning-hub/edit/kj5t_8yg4_kj4f?user=${DLOR_NO_EDIT_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.locator('h1')).toBeVisible();
-            await expect(page.getByTestId('dlor-form-no-access')).toBeVisible();
+            await expect(page.locator('[data-testid="dlor-form-no-access"]')).toBeVisible();
         });
     });
 });

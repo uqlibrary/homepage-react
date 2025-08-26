@@ -20,20 +20,20 @@ test.describe('Digital Learning Hub admin Teams Members management', () => {
         test('team user management - add member', async ({ page }) => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.locator('h1')).toContainText('Digital Learning Hub - Team management');
-            await page.getByTestId('dlor-teamlist-edit-1').click();
-            await expect(page.getByTestId('team-members-title')).toBeVisible();
+            await page.locator('[data-testid="dlor-teamlist-edit-1"]').click();
+            await expect(page.locator('[data-testid="team-members-title"]')).toBeVisible();
             // spaces and length check
             await page.locator('[data-testid="add-team-member-username"] input').fill('user name with spaces');
             await expect(page.locator('[data-testid="add-team-member-username"] input')).toHaveValue('usernamewithspa');
             // email check
             await page.locator('[data-testid="add-team-member-email"] input').fill('username@uq');
             // disabled button
-            await expect(page.getByTestId('add-team-member-button')).toBeDisabled();
+            await expect(page.locator('[data-testid="add-team-member-button"]')).toBeDisabled();
             await page.locator('[data-testid="add-team-member-email"] input').fill('username@uq.edu.au');
             // enabled button
-            await page.getByTestId('add-team-member-button').click();
+            await page.locator('[data-testid="add-team-member-button"]').click();
             await expect(page.locator('h1')).toContainText('Digital Learning Hub - Edit Team');
-            await expect(page.getByTestId('dlor-breadcrumb-edit-team-label-1')).toContainText(
+            await expect(page.locator('[data-testid="dlor-breadcrumb-edit-team-label-1"]')).toContainText(
                 'Edit team: LIB DX Digital Content',
             );
         });
@@ -41,42 +41,42 @@ test.describe('Digital Learning Hub admin Teams Members management', () => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await page.waitForSelector('h1');
             await expect(page.locator('h1')).toContainText('Digital Learning Hub - Team management');
-            await page.getByTestId('dlor-teamlist-edit-1').click();
-            await expect(page.getByTestId('team-members-title')).toBeVisible();
+            await page.locator('[data-testid="dlor-teamlist-edit-1"]').click();
+            await expect(page.locator('[data-testid="team-members-title"]')).toBeVisible();
             // Edit first user
-            await page.getByTestId('team-member-edit-0').click();
+            await page.locator('[data-testid="team-member-edit-0"]').click();
             await page.locator('input[value="uqstaff"]').fill('uqstaffedit');
             await page.locator('input[value="uqstaff@uq.edu.au"]').fill('uqstaffedit@uq.edu.au');
-            await page.getByTestId('team-member-save-0').click();
+            await page.locator('[data-testid="team-member-save-0"]').click();
             // Test Cancel button
-            await page.getByTestId('team-member-edit-0').click();
+            await page.locator('[data-testid="team-member-edit-0"]').click();
             await page.locator('input[value="uqstaff"]').fill('uqstaffedit');
             await page.locator('input[value="uqstaff@uq.edu.au"]').fill('uqstaffedit@uq.edu.au');
-            await page.getByTestId('team-member-cancel-0').click();
-            await expect(page.getByTestId('team-member-cancel-0')).not.toBeVisible();
+            await page.locator('[data-testid="team-member-cancel-0"]').click();
+            await expect(page.locator('[data-testid="team-member-cancel-0"]')).not.toBeVisible();
         });
         test('team user management - delete member', async ({ page }) => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await page.waitForSelector('h1');
             await expect(page.locator('h1')).toContainText('Digital Learning Hub - Team management');
-            await page.getByTestId('dlor-teamlist-edit-1').click();
-            await expect(page.getByTestId('team-members-title')).toBeVisible();
+            await page.locator('[data-testid="dlor-teamlist-edit-1"]').click();
+            await expect(page.locator('[data-testid="team-members-title"]')).toBeVisible();
             // Delete first user
-            await page.getByTestId('team-member-delete-0').click();
+            await page.locator('[data-testid="team-member-delete-0"]').click();
             // Cancel delete
-            await page.getByTestId('cancel-dlor-team-member-delete-confirm').click();
-            await page.getByTestId('team-member-delete-0').click();
+            await page.locator('[data-testid="cancel-dlor-team-member-delete-confirm"]').click();
+            await page.locator('[data-testid="team-member-delete-0"]').click();
             // Confirm delete
-            await page.getByTestId('confirm-dlor-team-member-delete-confirm').click();
+            await page.locator('[data-testid="confirm-dlor-team-member-delete-confirm"]').click();
             // confirm we returned to the management page for testing.
-            await expect(page.getByTestId('team-member-delete-0')).toBeVisible();
+            await expect(page.locator('[data-testid="team-member-delete-0"]')).toBeVisible();
         });
     });
     test.describe('Teams member restrictions', () => {
         test('team user management - no access', async ({ page }) => {
             await page.goto('http://localhost:2020/digital-learning-hub/team/edit/2?user=uqstaff');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('dlor-teamItem-error-message')).toContainText(
+            await expect(page.locator('[data-testid="dlor-teamItem-error-message"]')).toContainText(
                 'You are not a member of this team and cannot edit it.',
             );
         });
