@@ -10,10 +10,11 @@ test.describe('Masquerade', () => {
         });
         await expect(
             page
-                .getByTestId('masquerade')
+                .locator('[data-testid="masquerade"]')
                 .getByText(/Masquerade/)
                 .first(),
         ).toBeVisible();
+        console.log('Masquerade');
         await assertAccessibility(page, '[data-testid="masquerade"]');
     });
     test('Masquerade Readonly Accessibility', async ({ page }) => {
@@ -25,10 +26,11 @@ test.describe('Masquerade', () => {
         });
         await expect(
             page
-                .getByTestId('masquerade')
+                .locator('[data-testid="masquerade"]')
                 .getByText(/Masquerade/)
                 .first(),
         ).toBeVisible();
+        console.log('Masquerade');
         await assertAccessibility(page, '[data-testid="masquerade"]');
     });
     test('unprivileged users cant masquerade', async ({ page }) => {
