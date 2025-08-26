@@ -5,9 +5,7 @@
         "skipLibCheck": true,
         "strict": true,
         "allowJs": true,
-        "checkJs": false,
         "noImplicitAny": true,
-        "noEmit": true,
         "paths": {
             "@uq/pw/*": ["*"]
         },
