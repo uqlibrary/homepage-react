@@ -39,6 +39,3 @@ artifacts:
     - 'coverage/**/*'
     - 'playwright/.results/**/trace.zip'
   name: builds/$CODEBUILD_BUILD_NUMBER/coverage
-cache:
-  paths:
-    - '/root/.npm/**/*'

@@ -17,5 +17,5 @@ printf "\n$ npm cache clear\n"
 npm cache clear -f
 
 printf "\n\n--- INSTALL DEPENDENCIES ---\n"
-echo "$ npm ci --prefer-offline"
-npm ci --prefer-offline
+echo "$ npm ci"
+npm ci
