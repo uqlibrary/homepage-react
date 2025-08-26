@@ -307,21 +307,20 @@ test.describe('Digital Learning Hub View page', () => {
 
             // enter a subject so that something is sent even thoiught they uncheck notify
             await page.getByTestId('detailpage-notify-button').click();
+
             await expect(page.getByTestId('notifications-capture')).not.toBeDisabled();
 
             const userEmailInput = page.locator('#userEmail');
-            await expect(async () => {
-                await userEmailInput.clear({ timeout: 500 });
-                await expect(userEmailInput).toHaveValue('', { timeout: 500 });
-            }).toPass();
+            await userEmailInput.clear();
+
             await expect(page.getByTestId('notifications-capture')).toBeDisabled();
 
             await userEmailInput.fill('joe');
             await expect(page.getByTestId('notifications-capture')).toBeDisabled();
-
+            await userEmailInput.clear();
             await userEmailInput.fill('joe@joe.com');
             await expect(page.getByTestId('notifications-capture')).not.toBeDisabled();
-
+            await userEmailInput.clear();
             await userEmailInput.fill('thisfails');
             await expect(page.getByTestId('notifications-capture')).toBeDisabled();
         });
