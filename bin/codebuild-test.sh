@@ -55,11 +55,7 @@ function check_code_style {
 }
 
 function fix_coverage_report_paths() {
-    if [[ ! -f "$1" ]]; then
-        return 0
-    fi
-    
-    sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' "$1"
+    [[ -f "$1" ]] && sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' "$1"
 }
 
 function install_pw_deps() {
