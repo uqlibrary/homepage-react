@@ -1,6 +1,6 @@
-import { test, expect } from '@uq/pw/test';
-import { DLOR_ADMIN_USER } from '@uq/pw/lib/constants';
-import { assertAccessibility } from '@uq/pw/lib/axe';
+import { test, expect } from '@uqpw/test';
+import { DLOR_ADMIN_USER } from '@uqpw/lib/constants';
+import { assertAccessibility } from '@uqpw/lib/axe';
 
 test.describe('Digital Learning Hub admin Series management', () => {
     test.beforeEach(async ({ page }) => {

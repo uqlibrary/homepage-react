@@ -7,7 +7,7 @@
         "allowJs": true,
         "noImplicitAny": true,
         "paths": {
-            "@uq/pw/*": ["*"]
-        },
+            "@uqpw/*": ["*"]
+        }
     },
 }

@@ -1,5 +1,5 @@
-import { test, expect } from '@uq/pw/test';
-import { assertAccessibility } from '@uq/pw/lib/axe';
+import { test, expect } from '@uqpw/test';
+import { assertAccessibility } from '@uqpw/lib/axe';
 import { clickButton, dateHasValue } from '../../../support/helpers';
 
 test.describe('Alerts Admin View Page', () => {

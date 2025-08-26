@@ -1,5 +1,5 @@
-import { test, expect } from '@uq/pw/test';
-import { assertAccessibility } from '@uq/pw/lib/axe';
+import { test, expect } from '@uqpw/test';
+import { assertAccessibility } from '@uqpw/lib/axe';
 
 test.describe('not found page accessibility', () => {
     test('unprivileged user on an admin-only page is accessible', async ({ page }) => {
