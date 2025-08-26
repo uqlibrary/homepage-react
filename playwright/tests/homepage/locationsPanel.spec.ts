@@ -4,14 +4,9 @@ import { assertAccessibility } from '@uq/pw/lib/axe';
 const openCloseWorks = () => {
     test.describe('tests', () => {
         test('can click away to close the dialog', async ({ page }) => {
-            await expect(async () => {
-                await page.getByTestId('hours-accordion-open').click({ timeout: 500 });
-                // dialog is open
-                await expect(page.getByTestId('locations-wrapper')).toContainText('See all Library and AskUs hours', {
-                    timeout: 1000,
-                });
-            }).toPass();
-
+            await page.getByTestId('hours-accordion-open').click();
+            // dialog is open
+            await expect(page.getByTestId('locations-wrapper')).toContainText('See all Library and AskUs hours');
             // click elsewhere on the screen
             await page.locator('body').click();
             // dialog is closed
