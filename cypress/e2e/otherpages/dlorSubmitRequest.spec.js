@@ -22,9 +22,7 @@ describe('Request an object addition to the Digital Learning Hub', () => {
             it('opens the form', () => {
                 cy.visit('digital-learning-hub');
 
-                cy.get('[data-testid="dlor-homepage-request-new-item"]')
-                    .contains('Submit new object request')
-                    .click();
+                cy.get('[data-testid="dlor-homepage-request-new-item"]').contains('Submit new object request').click();
                 cy.get('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                     .contains('Digital Learning Hub')
                     .should('have.attr', 'href')
@@ -32,11 +30,12 @@ describe('Request an object addition to the Digital Learning Hub', () => {
                 cy.get(
                     '[data-testid="dlor-breadcrumb-create-an-object-for-the-digital-learning-hub-label-0"]',
                 ).contains('Create an Object for the Digital Learning Hub');
+
             });
         });
         context('successfully', () => {
             beforeEach(() => {
-                cy.visit('http://localhost:2020/digital-learning-hub/submit');
+                cy.visit(`http://localhost:2020/digital-learning-hub/submit`);
                 cy.viewport(1300, 1000);
             });
             it('navigation is functional and help is shown', () => {
@@ -381,9 +380,8 @@ describe('Request an object addition to the Digital Learning Hub', () => {
                     .should('not.be.disabled')
                     .click();
                 cy.get('[data-testid="message-title"]').should('exist'); // wording to come after review
-                cy.get('[data-testid="confirm-dlor-save-outcome"]')
-                    .should('exist')
-                    .click();
+                cy.get('[data-testid="confirm-dlor-save-outcome"]').should('exist').click();
+
             });
             it('shows character minimums', () => {
                 // go to the second panel, description

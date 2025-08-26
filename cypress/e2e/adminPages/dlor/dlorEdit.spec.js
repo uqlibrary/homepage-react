@@ -1411,9 +1411,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
             cy.get('h1').should('contain', 'Digital Learning Hub - Edit Object');
-            cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]')
-                .should('exist')
-                .should('contain', 'UQ has a Blak History');
+            cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]').should('exist').should('contain', 'UQ has a Blak History');
         });
         it('is accessible for a DLOR object owner', () => {
             cy.visit(`http://localhost:2020/digital-learning-hub/edit/kj5t_8yg4_kj4f?user=${DLOR_OBJECT_OWNER}`);
@@ -1421,9 +1419,7 @@ describe('Edit an object on the Digital Learning Hub', () => {
             cy.get('h1').should('be.visible');
             cy.get('h1').should('contain', 'Digital Learning Hub - Edit Object');
             cy.get('[data-testid="dlor-form-no-access"]').should('not.exist');
-            cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]')
-                .should('exist')
-                .should('contain', 'UQ has a Blak History');
+            cy.get('[data-testid="dlor-breadcrumb-edit-object-label-0"]').should('exist').should('contain', 'UQ has a Blak History');
         });
         it('is not accessible for a DLOR object owner with a different user', () => {
             cy.visit(`http://localhost:2020/digital-learning-hub/edit/kj5t_8yg4_kj4f?user=${DLOR_NO_EDIT_USER}`);
