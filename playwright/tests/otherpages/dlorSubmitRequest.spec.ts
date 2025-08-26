@@ -18,10 +18,10 @@ test.describe('Request an object addition to the Digital Learning Hub', () => {
                     .click();
                 await expect(
                     page
-                        .locator('a[data-testid="dlor-breadcrumb-admin-homelink"]')
+                        .getByTestId('dlor-breadcrumb-admin-homelink')
                         .getByText(/Digital Learning Hub/)
                         .first(),
-                ).toHaveAttribute('href', `/digital-learning-hub`);
+                ).toHaveAttribute('href', /\/digital-learning-hub/);
                 await expect(
                     page
                         .locator(
@@ -70,10 +70,10 @@ test.describe('Request an object addition to the Digital Learning Hub', () => {
             test('loads as expected', async ({ page }) => {
                 await expect(
                     page
-                        .locator('a[data-testid="dlor-breadcrumb-admin-homelink"]')
+                        .getByTestId('dlor-breadcrumb-admin-homelink')
                         .getByText(/Digital Learning Hub/)
                         .first(),
-                ).toHaveAttribute('href', `/digital-learning-hub`);
+                ).toHaveAttribute('href', /\/digital-learning-hub/);
                 await expect(
                     page
                         .locator(
