@@ -12,23 +12,25 @@ test.describe('LibraryUpdates', () => {
     test.describe('content', () => {
         test('loads as expected on desktop', async ({ page }) => {
             await page.goto('/');
-            await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('drupal-article-0')).toContainText('Rae and George Hammer memorial');
             await expect(page.getByTestId('drupal-article-1')).toContainText('Building works at Biological Sciences');
             await expect(page.getByTestId('drupal-article-2')).toContainText('Teaching');
             await expect(page.getByTestId('drupal-article-3')).toContainText('Digital Essentials');
 
-            await expect(page.locator('[data-testid="library-updates-parent"] > div')).toHaveCount(4 + 1); // 4 news stories and a heading
+            await expect(page.locator('[data-testid="library-updates-parent"] > div')).toHaveCount(5);
 
             // at desktop, the articles are laid out like:
             //  /----------------\
             //  | XXXXXXXXXXXXXX |
             //  \----------------/
             //  XXXX   XXXX   XXXX
-            await page.evaluate(() => window.scrollBy(0, document.body.scrollHeight));
-            const firstBox = (await page.getByTestId('drupal-article-0').boundingBox()) as BoundingBox;
-            // CY to PW conversion note: the baseline value changed from 77 to 84 when running tests in parallel
-            expect(firstBox.x).toBeLessThan(84);
+            let firstBox;
+            await expect(async () => {
+                await page.setViewportSize({ width: 1200, height: 1000 });
+                await page.setViewportSize({ width: 1300, height: 1000 });
+                firstBox = (await page.getByTestId('drupal-article-0').boundingBox()) as BoundingBox;
+                expect(firstBox.x).toBeLessThan(77);
+            }).toPass();
 
             const secondBox = (await page.getByTestId('drupal-article-1').boundingBox()) as BoundingBox;
             expect(secondBox.x).toBe(firstBox.x);
