@@ -15,7 +15,6 @@
 .idea/sonarlint/*
 .idea/snyk.project.settings.xml
 .idea/misc.xml
-.idea/GitLink.xml
 node_modules
 dist
 npm-debug.log*
