@@ -519,7 +519,7 @@ export const DLOTeamForm = ({
                                             </AccordionDetails>
                                         </Accordion>
                                     </Grid>
-                                    
+
                                 </Grid>
                             </Grid>
 

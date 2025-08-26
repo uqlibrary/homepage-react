@@ -1665,7 +1665,7 @@ export const DlorForm = ({
         // 3. In the team that owns the object
         /* istanbul ignore else */
         if (Array.isArray(dlorTeamList) && formDefaults?.object_owning_team_id) {
-            
+
             const owningTeam = dlorTeamList.find(t => t.team_id === formDefaults.object_owning_team_id);
             console.log("STEP 1", owningTeam);
             if (

@@ -21,7 +21,7 @@ describe('Request an object addition to the Digital Learning Hub', () => {
         context('interface link', () => {
             it('opens the form', () => {
                 cy.visit('digital-learning-hub');
-               
+
                 cy.get('[data-testid="dlor-homepage-request-new-item"]').contains('Submit new object request').click();
                 cy.get('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                     .contains('Digital Learning Hub')
@@ -57,7 +57,7 @@ describe('Request an object addition to the Digital Learning Hub', () => {
                 );
 
                 cy.get('[data-testid="dlor-UserAdd-helper"]').should('exist');
-                
+
                 // go to the third panel, Link
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')
@@ -70,7 +70,7 @@ describe('Request an object addition to the Digital Learning Hub', () => {
                 );
 
                 cy.get('[data-testid="dlor-UserAdd-helper"]').should('exist');
-                
+
                 // go to the fourth panel, Filtering
                 cy.get('[data-testid="dlor-form-next-button"]')
                     .should('exist')

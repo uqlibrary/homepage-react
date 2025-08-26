@@ -284,7 +284,7 @@ describe('Digital Learning Hub admin Edit Team', () => {
                 .should('be.visible')
                 .contains('My team(s) details')
                 .click();
-            
+
             cy.get('[data-testid="StandardPage-title"]').should('exist')
             cy.wait(2000)
             cy.get('[data-testid="dlor-detailpage-sitelabel"]').should('be.visible')
@@ -293,8 +293,8 @@ describe('Digital Learning Hub admin Edit Team', () => {
                 .should('exist')
                 .should('be.visible')
                 .click();
-            
-           
+
+
             cy.get('[data-testid="dlor-breadcrumb-edit-team-label-1"]').should('be.visible')
                 .contains('Edit team: LIB DX Digital Content');
         })
