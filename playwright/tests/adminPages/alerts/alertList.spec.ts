@@ -27,18 +27,21 @@ test.describe('Alert Admin List page', () => {
                 .first(),
         ).toBeVisible();
         // this alert has all 3 chips
+        await expect(page.getByTestId('alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245')).toBeVisible();
         await expect(
             page
                 .getByTestId('alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245')
                 .getByText(/Urgent/)
                 .first(),
         ).toBeVisible();
+        await expect(page.getByTestId('alert-list-link-chip-1db618c0-d897-11eb-a27e-df4e46db7245')).toBeVisible();
         await expect(
             page
                 .getByTestId('alert-list-link-chip-1db618c0-d897-11eb-a27e-df4e46db7245')
                 .getByText(/Link/)
                 .first(),
         ).toBeVisible();
+        await expect(page.getByTestId('alert-list-permanent-chip-1db618c0-d897-11eb-a27e-df4e46db7245')).toBeVisible();
         await expect(
             page
                 .getByTestId('alert-list-permanent-chip-1db618c0-d897-11eb-a27e-df4e46db7245')
@@ -71,6 +74,7 @@ test.describe('Alert Admin List page', () => {
         await expect(
             page.getByTestId('alert-list-permanent-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35'),
         ).not.toBeVisible();
+        await expect(page.getByTestId('admin-alerts-list-past-list')).toBeVisible();
         await expect(
             page
                 .getByTestId('headerRow-count-past')
@@ -103,6 +107,7 @@ test.describe('Alert Admin List page', () => {
         await hasAWorkingHelpButton(page);
     });
     test('has a working Add button on the List page', async ({ page }) => {
+        await expect(page.getByTestId('admin-alerts-help-display-button')).toBeVisible();
         await page.getByTestId('admin-alerts-help-display-button').click();
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts/add');
     });
