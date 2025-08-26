@@ -18,7 +18,7 @@ test.describe('Alerts Admin View Page', () => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
     test('has breadcrumb', async ({ page }) => {
-        await expect(page.getByTestId('subsite-title')).toHaveText('Alerts admin');
+        await expect(page.locator('[data-testid="subsite-title"]')).toHaveText('Alerts admin');
     });
     test('can view an alert without being able to edit any fields', async ({ page }) => {
         await expect(
@@ -59,23 +59,29 @@ test.describe('Alerts Admin View Page', () => {
     });
     test('can return to the list page from the view page', async ({ page }) => {
         await expect(page.locator('[data-testid="admin-alerts-view-title"] input')).toHaveValue('Example alert:');
-        await expect(page.getByTestId('admin-alerts-view-button-block').locator(':scope > *')).toHaveCount(2);
+        await expect(page.locator('[data-testid="admin-alerts-view-button-block"]').locator(':scope > *')).toHaveCount(
+            2,
+        );
 
         await clickButton(page, 'button[data-testid="admin-alerts-view-button-cancel"]', 'Cancel');
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts');
     });
     test('can visit the clone page from the view page', async ({ page }) => {
         await expect(page.locator('[data-testid="admin-alerts-view-title"] input')).toHaveValue('Example alert:');
-        await expect(page.getByTestId('admin-alerts-view-button-block').locator(':scope > *')).toHaveCount(2);
+        await expect(page.locator('[data-testid="admin-alerts-view-button-block"]').locator(':scope > *')).toHaveCount(
+            2,
+        );
 
         await clickButton(page, 'button[data-testid="admin-alerts-view-button-save"]', 'Clone');
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245');
     });
     test('has a Help button on the View page', async ({ page }) => {
+        await expect(page.locator('[data-testid="admin-alerts-help-button"]')).toBeVisible();
         // the reusable function doesnt work here - unclear why
         // hasAWorkingHelpButton();
     });
     test('can show a preview of an urgent-priority permanent alert with link', async ({ page }) => {
+        await expect(page.locator('uq-alert[id="alert-preview"]')).toBeVisible();
         await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alerttitle', 'Example alert:');
         await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('prioritytype', 'urgent');
         await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute(
@@ -88,15 +94,19 @@ test.describe('Alerts Admin View Page - other page tests', () => {
     test('can show a preview of a info-priority non-permanent alert without link', async ({ page }) => {
         await page.goto('http://localhost:2020/admin/alerts/view/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
         await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.locator('uq-alert[id="alert-preview"]')).toBeVisible();
         await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alerttitle', 'Sample alert 2:');
         await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('prioritytype', 'info');
         await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alertmessage', 'Has mock data.');
         // the editing user displays correctly
-        await expect(page.getByTestId('admin-alerts-view-created-by')).not.toBeVisible();
-        await expect(page.getByTestId('admin-alerts-view-updated-by')).toContainText('Last Updated by: uqtest2');
+        await expect(page.locator('[data-testid="admin-alerts-view-created-by"]')).not.toBeVisible();
+        await expect(page.locator('[data-testid="admin-alerts-view-updated-by"]')).toContainText(
+            'Last Updated by: uqtest2',
+        );
     });
     test('can show a preview of an extreme-priority permanent alert with link', async ({ page }) => {
         await page.goto('http://localhost:2020/admin/alerts/view/d23f2e10-d7d6-11eb-a928-71f3ef9d35d9?user=uqstaff');
+        await expect(page.locator('uq-alert[id="alert-preview"]')).toBeVisible();
         await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute(
             'alerttitle',
             'Face masks in the Library:',
@@ -108,28 +118,32 @@ test.describe('Alerts Admin View Page - other page tests', () => {
         );
 
         // the editing user displays correctly
-        await expect(page.getByTestId('admin-alerts-view-created-by')).not.toBeVisible();
-        await expect(page.getByTestId('admin-alerts-view-updated-by')).not.toBeVisible();
+        await expect(page.locator('[data-testid="admin-alerts-view-created-by"]')).not.toBeVisible();
+        await expect(page.locator('[data-testid="admin-alerts-view-updated-by"]')).not.toBeVisible();
     });
     test('tells the user when alert appeared on all systems', async ({ page }) => {
         await page.goto('http://localhost:2020/admin/alerts/view/cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08?user=uqstaff');
         await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.locator('[data-testid="admin-alerts-view-systems"]')).toBeVisible();
         await expect(
             page
-                .getByTestId('admin-alerts-view-systems')
+                .locator('[data-testid="admin-alerts-view-systems"]')
                 .getByText(/This alert appeared on all systems/)
                 .first(),
         ).toBeVisible();
 
-        await expect(page.getByTestId('admin-alerts-view-created-by')).toContainText('Created by: uqtest1');
-        await expect(page.getByTestId('admin-alerts-view-updated-by')).toContainText('Last Updated by: uqtest2');
+        await expect(page.locator('[data-testid="admin-alerts-view-created-by"]')).toContainText('Created by: uqtest1');
+        await expect(page.locator('[data-testid="admin-alerts-view-updated-by"]')).toContainText(
+            'Last Updated by: uqtest2',
+        );
     });
     test('tells the user which systems the alert appeared on', async ({ page }) => {
         await page.goto('http://localhost:2020/admin/alerts/view/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
         await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.locator('[data-testid="admin-alerts-view-checkbox-system-primo"]')).toBeVisible();
         await expect(
             page
-                .getByTestId('admin-alerts-view-checkbox-system-primo')
+                .locator('[data-testid="admin-alerts-view-checkbox-system-primo"]')
                 .getByText(/Primo/)
                 .first(),
         ).toBeVisible();

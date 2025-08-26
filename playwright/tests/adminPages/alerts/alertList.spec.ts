@@ -18,49 +18,60 @@ test.describe('Alert Admin List page', () => {
         ).toBeVisible();
     });
     test('displays a list of alerts to the authorised user', async ({ page }) => {
+        await expect(page.locator('[data-testid="admin-alerts-list-current-list"]')).toBeVisible();
         await expect(page.locator('[data-testid="admin-alerts-list-current-list"] tbody tr')).toHaveCount(
             1 + numRowsHiddenAsNoDataInfo,
         );
         await expect(
             page
-                .getByTestId('headerRow-count-current')
+                .locator('[data-testid="headerRow-count-current"]')
                 .getByText(/1 alert/)
                 .first(),
         ).toBeVisible();
         // this alert has all 3 chips
-        await expect(page.getByTestId('alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245')).toBeVisible();
+        await expect(
+            page.locator('[data-testid="alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]'),
+        ).toBeVisible();
         await expect(
             page
-                .getByTestId('alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245')
+                .locator('[data-testid="alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]')
                 .getByText(/Urgent/)
                 .first(),
         ).toBeVisible();
-        await expect(page.getByTestId('alert-list-link-chip-1db618c0-d897-11eb-a27e-df4e46db7245')).toBeVisible();
+        await expect(
+            page.locator('[data-testid="alert-list-link-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]'),
+        ).toBeVisible();
         await expect(
             page
-                .getByTestId('alert-list-link-chip-1db618c0-d897-11eb-a27e-df4e46db7245')
+                .locator('[data-testid="alert-list-link-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]')
                 .getByText(/Link/)
                 .first(),
         ).toBeVisible();
-        await expect(page.getByTestId('alert-list-permanent-chip-1db618c0-d897-11eb-a27e-df4e46db7245')).toBeVisible();
+        await expect(
+            page.locator('[data-testid="alert-list-permanent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]'),
+        ).toBeVisible();
         await expect(
             page
-                .getByTestId('alert-list-permanent-chip-1db618c0-d897-11eb-a27e-df4e46db7245')
+                .locator('[data-testid="alert-list-permanent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]')
                 .getByText(/Permanent/)
                 .first(),
         ).toBeVisible();
 
         // the system chips display as expected
         await expect(
+            page.locator('[data-testid="alert-list-system-chip-1db618c0-d897-11eb-a27e-df4e46db7245-homepage"]'),
+        ).toBeVisible();
+        await expect(
             page
-                .getByTestId('alert-list-system-chip-1db618c0-d897-11eb-a27e-df4e46db7245-homepage')
+                .locator('[data-testid="alert-list-system-chip-1db618c0-d897-11eb-a27e-df4e46db7245-homepage"]')
                 .getByText(/System: Home page/)
                 .first(),
         ).toBeVisible();
         await expect(page.locator('[data-testid="admin-alerts-list-future-list"] tbody')).toBeVisible();
+        await expect(page.locator('[data-testid="admin-alerts-list-future-list"] tbody')).toBeVisible();
         await expect(
             page
-                .getByTestId('headerRow-count-scheduled')
+                .locator('[data-testid="headerRow-count-scheduled"]')
                 .getByText(/5 alerts/)
                 .first(),
         ).toBeVisible();
@@ -70,15 +81,19 @@ test.describe('Alert Admin List page', () => {
         ).toHaveCount(5 + numRowsHiddenAsNoDataInfo);
         await expect(page.locator('[data-testid="admin-alerts-list-future-list"] tfoot')).not.toBeVisible();
         // this alert has no chips
-        await expect(page.getByTestId('alert-list-urgent-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35')).not.toBeVisible();
-        await expect(page.getByTestId('alert-list-link-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35')).not.toBeVisible();
         await expect(
-            page.getByTestId('alert-list-permanent-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35'),
+            page.locator('[data-testid="alert-list-urgent-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]'),
         ).not.toBeVisible();
-        await expect(page.getByTestId('admin-alerts-list-past-list')).toBeVisible();
+        await expect(
+            page.locator('[data-testid="alert-list-link-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]'),
+        ).not.toBeVisible();
+        await expect(
+            page.locator('[data-testid="alert-list-permanent-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]'),
+        ).not.toBeVisible();
+        await expect(page.locator('[data-testid="admin-alerts-list-past-list"]')).toBeVisible();
         await expect(
             page
-                .getByTestId('headerRow-count-past')
+                .locator('[data-testid="headerRow-count-past"]')
                 .getByText(/78 alerts/)
                 .first(),
         ).toBeVisible();
@@ -86,6 +101,7 @@ test.describe('Alert Admin List page', () => {
         await expect(
             page.locator('[data-testid="admin-alerts-list-past-list"] tbody ').locator(':scope > *'),
         ).toHaveCount(5 + numRowsHiddenAsNoDataInfo);
+        await expect(page.locator('[data-testid="admin-alerts-list-past-list"] tfoot')).toBeVisible();
         await expect(
             page
                 .locator('[data-testid="admin-alerts-list-past-list"] tfoot')
@@ -101,15 +117,15 @@ test.describe('Alert Admin List page', () => {
                 .getByText(/All alerts/)
                 .first(),
         ).toBeVisible();
-        await expect(page.getByTestId('alert-list-row-1db618c0-d897-11eb-a27e-df4e46db7245')).toBeVisible();
+        await expect(page.locator('[data-testid="alert-list-row-1db618c0-d897-11eb-a27e-df4e46db7245"]')).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
     test('has a working Help button on the List page', async ({ page }) => {
         await hasAWorkingHelpButton(page);
     });
     test('has a working Add button on the List page', async ({ page }) => {
-        await expect(page.getByTestId('admin-alerts-help-display-button')).toBeVisible();
-        await page.getByTestId('admin-alerts-help-display-button').click();
+        await expect(page.locator('[data-testid="admin-alerts-help-display-button"]')).toBeVisible();
+        await page.locator('[data-testid="admin-alerts-help-display-button"]').click();
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts/add');
     });
     test('has a working Edit button on the List page', async ({ page }) => {
@@ -180,15 +196,21 @@ test.describe('Alert Admin List page', () => {
     });
     test('has working Split button actions for current/scheduled alerts', async ({ page }) => {
         await expect(
+            page.locator('[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]'),
+        ).toBeVisible();
+        await expect(
             page
-                .getByTestId('alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245')
+                .locator('[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]')
                 .getByText(/Edit/)
                 .first(),
         ).toBeVisible();
         // the dropdown split button exists but is not open
         await expect(
+            page.locator('[data-testid="alert-list-arrowicon-1db618c0-d897-11eb-a27e-df4e46db7245"]'),
+        ).toBeVisible();
+        await expect(
             page
-                .getByTestId('alert-list-arrowicon-1db618c0-d897-11eb-a27e-df4e46db7245')
+                .locator('[data-testid="alert-list-arrowicon-1db618c0-d897-11eb-a27e-df4e46db7245"]')
                 .locator('..')
                 .locator('..')
                 .locator(':scope > *'),
@@ -200,15 +222,16 @@ test.describe('Alert Admin List page', () => {
         );
         await expect(
             page
-                .getByTestId('alert-list-arrowicon-1db618c0-d897-11eb-a27e-df4e46db7245')
+                .locator('[data-testid="alert-list-arrowicon-1db618c0-d897-11eb-a27e-df4e46db7245"]')
                 .locator('..')
                 .locator('..')
                 .locator(':scope > *'),
         ).toHaveCount(2);
         // CLONE BUTTON WORKS
-        await page.getByTestId('1db618c0-d897-11eb-a27e-df4e46db7245-clone-button').click();
+        await expect(page.locator('[data-testid="1db618c0-d897-11eb-a27e-df4e46db7245-clone-button"]')).toBeVisible();
+        await page.locator('[data-testid="1db618c0-d897-11eb-a27e-df4e46db7245-clone-button"]').click();
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245');
-        await page.getByTestId('admin-alerts-form-button-cancel').click();
+        await page.locator('[data-testid="admin-alerts-form-button-cancel"]').click();
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts');
         await page
             .locator(
@@ -216,47 +239,59 @@ test.describe('Alert Admin List page', () => {
             )
             .click();
         // DELETE BUTTON WORKS
-        await page.getByTestId('1db618c0-d897-11eb-a27e-df4e46db7245-delete-button').click();
+        await expect(page.locator('[data-testid="1db618c0-d897-11eb-a27e-df4e46db7245-delete-button"]')).toBeVisible();
+        await page.locator('[data-testid="1db618c0-d897-11eb-a27e-df4e46db7245-delete-button"]').click();
         // confirmation appears
         await expect(
             page
-                .getByTestId('message-title')
+                .locator('[data-testid="message-title"]')
                 .getByText(/Remove 1 alert\?/)
                 .first(),
         ).toBeVisible();
+        await expect(page.locator('[data-testid="confirm-alert-delete-confirm"]')).toBeVisible();
         await expect(
             page
-                .getByTestId('confirm-alert-delete-confirm')
+                .locator('[data-testid="confirm-alert-delete-confirm"]')
                 .getByText(/Proceed/)
                 .first(),
         ).toBeVisible();
-        await page.getByTestId('confirm-alert-delete-confirm').click();
+        await page.locator('[data-testid="confirm-alert-delete-confirm"]').click();
         // dialog disappears
-        await expect(page.getByTestId('dialogbox-alert-delete-confirm')).not.toBeVisible();
+        await expect(page.locator('[data-testid="dialogbox-alert-delete-confirm"]')).not.toBeVisible();
         // cant test display further as mock data doesnt actually delete
     });
     test('has working Split button actions for past alerts', async ({ page }) => {
         // VIEW BUTTON WORKS
-        await expect(page.getByTestId('alert-list-item-view-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9')).toBeVisible();
+        await expect(
+            page.locator('[data-testid="alert-list-item-view-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]'),
+        ).toBeVisible();
         await expect(
             page
-                .getByTestId('alert-list-item-view-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9')
+                .locator('[data-testid="alert-list-item-view-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]')
                 .getByText(/View/)
                 .first(),
         ).toBeVisible();
-        await page.getByTestId('alert-list-item-view-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9').click();
+        await page.locator('[data-testid="alert-list-item-view-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').click();
         // but this is actually showing an error because we dont have the mock data
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts/view/d23f2e10-d7d6-11eb-a928-71f3ef9d35d9');
         await page.goto('http://localhost:2020/admin/alerts?user=uqstaff');
         // the dropdown split button exists but is not open
         await expect(
+            page.locator('[data-testid="alert-list-arrowicon-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]'),
+        ).toBeVisible();
+        await expect(
             page
-                .getByTestId('alert-list-arrowicon-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9')
+                .locator('[data-testid="alert-list-arrowicon-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]')
                 .locator('..')
                 .locator('..')
                 .locator(':scope > *'),
         ).toHaveCount(1);
+        await expect(
+            page.locator(
+                '[data-testid="alert-list-action-block-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"] button:nth-of-type(2)',
+            ),
+        ).toBeVisible();
         await page
             .locator(
                 '[data-testid="alert-list-action-block-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"] button:nth-of-type(2)',
@@ -264,32 +299,34 @@ test.describe('Alert Admin List page', () => {
             .click();
         await expect(
             page
-                .getByTestId('alert-list-arrowicon-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9')
+                .locator('[data-testid="alert-list-arrowicon-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]')
                 .locator('..')
                 .locator('..')
                 .locator(':scope > *'),
         ).toHaveCount(2);
         // CLONE PAGE LINK WORKS
-        await expect(page.getByTestId('d23f2e10-d7d6-11eb-a928-71f3ef9d35d9-clone-button')).toBeVisible();
+        await expect(page.locator('[data-testid="d23f2e10-d7d6-11eb-a928-71f3ef9d35d9-clone-button"]')).toBeVisible();
         // but the mock data doesnt exist so we wont try to load it
         // DELETE PAGE LINK WORKS (needs actual test here because the method is slightly different to the checkbox)
-        await page.getByTestId('d23f2e10-d7d6-11eb-a928-71f3ef9d35d9-delete-button').click();
+        await expect(page.locator('[data-testid="d23f2e10-d7d6-11eb-a928-71f3ef9d35d9-delete-button"]')).toBeVisible();
+        await page.locator('[data-testid="d23f2e10-d7d6-11eb-a928-71f3ef9d35d9-delete-button"]').click();
         // confirmation appears
         await expect(
             page
-                .getByTestId('message-title')
+                .locator('[data-testid="message-title"]')
                 .getByText(/Remove 1 alert\?/)
                 .first(),
         ).toBeVisible();
+        await expect(page.locator('[data-testid="confirm-alert-delete-confirm"]')).toBeVisible();
         await expect(
             page
-                .getByTestId('confirm-alert-delete-confirm')
+                .locator('[data-testid="confirm-alert-delete-confirm"]')
                 .getByText(/Proceed/)
                 .first(),
         ).toBeVisible();
-        await page.getByTestId('confirm-alert-delete-confirm').click();
+        await page.locator('[data-testid="confirm-alert-delete-confirm"]').click();
         // dialog disappears
-        await expect(page.getByTestId('dialogbox-alert-delete-confirm')).not.toBeVisible();
+        await expect(page.locator('[data-testid="dialogbox-alert-delete-confirm"]')).not.toBeVisible();
         // cant test display further as mock data doesnt actually delete
     });
     test('the footer paginator shows all links when "all" is selected', async ({ page }) => {
@@ -319,6 +356,9 @@ test.describe('Alert Admin List page', () => {
                 .first(),
         ).toBeVisible();
         await page.waitForTimeout(1000);
+        await expect(
+            page.locator('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(3)'),
+        ).toBeVisible();
         await page.locator('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(3)').click();
         await expect(
             page
@@ -329,6 +369,9 @@ test.describe('Alert Admin List page', () => {
         await expect(page.locator('[data-testid="admin-alerts-list-past-list"] tbody tr:first-child')).toContainText(
             '[5.00pm] Unexpected performance issues, UQ Library Search',
         );
+        await expect(
+            page.locator('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(2)'),
+        ).toBeVisible();
         await page.locator('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(2)').click();
         await expect(
             page
@@ -339,6 +382,9 @@ test.describe('Alert Admin List page', () => {
         await expect(page.locator('[data-testid="admin-alerts-list-past-list"] tbody tr:first-child')).toContainText(
             'Face masks in the Library',
         );
+        await expect(
+            page.locator('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(4)'),
+        ).toBeVisible();
         await page.locator('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(4)').click();
         await expect(
             page
@@ -349,6 +395,9 @@ test.describe('Alert Admin List page', () => {
         await expect(page.locator('[data-testid="admin-alerts-list-past-list"] tbody tr:first-child')).toContainText(
             'Unexpected issue, print credit top-ups',
         );
+        await expect(
+            page.locator('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(1)'),
+        ).toBeVisible();
         await page.locator('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(1)').click();
         await expect(
             page
@@ -367,97 +416,118 @@ test.describe('Alert Admin List page', () => {
         });
         test('the user can select an alert to delete', async ({ page }) => {
             // select one alert and every thing looks right
-            await expect(page.getByTestId('headerRow-current')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+            await expect(page.locator('[data-testid="headerRow-current"]')).toHaveCSS(
+                'background-color',
+                'rgba(0, 0, 0, 0)',
+            );
             await expect(page.locator('[data-testid="headerRow-current"] span.deleteManager')).not.toBeVisible();
-            await page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245').check();
-            await expect(page.getByTestId('headerRow-current')).toHaveCSS('background-color', 'rgb(35, 119, 203)');
+            await page.locator('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').check();
+            await expect(page.locator('[data-testid="headerRow-current"]')).toHaveCSS(
+                'background-color',
+                'rgb(35, 119, 203)',
+            );
             await expect(
                 page
                     .locator('[data-testid="headerRow-current"] span.deleteManager span')
                     .getByText(/1 alert selected/)
                     .first(),
             ).toBeVisible();
-            await page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245').uncheck();
+            await page
+                .locator('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]')
+                .uncheck();
             await expect(page.locator('[data-testid="headerRow-current"] span.deleteManager')).not.toBeVisible();
-            await page.getByTestId('alert-list-item-checkbox-0aa12a30-996a-11eb-b009-3f6ded4fdb35').check();
-            await page.getByTestId('alert-list-item-checkbox-232d6880-996a-11eb-8a79-e7fddae87baf').check();
+            await page.locator('[data-testid="alert-list-item-checkbox-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').check();
+            await page.locator('[data-testid="alert-list-item-checkbox-232d6880-996a-11eb-8a79-e7fddae87baf"]').check();
             await expect(
                 page
                     .locator('[data-testid="headerRow-scheduled"] span.deleteManager span')
                     .getByText(/2 alerts selected/)
                     .first(),
             ).toBeVisible();
-            await page.getByTestId('alert-list-item-checkbox-0aa12a30-996a-11eb-b009-3f6ded4fdb35').uncheck();
+            await page
+                .locator('[data-testid="alert-list-item-checkbox-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]')
+                .uncheck();
             await expect(
                 page
                     .locator('[data-testid="headerRow-scheduled"] span.deleteManager span')
                     .getByText(/1 alert selected/)
                     .first(),
             ).toBeVisible();
-            await page.getByTestId('alert-list-scheduled-delete-button').click();
-            await page.getByTestId('cancel-alert-delete-confirm').click();
-            await expect(page.getByTestId('dialogbox-alert-delete-confirm')).not.toBeVisible();
+            await page.locator('[data-testid="alert-list-scheduled-delete-button"]').click();
+            await expect(page.locator('[data-testid="cancel-alert-delete-confirm"]')).toBeVisible();
+            await page.locator('[data-testid="cancel-alert-delete-confirm"]').click();
+            await expect(page.locator('[data-testid="dialogbox-alert-delete-confirm"]')).not.toBeVisible();
         });
         test('the user can clear selected alerts', async ({ page }) => {
-            await expect(page.getByTestId('headerRow-scheduled')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+            await expect(page.locator('[data-testid="headerRow-scheduled"]')).toHaveCSS(
+                'background-color',
+                'rgba(0, 0, 0, 0)',
+            );
             await expect(page.locator('[data-testid="headerRow-scheduled"] span.deleteManager')).not.toBeVisible();
-            await page.getByTestId('alert-list-item-checkbox-d480b250-9cd8-11eb-88c0-a3882cd6c52e').check();
-            await expect(page.getByTestId('headerRow-scheduled')).toHaveCSS('background-color', 'rgb(35, 119, 203)');
+            await page.locator('[data-testid="alert-list-item-checkbox-d480b250-9cd8-11eb-88c0-a3882cd6c52e"]').check();
+            await expect(page.locator('[data-testid="headerRow-scheduled"]')).toHaveCSS(
+                'background-color',
+                'rgb(35, 119, 203)',
+            );
             await expect(
                 page
                     .locator('[data-testid="headerRow-scheduled"] span.deleteManager span')
                     .getByText(/1 alert selected/)
                     .first(),
             ).toBeVisible();
-            await page.getByTestId('alert-list-item-checkbox-857726b0-a19f-11eb-ab5b-bb33418ed6de').check();
+            await page.locator('[data-testid="alert-list-item-checkbox-857726b0-a19f-11eb-ab5b-bb33418ed6de"]').check();
             await expect(
                 page
                     .locator('[data-testid="headerRow-scheduled"] span.deleteManager span')
                     .getByText(/2 alerts selected/)
                     .first(),
             ).toBeVisible();
-            await page.getByTestId('alert-list-scheduled-deselect-button').click();
+            await expect(page.locator('[data-testid="alert-list-scheduled-deselect-button"]')).toBeVisible();
+            await page.locator('[data-testid="alert-list-scheduled-deselect-button"]').click();
             await expect(page.locator('[data-testid="headerRow-scheduled"] span.deleteManager')).not.toBeVisible();
         });
         test('the user can delete an alert', async ({ page }) => {
-            await page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245').check();
+            await page.locator('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').check();
             await expect(
                 page
                     .locator('[data-testid="headerRow-current"] span span')
                     .getByText(/1 alert selected/)
                     .first(),
             ).toBeVisible();
-            await page.getByTestId('alert-list-current-delete-button').click();
+            await page.locator('[data-testid="alert-list-current-delete-button"]').click();
+            await expect(page.locator('[data-testid="confirm-alert-delete-confirm"]')).toBeVisible();
             await expect(
                 page
-                    .getByTestId('confirm-alert-delete-confirm')
+                    .locator('[data-testid="confirm-alert-delete-confirm"]')
                     .getByText(/Proceed/)
                     .first(),
             ).toBeVisible();
-            await page.getByTestId('confirm-alert-delete-confirm').click();
+            await page.locator('[data-testid="confirm-alert-delete-confirm"]').click();
             // dialog disappears
-            await expect(page.getByTestId('dialogbox-alert-delete-confirm')).not.toBeVisible();
+            await expect(page.locator('[data-testid="dialogbox-alert-delete-confirm"]')).not.toBeVisible();
             // cant test display further as mock data doesnt actually delete
         });
         test('reports when a delete fails', async ({ page }) => {
-            await page.getByTestId('alert-list-item-checkbox-0aa12a30-996a-11eb-b009-3f6ded4fdb35').check();
+            await page.locator('[data-testid="alert-list-item-checkbox-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').check();
             await expect(
                 page
                     .locator('[data-testid="headerRow-scheduled"] span span')
                     .getByText(/1 alert selected/)
                     .first(),
             ).toBeVisible();
-            await page.getByTestId('alert-list-scheduled-delete-button').click();
+            await page.locator('[data-testid="alert-list-scheduled-delete-button"]').click();
             // a confirm dialog popup
+            await expect(page.locator('[data-testid="confirm-alert-delete-confirm"]')).toBeVisible();
             await expect(
                 page
-                    .getByTestId('confirm-alert-delete-confirm')
+                    .locator('[data-testid="confirm-alert-delete-confirm"]')
                     .getByText(/Proceed/)
                     .first(),
             ).toBeVisible();
-            await page.getByTestId('confirm-alert-delete-confirm').click();
-            await expect(page.getByTestId('dialogbox-alert-delete-confirm')).not.toBeVisible();
+            await page.locator('[data-testid="confirm-alert-delete-confirm"]').click();
+            await expect(page.locator('[data-testid="dialogbox-alert-delete-confirm"]')).not.toBeVisible();
             // failure is reported in a dialog
+            await expect(page.locator('[data-testid="dialogbox-alert-delete-error-dialog"]')).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="dialogbox-alert-delete-error-dialog"] h2')
@@ -465,134 +535,144 @@ test.describe('Alert Admin List page', () => {
                     .first(),
             ).toBeVisible();
             // dialog can be closed
-            await page.getByTestId('confirm-alert-delete-error-dialog').click();
-            await expect(page.getByTestId('dialogbox-alert-delete-error-dialog')).not.toBeVisible();
+            await expect(page.locator('[data-testid="confirm-alert-delete-error-dialog"]')).toBeVisible();
+            await page.locator('[data-testid="confirm-alert-delete-error-dialog"]').click();
+            await expect(page.locator('[data-testid="dialogbox-alert-delete-error-dialog"]')).not.toBeVisible();
         });
         test('sequential deletion of alerts does not fail', async ({ page }) => {
-            await page.getByTestId('alert-list-item-checkbox-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9').check();
+            await page.locator('[data-testid="alert-list-item-checkbox-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').check();
             await expect(
                 page
                     .locator('[data-testid="headerRow-past"] span span')
                     .getByText(/1 alert selected/)
                     .first(),
             ).toBeVisible();
-            await page.getByTestId('alert-list-past-delete-button').click();
+            await page.locator('[data-testid="alert-list-past-delete-button"]').click();
             // a confirm dialog popup
+            await expect(page.locator('[data-testid="confirm-alert-delete-confirm"]')).toBeVisible();
             await expect(
                 page
-                    .getByTestId('confirm-alert-delete-confirm')
+                    .locator('[data-testid="confirm-alert-delete-confirm"]')
                     .getByText(/Proceed/)
                     .first(),
             ).toBeVisible();
-            await page.getByTestId('confirm-alert-delete-confirm').click();
-            await expect(page.getByTestId('dialogbox-alert-delete-confirm')).not.toBeVisible();
+            await page.locator('[data-testid="confirm-alert-delete-confirm"]').click();
+            await expect(page.locator('[data-testid="dialogbox-alert-delete-confirm"]')).not.toBeVisible();
             await page.waitForTimeout(500);
             // the error dialog doesnt appear
-            await expect(page.getByTestId('dialogbox-alert-delete-error-dialog')).not.toBeVisible();
+            await expect(page.locator('[data-testid="dialogbox-alert-delete-error-dialog"]')).not.toBeVisible();
             await page.waitForTimeout(1000);
-            await page.getByTestId('alert-list-item-checkbox-da181a00-d476-11eb-8596-2540419539a9').check();
+            await page.locator('[data-testid="alert-list-item-checkbox-da181a00-d476-11eb-8596-2540419539a9"]').check();
             await expect(
                 page
                     .locator('[data-testid="headerRow-past"] span span')
                     .getByText(/1 alert selected/)
                     .first(),
             ).toBeVisible();
-            await page.getByTestId('alert-list-item-checkbox-cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08').check();
+            await page.locator('[data-testid="alert-list-item-checkbox-cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08"]').check();
             await expect(
                 page
                     .locator('[data-testid="headerRow-past"] span span')
                     .getByText(/2 alerts selected/)
                     .first(),
             ).toBeVisible();
-            await page.getByTestId('alert-list-past-delete-button').click();
+            await page.locator('[data-testid="alert-list-past-delete-button"]').click();
             // a confirm dialog popup
+            await expect(page.locator('[data-testid="confirm-alert-delete-confirm"]')).toBeVisible();
             await expect(
                 page
-                    .getByTestId('confirm-alert-delete-confirm')
+                    .locator('[data-testid="confirm-alert-delete-confirm"]')
                     .getByText(/Proceed/)
                     .first(),
             ).toBeVisible();
-            await page.getByTestId('confirm-alert-delete-confirm').click();
-            await expect(page.getByTestId('dialogbox-alert-delete-confirm')).not.toBeVisible();
+            await page.locator('[data-testid="confirm-alert-delete-confirm"]').click();
+            await expect(page.locator('[data-testid="dialogbox-alert-delete-confirm"]')).not.toBeVisible();
             await page.waitForTimeout(500);
             // the error dialog doesnt appear
-            await expect(page.getByTestId('dialogbox-alert-delete-error-dialog')).not.toBeVisible();
+            await expect(page.locator('[data-testid="dialogbox-alert-delete-error-dialog"]')).not.toBeVisible();
         });
         test('during delete section checkboxes in other sections are disabled', async ({ page }) => {
             await expect(
-                page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245'),
+                page.locator('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]'),
             ).not.toBeDisabled();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec'),
+                page.locator('[data-testid="alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]'),
             ).not.toBeDisabled();
-            await page.getByTestId('alert-list-item-checkbox-da181a00-d476-11eb-8596-2540419539a9').check();
+            await page.locator('[data-testid="alert-list-item-checkbox-da181a00-d476-11eb-8596-2540419539a9"]').check();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245'),
+                page.locator('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]'),
             ).toBeDisabled();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec'),
+                page.locator('[data-testid="alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]'),
             ).not.toBeDisabled();
-            await page.getByTestId('alert-list-item-checkbox-cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08').check();
-            await page.getByTestId('alert-list-item-checkbox-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9').check();
+            await page.locator('[data-testid="alert-list-item-checkbox-cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08"]').check();
+            await page.locator('[data-testid="alert-list-item-checkbox-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').check();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245'),
+                page.locator('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]'),
             ).toBeDisabled();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec'),
+                page.locator('[data-testid="alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]'),
             ).not.toBeDisabled();
-            await page.getByTestId('alert-list-item-checkbox-da181a00-d476-11eb-8596-2540419539a9').uncheck();
+            await page
+                .locator('[data-testid="alert-list-item-checkbox-da181a00-d476-11eb-8596-2540419539a9"]')
+                .uncheck();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245'),
+                page.locator('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]'),
             ).toBeDisabled();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec'),
+                page.locator('[data-testid="alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]'),
             ).not.toBeDisabled();
-            await page.getByTestId('alert-list-item-checkbox-cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08').uncheck();
+            await page
+                .locator('[data-testid="alert-list-item-checkbox-cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08"]')
+                .uncheck();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245'),
+                page.locator('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]'),
             ).toBeDisabled();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec'),
+                page.locator('[data-testid="alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]'),
             ).not.toBeDisabled();
-            await page.getByTestId('alert-list-item-checkbox-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9').uncheck();
+            await page
+                .locator('[data-testid="alert-list-item-checkbox-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]')
+                .uncheck();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245'),
+                page.locator('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]'),
             ).not.toBeDisabled();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec'),
+                page.locator('[data-testid="alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]'),
             ).not.toBeDisabled();
         });
         test('can unselect all checkboxes with the "X"', async ({ page }) => {
             await expect(
-                page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245'),
+                page.locator('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]'),
             ).not.toBeDisabled();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec'),
+                page.locator('[data-testid="alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]'),
             ).not.toBeDisabled();
-            await page.getByTestId('alert-list-item-checkbox-da181a00-d476-11eb-8596-2540419539a9').check();
-            await page.getByTestId('alert-list-item-checkbox-cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08').check();
-            await page.getByTestId('alert-list-item-checkbox-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9').check();
+            await page.locator('[data-testid="alert-list-item-checkbox-da181a00-d476-11eb-8596-2540419539a9"]').check();
+            await page.locator('[data-testid="alert-list-item-checkbox-cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08"]').check();
+            await page.locator('[data-testid="alert-list-item-checkbox-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').check();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245'),
+                page.locator('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]'),
             ).toBeDisabled();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec'),
+                page.locator('[data-testid="alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]'),
             ).not.toBeDisabled();
-            await page.getByTestId('alert-list-past-deselect-button').click();
+            await expect(page.locator('[data-testid="alert-list-past-deselect-button"]')).toBeVisible();
+            await page.locator('[data-testid="alert-list-past-deselect-button"]').click();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245'),
-            ).not.toBeDisabled();
-            await expect(
-                page.getByTestId('alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec'),
+                page.locator('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]'),
             ).not.toBeDisabled();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-da181a00-d476-11eb-8596-2540419539a9'),
+                page.locator('[data-testid="alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]'),
+            ).not.toBeDisabled();
+            await expect(
+                page.locator('[data-testid="alert-list-item-checkbox-da181a00-d476-11eb-8596-2540419539a9"]'),
             ).not.toBeChecked();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08'),
+                page.locator('[data-testid="alert-list-item-checkbox-cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08"]'),
             ).not.toBeChecked();
             await expect(
-                page.getByTestId('alert-list-item-checkbox-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9'),
+                page.locator('[data-testid="alert-list-item-checkbox-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]'),
             ).not.toBeChecked();
         });
     });
