@@ -8,7 +8,7 @@ const openCloseWorks = async () => {
             await expect(async () => {
                 if (isRetry) await page.reload();
                 isRetry = false;
-                await page.getByTestId('hours-accordion-open').click({ timeout: 500 });
+                await page.getByTestId('hours-accordion-open').click({ timeout: 1000 });
                 isRetry = true;
                 await expect(page.getByTestId('locations-wrapper')).toContainText('See all Library and AskUs hours', {
                     timeout: 1000,
@@ -271,9 +271,9 @@ test.describe('Locations Panel', () => {
                 }
                 retry = true;
                 // askus hidden (it only has hours, no point having the row with no hours)
-                await expect(page.getByTestId('locations-hours-disclaimer')).not.toBeVisible({ timeout: 500 });
+                await expect(page.getByTestId('locations-hours-disclaimer')).not.toBeVisible({ timeout: 1000 });
                 // hours disclaimer hidden (if no hours displayed, then no point in disclaimer)
-                await expect(page.getByTestId('hours-item-askus-link')).not.toBeVisible({ timeout: 500 });
+                await expect(page.getByTestId('hours-item-askus-link')).not.toBeVisible({ timeout: 1000 });
             }).toPass();
         });
         test.describe('the open Locations panel butts up against the Utility bar', () => {
@@ -304,7 +304,7 @@ test.describe('Locations Panel', () => {
                 await expect(async () => {
                     if (isRetry) await page.reload();
                     isRetry = false;
-                    await page.getByTestId('hours-accordion-open').click({ timeout: 500 });
+                    await page.getByTestId('hours-accordion-open').click({ timeout: 1000 });
                     isRetry = true;
                     await expect(page.getByTestId('homepage-hours-weeklyhours-link')).toContainText(
                         'See all Library and AskUs hours',

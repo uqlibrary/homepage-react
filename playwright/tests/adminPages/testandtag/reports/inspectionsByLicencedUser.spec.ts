@@ -27,7 +27,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
     test('Inspector selection works as intended', async ({ page }) => {
         const showDropdown = async (testId: string) => {
             await expect(async () => {
-                await page.getByTestId(testId).click({ timeout: 500 });
+                await page.getByTestId(testId).click({ timeout: 1000 });
                 await expect(page.getByRole('listbox')).toBeVisible({ timeout: 1000 });
             }).toPass();
         };

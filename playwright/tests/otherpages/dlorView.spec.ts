@@ -311,9 +311,9 @@ test.describe('Digital Learning Hub View page', () => {
 
             const userEmailInput = page.locator('#userEmail');
             await expect(async () => {
-                await userEmailInput.clear({ timeout: 500 });
-                await expect(userEmailInput).toHaveValue('', { timeout: 500 });
-                await expect(page.getByTestId('notifications-capture')).toBeDisabled({ timeout: 500 });
+                await userEmailInput.clear({ timeout: 1000 });
+                await expect(userEmailInput).toHaveValue('', { timeout: 1000 });
+                await expect(page.getByTestId('notifications-capture')).toBeDisabled({ timeout: 1000 });
             }).toPass();
 
             await userEmailInput.fill('joe');

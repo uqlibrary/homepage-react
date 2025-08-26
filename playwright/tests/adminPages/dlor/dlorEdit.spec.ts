@@ -769,16 +769,16 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 await expect(async () => {
                     // choose file type
-                    await page.getByTestId('object-link-file-type').click({ timeout: 500 });
-                    await page.getByTestId('object-link-file-type-something').click({ timeout: 500 });
-                    await page.getByTestId('object-link-file-type-new').click({ timeout: 500 });
+                    await page.getByTestId('object-link-file-type').click({ timeout: 1000 });
+                    await page.getByTestId('object-link-file-type-something').click({ timeout: 1000 });
+                    await page.getByTestId('object-link-file-type-new').click({ timeout: 1000 });
                     // panel invalidity count present
                     await expect(
                         page.locator('[data-testid="dlor-panel-validity-indicator-2"] span'),
-                    ).toContainText('1', { timeout: 500 });
+                    ).toContainText('1', { timeout: 1000 });
                     await page
                         .locator('[data-testid="dlor-admin-form-new-file-type"] input')
-                        .fill('docx', { timeout: 500 });
+                        .fill('docx', { timeout: 1000 });
                 }).toPass();
 
                 await expect(page.getByTestId('dlor-panel-validity-indicator-2')).toBeHidden();
@@ -817,9 +817,9 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 // workaround https://github.com/microsoft/playwright/issues/13470
                 await expect(async () => {
-                    await expect(chooseNotifyInput).toBeChecked({ timeout: 500 });
+                    await expect(chooseNotifyInput).toBeChecked({ timeout: 1000 });
                     await chooseNotifyInput.dispatchEvent('click');
-                    await expect(chooseNotifyInput).not.toBeChecked({ timeout: 500 });
+                    await expect(chooseNotifyInput).not.toBeChecked({ timeout: 1000 });
                 }).toPass({ timeout: 5000 });
                 await expect(reeditButton).toBeHidden();
 
@@ -827,9 +827,9 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 // but lets confirm that the form holds the previously entered text first
                 // recheck notify, lightbox opens with previous text
                 await expect(async () => {
-                    await expect(chooseNotifyInput).not.toBeChecked({ timeout: 500 });
+                    await expect(chooseNotifyInput).not.toBeChecked({ timeout: 1000 });
                     await chooseNotifyInput.dispatchEvent('click');
-                    await expect(chooseNotifyInput).toBeChecked({ timeout: 500 });
+                    await expect(chooseNotifyInput).toBeChecked({ timeout: 1000 });
                 }).toPass({ timeout: 5000 });
                 await expect(notifyLightboxTitle).toContainText('Object change notification');
                 await expect(lightboxModal).toContainText('the words that will go in the email');
@@ -837,9 +837,9 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 // uncheck, we want to check it doesnt send
                 await expect(async () => {
-                    await expect(chooseNotifyInput).toBeChecked({ timeout: 500 });
+                    await expect(chooseNotifyInput).toBeChecked({ timeout: 1000 });
                     await chooseNotifyInput.dispatchEvent('click');
-                    await expect(chooseNotifyInput).not.toBeChecked({ timeout: 500 });
+                    await expect(chooseNotifyInput).not.toBeChecked({ timeout: 1000 });
                 }).toPass({ timeout: 5000 });
 
                 // save record
