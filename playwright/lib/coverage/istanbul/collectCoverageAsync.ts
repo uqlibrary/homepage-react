@@ -1,4 +1,4 @@
-import { BrowserContext, test } from '@uq/pw/test';
+import { BrowserContext } from '@uq/pw/test';
 import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -27,7 +27,6 @@ export async function collectCoverageAsync(
 
     await use(context);
 
-    test.setTimeout(120_000);
     for (const page of context.pages()) {
         await page.evaluate(() => {
             if (!(window as any)?.__coverage__) return;
