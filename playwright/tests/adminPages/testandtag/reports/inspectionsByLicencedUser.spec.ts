@@ -1,6 +1,6 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { assertTitles, forcePageRefresh, getFieldValue } from '../helpers';
+import { forcePageRefresh, getFieldValue } from '../helpers';
 import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
 test.describe('Test and Tag Report - Inspections by Licenced User', () => {
@@ -12,7 +12,10 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library'));
+        await expect(page.locator('h1')).toContainText(locale.pages.general.pageTitle);
+        await expect(
+            page.locator('h2').getByText(locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library')),
+        ).toBeVisible();
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqtest1');
 
@@ -26,48 +29,32 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
 
     test('Inspector selection works as intended', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library'));
+        await expect(page.locator('h1')).toContainText(locale.pages.general.pageTitle);
+        await expect(
+            page.locator('h2').getByText(locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library')),
+        ).toBeVisible();
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqtest1');
 
-        await expect(async () => {
-            await page.getByTestId('user_inspections-user-name').click({ timeout: 1000 });
-            // Select user with no records
-            await page.getByTestId('user_inspections-user-name-option-2').click({ timeout: 1000 });
-            await page.locator('body').click({ timeout: 1000 });
-            // Check the value of the dropdown
-            await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('Third Testing user', {
-                timeout: 1000,
-            });
-        }).toPass();
-
+        await page.getByTestId('user_inspections-user-name').click();
+        // Select user with no records
+        await page.getByTestId('user_inspections-user-name-option-2').click();
+        await page.locator('body').click();
+        // Check the value of the dropdown
+        await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('Third Testing user');
         // Select a second user
-        await expect(async () => {
-            await page.getByTestId('user_inspections-user-name').click({ timeout: 1000 });
-            await page.getByTestId('user_inspections-user-name-option-1').click({ timeout: 1000 });
-            await page.locator('body').click({ timeout: 1000 });
-            await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('Second Testing user', {
-                timeout: 1000,
-            });
-            await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('Third Testing user', {
-                timeout: 1000,
-            });
-        }).toPass();
+        await page.getByTestId('user_inspections-user-name').click();
+        await page.getByTestId('user_inspections-user-name-option-1').click();
+        await page.locator('body').click();
+        await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('Second Testing user');
+        await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('Third Testing user');
         // Select third user
-        await expect(async () => {
-            await page.getByTestId('user_inspections-user-name-select').click({ timeout: 1000 });
-            await page.getByTestId('user_inspections-user-name-option-0').click({ timeout: 1000 });
-            await page.locator('body').click({ timeout: 1000 });
-            await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('JTest User', {
-                timeout: 1000,
-            });
-            await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('Second Testing user', {
-                timeout: 1000,
-            });
-            await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('(and 1 more)', {
-                timeout: 1000,
-            });
-        }).toPass();
+        await page.getByTestId('user_inspections-user-name-select').click();
+        await page.getByTestId('user_inspections-user-name-option-0').click();
+        await page.locator('body').click();
+        await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('JTest User');
+        await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('Second Testing user');
+        await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('(and 1 more)');
     });
 
     test('Date selectors work as intended', async ({ page }) => {
@@ -75,7 +62,10 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         const currentMonth = zeroPad(new Date().getMonth() + 1, 2);
 
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library'));
+        await expect(page.locator('h1')).toContainText(locale.pages.general.pageTitle);
+        await expect(
+            page.locator('h2').getByText(locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library')),
+        ).toBeVisible();
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqtest1');
 

@@ -1,6 +1,6 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { assertTitles, forcePageRefresh, getFieldValue } from '../helpers';
+import { forcePageRefresh, getFieldValue } from '../helpers';
 import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
 test.describe('Test and Tag Report - Asset inspection by filters', () => {
@@ -12,7 +12,10 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
+        await expect(page.locator('h1')).toContainText(locale.pages.general.pageTitle);
+        await expect(
+            page.locator('h2').getByText(locale.pages.report.assetReportByFilters.header.pageSubtitle('Library')),
+        ).toBeVisible();
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
         await assertAccessibility(page, '[data-testid="StandardPage"]', {
@@ -25,7 +28,10 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
     });
 
     test('UI Dropdown for Status and building function correctly', async ({ page }) => {
-        await assertTitles(page, locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
+        await expect(page.locator('h1')).toContainText(locale.pages.general.pageTitle);
+        await expect(
+            page.locator('h2').getByText(locale.pages.report.assetReportByFilters.header.pageSubtitle('Library')),
+        ).toBeVisible();
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
 
@@ -63,7 +69,10 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
         const currentYear = new Date().getFullYear();
         const currentMonth = zeroPad(new Date().getMonth() + 1, 2);
 
-        await assertTitles(page, locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
+        await expect(page.locator('h1')).toContainText(locale.pages.general.pageTitle);
+        await expect(
+            page.locator('h2').getByText(locale.pages.report.assetReportByFilters.header.pageSubtitle('Library')),
+        ).toBeVisible();
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
 
@@ -119,7 +128,10 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
     });
 
     test('Sorting should work correctly', async ({ page }) => {
-        await assertTitles(page, locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
+        await expect(page.locator('h1')).toContainText(locale.pages.general.pageTitle);
+        await expect(
+            page.locator('h2').getByText(locale.pages.report.assetReportByFilters.header.pageSubtitle('Library')),
+        ).toBeVisible();
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
 
