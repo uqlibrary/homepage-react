@@ -161,6 +161,11 @@ describe('Backend routes method', () => {
         MockDate.reset();
     });
 
+    it('should construct url for FACILITY_TYPE_ALL_API', () => {
+        const AllAPIRequest = routes.FACILITY_TYPE_ALL_API(false);
+        expect(AllAPIRequest.apiUrl).toEqual('/facility_types');
+    });
+
     it('should construct url for PRINTING_API', () => {
         const MockDate = require('mockdate');
         MockDate.set('2020-01-01T00:00:00.000Z', 10);

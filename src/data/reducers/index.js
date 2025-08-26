@@ -45,3 +45,4 @@ export { default as dlorFavouritesReducer } from './dlorFavouritesReducer';
 export { default as dlorAdminNotesReducer } from './dlorAdminNotesReducer';
 export { default as locationSpacesReducer } from './locationSpacesReducer';
 export { default as weeklyHoursReducer } from './weeklyHoursReducer';
+export { default as facilityTypeReducer } from './facilityTypeReducer';

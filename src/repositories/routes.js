@@ -22,6 +22,12 @@ export const WEEKLYHOURS_API = () => {
     };
 };
 
+export const FACILITY_TYPE_ALL_API = () => {
+    return {
+        apiUrl: 'facility_types',
+    };
+};
+
 // Papercut balance API
 export const PRINTING_API = () => ({
     apiUrl: 'papercut/balance',

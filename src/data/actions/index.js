@@ -9,3 +9,4 @@ export * from './testTagActions';
 export * from './drupalArticlesActions';
 export * from './locationSpacesActions';
 export * from './hoursWeeklyActions';
+export * from './facilityTypeActions';
