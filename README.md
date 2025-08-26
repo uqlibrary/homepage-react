@@ -13,8 +13,8 @@ A repo for the Library of The University of Queensland website homepage
 - Design: `Google Material Design` - [Material UI](https://v0.material-ui.com/#/components/app-bar)
 - Build and dev tools: `Webpack`
 - Unit tests: `Jest`
-- E2E tests: `Cypress`
-- WCAG tests: `Cypress/aXe`
+- E2E tests: `Playwright`
+- WCAG tests: `@axe-core-npm/playwright`
 
 This project is using `npm` for dependency management. Make sure `npm` is installed on your machine.
 
@@ -222,106 +222,66 @@ Before committing changes, locally run tests and update stapshots (if required).
 
 ### E2E testing
 
-We are using [Cypress](https://docs.cypress.io/guides/getting-started/writing-your-first-test.html#Add-a-test-file) for
-our e2e UI testing.
+We use [Playwright](https://playwright.dev/docs/writing-tests) for our E2E testing.
 
-To run tests, first start the build, using mock data, ie `npm run start:mock`
+To run tests, simply use `npm run test:e2e`.
 
-Then:
+To run all tests, including unit tests, use `npm run test:all`.\
+Then, to generate a combined code coverage report, use `npm run cc:reportAll`.\
+This workflow is useful for confidently pushing changes upstream.
 
-- use `npm run cypress:run`
-- or to open the Cypress UI use `npm run cypress:open`
-- or to watch the tests `npm run cypress:watch`.
+#### Parallelism
 
-Note: Ensure your .env is configured to use API_URL `https://api.library.uq.edu.au/staging/` when attempting to run cypress tests for full coverage, or whilst using cypress:run or cypress:open, otherwise your cypress tests may fail to run.
+E2E tests run in [parallel](https://playwright.dev/docs/test-parallel) by default. In CI, this also includes **horizontal parallelism**  
+via test sharding, where they are split across independent CI steps to speed up execution.
 
-Before pushing to a branch make sure to run `npm run test:all`. This runs the unit and cypress tests.
+Unfortunately, Playwright doesn't support splitting tests based on their estimated or historical runtime. For this reason,
+to avoid test sharding imbalances, where one shard takes significantly longer than the others, please consider splitting
+lengthy tests into multiple smaller ones.
 
-AWS pipeline runs `npm run test:e2e:ci` as it spins up a webpack-dev-server and serves the frontend with mock data to run tests for now until we have API integration with docker, but only in `master` branch.
+#### Debugging
 
-You can watch video recordings of any failed test runs and view some debug messages via the [Cypress dashboard](https://dashboard.cypress.io/projects/mvfnrv/runs). We have open-source license which allows unlimited runs.
+By default, Playwright runs tests using a headless browser.
+To visualize tests in the browser, use `npm run test:e2e:show [?spec file]`.\
+This disables test parallelism for convenience.
 
-To manage the account, the admin username/pass is in PasswordState under "GitHub Cypress.io Admin User" (login to Github as this user, then use the github account to log into Cypress).
+Breakpoints are handy for pausing either the test execution (via IDE integration) or the code execution (via the `debugger` keyword or manual breakpoints).
+PhpStorm provides seamless integration.
 
-If you want Codeship to run cypress tests before you merge to master, include the text `cypress` in the branch name and push and cypress tests will be run on that branch (set up in bin/codeship-test.sh).
+##### Failed tests
+
+To debug a failed test, use:\
+`npm run test:e2e:debug playwright/.results/.../trace.zip`\
+This displays a storyline of the failed test using the [Playwright Trace Viewer](https://playwright.dev/docs/trace-viewer-intro),\
+where all sorts of detailed inspections are possible - network, DOM elements, etc.
+
+###### CI
+
+The above also applies to tests that fail on CI. In this case, the trace files need to be downloaded locally first. They
+are part of the artifacts uploaded to S3 as output of each test stage - please refer to the "Artifacts" section on
+the "Build Details" tab.
 
 #### Standardised selectors to target elements
 
-- We are following the best practice recommended by cypress to target elements using `data-testid` attribute
+- We are following the best practice recommended by playwright to target elements using `data-testid` attribute
 
-- Please have a look at below table for some current examples in eSpace frontend:
+#### Gotchas
 
-| Element   | prop for ID               | ID attached to native elements for targetting                   |
-| --------- | ------------------------- | --------------------------------------------------------------- |
-| TextField | `textFieldId="rek-title"` | `<input id="rek-title-input"/>` `<label id="rek-title-label"/>` |
+Unlike Jest, Playwright test assertions are based on [actionability checks](https://playwright.dev/docs/actionability),
+which means they are not suitable for checking every possible state of a given component. For instance, if a component
+displays a loading message for async actions, and those actions complete too quickly, checking for the presence of the
+loading message might fail.
 
-#### Some tricks and tips
+For assertions like the above, Jest is a better fit, as it requires adding waits to ensure the test doesn't finish
+before the component reaches its final state.
 
-- the message 'Failed to connect to the bus' is not a problem per https://docs.cypress.io/guides/references/troubleshooting#Run-the-Cypress-app-by-itself
-- When simulating clicks, use `cy.waitUntil()` to wait for the page to have loaded.
-  Very rarely, you might need to eg `cy.wait(1000);` to wait 1 second after the click before posing any expectations - 
-  an example is the Axe accessibility checks which seem to simply take some time before the functionality is available.
-- sometimes a button is detached from the DOM when you go to click it. We have a helper called `clickButton` which usually gets around this.
-  Note that we've had success by shifting the test up in the list when this happens (cypress seems to have memory problems at this scale?)
-- For a input field that has a problem clearing, first try adding a `.focus()`, if that isnt sufficient try eg
-  `.should('have.value', 'Example alert:')`
-- Custom cypress commands can be added to `cypress/support` to abstract out common actions. For example:
-
-  - When the form you are writing tests for has a browser alert box to prevent navigating away before its complete, add this to the top of your test to unbind the unload event handler. The issue might only present itself when trying to do another test by navigating to a new url, which never finishes loading because the browser is waiting for the alert from the previous page to be dismissed, which is actually not visible in Cypress UI!
-
-    ```javascript
-    afterEach(() => {
-      cy.killWindowUnloadHandler();
-    });
-    ```
-
-  - When using the MUI dialog confirmation, use the following for navigating to the homepage:
-
-    ```javascript
-    cy.navToHomeFromMenu(locale);
-    ```
-
-    where `locale` is:
-
-    ```javascript
-    {
-      confirmationTitle: '(Title of the confirmation dialogue)',
-      confirmButtonLabel: '(Text of the "Yes" button)'
-    }
-    ```
-
-    See `cypress/support/commands.js` to see how that works.
-
-- If a test occasionally fails as "requires a DOM element." add a `.should()` test after the `.get()`, to make it wait for the element to appear (`.should()` loops)
-
-- example of testing a click away from the page:
-```javascript
-    cy.intercept(/uqbookit/, 'user has navigated to Bookit page');
-    cy.visit('/');
-    cy.viewport(1300, 1000);
-
-    cy.get('[data-testid="homepage-hours-bookit-link"]')
-            .should('contain', 'Book a room')
-            .click();
-    cy.get('body').contains('user has navigated to Bookit page');
-```
-- if you need to check pattern matching on an element attribute, this is one way to do it:
-```javascript
-    cy.get('[data-testid="computers-library-1-level-4-button"]')
-        .should('have.attr', 'aria-label')
-        .then(ariaLabel => {
-            expect(ariaLabel).to.contains('Biological Sciences Library level 4. 72 free of 110 computers');
-        });
-```
 ### Code Coverage
 
 We require 100% coverage, but untestable/ unvaluable sections can be exlcude with istanbul (search the code base for examples)
 
 To run the complete test suite and get code coverage, run `npm run test:cc`
 
-This will run unit tests (jest) and e2e tests (cypress) and then merge the coverage of the 2 to give complete coverage. Coverage reports are at `coverage/index.html` after the run.
-
-(make sure the local mock server is NOT running before cypress begins or coverage doesnt work)
+This will run unit tests (jest) and e2e tests (playwright) and then merge the coverage of the 2 to give complete coverage. Coverage reports are at `coverage/index.html` after the run.
 
 This will wipe previous coverage file.
 
@@ -372,7 +332,7 @@ Ask for review from team-mates if you'd like other eyes on your changes.
 
 ## Deployment
 
-Application deployment is 100% automated using AWS Codebuild (and Codepipeline), and is hosted in S3. All testing and deployment commands and configuration are stored in the buildspec yaml files in the repo. All secrets (access keys and tokens for PT, Cypress, Sentry and Google) are stored in AWS Parameter Store, and then populated into ENV variables in those buildspec yaml files.
+Application deployment is 100% automated using AWS Codebuild (and Codepipeline), and is hosted in S3. All testing and deployment commands and configuration are stored in the buildspec yaml files in the repo. All secrets (access keys and tokens for PT, Sentry and Google) are stored in AWS Parameter Store, and then populated into ENV variables in those buildspec yaml files.
 Deployment pipelines are setup for branches: "master", "staging, "production" and several key branches starting with "feature-".
 
 - You must always copy Master branch to staging/production (idally, staging before master and alow the e2es to run before yu go to master and prod)

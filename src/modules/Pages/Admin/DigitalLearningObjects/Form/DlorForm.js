@@ -266,7 +266,7 @@ export const DlorForm = ({
     //     }
     // }, [formDefaults]);
 
-    // these match the values in dlor cypress admin tests
+    // these match the values in dlor playwright admin tests
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
     const summaryMinimumLength = 20;
@@ -315,11 +315,11 @@ export const DlorForm = ({
                     mode: 'manual',
                     label: 'Editing',
                     attributes: {
-                        href: 'javascript:void(0);'
-                    }
-                }
-            }
-        }
+                        href: 'javascript:void(0);',
+                    },
+                },
+            },
+        },
     };
 
     const isValidUsername = testUserName => {
@@ -1794,20 +1794,15 @@ export const DlorForm = ({
         setConfirmationOpen(false);
         actions.clearADlor();
         window.location.href = getDlorViewPageUrl(uuid);
+        /* istanbul ignore next */
         scrollToTopOfPage();
     };
-
-    // const navigateToDlorAdminHomePage = () => {
-    //     setConfirmationOpen(false);
-    //     actions.clearADlor();
-    //     window.location.href = dlorAdminLink();
-    //     scrollToTopOfPage();
-    // };
 
     const navigateToListPage = isAdmin => {
         setConfirmationOpen(false);
         actions.clearADlor();
         window.location.href = dlorAdminLink(undefined, account);
+        /* istanbul ignore next */
         scrollToTopOfPage();
     };
 
@@ -1827,11 +1822,12 @@ export const DlorForm = ({
     const handleNext = () => {
         setEditorReady(false);
         setActiveStep(prevActiveStep => prevActiveStep + 1);
-    }
+    };
+
     const handleBack = () => {
         setEditorReady(false);
         setActiveStep(prevActiveStep => prevActiveStep - 1);
-    }
+    };
 
     if (!!dlorTeamListLoading || dlorFilterListLoading || !!dlorItemSaving || !!dlorItemLoading) {
         return (

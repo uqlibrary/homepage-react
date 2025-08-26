@@ -98,6 +98,7 @@ export const DLOTeamForm = ({
     const navigateToTeamManagementHomePage = () => {
         closeConfirmationBox();
         window.location.href = dlorAdminLink('/team/manage', account);
+        /* istanbul ignore next */
         scrollToTopOfPage();
     };
     const navigateToPreviousPage = () => {
