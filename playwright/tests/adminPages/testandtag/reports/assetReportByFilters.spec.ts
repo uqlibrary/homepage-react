@@ -1,6 +1,6 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { forcePageRefresh, getFieldValue } from '../helpers';
+import { forcePageRefresh, getFieldValue } from './helpers';
 import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
 test.describe('Test and Tag Report - Asset inspection by filters', () => {
