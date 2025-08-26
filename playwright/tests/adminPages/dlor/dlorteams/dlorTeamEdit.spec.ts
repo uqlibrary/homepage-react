@@ -267,25 +267,22 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             );
         });
         test('has a team admin menu - object export', async ({ page }) => {
-            let createObjectURLCall = false;
-            await page.addInitScript(() => {
-                const originalCreateObjectURL = window.URL.createObjectURL;
-                window.URL.createObjectURL = function() {
-                    createObjectURLCall = true;
-                    return originalCreateObjectURL.apply(this, arguments);
+            await page.goto('http://localhost:2020/digital-learning-hub?user=uqstaff');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+
+            await page.evaluate(() => {
+                const originalURLCreateObjectURL = URL.createObjectURL;
+                URL.createObjectURL = function() {
+                    window.wasURLCreateObjectURLCalled = true;
+                    return originalURLCreateObjectURL.apply(this, arguments);
                 };
             });
 
-            await page.goto('http://localhost:2020/digital-learning-hub?user=uqstaff');
-            await page.setViewportSize({ width: 1300, height: 1000 });
+            expect(await page.evaluate(() => window.wasURLCreateObjectURLCalled)).not.toBeTruthy();
             await page.locator('[data-testid="admin-dlor-team-admin-menu-button"]').click();
-
             await page.locator('[data-testid="admin-dlor-export-team-objects--button"]').click();
-
-            // TODO fix incorrect assertion below
             // Verify that the URL.createObjectURL method was called
-            // console.log(await page.evaluate(() => URL.createObjectURL));
-            // expect(createObjectURLCall).toBeTruthy();
+            expect(await page.evaluate(() => window.wasURLCreateObjectURLCalled)).toBeTruthy();
         });
     });
 });
