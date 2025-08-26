@@ -5,7 +5,7 @@ import { baseURL, istanbulReportPartialsDir } from './playwright/lib/constants';
 export default defineConfig({
     outputDir: 'playwright/.results',
     testDir: 'playwright/tests',
-    timeout: process.env.CI_BRANCH ? 90_000 : 60_000,
+    timeout: 60_000,
     expect: {
         timeout: 10_000,
     },
