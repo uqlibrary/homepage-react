@@ -1034,7 +1034,6 @@ export const DLOList = ({
                 const aFav = isFavorited(a);
                 const bFav = isFavorited(b);
                 if (aFav && !bFav) return -1;
-                /* istanbul ignore next */
                 if (!aFav && bFav) return 1;
                 return 0;
             });

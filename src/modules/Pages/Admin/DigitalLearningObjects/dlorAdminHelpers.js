@@ -172,7 +172,7 @@ export const fetchAndExportFavouritesToCSV = async filename => {
         const { data } = await get(DLOR_FAVOURITES_REPORT_API());
         const favouritesData = data.data || /* istanbul ignore next */ data;
         exportFavouritesToCSV(favouritesData, filename);
-    } catch (error) /* istanbul ignore next */ {
+    } catch (error) {
         console.error('Error exporting favourites:', error);
         throw error;
     }

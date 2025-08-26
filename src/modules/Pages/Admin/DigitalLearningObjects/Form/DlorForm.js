@@ -315,11 +315,11 @@ export const DlorForm = ({
                     mode: 'manual',
                     label: 'Editing',
                     attributes: {
-                        href: 'javascript:void(0);',
-                    },
-                },
-            },
-        },
+                        href: 'javascript:void(0);'
+                    }
+                }
+            }
+        }
     };
 
     const isValidUsername = testUserName => {
@@ -1794,7 +1794,6 @@ export const DlorForm = ({
         setConfirmationOpen(false);
         actions.clearADlor();
         window.location.href = getDlorViewPageUrl(uuid);
-        /* istanbul ignore next */
         scrollToTopOfPage();
     };
 
@@ -1809,7 +1808,6 @@ export const DlorForm = ({
         setConfirmationOpen(false);
         actions.clearADlor();
         window.location.href = dlorAdminLink(undefined, account);
-        /* istanbul ignore next */
         scrollToTopOfPage();
     };
 
@@ -1829,12 +1827,11 @@ export const DlorForm = ({
     const handleNext = () => {
         setEditorReady(false);
         setActiveStep(prevActiveStep => prevActiveStep + 1);
-    };
-
+    }
     const handleBack = () => {
         setEditorReady(false);
         setActiveStep(prevActiveStep => prevActiveStep - 1);
-    };
+    }
 
     if (!!dlorTeamListLoading || dlorFilterListLoading || !!dlorItemSaving || !!dlorItemLoading) {
         return (

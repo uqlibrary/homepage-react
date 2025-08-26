@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import TextField from '@mui/material/TextField';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -48,7 +49,6 @@ const EventPanel = ({
 
     const updateEventDate = newDate => {
         const manualDate = newDate.isBefore(moment(), 'day');
-        /* istanbul ignore next */
         if (newDate.isValid()) {
             handleChange('action_date')(newDate);
         }
