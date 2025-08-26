@@ -40,14 +40,17 @@ test.describe('Test and Tag bulk asset update', () => {
     test('Asset id search functions correctly', async ({ page }) => {
         await checkBaseline(page);
         // Search for an asset
+        await page.getByTestId('asset_selector-bulk-asset-update-input').clear();
         await page.getByTestId('asset_selector-bulk-asset-update-input').fill('5');
         await expect(await getFieldValue(page, 'asset_id_displayed', 0)).toContainText('UQL000005');
 
         // Search for an additional asset
+        await page.getByTestId('asset_selector-bulk-asset-update-input').clear();
         await page.getByTestId('asset_selector-bulk-asset-update-input').fill('6');
         await expect(await getFieldValue(page, 'asset_id_displayed', 1)).toContainText('UQL000006');
 
         // Search for an exact asset
+        await page.getByTestId('asset_selector-bulk-asset-update-input').clear();
         await page.getByTestId('asset_selector-bulk-asset-update-input').fill('UQL310000');
         await expect(await getFieldValue(page, 'asset_id_displayed', 2)).toContainText('UQL310000');
         await expect(page.getByTestId('bulk_asset_update-count-alert')).toBeVisible();
@@ -105,6 +108,7 @@ test.describe('Test and Tag bulk asset update', () => {
             await expect(page.getByTestId('asset_type_selector-filter-dialog-input')).toHaveValue('Power Cord - C13');
 
             // notes
+            await page.getByTestId('filter_dialog-bulk-asset-update-search-notes-input').clear();
             await page.getByTestId('filter_dialog-bulk-asset-update-search-notes-input').fill('Test notes');
             await expect(page.getByTestId('filter_dialog-bulk-asset-update-search-notes-input')).toHaveValue(
                 'Test notes',
@@ -222,6 +226,7 @@ test.describe('Test and Tag bulk asset update', () => {
         // Update status
         await page.locator('#bulk_asset_update-status-checkbox').click();
         await expect(page.getByTestId('bulk-asset-update-discard-reason-input')).toHaveAttribute('required');
+        await page.getByTestId('bulk-asset-update-discard-reason-input').clear();
         await page.getByTestId('bulk-asset-update-discard-reason-input').fill('Cypress test');
         // Commit the change
         await page.getByTestId('bulk_asset_update-submit-button').click();
