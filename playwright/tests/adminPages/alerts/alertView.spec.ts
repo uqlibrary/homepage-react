@@ -69,15 +69,8 @@ test.describe('Alerts Admin View Page', () => {
         await expect(page.locator('[data-testid="admin-alerts-view-title"] input')).toHaveValue('Example alert:');
         await expect(page.getByTestId('admin-alerts-view-button-block').locator(':scope > *')).toHaveCount(2);
 
-        await expect(async () => {
-            await page.locator('button[data-testid="admin-alerts-view-button-save"]').click({ timeout: 500 });
-            await expect(page).toHaveURL(
-                'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245',
-                {
-                    timeout: 2000,
-                },
-            );
-        }).toPass();
+        await page.locator('button[data-testid="admin-alerts-view-button-save"]').click();
+        await expect(page).toHaveURL('http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245');
     });
     test('can show a preview of an urgent-priority permanent alert with link', async ({ page }) => {
         await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alerttitle', 'Example alert:');
