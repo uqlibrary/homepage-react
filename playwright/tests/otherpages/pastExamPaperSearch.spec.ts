@@ -52,6 +52,7 @@ test.describe('Past Exam Papers Pages', () => {
             await page.goto('/exams');
             await page.locator('[data-testid="past-exam-paper-search-autocomplete-input"]').fill('em');
             await expect(page.locator('.MuiAutocomplete-listbox')).toHaveCount(0);
+            await expect(page.locator('.MuiAutocomplete-noOptions')).toBeVisible();
             await expect(
                 page
                     .locator('.MuiAutocomplete-noOptions')
@@ -63,6 +64,7 @@ test.describe('Past Exam Papers Pages', () => {
             await page.goto('/exams');
             await page.locator('[data-testid="past-exam-paper-search-autocomplete-input"]').fill('f');
             await expect(page.locator('.MuiAutocomplete-listbox')).toHaveCount(0);
+            await expect(page.locator('.MuiAutocomplete-noOptions')).toBeVisible();
             await expect(
                 page
                     .locator('.MuiAutocomplete-noOptions')
@@ -107,6 +109,7 @@ test.describe('Past Exam Papers Pages', () => {
             await page.goto('/exams');
             await page.locator('[data-testid="past-exam-paper-search-autocomplete-input"]').fill('fail');
             await expect(page.locator('.MuiAutocomplete-listbox')).toHaveCount(0);
+            await expect(page.locator('div[data-testid="past-exam-paper-error"]')).toBeVisible();
             await expect(
                 page
                     .locator('div[data-testid="past-exam-paper-error"]')
@@ -125,7 +128,7 @@ test.describe('Past Exam Papers Pages', () => {
                     .getByText(/Past Exam Papers/)
                     .first(),
             ).toBeVisible();
-            await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['empty-table-header'] });
+            await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
         test('past exam paper result page responsive display is accessible', async ({ page }) => {
             await page.goto('/exams/course/fren');
@@ -154,6 +157,7 @@ test.describe('Past Exam Papers Pages', () => {
                         .first(),
                 ).toBeVisible();
                 // sample papers are correct
+                await expect(page.locator('[data-testid="exampaper-desktop-sample-link-0-0-0"]')).toBeVisible();
                 await expect(
                     page
                         .locator('[data-testid="exampaper-desktop-sample-link-0-0-0"]')
@@ -223,6 +227,7 @@ test.describe('Past Exam Papers Pages', () => {
                         .getByText(/Original past exam papers/)
                         .first(),
                 ).toBeVisible();
+                await expect(page.locator('[data-testid="no-original-papers-provided"]')).toBeVisible();
                 await expect(
                     page
                         .locator('[data-testid="no-original-papers-provided"]')
@@ -230,12 +235,14 @@ test.describe('Past Exam Papers Pages', () => {
                         .first(),
                 ).toBeVisible();
                 await expect(page.locator('[data-testid="original-papers-table"]')).not.toBeVisible();
+                await expect(page.locator('[data-testid="sample-papers-heading"]')).toBeVisible();
                 await expect(
                     page
                         .locator('[data-testid="sample-papers-heading"]')
                         .getByText(/Sample past exam papers/)
                         .first(),
                 ).toBeVisible();
+                await expect(page.locator('[data-testid="exampaper-desktop-sample-link-0-0-0"]')).toBeVisible();
                 await expect(
                     page
                         .locator('[data-testid="exampaper-desktop-sample-link-0-0-0"]')
@@ -249,6 +256,7 @@ test.describe('Past Exam Papers Pages', () => {
                 await page.goto('/exams/course/fren');
                 await page.setViewportSize({ width: 414, height: 736 });
                 // sample papers are correct
+                await expect(page.locator('[data-testid="exampaper-mobile-sample-link-0-0-0"]')).toBeVisible();
                 await expect(page.locator('[data-testid="exampaper-mobile-sample-link-0-0-0"]')).toHaveText(
                     /FREN1010 Sem\.2 2020/,
                 );
@@ -296,6 +304,7 @@ test.describe('Past Exam Papers Pages', () => {
                         .getByText(/Original past exam papers/)
                         .first(),
                 ).toBeVisible();
+                await expect(page.locator('[data-testid="no-original-papers-provided"]')).toBeVisible();
                 await expect(
                     page
                         .locator('[data-testid="no-original-papers-provided"]')
@@ -303,12 +312,14 @@ test.describe('Past Exam Papers Pages', () => {
                         .first(),
                 ).toBeVisible();
                 await expect(page.locator('[data-testid="original-papers-table"]')).not.toBeVisible();
+                await expect(page.locator('[data-testid="sample-papers-heading"]')).toBeVisible();
                 await expect(
                     page
                         .locator('[data-testid="sample-papers-heading"]')
                         .getByText(/Sample past exam papers/)
                         .first(),
                 ).toBeVisible();
+                await expect(page.locator('[data-testid="exampaper-mobile-sample-link-0-0-0"]')).toBeVisible();
                 await expect(
                     page
                         .locator('[data-testid="exampaper-mobile-sample-link-0-0-0"]')
@@ -361,6 +372,7 @@ test.describe('Past Exam Papers Pages', () => {
         test('when the api fails I get an appropriate error message', async ({ page }) => {
             await page.goto('/exams/course/fail');
             await expect(page.locator('.MuiAutocomplete-listbox')).toHaveCount(0);
+            await expect(page.locator('div[data-testid="past-exam-paper-error"]')).toBeVisible();
             await expect(
                 page
                     .locator('div[data-testid="past-exam-paper-error"]')

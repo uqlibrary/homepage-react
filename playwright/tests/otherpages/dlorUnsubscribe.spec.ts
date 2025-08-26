@@ -5,10 +5,14 @@ test.describe('Digital Learning Hub', () => {
         test('a successful unsubscribe appears as expected', async ({ page }) => {
             await page.goto('digital-learning-hub/confirm/unsubscribe/fdsgsgsdgsd');
             await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.locator('[data-testid="dlor-unsubscribe-prompt"]')).toBeVisible();
+            await expect(page.locator('[data-testid="dlor-unsubscribe-prompt"]')).toBeVisible();
             await expect(page.locator('[data-testid="dlor-unsubscribe-prompt"]')).toHaveText(
                 /Do you wish to unsubscribe from notifications about Artificial Intelligence - Digital Essentials\?/,
             );
+            await expect(page.locator('[data-testid="dlor-unsubscribe-checkbox"] input')).toBeVisible();
             await page.locator('[data-testid="dlor-unsubscribe-checkbox"] input').check();
+            await expect(page.locator('[data-testid="dlor-unsubscribe-button"]')).toBeVisible();
             await page.locator('[data-testid="dlor-unsubscribe-button"]').click();
             await expect(
                 page
@@ -20,14 +24,18 @@ test.describe('Digital Learning Hub', () => {
         test('is accessible', async ({ page }) => {
             await page.goto('digital-learning-hub/confirm/unsubscribe/fdsgsgsdgsd');
             await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.locator('[data-testid="dlor-unsubscribe-prompt"]')).toBeVisible();
+            await expect(page.locator('[data-testid="dlor-unsubscribe-prompt"]')).toBeVisible();
             await expect(page.locator('[data-testid="dlor-unsubscribe-prompt"]')).toHaveText(
                 /Do you wish to unsubscribe from notifications about Artificial Intelligence - Digital Essentials\?/,
             );
 
             await assertAccessibility(page, '[data-testid="StandardPage"]');
+            await expect(page.locator('[data-testid="dlor-unsubscribe-checkbox"] input')).toBeVisible();
             await page.locator('[data-testid="dlor-unsubscribe-checkbox"] input').check();
 
             await assertAccessibility(page, '[data-testid="StandardPage"]');
+            await expect(page.locator('[data-testid="dlor-unsubscribe-button"]')).toBeVisible();
             await page.locator('[data-testid="dlor-unsubscribe-button"]').click();
 
             await assertAccessibility(page, '[data-testid="StandardPage"]');
@@ -44,6 +52,8 @@ test.describe('Digital Learning Hub', () => {
         test('an expired unsubscription appears as expected', async ({ page }) => {
             await page.goto('digital-learning-hub/confirm/unsubscribe/unsubscribeExpired');
             await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.locator('[data-testid="dlor-unsubscribe-error"]')).toBeVisible();
+            await expect(page.locator('[data-testid="dlor-unsubscribe-error"]')).toBeVisible();
             await expect(page.locator('[data-testid="dlor-unsubscribe-error"]')).toHaveText(
                 /That unsubscribe request doesn't exist - have you already unsubscribed\? Otherwise, something has gone wrong\./,
             );
@@ -51,6 +61,8 @@ test.describe('Digital Learning Hub', () => {
         test('a second click on a unsubscription link appears as expected', async ({ page }) => {
             await page.goto('digital-learning-hub/confirm/unsubscribe/duplicateclick');
             await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.locator('[data-testid="dlor-unsubscribe-error"]')).toBeVisible();
+            await expect(page.locator('[data-testid="dlor-unsubscribe-error"]')).toBeVisible();
             await expect(page.locator('[data-testid="dlor-unsubscribe-error"]')).toHaveText(
                 /That unsubscribe request doesn't exist - have you already unsubscribed\? Otherwise, something has gone wrong\./,
             );
@@ -58,6 +70,8 @@ test.describe('Digital Learning Hub', () => {
         test('a click on an unknown unsubscription link appears as expected', async ({ page }) => {
             await page.goto('digital-learning-hub/confirm/unsubscribe/noSuchConf');
             await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.locator('[data-testid="dlor-unsubscribe-error"]')).toBeVisible();
+            await expect(page.locator('[data-testid="dlor-unsubscribe-error"]')).toBeVisible();
             await expect(page.locator('[data-testid="dlor-unsubscribe-error"]')).toHaveText(
                 /That unsubscribe request doesn't exist - have you already unsubscribed\? Otherwise, something has gone wrong\./,
             );
@@ -65,6 +79,8 @@ test.describe('Digital Learning Hub', () => {
         test('an error on find appears as expected', async ({ page }) => {
             await page.goto('digital-learning-hub/confirm/unsubscribe/unsubscribeFindError');
             await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.locator('[data-testid="dlor-unsubscribe-error"]')).toBeVisible();
+            await expect(page.locator('[data-testid="dlor-unsubscribe-error"]')).toBeVisible();
             await expect(page.locator('[data-testid="dlor-unsubscribe-error"]')).toHaveText(
                 /An error has occurred during the request/,
             );
@@ -72,11 +88,16 @@ test.describe('Digital Learning Hub', () => {
         test('an error on unsubscribe appears as expected', async ({ page }) => {
             await page.goto('digital-learning-hub/confirm/unsubscribe/unsubscribeError');
             await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.locator('[data-testid="dlor-unsubscribe-prompt"]')).toBeVisible();
+            await expect(page.locator('[data-testid="dlor-unsubscribe-prompt"]')).toBeVisible();
             await expect(page.locator('[data-testid="dlor-unsubscribe-prompt"]')).toHaveText(
                 /Do you wish to unsubscribe from notifications about Artificial Intelligence - Digital Essentials\?/,
             );
+            await expect(page.locator('[data-testid="dlor-unsubscribe-checkbox"] input')).toBeVisible();
             await page.locator('[data-testid="dlor-unsubscribe-checkbox"] input').check();
+            await expect(page.locator('[data-testid="dlor-unsubscribe-button"]')).toBeVisible();
             await page.locator('[data-testid="dlor-unsubscribe-button"]').click();
+            await expect(page.locator('[data-testid="dlor-unsubscribe-error"]')).toBeVisible();
             await expect(page.locator('[data-testid="dlor-unsubscribe-error"]')).toHaveText(
                 /An error has occurred during the request/,
             );
