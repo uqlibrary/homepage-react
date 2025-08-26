@@ -19,10 +19,17 @@ npm install -g nyc
 
 # Copy output artifact test reports into common location
 mkdir -p coverage/all
+echo "${CODEBUILD_SRC_DIR_TestArtifact1}"
+ls -laR "${CODEBUILD_SRC_DIR_TestArtifact1}" | grep coverage-final
+echo "${CODEBUILD_SRC_DIR_TestArtifact2}"
+ls -laR "${CODEBUILD_SRC_DIR_TestArtifact2}" | grep coverage-final
+echo "${CODEBUILD_SRC_DIR_TestArtifact3}"
+ls -laR "${CODEBUILD_SRC_DIR_TestArtifact3}" | grep coverage-final
 cp "${CODEBUILD_SRC_DIR_TestArtifact1}/coverage/playwright/coverage-final.json" coverage/all/playwright-1.json
 cp "${CODEBUILD_SRC_DIR_TestArtifact2}/coverage/playwright/coverage-final.json" coverage/all/playwright-2.json
 cp "${CODEBUILD_SRC_DIR_TestArtifact3}/coverage/playwright/coverage-final.json" coverage/all/playwright-3.json
 cp "${CODEBUILD_SRC_DIR_TestArtifact3}/coverage/jest/coverage-final.json" coverage/all/jest.json
+ls -la coverage/all
 
 # Combine reports into single json file
 nyc merge coverage/all coverage/merged-coverage.json
