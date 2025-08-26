@@ -15,19 +15,6 @@ export const TRAINING_API = (numEvents = 6, filterId = 104) => ({
     options: { params: { take: numEvents, 'filterIds[]': filterId, ts: `${new Date().getTime()}` } },
 });
 
-export const WEEKLYHOURS_API = () => {
-    return {
-        apiUrl: 'library_hours/week',
-        options: { params: { weeks: 2, ts: `${new Date().getTime()}` } },
-    };
-};
-
-export const FACILITY_TYPE_ALL_API = () => {
-    return {
-        apiUrl: 'facility_types',
-    };
-};
-
 // Papercut balance API
 export const PRINTING_API = () => ({
     apiUrl: 'papercut/balance',
@@ -295,7 +282,21 @@ export const LOANS_API = () => ({
     options: { params: { ts: `${new Date().getTime()}` } },
 });
 
+// Locations APIs
 export const LOCATIONSPACE_ALL_API = () => ({
-    apiUrl: 'location-spaces',
+    apiUrl: 'space_locations/spaces/all',
     options: { params: { ts: `${new Date().getTime()}` } },
 });
+
+export const WEEKLYHOURS_API = () => {
+    return {
+        apiUrl: 'library_hours/week',
+        options: { params: { weeks: 2, ts: `${new Date().getTime()}` } },
+    };
+};
+
+export const FACILITY_TYPE_ALL_API = () => {
+    return {
+        apiUrl: 'space_locations/facility_types/all',
+    };
+};

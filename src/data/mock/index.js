@@ -1431,7 +1431,7 @@ mock.onGet('exams/course/FREN1010/summary')
                 return [200, { ...loans, fines: [], total_fines_count: 0 }];
         }
     })
-    .onGet('location-spaces')
+    .onGet(routes.LOCATIONSPACE_ALL_API().apiUrl)
     .reply(() => {
         if (responseType === 'error') {
             return [500, {}];
