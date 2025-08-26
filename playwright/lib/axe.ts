@@ -2,8 +2,6 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, Page } from '../test';
 
 export const defaultIncludedImpacts = ['minor', 'moderate', 'serious', 'critical'];
-export const defaultDisabledRules = ['aria-required-children', 'aria-progressbar-name'];
-
 export const assertAccessibility = async (
     page: Page,
     selector?: string,
@@ -14,9 +12,6 @@ export const assertAccessibility = async (
     },
 ) => {
     const builder = new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice']);
-    const includedImpacts = options?.includedImpacts || defaultIncludedImpacts;
-    const disableRules = options?.disabledRules || defaultDisabledRules;
-
     if (selector) {
         builder.include(selector);
     }
@@ -24,13 +19,17 @@ export const assertAccessibility = async (
         builder.withRules(options.rules);
     }
     if (options?.disabledRules?.length) {
-        builder.disableRules(disableRules);
+        builder.disableRules(options.disabledRules);
     }
     const results = await builder.analyze();
 
+    const impacts = options?.includedImpacts || defaultIncludedImpacts;
     const filtered = results.violations
-        .filter(violation => !violation.impact || !includedImpacts.length || includedImpacts.includes(violation.impact))
-        .filter(violation => !violation.id || !disableRules.length || !disableRules.includes(violation.id));
+        .filter(violation => !violation.impact || !impacts.length || impacts.includes(violation.impact))
+        .filter(
+            violation =>
+                !violation.id || !options?.disabledRules?.length || !options.disabledRules.includes(violation.id),
+        );
     if (filtered.length > 0) {
         console.error('Accessibility Violations Found (filtered by impact):');
         console.table(

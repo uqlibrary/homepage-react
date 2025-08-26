@@ -1,5 +1,5 @@
 import { test, expect } from '@uq/pw/test';
-import { assertAccessibility, defaultDisabledRules } from '@uq/pw/lib/axe';
+import { assertAccessibility } from '@uq/pw/lib/axe';
 import { assertTitles, forcePageRefresh, getFieldValue } from '../helpers';
 import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
@@ -16,7 +16,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqtest1');
         await assertAccessibility(page, '[data-testid="StandardPage"]', {
-            disabledRules: [...defaultDisabledRules, 'color-contrast'],
+            disabledRules: ['aria-required-children', 'aria-progressbar-name', 'color-contrast'],
         });
     });
 

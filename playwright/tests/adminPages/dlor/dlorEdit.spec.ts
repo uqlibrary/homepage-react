@@ -16,7 +16,9 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await expect(page.locator('h1').getByText('Digital Learning Hub - Edit Object')).toBeVisible();
 
                 // check panel 1
-                await assertAccessibility(page, '[data-testid="StandardPage"]');
+                await assertAccessibility(page, '[data-testid="StandardPage"]', {
+                    disabledRules: ['aria-required-children'],
+                });
 
                 // open the "edit a team dialog"
                 await page.getByTestId('object-form-teamid-change').click();

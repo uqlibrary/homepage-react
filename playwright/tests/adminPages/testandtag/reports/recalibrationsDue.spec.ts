@@ -13,7 +13,9 @@ test.describe('Test and Tag Report - RecalibrationsDue due', () => {
         await assertTitles(page, locale.pages.report.recalibrationsDue.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'device_model_name', 0)).toContainText('AV 025');
-        await assertAccessibility(page, '[data-testid="StandardPage"]');
+        await assertAccessibility(page, '[data-testid="StandardPage"]', {
+            disabledRules: ['aria-required-children', 'aria-progressbar-name'],
+        });
     });
 
     test('has breadcrumbs', async ({ page }) => {
