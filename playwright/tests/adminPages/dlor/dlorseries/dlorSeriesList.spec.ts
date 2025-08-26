@@ -173,6 +173,11 @@ test.describe('Digital Learning Hub admin Series management', () => {
             await page.getByTestId('dlor-series-object-list-item-2').click();
             await expect(page).toHaveURL('http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=dloradmn');
         });
+        test.skip('has a working "add a series" button', async ({ page }) => {
+            await expect(page.getByTestId('admin-dlor-visit-add-button')).toHaveText(/Add series/);
+            await page.getByTestId('admin-dlor-visit-add-button').click();
+            await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/series/add?user=${DLOR_ADMIN_USER}`);
+        });
         test('has a working "edit a series" button 2', async ({ page }) => {
             await page.getByTestId('dlor-serieslist-edit-2').click();
             await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/series/edit/2?user=${DLOR_ADMIN_USER}`);
