@@ -1,15 +1,12 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
-const openCloseWorks = async () => {
-    test.describe('tests', async () => {
+const openCloseWorks = () => {
+    test.describe('tests', () => {
         test('can click away to close the dialog', async ({ page }) => {
-            let isRetry = false;
             await expect(async () => {
-                if (isRetry) await page.reload();
-                isRetry = false;
                 await page.getByTestId('hours-accordion-open').click({ timeout: 500 });
-                isRetry = true;
+                // dialog is open
                 await expect(page.getByTestId('locations-wrapper')).toContainText('See all Library and AskUs hours', {
                     timeout: 1000,
                 });
@@ -300,19 +297,9 @@ test.describe('Locations Panel', () => {
             test.afterEach(async ({ page }) => {
                 await page.getByTestId('hours-accordion-open').click();
 
-                let isRetry = false;
-                await expect(async () => {
-                    if (isRetry) await page.reload();
-                    isRetry = false;
-                    await page.getByTestId('hours-accordion-open').click({ timeout: 500 });
-                    isRetry = true;
-                    await expect(page.getByTestId('homepage-hours-weeklyhours-link')).toContainText(
-                        'See all Library and AskUs hours',
-                        {
-                            timeout: 1000,
-                        },
-                    );
-                }).toPass();
+                await expect(page.getByTestId('homepage-hours-weeklyhours-link')).toContainText(
+                    'See all Library and AskUs hours',
+                );
 
                 const utilityBarBottom = await page
                     .getByTestId('hours-accordion-open')
@@ -627,12 +614,13 @@ test.describe('Locations Panel', () => {
             await expect(page.getByTestId('hours-item-whitty-mater')).not.toBeVisible();
         });
 
-        test.describe('all close methods work', async () => {
+        test.describe('all close methods work', () => {
             test.beforeEach(async ({ page }) => {
                 await page.goto('/');
                 await page.setViewportSize({ width: 1300, height: 1000 });
             });
-            await openCloseWorks();
+
+            openCloseWorks();
         });
     });
     test.describe('handles an error as expected', () => {
@@ -648,12 +636,12 @@ test.describe('Locations Panel', () => {
             );
         });
 
-        test.describe('all close methods work', async () => {
+        test.describe('all close methods work', () => {
             test.beforeEach(async ({ page }) => {
                 await page.goto('/?responseType=error');
                 await page.setViewportSize({ width: 1300, height: 1000 });
             });
-            await openCloseWorks();
+            openCloseWorks();
         });
     });
 });
