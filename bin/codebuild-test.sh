@@ -55,7 +55,7 @@ function check_code_style {
 }
 
 function fix_coverage_report_paths() {
-    [[ -f "$1" ]] && sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' "$1"
+    sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' "$1"
 }
 
 function install_pw_deps() {
@@ -79,7 +79,11 @@ function run_pw_tests() {
         fi
 
         run_pw_test_shard "${PW_SHARD_INDEX}"
-        fix_coverage_report_paths "coverage/playwright/coverage-final.json"
+
+        if [[ $PW_IS_LAST_SHARD == true ]]; then
+            # the cc report merger will take action and produce the file below
+            fix_coverage_report_paths "coverage/playwright/coverage-final.json"
+        fi
 
         ((PW_SHARD_INDEX++))
     done
