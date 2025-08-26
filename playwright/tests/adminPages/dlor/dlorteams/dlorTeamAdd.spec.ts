@@ -126,6 +126,8 @@ test.describe('Digital Learning Hub admin Add Team', () => {
 
             await expect(page.getByTestId('StandardPage-title')).toHaveText(/Digital Learning Hub - Add a new Team/);
             await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/team/add?user=${DLOR_ADMIN_USER}`);
+            // TODO fix incorrect assertion below
+            // await expect(teamNameInput).toBeEmpty();
         });
 
         test('saves correctly and navigates to team list', async ({ page, context }) => {
