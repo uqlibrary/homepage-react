@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { InlineLoader } from '../../SharedComponents/Toolbox/Loaders';
+import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 const StyledStandardCard = styled(StandardCard)(() => ({
     '& .MuiCardHeader-root': {

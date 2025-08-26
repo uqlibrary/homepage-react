@@ -1,6 +1,12 @@
 import React from 'react';
 import { locale } from 'locale';
-import { canSeeLearningResourcesPage, isAlertsAdminUser, isDlorAdminUser, isTestTagUser } from 'helpers/access';
+import {
+    canSeeLearningResourcesPage,
+    isAlertsAdminUser,
+    isDlorAdminUser,
+    isSpacesAdminUser,
+    isTestTagUser,
+} from 'helpers/access';
 import { pathConfig } from './pathConfig';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
@@ -41,6 +47,7 @@ export const flattedPathConfigExact = [
     'https://www.library.uq.edu.au/404.js',
     '/digital-learning-hub-list',
     '/spaces',
+    '/admin/spaces',
 ];
 export const flattedPathConfig = [
     '/admin/alerts/edit',
@@ -347,6 +354,15 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const spacesLocationsDisplay = [
+        {
+            path: pathConfig.admin.spacesLocationsDashboard,
+            element: <components.SpacesLocationsDashboard />,
+            exact: true,
+            pageTitle: locale.pages.admin.spacesLocations.title,
+        },
+    ];
+
     return [
         ...publicPages,
         ...(account && canSeeLearningResourcesPage(account) ? courseResourcesDisplay : []),
@@ -354,6 +370,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isDlorAdminUser(account) ? dlorAdminDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
         ...(account && isTestTagUser(account) ? testntagDisplay : []),
+        ...(account && isSpacesAdminUser(account) ? spacesLocationsDisplay : []),
         ...(account ? authenticatedDlorDisplay : []),
         {
             path: '*',

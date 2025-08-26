@@ -51,6 +51,9 @@ export default {
             testntag: {
                 title: 'Test and Tag',
             },
+            spacesLocations: {
+                title: 'locations',
+            },
         },
         learningresources: {
             title: 'Learning resources',

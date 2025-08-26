@@ -5,11 +5,10 @@ export default {
             space_id: "123456",
             space_uuid: "987y_isjgt_9866",
             space_title: "01-W431",
-            space_precise: "Third floor [some position] Forgen Smith Building St Lucia Campus",
-            space_description: "A space in the Law library. lots of descriptive words here",
+            space_precise: "Third floor, west wing, Forgen Smith Building St Lucia Campus",
+            space_description: "A space in the Law library. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
             space_photo_url: "https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg", // https://campuses.uq.edu.au/list-rooms
             space_photo_description: 'a large room with 6 large round tables, each wih multiple chairs',
-            space_type: 'Collaborative space',
             space_opening_hours_id: 3841,
             space_services_page: "https://web.library.uq.edu.au/visit/walter-harrison-law-library",
             created_at: "2025-08-01 10:00:00",
@@ -22,16 +21,22 @@ export default {
             }, {
                 facilityTypeId: 2,
                 facilityTypeDisplayName: 'Group study tables',
-            }]
+            }],
+            space_type: 'Collaborative space',
+            space_floor_id: 1,
+            space_floor_name: "3",
+            space_building_id: 1,
+            space_building_name: "Forgan Smith Building",
+            space_site_id: 1,
+            space_site_name: "St Lucia",
         }, {
             space_id: "1234544",
             space_uuid: "9867y_isjgt_9866",
             space_title: "6078",
             space_precise: "Dutton Park Health Sciences",
-            space_description: "A space at Dutton Park. lots of descriptive words here",
+            space_description: "A space at Dutton Park. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. ",
             space_photo_url: "",
             space_photo_description: "",
-            space_type: 'Group Study Room',
             space_opening_hours_id: 3967,
             space_services_page: "https://web.library.uq.edu.au/visit/dutton-park-health-sciences-library",
             created_at: "2025-08-01 10:00:00",
@@ -44,16 +49,22 @@ export default {
             }, {
                 facilityTypeId: 6,
                 facilityTypeDisplayName: 'Standing Desks',
-            }]
+            }],
+            space_type: 'Group Study Room',
+            space_floor_id: 65,
+            space_floor_name: "3",
+            space_building_id: 10,
+            space_building_name: "Pharmacy Australia Centre of Excellence",
+            space_site_id: 3,
+            space_site_name: "Dutton Park",
         }, {
             space_id: "43534",
             space_uuid: "987y_isjgt_9867",
             space_title: "46-342/343",
-            space_precise: "Third floor [some position] Andrew N. Liveris Building St Lucia Campus",
-            space_description: "A space in the Liveris building. lots of descriptive words here",
+            space_precise: "Third floor, eastern corner, Andrew N. Liveris Building St Lucia Campus",
+            space_description: "A space in the Liveris building. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.",
             space_photo_url: "https://campuses.uq.edu.au/files/35424/46-342-343.JPG", // https://campuses.uq.edu.au/list-rooms
             space_photo_description: 'a large room with many tables, each wih 4 chairs',
-            space_type: 'Computer room',
             space_opening_hours_id: null,
             space_services_page: null,
             created_at: "2025-08-01 10:00:00",
@@ -61,36 +72,22 @@ export default {
             space_latitude: "-27.50046410327122",
             space_longitude: "153.0141740262594",
             facilities: [{
-                facilityTypeId: 3,
+                facilityTypeId: 2,
                 facilityTypeDisplayName: 'Natural light',
             }, {
                 facilityTypeId: 4,
                 facilityTypeDisplayName: 'Moderated',
             }, {
-                facilityTypeId: 2,
+                facilityTypeId: 3,
                 facilityTypeDisplayName: 'Group study tables',
-            }]
-            // }, {
-            //     space_id: "123456",
-            //     space_uuid: "987y_isjgt_9866",
-            //     space_title: "01-W431 Law Library",
-            //     space_precise: "Third floor [some position] Forgen Smith Building St Lucia Campus",
-            //     space_description: "A space in the Law library. lots of descriptive words here",
-            //     space_photo_url: "https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg", // https://campuses.uq.edu.au/list-rooms
-            //     space_photo_description: 'a large room with 6 large round tables, each wih multiple chairs',
-            //     created_at: "2025-08-01 10:00:00",
-            //     updated_at: "2025-08-01 11:00:00",
-            //     space_latitude: "-27.496955206561836",
-            //     space_longitude: "153.01308753792662",
-            //     facilities: [
-            //         {
-            //             facilityTypeId: 1,
-            //             facilityTypeDisplayName: 'Toilets nearby',
-            //         }, {
-            //             facilityTypeId: 2,
-            //             facilityTypeDisplayName: 'Group study tables',
-            //         }
-            //     ]
+            }],
+            space_type: 'Computer room',
+            space_floor_id: 72,
+            space_floor_name: "3",
+            space_building_id: 46,
+            space_building_name: "Andrew N. Liveris",
+            space_site_id: 1,
+            space_site_name: "St Lucia",
         }]
     }
 }
