@@ -35,3 +35,6 @@ artifacts:
     - '**/*'
   name: homepage-build.zip
   base-directory: dist
+cache:
+  paths:
+    - '/root/.npm/**/*'
