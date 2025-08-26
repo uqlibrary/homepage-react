@@ -470,12 +470,12 @@ test.describe('Digital Learning Hub admin homepage', () => {
 
             await expect(async () => {
                 if (await addToFavoriteButton.isVisible()) {
-                    await addToFavoriteButton.click({ timeout: 1000 });
+                    await addToFavoriteButton.click({ timeout: 500 });
                     await expect(removeFromFavoriteButton).toBeVisible({ timeout: 1000 });
                     return;
                 }
                 if (await removeFromFavoriteButton.isVisible()) {
-                    await removeFromFavoriteButton.click({ timeout: 1000 });
+                    await removeFromFavoriteButton.click({ timeout: 500 });
                 }
             }).toPass();
 

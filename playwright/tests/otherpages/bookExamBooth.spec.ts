@@ -86,7 +86,7 @@ test.describe('Book Exam Booth page', () => {
         );
     });
 
-    test.only('should redirect to expected url on submit with updated values', async ({ page }) => {
+    test('should redirect to expected url on submit with updated values', async ({ page }) => {
         await selectProctoredExam(page);
         await selectFirstLocation(page);
 
@@ -110,24 +110,12 @@ test.describe('Book Exam Booth page', () => {
         expect(defaultDateValue).toBe(yesterday.format('DD/MM/YYYY'));
 
         await page.getByTestId('start-date-button').click();
+
         const nextMonthButton = page.getByTestId('ArrowRightIcon');
-
-        let currentMonth = moment().format('MMMM');
-        const selectNextMonth = async () => {
-            await expect(async () => {
-                await expect(page.getByText(currentMonth)).toBeVisible({ timeout: 1000 });
-                await nextMonthButton.click({ timeout: 1000 });
-                await expect(page.getByText(moment().format('MMMM'))).not.toBeVisible({ timeout: 1000 });
-                currentMonth = moment()
-                    .add(1, 'month')
-                    .format('MMMM');
-            }).toPass();
-        };
-
-        await selectNextMonth();
+        await nextMonthButton.click();
         if (moment().date() === 1) {
             // The field defaults to the previous day, which can be in the previous month.
-            await selectNextMonth();
+            await nextMonthButton.click();
         }
 
         await page
