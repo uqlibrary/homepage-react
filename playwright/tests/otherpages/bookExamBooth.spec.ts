@@ -86,7 +86,7 @@ test.describe('Book Exam Booth page', () => {
         );
     });
 
-    test.only('should redirect to expected url on submit with updated values', async ({ page }) => {
+    test('should redirect to expected url on submit with updated values', async ({ page }) => {
         await selectProctoredExam(page);
         await selectFirstLocation(page);
 
