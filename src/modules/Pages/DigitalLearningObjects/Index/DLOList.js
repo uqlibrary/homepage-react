@@ -13,6 +13,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { Divider } from '@mui/material';
 
 import DescriptionIcon from '@mui/icons-material/Description';
 import LaptopIcon from '@mui/icons-material/Laptop';
@@ -46,8 +50,11 @@ import {
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { isEscapeKeyPressed, isReturnKeyPressed } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
-import { isDlorAdminUser, isLibraryStaff, isUQOnlyUser, isStaff } from 'helpers/access';
+import { isDlorAdminUser, isLibraryStaff, isUQOnlyUser, isStaff, isADlorTeamMember } from 'helpers/access';
+import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { LocalFireDepartment } from '@mui/icons-material';
+
+import {exportDLORDataToCSV} from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 
 const StyledSkipLinkButton = styled(Button)(({ theme }) => ({
     // hidden when not focused
@@ -281,6 +288,9 @@ export const DLOList = ({
     dlorFavouritesList,
     dlorFavouritesLoading,
     dlorFavouritesError,
+    dlorTeamList,
+    dlorTeamListLoading,
+    dlorTeamListError,
 }) => {
     // console.log('permissions', isLibraryStaff(account), isStaff(account), isUQOnlyUser(account));
     const [selectedFilters, setSelectedFilters] = useState([]);
@@ -291,15 +301,33 @@ export const DLOList = ({
     const [isKeywordClearable, setIsKeywordClearable] = useState(false);
     const keyWordSearchRef = useRef('');
 
+    const [anchorEl, setAnchorEl] = useState(null);
+    const menuOpen = Boolean(anchorEl);
+
+    const handleMenuClick = event => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    // Looking into a potential flag for facets to indicate if they are candidate displays similar to graduate attributes.
+    // For now, using an array to store selected helper text display as graduate attribute style.
+
+    console.log("TEAM LIST", dlorTeamList, dlorTeamListLoading, dlorTeamListError);
+
     const [paginationPage, setPaginationPage] = React.useState(1);
 
     const FilterGraduateAttributes = (filterList, filterId, mode) => {
+        console.log("FilterList", filterList, filterId, mode);
         if (mode === 'push') {
             const ga = filterList
                 .filter(item => item.facet_type_name === 'Graduate attributes')
                 .flatMap(item => item.facet_list);
-            console.log('GA', ga, filterId);
-            const filteredGraduateAttributes = ga.filter(facet => Number(facet.facet_id) === Number(filterId));
+            const gaAlternate = [...ga, ...filterFacetsWithShowHelp(filterList)]
+            console.log('GA', ga, gaAlternate, filterId);
+            const filteredGraduateAttributes = gaAlternate.filter(facet => Number(facet.facet_id) === Number(filterId));
 
             setSelectedGradAttributes([...selectedGradAttributes, ...filteredGraduateAttributes]);
         } else {
@@ -309,6 +337,16 @@ export const DLOList = ({
             setSelectedGradAttributes(filteredGraduateAttributes);
         }
     };
+
+    function filterFacetsWithShowHelp(data) {
+        console.log("filterFacetsWithShowHelp RAW DATA", data);
+    return data.flatMap(facetType =>
+        facetType.facet_list.filter(item => !!item.facet_show_help)
+    );
+}
+
+    console.log("filterFacetsWithShowHelp", filterFacetsWithShowHelp(dlorFilterList || []), dlorFilterList);
+
     /* istanbul ignore next */
     function skipToElement() {
         const skipNavLander = document.querySelector('#first-panel-button');
@@ -319,6 +357,12 @@ export const DLOList = ({
     const heroDescriptionDlor =
         'Use the Digital Learning Hub to find modules, videos and guides for teaching and study.';
     const heroBackgroundImageDlor = require('../../../../../public/images/digital-learning-hub-hero-shot-wide.png');
+
+    useEffect(() => {
+            if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {
+                actions.loadOwningTeams();
+            }
+        }, [actions, dlorTeamList, dlorTeamListError, dlorTeamListLoading]);
 
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -544,7 +588,9 @@ export const DLOList = ({
                     .filter(item => item.facet_type_name === 'Graduate attributes')
                     .flatMap(item => item.facet_list);
 
-                const filteredGraduateAttributes = ga.filter(facet => Number(facet.facet_id) === Number(facetId));
+                     const gaAlternate = [...ga, ...filterFacetsWithShowHelp(dlorFilterList)]
+
+                const filteredGraduateAttributes = gaAlternate.filter(facet => Number(facet.facet_id) === Number(facetId));
                 selectedGraduateAttributes = [...selectedGraduateAttributes, ...filteredGraduateAttributes];
             });
             setSelectedFilters(facettypelist);
@@ -1027,16 +1073,6 @@ export const DLOList = ({
         // Group selectedFilters by facetTypeSlug
         const groupedFilters = parseSelectedFilters(selectedFilters);
 
-        // Filter the list then sort by favorites
-        // const filteredList = sortedList?.filter(d => {
-        //     const passesCheckboxFilter = filterDlor(d, groupedFilters);
-        //     const passesKeyWordFilter =
-        //         !keywordSearch || // keyword not supplied - don't block
-        //         !keywordIsSearchable(keywordSearch) || // keyword too short to be useful - don't block
-        //         !!keywordFoundIn(d, keywordSearch); // DO block the Object by keyword
-        //     return passesCheckboxFilter && passesKeyWordFilter;
-        // });
-
         const filteredList = sortedList?.filter(d => {
             const passesCheckboxFilter = filterDlor(d, groupedFilters);
             const passesKeyWordFilter =
@@ -1291,7 +1327,26 @@ export const DLOList = ({
     // this will eventually be an internal form
     const contactFormLink = 'https://forms.office.com/r/8t0ugSZgE7';
 
-    const containsGraduateAttributes = selectedFilters.some(filter => filter.includes('graduate_attributes'));
+    function containsFacetWithShowHelp(selectedFilters, filterListTrimmed) {
+    // Build a Set of all facet ids with facet_show_help === true
+    const facetIdsWithShowHelp = new Set(
+        filterListTrimmed.flatMap(facetType =>
+            facetType.facet_list
+                .filter(item => item.facet_show_help === true)
+                .map(item => String(item.facet_id))
+        )
+    );
+    // Check if any selected filter matches a facet id with show help
+    return selectedFilters.some(filter => {
+        const parts = filter.split('-');
+        const facetId = parts[1];
+        return facetIdsWithShowHelp.has(facetId);
+    });
+}
+
+    const containsGraduateAttributes = selectedFilters.some(filter => filter.includes('graduate_attributes') || containsFacetWithShowHelp(selectedFilters, filterListTrimmed));
+
+    console.log("selectedFilters", selectedFilters, selectedGradAttributes);
 
     // sort the grad attributes display set in alpha order.
     selectedGradAttributes.sort((a, b) => {
@@ -1313,7 +1368,7 @@ export const DLOList = ({
                     justifyContent="space-between"
                     sx={{ marginBlock: '2em 1em' }}
                 >
-                    <Grid item xs={12} md="auto">
+                    <Grid item xs={11} md="auto">
                         <Typography component={'p'} sx={{ fontSize: '1.2em', fontWeight: 400 }}>
                             Find out{' '}
                             <a href="https://guides.library.uq.edu.au/research-and-teaching-staff/link-embed-resources/digital-learning-objects">
@@ -1328,7 +1383,66 @@ export const DLOList = ({
                             </StyledSkipLinkButton>
                         </Typography>
                     </Grid>
-                    {!!account?.id && !!!isDlorAdminUser(account) && (
+                    {!!isADlorTeamMember(account, dlorTeamList) && (
+                        <Grid item xs={1} md="auto" sx={{ textAlign: 'right' }}>
+                            <IconButton
+                            color="primary"
+                            aria-controls={menuOpen ? 'team-admin-dlor-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={menuOpen ? 'true' : undefined}
+                            onClick={handleMenuClick}
+                            data-testid="admin-dlor-team-admin-menu-button"
+                            aria-label="Team admin menu"
+                        >
+                            <MoreVertIcon />
+                            </IconButton>
+                            <Menu
+                                id="team-admin-dlor-menu"
+                                anchorEl={anchorEl}
+                                open={menuOpen}
+                                onClose={handleMenuClose}
+                                MenuListProps={{
+                                    'aria-labelledby': 'team-admin-dlor-menu-button',
+                                }}
+                            >
+                                <MenuItem
+                                    onClick={() => {
+                                        handleRequestNewItem();
+                                        handleMenuClose();
+                                    }}
+                                    data-testid="team-admin-submit-object-request"
+                                >
+                                    Submit new object request
+                                </MenuItem>
+                                <Divider />
+                                <MenuItem
+                                    onClick={() => {
+                                        window.location.href = dlorAdminLink('/team/manage', account);
+                                        handleMenuClose();
+                                    }}
+                                    data-testid="team-admin-details--button"
+                                >
+                                    My team(s) details
+                                </MenuItem>
+                                <Divider />
+                                <MenuItem
+                                    onClick={() => {
+                                       exportDLORDataToCSV(dlorList, 'dlor_data.csv');
+                                       handleMenuClose();
+                                    }}
+                                    data-testid="admin-dlor-export-team-objects--button"
+                                >
+                                    Export Object data to CSV
+                                </MenuItem>
+
+
+
+                                
+                                
+                            </Menu>
+                        </Grid>
+                    )}
+                    {!!account?.id && !!!isDlorAdminUser(account) && !!!isADlorTeamMember(account || /* istanbul ignore next */ null, dlorTeamList || /* istanbul ignore next */ null) && (
                         <Grid item xs={12} md="auto" sx={{ textAlign: 'right' }}>
                             <UqActionLink
                                 data-testid="dlor-homepage-request-new-item"

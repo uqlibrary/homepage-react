@@ -1,5 +1,5 @@
 import { test, expect } from '@uq/pw/test';
-import { DLOR_ADMIN_USER } from '@uq/pw/lib/constants';
+import { DLOR_ADMIN_USER, DLOR_OBJECT_OWNER } from '@uq/pw/lib/constants';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 test.describe('Digital Learning Hub admin Teams management', () => {
     test.beforeEach(async ({ page }) => {
@@ -249,6 +249,13 @@ test.describe('Digital Learning Hub admin Teams management', () => {
             await page.goto(`http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.locator('h1')).toContainText('Digital Learning Hub - Team management');
+        });
+        test('displays correct page for non admin users (list)', async ({ page }) => {
+            await page.goto(`http://localhost:2020/digital-learning-hub/team/manage?user=${DLOR_OBJECT_OWNER}`);
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Team management');
+            await expect(page.locator('[data-testid="dlor-teamlist-panel-1"]')).toBeVisible();
+            await expect(page.locator('[data-testid="admin-dlor-visit-add-button"]')).not.toBeVisible();
         });
     });
 });

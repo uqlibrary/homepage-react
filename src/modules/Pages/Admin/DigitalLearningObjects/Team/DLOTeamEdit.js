@@ -8,6 +8,8 @@ import DlOTeamForm from 'modules/Pages/Admin/DigitalLearningObjects/Team/DlOTeam
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 import { breadcrumbs } from 'config/routes';
+import { useAccountContext } from 'context';
+import { isDlorAdminUser } from 'helpers/access';
 
 export const DLOTeamEdit = ({
     actions,
@@ -18,6 +20,7 @@ export const DLOTeamEdit = ({
     dlorUpdatedItemError,
     dlorUpdatedItem,
 }) => {
+    const { account } = useAccountContext();
     const { dlorTeamId } = useParams();
 
     useEffect(() => {
@@ -29,7 +32,7 @@ export const DLOTeamEdit = ({
     useEffect(() => {
         /* istanbul ignore else */
         if (!!dlorTeamId) {
-            actions.loadADLORTeam(dlorTeamId);
+            actions.loadADLORTeam(dlorTeamId); 
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorTeamId]);
@@ -39,7 +42,7 @@ export const DLOTeamEdit = ({
             <DlorAdminBreadcrumbs
                 breadCrumbList={[
                     {
-                        link: dlorAdminLink('/team/manage'),
+                        link: dlorAdminLink('/team/manage', account),
                         title: 'Team management',
                     },
                     {

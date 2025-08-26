@@ -42,7 +42,8 @@ export const pathConfig = {
     dlorUnsubscribe: confirmationId => `/digital-learning-hub/confirm/unsubscribe/${confirmationId}`,
     pastExamPaperList: courseHint => `/exams/course/${courseHint}`,
     pastExamPaperSearch: '/exams',
-    help: 'https://guides.library.uq.edu.au/for-researchers/research-publications-guide',
     dlorSubmit: '/digital-learning-hub/submit',
     dlorOwnObjectEdit: dlorId => `/digital-learning-hub/edit/${dlorId}`,
+    dlorOwnTeamList: '/digital-learning-hub/team/manage',
+    dlorOwnTeamEdit: dlorTeamId => `/digital-learning-hub/team/edit/${dlorTeamId}`,
 };

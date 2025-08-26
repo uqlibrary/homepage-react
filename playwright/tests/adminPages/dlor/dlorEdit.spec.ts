@@ -1,7 +1,7 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { readCKEditor, typeCKEditor } from '@uq/pw/lib/ckeditor';
-import { DLOR_ADMIN_USER } from '@uq/pw/lib/constants';
+import { DLOR_ADMIN_USER, DLOR_NO_EDIT_USER, DLOR_OBJECT_OWNER } from '@uq/pw/lib/constants';
 import moment from 'moment-timezone';
 
 const REQUIRED_LENGTH_TITLE = 8;
@@ -986,9 +986,27 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
             await expect(page.locator('h1').getByText('Permission denied')).toBeVisible();
         });
         test('displays correct page for admin users (list)', async ({ page }) => {
-            await page.goto(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
+            await page.goto(`http://localhost:2020/digital-learning-hub/edit/kj5t_8yg4_kj4f?user=${DLOR_ADMIN_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1').getByText('Digital Learning Hub - Edit Object')).toBeVisible();
+            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Edit Object');
+            await expect(page.locator('[data-testid="dlor-breadcrumb-edit-object-label-0"]')).toContainText(
+                'UQ has a Blak History',
+            );
+        });
+        test('is accessible for a DLOR object owner', async ({ page }) => {
+            await page.goto(`http://localhost:2020/digital-learning-hub/edit/kj5t_8yg4_kj4f?user=${DLOR_OBJECT_OWNER}`);
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Edit Object');
+            await expect(page.locator('[data-testid="dlor-form-no-access"]')).not.toBeVisible();
+            await expect(page.locator('[data-testid="dlor-breadcrumb-edit-object-label-0"]')).toContainText(
+                'UQ has a Blak History',
+            );
+        });
+        test('is not accessible for a DLOR object owner with a different user', async ({ page }) => {
+            await page.goto(`http://localhost:2020/digital-learning-hub/edit/kj5t_8yg4_kj4f?user=${DLOR_NO_EDIT_USER}`);
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.locator('h1')).toBeVisible();
+            await expect(page.locator('[data-testid="dlor-form-no-access"]')).toBeVisible();
         });
     });
 });
