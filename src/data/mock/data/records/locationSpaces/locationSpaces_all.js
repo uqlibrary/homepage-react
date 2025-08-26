@@ -15,13 +15,6 @@ export default {
             updated_at: "2025-08-01 11:00:00",
             space_latitude: "-27.496955206561836",
             space_longitude: "153.01308753792662",
-            facilities: [{
-                facilityTypeId: 1,
-                facilityTypeDisplayName: 'Toilets nearby',
-            }, {
-                facilityTypeId: 2,
-                facilityTypeDisplayName: 'Group study tables',
-            }],
             space_type: 'Collaborative space',
             space_floor_id: 1,
             space_floor_name: "3",
@@ -29,6 +22,13 @@ export default {
             space_building_name: "Forgan Smith Building",
             space_site_id: 1,
             space_site_name: "St Lucia",
+            facility_types: [{
+                facility_type_id: 1,
+                facilityTypeDisplayName: 'Toilets nearby',
+            }, {
+                facility_type_id: 2,
+                facilityTypeDisplayName: 'Group study tables',
+            }],
         }, {
             space_id: "1234544",
             space_uuid: "9867y_isjgt_9866",
@@ -43,11 +43,11 @@ export default {
             updated_at: "2025-08-01 11:00:00",
             space_latitude: "-27.496955206561836",
             space_longitude: "153.01308753792662",
-            facilities: [{
-                facilityTypeId: 5,
+            facility_types: [{
+                facility_type_id: 5,
                 facilityTypeDisplayName: 'Cafe nearby',
             }, {
-                facilityTypeId: 6,
+                facility_type_id: 6,
                 facilityTypeDisplayName: 'Standing Desks',
             }],
             space_type: 'Group Study Room',
@@ -71,14 +71,14 @@ export default {
             updated_at: "2025-08-01 11:00:00",
             space_latitude: "-27.50046410327122",
             space_longitude: "153.0141740262594",
-            facilities: [{
-                facilityTypeId: 2,
+            facility_types: [{
+                facility_type_id: 2,
                 facilityTypeDisplayName: 'Natural light',
             }, {
-                facilityTypeId: 4,
+                facility_type_id: 4,
                 facilityTypeDisplayName: 'Moderated',
             }, {
-                facilityTypeId: 3,
+                facility_type_id: 3,
                 facilityTypeDisplayName: 'Group study tables',
             }],
             space_type: 'Computer room',

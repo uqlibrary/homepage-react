@@ -63,12 +63,12 @@ export const SpacesLocationsDashboard = ({
     // function spaceFacilities(bookableSpace) {
     //     return (
     //         <>
-    //             {bookableSpace?.facilities?.length > 0 && <h3>Facilities</h3>}
-    //             {bookableSpace?.facilities?.length > 0 && (
+    //             {bookableSpace?.facility_types?.length > 0 && <h3>Facilities</h3>}
+    //             {bookableSpace?.facility_types?.length > 0 && (
     //                 <ul>
-    //                     {bookableSpace?.facilities?.map(facility => {
+    //                     {bookableSpace?.facility_types?.map(facility => {
     //                         return (
-    //                             <li key={`facility-${bookableSpace?.space_id}-${facility.facilityTypeId}`}>
+    //                             <li key={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}>
     //                                 {facility.facilityTypeDisplayName}
     //                             </li>
     //                         );
@@ -80,8 +80,10 @@ export const SpacesLocationsDashboard = ({
     // }
 
     function markIfLocationHasFacility(facilityId, bookableSpace) {
-        // const hasThisFacility = bookableSpace?.facilities.some(facility => facility.facility_id === facilityId);
-        const hasThisFacility = bookableSpace?.facilities.some(facility => facility.facilityTypeId === facilityId);
+        // const hasThisFacility = bookableSpace?.facility_types.some(facility => facility.facility_type_id === facilityId);
+        const hasThisFacility = bookableSpace?.facility_types.some(
+            facility => facility.facility_type_id === facilityId,
+        );
         return hasThisFacility ? tickIcon('Included') : null;
     }
 
@@ -136,16 +138,16 @@ export const SpacesLocationsDashboard = ({
                                                         <TableCell component="th">Name</TableCell>
                                                         <TableCell component="th">Space type</TableCell>
                                                         <TableCell component="th">Space location</TableCell>
-                                                        {facilityTypeList?.data?.facilities?.length > 0 && (
+                                                        {facilityTypeList?.data?.facility_types?.length > 0 && (
                                                             <>
-                                                                {facilityTypeList?.data?.facilities?.map(
+                                                                {facilityTypeList?.data?.facility_types?.map(
                                                                     facilityType => {
                                                                         return (
                                                                             <TableCell
                                                                                 component="th"
-                                                                                key={`facilitytype-${facilityType.facility_id}`}
+                                                                                key={`facilitytype-${facilityType.facility_type_id}`}
                                                                             >
-                                                                                {facilityType.facility_name}
+                                                                                {facilityType.facility_type_name}
                                                                             </TableCell>
                                                                         );
                                                                     },
@@ -173,16 +175,16 @@ export const SpacesLocationsDashboard = ({
                                                                     {bookableSpace?.space_building_name}
                                                                 </TableCell>
 
-                                                                {facilityTypeList?.data?.facilities?.length > 0 && (
+                                                                {facilityTypeList?.data?.facility_types?.length > 0 && (
                                                                     <>
-                                                                        {facilityTypeList?.data?.facilities?.map(
+                                                                        {facilityTypeList?.data?.facility_types?.map(
                                                                             facilityType => {
                                                                                 return (
                                                                                     <TableCell
-                                                                                        key={`space-${bookableSpace?.space_id}-facilitytype-${facilityType.facility_name}`}
+                                                                                        key={`space-${bookableSpace?.space_id}-facilitytype-${facilityType.facility_type_name}`}
                                                                                     >
                                                                                         {markIfLocationHasFacility(
-                                                                                            facilityType.facility_id,
+                                                                                            facilityType.facility_type_id,
                                                                                             bookableSpace,
                                                                                         )}
                                                                                     </TableCell>

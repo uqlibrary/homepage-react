@@ -128,12 +128,12 @@ export const SpacesLocationList = ({
     function spaceFacilities(bookableSpace) {
         return (
             <>
-                {bookableSpace?.facilities?.length > 0 && <h3>Facilities</h3>}
-                {bookableSpace?.facilities?.length > 0 && (
+                {bookableSpace?.facility_types?.length > 0 && <h3>Facilities</h3>}
+                {bookableSpace?.facility_types?.length > 0 && (
                     <ul>
-                        {bookableSpace?.facilities?.map(facility => {
+                        {bookableSpace?.facility_types?.map(facility => {
                             return (
-                                <li key={`facility-${bookableSpace?.space_id}-${facility.facilityTypeId}`}>
+                                <li key={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}>
                                     {facility.facilityTypeDisplayName}
                                 </li>
                             );

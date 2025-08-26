@@ -1,24 +1,24 @@
 export default {
     "status": "OK",
     "data": {
-        "facilities": [{
-            facility_id: 1,
-            facility_name: "Toilets nearby",
+        "facility_types": [{
+            facility_type_id: 1,
+            facility_type_name: "Toilets nearby",
         }, {
-            facility_id: 2,
-            facility_name: "Natural light",
+            facility_type_id: 2,
+            facility_type_name: "Natural light",
         }, {
-            facility_id: 3,
-            facility_name: "Group study tables",
+            facility_type_id: 3,
+            facility_type_name: "Group study tables",
         }, {
-            facility_id: 4,
-            facility_name: "Moderated",
+            facility_type_id: 4,
+            facility_type_name: "Moderated",
         }, {
-            facility_id: 5,
-            facility_name: "Cafe nearby",
+            facility_type_id: 5,
+            facility_type_name: "Cafe nearby",
         }, {
-            facility_id: 6,
-            facility_name: "Standing Desks",
+            facility_type_id: 6,
+            facility_type_name: "Standing Desks",
         }]
     }
 }
