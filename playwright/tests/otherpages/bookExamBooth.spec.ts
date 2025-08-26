@@ -117,14 +117,15 @@ test.describe('Book Exam Booth page', () => {
             // The field defaults to the previous day, which can be in the previous month.
             await nextMonthButton.click();
         }
-
-        await page
-            .locator('.MuiPickersDay-root')
-            .getByText(intendedDate)
-            .first()
-            .dispatchEvent('click');
-        await page.locator('body').click();
-        expect(await dateInput.inputValue()).toBe(bookingDate.format('DD/MM/YYYY'));
+        await expect(async () => {
+            await page
+                .locator('.MuiPickersDay-root')
+                .getByText(intendedDate)
+                .first()
+                .click({ timeout: 500 });
+            await page.keyboard.press('Escape');
+            expect(await dateInput.inputValue()).toBe(bookingDate.format('DD/MM/YYYY'));
+        }).toPass();
 
         // Choose a custom time
         await page.getByTestId('start-time-hours').click();
