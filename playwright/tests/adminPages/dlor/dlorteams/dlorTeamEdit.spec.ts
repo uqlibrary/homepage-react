@@ -220,49 +220,43 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             await page.goto(`http://localhost:2020/digital-learning-hub/team/manage?user=uqstaff`);
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.locator('h1')).toContainText('Digital Learning Hub - Team management');
-            await expect(page.locator('[data-testid="admin-dlor-team-form-save-button"]')).not.toBeVisible();
+            await expect(page.getByTestId('admin-dlor-team-form-save-button')).not.toBeVisible();
         });
         test('disallows non-team members trying to view the team edit page', async ({ page }) => {
             await page.goto(`http://localhost:2020/digital-learning-hub/team/manage?user=s1111111`);
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.locator('h1')).toContainText('Digital Learning Hub - Team management');
-            await expect(page.locator('[data-testid="admin-dlor-team-form-save-button"]')).not.toBeVisible();
-            await expect(page.locator('[data-testid="dlor-teamlist-no-access"]')).toBeVisible();
+            await expect(page.getByTestId('admin-dlor-team-form-save-button')).not.toBeVisible();
+            await expect(page.getByTestId('dlor-teamlist-no-access')).toBeVisible();
         });
     });
     test.describe('team admin functionality', () => {
         test('has a team admin menu - object request', async ({ page }) => {
             await page.goto('http://localhost:2020/digital-learning-hub?user=uqstaff');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await page.locator('[data-testid="admin-dlor-team-admin-menu-button"]').click();
-            await expect(page.locator('[data-testid="team-admin-submit-object-request"]')).toContainText(
+            await page.getByTestId('admin-dlor-team-admin-menu-button').click();
+            await expect(page.getByTestId('team-admin-submit-object-request')).toContainText(
                 'Submit new object request',
             );
-            await expect(page.locator('[data-testid="team-admin-details--button"]')).toContainText(
-                'My team(s) details',
-            );
-            await page.locator('[data-testid="team-admin-submit-object-request"]').click();
-            await expect(page.locator('[data-testid="StandardPage-title"]')).toContainText(
-                'Digital Learning Hub Management',
-            );
+            await expect(page.getByTestId('team-admin-details--button')).toContainText('My team(s) details');
+            await page.getByTestId('team-admin-submit-object-request').click();
+            await expect(page.getByTestId('StandardPage-title')).toContainText('Digital Learning Hub Management');
             await expect(
-                page.locator('[data-testid="dlor-breadcrumb-create-an-object-for-the-digital-learning-hub-label-0"]'),
+                page.getByTestId('dlor-breadcrumb-create-an-object-for-the-digital-learning-hub-label-0'),
             ).toContainText('Create an Object for the Digital Learning Hub');
         });
         test('has a team admin menu - team management', async ({ page }) => {
             await page.goto('http://localhost:2020/digital-learning-hub?user=uqstaff');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await page.locator('[data-testid="admin-dlor-team-admin-menu-button"]').click();
-            await expect(page.locator('[data-testid="team-admin-details--button"]')).toContainText(
-                'My team(s) details',
-            );
-            await page.locator('[data-testid="team-admin-details--button"]').click();
+            await page.getByTestId('admin-dlor-team-admin-menu-button').click();
+            await expect(page.getByTestId('team-admin-details--button')).toContainText('My team(s) details');
+            await page.getByTestId('team-admin-details--button').click();
 
-            await expect(page.locator('[data-testid="StandardPage-title"]')).toBeVisible();
-            await expect(page.locator('[data-testid="dlor-detailpage-sitelabel"]')).toContainText('Team management');
-            await page.locator('[data-testid="dlor-teamlist-edit-1"]').click();
+            await expect(page.getByTestId('StandardPage-title')).toBeVisible();
+            await expect(page.getByTestId('dlor-detailpage-sitelabel')).toContainText('Team management');
+            await page.getByTestId('dlor-teamlist-edit-1').click();
 
-            await expect(page.locator('[data-testid="dlor-breadcrumb-edit-team-label-1"]')).toContainText(
+            await expect(page.getByTestId('dlor-breadcrumb-edit-team-label-1')).toContainText(
                 'Edit team: LIB DX Digital Content',
             );
         });
@@ -279,8 +273,8 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             });
 
             expect(await page.evaluate(() => window.wasURLCreateObjectURLCalled)).not.toBeTruthy();
-            await page.locator('[data-testid="admin-dlor-team-admin-menu-button"]').click();
-            await page.locator('[data-testid="admin-dlor-export-team-objects--button"]').click();
+            await page.getByTestId('admin-dlor-team-admin-menu-button').click();
+            await page.getByTestId('admin-dlor-export-team-objects--button').click();
             // Verify that the URL.createObjectURL method was called
             expect(await page.evaluate(() => window.wasURLCreateObjectURLCalled)).toBeTruthy();
         });

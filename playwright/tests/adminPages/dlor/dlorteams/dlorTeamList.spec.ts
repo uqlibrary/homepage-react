@@ -254,8 +254,8 @@ test.describe('Digital Learning Hub admin Teams management', () => {
             await page.goto(`http://localhost:2020/digital-learning-hub/team/manage?user=${DLOR_OBJECT_OWNER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.locator('h1')).toContainText('Digital Learning Hub - Team management');
-            await expect(page.locator('[data-testid="dlor-teamlist-panel-1"]')).toBeVisible();
-            await expect(page.locator('[data-testid="admin-dlor-visit-add-button"]')).not.toBeVisible();
+            await expect(page.getByTestId('dlor-teamlist-panel-1')).toBeVisible();
+            await expect(page.getByTestId('admin-dlor-visit-add-button')).not.toBeVisible();
         });
     });
 });
