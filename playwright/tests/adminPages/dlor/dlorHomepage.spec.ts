@@ -3,10 +3,6 @@ import { DLOR_ADMIN_USER } from '@uq/pw/lib/constants';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
 test.describe('Digital Learning Hub admin homepage', () => {
-    test.beforeEach(async ({}, testInfo) => {
-        test.setTimeout(testInfo.timeout + 30_000);
-    });
-
     const itemsPerPage = 10; // matches value in DLOAdminHomepage
     const gridFromExpectedRowCount = (expected = 23) => (expected > itemsPerPage ? itemsPerPage : expected);
     test.describe('homepage', () => {
