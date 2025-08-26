@@ -1,4 +1,4 @@
-import { test, expect } from '@uq/pw/test';
+import { test, expect } from '@playwright/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
 test.describe('Referencing', () => {

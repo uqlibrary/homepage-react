@@ -1,5 +1,5 @@
 import { Page, expect, Locator } from '../test';
-import { BrowserContext } from '@uq/pw/test';
+import { BrowserContext } from '@playwright/test';
 
 export const getOpenedLink = async (context: BrowserContext, locator: Locator) => {
     const [newPage] = await Promise.all([context.waitForEvent('page'), locator.click()]);
