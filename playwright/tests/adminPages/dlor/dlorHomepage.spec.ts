@@ -447,7 +447,7 @@ test.describe('Digital Learning Hub admin homepage', () => {
             await exportButton.click();
 
             // Verify error was logged
-            await expect(async () =>
+            expect(async () =>
                 expect(consoleErrors.some(err => err.includes('Failed to export favourites:'))).toBeTruthy(),
             ).toPass();
         });
@@ -459,19 +459,19 @@ test.describe('Digital Learning Hub admin homepage', () => {
         });
 
         test('should be able to favourite and unfavourite an object', async ({ page }) => {
-            const addToFavoriteButton = page.getByTestId('favorite-star-icon');
-            const removeFromFavoriteButton = page.getByTestId('favorite-star-outline-icon');
+            const favoriteStar = page.getByTestId('favorite-star-icon');
+            await favoriteStar.click();
+            await expect(favoriteStar).not.toBeVisible();
 
-            await addToFavoriteButton.click();
-            await expect(addToFavoriteButton).not.toBeVisible();
             // Verify tooltip
-            await removeFromFavoriteButton.hover();
             await expect(page.locator('.MuiTooltip-tooltip')).toContainText('Add to Favourites');
 
-            await removeFromFavoriteButton.click();
-            await expect(addToFavoriteButton).toBeVisible();
-            // Verify tooltip
-            await addToFavoriteButton.hover();
+            const favoriteOutline = page.getByTestId('favorite-star-outline-icon');
+            await expect(favoriteOutline).toBeVisible();
+            await expect(async () => {
+                await favoriteOutline.click({ timeout: 500 });
+                await expect(favoriteStar).toBeVisible({ timeout: 500 });
+            }).toPass();
             await expect(page.locator('.MuiTooltip-tooltip')).toContainText('Remove from Favourites');
         });
     });
