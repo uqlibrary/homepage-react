@@ -14,11 +14,8 @@ test.describe('Chatbot', () => {
     test.describe('chatbot', () => {
         test.beforeEach(async ({ page }) => await loadPage(page));
         test('works as expected', async ({ page }) => {
-            // because the wording is under the control of ITS (and they fiddle with it)
-            // we don't check for precise wording :(
-            // assume if the copilot JS has supplied some `article` elements, then it's ok
             const directLineToken = await page.evaluate(() => window.sessionStorage.getItem('directLineToken'));
-            expect(directLineToken).not.toBeNull(); // for comparison with other test
+            expect(directLineToken).not.toBeNull();
         });
     });
 

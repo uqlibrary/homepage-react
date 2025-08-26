@@ -16,7 +16,6 @@ test.describe('Masquerade', () => {
         ).toBeVisible();
         await assertAccessibility(page, '[data-testid="masquerade"]');
     });
-
     test('Masquerade Readonly Accessibility', async ({ page }) => {
         await page.goto('/admin/masquerade?user=uqmasquerade');
 
@@ -32,7 +31,6 @@ test.describe('Masquerade', () => {
         ).toBeVisible();
         await assertAccessibility(page, '[data-testid="masquerade"]');
     });
-
     test('unprivileged users cant masquerade', async ({ page }) => {
         await page.goto('/admin/masquerade?user=s1111111');
         await page.setViewportSize({
@@ -46,13 +44,10 @@ test.describe('Masquerade', () => {
                 .first(),
         ).toBeVisible();
     });
-
-    // we cant really test the masquerade works, checking we hit auth is really as far as we can go, but its something
     test('readonly users can masquerade', async ({ page }) => {
-        await page.route('**/auth.library.uq.edu.au/**', route =>
+        page.route('**/auth.library.uq.edu.au/**', route =>
             route.fulfill({ status: 200, body: 'user has navigated to auth for readonly' }),
         );
-
         await page.goto('/admin/masquerade/?user=uqmasquerade');
         await page.setViewportSize({
             width: 1300,
@@ -71,13 +66,10 @@ test.describe('Masquerade', () => {
                 .first(),
         ).toBeVisible();
     });
-
-    // we cant really test the masquerade works, checking we hit auth is really as far as we can go, but its something
     test('admin users can masquerade', async ({ page }) => {
-        await page.route('**/auth.library.uq.edu.au/**', route =>
+        page.route('**/auth.library.uq.edu.au/**', route =>
             route.fulfill({ status: 200, body: 'user has navigated to auth for admin' }),
         );
-
         await page.goto('/admin/masquerade/?user=uqstaff');
         await page.setViewportSize({
             width: 1300,

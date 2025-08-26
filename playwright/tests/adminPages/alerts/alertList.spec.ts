@@ -8,7 +8,6 @@ test.describe('Alert Admin List page', () => {
         await page.goto('http://localhost:2020/admin/alerts?user=uqstaff');
         await page.setViewportSize({ width: 1300, height: 1200 });
     });
-
     test('has breadcrumb', async ({ page }) => {
         await expect(
             page
@@ -17,7 +16,6 @@ test.describe('Alert Admin List page', () => {
                 .first(),
         ).toBeVisible();
     });
-
     test('displays a list of alerts to the authorised user', async ({ page }) => {
         await expect(page.locator('[data-testid="admin-alerts-list-current-list"] tbody tr')).toHaveCount(
             1 + numRowsHiddenAsNoDataInfo,
@@ -28,7 +26,6 @@ test.describe('Alert Admin List page', () => {
                 .getByText(/1 alert/)
                 .first(),
         ).toBeVisible();
-
         // this alert has all 3 chips
         await expect(
             page
@@ -56,7 +53,6 @@ test.describe('Alert Admin List page', () => {
                 .getByText(/System: Home page/)
                 .first(),
         ).toBeVisible();
-
         await expect(page.locator('[data-testid="admin-alerts-list-future-list"] tbody')).toBeVisible();
         await expect(
             page
@@ -69,14 +65,12 @@ test.describe('Alert Admin List page', () => {
             page.locator('[data-testid="admin-alerts-list-future-list"] tbody').locator(':scope > *'),
         ).toHaveCount(5 + numRowsHiddenAsNoDataInfo);
         await expect(page.locator('[data-testid="admin-alerts-list-future-list"] tfoot')).not.toBeVisible();
-
         // this alert has no chips
         await expect(page.getByTestId('alert-list-urgent-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35')).not.toBeVisible();
         await expect(page.getByTestId('alert-list-link-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35')).not.toBeVisible();
         await expect(
             page.getByTestId('alert-list-permanent-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35'),
         ).not.toBeVisible();
-
         await expect(
             page
                 .getByTestId('headerRow-count-past')
@@ -94,7 +88,6 @@ test.describe('Alert Admin List page', () => {
                 .first(),
         ).toBeVisible();
     });
-
     test('is accessible', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(
@@ -113,7 +106,6 @@ test.describe('Alert Admin List page', () => {
         await page.getByTestId('admin-alerts-help-display-button').click();
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts/add');
     });
-
     test('has a working Edit button on the List page', async ({ page }) => {
         await clickButton(
             page,
@@ -122,7 +114,6 @@ test.describe('Alert Admin List page', () => {
         );
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245');
     });
-
     test('an Edit button a long way down the List shows the top of the edit form', async ({ page }) => {
         await page
             .locator('button[data-testid="alert-list-item-edit-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]')
@@ -135,7 +126,6 @@ test.describe('Alert Admin List page', () => {
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts/edit/0aa12a30-996a-11eb-b009-3f6ded4fdb35');
         await expect(page.getByTestId('StandardPage').first()).toBeInViewport();
     });
-
     test('has alert dates formatted as expected', async ({ page }) => {
         // non-past dates dont have the year' time is formatted as expected
         {
@@ -157,7 +147,6 @@ test.describe('Alert Admin List page', () => {
             await expect(scope.getByText(/3pm/).first()).toBeVisible();
         }
     });
-
     test('can save the paginator default row count selection', async ({ page }) => {
         await expect(
             page.locator('[data-testid="alert-list-past"] [data-testid="admin-alerts-list-paginator-select"]'),
@@ -213,7 +202,6 @@ test.describe('Alert Admin List page', () => {
         // CLONE BUTTON WORKS
         await page.getByTestId('1db618c0-d897-11eb-a27e-df4e46db7245-clone-button').click();
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245');
-        // back to the list page
         await page.getByTestId('admin-alerts-form-button-cancel').click();
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts');
         await page
@@ -241,7 +229,6 @@ test.describe('Alert Admin List page', () => {
         await expect(page.getByTestId('dialogbox-alert-delete-confirm')).not.toBeVisible();
         // cant test display further as mock data doesnt actually delete
     });
-
     test('has working Split button actions for past alerts', async ({ page }) => {
         // VIEW BUTTON WORKS
         await expect(page.getByTestId('alert-list-item-view-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9')).toBeVisible();
@@ -386,8 +373,6 @@ test.describe('Alert Admin List page', () => {
             ).toBeVisible();
             await page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245').uncheck();
             await expect(page.locator('[data-testid="headerRow-current"] span.deleteManager')).not.toBeVisible();
-
-            // select two alerts and every thing looks right
             await page.getByTestId('alert-list-item-checkbox-0aa12a30-996a-11eb-b009-3f6ded4fdb35').check();
             await page.getByTestId('alert-list-item-checkbox-232d6880-996a-11eb-8a79-e7fddae87baf').check();
             await expect(
@@ -396,8 +381,6 @@ test.describe('Alert Admin List page', () => {
                     .getByText(/2 alerts selected/)
                     .first(),
             ).toBeVisible();
-
-            // click the delete button and the delete dialog appears
             await page.getByTestId('alert-list-item-checkbox-0aa12a30-996a-11eb-b009-3f6ded4fdb35').uncheck();
             await expect(
                 page
@@ -406,11 +389,9 @@ test.describe('Alert Admin List page', () => {
                     .first(),
             ).toBeVisible();
             await page.getByTestId('alert-list-scheduled-delete-button').click();
-            // close dialog
             await page.getByTestId('cancel-alert-delete-confirm').click();
             await expect(page.getByTestId('dialogbox-alert-delete-confirm')).not.toBeVisible();
         });
-
         test('the user can clear selected alerts', async ({ page }) => {
             await expect(page.getByTestId('headerRow-scheduled')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
             await expect(page.locator('[data-testid="headerRow-scheduled"] span.deleteManager')).not.toBeVisible();
@@ -429,11 +410,9 @@ test.describe('Alert Admin List page', () => {
                     .getByText(/2 alerts selected/)
                     .first(),
             ).toBeVisible();
-
             await page.getByTestId('alert-list-scheduled-deselect-button').click();
             await expect(page.locator('[data-testid="headerRow-scheduled"] span.deleteManager')).not.toBeVisible();
         });
-
         test('the user can delete an alert', async ({ page }) => {
             await page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245').check();
             await expect(
@@ -442,8 +421,6 @@ test.describe('Alert Admin List page', () => {
                     .getByText(/1 alert selected/)
                     .first(),
             ).toBeVisible();
-
-            // click the Proceed button and the alert is deleted
             await page.getByTestId('alert-list-current-delete-button').click();
             await expect(
                 page
@@ -456,7 +433,6 @@ test.describe('Alert Admin List page', () => {
             await expect(page.getByTestId('dialogbox-alert-delete-confirm')).not.toBeVisible();
             // cant test display further as mock data doesnt actually delete
         });
-
         test('reports when a delete fails', async ({ page }) => {
             await page.getByTestId('alert-list-item-checkbox-0aa12a30-996a-11eb-b009-3f6ded4fdb35').check();
             await expect(
@@ -465,7 +441,6 @@ test.describe('Alert Admin List page', () => {
                     .getByText(/1 alert selected/)
                     .first(),
             ).toBeVisible();
-            // click bin icon
             await page.getByTestId('alert-list-scheduled-delete-button').click();
             // a confirm dialog popup
             await expect(
@@ -487,7 +462,6 @@ test.describe('Alert Admin List page', () => {
             await page.getByTestId('confirm-alert-delete-error-dialog').click();
             await expect(page.getByTestId('dialogbox-alert-delete-error-dialog')).not.toBeVisible();
         });
-
         test('sequential deletion of alerts does not fail', async ({ page }) => {
             await page.getByTestId('alert-list-item-checkbox-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9').check();
             await expect(
@@ -496,7 +470,6 @@ test.describe('Alert Admin List page', () => {
                     .getByText(/1 alert selected/)
                     .first(),
             ).toBeVisible();
-            // click bin icon
             await page.getByTestId('alert-list-past-delete-button').click();
             // a confirm dialog popup
             await expect(
@@ -505,9 +478,9 @@ test.describe('Alert Admin List page', () => {
                     .getByText(/Proceed/)
                     .first(),
             ).toBeVisible();
-            // click the Proceed button and delete is attempted
             await page.getByTestId('confirm-alert-delete-confirm').click();
             await expect(page.getByTestId('dialogbox-alert-delete-confirm')).not.toBeVisible();
+            await page.waitForTimeout(500);
             // the error dialog doesnt appear
             await expect(page.getByTestId('dialogbox-alert-delete-error-dialog')).not.toBeVisible();
             await page.waitForTimeout(1000);
@@ -525,7 +498,6 @@ test.describe('Alert Admin List page', () => {
                     .getByText(/2 alerts selected/)
                     .first(),
             ).toBeVisible();
-            // click bin icon
             await page.getByTestId('alert-list-past-delete-button').click();
             // a confirm dialog popup
             await expect(
@@ -540,7 +512,6 @@ test.describe('Alert Admin List page', () => {
             // the error dialog doesnt appear
             await expect(page.getByTestId('dialogbox-alert-delete-error-dialog')).not.toBeVisible();
         });
-
         test('during delete section checkboxes in other sections are disabled', async ({ page }) => {
             await expect(
                 page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245'),
@@ -585,7 +556,6 @@ test.describe('Alert Admin List page', () => {
                 page.getByTestId('alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec'),
             ).not.toBeDisabled();
         });
-
         test('can unselect all checkboxes with the "X"', async ({ page }) => {
             await expect(
                 page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245'),

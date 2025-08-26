@@ -15,7 +15,9 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqtest1');
-        await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['color-contrast'] });
+
+        // Note this a11y check ignores the date label elements
+        await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
     test('has breadcrumbs', async ({ page }) => {
@@ -27,21 +29,23 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqtest1');
+
         await expect(async () => {
-            await page.getByTestId('user_inspections-user-name').click({ timeout: 500 });
+            await page.getByTestId('user_inspections-user-name').click({ timeout: 1000 });
             // Select user with no records
-            await page.getByTestId('user_inspections-user-name-option-2').click({ timeout: 500 });
-            await page.locator('body').click({ timeout: 500 });
+            await page.getByTestId('user_inspections-user-name-option-2').click({ timeout: 1000 });
+            await page.locator('body').click({ timeout: 1000 });
             // Check the value of the dropdown
             await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('Third Testing user', {
                 timeout: 1000,
             });
         }).toPass();
+
         // Select a second user
         await expect(async () => {
-            await page.getByTestId('user_inspections-user-name').click({ timeout: 500 });
-            await page.getByTestId('user_inspections-user-name-option-1').click({ timeout: 500 });
-            await page.locator('body').click({ timeout: 500 });
+            await page.getByTestId('user_inspections-user-name').click({ timeout: 1000 });
+            await page.getByTestId('user_inspections-user-name-option-1').click({ timeout: 1000 });
+            await page.locator('body').click({ timeout: 1000 });
             await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('Second Testing user', {
                 timeout: 1000,
             });
@@ -51,9 +55,9 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         }).toPass();
         // Select third user
         await expect(async () => {
-            await page.getByTestId('user_inspections-user-name-select').click({ timeout: 500 });
-            await page.getByTestId('user_inspections-user-name-option-0').click({ timeout: 500 });
-            await page.locator('body').click({ timeout: 500 });
+            await page.getByTestId('user_inspections-user-name-select').click({ timeout: 1000 });
+            await page.getByTestId('user_inspections-user-name-option-0').click({ timeout: 1000 });
+            await page.locator('body').click({ timeout: 1000 });
             await expect(page.getByTestId('user_inspections-user-name-select')).toContainText('JTest User', {
                 timeout: 1000,
             });
@@ -69,10 +73,12 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
     test('Date selectors work as intended', async ({ page }) => {
         const currentYear = new Date().getFullYear();
         const currentMonth = zeroPad(new Date().getMonth() + 1, 2);
+
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.report.inspectionsByLicencedUser.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqtest1');
+
         // Add a start date
         await page.getByTestId('user_inspections-tagged-start-button').click();
         await page.locator('.MuiPickersDay-root:has-text("11")').click();
@@ -91,6 +97,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         await expect(page.getByTestId('user_inspections-tagged-end-input')).toHaveValue(
             `${currentYear}-${currentMonth}-12`,
         );
+
         // Set up an incorrect date for the end
         await page.getByTestId('user_inspections-tagged-end-button').click();
         await page.locator('.MuiPaper-root[style*="opacity: 1"] .MuiPickersDay-root:has-text("10")').click();
@@ -112,6 +119,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         await expect(page.locator('#user_inspections-tagged-start-input-helper-text')).toContainText(
             'A start date is required',
         );
+
         // Clear the end date
         await page.getByTestId('user_inspections-tagged-end-input').clear();
         await page.locator('body').click();

@@ -5,8 +5,10 @@ const openCloseWorks = () => {
     test.describe('tests', () => {
         test('can click away to close the dialog', async ({ page }) => {
             await page.getByTestId('hours-accordion-open').click();
+
             // dialog is open
             await expect(page.getByTestId('locations-wrapper')).toContainText('See all Library and AskUs hours');
+
             // click elsewhere on the screen
             await page.locator('body').click();
             // dialog is closed
@@ -17,13 +19,16 @@ const openCloseWorks = () => {
             const clickButton = async () => {
                 await page.getByTestId('hours-accordion-open').click();
             };
+
             await page.goto('/');
             await page.setViewportSize({ width: 1300, height: 1000 });
+
             // open dialog
             await clickButton();
 
             // confirm dialog is open
             await expect(page.getByTestId('hours-item-askus')).toContainText('AskUs chat hours');
+
             // re-click button
             await clickButton();
             // dialog is closed
@@ -39,6 +44,7 @@ const openCloseWorks = () => {
             // dialog is closed
             await expect(page.getByTestId('locations-wrapper')).toHaveAttribute('aria-live', 'off');
         });
+
         test('clicking the button label can open and close the dialog', async ({ page }) => {
             const clickLabel = async () => {
                 const button = await page.getByTestId('hours-accordion-open');
@@ -52,8 +58,10 @@ const openCloseWorks = () => {
                     });
                 }
             };
+
             await page.goto('/');
             await page.setViewportSize({ width: 1300, height: 1000 });
+
             // open dialog
             await clickLabel();
 
@@ -90,8 +98,10 @@ const openCloseWorks = () => {
                     });
                 }
             };
+
             await page.goto('/');
             await page.setViewportSize({ width: 1300, height: 1000 });
+
             // open dialog
             await clickChevron();
 
@@ -119,8 +129,10 @@ const openCloseWorks = () => {
 
             await page.goto('/');
             await page.setViewportSize({ width: 1300, height: 1000 });
+
             // open dialog
             await clickIcon();
+
             // confirm dialog is open
             await expect(page.getByTestId('hours-item-askus')).toContainText('AskUs chat hours');
 
@@ -161,19 +173,15 @@ test.describe('Locations Panel', () => {
     test('loads as expected', async ({ page }) => {
         await page.goto('/');
         await page.setViewportSize({ width: 1300, height: 1000 });
-
         await page.getByTestId('hours-accordion-open').click();
-
-        // the expected content is found on the page
         await expect(page.getByTestId('hours-item-arch-music')).toContainText('Architecture and Music');
-
-        // at desktop hours are displayed
         await expect(page.getByTestId('location-item-arch-music-hours')).toContainText('7:30am - 7:30pm');
+
         await expect(page.getByTestId('locations-hours-disclaimer')).toContainText('Student and staff hours');
         await expect(page.getByTestId('hours-item-askus-link')).toContainText('AskUs chat hours');
 
-        // there is a gap above the askus link
         const panel = page.getByTestId('locations-panel-content');
+
         const gattonBottom = await panel
             .locator('[data-testid="hours-item-gatton"] a')
             .evaluate(el => el.getBoundingClientRect().top + el.offsetHeight);
@@ -183,25 +191,21 @@ test.describe('Locations Panel', () => {
                 bottom: el.getBoundingClientRect().top + el.offsetHeight,
             };
         });
-
         const askusTop = await panel
             .locator('[data-testid="hours-item-askus"] a')
             .evaluate(el => el.getBoundingClientRect().top);
 
-        // law is below gatton and askus is below law
         expect(lawBox.top).toBeGreaterThan(gattonBottom);
         expect(askusTop).toBeGreaterThan(lawBox.bottom);
-        // the gap between gatton and law is smaller than the gap between askus and law
+
         const spaceBetweenGattonAndLaw = lawBox.top - gattonBottom;
         const spaceBetweenLawAndAskus = askusTop - lawBox.bottom;
         expect(spaceBetweenLawAndAskus).toBeGreaterThan(spaceBetweenGattonAndLaw * 1.5);
-        // just rough "distinct difference" rather than precise number
     });
     test.describe('Accessibility', () => {
         test('200 is Accessible', async ({ page }) => {
             await page.goto('/');
             await page.setViewportSize({ width: 1300, height: 1000 });
-
             await page.getByTestId('hours-accordion-open').click();
 
             // dialog has loaded correctly
@@ -211,13 +215,11 @@ test.describe('Locations Panel', () => {
                     .getByText(/Architecture and Music/)
                     .first(),
             ).toBeVisible();
-
             await assertAccessibility(page, 'div[data-testid="locations-panel"]');
         });
         test('error is Accessible', async ({ page }) => {
             await page.goto('/?responseType=error');
             await page.setViewportSize({ width: 1300, height: 1000 });
-
             await page.getByTestId('hours-accordion-open').click();
 
             // dialog has loaded correctly
@@ -229,7 +231,6 @@ test.describe('Locations Panel', () => {
                     )
                     .first(),
             ).toBeVisible();
-
             await assertAccessibility(page, 'div[data-testid="locations-panel"]');
         });
     });
@@ -237,7 +238,6 @@ test.describe('Locations Panel', () => {
         test('at tablet size the hours column is not displayed', async ({ page }) => {
             await page.goto('/');
             await page.setViewportSize({ width: 414, height: 736 });
-
             await page.getByTestId('hours-accordion-open').click();
 
             // name shows, hours does not, busy appears
@@ -297,15 +297,6 @@ test.describe('Locations Panel', () => {
                     .getByTestId('locations-panel')
                     .evaluate(el => el.getBoundingClientRect().top);
                 expect(utilityBarBottom - locationsPanelTop).toBeLessThan(0.02);
-
-                // test fails? drop this in the webpage console to get the change:
-                // const utilityBar = document.querySelector('[data-testid="utility-bar-button-wrapper"]');
-                // const locationPanel = document.querySelector('[data-testid="locations-panel"]');
-                // const utilityBarBoundingBox = utilityBar.getBoundingClientRect();
-                // const utilityBarBottom = utilityBarBoundingBox.top + utilityBarBoundingBox.height;
-                // const locationPanelBoundingBox = locationPanel.getBoundingClientRect();
-                // const diff = utilityBarBottom - locationPanelBoundingBox.top;
-                // console.log('change `top` of StyledStandardCard in Locations.js by ', diff, 'px');
             });
         });
         test('can navigate to weekly hours page from the library name cell', async ({ page }) => {
@@ -317,14 +308,11 @@ test.describe('Locations Panel', () => {
             });
             await page.goto('/');
             await page.setViewportSize({ width: 1300, height: 1000 });
-
             await page.getByTestId('hours-accordion-open').click();
-
             await page
                 .locator('a[data-testid="hours-item-arch-music-link"]')
                 .getByText(/Architecture and Music/)
                 .click();
-
             await expect(page.getByText(/user has navigated to Drupal hours page/)).toBeVisible();
         });
         test('can navigate to book a room page', async ({ page }) => {
@@ -385,7 +373,6 @@ test.describe('Locations Panel', () => {
             await expect(
                 page.locator('[data-testid="hours-item-arch-music"] > div:nth-child(3) span').first(),
             ).toHaveAttribute('aria-label', 'Very busy');
-
             await expect(
                 page
                     .locator('[data-testid="hours-item-biol-sci"] > div:first-child')
@@ -408,7 +395,6 @@ test.describe('Locations Panel', () => {
             await expect(
                 page.locator('[data-testid="hours-item-biol-sci"] > div:nth-child(3) span').first(),
             ).toHaveAttribute('aria-label', 'Moderately busy');
-
             await expect(
                 page
                     .locator('[data-testid="hours-item-central"] > div:first-child')
@@ -419,7 +405,6 @@ test.describe('Locations Panel', () => {
                 'aria-label',
                 'The Central Library study space is open 24 hours. This space is currently not busy.',
             );
-
             await expect(
                 page
                     .locator('[data-testid="hours-item-central"] > div:nth-child(2)')
@@ -432,7 +417,6 @@ test.describe('Locations Panel', () => {
             await expect(
                 page.locator('[data-testid="hours-item-central"] > div:nth-child(3) span').first(),
             ).toHaveAttribute('aria-label', 'Not busy');
-
             await expect(
                 page
                     .locator('[data-testid="hours-item-duhig-study"] > div:first-child')
@@ -480,7 +464,6 @@ test.describe('Locations Panel', () => {
                     .getByText(/Closed/)
                     .first(),
             ).toBeVisible();
-
             await expect(
                 page
                     .locator('[data-testid="hours-item-gatton"] > div:first-child')
@@ -506,7 +489,6 @@ test.describe('Locations Panel', () => {
                     .getByText(/Data not available/)
                     .first(),
             ).toBeVisible();
-
             await expect(
                 page
                     .locator('[data-testid="hours-item-law"] > div:first-child')
@@ -529,7 +511,6 @@ test.describe('Locations Panel', () => {
             await expect(
                 page.locator('[data-testid="hours-item-law"] > div:nth-child(3) span').first(),
             ).toHaveAttribute('aria-label', 'Quite busy');
-
             await expect(page.locator('[data-testid="hours-item-fryer"] > div:first-child')).toBeVisible();
             await expect(
                 page
@@ -557,7 +538,6 @@ test.describe('Locations Panel', () => {
                     .first(),
             ).toBeVisible();
             await expect(page.locator('[data-testid="hours-item-fryer"] > div:nth-child(3)')).toBeVisible();
-
             await expect(
                 page
                     .locator('[data-testid="hours-item-askus"] > div:first-child')
@@ -600,15 +580,6 @@ test.describe('Locations Panel', () => {
             ).toBeVisible();
             await expect(page.getByTestId('hours-item-whitty-mater')).not.toBeVisible();
         });
-
-        test.describe('all close methods work', () => {
-            test.beforeEach(async ({ page }) => {
-                await page.goto('/');
-                await page.setViewportSize({ width: 1300, height: 1000 });
-            });
-
-            openCloseWorks();
-        });
     });
     test.describe('handles an error as expected', () => {
         test('loads correctly', async ({ page }) => {
@@ -628,6 +599,7 @@ test.describe('Locations Panel', () => {
                 await page.goto('/?responseType=error');
                 await page.setViewportSize({ width: 1300, height: 1000 });
             });
+
             openCloseWorks();
         });
     });

@@ -32,14 +32,12 @@ test.describe('Digital Learning Hub Series page.', () => {
         test('is accessible', async ({ page }) => {
             await page.goto('digital-learning-hub/series/1');
             await page.setViewportSize({ width: 1300, height: 1000 });
-
             await expect(page.locator('[data-testid="dlor-seriespage"] h1')).toContainText('Series Name');
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
         test('shows correct object definitions for a series', async ({ page }) => {
             await page.goto('digital-learning-hub/series/9?user=public');
             await page.setViewportSize({ width: 1300, height: 1000 });
-
             await expect(
                 page
                     .getByText(/Staff Restricted Object/)
@@ -61,7 +59,6 @@ test.describe('Digital Learning Hub Series page.', () => {
 
             await page.goto('digital-learning-hub/series/9?user=dloradmn');
             await page.setViewportSize({ width: 1300, height: 1000 });
-
             await expect(
                 page
                     .getByText(/Staff Restricted Object/)

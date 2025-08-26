@@ -26,7 +26,6 @@ test.describe('Digital Learning Hub admin Series management - add item', () => {
                     .getByText(/Series management/)
                     .first(),
             ).toHaveAttribute('href', `http://localhost:2020/admin/dlor/series/manage?user=${DLOR_ADMIN_USER}`);
-
             // series name input shows correctly
             await expect(page.locator('[data-testid="series-name"] input')).toBeVisible();
             // CKEditor should show
@@ -48,11 +47,8 @@ test.describe('Digital Learning Hub admin Series management - add item', () => {
 
             await page.locator('[data-testid="series-name"] input').fill('Series without objects');
             await typeCKEditor(page, 'This is a series without any objects');
-            // should have no current objects already in the series
             await expect(page.locator('#dragLandingAarea')).toContainText('(None yet)');
-
             await page.getByTestId('admin-dlor-series-form-save-button').click();
-
             await expect(page.getByTestId('message-title')).toContainText('Series has been created');
         });
         test('can navigate to and from the add series page', async ({ page }) => {
@@ -62,10 +58,10 @@ test.describe('Digital Learning Hub admin Series management - add item', () => {
                     .getByText(/Cancel/)
                     .first(),
             ).toBeVisible();
+
             await page.getByTestId('dlor-breadcrumb-admin-homelink').click();
             await page.getByTestId('admin-dlor-menu-button').click();
             await page.getByTestId('admin-dlor-visit-add-series-button').click();
-
             await expect(page.getByTestId('StandardPage-title')).toHaveText(/Digital Learning Hub - Add Series/);
         });
     });

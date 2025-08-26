@@ -113,7 +113,6 @@ test.describe('Account panel', () => {
             ).toBeVisible();
 
             await openPapercutPopup(page);
-
             await expect(
                 page
                     .getByTestId('papercut-item-button-4')
@@ -145,7 +144,6 @@ test.describe('Account panel', () => {
             ).toBeVisible();
 
             await openPapercutPopup(page);
-
             await expect(
                 page
                     .getByTestId('papercut-item-button-4')
@@ -175,9 +173,7 @@ test.describe('Account panel', () => {
                     .getByText(/12\.50/)
                     .first(),
             ).toBeVisible();
-
             await openPapercutPopup(page);
-
             await expect(
                 page
                     .getByTestId('papercut-item-button-4')
@@ -209,7 +205,6 @@ test.describe('Account panel', () => {
             ).toBeVisible();
 
             await openPapercutPopup(page);
-
             await expect(
                 page
                     .getByTestId('papercut-item-button-4')
@@ -232,7 +227,6 @@ test.describe('Account panel', () => {
                     body: 'papercut info page',
                 });
             });
-
             await page.goto('/?user=emcommunity');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(
@@ -247,9 +241,7 @@ test.describe('Account panel', () => {
                     .getByText(/12\.50/)
                     .first(),
             ).toBeVisible();
-
             await openPapercutPopup(page);
-
             await page
                 .locator('li[data-testid="papercut-item-button-4"]')
                 .getByText(/More about your printing account/)
@@ -282,7 +274,6 @@ test.describe('Account panel', () => {
             ).toBeVisible();
 
             await openPapercutPopup(page);
-
             await page
                 .getByTestId('papercut-item-button-1')
                 .getByText(/Top up your print balance/)
@@ -308,7 +299,6 @@ test.describe('Account panel', () => {
             ).toBeVisible();
 
             await openPapercutPopup(page);
-
             await expect(
                 page
                     .getByTestId('papercut-item-button-4')
@@ -317,5 +307,34 @@ test.describe('Account panel', () => {
             ).toBeVisible();
             await expect(page.getByTestId('papercut-item-button-1')).not.toBeVisible();
         });
+        // test.skip('MANUALLY CHECK THAT TABBING WORKS!!!!', async ({ page }) => {
+        // there is custom tab handling on the papercut menu, but Cypress cant test that :(
+        // working:
+        // load http://localhost:2020/?user=vanilla
+        // tab to Print balance field
+        // tab again - focus is on "See all training"
+        // back tab - back on Print balance
+        // click return - menu opens, focus is on first item
+        // tab through each item, land on next item in menu
+        // tab out of final menu item, menu closes, focus is on "See all training"
+        // back tab, focus is on Print balance
+        // click enter to load menu
+        // tab to final entry on menu
+        // back tab through each menu item
+        // back tab out of first menu item, menu closes, focus is on Print balance
+        // -- also check when fines and charges available
+        // load http://localhost:2020/?user=s1111111
+        // tab to Print balance field
+        // tab again - focus is on "Fines and charges"
+        // back tab - back on Prin galance
+        // click return - menu opens, focus is on first item
+        // tab through each item, land on next item in menu
+        // tab out of final menu item, menu closes, focus is on "Fines and charges"
+        // back tab, focus is on Print balance
+        // click enter to load menu
+        // tab to final entry on menu
+        // back tab through each menu item
+        // back tab out of first menu item, menu closes, focus is on Print balance        })
+        // });
     });
 });

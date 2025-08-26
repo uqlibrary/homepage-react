@@ -5,14 +5,12 @@ test.describe('Training', () => {
     test('content is correct', async ({ page }) => {
         await page.goto('/?user=s1111111');
         await page.setViewportSize({ width: 1300, height: 1000 });
-
         await expect(
             page
                 .getByTestId('standard-card-training-header')
                 .getByText(/Training/)
                 .first(),
         ).toBeVisible();
-
         await page.getByTestId('training-event-detail-button-0').scrollIntoViewIfNeeded();
         await expect(
             page
@@ -125,9 +123,7 @@ test.describe('Training', () => {
                 .getByText(/24 November at 10am/)
                 .first(),
         ).toBeVisible();
-
         await page.locator('button[data-testid="training-event-detail-close-button"]').click(); // close it
-
         await expect(
             page
                 .locator('button[data-testid="training-event-detail-button-1"]')
@@ -135,7 +131,6 @@ test.describe('Training', () => {
                 .first(),
         ).toBeVisible();
         await page.locator('button[data-testid="training-event-detail-button-1"]').click(); // open
-
         await expect(
             page
                 .getByTestId('event-detail-open-summary')
@@ -163,9 +158,7 @@ test.describe('Training', () => {
                 .getByText(/24 November at 9am - 25 November at 4pm/)
                 .first(),
         ).toBeVisible();
-
         await page.locator('button[data-testid="training-event-detail-close-button"]').click(); // close it
-
         await expect(
             page
                 .locator('button[data-testid="training-event-detail-button-2"]')
@@ -173,7 +166,6 @@ test.describe('Training', () => {
                 .first(),
         ).toBeVisible();
         await page.locator('button[data-testid="training-event-detail-button-2"]').click(); // open it
-
         await expect(
             page
                 .getByTestId('event-detail-open-summary')
@@ -206,7 +198,6 @@ test.describe('Training', () => {
         // we brng the detail pane over these fields to make the pane bigger,
         // but we have to manually display: hidden them or we get an accessibility issue
         await page.locator('button[data-testid="training-event-detail-button-0"]').scrollIntoViewIfNeeded();
-
         await expect(
             page
                 .locator('button[data-testid="training-event-detail-button-0"]')
@@ -214,15 +205,15 @@ test.describe('Training', () => {
                 .first(),
         ).toBeVisible();
         await page.locator('button[data-testid="training-event-detail-button-0"]').click();
+        await page.waitForTimeout(500);
+        // cy.get('#seeAllTrainingLink').should('not.be.visible');
         await expect(
             page
                 .getByTestId('training-events-detail-2824657')
                 .getByText(/EndNote: getting started/)
                 .first(),
         ).toBeVisible();
-
         await page.getByTestId('training-event-detail-close-button').click();
-
         await expect(page.getByTestId('training-events-detail-2824657')).not.toBeVisible();
     });
     test('can navigate to event page', async ({ page }) => {
@@ -232,10 +223,8 @@ test.describe('Training', () => {
                 body: 'user has navigated to Studenthub page',
             }),
         );
-
         await page.goto('/');
         await page.setViewportSize({ width: 1300, height: 1000 });
-
         await page.locator('button[data-testid="training-event-detail-button-0"]').scrollIntoViewIfNeeded();
         await expect(
             page
@@ -244,7 +233,7 @@ test.describe('Training', () => {
                 .first(),
         ).toBeVisible();
         await page.locator('button[data-testid="training-event-detail-button-0"]').click();
-
+        await page.waitForTimeout(500);
         await expect(
             page
                 .getByTestId('training-events-detail-2824657')
@@ -252,7 +241,6 @@ test.describe('Training', () => {
                 .first(),
         ).toBeVisible();
         await page.getByTestId('training-event-detail-training-login-button').click();
-
         await expect(
             page
                 .locator('body')
@@ -269,7 +257,6 @@ test.describe('Training', () => {
                 .getByText(/Training/)
                 .first(),
         ).toBeVisible();
-
         await expect(
             page
                 .getByTestId('training-api-error')
@@ -281,14 +268,12 @@ test.describe('Training', () => {
     test('when the api 404s, it shows a friendly message', async ({ page }) => {
         await page.goto('/?user=s1111111&responseType=404');
         await page.setViewportSize({ width: 1300, height: 1000 });
-
         await expect(
             page
                 .getByTestId('standard-card-training-header')
                 .getByText(/Training/)
                 .first(),
         ).toBeVisible();
-
         await expect(
             page
                 .getByTestId('training-api-error')
@@ -300,14 +285,12 @@ test.describe('Training', () => {
     test('shows an api error correctly', async ({ page }) => {
         await page.goto('/?user=s1111111&responseType=error');
         await page.setViewportSize({ width: 1300, height: 1000 });
-
         await expect(
             page
                 .getByTestId('standard-card-training-header')
                 .getByText(/Training/)
                 .first(),
         ).toBeVisible();
-
         await expect(
             page
                 .getByTestId('training-api-error')

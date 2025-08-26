@@ -55,7 +55,6 @@ test.describe('Alerts Admin Page access', () => {
             ).toBeVisible();
         });
     });
-
     test.describe('Alert Admin non admin access blocked', () => {
         test('displays an "unauthorised" page to non-authorised users', async ({ page }) => {
             await page.goto('http://localhost:2020/admin/alerts?user=uqstaffnonpriv');

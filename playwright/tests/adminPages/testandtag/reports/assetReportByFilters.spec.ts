@@ -38,6 +38,7 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
         await page.locator('#asset_status_selector-assets-inspected-option-0').click();
         await expect(page.getByTestId('asset_status_selector-assets-inspected-input')).toHaveValue('All');
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
+
         // Building Dropdown - all
         await expect(page.getByTestId('location_picker-assets_inspected-building-input')).toHaveValue(
             'All - All buildings',
@@ -45,6 +46,7 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
         await page.getByTestId('location_picker-assets_inspected-building-input').click();
         await page.locator('#location_picker-assets_inspected-building-option-5').click();
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
+
         // Building Dropdown - selected
         await expect(page.getByTestId('location_picker-assets_inspected-building-input')).toHaveValue(
             '0050 - Hawken Engineering Building',
@@ -56,12 +58,15 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
         );
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
     });
+
     test('UI for date pickers function correctly', async ({ page }) => {
         const currentYear = new Date().getFullYear();
         const currentMonth = zeroPad(new Date().getMonth() + 1, 2);
+
         await assertTitles(page, locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
+
         // Select a Tagged from Date
         await expect(async () => {
             await page.getByTestId('assets_inspected-tagged-start-button').click({ timeout: 1000 });
@@ -70,8 +75,10 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
                 page.getByTestId('assets_inspected-tagged-start-input'),
             ).toHaveValue(`${currentYear}-${currentMonth}-11`, { timeout: 1000 });
         }).toPass();
+
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
-        // Select a Tagged to Date.
+
+        // Select a Tagged to Date
         await expect(async () => {
             await page.getByTestId('assets_inspected-tagged-end-button').click({ timeout: 1000 });
             await page.locator('.MuiPickersDay-root:has-text("12")').click({ timeout: 1000 });
@@ -79,7 +86,8 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
                 page.getByTestId('assets_inspected-tagged-end-input'),
             ).toHaveValue(`${currentYear}-${currentMonth}-12`, { timeout: 1000 });
         }).toPass();
-        // Select invalid end date.
+
+        // Select invalid end date
         await expect(async () => {
             await page.getByTestId('assets_inspected-tagged-end-button').click({ timeout: 1000 });
             await page.locator('.MuiPickersDay-root:has-text("10")').click({ timeout: 1000 });
@@ -88,7 +96,7 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
             });
         }).toPass();
 
-        // select a valid date.
+        // Select a valid date
         await expect(async () => {
             await page.getByTestId('assets_inspected-tagged-end-button').click({ timeout: 1000 });
             await page.locator('.MuiPickersDay-root:has-text("12")').click({ timeout: 1000 });
@@ -96,7 +104,8 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
                 timeout: 1000,
             });
         }).toPass();
-        // Clear both dates.
+
+        // Clear both dates
         await expect(async () => {
             await page.getByTestId('assets_inspected-tagged-start-input').click({ timeout: 1000 });
             await page.getByTestId('assets_inspected-tagged-end-input').click({ timeout: 1000 });
@@ -113,8 +122,10 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
         await assertTitles(page, locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
+
         await page.locator('.MuiDataGrid-columnHeader--sorted .MuiDataGrid-iconButtonContainer button').click();
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL001993');
+
         await page.locator('.MuiDataGrid-columnHeader--sorted .MuiDataGrid-iconButtonContainer button').click();
         await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
     });

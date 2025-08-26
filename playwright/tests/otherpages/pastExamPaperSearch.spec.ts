@@ -154,7 +154,6 @@ test.describe('Past Exam Papers Pages', () => {
                         .getByText(/Past Exam Papers from 2017 to 2022 for "FREN"/)
                         .first(),
                 ).toBeVisible();
-
                 // sample papers are correct
                 await expect(
                     page
@@ -162,7 +161,6 @@ test.describe('Past Exam Papers Pages', () => {
                         .getByText(/FREN1010 Sem\.2 2020/)
                         .first(),
                 ).toBeVisible();
-
                 // original papers are correct
                 await expect(
                     page.getByTestId('exampaper-desktop-originals-table-header').locator(':scope > *'),
@@ -215,7 +213,6 @@ test.describe('Past Exam Papers Pages', () => {
                         .getByText(/Original past exam papers/)
                         .first(),
                 ).toBeVisible();
-
                 await expect(page.getByTestId('exampaper-desktop-original-line')).toBeVisible();
                 await expect(page.getByTestId('exampaper-desktop-sample-line')).not.toBeVisible();
             });
@@ -252,11 +249,9 @@ test.describe('Past Exam Papers Pages', () => {
             test(' with multiple subjects displayed shows simple view for Original papers', async ({ page }) => {
                 await page.goto('/exams/course/fren');
                 await page.setViewportSize({ width: 414, height: 736 });
-
                 // sample papers are correct
                 await expect(page.getByTestId('exampaper-mobile-sample-link-0-0-0')).toHaveText(/FREN1010 Sem\.2 2020/);
 
-                // original papers are correct
                 await expect(page.getByTestId('exampaper-mobile-original-link-0-0-0')).toContainText(
                     'FREN1010 Sem.1 2020 Paper A',
                 );

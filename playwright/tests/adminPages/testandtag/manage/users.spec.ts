@@ -67,7 +67,7 @@ test.describe('Test and Tag Manage Users', () => {
         await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
         await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqjsmit');
-        // Add.
+        // Add
         await page.getByTestId('add_toolbar-user-management-add-button').click();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
         // Check default helper texts are in required state

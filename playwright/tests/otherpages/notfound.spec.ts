@@ -13,7 +13,6 @@ test.describe('not found page accessibility', () => {
         ).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
-
     test('non-loggedin user on a page that requires login is accessible', async ({ page }) => {
         await page.goto('/learning-resources?user=public');
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -25,7 +24,6 @@ test.describe('not found page accessibility', () => {
         ).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
-
     test('pages that arent available to all logged in users are accessible', async ({ page }) => {
         await page.goto('/learning-resources?user=emcommunity');
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -37,7 +35,6 @@ test.describe('not found page accessibility', () => {
         ).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
-
     test('genuine 404 is accessible', async ({ page }) => {
         await page.goto('/xxxxxx/?user=vanilla');
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -50,7 +47,6 @@ test.describe('not found page accessibility', () => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 });
-
 test.describe('authorisation errors', () => {
     test('page that requires Admin returns an error to unprivileged users', async ({ page }) => {
         await page.goto('/admin/alerts?user=s1111111');

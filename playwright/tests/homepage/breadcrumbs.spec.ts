@@ -16,6 +16,7 @@ test.describe('header', () => {
                     .getByText(/Find and borrow/)
                     .first(),
             ).toBeVisible();
+
             // then the homepage has the correct breadcrumbs
             await expect(
                 page
@@ -24,6 +25,7 @@ test.describe('header', () => {
                     .first(),
             ).toHaveAttribute('href', /http:\/\/localhost:2020\/\?user=s1111111/);
             await expect(page.getByTestId('secondlevel-site-title')).not.toBeVisible();
+
             // when we visit a subsystem
             // (could have been any of the subsystems, but this one has a link on page
             // and its valuable to test the actual navigation)
@@ -32,6 +34,7 @@ test.describe('header', () => {
                 .getByText(/FREN1010/)
                 .first()
                 .click();
+
             // the Learning Resource page loads
             await expect(page).toHaveURL(
                 'http://localhost:2020/learning-resources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
@@ -42,6 +45,7 @@ test.describe('header', () => {
                     .getByText(/Learning resources/)
                     .first(),
             ).toBeVisible();
+
             // and the correct breadcrumbs are present
             {
                 const scope = page.locator('uq-site-header');
@@ -61,6 +65,7 @@ test.describe('header', () => {
                 // ok now the important test: nav back to homepage and then show third breadcrumb removed
                 await scope.getByTestId('site-title').click();
             }
+
             // show the page has fully loaded
             await expect(page).toHaveURL('http://localhost:2020/?user=s1111111');
             await expect(
@@ -69,6 +74,7 @@ test.describe('header', () => {
                     .getByText(/Find and borrow/)
                     .first(),
             ).toBeVisible();
+
             // and the breadcrumbs are as expected:  learning resource breadcrumb has been removed :)
             {
                 const scope = page.locator('uq-site-header');
@@ -92,6 +98,7 @@ test.describe('header', () => {
                     .getByText(/Find and borrow/)
                     .first(),
             ).toBeVisible();
+
             // then the homepage has the correct breadcrumbs
             await expect(
                 page
@@ -100,6 +107,7 @@ test.describe('header', () => {
                     .first(),
             ).toHaveAttribute('href', 'http://localhost:2020/?user=s1111111');
             await expect(page.getByTestId('secondlevel-site-title')).not.toBeVisible();
+
             // when we visit a subsystem
             // (could have been any of the subsystems, but this one has a link on page
             // and its valuable to test the actual navigation)
@@ -108,6 +116,7 @@ test.describe('header', () => {
                 .getByText(/FREN1010/)
                 .first()
                 .click();
+
             // the Learning Resource page loads
             await expect(page).toHaveURL(
                 'http://localhost:2020/learning-resources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
@@ -118,6 +127,7 @@ test.describe('header', () => {
                     .getByText(/Learning resources/)
                     .first(),
             ).toBeVisible();
+
             // and the correct breadcrumbs are present
             {
                 const scope = page.locator('uq-site-header');
@@ -133,10 +143,10 @@ test.describe('header', () => {
                         .getByText(/Learning resource/)
                         .first(),
                 ).toHaveAttribute('href', /\/learning-resources/);
-
                 // ok now the important test: use the back button to homepage and then show third breadcrumb removed
                 await page.goBack();
             }
+
             // show the page has fully loaded
             await expect(page).toHaveURL('http://localhost:2020/?user=s1111111');
             await expect(
@@ -145,6 +155,7 @@ test.describe('header', () => {
                     .getByText(/Find and borrow/)
                     .first(),
             ).toBeVisible();
+
             // and the breadcrumbs are as expected:  learning resource breadcrumb has been removed :)
             {
                 const scope = page.locator('uq-site-header');
@@ -167,6 +178,7 @@ test.describe('header', () => {
                 .getByText(/Learning resources/)
                 .first(),
         ).toBeVisible();
+
         // and the correct breadcrumbs are present
         await expect(
             page

@@ -163,8 +163,7 @@ test.describe('Personalised Homepage', () => {
     test('Renders an RHD who is only enrolled in a research subject home page correctly', async ({ page }) => {
         await expectUserToDisplayCorrectFirstName(page, 's2222222', 'Jane');
 
-        // CY to PW conversion note:
-        // added 'espace', which refers to div[data-testid=espace-panel] h3 (present during cy testing)
+        // CY => PW conversion note: added 'espace', which refers to div[data-testid=espace-panel] h3 (present during cy testing)
         await hasPanels(page, ['catalogue', 'referencing', 'training', 'readpublish', 'espace']);
         await seesEndNoteInReferencing(page);
 

@@ -9,7 +9,6 @@ test.describe('Digital Learning Hub', () => {
             await expect(page.getByTestId('dlor-confirm-line-1')).toHaveText(
                 /Thank you for your interest in following Artificial Intelligence - Digital Essentials\./,
             );
-
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
         test('a successful confirmation appears as expected', async ({ page }) => {
