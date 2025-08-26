@@ -80,7 +80,8 @@ function run_pw_tests() {
 
         run_pw_test_shard "${PW_SHARD_INDEX}"
 
-        if [[ $PW_IS_LAST_SHARD == true ]]; then
+        if (( PW_SHARD_INDEX == LIMIT )); then
+            # since we have set PW_IS_LAST_SHARD=true above,
             # the cc report merger will take action and produce the file below
             fix_coverage_report_paths "coverage/playwright/coverage-final.json"
         fi
