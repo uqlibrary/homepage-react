@@ -224,6 +224,7 @@ async function load_a_subject_in_learning_resource_page_search_tab(
     await expect(page.locator('ul#full-learningresource-autocomplete-listbox').locator(':scope > *')).toHaveCount(
         numberOfMatchingSubject + 1,
     ); // plus one for title
+    console.log('backspace one char');
     await page.locator('div[data-testid=full-learningresource-autocomplete] input').press('Backspace');
     await expect(page.locator('div[data-testid=full-learningresource-autocomplete] input')).toHaveValue(
         typeChar.substring(0, typeChar.length - 1),
@@ -378,6 +379,7 @@ async function FREN1010LoadsProperly(page: Page) {
 }
 
 async function searchFor(page: Page, searchFor = 'FREN', selectCourseCode: string) {
+    console.log('searching for ', selectCourseCode);
     const searchSuggestionForThisCourse = subjectSearchSuggestions
         .filter(obj => {
             return obj.name === selectCourseCode;
@@ -405,6 +407,7 @@ test.describe('Learning Resources Accessibility', () => {
                 .getByText(/Your courses/)
                 .first(),
         ).toBeVisible();
+        console.log('Learning Resources');
         await page.waitForTimeout(1000);
         await assertAccessibility(page, 'div[data-testid="learning-resources"]');
     });
@@ -417,6 +420,7 @@ test.describe('Learning Resources Accessibility', () => {
                 .getByText(/Your courses/)
                 .first(),
         ).toBeVisible();
+        console.log('Learning Resources');
         await page.waitForTimeout(1000);
         await assertAccessibility(page, 'div[data-testid="learning-resources"]');
     });

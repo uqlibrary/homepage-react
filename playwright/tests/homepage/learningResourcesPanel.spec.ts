@@ -15,6 +15,7 @@ test.describe('The Homepage Learning Resource Panel', () => {
                 .first(),
         ).toBeVisible();
         await page.setViewportSize({ width: 1300, height: 1000 });
+        console.log('Learning resources panel');
         await expect(page.locator('div[data-testid="learning-resources-homepage-panel"]')).toBeVisible();
         await expect(
             page

@@ -22,6 +22,7 @@ test.describe('Alerts Admin Form Pages', () => {
             for (let ii = 0; ii <= buttonId; ii++) {
                 await expect(page.locator(`[data-testid="admin-alerts-form-start-date-${ii}"] input`)).toBeVisible();
                 await expect(page.locator(`[data-testid="admin-alerts-form-end-date-${ii}"] input`)).toBeVisible();
+                console.log('looking for remove button', ii);
                 await expect(page.locator(`[data-testid="admin-alerts-form-row-${ii}"]`)).toHaveText(/Start date/);
                 await expect(
                     page
