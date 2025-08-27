@@ -3,6 +3,7 @@ import { test, expect, Page } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import locale from '../../../src/modules/Pages/BookExamBooth/bookExamBooth.locale';
 import moment from 'moment';
+import { mockReusable, mockXHRResponse, removeVpnNeededToast } from '@uq/pw/lib/helpers';
 
 async function selectFirstLocation(page: Page) {
     const firstLocation = locale.locationDecider.locations[0];
@@ -38,6 +39,7 @@ test.describe('Book Exam Booth Accessibility', () => {
 test.describe('Book Exam Booth page', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('/book-exam-booth');
+        await removeVpnNeededToast(page);
     });
 
     test('should show initial view', async ({ page }) => {
@@ -87,6 +89,8 @@ test.describe('Book Exam Booth page', () => {
     });
 
     test('should redirect to expected url on submit with updated values', async ({ page }) => {
+        await mockReusable(page);
+        await mockXHRResponse(page, /uqbookit/, 200, 'done');
         await selectProctoredExam(page);
         await selectFirstLocation(page);
 
@@ -109,34 +113,35 @@ test.describe('Book Exam Booth page', () => {
         const yesterday = moment().subtract(1, 'day');
         expect(defaultDateValue).toBe(yesterday.format('DD/MM/YYYY'));
 
-        await page.getByTestId('start-date-button').click();
-        const nextMonthButton = page.getByTestId('ArrowRightIcon');
-
-        let currentMonth = moment().format('MMMM');
-        const selectNextMonth = async () => {
-            await expect(async () => {
-                await expect(page.getByText(currentMonth)).toBeVisible({ timeout: 1000 });
-                await nextMonthButton.click({ timeout: 1000 });
-                await expect(page.getByText(moment().format('MMMM'))).not.toBeVisible({ timeout: 1000 });
-                currentMonth = moment()
-                    .add(1, 'month')
-                    .format('MMMM');
-            }).toPass();
+        const selectNextMonth = async (currentMonth: string) => {
+            await expect(page.getByText(currentMonth)).toBeVisible({ timeout: 1000 });
+            await page.getByTestId('ArrowRightIcon').click({ timeout: 1000 });
+            await expect(page.getByTestId('ArrowRightIcon')).toBeVisible({ timeout: 1000 });
+            await expect(page.getByText(currentMonth)).not.toBeVisible({ timeout: 1000 });
+            return moment()
+                .add(1, 'month')
+                .format('MMMM');
         };
 
-        await selectNextMonth();
-        if (moment().date() === 1) {
-            // The field defaults to the previous day, which can be in the previous month.
-            await selectNextMonth();
-        }
+        await expect(async () => {
+            await page.locator('body').click();
+            await page.getByTestId('start-date-button').click();
 
-        await page
-            .locator('.MuiPickersDay-root')
-            .getByText(intendedDate)
-            .first()
-            .dispatchEvent('click');
-        await page.locator('body').click();
-        expect(await dateInput.inputValue()).toBe(bookingDate.format('DD/MM/YYYY'));
+            let selectedMonth = await selectNextMonth(moment().format('MMMM'));
+            // The field defaults to the previous day, which can be in the previous month.
+            if (moment().date() === 1) {
+                selectedMonth = await selectNextMonth(selectedMonth);
+            }
+            await expect(page.getByText(selectedMonth)).toBeVisible({ timeout: 1000 });
+
+            await page
+                .locator('.MuiPickersDay-root')
+                .getByText(intendedDate)
+                .first()
+                .dispatchEvent('click', undefined, { timeout: 1000 });
+            await page.locator('body').click();
+            expect(await dateInput.inputValue()).toBe(bookingDate.format('DD/MM/YYYY'));
+        }).toPass();
 
         // Choose a custom time
         await page.getByTestId('start-time-hours').click();

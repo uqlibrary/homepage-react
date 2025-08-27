@@ -1,5 +1,6 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
+import { mockReusable } from '@uq/pw/lib/helpers';
 
 test.describe('Digital Learning Hub', () => {
     const itemsPerPage = 10; // matches value in DLOList
@@ -973,12 +974,7 @@ test.describe('Digital Learning Hub', () => {
     });
     test.describe('unavailable objects', () => {
         test('unavailable objects are shown correctly in list', async ({ page }) => {
-            await page.route('https://assets.library.uq.edu.au/reusable-webcomponents/**', route => {
-                route.fulfill({
-                    status: 200,
-                    body: '',
-                });
-            });
+            await mockReusable(page);
             await page.goto('digital-learning-hub?user=public');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await page.locator('[aria-label="Go to page 3"]').click();

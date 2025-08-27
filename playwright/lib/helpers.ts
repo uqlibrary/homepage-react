@@ -18,3 +18,29 @@ export async function dateHasValue(page: Page, dateField: string, expectedDate: 
     const dateValue = await page.locator(dateField).getAttribute('value');
     expect(dateValue).toMatch(new RegExp(`^${expectedDate}`));
 }
+
+export async function mockXHRResponse(
+    page: Page,
+    url: string | RegExp | ((url: URL) => boolean),
+    status = 200,
+    body = '',
+) {
+    await page.route(url, route =>
+        route.fulfill({
+            status,
+            body,
+        }),
+    );
+}
+
+export async function removeVpnNeededToast(page: Page) {
+    try {
+        await page.evaluate(() => document.querySelector('[data-testid="vpn-needed-toast"]')?.remove());
+    } catch {
+        /* empty */
+    }
+}
+
+export async function mockReusable(page: Page) {
+    await mockXHRResponse(page, 'https://assets.library.uq.edu.au/reusable-webcomponents/**');
+}
