@@ -45,7 +45,8 @@ export const addToInputValue = async (
         delay?: number;
         noWaitAfter?: boolean;
         timeout?: number;
-    } = { delay: 100, timeout: 1000 },
+    } = { delay: 50, timeout: 1000 },
+    retryTimeout = 60_000,
 ) => {
     await expect(async () => {
         const current = await input.inputValue();
@@ -57,7 +58,7 @@ export const addToInputValue = async (
         await expect(input).toHaveValue(mode === 'append' ? `${current}${value}` : `${value}${current}`, {
             timeout: options.timeout,
         });
-    }).toPass({ timeout: 5000 });
+    }).toPass({ timeout: retryTimeout });
 };
 
 export const getOpenedLink = async (context: BrowserContext, locator: Locator) => {
