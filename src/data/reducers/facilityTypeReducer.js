@@ -7,26 +7,26 @@ export const initialState = {
 };
 
 const handlers = {
-    [actions.FACILITY_TYPE_LOADING]: state => ({
+    [actions.SPACES_FACILITY_TYPE_LOADING]: state => ({
         ...initialState,
         ...state,
         facilityTypeListLoading: true,
         facilityTypeListError: false,
     }),
-    [actions.FACILITY_TYPE_LOADED]: (state, action) => ({
+    [actions.SPACES_FACILITY_TYPE_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
         facilityTypeListLoading: false,
         facilityTypeListError: false,
         facilityTypeList: action.payload,
     }),
-    [actions.FACILITY_TYPE_FAILED]: (state, action) => ({
+    [actions.SPACES_FACILITY_TYPE_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
         facilityTypeListLoading: false,
         facilityTypeListError: action.payload,
     }),
-    // [actions.FACILITY_TYPE_CLEAR]: () => ({
+    // [actions.SPACES_FACILITY_TYPE_CLEAR]: () => ({
     //     ...initialState,
     // }),
 };

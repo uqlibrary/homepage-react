@@ -1455,7 +1455,7 @@ mock.onGet('exams/course/FREN1010/summary')
             return [200, hours_weekly];
         }
     })
-    .onGet(routes.FACILITY_TYPE_ALL_API().apiUrl)
+    .onGet(routes.SPACES_FACILITY_TYPE_ALL_API().apiUrl)
     .reply(() => {
         if (hoursResponseType === 'error') {
             return [500, {}];

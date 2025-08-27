@@ -295,7 +295,7 @@ export const WEEKLYHOURS_API = () => {
     };
 };
 
-export const FACILITY_TYPE_ALL_API = () => {
+export const SPACES_FACILITY_TYPE_ALL_API = () => {
     return {
         apiUrl: 'space_locations/facility_types/all',
     };

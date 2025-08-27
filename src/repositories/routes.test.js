@@ -161,8 +161,8 @@ describe('Backend routes method', () => {
         MockDate.reset();
     });
 
-    it('should construct url for FACILITY_TYPE_ALL_API', () => {
-        const AllAPIRequest = routes.FACILITY_TYPE_ALL_API(false);
+    it('should construct url for SPACES_FACILITY_TYPE_ALL_API', () => {
+        const AllAPIRequest = routes.SPACES_FACILITY_TYPE_ALL_API(false);
         expect(AllAPIRequest.apiUrl).toEqual('/facility_types');
     });
 

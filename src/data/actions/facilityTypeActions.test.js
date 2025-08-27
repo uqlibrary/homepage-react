@@ -20,18 +20,18 @@ describe('Facility type action creators', () => {
     });
 
     it('handles a facility type get request', async () => {
-        mockApi.onGet(repositories.routes.FACILITY_TYPE_ALL_API().apiUrl).reply(200, {});
+        mockApi.onGet(repositories.routes.SPACES_FACILITY_TYPE_ALL_API().apiUrl).reply(200, {});
 
-        const expectedActions = [actions.FACILITY_TYPE_LOADING, actions.FACILITY_TYPE_LOADED];
+        const expectedActions = [actions.SPACES_FACILITY_TYPE_LOADING, actions.SPACES_FACILITY_TYPE_LOADED];
 
         await mockActionsStore.dispatch(loadAllFacilityTypes());
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
     it('dispatches expected actions when facility type call fails', async () => {
-        mockApi.onGet(repositories.routes.FACILITY_TYPE_ALL_API()).reply(500);
+        mockApi.onGet(repositories.routes.SPACES_FACILITY_TYPE_ALL_API()).reply(500);
 
-        const expectedActions = [actions.FACILITY_TYPE_LOADING, actions.FACILITY_TYPE_FAILED];
+        const expectedActions = [actions.SPACES_FACILITY_TYPE_LOADING, actions.SPACES_FACILITY_TYPE_FAILED];
 
         await mockActionsStore.dispatch(loadAllFacilityTypes());
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);

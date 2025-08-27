@@ -7,26 +7,26 @@ export const initialState = {
 };
 
 const handlers = {
-    [actions.LOCATIONLIST_LOADING]: state => ({
+    [actions.SPACES_ROOM_LIST_LOADING]: state => ({
         ...initialState,
         ...state,
         locationSpaceListLoading: true,
         locationSpaceListError: false,
     }),
-    [actions.LOCATIONLIST_LOADED]: (state, action) => ({
+    [actions.SPACES_ROOM_LIST_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
         locationSpaceListLoading: false,
         locationSpaceListError: false,
         locationSpaceList: action.payload,
     }),
-    [actions.LOCATIONLIST_FAILED]: (state, action) => ({
+    [actions.SPACES_ROOM_LIST_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
         locationSpaceListLoading: false,
         locationSpaceListError: action.payload,
     }),
-    // [actions.LOCATIONLIST_CLEAR]: () => ({
+    // [actions.SPACES_ROOM_LIST_CLEAR]: () => ({
     //     ...initialState,
     // }),
 };

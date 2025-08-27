@@ -12,7 +12,7 @@ describe('facility type reducer', () => {
 
     it('should handle a failing Facility Type list API call', () => {
         const test = facilityTypeReducer(emptyState, {
-            type: actions.FACILITY_TYPE_FAILED,
+            type: actions.SPACES_FACILITY_TYPE_FAILED,
             payload: 'failed!',
         });
         expect(test).toEqual({
@@ -24,7 +24,7 @@ describe('facility type reducer', () => {
 
     it('should set Facility Type list values when successfully loaded', () => {
         const test = facilityTypeReducer(emptyState, {
-            type: actions.FACILITY_TYPE_LOADED,
+            type: actions.SPACES_FACILITY_TYPE_LOADED,
             payload: [],
         });
         expect(test).toEqual({
@@ -37,7 +37,7 @@ describe('facility type reducer', () => {
 
     it('should set Facility Type list Status flags to loading when loading', () => {
         const test = facilityTypeReducer(emptyState, {
-            type: actions.FACILITY_TYPE_LOADING,
+            type: actions.SPACES_FACILITY_TYPE_LOADING,
         });
         expect(test).toEqual({
             ...emptyState,
