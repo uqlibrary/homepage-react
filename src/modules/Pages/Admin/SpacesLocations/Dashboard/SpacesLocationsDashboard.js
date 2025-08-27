@@ -34,7 +34,6 @@ const StyledStandardCard = styled(StandardCard)(() => ({
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
 }));
-const StyledTableCell = styled(TableCell)(() => ({}));
 const StyledTableRow = styled(TableRow)(() => ({
     '&:hover': {
         backgroundColor: 'rgb(189 186 186)',
@@ -87,49 +86,96 @@ export const SpacesLocationsDashboard = ({
 
     const getColumnBackgroundColor = ii => (ii % 2 === 0 ? '#f0f0f0' : 'inherit');
 
-    function getFacilityTypesTableBodyCells(bookableSpace, facilityTypeList) {
+    function getTableLocations() {
+        const tableDescription = 'List of locations';
         return (
             <>
-                {facilityTypeList?.data?.facility_types?.length > 0 && (
-                    <>
-                        {facilityTypeList?.data?.facility_types?.map((facilityType, ii) => {
-                            return (
-                                <StyledTableCell
-                                    key={`space-${bookableSpace?.space_id}-facilitytype-${facilityType.facility_type_name}`}
-                                    sx={{
-                                        backgroundColor: getColumnBackgroundColor(ii),
-                                    }}
-                                >
-                                    {markIfLocationHasFacility(facilityType, bookableSpace)}
-                                </StyledTableCell>
-                            );
-                        })}
-                    </>
-                )}
-            </>
-        );
-    }
+                <TableHeadingTypography component={'h2'} variant={'p'} id="tableDescriptionElement">
+                    {tableDescription}
+                </TableHeadingTypography>
+                <TableContainer>
+                    <Table stickyHeader aria-label={tableDescription} aria-describedby="tableDescriptionElement">
+                        <TableHead>
+                            {facilityTypeList?.data?.facility_types?.length > 0 && (
+                                <TableRow>
+                                    {[...Array(2).keys()].map((unused, index) => (
+                                        <TableCell
+                                            component="th"
+                                            sx={{ borderBottomWidth: 0, paddingBlock: 0 }}
+                                            key={`header-cell-${index}`}
+                                        />
+                                    ))}
+                                    <TableCell
+                                        component="th"
+                                        colSpan={facilityTypeList?.data?.facility_types?.length}
+                                        sx={{
+                                            borderBottomWidth: 0,
+                                            borderTop: '1px solid rgba(224, 224, 224, 1)',
+                                        }}
+                                    >
+                                        Facilities
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                            <TableRow>
+                                <TableCell component="th">Name</TableCell>
+                                <TableCell component="th">Space location</TableCell>
+                                {facilityTypeList?.data?.facility_types?.length > 0 &&
+                                    facilityTypeList?.data?.facility_types?.map((facilityType, ii) => {
+                                        return (
+                                            <TableCell
+                                                component="th"
+                                                key={`facilitytype-${facilityType.facility_type_id}`}
+                                                sx={{
+                                                    backgroundColor: getColumnBackgroundColor(ii),
+                                                }}
+                                            >
+                                                {facilityType.facility_type_name}
+                                            </TableCell>
+                                        );
+                                    })}
+                            </TableRow>
+                        </TableHead>
+                        <tbody>
+                            {locationSpaceList?.data?.locations?.map(bookableSpace => {
+                                return (
+                                    <StyledTableRow
+                                        key={`space-${bookableSpace?.space_id}`}
+                                        data-testid="exampaper-desktop-originals-table-header"
+                                    >
+                                        <TableCell
+                                            component="th"
+                                            scope="col"
+                                            sx={{ position: 'sticky', left: 0, zIndex: 10 }}
+                                        >
+                                            <div>{bookableSpace?.space_title}</div>
+                                            <div>{bookableSpace?.space_type}</div>
+                                        </TableCell>
 
-    function getFacilityTypeTableHeaderCells(facilityTypeList) {
-        return (
-            <>
-                {facilityTypeList?.data?.facility_types?.length > 0 && (
-                    <>
-                        {facilityTypeList?.data?.facility_types?.map((facilityType, ii) => {
-                            return (
-                                <TableCell
-                                    component="th"
-                                    key={`facilitytype-${facilityType.facility_type_id}`}
-                                    sx={{
-                                        backgroundColor: getColumnBackgroundColor(ii),
-                                    }}
-                                >
-                                    {facilityType.facility_type_name}
-                                </TableCell>
-                            );
-                        })}
-                    </>
-                )}
+                                        <TableCell>{getFriendlyLocationDescription(bookableSpace)}</TableCell>
+
+                                        {facilityTypeList?.data?.facility_types?.length > 0 && (
+                                            <>
+                                                {facilityTypeList?.data?.facility_types?.map((facilityType, ii) => {
+                                                    return (
+                                                        <TableCell
+                                                            key={`space-${bookableSpace?.space_id}-facilitytype-${facilityType.facility_type_name}`}
+                                                            sx={{
+                                                                backgroundColor: getColumnBackgroundColor(ii),
+                                                            }}
+                                                        >
+                                                            {markIfLocationHasFacility(facilityType, bookableSpace)}
+                                                        </TableCell>
+                                                    );
+                                                })}
+                                            </>
+                                        )}
+                                    </StyledTableRow>
+                                );
+                            })}
+                        </tbody>
+                    </Table>
+                </TableContainer>
             </>
         );
     }
@@ -168,81 +214,7 @@ export const SpacesLocationsDashboard = ({
                                     </StyledBookableSpaceGridItem>
                                 );
                             } else {
-                                const tableDescription = <>List of locations</>;
-                                return (
-                                    <>
-                                        <TableHeadingTypography
-                                            component={'h2'}
-                                            variant={'p'}
-                                            id="tableDescriptionElement"
-                                        >
-                                            {tableDescription}
-                                        </TableHeadingTypography>
-                                        <TableContainer>
-                                            <Table
-                                                stickyHeader
-                                                aria-label={tableDescription}
-                                                aria-describedby="tableDescriptionElement"
-                                            >
-                                                <TableHead>
-                                                    {facilityTypeList?.data?.facility_types?.length > 0 && (
-                                                        <TableRow>
-                                                            {[...Array(2).keys()].map((unused, index) => (
-                                                                <TableCell
-                                                                    component="th"
-                                                                    sx={{ borderBottomWidth: 0, paddingBlock: 0 }}
-                                                                    key={`header-cell-${index}`}
-                                                                />
-                                                            ))}
-                                                            <TableCell
-                                                                component="th"
-                                                                colSpan={facilityTypeList?.data?.facility_types?.length}
-                                                                sx={{
-                                                                    borderBottomWidth: 0,
-                                                                    borderTop: '1px solid rgba(224, 224, 224, 1)',
-                                                                }}
-                                                            >
-                                                                Facilities
-                                                            </TableCell>
-                                                        </TableRow>
-                                                    )}
-                                                    <TableRow>
-                                                        <TableCell component="th">Name</TableCell>
-                                                        <TableCell component="th">Space location</TableCell>
-                                                        {getFacilityTypeTableHeaderCells(facilityTypeList)}
-                                                    </TableRow>
-                                                </TableHead>
-                                                <tbody>
-                                                    {locationSpaceList?.data?.locations?.map(bookableSpace => {
-                                                        return (
-                                                            <StyledTableRow
-                                                                key={`space-${bookableSpace?.space_id}`}
-                                                                data-testid="exampaper-desktop-originals-table-header"
-                                                            >
-                                                                <TableCell
-                                                                    component="th"
-                                                                    scope="col"
-                                                                    sx={{ position: 'sticky', left: 0, zIndex: 10 }}
-                                                                >
-                                                                    <div>{bookableSpace?.space_title}</div>
-                                                                    <div>{bookableSpace?.space_type}</div>
-                                                                </TableCell>
-
-                                                                <TableCell>
-                                                                    {getFriendlyLocationDescription(bookableSpace)}
-                                                                </TableCell>
-                                                                {getFacilityTypesTableBodyCells(
-                                                                    bookableSpace,
-                                                                    facilityTypeList,
-                                                                )}
-                                                            </StyledTableRow>
-                                                        );
-                                                    })}
-                                                </tbody>
-                                            </Table>
-                                        </TableContainer>
-                                    </>
-                                );
+                                return getTableLocations();
                             }
                         })()}
                     </Grid>
