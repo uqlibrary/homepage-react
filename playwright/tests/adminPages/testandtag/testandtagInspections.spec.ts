@@ -9,13 +9,13 @@ test.describe('Test and Tag Admin Inspection page', () => {
         await expect.poll(async () => await page.locator(':focus').getAttribute('value')).toBe('St Lucia');
     });
 
-    const selectListBox = async (page: Page, pattern: string) =>
+    const selectListBox = async (page: Page, pattern: string, timeout: number = 10_000) =>
         await page
             .locator('[role=listbox]')
             .locator('li')
             .getByText(pattern)
             .first()
-            .click({ timeout: 1000 });
+            .click({ timeout });
 
     const selectAssetId = async (page: Page, pattern: string) => {
         await page.getByTestId('asset_selector-asset-panel-input').click();
@@ -47,14 +47,16 @@ test.describe('Test and Tag Admin Inspection page', () => {
         if (!!site) {
             await expect(async () => {
                 await page.getByTestId('location_picker-event-panel-site').click({ timeout: 1000 });
-                await selectListBox(page, site);
+                await expect(page.getByRole('progressbar')).not.toBeVisible({ timeout: 5000 });
+                await selectListBox(page, site, 1000);
             }).toPass();
         }
         if (!!building) {
             // Building
             await expect(async () => {
                 await page.getByTestId('location_picker-event-panel-building').click({ timeout: 1000 });
-                await selectListBox(page, building);
+                await expect(page.getByRole('progressbar')).not.toBeVisible({ timeout: 5000 });
+                await selectListBox(page, building, 1000);
             }).toPass();
         }
 
@@ -62,7 +64,8 @@ test.describe('Test and Tag Admin Inspection page', () => {
         if (!!floor) {
             await expect(async () => {
                 await page.getByTestId('location_picker-event-panel-floor').click({ timeout: 1000 });
-                await selectListBox(page, floor);
+                await expect(page.getByRole('progressbar')).not.toBeVisible({ timeout: 5000 });
+                await selectListBox(page, floor, 1000);
             }).toPass();
         }
 
@@ -70,7 +73,8 @@ test.describe('Test and Tag Admin Inspection page', () => {
         if (!!room) {
             await expect(async () => {
                 await page.getByTestId('location_picker-event-panel-room').click({ timeout: 1000 });
-                await selectListBox(page, room);
+                await expect(page.getByRole('progressbar')).not.toBeVisible({ timeout: 5000 });
+                await selectListBox(page, room, 1000);
             }).toPass();
         }
     };

@@ -3,6 +3,7 @@ import { assertAccessibility } from '@uq/pw/lib/axe';
 import moment from 'moment-timezone';
 import { typeCKEditor } from '@uq/pw/lib/ckeditor';
 import { DLOR_NO_EDIT_USER } from '@uq/pw/lib/constants';
+import { setInputValue } from '@uq/pw/lib/helpers';
 
 test.describe('Digital Learning Hub View page', () => {
     test.describe('details page', () => {
@@ -311,19 +312,16 @@ test.describe('Digital Learning Hub View page', () => {
             await expect(page.getByTestId('notifications-capture')).not.toBeDisabled();
 
             const userEmailInput = page.locator('#userEmail');
-            await expect(async () => {
-                await userEmailInput.clear({ timeout: 1000 });
-                await expect(userEmailInput).toHaveValue('', { timeout: 1000 });
-                await expect(page.getByTestId('notifications-capture')).toBeDisabled({ timeout: 1000 });
-            }).toPass();
-
-            await userEmailInput.fill('joe');
+            await setInputValue(userEmailInput, '');
             await expect(page.getByTestId('notifications-capture')).toBeDisabled();
 
-            await userEmailInput.fill('joe@joe.com');
+            await setInputValue(userEmailInput, 'joe');
+            await expect(page.getByTestId('notifications-capture')).toBeDisabled();
+
+            await setInputValue(userEmailInput, 'joe@joe.com');
             await expect(page.getByTestId('notifications-capture')).not.toBeDisabled();
 
-            await userEmailInput.fill('thisfails');
+            await setInputValue(userEmailInput, 'thisfails');
             await expect(page.getByTestId('notifications-capture')).toBeDisabled();
         });
 
