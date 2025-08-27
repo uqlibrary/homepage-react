@@ -15,8 +15,8 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { getFriendlyLocationDescription } from 'modules/Pages/SpacesLocations/spacesHelpers';
 
-// https://mui.com/material-ui/material-icons/?query=tick&selected=Done
 const tickIcon = altText => (
+    // https://mui.com/material-ui/material-icons/?query=tick&selected=Done
     <svg title={`${altText}`} focusable="false" aria-hidden="true" viewBox="0 0 24 24" height="24" width="24">
         <path stroke="green" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z">
             <title>{altText}</title>
@@ -34,6 +34,24 @@ const StyledStandardCard = styled(StandardCard)(() => ({
 }));
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
+}));
+const StyledTableCell = styled(TableCell)(() => ({}));
+const StyledTableRow = styled(TableRow)(() => ({
+    '&:hover': {
+        backgroundColor: 'rgb(189 186 186)',
+        '& td': {
+            backgroundColor: 'rgb(189 186 186)',
+        },
+    },
+}));
+const TableHeadingTypography = styled(Typography)(({ theme }) => ({
+    marginLeft: '1.5rem',
+    marginTop: '1rem',
+    // width: '90%',
+    padding: 0,
+    [theme.breakpoints.down('md')]: {
+        marginLeft: '1rem',
+    },
 }));
 
 export const SpacesLocationsDashboard = ({
@@ -61,30 +79,60 @@ export const SpacesLocationsDashboard = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // function spaceFacilities(bookableSpace) {
-    //     return (
-    //         <>
-    //             {bookableSpace?.facility_types?.length > 0 && <h3>Facilities</h3>}
-    //             {bookableSpace?.facility_types?.length > 0 && (
-    //                 <ul>
-    //                     {bookableSpace?.facility_types?.map(facility => {
-    //                         return (
-    //                             <li key={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}>
-    //                                 {facility.facilityTypeDisplayName}
-    //                             </li>
-    //                         );
-    //                     })}
-    //                 </ul>
-    //             )}
-    //         </>
-    //     );
-    // }
-
     function markIfLocationHasFacility(facilityId, bookableSpace) {
         const hasThisFacility = bookableSpace?.facility_types.some(
             facility => facility.facility_type_id === facilityId,
         );
         return hasThisFacility ? tickIcon('Included') : null;
+    }
+
+    const getColumnBackgroundColor = ii => (ii % 2 === 0 ? '#f0f0f0' : 'inherit');
+
+    function getFacilityTypesTableBodyCells(bookableSpace, facilityTypeList) {
+        return (
+            <>
+                {facilityTypeList?.data?.facility_types?.length > 0 && (
+                    <>
+                        {facilityTypeList?.data?.facility_types?.map((facilityType, ii) => {
+                            return (
+                                <StyledTableCell
+                                    key={`space-${bookableSpace?.space_id}-facilitytype-${facilityType.facility_type_name}`}
+                                    sx={{
+                                        backgroundColor: getColumnBackgroundColor(ii),
+                                    }}
+                                >
+                                    {markIfLocationHasFacility(facilityType.facility_type_id, bookableSpace)}
+                                </StyledTableCell>
+                            );
+                        })}
+                    </>
+                )}
+            </>
+        );
+    }
+
+    function getFacilityTypeTableHeaderCells(facilityTypeList) {
+        return (
+            <>
+                {facilityTypeList?.data?.facility_types?.length > 0 && (
+                    <>
+                        {facilityTypeList?.data?.facility_types?.map((facilityType, ii) => {
+                            return (
+                                <TableCell
+                                    component="th"
+                                    key={`facilitytype-${facilityType.facility_type_id}`}
+                                    style={{
+                                        backgroundColor: getColumnBackgroundColor(ii),
+                                    }}
+                                >
+                                    {facilityType.facility_type_name}
+                                </TableCell>
+                            );
+                        })}
+                    </>
+                )}
+            </>
+        );
     }
 
     return (
@@ -124,9 +172,13 @@ export const SpacesLocationsDashboard = ({
                                 const tableDescription = <>List of locations</>;
                                 return (
                                     <>
-                                        <Typography component={'h2'} variant={'p'} id="tableDescriptionElement">
+                                        <TableHeadingTypography
+                                            component={'h2'}
+                                            variant={'p'}
+                                            id="tableDescriptionElement"
+                                        >
                                             {tableDescription}
-                                        </Typography>
+                                        </TableHeadingTypography>
                                         <TableContainer>
                                             <Table
                                                 stickyHeader
@@ -136,16 +188,20 @@ export const SpacesLocationsDashboard = ({
                                                 <TableHead>
                                                     {facilityTypeList?.data?.facility_types?.length > 0 && (
                                                         <TableRow>
-                                                            {[{}, {}, {}].map(() => (
+                                                            {[...Array(2).keys()].map((unused, index) => (
                                                                 <TableCell
                                                                     component="th"
                                                                     sx={{ borderBottomWidth: 0, paddingBlock: 0 }}
+                                                                    key={`header-cell-${index}`}
                                                                 />
                                                             ))}
                                                             <TableCell
                                                                 component="th"
-                                                                colspan={facilityTypeList?.data?.facility_types?.length}
-                                                                sx={{ borderBottomWidth: 0, paddingBlock: 0 }}
+                                                                colSpan={facilityTypeList?.data?.facility_types?.length}
+                                                                sx={{
+                                                                    borderBottomWidth: 0,
+                                                                    borderTop: '1px solid rgba(224, 224, 224, 1)',
+                                                                }}
                                                             >
                                                                 Facilities
                                                             </TableCell>
@@ -153,30 +209,14 @@ export const SpacesLocationsDashboard = ({
                                                     )}
                                                     <TableRow>
                                                         <TableCell component="th">Name</TableCell>
-                                                        <TableCell component="th">Space type</TableCell>
                                                         <TableCell component="th">Space location</TableCell>
-                                                        {facilityTypeList?.data?.facility_types?.length > 0 && (
-                                                            <>
-                                                                {facilityTypeList?.data?.facility_types?.map(
-                                                                    facilityType => {
-                                                                        return (
-                                                                            <TableCell
-                                                                                component="th"
-                                                                                key={`facilitytype-${facilityType.facility_type_id}`}
-                                                                            >
-                                                                                {facilityType.facility_type_name}
-                                                                            </TableCell>
-                                                                        );
-                                                                    },
-                                                                )}
-                                                            </>
-                                                        )}
+                                                        {getFacilityTypeTableHeaderCells(facilityTypeList)}
                                                     </TableRow>
                                                 </TableHead>
                                                 <tbody>
                                                     {locationSpaceList?.data?.locations?.map(bookableSpace => {
                                                         return (
-                                                            <TableRow
+                                                            <StyledTableRow
                                                                 key={`space-${bookableSpace?.space_id}`}
                                                                 data-testid="exampaper-desktop-originals-table-header"
                                                             >
@@ -185,32 +225,18 @@ export const SpacesLocationsDashboard = ({
                                                                     scope="col"
                                                                     sx={{ position: 'sticky', left: 0, zIndex: 10 }}
                                                                 >
-                                                                    {bookableSpace?.space_title}
+                                                                    <div>{bookableSpace?.space_title}</div>
+                                                                    <div>{bookableSpace?.space_type}</div>
                                                                 </TableCell>
-                                                                <TableCell>{bookableSpace?.space_type}</TableCell>
+
                                                                 <TableCell>
                                                                     {getFriendlyLocationDescription(bookableSpace)}
                                                                 </TableCell>
-
-                                                                {facilityTypeList?.data?.facility_types?.length > 0 && (
-                                                                    <>
-                                                                        {facilityTypeList?.data?.facility_types?.map(
-                                                                            facilityType => {
-                                                                                return (
-                                                                                    <TableCell
-                                                                                        key={`space-${bookableSpace?.space_id}-facilitytype-${facilityType.facility_type_name}`}
-                                                                                    >
-                                                                                        {markIfLocationHasFacility(
-                                                                                            facilityType.facility_type_id,
-                                                                                            bookableSpace,
-                                                                                        )}
-                                                                                    </TableCell>
-                                                                                );
-                                                                            },
-                                                                        )}
-                                                                    </>
+                                                                {getFacilityTypesTableBodyCells(
+                                                                    bookableSpace,
+                                                                    facilityTypeList,
                                                                 )}
-                                                            </TableRow>
+                                                            </StyledTableRow>
                                                         );
                                                     })}
                                                 </tbody>
