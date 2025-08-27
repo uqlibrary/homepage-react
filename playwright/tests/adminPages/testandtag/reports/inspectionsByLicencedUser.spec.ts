@@ -32,8 +32,10 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
     test('Inspector selection works as intended', async ({ page }) => {
         const showDropdown = async (testId: string) => {
             await expect(async () => {
+                await page.locator('body').click({ timeout: 1000 });
+                await expect(page.getByRole('listbox')).not.toBeVisible({ timeout: 3000 });
                 await page.getByTestId(testId).click({ timeout: 1000 });
-                await expect(page.getByRole('listbox')).toBeVisible({ timeout: 1000 });
+                await expect(page.getByRole('listbox')).toBeVisible({ timeout: 3000 });
             }).toPass();
         };
 
@@ -45,6 +47,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         // Select user with no records
         await page.getByTestId('user_inspections-user-name-option-2').click();
         await page.locator('body').click();
+        await expect(page.getByRole('progressbar')).not.toBeVisible();
         await expect(page.getByTestId('user_inspections-user-name-select')).toBeEnabled();
         // Check the value of the dropdown
         await expect(
@@ -54,6 +57,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         await showDropdown('user_inspections-user-name');
         await page.getByTestId('user_inspections-user-name-option-1').click();
         await page.locator('body').click();
+        await expect(page.getByRole('progressbar')).not.toBeVisible();
         await expect(page.getByTestId('user_inspections-user-name-select')).toBeEnabled();
         await expect(
             page.getByTestId('user_inspections-user-name-select').getByText('Second Testing user'),
@@ -66,6 +70,7 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         await showDropdown('user_inspections-user-name-select');
         await page.getByTestId('user_inspections-user-name-option-0').click();
         await page.locator('body').click();
+        await expect(page.getByRole('progressbar')).not.toBeVisible();
         await expect(page.getByTestId('user_inspections-user-name-select')).toBeEnabled();
         await expect(page.getByTestId('user_inspections-user-name-select').getByText('JTest User')).toBeVisible();
         await expect(
