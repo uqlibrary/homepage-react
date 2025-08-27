@@ -10,9 +10,9 @@ const openCloseWorks = async () => {
                 isRetry = false;
                 await page.getByTestId('hours-accordion-open').click({ timeout: 1000 });
                 isRetry = true;
-                await expect(page.getByTestId('locations-wrapper')).toContainText('See all Library and AskUs hours', {
-                    timeout: 1000,
-                });
+                await expect(
+                    page.getByTestId('locations-wrapper').getByText('See all Library and AskUs hours'),
+                ).toBeVisible({ timeout: 1000 });
             }).toPass();
 
             // click elsewhere on the screen
@@ -31,7 +31,7 @@ const openCloseWorks = async () => {
             await clickButton();
 
             // confirm dialog is open
-            await expect(page.getByTestId('hours-item-askus')).toContainText('AskUs chat hours');
+            await expect(page.getByTestId('hours-item-askus').getByText('AskUs chat hours')).toBeVisible();
             // re-click button
             await clickButton();
             // dialog is closed
@@ -66,7 +66,7 @@ const openCloseWorks = async () => {
             await clickLabel();
 
             // confirm dialog is open
-            await expect(page.getByTestId('hours-item-askus')).toContainText('AskUs chat hours');
+            await expect(page.getByTestId('hours-item-askus').getByText('AskUs chat hours')).toBeVisible();
 
             // re-click button
             await clickLabel();
@@ -104,7 +104,7 @@ const openCloseWorks = async () => {
             await clickChevron();
 
             // confirm dialog is open
-            await expect(page.getByTestId('hours-item-askus')).toContainText('AskUs chat hours');
+            await expect(page.getByTestId('hours-item-askus').getByText('AskUs chat hours')).toBeVisible();
 
             // re-click button
             await clickChevron();
@@ -130,7 +130,7 @@ const openCloseWorks = async () => {
             // open dialog
             await clickIcon();
             // confirm dialog is open
-            await expect(page.getByTestId('hours-item-askus')).toContainText('AskUs chat hours');
+            await expect(page.getByTestId('hours-item-askus').getByText('AskUs chat hours')).toBeVisible();
 
             // re-click button
             await clickIcon();
@@ -153,7 +153,7 @@ const openCloseWorks = async () => {
             await page.getByTestId('hours-accordion-open').click();
 
             // confirm dialog is open
-            await expect(page.getByTestId('locations-wrapper')).toContainText('all Library and AskUs hours');
+            await expect(page.getByTestId('locations-wrapper').getByText('all Library and AskUs hours')).toBeVisible();
 
             // click escape key to close dialog
             await page.getByTestId('locations-wrapper').focus();
@@ -173,12 +173,12 @@ test.describe('Locations Panel', () => {
         await page.getByTestId('hours-accordion-open').click();
 
         // the expected content is found on the page
-        await expect(page.getByTestId('hours-item-arch-music')).toContainText('Architecture and Music');
+        await expect(page.getByTestId('hours-item-arch-music').getByText('Architecture and Music')).toBeVisible();
 
         // at desktop hours are displayed
-        await expect(page.getByTestId('location-item-arch-music-hours')).toContainText('7:30am - 7:30pm');
-        await expect(page.getByTestId('locations-hours-disclaimer')).toContainText('Student and staff hours');
-        await expect(page.getByTestId('hours-item-askus-link')).toContainText('AskUs chat hours');
+        await expect(page.getByTestId('location-item-arch-music-hours').getByText('7:30am - 7:30pm')).toBeVisible();
+        await expect(page.getByTestId('locations-hours-disclaimer').getByText('Student and staff hours')).toBeVisible();
+        await expect(page.getByTestId('hours-item-askus-link').getByText('AskUs chat hours')).toBeVisible();
 
         // there is a gap above the askus link
         const panel = page.getByTestId('locations-panel-content');
@@ -306,12 +306,13 @@ test.describe('Locations Panel', () => {
                     isRetry = false;
                     await page.getByTestId('hours-accordion-open').click({ timeout: 1000 });
                     isRetry = true;
-                    await expect(page.getByTestId('homepage-hours-weeklyhours-link')).toContainText(
-                        'See all Library and AskUs hours',
-                        {
-                            timeout: 1000,
-                        },
-                    );
+                    await expect(
+                        page
+                            .getByTestId('homepage-hours-weeklyhours-link')
+                            .getByText('See all Library and AskUs hours', {
+                                timeout: 1000,
+                            }),
+                    ).toBeVisible();
                 }).toPass();
 
                 const utilityBarBottom = await page
@@ -643,9 +644,13 @@ test.describe('Locations Panel', () => {
             await page.getByTestId('hours-accordion-open').click();
 
             // the expected content is found on the page
-            await expect(page.getByTestId('locations-error')).toContainText(
-                "We can't load opening hours or how busy Library spaces are right now. Please refresh your browser or try again later.",
-            );
+            await expect(
+                page
+                    .getByTestId('locations-error')
+                    .getByText(
+                        "We can't load opening hours or how busy Library spaces are right now. Please refresh your browser or try again later.",
+                    ),
+            ).toBeVisible();
         });
 
         test.describe('all close methods work', async () => {

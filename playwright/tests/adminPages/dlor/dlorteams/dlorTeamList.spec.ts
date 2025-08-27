@@ -12,7 +12,7 @@ test.describe('Digital Learning Hub admin Teams management', () => {
         });
         test('is accessible', async ({ page }) => {
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Team management');
+            await expect(page.locator('h1').getByText('Digital Learning Hub - Team management')).toBeVisible();
             await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['button-name'] });
         });
         test('has breadcrumbs', async ({ page }) => {
@@ -248,12 +248,12 @@ test.describe('Digital Learning Hub admin Teams management', () => {
         test('displays correct page for admin users (list)', async ({ page }) => {
             await page.goto(`http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Team management');
+            await expect(page.locator('h1').getByText('Digital Learning Hub - Team management')).toBeVisible();
         });
         test('displays correct page for non admin users (list)', async ({ page }) => {
             await page.goto(`http://localhost:2020/digital-learning-hub/team/manage?user=${DLOR_OBJECT_OWNER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Team management');
+            await expect(page.locator('h1').getByText('Digital Learning Hub - Team management')).toBeVisible();
             await expect(page.getByTestId('dlor-teamlist-panel-1')).toBeVisible();
             await expect(page.getByTestId('admin-dlor-visit-add-button')).not.toBeVisible();
         });

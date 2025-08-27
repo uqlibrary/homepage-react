@@ -26,7 +26,7 @@ test.describe('Digital Learning Hub', () => {
             ).toBeVisible();
         });
         test('appears as expected', async ({ page }) => {
-            await expect(page.getByTestId('hero-card-title')).toContainText('Find a digital learning object');
+            await expect(page.getByTestId('hero-card-title').getByText('Find a digital learning object')).toBeVisible();
             await expect(page.getByTestId('dlor-homepage-list').locator(':scope > div')).toHaveCount(
                 itemsPerPage + extraRowCount,
             );
@@ -55,9 +55,11 @@ test.describe('Digital Learning Hub', () => {
             ).toBeVisible();
 
             // sorts properly
-            await expect(page.locator('[data-testid="dlor-homepage-list"] div:nth-child(4) article h2')).toContainText(
-                'Accessibility - Digital Essentials',
-            );
+            await expect(
+                page
+                    .locator('[data-testid="dlor-homepage-list"] div:nth-child(4) article h2')
+                    .getByText('Accessibility - Digital Essentials'),
+            ).toBeVisible();
             await expect(
                 page.locator('[data-testid="dlor-homepage-list"] article h2').getByText('Artificial Intelligence'),
             ).toBeVisible();
@@ -79,9 +81,11 @@ test.describe('Digital Learning Hub', () => {
                     .getByText(/Series: Digital Essentials/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="dlor-homepage-panel-987y-isjgt-9866"] article')).toContainText(
-                'Understanding the importance of accessibility online and creating accessible content.',
-            );
+            await expect(
+                page
+                    .locator('[data-testid="dlor-homepage-panel-987y-isjgt-9866"] article')
+                    .getByText('Understanding the importance of accessibility online and creating accessible content.'),
+            ).toBeVisible();
 
             await expect(
                 page
@@ -139,37 +143,47 @@ test.describe('Digital Learning Hub', () => {
                     .getByText(/Series: Advanced literature searching/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4"] article')).toContainText(
-                'Using advanced searching techniques',
-            );
+            await expect(
+                page
+                    .locator('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4"] article')
+                    .getByText('Using advanced searching techniques'),
+            ).toBeVisible();
             await expect(
                 page
                     .locator('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4"] article footer')
                     .locator(':scope > *'),
             ).toHaveCount(6); // 3 svg, 3 spans-with-text
-            await expect(page.getByTestId('dlor-homepage-panel-98s0-dy5k3-98h4-footer-type')).toContainText('Guide');
-            await expect(page.getByTestId('dlor-homepage-panel-98s0-dy5k3-98h4-footer-media')).toContainText(
-                'Pressbook',
-            );
-            await expect(page.getByTestId('dlor-homepage-panel-98s0-dy5k3-98h4-footer-topic')).toContainText(
-                'Assignments, Research',
-            );
+            await expect(
+                page.getByTestId('dlor-homepage-panel-98s0-dy5k3-98h4-footer-type').getByText('Guide'),
+            ).toBeVisible();
+            await expect(
+                page.getByTestId('dlor-homepage-panel-98s0-dy5k3-98h4-footer-media').getByText('Pressbook'),
+            ).toBeVisible();
+            await expect(
+                page.getByTestId('dlor-homepage-panel-98s0-dy5k3-98h4-footer-topic').getByText('Assignments, Research'),
+            ).toBeVisible();
 
             // fourth panel
             await expect(
                 page.locator('[data-testid="dlor-homepage-panel-938h-4986-654f"] article header h2'),
             ).toContainText('Artificial Intelligence - Digital Essentials');
-            await expect(page.locator('[data-testid="dlor-homepage-panel-938h-4986-654f"] article')).toContainText(
-                'Types of AI, implications for society, using AI in your studies and how UQ is',
-            );
+            await expect(
+                page
+                    .locator('[data-testid="dlor-homepage-panel-938h-4986-654f"] article')
+                    .getByText('Types of AI, implications for society, using AI in your studies and how UQ is'),
+            ).toBeVisible();
             await expect(
                 page.locator('[data-testid="dlor-homepage-panel-938h-4986-654f"] article footer').locator(':scope > *'),
             ).toHaveCount(6); // 3 svg, 3 spans-with-text
-            await expect(page.getByTestId('dlor-homepage-panel-938h-4986-654f-footer-type')).toContainText('Module');
-            await expect(page.getByTestId('dlor-homepage-panel-938h-4986-654f-footer-media')).toContainText('H5P');
-            await expect(page.getByTestId('dlor-homepage-panel-938h-4986-654f-footer-topic')).toContainText(
-                'Assignments, Software',
-            );
+            await expect(
+                page.getByTestId('dlor-homepage-panel-938h-4986-654f-footer-type').getByText('Module'),
+            ).toBeVisible();
+            await expect(
+                page.getByTestId('dlor-homepage-panel-938h-4986-654f-footer-media').getByText('H5P'),
+            ).toBeVisible();
+            await expect(
+                page.getByTestId('dlor-homepage-panel-938h-4986-654f-footer-topic').getByText('Assignments, Software'),
+            ).toBeVisible();
 
             // filter sidebar
             await expect(
@@ -210,13 +224,15 @@ test.describe('Digital Learning Hub', () => {
             // when the object doesn't have a particular facet type, it just doesn't appear in the panel footer item
             // (in practice, I think every object should have each of these)
             await expect(page.getByTestId('dlor-homepage-panel-98j3-fgf95-8j34-footer-type')).not.toBeVisible(); // MISSING FROM API RESULT
-            await expect(page.getByTestId('dlor-homepage-panel-98j3-fgf95-8j34-footer-media')).toContainText(
-                'Pressbook',
-            );
+            await expect(
+                page.getByTestId('dlor-homepage-panel-98j3-fgf95-8j34-footer-media').getByText('Pressbook'),
+            ).toBeVisible();
 
             await page.goto('digital-learning-hub?user=public');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('dlor-homepage-loginprompt')).toContainText('Log in for extra features   ');
+            await expect(
+                page.getByTestId('dlor-homepage-loginprompt').getByText('Log in for extra features   '),
+            ).toBeVisible();
         });
         test('can filter panels', async ({ page }) => {
             // initially, all panels are showing
@@ -578,9 +594,9 @@ test.describe('Digital Learning Hub', () => {
 
             // the first detail page loads
             await expect(page).toHaveURL(/http:\/\/localhost:2020\/digital-learning-hub\/view\/987y_isjgt_9866/);
-            await expect(page.locator('[data-testid="dlor-detailpage"] h1')).toContainText(
-                'Accessibility - Digital Essentials',
-            );
+            await expect(
+                page.locator('[data-testid="dlor-detailpage"] h1').getByText('Accessibility - Digital Essentials'),
+            ).toBeVisible();
             await expect(page.locator('[data-testid="dlor-detailpage-sitelabel"] a')).toHaveAttribute(
                 'href',
                 'http://localhost:2020/digital-learning-hub',
@@ -588,7 +604,7 @@ test.describe('Digital Learning Hub', () => {
             await page.locator('[data-testid="dlor-detailpage-sitelabel"] a').click();
 
             // back to homepage
-            await expect(page.locator('h1')).toContainText('Find a digital learning object');
+            await expect(page.locator('h1').getByText('Find a digital learning object')).toBeVisible();
             await expect(page).toHaveURL(/http:\/\/localhost:2020\/digital-learning-hub/);
 
             // check the second panel
@@ -596,9 +612,9 @@ test.describe('Digital Learning Hub', () => {
 
             // the second detail page loads
             await expect(page).toHaveURL(/http:\/\/localhost:2020\/digital-learning-hub\/view\/98s0_dy5k3_98h4/);
-            await expect(page.locator('[data-testid="dlor-detailpage"] h1')).toContainText(
-                'Advanced literature searching',
-            );
+            await expect(
+                page.locator('[data-testid="dlor-detailpage"] h1').getByText('Advanced literature searching'),
+            ).toBeVisible();
             // back to homepage
             await expect(page.locator('[data-testid="dlor-detailpage-sitelabel"] a')).toHaveAttribute(
                 'href',
@@ -606,7 +622,7 @@ test.describe('Digital Learning Hub', () => {
             );
             await page.locator('[data-testid="dlor-detailpage-sitelabel"] a').click();
 
-            await expect(page.locator('h1')).toContainText('Find a digital learning object');
+            await expect(page.locator('h1').getByText('Find a digital learning object')).toBeVisible();
             await expect(page).toHaveURL(/http:\/\/localhost:2020\/digital-learning-hub/);
 
             // check the fourth panel
@@ -614,12 +630,14 @@ test.describe('Digital Learning Hub', () => {
 
             // the third detail page loads
             await expect(page).toHaveURL(/http:\/\/localhost:2020\/digital-learning-hub\/view\/938h_4986_654f/);
-            await expect(page.locator('[data-testid="dlor-detailpage"] h1')).toContainText(
-                'Artificial Intelligence - Digital Essentials',
-            );
+            await expect(
+                page
+                    .locator('[data-testid="dlor-detailpage"] h1')
+                    .getByText('Artificial Intelligence - Digital Essentials'),
+            ).toBeVisible();
             // back button, alternate route back to homepage, works
             await page.goBack();
-            await expect(page.locator('h1')).toContainText('Find a digital learning object');
+            await expect(page.locator('h1').getByText('Find a digital learning object')).toBeVisible();
             await expect(page).toHaveURL(/http:\/\/localhost:2020\/digital-learning-hub/);
         });
         test('shows a preview appropriately', async ({ page }) => {
@@ -964,12 +982,12 @@ test.describe('Digital Learning Hub', () => {
         test('can handle non authenticated request to forced auth page', async ({ page }) => {
             await page.goto('digital-learning-hub-list?user=public');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('StandardPage-title')).toContainText('Authentication required');
+            await expect(page.getByTestId('StandardPage-title').getByText('Authentication required')).toBeVisible();
         });
         test('can handle authenticated request to forced auth page', async ({ page }) => {
             await page.goto('digital-learning-hub-list');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1')).toContainText('Find a digital learning object');
+            await expect(page.locator('h1').getByText('Find a digital learning object')).toBeVisible();
         });
     });
     test.describe('unavailable objects', () => {

@@ -42,7 +42,7 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
 
         test('is accessible', async ({ page }) => {
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Edit Series');
+            await expect(page.locator('h1').getByText('Digital Learning Hub - Edit Series')).toBeVisible();
             await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['link-name'] });
         });
 
@@ -57,7 +57,7 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
             await firstItem.dragTo(secondItem);
 
             const listItems = page.locator('#dragLandingAarea li');
-            await expect(listItems.first()).toContainText('for science');
+            await expect(listItems.first().getByText('for science')).toBeVisible();
             await expect(listItems.nth(1)).toHaveText(/Advanced literature searching/);
 
             // Drag first item to second item's position again to revert
@@ -67,7 +67,7 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
             await page.waitForSelector('#dragLandingAarea li');
 
             const updatedListItems = page.locator('#dragLandingAarea li');
-            await expect(updatedListItems.first()).toContainText('Advanced literature searching');
+            await expect(updatedListItems.first().getByText('Advanced literature searching')).toBeVisible();
             await expect(updatedListItems.nth(1)).toHaveText(/for science/);
         });
 
@@ -102,13 +102,13 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
 
             const listItems = page.locator('#dragLandingAarea li');
             await expect(listItems.nth(1)).toHaveText(/for science/);
-            await expect(listItems.first()).toContainText('Advanced literature searching');
+            await expect(listItems.first().getByText('Advanced literature searching')).toBeVisible();
 
             const seriesNameInput = page.locator('#series_name');
             await seriesNameInput.clear();
             await seriesNameInput.fill('Advanced literature searching xxx');
             await page.getByTestId('admin-dlor-series-form-save-button').click();
-            await expect(page.getByTestId('message-title')).toContainText('Changes have been saved');
+            await expect(page.getByTestId('message-title').getByText('Changes have been saved')).toBeVisible();
         });
     });
 
@@ -255,9 +255,9 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
             await page.goto(
                 `http://localhost:2020/admin/dlor/series/edit/1?user=${DLOR_ADMIN_USER}&responseType=fullListError`,
             );
-            await expect(page.getByTestId('dlor-seriesItem-error')).toContainText(
-                /An error has occurred during the request/,
-            );
+            await expect(
+                page.getByTestId('dlor-seriesItem-error').getByText(/An error has occurred during the request/),
+            ).toBeVisible();
         });
     });
     test.describe('user access', () => {

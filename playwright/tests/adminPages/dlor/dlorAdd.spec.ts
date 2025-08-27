@@ -17,7 +17,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
 
             test('is accessible', async ({ page }) => {
                 await page.setViewportSize({ width: 1300, height: 1000 });
-                await expect(page.locator('h1')).toContainText('Digital Learning Hub Management');
+                await expect(page.locator('h1').getByText('Digital Learning Hub Management')).toBeVisible();
 
                 // first panel is accessible
                 await assertAccessibility(page, '[data-testid="StandardPage"]');
@@ -49,9 +49,12 @@ test.describe('Add an object to the Digital Learning Hub', () => {
             });
 
             test('has breadcrumb', async ({ page }) => {
-                await expect(page.locator('uq-site-header').getByTestId('subsite-title')).toContainText(
-                    'Digital learning hub admin',
-                );
+                await expect(
+                    page
+                        .locator('uq-site-header')
+                        .getByTestId('subsite-title')
+                        .getByText('Digital learning hub admin'),
+                ).toBeVisible();
             });
 
             test('loads as expected', async ({ page }) => {
@@ -103,12 +106,18 @@ test.describe('Add an object to the Digital Learning Hub', () => {
 
                 await page.getByTestId('dlor-form-next-button').click();
 
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-1"] span')).toContainText('3'); // panel invalidity count present
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-1"] span').getByText('3'),
+                ).toBeVisible(); // panel invalidity count present
                 await page.locator('[data-testid="object-title"] input').fill('xx'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-1"] span')).toContainText('2'); // panel invalidity count present
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-1"] span').getByText('2'),
+                ).toBeVisible(); // panel invalidity count present
                 await typeCKEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
 
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-1"] span')).toContainText('1'); // panel invalidity count present
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-1"] span').getByText('1'),
+                ).toBeVisible(); // panel invalidity count present
                 await page
                     .locator('[data-testid="object-summary"] textarea:first-child')
                     .fill('new summary '.padEnd(REQUIRED_LENGTH_SUMMARY, 'x'));
@@ -116,13 +125,17 @@ test.describe('Add an object to the Digital Learning Hub', () => {
 
                 // click 'next' button to view panel 3, Link
                 await page.getByTestId('dlor-form-next-button').click();
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-2"] span')).toContainText('1'); // panel invalidity count present
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-2"] span').getByText('1'),
+                ).toBeVisible(); // panel invalidity count present
 
                 await page.locator('[data-testid="object-link-url"] input').fill('asdasdasdsadd');
                 await page.waitForSelector('[data-testid="dlor-form-error-message-object-link-url"]');
-                await expect(page.getByTestId('dlor-form-error-message-object-link-url')).toContainText(
-                    'This web address is not valid.',
-                );
+                await expect(
+                    page
+                        .getByTestId('dlor-form-error-message-object-link-url')
+                        .getByText('This web address is not valid.'),
+                ).toBeVisible();
                 await page.locator('[data-testid="object-link-url"] input').clear();
                 await page.locator('[data-testid="object-link-url"] input').fill('http://example.com');
                 await expect(page.getByTestId('dlor-panel-validity-indicator-2')).not.toBeVisible(); // panel invalidity count not present
@@ -131,23 +144,33 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.getByTestId('dlor-form-next-button').click();
                 // filters
                 await page.locator('[data-testid="filter-topic-aboriginal-and-torres-strait-islander"] input').check();
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-3"] span')).toContainText('5'); // panel invalidity count present
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-3"] span').getByText('5'),
+                ).toBeVisible(); // panel invalidity count present
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeDisabled();
 
                 await page.locator('[data-testid="filter-media-format-audio"] input').check();
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-3"] span')).toContainText('4');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-3"] span').getByText('4'),
+                ).toBeVisible();
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeDisabled();
 
                 await page.locator('[data-testid="filter-subject-cross-disciplinary"] input').check();
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-3"] span')).toContainText('3');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-3"] span').getByText('3'),
+                ).toBeVisible();
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeDisabled();
 
                 await page.locator('[data-testid="filter-item-type-guide"] input').check();
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-3"] span')).toContainText('2');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-3"] span').getByText('2'),
+                ).toBeVisible();
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeDisabled();
 
                 await page.locator('[data-testid="filter-licence-cc-by-attribution"] input').check();
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-3"] span')).toContainText('1');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-3"] span').getByText('1'),
+                ).toBeVisible();
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeDisabled();
 
                 await page
@@ -161,17 +184,23 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page
                     .locator('[data-testid="filter-topic-aboriginal-and-torres-strait-islander"] input')
                     .uncheck();
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-3"] span')).toContainText('1');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-3"] span').getByText('1'),
+                ).toBeVisible();
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeDisabled();
                 await page.locator('[data-testid="filter-topic-aboriginal-and-torres-strait-islander"] input').check();
 
                 await page.locator('[data-testid="filter-subject-cross-disciplinary"] input').uncheck();
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-3"] span')).toContainText('1');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-3"] span').getByText('1'),
+                ).toBeVisible();
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeDisabled();
                 await page.locator('[data-testid="filter-subject-cross-disciplinary"] input').check();
 
                 await page.locator('[data-testid="filter-media-format-audio"] input').uncheck();
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-3"] span')).toContainText('1');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-3"] span').getByText('1'),
+                ).toBeVisible();
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeDisabled();
                 await page.locator('[data-testid="filter-media-format-audio"] input').check();
 
@@ -180,11 +209,17 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 // click the back button to go back to panel 3, Link
                 await page.getByTestId('dlor-form-back-button').click();
                 await page.locator('[data-testid="object-link-url"] input').clear();
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-2"] span')).toContainText('1');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-2"] span').getByText('1'),
+                ).toBeVisible();
                 await page.locator('[data-testid="object-link-url"] input').fill('http://');
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-2"] span')).toContainText('1');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-2"] span').getByText('1'),
+                ).toBeVisible();
                 await page.locator('[data-testid="object-link-url"] input').fill('http://ex.c');
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-2"] span')).toContainText('1');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-2"] span').getByText('1'),
+                ).toBeVisible();
                 await page.locator('[data-testid="object-link-url"] input').fill('http://example.com');
                 await expect(page.getByTestId('dlor-panel-validity-indicator-2')).not.toBeVisible();
 
@@ -202,13 +237,17 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).not.toBeVisible();
 
                 await typeCKEditor(page, 'd');
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-1"] span')).toContainText('1');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-1"] span').getByText('1'),
+                ).toBeVisible();
 
                 await typeCKEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).not.toBeVisible();
 
                 await page.locator('[data-testid="object-summary"] textarea:first-child').clear();
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-1"] span')).toContainText('1');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-1"] span').getByText('1'),
+                ).toBeVisible();
                 await page
                     .locator('[data-testid="object-summary"] textarea:first-child')
                     .fill('new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
@@ -222,10 +261,14 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                     await page.locator('[data-testid="object-publishing-user"] input').press('End');
                     await page.locator('[data-testid="object-publishing-user"] input').press('Backspace');
                 }
-                await expect(page.getByTestId('dlor-form-error-message-object-publishing-user')).toContainText(
-                    'This username is not valid.',
-                );
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-0"] span')).toContainText('1');
+                await expect(
+                    page
+                        .getByTestId('dlor-form-error-message-object-publishing-user')
+                        .getByText('This username is not valid.'),
+                ).toBeVisible();
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-0"] span').getByText('1'),
+                ).toBeVisible();
                 await page.locator('[data-testid="object-publishing-user"] input').press('p');
                 await expect(page.getByTestId('dlor-panel-validity-indicator-0')).not.toBeVisible();
                 await expect(page.getByTestId('dlor-form-error-message-object-publishing-user')).not.toBeVisible();
@@ -234,14 +277,20 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.getByTestId('object-form-teamid-new').click();
 
                 // now that we have chosen "new team" the form is invalid until we enter all 3 fields
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-0"] span')).toContainText('3');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-0"] span').getByText('3'),
+                ).toBeVisible();
                 await page.locator('[data-testid="dlor-form-team-name-new"] input').fill('new team name');
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-0"] span')).toContainText('2');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-0"] span').getByText('2'),
+                ).toBeVisible();
                 await page.locator('[data-testid="dlor-form-team-manager-new"] input').fill('john Manager');
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-0"] span')).toContainText('1');
-                await expect(page.getByTestId('error-message-team-email-new')).toContainText(
-                    'This email address is not valid.',
-                );
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-0"] span').getByText('1'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('error-message-team-email-new').getByText('This email address is not valid.'),
+                ).toBeVisible();
                 await page.locator('[data-testid="dlor-form-team-email-new"] input').fill('john@example.com');
                 await expect(page.getByTestId('dlor-panel-validity-indicator-0')).not.toBeVisible();
 
@@ -257,18 +306,24 @@ test.describe('Add an object to the Digital Learning Hub', () => {
 
                 const titleInput = page.locator('[data-testid="object-title"] input');
                 await titleInput.fill('123');
-                await expect(page.getByTestId('input-characters-remaining-object-title')).toContainText(
-                    'at least 5 more characters needed',
-                );
+                await expect(
+                    page
+                        .getByTestId('input-characters-remaining-object-title')
+                        .getByText('at least 5 more characters needed'),
+                ).toBeVisible();
                 await typeCKEditor(page, 'new description');
-                await expect(page.getByTestId('input-characters-remaining-object-description')).toContainText(
-                    'at least 85 more characters needed',
-                );
+                await expect(
+                    page
+                        .getByTestId('input-characters-remaining-object-description')
+                        .getByText('at least 85 more characters needed'),
+                ).toBeVisible();
                 const summaryInput = page.locator('[data-testid="object-summary"] textarea:first-child');
                 await summaryInput.fill('new summary');
-                await expect(page.getByTestId('input-characters-remaining-object-summary')).toContainText(
-                    'at least 9 more characters needed',
-                );
+                await expect(
+                    page
+                        .getByTestId('input-characters-remaining-object-summary')
+                        .getByText('at least 9 more characters needed'),
+                ).toBeVisible();
 
                 // go to the fourth panel, links
                 await page.getByTestId('dlor-form-next-button').click();
@@ -276,9 +331,11 @@ test.describe('Add an object to the Digital Learning Hub', () => {
 
                 const keywordsInput = page.locator('[data-testid="object-keywords"] textarea:first-child');
                 await keywordsInput.fill('abc');
-                await expect(page.getByTestId('input-characters-remaining-object-keywords-string')).toContainText(
-                    'at least 1 more character needed',
-                );
+                await expect(
+                    page
+                        .getByTestId('input-characters-remaining-object-keywords-string')
+                        .getByText('at least 1 more character needed'),
+                ).toBeVisible();
             });
 
             test('supplies a summary suggestion', async ({ page }) => {
@@ -316,12 +373,16 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 // summary currently blank
                 await expect(page.locator('[data-testid="object-summary"] textarea').first()).toHaveValue('');
                 // step 2 validation number = 2 because title and summary not set
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-1"] span')).toContainText('2');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-1"] span').getByText('2'),
+                ).toBeVisible();
                 // click "use summary" button
                 await page.getByTestId('admin-dlor-suggest-summary-button').click();
                 await expect(page.getByTestId('admin-dlor-suggest-summary')).not.toBeVisible();
                 // step 2 validation number = 1, only title not set
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-1"] span')).toContainText('1');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-1"] span').getByText('1'),
+                ).toBeVisible();
             });
 
             test('shows a "will preview" notice correctly', async ({ page }) => {
@@ -339,9 +400,9 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 // finish typing to make a valid youtube shorthand url
                 await urlInput.pressSequentially('df');
                 // once the youtube link is long enough to maybe be a valid youtube link, show a "will preview" message
-                await expect(page.getByTestId('object-link-url-preview')).toContainText(
-                    'A preview will show on the View page.',
-                );
+                await expect(
+                    page.getByTestId('object-link-url-preview').getByText('A preview will show on the View page.'),
+                ).toBeVisible();
 
                 // youtube link that is missing the v= paramater (and isnt a shorthand link)
                 await urlInput.fill('http://www.youtube.com/?g=123456');
@@ -349,9 +410,9 @@ test.describe('Add an object to the Digital Learning Hub', () => {
 
                 // youtube link that is a valid link with v= parameter
                 await urlInput.fill('http://www.youtube.com/?v=123456');
-                await expect(page.getByTestId('object-link-url-preview')).toContainText(
-                    'A preview will show on the View page.',
-                );
+                await expect(
+                    page.getByTestId('object-link-url-preview').getByText('A preview will show on the View page.'),
+                ).toBeVisible();
 
                 // a link that won't preview doesn't show the "will preview" message
                 await urlInput.fill('http://www.example.com/something');
@@ -430,11 +491,17 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.getByTestId('admin-dlor-save-button-submit').click();
 
                 // confirm save happened
-                await expect(page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2')).toContainText(
-                    'The object has been created',
-                );
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('Return to list page');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Add another Object');
+                await expect(
+                    page
+                        .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
+                        .getByText('The object has been created'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('confirm-dlor-save-outcome').getByText('Return to list page'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('cancel-dlor-save-outcome').getByText('Add another Object'),
+                ).toBeVisible();
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
@@ -497,16 +564,25 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 }
 
                 // confirm save happened
-                await expect(page.getByTestId('dialogbox-dlor-save-outcome').locator('h2')).toContainText(
-                    'The object has been created',
-                );
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('Return to list page');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Add another Object');
+                await expect(
+                    page
+                        .getByTestId('dialogbox-dlor-save-outcome')
+                        .locator('h2')
+                        .getByText('The object has been created'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('confirm-dlor-save-outcome').getByText('Return to list page'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('cancel-dlor-save-outcome').getByText('Add another Object'),
+                ).toBeVisible();
 
                 // and navigate back to the list page
                 await page.getByTestId('confirm-dlor-save-outcome').click();
                 await expect(page).toHaveURL(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
-                await expect(page.getByTestId('StandardPage-title')).toContainText('Digital Learning Hub Management');
+                await expect(
+                    page.getByTestId('StandardPage-title').getByText('Digital Learning Hub Management'),
+                ).toBeVisible();
             });
             test('admin can create a new object for a new team and make it featured and return to list', async ({
                 page,
@@ -545,7 +621,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.locator('[data-testid="object-link-url"] input').fill('http://example.com');
 
                 // accessible link message: a downloadable file that is an XLS of size 36 meg
-                await expect(page.getByTestId('object-link-interaction-type')).toContainText('No message');
+                await expect(page.getByTestId('object-link-interaction-type').getByText('No message')).toBeVisible();
 
                 await expect(page.getByTestId('object-link-file-type')).not.toBeVisible();
                 await expect(page.getByTestId('object-link-duration-minutes')).not.toBeVisible();
@@ -560,13 +636,17 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await expect(page.getByTestId('object-link-duration-minutes')).not.toBeVisible();
                 await expect(page.getByTestId('object-link-duration-seconds')).not.toBeVisible();
                 // shows an error because they havent chosen a file type and a file size
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-2"] span')).toContainText('2');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-2"] span').getByText('2'),
+                ).toBeVisible();
 
                 // choose file type
                 await page.getByTestId('object-link-file-type').click();
                 await page.locator('[data-value="XLS"]').click();
 
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-2"] span')).toContainText('1');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-2"] span').getByText('1'),
+                ).toBeVisible();
 
                 // enter file size
                 await page.locator('[data-testid="object-link-size-amount"] input').fill('36');
@@ -597,11 +677,17 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.getByTestId('admin-dlor-save-button-submit').click();
 
                 // confirm save happened
-                await expect(page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2')).toContainText(
-                    'The object has been created',
-                );
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('Return to list page');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Add another Object');
+                await expect(
+                    page
+                        .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
+                        .getByText('The object has been created'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('confirm-dlor-save-outcome').getByText('Return to list page'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('cancel-dlor-save-outcome').getByText('Add another Object'),
+                ).toBeVisible();
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
@@ -667,16 +753,25 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 }
 
                 // confirm save happened
-                await expect(page.getByTestId('dialogbox-dlor-save-outcome').locator('h2')).toContainText(
-                    'The object has been created',
-                );
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('Return to list page');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Add another Object');
+                await expect(
+                    page
+                        .getByTestId('dialogbox-dlor-save-outcome')
+                        .locator('h2')
+                        .getByText('The object has been created'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('confirm-dlor-save-outcome').getByText('Return to list page'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('cancel-dlor-save-outcome').getByText('Add another Object'),
+                ).toBeVisible();
 
                 // and navigate back to the list page
                 await page.getByTestId('confirm-dlor-save-outcome').click();
                 await expect(page).toHaveURL(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
-                await expect(page.getByTestId('StandardPage-title')).toContainText('Digital Learning Hub Management');
+                await expect(
+                    page.getByTestId('StandardPage-title').getByText('Digital Learning Hub Management'),
+                ).toBeVisible();
             });
             test('admin can create a new object for an existing team and start a fresh form', async ({
                 page,
@@ -693,9 +788,9 @@ test.describe('Add an object to the Digital Learning Hub', () => {
 
                 // confirm team-changer works
                 await page.getByTestId('object-owning-team').click();
-                await expect(page.getByTestId('object-owning-team-2')).toContainText(
-                    'Lib train Library Corporate Services',
-                );
+                await expect(
+                    page.getByTestId('object-owning-team-2').getByText('Lib train Library Corporate Services'),
+                ).toBeVisible();
                 await page.getByTestId('object-owning-team-2').click();
                 await expect(page.getByTestId('dlor-panel-validity-indicator-0')).not.toBeVisible();
 
@@ -716,7 +811,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.locator('[data-testid="object-link-url"] input').fill('http://example.com');
 
                 // accessible link message: save a Viewable file that is a video that is 3min 47 secs long
-                await expect(page.getByTestId('object-link-interaction-type')).toContainText('No message');
+                await expect(page.getByTestId('object-link-interaction-type').getByText('No message')).toBeVisible();
                 await expect(page.getByTestId('object-link-file-type')).not.toBeVisible();
                 await expect(page.getByTestId('object-link-duration-minutes')).not.toBeVisible();
                 await expect(page.getByTestId('object-link-duration-seconds')).not.toBeVisible();
@@ -730,7 +825,9 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await expect(page.getByTestId('object-link-duration-minutes')).toBeVisible();
                 await expect(page.getByTestId('object-link-duration-seconds')).toBeVisible();
                 // shows an error because they havent chosen a file type and a file size
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-2"] span')).toContainText('2');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-2"] span').getByText('2'),
+                ).toBeVisible();
                 await page.getByTestId('object-link-file-type').click();
                 await page.locator('[data-value="video"]').click();
                 await page.locator('[data-testid="object-link-duration-minutes"] input').fill('3');
@@ -761,11 +858,17 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.getByTestId('admin-dlor-save-button-submit').click();
 
                 // confirm save happened
-                await expect(page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2')).toContainText(
-                    'The object has been created',
-                );
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('Return to list page');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Add another Object');
+                await expect(
+                    page
+                        .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
+                        .getByText('The object has been created'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('confirm-dlor-save-outcome').getByText('Return to list page'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('cancel-dlor-save-outcome').getByText('Add another Object'),
+                ).toBeVisible();
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
@@ -831,11 +934,18 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 }
 
                 // confirm save happened
-                await expect(page.getByTestId('dialogbox-dlor-save-outcome').locator('h2')).toContainText(
-                    'The object has been created',
-                );
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('Return to list page');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Add another Object');
+                await expect(
+                    page
+                        .getByTestId('dialogbox-dlor-save-outcome')
+                        .locator('h2')
+                        .getByText('The object has been created'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('confirm-dlor-save-outcome').getByText('Return to list page'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('cancel-dlor-save-outcome').getByText('Add another Object'),
+                ).toBeVisible();
 
                 // now clear the form to create another Object
                 await page.getByTestId('cancel-dlor-save-outcome').click();
@@ -875,7 +985,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await expect(page.getByTestId('object-link-size-units')).not.toBeVisible();
                 await expect(page.getByTestId('object-link-duration-minutes')).toBeVisible();
                 await expect(page.getByTestId('object-link-duration-seconds')).toBeVisible();
-                await expect(page.getByTestId('object-link-file-type')).toContainText('New type');
+                await expect(page.getByTestId('object-link-file-type').getByText('New type')).toBeVisible();
                 await page.getByTestId('object-link-file-type').click();
                 await page.locator('[data-value="video"]').click();
                 await page.locator('[data-testid="object-link-duration-minutes"] input').fill('3');
@@ -909,11 +1019,17 @@ test.describe('Add an object to the Digital Learning Hub', () => {
 
                 // confirm save happened
                 await page.waitForSelector('[data-testid="cancel-dlor-save-outcome"]');
-                await expect(page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2')).toContainText(
-                    'The object has been created',
-                );
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('Return to list page');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Add another Object');
+                await expect(
+                    page
+                        .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
+                        .getByText('The object has been created'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('confirm-dlor-save-outcome').getByText('Return to list page'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('cancel-dlor-save-outcome').getByText('Add another Object'),
+                ).toBeVisible();
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
@@ -1003,7 +1119,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await expect(page.getByTestId('object-link-duration-minutes')).toBeVisible();
                 await expect(page.getByTestId('object-link-duration-seconds')).toBeVisible();
 
-                await expect(page.getByTestId('object-link-file-type')).toContainText('New type');
+                await expect(page.getByTestId('object-link-file-type').getByText('New type')).toBeVisible();
                 await page.locator('[data-testid="dlor-admin-form-new-file-type"] input').fill('docx');
                 await page.locator('[data-testid="object-link-duration-minutes"] input').fill('3');
                 await page.locator('[data-testid="object-link-duration-seconds"] input').fill('47');
@@ -1030,11 +1146,17 @@ test.describe('Add an object to the Digital Learning Hub', () => {
 
                 // confirm save happened
                 await page.waitForSelector('[data-testid="cancel-dlor-save-outcome"]');
-                await expect(page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2')).toContainText(
-                    'The object has been created',
-                );
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('Return to list page');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Add another Object');
+                await expect(
+                    page
+                        .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
+                        .getByText('The object has been created'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('confirm-dlor-save-outcome').getByText('Return to list page'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('cancel-dlor-save-outcome').getByText('Add another Object'),
+                ).toBeVisible();
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
@@ -1098,25 +1220,33 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.goto(
                     `http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}&responseType=teamsLoadError`,
                 );
-                await expect(page.getByTestId('dlor-form-addedit-error')).toContainText(
-                    'An error has occurred during the request and this request cannot be processed',
-                );
+                await expect(
+                    page
+                        .getByTestId('dlor-form-addedit-error')
+                        .getByText('An error has occurred during the request and this request cannot be processed'),
+                ).toBeVisible();
             });
             test('admin gets an error when Filter list api doesnt load', async ({ page }) => {
                 await page.goto(
                     `http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}&responseType=filterLoadError`,
                 );
-                await expect(page.getByTestId('dlor-homepage-error')).toContainText(
-                    'An error has occurred during the request and this request cannot be processed',
-                );
+                await expect(
+                    page
+                        .getByTestId('dlor-homepage-error')
+                        .getByText('An error has occurred during the request and this request cannot be processed'),
+                ).toBeVisible();
             });
             test('admin gets an error when Filter list is empty', async ({ page }) => {
                 await page.goto(
                     `http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}&responseType=filterLoadEmpty`,
                 );
-                await expect(page.getByTestId('dlor-homepage-noresult')).toContainText(
-                    'Missing filters: We did not find any entries in the system - please try again later.',
-                );
+                await expect(
+                    page
+                        .getByTestId('dlor-homepage-noresult')
+                        .getByText(
+                            'Missing filters: We did not find any entries in the system - please try again later.',
+                        ),
+                ).toBeVisible();
             });
             test('admin gets an error on a failed save', async ({ page }) => {
                 await page.goto(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}&responseType=saveError`);
@@ -1148,11 +1278,17 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.getByTestId('admin-dlor-save-button-submit').click();
 
                 // "responseType=saveError" on the url forces an error from mock api
-                await expect(page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2')).toContainText(
-                    'An error has occurred during the request and this request cannot be processed',
-                );
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('Return to list page');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Add another Object');
+                await expect(
+                    page
+                        .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
+                        .getByText('An error has occurred during the request and this request cannot be processed'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('confirm-dlor-save-outcome').getByText('Return to list page'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('cancel-dlor-save-outcome').getByText('Add another Object'),
+                ).toBeVisible();
             });
         });
     });
@@ -1160,19 +1296,34 @@ test.describe('Add an object to the Digital Learning Hub', () => {
         test('displays an "unauthorised" page to public users', async ({ page }) => {
             await page.goto('http://localhost:2020/admin/dlor/add?user=public');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1').first()).toContainText('Authentication required');
+            await expect(
+                page
+                    .locator('h1')
+                    .first()
+                    .getByText('Authentication required'),
+            ).toBeVisible();
         });
 
         test('displays an "unauthorised" page to non-authorised users', async ({ page }) => {
             await page.goto('http://localhost:2020/admin/dlor/add?user=uqstaff');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1').first()).toContainText('Permission denied');
+            await expect(
+                page
+                    .locator('h1')
+                    .first()
+                    .getByText('Permission denied'),
+            ).toBeVisible();
         });
 
         test('displays correct page for admin users (list)', async ({ page }) => {
             await page.goto(`http://localhost:2020/admin/dlor/add?user=${DLOR_ADMIN_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1').first()).toContainText('Digital Learning Hub Management');
+            await expect(
+                page
+                    .locator('h1')
+                    .first()
+                    .getByText('Digital Learning Hub Management'),
+            ).toBeVisible();
         });
     });
 });

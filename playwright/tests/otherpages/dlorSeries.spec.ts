@@ -5,18 +5,22 @@ test.describe('Digital Learning Hub Series page.', () => {
     test.describe('series page', () => {
         test('appears as expected', async ({ page }) => {
             await page.goto('digital-learning-hub/series/1');
-            await expect(page.locator('[data-testid="dlor-seriespage"] h1')).toContainText('Series Name');
+            await expect(page.locator('[data-testid="dlor-seriespage"] h1').getByText('Series Name')).toBeVisible();
             await page.goto('digital-learning-hub/series/2');
-            await expect(page.locator('[data-testid="dlor-seriespage"] h1')).toContainText('Series Name');
-            await expect(page.getByTestId('dlor-homepage-panel-987y-isjgt-9866')).toContainText(
-                'Accessibility - Digital Essentials (has Youtube link)',
-            );
+            await expect(page.locator('[data-testid="dlor-seriespage"] h1').getByText('Series Name')).toBeVisible();
+            await expect(
+                page
+                    .getByTestId('dlor-homepage-panel-987y-isjgt-9866')
+                    .getByText('Accessibility - Digital Essentials (has Youtube link)'),
+            ).toBeVisible();
             await page.goto('digital-learning-hub/series/2');
-            await expect(page.locator('[data-testid="dlor-seriespage"] h1')).toContainText('Series Name');
+            await expect(page.locator('[data-testid="dlor-seriespage"] h1').getByText('Series Name')).toBeVisible();
             await page.goto('digital-learning-hub/series/9');
-            await expect(page.getByTestId('dlor-seriespage-description')).toContainText(
-                'This series does not have a detailed description at this time.',
-            );
+            await expect(
+                page
+                    .getByTestId('dlor-seriespage-description')
+                    .getByText('This series does not have a detailed description at this time.'),
+            ).toBeVisible();
             await page.goto('digital-learning-hub/series/5');
             await expect(page.getByTestId('dlor-seriespage-description')).not.toBeVisible();
             await expect(page.getByTestId('dlor-seriespage-loadError')).toHaveText(
@@ -25,15 +29,20 @@ test.describe('Digital Learning Hub Series page.', () => {
         });
         test('navigates to the correct location', async ({ page }) => {
             await page.goto('digital-learning-hub/series/1');
-            await expect(page.locator('[data-testid="dlor-seriespage"] h1')).toContainText('Series Name');
+            await expect(page.locator('[data-testid="dlor-seriespage"] h1').getByText('Series Name')).toBeVisible();
             await page.locator('[data-testid="dlor-homepage-panel-98s0-dy5k3-98h4"] button').click();
-            await expect(page.getByTestId('dlor-detailpage')).toContainText('Advanced literature searching');
+            await expect(
+                page
+                    .getByTestId('dlor-detailpage')
+                    .getByText('Advanced literature searching')
+                    .first(),
+            ).toBeVisible();
         });
         test('is accessible', async ({ page }) => {
             await page.goto('digital-learning-hub/series/1');
             await page.setViewportSize({ width: 1300, height: 1000 });
 
-            await expect(page.locator('[data-testid="dlor-seriespage"] h1')).toContainText('Series Name');
+            await expect(page.locator('[data-testid="dlor-seriespage"] h1').getByText('Series Name')).toBeVisible();
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
         test('shows correct object definitions for a series', async ({ page }) => {
@@ -74,7 +83,13 @@ test.describe('Digital Learning Hub Series page.', () => {
                     .locator('../../..')
                     .getByText(/Staff \(library\) Only/),
             ).toBeVisible();
-            await expect(page.getByText(/UQ Only Restricted Object/).locator('../../..')).toContainText('UQ Only');
+            await expect(
+                page
+                    .getByText(/UQ Only Restricted Object/)
+                    .locator('../../..')
+                    .getByText('UQ Only')
+                    .first(),
+            ).toBeVisible();
         });
     });
 });

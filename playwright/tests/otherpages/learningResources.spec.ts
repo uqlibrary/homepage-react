@@ -841,14 +841,16 @@ test.describe('The Learning Resources Page', () => {
                 .first(),
         ).toBeVisible();
 
-        await expect(page.getByTestId('learning-resource-subject-title')).toContainText('HIST1201');
-        await expect(page.getByTestId('learning-resource-subject-title')).toContainText('The Australian Experience');
+        await expect(page.getByTestId('learning-resource-subject-title').getByText('HIST1201')).toBeVisible();
+        await expect(
+            page.getByTestId('learning-resource-subject-title').getByText('The Australian Experience'),
+        ).toBeVisible();
 
         await hasExamReadMoreLink(page);
 
         await expect(page.getByTestId('exam-list-wrapper').locator(':scope > *')).toHaveCount(1);
-        await expect(page.getByTestId('examPaperItem-0')).toContainText('Semester 1 2016');
-        await expect(page.getByTestId('no-guides')).toContainText('No subject guides for this course');
+        await expect(page.getByTestId('examPaperItem-0').getByText('Semester 1 2016')).toBeVisible();
+        await expect(page.getByTestId('no-guides').getByText('No subject guides for this course')).toBeVisible();
     });
 
     // a subject with one reading list which has only the minimum number of items displays correctly
@@ -863,19 +865,21 @@ test.describe('The Learning Resources Page', () => {
                 .first(),
         ).toBeVisible();
 
-        await expect(page.getByTestId('learning-resource-subject-title')).toContainText('FREN1010');
-        await expect(page.getByTestId('learning-resource-subject-title')).toContainText('Introductory French 1');
+        await expect(page.getByTestId('learning-resource-subject-title').getByText('FREN1010')).toBeVisible();
+        await expect(
+            page.getByTestId('learning-resource-subject-title').getByText('Introductory French 1'),
+        ).toBeVisible();
 
         await hasExamReadMoreLink(page);
 
         await expect(page.getByTestId('exam-list-wrapper').locator(':scope > *')).toHaveCount(3);
-        await expect(page.getByTestId('examPaperItem-0')).toContainText('Semester 2 2019');
-        await expect(page.getByTestId('examPaperItem-1')).toContainText('Semester 1 2019');
-        await expect(page.getByTestId('exam-more-link')).toContainText('14 more past papers');
+        await expect(page.getByTestId('examPaperItem-0').getByText('Semester 2 2019')).toBeVisible();
+        await expect(page.getByTestId('examPaperItem-1').getByText('Semester 1 2019')).toBeVisible();
+        await expect(page.getByTestId('exam-more-link').getByText('14 more past papers')).toBeVisible();
         await expect(page.locator('[data-testid="guides-FREN1010-content"] > div').locator(':scope > *')).toHaveCount(
             3,
         );
-        await expect(page.getByTestId('guide-0')).toContainText('French Studies');
+        await expect(page.getByTestId('guide-0').getByText('French Studies')).toBeVisible();
     });
 
     // a subject with multiple reading lists displays correctly
@@ -889,20 +893,22 @@ test.describe('The Learning Resources Page', () => {
                 .getByText(/PHIL1002 \(has 2 reading lists\)/)
                 .first(),
         ).toBeVisible();
-        await expect(page.getByTestId('learning-resource-subject-title')).toContainText(
-            'PHIL1002 - Introduction to Philosophy: What is Philosophy?',
-        );
+        await expect(
+            page
+                .getByTestId('learning-resource-subject-title')
+                .getByText('PHIL1002 - Introduction to Philosophy: What is Philosophy?'),
+        ).toBeVisible();
 
         await hasExamReadMoreLink(page);
 
         await expect(page.getByTestId('exam-list-wrapper').locator(':scope > *')).toHaveCount(2);
-        await expect(page.getByTestId('no-exam-papers')).toContainText('No Past Exam Papers for this course');
+        await expect(page.getByTestId('no-exam-papers').getByText('No Past Exam Papers for this course')).toBeVisible();
         await expect(page.locator('[data-testid="guides-PHIL1002-content"] > div').locator(':scope > *')).toHaveCount(
             5,
         );
-        await expect(page.getByTestId('guide-0')).toContainText('PHIL1002');
-        await expect(page.getByTestId('guide-1')).toContainText('Philosophy');
-        await expect(page.getByTestId('guide-2')).toContainText('Stuff');
+        await expect(page.getByTestId('guide-0').getByText('PHIL1002')).toBeVisible();
+        await expect(page.getByTestId('guide-1').getByText('Philosophy')).toBeVisible();
+        await expect(page.getByTestId('guide-2').getByText('Stuff')).toBeVisible();
     });
     test('a user who manages to load a subject that has no reading list informed so', async ({ page }) => {
         await page.goto(

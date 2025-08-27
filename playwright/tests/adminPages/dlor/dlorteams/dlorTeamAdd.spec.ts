@@ -14,7 +14,7 @@ test.describe('Digital Learning Hub admin Add Team', () => {
         });
 
         test('is accessible', async ({ page }) => {
-            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Add a new Team');
+            await expect(page.locator('h1').getByText('Digital Learning Hub - Add a new Team')).toBeVisible();
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
 
@@ -100,9 +100,9 @@ test.describe('Digital Learning Hub admin Add Team', () => {
             await expect(saveButton).not.toBeDisabled();
             await saveButton.click();
 
-            await expect(page.getByTestId('dialogbox-dlor-team-save-outcome')).toContainText(
-                /The team has been created/,
-            );
+            await expect(
+                page.getByTestId('dialogbox-dlor-team-save-outcome').getByText(/The team has been created/),
+            ).toBeVisible();
             await expect(page.getByTestId('confirm-dlor-team-save-outcome')).toHaveText(/Return to Admin Teams page/);
             await expect(page.getByTestId('cancel-dlor-team-save-outcome')).toHaveText(/Add another Team/);
 
@@ -211,7 +211,7 @@ test.describe('Digital Learning Hub admin Add Team', () => {
         test('displays correct page for admin users', async ({ page }) => {
             await page.goto(`http://localhost:2020/admin/dlor/team/add?user=${DLOR_ADMIN_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Add a new Team');
+            await expect(page.locator('h1').getByText('Digital Learning Hub - Add a new Team')).toBeVisible();
         });
     });
 });

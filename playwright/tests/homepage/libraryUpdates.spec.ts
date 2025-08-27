@@ -48,10 +48,19 @@ test.describe('LibraryUpdates', () => {
         test('loads as expected on desktop', async ({ page }) => {
             await page.goto('/');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('drupal-article-0')).toContainText('Rae and George Hammer memorial');
-            await expect(page.getByTestId('drupal-article-1')).toContainText('Building works at Biological Sciences');
-            await expect(page.getByTestId('drupal-article-2')).toContainText('Teaching');
-            await expect(page.getByTestId('drupal-article-3')).toContainText('Digital Essentials');
+            await expect(
+                page.getByTestId('drupal-article-0').getByText('Rae and George Hammer memorial'),
+            ).toBeVisible();
+            await expect(
+                page.getByTestId('drupal-article-1').getByText('Building works at Biological Sciences'),
+            ).toBeVisible();
+            await expect(
+                page
+                    .getByTestId('drupal-article-2')
+                    .getByText('Teaching')
+                    .first(),
+            ).toBeVisible();
+            await expect(page.getByTestId('drupal-article-3').getByText('Digital Essentials')).toBeVisible();
 
             await expect(page.locator('[data-testid="library-updates-parent"] > div')).toHaveCount(4 + 1); // 4 news stories and a heading
 
@@ -103,7 +112,9 @@ test.describe('LibraryUpdates', () => {
         test('loads as expected on tablet', async ({ page }) => {
             await page.goto('/');
             await page.setViewportSize({ width: 840, height: 900 });
-            await expect(page.getByTestId('drupal-article-0')).toContainText('Rae and George Hammer memorial');
+            await expect(
+                page.getByTestId('drupal-article-0').getByText('Rae and George Hammer memorial'),
+            ).toBeVisible();
 
             await expect(page.locator('[data-testid="library-updates-parent"] > div')).toHaveCount(5);
 
@@ -148,7 +159,9 @@ test.describe('LibraryUpdates', () => {
         test('loads as expected on mobile', async ({ page }) => {
             await page.goto('/');
             await page.setViewportSize({ width: 390, height: 736 });
-            await expect(page.getByTestId('drupal-article-0')).toContainText('Rae and George Hammer memorial');
+            await expect(
+                page.getByTestId('drupal-article-0').getByText('Rae and George Hammer memorial'),
+            ).toBeVisible();
 
             await expect(page.locator('[data-testid="library-updates-parent"] > div')).toHaveCount(5); // 4 news stories and a heading
 
@@ -201,7 +214,7 @@ test.describe('LibraryUpdates', () => {
         test('handles an error correctly', async ({ page }) => {
             await page.goto('/?responseType=drupalError');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('drupal-error')).toContainText('No articles found');
+            await expect(page.getByTestId('drupal-error').getByText('No articles found')).toBeVisible();
         });
     });
     test.describe('accessibility', () => {

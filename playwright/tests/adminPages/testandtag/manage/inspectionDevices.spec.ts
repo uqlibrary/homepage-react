@@ -12,7 +12,7 @@ test.describe('Test and Tag manage inspection devices', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.inspectiondevices.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
-        await expect(await getFieldValue(page, 'device_model_name', 0)).toContainText('AV 025');
+        await expect((await getFieldValue(page, 'device_model_name', 0)).getByText('AV 025')).toBeVisible();
     };
 
     test('page is accessible and renders base', async ({ page }) => {
@@ -23,7 +23,7 @@ test.describe('Test and Tag manage inspection devices', () => {
     });
 
     test('has breadcrumbs', async ({ page }) => {
-        await expect(page.getByTestId('subsite-title')).toContainText('Test and tag');
+        await expect(page.getByTestId('subsite-title').getByText('Test and tag')).toBeVisible();
     });
 
     test('Add and Edit Inspection Device functions correctly', async ({ page }) => {
@@ -42,7 +42,7 @@ test.describe('Test and Tag manage inspection devices', () => {
         await page.getByTestId('device_calibrated_by_last-input').clear();
         await page.getByTestId('device_calibrated_by_last-input').fill('Calibration Person');
         await page.getByTestId('update_dialog-action-button').click();
-        await expect(page.locator('.MuiAlert-message')).toContainText('Request successfully completed');
+        await expect(page.locator('.MuiAlert-message').getByText('Request successfully completed')).toBeVisible();
 
         // Editing an asset type
         await page.getByTestId('action_cell-2-edit-button').click();
@@ -55,7 +55,7 @@ test.describe('Test and Tag manage inspection devices', () => {
         await page.getByTestId('device_calibrated_by_last-input').clear();
         await page.getByTestId('device_calibrated_by_last-input').fill('Calibration Person Edited');
         await page.getByTestId('update_dialog-action-button').click();
-        await expect(page.locator('.MuiAlert-message')).toContainText('Request successfully completed');
+        await expect(page.locator('.MuiAlert-message').getByText('Request successfully completed')).toBeVisible();
 
         // Cancel button - Add
         await page.getByTestId('add_toolbar-inspection-devices-add-button').click();
@@ -70,7 +70,7 @@ test.describe('Test and Tag manage inspection devices', () => {
         // Delete Button - Confirm
         await page.getByTestId('action_cell-2-delete-button').click();
         await page.getByTestId('confirm-inspection-devices').click();
-        await expect(page.locator('.MuiAlert-message')).toContainText('Request successfully completed');
+        await expect(page.locator('.MuiAlert-message').getByText('Request successfully completed')).toBeVisible();
 
         // Delete Button - Cancel
         await page.getByTestId('action_cell-2-delete-button').click();

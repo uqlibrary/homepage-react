@@ -10,14 +10,16 @@ test.describe('Test and Tag bulk asset update', () => {
 
     const selectAllRows = async (page: Page) => {
         await page.getByTestId('bulk_asset_update-feature-button').click();
-        await expect(page.getByTestId('filter_dialog-bulk-asset-update-title')).toContainText(
-            locale.pages.manage.bulkassetupdate.form.filterDialog.title,
-        );
-        await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
+        await expect(
+            page
+                .getByTestId('filter_dialog-bulk-asset-update-title')
+                .getByText(locale.pages.manage.bulkassetupdate.form.filterDialog.title),
+        ).toBeVisible();
+        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
         await page.locator('input[aria-label="Select all rows"]').click();
         await page.getByTestId('filter_dialog-bulk-asset-update-action-button').click();
-        await expect(await getFieldValue(page, 'asset_id_displayed', 0)).toContainText('UQL000001');
-        await expect(await getFieldValue(page, 'asset_id_displayed', 4)).toContainText('UQL001993');
+        await expect((await getFieldValue(page, 'asset_id_displayed', 0)).getByText('UQL000001')).toBeVisible();
+        await expect((await getFieldValue(page, 'asset_id_displayed', 4)).getByText('UQL001993')).toBeVisible();
         await page.getByTestId('footer_bar-bulk-asset-update-action-button').click();
         await expect(page.getByTestId('bulk_asset_update-summary-alert')).toBeVisible();
     };
@@ -34,22 +36,22 @@ test.describe('Test and Tag bulk asset update', () => {
     });
 
     test('has breadcrumbs', async ({ page }) => {
-        await expect(page.getByTestId('subsite-title')).toContainText('Test and tag');
+        await expect(page.getByTestId('subsite-title').getByText('Test and tag')).toBeVisible();
     });
 
     test('Asset id search functions correctly', async ({ page }) => {
         await checkBaseline(page);
         // Search for an asset
         await page.getByTestId('asset_selector-bulk-asset-update-input').fill('5');
-        await expect(await getFieldValue(page, 'asset_id_displayed', 0)).toContainText('UQL000005');
+        await expect((await getFieldValue(page, 'asset_id_displayed', 0)).getByText('UQL000005')).toBeVisible();
 
         // Search for an additional asset
         await page.getByTestId('asset_selector-bulk-asset-update-input').fill('6');
-        await expect(await getFieldValue(page, 'asset_id_displayed', 1)).toContainText('UQL000006');
+        await expect((await getFieldValue(page, 'asset_id_displayed', 1)).getByText('UQL000006')).toBeVisible();
 
         // Search for an exact asset
         await page.getByTestId('asset_selector-bulk-asset-update-input').fill('UQL310000');
-        await expect(await getFieldValue(page, 'asset_id_displayed', 2)).toContainText('UQL310000');
+        await expect((await getFieldValue(page, 'asset_id_displayed', 2)).getByText('UQL310000')).toBeVisible();
         await expect(page.getByTestId('bulk_asset_update-count-alert')).toBeVisible();
 
         // Clear the assets
@@ -73,9 +75,11 @@ test.describe('Test and Tag bulk asset update', () => {
     test.describe('filter dialog', () => {
         test('all components respond to user input', async ({ page }) => {
             await page.getByTestId('bulk_asset_update-feature-button').click();
-            await expect(page.getByTestId('filter_dialog-bulk-asset-update-title')).toContainText(
-                locale.pages.manage.bulkassetupdate.form.filterDialog.title,
-            );
+            await expect(
+                page
+                    .getByTestId('filter_dialog-bulk-asset-update-title')
+                    .getByText(locale.pages.manage.bulkassetupdate.form.filterDialog.title),
+            ).toBeVisible();
 
             // site
             await page.getByTestId('location_picker-filter-dialog-site-input').click();

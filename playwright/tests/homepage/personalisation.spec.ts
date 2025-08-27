@@ -4,7 +4,7 @@ import { Page } from '@uq/pw/test';
 const expectUserToDisplayCorrectFirstName = async (page: Page, username: string, firstname: string) => {
     await page.goto(`/?user=${username}`);
     await page.setViewportSize({ width: 1300, height: 1000 });
-    await expect(page.getByTestId('homepage-user-greeting')).toContainText(`Hi, ${firstname}`);
+    await expect(page.getByTestId('homepage-user-greeting').getByText(`Hi, ${firstname}`)).toBeVisible();
 };
 
 const possiblePanels = new Map<string, { title: string; content: string }>();
@@ -39,7 +39,7 @@ export const hasPanels = async (page: Page, optionsTheUserShouldSee: string[]) =
         const panelname = `${key}-panel`;
         const titleSelector = `div[data-testid="${panelname}"] h3`;
         if (optionsTheUserShouldSee.includes(key)) {
-            await expect(page.locator(titleSelector)).toContainText(value.title);
+            await expect(page.locator(titleSelector).getByText(value.title)).toBeVisible();
         } else {
             await expect(page.locator(titleSelector)).not.toBeVisible();
         }
@@ -100,7 +100,7 @@ const hasAccountPanelOptions = async (page: Page, optionsTheUserShouldSee: strin
 };
 
 const seesEndNoteInReferencing = async (page: Page) =>
-    await expect(page.getByTestId('referencing-endnote')).toContainText('Endnote referencing software');
+    await expect(page.getByTestId('referencing-endnote').getByText('Endnote referencing software')).toBeVisible();
 
 const noEndNoteInReferencing = async (page: Page) => {
     await expect(page.getByTestId('referencing-endnote')).not.toBeVisible();

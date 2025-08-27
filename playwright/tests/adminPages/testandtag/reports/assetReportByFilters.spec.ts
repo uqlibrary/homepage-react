@@ -14,18 +14,23 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
-        await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
+        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
     test('has breadcrumbs', async ({ page }) => {
-        await expect(page.locator('uq-site-header').getByTestId('subsite-title')).toContainText('Test and tag');
+        await expect(
+            page
+                .locator('uq-site-header')
+                .getByTestId('subsite-title')
+                .getByText('Test and tag'),
+        ).toBeVisible();
     });
 
     test('UI Dropdown for Status and building function correctly', async ({ page }) => {
         await assertTitles(page, locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
-        await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
+        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
 
         // Status Dropdown
         await expect(page.getByTestId('asset_status_selector-assets-inspected-input')).toHaveValue('All');
@@ -35,14 +40,14 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
         await page.getByTestId('asset_status_selector-assets-inspected-input').click();
         await page.locator('#asset_status_selector-assets-inspected-option-0').click();
         await expect(page.getByTestId('asset_status_selector-assets-inspected-input')).toHaveValue('All');
-        await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
+        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
         // Building Dropdown - all
         await expect(page.getByTestId('location_picker-assets_inspected-building-input')).toHaveValue(
             'All - All buildings',
         );
         await page.getByTestId('location_picker-assets_inspected-building-input').click();
         await page.locator('#location_picker-assets_inspected-building-option-5').click();
-        await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
+        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
         // Building Dropdown - selected
         await expect(page.getByTestId('location_picker-assets_inspected-building-input')).toHaveValue(
             '0050 - Hawken Engineering Building',
@@ -52,14 +57,14 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
         await expect(page.getByTestId('location_picker-assets_inspected-building-input')).toHaveValue(
             'All - All buildings',
         );
-        await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
+        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
     });
     test('UI for date pickers function correctly', async ({ page }) => {
         const currentYear = new Date().getFullYear();
         const currentMonth = zeroPad(new Date().getMonth() + 1, 2);
         await assertTitles(page, locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
-        await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
+        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
         // Select a Tagged from Date
         await expect(async () => {
             await page.getByTestId('assets_inspected-tagged-start-button').click({ timeout: 1000 });
@@ -68,7 +73,7 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
                 page.getByTestId('assets_inspected-tagged-start-input'),
             ).toHaveValue(`${currentYear}-${currentMonth}-11`, { timeout: 1000 });
         }).toPass();
-        await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
+        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
         // Select a Tagged to Date.
         await expect(async () => {
             await page.getByTestId('assets_inspected-tagged-end-button').click({ timeout: 1000 });
@@ -110,10 +115,10 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
     test('Sorting should work correctly', async ({ page }) => {
         await assertTitles(page, locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
-        await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
+        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
         await page.locator('.MuiDataGrid-columnHeader--sorted .MuiDataGrid-iconButtonContainer button').click();
-        await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL001993');
+        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL001993')).toBeVisible();
         await page.locator('.MuiDataGrid-columnHeader--sorted .MuiDataGrid-iconButtonContainer button').click();
-        await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000001');
+        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
     });
 });

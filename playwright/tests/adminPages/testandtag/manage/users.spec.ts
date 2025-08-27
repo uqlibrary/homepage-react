@@ -12,19 +12,24 @@ test.describe('Test and Tag Manage Users', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
-        await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqjsmit');
+        await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
     test('has breadcrumbs', async ({ page }) => {
-        await expect(page.locator('uq-site-header').getByTestId('subsite-title')).toContainText('Test and tag');
+        await expect(
+            page
+                .locator('uq-site-header')
+                .getByTestId('subsite-title')
+                .getByText('Test and tag'),
+        ).toBeVisible();
     });
 
     test('base page edit controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
-        await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqjsmit');
+        await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
 
         await expect(page.locator('#action_cell-1-edit-button[data-value="uqjsmit"]')).not.toBeDisabled();
         // Click the first edit button
@@ -66,7 +71,7 @@ test.describe('Test and Tag Manage Users', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
-        await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqjsmit');
+        await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
         // Add.
         await page.getByTestId('add_toolbar-user-management-add-button').click();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
@@ -103,7 +108,7 @@ test.describe('Test and Tag Manage Users', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
-        await expect(await getFieldValue(page, 'user_uid', 0)).toContainText('uqjsmit');
+        await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
         // Delete
         await page.getByTestId('action_cell-1-delete-button').click();
         await assertAccessibility(page, '[data-testid="StandardPage"]');

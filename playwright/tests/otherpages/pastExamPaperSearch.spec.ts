@@ -98,11 +98,13 @@ test.describe('Past Exam Papers Pages', () => {
             await page.goto('/exams');
             await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('fren101');
             await expect(page.locator('.MuiAutocomplete-listbox').locator(':scope > *')).toHaveCount(2);
-            await expect(page.locator('#exam-search-option-0')).toContainText('View all exam papers for FREN101');
-            await expect(page.locator('#exam-search-option-1')).toContainText('FREN1010');
+            await expect(
+                page.locator('#exam-search-option-0').getByText('View all exam papers for FREN101'),
+            ).toBeVisible();
+            await expect(page.locator('#exam-search-option-1').getByText('FREN1010')).toBeVisible();
             await page.getByTestId('past-exam-paper-search-autocomplete-input').pressSequentially('0');
             await expect(page.locator('.MuiAutocomplete-listbox').locator('> *')).toHaveCount(1);
-            await expect(page.locator('#exam-search-option-0')).toContainText('FREN1010');
+            await expect(page.locator('#exam-search-option-0').getByText('FREN1010')).toBeVisible();
         });
         test('when the api fails I get an appropriate error message', async ({ page }) => {
             await page.goto('/exams');
@@ -257,27 +259,31 @@ test.describe('Past Exam Papers Pages', () => {
                 await expect(page.getByTestId('exampaper-mobile-sample-link-0-0-0')).toHaveText(/FREN1010 Sem\.2 2020/);
 
                 // original papers are correct
-                await expect(page.getByTestId('exampaper-mobile-original-link-0-0-0')).toContainText(
-                    'FREN1010 Sem.1 2020 Paper A',
-                );
-                await expect(page.getByTestId('exampaper-mobile-original-link-0-0-1')).toContainText(
-                    'FREN1010 Sem.1 2020 Paper B',
-                );
-                await expect(page.getByTestId('exampaper-mobile-original-link-1-0-0')).toContainText(
-                    'FREN2010 Sem.1 2021',
-                );
-                await expect(page.getByTestId('exampaper-mobile-original-link-1-1-0')).toContainText(
-                    'FREN2010 Sem.1 2019 Final',
-                );
-                await expect(page.getByTestId('exampaper-mobile-original-link-4-1-0')).toContainText(
-                    'FREN2082 Sem.1 2020 a special french paper',
-                );
-                await expect(page.getByTestId('exampaper-mobile-original-link-4-1-1')).toContainText(
-                    'FREN2082 Sem.1 2020 Paper 2',
-                );
-                await expect(page.getByTestId('exampaper-mobile-original-link-4-0-0')).toContainText(
-                    'FREN2082 Sem.1 2021 (Final Paper)',
-                );
+                await expect(
+                    page.getByTestId('exampaper-mobile-original-link-0-0-0').getByText('FREN1010 Sem.1 2020 Paper A'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('exampaper-mobile-original-link-0-0-1').getByText('FREN1010 Sem.1 2020 Paper B'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('exampaper-mobile-original-link-1-0-0').getByText('FREN2010 Sem.1 2021'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('exampaper-mobile-original-link-1-1-0').getByText('FREN2010 Sem.1 2019 Final'),
+                ).toBeVisible();
+                await expect(
+                    page
+                        .getByTestId('exampaper-mobile-original-link-4-1-0')
+                        .getByText('FREN2082 Sem.1 2020 a special french paper'),
+                ).toBeVisible();
+                await expect(
+                    page.getByTestId('exampaper-mobile-original-link-4-1-1').getByText('FREN2082 Sem.1 2020 Paper 2'),
+                ).toBeVisible();
+                await expect(
+                    page
+                        .getByTestId('exampaper-mobile-original-link-4-0-0')
+                        .getByText('FREN2082 Sem.1 2021 (Final Paper)'),
+                ).toBeVisible();
             });
             test('with one subject and no sample papers shows originals in Simple view', async ({ page }) => {
                 await page.goto('/exams/course/PHYS1001?user=s1111111');

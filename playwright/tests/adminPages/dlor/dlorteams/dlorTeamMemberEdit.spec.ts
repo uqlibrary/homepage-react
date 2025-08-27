@@ -13,13 +13,13 @@ test.describe('Digital Learning Hub admin Teams Members management', () => {
         test('is accessible', async ({ page }) => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await page.waitForSelector('h1');
-            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Team management');
+            await expect(page.locator('h1').getByText('Digital Learning Hub - Team management')).toBeVisible();
 
             await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['button-name'] });
         });
         test('team user management - add member', async ({ page }) => {
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Team management');
+            await expect(page.locator('h1').getByText('Digital Learning Hub - Team management')).toBeVisible();
             await page.getByTestId('dlor-teamlist-edit-1').click();
             await expect(page.getByTestId('team-members-title')).toBeVisible();
             // spaces and length check
@@ -32,15 +32,15 @@ test.describe('Digital Learning Hub admin Teams Members management', () => {
             await page.locator('[data-testid="add-team-member-email"] input').fill('username@uq.edu.au');
             // enabled button
             await page.getByTestId('add-team-member-button').click();
-            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Edit Team');
-            await expect(page.getByTestId('dlor-breadcrumb-edit-team-label-1')).toContainText(
-                'Edit team: LIB DX Digital Content',
-            );
+            await expect(page.locator('h1').getByText('Digital Learning Hub - Edit Team')).toBeVisible();
+            await expect(
+                page.getByTestId('dlor-breadcrumb-edit-team-label-1').getByText('Edit team: LIB DX Digital Content'),
+            ).toBeVisible();
         });
         test('team user management - edit member', async ({ page }) => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await page.waitForSelector('h1');
-            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Team management');
+            await expect(page.locator('h1').getByText('Digital Learning Hub - Team management')).toBeVisible();
             await page.getByTestId('dlor-teamlist-edit-1').click();
             await expect(page.getByTestId('team-members-title')).toBeVisible();
             // Edit first user
@@ -58,7 +58,7 @@ test.describe('Digital Learning Hub admin Teams Members management', () => {
         test('team user management - delete member', async ({ page }) => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await page.waitForSelector('h1');
-            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Team management');
+            await expect(page.locator('h1').getByText('Digital Learning Hub - Team management')).toBeVisible();
             await page.getByTestId('dlor-teamlist-edit-1').click();
             await expect(page.getByTestId('team-members-title')).toBeVisible();
             // Delete first user
@@ -76,9 +76,11 @@ test.describe('Digital Learning Hub admin Teams Members management', () => {
         test('team user management - no access', async ({ page }) => {
             await page.goto('http://localhost:2020/digital-learning-hub/team/edit/2?user=uqstaff');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('dlor-teamItem-error-message')).toContainText(
-                'You are not a member of this team and cannot edit it.',
-            );
+            await expect(
+                page
+                    .getByTestId('dlor-teamItem-error-message')
+                    .getByText('You are not a member of this team and cannot edit it.'),
+            ).toBeVisible();
         });
     });
 });

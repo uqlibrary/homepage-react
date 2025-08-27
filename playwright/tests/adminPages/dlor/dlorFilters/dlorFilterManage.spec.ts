@@ -10,9 +10,9 @@ test.describe('Digital Learning Hub admin filter management', () => {
             await page.goto(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
             await page.getByTestId('admin-dlor-menu-button').click();
             await page.getByTestId('admin-dlor-visit-manage-filters-button').click();
-            await expect(page.getByTestId('StandardPage-title')).toContainText(
-                'Digital Learning Hub - Facet Management',
-            );
+            await expect(
+                page.getByTestId('StandardPage-title').getByText('Digital Learning Hub - Facet Management'),
+            ).toBeVisible();
         });
     });
     test.describe('filters list', () => {
@@ -34,15 +34,15 @@ test.describe('Digital Learning Hub admin filter management', () => {
                     .getByText(/Facet management/)
                     .first(),
             ).toBeVisible();
-            await expect(page.getByTestId('facet-type-1-name')).toContainText('Topic');
+            await expect(page.getByTestId('facet-type-1-name').getByText('Topic')).toBeVisible();
             await expect(page.getByTestId('add-facet-1')).toBeVisible();
         });
         test('Allows the creation of a new filter', async ({ page }) => {
             await expect(page.getByTestId('StandardPage-title')).toHaveText(/Digital Learning Hub - Facet Management/);
             await page.getByTestId('add-facet-1').click();
             // popup
-            await expect(page.locator('#modal-modal-title')).toContainText('Add new facet');
-            await expect(page.locator('#modal-modal-existingName')).toContainText('Topic');
+            await expect(page.locator('#modal-modal-title').getByText('Add new facet')).toBeVisible();
+            await expect(page.locator('#modal-modal-existingName').getByText('Topic')).toBeVisible();
             await page.locator('#facet_name').fill('New filter');
             await page.locator('#facet_order').fill('1');
             // content entry
@@ -56,7 +56,7 @@ test.describe('Digital Learning Hub admin filter management', () => {
 
             await page.getByTestId('edit-facet-1').click();
             // popup
-            await expect(page.locator('#modal-modal-title')).toContainText('Edit facet');
+            await expect(page.locator('#modal-modal-title').getByText('Edit facet')).toBeVisible();
             await expect(page.locator('#modal-modal-existingName')).toHaveText(/Original Name/);
             await expect(page.locator('#modal-modal-existingName')).toHaveText(/Aboriginal and Torres Strait Islander/);
             // content entry
@@ -83,13 +83,17 @@ test.describe('Digital Learning Hub admin filter management', () => {
             await expect(page.getByTestId('StandardPage-title')).toHaveText(/Digital Learning Hub - Facet Management/);
             await page.getByTestId('delete-facet-1').click();
 
-            await expect(page.getByTestId('message-title')).toContainText('Delete facet');
-            await expect(page.getByTestId('message-content')).toContainText('Aboriginal and Torres Strait Islander');
+            await expect(page.getByTestId('message-title').getByText('Delete facet')).toBeVisible();
+            await expect(
+                page.getByTestId('message-content').getByText('Aboriginal and Torres Strait Islander'),
+            ).toBeVisible();
             await page.getByTestId('confirm-alert-edit-save-succeeded').click();
             await page.getByTestId('delete-facet-1').click();
 
-            await expect(page.getByTestId('message-title')).toContainText('Delete facet');
-            await expect(page.getByTestId('message-content')).toContainText('Aboriginal and Torres Strait Islander');
+            await expect(page.getByTestId('message-title').getByText('Delete facet')).toBeVisible();
+            await expect(
+                page.getByTestId('message-content').getByText('Aboriginal and Torres Strait Islander'),
+            ).toBeVisible();
             await page.getByTestId('cancel-alert-edit-save-succeeded').click();
             // popup
         });

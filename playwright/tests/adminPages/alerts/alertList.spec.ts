@@ -326,9 +326,11 @@ test.describe('Alert Admin List page', () => {
                 .getByText(/6–10 of 78/)
                 .first(),
         ).toBeVisible();
-        await expect(page.locator('[data-testid="admin-alerts-list-past-list"] tbody tr:first-child')).toContainText(
-            '[5.00pm] Unexpected performance issues, UQ Library Search',
-        );
+        await expect(
+            page
+                .locator('[data-testid="admin-alerts-list-past-list"] tbody tr:first-child')
+                .getByText('[5.00pm] Unexpected performance issues, UQ Library Search'),
+        ).toBeVisible();
         await page.locator('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(2)').click();
         await expect(
             page
@@ -336,9 +338,11 @@ test.describe('Alert Admin List page', () => {
                 .getByText(/1–5 of 78/)
                 .first(),
         ).toBeVisible();
-        await expect(page.locator('[data-testid="admin-alerts-list-past-list"] tbody tr:first-child')).toContainText(
-            'Face masks in the Library',
-        );
+        await expect(
+            page
+                .locator('[data-testid="admin-alerts-list-past-list"] tbody tr:first-child')
+                .getByText('Face masks in the Library'),
+        ).toBeVisible();
         await page.locator('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(4)').click();
         await expect(
             page
@@ -346,9 +350,11 @@ test.describe('Alert Admin List page', () => {
                 .getByText(/76–78 of 78/)
                 .first(),
         ).toBeVisible();
-        await expect(page.locator('[data-testid="admin-alerts-list-past-list"] tbody tr:first-child')).toContainText(
-            'Unexpected issue, print credit top-ups',
-        );
+        await expect(
+            page
+                .locator('[data-testid="admin-alerts-list-past-list"] tbody tr:first-child')
+                .getByText('Unexpected issue, print credit top-ups'),
+        ).toBeVisible();
         await page.locator('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(1)').click();
         await expect(
             page
@@ -356,9 +362,11 @@ test.describe('Alert Admin List page', () => {
                 .getByText(/1–5 of 78/)
                 .first(),
         ).toBeVisible();
-        await expect(page.locator('[data-testid="admin-alerts-list-past-list"] tbody tr:first-child')).toContainText(
-            'Face masks in the Library',
-        );
+        await expect(
+            page
+                .locator('[data-testid="admin-alerts-list-past-list"] tbody tr:first-child')
+                .getByText('Face masks in the Library'),
+        ).toBeVisible();
     });
     test.describe('Alert Admin deletion', () => {
         test.beforeEach(async ({ page }) => {

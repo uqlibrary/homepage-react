@@ -135,16 +135,16 @@ test.describe('The Homepage Learning Resource Panel', () => {
     test('The Learning resources panel displays results correctly when the user has many classes', async ({ page }) => {
         await page.goto('?user=s5555555');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('div[data-testid=learning-resources-panel]')).toContainText(
-            locale.homepagePanel.title,
-        );
+        await expect(
+            page.locator('div[data-testid=learning-resources-panel]').getByText(locale.homepagePanel.title),
+        ).toBeVisible();
 
         await expect(page.getByTestId('staff-course-prompt')).not.toBeVisible();
         const yourCourses = page.getByTestId('your-courses');
         await expect(yourCourses.locator('> * > *')).toHaveCount(5 + 2);
-        await expect(page.getByTestId('learning-resource-panel-course-multi-footer')).toContainText(
-            'See all 10 classes',
-        );
+        await expect(
+            page.getByTestId('learning-resource-panel-course-multi-footer').getByText('See all 10 classes'),
+        ).toBeVisible();
 
         const liItems = yourCourses.locator('li');
         await expect(liItems).toHaveCount(5);

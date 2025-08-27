@@ -98,7 +98,9 @@ test.describe('Alerts Admin View Page - other page tests', () => {
 
         // the editing user displays correctly
         await expect(page.getByTestId('admin-alerts-view-created-by')).not.toBeVisible();
-        await expect(page.getByTestId('admin-alerts-view-updated-by')).toContainText('Last Updated by: uqtest2');
+        await expect(
+            page.getByTestId('admin-alerts-view-updated-by').getByText('Last Updated by: uqtest2'),
+        ).toBeVisible();
     });
     test('can show a preview of an extreme-priority permanent alert with link', async ({ page }) => {
         await page.goto('http://localhost:2020/admin/alerts/view/d23f2e10-d7d6-11eb-a928-71f3ef9d35d9?user=uqstaff');
@@ -127,8 +129,10 @@ test.describe('Alerts Admin View Page - other page tests', () => {
         ).toBeVisible();
 
         // the editing user displays correctly
-        await expect(page.getByTestId('admin-alerts-view-created-by')).toContainText('Created by: uqtest1');
-        await expect(page.getByTestId('admin-alerts-view-updated-by')).toContainText('Last Updated by: uqtest2');
+        await expect(page.getByTestId('admin-alerts-view-created-by').getByText('Created by: uqtest1')).toBeVisible();
+        await expect(
+            page.getByTestId('admin-alerts-view-updated-by').getByText('Last Updated by: uqtest2'),
+        ).toBeVisible();
     });
     test('tells the user which systems the alert appeared on', async ({ page }) => {
         await page.goto('http://localhost:2020/admin/alerts/view/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');

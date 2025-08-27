@@ -39,7 +39,7 @@ test.describe('Request an object addition to the Digital Learning Hub', () => {
             });
             test('navigation is functional and help is shown', async ({ page }) => {
                 await page.setViewportSize({ width: 1300, height: 1000 });
-                await expect(page.locator('h1')).toContainText('Digital Learning Hub');
+                await expect(page.locator('h1').getByText('Digital Learning Hub')).toBeVisible();
                 await expect(page.getByTestId('dlor-UserAdd-helper')).toBeVisible();
 
                 // go to the second panel, Description
@@ -121,9 +121,11 @@ test.describe('Request an object addition to the Digital Learning Hub', () => {
                 await expect(page.locator('[data-testid="dlor-panel-validity-indicator-2"] span')).toHaveText(/1/); // panel invalidity count present
 
                 await page.locator('[data-testid="object-link-url"] input').fill('asdasdasdsadd');
-                await expect(page.getByTestId('dlor-form-error-message-object-link-url')).toContainText(
-                    'This web address is not valid.',
-                );
+                await expect(
+                    page
+                        .getByTestId('dlor-form-error-message-object-link-url')
+                        .getByText('This web address is not valid.'),
+                ).toBeVisible();
                 await page.locator('[data-testid="object-link-url"] input').clear();
                 await page.locator('[data-testid="object-link-url"] input').fill('http://example.com');
                 await expect(page.getByTestId('dlor-panel-validity-indicator-2')).not.toBeVisible(); // panel invalidity count not present

@@ -31,11 +31,11 @@ test.describe('Digital Learning Hub admin Series management - add item', () => {
             await expect(page.locator('[data-testid="series-name"] input')).toBeVisible();
             // CKEditor should show
             await expect(page.locator('[class="ck ck-editor__main"]')).toBeVisible();
-            await expect(page.locator('#dragLandingAarea')).toContainText('(None yet)');
+            await expect(page.locator('#dragLandingAarea').getByText('(None yet)')).toBeVisible();
         });
         test('is accessible', async ({ page }) => {
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Add Series');
+            await expect(page.locator('h1').getByText('Digital Learning Hub - Add Series')).toBeVisible();
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
         test('can add a series without objects', async ({ page }) => {
@@ -49,11 +49,11 @@ test.describe('Digital Learning Hub admin Series management - add item', () => {
             await page.locator('[data-testid="series-name"] input').fill('Series without objects');
             await typeCKEditor(page, 'This is a series without any objects');
             // should have no current objects already in the series
-            await expect(page.locator('#dragLandingAarea')).toContainText('(None yet)');
+            await expect(page.locator('#dragLandingAarea').getByText('(None yet)')).toBeVisible();
 
             await page.getByTestId('admin-dlor-series-form-save-button').click();
 
-            await expect(page.getByTestId('message-title')).toContainText('Series has been created');
+            await expect(page.getByTestId('message-title').getByText('Series has been created')).toBeVisible();
         });
         test('can navigate to and from the add series page', async ({ page }) => {
             await expect(

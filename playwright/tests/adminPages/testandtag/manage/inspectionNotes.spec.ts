@@ -21,29 +21,31 @@ test.describe('Test and Tag Manage Inspection Notes', () => {
     });
 
     test('has breadcrumbs', async ({ page }) => {
-        await expect(page.getByTestId('subsite-title')).toContainText('Test and tag');
+        await expect(page.getByTestId('subsite-title').getByText('Test and tag')).toBeVisible();
     });
 
     test('allows wildcard searching of assets', async ({ page }) => {
         await checkBaseline(page);
         // Enter search criteria
         await page.getByTestId('asset_selector-inspection-details-input').fill('UQL00001');
-        await expect(await getFieldValue(page, 'asset_id_displayed', 0)).toContainText('UQL000010');
-        await expect(await getFieldValue(page, 'asset_id_displayed', 9)).toContainText('UQL000019');
-        await expect(page.locator('.MuiTablePagination-displayedRows')).toContainText('1–10 of 10');
+        await expect((await getFieldValue(page, 'asset_id_displayed', 0)).getByText('UQL000010')).toBeVisible();
+        await expect((await getFieldValue(page, 'asset_id_displayed', 9)).getByText('UQL000019')).toBeVisible();
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–10 of 10')).toBeVisible();
     });
 
     test('allows searching and editing of discard assets', async ({ page }) => {
         await checkBaseline(page);
         // Enter search criteria
         await page.getByTestId('asset_selector-inspection-details-input').fill('1');
-        await expect(await getFieldValue(page, 'asset_id_displayed', 0)).toContainText('UQL000001');
+        await expect((await getFieldValue(page, 'asset_id_displayed', 0)).getByText('UQL000001')).toBeVisible();
 
         // Edit details
         await page.getByTestId('action_cell-UQL000001-edit-button').click();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
-        await expect(page.getByTestId('update_dialog-inspection-details-content')).toContainText('UQL000001');
-        await expect(page.getByTestId('update_dialog-inspection-details-content')).toContainText('No defects detected');
+        await expect(page.getByTestId('update_dialog-inspection-details-content').getByText('UQL000001')).toBeVisible();
+        await expect(
+            page.getByTestId('update_dialog-inspection-details-content').getByText('No defects detected'),
+        ).toBeVisible();
         await page.getByTestId('inspect_notes-input').clear();
         await page.getByTestId('inspect_notes-input').fill('Cypress test notes');
         await expect(page.getByTestId('inspect_fail_reason-input')).toBeDisabled();
@@ -63,11 +65,11 @@ test.describe('Test and Tag Manage Inspection Notes', () => {
         await checkBaseline(page);
         // Enter search criteria
         await page.getByTestId('asset_selector-inspection-details-input').fill('UQL000010');
-        await expect(await getFieldValue(page, 'asset_id_displayed', 0)).toContainText('UQL000010');
+        await expect((await getFieldValue(page, 'asset_id_displayed', 0)).getByText('UQL000010')).toBeVisible();
 
         // Edit details
         await page.getByTestId('action_cell-UQL000010-edit-button').click();
-        await expect(page.getByTestId('update_dialog-inspection-details-content')).toContainText('UQL000010');
+        await expect(page.getByTestId('update_dialog-inspection-details-content').getByText('UQL000010')).toBeVisible();
         await page.getByTestId('inspect_notes-input').clear();
         await page.getByTestId('inspect_notes-input').fill('Cypress test notes');
         await expect(page.getByTestId('inspect_fail_reason-input')).toBeDisabled();

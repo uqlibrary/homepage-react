@@ -12,9 +12,9 @@ test.describe('Test and Tag Report - Inspections due', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.report.inspectionsDue.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
-        await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000007');
+        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000007')).toBeVisible();
         await expect(page.getByTestId('location_picker-inspections-due-site-input')).toHaveValue('All sites');
-        await expect(page.getByTestId('months_selector-inspections-due-select')).toContainText('3 months');
+        await expect(page.getByTestId('months_selector-inspections-due-select').getByText('3 months')).toBeVisible();
         // Default states of other selectors
         await expect(page.getByTestId('location_picker-inspections-due-building-input')).toBeDisabled();
         await expect(page.getByTestId('location_picker-inspections-due-floor-input')).toBeDisabled();
@@ -23,39 +23,44 @@ test.describe('Test and Tag Report - Inspections due', () => {
     });
 
     test('has breadcrumbs', async ({ page }) => {
-        await expect(page.locator('uq-site-header').getByTestId('subsite-title')).toContainText('Test and tag');
+        await expect(
+            page
+                .locator('uq-site-header')
+                .getByTestId('subsite-title')
+                .getByText('Test and tag'),
+        ).toBeVisible();
     });
 
     test('page UI elements function as expected', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.report.inspectionsDue.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
-        await expect(await getFieldValue(page, 'asset_barcode', 0)).toContainText('UQL000007');
+        await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000007')).toBeVisible();
         await expect(page.getByTestId('location_picker-inspections-due-site-input')).toHaveValue('All sites');
-        await expect(page.getByTestId('months_selector-inspections-due-select')).toContainText('3 months');
+        await expect(page.getByTestId('months_selector-inspections-due-select').getByText('3 months')).toBeVisible();
         // Change Site
         await page.getByTestId('location_picker-inspections-due-site-input').click();
         await page.locator('#location_picker-inspections-due-site-option-1').click();
         // Check if number of results are correct
-        await expect(page.locator('.MuiTablePagination-displayedRows')).toContainText('1–8 of 8');
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–8 of 8')).toBeVisible();
         await expect(page.getByTestId('location_picker-inspections-due-building-input')).not.toBeDisabled();
         // Change Building
         await page.getByTestId('location_picker-inspections-due-building-input').click();
         await page.locator('#location_picker-inspections-due-building-option-1').click();
         // Check if number of results are correct
-        await expect(page.locator('.MuiTablePagination-displayedRows')).toContainText('1–6 of 6');
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–6 of 6')).toBeVisible();
         await expect(page.getByTestId('location_picker-inspections-due-floor-input')).not.toBeDisabled();
         // Change Floor
         await page.getByTestId('location_picker-inspections-due-floor-input').click();
         await page.locator('#location_picker-inspections-due-floor-option-1').click();
         // Check if number of results are correct
-        await expect(page.locator('.MuiTablePagination-displayedRows')).toContainText('1–4 of 4');
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–4 of 4')).toBeVisible();
         await expect(page.getByTestId('location_picker-inspections-due-room-input')).not.toBeDisabled();
         // Change Room
         await page.getByTestId('location_picker-inspections-due-room-input').click();
         await page.locator('#location_picker-inspections-due-room-option-1').click();
         // Check if number of results are correct
-        await expect(page.locator('.MuiTablePagination-displayedRows')).toContainText('1–2 of 2');
+        await expect(page.locator('.MuiTablePagination-displayedRows').getByText('1–2 of 2')).toBeVisible();
         // Check inspection overdue classes
         const overdueCell = await getFieldValue(page, 'asset_next_test_due_date', 1);
         await expect(overdueCell).toHaveClass(/inspectionOverdue/);

@@ -26,7 +26,7 @@ test.describe('Test and Tag Admin Inspection page', () => {
     const selectTestingDevice = async (page: Page, pattern: string) => {
         await page.getByTestId('inspection_panel-inspection-device-select').click();
         await selectListBox(page, pattern);
-        await expect(page.getByTestId('inspection_panel-inspection-device-select')).toContainText(pattern);
+        await expect(page.getByTestId('inspection_panel-inspection-device-select').getByText(pattern)).toBeVisible();
     };
 
     const selectAssetType = async (page: Page, pattern: string) => {
@@ -77,14 +77,19 @@ test.describe('Test and Tag Admin Inspection page', () => {
 
     const runAllTests = () => {
         test('page is accessible', async ({ page }) => {
-            await expect(page.locator('h1')).toContainText('UQ Asset Test and Tag');
+            await expect(page.locator('h1').getByText('UQ Asset Test and Tag')).toBeVisible();
             await expect(page.locator('h2').getByText('Testing assets for Library')).toBeVisible();
             await expect(page.getByTestId('location_picker-event-panel-site-input')).toHaveValue('St Lucia');
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
 
         test('has breadcrumb', async ({ page }) =>
-            await expect(page.locator('uq-site-header').getByTestId('subsite-title')).toContainText('Test and tag'));
+            await expect(
+                page
+                    .locator('uq-site-header')
+                    .getByTestId('subsite-title')
+                    .getByText('Test and tag'),
+            ).toBeVisible());
 
         test.describe('Event panel functionality', () => {
             const today = moment();
@@ -104,9 +109,11 @@ test.describe('Test and Tag Admin Inspection page', () => {
 
                 await page.getByTestId('event_panel-event-date-input').clear();
                 await page.getByTestId('event_panel-event-date-input').fill(invalidDate);
-                await expect(page.locator('#event_panel-event-date-input-helper-text')).toContainText(
-                    locale.pages.inspect.form.event.date.maxDateMessage,
-                );
+                await expect(
+                    page
+                        .locator('#event_panel-event-date-input-helper-text')
+                        .getByText(locale.pages.inspect.form.event.date.maxDateMessage),
+                ).toBeVisible();
                 await page.getByTestId('event_panel-event-date-input').clear();
                 // make sure if starts typing from day
                 await page.getByTestId('event_panel-event-date-input').press('ArrowLeft');
@@ -228,14 +235,14 @@ test.describe('Test and Tag Admin Inspection page', () => {
                 await page.getByTestId('asset_type_selector-asset-panel-input').click();
                 await selectListBox(page, 'ADD NEW ASSET TYPE');
                 // popup has loaded as it has header
-                await expect(page.getByTestId('asset_type_name-label')).toContainText('Asset type name');
+                await expect(page.getByTestId('asset_type_name-label').getByText('Asset type name')).toBeVisible();
                 await expect(page.getByTestId('update_dialog-action-button')).toBeDisabled();
                 await page.getByTestId('asset_type_name-input').fill('an asset type');
 
                 // the popup is accessible
                 await assertAccessibility(page, '[data-testid="StandardPage"]');
 
-                await expect(page.getByTestId('update_dialog-action-button')).toContainText('Add');
+                await expect(page.getByTestId('update_dialog-action-button').getByText('Add')).toBeVisible();
                 await page.getByTestId('update_dialog-action-button').click();
                 await page
                     .getByTestId('confirmation_alert-success')
@@ -247,7 +254,7 @@ test.describe('Test and Tag Admin Inspection page', () => {
             test('should allow selection of existing asset', async ({ page }) => {
                 await expect(page.getByTestId('asset_type_selector-asset-panel-input')).toBeDisabled();
                 await page.getByTestId('asset_selector-asset-panel-input').fill('UQL3100');
-                await expect(page.locator('#asset_selector-asset-panel-option-0')).toContainText('UQL31000');
+                await expect(page.locator('#asset_selector-asset-panel-option-0').getByText('UQL31000')).toBeVisible();
                 await page.locator('#asset_selector-asset-panel-option-0').click();
                 await expect(page.getByTestId('asset_selector-asset-panel-input')).toHaveValue('UQL310000');
                 await expect(page.getByTestId('asset_type_selector-asset-panel-input')).not.toBeDisabled();
@@ -268,8 +275,10 @@ test.describe('Test and Tag Admin Inspection page', () => {
                 await expect(expandButton).toHaveAttribute('aria-expanded', 'false');
                 await expandButton.click();
                 await expect(expandButton).toHaveAttribute('aria-expanded', 'true');
-                await expect(page.getByTestId('last_inspection_panel')).toContainText('CURRENT');
-                await expect(page.getByTestId('last_inspection_panel')).toContainText('Locations do not match');
+                await expect(page.getByTestId('last_inspection_panel').getByText('CURRENT')).toBeVisible();
+                await expect(
+                    page.getByTestId('last_inspection_panel').getByText('Locations do not match'),
+                ).toBeVisible();
                 // make locations match
                 await selectLocation(page, {
                     site: 'St Lucia',
@@ -295,8 +304,10 @@ test.describe('Test and Tag Admin Inspection page', () => {
                 await expect(expandButton).toHaveAttribute('aria-expanded', 'false');
                 await expandButton.click();
                 await expect(expandButton).toHaveAttribute('aria-expanded', 'true');
-                await expect(page.getByTestId('last_inspection_panel')).toContainText('OUTFORREPAIR');
-                await expect(page.getByTestId('last_inspection_panel')).toContainText('Locations do not match');
+                await expect(page.getByTestId('last_inspection_panel').getByText('OUTFORREPAIR')).toBeVisible();
+                await expect(
+                    page.getByTestId('last_inspection_panel').getByText('Locations do not match'),
+                ).toBeVisible();
                 // make locations match
                 await selectLocation(page, {
                     site: 'St Lucia',
@@ -319,8 +330,10 @@ test.describe('Test and Tag Admin Inspection page', () => {
                 await expect(page.getByTestId('last_inspection_panel-header-pass-chip')).toBeVisible();
                 const expandButton = page.getByTestId('last_inspection_panel-expand-button');
                 await expect(expandButton).toHaveAttribute('aria-expanded', 'true'); // inspection auto expands
-                await expect(page.getByTestId('last_inspection_panel')).toContainText('DISCARDED');
-                await expect(page.getByTestId('last_inspection_panel')).toContainText('Locations do not match');
+                await expect(page.getByTestId('last_inspection_panel').getByText('DISCARDED')).toBeVisible();
+                await expect(
+                    page.getByTestId('last_inspection_panel').getByText('Locations do not match'),
+                ).toBeVisible();
                 await expect(page.getByTestId('inspection_panel')).not.toBeVisible();
                 await expect(page.getByTestId('inspection-save-button')).toBeDisabled();
                 await page.getByTestId('inspection-reset-button').click(); // reset form
@@ -343,7 +356,9 @@ test.describe('Test and Tag Admin Inspection page', () => {
                 await expect(page.getByTestId('inspection_panel-inspection-result-failed-button')).not.toBeDisabled();
                 await page.getByTestId('inspection_panel-inspection-device-select').click();
                 await selectListBox(page, 'AV 025');
-                await expect(page.getByTestId('inspection_panel-inspection-device-select')).toContainText('AV 025');
+                await expect(
+                    page.getByTestId('inspection_panel-inspection-device-select').getByText('AV 025'),
+                ).toBeVisible();
                 await page.getByTestId('inspection_panel-inspection-result-passed-button').click();
 
                 const today = moment();
@@ -370,27 +385,27 @@ test.describe('Test and Tag Admin Inspection page', () => {
                 );
 
                 await expect(page.getByTestId('months_selector-inspection-panel-select')).toBeVisible();
-                await expect(page.getByTestId('months_selector-inspection-panel-next-date-label')).toContainText(
-                    plus12months,
-                );
+                await expect(
+                    page.getByTestId('months_selector-inspection-panel-next-date-label').getByText(plus12months),
+                ).toBeVisible();
                 // 3 months
                 await page.getByTestId('months_selector-inspection-panel-select').click();
                 await selectListBox(page, '3 months');
-                await expect(page.getByTestId('months_selector-inspection-panel-next-date-label')).toContainText(
-                    plus3months,
-                );
+                await expect(
+                    page.getByTestId('months_selector-inspection-panel-next-date-label').getByText(plus3months),
+                ).toBeVisible();
                 // 6 months
                 await page.getByTestId('months_selector-inspection-panel-select').click();
                 await selectListBox(page, '6 months');
-                await expect(page.getByTestId('months_selector-inspection-panel-next-date-label')).toContainText(
-                    plus6months,
-                );
+                await expect(
+                    page.getByTestId('months_selector-inspection-panel-next-date-label').getByText(plus6months),
+                ).toBeVisible();
                 // 5 years
                 await page.getByTestId('months_selector-inspection-panel-select').click();
                 await selectListBox(page, '5 years');
-                await expect(page.getByTestId('months_selector-inspection-panel-next-date-label')).toContainText(
-                    plus60months,
-                );
+                await expect(
+                    page.getByTestId('months_selector-inspection-panel-next-date-label').getByText(plus60months),
+                ).toBeVisible();
 
                 await page.getByTestId('inspection_panel-inspection-notes-input').fill('Test notes');
 
@@ -413,20 +428,24 @@ test.describe('Test and Tag Admin Inspection page', () => {
                 await expect(page.getByTestId('inspection_panel-inspection-result-failed-button')).not.toBeDisabled();
                 await page.getByTestId('inspection_panel-inspection-device-select').click();
                 await selectListBox(page, 'Visual Inspection');
-                await expect(page.getByTestId('inspection_panel-inspection-device-select')).toContainText(
-                    'Visual Inspection',
-                );
+                await expect(
+                    page.getByTestId('inspection_panel-inspection-device-select').getByText('Visual Inspection'),
+                ).toBeVisible();
                 await expect(page.getByTestId('inspection_panel-inspection-device-validation-text')).not.toBeVisible();
                 await page.getByTestId('inspection_panel-inspection-result-passed-button').click();
-                await expect(page.getByTestId('inspection_panel-inspection-device-validation-text')).toContainText(
-                    'Visual Inspection can not be used for a PASS test',
-                );
+                await expect(
+                    page
+                        .getByTestId('inspection_panel-inspection-device-validation-text')
+                        .getByText('Visual Inspection can not be used for a PASS test'),
+                ).toBeVisible();
                 await page.getByTestId('inspection_panel-inspection-result-failed-button').click();
                 await expect(page.getByTestId('inspection_panel-inspection-device-validation-text')).not.toBeVisible();
                 await page.getByTestId('inspection_panel-inspection-result-passed-button').click();
-                await expect(page.getByTestId('inspection_panel-inspection-device-validation-text')).toContainText(
-                    'Visual Inspection can not be used for a PASS test',
-                );
+                await expect(
+                    page
+                        .getByTestId('inspection_panel-inspection-device-validation-text')
+                        .getByText('Visual Inspection can not be used for a PASS test'),
+                ).toBeVisible();
                 await page.getByTestId('inspection_panel-inspection-device-select').click();
                 await selectListBox(page, 'AV 025');
                 await expect(page.getByTestId('inspection_panel-inspection-device-validation-text')).not.toBeVisible();
@@ -495,8 +514,13 @@ test.describe('Test and Tag Admin Inspection page', () => {
                 await page.getByTestId('inspection_panel-inspection-notes-input').fill('Test notes');
                 await expect(page.getByTestId('inspection-save-button')).not.toBeDisabled();
                 await page.getByTestId('inspection-save-button').click();
-                await expect(page.getByTestId('message-title')).toContainText('Asset saved');
-                await expect(page.getByTestId('saved-asset-id').first()).toContainText('UQL000298');
+                await expect(page.getByTestId('message-title').getByText('Asset saved')).toBeVisible();
+                await expect(
+                    page
+                        .getByTestId('saved-asset-id')
+                        .first()
+                        .getByText('UQL000298'),
+                ).toBeVisible();
                 await page.getByTestId('confirm-inspection-save-success').click();
 
                 await expect(page.getByTestId('asset_selector-asset-panel-input')).toHaveValue('');

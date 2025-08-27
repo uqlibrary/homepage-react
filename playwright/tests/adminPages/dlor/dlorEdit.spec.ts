@@ -59,32 +59,36 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`,
                 );
 
-                await expect(page.getByTestId('dlor-breadcrumb-edit-object-label-0')).toContainText(
-                    'Edit object: Advanced literature searching',
-                );
+                await expect(
+                    page
+                        .getByTestId('dlor-breadcrumb-edit-object-label-0')
+                        .getByText('Edit object: Advanced literature searching'),
+                ).toBeVisible();
 
                 // Admin notes
                 // Check Open.
                 await page.getByTestId('ExpandMoreIcon').click();
                 // Check Note 1.
-                await expect(page.getByTestId('admin-note-username-0')).toContainText('uqtest1');
+                await expect(page.getByTestId('admin-note-username-0').getByText('uqtest1')).toBeVisible();
                 // Check Note 2.
-                await expect(page.getByTestId('admin-note-username-1')).toContainText('uqabcdef');
+                await expect(page.getByTestId('admin-note-username-1').getByText('uqabcdef')).toBeVisible();
 
                 // team editor
 
                 // swap teams and the edit button doesnt exist
-                await expect(page.getByTestId('object-form-teamid-change')).toContainText('Update contact');
+                await expect(page.getByTestId('object-form-teamid-change').getByText('Update contact')).toBeVisible();
 
                 // swap to "team 1"
                 await page.getByTestId('object-owning-team').click();
                 await page.getByTestId('object-owning-team-1').click();
-                await expect(page.getByTestId('object-owning-team')).toContainText('LIB DX Digital Content');
+                await expect(page.getByTestId('object-owning-team').getByText('LIB DX Digital Content')).toBeVisible();
                 await expect(page.getByTestId('object-form-teamid-change')).not.toBeVisible();
                 // swap to "team 3"
                 await page.getByTestId('object-owning-team').click();
                 await page.getByTestId('object-owning-team-3').click();
-                await expect(page.getByTestId('object-owning-team')).toContainText('Library Indigenous Enquiries');
+                await expect(
+                    page.getByTestId('object-owning-team').getByText('Library Indigenous Enquiries'),
+                ).toBeVisible();
                 await expect(page.getByTestId('object-form-teamid-change')).not.toBeVisible();
 
                 // back to "team 2", current Team
@@ -161,7 +165,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 );
 
                 // accessible link message is "no message"
-                await expect(page.getByTestId('object-link-interaction-type')).toContainText('No message');
+                await expect(page.getByTestId('object-link-interaction-type').getByText('No message')).toBeVisible();
                 await expect(page.getByTestId('object-link-file-type')).not.toBeVisible();
                 await expect(page.getByTestId('object-link-duration')).not.toBeVisible();
                 await expect(page.getByTestId('object-link-file-size')).not.toBeVisible();
@@ -271,10 +275,10 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.getByTestId('dlor-form-next-button').click();
 
                 // accessible link message is "no message"
-                await expect(page.getByTestId('object-link-interaction-type')).toContainText('can Download');
-                await expect(page.getByTestId('object-link-file-type')).toContainText('XLS');
+                await expect(page.getByTestId('object-link-interaction-type').getByText('can Download')).toBeVisible();
+                await expect(page.getByTestId('object-link-file-type').getByText('XLS')).toBeVisible();
                 await expect(page.locator('[data-testid="object-link-size-amount"] input')).toHaveValue('3.4');
-                await expect(page.getByTestId('object-link-size-units')).toContainText('GB');
+                await expect(page.getByTestId('object-link-size-units').getByText('GB')).toBeVisible();
                 await expect(page.getByTestId('object-link-duration-minutes')).toHaveCount(0);
                 await expect(page.getByTestId('object-link-duration-seconds')).toHaveCount(0);
 
@@ -292,13 +296,13 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.getByTestId('admin-dlor-save-button-submit').click();
 
                 // wait for save outcome dialog
-                await expect(page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2')).toContainText(
-                    'Changes have been saved',
-                );
+                await expect(
+                    page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2').getByText('Changes have been saved'),
+                ).toBeVisible();
 
                 // wait for the save to complete
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('View Object');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Re-edit Object');
+                await expect(page.getByTestId('confirm-dlor-save-outcome').getByText('View Object')).toBeVisible();
+                await expect(page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object')).toBeVisible();
 
                 {
                     const cookie = await context.cookies();
@@ -341,8 +345,8 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.getByTestId('dlor-form-next-button').click();
 
                 // accessible link message is "no message"
-                await expect(page.getByTestId('object-link-interaction-type')).toContainText('can View');
-                await expect(page.getByTestId('object-link-file-type')).toContainText('video');
+                await expect(page.getByTestId('object-link-interaction-type').getByText('can View')).toBeVisible();
+                await expect(page.getByTestId('object-link-file-type').getByText('video')).toBeVisible();
                 await expect(page.locator('[data-testid="object-link-duration-minutes"] input')).toHaveValue('47');
                 await expect(page.locator('[data-testid="object-link-duration-seconds"] input')).toHaveValue('44');
                 await expect(page.getByTestId('object-link-size-amount')).not.toBeVisible();
@@ -362,11 +366,11 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.getByTestId('admin-dlor-save-button-submit').click();
 
                 // wait for the save to complete
-                await expect(page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2')).toContainText(
-                    'Changes have been saved',
-                );
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('View Object');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Re-edit Object');
+                await expect(
+                    page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2').getByText('Changes have been saved'),
+                ).toBeVisible();
+                await expect(page.getByTestId('confirm-dlor-save-outcome').getByText('View Object')).toBeVisible();
+                await expect(page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object')).toBeVisible();
 
                 {
                     const savedCookie = await context
@@ -476,7 +480,9 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 // add notification text
                 await page.locator('[data-testid="choose-notify"] input').check();
 
-                await expect(page.getByTestId('notify-lightbox-title')).toContainText('Object change notification');
+                await expect(
+                    page.getByTestId('notify-lightbox-title').getByText('Object change notification'),
+                ).toBeVisible();
 
                 await typeCKEditor(page, 'the words that will go in the email');
 
@@ -487,8 +493,8 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await expect(
                     page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2').getByText('Changes have been saved'),
                 ).toBeVisible();
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('View Object');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Re-edit Object');
+                await expect(page.getByTestId('confirm-dlor-save-outcome').getByText('View Object')).toBeVisible();
+                await expect(page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object')).toBeVisible();
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
@@ -551,15 +557,21 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 }
 
                 // check save-confirmation popup
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('View Object');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Re-edit Object');
+                await expect(page.getByTestId('confirm-dlor-save-outcome').getByText('View Object')).toBeVisible();
+                await expect(page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object')).toBeVisible();
 
                 // navigate back to the list page
                 await page.getByTestId('confirm-dlor-save-outcome').click();
                 await expect(page).toHaveURL(
                     `http://localhost:2020/digital-learning-hub/view/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`,
                 );
-                await expect(page.getByTestId('dlor-detailpage')).toContainText('Advanced literature searching');
+                await expect(
+                    page
+                        .getByTestId('dlor-detailpage')
+                        .first()
+                        .getByText('Advanced literature searching')
+                        .first(),
+                ).toBeVisible();
             });
 
             test('admin can edit, edit the current team, choose a different existing team and re-edit', async ({
@@ -645,11 +657,11 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.getByTestId('admin-dlor-save-button-submit').click();
 
                 // check save happened
-                await expect(page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2')).toContainText(
-                    'Changes have been saved',
-                );
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('View Object');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Re-edit Object');
+                await expect(
+                    page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2').getByText('Changes have been saved'),
+                ).toBeVisible();
+                await expect(page.getByTestId('confirm-dlor-save-outcome').getByText('View Object')).toBeVisible();
+                await expect(page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object')).toBeVisible();
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
@@ -716,15 +728,17 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 // confirm save happened
                 await expect(page.getByTestId('dialogbox-dlor-save-outcome').getByText('View Object')).toBeVisible();
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Re-edit Object');
+                await expect(page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object')).toBeVisible();
 
                 // now clear the form to create another Object
                 await page.getByTestId('cancel-dlor-save-outcome').click();
                 await page.getByTestId('dlor-form-next-button').click();
 
-                await expect(page.getByTestId('dlor-detailpage-sitelabel')).toContainText(
-                    'Edit object: Advanced literature searching',
-                );
+                await expect(
+                    page
+                        .getByTestId('dlor-detailpage-sitelabel')
+                        .getByText('Edit object: Advanced literature searching'),
+                ).toBeVisible();
             });
 
             test('with a new interaction type & is featured & cancelled notification text', async ({
@@ -919,18 +933,20 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await expect(page.locator('[data-testid="object-publishing-user"] input')).toBeVisible();
                 await nextButton.click();
 
-                await expect(page.getByTestId('dlor-detailpage-sitelabel')).toContainText(
-                    'Edit object: Accessibility - Digital Essentials (has Youtube link)',
-                );
+                await expect(
+                    page
+                        .getByTestId('dlor-detailpage-sitelabel')
+                        .getByText('Edit object: Accessibility - Digital Essentials (has Youtube link)'),
+                ).toBeVisible();
             });
         });
 
         test.describe('fails correctly', () => {
             test('404 page return correctly', async ({ page }) => {
                 await page.goto(`http://localhost:2020/admin/dlor/edit/object_404?user=${DLOR_ADMIN_USER}`);
-                await expect(page.getByTestId('dlor-form-error')).toContainText(
-                    'The requested page could not be found.',
-                );
+                await expect(
+                    page.getByTestId('dlor-form-error').getByText('The requested page could not be found.'),
+                ).toBeVisible();
             });
 
             test('admin gets an error on a failed save', async ({ page }) => {
@@ -956,11 +972,13 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 // form filled out. now save
                 await page.getByTestId('admin-dlor-save-button-submit').click();
 
-                await expect(page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2')).toContainText(
-                    'Request failed with status code 400',
-                );
-                await expect(page.getByTestId('confirm-dlor-save-outcome')).toContainText('View Object');
-                await expect(page.getByTestId('cancel-dlor-save-outcome')).toContainText('Re-edit Object');
+                await expect(
+                    page
+                        .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
+                        .getByText('Request failed with status code 400'),
+                ).toBeVisible();
+                await expect(page.getByTestId('confirm-dlor-save-outcome').getByText('View Object')).toBeVisible();
+                await expect(page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object')).toBeVisible();
             });
         });
     });
@@ -978,19 +996,19 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
         test('displays correct page for admin users (list)', async ({ page }) => {
             await page.goto(`http://localhost:2020/digital-learning-hub/edit/kj5t_8yg4_kj4f?user=${DLOR_ADMIN_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Edit Object');
-            await expect(page.getByTestId('dlor-breadcrumb-edit-object-label-0')).toContainText(
-                'UQ has a Blak History',
-            );
+            await expect(page.locator('h1').getByText('Digital Learning Hub - Edit Object')).toBeVisible();
+            await expect(
+                page.getByTestId('dlor-breadcrumb-edit-object-label-0').getByText('UQ has a Blak History'),
+            ).toBeVisible();
         });
         test('is accessible for a DLOR object owner', async ({ page }) => {
             await page.goto(`http://localhost:2020/digital-learning-hub/edit/kj5t_8yg4_kj4f?user=${DLOR_OBJECT_OWNER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1')).toContainText('Digital Learning Hub - Edit Object');
+            await expect(page.locator('h1').getByText('Digital Learning Hub - Edit Object')).toBeVisible();
             await expect(page.getByTestId('dlor-form-no-access')).not.toBeVisible();
-            await expect(page.getByTestId('dlor-breadcrumb-edit-object-label-0')).toContainText(
-                'UQ has a Blak History',
-            );
+            await expect(
+                page.getByTestId('dlor-breadcrumb-edit-object-label-0').getByText('UQ has a Blak History'),
+            ).toBeVisible();
         });
         test('is not accessible for a DLOR object owner with a different user', async ({ page }) => {
             await page.goto(`http://localhost:2020/digital-learning-hub/edit/kj5t_8yg4_kj4f?user=${DLOR_NO_EDIT_USER}`);

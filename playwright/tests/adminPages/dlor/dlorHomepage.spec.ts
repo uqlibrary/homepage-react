@@ -16,7 +16,12 @@ test.describe('Digital Learning Hub admin homepage', () => {
         });
         test('is accessible', async ({ page }) => {
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1').first()).toContainText('Digital Learning Hub Management');
+            await expect(
+                page
+                    .locator('h1')
+                    .first()
+                    .getByText('Digital Learning Hub Management'),
+            ).toBeVisible();
             await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['button-name'] });
         });
         test('has a working "visit public homepage" button', async ({ page }) => {
@@ -60,9 +65,12 @@ test.describe('Digital Learning Hub admin homepage', () => {
             );
         });
         test('has breadcrumbs', async ({ page }) => {
-            await expect(page.locator('uq-site-header').getByTestId('subsite-title')).toContainText(
-                'Digital learning hub admin',
-            );
+            await expect(
+                page
+                    .locator('uq-site-header')
+                    .getByTestId('subsite-title')
+                    .getByText('Digital learning hub admin'),
+            ).toBeVisible();
         });
         test('shows a list of objects to manage', async ({ page }) => {
             const list = page.getByTestId('dlor-homepage-list');
@@ -70,28 +78,58 @@ test.describe('Digital Learning Hub admin homepage', () => {
 
             // sorts properly ('UQ has a Blak History' moves from position 3 to 2)
             const firstItem = list.locator('> div').first();
-            await expect(firstItem.locator('h2')).toContainText('Accessibility - Digital Essentials');
+            await expect(firstItem.locator('h2').getByText('Accessibility - Digital Essentials')).toBeVisible();
             await expect(firstItem.locator('svg path').first()).toHaveAttribute(
                 'd',
                 'M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z',
             ); // has green tick
-            await expect(firstItem.locator('div:nth-child(3) p').first()).toContainText('uqldegro');
-            await expect(firstItem.locator('div:nth-child(3) p').nth(1)).toContainText('CDS DX Digital Content');
+            await expect(
+                firstItem
+                    .locator('div:nth-child(3) p')
+                    .first()
+                    .getByText('uqldegro'),
+            ).toBeVisible();
+            await expect(
+                firstItem
+                    .locator('div:nth-child(3) p')
+                    .nth(1)
+                    .getByText('CDS DX Digital Content'),
+            ).toBeVisible();
 
             const thirdItem = list.locator('> div').nth(2);
-            await expect(thirdItem.locator('h2')).toContainText('UQ has a Blak History');
+            await expect(thirdItem.locator('h2').getByText('UQ has a Blak History')).toBeVisible();
             await expect(thirdItem.locator('svg path').first()).toHaveAttribute(
                 'd',
                 'M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z',
             ); // has green tick
-            await expect(thirdItem.locator('div:nth-child(3) p').first()).toContainText('uquser1');
-            await expect(thirdItem.locator('div:nth-child(3) p').nth(1)).toContainText('CDS DX Digital Content');
+            await expect(
+                thirdItem
+                    .locator('div:nth-child(3) p')
+                    .first()
+                    .getByText('uquser1'),
+            ).toBeVisible();
+            await expect(
+                thirdItem
+                    .locator('div:nth-child(3) p')
+                    .nth(1)
+                    .getByText('CDS DX Digital Content'),
+            ).toBeVisible();
 
             const secondItem = list.locator('> div').nth(1);
-            await expect(secondItem.locator('h2')).toContainText('Advanced literature searching');
+            await expect(secondItem.locator('h2').getByText('Advanced literature searching')).toBeVisible();
             await expect(secondItem.getByTestId('dlor-homepage-featured-98s0_dy5k3_98h4')).toBeVisible();
-            await expect(secondItem.locator('div:nth-child(3) p').first()).toContainText('uqjsmith');
-            await expect(secondItem.locator('div:nth-child(3) p').nth(1)).toContainText('Faculty Services Librarians');
+            await expect(
+                secondItem
+                    .locator('div:nth-child(3) p')
+                    .first()
+                    .getByText('uqjsmith'),
+            ).toBeVisible();
+            await expect(
+                secondItem
+                    .locator('div:nth-child(3) p')
+                    .nth(1)
+                    .getByText('Faculty Services Librarians'),
+            ).toBeVisible();
         });
 
         test('pagination works', async ({ page }) => {
@@ -110,14 +148,18 @@ test.describe('Digital Learning Hub admin homepage', () => {
 
             // the displayed entries are what is expected
             const list = page.getByTestId('dlor-homepage-list');
-            await expect(list.locator('> div:nth-child(1) h2')).toContainText('Accessibility - Digital Essentials');
+            await expect(
+                list.locator('> div:nth-child(1) h2').getByText('Accessibility - Digital Essentials'),
+            ).toBeVisible();
 
             // click pagination for next page
             await page.locator('nav[aria-label="pagination navigation"] li:nth-child(4) button').click();
 
             // the displayed entries have updated
             await expect(list.locator('button').first()).toBeVisible();
-            await expect(list.locator('> div:nth-child(1) h2')).toContainText('Dummy entry to increase list size 3');
+            await expect(
+                list.locator('> div:nth-child(1) h2').getByText('Dummy entry to increase list size 3'),
+            ).toBeVisible();
 
             // click pagination to go to first page
             await page.locator('nav[aria-label="pagination navigation"] li:first-child button').click();
@@ -212,9 +254,9 @@ test.describe('Digital Learning Hub admin homepage', () => {
             await page.getByTestId('dlor-homepage-delete-98s0_dy5k3_98h4').click();
 
             // Verify delete confirmation dialog
-            await expect(page.getByTestId('dialogbox-dlor-item-delete-confirm')).toContainText(
-                'Do you want to delete this object?',
-            );
+            await expect(
+                page.getByTestId('dialogbox-dlor-item-delete-confirm').getByText('Do you want to delete this object?'),
+            ).toBeVisible();
 
             // Confirm deletion
             await page.getByTestId('confirm-dlor-item-delete-confirm').click();
@@ -327,9 +369,9 @@ test.describe('Digital Learning Hub admin homepage', () => {
     test.describe('error handling', () => {
         test('shows an error when list api fails', async ({ page }) => {
             await page.goto(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}&responseType=fullListError`);
-            await expect(page.getByTestId('dlor-homepage-error')).toContainText(
-                'An error has occurred during the request',
-            );
+            await expect(
+                page.getByTestId('dlor-homepage-error').getByText('An error has occurred during the request'),
+            ).toBeVisible();
         });
 
         test('deletion failure pops up an error', async ({ page }) => {
@@ -350,9 +392,9 @@ test.describe('Digital Learning Hub admin homepage', () => {
             const errorDialog = page.getByTestId('dialogbox-dlor-item-delete-failure-notice');
 
             // Verify error message
-            await expect(errorDialog.getByTestId('message-title')).toContainText(
-                'An error occurred deleting the Object',
-            );
+            await expect(
+                errorDialog.getByTestId('message-title').getByText('An error occurred deleting the Object'),
+            ).toBeVisible();
 
             // Close dialog
             await page.locator('button[data-testid="confirm-dlor-item-delete-failure-notice"]').click();
@@ -369,19 +411,34 @@ test.describe('Digital Learning Hub admin homepage', () => {
         test('displays an "unauthorised" page to public users', async ({ page }) => {
             await page.goto('http://localhost:2020/admin/dlor?user=public');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1').first()).toContainText('Authentication required');
+            await expect(
+                page
+                    .locator('h1')
+                    .first()
+                    .getByText('Authentication required'),
+            ).toBeVisible();
         });
 
         test('displays an "unauthorised" page to non-authorised users', async ({ page }) => {
             await page.goto('http://localhost:2020/admin/dlor?user=uqstaff');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1').first()).toContainText('Permission denied');
+            await expect(
+                page
+                    .locator('h1')
+                    .first()
+                    .getByText('Permission denied'),
+            ).toBeVisible();
         });
 
         test('displays correct page for admin users (list)', async ({ page }) => {
             await page.goto(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1').first()).toContainText('Digital Learning Hub Management');
+            await expect(
+                page
+                    .locator('h1')
+                    .first()
+                    .getByText('Digital Learning Hub Management'),
+            ).toBeVisible();
         });
     });
 
@@ -466,7 +523,7 @@ test.describe('Digital Learning Hub admin homepage', () => {
             await expect(removeFromFavoriteButton).not.toBeVisible();
             // Verify tooltip
             await addToFavoriteButton.hover();
-            await expect(page.locator('.MuiTooltip-tooltip')).toContainText('Add to Favourites');
+            await expect(page.locator('.MuiTooltip-tooltip').getByText('Add to Favourites')).toBeVisible();
 
             await expect(async () => {
                 if (await addToFavoriteButton.isVisible()) {
@@ -481,7 +538,7 @@ test.describe('Digital Learning Hub admin homepage', () => {
 
             // Verify tooltip
             await removeFromFavoriteButton.hover();
-            await expect(page.locator('.MuiTooltip-tooltip')).toContainText('Remove from Favourites');
+            await expect(page.locator('.MuiTooltip-tooltip').getByText('Remove from Favourites')).toBeVisible();
         });
     });
 

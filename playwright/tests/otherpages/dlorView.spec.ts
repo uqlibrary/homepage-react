@@ -345,7 +345,7 @@ test.describe('Digital Learning Hub View page', () => {
             const captureButton = page.getByTestId('demographics-capture');
             await expect(captureButton).not.toBeDisabled();
             await captureButton.click();
-            await expect(page.getByTestId('message-title')).toContainText('Demographic information saved');
+            await expect(page.getByTestId('message-title').getByText('Demographic information saved')).toBeVisible();
 
             const expectedValues = {
                 dlorUuid: '9bc174f7-5326-4a8b-bfab-d5081c688597',

@@ -124,6 +124,8 @@ test.describe('404 errors', () => {
         await page.goto('/courseresources?user=public');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.locator('body')).not.toContainText('The requested page could not be found.');
-        await expect(page.locator('body')).toContainText('This page has permanently moved and is now available at');
+        await expect(
+            page.locator('body').getByText('This page has permanently moved and is now available at'),
+        ).toBeVisible();
     });
 });
