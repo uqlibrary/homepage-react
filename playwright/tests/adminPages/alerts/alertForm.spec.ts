@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { hasAWorkingHelpButton, dateHasValue } from '@uq/pw/lib/helpers';
+import { hasAWorkingHelpButton, dateHasValue } from './helpers';
 
 async function selectPriorityType(page: Page, type: string) {
     // open the select
