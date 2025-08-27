@@ -16,11 +16,10 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { getFriendlyLocationDescription } from 'modules/Pages/SpacesLocations/spacesHelpers';
 
 const tickIcon = altText => (
-    // https://mui.com/material-ui/material-icons/?query=tick&selected=Done
-    <svg title={`${altText}`} focusable="false" aria-hidden="true" viewBox="0 0 24 24" height="24" width="24">
-        <path stroke="green" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z">
-            <title>{altText}</title>
-        </path>
+    // https://mui.com/material-ui/material-icons/?selected=Done
+    <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" height="24" width="24">
+        <path stroke="green" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z" />
+        <title>{altText}</title>
     </svg>
 );
 
@@ -83,7 +82,7 @@ export const SpacesLocationsDashboard = ({
         const hasThisFacility = bookableSpace?.facility_types.some(
             facility => facility.facility_type_id === facilityId,
         );
-        return hasThisFacility ? tickIcon('Included') : null;
+        return hasThisFacility ? tickIcon('Space has this facility') : null;
     }
 
     const getColumnBackgroundColor = ii => (ii % 2 === 0 ? '#f0f0f0' : 'inherit');
