@@ -45,7 +45,7 @@ export const addToInputValue = async (
         delay?: number;
         noWaitAfter?: boolean;
         timeout?: number;
-    } = { timeout: 1000 },
+    } = { delay: 100, timeout: 1000 },
 ) => {
     await expect(async () => {
         const current = await input.inputValue();
