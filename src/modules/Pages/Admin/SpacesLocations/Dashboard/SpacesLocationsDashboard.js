@@ -135,7 +135,7 @@ export const SpacesLocationsDashboard = ({
     }
 
     return (
-        <StandardPage title="Library bookable spaces">
+        <StandardPage title="Library bookable spaces management">
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
                     <Grid container spacing={3}>
