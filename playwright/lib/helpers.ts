@@ -48,16 +48,22 @@ export const addToInputValue = async (
     } = { delay: 50, timeout: 1000 },
     retryTimeout = 60_000,
 ) => {
+    const initial = await input.inputValue();
+    const expected = mode === 'append' ? `${initial}${value}` : `${value}${initial}`;
+
+    let retry = false;
     await expect(async () => {
-        const current = await input.inputValue();
+        if (retry) await input.fill(initial);
+        retry = true;
+
         await input.focus({ timeout: options.timeout });
         await input.press(mode === 'append' ? 'End' : 'Home', options);
         await input.pressSequentially(value, options);
-        await input.blur({ timeout: options.timeout });
-        // assert value
-        await expect(input).toHaveValue(mode === 'append' ? `${current}${value}` : `${value}${current}`, {
+        // assert value changes
+        await expect(input).toHaveValue(expected, {
             timeout: options.timeout,
         });
+        await input.blur({ timeout: options.timeout });
     }).toPass({ timeout: retryTimeout });
 };
 
