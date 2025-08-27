@@ -191,9 +191,13 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 // click the back button to go back to panel 2, Description
                 await page.getByTestId('dlor-form-back-button').click();
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).not.toBeVisible();
-                await page.locator('[data-testid="object-title"] input').press('End');
-                await page.locator('[data-testid="object-title"] input').press('Backspace');
-                await expect(page.locator('[data-testid="dlor-panel-validity-indicator-1"] span')).toContainText('1');
+                await expect(async () => {
+                    await page.locator('[data-testid="object-title"] input').press('End', { timeout: 1000 });
+                    await page.locator('[data-testid="object-title"] input').press('Backspace', { timeout: 1000 });
+                    await expect(
+                        page.locator('[data-testid="dlor-panel-validity-indicator-1"] span'),
+                    ).toContainText('1', { timeout: 1000 });
+                }).toPass();
                 await page.locator('[data-testid="object-title"] input').pressSequentially('p');
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).not.toBeVisible();
 

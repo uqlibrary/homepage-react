@@ -1,6 +1,7 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { readCKEditor, typeCKEditor } from '@uq/pw/lib/ckeditor';
+import { addToInputValue } from '@uq/pw/lib/helpers';
 import { DLOR_ADMIN_USER, DLOR_NO_EDIT_USER, DLOR_OBJECT_OWNER } from '@uq/pw/lib/constants';
 import moment from 'moment-timezone';
 
@@ -103,9 +104,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 // check the Close button works
                 await page.getByTestId('object-form-teamid-change').click();
-                await page.locator('[data-testid="dlor-form-team-manager-edit"] input').press('End');
-                await page.locator('[data-testid="dlor-form-team-manager-edit"] input').pressSequentially('111');
-                await page.locator('[data-testid="dlor-form-team-email-edit"] input').clear();
+                await addToInputValue(page.locator('[data-testid="dlor-form-team-manager-edit"] input'), '111');
                 await page.locator('[data-testid="dlor-form-team-email-edit"] input').fill('lea@example.com');
 
                 // the user realises they actually want a new team and choose 'new' from the Owning team drop down
@@ -282,8 +281,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.getByTestId('object-link-file-type').click();
                 await page.getByTestId('object-link-file-type-PPT').click();
 
-                await page.locator('[data-testid="object-link-size-amount"] input').press('End');
-                await page.locator('[data-testid="object-link-size-amount"] input').pressSequentially('33');
+                await addToInputValue(page.locator('[data-testid="object-link-size-amount"] input'), '33');
                 await page.getByTestId('object-link-size-units').click();
                 await page.getByTestId('object-link-size-units-MB').click();
 
@@ -353,10 +351,8 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.getByTestId('object-link-file-type').click();
                 await page.getByTestId('object-link-file-type-something').click();
 
-                await page.locator('[data-testid="object-link-duration-minutes"] input').press('End');
-                await page.locator('[data-testid="object-link-duration-minutes"] input').pressSequentially('3');
-                await page.locator('[data-testid="object-link-duration-seconds"] input').press('End');
-                await page.locator('[data-testid="object-link-duration-seconds"] input').pressSequentially('1');
+                await addToInputValue(page.locator('[data-testid="object-link-duration-minutes"] input'), '3');
+                await addToInputValue(page.locator('[data-testid="object-link-duration-seconds"] input'), '1');
 
                 // go to panel 4
                 await page.getByTestId('dlor-form-next-button').click();
@@ -434,20 +430,16 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 // go to the second panel, Description
                 await page.getByTestId('dlor-form-next-button').click();
 
-                await page.locator('[data-testid="object-title"] input').press('End');
-                await page.locator('[data-testid="object-title"] input').pressSequentially('xx');
+                await addToInputValue(page.locator('[data-testid="object-title"] input'), 'xx');
                 await typeCKEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
-                await page.locator('[data-testid="object-summary"] textarea:first-child').press('End');
-                await page.locator('[data-testid="object-summary"] textarea:first-child').pressSequentially('xx');
+                await addToInputValue(page.locator('[data-testid="object-summary"] textarea:first-child'), 'xx');
 
                 await page.locator('[data-testid="object-is-featured"] input').check();
                 await page.locator('[data-testid="object-cultural-advice"] input').check();
 
                 // go to the third panel, Link
                 await page.getByTestId('dlor-form-next-button').click();
-                await page.locator('[data-testid="object-link-url"] input').press('End');
-
-                await page.locator('[data-testid="object-link-url"] input').pressSequentially('/page');
+                await addToInputValue(page.locator('[data-testid="object-link-url"] input'), '/page');
 
                 // select download as the url interaction type
                 await page.getByTestId('object-link-interaction-type').click();
@@ -586,7 +578,6 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 // edit team details for the current team
                 await page.getByTestId('object-form-teamid-change').click();
                 await page.locator('[data-testid="dlor-form-team-manager-edit"] input').fill('manager name');
-                await page.locator('[data-testid="dlor-form-team-email-edit"] input').clear();
                 await page.locator('[data-testid="dlor-form-team-email-edit"] input').fill('lea@example.com');
 
                 // and then change your mind and change teams instead
@@ -603,13 +594,12 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 // go to the second panel, Description
                 await page.getByTestId('dlor-form-next-button').click();
 
-                await page.locator('[data-testid="object-title"] input').press('End');
-                await page
-                    .locator('[data-testid="object-title"] input')
-                    .pressSequentially('x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
+                await addToInputValue(
+                    page.locator('[data-testid="object-title"] input'),
+                    'x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'),
+                );
                 await typeCKEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
-                await page.locator('[data-testid="object-summary"] textarea:first-child').press('End');
-                await page.locator('[data-testid="object-summary"] textarea:first-child').pressSequentially('xxx');
+                await addToInputValue(page.locator('[data-testid="object-summary"] textarea:first-child'), 'xxx');
 
                 // go to the third panel, Link
                 await page.getByTestId('dlor-form-next-button').click();
