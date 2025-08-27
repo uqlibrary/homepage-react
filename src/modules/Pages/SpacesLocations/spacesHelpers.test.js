@@ -1,8 +1,7 @@
 import { getFriendlyFloorName, getOrdinalSuffixFor, isInt } from './spacesHelpers';
 
 describe('spaces helpers', () => {
-    it('creates ordinal numebrs correctly', () => {
-        console.log(`getOrdinalSuffixFor(0)="${getOrdinalSuffixFor(0)}"`);
+    it('creates ordinal numbers correctly', () => {
         expect(getOrdinalSuffixFor(0)).toEqual('th');
         expect(getOrdinalSuffixFor(1)).toEqual('st');
         expect(getOrdinalSuffixFor(2)).toEqual('nd');
@@ -119,144 +118,47 @@ describe('spaces helpers', () => {
         expect(getOrdinalSuffixFor(113)).toEqual('th');
         expect(getOrdinalSuffixFor(114)).toEqual('th');
         expect(getOrdinalSuffixFor(115)).toEqual('th');
-    });
-    it.skip('holding', () => {
-        expect(getOrdinalSuffixFor(0).toEqual(' 0th '));
-        expect(getOrdinalSuffixFor(1).toEqual(' 1st '));
-        expect(getOrdinalSuffixFor(2).toEqual(' 2nd '));
-        expect(getOrdinalSuffixFor(3).toEqual(' 3rd '));
-        expect(getOrdinalSuffixFor(4).toEqual(' 4th '));
-        expect(getOrdinalSuffixFor(5).toEqual(' 5th '));
-        expect(getOrdinalSuffixFor(6).toEqual(' 6th '));
-        expect(getOrdinalSuffixFor(7).toEqual(' 7th '));
-        expect(getOrdinalSuffixFor(8).toEqual(' 8th '));
-        expect(getOrdinalSuffixFor(9).toEqual(' 9th '));
-        expect(getOrdinalSuffixFor(10).toEqual(' 10th '));
-        expect(getOrdinalSuffixFor(11).toEqual(' 11th '));
-        expect(getOrdinalSuffixFor(12).toEqual(' 12th '));
-        expect(getOrdinalSuffixFor(13).toEqual(' 13th '));
-        expect(getOrdinalSuffixFor(14).toEqual(' 14th '));
-        expect(getOrdinalSuffixFor(15).toEqual(' 15th '));
-        expect(getOrdinalSuffixFor(16).toEqual(' 16th '));
-        expect(getOrdinalSuffixFor(17).toEqual(' 17th '));
-        expect(getOrdinalSuffixFor(18).toEqual(' 18th '));
-        expect(getOrdinalSuffixFor(19).toEqual(' 19th '));
-        expect(getOrdinalSuffixFor(20).toEqual(' 20th '));
-        expect(getOrdinalSuffixFor(21).toEqual(' 21st '));
-        expect(getOrdinalSuffixFor(22).toEqual(' 22nd '));
-        expect(getOrdinalSuffixFor(23).toEqual(' 23rd '));
-        expect(getOrdinalSuffixFor(24).toEqual(' 24th '));
-        expect(getOrdinalSuffixFor(25).toEqual(' 25th '));
-        expect(getOrdinalSuffixFor(26).toEqual(' 26th '));
-        expect(getOrdinalSuffixFor(27).toEqual(' 27th '));
-        expect(getOrdinalSuffixFor(28).toEqual(' 28th '));
-        expect(getOrdinalSuffixFor(29).toEqual(' 29th '));
-        expect(getOrdinalSuffixFor(30).toEqual(' 30th '));
-        expect(getOrdinalSuffixFor(31).toEqual(' 31st '));
-        expect(getOrdinalSuffixFor(32).toEqual(' 32nd '));
-        expect(getOrdinalSuffixFor(33).toEqual(' 33rd '));
-        expect(getOrdinalSuffixFor(34).toEqual(' 34th '));
-        expect(getOrdinalSuffixFor(35).toEqual(' 35th '));
-        expect(getOrdinalSuffixFor(36).toEqual(' 36th '));
-        expect(getOrdinalSuffixFor(37).toEqual(' 37th '));
-        expect(getOrdinalSuffixFor(38).toEqual(' 38th '));
-        expect(getOrdinalSuffixFor(39).toEqual(' 39th '));
-        expect(getOrdinalSuffixFor(40).toEqual(' 40th '));
-        expect(getOrdinalSuffixFor(41).toEqual(' 41st '));
-        expect(getOrdinalSuffixFor(42).toEqual(' 42nd '));
-        expect(getOrdinalSuffixFor(43).toEqual(' 43rd '));
-        expect(getOrdinalSuffixFor(44).toEqual(' 44th '));
-        expect(getOrdinalSuffixFor(45).toEqual(' 45th '));
-        expect(getOrdinalSuffixFor(46).toEqual(' 46th '));
-        expect(getOrdinalSuffixFor(47).toEqual(' 47th '));
-        expect(getOrdinalSuffixFor(48).toEqual(' 48th '));
-        expect(getOrdinalSuffixFor(49).toEqual(' 49th '));
-        expect(getOrdinalSuffixFor(50).toEqual(' 50th '));
-        expect(getOrdinalSuffixFor(51).toEqual(' 51st '));
-        expect(getOrdinalSuffixFor(52).toEqual(' 52nd '));
-        expect(getOrdinalSuffixFor(53).toEqual(' 53rd '));
-        expect(getOrdinalSuffixFor(54).toEqual(' 54th '));
-        expect(getOrdinalSuffixFor(55).toEqual(' 55th '));
-        expect(getOrdinalSuffixFor(56).toEqual(' 56th '));
-        expect(getOrdinalSuffixFor(57).toEqual(' 57th '));
-        expect(getOrdinalSuffixFor(58).toEqual(' 58th '));
-        expect(getOrdinalSuffixFor(59).toEqual(' 59th '));
-        expect(getOrdinalSuffixFor(60).toEqual(' 60th '));
-        expect(getOrdinalSuffixFor(61).toEqual(' 61st '));
-        expect(getOrdinalSuffixFor(62).toEqual(' 62nd '));
-        expect(getOrdinalSuffixFor(63).toEqual(' 63rd '));
-        expect(getOrdinalSuffixFor(64).toEqual(' 64th '));
-        expect(getOrdinalSuffixFor(65).toEqual(' 65th '));
-        expect(getOrdinalSuffixFor(66).toEqual(' 66th '));
-        expect(getOrdinalSuffixFor(67).toEqual(' 67th '));
-        expect(getOrdinalSuffixFor(68).toEqual(' 68th '));
-        expect(getOrdinalSuffixFor(69).toEqual(' 69th '));
-        expect(getOrdinalSuffixFor(70).toEqual(' 70th '));
-        expect(getOrdinalSuffixFor(71).toEqual(' 71st '));
-        expect(getOrdinalSuffixFor(72).toEqual(' 72nd '));
-        expect(getOrdinalSuffixFor(73).toEqual(' 73rd '));
-        expect(getOrdinalSuffixFor(74).toEqual(' 74th '));
-        expect(getOrdinalSuffixFor(75).toEqual(' 75th '));
-        expect(getOrdinalSuffixFor(76).toEqual(' 76th '));
-        expect(getOrdinalSuffixFor(77).toEqual(' 77th '));
-        expect(getOrdinalSuffixFor(78).toEqual(' 78th '));
-        expect(getOrdinalSuffixFor(79).toEqual(' 79th '));
-        expect(getOrdinalSuffixFor(80).toEqual(' 80th '));
-        expect(getOrdinalSuffixFor(81).toEqual(' 81st '));
-        expect(getOrdinalSuffixFor(82).toEqual(' 82nd '));
-        expect(getOrdinalSuffixFor(83).toEqual(' 83rd '));
-        expect(getOrdinalSuffixFor(84).toEqual(' 84th '));
-        expect(getOrdinalSuffixFor(85).toEqual(' 85th '));
-        expect(getOrdinalSuffixFor(86).toEqual(' 86th '));
-        expect(getOrdinalSuffixFor(87).toEqual(' 87th '));
-        expect(getOrdinalSuffixFor(88).toEqual(' 88th '));
-        expect(getOrdinalSuffixFor(89).toEqual(' 89th '));
-        expect(getOrdinalSuffixFor(90).toEqual(' 90th '));
-        expect(getOrdinalSuffixFor(91).toEqual(' 91st '));
-        expect(getOrdinalSuffixFor(92).toEqual(' 92nd '));
-        expect(getOrdinalSuffixFor(93).toEqual(' 93rd '));
-        expect(getOrdinalSuffixFor(94).toEqual(' 94th '));
-        expect(getOrdinalSuffixFor(95).toEqual(' 95th '));
-        expect(getOrdinalSuffixFor(96).toEqual(' 96th '));
-        expect(getOrdinalSuffixFor(97).toEqual(' 97th '));
-        expect(getOrdinalSuffixFor(98).toEqual(' 98th '));
-        expect(getOrdinalSuffixFor(99).toEqual(' 99th '));
-        expect(getOrdinalSuffixFor(100).toEqual(' 100th '));
-        expect(getOrdinalSuffixFor(101).toEqual(' 101st '));
-        expect(getOrdinalSuffixFor(102).toEqual(' 102nd '));
-        expect(getOrdinalSuffixFor(103).toEqual(' 103rd '));
-        expect(getOrdinalSuffixFor(104).toEqual(' 104th '));
-        expect(getOrdinalSuffixFor(105).toEqual(' 105th '));
-        expect(getOrdinalSuffixFor(106).toEqual(' 106th '));
-        expect(getOrdinalSuffixFor(107).toEqual(' 107th '));
-        expect(getOrdinalSuffixFor(108).toEqual(' 108th '));
-        expect(getOrdinalSuffixFor(109).toEqual(' 109th '));
-        expect(getOrdinalSuffixFor(110).toEqual(' 110th '));
-        expect(getOrdinalSuffixFor(111).toEqual(' 111th '));
-        expect(getOrdinalSuffixFor(112).toEqual(' 112th '));
-        expect(getOrdinalSuffixFor(113).toEqual(' 113th '));
-        expect(getOrdinalSuffixFor(114).toEqual(' 114th '));
-        expect(getOrdinalSuffixFor(115).toEqual(' 115th '));
+        expect(getOrdinalSuffixFor(115)).toEqual('th');
+        expect(getOrdinalSuffixFor(116)).toEqual('th');
+        expect(getOrdinalSuffixFor(117)).toEqual('th');
+        expect(getOrdinalSuffixFor(118)).toEqual('th');
+        expect(getOrdinalSuffixFor(119)).toEqual('th');
+        expect(getOrdinalSuffixFor(120)).toEqual('th');
+        expect(getOrdinalSuffixFor(121)).toEqual('st');
+        expect(getOrdinalSuffixFor(122)).toEqual('nd');
     });
 
     it('is an integer', () => {
         expect(isInt(0)).toEqual(true);
-        expect(isInt('2a')).toEqual(false);
         expect(isInt(1)).toEqual(true);
         expect(isInt(2)).toEqual(true);
         expect(isInt(3)).toEqual(true);
         expect(isInt(4)).toEqual(true);
+        expect(isInt('2a')).toEqual(false);
         expect(isInt('4')).toEqual(true);
     });
 
     it('has a friendly floor name', () => {
+        // missing attributes default to false
         expect(getFriendlyFloorName({ space_precise: 'Westernmost corner', space_floor_name: '3' })).toEqual(
             'Westernmost corner, 3rd Floor',
         );
+        expect(
+            getFriendlyFloorName({
+                space_precise: 'Westernmost corner',
+                space_floor_name: '3',
+                space_is_ground_floor: false,
+            }),
+        ).toEqual('Westernmost corner, 3rd Floor');
         expect(getFriendlyFloorName({ space_precise: 'Eastern corner', space_floor_name: '2A' })).toEqual(
             'Eastern corner, Floor 2A',
         );
         expect(getFriendlyFloorName({ space_precise: '', space_floor_name: '1' })).toEqual('1st Floor');
+        expect(getFriendlyFloorName({ space_floor_name: '3A' })).toEqual('Floor 3A');
         expect(getFriendlyFloorName({ space_precise: '', space_floor_name: '3A' })).toEqual('Floor 3A');
+        expect(getFriendlyFloorName({ space_is_ground_floor: true })).toEqual('Ground floor');
+        expect(getFriendlyFloorName({ space_is_ground_floor: true, space_precise: 'Eastern corner' })).toEqual(
+            'Eastern corner, Ground floor',
+        );
     });
 });

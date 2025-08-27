@@ -78,11 +78,11 @@ export const SpacesLocationsDashboard = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    function markIfLocationHasFacility(facilityId, bookableSpace) {
+    function markIfLocationHasFacility(facilityType, bookableSpace) {
         const hasThisFacility = bookableSpace?.facility_types.some(
-            facility => facility.facility_type_id === facilityId,
+            spaceFacility => spaceFacility.facility_type_id === facilityType.facility_type_id,
         );
-        return hasThisFacility ? tickIcon('Space has this facility') : null;
+        return hasThisFacility ? tickIcon(`Space has ${facilityType.facility_type_name}`) : null;
     }
 
     const getColumnBackgroundColor = ii => (ii % 2 === 0 ? '#f0f0f0' : 'inherit');
@@ -100,7 +100,7 @@ export const SpacesLocationsDashboard = ({
                                         backgroundColor: getColumnBackgroundColor(ii),
                                     }}
                                 >
-                                    {markIfLocationHasFacility(facilityType.facility_type_id, bookableSpace)}
+                                    {markIfLocationHasFacility(facilityType, bookableSpace)}
                                 </StyledTableCell>
                             );
                         })}
@@ -120,7 +120,7 @@ export const SpacesLocationsDashboard = ({
                                 <TableCell
                                     component="th"
                                     key={`facilitytype-${facilityType.facility_type_id}`}
-                                    style={{
+                                    sx={{
                                         backgroundColor: getColumnBackgroundColor(ii),
                                     }}
                                 >

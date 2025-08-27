@@ -21,9 +21,15 @@ export const isInt = value => {
 };
 
 export function getFriendlyFloorName(bookableSpace) {
-    const floorName = isInt(bookableSpace?.space_floor_name)
-        ? `${bookableSpace?.space_floor_name}${getOrdinalSuffixFor(bookableSpace?.space_floor_name)} Floor`
-        : `Floor ${bookableSpace?.space_floor_name}`;
+    let floorName = `Floor ${bookableSpace?.space_floor_name}`;
+    if (!!bookableSpace.space_is_ground_floor) {
+        floorName = 'Ground floor';
+    } else if (isInt(bookableSpace?.space_floor_name)) {
+        // some floors are like "2A"
+        const floorNumberAsOrdinal =
+            bookableSpace?.space_floor_name + getOrdinalSuffixFor(bookableSpace?.space_floor_name);
+        floorName = `${floorNumberAsOrdinal} Floor`;
+    }
     return !!bookableSpace?.space_precise ? `${bookableSpace?.space_precise}, ${floorName}` : floorName;
 }
 
