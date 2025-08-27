@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import { getFriendlyLocationDescription } from 'modules/Pages/SpacesLocations/spacesHelpers';
 
 // https://mui.com/material-ui/material-icons/?query=tick&selected=Done
 const tickIcon = altText => (
@@ -80,7 +81,6 @@ export const SpacesLocationsDashboard = ({
     // }
 
     function markIfLocationHasFacility(facilityId, bookableSpace) {
-        // const hasThisFacility = bookableSpace?.facility_types.some(facility => facility.facility_type_id === facilityId);
         const hasThisFacility = bookableSpace?.facility_types.some(
             facility => facility.facility_type_id === facilityId,
         );
@@ -134,6 +134,23 @@ export const SpacesLocationsDashboard = ({
                                                 aria-describedby="tableDescriptionElement"
                                             >
                                                 <TableHead>
+                                                    {facilityTypeList?.data?.facility_types?.length > 0 && (
+                                                        <TableRow>
+                                                            {[{}, {}, {}].map(() => (
+                                                                <TableCell
+                                                                    component="th"
+                                                                    sx={{ borderBottomWidth: 0, paddingBlock: 0 }}
+                                                                />
+                                                            ))}
+                                                            <TableCell
+                                                                component="th"
+                                                                colspan={facilityTypeList?.data?.facility_types?.length}
+                                                                sx={{ borderBottomWidth: 0, paddingBlock: 0 }}
+                                                            >
+                                                                Facilities
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )}
                                                     <TableRow>
                                                         <TableCell component="th">Name</TableCell>
                                                         <TableCell component="th">Space type</TableCell>
@@ -172,7 +189,7 @@ export const SpacesLocationsDashboard = ({
                                                                 </TableCell>
                                                                 <TableCell>{bookableSpace?.space_type}</TableCell>
                                                                 <TableCell>
-                                                                    {bookableSpace?.space_building_name}
+                                                                    {getFriendlyLocationDescription(bookableSpace)}
                                                                 </TableCell>
 
                                                                 {facilityTypeList?.data?.facility_types?.length > 0 && (

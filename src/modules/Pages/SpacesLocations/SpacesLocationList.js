@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import { getFriendlyLocationDescription } from './spacesHelpers';
 
 const StyledStandardCard = styled(StandardCard)(() => ({
     '& .MuiCardHeader-root': {
@@ -219,7 +220,7 @@ export const SpacesLocationList = ({
                                             >
                                                 {
                                                     <>
-                                                        <p>{bookableSpace?.space_precise}</p>
+                                                        <p>{getFriendlyLocationDescription(bookableSpace)}</p>
                                                         <p>{bookableSpace?.space_description}</p>
                                                         {bookableSpace?.space_photo_url && (
                                                             <StyledLocationPhoto
