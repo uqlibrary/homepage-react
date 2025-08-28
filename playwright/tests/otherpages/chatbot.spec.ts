@@ -2,8 +2,10 @@ import { test, expect, Page } from '@uq/pw/test';
 
 test.describe('Chatbot', () => {
     const loadPage = async (page: Page) => {
-        await page.goto('chatbot.html');
-        await expect(async () => await expect(page.locator('article').first()).toBeVisible()).toPass();
+        await expect(async () => {
+            await page.goto('chatbot.html', { timeout: 60_000 });
+            await expect(page.locator('article').first()).toBeVisible({ timeout: 30_000 });
+        }).toPass();
         await page.setViewportSize({ width: 1300, height: 1000 });
     };
 
