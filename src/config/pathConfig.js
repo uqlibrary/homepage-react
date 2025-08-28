@@ -45,5 +45,5 @@ export const pathConfig = {
     pastExamPaperSearch: '/exams',
     dlorSubmit: '/digital-learning-hub/submit',
     dlorOwnObjectEdit: dlorId => `/digital-learning-hub/edit/${dlorId}`,
-    bookableSpaces: '/spaces',
+    bookablespaces: '/spaces',
 };
