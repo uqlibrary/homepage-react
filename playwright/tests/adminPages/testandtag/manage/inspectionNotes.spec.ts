@@ -16,7 +16,6 @@ test.describe('Test and Tag Manage Inspection Notes', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await checkBaseline(page);
-        await page.waitForTimeout(1000);
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 

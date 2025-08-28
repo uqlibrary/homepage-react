@@ -31,7 +31,6 @@ test.describe('Test and Tag manage inspection devices', () => {
 
         // Adding an Inspection Device
         await page.getByTestId('add_toolbar-inspection-devices-add-button').click();
-        await page.waitForTimeout(1000);
 
         await assertAccessibility(page, '[data-testid="StandardPage"]');
 

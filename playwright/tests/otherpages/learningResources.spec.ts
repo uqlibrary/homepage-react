@@ -403,7 +403,6 @@ test.describe('Learning Resources Accessibility', () => {
                 .getByText(/Your courses/)
                 .first(),
         ).toBeVisible();
-        await page.waitForTimeout(1000);
         await assertAccessibility(page, 'div[data-testid="learning-resources"]');
     });
 
@@ -416,7 +415,6 @@ test.describe('Learning Resources Accessibility', () => {
                 .getByText(/Your courses/)
                 .first(),
         ).toBeVisible();
-        await page.waitForTimeout(1000);
         await assertAccessibility(page, 'div[data-testid="learning-resources"]');
     });
 });

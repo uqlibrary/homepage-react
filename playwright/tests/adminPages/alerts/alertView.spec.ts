@@ -15,7 +15,6 @@ test.describe('Alerts Admin View Page', () => {
                 .getByText(/View alert/)
                 .first(),
         ).toBeVisible();
-        await page.waitForTimeout(1500);
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
     test('has breadcrumb', async ({ page }) => {

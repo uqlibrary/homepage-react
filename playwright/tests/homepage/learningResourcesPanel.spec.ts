@@ -29,7 +29,6 @@ test.describe('The Homepage Learning Resource Panel', () => {
                 .getByText(/Matching courses/)
                 .first(),
         ).toBeVisible();
-        await page.waitForTimeout(600);
         await assertAccessibility(page, 'div[data-testid="learning-resources-panel"]');
     });
 

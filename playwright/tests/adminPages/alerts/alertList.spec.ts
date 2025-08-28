@@ -318,7 +318,6 @@ test.describe('Alert Admin List page', () => {
                 .getByText(/1–5 of 78/)
                 .first(),
         ).toBeVisible();
-        await page.waitForTimeout(1000);
         await page.locator('[data-testid="admin-alerts-list-past-list"] tfoot button:nth-child(3)').click();
         await expect(
             page
@@ -511,7 +510,6 @@ test.describe('Alert Admin List page', () => {
             await expect(page.getByTestId('dialogbox-alert-delete-confirm')).not.toBeVisible();
             // the error dialog doesnt appear
             await expect(page.getByTestId('dialogbox-alert-delete-error-dialog')).not.toBeVisible();
-            await page.waitForTimeout(1000);
             await page.getByTestId('alert-list-item-checkbox-da181a00-d476-11eb-8596-2540419539a9').check();
             await expect(
                 page
@@ -537,7 +535,6 @@ test.describe('Alert Admin List page', () => {
             ).toBeVisible();
             await page.getByTestId('confirm-alert-delete-confirm').click();
             await expect(page.getByTestId('dialogbox-alert-delete-confirm')).not.toBeVisible();
-            await page.waitForTimeout(500);
             // the error dialog doesnt appear
             await expect(page.getByTestId('dialogbox-alert-delete-error-dialog')).not.toBeVisible();
         });

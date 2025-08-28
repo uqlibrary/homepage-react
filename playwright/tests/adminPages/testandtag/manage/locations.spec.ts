@@ -12,10 +12,8 @@ test.describe('Test and Tag Manage Locations', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.locations.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
-        await page.waitForTimeout(1000);
         await expect((await getFieldValue(page, 'site_id_displayed', 0)).getByText('01')).toBeVisible();
         await expect((await getFieldValue(page, 'site_name', 0)).getByText('St Lucia')).toBeVisible();
-        await page.waitForTimeout(1000);
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
@@ -32,7 +30,6 @@ test.describe('Test and Tag Manage Locations', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.locations.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
-        await page.waitForTimeout(1000);
         await expect((await getFieldValue(page, 'site_id_displayed', 0)).getByText('01')).toBeVisible();
         await expect((await getFieldValue(page, 'site_name', 0)).getByText('St Lucia')).toBeVisible();
 
@@ -107,7 +104,6 @@ test.describe('Test and Tag Manage Locations', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.locations.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
-        await page.waitForTimeout(1000);
         await expect((await getFieldValue(page, 'site_id_displayed', 0)).getByText('01')).toBeVisible();
         await expect((await getFieldValue(page, 'site_name', 0)).getByText('St Lucia')).toBeVisible();
 
@@ -170,7 +166,6 @@ test.describe('Test and Tag Manage Locations', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.locations.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
-        await page.waitForTimeout(1000);
         await expect((await getFieldValue(page, 'site_id_displayed', 0)).getByText('01')).toBeVisible();
         await expect((await getFieldValue(page, 'site_name', 0)).getByText('St Lucia')).toBeVisible();
         // Check if populated sites are disabled
