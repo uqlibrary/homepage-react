@@ -260,10 +260,17 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.getByTestId('dlor-form-back-button').click();
 
                 await expect(page.getByTestId('dlor-panel-validity-indicator-0')).not.toBeVisible();
-                for (let i = 0; i < 5; i++) {
-                    await page.locator('[data-testid="object-publishing-user"] input').press('End');
-                    await page.locator('[data-testid="object-publishing-user"] input').press('Backspace');
-                }
+                await expect(async () => {
+                    while (
+                        (await page.locator('[data-testid="object-publishing-user"] input').inputValue()) &&
+                        (await page.locator('[data-testid="object-publishing-user"] input').inputValue()) !== 'dlo'
+                    ) {
+                        await page.locator('[data-testid="object-publishing-user"] input').press('End', { delay: 50 });
+                        await page
+                            .locator('[data-testid="object-publishing-user"] input')
+                            .press('Backspace', { delay: 50 });
+                    }
+                }).toPass();
                 await expect(
                     page
                         .getByTestId('dlor-form-error-message-object-publishing-user')
