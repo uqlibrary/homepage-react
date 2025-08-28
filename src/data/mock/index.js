@@ -70,9 +70,10 @@ import {
 } from './data/journalSearchFavourites';
 import { vemcountData } from './data/vemcount';
 import dlor_admin_notes from './data/records/dlor/dlor_admin_notes';
-import location_spaces_all from './data/records/locationSpaces/bookableSpaces_all';
-import hours_weekly from './data/records/locationSpaces/hours_weekly_2';
-import facilityTypes_all from './data/records/locationSpaces/facilityTypes_all';
+import bookableSpaces_all from './data/records/bookableSpaces/bookableSpaces_all';
+import hours_weekly from './data/records/bookableSpaces/hours_weekly_2';
+import facilityTypes_all from './data/records/bookableSpaces/facilityTypes_all';
+import location_sites_all from './data/records/bookableSpaces/location_sites_all';
 
 const moment = require('moment');
 
@@ -1439,7 +1440,7 @@ mock.onGet('exams/course/FREN1010/summary')
         } else if (responseType === '404') {
             return [404, {}];
         } else {
-            return [200, location_spaces_all];
+            return [200, bookableSpaces_all];
         }
     })
     .onGet(routes.WEEKLYHOURS_API().apiUrl)
@@ -1466,6 +1467,40 @@ mock.onGet('exams/course/FREN1010/summary')
             return [200, facilityTypes_all];
         }
     })
+    .onGet(routes.SPACES_SITE_API().apiUrl)
+    .reply(() => {
+        if (hoursResponseType === 'error') {
+            return [500, {}];
+        } else if (hoursResponseType === 'empty') {
+            return [200, []];
+        } else if (hoursResponseType === '404') {
+            return [404, {}];
+        } else {
+            return [200, location_sites_all];
+        }
+    })
+
+    // Bookable Spaces (site,building,floor)
+    .onPost(routes.SPACES_ADD_LOCATION_API('site').apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'site', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.SPACES_ADD_LOCATION_API('building').apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'building', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.SPACES_ADD_LOCATION_API('floor').apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'floor', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.SPACES_ADD_LOCATION_API('room').apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'room', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onDelete(/bookable_spaces\/site|building|floor\/2/)
+    .reply(() => [200, { status: 'OK' }])
+    .onDelete(/bookable_spaces\/site|building|floor\/.*/)
+    .reply(() => [400, { message: '52 is a test error', status: 'error' }])
     .onAny()
     .reply(function(config) {
         console.log('url not mocked...', config.url);

@@ -51,6 +51,7 @@ export const DLOFilterManage = lazy(() => lazyRetry(() => import('modules/Pages/
 
 export const BookableSpacesList = lazy(() => lazyRetry(() => import('../../Pages/BookableSpaces/BookableSpacesListContainer')));
 export const BookableSpacesDashboard = lazy(() => lazyRetry(() => import('../../Pages/Admin/BookableSpaces/Dashboard/./BookableSpacesDashboardContainer')));
+export const BookableSpacesManageLocations = lazy(() => lazyRetry(() => import('../../Pages/Admin/BookableSpaces/ManageLocations/BookableSpacesManageLocationsContainer')));
 
 // always load components
 export { HomePageContainer as Index } from 'modules/HomePage';

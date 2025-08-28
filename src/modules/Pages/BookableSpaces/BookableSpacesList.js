@@ -8,6 +8,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { getFriendlyLocationDescription } from './spacesHelpers';
+import { breadcrumbs } from 'config/routes';
 
 const StyledStandardCard = styled(StandardCard)(() => ({
     '& .MuiCardHeader-root': {
@@ -34,6 +35,9 @@ export const BookableSpacesList = ({
     weeklyHoursError,
 }) => {
     React.useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookablespaces.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespaces.pathname);
         if (
             bookableSpacesRoomListError === null &&
             bookableSpacesRoomListLoading === null &&

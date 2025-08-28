@@ -32,6 +32,7 @@ export const pathConfig = {
         testntagreportrecalibrationssdue: '/admin/testntag/report/recalibrationsdue',
         testntagmanageusers: '/admin/testntag/manage/users',
         bookableSpacesDashboard: '/admin/spaces',
+        bookableSpacesManageLocations: '/admin/spaces/manage/locations',
     },
     bookExamBooth: '/book-exam-booth',
     dlorProtected: '/digital-learning-hub-list',

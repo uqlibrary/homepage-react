@@ -48,6 +48,7 @@ export const flattedPathConfigExact = [
     '/digital-learning-hub-list',
     '/spaces',
     '/admin/spaces',
+    '/admin/spaces/manage/locations',
 ];
 export const flattedPathConfig = [
     '/admin/alerts/edit',
@@ -358,6 +359,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.admin.bookableSpacesDashboard,
             element: <components.BookableSpacesDashboard />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespaces.title,
+        },
+        {
+            path: pathConfig.admin.bookableSpacesManageLocations,
+            element: <components.BookableSpacesManageLocations />,
             exact: true,
             pageTitle: locale.pages.admin.bookablespaces.title,
         },

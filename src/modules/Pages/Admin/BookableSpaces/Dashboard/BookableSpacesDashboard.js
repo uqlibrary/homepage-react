@@ -14,6 +14,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { breadcrumbs } from 'config/routes';
 
 const tickIcon = altText => (
     // https://mui.com/material-ui/material-icons/?selected=Done
@@ -65,6 +66,9 @@ export const BookableSpacesDashboard = ({
     facilityTypeListError,
 }) => {
     React.useEffect(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookablespacesadmin.title);
+        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespacesadmin.pathname);
         if (
             bookableSpacesRoomListError === null &&
             bookableSpacesRoomListLoading === null &&
