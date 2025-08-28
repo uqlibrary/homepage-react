@@ -11,9 +11,9 @@ env:
 phases:
   install:
     runtime-versions:
-      nodejs: 20
+      nodejs: 22
     commands:
-      - n 20
+      - n 22
       - set
       - sysctl fs.inotify.max_user_watches
       - sysctl fs.inotify.max_user_watches=524288
