@@ -451,8 +451,7 @@ test.describe('Digital Learning Hub admin homepage', () => {
                             const downloadPromise = page.waitForEvent('download', { timeout: 30_000 });
                             await page.locator('body').click();
                             await callback();
-                            const download = await downloadPromise;
-                            return download?.suggestedFilename() || null;
+                            return (await downloadPromise)?.suggestedFilename() || null;
                         } catch (err) {
                             if (err instanceof Error && (/download/.test(err.message) || /Timeout/.test(err.message))) {
                                 return null;
