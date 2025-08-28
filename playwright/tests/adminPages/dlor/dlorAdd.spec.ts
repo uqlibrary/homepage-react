@@ -27,7 +27,6 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await reviewDateInput.click();
                 await reviewDateInput.fill(today);
                 await reviewDateInput.blur();
-                await page.waitForTimeout(500);
                 await expect(reviewDateInput).toHaveValue(today);
 
                 await typeCKEditor(page, 'This is the admin notes');
@@ -101,7 +100,6 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.locator('[data-testid="object-review-date"] input').clear();
                 await page.locator('[data-testid="object-review-date"] input').fill(today);
                 await page.locator('[data-testid="object-review-date"] input').blur();
-                await page.waitForTimeout(500);
                 await expect(page.locator('[data-testid="object-review-date"] input')).toHaveValue(today);
 
                 await page.getByTestId('dlor-form-next-button').click();
@@ -227,15 +225,19 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.getByTestId('dlor-form-back-button').click();
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).not.toBeVisible();
                 await expect(async () => {
-                    await page.locator('[data-testid="object-title"] input').press('End', { timeout: 2000 });
-                    await page.locator('[data-testid="object-title"] input').press('Backspace', { timeout: 2000 });
-                    await expect(
-                        page
-                            .locator('[data-testid="dlor-panel-validity-indicator-1"] span')
-                            .getByText('1')
-                            .first(),
-                    ).toBeVisible({ timeout: 3000 });
+                    const input = page.locator('[data-testid="object-title"] input');
+                    while ((await input.inputValue()) && (await input.inputValue()) !== 'xxxxxxx') {
+                        await input.focus();
+                        await input.press('End', { delay: 50 });
+                        await input.press('Backspace', { delay: 50 });
+                    }
                 }).toPass();
+                await expect(
+                    page
+                        .locator('[data-testid="dlor-panel-validity-indicator-1"] span')
+                        .getByText('1')
+                        .first(),
+                ).toBeVisible();
                 await page.locator('[data-testid="object-title"] input').pressSequentially('p');
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).not.toBeVisible();
 
@@ -261,14 +263,11 @@ test.describe('Add an object to the Digital Learning Hub', () => {
 
                 await expect(page.getByTestId('dlor-panel-validity-indicator-0')).not.toBeVisible();
                 await expect(async () => {
-                    while (
-                        (await page.locator('[data-testid="object-publishing-user"] input').inputValue()) &&
-                        (await page.locator('[data-testid="object-publishing-user"] input').inputValue()) !== 'dlo'
-                    ) {
-                        await page.locator('[data-testid="object-publishing-user"] input').press('End', { delay: 50 });
-                        await page
-                            .locator('[data-testid="object-publishing-user"] input')
-                            .press('Backspace', { delay: 50 });
+                    const input = page.locator('[data-testid="object-publishing-user"] input');
+                    while ((await input.inputValue()) && (await input.inputValue()) !== 'dlo') {
+                        await input.focus();
+                        await input.press('End', { delay: 50 });
+                        await input.press('Backspace', { delay: 50 });
                     }
                 }).toPass();
                 await expect(
