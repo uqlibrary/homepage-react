@@ -49,8 +49,8 @@ export const DLONew = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLe
 export const DLOOwnEdit = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Objects/DLOEditContainer')));
 export const DLOFilterManage = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Filters/DLOFilterManageContainer')));
 
-export const LocationSpaceList = lazy(() => lazyRetry(() => import('modules/Pages/SpacesLocations/./SpacesLocationListContainer')));
-export const SpacesLocationsDashboard = lazy(() => lazyRetry(() => import('modules/Pages/Admin/SpacesLocations/Dashboard/SpacesLocationsDashboardContainer')));
+export const BookableSpacesList = lazy(() => lazyRetry(() => import('../../Pages/BookableSpaces/BookableSpacesListContainer')));
+export const BookableSpacesDashboard = lazy(() => lazyRetry(() => import('../../Pages/Admin/BookableSpaces/Dashboard/./BookableSpacesDashboardContainer')));
 
 // always load components
 export { HomePageContainer as Index } from 'modules/HomePage';

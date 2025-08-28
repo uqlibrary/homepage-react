@@ -51,8 +51,8 @@ export default {
             testntag: {
                 title: 'Test and Tag',
             },
-            spacesLocations: {
-                title: 'locations',
+            bookableSpaces: {
+                title: 'Spaces',
             },
         },
         learningresources: {

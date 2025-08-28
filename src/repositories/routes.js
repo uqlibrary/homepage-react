@@ -283,8 +283,8 @@ export const LOANS_API = () => ({
 });
 
 // Locations APIs
-export const LOCATIONSPACE_ALL_API = () => ({
-    apiUrl: 'space_locations/spaces/all',
+export const SPACES_ROOMS_ALL_API = () => ({
+    apiUrl: 'bookable_spaces/spaces/all',
     options: { params: { ts: `${new Date().getTime()}` } },
 });
 
@@ -297,6 +297,6 @@ export const WEEKLYHOURS_API = () => {
 
 export const SPACES_FACILITY_TYPE_ALL_API = () => {
     return {
-        apiUrl: 'space_locations/facility_types/all',
+        apiUrl: 'bookable_spaces/facility_types/all',
     };
 };

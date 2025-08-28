@@ -24,18 +24,22 @@ const StyledLocationPhoto = styled('img')(() => ({
     maxWidth: '100%',
 }));
 
-export const SpacesLocationList = ({
+export const BookableSpacesList = ({
     actions,
-    locationSpaceList,
-    locationSpaceListLoading,
-    locationSpaceListError,
+    bookableSpacesRoomList,
+    bookableSpacesRoomListLoading,
+    bookableSpacesRoomListError,
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
 }) => {
     React.useEffect(() => {
-        if (locationSpaceListError === null && locationSpaceListLoading === null && locationSpaceList === null) {
-            actions.loadAllLocationSpaces();
+        if (
+            bookableSpacesRoomListError === null &&
+            bookableSpacesRoomListLoading === null &&
+            bookableSpacesRoomList === null
+        ) {
+            actions.loadAllBookableSpacesRooms();
         }
         if (weeklyHoursError === null && weeklyHoursLoading === null && weeklyHours === null) {
             actions.loadWeeklyHours();
@@ -182,7 +186,7 @@ export const SpacesLocationList = ({
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
                     <Grid container spacing={3}>
                         {(() => {
-                            if (!!locationSpaceListLoading || !!weeklyHoursLoading) {
+                            if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading) {
                                 return (
                                     <StyledBookableSpaceGridItem item xs={12} md={9}>
                                         <StyledStandardCard fullHeight>
@@ -190,7 +194,7 @@ export const SpacesLocationList = ({
                                         </StyledStandardCard>
                                     </StyledBookableSpaceGridItem>
                                 );
-                            } else if (!!locationSpaceListError) {
+                            } else if (!!bookableSpacesRoomListError) {
                                 return (
                                     <StyledBookableSpaceGridItem item xs={12} md={9}>
                                         <StyledStandardCard fullHeight>
@@ -199,8 +203,8 @@ export const SpacesLocationList = ({
                                     </StyledBookableSpaceGridItem>
                                 );
                             } else if (
-                                !locationSpaceList?.data?.locations ||
-                                locationSpaceList?.data?.locations.length === 0
+                                !bookableSpacesRoomList?.data?.locations ||
+                                bookableSpacesRoomList?.data?.locations.length === 0
                             ) {
                                 return (
                                     <StyledBookableSpaceGridItem item xs={12} md={9}>
@@ -210,7 +214,7 @@ export const SpacesLocationList = ({
                                     </StyledBookableSpaceGridItem>
                                 );
                             } else {
-                                return locationSpaceList?.data?.locations.map(bookableSpace => {
+                                return bookableSpacesRoomList?.data?.locations.map(bookableSpace => {
                                     const locationKey = `space-${bookableSpace?.space_id}`;
                                     return (
                                         <StyledBookableSpaceGridItem item xs={12} md={9} key={locationKey}>
@@ -248,14 +252,14 @@ export const SpacesLocationList = ({
     );
 };
 
-SpacesLocationList.propTypes = {
+BookableSpacesList.propTypes = {
     actions: PropTypes.any,
-    locationSpaceList: PropTypes.any,
-    locationSpaceListLoading: PropTypes.bool,
-    locationSpaceListError: PropTypes.any,
+    bookableSpacesRoomList: PropTypes.any,
+    bookableSpacesRoomListLoading: PropTypes.bool,
+    bookableSpacesRoomListError: PropTypes.any,
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
 };
 
-export default React.memo(SpacesLocationList);
+export default React.memo(BookableSpacesList);

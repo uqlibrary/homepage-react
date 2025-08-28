@@ -2,12 +2,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from 'data/actions';
 
-import LocationSpaceList from './SpacesLocationList';
+import BookableSpacesDashboard from './BookableSpacesDashboard';
 
 const mapStateToProps = state => {
     return {
-        ...state.get('locationSpacesReducer'),
+        ...state.get('bookableSpacesRoomListReducer'),
         ...state.get('weeklyHoursReducer'),
+        ...state.get('facilityTypeReducer'),
     };
 };
 
@@ -17,6 +18,6 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-const SpacesLocationListContainer = connect(mapStateToProps, mapDispatchToProps)(LocationSpaceList);
+const BookableSpacesDashboardContainer = connect(mapStateToProps, mapDispatchToProps)(BookableSpacesDashboard);
 
-export default SpacesLocationListContainer;
+export default BookableSpacesDashboardContainer;

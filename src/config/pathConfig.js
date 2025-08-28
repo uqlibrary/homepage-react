@@ -31,7 +31,7 @@ export const pathConfig = {
         testntagreportinspectionsdue: '/admin/testntag/report/inspectionsdue',
         testntagreportrecalibrationssdue: '/admin/testntag/report/recalibrationsdue',
         testntagmanageusers: '/admin/testntag/manage/users',
-        spacesLocationsDashboard: '/admin/spaces',
+        bookableSpacesDashboard: '/admin/spaces',
     },
     bookExamBooth: '/book-exam-booth',
     dlorProtected: '/digital-learning-hub-list',
@@ -45,5 +45,5 @@ export const pathConfig = {
     pastExamPaperSearch: '/exams',
     dlorSubmit: '/digital-learning-hub/submit',
     dlorOwnObjectEdit: dlorId => `/digital-learning-hub/edit/${dlorId}`,
-    spacesLocations: '/spaces',
+    bookableSpaces: '/spaces',
 };

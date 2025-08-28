@@ -1,37 +1,37 @@
 import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
-    locationSpaceList: null,
-    locationSpaceListLoading: null,
-    locationSpaceListError: null,
+    bookableSpacesRoomList: null,
+    bookableSpacesRoomListLoading: null,
+    bookableSpacesRoomListError: null,
 };
 
 const handlers = {
     [actions.SPACES_ROOM_LIST_LOADING]: state => ({
         ...initialState,
         ...state,
-        locationSpaceListLoading: true,
-        locationSpaceListError: false,
+        bookableSpacesRoomListLoading: true,
+        bookableSpacesRoomListError: false,
     }),
     [actions.SPACES_ROOM_LIST_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
-        locationSpaceListLoading: false,
-        locationSpaceListError: false,
-        locationSpaceList: action.payload,
+        bookableSpacesRoomListLoading: false,
+        bookableSpacesRoomListError: false,
+        bookableSpacesRoomList: action.payload,
     }),
     [actions.SPACES_ROOM_LIST_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
-        locationSpaceListLoading: false,
-        locationSpaceListError: action.payload,
+        bookableSpacesRoomListLoading: false,
+        bookableSpacesRoomListError: action.payload,
     }),
     // [actions.SPACES_ROOM_LIST_CLEAR]: () => ({
     //     ...initialState,
     // }),
 };
 
-export default function locationSpacesReducer(state = initialState, action) {
+export default function bookableSpacesRoomListReducer(state = initialState, action) {
     const handler = handlers[action.type];
     if (!handler) {
         return state;

@@ -145,8 +145,8 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: 'Edit details of your object',
         },
         {
-            path: pathConfig.spacesLocations,
-            element: <components.LocationSpaceList />,
+            path: pathConfig.bookableSpaces,
+            element: <components.BookableSpacesList />,
             exact: false,
             pageTitle: 'Library spaces',
         },
@@ -354,12 +354,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    const spacesLocationsDisplay = [
+    const bookableSpacesAdminPages = [
         {
-            path: pathConfig.admin.spacesLocationsDashboard,
-            element: <components.SpacesLocationsDashboard />,
+            path: pathConfig.admin.bookableSpacesDashboard,
+            element: <components.BookableSpacesDashboard />,
             exact: true,
-            pageTitle: locale.pages.admin.spacesLocations.title,
+            pageTitle: locale.pages.admin.bookableSpaces.title,
         },
     ];
 
@@ -370,7 +370,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isDlorAdminUser(account) ? dlorAdminDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
         ...(account && isTestTagUser(account) ? testntagDisplay : []),
-        ...(account && isSpacesAdminUser(account) ? spacesLocationsDisplay : []),
+        ...(account && isSpacesAdminUser(account) ? bookableSpacesAdminPages : []),
         ...(account ? authenticatedDlorDisplay : []),
         {
             path: '*',

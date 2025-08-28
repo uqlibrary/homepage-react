@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { getFriendlyLocationDescription } from 'modules/Pages/SpacesLocations/spacesHelpers';
+import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const tickIcon = altText => (
     // https://mui.com/material-ui/material-icons/?selected=Done
@@ -52,11 +52,11 @@ const TableHeadingTypography = styled(Typography)(({ theme }) => ({
     },
 }));
 
-export const SpacesLocationsDashboard = ({
+export const BookableSpacesDashboard = ({
     actions,
-    locationSpaceList,
-    locationSpaceListLoading,
-    locationSpaceListError,
+    bookableSpacesRoomList,
+    bookableSpacesRoomListLoading,
+    bookableSpacesRoomListError,
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
@@ -65,8 +65,12 @@ export const SpacesLocationsDashboard = ({
     facilityTypeListError,
 }) => {
     React.useEffect(() => {
-        if (locationSpaceListError === null && locationSpaceListLoading === null && locationSpaceList === null) {
-            actions.loadAllLocationSpaces();
+        if (
+            bookableSpacesRoomListError === null &&
+            bookableSpacesRoomListLoading === null &&
+            bookableSpacesRoomList === null
+        ) {
+            actions.loadAllBookableSpacesRooms();
         }
         if (weeklyHoursError === null && weeklyHoursLoading === null && weeklyHours === null) {
             actions.loadWeeklyHours();
@@ -86,8 +90,8 @@ export const SpacesLocationsDashboard = ({
 
     const getColumnBackgroundColor = ii => (ii % 2 === 0 ? '#f0f0f0' : 'inherit');
 
-    function getTableLocations() {
-        const tableDescription = 'List of locations';
+    function displayListOfBookableSpaces() {
+        const tableDescription = 'Manage Spaces';
         return (
             <>
                 <TableHeadingTypography component={'h2'} variant={'p'} id="tableDescriptionElement">
@@ -137,7 +141,7 @@ export const SpacesLocationsDashboard = ({
                             </TableRow>
                         </TableHead>
                         <tbody>
-                            {locationSpaceList?.data?.locations?.map(bookableSpace => {
+                            {bookableSpacesRoomList?.data?.locations?.map(bookableSpace => {
                                 return (
                                     <StyledTableRow
                                         key={`space-${bookableSpace?.space_id}`}
@@ -186,7 +190,7 @@ export const SpacesLocationsDashboard = ({
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
                     <Grid container spacing={3}>
                         {(() => {
-                            if (!!locationSpaceListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
+                            if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
                                 return (
                                     <StyledBookableSpaceGridItem item xs={12} md={9}>
                                         <StyledStandardCard fullHeight>
@@ -194,7 +198,7 @@ export const SpacesLocationsDashboard = ({
                                         </StyledStandardCard>
                                     </StyledBookableSpaceGridItem>
                                 );
-                            } else if (!!locationSpaceListError || !!facilityTypeListError) {
+                            } else if (!!bookableSpacesRoomListError || !!facilityTypeListError) {
                                 return (
                                     <StyledBookableSpaceGridItem item xs={12} md={9}>
                                         <StyledStandardCard fullHeight>
@@ -203,18 +207,18 @@ export const SpacesLocationsDashboard = ({
                                     </StyledBookableSpaceGridItem>
                                 );
                             } else if (
-                                !locationSpaceList?.data?.locations ||
-                                locationSpaceList?.data?.locations.length === 0
+                                !bookableSpacesRoomList?.data?.locations ||
+                                bookableSpacesRoomList?.data?.locations.length === 0
                             ) {
                                 return (
                                     <StyledBookableSpaceGridItem item xs={12} md={9}>
                                         <StyledStandardCard fullHeight>
-                                            <p>No locations found - please try again soon.</p>
+                                            <p>No spaces currently in system - please try again soon.</p>
                                         </StyledStandardCard>
                                     </StyledBookableSpaceGridItem>
                                 );
                             } else {
-                                return getTableLocations();
+                                return displayListOfBookableSpaces();
                             }
                         })()}
                     </Grid>
@@ -224,11 +228,11 @@ export const SpacesLocationsDashboard = ({
     );
 };
 
-SpacesLocationsDashboard.propTypes = {
+BookableSpacesDashboard.propTypes = {
     actions: PropTypes.any,
-    locationSpaceList: PropTypes.any,
-    locationSpaceListLoading: PropTypes.bool,
-    locationSpaceListError: PropTypes.any,
+    bookableSpacesRoomList: PropTypes.any,
+    bookableSpacesRoomListLoading: PropTypes.bool,
+    bookableSpacesRoomListError: PropTypes.any,
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
@@ -237,4 +241,4 @@ SpacesLocationsDashboard.propTypes = {
     facilityTypeListError: PropTypes.any,
 };
 
-export default React.memo(SpacesLocationsDashboard);
+export default React.memo(BookableSpacesDashboard);

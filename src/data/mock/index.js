@@ -70,7 +70,7 @@ import {
 } from './data/journalSearchFavourites';
 import { vemcountData } from './data/vemcount';
 import dlor_admin_notes from './data/records/dlor/dlor_admin_notes';
-import location_spaces_all from './data/records/locationSpaces/locationSpaces_all';
+import location_spaces_all from './data/records/locationSpaces/bookableSpaces_all';
 import hours_weekly from './data/records/locationSpaces/hours_weekly_2';
 import facilityTypes_all from './data/records/locationSpaces/facilityTypes_all';
 
@@ -196,7 +196,6 @@ mock.onGet(routes.PRINTING_API().apiUrl)
 
 // mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
 mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
-    console.log('hoursResponseType=', hoursResponseType);
     if (hoursResponseType === 'error') {
         return [500, {}];
     } else if (hoursResponseType === 'missing') {
@@ -1431,7 +1430,7 @@ mock.onGet('exams/course/FREN1010/summary')
                 return [200, { ...loans, fines: [], total_fines_count: 0 }];
         }
     })
-    .onGet(routes.LOCATIONSPACE_ALL_API().apiUrl)
+    .onGet(routes.SPACES_ROOMS_ALL_API().apiUrl)
     .reply(() => {
         if (responseType === 'error') {
             return [500, {}];

@@ -43,6 +43,6 @@ export { default as journalSearchReducer } from './journalSearchReducer';
 export { default as dlorDemographicsReducer } from './dlorDemographicsReducer';
 export { default as dlorFavouritesReducer } from './dlorFavouritesReducer';
 export { default as dlorAdminNotesReducer } from './dlorAdminNotesReducer';
-export { default as locationSpacesReducer } from './locationSpacesReducer';
+export { default as bookableSpacesRoomListReducer } from './bookableSpacesRoomListReducer';
 export { default as weeklyHoursReducer } from './weeklyHoursReducer';
 export { default as facilityTypeReducer } from './facilityTypeReducer';

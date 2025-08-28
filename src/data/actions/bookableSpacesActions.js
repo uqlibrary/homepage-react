@@ -1,12 +1,12 @@
 import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
-import { LOCATIONSPACE_ALL_API } from 'repositories/routes';
+import { SPACES_ROOMS_ALL_API } from 'repositories/routes';
 
-export function loadAllLocationSpaces() {
+export function loadAllBookableSpacesRooms() {
     return dispatch => {
         // dispatch({ type: actions.SPACES_ROOM_LIST_CLEAR });
         dispatch({ type: actions.SPACES_ROOM_LIST_LOADING });
-        return get(LOCATIONSPACE_ALL_API())
+        return get(SPACES_ROOMS_ALL_API())
             .then(response => {
                 dispatch({
                     type: actions.SPACES_ROOM_LIST_LOADED,
