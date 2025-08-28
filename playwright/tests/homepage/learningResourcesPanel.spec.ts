@@ -69,9 +69,7 @@ test.describe('The Homepage Learning Resource Panel', () => {
             .locator(`[data-testid="learning-resource-panel-course-link-${classIndex}"]`)
             .getByText(`${specificClass.SUBJECT}${specificClass.CATALOG_NBR}`)
             .first()
-            .click({
-                force: true,
-            });
+            .click();
         // the user lands on the correct page
         await expect(page).toHaveURL(
             `learning-resources?user=s1111111&coursecode=${specificClass.SUBJECT}${specificClass.CATALOG_NBR}&campus=St%20Lucia&semester=Semester%202%202020`,

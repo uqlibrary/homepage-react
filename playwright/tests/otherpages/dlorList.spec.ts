@@ -527,9 +527,7 @@ test.describe('Digital Learning Hub', () => {
             await expect(page.getByTestId('panel-help-close-graduate-attributes')).toBeVisible();
 
             // click reset
-            await page.getByTestId('sidebar-filter-reset-button').click({
-                force: true,
-            });
+            await page.getByTestId('sidebar-filter-reset-button').click();
 
             // popup help closes
             await expect(page.getByTestId('panel-help-close-graduate-attributes')).not.toBeVisible();
@@ -548,9 +546,7 @@ test.describe('Digital Learning Hub', () => {
             await expect(page.locator('nav[aria-label="pagination navigation"] li:nth-child(5) button')).toBeVisible();
 
             // click reset
-            await page.getByTestId('sidebar-filter-reset-button').click({
-                force: true,
-            });
+            await page.getByTestId('sidebar-filter-reset-button').click();
 
             // all panels showing
             await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
@@ -580,7 +576,6 @@ test.describe('Digital Learning Hub', () => {
             await expect(async () => {
                 // click reset
                 await page.getByTestId('sidebar-filter-reset-button').click({
-                    force: true,
                     timeout: 2000,
                 });
                 // has reset pagination to page 1

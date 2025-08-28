@@ -615,7 +615,7 @@ test.describe('Digital Learning Hub View page', () => {
             await page.locator('[data-testid="object-review-date"] input').blur();
 
             // Force a change event
-            await page.locator('[data-testid="object-review-date"] input').dispatchEvent('change', { force: true });
+            await page.locator('[data-testid="object-review-date"] input').dispatchEvent('change');
             await page.getByTestId('dlor-form-next-button').click();
             await typeCKEditor(page, testData);
             await page.getByTestId('dlor-form-next-button').click();

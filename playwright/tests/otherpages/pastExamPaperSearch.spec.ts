@@ -84,7 +84,7 @@ test.describe('Past Exam Papers Pages', () => {
             await page.goto('/exams');
             await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('fren');
             await expect(page.locator('.MuiAutocomplete-listbox').locator(':scope > *')).toHaveCount(17);
-            await page.locator('#exam-search-option-0').click({ force: true });
+            await page.locator('#exam-search-option-0').click();
             await expect(page).toHaveURL(/exams\/course\/FREN/);
         });
         test('when I hit return on a search list, the result page for the first option loads', async ({ page }) => {
