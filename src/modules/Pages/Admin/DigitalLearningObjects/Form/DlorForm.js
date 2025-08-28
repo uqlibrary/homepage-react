@@ -437,7 +437,9 @@ export const DlorForm = ({
 
     function validatePanelFiltering(currentValues) {
         let fourthPanelErrorCount = 0;
-        currentValues?.object_keywords_string?.length < keywordMinimumLength && fourthPanelErrorCount++;
+        // ensure there is at least one keyword selected.
+        console.log("currentValues", currentValues);
+        // currentValues?.object_keywords_string?.length < keywordMinimumLength && fourthPanelErrorCount++;
 
         function isDeepStructure(variable) {
             return Array.isArray(variable) ? typeof variable[0] === 'object' && variable[0] !== null : false;
