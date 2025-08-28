@@ -224,14 +224,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 // click the back button to go back to panel 2, Description
                 await page.getByTestId('dlor-form-back-button').click();
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).not.toBeVisible();
-                await expect(async () => {
-                    const input = page.locator('[data-testid="object-title"] input');
-                    while ((await input.inputValue()) && (await input.inputValue()) !== 'xxxxxxx') {
-                        await input.focus();
-                        await input.press('End', { delay: 50 });
-                        await input.press('Backspace', { delay: 50 });
-                    }
-                }).toPass();
+                await page.locator('[data-testid="object-title"] input').fill('xxxxxxx');
                 await expect(
                     page
                         .locator('[data-testid="dlor-panel-validity-indicator-1"] span')
@@ -262,14 +255,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.getByTestId('dlor-form-back-button').click();
 
                 await expect(page.getByTestId('dlor-panel-validity-indicator-0')).not.toBeVisible();
-                await expect(async () => {
-                    const input = page.locator('[data-testid="object-publishing-user"] input');
-                    while ((await input.inputValue()) && (await input.inputValue()) !== 'dlo') {
-                        await input.focus();
-                        await input.press('End', { delay: 50 });
-                        await input.press('Backspace', { delay: 50 });
-                    }
-                }).toPass();
+                await page.locator('[data-testid="object-publishing-user"] input').fill('dlo');
                 await expect(
                     page
                         .getByTestId('dlor-form-error-message-object-publishing-user')
