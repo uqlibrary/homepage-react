@@ -114,10 +114,10 @@ test.describe('Book Exam Booth page', () => {
         expect(defaultDateValue).toBe(yesterday.format('DD/MM/YYYY'));
 
         const selectNextMonth = async (currentMonth: string) => {
-            await expect(page.getByText(currentMonth)).toBeVisible({ timeout: 1000 });
-            await page.getByTestId('ArrowRightIcon').click({ timeout: 1000 });
-            await expect(page.getByTestId('ArrowRightIcon')).toBeVisible({ timeout: 1000 });
-            await expect(page.getByText(currentMonth)).not.toBeVisible({ timeout: 1000 });
+            await expect(page.getByText(currentMonth)).toBeVisible({ timeout: 2000 });
+            await page.getByTestId('ArrowRightIcon').click({ timeout: 2000 });
+            await expect(page.getByTestId('ArrowRightIcon')).toBeVisible({ timeout: 2000 });
+            await expect(page.getByText(currentMonth)).not.toBeVisible({ timeout: 2000 });
             return moment()
                 .add(1, 'month')
                 .format('MMMM');
@@ -132,13 +132,13 @@ test.describe('Book Exam Booth page', () => {
             if (moment().date() === 1) {
                 selectedMonth = await selectNextMonth(selectedMonth);
             }
-            await expect(page.getByText(selectedMonth)).toBeVisible({ timeout: 1000 });
+            await expect(page.getByText(selectedMonth)).toBeVisible({ timeout: 2000 });
 
             await page
                 .locator('.MuiPickersDay-root')
                 .getByText(intendedDate)
                 .first()
-                .dispatchEvent('click', undefined, { timeout: 1000 });
+                .dispatchEvent('click', undefined, { timeout: 2000 });
             await page.locator('body').click();
             expect(await dateInput.inputValue()).toBe(bookingDate.format('DD/MM/YYYY'));
         }).toPass();

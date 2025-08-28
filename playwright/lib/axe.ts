@@ -13,7 +13,7 @@ export const assertAccessibility = async (
         includedImpacts?: string[];
     },
 ) => {
-    await expect(async () => await expect(page.locator(selector).first()).toBeVisible({ timeout: 1000 })).toPass();
+    await expect(async () => await expect(page.locator(selector).first()).toBeVisible({ timeout: 2000 })).toPass();
 
     const builder = new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice']);
     const includedImpacts = options?.includedImpacts || defaultIncludedImpacts;

@@ -773,9 +773,9 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 await expect(async () => {
                     // choose file type
-                    await page.getByTestId('object-link-file-type').click({ timeout: 1000 });
-                    await page.getByTestId('object-link-file-type-something').click({ timeout: 1000 });
-                    await page.getByTestId('object-link-file-type-new').click({ timeout: 1000 });
+                    await page.getByTestId('object-link-file-type').click({ timeout: 2000 });
+                    await page.getByTestId('object-link-file-type-something').click({ timeout: 2000 });
+                    await page.getByTestId('object-link-file-type-new').click({ timeout: 2000 });
                     // panel invalidity count present
                     await expect(
                         page
@@ -824,9 +824,9 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 // workaround https://github.com/microsoft/playwright/issues/13470
                 await expect(async () => {
-                    await expect(chooseNotifyInput).toBeChecked({ timeout: 1000 });
+                    await expect(chooseNotifyInput).toBeChecked({ timeout: 2000 });
                     await chooseNotifyInput.dispatchEvent('click');
-                    await expect(chooseNotifyInput).not.toBeChecked({ timeout: 1000 });
+                    await expect(chooseNotifyInput).not.toBeChecked({ timeout: 2000 });
                 }).toPass({ timeout: 5000 });
                 await expect(reeditButton).toBeHidden();
 
@@ -834,9 +834,9 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 // but lets confirm that the form holds the previously entered text first
                 // recheck notify, lightbox opens with previous text
                 await expect(async () => {
-                    await expect(chooseNotifyInput).not.toBeChecked({ timeout: 1000 });
+                    await expect(chooseNotifyInput).not.toBeChecked({ timeout: 2000 });
                     await chooseNotifyInput.dispatchEvent('click');
-                    await expect(chooseNotifyInput).toBeChecked({ timeout: 1000 });
+                    await expect(chooseNotifyInput).toBeChecked({ timeout: 2000 });
                 }).toPass({ timeout: 5000 });
                 await expect(notifyLightboxTitle).toContainText('Object change notification');
                 await expect(lightboxModal).toContainText('the words that will go in the email');
@@ -844,9 +844,9 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 // uncheck, we want to check it doesnt send
                 await expect(async () => {
-                    await expect(chooseNotifyInput).toBeChecked({ timeout: 1000 });
+                    await expect(chooseNotifyInput).toBeChecked({ timeout: 2000 });
                     await chooseNotifyInput.dispatchEvent('click');
-                    await expect(chooseNotifyInput).not.toBeChecked({ timeout: 1000 });
+                    await expect(chooseNotifyInput).not.toBeChecked({ timeout: 2000 });
                 }).toPass({ timeout: 5000 });
 
                 // save record

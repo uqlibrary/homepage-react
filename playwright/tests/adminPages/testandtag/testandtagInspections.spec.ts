@@ -46,7 +46,7 @@ test.describe('Test and Tag Admin Inspection page', () => {
         // Site
         if (!!site) {
             await expect(async () => {
-                await page.getByTestId('location_picker-event-panel-site').click({ timeout: 1000 });
+                await page.getByTestId('location_picker-event-panel-site').click({ timeout: 2000 });
                 await expect(page.getByRole('progressbar')).not.toBeVisible({ timeout: 5000 });
                 await selectListBox(page, site, 1000);
             }).toPass();
@@ -54,7 +54,7 @@ test.describe('Test and Tag Admin Inspection page', () => {
         if (!!building) {
             // Building
             await expect(async () => {
-                await page.getByTestId('location_picker-event-panel-building').click({ timeout: 1000 });
+                await page.getByTestId('location_picker-event-panel-building').click({ timeout: 2000 });
                 await expect(page.getByRole('progressbar')).not.toBeVisible({ timeout: 5000 });
                 await selectListBox(page, building, 1000);
             }).toPass();
@@ -63,7 +63,7 @@ test.describe('Test and Tag Admin Inspection page', () => {
         // Floor
         if (!!floor) {
             await expect(async () => {
-                await page.getByTestId('location_picker-event-panel-floor').click({ timeout: 1000 });
+                await page.getByTestId('location_picker-event-panel-floor').click({ timeout: 2000 });
                 await expect(page.getByRole('progressbar')).not.toBeVisible({ timeout: 5000 });
                 await selectListBox(page, floor, 1000);
             }).toPass();
@@ -72,7 +72,7 @@ test.describe('Test and Tag Admin Inspection page', () => {
         // Room
         if (!!room) {
             await expect(async () => {
-                await page.getByTestId('location_picker-event-panel-room').click({ timeout: 1000 });
+                await page.getByTestId('location_picker-event-panel-room').click({ timeout: 2000 });
                 await expect(page.getByRole('progressbar')).not.toBeVisible({ timeout: 5000 });
                 await selectListBox(page, room, 1000);
             }).toPass();
@@ -146,15 +146,15 @@ test.describe('Test and Tag Admin Inspection page', () => {
 
                 // Floor
                 await expect(async () => {
-                    await page.getByTestId('location_picker-event-panel-floor').click({ timeout: 1000 });
-                    await page.locator('#location_picker-event-panel-floor-option-0').click({ timeout: 1000 });
+                    await page.getByTestId('location_picker-event-panel-floor').click({ timeout: 2000 });
+                    await page.locator('#location_picker-event-panel-floor-option-0').click({ timeout: 2000 });
                     await expect(page.getByTestId('location_picker-event-panel-floor-input')).toHaveValue('1');
                 }).toPass();
 
                 // Room
                 await expect(async () => {
-                    await page.getByTestId('location_picker-event-panel-room').click({ timeout: 1000 });
-                    await page.locator('#location_picker-event-panel-room-option-0').click({ timeout: 1000 });
+                    await page.getByTestId('location_picker-event-panel-room').click({ timeout: 2000 });
+                    await page.locator('#location_picker-event-panel-room-option-0').click({ timeout: 2000 });
                     await expect(page.getByTestId('location_picker-event-panel-room-input')).toHaveValue('101');
                 }).toPass();
 

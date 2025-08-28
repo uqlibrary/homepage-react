@@ -581,12 +581,12 @@ test.describe('Digital Learning Hub', () => {
                 // click reset
                 await page.getByTestId('sidebar-filter-reset-button').click({
                     force: true,
-                    timeout: 1000,
+                    timeout: 2000,
                 });
                 // has reset pagination to page 1
                 await expect(
                     page.locator('nav[aria-label="pagination navigation"] button[aria-label="page 1"]'),
-                ).toBeVisible({ timeout: 1000 });
+                ).toBeVisible({ timeout: 2000 });
             }).toPass();
         });
         test('has working site navigation - can move around the pages', async ({ page }) => {

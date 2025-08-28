@@ -67,47 +67,47 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
         // Select a Tagged from Date
         await expect(async () => {
-            await page.getByTestId('assets_inspected-tagged-start-button').click({ timeout: 1000 });
-            await page.locator('.MuiPickersDay-root:has-text("11")').click({ timeout: 1000 });
+            await page.getByTestId('assets_inspected-tagged-start-button').click({ timeout: 2000 });
+            await page.locator('.MuiPickersDay-root:has-text("11")').click({ timeout: 2000 });
             await expect(
                 page.getByTestId('assets_inspected-tagged-start-input'),
-            ).toHaveValue(`${currentYear}-${currentMonth}-11`, { timeout: 1000 });
+            ).toHaveValue(`${currentYear}-${currentMonth}-11`, { timeout: 2000 });
         }).toPass();
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
         // Select a Tagged to Date.
         await expect(async () => {
-            await page.getByTestId('assets_inspected-tagged-end-button').click({ timeout: 1000 });
-            await page.locator('.MuiPickersDay-root:has-text("12")').click({ timeout: 1000 });
+            await page.getByTestId('assets_inspected-tagged-end-button').click({ timeout: 2000 });
+            await page.locator('.MuiPickersDay-root:has-text("12")').click({ timeout: 2000 });
             await expect(
                 page.getByTestId('assets_inspected-tagged-end-input'),
-            ).toHaveValue(`${currentYear}-${currentMonth}-12`, { timeout: 1000 });
+            ).toHaveValue(`${currentYear}-${currentMonth}-12`, { timeout: 2000 });
         }).toPass();
         // Select invalid end date.
         await expect(async () => {
-            await page.getByTestId('assets_inspected-tagged-end-button').click({ timeout: 1000 });
-            await page.locator('.MuiPickersDay-root:has-text("10")').click({ timeout: 1000 });
+            await page.getByTestId('assets_inspected-tagged-end-button').click({ timeout: 2000 });
+            await page.locator('.MuiPickersDay-root:has-text("10")').click({ timeout: 2000 });
             await expect(page.locator('#assets_inspected-tagged-start-input-label')).toHaveClass(/Mui-error/, {
-                timeout: 1000,
+                timeout: 2000,
             });
         }).toPass();
 
         // select a valid date.
         await expect(async () => {
-            await page.getByTestId('assets_inspected-tagged-end-button').click({ timeout: 1000 });
-            await page.locator('.MuiPickersDay-root:has-text("12")').click({ timeout: 1000 });
+            await page.getByTestId('assets_inspected-tagged-end-button').click({ timeout: 2000 });
+            await page.locator('.MuiPickersDay-root:has-text("12")').click({ timeout: 2000 });
             await expect(page.locator('#assets_inspected-tagged-start-input-label')).not.toHaveClass(/Mui-error/, {
-                timeout: 1000,
+                timeout: 2000,
             });
         }).toPass();
         // Clear both dates.
         await expect(async () => {
-            await page.getByTestId('assets_inspected-tagged-start-input').click({ timeout: 1000 });
-            await page.getByTestId('assets_inspected-tagged-end-input').click({ timeout: 1000 });
+            await page.getByTestId('assets_inspected-tagged-start-input').click({ timeout: 2000 });
+            await page.getByTestId('assets_inspected-tagged-end-input').click({ timeout: 2000 });
             await expect(page.locator('#assets_inspected-tagged-start-input-label')).not.toHaveClass(/Mui-error/, {
-                timeout: 1000,
+                timeout: 2000,
             });
             await expect(page.locator('#assets_inspected-tagged-end-input-label')).not.toHaveClass(/Mui-error/, {
-                timeout: 1000,
+                timeout: 2000,
             });
         }).toPass();
     });

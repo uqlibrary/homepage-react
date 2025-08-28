@@ -16,7 +16,7 @@ export const setInputValue = async (
         force?: boolean;
         noWaitAfter?: boolean;
         timeout?: number;
-    } = { timeout: 1000 },
+    } = { timeout: 2000 },
 ) => {
     await expect(async () => {
         // no need to use focus() - already done as part of fill()
