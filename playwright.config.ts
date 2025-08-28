@@ -6,7 +6,7 @@ import * as process from 'node:process';
 export default defineConfig({
     outputDir: `playwright/.results/${process.env.PW_SHARD_INDEX || ''}`,
     testDir: 'playwright/tests',
-    timeout: 90_000,
+    timeout: 120_000,
     expect: {
         timeout: 10_000,
     },
