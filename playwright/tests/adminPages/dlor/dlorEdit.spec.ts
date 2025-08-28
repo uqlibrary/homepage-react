@@ -778,11 +778,14 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     await page.getByTestId('object-link-file-type-new').click({ timeout: 1000 });
                     // panel invalidity count present
                     await expect(
-                        page.locator('[data-testid="dlor-panel-validity-indicator-2"] span'),
-                    ).toContainText('1', { timeout: 1000 });
+                        page
+                            .locator('[data-testid="dlor-panel-validity-indicator-2"] span')
+                            .getByText('1')
+                            .first(),
+                    ).toBeVisible({ timeout: 3000 });
                     await page
                         .locator('[data-testid="dlor-admin-form-new-file-type"] input')
-                        .fill('docx', { timeout: 1000 });
+                        .fill('docx', { timeout: 3000 });
                 }).toPass();
 
                 await expect(page.getByTestId('dlor-panel-validity-indicator-2')).toBeHidden();

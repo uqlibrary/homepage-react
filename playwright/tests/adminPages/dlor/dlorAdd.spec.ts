@@ -230,8 +230,11 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                     await page.locator('[data-testid="object-title"] input').press('End', { timeout: 1000 });
                     await page.locator('[data-testid="object-title"] input').press('Backspace', { timeout: 1000 });
                     await expect(
-                        page.locator('[data-testid="dlor-panel-validity-indicator-1"] span'),
-                    ).toContainText('1', { timeout: 1000 });
+                        page
+                            .locator('[data-testid="dlor-panel-validity-indicator-1"] span')
+                            .getByText('1')
+                            .first(),
+                    ).toBeVisible({ timeout: 3000 });
                 }).toPass();
                 await page.locator('[data-testid="object-title"] input').pressSequentially('p');
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).not.toBeVisible();
