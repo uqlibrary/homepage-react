@@ -312,17 +312,25 @@ test.describe('Digital Learning Hub View page', () => {
             await expect(page.getByTestId('notifications-capture')).not.toBeDisabled();
 
             const userEmailInput = page.locator('#userEmail');
-            await setInputValue(userEmailInput, '');
-            await expect(page.getByTestId('notifications-capture')).toBeDisabled();
+            await expect(async () => {
+                await setInputValue(userEmailInput, '');
+                await expect(page.getByTestId('notifications-capture')).toBeDisabled({ timeout: 2000 });
+            }).toPass();
 
-            await setInputValue(userEmailInput, 'joe');
-            await expect(page.getByTestId('notifications-capture')).toBeDisabled();
+            await expect(async () => {
+                await setInputValue(userEmailInput, 'test');
+                await expect(page.getByTestId('notifications-capture')).toBeDisabled({ timeout: 2000 });
+            }).toPass();
 
-            await setInputValue(userEmailInput, 'joe@joe.com');
-            await expect(page.getByTestId('notifications-capture')).not.toBeDisabled();
+            await expect(async () => {
+                await setInputValue(userEmailInput, 'test@test.com');
+                await expect(page.getByTestId('notifications-capture')).not.toBeDisabled({ timeout: 2000 });
+            }).toPass();
 
-            await setInputValue(userEmailInput, 'thisfails');
-            await expect(page.getByTestId('notifications-capture')).toBeDisabled();
+            await expect(async () => {
+                await setInputValue(userEmailInput, 'thisfails');
+                await expect(page.getByTestId('notifications-capture')).toBeDisabled({ timeout: 2000 });
+            }).toPass();
         });
 
         test('sends demographics correctly', async ({ page, context }) => {
