@@ -1,4 +1,4 @@
-import { test, expect } from '@uq/pw/test';
+import { test, expect, Page } from '@uq/pw/test';
 import { DLOR_ADMIN_USER } from '@uq/pw/lib/constants';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
@@ -443,47 +443,52 @@ test.describe('Digital Learning Hub admin homepage', () => {
     });
 
     test.describe('DLOR exports', () => {
+        const getDownloadTriggerPromise = (page: Page, callback: () => Promise<void>) =>
+            expect(async () => {
+                await page.locator('body').click();
+                await callback();
+            }).toPass();
+
+        const assertDownload = async (page: Page, promise: Promise<void>) => {
+            const [downloadPromiseResult] = await Promise.all([page.waitForEvent('download'), promise]);
+            expect(downloadPromiseResult).toBeTruthy();
+        };
+
         test.beforeEach(async ({ page }) => {
             await page.goto(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
         });
 
         test('should trigger a download when the Export Objects to CSV button is clicked', async ({ page }) => {
             await expect(page.getByTestId('dlor-homepage-panel-987y-isjgt-9866')).toBeVisible();
-
-            // Mock the download
-            const [download] = await Promise.all([
-                page.waitForEvent('download'),
-                page.getByTestId('admin-dlor-menu-button').click(),
-                page.getByTestId('admin-dlor-export-dlordata-button').click(),
-            ]);
-
-            expect(download).toBeTruthy();
+            await assertDownload(
+                page,
+                getDownloadTriggerPromise(page, async () => {
+                    await page.getByTestId('admin-dlor-menu-button').click({ timeout: 2000 });
+                    await page.getByTestId('admin-dlor-export-dlordata-button').click({ timeout: 2000 });
+                }),
+            );
         });
 
         test('should trigger a download when the Export Demographics to CSV button is clicked', async ({ page }) => {
             await expect(page.getByTestId('dlor-homepage-panel-987y-isjgt-9866')).toBeVisible();
-
-            // Mock the download
-            const [download] = await Promise.all([
-                page.waitForEvent('download'),
-                page.getByTestId('admin-dlor-menu-button').click(),
-                page.getByTestId('admin-dlor-export-demographicsdata-button').click(),
-            ]);
-
-            expect(download).toBeTruthy();
+            await assertDownload(
+                page,
+                getDownloadTriggerPromise(page, async () => {
+                    await page.getByTestId('admin-dlor-menu-button').click({ timeout: 2000 });
+                    await page.getByTestId('admin-dlor-export-demographicsdata-button').click({ timeout: 2000 });
+                }),
+            );
         });
 
         test('should trigger a download when the Export Favourites to CSV button is clicked', async ({ page }) => {
             await expect(page.getByTestId('dlor-homepage-panel-987y-isjgt-9866')).toBeVisible();
-
-            // Mock the download
-            const [download] = await Promise.all([
-                page.waitForEvent('download'),
-                page.getByTestId('admin-dlor-menu-button').click(),
-                page.getByTestId('admin-dlor-export-favourites-button').click(),
-            ]);
-
-            expect(download).toBeTruthy();
+            await assertDownload(
+                page,
+                getDownloadTriggerPromise(page, async () => {
+                    await page.getByTestId('admin-dlor-menu-button').click({ timeout: 2000 });
+                    await page.getByTestId('admin-dlor-export-favourites-button').click({ timeout: 2000 });
+                }),
+            );
         });
 
         test('should handle errors when exporting favourites to CSV fails', async ({ page }) => {
