@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -75,6 +76,15 @@ const StyledButton = styled(Button)(({ theme }) => ({
             backgroundColor: theme.palette.primary.light,
             borderColor: theme.palette.primary.light,
             color: '#fff',
+        },
+    },
+    '&.alert': {
+        backgroundColor: '#d62929',
+        borderColor: '#d62929',
+        color: '#fff',
+        '&:hover': {
+            backgroundColor: '#fff',
+            color: '#d62929',
         },
     },
     '&.primary': {
@@ -188,6 +198,14 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             <div class="dialogRow">
                 <label for="siteNumber">Site number</label>
                 <input id="siteNumber" name="site_id_displayed" type="text" value="${siteDetails.site_id_displayed}" />
+            </div>
+            <div class="dialogRow">
+                <label>Buildings</label>
+                ${siteDetails?.buildings?.length > 0 &&
+                    '<ul>' +
+                        siteDetails.buildings.map(building => `<li>${building.building_id_displayed} </li>`).join('') +
+                        '</ul>'}
+                ${siteDetails?.buildings?.length === 0 ? '<p>No buildings</p>' : ''}
             </div>`;
 
         if (!!formBody) {
@@ -224,13 +242,9 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
     <div class="dialogRow">
         <label>Floors</label>
         ${buildingDetails?.floors?.length > 0 &&
-            '<ul>' + buildingDetails.floors.map(floor => `<li>${floor.floor_id_displayed}</li>`).join('') + '</ul>'}
+            '<ul>' + buildingDetails.floors.map(floor => `<li>${floor.floor_id_displayed} </li>`).join('') + '</ul>'}
         ${buildingDetails?.floors?.length === 0 ? '<p>No floors</p>' : ''}
-    </div>
-    <div class="dialogRow">
-        <button>Add floor</button>
-    </div>
-`;
+    </div>`;
 
         if (!!formBody) {
             const dialogBodyElement = document.getElementById('dialogBody');
@@ -386,8 +400,29 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                     <form>
                         <div id="dialogBody" />
                         <div id="dialogFooter" className={'dialogFooter'}>
-                            <StyledButton className={'secondary'} children={'Cancel'} onClick={closeDialog} />
-                            <StyledButton className={'primary'} children={'Save'} onClick={saveChange} />
+                            <div>
+                                <StyledButton
+                                    className={'alert'}
+                                    children={'Delete'}
+                                    // onClick={}
+                                />
+                            </div>
+                            <div>
+                                <StyledButton
+                                    className={'secondary'}
+                                    style={{ marginRight: '0.5rem' }}
+                                    // onClick={}
+                                >
+                                    Add new
+                                </StyledButton>
+                                <StyledButton
+                                    className={'secondary'}
+                                    style={{ marginRight: '0.5rem' }}
+                                    children={'Cancel'}
+                                    onClick={closeDialog}
+                                />
+                                <StyledButton className={'primary'} children={'Save'} onClick={saveChange} />
+                            </div>
                         </div>
                     </form>
                 </StyledDialog>
