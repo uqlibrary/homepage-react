@@ -110,7 +110,8 @@ const StyledEditButton = styled(Button)(() => ({
         color: 'grey',
         height: '1rem',
     },
-    marginLeft: '0.5rem',
+    marginLeft: '-0.5rem',
+    paddingLeft: 0,
     '&:hover, &:focus': {
         backgroundColor: 'transparent',
         '& svg': {
@@ -120,11 +121,17 @@ const StyledEditButton = styled(Button)(() => ({
 }));
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
-    textAlign: 'center',
+    alignItems: 'center',
 }));
 const StyledRow = styled('div')(() => ({
     marginBlock: '1rem',
 }));
+const StyledGroundFloorIndicatorSpan = styled('span')(() => ({
+    marginLeft: '0.25rem',
+}));
+
+const getIdentifierForFloorGroundFloorIndicator = floorId => `groundfloor-for-${floorId}`;
+
 export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoading, siteListError }) => {
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -218,6 +225,9 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             const dialogBodyElement = document.getElementById('dialogBody');
             !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
+            const addNewButton = document.getElementById('addNewButton');
+            !!addNewButton && (addNewButton.innerText = 'Add building');
+
             const dialog = document.getElementById('popupDialog');
             !!dialog && dialog.showModal();
         } else {
@@ -235,6 +245,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
     <h2>Edit building details</h2>
     <input name="buildingId" type="hidden" value="${buildingDetails?.building_id}" />
     <input name="locationType" type="hidden" value="building" />
+    <input name="ground_floor_id_old" type="hidden" value="${buildingDetails.ground_floor_id}" />
     <div class="dialogRow">
         <label for="buildingName">Building name</label>
         <input id="buildingName" name="building_name" type="text" value="${buildingDetails?.building_name}" />
@@ -253,13 +264,13 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                     .map(floor => {
                         const checked = floor.floor_id === buildingDetails.ground_floor_id ? ' checked' : '';
                         return `<li>
-                                    <input type="radio" id="groundFloor-${floor.floor_id}" name="groundFloor" ${checked} />
+                                    <input type="radio" id="groundFloor-${floor.floor_id}" name="ground_floor_id" ${checked} value="${floor.floor_id}" />
                                     <label for="groundFloor-${floor.floor_id}">Floor ${floor.floor_id_displayed}</label> 
                                 </li>`;
                     })
                     .join('') +
                 `<li>
-                    <input type="radio" id="groundFloor-none}" name="groundFloor" ${
+                    <input type="radio" id="groundFloor-none}" name="ground_floor_id" ${
                         !buildingDetails.ground_floor_id ? ' checked' : ''
                     } />
                     <label for="groundFloor-none">None</label> 
@@ -272,6 +283,9 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         if (!!formBody) {
             const dialogBodyElement = document.getElementById('dialogBody');
             !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+            const addNewButton = document.getElementById('addNewButton');
+            !!addNewButton && (addNewButton.innerText = 'Add floor');
 
             const dialog = document.getElementById('popupDialog');
             !!dialog && dialog.showModal();
@@ -286,6 +300,9 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
         const dialogBodyElement = document.getElementById('dialogBody');
         !!dialogBodyElement && (dialogBodyElement.innerHTML = '');
+
+        const addNewButton = document.getElementById('addNewButton');
+        !!addNewButton && (addNewButton.innerText = 'Add new');
     }
 
     function saveChange(e) {
@@ -293,6 +310,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
+        console.log('data=', data);
         const locationType = data?.locationType;
         const locationid = data[`${locationType}Id`];
         !!locationType &&
@@ -311,6 +329,17 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                         case 'building':
                             element = document.getElementById(`building-${locationid}`);
                             !!element && (element.innerText = data?.building_name);
+                            if (data?.ground_floor_id_old !== data?.ground_floor_id) {
+                                const oldGroudFloorlabel = document.getElementById(
+                                    getIdentifierForFloorGroundFloorIndicator(data?.ground_floor_id_old),
+                                );
+                                !!oldGroudFloorlabel && (oldGroudFloorlabel.style.display = 'none');
+
+                                const newGroudFloorlabel = document.getElementById(
+                                    getIdentifierForFloorGroundFloorIndicator(data?.ground_floor_id),
+                                );
+                                !!newGroudFloorlabel && (newGroudFloorlabel.style.display = 'block');
+                            }
                             break;
                         default:
                     }
@@ -319,6 +348,10 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                     console.log('catch: saving site ', locationid, 'failed:', e);
                     displayToastMessage('An error occurred');
                 });
+    }
+
+    function addCampus() {
+        //
     }
 
     function getLocationLayout(siteList) {
@@ -363,8 +396,16 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                             <StyledRow key={`location-floor-${floor.floor_id}`}>
                                 <div style={{ paddingLeft: '12rem' }}>
                                     <StyledDiv>
-                                        {floor.floor_id_displayed}
-                                        {building.ground_floor_id === floor.floor_id && ' [Ground]'}
+                                        <span>{floor.floor_id_displayed}</span>
+
+                                        <StyledGroundFloorIndicatorSpan
+                                            id={getIdentifierForFloorGroundFloorIndicator(floor.floor_id)}
+                                            style={{
+                                                display: building.ground_floor_id === floor.floor_id ? 'block' : 'none',
+                                            }}
+                                        >
+                                            [Ground floor]
+                                        </StyledGroundFloorIndicatorSpan>
                                         <StyledEditButton
                                             color="primary"
                                             size="small"
@@ -379,6 +420,12 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                         )),
                     ]),
                 ])}
+                <StyledButton
+                    className={'primary'}
+                    style={{ marginLeft: '4rem', marginTop: '2rem' }}
+                    children={'Add new Campus'}
+                    onClick={addCampus}
+                />
             </>
         );
     }
@@ -432,6 +479,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                             </div>
                             <div>
                                 <StyledButton
+                                    id={'addNewButton'}
                                     className={'secondary'}
                                     style={{ marginRight: '0.5rem' }}
                                     // onClick={}
