@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 
 import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
 
 import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -20,13 +22,85 @@ const StyledStandardCard = styled(StandardCard)(() => ({
         paddingBlock: 0,
     },
 }));
+const StyledDialog = styled('dialog')(({ theme }) => ({
+    width: '80%',
+    height: '80%',
+    border: '1px solid rgba(38, 85, 115, 0.15)',
+    '& .dialogRow': {
+        padding: '1rem',
+        '& label': {
+            fontWeight: 500,
+            display: 'block',
+        },
+        '& input[type="text"]': {
+            padding: '0.5rem',
+            width: '90%',
+        },
+        '& :focus-visible': {
+            outlineColor: theme.palette.primary.light,
+        },
+    },
+    '& .dialogFooter': {
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginTop: '1rem',
+    },
+}));
+const StyledButton = styled(Button)(({ theme }) => ({
+    backgroundColor: theme.palette.primary.light,
+    borderWidth: '2px',
+    borderStyle: 'solid',
+    borderColor: theme.palette.primary.light,
+    borderRadius: '.25rem',
+    boxSizing: 'border-box',
+    color: '#fff',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '.5rem',
+    fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+    fontSize: '1rem',
+    fontWeight: 500,
+    lineHeight: 1,
+    padding: '1rem 1.5rem',
+    position: 'relative',
+    textAlign: 'center',
+    textDecoration: 'none',
+    transition: 'background-color 200ms ease-out, color 200ms ease-out, border 200ms ease-out',
+    '&.secondary': {
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+        borderColor: theme.palette.primary.light,
+        color: theme.palette.primary.light,
+        '&:hover': {
+            backgroundColor: theme.palette.primary.light,
+            borderColor: theme.palette.primary.light,
+            color: '#fff',
+        },
+    },
+    '&.primary': {
+        '&:hover': {
+            backgroundColor: '#fff',
+            borderColor: '#51247a',
+            color: '#51247a',
+            textDecoration: 'underline',
+        },
+    },
+}));
 const StyledGridItem = styled(Grid)(() => ({
     marginTop: '12px',
 }));
-const StyledEditIcon = styled(EditIcon)(() => ({
-    color: 'grey',
+const StyledEditButton = styled(Button)(() => ({
+    '& svg': {
+        color: 'grey',
+        height: '1rem',
+    },
     marginLeft: '0.5rem',
-    height: '1rem',
+    '&:hover, &:focus': {
+        backgroundColor: 'transparent',
+        '& svg': {
+            color: 'black',
+        },
+    },
 }));
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
@@ -49,6 +123,34 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    function editSite(siteId) {
+        console.log('editSite', siteId);
+        const siteDetails = siteList.find(s => s.site_id === siteId);
+        console.log('siteDetails=', siteDetails);
+        const formBody = `<h2>Edit site details</h2>
+                                <div class="dialogRow">
+                                    <label for="siteName">Site name</label>
+                                    <input id="siteName" type="text" value="${siteDetails.site_name}" />
+                                </div>
+                                <div class="dialogRow">
+                                    <label for="siteNumber">Site number</label>
+                                    <input id="siteNumber" type="text" value=${siteDetails.site_id_displayed} />
+                                </div>`;
+
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+        const dialog = document.getElementById('siteDialog');
+        !!dialog && dialog.showModal();
+    }
+
+    function closeDialog(e) {
+        e.target.closest('dialog').close();
+
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = '');
+    }
+
     function getLocationLayout(siteList) {
         return (
             <>
@@ -56,8 +158,14 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                     <StyledRow key={`site-${site.site_id}`}>
                         <div style={{ paddingLeft: '4rem' }}>
                             <StyledDiv>
-                                {site.site_name}
-                                {<StyledEditIcon />}
+                                <span>{site.site_name}</span>
+                                <StyledEditButton
+                                    size="small"
+                                    onClick={() => editSite(site.site_id)}
+                                    aria-label={`Edit ${site.site_name} site details`}
+                                >
+                                    <EditIcon />
+                                </StyledEditButton>
                             </StyledDiv>
                         </div>
                     </StyledRow>,
@@ -70,7 +178,14 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                         'Floor',
                                         building.floors.length,
                                     )})`}</span>
-                                    {<StyledEditIcon />}
+                                    <StyledEditButton
+                                        color="primary"
+                                        size="small"
+                                        // onClick={() => editSite(site.site_id)}
+                                        aria-label={`Edit ${building.building_name}`}
+                                    >
+                                        <EditIcon />
+                                    </StyledEditButton>
                                 </StyledDiv>
                             </div>
                         </StyledRow>,
@@ -80,7 +195,14 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                     <StyledDiv>
                                         {floor.floor_id_displayed}
                                         {building.ground_floor_id === floor.floor_id && ' [Ground]'}
-                                        <StyledEditIcon />
+                                        <StyledEditButton
+                                            color="primary"
+                                            size="small"
+                                            // onClick={() => editSite(site.site_id)}
+                                            aria-label={`Edit ${floor.floor_id_displayed}`}
+                                        >
+                                            <EditIcon />
+                                        </StyledEditButton>
                                     </StyledDiv>
                                 </div>
                             </StyledRow>
@@ -127,6 +249,28 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                         })()}
                     </Grid>
                 </StandardCard>
+                <StyledDialog id={'siteDialog'} closedby="any">
+                    <form>
+                        <div id="dialogBody" />
+                        <div id="dialogFooter" className={'dialogFooter'}>
+                            <StyledButton
+                                className={'secondary'}
+                                // variant="contained"
+                                children={'Cancel'}
+                                // disabled={!isFormValid}
+                                onClick={closeDialog}
+                            />
+                            <StyledButton
+                                className={'primary'}
+                                // variant="contained"
+                                children={'Save'}
+                                // children={defaults.type === 'edit' ? 'Save' : 'Create'}
+                                // disabled={!isFormValid}
+                                // onClick={saveChange}
+                            />
+                        </div>
+                    </form>
+                </StyledDialog>
             </section>
         </StandardPage>
     );

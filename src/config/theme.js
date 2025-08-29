@@ -5,7 +5,7 @@ import { renderTimeViewClock } from '@mui/x-date-pickers';
 const palette = {
     primary: {
         light: '#51247A', // uqpurple
-        main: '#2377CB', // uqblue
+        main: '#51247A', // uqpurple
         dark: '#195794',
         gradient: {
             horizontal: {
