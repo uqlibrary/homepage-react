@@ -40,6 +40,12 @@ const StyledDialog = styled('dialog')(({ theme }) => ({
         '& :focus-visible': {
             outlineColor: theme.palette.primary.light,
         },
+        '& li': {
+            paddingBlock: '0.5rem',
+            '& input[type="radio"], & label': {
+                display: 'inline',
+            },
+        },
     },
     '& .dialogFooter': {
         display: 'flex',
@@ -240,9 +246,26 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         }" />
     </div>
     <div class="dialogRow">
-        <label>Floors</label>
+        <label>Floors - Choose ground floor</label>
         ${buildingDetails?.floors?.length > 0 &&
-            '<ul>' + buildingDetails.floors.map(floor => `<li>${floor.floor_id_displayed} </li>`).join('') + '</ul>'}
+            '<ul>' +
+                buildingDetails.floors
+                    .map(floor => {
+                        const checked = floor.floor_id === buildingDetails.ground_floor_id ? ' checked' : '';
+                        return `<li>
+                                    <input type="radio" id="groundFloor-${floor.floor_id}" name="groundFloor" ${checked} />
+                                    <label for="groundFloor-${floor.floor_id}">Floor ${floor.floor_id_displayed}</label> 
+                                </li>`;
+                    })
+                    .join('') +
+                `<li>
+                    <input type="radio" id="groundFloor-none}" name="groundFloor" ${
+                        !buildingDetails.ground_floor_id ? ' checked' : ''
+                    } />
+                    <label for="groundFloor-none">None</label> 
+                </li>
+                </ul>`}
+                
         ${buildingDetails?.floors?.length === 0 ? '<p>No floors</p>' : ''}
     </div>`;
 
