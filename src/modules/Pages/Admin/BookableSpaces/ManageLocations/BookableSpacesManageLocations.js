@@ -3,12 +3,6 @@ import PropTypes from 'prop-types';
 
 import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -16,6 +10,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { breadcrumbs } from 'config/routes';
+import { pluralise } from 'helpers/general';
 
 const StyledStandardCard = styled(StandardCard)(() => ({
     '& .MuiCardHeader-root': {
@@ -31,10 +26,14 @@ const StyledGridItem = styled(Grid)(() => ({
 const StyledEditIcon = styled(EditIcon)(() => ({
     color: 'grey',
     marginLeft: '0.5rem',
+    height: '1rem',
 }));
 const StyledDiv = styled('div')(() => ({
     display: 'flex',
     textAlign: 'center',
+}));
+const StyledRow = styled('div')(() => ({
+    marginBlock: '1rem',
 }));
 export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoading, siteListError }) => {
     React.useEffect(() => {
@@ -50,34 +49,48 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    function getLoctionListTableRow(site, building, floor, siteIdPrevious, buildingIdPrevious) {
+    function getLocationLayout(siteList) {
         return (
-            <TableRow key={`location-${site.site_id}-${building.building_id}-floor-${floor.floor_id}`}>
-                <TableCell>
-                    <StyledDiv>
-                        {site.site_name}
-                        {siteIdPrevious !== site.site_id && <StyledEditIcon />}
-                    </StyledDiv>
-                </TableCell>
-                <TableCell>
-                    <StyledDiv>
-                        {building.building_name}
-                        {buildingIdPrevious !== building.building_id && <StyledEditIcon />}
-                    </StyledDiv>
-                </TableCell>
-                <TableCell>
-                    <StyledDiv>
-                        {floor.floor_id_displayed}
-                        {building.ground_floor_id === floor.floor_id && ' [Ground]'}
-                        <StyledEditIcon />
-                    </StyledDiv>
-                </TableCell>
-            </TableRow>
+            <>
+                {siteList.map(site => [
+                    <StyledRow key={`site-${site.site_id}`}>
+                        <div style={{ paddingLeft: '4rem' }}>
+                            <StyledDiv>
+                                {site.site_name}
+                                {<StyledEditIcon />}
+                            </StyledDiv>
+                        </div>
+                    </StyledRow>,
+                    ...site.buildings.flatMap(building => [
+                        <StyledRow key={`building-${building.building_id}`}>
+                            <div style={{ paddingLeft: '8rem' }}>
+                                <StyledDiv>
+                                    <span>{`${building.building_name}`}</span>
+                                    <span style={{ marginLeft: '0.5rem' }}>{`(${building.floors.length} ${pluralise(
+                                        'Floor',
+                                        building.floors.length,
+                                    )})`}</span>
+                                    {<StyledEditIcon />}
+                                </StyledDiv>
+                            </div>
+                        </StyledRow>,
+                        ...building.floors.map(floor => (
+                            <StyledRow key={`location-floor-${floor.floor_id}`}>
+                                <div style={{ paddingLeft: '12rem' }}>
+                                    <StyledDiv>
+                                        {floor.floor_id_displayed}
+                                        {building.ground_floor_id === floor.floor_id && ' [Ground]'}
+                                        <StyledEditIcon />
+                                    </StyledDiv>
+                                </div>
+                            </StyledRow>
+                        )),
+                    ]),
+                ])}
+            </>
         );
     }
 
-    let siteIdPrevious = null;
-    let buildingIdPrevious = null;
     return (
         <StandardPage title="Library bookable spaces Location management">
             <section aria-live="assertive">
@@ -109,39 +122,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                     </StyledGridItem>
                                 );
                             } else {
-                                return (
-                                    <TableContainer>
-                                        <Table>
-                                            <TableHead>
-                                                <TableRow>
-                                                    <TableCell component="th">Site</TableCell>
-                                                    <TableCell component="th">Building</TableCell>
-                                                    <TableCell component="th">Floor</TableCell>
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                                {siteList.map(site =>
-                                                    site.buildings.map(building =>
-                                                        building.floors.map(floor => {
-                                                            const component = getLoctionListTableRow(
-                                                                site,
-                                                                building,
-                                                                floor,
-                                                                siteIdPrevious,
-                                                                buildingIdPrevious,
-                                                            );
-
-                                                            siteIdPrevious = site.site_id;
-                                                            buildingIdPrevious = building.building_id;
-
-                                                            return component;
-                                                        }),
-                                                    ),
-                                                )}
-                                            </TableBody>
-                                        </Table>
-                                    </TableContainer>
-                                );
+                                return <StyledGridItem>{getLocationLayout(siteList)}</StyledGridItem>;
                             }
                         })()}
                     </Grid>
