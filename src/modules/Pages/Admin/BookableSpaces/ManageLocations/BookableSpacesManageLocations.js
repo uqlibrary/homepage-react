@@ -175,7 +175,6 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
     }
 
     function editSite(siteId) {
-        console.log('editSite', siteId);
         const siteDetails = siteId > 0 && siteList.find(s => s.site_id === siteId);
         const formBody =
             !!siteDetails &&
@@ -184,21 +183,63 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             <input  name="locationType" type="hidden" value="site" />
             <div class="dialogRow">
                 <label for="siteName">Site name</label>
-                <input id="siteName" name="siteName" type="text" value="${siteDetails.site_name}" />
+                <input id="siteName" name="site_name" type="text" value="${siteDetails.site_name}" />
             </div>
             <div class="dialogRow">
                 <label for="siteNumber">Site number</label>
-                <input id="siteNumber" name="siteNumber" type="text" value="${siteDetails.site_id_displayed}" onchange="" />
+                <input id="siteNumber" name="site_id_displayed" type="text" value="${siteDetails.site_id_displayed}" />
             </div>`;
 
         if (!!formBody) {
             const dialogBodyElement = document.getElementById('dialogBody');
             !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
-            const dialog = document.getElementById('siteDialog');
+            const dialog = document.getElementById('popupDialog');
             !!dialog && dialog.showModal();
         } else {
-            console.log('Cant get site with id ', siteId);
+            console.log(`Cant get find site with site_id = "${siteId}" in sitelist from api`);
+            displayToastMessage('Sorry, something went wrong');
+        }
+    }
+
+    function editBuilding(buildingId) {
+        const buildingDetails =
+            buildingId > 0 &&
+            siteList.flatMap(site => site.buildings).find(building => building.building_id === buildingId);
+
+        const formBody = `
+    <h2>Edit building details</h2>
+    <input name="buildingId" type="hidden" value="${buildingDetails?.building_id}" />
+    <input name="locationType" type="hidden" value="building" />
+    <div class="dialogRow">
+        <label for="buildingName">Building name</label>
+        <input id="buildingName" name="building_name" type="text" value="${buildingDetails?.building_name}" />
+    </div>
+    <div class="dialogRow">
+        <label for="buildingNumber">Building number</label>
+        <input id="buildingNumber" name="building_id_displayed" type="text" value="${
+            buildingDetails?.building_id_displayed
+        }" />
+    </div>
+    <div class="dialogRow">
+        <label>Floors</label>
+        ${buildingDetails?.floors?.length > 0 &&
+            '<ul>' + buildingDetails.floors.map(floor => `<li>${floor.floor_id_displayed}</li>`).join('') + '</ul>'}
+        ${buildingDetails?.floors?.length === 0 ? '<p>No floors</p>' : ''}
+    </div>
+    <div class="dialogRow">
+        <button>Add floor</button>
+    </div>
+`;
+
+        if (!!formBody) {
+            const dialogBodyElement = document.getElementById('dialogBody');
+            !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+            const dialog = document.getElementById('popupDialog');
+            !!dialog && dialog.showModal();
+        } else {
+            console.log(`Cant get find building with building_id = "${buildingId}" in sitelist from api`);
             displayToastMessage('Sorry, something went wrong');
         }
     }
@@ -224,10 +265,15 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 .then(() => {
                     closeDialog(e);
                     displayToastMessage('Location changes saved', false);
+                    let element;
                     switch (locationType) {
                         case 'site':
-                            const element = document.getElementById(`site-${locationid}`);
-                            !!element && (element.innerText = data?.siteName);
+                            element = document.getElementById(`site-${locationid}`);
+                            !!element && (element.innerText = data?.site_name);
+                            break;
+                        case 'building':
+                            element = document.getElementById(`building-${locationid}`);
+                            !!element && (element.innerText = data?.building_name);
                             break;
                         default:
                     }
@@ -249,7 +295,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                 <StyledEditButton
                                     size="small"
                                     onClick={() => editSite(site.site_id)}
-                                    aria-label={`Edit ${site.site_name} site details`}
+                                    aria-label={`Edit ${site.site_name} campus details`}
                                 >
                                     <EditIcon />
                                 </StyledEditButton>
@@ -260,7 +306,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                         <StyledRow key={`building-${building.building_id}`}>
                             <div style={{ paddingLeft: '8rem' }}>
                                 <StyledDiv>
-                                    <span>{`${building.building_name}`}</span>
+                                    <span id={`building-${building.building_id}`}>{`${building.building_name}`}</span>
                                     <span style={{ marginLeft: '0.5rem' }}>{`(${building.floors.length} ${pluralise(
                                         'Floor',
                                         building.floors.length,
@@ -268,8 +314,8 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                     <StyledEditButton
                                         color="primary"
                                         size="small"
-                                        // onClick={() => editSite(site.site_id)}
-                                        aria-label={`Edit ${building.building_name}`}
+                                        onClick={() => editBuilding(building.building_id)}
+                                        aria-label={`Edit ${building.building_name} details`}
                                     >
                                         <EditIcon />
                                     </StyledEditButton>
@@ -336,7 +382,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                         })()}
                     </Grid>
                 </StandardCard>
-                <StyledDialog id={'siteDialog'} closedby="any">
+                <StyledDialog id={'popupDialog'} closedby="any">
                     <form>
                         <div id="dialogBody" />
                         <div id="dialogFooter" className={'dialogFooter'}>
