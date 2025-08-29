@@ -46,7 +46,7 @@ const palette = {
         dark: '#005000',
     },
     error: {
-        light: '#ff0000',
+        light: '#D62929',
         main: '#951126',
         dark: '#790000',
     },

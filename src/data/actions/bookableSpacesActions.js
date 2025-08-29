@@ -1,9 +1,9 @@
 import * as actions from './actionTypes';
 import { destroy, get, post, put } from 'repositories/generic';
 import {
-    SPACES_ROOMS_ALL_API,
     SPACES_ADD_LOCATION_API,
     SPACES_MODIFY_LOCATION_API,
+    SPACES_ROOMS_ALL_API,
     SPACES_SITE_API,
 } from 'repositories/routes';
 
@@ -64,10 +64,12 @@ export function addBookableSpaceLocation({ type, request }) {
     };
 }
 
-export function updateBookableSpaceLocation({ type, request }) {
+export function updateBookableSpaceLocation(request) {
+    const locationType = request?.locationType;
     return dispatch => {
         dispatch({ type: actions.SPACES_LOCATION_UPDATING });
-        return put(SPACES_MODIFY_LOCATION_API({ type, id: request[`${type}_id`] }), request)
+        const url = SPACES_MODIFY_LOCATION_API({ type: locationType, id: request[`${locationType}Id`] });
+        return put(url, request)
             .then(response => {
                 if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({

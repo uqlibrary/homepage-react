@@ -123,25 +123,84 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    function displayToastMessage(message, isError = true) {
+        const backgroundColor = isError ? '#D62929' : '#4aa74e';
+        const icon = isError
+            ? 'url("data:image/svg+xml,%3csvg viewBox=%270 0 24 24%27 fill=%27none%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M20.127 18.545a1.18 1.18 0 0 1-1.055 1.706H4.929a1.18 1.18 0 0 1-1.055-1.706l7.072-14.143a1.179 1.179 0 0 1 2.109 0l7.072 14.143Z%27 stroke=%27%23fff%27 stroke-width=%271.5%27%3e%3c/path%3e%3cpath d=%27M12 9v4%27 stroke=%27%23fff%27 stroke-width=%271.5%27 stroke-linecap=%27round%27%3e%3c/path%3e%3ccircle cx=%2711.9%27 cy=%2716.601%27 r=%271.1%27 fill=%27%23fff%27%3e%3c/circle%3e%3c/svg%3e")'
+            : 'url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27%23fff%27 viewBox=%270 0 16 16%27%3E%3Cg stroke=%27%23fff%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3E%3Cpath fill=%27none%27 d=%27M9.258 10.516h-.43A.829.829 0 0 1 8 9.687V7.602c0-.23-.2-.43-.43-.43h-.425%27/%3E%3Cpath d=%27M7.8 5.059a.194.194 0 0 0-.198.199c0 .113.085.199.199.199a.195.195 0 0 0 .199-.2.195.195 0 0 0-.2-.198zm0 0%27/%3E%3Cpath fill=%27none%27 d=%27M8 1.715c3.457 0 6.285 2.828 6.285 6.285 0 3.457-2.828 6.285-6.285 6.285-3.457 0-6.285-2.828-6.285-6.285 0-3.457 2.828-6.285 6.285-6.285zm0 0%27/%3E%3C/g%3E%3C/svg%3E")';
+        const html = `
+            <style>
+                body {
+                    position: relative;
+                }
+                .toast {
+                    background-color: ${backgroundColor};
+                    color: #fff;
+                    padding: .5rem 1.5rem .5rem 2.5rem;
+                    background-image: ${icon};
+                    background-repeat: no-repeat;
+                    background-size: 1.5rem;
+                    background-position: 0.75rem center;
+                    position: fixed;
+                    bottom: 0.5rem;
+                    left: 0.5rem;
+                    transition: opacity 500ms ease-out;
+                    p {
+                        font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                        font-size: 1rem;
+                        font-weight: 400;
+                        letter-spacing: 0.16px;
+                        line-height: 25.6px;
+                    }
+                }
+            </style>
+            <div id="toast-corner-message" class="toast" data-testid="toast">
+                <p>${message}</p>
+            </div>
+        `;
+
+        const template = document.createElement('template');
+        !!html && !!template && (template.innerHTML = html);
+        const body = document.querySelector('body');
+        !!body && !!template && body.appendChild(template.content.cloneNode(true));
+        const hideDelay = 3000;
+        setTimeout(() => {
+            const toast = document.getElementById('toast-corner-message');
+            !!toast && (toast.style.opacity = 0);
+        }, hideDelay);
+        setTimeout(() => {
+            const toast = document.getElementById('toast-corner-message');
+            !!toast && toast.remove();
+        }, hideDelay + 1000);
+    }
+
     function editSite(siteId) {
         console.log('editSite', siteId);
-        const siteDetails = siteList.find(s => s.site_id === siteId);
-        console.log('siteDetails=', siteDetails);
-        const formBody = `<h2>Edit site details</h2>
-                                <div class="dialogRow">
-                                    <label for="siteName">Site name</label>
-                                    <input id="siteName" type="text" value="${siteDetails.site_name}" />
-                                </div>
-                                <div class="dialogRow">
-                                    <label for="siteNumber">Site number</label>
-                                    <input id="siteNumber" type="text" value=${siteDetails.site_id_displayed} />
-                                </div>`;
+        const siteDetails = siteId > 0 && siteList.find(s => s.site_id === siteId);
+        const formBody =
+            !!siteDetails &&
+            `<h2>Edit site details</h2>
+            <input  name="siteId" type="hidden" value="${siteDetails.site_id}" />
+            <input  name="locationType" type="hidden" value="site" />
+            <div class="dialogRow">
+                <label for="siteName">Site name</label>
+                <input id="siteName" name="siteName" type="text" value="${siteDetails.site_name}" />
+            </div>
+            <div class="dialogRow">
+                <label for="siteNumber">Site number</label>
+                <input id="siteNumber" name="siteNumber" type="text" value="${siteDetails.site_id_displayed}" onchange="" />
+            </div>`;
 
-        const dialogBodyElement = document.getElementById('dialogBody');
-        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+        if (!!formBody) {
+            const dialogBodyElement = document.getElementById('dialogBody');
+            !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
-        const dialog = document.getElementById('siteDialog');
-        !!dialog && dialog.showModal();
+            const dialog = document.getElementById('siteDialog');
+            !!dialog && dialog.showModal();
+        } else {
+            console.log('Cant get site with id ', siteId);
+            displayToastMessage('Sorry, something went wrong');
+        }
     }
 
     function closeDialog(e) {
@@ -151,6 +210,34 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         !!dialogBodyElement && (dialogBodyElement.innerHTML = '');
     }
 
+    function saveChange(e) {
+        const form = e.target.closest('form');
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+        const locationType = data?.locationType;
+        const locationid = data[`${locationType}Id`];
+        !!locationType &&
+            !!locationid &&
+            actions
+                .updateBookableSpaceLocation(Object.fromEntries(formData))
+                .then(() => {
+                    closeDialog(e);
+                    displayToastMessage('Location changes saved', false);
+                    switch (locationType) {
+                        case 'site':
+                            const element = document.getElementById(`site-${locationid}`);
+                            !!element && (element.innerText = data?.siteName);
+                            break;
+                        default:
+                    }
+                })
+                .catch(e => {
+                    console.log('catch: saving site ', locationid, 'failed:', e);
+                    displayToastMessage('An error occurred');
+                });
+    }
+
     function getLocationLayout(siteList) {
         return (
             <>
@@ -158,7 +245,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                     <StyledRow key={`site-${site.site_id}`}>
                         <div style={{ paddingLeft: '4rem' }}>
                             <StyledDiv>
-                                <span>{site.site_name}</span>
+                                <span id={`site-${site.site_id}`}>{site.site_name}</span>
                                 <StyledEditButton
                                     size="small"
                                     onClick={() => editSite(site.site_id)}
@@ -253,21 +340,8 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                     <form>
                         <div id="dialogBody" />
                         <div id="dialogFooter" className={'dialogFooter'}>
-                            <StyledButton
-                                className={'secondary'}
-                                // variant="contained"
-                                children={'Cancel'}
-                                // disabled={!isFormValid}
-                                onClick={closeDialog}
-                            />
-                            <StyledButton
-                                className={'primary'}
-                                // variant="contained"
-                                children={'Save'}
-                                // children={defaults.type === 'edit' ? 'Save' : 'Create'}
-                                // disabled={!isFormValid}
-                                // onClick={saveChange}
-                            />
+                            <StyledButton className={'secondary'} children={'Cancel'} onClick={closeDialog} />
+                            <StyledButton className={'primary'} children={'Save'} onClick={saveChange} />
                         </div>
                     </form>
                 </StyledDialog>
