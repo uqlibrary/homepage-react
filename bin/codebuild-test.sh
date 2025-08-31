@@ -104,8 +104,6 @@ function run_pw_test_shard() {
 echo "pwd "
 pwd
 
-echo "start \n"
-
 case "$PIPE_NUM" in
 "1")
     npm run start:mock &
