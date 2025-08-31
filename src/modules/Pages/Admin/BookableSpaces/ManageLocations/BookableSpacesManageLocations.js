@@ -6,8 +6,6 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 
 import EditIcon from '@mui/icons-material/Edit';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -152,7 +150,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             ? 'url("data:image/svg+xml,%3csvg viewBox=%270 0 24 24%27 fill=%27none%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M20.127 18.545a1.18 1.18 0 0 1-1.055 1.706H4.929a1.18 1.18 0 0 1-1.055-1.706l7.072-14.143a1.179 1.179 0 0 1 2.109 0l7.072 14.143Z%27 stroke=%27%23fff%27 stroke-width=%271.5%27%3e%3c/path%3e%3cpath d=%27M12 9v4%27 stroke=%27%23fff%27 stroke-width=%271.5%27 stroke-linecap=%27round%27%3e%3c/path%3e%3ccircle cx=%2711.9%27 cy=%2716.601%27 r=%271.1%27 fill=%27%23fff%27%3e%3c/circle%3e%3c/svg%3e")'
             : 'url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27%23fff%27 viewBox=%270 0 16 16%27%3E%3Cg stroke=%27%23fff%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3E%3Cpath fill=%27none%27 d=%27M9.258 10.516h-.43A.829.829 0 0 1 8 9.687V7.602c0-.23-.2-.43-.43-.43h-.425%27/%3E%3Cpath d=%27M7.8 5.059a.194.194 0 0 0-.198.199c0 .113.085.199.199.199a.195.195 0 0 0 .199-.2.195.195 0 0 0-.2-.198zm0 0%27/%3E%3Cpath fill=%27none%27 d=%27M8 1.715c3.457 0 6.285 2.828 6.285 6.285 0 3.457-2.828 6.285-6.285 6.285-3.457 0-6.285-2.828-6.285-6.285 0-3.457 2.828-6.285 6.285-6.285zm0 0%27/%3E%3C/g%3E%3C/svg%3E")';
         const html = `
-            <style>
+            <style id="locations-toast-styles">
                 body {
                     position: relative;
                 }
@@ -194,14 +192,21 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         setTimeout(() => {
             const toast = document.getElementById('toast-corner-message');
             !!toast && toast.remove();
+            const styles = document.getElementById('locations-toast-styles');
+            !!styles && styles.remove();
         }, hideDelay + 1000);
     }
 
     function editSite(siteId) {
         const siteDetails = siteId > 0 && siteList.find(s => s.site_id === siteId);
-        const formBody =
-            !!siteDetails &&
-            `<h2>Edit site details</h2>
+
+        if (!siteDetails) {
+            console.log(`Can't find site with site_id = "${siteId}" in sitelist from api`);
+            displayToastMessage('Sorry, something went wrong');
+            return;
+        }
+
+        const formBody = `<h2>Edit site details</h2>
             <input  name="siteId" type="hidden" value="${siteDetails.site_id}" />
             <input  name="locationType" type="hidden" value="site" />
             <div class="dialogRow">
@@ -216,7 +221,9 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 <label>Buildings</label>
                 ${siteDetails?.buildings?.length > 0 &&
                     '<ul>' +
-                        siteDetails.buildings.map(building => `<li>${building.building_id_displayed} </li>`).join('') +
+                        siteDetails.buildings
+                            .map(building => `<li>${building.building_name} (${building.building_id_displayed}) </li>`)
+                            .join('') +
                         '</ul>'}
                 ${siteDetails?.buildings?.length === 0 ? '<p>No buildings</p>' : ''}
             </div>`;
@@ -230,9 +237,6 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
             const dialog = document.getElementById('popupDialog');
             !!dialog && dialog.showModal();
-        } else {
-            console.log(`Cant get find site with site_id = "${siteId}" in sitelist from api`);
-            displayToastMessage('Sorry, something went wrong');
         }
     }
 
@@ -241,58 +245,60 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             buildingId > 0 &&
             siteList.flatMap(site => site.buildings).find(building => building.building_id === buildingId);
 
-        const formBody = `
-    <h2>Edit building details</h2>
-    <input name="buildingId" type="hidden" value="${buildingDetails?.building_id}" />
-    <input name="locationType" type="hidden" value="building" />
-    <input name="ground_floor_id_old" type="hidden" value="${buildingDetails.ground_floor_id}" />
-    <div class="dialogRow">
-        <label for="buildingName">Building name</label>
-        <input id="buildingName" name="building_name" type="text" value="${buildingDetails?.building_name}" />
-    </div>
-    <div class="dialogRow">
-        <label for="buildingNumber">Building number</label>
-        <input id="buildingNumber" name="building_id_displayed" type="text" value="${
-            buildingDetails?.building_id_displayed
-        }" />
-    </div>
-    <div class="dialogRow">
-        <label>Floors - Choose ground floor</label>
-        ${buildingDetails?.floors?.length > 0 &&
-            '<ul>' +
-                buildingDetails.floors
-                    .map(floor => {
-                        const checked = floor.floor_id === buildingDetails.ground_floor_id ? ' checked' : '';
-                        return `<li>
-                                    <input type="radio" id="groundFloor-${floor.floor_id}" name="ground_floor_id" ${checked} value="${floor.floor_id}" />
-                                    <label for="groundFloor-${floor.floor_id}">Floor ${floor.floor_id_displayed}</label> 
-                                </li>`;
-                    })
-                    .join('') +
-                `<li>
-                    <input type="radio" id="groundFloor-none}" name="ground_floor_id" ${
-                        !buildingDetails.ground_floor_id ? ' checked' : ''
-                    } />
-                    <label for="groundFloor-none">None</label> 
-                </li>
-                </ul>`}
-                
-        ${buildingDetails?.floors?.length === 0 ? '<p>No floors</p>' : ''}
-    </div>`;
-
-        if (!!formBody) {
-            const dialogBodyElement = document.getElementById('dialogBody');
-            !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
-
-            const addNewButton = document.getElementById('addNewButton');
-            !!addNewButton && (addNewButton.innerText = 'Add floor');
-
-            const dialog = document.getElementById('popupDialog');
-            !!dialog && dialog.showModal();
-        } else {
-            console.log(`Cant get find building with building_id = "${buildingId}" in sitelist from api`);
+        if (!buildingDetails) {
+            console.log(`Can't find building with building_id = "${buildingId}" in sitelist from api`);
             displayToastMessage('Sorry, something went wrong');
+            return;
         }
+
+        console.log('buildingDetails=', buildingDetails);
+        const formBody = `
+            <h2>Edit building details</h2>
+            <input name="buildingId" type="hidden" value="${buildingDetails?.building_id}" />
+            <input name="locationType" type="hidden" value="building" />
+            <input name="ground_floor_id_old" type="hidden" value="${buildingDetails.ground_floor_id ?? ''}" />
+            <div class="dialogRow">
+                <label for="buildingName">Building name</label>
+                <input id="buildingName" name="building_name" type="text" value="${buildingDetails?.building_name}" />
+            </div>
+            <div class="dialogRow">
+                <label for="buildingNumber">Building number</label>
+                <input id="buildingNumber" name="building_id_displayed" type="text" value="${
+                    buildingDetails?.building_id_displayed
+                }" />
+            </div>
+            <div class="dialogRow">
+                <label>Floors - Choose ground floor</label>
+                ${buildingDetails?.floors?.length > 0 &&
+                    '<ul>' +
+                        buildingDetails.floors
+                            .map(floor => {
+                                const checked = floor.floor_id === buildingDetails.ground_floor_id ? ' checked' : '';
+                                return `<li>
+                                            <input type="radio" id="groundFloor-${floor.floor_id}" name="ground_floor_id" ${checked} value="${floor.floor_id}" />
+                                            <label for="groundFloor-${floor.floor_id}">Floor ${floor.floor_id_displayed}</label> 
+                                        </li>`;
+                            })
+                            .join('') +
+                        `<li>
+                            <input type="radio" id="groundFloor-none}" name="ground_floor_id" ${
+                                !buildingDetails.ground_floor_id ? ' checked' : ''
+                            } />
+                            <label for="groundFloor-none">None</label> 
+                        </li>
+                        </ul>`}
+                        
+                ${buildingDetails?.floors?.length === 0 ? '<p>No floors</p>' : ''}
+            </div>`;
+
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+        const addNewButton = document.getElementById('addNewButton');
+        !!addNewButton && (addNewButton.innerText = 'Add floor');
+
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog.showModal();
     }
 
     function closeDialog(e) {
