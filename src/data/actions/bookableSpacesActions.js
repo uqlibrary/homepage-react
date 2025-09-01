@@ -98,10 +98,11 @@ export function updateBookableSpaceLocation(request) {
     };
 }
 
-export function deleteBookableSpaceLocation({ type, id }) {
+export function deleteBookableSpaceLocation({ locationType, locationId }) {
     return dispatch => {
         dispatch({ type: actions.SPACES_LOCATION_DELETING });
-        return destroy(SPACES_MODIFY_LOCATION_API({ type, id: id }))
+        const url = SPACES_MODIFY_LOCATION_API({ type: locationType, id: locationId });
+        return destroy(url)
             .then(response => {
                 if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({

@@ -52,7 +52,14 @@ const StyledDialog = styled('dialog')(({ theme }) => ({
         display: 'flex',
         justifyContent: 'space-between',
         marginTop: '1rem',
+        '& button': {
+            marginLeft: '0.5rem',
+        },
     },
+}));
+const StyledConfirmationButtons = styled('div')(() => ({
+    display: 'flex',
+    justifyContent: 'space-between',
 }));
 const StyledButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.primary.light,
@@ -231,8 +238,9 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         return clonedElement;
     }
 
-    function closeDialog(e) {
-        e.target.closest('dialog').close();
+    function closeDialog(e = null) {
+        const dialog = !e ? document.getElementById('popupDialog') : e.target.closest('dialog');
+        !!dialog && dialog.close();
 
         const dialogBodyElement = document.getElementById('dialogBody');
         !!dialogBodyElement && (dialogBodyElement.innerHTML = '');
@@ -248,8 +256,6 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
         const saveButton = document.getElementById('saveButton');
         removeAnyListeners(saveButton);
-
-        // todo handle delete button
     }
 
     function saveNewSite(e) {
@@ -275,7 +281,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 .then(() => {
                     displayToastMessage('Site added', false);
 
-                    actions.loadAllBookableSpacesRooms();
+                    actions.loadBookableSpaceSites();
                 })
                 .catch(e => {
                     console.log('catch: adding new site failed:', e);
@@ -326,7 +332,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 .then(() => {
                     displayToastMessage('Building added', false);
 
-                    actions.loadAllBookableSpacesRooms();
+                    actions.loadBookableSpaceSites();
                 })
                 .catch(e => {
                     console.log('catch: adding new building failed:', e);
@@ -344,7 +350,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         const data = !!formData && Object.fromEntries(formData);
         console.log('saveChangeToSite data=', data);
         const locationType = data?.locationType;
-        const locationid = data[`${locationType}Id`];
+        const locationId = data[`${locationType}Id`];
 
         // validate form
         const failureMessage = (!data.site_name || !data.site_id_displayed) && 'Please enter site name and number';
@@ -357,18 +363,18 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         closeDialog(e);
 
         !!locationType &&
-            !!locationid &&
+            !!locationId &&
             actions
                 .updateBookableSpaceLocation(Object.fromEntries(formData))
                 .then(() => {
                     displayToastMessage('Change to site saved', false);
 
                     // successful change to values - update the on-screen data to match
-                    const element = document.getElementById(`site-${locationid}`);
+                    const element = document.getElementById(`site-${locationId}`);
                     !!element && (element.innerText = data?.site_name);
                 })
                 .catch(e => {
-                    console.log('catch: saving site ', locationid, 'failed:', e);
+                    console.log('catch: saving site ', locationId, 'failed:', e);
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
@@ -412,6 +418,58 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         !!dialog && dialog.showModal();
     }
 
+    function closeSiteDeletionConfirmation() {
+        const dialog = document.getElementById('confirmationDialog');
+        !!dialog && dialog.close();
+
+        const confirmationCancelButton = document.getElementById('confDialogCancelButton');
+        removeAnyListeners(confirmationCancelButton);
+
+        const confirmationOKButton = document.getElementById('confDialogOkButton');
+        removeAnyListeners(confirmationOKButton);
+    }
+
+    function deleteSite(e, siteDetails) {
+        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+
+        closeSiteDeletionConfirmation(); // close delete conf dialog
+        closeDialog(); // close main dialog
+
+        const locationType = 'site';
+        const locationId = siteDetails?.site_id;
+
+        !!locationType &&
+            !!locationId &&
+            actions
+                .deleteBookableSpaceLocation({ locationType, locationId })
+                .then(() => {
+                    displayToastMessage(`${siteDetails?.site_name} campus deleted`, false);
+                    actions.loadBookableSpaceSites();
+                })
+                .catch(e => {
+                    console.log('catch: deleting site ', locationId, 'failed:', e);
+                    displayToastMessage('Sorry, an error occurred - the admins have been informed');
+                })
+                .finally(() => {
+                    hideBusyIcon(busyWhileSavingIcon);
+                });
+    }
+
+    function confirmAndDeleteSite(e, siteDetails) {
+        const confirmationMessageElement = document.getElementById('confDialogMessage');
+        !!confirmationMessageElement &&
+            (confirmationMessageElement.innerHTML = `<p>Do you really want to delete ${siteDetails.site_name} campus?</p><p>This will also delete associated buildings.</p>`);
+
+        const confirmationCancelButton = document.getElementById('confDialogCancelButton');
+        !!confirmationCancelButton && confirmationCancelButton.addEventListener('click', closeSiteDeletionConfirmation);
+
+        const confirmationOKButton = document.getElementById('confDialogOkButton');
+        !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteSite(e, siteDetails));
+
+        const dialog = document.getElementById('confirmationDialog');
+        !!dialog && dialog.showModal();
+    }
+
     function showEditSiteForm(siteId) {
         const siteDetails = siteId > 0 && siteList.find(s => s.site_id === siteId);
 
@@ -449,9 +507,8 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             !!addNewButton && (addNewButton.innerText = 'Add building');
             !!addNewButton && addNewButton.addEventListener('click', e => showAddBuildingForm(e, siteDetails));
 
-            // TODO handle delete site
-
-            // TODO handle add building
+            const deleteButton = document.getElementById('deleteButton');
+            !!deleteButton && deleteButton.addEventListener('click', e => confirmAndDeleteSite(e, siteDetails));
 
             const dialog = document.getElementById('popupDialog');
             !!dialog && dialog.showModal();
@@ -465,7 +522,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         const data = !!formData && Object.fromEntries(formData);
         console.log('saveChangeToBuilding data=', data);
         const locationType = data?.locationType;
-        const locationid = data[`${locationType}Id`];
+        const locationId = data[`${locationType}Id`];
 
         // validate form
         const failureMessage =
@@ -479,14 +536,14 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         closeDialog(e);
 
         !!locationType &&
-            !!locationid &&
+            !!locationId &&
             actions
                 .updateBookableSpaceLocation(Object.fromEntries(formData))
                 .then(() => {
                     displayToastMessage('Change to building saved', false);
 
                     // successful change to values - update the on-screen data to match
-                    const element = document.getElementById(`building-${locationid}`);
+                    const element = document.getElementById(`building-${locationId}`);
                     !!element && (element.innerText = data?.building_name);
                     if (data?.ground_floor_id_old !== data?.ground_floor_id) {
                         const oldGroudFloorlabel = document.getElementById(
@@ -501,7 +558,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                     }
                 })
                 .catch(e => {
-                    console.log('catch: saving building ', locationid, 'failed:', e);
+                    console.log('catch: saving building ', locationId, 'failed:', e);
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
@@ -623,8 +680,6 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
         // TODO handle delete building
 
-        // TODO handle add fllor
-
         const dialog = document.getElementById('popupDialog');
         !!dialog && dialog.showModal();
     }
@@ -636,7 +691,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         const data = !!formData && Object.fromEntries(formData);
         console.log('saveChangeToFloor data=', data);
         const locationType = data?.locationType;
-        const locationid = data[`${locationType}Id`];
+        const locationId = data[`${locationType}Id`];
 
         // validate form
         const failureMessage = !data.floor_id_displayed && 'Please enter floor name';
@@ -649,7 +704,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         closeDialog(e);
 
         !!locationType &&
-            !!locationid &&
+            !!locationId &&
             actions
                 .updateBookableSpaceLocation(Object.fromEntries(formData))
                 .then(() => {
@@ -657,11 +712,11 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
                     // successful change to values - update the on-screen data to match
 
-                    const element = document.getElementById(`floor-${locationid}`);
+                    const element = document.getElementById(`floor-${locationId}`);
                     !!element && (element.innerText = data?.floor_id_displayed);
                 })
                 .catch(e => {
-                    console.log('catch: saving floor ', locationid, 'failed:', e);
+                    console.log('catch: saving floor ', locationId, 'failed:', e);
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
@@ -840,33 +895,25 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                         </StyledBusyIconDiv>
                     </Grid>
                 </StandardCard>
+                <dialog id="confirmationDialog" className="confirmationDialog">
+                    <p id="confDialogMessage" />
+                    <StyledConfirmationButtons>
+                        <StyledButton id="confDialogCancelButton" className={'secondary'} children={'No'} />
+                        <StyledButton id="confDialogOkButton" children={'primary'} children={'Yes'} />
+                    </StyledConfirmationButtons>
+                </dialog>
                 <StyledDialog id={'popupDialog'} closedby="any">
                     <form>
                         <div id="dialogBody" />
                         <div id="dialogFooter" className={'dialogFooter'}>
                             <div>
-                                <StyledButton
-                                    id={'deleteButton'}
-                                    className={'alert'}
-                                    children={'Delete'}
-                                    // onClick={}
-                                />
+                                <StyledButton id={'deleteButton'} className={'alert'} children={'Delete'} />
                             </div>
                             <div>
-                                <StyledButton
-                                    id={'addNewButton'}
-                                    className={'secondary'}
-                                    style={{ marginRight: '0.5rem' }}
-                                    // onClick={}
-                                >
+                                <StyledButton id={'addNewButton'} className={'secondary'}>
                                     Add new
                                 </StyledButton>
-                                <StyledButton
-                                    className={'secondary'}
-                                    style={{ marginRight: '0.5rem' }}
-                                    children={'Cancel'}
-                                    onClick={closeDialog}
-                                />
+                                <StyledButton className={'secondary'} children={'Cancel'} onClick={closeDialog} />
                                 <StyledButton id={'saveButton'} className={'primary'} children={'Save'} />
                             </div>
                         </div>
