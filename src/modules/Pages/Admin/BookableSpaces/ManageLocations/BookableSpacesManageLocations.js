@@ -408,10 +408,6 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         !!saveButton && saveButton.removeEventListener('click', saveChangeToSite);
         !!saveButton && saveButton.addEventListener('click', saveNewBuilding);
 
-        // TODO handle delete building
-
-        // TODO handle add floor
-
         const dialog = document.getElementById('popupDialog');
         !!dialog && dialog.showModal();
     }
@@ -513,6 +509,70 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 });
     };
 
+    function saveNewFloor(e) {
+        const form = e.target.closest('form');
+        console.log('saveNewFloor form=', form);
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+        console.log('saveNewFloor data', data);
+        const locationType = data?.locationType;
+
+        // validate form
+        if (!data.floor_id_displayed) {
+            displayToastMessage('Please enter floor name', true);
+            return false;
+        }
+
+        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        closeDialog(e);
+
+        !!locationType &&
+            actions
+                .addBookableSpaceLocation(data)
+                .then(() => {
+                    displayToastMessage('Floor added', false);
+
+                    actions.loadAllBookableSpacesRooms();
+                })
+                .catch(e => {
+                    console.log('catch: adding new floor failed:', e);
+                    displayToastMessage('Sorry, an error occurred - the admins have been informed');
+                })
+                .finally(() => {
+                    hideBusyIcon(busyWhileSavingIcon);
+                });
+    }
+
+    const floorCoreForm = floorDetails => `<input name="locationType" type="hidden" value="floor" />
+        <div class="dialogRow">
+            <label for="floorName">Floor name</label>
+            <input id="displayedFloorId" name="floor_id_displayed" type="text" required value="${floorDetails?.floor_id_displayed ??
+                ''}" />
+        </div>`;
+
+    function showAddFloorForm(e, buildingDetails) {
+        console.log('showAddFloorForm');
+        const formBody = `<h2>Add a floor to ${buildingDetails?.building_name ||
+            'unknown building'}</h2>${floorCoreForm()}`;
+        if (!formBody) {
+            return;
+        }
+
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+        const addNewButton = document.getElementById('addNewButton');
+        !!addNewButton && (addNewButton.style.display = 'none');
+
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton.removeEventListener('click', saveChangeToBuilding);
+        !!saveButton && saveButton.addEventListener('click', saveNewFloor);
+
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog.showModal();
+    }
+
     function showEditBuildingForm(buildingId) {
         const buildingDetails =
             buildingId > 0 &&
@@ -556,6 +616,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
         const addNewButton = document.getElementById('addNewButton');
         !!addNewButton && (addNewButton.innerText = 'Add floor');
+        !!addNewButton && addNewButton.addEventListener('click', e => showAddFloorForm(e, buildingDetails));
 
         const saveButton = document.getElementById('saveButton');
         !!saveButton && saveButton.addEventListener('click', saveChangeToBuilding);
@@ -624,12 +685,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
         const formBody = `
             <h2>Edit floor details</h2>
-            <input name="floorId" type="hidden" value="${floorDetails?.floor_id}" />
-            <input name="locationType" type="hidden" value="floor" />
-            <div class="dialogRow">
-                <label for="floorName">Floor name</label>
-                <input id="displayedFloorId" name="floor_id_displayed" type="text" required value="${floorDetails?.floor_id_displayed}" />
-            </div>`;
+            <input name="floorId" type="hidden" value="${floorDetails?.floor_id}" />${floorCoreForm(floorDetails)}`;
 
         const dialogBodyElement = document.getElementById('dialogBody');
         !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
