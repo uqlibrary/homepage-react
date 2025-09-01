@@ -197,6 +197,100 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         }, hideDelay + 1000);
     }
 
+    function showBusyWhileSavingIcon(id) {
+        const busyWhileSavingIcon = document.getElementById(id);
+        !!busyWhileSavingIcon && (busyWhileSavingIcon.style.display = 'block');
+        return busyWhileSavingIcon;
+    }
+
+    function hideWhileSavingIcon(busyWhileSavingIcon) {
+        !!busyWhileSavingIcon && (busyWhileSavingIcon.style.display = 'none');
+    }
+
+    function removeAnyListeners(element) {
+        if (!element) {
+            return false;
+        }
+        // we cant actually generically remove listeners - but we can start form scratch
+        const clonedElement = element.cloneNode(true);
+        element.replaceWith(clonedElement);
+        return clonedElement;
+    }
+
+    function closeDialog(e) {
+        e.target.closest('dialog').close();
+
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = '');
+
+        const addNewButton = document.getElementById('addNewButton');
+        !!addNewButton && (addNewButton.innerText = 'Add new');
+        !!addNewButton && (addNewButton.style.display = 'inline');
+        removeAnyListeners(addNewButton);
+
+        const saveButton = document.getElementById('saveButton');
+        removeAnyListeners(saveButton);
+
+        // todo handle delete button
+    }
+
+    function saveChange(e) {
+        const form = e.target.closest('form');
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+        const locationType = data?.locationType;
+        const locationid = data[`${locationType}Id`];
+
+        closeDialog(e, saveChange);
+
+        const busyWhileSavingIcon = showBusyWhileSavingIcon('busy-icon-while-saving');
+
+        !!locationType &&
+            !!locationid &&
+            actions
+                .updateBookableSpaceLocation(Object.fromEntries(formData))
+                .then(() => {
+                    displayToastMessage('Location changes saved', false);
+
+                    // successful change to values - update the on-screen data to match
+                    let element;
+                    switch (locationType) {
+                        case 'site':
+                            element = document.getElementById(`site-${locationid}`);
+                            !!element && (element.innerText = data?.site_name);
+                            break;
+                        case 'building':
+                            element = document.getElementById(`building-${locationid}`);
+                            !!element && (element.innerText = data?.building_name);
+                            if (data?.ground_floor_id_old !== data?.ground_floor_id) {
+                                const oldGroudFloorlabel = document.getElementById(
+                                    getIdentifierForFloorGroundFloorIndicator(data?.ground_floor_id_old),
+                                );
+                                !!oldGroudFloorlabel && (oldGroudFloorlabel.style.display = 'none');
+
+                                const newGroudFloorlabel = document.getElementById(
+                                    getIdentifierForFloorGroundFloorIndicator(data?.ground_floor_id),
+                                );
+                                !!newGroudFloorlabel && (newGroudFloorlabel.style.display = 'block');
+                            }
+                            break;
+                        case 'floor':
+                            element = document.getElementById(`floor-${locationid}`);
+                            !!element && (element.innerText = data?.floor_id_displayed);
+                            break;
+                        default:
+                    }
+                })
+                .catch(e => {
+                    console.log('catch: saving site ', locationid, 'failed:', e);
+                    displayToastMessage('Sorry, an error occurred - the admins have been informed');
+                })
+                .finally(() => {
+                    hideWhileSavingIcon(busyWhileSavingIcon);
+                });
+    }
+
     function editSite(siteId) {
         const siteDetails = siteId > 0 && siteList.find(s => s.site_id === siteId);
 
@@ -232,8 +326,15 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             const dialogBodyElement = document.getElementById('dialogBody');
             !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
+            const saveButton = document.getElementById('saveButton');
+            !!saveButton && saveButton.addEventListener('click', saveChange);
+
             const addNewButton = document.getElementById('addNewButton');
             !!addNewButton && (addNewButton.innerText = 'Add building');
+
+            // TODO handle delete site
+
+            // TODO handle add building
 
             const dialog = document.getElementById('popupDialog');
             !!dialog && dialog.showModal();
@@ -251,7 +352,6 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             return;
         }
 
-        console.log('buildingDetails=', buildingDetails);
         const formBody = `
             <h2>Edit building details</h2>
             <input name="buildingId" type="hidden" value="${buildingDetails?.building_id}" />
@@ -297,67 +397,80 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         const addNewButton = document.getElementById('addNewButton');
         !!addNewButton && (addNewButton.innerText = 'Add floor');
 
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton.addEventListener('click', saveChange);
+
+        // TODO handle delete building
+
+        // TODO handle add fllor
+
         const dialog = document.getElementById('popupDialog');
         !!dialog && dialog.showModal();
     }
 
-    function closeDialog(e) {
-        e.target.closest('dialog').close();
+    function editFloor(floorId) {
+        const floorDetails =
+            floorId > 0 &&
+            siteList
+                .flatMap(site => site.buildings)
+                .flatMap(building => building.floors)
+                .find(floor => floor.floor_id === floorId);
+
+        if (!floorDetails) {
+            console.log(`Can't find floor with floor_id = "${floorId}" in sitelist from api`);
+            displayToastMessage('Sorry, something went wrong');
+            return;
+        }
+
+        const formBody = `
+            <h2>Edit floor details</h2>
+            <input name="floorId" type="hidden" value="${floorDetails?.floor_id}" />
+            <input name="locationType" type="hidden" value="floor" />
+            <input name="ground_floor_id_old" type="hidden" value="${floorDetails.ground_floor_id ?? ''}" />
+            <div class="dialogRow">
+                <label for="floorName">Floor name</label>
+                <input id="displayedFloorId" name="floor_id_displayed" type="text" value="${
+                    floorDetails?.floor_id_displayed
+                }" />
+            </div>`;
 
         const dialogBodyElement = document.getElementById('dialogBody');
-        !!dialogBodyElement && (dialogBodyElement.innerHTML = '');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
         const addNewButton = document.getElementById('addNewButton');
-        !!addNewButton && (addNewButton.innerText = 'Add new');
+        !!addNewButton && (addNewButton.style.display = 'none');
+
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton.addEventListener('click', saveChange);
+
+        // TODO handle delete floor
+
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog.showModal();
     }
 
-    function saveChange(e) {
-        const form = e.target.closest('form');
+    function addSite() {
+        const formBody = `<h2>Add campus</h2>
+            <input  name="locationType" type="hidden" value="site" />
+            <div class="dialogRow">
+                <label for="siteName">Site name</label>
+                <input id="siteName" name="site_name" type="text" value="" />
+            </div>
+            <div class="dialogRow">
+                <label for="siteNumber">Site number</label>
+                <input id="siteNumber" name="site_id_displayed" type="text" value="" />
+            </div>`;
 
-        const formData = new FormData(form);
-        const data = !!formData && Object.fromEntries(formData);
-        console.log('data=', data);
-        const locationType = data?.locationType;
-        const locationid = data[`${locationType}Id`];
-        !!locationType &&
-            !!locationid &&
-            actions
-                .updateBookableSpaceLocation(Object.fromEntries(formData))
-                .then(() => {
-                    closeDialog(e);
-                    displayToastMessage('Location changes saved', false);
-                    let element;
-                    switch (locationType) {
-                        case 'site':
-                            element = document.getElementById(`site-${locationid}`);
-                            !!element && (element.innerText = data?.site_name);
-                            break;
-                        case 'building':
-                            element = document.getElementById(`building-${locationid}`);
-                            !!element && (element.innerText = data?.building_name);
-                            if (data?.ground_floor_id_old !== data?.ground_floor_id) {
-                                const oldGroudFloorlabel = document.getElementById(
-                                    getIdentifierForFloorGroundFloorIndicator(data?.ground_floor_id_old),
-                                );
-                                !!oldGroudFloorlabel && (oldGroudFloorlabel.style.display = 'none');
+        if (!!formBody) {
+            const dialogBodyElement = document.getElementById('dialogBody');
+            !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
-                                const newGroudFloorlabel = document.getElementById(
-                                    getIdentifierForFloorGroundFloorIndicator(data?.ground_floor_id),
-                                );
-                                !!newGroudFloorlabel && (newGroudFloorlabel.style.display = 'block');
-                            }
-                            break;
-                        default:
-                    }
-                })
-                .catch(e => {
-                    console.log('catch: saving site ', locationid, 'failed:', e);
-                    displayToastMessage('An error occurred');
-                });
-    }
+            const addNewButton = document.getElementById('addNewButton');
+            !!addNewButton && (addNewButton.style.display = 'none');
 
-    function addCampus() {
-        //
+            const dialog = document.getElementById('popupDialog');
+            !!dialog && dialog.showModal();
+        }
     }
 
     function getLocationLayout(siteList) {
@@ -416,6 +529,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                             color="primary"
                                             size="small"
                                             // onClick={() => editSite(site.site_id)}
+                                            onClick={() => editFloor(floor.floor_id)}
                                             aria-label={`Edit ${floor.floor_id_displayed}`}
                                         >
                                             <EditIcon />
@@ -430,7 +544,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                     className={'primary'}
                     style={{ marginLeft: '4rem', marginTop: '2rem' }}
                     children={'Add new Campus'}
-                    onClick={addCampus}
+                    onClick={addSite}
                 />
             </>
         );
@@ -440,7 +554,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         <StandardPage title="Library bookable spaces Location management">
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} style={{ position: 'relative' }}>
                         {(() => {
                             if (!!siteListLoading) {
                                 return (
@@ -470,6 +584,22 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                 return <StyledGridItem>{getLocationLayout(siteList)}</StyledGridItem>;
                             }
                         })()}
+                        <div
+                            id="busy-icon-while-saving"
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                backgroundColor: '#fff',
+                                opacity: '80%',
+                                zIndex: 99,
+                                position: 'absolute',
+                                top: 0,
+                                paddingTop: '4rem',
+                                display: 'none',
+                            }}
+                        >
+                            <InlineLoader message="Saving" />
+                        </div>
                     </Grid>
                 </StandardCard>
                 <StyledDialog id={'popupDialog'} closedby="any">
@@ -498,7 +628,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                     children={'Cancel'}
                                     onClick={closeDialog}
                                 />
-                                <StyledButton className={'primary'} children={'Save'} onClick={saveChange} />
+                                <StyledButton id={'saveButton'} className={'primary'} children={'Save'} />
                             </div>
                         </div>
                     </form>
