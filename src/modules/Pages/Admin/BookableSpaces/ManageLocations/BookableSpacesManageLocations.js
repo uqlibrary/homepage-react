@@ -363,6 +363,22 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 });
     };
 
+    const siteFormCore = (siteDetails = {}) => {
+        const siteName = siteDetails?.site_name ?? '';
+        const siteIdDisplayed = siteDetails?.site_id_displayed ?? '';
+        return `<div>
+            <input  name="locationType" type="hidden" value="site" />
+            <div class="dialogRow">
+                <label for="siteName">Site name</label>
+                <input id="siteName" name="site_name" type="text" value="${siteName}" required />
+            </div>
+            <div class="dialogRow">
+                <label for="siteNumber">Site number</label>
+                <input id="siteNumber" name="site_id_displayed" type="text" value="${siteIdDisplayed}" required />
+            </div>
+        </div>`;
+    };
+
     function showEditSiteForm(siteId) {
         const siteDetails = siteId > 0 && siteList.find(s => s.site_id === siteId);
 
@@ -373,19 +389,9 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         }
 
         const formBody = `<h2>Edit site details</h2>
-            <input  name="siteId" type="hidden" value="${siteDetails.site_id}" />
-            <input  name="locationType" type="hidden" value="site" />
-            <div class="dialogRow">
-                <label for="siteName">Site name</label>
-                <input id="siteName" name="site_name" type="text" value="${siteDetails.site_name}" required />
-            </div>
-            <div class="dialogRow">
-                <label for="siteNumber">Site number</label>
-                <input id="siteNumber" name="site_id_displayed" type="text" value="${
-                    siteDetails.site_id_displayed
-                }" required />
-            </div>
-            <div class="dialogRow">
+            <input  name="siteId" type="hidden" value="${siteDetails.site_id}" />${siteFormCore(
+            siteDetails,
+        )}<div class="dialogRow">
                 <label>Buildings</label>
                 ${siteDetails?.buildings?.length > 0 &&
                     '<ul>' +
@@ -523,16 +529,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
     }
 
     function addSite() {
-        const formBody = `<h2>Add campus</h2>
-            <input  name="locationType" type="hidden" value="site" />
-            <div class="dialogRow">
-                <label for="siteName">Site name</label>
-                    <input id="siteName" name="site_name" type="text" value="" required />
-            </div>
-            <div class="dialogRow">
-                <label for="siteNumber">Site number</label>
-                <input id="siteNumber" name="site_id_displayed" type="text" value="" required />
-            </div>`;
+        const formBody = `<h2>Add campus</h2>${siteFormCore()}`;
 
         if (!!formBody) {
             const dialogBodyElement = document.getElementById('dialogBody');
