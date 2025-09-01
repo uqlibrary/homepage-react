@@ -133,7 +133,7 @@ const FilterDialog = ({
                 <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
                     {locale?.title}
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent sx={{ overflowX: 'hidden' }}>
                     <Grid container spacing={3}>
                         <AutoLocationPicker
                             id={rootId}

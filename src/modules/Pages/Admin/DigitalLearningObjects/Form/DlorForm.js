@@ -266,7 +266,7 @@ export const DlorForm = ({
     //     }
     // }, [formDefaults]);
 
-    // these match the values in dlor cypress admin tests
+    // these match the values in dlor playwright admin tests
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
     const summaryMinimumLength = 20;
@@ -315,11 +315,11 @@ export const DlorForm = ({
                     mode: 'manual',
                     label: 'Editing',
                     attributes: {
-                        href: 'javascript:void(0);'
-                    }
-                }
-            }
-        }
+                        href: 'javascript:void(0);',
+                    },
+                },
+            },
+        },
     };
 
     const isValidUsername = testUserName => {
@@ -573,7 +573,7 @@ export const DlorForm = ({
                             id="object_publishing_user"
                             data-testid="object-publishing-user"
                             required
-                            disabled={(!isDlorAdminUser(account) && !isInDLOROwningTeam(account, dlorItem, dlorTeamList ))}
+                            disabled={!isDlorAdminUser(account) && !isInDLOROwningTeam(account, dlorItem, dlorTeamList)}
                             value={formValues?.object_publishing_user || ''}
                             onChange={handleChange('object_publishing_user')}
                             sx={{ width: '20em' }}
@@ -703,12 +703,12 @@ export const DlorForm = ({
                                 id="team_email_edit"
                                 data-testid="dlor-form-team-email-edit"
                                 required
-                                value={formValues?.team_email_edit || ''}
+                                value={formValues?.team_email_edit || /* istanbul ignore next */ ''}
                                 onChange={handleChange('team_email_edit')}
                                 type="email"
                                 error={!isValidEmail(formValues?.team_email_edit)}
                             />
-                            {!isValidEmail(formValues?.team_email_edit) && (
+                            {/* istanbul ignore next */ !isValidEmail(formValues?.team_email_edit) && (
                                 <StyledErrorMessageBox data-testid="error-message-team-email-edit">
                                     This email address is not valid.
                                 </StyledErrorMessageBox>
@@ -1661,19 +1661,18 @@ export const DlorForm = ({
 
         // 2. Owner of the object
         if (formDefaults?.object_publishing_user && account?.id === formDefaults.object_publishing_user) return true;
-        console.log("dlorTeamList=", dlorTeamList, " formDefaults=", formDefaults, " account=", account);
+        console.log('dlorTeamList=', dlorTeamList, ' formDefaults=', formDefaults, ' account=', account);
         // 3. In the team that owns the object
         /* istanbul ignore else */
         if (Array.isArray(dlorTeamList) && formDefaults?.object_owning_team_id) {
-            
             const owningTeam = dlorTeamList.find(t => t.team_id === formDefaults.object_owning_team_id);
-            console.log("STEP 1", owningTeam);
+            console.log('STEP 1', owningTeam);
             if (
                 owningTeam &&
                 Array.isArray(owningTeam.team_members) &&
                 owningTeam.team_members.some(member => member.team_admin_username === account?.id)
             ) {
-                console.log("STEP 3");
+                console.log('STEP 3');
                 return true;
             }
         }
@@ -1794,20 +1793,15 @@ export const DlorForm = ({
         setConfirmationOpen(false);
         actions.clearADlor();
         window.location.href = getDlorViewPageUrl(uuid);
+        /* istanbul ignore next */
         scrollToTopOfPage();
     };
-
-    // const navigateToDlorAdminHomePage = () => {
-    //     setConfirmationOpen(false);
-    //     actions.clearADlor();
-    //     window.location.href = dlorAdminLink();
-    //     scrollToTopOfPage();
-    // };
 
     const navigateToListPage = isAdmin => {
         setConfirmationOpen(false);
         actions.clearADlor();
         window.location.href = dlorAdminLink(undefined, account);
+        /* istanbul ignore next */
         scrollToTopOfPage();
     };
 
@@ -1827,11 +1821,12 @@ export const DlorForm = ({
     const handleNext = () => {
         setEditorReady(false);
         setActiveStep(prevActiveStep => prevActiveStep + 1);
-    }
+    };
+
     const handleBack = () => {
         setEditorReady(false);
         setActiveStep(prevActiveStep => prevActiveStep - 1);
-    }
+    };
 
     if (!!dlorTeamListLoading || dlorFilterListLoading || !!dlorItemSaving || !!dlorItemLoading) {
         return (

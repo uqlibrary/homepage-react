@@ -225,7 +225,7 @@ mock.onAny(routes.ALERTS_CREATE_API().apiUrl).reply(
     ]),
 );
 // mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(withDelay([500, {}]));
-mock.onAny(routes.ALERT_UPDATE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
+mock.onPut(`/${routes.ALERT_UPDATE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl}`).reply(
     withDelay([
         200,
         {

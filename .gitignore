@@ -15,6 +15,7 @@
 .idea/sonarlint/*
 .idea/snyk.project.settings.xml
 .idea/misc.xml
+.idea/GitLink.xml
 node_modules
 dist
 npm-debug.log*
@@ -25,7 +26,7 @@ npm-debug.log*
 
 e2eTestLog
 chromedriver.log
-coverage
+/coverage
 yarn.lock
 frontend.json
 # ignore js bungle analyser files
@@ -35,8 +36,10 @@ bundle.js.map
 favicon.ico
 index.html
 stats.json
-cypress/videos
-cypress/screenshots
+
+# Playwright
+/playwright/.results
+/playwright/.cache
 
 # Code Coverage checker temp dir
 .nyc_output

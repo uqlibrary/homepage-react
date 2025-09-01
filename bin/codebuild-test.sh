@@ -5,6 +5,7 @@ export COMMIT_INFO_AUTHOR=$(git show ${CI_COMMIT_ID} --no-patch --pretty=format:
 export COMMIT_INFO_EMAIL=$(git show ${CI_COMMIT_ID} --no-patch --pretty=format:"%ae")
 export COMMIT_INFO_MESSAGE=$(git show ${CI_COMMIT_ID} --no-patch --pretty=format:"%B")
 export CI_BUILD_URL="https://ap-southeast-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/fez-frontend/executions/${CI_BUILD_NUMBER}"
+export PW_SHARD_COUNT=10
 
 echo
 echo "Commit Info:"
@@ -35,7 +36,7 @@ fi
 
 printf "(Build of branch \"$CI_BRANCH\")\n"
 
-function checkCodeStyle {
+function check_code_style {
     printf "\n--- \e[1mRUNNING CODE STYLE CHECKS\e[0m ---\n"
 
     FILES=$(npm run codestyles:files -s)
@@ -53,64 +54,71 @@ function checkCodeStyle {
     fi
 }
 
+function fix_coverage_report_paths() {
+    if [[ ! -f "$1" ]]; then
+        return 0
+    fi
+    
+    sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' "$1"
+}
+
+function install_pw_deps() {
+    printf "\n--- \e[INSTALLING PW DEPS [STARTING AT $(date)] 1\e[0m ---\n"
+    npx playwright install chromium-headless-shell
+    npx playwright install-deps chromium-headless-shell
+    printf "\n--- \e[ENDED INSTALLING PW DEPS AT $(date)] 1\e[0m ---\n"
+}
+
+function run_pw_tests() {
+    set -e
+    export PW_SHARD_INDEX="$1"
+    local LIMIT="$2"
+
+    printf "\n--- \e[1mRUNNING E2E TESTS GROUP #$PIPE_NUM [STARTING AT $(date)] 2\e[0m ---\n"
+
+    while (( PW_SHARD_INDEX <= LIMIT ))
+    do
+        if (( PW_SHARD_INDEX == LIMIT )); then
+            export PW_IS_LAST_SHARD=true
+        fi
+
+        run_pw_test_shard "${PW_SHARD_INDEX}"
+        fix_coverage_report_paths "coverage/playwright/coverage-final.json"
+
+        ((PW_SHARD_INDEX++))
+    done
+
+    printf "\n--- [ENDED RUNNING E2E TESTS GROUP #$PIPE_NUM AT $(date)] \n"
+}
+
+function run_pw_test_shard() {
+    local SHARD_INDEX="${1-PW_SHARD_INDEX}"
+    if [[ $CODE_COVERAGE_REQUIRED != 1 ]]; then
+        npm run test:e2e -- --shard="${SHARD_INDEX}/${PW_SHARD_COUNT}"
+        return 0
+    fi
+
+    npm run test:e2e:cc -- -- --shard="${SHARD_INDEX}/${PW_SHARD_COUNT}"
+}
+
 echo "pwd "
 pwd
 
-npm run pretest:unit:ci
-
-# Split the Cypress E2E tests into n groups with roughly equal numbers of files in each group, and writes the testfile
-# paths for each group to separate text files (bin/groupn.txt).
-# Assumes that the test spec files are located in the cypress/e2e directory and its subdirectories.
-
-printf "\n ### Splitting cypress tests into pipeline groups ### \n\n"
-
-spec_files=$(find cypress/e2e -name '*.spec.js')
-
-> bin/group1.txt
-> bin/group2.txt
-> bin/group3.txt
-echo "start \n"
-index=0
-# split the file list so an even run time is likely
-# lots in pipelines 1 & 2 and then a small number to run after the unit tests in pipeline 3
-# this may need rebalancing from time to time, if we add or remove test suites
-echo "$spec_files" | awk '{
-    if (NR % 8 == 3 || NR % 8 == 4 || NR % 8 == 5) {
-        print > "bin/group1.txt"
-    } else if (NR % 8 == 0 || NR % 8 == 6) {
-        print > "bin/group3.txt"
-    } else {
-        print > "bin/group2.txt"
-    }
-}'
-
 case "$PIPE_NUM" in
 "1")
-    printf "\n ### PIPELINE 1 ### \n\n"
-    set -e
-
-    printf "\n--- \e[1mRUNNING E2E TESTS GROUP 1\e[0m ---\n"
-    npm run test:e2e:ci1
-
-    if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
-      sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
-    fi
+    npm run start:mock &
+    install_pw_deps
+    run_pw_tests 1 3
 ;;
 "2")
-    printf "\n ### PIPELINE 2 ### \n\n"
-    set -e
-
-    printf "\n--- \e[1mRUNNING Cypress TESTS GROUP 2\e[0m ---\n"
-    npm run test:e2e:ci2
-
-    if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
-        sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
-    fi
+    npm run start:mock &
+    install_pw_deps
+    run_pw_tests 4 7
 ;;
 "3")
     printf "\n ### PIPELINE 3 ### \n\n"
 
-    checkCodeStyle
+    check_code_style
 
     printf "\n\n--- INSTALL JEST ---\n"
     echo "$ npm install -g jest"
@@ -127,12 +135,9 @@ case "$PIPE_NUM" in
         npm run test:unit:ci:nocoverage
     fi
 
-    printf "\n--- \e[1mRUNNING Cypress TESTS GROUP 3\e[0m ---\n"
-    set -e
-    npm run test:e2e:ci3
-    if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
-       sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/cypress/coverage-final.json
-    fi
+    npm run start:mock &
+    install_pw_deps
+    run_pw_tests 8 10
 ;;
 *)
 ;;

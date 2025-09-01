@@ -10,12 +10,13 @@ import locale from 'locale/global';
 import * as Sentry from '@sentry/browser';
 
 import { LIB_HOURS_API, TRAINING_API } from '../repositories/routes';
+import { isDevEnv, isTest } from '../helpers/general';
 
 let apiClient = axios.create({
     baseURL: API_URL,
     crossdomain: true,
 });
-if (!['test', 'cc', 'development'].includes(process.env.NODE_ENV)) {
+if (!isDevEnv() && !isTest()) {
     apiClient = setupCache(apiClient, {
         // unfortunately the below doesn't work for tests
         // cache: process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'cc'
