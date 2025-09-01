@@ -368,10 +368,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 .updateBookableSpaceLocation(Object.fromEntries(formData))
                 .then(() => {
                     displayToastMessage('Change to site saved', false);
-
-                    // successful change to values - update the on-screen data to match
-                    const element = document.getElementById(`site-${locationId}`);
-                    !!element && (element.innerText = data?.site_name);
+                    actions.loadBookableSpaceSites();
                 })
                 .catch(e => {
                     console.log('catch: saving site ', locationId, 'failed:', e);
@@ -541,21 +538,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 .updateBookableSpaceLocation(Object.fromEntries(formData))
                 .then(() => {
                     displayToastMessage('Change to building saved', false);
-
-                    // successful change to values - update the on-screen data to match
-                    const element = document.getElementById(`building-${locationId}`);
-                    !!element && (element.innerText = data?.building_name);
-                    if (data?.ground_floor_id_old !== data?.ground_floor_id) {
-                        const oldGroudFloorlabel = document.getElementById(
-                            getIdentifierForFloorGroundFloorIndicator(data?.ground_floor_id_old),
-                        );
-                        !!oldGroudFloorlabel && (oldGroudFloorlabel.style.display = 'none');
-
-                        const newGroudFloorlabel = document.getElementById(
-                            getIdentifierForFloorGroundFloorIndicator(data?.ground_floor_id),
-                        );
-                        !!newGroudFloorlabel && (newGroudFloorlabel.style.display = 'block');
-                    }
+                    actions.loadBookableSpaceSites();
                 })
                 .catch(e => {
                     console.log('catch: saving building ', locationId, 'failed:', e);
@@ -709,11 +692,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 .updateBookableSpaceLocation(Object.fromEntries(formData))
                 .then(() => {
                     displayToastMessage('Changes to floor saved', false);
-
-                    // successful change to values - update the on-screen data to match
-
-                    const element = document.getElementById(`floor-${locationId}`);
-                    !!element && (element.innerText = data?.floor_id_displayed);
+                    actions.loadBookableSpaceSites();
                 })
                 .catch(e => {
                     console.log('catch: saving floor ', locationId, 'failed:', e);
@@ -823,14 +802,13 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                     <StyledDiv>
                                         <span id={`floor-${floor.floor_id}`}>{floor.floor_id_displayed}</span>
 
-                                        <StyledGroundFloorIndicatorSpan
-                                            id={getIdentifierForFloorGroundFloorIndicator(floor.floor_id)}
-                                            style={{
-                                                display: building.ground_floor_id === floor.floor_id ? 'block' : 'none',
-                                            }}
-                                        >
-                                            [Ground floor]
-                                        </StyledGroundFloorIndicatorSpan>
+                                        {building.ground_floor_id === floor.floor_id && (
+                                            <StyledGroundFloorIndicatorSpan
+                                                id={getIdentifierForFloorGroundFloorIndicator(floor.floor_id)}
+                                            >
+                                                [Ground floor]
+                                            </StyledGroundFloorIndicatorSpan>
+                                        )}
                                         <StyledEditButton
                                             color="primary"
                                             size="small"
