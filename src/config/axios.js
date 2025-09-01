@@ -23,6 +23,7 @@ if (!isDevEnv() && !isTest()) {
         // debug: dc,
         ttl: 15 * 60 * 1000,
         generateKey: request => `${request.url}${JSON.stringify(request.params)}`,
+        cacheTakeover: false,
     });
 
     // the place the below is declared matters - see https://axios-cache-interceptor.js.org/guide/interceptors
