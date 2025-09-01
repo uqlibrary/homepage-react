@@ -1106,8 +1106,8 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, { status: 'OK' }])
     .onDelete(/test-and-tag\/site|building|floor\/2/)
     .reply(() => [200, { status: 'OK' }])
-    .onDelete(/test-and-tag\/site|building|floor\/.*/)
-    .reply(() => [400, { message: '52 is a test error', status: 'error' }])
+    // .onDelete(/test-and-tag\/site|building|floor\/.*/)
+    // .reply(() => [400, { message: '52 is a test error', status: 'error' }])
     // T&T MANAGE INSPECTION DEVICES
     .onGet(routes.TEST_TAG_INSPECTION_DEVICE_API().apiUrl)
     .reply(() => {
@@ -1469,11 +1469,11 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.SPACES_SITE_API().apiUrl)
     .reply(() => {
-        if (hoursResponseType === 'error') {
+        if (responseType === 'error') {
             return [500, {}];
-        } else if (hoursResponseType === 'empty') {
+        } else if (responseType === 'empty') {
             return [200, []];
-        } else if (hoursResponseType === '404') {
+        } else if (responseType === '404') {
             return [404, {}];
         } else {
             return [200, location_sites_all];
@@ -1483,26 +1483,33 @@ mock.onGet('exams/course/FREN1010/summary')
     // Bookable Spaces (site,building,floor)
     .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'site' }).apiUrl)
     .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'building' }).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'floor' }).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+
     // .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'site', id: '.*' }).apiUrl)))
     // .reply(() => [200, { status: 'OK' }])
     .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'site', id: '.*' }).apiUrl)))
     .reply(withDelay([200, { status: 'OK' }]))
-    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'building' }).apiUrl)
-    .reply(() => [200, { status: 'OK' }])
     .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'building', id: '.*' }).apiUrl)))
-    .reply(() => [200, { status: 'OK' }])
-    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'floor' }).apiUrl)
     .reply(() => [200, { status: 'OK' }])
     .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'floor', id: '.*' }).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
-    // .onPost(routes.SPACES_ADD_LOCATION_API('room').apiUrl)
-    // .reply(() => [200, { status: 'OK' }])
-    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'room', id: '.*' }).apiUrl)))
+
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'site', id: '.*' }).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
-    .onDelete(/bookable_spaces\/site|building|floor\/2/)
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'building', id: '.*' }).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
-    .onDelete(/bookable_spaces\/site|building|floor\/.*/)
-    .reply(() => [400, { message: '52 is a test error', status: 'error' }])
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'floor', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    // .onDelete(/bookable_spaces\/site|building|floor\/.*/)
+    // .reply(() => {
+    //     if (responseType === 'error') {
+    //         return [500, {}];
+    //     }
+    //     return [200, { status: 'OK' }];
+    // })
     .onAny()
     .reply(function(config) {
         console.log('url not mocked...', config.url);

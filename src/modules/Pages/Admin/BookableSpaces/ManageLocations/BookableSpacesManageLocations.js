@@ -469,35 +469,49 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         deleteLocation(locationType, locationId, successMessage, failureMessage);
     }
 
-    function confirmAndDeleteSite(e, siteDetails) {
+    function deleteFloor(e, floorDetails) {
+        console.log('floorDetails=', floorDetails);
+        const locationType = 'floor';
+        const locationId = floorDetails?.floor_id;
+        const successMessage = `Floor ${floorDetails?.floor_id_displayed} in ${floorDetails?.building_name}  deleted`;
+        const failureMessage = `catch: deleting floor ${floorDetails.floor_id} failed:`;
+        deleteLocation(locationType, locationId, successMessage, failureMessage);
+    }
+
+    function confirmAndDeleteLocation(line1, line2) {
         const confirmationMessageElement = document.getElementById('confDialogMessage');
-        !!confirmationMessageElement &&
-            (confirmationMessageElement.innerHTML = `<p>Do you really want to delete ${siteDetails.site_name} campus?</p><p>This will also delete associated buildings.</p>`);
+        !!confirmationMessageElement && (confirmationMessageElement.innerHTML = `<p>${line1}</p><p>${line2}</p>`);
 
         const confirmationCancelButton = document.getElementById('confDialogCancelButton');
         !!confirmationCancelButton && confirmationCancelButton.addEventListener('click', closeDeletionConfirmation);
-
-        const confirmationOKButton = document.getElementById('confDialogOkButton');
-        !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteSite(e, siteDetails));
 
         const dialog = document.getElementById('confirmationDialog');
         !!dialog && dialog.showModal();
     }
 
+    function confirmAndDeleteSite(e, siteDetails) {
+        const line1 = `Do you really want to delete ${siteDetails.site_name} campus?`;
+        const line2 = 'This will also delete associated buildings.';
+        const confirmationOKButton = document.getElementById('confDialogOkButton');
+        !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteSite(e, siteDetails));
+        confirmAndDeleteLocation(line1, line2);
+    }
+
     function confirmAndDeleteBuilding(e, buildingDetails) {
-        const confirmationMessageElement = document.getElementById('confDialogMessage');
-        !!confirmationMessageElement &&
-            (confirmationMessageElement.innerHTML = `<p>Do you really want to delete ${buildingDetails.building_name} campus?</p><p>This will also delete associated floors.</p>`);
-
-        const confirmationCancelButton = document.getElementById('confDialogCancelButton');
-        !!confirmationCancelButton && confirmationCancelButton.addEventListener('click', closeDeletionConfirmation);
-
+        const line1 = `Do you really want to delete ${buildingDetails.building_name} campus?`;
+        const line2 = 'This will also delete associated floors.';
         const confirmationOKButton = document.getElementById('confDialogOkButton');
         !!confirmationOKButton &&
             confirmationOKButton.addEventListener('click', e => deleteBuilding(e, buildingDetails));
+        confirmAndDeleteLocation(line1, line2);
+    }
 
-        const dialog = document.getElementById('confirmationDialog');
-        !!dialog && dialog.showModal();
+    function confirmAndDeleteFloor(e, floorDetails) {
+        const line1 = `Do you really want to delete floor ${floorDetails.floor_id_displayed}?`;
+        const line2 = 'This will also delete associated rooms.';
+        const confirmationOKButton = document.getElementById('confDialogOkButton');
+        !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteFloor(e, floorDetails));
+        confirmAndDeleteLocation(line1, line2);
     }
 
     function showEditSiteForm(siteId) {
@@ -740,10 +754,20 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
     function showEditFloorForm(floorId) {
         const floorDetails =
             floorId > 0 &&
-            siteList
-                .flatMap(site => site.buildings)
-                .flatMap(building => building.floors)
-                .find(floor => floor.floor_id === floorId);
+            (() => {
+                for (const site of siteList) {
+                    for (const building of site.buildings) {
+                        const floor = building.floors.find(floor => floor.floor_id === floorId);
+                        if (floor) {
+                            return {
+                                ...floor,
+                                building_name: building.building_name,
+                            };
+                        }
+                    }
+                }
+                return null;
+            })();
 
         if (!floorDetails) {
             console.log(`Can't find floor with floor_id = "${floorId}" in sitelist from api`);
@@ -764,7 +788,8 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         const saveButton = document.getElementById('saveButton');
         !!saveButton && saveButton.addEventListener('click', saveChangeToFloor);
 
-        // TODO handle delete floor
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton && deleteButton.addEventListener('click', e => confirmAndDeleteFloor(e, floorDetails));
 
         const dialog = document.getElementById('popupDialog');
         !!dialog && dialog.showModal();
@@ -877,9 +902,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                             if (!!siteListLoading) {
                                 return (
                                     <StyledGridItem item xs={12} md={9}>
-                                        <StyledStandardCard fullHeight>
-                                            <InlineLoader message="Loading" />
-                                        </StyledStandardCard>
+                                        <InlineLoader message="Loading" />
                                     </StyledGridItem>
                                 );
                             } else if (!!siteListError) {
