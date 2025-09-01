@@ -37,6 +37,7 @@ export function loadAllBookableSpacesRooms() {
 
 export function addBookableSpaceLocation(request) {
     const locationType = request?.locationType;
+    console.log('addBookableSpaceLocation', locationType, request);
     return dispatch => {
         dispatch({ type: actions.SPACES_LOCATION_ADDING });
         const url = SPACES_ADD_LOCATION_API({ type: locationType });

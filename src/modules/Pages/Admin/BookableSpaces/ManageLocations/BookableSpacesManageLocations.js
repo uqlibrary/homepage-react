@@ -286,83 +286,6 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 });
     }
 
-    const saveChange = e => {
-        const form = e.target.closest('form');
-
-        const formData = new FormData(form);
-        const data = !!formData && Object.fromEntries(formData);
-        console.log('saveChange data=', data);
-        const locationType = data?.locationType;
-        const locationid = data[`${locationType}Id`];
-
-        // validate form
-        let toastMessage = '';
-        switch (locationType) {
-            case 'site':
-                toastMessage = (!data.site_name || !data.site_id_displayed) && 'Please enter site name and number';
-                break;
-            case 'building':
-                toastMessage =
-                    (!data.building_name || !data.building_id_displayed) && 'Please enter building name and number';
-                break;
-            case 'floor':
-                toastMessage = !data.floor_id_displayed && 'Please enter floor name';
-                break;
-            default:
-        }
-        if (!!toastMessage) {
-            displayToastMessage(toastMessage, true);
-            return false;
-        }
-
-        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
-        closeDialog(e);
-
-        !!locationType &&
-            !!locationid &&
-            actions
-                .updateBookableSpaceLocation(Object.fromEntries(formData))
-                .then(() => {
-                    displayToastMessage('Location changes saved', false);
-
-                    // successful change to values - update the on-screen data to match
-                    let element;
-                    switch (locationType) {
-                        case 'site':
-                            element = document.getElementById(`site-${locationid}`);
-                            !!element && (element.innerText = data?.site_name);
-                            break;
-                        case 'building':
-                            element = document.getElementById(`building-${locationid}`);
-                            !!element && (element.innerText = data?.building_name);
-                            if (data?.ground_floor_id_old !== data?.ground_floor_id) {
-                                const oldGroudFloorlabel = document.getElementById(
-                                    getIdentifierForFloorGroundFloorIndicator(data?.ground_floor_id_old),
-                                );
-                                !!oldGroudFloorlabel && (oldGroudFloorlabel.style.display = 'none');
-
-                                const newGroudFloorlabel = document.getElementById(
-                                    getIdentifierForFloorGroundFloorIndicator(data?.ground_floor_id),
-                                );
-                                !!newGroudFloorlabel && (newGroudFloorlabel.style.display = 'block');
-                            }
-                            break;
-                        case 'floor':
-                            element = document.getElementById(`floor-${locationid}`);
-                            !!element && (element.innerText = data?.floor_id_displayed);
-                            break;
-                        default:
-                    }
-                })
-                .catch(e => {
-                    console.log('catch: saving site ', locationid, 'failed:', e);
-                    displayToastMessage('Sorry, an error occurred - the admins have been informed');
-                })
-                .finally(() => {
-                    hideBusyIcon(busyWhileSavingIcon);
-                });
-    };
-
     const siteFormCore = (siteDetails = {}) => {
         const siteName = siteDetails?.site_name ?? '';
         const siteIdDisplayed = siteDetails?.site_id_displayed ?? '';
@@ -414,6 +337,45 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 });
     }
 
+    const saveChangeToSite = e => {
+        const form = e.target.closest('form');
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+        console.log('saveChangeToSite data=', data);
+        const locationType = data?.locationType;
+        const locationid = data[`${locationType}Id`];
+
+        // validate form
+        const failureMessage = (!data.site_name || !data.site_id_displayed) && 'Please enter site name and number';
+        if (!!failureMessage) {
+            displayToastMessage(failureMessage, true);
+            return false;
+        }
+
+        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        closeDialog(e);
+
+        !!locationType &&
+            !!locationid &&
+            actions
+                .updateBookableSpaceLocation(Object.fromEntries(formData))
+                .then(() => {
+                    displayToastMessage('Change to site saved', false);
+
+                    // successful change to values - update the on-screen data to match
+                    const element = document.getElementById(`site-${locationid}`);
+                    !!element && (element.innerText = data?.site_name);
+                })
+                .catch(e => {
+                    console.log('catch: saving site ', locationid, 'failed:', e);
+                    displayToastMessage('Sorry, an error occurred - the admins have been informed');
+                })
+                .finally(() => {
+                    hideBusyIcon(busyWhileSavingIcon);
+                });
+    };
+
     function buildingCoreForm(buildingDetails = {}) {
         return `<input name="locationType" type="hidden" value="building" />
             <div class="dialogRow">
@@ -443,12 +405,12 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         !!addNewButton && (addNewButton.style.display = 'none');
 
         const saveButton = document.getElementById('saveButton');
-        !!saveButton && saveButton.removeEventListener('click', saveChange);
+        !!saveButton && saveButton.removeEventListener('click', saveChangeToSite);
         !!saveButton && saveButton.addEventListener('click', saveNewBuilding);
 
         // TODO handle delete building
 
-        // TODO handle add fllor
+        // TODO handle add floor
 
         const dialog = document.getElementById('popupDialog');
         !!dialog && dialog.showModal();
@@ -485,7 +447,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
             const saveButton = document.getElementById('saveButton');
-            !!saveButton && saveButton.addEventListener('click', saveChange);
+            !!saveButton && saveButton.addEventListener('click', saveChangeToSite);
 
             const addNewButton = document.getElementById('addNewButton');
             !!addNewButton && (addNewButton.innerText = 'Add building');
@@ -499,6 +461,57 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             !!dialog && dialog.showModal();
         }
     }
+
+    const saveChangeToBuilding = e => {
+        const form = e.target.closest('form');
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+        console.log('saveChangeToBuilding data=', data);
+        const locationType = data?.locationType;
+        const locationid = data[`${locationType}Id`];
+
+        // validate form
+        const failureMessage =
+            (!data.building_name || !data.building_id_displayed) && 'Please enter building name and number';
+        if (!!failureMessage) {
+            displayToastMessage(failureMessage, true);
+            return false;
+        }
+
+        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        closeDialog(e);
+
+        !!locationType &&
+            !!locationid &&
+            actions
+                .updateBookableSpaceLocation(Object.fromEntries(formData))
+                .then(() => {
+                    displayToastMessage('Change to building saved', false);
+
+                    // successful change to values - update the on-screen data to match
+                    const element = document.getElementById(`building-${locationid}`);
+                    !!element && (element.innerText = data?.building_name);
+                    if (data?.ground_floor_id_old !== data?.ground_floor_id) {
+                        const oldGroudFloorlabel = document.getElementById(
+                            getIdentifierForFloorGroundFloorIndicator(data?.ground_floor_id_old),
+                        );
+                        !!oldGroudFloorlabel && (oldGroudFloorlabel.style.display = 'none');
+
+                        const newGroudFloorlabel = document.getElementById(
+                            getIdentifierForFloorGroundFloorIndicator(data?.ground_floor_id),
+                        );
+                        !!newGroudFloorlabel && (newGroudFloorlabel.style.display = 'block');
+                    }
+                })
+                .catch(e => {
+                    console.log('catch: saving building ', locationid, 'failed:', e);
+                    displayToastMessage('Sorry, an error occurred - the admins have been informed');
+                })
+                .finally(() => {
+                    hideBusyIcon(busyWhileSavingIcon);
+                });
+    };
 
     function showEditBuildingForm(buildingId) {
         const buildingDetails =
@@ -545,7 +558,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         !!addNewButton && (addNewButton.innerText = 'Add floor');
 
         const saveButton = document.getElementById('saveButton');
-        !!saveButton && saveButton.addEventListener('click', saveChange);
+        !!saveButton && saveButton.addEventListener('click', saveChangeToBuilding);
 
         // TODO handle delete building
 
@@ -554,6 +567,46 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         const dialog = document.getElementById('popupDialog');
         !!dialog && dialog.showModal();
     }
+
+    const saveChangeToFloor = e => {
+        const form = e.target.closest('form');
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+        console.log('saveChangeToFloor data=', data);
+        const locationType = data?.locationType;
+        const locationid = data[`${locationType}Id`];
+
+        // validate form
+        const failureMessage = !data.floor_id_displayed && 'Please enter floor name';
+        if (!!failureMessage) {
+            displayToastMessage(failureMessage, true);
+            return false;
+        }
+
+        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        closeDialog(e);
+
+        !!locationType &&
+            !!locationid &&
+            actions
+                .updateBookableSpaceLocation(Object.fromEntries(formData))
+                .then(() => {
+                    displayToastMessage('Changes to floor saved', false);
+
+                    // successful change to values - update the on-screen data to match
+
+                    const element = document.getElementById(`floor-${locationid}`);
+                    !!element && (element.innerText = data?.floor_id_displayed);
+                })
+                .catch(e => {
+                    console.log('catch: saving floor ', locationid, 'failed:', e);
+                    displayToastMessage('Sorry, an error occurred - the admins have been informed');
+                })
+                .finally(() => {
+                    hideBusyIcon(busyWhileSavingIcon);
+                });
+    };
 
     function showEditFloorForm(floorId) {
         const floorDetails =
@@ -585,7 +638,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         !!addNewButton && (addNewButton.style.display = 'none');
 
         const saveButton = document.getElementById('saveButton');
-        !!saveButton && saveButton.addEventListener('click', saveChange);
+        !!saveButton && saveButton.addEventListener('click', saveChangeToFloor);
 
         // TODO handle delete floor
 
