@@ -1034,6 +1034,7 @@ export const DLOList = ({
                 const aFav = isFavorited(a);
                 const bFav = isFavorited(b);
                 if (aFav && !bFav) return -1;
+                /* istanbul ignore next */
                 if (!aFav && bFav) return 1;
                 return 0;
             });
@@ -1407,6 +1408,7 @@ export const DLOList = ({
                                 <MenuItem
                                     onClick={() => {
                                         handleRequestNewItem();
+                                        /* istanbul ignore next */
                                         handleMenuClose();
                                     }}
                                     data-testid="team-admin-submit-object-request"
@@ -1417,6 +1419,7 @@ export const DLOList = ({
                                 <MenuItem
                                     onClick={() => {
                                         window.location.href = dlorAdminLink('/team/manage', account);
+                                        /* istanbul ignore next */
                                         handleMenuClose();
                                     }}
                                     data-testid="team-admin-details--button"

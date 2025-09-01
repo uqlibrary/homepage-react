@@ -81,10 +81,14 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
+                        presets: ['@babel/preset-env', '@babel/preset-react'],
                         plugins: [
                             '@babel/plugin-proposal-export-default-from',
                             enableFastRefresh && 'react-refresh/babel',
+                            'babel-plugin-istanbul',
                         ].filter(Boolean),
+                        sourceMaps: true,
+                        inputSourceMap: true,
                     },
                 },
             },
