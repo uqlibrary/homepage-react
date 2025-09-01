@@ -379,6 +379,81 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         </div>`;
     };
 
+    function saveNewBuilding(e) {
+        const form = e.target.closest('form');
+        console.log('saveNewBuilding form=', form);
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+        console.log('saveNewBuilding data', data);
+        const locationType = data?.locationType;
+
+        // validate form
+        if (!data.building_name || !data.building_id_displayed) {
+            displayToastMessage('Please enter building name and number', true);
+            return false;
+        }
+
+        closeDialog(e);
+
+        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        !!locationType &&
+            actions
+                .addBookableSpaceLocation(data)
+                .then(() => {
+                    displayToastMessage('Building added', false);
+
+                    actions.loadAllBookableSpacesRooms();
+                })
+                .catch(e => {
+                    console.log('catch: adding new building failed:', e);
+                    displayToastMessage('Sorry, an error occurred - the admins have been informed');
+                })
+                .finally(() => {
+                    hideBusyIcon(busyWhileSavingIcon);
+                });
+    }
+
+    function buildingCoreForm(buildingDetails = {}) {
+        return `<input name="locationType" type="hidden" value="building" />
+            <div class="dialogRow">
+                <label for="buildingName">Building name</label>
+                <input id="buildingName" name="building_name" type="text" value="${buildingDetails?.building_name ||
+                    ''}" required />
+            </div>
+            <div class="dialogRow">
+                <label for="buildingNumber">Building number</label>
+                <input id="buildingNumber" name="building_id_displayed" type="text" value="${buildingDetails?.building_id_displayed ||
+                    ''}" required />
+            </div>`;
+    }
+
+    function showAddBuildingForm(e, siteDetails) {
+        console.log('showAddBuildingForm');
+        const formBody = `<h2>Add a building to ${siteDetails?.site_name ||
+            'unknown'} campus</h2>${buildingCoreForm()}`;
+        if (!formBody) {
+            return;
+        }
+
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+        const addNewButton = document.getElementById('addNewButton');
+        !!addNewButton && (addNewButton.style.display = 'none');
+
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton.removeEventListener('click', saveChange);
+        !!saveButton && saveButton.addEventListener('click', saveNewBuilding);
+
+        // TODO handle delete building
+
+        // TODO handle add fllor
+
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog.showModal();
+    }
+
     function showEditSiteForm(siteId) {
         const siteDetails = siteId > 0 && siteList.find(s => s.site_id === siteId);
 
@@ -393,12 +468,15 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             siteDetails,
         )}<div class="dialogRow">
                 <label>Buildings</label>
-                ${siteDetails?.buildings?.length > 0 &&
-                    '<ul>' +
-                        siteDetails.buildings
-                            .map(building => `<li>${building.building_name} (${building.building_id_displayed}) </li>`)
-                            .join('') +
-                        '</ul>'}
+                ${
+                    siteDetails?.buildings?.length > 0
+                        ? `<ul>${siteDetails.buildings
+                              .map(
+                                  building => `<li>${building.building_name} (${building.building_id_displayed}) </li>`,
+                              )
+                              .join('')}</ul>`
+                        : ''
+                }
                 ${siteDetails?.buildings?.length === 0 ? '<p>No buildings</p>' : ''}
             </div>`;
 
@@ -411,6 +489,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
             const addNewButton = document.getElementById('addNewButton');
             !!addNewButton && (addNewButton.innerText = 'Add building');
+            !!addNewButton && addNewButton.addEventListener('click', e => showAddBuildingForm(e, siteDetails));
 
             // TODO handle delete site
 
@@ -432,28 +511,14 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             return;
         }
 
-        const formBody = `
-            <h2>Edit building details</h2>
+        const formBody = `<h2>Edit building details</h2>
             <input name="buildingId" type="hidden" value="${buildingDetails?.building_id}" />
-            <input name="locationType" type="hidden" value="building" />
-            <input name="ground_floor_id_old" type="hidden" value="${buildingDetails.ground_floor_id ?? ''}" />
-            <div class="dialogRow">
-                <label for="buildingName">Building name</label>
-                <input id="buildingName" name="building_name" type="text" value="${
-                    buildingDetails?.building_name
-                }" required />
-            </div>
-            <div class="dialogRow">
-                <label for="buildingNumber">Building number</label>
-                <input id="buildingNumber" name="building_id_displayed" type="text" value="${
-                    buildingDetails?.building_id_displayed
-                }" required />
-            </div>
-            <div class="dialogRow">
+            <input name="ground_floor_id_old" type="hidden" value="${buildingDetails?.ground_floor_id ??
+                ''}" />${buildingCoreForm(buildingDetails)}<div class="dialogRow">
                 <label>Floors - Choose ground floor</label>
                 ${buildingDetails?.floors?.length > 0 &&
                     '<ul>' +
-                        buildingDetails.floors
+                        buildingDetails?.floors
                             .map(floor => {
                                 const checked = floor.floor_id === buildingDetails.ground_floor_id ? ' checked' : '';
                                 return `<li>
@@ -528,7 +593,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         !!dialog && dialog.showModal();
     }
 
-    function addSite() {
+    function showAddSiteForm() {
         const formBody = `<h2>Add campus</h2>${siteFormCore()}`;
 
         if (!!formBody) {
@@ -621,7 +686,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                     className={'primary'}
                     style={{ marginLeft: '4rem', marginTop: '2rem' }}
                     children={'Add new Campus'}
-                    onClick={addSite}
+                    onClick={showAddSiteForm}
                 />
             </>
         );
