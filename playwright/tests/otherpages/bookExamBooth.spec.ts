@@ -109,30 +109,28 @@ test.describe('Book Exam Booth page', () => {
             .date(intendedDate);
         const dateInput = page.locator('input[data-testid="start-date"]');
 
-        const defaultDateValue = await dateInput.inputValue();
+        const defaultDate = moment(await dateInput.inputValue(), 'DD/MM/YYYY');
         const yesterday = moment().subtract(1, 'day');
-        expect(defaultDateValue).toBe(yesterday.format('DD/MM/YYYY'));
+        expect(defaultDate.format('DD/MM/YYYY')).toBe(yesterday.format('DD/MM/YYYY'));
 
-        const selectNextMonth = async (currentMonth: string) => {
-            await expect(page.getByText(currentMonth)).toBeVisible({ timeout: 2000 });
+        const selectNextMonth = async (date: moment.Moment): Promise<moment.Moment> => {
+            await expect(page.getByText(date.format('MMMM'))).toBeVisible({ timeout: 2000 });
             await page.getByTestId('ArrowRightIcon').click({ timeout: 2000 });
             await expect(page.getByTestId('ArrowRightIcon')).toBeVisible({ timeout: 2000 });
-            await expect(page.getByText(currentMonth)).not.toBeVisible({ timeout: 2000 });
-            return moment()
-                .add(1, 'month')
-                .format('MMMM');
+            await expect(page.getByText(date.format('MMMM'))).not.toBeVisible({ timeout: 2000 });
+            return date.clone().add(1, 'month');
         };
 
         await expect(async () => {
             await page.locator('body').click();
             await page.getByTestId('start-date-button').click();
 
-            let selectedMonth = await selectNextMonth(moment().format('MMMM'));
+            let selectedDate = await selectNextMonth(defaultDate);
             // The field defaults to the previous day, which can be in the previous month.
             if (moment().date() === 1) {
-                selectedMonth = await selectNextMonth(selectedMonth);
+                selectedDate = await selectNextMonth(selectedDate);
             }
-            await expect(page.getByText(selectedMonth)).toBeVisible({ timeout: 2000 });
+            await expect(page.getByText(selectedDate.format('MMMM'))).toBeVisible({ timeout: 2000 });
 
             await page
                 .locator('.MuiPickersDay-root')
