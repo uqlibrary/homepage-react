@@ -252,12 +252,12 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         // todo handle delete button
     }
 
-    function addNewSite(e) {
+    function saveNewSite(e) {
         const form = e.target.closest('form');
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
-        console.log('addNewSite data', data);
+        console.log('saveNewSite data', data);
         const locationType = data?.locationType;
 
         // validate form
@@ -363,7 +363,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 });
     };
 
-    function editSite(siteId) {
+    function showEditSiteForm(siteId) {
         const siteDetails = siteId > 0 && siteList.find(s => s.site_id === siteId);
 
         if (!siteDetails) {
@@ -415,7 +415,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         }
     }
 
-    function editBuilding(buildingId) {
+    function showEditBuildingForm(buildingId) {
         const buildingDetails =
             buildingId > 0 &&
             siteList.flatMap(site => site.buildings).find(building => building.building_id === buildingId);
@@ -484,7 +484,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         !!dialog && dialog.showModal();
     }
 
-    function editFloor(floorId) {
+    function showEditFloorForm(floorId) {
         const floorDetails =
             floorId > 0 &&
             siteList
@@ -549,7 +549,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             !!dialog && dialog.showModal();
 
             const saveButton = document.getElementById('saveButton');
-            !!saveButton && saveButton.addEventListener('click', addNewSite);
+            !!saveButton && saveButton.addEventListener('click', saveNewSite);
         }
     }
 
@@ -563,7 +563,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                 <span id={`site-${site.site_id}`}>{site.site_name}</span>
                                 <StyledEditButton
                                     size="small"
-                                    onClick={() => editSite(site.site_id)}
+                                    onClick={() => showEditSiteForm(site.site_id)}
                                     aria-label={`Edit ${site.site_name} campus details`}
                                 >
                                     <EditIcon />
@@ -583,7 +583,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                     <StyledEditButton
                                         color="primary"
                                         size="small"
-                                        onClick={() => editBuilding(building.building_id)}
+                                        onClick={() => showEditBuildingForm(building.building_id)}
                                         aria-label={`Edit ${building.building_name} details`}
                                     >
                                         <EditIcon />
@@ -608,8 +608,8 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                         <StyledEditButton
                                             color="primary"
                                             size="small"
-                                            // onClick={() => editSite(site.site_id)}
-                                            onClick={() => editFloor(floor.floor_id)}
+                                            // onClick={() => showEditSiteForm(site.site_id)}
+                                            onClick={() => showEditFloorForm(floor.floor_id)}
                                             aria-label={`Edit ${floor.floor_id_displayed}`}
                                         >
                                             <EditIcon />
