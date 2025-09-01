@@ -74,27 +74,29 @@ import parse from 'html-react-parser';
 
 import Fuse from 'fuse.js';
 import FuzzySearch from 'modules/Pages/DigitalLearningObjects/SharedComponents/FuzzySearch';
+
 const fuseData = [
-  {
-    keyword: "Aboriginal and Torres Strait Islander",
-    synonyms: ["ATSI", "Reconciliation", "Culture", "Indigenising curriculum"],
-    keyword_id: 1,
-  },
-  {
-    keyword: "Information Technology",
-    synonyms: ["AI", "Artificial Intelligence", "Web Crawling", "Programming", "Coding", "Software", "Hardware", "Computing"],
-    keyword_id: 2,
-  },
-  {
-    keyword: "Research Skills",
-    synonyms: ["Literature Review", "Data Analysis", "Academic Writing", "Referencing"],
-    keyword_id: 3,
-  },
+    {
+        keyword: "Aboriginal and Torres Strait Islander",
+        synonyms: ["ATSI", "Reconciliation", "Culture", "Indigenising curriculum"],
+        keyword_id: 1,
+    },
+    {
+        keyword: "Information Technology",
+        synonyms: ["AI", "Artificial Intelligence", "Web Crawling", "Programming", "Coding", "Software", "Hardware", "Computing"],
+        keyword_id: 2,
+    },
+    {
+        keyword: "Research Skills",
+        synonyms: ["Literature Review", "Data Analysis", "Academic Writing", "Referencing"],
+        keyword_id: 3,
+    },
 ];
+
 const fuseOptions = {
-  includeScore: true,
-  threshold: 0.5,
-  keys: ['keyword', 'synonyms'],
+    includeScore: true,
+    threshold: 0.5,
+    keys: ['keyword', 'synonyms'],
 };
 
 
@@ -206,6 +208,26 @@ export const DlorForm = ({
     const teamSelectRef = useRef(null);
     const linkInteractionTypeSelectRef = useRef(formValues?.object_link_interaction_type || 'none');
     const linkFileTypeSelectRef = useRef(formValues.object_link_file_type || 'new');
+
+    const [selectedKeywords, setSelectedKeywords] = useState([]);
+
+    console.log("Selected keywords", selectedKeywords);
+
+    const handleSelectedItemsChange = (newItems) => {
+        setSelectedKeywords(newItems);
+    };
+
+    useEffect(() => {
+        // Do something with selectedKeywords, e.g., update formValues
+        console.log("Selected keywords in DlorForm:", selectedKeywords);
+        // If you need to store the keyword ids in formValues:
+        const keywordIds = selectedKeywords.map(item => item.keyword_id);
+        setFormValues(prevValues => ({
+            ...prevValues,
+            object_keyword_ids: keywordIds, // or whatever field you want to store them in
+            object_keywords: selectedKeywords.map(item => item.keyword), // if you want the keywords as well
+        }));
+    }, [selectedKeywords]);
 
     const flatMapFacets = facetList => {
         return facetList?.flatMap(facet => facet?.filter_values?.map(value => value?.id)).sort((a, b) => a - b);
@@ -439,7 +461,7 @@ export const DlorForm = ({
         let fourthPanelErrorCount = 0;
         // ensure there is at least one keyword selected.
         console.log("currentValues", currentValues);
-        // currentValues?.object_keywords_string?.length < keywordMinimumLength && fourthPanelErrorCount++;
+        currentValues?.object_keywords?.length < 1 && fourthPanelErrorCount++;
 
         function isDeepStructure(variable) {
             return Array.isArray(variable) ? typeof variable[0] === 'object' && variable[0] !== null : false;
@@ -1476,39 +1498,13 @@ export const DlorForm = ({
                     Keywords
                 </Typography>
             </Grid>
-            {/* <Grid item xs={12} style={{ paddingTop: 0 }}>
-                <FormControl variant="standard" fullWidth>
-                    <InputLabel htmlFor="object_keywords">
-                        Keywords - enter a comma separated list of keywords *
-                    </InputLabel>
-                    <Input
-                        id="object_keywords"
-                        data-testid="object-keywords"
-                        multiline
-                        required
-                        rows={2}
-                        value={formValues?.object_keywords_string || ''}
-                        onChange={handleChange('object_keywords_string')}
-                    />
-                    {!!formValues?.object_keywords_string &&
-                        characterCount(
-                            formValues?.object_keywords_string?.length,
-                            keywordMinimumLength,
-                            'object_keywords_string',
-                        )}
-                    <Box
-                        sx={{
-                            fontSize: '0.8em',
-                            marginBlock: '12px',
-                        }}
-                    >
-                        If you need a keyword with a comma within it, surround the keyword with double quotes, like:
-                        cat, "dog, dog", mouse
-                    </Box>
-                </FormControl>
-            </Grid> */}
             <Grid item xs={12} style={{ paddingTop: 20 }}>
-                <FuzzySearch data={fuseData} options={fuseOptions} delay={300} />
+                <FuzzySearch
+                    data={fuseData}
+                    fuseOptions={fuseOptions}
+                    delay={300}
+                    onSelectedItemsChange={handleSelectedItemsChange}
+                />
             </Grid>
             {mode === 'edit' && (
                 <Grid item xs={12}>
@@ -1748,7 +1744,7 @@ export const DlorForm = ({
         delete valuesToSend.team_manager_edit;
         delete valuesToSend.team_email_edit;
 
-        valuesToSend.object_keywords = splitStringToArrayOnComma(valuesToSend.object_keywords_string);
+        //valuesToSend.object_keywords = splitStringToArrayOnComma(valuesToSend.object_keywords_string);
         delete valuesToSend.object_keywords_string;
 
         if (mode === 'add') {
@@ -1787,7 +1783,7 @@ export const DlorForm = ({
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
-
+        console.log('valuesToSend=', valuesToSend);
         const saveDlorPromise =
             mode === 'add'
                 ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
