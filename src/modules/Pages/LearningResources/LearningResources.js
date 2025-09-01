@@ -44,7 +44,7 @@ export const isValidInput = params => {
      * course code should be a valid coursecode, 4 char + 4 numbers + optional char
      * semester can be only letters and numbers
      * and campus must be in the global campus lookup list
-     * (this cant go in the helpers file because it needs the global locale, which cant be reached during cypress tests)
+     * (this cant go in the helpers file because it needs the global locale, which cant be reached during playwright tests)
      * @param params
      * @returns {boolean}
      */

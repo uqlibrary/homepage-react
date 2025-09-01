@@ -280,6 +280,7 @@ export const DLOSeriesEdit = ({
     const navigateToSeriesManagementHomePage = () => {
         closeConfirmationBox();
         window.location.href = dlorAdminLink('/series/manage', account);
+        /* istanbul ignore next */
         scrollToTopOfPage();
     };
     const navigateToPreviousPage = () => {

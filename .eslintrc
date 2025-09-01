@@ -12,7 +12,6 @@
     "afterAll": true,
     "beforeAll": true,
     "cy": true,
-    "Cypress": true,
     "expect": true,
     "getElement": true,
     "jasmine": true,
@@ -239,5 +238,17 @@
     "react-hooks",
     "jsx-a11y"
   ],
-  "extends": ["plugin:prettier/recommended"]
+  "extends": ["plugin:prettier/recommended"],
+  "overrides": [
+    {
+      "files": ["playwright.config.ts", "playwright/**/*.ts"],
+      "parser": "@typescript-eslint/parser",
+      "plugins": ["@typescript-eslint"],
+      "extends": [
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "prettier"
+      ]
+    }
+  ]
 }

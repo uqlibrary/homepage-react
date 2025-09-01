@@ -25,10 +25,14 @@ export function getHomepageLink(hostname = null, protocol = null, port = null, p
     return homepagelink;
 }
 
-export const _courseLink = (courseCode, url) => {
+export const _courseLink = (
+    courseCode,
+    url,
+    locationHost = document.location.host,
+    homepageLink = getHomepageLink(),
+) => {
     let _url = url;
-    if (document.location.host !== 'www.library.uq.edu.au' && _url.startsWith('https://www.library.uq.edu.au/')) {
-        let homepageLink = getHomepageLink();
+    if (locationHost !== 'www.library.uq.edu.au' && _url.startsWith('https://www.library.uq.edu.au/')) {
         let params = '';
         const tempUrl = new URL(homepageLink);
         params = tempUrl.search;

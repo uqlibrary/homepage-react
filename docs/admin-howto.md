@@ -26,10 +26,6 @@ Visit the [Reusable Webcomponents instructions](https://github.com/uqlibrary/reu
 
 Visit the [Reusable Webcomponents instructions](https://github.com/uqlibrary/reusable-webcomponents/blob/user-admin-manage/docs/admin-howto.md)
 
-## Viewing what each user type sees
-
-Visit [the homepage test file](https://github.com/uqlibrary/homepage-react/blob/user-admin-manage/cypress/integration/homepage.spec.js#L9) to view what elements many user types can see on the Homepage. (Developers can add remaining types on request) 
-
 ## Alerts Admin system
 
 Need to add or remove a user? Ask Work Station Support to add or remove the "SpotlightAdmins" AD group for the user (the one group covers Spotlights and Alerts). Include the username in the request (eg uqjtilse).
