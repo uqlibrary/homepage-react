@@ -415,7 +415,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         !!dialog && dialog.showModal();
     }
 
-    function closeSiteDeletionConfirmation() {
+    function closeDeletionConfirmation() {
         const dialog = document.getElementById('confirmationDialog');
         !!dialog && dialog.close();
 
@@ -426,30 +426,47 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         removeAnyListeners(confirmationOKButton);
     }
 
-    function deleteSite(e, siteDetails) {
+    function deleteLocation(locationType, locationId, successMessage, failureMessage) {
+        console.log('deleteLocation', locationType, locationId);
         const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
 
-        closeSiteDeletionConfirmation(); // close delete conf dialog
+        closeDeletionConfirmation(); // close delete conf dialog
         closeDialog(); // close main dialog
-
-        const locationType = 'site';
-        const locationId = siteDetails?.site_id;
 
         !!locationType &&
             !!locationId &&
             actions
                 .deleteBookableSpaceLocation({ locationType, locationId })
                 .then(() => {
-                    displayToastMessage(`${siteDetails?.site_name} campus deleted`, false);
+                    console.log('deleteLocation then');
+                    displayToastMessage(successMessage, false);
                     actions.loadBookableSpaceSites();
                 })
                 .catch(e => {
-                    console.log('catch: deleting site ', locationId, 'failed:', e);
+                    console.log(failureMessage, e);
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
                     hideBusyIcon(busyWhileSavingIcon);
                 });
+    }
+
+    function deleteSite(e, siteDetails) {
+        console.log('deleteSite', siteDetails);
+        const locationType = 'site';
+        const locationId = siteDetails?.site_id;
+        const successMessage = `${siteDetails?.site_name} campus deleted`;
+        const failureMessage = `catch: deleting site ${locationId} failed:`;
+        console.log('deleteSite', locationType, locationId);
+        deleteLocation(locationType, locationId, successMessage, failureMessage);
+    }
+
+    function deleteBuilding(e, buildingDetails) {
+        const locationType = 'building';
+        const locationId = buildingDetails?.building_id;
+        const successMessage = `${buildingDetails?.building_name} deleted`;
+        const failureMessage = `catch: deleting building ${locationId} failed:`;
+        deleteLocation(locationType, locationId, successMessage, failureMessage);
     }
 
     function confirmAndDeleteSite(e, siteDetails) {
@@ -458,10 +475,26 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             (confirmationMessageElement.innerHTML = `<p>Do you really want to delete ${siteDetails.site_name} campus?</p><p>This will also delete associated buildings.</p>`);
 
         const confirmationCancelButton = document.getElementById('confDialogCancelButton');
-        !!confirmationCancelButton && confirmationCancelButton.addEventListener('click', closeSiteDeletionConfirmation);
+        !!confirmationCancelButton && confirmationCancelButton.addEventListener('click', closeDeletionConfirmation);
 
         const confirmationOKButton = document.getElementById('confDialogOkButton');
         !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteSite(e, siteDetails));
+
+        const dialog = document.getElementById('confirmationDialog');
+        !!dialog && dialog.showModal();
+    }
+
+    function confirmAndDeleteBuilding(e, buildingDetails) {
+        const confirmationMessageElement = document.getElementById('confDialogMessage');
+        !!confirmationMessageElement &&
+            (confirmationMessageElement.innerHTML = `<p>Do you really want to delete ${buildingDetails.building_name} campus?</p><p>This will also delete associated floors.</p>`);
+
+        const confirmationCancelButton = document.getElementById('confDialogCancelButton');
+        !!confirmationCancelButton && confirmationCancelButton.addEventListener('click', closeDeletionConfirmation);
+
+        const confirmationOKButton = document.getElementById('confDialogOkButton');
+        !!confirmationOKButton &&
+            confirmationOKButton.addEventListener('click', e => deleteBuilding(e, buildingDetails));
 
         const dialog = document.getElementById('confirmationDialog');
         !!dialog && dialog.showModal();
@@ -661,7 +694,8 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         const saveButton = document.getElementById('saveButton');
         !!saveButton && saveButton.addEventListener('click', saveChangeToBuilding);
 
-        // TODO handle delete building
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton && deleteButton.addEventListener('click', e => confirmAndDeleteBuilding(e, buildingDetails));
 
         const dialog = document.getElementById('popupDialog');
         !!dialog && dialog.showModal();
