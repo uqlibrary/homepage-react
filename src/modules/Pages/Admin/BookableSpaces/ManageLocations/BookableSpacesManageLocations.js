@@ -35,6 +35,9 @@ const StyledDialog = styled('dialog')(({ theme }) => ({
             padding: '0.5rem',
             width: '90%',
         },
+        '& input:not(:valid)': {
+            outline: '1px solid red',
+        },
         '& :focus-visible': {
             outlineColor: theme.palette.primary.light,
         },
@@ -228,21 +231,58 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         !!addNewButton && (addNewButton.style.display = 'inline');
         removeAnyListeners(addNewButton);
 
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton && (deleteButton.style.display = 'inline');
+        removeAnyListeners(deleteButton);
+
         const saveButton = document.getElementById('saveButton');
         removeAnyListeners(saveButton);
 
         // todo handle delete button
     }
 
-    function saveChange(e) {
+    function addNewSite(e) {
         const form = e.target.closest('form');
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
+        console.log('data', data);
+
+        if (!data.site_name || !data.site_id_displayed) {
+            displayToastMessage('Please enter name and number', true);
+            return false;
+        }
+    }
+
+    const saveChange = e => {
+        const form = e.target.closest('form');
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+        console.log('data=', data);
         const locationType = data?.locationType;
         const locationid = data[`${locationType}Id`];
 
-        closeDialog(e, saveChange);
+        let toastMessage = '';
+        switch (locationType) {
+            case 'site':
+                toastMessage = (!data.site_name || !data.site_id_displayed) && 'Please enter site name and number';
+                break;
+            case 'building':
+                toastMessage =
+                    (!data.building_name || !data.building_id_displayed) && 'Please enter building name and number';
+                break;
+            case 'floor':
+                toastMessage = !data.floor_id_displayed && 'Please enter floor name';
+                break;
+            default:
+        }
+        if (!!toastMessage) {
+            displayToastMessage(toastMessage, true);
+            return false;
+        }
+
+        closeDialog(e);
 
         const busyWhileSavingIcon = showBusyWhileSavingIcon('busy-icon-while-saving');
 
@@ -289,7 +329,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 .finally(() => {
                     hideWhileSavingIcon(busyWhileSavingIcon);
                 });
-    }
+    };
 
     function editSite(siteId) {
         const siteDetails = siteId > 0 && siteList.find(s => s.site_id === siteId);
@@ -305,11 +345,13 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             <input  name="locationType" type="hidden" value="site" />
             <div class="dialogRow">
                 <label for="siteName">Site name</label>
-                <input id="siteName" name="site_name" type="text" value="${siteDetails.site_name}" />
+                <input id="siteName" name="site_name" type="text" value="${siteDetails.site_name}" required />
             </div>
             <div class="dialogRow">
                 <label for="siteNumber">Site number</label>
-                <input id="siteNumber" name="site_id_displayed" type="text" value="${siteDetails.site_id_displayed}" />
+                <input id="siteNumber" name="site_id_displayed" type="text" value="${
+                    siteDetails.site_id_displayed
+                }" required />
             </div>
             <div class="dialogRow">
                 <label>Buildings</label>
@@ -359,13 +401,15 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             <input name="ground_floor_id_old" type="hidden" value="${buildingDetails.ground_floor_id ?? ''}" />
             <div class="dialogRow">
                 <label for="buildingName">Building name</label>
-                <input id="buildingName" name="building_name" type="text" value="${buildingDetails?.building_name}" />
+                <input id="buildingName" name="building_name" type="text" value="${
+                    buildingDetails?.building_name
+                }" required />
             </div>
             <div class="dialogRow">
                 <label for="buildingNumber">Building number</label>
                 <input id="buildingNumber" name="building_id_displayed" type="text" value="${
                     buildingDetails?.building_id_displayed
-                }" />
+                }" required />
             </div>
             <div class="dialogRow">
                 <label>Floors - Choose ground floor</label>
@@ -429,7 +473,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             <input name="ground_floor_id_old" type="hidden" value="${floorDetails.ground_floor_id ?? ''}" />
             <div class="dialogRow">
                 <label for="floorName">Floor name</label>
-                <input id="displayedFloorId" name="floor_id_displayed" type="text" value="${
+                <input id="displayedFloorId" name="floor_id_displayed" type="text" required value="${
                     floorDetails?.floor_id_displayed
                 }" />
             </div>`;
@@ -454,22 +498,29 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             <input  name="locationType" type="hidden" value="site" />
             <div class="dialogRow">
                 <label for="siteName">Site name</label>
-                <input id="siteName" name="site_name" type="text" value="" />
+                    <input id="siteName" name="site_name" type="text" value="" required />
             </div>
             <div class="dialogRow">
                 <label for="siteNumber">Site number</label>
-                <input id="siteNumber" name="site_id_displayed" type="text" value="" />
+                <input id="siteNumber" name="site_id_displayed" type="text" value="" required />
             </div>`;
 
         if (!!formBody) {
             const dialogBodyElement = document.getElementById('dialogBody');
             !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
-            const addNewButton = document.getElementById('addNewButton');
+            const elementId = 'addNewButton';
+            const addNewButton = document.getElementById(elementId);
             !!addNewButton && (addNewButton.style.display = 'none');
+
+            const deleteButton = document.getElementById('deleteButton');
+            !!deleteButton && (deleteButton.style.display = 'none');
 
             const dialog = document.getElementById('popupDialog');
             !!dialog && dialog.showModal();
+
+            const saveButton = document.getElementById('saveButton');
+            !!saveButton && saveButton.addEventListener('click', addNewSite);
         }
     }
 
@@ -608,6 +659,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                         <div id="dialogFooter" className={'dialogFooter'}>
                             <div>
                                 <StyledButton
+                                    id={'deleteButton'}
                                     className={'alert'}
                                     children={'Delete'}
                                     // onClick={}
