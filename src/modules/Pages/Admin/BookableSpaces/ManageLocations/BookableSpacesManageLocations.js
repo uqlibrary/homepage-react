@@ -106,6 +106,17 @@ const StyledButton = styled(Button)(({ theme }) => ({
 const StyledGridItem = styled(Grid)(() => ({
     marginTop: '12px',
 }));
+const StyledBusyIconDiv = styled('div')(() => ({
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#fff',
+    opacity: '80%',
+    zIndex: 99,
+    position: 'absolute',
+    top: 0,
+    paddingTop: '4rem',
+    marginTop: '12px',
+}));
 const StyledEditButton = styled(Button)(() => ({
     '& svg': {
         color: 'grey',
@@ -200,13 +211,13 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         }, hideDelay + 1000);
     }
 
-    function showBusyWhileSavingIcon(id) {
+    function showBusyIcon(id) {
         const busyWhileSavingIcon = document.getElementById(id);
         !!busyWhileSavingIcon && (busyWhileSavingIcon.style.display = 'block');
         return busyWhileSavingIcon;
     }
 
-    function hideWhileSavingIcon(busyWhileSavingIcon) {
+    function hideBusyIcon(busyWhileSavingIcon) {
         !!busyWhileSavingIcon && (busyWhileSavingIcon.style.display = 'none');
     }
 
@@ -246,12 +257,33 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
-        console.log('data', data);
+        console.log('addNewSite data', data);
+        const locationType = data?.locationType;
 
+        // validate form
         if (!data.site_name || !data.site_id_displayed) {
-            displayToastMessage('Please enter name and number', true);
+            displayToastMessage('Please enter site name and number', true);
             return false;
         }
+
+        closeDialog(e);
+
+        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        !!locationType &&
+            actions
+                .addBookableSpaceLocation(data)
+                .then(() => {
+                    displayToastMessage('Site added', false);
+
+                    actions.loadAllBookableSpacesRooms();
+                })
+                .catch(e => {
+                    console.log('catch: adding new site failed:', e);
+                    displayToastMessage('Sorry, an error occurred - the admins have been informed');
+                })
+                .finally(() => {
+                    hideBusyIcon(busyWhileSavingIcon);
+                });
     }
 
     const saveChange = e => {
@@ -259,10 +291,11 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
-        console.log('data=', data);
+        console.log('saveChange data=', data);
         const locationType = data?.locationType;
         const locationid = data[`${locationType}Id`];
 
+        // validate form
         let toastMessage = '';
         switch (locationType) {
             case 'site':
@@ -282,9 +315,8 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             return false;
         }
 
+        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
         closeDialog(e);
-
-        const busyWhileSavingIcon = showBusyWhileSavingIcon('busy-icon-while-saving');
 
         !!locationType &&
             !!locationid &&
@@ -327,7 +359,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideWhileSavingIcon(busyWhileSavingIcon);
+                    hideBusyIcon(busyWhileSavingIcon);
                 });
     };
 
@@ -528,7 +560,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         return (
             <>
                 {siteList.map(site => [
-                    <StyledRow key={`site-${site.site_id}`}>
+                    <StyledRow key={`site-${site.site_id}`} data-testid={'spaces-site-entry'}>
                         <div style={{ paddingLeft: '4rem' }}>
                             <StyledDiv>
                                 <span id={`site-${site.site_id}`}>{site.site_name}</span>
@@ -635,22 +667,9 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                 return <StyledGridItem>{getLocationLayout(siteList)}</StyledGridItem>;
                             }
                         })()}
-                        <div
-                            id="busy-icon-while-saving"
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                backgroundColor: '#fff',
-                                opacity: '80%',
-                                zIndex: 99,
-                                position: 'absolute',
-                                top: 0,
-                                paddingTop: '4rem',
-                                display: 'none',
-                            }}
-                        >
+                        <StyledBusyIconDiv id="busy-icon-while-saving" style={{ display: 'none' }}>
                             <InlineLoader message="Saving" />
-                        </div>
+                        </StyledBusyIconDiv>
                     </Grid>
                 </StandardCard>
                 <StyledDialog id={'popupDialog'} closedby="any">

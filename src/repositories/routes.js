@@ -300,7 +300,7 @@ export const SPACES_FACILITY_TYPE_ALL_API = () => {
         apiUrl: 'bookable_spaces/facility_types/all',
     };
 };
-export const SPACES_ADD_LOCATION_API = type => ({ apiUrl: `bookable_spaces/${type}` });
+export const SPACES_ADD_LOCATION_API = ({ type }) => ({ apiUrl: `bookable_spaces/${type}` });
 export const SPACES_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `bookable_spaces/${type}/${id}` });
 
 export const SPACES_SITE_API = () => ({ apiUrl: 'bookable_spaces/sites/all' });

@@ -35,10 +35,12 @@ export function loadAllBookableSpacesRooms() {
     };
 }
 
-export function addBookableSpaceLocation({ type, request }) {
+export function addBookableSpaceLocation(request) {
+    const locationType = request?.locationType;
     return dispatch => {
         dispatch({ type: actions.SPACES_LOCATION_ADDING });
-        return post(SPACES_ADD_LOCATION_API(type), request)
+        const url = SPACES_ADD_LOCATION_API({ type: locationType });
+        return post(url, request)
             .then(response => {
                 if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({
