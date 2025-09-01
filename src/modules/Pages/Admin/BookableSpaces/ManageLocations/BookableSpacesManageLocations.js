@@ -502,12 +502,9 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             <h2>Edit floor details</h2>
             <input name="floorId" type="hidden" value="${floorDetails?.floor_id}" />
             <input name="locationType" type="hidden" value="floor" />
-            <input name="ground_floor_id_old" type="hidden" value="${floorDetails.ground_floor_id ?? ''}" />
             <div class="dialogRow">
                 <label for="floorName">Floor name</label>
-                <input id="displayedFloorId" name="floor_id_displayed" type="text" required value="${
-                    floorDetails?.floor_id_displayed
-                }" />
+                <input id="displayedFloorId" name="floor_id_displayed" type="text" required value="${floorDetails?.floor_id_displayed}" />
             </div>`;
 
         const dialogBodyElement = document.getElementById('dialogBody');
@@ -598,7 +595,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                             <StyledRow key={`location-floor-${floor.floor_id}`}>
                                 <div style={{ paddingLeft: '12rem' }}>
                                     <StyledDiv>
-                                        <span>{floor.floor_id_displayed}</span>
+                                        <span id={`floor-${floor.floor_id}`}>{floor.floor_id_displayed}</span>
 
                                         <StyledGroundFloorIndicatorSpan
                                             id={getIdentifierForFloorGroundFloorIndicator(floor.floor_id)}
