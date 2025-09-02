@@ -48,6 +48,11 @@ const StyledMainDialog = styled('dialog')(({ theme }) => ({
             },
         },
     },
+    '& .dialogRowInline': {
+        '& label': {
+            display: 'inline',
+        },
+    },
     '& .dialogFooter': {
         display: 'flex',
         justifyContent: 'space-between',
@@ -115,7 +120,6 @@ const StyledGridItem = styled(Grid)(() => ({
 }));
 const StyledBusyIconDiv = styled('div')(() => ({
     width: '100%',
-    height: '100%',
     backgroundColor: '#fff',
     opacity: '80%',
     zIndex: 99,
@@ -393,12 +397,12 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             <div class="dialogRow" data-testid="building-name">
                 <label for="buildingName">Building name</label>
                 <input id="buildingName" name="building_name" type="text" value="${buildingDetails?.building_name ||
-                    ''}" required />
+                    ''}" required  maxlength="255" />
             </div>
             <div class="dialogRow" data-testid="building-number">
                 <label for="buildingNumber">Building number</label>
                 <input id="buildingNumber" name="building_id_displayed" type="text" value="${buildingDetails?.building_id_displayed ||
-                    ''}" required />
+                    ''}" required  maxlength="10" />
             </div>`;
     }
 
@@ -630,6 +634,18 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         !!locationType &&
             actions
                 .addBookableSpaceLocation(data)
+                .then(newFloor => {
+                    if (!!data.isGroundFloor && data?.isGroundFloor === 'Y') {
+                        const buildingData = {
+                            locationType: 'building',
+                            buildingId: data.buildingId,
+                            ground_floor_id: newFloor.data.floor_id,
+                        };
+                        return actions.updateBookableSpaceLocation(buildingData);
+                    } else {
+                        return true;
+                    }
+                })
                 .then(() => {
                     displayToastMessage('Floor added', false);
 
@@ -648,13 +664,20 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         <div class="dialogRow" data-testid="floor-name">
             <label for="displayedFloorId">Floor name</label>
             <input id="displayedFloorId" name="floor_id_displayed" type="text" required value="${floorDetails?.floor_id_displayed ??
-                ''}" />
+                ''}"  maxlength="10" />
         </div>`;
 
-    function showAddFloorForm(e, buildingDetails) {
-        console.log('showAddFloorForm');
-        const formBody = `<h2>Add a floor to ${buildingDetails?.building_name ||
-            'unknown building'}</h2>${floorCoreForm()}`;
+    function showAddFloorForm(e, buildingDetails, currentGroundFloorDetails) {
+        const groundFloorDescription = !!currentGroundFloorDetails
+            ? `Current ground floor is Floor ${currentGroundFloorDetails.floor_id_displayed}`
+            : 'No floor is currently marked as the ground floor';
+        const formBody = `<h2>Add a floor to ${buildingDetails?.building_name || 'unknown building'}</h2>
+            <input name="buildingId" type="hidden" value="${buildingDetails?.building_id}" />
+            ${floorCoreForm()}
+            <div class="dialogRow dialogRowInline" data-testid="mark-ground-floor">
+                <input type="checkbox" name="isGroundFloor" value="Y" id="isGroundFloor">
+                <label for="isGroundFloor">Mark new floor as Ground floor (${groundFloorDescription})</label> 
+            </div>`;
         if (!formBody) {
             return;
         }
@@ -719,7 +742,13 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
         const addNewButton = document.getElementById('addNewButton');
         !!addNewButton && (addNewButton.innerText = 'Add floor');
-        !!addNewButton && addNewButton.addEventListener('click', e => showAddFloorForm(e, buildingDetails));
+        const currentGroundFloorDetails = buildingDetails.floors.find(
+            f => buildingDetails.ground_floor_id === f.floor_id,
+        );
+        !!addNewButton &&
+            addNewButton.addEventListener('click', e =>
+                showAddFloorForm(e, buildingDetails, currentGroundFloorDetails),
+            );
 
         const saveButton = document.getElementById('saveButton');
         !!saveButton && saveButton.addEventListener('click', saveChangeToBuilding);

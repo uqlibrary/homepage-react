@@ -814,7 +814,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
     })
     .onPost(/dlor\/admin\/object\/notes\/.*/)
     .reply(() => {
-        return[200, dlor_admin_notes];
+        return [200, dlor_admin_notes];
     })
     .onPost(/dlor\/auth\/teammember/)
     .reply(() => {
@@ -1492,13 +1492,18 @@ mock.onGet('exams/course/FREN1010/summary')
         }
     })
 
-    // Bookable Spaces (site,building,floor)
+    // Bookable Spaces (site, building, floor)
     .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'site' }).apiUrl)
     .reply(() => [200, { status: 'OK' }])
     .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'building' }).apiUrl)
     .reply(() => [200, { status: 'OK' }])
     .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'floor' }).apiUrl)
-    .reply(() => [200, { status: 'OK' }])
+    .reply(() => {
+        if (responseType === 'floorAddError') {
+            return [500, {}];
+        }
+        return [200, { status: 'OK', data: { floor_id: 99, other_fields: '...' } }];
+    })
 
     // .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'site', id: '.*' }).apiUrl)))
     // .reply(() => [200, { status: 'OK' }])

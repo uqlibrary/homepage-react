@@ -598,7 +598,7 @@ test.describe('Spaces admin', () => {
                 await dialog.getByTestId('dialog-save-button').click();
                 await assertToastHasMessage(page, 'Please enter floor name');
             });
-            test('can save with valid floor data', async ({ page }) => {
+            test('can save with valid floor data, ground floor not requested', async ({ page }) => {
                 await assertCanOpenAddFloorDialog(page, 1);
                 const dialog = page.getByTestId('main-dialog');
 
@@ -607,6 +607,54 @@ test.describe('Spaces admin', () => {
                     .getByTestId('floor-name')
                     .locator('input')
                     .fill('name of new floor');
+                await dialog.getByTestId('dialog-save-button').click();
+
+                await assertToastHasMessage(page, 'Floor added');
+                // cant assert change happens as mock list reloads
+            });
+            test('can save with valid floor data, ground floor requested, no current ground floor', async ({
+                page,
+            }) => {
+                await assertCanOpenAddFloorDialog(page, 1);
+                const dialog = page.getByTestId('main-dialog');
+
+                await expect(dialog.getByTestId('floor-name').locator('input')).toBeVisible();
+                await expect(dialog.getByTestId('mark-ground-floor').locator('label')).toContainText(
+                    'No floor is currently marked as the ground floor',
+                );
+
+                await dialog
+                    .getByTestId('floor-name')
+                    .locator('input')
+                    .fill('name of new floor');
+                await dialog
+                    .getByTestId('mark-ground-floor')
+                    .locator('input')
+                    .setChecked(true);
+                await dialog.getByTestId('dialog-save-button').click();
+
+                await assertToastHasMessage(page, 'Floor added');
+                // cant assert change happens as mock list reloads
+            });
+            test('can save with valid floor data, ground floor requested, override current ground floor', async ({
+                page,
+            }) => {
+                await assertCanOpenAddFloorDialog(page, 2);
+                const dialog = page.getByTestId('main-dialog');
+
+                await expect(dialog.getByTestId('floor-name').locator('input')).toBeVisible();
+                await expect(dialog.getByTestId('mark-ground-floor').locator('label')).toContainText(
+                    'Current ground floor is Floor 1',
+                );
+
+                await dialog
+                    .getByTestId('floor-name')
+                    .locator('input')
+                    .fill('name of new floor');
+                await dialog
+                    .getByTestId('mark-ground-floor')
+                    .locator('input')
+                    .setChecked(true);
                 await dialog.getByTestId('dialog-save-button').click();
 
                 await assertToastHasMessage(page, 'Floor added');
@@ -794,7 +842,12 @@ test.describe('Spaces admin', () => {
         await expect(page.getByTestId('main-dialog').locator('h2')).toContainText('Edit campus details');
 
         // open confirmation dialog
-        await clickDeleteButton(page);
+        await expect(page.getByTestId('confirmation-dialog')).not.toBeVisible();
+        await page
+            .getByTestId('main-dialog')
+            .getByTestId('dialog-delete-button')
+            .click();
+        await expect(page.getByTestId('confirmation-dialog')).toBeVisible();
 
         // close confirmation dialog
         const confirmationDialog = page.getByTestId('confirmation-dialog');
@@ -804,7 +857,12 @@ test.describe('Spaces admin', () => {
         await expect(page.getByTestId('confirmation-dialog')).not.toBeVisible();
 
         // open confirmation dialog
-        await clickDeleteButton(page);
+        await expect(page.getByTestId('confirmation-dialog')).not.toBeVisible();
+        await page
+            .getByTestId('main-dialog')
+            .getByTestId('dialog-delete-button')
+            .click();
+        await expect(page.getByTestId('confirmation-dialog')).toBeVisible();
 
         // close confirmation dialog
         await expect(confirmationDialog.getByTestId('confirmation-dialog-reject-button')).toBeVisible();
