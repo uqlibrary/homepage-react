@@ -188,7 +188,7 @@ export const BookableSpacesList = ({
         <StandardPage title="Library bookable spaces">
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} data-testid="library-spaces">
                         {(() => {
                             if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading) {
                                 return (

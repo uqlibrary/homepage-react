@@ -196,7 +196,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                     }
                 }
             </style>
-            <div id="toast-corner-message" class="toast" data-testid="toast">
+            <div id="toast-corner-message" class="toast" data-testid="toast-corner-message">
                 <p>${message}</p>
             </div>
         `;
@@ -292,18 +292,18 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 });
     }
 
-    const siteFormCore = (siteDetails = {}) => {
+    const siteFormCore = (siteDetails = {}, formType = 'add') => {
         const siteName = siteDetails?.site_name ?? '';
         const siteIdDisplayed = siteDetails?.site_id_displayed ?? '';
         return `<div>
             <input  name="locationType" type="hidden" value="site" />
-            <div class="dialogRow">
+            <div class="dialogRow" data-testid="${formType}-campus-name">
                 <label for="siteName">Site name</label>
-                <input id="siteName" name="site_name" type="text" value="${siteName}" required />
+                <input id="siteName" name="site_name" type="text" value="${siteName}" required maxlength="255" />
             </div>
-            <div class="dialogRow">
+            <div class="dialogRow" data-testid="${formType}-campus-number">
                 <label for="siteNumber">Site number</label>
-                <input id="siteNumber" name="site_id_displayed" type="text" value="${siteIdDisplayed}" required />
+                <input id="siteNumber" name="site_id_displayed" type="text" value="${siteIdDisplayed}" required maxlength="10" />
             </div>
         </div>`;
     };
@@ -381,12 +381,12 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
     function buildingCoreForm(buildingDetails = {}) {
         return `<input name="locationType" type="hidden" value="building" />
-            <div class="dialogRow">
+            <div class="dialogRow" data-testid="building-name">
                 <label for="buildingName">Building name</label>
                 <input id="buildingName" name="building_name" type="text" value="${buildingDetails?.building_name ||
                     ''}" required />
             </div>
-            <div class="dialogRow">
+            <div class="dialogRow" data-testid="building-number">
                 <label for="buildingNumber">Building number</label>
                 <input id="buildingNumber" name="building_id_displayed" type="text" value="${buildingDetails?.building_id_displayed ||
                     ''}" required />
@@ -406,6 +406,9 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
         const addNewButton = document.getElementById('addNewButton');
         !!addNewButton && (addNewButton.style.display = 'none');
+
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton && (deleteButton.style.display = 'none');
 
         const saveButton = document.getElementById('saveButton');
         !!saveButton && saveButton.removeEventListener('click', saveChangeToSite);
@@ -473,7 +476,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         console.log('floorDetails=', floorDetails);
         const locationType = 'floor';
         const locationId = floorDetails?.floor_id;
-        const successMessage = `Floor ${floorDetails?.floor_id_displayed} in ${floorDetails?.building_name}  deleted`;
+        const successMessage = `Floor ${floorDetails?.floor_id_displayed} in ${floorDetails?.building_name} deleted`;
         const failureMessage = `catch: deleting floor ${floorDetails.floor_id} failed:`;
         deleteLocation(locationType, locationId, successMessage, failureMessage);
     }
@@ -498,7 +501,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
     }
 
     function confirmAndDeleteBuilding(e, buildingDetails) {
-        const line1 = `Do you really want to delete ${buildingDetails.building_name} campus?`;
+        const line1 = `Do you really want to delete ${buildingDetails.building_name}?`;
         const line2 = 'This will also delete associated floors.';
         const confirmationOKButton = document.getElementById('confDialogOkButton');
         !!confirmationOKButton &&
@@ -523,14 +526,15 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             return;
         }
 
-        const formBody = `<h2>Edit site details</h2>
+        const formBody = `<h2 data-testid="edit-campus-dialog-heading">Edit campus details</h2>
             <input  name="siteId" type="hidden" value="${siteDetails.site_id}" />${siteFormCore(
             siteDetails,
+            'edit',
         )}<div class="dialogRow">
-                <label>Buildings</label>
+                <h3 data-testid="campus-building-label">Buildings</h3>
                 ${
                     siteDetails?.buildings?.length > 0
-                        ? `<ul>${siteDetails.buildings
+                        ? `<ul data-testid="campus-building-list">${siteDetails.buildings
                               .map(
                                   building => `<li>${building.building_name} (${building.building_id_displayed}) </li>`,
                               )
@@ -632,7 +636,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
     }
 
     const floorCoreForm = floorDetails => `<input name="locationType" type="hidden" value="floor" />
-        <div class="dialogRow">
+        <div class="dialogRow" data-testid="floor-name">
             <label for="floorName">Floor name</label>
             <input id="displayedFloorId" name="floor_id_displayed" type="text" required value="${floorDetails?.floor_id_displayed ??
                 ''}" />
@@ -651,6 +655,9 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
         const addNewButton = document.getElementById('addNewButton');
         !!addNewButton && (addNewButton.style.display = 'none');
+
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton && (deleteButton.style.display = 'none');
 
         const saveButton = document.getElementById('saveButton');
         !!saveButton && saveButton.removeEventListener('click', saveChangeToBuilding);
@@ -674,8 +681,8 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         const formBody = `<h2>Edit building details</h2>
             <input name="buildingId" type="hidden" value="${buildingDetails?.building_id}" />
             <input name="ground_floor_id_old" type="hidden" value="${buildingDetails?.ground_floor_id ??
-                ''}" />${buildingCoreForm(buildingDetails)}<div class="dialogRow">
-                <label>Floors - Choose ground floor</label>
+                ''}" />${buildingCoreForm(buildingDetails)}<div class="dialogRow" data-testid="building-floor-list">
+                <h3>Floors - Choose ground floor:</h3>
                 ${buildingDetails?.floors?.length > 0 &&
                     '<ul>' +
                         buildingDetails?.floors
@@ -796,7 +803,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
     }
 
     function showAddSiteForm() {
-        const formBody = `<h2>Add campus</h2>${siteFormCore()}`;
+        const formBody = `<h2 data-testid="add-campus-heading">Add campus</h2>${siteFormCore()}`;
 
         if (!!formBody) {
             const dialogBodyElement = document.getElementById('dialogBody');
@@ -829,6 +836,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                     size="small"
                                     onClick={() => showEditSiteForm(site.site_id)}
                                     aria-label={`Edit ${site.site_name} campus details`}
+                                    data-testid={`edit-campus-${site.site_id}-button`}
                                 >
                                     <EditIcon />
                                 </StyledEditButton>
@@ -849,6 +857,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                         size="small"
                                         onClick={() => showEditBuildingForm(building.building_id)}
                                         aria-label={`Edit ${building.building_name} details`}
+                                        data-testid={`edit-building-${building.building_id}-button`}
                                     >
                                         <EditIcon />
                                     </StyledEditButton>
@@ -864,6 +873,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                         {building.ground_floor_id === floor.floor_id && (
                                             <StyledGroundFloorIndicatorSpan
                                                 id={getIdentifierForFloorGroundFloorIndicator(floor.floor_id)}
+                                                data-testid={getIdentifierForFloorGroundFloorIndicator(floor.floor_id)}
                                             >
                                                 [Ground floor]
                                             </StyledGroundFloorIndicatorSpan>
@@ -873,7 +883,8 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                             size="small"
                                             // onClick={() => showEditSiteForm(site.site_id)}
                                             onClick={() => showEditFloorForm(floor.floor_id)}
-                                            aria-label={`Edit ${floor.floor_id_displayed}`}
+                                            aria-label={`Edit Floor ${floor.floor_id_displayed}`}
+                                            data-testid={`edit-floor-${floor.floor_id}-button`}
                                         >
                                             <EditIcon />
                                         </StyledEditButton>
@@ -888,6 +899,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                     style={{ marginLeft: '4rem', marginTop: '2rem' }}
                     children={'Add new Campus'}
                     onClick={showAddSiteForm}
+                    data-testid="add-new-campus-button"
                 />
             </>
         );
@@ -922,7 +934,11 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                     </StyledGridItem>
                                 );
                             } else {
-                                return <StyledGridItem>{getLocationLayout(siteList)}</StyledGridItem>;
+                                return (
+                                    <StyledGridItem data-testid="spaces-location-wrapper">
+                                        {getLocationLayout(siteList)}
+                                    </StyledGridItem>
+                                );
                             }
                         })()}
                         <StyledBusyIconDiv id="busy-icon-while-saving" style={{ display: 'none' }}>
@@ -930,26 +946,55 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                         </StyledBusyIconDiv>
                     </Grid>
                 </StandardCard>
-                <dialog id="confirmationDialog" className="confirmationDialog">
-                    <p id="confDialogMessage" />
+                <dialog id="confirmationDialog" className="confirmationDialog" data-testid="confirmation-dialog">
+                    <p id="confDialogMessage" data-testid="confirmation-dialog-message" />
                     <StyledConfirmationButtons>
-                        <StyledButton id="confDialogCancelButton" className={'secondary'} children={'No'} />
-                        <StyledButton id="confDialogOkButton" children={'primary'} children={'Yes'} />
+                        <StyledButton
+                            id="confDialogCancelButton"
+                            className={'secondary'}
+                            children={'No'}
+                            data-testid="confirmation-dialog-reject-button"
+                        />
+                        <StyledButton
+                            id="confDialogOkButton"
+                            children={'primary'}
+                            children={'Yes'}
+                            data-testid="confirmation-dialog-accept-button"
+                        />
                     </StyledConfirmationButtons>
                 </dialog>
-                <StyledDialog id={'popupDialog'} closedby="any">
+                <StyledDialog id={'popupDialog'} closedby="any" data-testid="main-dialog">
                     <form>
                         <div id="dialogBody" />
                         <div id="dialogFooter" className={'dialogFooter'}>
                             <div>
-                                <StyledButton id={'deleteButton'} className={'alert'} children={'Delete'} />
+                                <StyledButton
+                                    id={'deleteButton'}
+                                    className={'alert'}
+                                    children={'Delete'}
+                                    data-testid="dialog-delete-button"
+                                />
                             </div>
                             <div>
-                                <StyledButton id={'addNewButton'} className={'secondary'}>
+                                <StyledButton
+                                    id={'addNewButton'}
+                                    className={'secondary'}
+                                    data-testid="dialog-addnew-button"
+                                >
                                     Add new
                                 </StyledButton>
-                                <StyledButton className={'secondary'} children={'Cancel'} onClick={closeDialog} />
-                                <StyledButton id={'saveButton'} className={'primary'} children={'Save'} />
+                                <StyledButton
+                                    className={'secondary'}
+                                    children={'Cancel'}
+                                    onClick={closeDialog}
+                                    data-testid="dialog-cancel-button"
+                                />
+                                <StyledButton
+                                    id={'saveButton'}
+                                    className={'primary'}
+                                    children={'Save'}
+                                    data-testid="dialog-save-button"
+                                />
                             </div>
                         </div>
                     </form>
