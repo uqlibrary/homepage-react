@@ -129,7 +129,13 @@ const FuzzySearch = ({ data, fuseOptions = DEFAULT_FUSE_OPTIONS, delay = 800, on
                         {...params}
                         label="Search and select keywords"
                         variant="outlined"
+                        data-testid="fuzzy-search-input"
                     />
+                )}
+                renderOption={(props, option, index) => (
+                    <li {...props} id={`fuzzy-search-option-${option.keyword_id}`}>
+                        {getOptionLabel(option)}
+                    </li>
                 )}
             />
 
