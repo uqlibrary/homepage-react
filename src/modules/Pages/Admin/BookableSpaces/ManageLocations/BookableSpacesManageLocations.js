@@ -23,8 +23,11 @@ const StyledStandardCard = styled(StandardCard)(() => ({
 }));
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
-    height: '80%',
     border: '1px solid rgba(38, 85, 115, 0.15)',
+    maxWidth: '1136px',
+    '& h2': {
+        paddingInline: '1rem',
+    },
     '& .dialogRow': {
         padding: '1rem',
         '& label': {
@@ -48,9 +51,16 @@ const StyledMainDialog = styled('dialog')(({ theme }) => ({
             },
         },
     },
-    '& .dialogRowInline': {
-        '& label': {
-            display: 'inline',
+    '& .dialogRowSideBySide': {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        columnGap: '0.5rem',
+        alignItems: 'flex-start',
+        '& div': {
+            marginBottom: '0.2rem',
+        },
+        '& div:not(:first-child)': {
+            fontWeight: '300',
         },
     },
     '& .dialogFooter': {
@@ -120,6 +130,7 @@ const StyledGridItem = styled(Grid)(() => ({
 }));
 const StyledBusyIconDiv = styled('div')(() => ({
     width: '100%',
+    height: '100%',
     backgroundColor: '#fff',
     opacity: '80%',
     zIndex: 99,
@@ -139,6 +150,7 @@ const StyledEditButton = styled(Button)(({ theme }) => ({
     paddingLeft: 0,
     textTransform: 'capitalize',
     lineHeight: 'normal',
+    justifyContent: 'flex-start',
     '&:hover, &:focus': {
         backgroundColor: 'transparent',
         transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
@@ -674,9 +686,13 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         const formBody = `<h2>Add a floor to ${buildingDetails?.building_name || 'unknown building'}</h2>
             <input name="buildingId" type="hidden" value="${buildingDetails?.building_id}" />
             ${floorCoreForm()}
-            <div class="dialogRow dialogRowInline" data-testid="mark-ground-floor">
+            <div class="dialogRow dialogRowSideBySide" data-testid="mark-ground-floor">
                 <input type="checkbox" name="isGroundFloor" value="Y" id="isGroundFloor">
-                <label for="isGroundFloor">Mark new floor as Ground floor (${groundFloorDescription})</label> 
+                <label for="isGroundFloor">
+                    <div>Mark new floor as Ground floor</div>
+                    <div>(${groundFloorDescription})</div>
+                    <div>A ground floor is not compulsory!</div>
+                </label> 
             </div>`;
         if (!formBody) {
             return;
