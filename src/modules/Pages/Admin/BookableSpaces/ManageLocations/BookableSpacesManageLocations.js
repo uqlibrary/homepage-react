@@ -21,7 +21,7 @@ const StyledStandardCard = styled(StandardCard)(() => ({
         paddingBlock: 0,
     },
 }));
-const StyledDialog = styled('dialog')(({ theme }) => ({
+const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
     height: '80%',
     border: '1px solid rgba(38, 85, 115, 0.15)',
@@ -124,7 +124,7 @@ const StyledBusyIconDiv = styled('div')(() => ({
     paddingTop: '4rem',
     marginTop: '12px',
 }));
-const StyledEditButton = styled(Button)(() => ({
+const StyledEditButton = styled(Button)(({ theme }) => ({
     '& svg': {
         color: 'grey',
         height: '1rem',
@@ -134,21 +134,30 @@ const StyledEditButton = styled(Button)(() => ({
     marginLeft: '-0.5rem',
     paddingLeft: 0,
     textTransform: 'capitalize',
+    lineHeight: 'normal',
     '&:hover, &:focus': {
         backgroundColor: 'transparent',
+        transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
         '& svg': {
             color: 'black',
+        },
+        '& span': {
+            color: '#fff',
+            backgroundColor: theme.palette.primary.light,
         },
     },
     '& span': {
         fontSize: '1rem',
+    },
+    '& .MuiTouchRipple-root': {
+        display: 'none', // remove mui ripple
     },
 }));
 const StyledRow = styled('div')(() => ({
     marginBlock: '0.2rem',
 }));
 const StyledGroundFloorIndicatorSpan = styled('span')(() => ({
-    marginLeft: '0.25rem',
+    paddingLeft: '0.25rem',
 }));
 
 const getIdentifierForFloorGroundFloorIndicator = floorId => `groundfloor-for-${floorId}`;
@@ -851,7 +860,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                 data-testid={`edit-building-${building.building_id}-button`}
                             >
                                 <span id={`building-${building.building_id}`}>{`${building.building_name}`}</span>
-                                <span style={{ marginLeft: '0.5rem' }}>{`(${building.floors.length} ${pluralise(
+                                <span style={{ paddingLeft: '0.5rem' }}>{`(${building.floors.length} ${pluralise(
                                     'Floor',
                                     building.floors.length,
                                 )})`}</span>
@@ -873,7 +882,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                             id={getIdentifierForFloorGroundFloorIndicator(floor.floor_id)}
                                             data-testid={getIdentifierForFloorGroundFloorIndicator(floor.floor_id)}
                                         >
-                                            [Ground floor]
+                                            (Ground floor)
                                         </StyledGroundFloorIndicatorSpan>
                                     )}
                                     <EditIcon />
@@ -951,7 +960,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                         />
                     </StyledConfirmationButtons>
                 </dialog>
-                <StyledDialog id={'popupDialog'} closedby="any" data-testid="main-dialog">
+                <StyledMainDialog id={'popupDialog'} closedby="any" data-testid="main-dialog">
                     <form>
                         <div id="dialogBody" />
                         <div id="dialogFooter" className={'dialogFooter'}>
@@ -986,7 +995,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                             </div>
                         </div>
                     </form>
-                </StyledDialog>
+                </StyledMainDialog>
             </section>
         </StandardPage>
     );
