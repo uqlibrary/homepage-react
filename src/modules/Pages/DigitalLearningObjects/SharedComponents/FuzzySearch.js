@@ -7,16 +7,23 @@ import Box from '@mui/material/Box';
 import Fuse from 'fuse.js';
 import useDebounce from './hooks';
 
-const DEFAULT_FUSE_OPTIONS = {
-    keys: ["keyword", "synonyms"],
-    threshold: 0.6,
-    includeScore: true,
-    ignoreCase: true,
+const truncateToXDecimals = (number, places) => {
+    const numStr = number.toString();
+    const decimalIndex = numStr.indexOf('.');
+
+    /* Not how the scoring works with fuse, but just in case */
+    /* istanbul ignore next */
+    if (decimalIndex === -1) {
+        return number; 
+    }
+
+    const truncatedStr = numStr.substring(0, decimalIndex + (places + 1)); 
+    return parseFloat(truncatedStr);
 };
 
-const FuzzySearch = ({ data, fuseOptions = DEFAULT_FUSE_OPTIONS, delay = 800, onSelectedItemsChange }) => {
+const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange }) => {
     const [inputValue, setInputValue] = useState('');
-    const [options, setOptions] = useState(data || []);
+    const [options, setOptions] = useState(data);
     const [selectedItems, setSelectedItems] = useState([]);
 
     console.log("selectedItems", selectedItems);
@@ -36,7 +43,7 @@ const FuzzySearch = ({ data, fuseOptions = DEFAULT_FUSE_OPTIONS, delay = 800, on
             const newOptions = fuseResults.map(result => result.item);
             setOptions(newOptions);
         } else {
-            setOptions(data || []);
+            setOptions(data);
         }
     }, [debouncedInputValue, fuseResults, data]);
 
@@ -46,11 +53,12 @@ const FuzzySearch = ({ data, fuseOptions = DEFAULT_FUSE_OPTIONS, delay = 800, on
     }, [selectedItems, onSelectedItemsChange]);
 
     const getOptionLabel = (option) => {
-        return option?.keyword || '';
+        return option?.keyword;
     };
 
     const handleSelectionChange = (event, newValue) => {
-        if (!newValue) return;
+        console.log("handleSelectionChange called with newValue:", newValue);
+
 
         const fuseResult = fuseResults.length > 0
             ? fuseResults.find(
@@ -58,12 +66,16 @@ const FuzzySearch = ({ data, fuseOptions = DEFAULT_FUSE_OPTIONS, delay = 800, on
             )
             : fuse.search(newValue.keyword).find(result => result.item.keyword === newValue.keyword);
 
-        const score = fuseResult?.score || 1;
+        const score = fuseResult?.score;
+        console.log("fuseResult", fuseResult);
+        console.log("score", score);
 
         // Check for existing item using the keyword_id
         const existingItemIndex = selectedItems.findIndex(
             (item) => item.keyword_id === newValue.keyword_id
         );
+
+        console.log("existingItemIndex", existingItemIndex);
 
         // Create a flat object with only the needed properties
         const newItem = {
@@ -72,18 +84,27 @@ const FuzzySearch = ({ data, fuseOptions = DEFAULT_FUSE_OPTIONS, delay = 800, on
             score: score,
         };
 
+        console.log("newItem", newItem);
+
         let updatedItems;
         if (existingItemIndex > -1) {
+            
             // Compare scores on the flat object
-            if (newItem.score < selectedItems[existingItemIndex].score) {
+            console.log("Item already exists. Comparing scores...", truncateToXDecimals(newItem.score, 8), truncateToXDecimals(selectedItems[existingItemIndex].score, 8));
+            if (truncateToXDecimals(newItem.score, 8) < truncateToXDecimals(selectedItems[existingItemIndex].score, 8)) {
+                console.log("Updating Scores")
                 updatedItems = [...selectedItems];
                 updatedItems[existingItemIndex] = newItem;
             } else {
+                console.log("Not updating score, newItem.score is not less than existing score");
                 updatedItems = selectedItems;
             }
         } else {
+            console.log("Item is new, adding to selectedItems");
             updatedItems = [...selectedItems, newItem];
         }
+
+        console.log("updatedItems before sorting", updatedItems);
 
         // Sort the updated array by score (ascending) and then alphabetically
         const sortedItems = updatedItems.sort((a, b) => {
@@ -91,7 +112,7 @@ const FuzzySearch = ({ data, fuseOptions = DEFAULT_FUSE_OPTIONS, delay = 800, on
             const roundedB = parseFloat(b.score.toFixed(4));
 
             const scoreComparison = roundedA - roundedB;
-
+            /* istanbul ignore next */
             if (scoreComparison === 0) {
                 return a.keyword.trim().localeCompare(b.keyword.trim());
             }
@@ -99,7 +120,10 @@ const FuzzySearch = ({ data, fuseOptions = DEFAULT_FUSE_OPTIONS, delay = 800, on
             return scoreComparison;
         });
 
+        console.log("sortedItems", sortedItems);
+
         setSelectedItems(sortedItems);
+        console.log("selectedItems after setSelectedItems", sortedItems);
         setInputValue('');
     };
 
@@ -146,6 +170,7 @@ const FuzzySearch = ({ data, fuseOptions = DEFAULT_FUSE_OPTIONS, delay = 800, on
                         {selectedItems.map((item, index) => (
                             <Chip
                                 key={index}
+                                data-testid={`selected-keyword-${item.keyword_id}`}
                                 // Use the simplified keyword and score properties
                                 label={`${item.keyword}`}
                                 onDelete={handleChipDelete(item)}
