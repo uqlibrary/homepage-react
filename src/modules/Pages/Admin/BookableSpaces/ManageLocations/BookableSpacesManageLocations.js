@@ -129,21 +129,23 @@ const StyledEditButton = styled(Button)(() => ({
         color: 'grey',
         height: '1rem',
     },
+    display: 'flex',
+    alignItems: 'center',
     marginLeft: '-0.5rem',
     paddingLeft: 0,
+    textTransform: 'capitalize',
     '&:hover, &:focus': {
         backgroundColor: 'transparent',
         '& svg': {
             color: 'black',
         },
     },
-}));
-const StyledDiv = styled('div')(() => ({
-    display: 'flex',
-    alignItems: 'center',
+    '& span': {
+        fontSize: '1rem',
+    },
 }));
 const StyledRow = styled('div')(() => ({
-    marginBlock: '1rem',
+    marginBlock: '0.2rem',
 }));
 const StyledGroundFloorIndicatorSpan = styled('span')(() => ({
     marginLeft: '0.25rem',
@@ -156,8 +158,6 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookablespacesadmin.title);
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespacesadmin.pathname);
-
-        // actions.clearSites();
 
         if (siteListError === null && siteListLoading === null && siteList === null) {
             actions.loadBookableSpaceSites();
@@ -828,68 +828,56 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         return (
             <>
                 {siteList.map(site => [
-                    <StyledRow key={`site-${site.site_id}`} data-testid={'spaces-site-entry'}>
-                        <div style={{ paddingLeft: '4rem' }}>
-                            <StyledDiv>
-                                <span id={`site-${site.site_id}`}>{site.site_name}</span>
-                                <StyledEditButton
-                                    size="small"
-                                    onClick={() => showEditSiteForm(site.site_id)}
-                                    aria-label={`Edit ${site.site_name} campus details`}
-                                    data-testid={`edit-campus-${site.site_id}-button`}
-                                >
-                                    <EditIcon />
-                                </StyledEditButton>
-                            </StyledDiv>
-                        </div>
+                    <StyledRow
+                        key={`site-${site.site_id}`}
+                        data-testid={'spaces-site-entry'}
+                        style={{ paddingLeft: '4rem' }}
+                    >
+                        <StyledEditButton
+                            onClick={() => showEditSiteForm(site.site_id)}
+                            aria-label={`Edit ${site.site_name} campus details`}
+                            data-testid={`edit-campus-${site.site_id}-button`}
+                        >
+                            <span id={`site-${site.site_id}`}>{site.site_name}</span>
+                            <EditIcon />
+                        </StyledEditButton>
                     </StyledRow>,
                     ...site.buildings.flatMap(building => [
-                        <StyledRow key={`building-${building.building_id}`}>
-                            <div style={{ paddingLeft: '8rem' }}>
-                                <StyledDiv>
-                                    <span id={`building-${building.building_id}`}>{`${building.building_name}`}</span>
-                                    <span style={{ marginLeft: '0.5rem' }}>{`(${building.floors.length} ${pluralise(
-                                        'Floor',
-                                        building.floors.length,
-                                    )})`}</span>
-                                    <StyledEditButton
-                                        color="primary"
-                                        size="small"
-                                        onClick={() => showEditBuildingForm(building.building_id)}
-                                        aria-label={`Edit ${building.building_name} details`}
-                                        data-testid={`edit-building-${building.building_id}-button`}
-                                    >
-                                        <EditIcon />
-                                    </StyledEditButton>
-                                </StyledDiv>
-                            </div>
+                        <StyledRow key={`building-${building.building_id}`} style={{ paddingLeft: '8rem' }}>
+                            <StyledEditButton
+                                color="primary"
+                                onClick={() => showEditBuildingForm(building.building_id)}
+                                aria-label={`Edit ${building.building_name} details`}
+                                data-testid={`edit-building-${building.building_id}-button`}
+                            >
+                                <span id={`building-${building.building_id}`}>{`${building.building_name}`}</span>
+                                <span style={{ marginLeft: '0.5rem' }}>{`(${building.floors.length} ${pluralise(
+                                    'Floor',
+                                    building.floors.length,
+                                )})`}</span>
+                                <EditIcon />
+                            </StyledEditButton>
                         </StyledRow>,
                         ...building.floors.map(floor => (
-                            <StyledRow key={`location-floor-${floor.floor_id}`}>
-                                <div style={{ paddingLeft: '12rem' }}>
-                                    <StyledDiv>
-                                        <span id={`floor-${floor.floor_id}`}>{floor.floor_id_displayed}</span>
-
-                                        {building.ground_floor_id === floor.floor_id && (
-                                            <StyledGroundFloorIndicatorSpan
-                                                id={getIdentifierForFloorGroundFloorIndicator(floor.floor_id)}
-                                                data-testid={getIdentifierForFloorGroundFloorIndicator(floor.floor_id)}
-                                            >
-                                                [Ground floor]
-                                            </StyledGroundFloorIndicatorSpan>
-                                        )}
-                                        <StyledEditButton
-                                            color="primary"
-                                            size="small"
-                                            // onClick={() => showEditSiteForm(site.site_id)}
-                                            onClick={() => showEditFloorForm(floor.floor_id)}
-                                            aria-label={`Edit Floor ${floor.floor_id_displayed}`}
-                                            data-testid={`edit-floor-${floor.floor_id}-button`}
+                            <StyledRow key={`location-floor-${floor.floor_id}`} style={{ paddingLeft: '12rem' }}>
+                                <StyledEditButton
+                                    color="primary"
+                                    // onClick={() => showEditSiteForm(site.site_id)}
+                                    onClick={() => showEditFloorForm(floor.floor_id)}
+                                    aria-label={`Edit Floor ${floor.floor_id_displayed}`}
+                                    data-testid={`edit-floor-${floor.floor_id}-button`}
+                                >
+                                    <span id={`floor-${floor.floor_id}`}>{floor.floor_id_displayed}</span>
+                                    {building.ground_floor_id === floor.floor_id && (
+                                        <StyledGroundFloorIndicatorSpan
+                                            id={getIdentifierForFloorGroundFloorIndicator(floor.floor_id)}
+                                            data-testid={getIdentifierForFloorGroundFloorIndicator(floor.floor_id)}
                                         >
-                                            <EditIcon />
-                                        </StyledEditButton>
-                                    </StyledDiv>
-                                </div>
+                                            [Ground floor]
+                                        </StyledGroundFloorIndicatorSpan>
+                                    )}
+                                    <EditIcon />
+                                </StyledEditButton>
                             </StyledRow>
                         )),
                     ]),
