@@ -335,7 +335,7 @@ Ask for review from team-mates if you'd like other eyes on your changes.
 Application deployment is 100% automated using AWS Codebuild (and Codepipeline), and is hosted in S3. All testing and deployment commands and configuration are stored in the buildspec yaml files in the repo. All secrets (access keys and tokens for PT, Sentry and Google) are stored in AWS Parameter Store, and then populated into ENV variables in those buildspec yaml files.
 Deployment pipelines are setup for branches: "master", "staging, "production" and several key branches starting with "feature-".
 
-- You must always copy Master branch to staging/production (idally, staging before master and alow the e2es to run before yu go to master and prod)
+- You must always merge your change to master branch, and then merge master into staging/production branches (ideally, merge your changes into staging branch and make sure [e2e tests](https://github.com/uqlibrary/e2e-testing) pass **before** merging then into master branch)
 - Deployments to production are visitable on <https://homepage-production.library.uq.edu.au/> and <https://www.library.uq.edu.au/>
 - Deployments to staging are visitable on <https://homepage-staging.library.uq.edu.au/>
 - Some other branches are visitable on <https://homepage-development.library.uq.edu.au/branchName/>. (Only certain branches are deployed now we are using AWS - [How to create a new CodePipeline](https://uq.sharepoint.com/:w:/r/teams/lbf4g4a1/LTSDevelopers%20Documents/How-to/(needs%20revision)%20Create%20a%20new%20CodePipeline.docx?d=wf0198aaec9ad4037b408a224cc8497b6&csf=1&web=1&e=JkoB3W))
