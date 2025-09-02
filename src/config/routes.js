@@ -1,6 +1,12 @@
 import React from 'react';
 import { locale } from 'locale';
-import { canSeeLearningResourcesPage, isAlertsAdminUser, isDlorAdminUser, isTestTagUser } from 'helpers/access';
+import {
+    canSeeLearningResourcesPage,
+    isAlertsAdminUser,
+    isDlorAdminUser,
+    isSpacesAdminUser,
+    isTestTagUser,
+} from 'helpers/access';
 import { pathConfig } from './pathConfig';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
@@ -40,6 +46,9 @@ export const flattedPathConfigExact = [
     '/digital-learning-hub',
     'https://www.library.uq.edu.au/404.js',
     '/digital-learning-hub-list',
+    '/spaces',
+    '/admin/spaces',
+    '/admin/spaces/manage/locations',
 ];
 export const flattedPathConfig = [
     '/admin/alerts/edit',
@@ -135,6 +144,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             element: <components.DLOOwnEdit />,
             exact: false,
             pageTitle: 'Edit details of your object',
+        },
+        {
+            path: pathConfig.bookablespaces,
+            element: <components.BookableSpacesList />,
+            exact: false,
+            pageTitle: 'Library spaces',
         },
     ];
 
@@ -354,6 +369,21 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const bookableSpacesAdminPages = [
+        {
+            path: pathConfig.admin.bookableSpacesDashboard,
+            element: <components.BookableSpacesDashboard />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespaces.title,
+        },
+        {
+            path: pathConfig.admin.bookableSpacesManageLocations,
+            element: <components.BookableSpacesManageLocations />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespaces.title,
+        },
+    ];
+
     return [
         ...publicPages,
         ...(account && canSeeLearningResourcesPage(account) ? courseResourcesDisplay : []),
@@ -363,6 +393,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isTestTagUser(account) ? testntagDisplay : []),
         ...(account ? dlorTeamAdminDisplay : []),
         ...(account ? authenticatedDlorDisplay : []),
+        ...(account && isSpacesAdminUser(account) ? bookableSpacesAdminPages : []),
         {
             path: '*',
             element: <components.NotFound />,
@@ -375,10 +406,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 export const breadcrumbs = {
     alertsadmin: { pathname: '/admin/alerts', title: 'Alerts admin' },
     dloradmin: { pathname: '/admin/dlor', title: 'Digital learning hub admin' },
+    bookablespacesadmin: { pathname: '/spaces', title: 'Book a Space management' },
     testntag: { pathname: '/admin/testntag', title: 'Test and tag' },
     bookexambooth: { pathname: '/book-exam-booth', title: 'Book an Exam booth' },
     dlor: { pathname: '/digital-learning-hub', title: 'Digital learning hub' },
     exampapers: { pathname: '/exams', title: 'Past exam papers' },
     learningresources: { pathname: '/learning-resources', title: 'Learning resources' },
     paymentreceipt: { pathname: '/payment-receipt', title: 'Payment receipt' },
+    bookablespaces: { pathname: '/spaces', title: 'Book a Space' },
 };

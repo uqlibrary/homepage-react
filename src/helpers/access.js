@@ -191,6 +191,9 @@ const userHasAdGroup = (ADGroupName, account) =>
 
 export const isTestTagUser = account => isLoggedInUser(account) && userHasAdGroup('lib_libapi_TestTagUsers', account);
 
+export const isSpacesAdminUser = account =>
+    isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
+
 export const isAlertsAdminUser = account =>
     isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
 

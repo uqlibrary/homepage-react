@@ -287,3 +287,26 @@ export const LOANS_API = () => ({
     apiUrl: 'account/loans',
     options: { params: { ts: `${new Date().getTime()}` } },
 });
+
+// Locations APIs
+export const SPACES_ROOMS_ALL_API = () => ({
+    apiUrl: 'bookable_spaces/spaces/all',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
+export const WEEKLYHOURS_API = () => {
+    return {
+        apiUrl: 'library_hours/week',
+        options: { params: { weeks: 2, ts: `${new Date().getTime()}` } },
+    };
+};
+
+export const SPACES_FACILITY_TYPE_ALL_API = () => {
+    return {
+        apiUrl: 'bookable_spaces/facility_types/all',
+    };
+};
+export const SPACES_ADD_LOCATION_API = ({ type }) => ({ apiUrl: `bookable_spaces/${type}` });
+export const SPACES_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `bookable_spaces/${type}/${id}` });
+
+export const SPACES_SITE_API = () => ({ apiUrl: 'bookable_spaces/sites/all' });

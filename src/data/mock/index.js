@@ -70,6 +70,10 @@ import {
 } from './data/journalSearchFavourites';
 import { vemcountData } from './data/vemcount';
 import dlor_admin_notes from './data/records/dlor/dlor_admin_notes';
+import bookableSpaces_all from './data/records/bookableSpaces/bookableSpaces_all';
+import hours_weekly from './data/records/bookableSpaces/hours_weekly_2';
+import facilityTypes_all from './data/records/bookableSpaces/facilityTypes_all';
+import location_sites_all from './data/records/bookableSpaces/location_sites_all';
 
 const moment = require('moment');
 
@@ -87,6 +91,10 @@ let responseType = !!queryString
     ? queryString.get('responseType')
     : window.location.hash.substring(window.location.hash.indexOf('?')).responseType;
 responseType = responseType || 'ok';
+let hoursResponseType = !!queryString
+    ? queryString.get('hoursResponseType')
+    : window.location.hash.substring(window.location.hash.indexOf('?')).hoursResponseType;
+hoursResponseType = hoursResponseType || 'ok';
 
 // set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
@@ -187,16 +195,16 @@ mock.onGet(routes.PRINTING_API().apiUrl)
         return [200, printBalance];
     });
 
-mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
-// mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
-//     if (responseType === 'error') {
-//         return [500, {}];
-//     } else if (responseType === 'missing') {
-//         return [404, {}];
-//     } else {
-//         return [200, libHours];
-//     }
-// });
+// mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
+mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
+    if (hoursResponseType === 'error') {
+        return [500, {}];
+    } else if (hoursResponseType === 'missing') {
+        return [404, {}];
+    } else {
+        return [200, libHours];
+    }
+});
 
 // mock cant tell the difference between POSSIBLE_RECORDS_API and INCOMPLETE_NTRO_RECORDS_API calls :(
 mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(() => {
@@ -1110,8 +1118,8 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, { status: 'OK' }])
     .onDelete(/test-and-tag\/site|building|floor\/2/)
     .reply(() => [200, { status: 'OK' }])
-    .onDelete(/test-and-tag\/site|building|floor\/.*/)
-    .reply(() => [400, { message: '52 is a test error', status: 'error' }])
+    // .onDelete(/test-and-tag\/site|building|floor\/.*/)
+    // .reply(() => [400, { message: '52 is a test error', status: 'error' }])
     // T&T MANAGE INSPECTION DEVICES
     .onGet(routes.TEST_TAG_INSPECTION_DEVICE_API().apiUrl)
     .reply(() => {
@@ -1435,6 +1443,85 @@ mock.onGet('exams/course/FREN1010/summary')
                 return [200, { ...loans, fines: [], total_fines_count: 0 }];
         }
     })
+    .onGet(routes.SPACES_ROOMS_ALL_API().apiUrl)
+    .reply(() => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (responseType === 'empty') {
+            return [200, []];
+        } else if (responseType === '404') {
+            return [404, {}];
+        } else {
+            return [200, bookableSpaces_all];
+        }
+    })
+    .onGet(routes.WEEKLYHOURS_API().apiUrl)
+    .reply(() => {
+        if (hoursResponseType === 'error') {
+            return [500, {}];
+        } else if (hoursResponseType === 'empty') {
+            return [200, []];
+        } else if (hoursResponseType === '404') {
+            return [404, {}];
+        } else {
+            return [200, hours_weekly];
+        }
+    })
+    .onGet(routes.SPACES_FACILITY_TYPE_ALL_API().apiUrl)
+    .reply(() => {
+        if (hoursResponseType === 'error') {
+            return [500, {}];
+        } else if (hoursResponseType === 'empty') {
+            return [200, []];
+        } else if (hoursResponseType === '404') {
+            return [404, {}];
+        } else {
+            return [200, facilityTypes_all];
+        }
+    })
+    .onGet(routes.SPACES_SITE_API().apiUrl)
+    .reply(() => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (responseType === 'empty') {
+            return [200, []];
+        } else if (responseType === '404') {
+            return [404, {}];
+        } else {
+            return [200, location_sites_all];
+        }
+    })
+
+    // Bookable Spaces (site,building,floor)
+    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'site' }).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'building' }).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'floor' }).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+
+    // .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'site', id: '.*' }).apiUrl)))
+    // .reply(() => [200, { status: 'OK' }])
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'site', id: '.*' }).apiUrl)))
+    .reply(withDelay([200, { status: 'OK' }]))
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'building', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'floor', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'site', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'building', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'floor', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    // .onDelete(/bookable_spaces\/site|building|floor\/.*/)
+    // .reply(() => {
+    //     if (responseType === 'error') {
+    //         return [500, {}];
+    //     }
+    //     return [200, { status: 'OK' }];
+    // })
     .onAny()
     .reply(function(config) {
         console.log('url not mocked...', config.url);
