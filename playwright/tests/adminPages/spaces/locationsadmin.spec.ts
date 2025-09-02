@@ -127,6 +127,9 @@ test.describe('Spaces admin', () => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId(`edit-campus-${campusId}-button`)).toBeVisible();
             await page.getByTestId(`edit-campus-${campusId}-button`).click();
+
+            await expect(page.getByTestId('main-dialog').locator('h2')).toBeVisible();
+            await expect(page.getByTestId('main-dialog').locator('h2')).toContainText('Edit campus details');
         }
 
         test('edit site form has expected entries', async ({ page }) => {
@@ -288,7 +291,6 @@ test.describe('Spaces admin', () => {
             async function assertCanOpenAddBuildingDialog(page: Page) {
                 await assertCanOpenEditCampusDialog(page, 1);
                 const dialog = page.getByTestId('main-dialog');
-                await expect(dialog.locator('h2')).toContainText('Edit campus details');
 
                 await expect(dialog.getByTestId('dialog-addnew-button')).toBeVisible();
                 await expect(dialog.getByTestId('dialog-addnew-button')).toContainText('Add building');
@@ -749,5 +751,73 @@ test.describe('Spaces admin', () => {
 
             await expect(page.getByTestId('main-dialog')).not.toBeVisible();
         });
+    });
+    test('repeated actions dont cause a problem', async ({ page }) => {
+        // can we open and close dialogs repeatedly without problem
+        await page.goto('/admin/spaces/manage/locations?user=uqstaff');
+
+        // open main dialog to edit campus
+        await expect(page.getByTestId('main-dialog')).not.toBeVisible();
+        await expect(page.getByTestId(`edit-campus-1-button`)).toBeVisible();
+        await page.getByTestId(`edit-campus-1-button`).click();
+        await expect(page.getByTestId('main-dialog').locator('h2')).toBeVisible();
+        await expect(page.getByTestId('main-dialog').locator('h2')).toContainText('Edit campus details');
+
+        // close the main dialog
+        await expect(page.getByTestId('main-dialog').getByTestId(`dialog-cancel-button`)).toBeVisible();
+        await page
+            .getByTestId('main-dialog')
+            .getByTestId(`dialog-cancel-button`)
+            .click();
+        await expect(page.getByTestId('main-dialog').locator('h2')).not.toBeVisible();
+
+        // open main dialog to edit campus
+        await expect(page.getByTestId('main-dialog')).not.toBeVisible();
+        await expect(page.getByTestId(`edit-campus-1-button`)).toBeVisible();
+        await page.getByTestId(`edit-campus-1-button`).click();
+        await expect(page.getByTestId('main-dialog').locator('h2')).toBeVisible();
+        await expect(page.getByTestId('main-dialog').locator('h2')).toContainText('Edit campus details');
+
+        // close the main dialog
+        await expect(page.getByTestId('main-dialog').getByTestId(`dialog-cancel-button`)).toBeVisible();
+        await page
+            .getByTestId('main-dialog')
+            .getByTestId(`dialog-cancel-button`)
+            .click();
+        await expect(page.getByTestId('main-dialog').locator('h2')).not.toBeVisible();
+
+        // open main dialog to edit campus
+        await expect(page.getByTestId('main-dialog')).not.toBeVisible();
+        await expect(page.getByTestId(`edit-campus-1-button`)).toBeVisible();
+        await page.getByTestId(`edit-campus-1-button`).click();
+        await expect(page.getByTestId('main-dialog').locator('h2')).toBeVisible();
+        await expect(page.getByTestId('main-dialog').locator('h2')).toContainText('Edit campus details');
+
+        // open confirmation dialog
+        await clickDeleteButton(page);
+
+        // close confirmation dialog
+        const confirmationDialog = page.getByTestId('confirmation-dialog');
+        await expect(confirmationDialog.getByTestId('confirmation-dialog-reject-button')).toBeVisible();
+        await expect(confirmationDialog.getByTestId('confirmation-dialog-reject-button')).toContainText('No');
+        await confirmationDialog.getByTestId('confirmation-dialog-reject-button').click();
+        await expect(page.getByTestId('confirmation-dialog')).not.toBeVisible();
+
+        // open confirmation dialog
+        await clickDeleteButton(page);
+
+        // close confirmation dialog
+        await expect(confirmationDialog.getByTestId('confirmation-dialog-reject-button')).toBeVisible();
+        await expect(confirmationDialog.getByTestId('confirmation-dialog-reject-button')).toContainText('No');
+        await confirmationDialog.getByTestId('confirmation-dialog-reject-button').click();
+        await expect(page.getByTestId('confirmation-dialog')).not.toBeVisible();
+
+        // close the main dialog
+        await expect(page.getByTestId('main-dialog').getByTestId(`dialog-cancel-button`)).toBeVisible();
+        await page
+            .getByTestId('main-dialog')
+            .getByTestId(`dialog-cancel-button`)
+            .click();
+        await expect(page.getByTestId('main-dialog').locator('h2')).not.toBeVisible();
     });
 });
