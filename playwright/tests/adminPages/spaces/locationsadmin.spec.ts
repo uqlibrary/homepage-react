@@ -1,12 +1,12 @@
 import { expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
-async function assertToastHasMessage(page, msg: string) {
+async function assertToastHasMessage(page: Page, msg: string) {
     await expect(page.getByTestId('toast-corner-message')).toBeVisible();
     await expect(page.getByTestId('toast-corner-message')).toContainText(msg);
 }
 
-async function clickDeleteButton(page) {
+async function clickDeleteButton(page: Page) {
     const mainDialog = page.getByTestId('main-dialog');
     await expect(page.getByTestId('confirmation-dialog')).not.toBeVisible();
     await mainDialog.getByTestId('dialog-delete-button').click();
@@ -38,7 +38,7 @@ test.describe('Spaces admin', () => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
     test.describe('Add a campus', () => {
-        async function assertCanOpenAddNewCampusDialog(page) {
+        async function assertCanOpenAddNewCampusDialog(page: Page) {
             await page.goto('/admin/spaces/manage/locations?user=uqstaff');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('add-new-campus-button')).toContainText('Add new Campus');
@@ -122,7 +122,7 @@ test.describe('Spaces admin', () => {
         });
     });
     test.describe('Edit a campus', () => {
-        async function assertCanOpenEditCampusDialog(page, campusId: number) {
+        async function assertCanOpenEditCampusDialog(page: Page, campusId: number) {
             await page.goto('/admin/spaces/manage/locations?user=uqstaff');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId(`edit-campus-${campusId}-button`)).toBeVisible();
@@ -285,7 +285,7 @@ test.describe('Spaces admin', () => {
             await expect(editDialog.getByTestId('edit-campus-dialog-heading')).toBeVisible(); // the main dialog has not closed
         });
         test.describe('Add a building to a site', () => {
-            async function assertCanOpenAddBuildingDialog(page) {
+            async function assertCanOpenAddBuildingDialog(page: Page) {
                 await assertCanOpenEditCampusDialog(page, 1);
                 const dialog = page.getByTestId('main-dialog');
                 await expect(dialog.locator('h2')).toContainText('Edit campus details');
@@ -333,12 +333,12 @@ test.describe('Spaces admin', () => {
                 const dialog = page.getByTestId('main-dialog');
 
                 // save after not entering the number field
-                await expect(page.getByTestId('building-name').locator('input')).toBeVisible();
-                await page
+                await expect(dialog.getByTestId('building-name').locator('input')).toBeVisible();
+                await dialog
                     .getByTestId('building-name')
                     .locator('input')
                     .fill('name of new building');
-                await page.getByTestId('dialog-save-button').click();
+                await dialog.getByTestId('dialog-save-button').click();
 
                 await assertToastHasMessage(page, 'Please enter building name and number');
             });
@@ -347,12 +347,12 @@ test.describe('Spaces admin', () => {
                 const dialog = page.getByTestId('main-dialog');
 
                 // save after not entering the name field
-                await expect(page.getByTestId('building-number').locator('input')).toBeVisible();
-                await page
+                await expect(dialog.getByTestId('building-number').locator('input')).toBeVisible();
+                await dialog
                     .getByTestId('building-number')
                     .locator('input')
                     .fill('number of new building');
-                await page.getByTestId('dialog-save-button').click();
+                await dialog.getByTestId('dialog-save-button').click();
                 await assertToastHasMessage(page, 'Please enter building name and number');
             });
             test('can save with valid building data', async ({ page }) => {
@@ -394,7 +394,7 @@ test.describe('Spaces admin', () => {
         });
     });
     test.describe('Edit a building', () => {
-        async function assertCanOpenEditBuildingDialog(page, buildingId: number) {
+        async function assertCanOpenEditBuildingDialog(page: Page, buildingId: number) {
             await page.goto('/admin/spaces/manage/locations?user=uqstaff');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId(`edit-building-${buildingId}-button`)).toBeVisible();
@@ -631,7 +631,7 @@ test.describe('Spaces admin', () => {
         });
     });
     test.describe('Edit a floor', () => {
-        async function assertCanOpenEditFloorDialog(page, floorId: number) {
+        async function assertCanOpenEditFloorDialog(page: Page, floorId: number) {
             await page.goto('/admin/spaces/manage/locations?user=uqstaff');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId(`edit-floor-${floorId}-button`)).toBeVisible();
