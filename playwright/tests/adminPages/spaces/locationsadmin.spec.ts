@@ -1,4 +1,5 @@
 import { expect, Page, test } from '@uq/pw/test';
+import { assertAccessibility } from '@uq/pw/lib/axe';
 
 async function assertToastHasMessage(page, msg: string) {
     await expect(page.getByTestId('toast-corner-message')).toBeVisible();
@@ -29,6 +30,13 @@ test.describe('Spaces admin', () => {
         await expect(page.getByTestId('groundfloor-for-31')).not.toBeVisible(); // warehouse, floor 1
         await expect(page.getByTestId('groundfloor-for-32')).not.toBeVisible(); // warehouse, floor 2
     });
+    test('full list is accessible', async ({ page }) => {
+        await page.goto('/admin/spaces/manage/locations?user=uqstaff');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.locator('body').getByText(/Library bookable spaces Location management/)).toBeVisible();
+
+        await assertAccessibility(page, '[data-testid="StandardPage"]');
+    });
     test.describe('Add a campus', () => {
         async function assertCanOpenAddNewCampusDialog(page) {
             await page.goto('/admin/spaces/manage/locations?user=uqstaff');
@@ -54,6 +62,11 @@ test.describe('Spaces admin', () => {
             await expect(dialog.getByTestId('dialog-cancel-button')).toContainText('Cancel');
             await expect(dialog.getByTestId('dialog-save-button')).toBeVisible();
             await expect(dialog.getByTestId('dialog-save-button')).toContainText('Save');
+        });
+        test('add campus dialog is accessible', async ({ page }) => {
+            await assertCanOpenAddNewCampusDialog(page);
+
+            await assertAccessibility(page, '[data-testid="main-dialog"]');
         });
         test('validates properly for two empty site fields', async ({ page }) => {
             await assertCanOpenAddNewCampusDialog(page);
@@ -146,6 +159,11 @@ test.describe('Spaces admin', () => {
             await expect(dialog.getByTestId('dialog-save-button')).toBeVisible();
             await expect(dialog.getByTestId('dialog-save-button')).toContainText('Save');
         });
+        test('edit campus dialog is accessible', async ({ page }) => {
+            await assertCanOpenEditCampusDialog(page, 1);
+
+            await assertAccessibility(page, '[data-testid="main-dialog"]');
+        });
 
         test('validates properly - name field empty gives an error', async ({ page }) => {
             await assertCanOpenEditCampusDialog(page, 1);
@@ -221,6 +239,12 @@ test.describe('Spaces admin', () => {
 
             await expect(page.getByTestId('main-dialog')).not.toBeVisible();
         });
+        test('delete a site dialog is accessible', async ({ page }) => {
+            await assertCanOpenEditCampusDialog(page, 1);
+            await clickDeleteButton(page);
+
+            await assertAccessibility(page, '[data-testid="confirmation-dialog"]');
+        });
         test('can delete a site', async ({ page }) => {
             await assertCanOpenEditCampusDialog(page, 1);
             const editDialog = page.getByTestId('main-dialog');
@@ -290,6 +314,11 @@ test.describe('Spaces admin', () => {
                 await expect(dialog.getByTestId('dialog-cancel-button')).toContainText('Cancel');
                 await expect(dialog.getByTestId('dialog-save-button')).toBeVisible();
                 await expect(dialog.getByTestId('dialog-save-button')).toContainText('Save');
+            });
+            test('add building dialog is accessible', async ({ page }) => {
+                await assertCanOpenAddBuildingDialog(page);
+
+                await assertAccessibility(page, '[data-testid="main-dialog"]');
             });
             test('validates properly for two empty building fields', async ({ page }) => {
                 await assertCanOpenAddBuildingDialog(page);
@@ -400,6 +429,11 @@ test.describe('Spaces admin', () => {
             await expect(dialog.getByTestId('dialog-save-button')).toBeVisible();
             await expect(dialog.getByTestId('dialog-save-button')).toContainText('Save');
         });
+        test('edit building dialog is accessible', async ({ page }) => {
+            await assertCanOpenEditBuildingDialog(page, 1);
+
+            await assertAccessibility(page, '[data-testid="main-dialog"]');
+        });
         test('can cancel a deletion of a building', async ({ page }) => {
             await assertCanOpenEditBuildingDialog(page, 1);
             const mainDialog = page.getByTestId('main-dialog');
@@ -416,6 +450,12 @@ test.describe('Spaces admin', () => {
             await expect(mainDialog).toBeVisible(); // but the main dialog is still open
             await expect(mainDialog.locator('h2')).toBeVisible();
             await expect(mainDialog.locator('h2')).toContainText('Edit building details'); // and is the expected dialog
+        });
+        test('building delete is accessible', async ({ page }) => {
+            await assertCanOpenEditBuildingDialog(page, 1);
+            await clickDeleteButton(page);
+
+            await assertAccessibility(page, '[data-testid="confirmation-dialog"]');
         });
         test('can delete a building', async ({ page }) => {
             await assertCanOpenEditBuildingDialog(page, 1);
@@ -528,6 +568,11 @@ test.describe('Spaces admin', () => {
                 // the new dialog contents have loaded
                 await expect(dialog.locator('h2')).toContainText('Add a floor to');
             }
+            test('add floor dialog is accessible', async ({ page }) => {
+                await assertCanOpenAddFloorDialog(page, 1);
+
+                await assertAccessibility(page, '[data-testid="main-dialog"]');
+            });
 
             test('floor add form loads properly', async ({ page }) => {
                 await assertCanOpenAddFloorDialog(page, 1);
@@ -609,6 +654,11 @@ test.describe('Spaces admin', () => {
             await expect(dialog.getByTestId('dialog-save-button')).toBeVisible();
             await expect(dialog.getByTestId('dialog-save-button')).toContainText('Save');
         });
+        test('edit floor dialog is accessible', async ({ page }) => {
+            await assertCanOpenEditFloorDialog(page, 1);
+
+            await assertAccessibility(page, '[data-testid="main-dialog"]');
+        });
         test('can cancel a deletion of a floor', async ({ page }) => {
             await assertCanOpenEditFloorDialog(page, 1);
             const mainDialog = page.getByTestId('main-dialog');
@@ -625,6 +675,12 @@ test.describe('Spaces admin', () => {
             await expect(mainDialog).toBeVisible(); // but the main dialog is still open
             await expect(mainDialog.locator('h2')).toBeVisible();
             await expect(mainDialog.locator('h2')).toContainText('Edit floor details'); // and is the expected dialog
+        });
+        test('delete floor dialog is accessible', async ({ page }) => {
+            await assertCanOpenEditFloorDialog(page, 1);
+            await clickDeleteButton(page);
+
+            await assertAccessibility(page, '[data-testid="confirmation-dialog"]');
         });
         test('can delete a floor', async ({ page }) => {
             await assertCanOpenEditFloorDialog(page, 1);

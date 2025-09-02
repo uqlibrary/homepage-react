@@ -637,7 +637,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
     const floorCoreForm = floorDetails => `<input name="locationType" type="hidden" value="floor" />
         <div class="dialogRow" data-testid="floor-name">
-            <label for="floorName">Floor name</label>
+            <label for="displayedFloorId">Floor name</label>
             <input id="displayedFloorId" name="floor_id_displayed" type="text" required value="${floorDetails?.floor_id_displayed ??
                 ''}" />
         </div>`;
@@ -695,7 +695,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                             })
                             .join('') +
                         `<li>
-                            <input type="radio" id="groundFloor-none}" name="ground_floor_id" ${
+                            <input type="radio" id="groundFloor-none" name="ground_floor_id" ${
                                 !buildingDetails.ground_floor_id ? ' checked' : ''
                             } />
                             <label for="groundFloor-none">None</label> 
