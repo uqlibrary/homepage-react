@@ -178,11 +178,40 @@ const StyledGroundFloorIndicatorSpan = styled('span')(() => ({
 
 const getIdentifierForFloorGroundFloorIndicator = floorId => `groundfloor-for-${floorId}`;
 
+function addBreadcrumbsToSiteHeader() {
+    const awaitSiteHeader = setInterval(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        const siteHeaderShadowRoot = siteHeader.shadowRoot;
+
+        if (!!siteHeaderShadowRoot) {
+            clearInterval(awaitSiteHeader);
+
+            const breadcrumbParent = !!siteHeaderShadowRoot && siteHeaderShadowRoot.getElementById('breadcrumb_nav');
+            if (breadcrumbParent.children.length > 2) {
+                return; // already added
+            }
+
+            !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookablespaces.title);
+            !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespaces.pathname);
+
+            const listItems = [
+                `<li class="uq-breadcrumb__item">
+                     <a class="uq-breadcrumb__link" id="secondlevel-site-breadcrumb-link" data-testid="secondlevel-site-title" href="/spaces/manage">Admin</a>
+                 </li>`,
+                '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Location management</span></li>',
+            ];
+            !!listItems &&
+                listItems.length > 0 &&
+                listItems.forEach(item => {
+                    breadcrumbParent.insertAdjacentHTML('beforeend', item);
+                });
+        }
+    }, 100);
+}
+
 export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoading, siteListError }) => {
     React.useEffect(() => {
-        const siteHeader = document.querySelector('uq-site-header');
-        !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookablespacesadmin.title);
-        !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespacesadmin.pathname);
+        addBreadcrumbsToSiteHeader();
 
         if (siteListError === null && siteListLoading === null && siteList === null) {
             actions.loadBookableSpaceSites();
