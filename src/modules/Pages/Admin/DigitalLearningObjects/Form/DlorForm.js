@@ -75,23 +75,23 @@ import parse from 'html-react-parser';
 import Fuse from 'fuse.js';
 import FuzzySearch from 'modules/Pages/DigitalLearningObjects/SharedComponents/FuzzySearch';
 
-const fuseData = [
-    {
-        keyword: "Aboriginal and Torres Strait Islander",
-        synonyms: ["ATSI", "Reconciliation", "Culture", "Indigenising curriculum"],
-        keyword_id: 1,
-    },
-    {
-        keyword: "Information Technology",
-        synonyms: ["AI", "Artificial Intelligence", "Web Crawling", "Programming", "Coding", "Software", "Hardware", "Computing"],
-        keyword_id: 2,
-    },
-    {
-        keyword: "Research Skills",
-        synonyms: ["Literature Review", "Data Analysis", "Academic Writing", "Referencing"],
-        keyword_id: 3,
-    },
-];
+// const fuseData = [
+//     {
+//         keyword: "Aboriginal and Torres Strait Islander",
+//         synonyms: ["ATSI", "Reconciliation", "Culture", "Indigenising curriculum"],
+//         keyword_id: 1,
+//     },
+//     {
+//         keyword: "Information Technology",
+//         synonyms: ["AI", "Artificial Intelligence", "Web Crawling", "Programming", "Coding", "Software", "Hardware", "Computing"],
+//         keyword_id: 2,
+//     },
+//     {
+//         keyword: "Research Skills",
+//         synonyms: ["Literature Review", "Data Analysis", "Academic Writing", "Referencing"],
+//         keyword_id: 3,
+//     },
+// ];
 
 const fuseOptions = {
     includeScore: true,
@@ -172,6 +172,7 @@ export const DlorForm = ({
     dlorAdminNotesLoadError,
     dlorAdminNotes,
     formDefaults,
+    dlorKeywords,
     mode,
 }) => {
     //const [inputValue, setInputValue] = useState('');
@@ -1500,7 +1501,7 @@ export const DlorForm = ({
             </Grid>
             <Grid item xs={12} style={{ paddingTop: 20 }}>
                 <FuzzySearch
-                    data={fuseData}
+                    data={dlorKeywords}
                     fuseOptions={fuseOptions}
                     delay={300}
                     onSelectedItemsChange={handleSelectedItemsChange}
