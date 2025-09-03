@@ -9,6 +9,11 @@ test.describe('Spaces', () => {
 
         // there are 3 spaces on the demo page
         await expect(page.getByTestId('library-spaces').locator('> *')).toHaveCount(3);
+
+        // the first and second opening hours are labelled 'tiday' and 'tomorrow'
+        await expect(page.getByTestId('space-123456-openingHours-0')).toBeVisible();
+        await expect(page.getByTestId('space-123456-openingHours-0')).toContainText('Today');
+        await expect(page.getByTestId('space-123456-openingHours-1')).toContainText('Tomorrow');
     });
     test('is accessible', async ({ page }) => {
         await page.goto('spaces');

@@ -71,6 +71,13 @@ export const BookableSpacesList = ({
         // Sort by date to ensure chronological order
         filteredDays.sort((a, b) => new Date(a.date) - new Date(b.date));
 
+        filteredDays.map((d, index) => {
+            if (index <= 1) {
+                d.dayName = index === 0 ? 'Today' : 'Tomorrow';
+            }
+            return d;
+        });
+
         // Return the department with filtered days
         const result = {
             ...departmentData,
@@ -159,12 +166,16 @@ export const BookableSpacesList = ({
         }
         return (
             <>
-                <h3>Opening Hours</h3>
+                <h3>Building opening hours</h3>
                 <table style={{ width: '100%' }}>
                     <thead>
                         <tr>
                             {openingHoursList.map((d, index) => (
-                                <th style={{ textAlign: 'center' }} key={`${locationKey}-openingth-${index}`}>
+                                <th
+                                    style={{ textAlign: 'center' }}
+                                    key={`${locationKey}-openingHours-${index}`}
+                                    data-testid={`${locationKey}-openingHours-${index}`}
+                                >
                                     {d.dayName}
                                 </th>
                             ))}
@@ -228,7 +239,7 @@ export const BookableSpacesList = ({
                                             >
                                                 {
                                                     <>
-                                                        <p>{getFriendlyLocationDescription(bookableSpace)}</p>
+                                                        <div>{getFriendlyLocationDescription(bookableSpace)}</div>
                                                         <p>{bookableSpace?.space_description}</p>
                                                         {bookableSpace?.space_photo_url && (
                                                             <StyledLocationPhoto
