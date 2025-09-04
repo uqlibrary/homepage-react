@@ -13,7 +13,7 @@ export default {
         {
             keyword: "Research Skills",
             synonyms: ["Literature Review", "Data Analysis", "Academic Writing", "Referencing"],
-            keyword_vicabulary_id: 3,
+            keyword_vocabulary_id: 3,
         },
         {
             keyword: "Other Keywords",
