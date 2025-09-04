@@ -21,12 +21,11 @@ const truncateToXDecimals = (number, places) => {
     return parseFloat(truncatedStr);
 };
 
-const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existingItems = [] }) => {
+const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existingItems }) => {
     const [inputValue, setInputValue] = useState('');
     const [options, setOptions] = useState(data);
-    const [selectedItems, setSelectedItems] = useState(existingItems);
+    const [selectedItems, setSelectedItems] = useState(existingItems || /* istanbul ignore next */ []);
 
-    console.log("selectedItems", selectedItems);
     const debouncedInputValue = useDebounce(inputValue, delay);
 
     const fuse = useMemo(() => new Fuse(data, fuseOptions), [data, fuseOptions]);
@@ -57,9 +56,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
     };
 
     const handleSelectionChange = (event, newValue) => {
-        console.log("handleSelectionChange called with newValue:", newValue);
-
-
+    
         const fuseResult = fuseResults.length > 0
             ? fuseResults.find(
                 (result) => result.item.keyword === newValue.keyword
@@ -67,16 +64,13 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
             : fuse.search(newValue.keyword).find(result => result.item.keyword === newValue.keyword);
 
         const score = fuseResult?.score;
-        console.log("fuseResult", fuseResult);
-        console.log("score", score);
-
+    
         // Check for existing item using the keyword_id
         const existingItemIndex = selectedItems.findIndex(
             (item) => item.keyword_vocabulary_id === newValue.keyword_vocabulary_id
         );
 
-        console.log("existingItemIndex", existingItemIndex);
-
+    
         // Create a flat object with only the needed properties
         const newItem = {
             keyword: newValue.keyword,
@@ -84,27 +78,20 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
             score: score,
         };
 
-        console.log("newItem", newItem);
-
+    
         let updatedItems;
         if (existingItemIndex > -1) {
             
             // Compare scores on the flat object
-            console.log("Item already exists. Comparing scores...", truncateToXDecimals(newItem.score, 8), truncateToXDecimals(selectedItems[existingItemIndex].score, 8));
             if (truncateToXDecimals(newItem.score, 8) < truncateToXDecimals(selectedItems[existingItemIndex].score, 8)) {
-                console.log("Updating Scores")
                 updatedItems = [...selectedItems];
                 updatedItems[existingItemIndex] = newItem;
             } else {
-                console.log("Not updating score, newItem.score is not less than existing score");
                 updatedItems = selectedItems;
             }
         } else {
-            console.log("Item is new, adding to selectedItems");
             updatedItems = [...selectedItems, newItem];
         }
-
-        console.log("updatedItems before sorting", updatedItems);
 
         // Sort the updated array by score (ascending) and then alphabetically
         const sortedItems = updatedItems.sort((a, b) => {
@@ -120,10 +107,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
             return scoreComparison;
         });
 
-        console.log("sortedItems", sortedItems);
-
         setSelectedItems(sortedItems);
-        console.log("selectedItems after setSelectedItems", sortedItems);
         setInputValue('');
     };
 

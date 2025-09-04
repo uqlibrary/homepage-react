@@ -529,8 +529,8 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     team_email: 'john@example.com',
                     team_manager: 'john Manager',
                     team_name: 'new team name',
-                    object_keywords: ['Research Skills'],
-                    object_keyword_ids: [3],
+                    object_keywords: ['Research Skills', "evaluate", "literature", "search", "strategy"],
+                    object_keyword_ids: [3, 100001, 100002, 100000, 100003],
                     facets: [
                         10, // Graduate attributes : Accomplished scholars
                         14, // Graduate attributes : Influential communicator
@@ -712,7 +712,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                         11, // Graduate attributes : Connected citizens
                     ],
                     object_keywords: ['cat', 'dog'],
-                    object_keyword_ids: [3],
+                    object_keyword_ids: [3, 100001, 100002, 100000, 100003],
                     notificationText: '',
                 };
 
@@ -912,7 +912,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                         45, // Licence : CC BY-NC Attribution NonCommercial
                     ],
                     object_keywords: ['cat', 'dog'],
-                    object_keyword_ids: [3],
+                    object_keyword_ids: [3, 100000, 100001, 100002],
                     team_email: 'dlor@library.uq.edu.au',
                     team_manager: 'John Smith',
                     team_name: 'LIB DX Digital Content',
