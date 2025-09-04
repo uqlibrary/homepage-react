@@ -21,10 +21,10 @@ const truncateToXDecimals = (number, places) => {
     return parseFloat(truncatedStr);
 };
 
-const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange }) => {
+const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existingItems = [] }) => {
     const [inputValue, setInputValue] = useState('');
     const [options, setOptions] = useState(data);
-    const [selectedItems, setSelectedItems] = useState([]);
+    const [selectedItems, setSelectedItems] = useState(existingItems);
 
     console.log("selectedItems", selectedItems);
     const debouncedInputValue = useDebounce(inputValue, delay);
@@ -174,8 +174,18 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange }) => {
                                 // Use the simplified keyword and score properties
                                 label={`${item.keyword}`}
                                 onDelete={handleChipDelete(item)}
+                                sx={{
+                                    ...(item.keyword_vocabulary_id >= 100000 && {
+                                        backgroundColor: 'rgba(255, 0, 0, 0.1)', // Light red
+                                    }),
+                                }}
                             />
                         ))}
+                        {selectedItems.some(item => item.keyword_vocabulary_id >= 100000) && (
+                            <Box sx={{width:'100%'}}>
+                                <strong>Note:</strong> Keywords highlighted in red are not located in our controlled vocabulary, and may not be effective in searches.
+                            </Box>
+                        )}
                     </Box>
                 ) : (
                     <p>No keywords selected yet.</p>

@@ -175,13 +175,9 @@ export const DlorForm = ({
     dlorKeywords,
     mode,
 }) => {
-    //const [inputValue, setInputValue] = useState('');
-    //const [searchOptions, setSearchOptions] = useState([]);
-    // const fuseResult = fuseTest.search("Cheeseburger");
-    // console.log('FUSE RESULT', fuseResult);
+    
 
-    console.log('Form Defaults form', formDefaults);
-    console.log('Admin notes', dlorAdminNotes);
+
     const [cookies, setCookie] = useCookies();
     const { account } = useAccountContext();
 
@@ -212,23 +208,36 @@ export const DlorForm = ({
 
     const [selectedKeywords, setSelectedKeywords] = useState([]);
 
-    console.log("Selected keywords", selectedKeywords);
-
+    
     const handleSelectedItemsChange = (newItems) => {
-        setSelectedKeywords(newItems);
+            setSelectedKeywords(newItems);
     };
 
     useEffect(() => {
-        // Do something with selectedKeywords, e.g., update formValues
-        console.log("Selected keywords in DlorForm:", selectedKeywords);
-        // If you need to store the keyword ids in formValues:
         const keywordIds = selectedKeywords.map(item => item.keyword_vocabulary_id);
         setFormValues(prevValues => ({
             ...prevValues,
-            object_keyword_ids: keywordIds, // or whatever field you want to store them in
-            object_keywords: selectedKeywords.map(item => item.keyword), // if you want the keywords as well
+            object_keyword_ids: keywordIds, 
+            object_keywords: selectedKeywords.map(item => item.keyword), 
         }));
     }, [selectedKeywords]);
+
+    useEffect(() => {
+        // map the keywords from the keyword string BACK into the selectedKeywords structure
+        if (!!formValues?.object_keywords_string && formValues?.object_keywords_string.length > 0) {
+            const keywordStrings = splitStringToArrayOnComma(formValues.object_keywords_string || '');
+
+            const newKeywordsArray = keywordStrings.map((keyword, index) => {
+                return {
+                    keyword: keyword,
+                    keyword_vocabulary_id: index + 100000, 
+                    score: 1
+                };
+            });
+            
+            setSelectedKeywords(newKeywordsArray);
+        }
+    }, [formValues.object_keywords_string]);
 
     const flatMapFacets = facetList => {
         return facetList?.flatMap(facet => facet?.filter_values?.map(value => value?.id)).sort((a, b) => a - b);
@@ -246,14 +255,6 @@ export const DlorForm = ({
     }, []);
 
     useEffect(() => {
-        // console.log(
-        //     'useEffect FIRST l=',
-        //     dlorItemSaving,
-        //     '; e=',
-        //     dlorSavedItemError,
-        //     '; dlorSavedItem=',
-        //     dlorSavedItem,
-        // );
         setConfirmationOpen(!dlorItemSaving && (!!dlorSavedItemError || !!dlorSavedItem));
     }, [dlorItemSaving, dlorSavedItemError, dlorSavedItem]);
 
@@ -312,14 +313,6 @@ export const DlorForm = ({
         }
     }, [editorReady]);
 
-    // useEffect(() => {
-    //     console.log("UseEffect formDefaults", formDefaults, formValues);
-    //     if (!!!formDefaults.object_publishing_user) {
-    //         console.log("SETTING FORM DEFAULTS");
-    //         setFormValues({...formValues, object_publishing_user: formDefaults.object_publishing_user});
-    //     }
-    // }, [formDefaults]);
-
     // these match the values in dlor playwright admin tests
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
@@ -377,14 +370,12 @@ export const DlorForm = ({
     };
 
     const isValidUsername = testUserName => {
-        console.log('TEST THE USERNAME, ', testUserName);
         return testUserName?.length >= 4 && testUserName?.length <= 8;
     };
 
     function validatePanelOwnership(currentValues) {
         let firstPanelErrorCount = 0;
         // valid user id is 8 or 9 char
-        console.log('currentValues', currentValues);
         !isValidUsername(currentValues?.object_publishing_user) && firstPanelErrorCount++;
 
         if (
@@ -562,8 +553,7 @@ export const DlorForm = ({
         let theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
 
-        console.log('The new value', theNewValue);
-
+        
         if (['object_is_featured', 'object_cultural_advice'].includes(prop)) {
             theNewValue = !!e.target.checked ? 1 : 0;
         }
@@ -595,8 +585,7 @@ export const DlorForm = ({
         // amalgamate new value into data set
         const newValues = { ...formValues, [prop]: theNewValue };
 
-        console.log('The new values are', newValues);
-
+        
         setFormValues(newValues);
     };
 
@@ -617,8 +606,7 @@ export const DlorForm = ({
         setFormValues(newValues);
     };
 
-    console.log('IS ADMIN', isDlorAdminUser(account));
-
+    
     const stepPanelContentOwnership = React.useMemo(
         () => (
             <>
@@ -967,7 +955,6 @@ export const DlorForm = ({
                         characterCount(formValues?.object_title?.length, titleMinimumLength, 'object_title')}
                 </FormControl>
             </Grid>
-            {console.log('THE FORM VALUES:', formValues)}
             <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
@@ -1505,6 +1492,7 @@ export const DlorForm = ({
                     fuseOptions={fuseOptions}
                     delay={300}
                     onSelectedItemsChange={handleSelectedItemsChange}
+                    existingItems={selectedKeywords}
                 />
             </Grid>
             {mode === 'edit' && (
@@ -1660,7 +1648,6 @@ export const DlorForm = ({
             actions.loadFileTypeList();
         }
 
-        // console.log('useEffect 2ND l=', dlorItemSaving, ' e=', dlorSavedItemError, ' dlorSavedItem=', dlorSavedItem);
         setConfirmationOpen(!dlorItemSaving && (!!dlorSavedItemError || !!dlorSavedItem));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -1689,23 +1676,19 @@ export const DlorForm = ({
     // Helper function to check access
     const userHasEditAccess = account => {
         // 1. DLOR Admin
-        console.log('account=', account, ' formDefaults=', formDefaults, 'teanlist=', dlorTeamList);
         if (isDlorAdminUser(account)) return true;
 
         // 2. Owner of the object
         if (formDefaults?.object_publishing_user && account?.id === formDefaults.object_publishing_user) return true;
-        console.log('dlorTeamList=', dlorTeamList, ' formDefaults=', formDefaults, ' account=', account);
         // 3. In the team that owns the object
         /* istanbul ignore else */
         if (Array.isArray(dlorTeamList) && formDefaults?.object_owning_team_id) {
             const owningTeam = dlorTeamList.find(t => t.team_id === formDefaults.object_owning_team_id);
-            console.log('STEP 1', owningTeam);
             if (
                 owningTeam &&
                 Array.isArray(owningTeam.team_members) &&
                 owningTeam.team_members.some(member => member.team_admin_username === account?.id)
             ) {
-                console.log('STEP 3');
                 return true;
             }
         }
@@ -1783,7 +1766,6 @@ export const DlorForm = ({
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
-        console.log('valuesToSend=', valuesToSend);
         const saveDlorPromise =
             mode === 'add'
                 ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
