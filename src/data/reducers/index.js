@@ -43,3 +43,4 @@ export { default as journalSearchReducer } from './journalSearchReducer';
 export { default as dlorDemographicsReducer } from './dlorDemographicsReducer';
 export { default as dlorFavouritesReducer } from './dlorFavouritesReducer';
 export { default as dlorAdminNotesReducer } from './dlorAdminNotesReducer';
+export { default as dlorKeywordsReducer } from './dlorKeywordsReducer';

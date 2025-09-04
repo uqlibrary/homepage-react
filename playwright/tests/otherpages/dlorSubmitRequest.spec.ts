@@ -153,9 +153,9 @@ test.describe('Request an object addition to the Digital Learning Hub', () => {
                 await expect(page.locator('[data-testid="dlor-panel-validity-indicator-3"] span')).toHaveText(/1/); // panel invalidity count present
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeDisabled(); // submit button still disabled
 
-                await page
-                    .locator('[data-testid="object-keywords"] textarea:first-child')
-                    .fill('a'.padEnd(REQUIRED_LENGTH_KEYWORDS, 'x'));
+                // select a keyword so we can save
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
+                await page.locator("#fuzzy-search-option-3").click()
 
                 await expect(page.getByTestId('dlor-panel-validity-indicator-3')).not.toBeVisible(); // panel invalidity count no longer present
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).not.toBeDisabled();
@@ -242,6 +242,11 @@ test.describe('Request an object addition to the Digital Learning Hub', () => {
                 await page.getByTestId('dlor-form-next-button').click();
                 await page.getByTestId('dlor-form-next-button').click();
                 await page.getByTestId('dlor-form-next-button').click();
+
+                // select a keyword so we can save
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
+                await page.locator("#fuzzy-search-option-3").click()
+
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).not.toBeDisabled();
                 await page.getByTestId('admin-dlor-save-button-submit').click();
                 await expect(page.getByTestId('message-title')).toBeVisible(); // wording to come after review
@@ -268,10 +273,31 @@ test.describe('Request an object addition to the Digital Learning Hub', () => {
                 // go to the fourth panel, links
                 await page.getByTestId('dlor-form-next-button').click();
                 await page.getByTestId('dlor-form-next-button').click();
-                await page.locator('[data-testid="object-keywords"] textarea:first-child').fill('abc');
-                await expect(page.getByTestId('input-characters-remaining-object-keywords-string')).toHaveText(
-                    /at least 1 more character needed/,
-                );
+                // select a keyword so we can save
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
+                await page.waitForTimeout(1000); 
+                await page.locator("#fuzzy-search-option-3").click()
+                // add another keyword
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill("ATSI");
+                await page.waitForTimeout(1000); 
+                await page.locator("#fuzzy-search-option-1").click()
+                // Select fuzzy, then clear option.
+                await expect(page.locator('[data-testid="selected-keyword-1"]')).toBeVisible();
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill("Aboriginal and Torres Strait Islander");
+                await page.waitForTimeout(1000); 
+                await page.locator("#fuzzy-search-option-1").click()
+                await page.waitForTimeout(1000);
+                await expect(page.locator('[data-testid="selected-keyword-1"]')).toBeVisible();
+
+                // Direct select 
+
+                await page.locator("[data-testid='fuzzy-search-input'] input").click();
+                await page.locator("#fuzzy-search-option-1").click()
+
+                await page.locator('[data-testid="selected-keyword-1"] [data-testid="CancelIcon"]').click();
+                await expect(page.locator('[data-testid="selected-keyword-1"]')).not.toBeVisible();
+                
+
             });
             test('supplies a summary suggestion', async ({ page }) => {
                 // go to the second step, Description

@@ -628,6 +628,9 @@ test.describe('Digital Learning Hub View page', () => {
             await typeCKEditor(page, testData);
             await page.getByTestId('dlor-form-next-button').click();
             await page.getByTestId('dlor-form-next-button').click();
+            // select a keyword so we can save
+            await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
+            await page.locator("#fuzzy-search-option-3").click()
             await page.getByTestId('admin-dlor-save-button-submit').click();
             await expect(
                 page

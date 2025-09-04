@@ -29,6 +29,9 @@ export const DLOAdd = ({
     dlorAdminNotesLoaded,
     dlorAdminNotesLoadError,
     dlorAdminNotes,
+    dlorKeywords,
+    dlorKeywordsLoading,
+    dlorKeywordsError,
 }) => {
     const { account } = useAccountContext();
     console.log('ACCOUNT', account);
@@ -41,6 +44,14 @@ export const DLOAdd = ({
     //         .minute(1) // 1 minute past midnight
     //         .format('YYYY-MM-DDTHH:mm');
     // }
+    React.useEffect(() => {
+        /* istanbul ignore next */
+        if (!dlorKeywordsLoading && !dlorKeywordsError && (!dlorKeywords || dlorKeywords.length === 0)) {
+            console.log('LOAD KEYWORDS');
+            actions.loadDlorKeywords();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     function getToday() {
         return moment()
@@ -118,6 +129,7 @@ export const DLOAdd = ({
                         dlorAdminNotesLoading={dlorAdminNotesLoading}
                         dlorAdminNotesLoaded={dlorAdminNotesLoaded}
                         dlorAdminNotesLoadError={dlorAdminNotesLoadError}
+                        dlorKeywords={dlorKeywords}
                         dlorAdminNotes={dlorAdminNotes}
                         mode="add"
                     />
