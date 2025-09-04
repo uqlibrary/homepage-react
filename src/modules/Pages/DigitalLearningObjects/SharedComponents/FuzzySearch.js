@@ -72,7 +72,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange }) => {
 
         // Check for existing item using the keyword_id
         const existingItemIndex = selectedItems.findIndex(
-            (item) => item.keyword_id === newValue.keyword_id
+            (item) => item.keyword_vocabulary_id === newValue.keyword_vocabulary_id
         );
 
         console.log("existingItemIndex", existingItemIndex);
@@ -80,7 +80,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange }) => {
         // Create a flat object with only the needed properties
         const newItem = {
             keyword: newValue.keyword,
-            keyword_id: newValue.keyword_id,
+            keyword_vocabulary_id: newValue.keyword_vocabulary_id,
             score: score,
         };
 
@@ -130,7 +130,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange }) => {
     const handleChipDelete = (itemToDelete) => () => {
         // Filter the array using the keyword_id from the flat object
         setSelectedItems((selectedItems) =>
-            selectedItems.filter((item) => item.keyword_id !== itemToDelete.keyword_id)
+            selectedItems.filter((item) => item.keyword_vocabulary_id !== itemToDelete.keyword_vocabulary_id)
         );
     };
 
@@ -157,7 +157,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange }) => {
                     />
                 )}
                 renderOption={(props, option, index) => (
-                    <li {...props} id={`fuzzy-search-option-${option.keyword_id}`}>
+                    <li {...props} id={`fuzzy-search-option-${option.keyword_vocabulary_id}`}>
                         {getOptionLabel(option)}
                     </li>
                 )}
@@ -170,7 +170,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange }) => {
                         {selectedItems.map((item, index) => (
                             <Chip
                                 key={index}
-                                data-testid={`selected-keyword-${item.keyword_id}`}
+                                data-testid={`selected-keyword-${item.keyword_vocabulary_id}`}
                                 // Use the simplified keyword and score properties
                                 label={`${item.keyword}`}
                                 onDelete={handleChipDelete(item)}
@@ -189,7 +189,7 @@ FuzzySearch.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({
         keyword: PropTypes.string.isRequired,
         synonyms: PropTypes.arrayOf(PropTypes.string),
-        keyword_id: PropTypes.number.isRequired,
+        keyword_vocabulary_id: PropTypes.number.isRequired,
     })).isRequired,
     fuseOptions: PropTypes.object,
     delay: PropTypes.number,

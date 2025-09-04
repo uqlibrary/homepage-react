@@ -222,7 +222,7 @@ export const DlorForm = ({
         // Do something with selectedKeywords, e.g., update formValues
         console.log("Selected keywords in DlorForm:", selectedKeywords);
         // If you need to store the keyword ids in formValues:
-        const keywordIds = selectedKeywords.map(item => item.keyword_id);
+        const keywordIds = selectedKeywords.map(item => item.keyword_vocabulary_id);
         setFormValues(prevValues => ({
             ...prevValues,
             object_keyword_ids: keywordIds, // or whatever field you want to store them in
