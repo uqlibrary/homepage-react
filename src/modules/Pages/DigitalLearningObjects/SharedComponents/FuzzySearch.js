@@ -21,12 +21,11 @@ const truncateToXDecimals = (number, places) => {
     return parseFloat(truncatedStr);
 };
 
-const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange }) => {
+const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existingItems }) => {
     const [inputValue, setInputValue] = useState('');
     const [options, setOptions] = useState(data);
-    const [selectedItems, setSelectedItems] = useState([]);
+    const [selectedItems, setSelectedItems] = useState(existingItems || /* istanbul ignore next */ []);
 
-    console.log("selectedItems", selectedItems);
     const debouncedInputValue = useDebounce(inputValue, delay);
 
     const fuse = useMemo(() => new Fuse(data, fuseOptions), [data, fuseOptions]);
@@ -57,9 +56,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange }) => {
     };
 
     const handleSelectionChange = (event, newValue) => {
-        console.log("handleSelectionChange called with newValue:", newValue);
-
-
+    
         const fuseResult = fuseResults.length > 0
             ? fuseResults.find(
                 (result) => result.item.keyword === newValue.keyword
@@ -67,16 +64,13 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange }) => {
             : fuse.search(newValue.keyword).find(result => result.item.keyword === newValue.keyword);
 
         const score = fuseResult?.score;
-        console.log("fuseResult", fuseResult);
-        console.log("score", score);
-
+    
         // Check for existing item using the keyword_id
         const existingItemIndex = selectedItems.findIndex(
             (item) => item.keyword_vocabulary_id === newValue.keyword_vocabulary_id
         );
 
-        console.log("existingItemIndex", existingItemIndex);
-
+    
         // Create a flat object with only the needed properties
         const newItem = {
             keyword: newValue.keyword,
@@ -84,27 +78,20 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange }) => {
             score: score,
         };
 
-        console.log("newItem", newItem);
-
+    
         let updatedItems;
         if (existingItemIndex > -1) {
             
             // Compare scores on the flat object
-            console.log("Item already exists. Comparing scores...", truncateToXDecimals(newItem.score, 8), truncateToXDecimals(selectedItems[existingItemIndex].score, 8));
             if (truncateToXDecimals(newItem.score, 8) < truncateToXDecimals(selectedItems[existingItemIndex].score, 8)) {
-                console.log("Updating Scores")
                 updatedItems = [...selectedItems];
                 updatedItems[existingItemIndex] = newItem;
             } else {
-                console.log("Not updating score, newItem.score is not less than existing score");
                 updatedItems = selectedItems;
             }
         } else {
-            console.log("Item is new, adding to selectedItems");
             updatedItems = [...selectedItems, newItem];
         }
-
-        console.log("updatedItems before sorting", updatedItems);
 
         // Sort the updated array by score (ascending) and then alphabetically
         const sortedItems = updatedItems.sort((a, b) => {
@@ -120,10 +107,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange }) => {
             return scoreComparison;
         });
 
-        console.log("sortedItems", sortedItems);
-
         setSelectedItems(sortedItems);
-        console.log("selectedItems after setSelectedItems", sortedItems);
         setInputValue('');
     };
 
@@ -174,8 +158,18 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange }) => {
                                 // Use the simplified keyword and score properties
                                 label={`${item.keyword}`}
                                 onDelete={handleChipDelete(item)}
+                                sx={{
+                                    ...(item.keyword_vocabulary_id >= 100000 && {
+                                        backgroundColor: 'rgba(255, 0, 0, 0.1)', // Light red
+                                    }),
+                                }}
                             />
                         ))}
+                        {selectedItems.some(item => item.keyword_vocabulary_id >= 100000) && (
+                            <Box sx={{width:'100%'}}>
+                                <strong>Note:</strong> Keywords highlighted in red are not located in our controlled vocabulary, and may not be effective in searches.
+                            </Box>
+                        )}
                     </Box>
                 ) : (
                     <p>No keywords selected yet.</p>
