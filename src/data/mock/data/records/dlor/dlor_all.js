@@ -647,7 +647,7 @@ export default {
                     }]
                 },
             ],
-            "object_keywords": ["group work", "collaboration", "formal emails", "meetings", "discussion forum", "conflict"],
+            "object_keywords": ["Information Technology", "referencing", "EndNote", "citation", "library", "Word"],
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 2,
