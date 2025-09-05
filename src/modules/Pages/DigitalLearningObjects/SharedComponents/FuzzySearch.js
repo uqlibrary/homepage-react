@@ -69,7 +69,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
     
         // Check for existing item using the keyword_id
         const existingItemIndex = selectedItems.findIndex(
-            (item) => item.keyword_vocabulary_id === newValue.keyword_vocabulary_id
+            (item) => item.keyword === newValue.keyword
         );
 
     
