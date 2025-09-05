@@ -647,7 +647,7 @@ export default {
                     }]
                 },
             ],
-            "object_keywords": ["group work", "collaboration", "formal emails", "meetings", "discussion forum", "conflict"],
+            "object_keywords": ["Information Technology", "referencing", "EndNote", "citation", "library", "Word"],
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 2,
@@ -698,7 +698,6 @@ export default {
             "updated_at": "2024-03-03T23:48:01.000000Z",
             "object_download_instructions": null,
             "object_link_url": null,
-            "object_keywords": ["Information Technology", "referencing", "EndNote", "citation", "library", "Word"],
             "object_filters": [
                 {
                     "filter_key": "topic",
