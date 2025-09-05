@@ -26,6 +26,8 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
     const [options, setOptions] = useState(data);
     const [selectedItems, setSelectedItems] = useState(existingItems || /* istanbul ignore next */ []);
 
+    console.log('data is ', data);
+
     const debouncedInputValue = useDebounce(inputValue, delay);
 
     const fuse = useMemo(() => new Fuse(data, fuseOptions), [data, fuseOptions]);
@@ -151,22 +153,32 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
                 <h3>Selected Keywords:</h3>
                 {selectedItems.length > 0 ? (
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                        {selectedItems.map((item, index) => (
-                            <Chip
-                                key={index}
-                                data-testid={`selected-keyword-${item.keyword_vocabulary_id}`}
-                                // Use the simplified keyword and score properties
-                                label={`${item.keyword}`}
-                                onDelete={handleChipDelete(item)}
-                                sx={{
-                                    ...(item.keyword_vocabulary_id >= 100000 && {
-                                        backgroundColor: 'rgba(255, 0, 0, 0.1)', // Light red
-                                    }),
-                                }}
-                            />
-                        ))}
-                        {selectedItems.some(item => item.keyword_vocabulary_id >= 100000) && (
-                            <Box sx={{width:'100%'}}>
+                        {selectedItems.map((item, index) => {
+                            const isKeywordAvailable = data.some(
+                                (availableItem) => availableItem.keyword === item.keyword
+                            );
+
+                            return (
+                                <Chip
+                                    key={index}
+                                    data-testid={`selected-keyword-${item.keyword_vocabulary_id}`}
+                                    label={`${item.keyword}`}
+                                    onDelete={handleChipDelete(item)}
+                                    sx={{
+                                        ...(!isKeywordAvailable && {
+                                            backgroundColor: 'rgba(255, 0, 0, 0.1)', // Light red
+                                        }),
+                                    }}
+                                />
+                            );
+                        })}
+                        {selectedItems.some(
+                            (item) =>
+                                !data.some(
+                                    (availableItem) => availableItem.keyword === item.keyword
+                                )
+                        ) && (
+                            <Box sx={{ width: '100%' }}>
                                 <strong>Note:</strong> Keywords highlighted in red are not located in our controlled vocabulary, and may not be effective in searches.
                             </Box>
                         )}
