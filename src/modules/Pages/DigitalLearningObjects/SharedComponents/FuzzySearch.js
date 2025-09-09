@@ -184,7 +184,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
                         )}
                     </Box>
                 ) : (
-                    <p>No keywords selected yet.</p>
+                    <p>No tags selected yet.</p>
                 )}
             </div>
         </>
