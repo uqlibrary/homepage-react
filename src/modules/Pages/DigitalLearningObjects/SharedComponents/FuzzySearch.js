@@ -137,7 +137,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
                 renderInput={(params) => (
                     <TextField
                         {...params}
-                        label="Search and select keywords"
+                        label="Search and select tags"
                         variant="outlined"
                         data-testid="fuzzy-search-input"
                     />
@@ -150,7 +150,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
             />
 
             <div style={{ marginTop: '20px' }}>
-                <h3>Selected Keywords:</h3>
+                <h3>Selected Tags:</h3>
                 {selectedItems.length > 0 ? (
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                         {selectedItems.map((item, index) => {
@@ -179,7 +179,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
                                 )
                         ) && (
                             <Box sx={{ width: '100%' }}>
-                                <strong>Note:</strong> Keywords highlighted in red are not located in our controlled vocabulary, and may not be effective in searches.
+                                <strong>Note:</strong> Tags highlighted in red are not located in our controlled vocabulary, and may not be effective in searches.
                             </Box>
                         )}
                     </Box>
