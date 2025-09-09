@@ -1494,7 +1494,7 @@ export const DLOList = ({
                                 marginLeft: '12px',
                             }}
                             data-testid="dlor-homepage-keyword"
-                            label="Search our digital objects by keyword"
+                            label="Search our digital objects by tag"
                             onKeyUp={handleKeywordCharacterEntry}
                             InputProps={{
                                 endAdornment: (

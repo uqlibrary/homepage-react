@@ -829,7 +829,7 @@ export const DlorForm = ({
                         <Grid item xs={12}>
                             <Accordion sx={{ marginTop: 2 }}>
                                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                    <Typography variant="p">Admin Notes</Typography>
+                                    <Typography variant="p">Existing Admin Notes</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     <TableContainer component={Paper}>
@@ -1483,7 +1483,7 @@ export const DlorForm = ({
                 })}
             <Grid item xs={12}>
                 <Typography component={'h2'} variant={'h6'}>
-                    Keywords
+                    Tags
                 </Typography>
             </Grid>
             <Grid item xs={12} style={{ paddingTop: 20 }}>
@@ -1507,7 +1507,7 @@ export const DlorForm = ({
                                     checked={isNotifying}
                                 />
                             }
-                            label="Notify following users?"
+                            label="Notify subscribers of significant updates?"
                         />
                         {!!isNotifying && (
                             <Button onClick={openNotifyLightbox} data-testid="notify-reedit-button">
@@ -1539,6 +1539,9 @@ export const DlorForm = ({
                         p: 4,
                     }}
                 >
+                    <h1>Preview of your notification:</h1>
+                    <p>Below is a preview of the notification that will be sent to users that have subscribed to updates for this object.</p>
+                    <p>These notifications should be for significant changes only, and this information is intended for ALL subscribers to this object (internal and external)</p>
                     <StyledLightboxHeaderBox id="notify-lightbox-title">
                         <Typography variant="h6" component="h2" data-testid="notify-lightbox-title">
                             Object change notification
