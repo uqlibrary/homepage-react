@@ -1784,7 +1784,7 @@ export const DlorForm = ({
                 const objectUuid =
                     mode === 'edit' ? dlorItem?.object_public_uuid : dlorSavedItem?.data?.object_public_uuid;
                 const noteContent = formValues.object_admin_notes;
-                actions.saveDlorAdminNote(objectUuid, noteContent);
+                !!noteContent && actions.saveDlorAdminNote(objectUuid, noteContent);
             }
         });
     };
