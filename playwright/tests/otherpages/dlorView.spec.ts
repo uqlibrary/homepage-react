@@ -144,7 +144,7 @@ test.describe('Digital Learning Hub View page', () => {
 
             {
                 const scope = page.getByTestId('detailpage-metadata-keywords');
-                await expect(scope.locator('h3')).toHaveText(/Keywords/);
+                await expect(scope.locator('h3')).toHaveText(/Tags/);
                 await expect(scope.locator('li')).toHaveCount(8);
                 await expect(scope.getByText(/Generative AI/).first()).toBeVisible();
             }
