@@ -34,6 +34,9 @@ export const DLOEdit = ({
     dlorAdminNotesLoaded,
     dlorAdminNotesLoadError,
     dlorAdminNotes,
+    dlorKeywords,
+    dlorKeywordsLoading,
+    dlorKeywordsError,
 }) => {
     const { account } = useAccountContext();
     const { dlorId } = useParams();
@@ -42,6 +45,15 @@ export const DLOEdit = ({
         /* istanbul ignore next */
         if (!dlorTeamListLoading && !dlorTeamListError && !dlorTeamList) {
             actions.loadOwningTeams();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    React.useEffect(() => {
+        /* istanbul ignore next */
+        if (!dlorKeywordsLoading && !dlorKeywordsError && (!dlorKeywords || dlorKeywords.length === 0)) {
+            console.log('LOAD KEYWORDS');
+            actions.loadDlorKeywords();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -101,6 +113,7 @@ export const DLOEdit = ({
         team_manager_edit: dlorItem?.owner.team_manager,
         team_email_edit: dlorItem?.owner.team_email,
         object_keywords_string: dlorItem?.object_keywords?.join(', '),
+        object_keywords: dlorItem?.object_keywords || [],
         facets: dlorItem?.object_filters,
         object_link_types: dlorItem?.object_link_types,
         object_link_interaction_type: dlorItem?.object_link_interaction_type,
@@ -144,6 +157,7 @@ export const DLOEdit = ({
                         dlorAdminNotesLoaded={dlorAdminNotesLoaded}
                         dlorAdminNotesLoadError={dlorAdminNotesLoadError}
                         dlorAdminNotes={dlorAdminNotes}
+                        dlorKeywords={dlorKeywords}
                         formDefaults={formDefaults}
                         mode="edit"
                     />

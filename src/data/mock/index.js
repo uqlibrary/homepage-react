@@ -70,6 +70,7 @@ import {
 } from './data/journalSearchFavourites';
 import { vemcountData } from './data/vemcount';
 import dlor_admin_notes from './data/records/dlor/dlor_admin_notes';
+import dlor_keywords from './data/records/dlor/dlor_keywords';
 
 const moment = require('moment');
 
@@ -819,7 +820,11 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .onDelete(/dlor\/auth\/teammember\/\d+/)
     .reply(() => {
         return [200, { data: { success: true } }];
-    });
+    })
+    .onGet(/dlor\/public\/keywords\/list/)
+    .reply(() => {
+        return [200, dlor_keywords];
+    })
 
 mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
