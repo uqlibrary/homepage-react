@@ -1464,7 +1464,7 @@ mock.onGet('exams/course/FREN1010/summary')
         } else if (hoursResponseType === '404') {
             return [404, {}];
         } else {
-            return [200, hours_weekly];
+            return [200, resetWeeklyHourDatesToBeCurrent(hours_weekly)];
         }
     })
     .onGet(routes.SPACES_FACILITY_TYPE_ALL_API().apiUrl)
@@ -1532,3 +1532,26 @@ mock.onGet('exams/course/FREN1010/summary')
         console.log('url not mocked...', config.url);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });
+
+function resetWeeklyHourDatesToBeCurrent(jsonData) {
+    // reset the mock data so it is data for this week
+    const today = new Date();
+    const currentMonday = new Date(today);
+    currentMonday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+    jsonData?.data?.locations?.forEach(location => {
+        location.departments?.forEach(department => {
+            department.weeks?.forEach((week, weekIndex) => {
+                days.forEach((day, index) => {
+                    const newDate = new Date(currentMonday);
+                    newDate.setDate(currentMonday.getDate() + index + weekIndex * 7);
+                    week[day].date = newDate.toISOString().split('T')[0];
+                });
+            });
+        });
+    });
+
+    return jsonData;
+}
