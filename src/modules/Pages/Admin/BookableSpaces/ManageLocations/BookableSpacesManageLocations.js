@@ -977,7 +977,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
     }
 
     return (
-        <StandardPage title="Library bookable spaces Location management">
+        <StandardPage title="Library spaces Location management">
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
                     <Grid container spacing={3} style={{ position: 'relative' }}>

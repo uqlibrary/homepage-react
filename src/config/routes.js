@@ -406,12 +406,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 export const breadcrumbs = {
     alertsadmin: { pathname: '/admin/alerts', title: 'Alerts admin' },
     dloradmin: { pathname: '/admin/dlor', title: 'Digital learning hub admin' },
-    bookablespacesadmin: { pathname: '/spaces', title: 'Book a Space management' },
+    bookablespacesadmin: { pathname: '/spaces', title: 'Spaces management' },
     testntag: { pathname: '/admin/testntag', title: 'Test and tag' },
     bookexambooth: { pathname: '/book-exam-booth', title: 'Book an Exam booth' },
     dlor: { pathname: '/digital-learning-hub', title: 'Digital learning hub' },
     exampapers: { pathname: '/exams', title: 'Past exam papers' },
     learningresources: { pathname: '/learning-resources', title: 'Learning resources' },
     paymentreceipt: { pathname: '/payment-receipt', title: 'Payment receipt' },
-    bookablespaces: { pathname: '/spaces', title: 'Book a Space' },
+    bookablespaces: { pathname: '/spaces', title: 'Spaces' },
 };

@@ -17,7 +17,7 @@ test.describe('Spaces admin', () => {
     test('Shows a basic page for Spaces Location Admin', async ({ page }) => {
         await page.goto('/admin/spaces/manage/locations?user=uqstaff');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('body').getByText(/Library bookable spaces Location management/)).toBeVisible();
+        await expect(page.locator('body').getByText(/Library spaces Location management/)).toBeVisible();
         await expect(page.getByTestId('spaces-location-wrapper').locator('> *')).toHaveCount(16); // 3 locations with 4 buildings 8 floors + an add button
 
         // ground floors correctly marked
@@ -33,7 +33,7 @@ test.describe('Spaces admin', () => {
     test('full list is accessible', async ({ page }) => {
         await page.goto('/admin/spaces/manage/locations?user=uqstaff');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('body').getByText(/Library bookable spaces Location management/)).toBeVisible();
+        await expect(page.locator('body').getByText(/Library spaces Location management/)).toBeVisible();
 
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
