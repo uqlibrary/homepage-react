@@ -34,7 +34,8 @@ import {
     DLOR_CREATE_TEAM_ADMIN_API,
     DLOR_EDIT_TEAM_ADMIN_API,
     DLOR_DELETE_TEAM_ADMIN_API,
-    DLOR_TEAM_MEMBER_SINGLE_GET_API
+    DLOR_TEAM_MEMBER_SINGLE_GET_API,
+    DLOR_KEYWORDS_API
 } from 'repositories/routes';
 
 const checkExpireSession = (dispatch, error) => {
@@ -773,6 +774,26 @@ export function deleteDlorTeamMember(id, team_id) {
             .catch(error => {
                 dispatch({
                     type: actions.DLOR_TEAM_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function loadDlorKeywords() {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_KEYWORDS_LOADING });
+        return get(DLOR_KEYWORDS_API())
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_KEYWORDS_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_KEYWORDS_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);

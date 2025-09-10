@@ -144,7 +144,7 @@ test.describe('Digital Learning Hub View page', () => {
 
             {
                 const scope = page.getByTestId('detailpage-metadata-keywords');
-                await expect(scope.locator('h3')).toHaveText(/Keywords/);
+                await expect(scope.locator('h3')).toHaveText(/Tags/);
                 await expect(scope.locator('li')).toHaveCount(8);
                 await expect(scope.getByText(/Generative AI/).first()).toBeVisible();
             }
@@ -628,6 +628,9 @@ test.describe('Digital Learning Hub View page', () => {
             await typeCKEditor(page, testData);
             await page.getByTestId('dlor-form-next-button').click();
             await page.getByTestId('dlor-form-next-button').click();
+            // select a keyword so we can save
+            await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
+            await page.locator("#fuzzy-search-option-3").click()
             await page.getByTestId('admin-dlor-save-button-submit').click();
             await expect(
                 page

@@ -1417,7 +1417,7 @@ export const DLOView = ({
                                         {!!dlorItem?.object_keywords && (
                                             <div data-testid="detailpage-metadata-keywords">
                                                 <StyledTitleTypography component={'h3'} variant={'h6'}>
-                                                    Keywords
+                                                    Tags
                                                 </StyledTitleTypography>
                                                 <StyledKeywordList>
                                                     {dlorItem.object_keywords.map((keyword, index) => {
