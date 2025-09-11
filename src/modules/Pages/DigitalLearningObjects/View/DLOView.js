@@ -1420,7 +1420,7 @@ export const DLOView = ({
                                                     Tags
                                                 </StyledTitleTypography>
                                                 <StyledKeywordList>
-                                                    {dlorItem.object_keywords.map((keyword, index) => {
+                                                    {dlorItem.object_keywords.sort().map((keyword, index) => {
                                                         return (
                                                             <li key={index}>
                                                                 <StyledFilterLink
