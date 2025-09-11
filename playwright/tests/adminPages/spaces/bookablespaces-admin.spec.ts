@@ -412,14 +412,23 @@ test.describe('Spaces admin', () => {
             await expect(dialog.getByTestId('building-number').locator('label')).toContainText('Building number');
             await expect(dialog.getByTestId('building-number').locator('input')).toHaveValue('0001');
 
-            await expect(dialog.locator('h3')).toContainText('Floors - Choose ground floor:');
             const floorList = dialog.getByTestId('building-floor-list');
+            await expect(floorList.locator('h3')).toContainText('Floors - Choose ground floor:');
             await expect(floorList).toBeVisible();
             await expect(floorList.locator('ul > *')).toHaveCount(3);
             await expect(floorList.locator('ul li:first-of-type label')).toContainText('Floor 2');
             await expect(floorList.locator('ul li:nth-of-type(2) label')).toContainText('Floor 3A');
             await expect(floorList.locator('ul li:last-of-type label')).toContainText('None');
             await expect(floorList.locator('ul li:last-of-type input')).toBeChecked();
+
+            const campusList = dialog.getByTestId('building-site-list');
+            await expect(campusList.locator('h3')).toContainText('Change Campus');
+            await expect(campusList).toBeVisible();
+            await expect(campusList.locator('ul > *')).toHaveCount(3);
+            await expect(campusList.locator('ul li:first-of-type label')).toContainText('St Lucia');
+            await expect(campusList.locator('ul li:nth-of-type(2) label')).toContainText('Gatton');
+            await expect(campusList.locator('ul li:last-of-type label')).toContainText('Newsite');
+            await expect(campusList.locator('ul li:first-of-type input')).toBeChecked();
 
             await expect(dialog.getByTestId('dialog-delete-button')).toBeVisible();
             await expect(dialog.getByTestId('dialog-delete-button')).toContainText('Delete');
@@ -557,7 +566,7 @@ test.describe('Spaces admin', () => {
 
             await expect(dialog).not.toBeVisible();
         });
-        test.describe('Add a floor to a site', () => {
+        test.describe('Add a floor to a building', () => {
             async function assertCanOpenAddFloorDialog(page: Page, buildingId: number) {
                 await assertCanOpenEditBuildingDialog(page, buildingId);
                 const dialog = page.getByTestId('main-dialog');

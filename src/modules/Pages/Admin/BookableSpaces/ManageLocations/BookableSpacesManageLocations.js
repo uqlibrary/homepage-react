@@ -50,6 +50,9 @@ const StyledMainDialog = styled('dialog')(({ theme }) => ({
                 display: 'inline',
             },
         },
+        '& ul.radioList li': {
+            listStyle: 'none',
+        },
     },
     '& .dialogRowSideBySide': {
         display: 'flex',
@@ -744,7 +747,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         !!dialog && dialog.showModal();
     }
 
-    function showEditBuildingForm(buildingId) {
+    function showEditBuildingForm(buildingId, buildingSiteId) {
         const buildingDetails =
             buildingId > 0 &&
             siteList.flatMap(site => site.buildings).find(building => building.building_id === buildingId);
@@ -761,7 +764,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 ''}" />${buildingCoreForm(buildingDetails)}<div class="dialogRow" data-testid="building-floor-list">
                 <h3>Floors - Choose ground floor:</h3>
                 ${buildingDetails?.floors?.length > 0 &&
-                    '<ul>' +
+                    '<ul class="radioList">' +
                         buildingDetails?.floors
                             .map(floor => {
                                 const checked = floor.floor_id === buildingDetails.ground_floor_id ? ' checked' : '';
@@ -777,10 +780,26 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                             } />
                             <label for="groundFloor-none">None</label> 
                         </li>
-                        </ul>`}
+                    </ul>`}
                         
                 ${buildingDetails?.floors?.length === 0 ? '<p>No floors</p>' : ''}
-            </div>`;
+                </div>
+                
+                <div class="dialogRow" data-testid="building-site-list">
+                    <h3>Change Campus</h3>
+                    <ul class="radioList" data-testid="change-site">
+                    ${siteList
+                        .map(site => {
+                            console.log('site=', site);
+                            const checked = site.site_id === buildingSiteId ? ' checked' : '';
+                            return `<li>
+                                    <input type="radio" id="chooseSite-${site.site_id}" name="site_id" ${checked} value="${site.site_id}" />
+                                    <label for="chooseSite-${site.site_id}">${site.site_name}</label> 
+                                </li>`;
+                        })
+                        .join('')}
+                    </ul>
+                </div>`;
 
         const dialogBodyElement = document.getElementById('dialogBody');
         !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
@@ -929,7 +948,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                         <StyledRow key={`building-${building.building_id}`} style={{ paddingLeft: '8rem' }}>
                             <StyledEditButton
                                 color="primary"
-                                onClick={() => showEditBuildingForm(building.building_id)}
+                                onClick={() => showEditBuildingForm(building.building_id, site.site_id)}
                                 aria-label={`Edit ${building.building_name} details`}
                                 data-testid={`edit-building-${building.building_id}-button`}
                             >
