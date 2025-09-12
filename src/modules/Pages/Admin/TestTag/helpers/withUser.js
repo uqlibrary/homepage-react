@@ -17,10 +17,11 @@ export const withUser = Component => props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userLoading, userLoaded, userError]);
 
-    if (!!user?.user_uid) return <Component {...props} />;
-    else {
-        if (userLoaded || !!userError) {
-            return <StandardPage standardPageId="authentication-required" {...locale.pages.general.accountRequired} />;
-        } else return <ContentLoader message={locale.pages.general.checkingAuth} />;
+    if (!!user?.user_uid) {
+        return <Component {...props} />;
     }
+    if (userLoaded || !!userError) {
+        return <StandardPage standardPageId="authentication-required" {...locale.pages.general.accountRequired} />;
+    }
+    return <ContentLoader message={locale.pages.general.checkingAuth} />;
 };
