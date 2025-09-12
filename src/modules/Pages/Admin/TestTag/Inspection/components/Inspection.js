@@ -22,7 +22,7 @@ import { statusEnum } from '../utils/helpers';
 import { scrollToTopOfPage } from 'helpers/general';
 import { useValidation } from '../utils/hooks';
 import { useLocation, useForm, useConfirmationAlert } from '../../helpers/hooks';
-import locale from '../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { transformer } from '../utils/transformers';
 import { saveInspectionTransformer } from '../transformers/saveInspectionTransformer';
 import { getSuccessDialog } from '../utils/saveDialog';

@@ -18,7 +18,7 @@ import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { isEmptyStr } from '../../helpers/helpers';
-import locale from '../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { statusEnum } from '../utils/helpers';
 
 const moment = require('moment');

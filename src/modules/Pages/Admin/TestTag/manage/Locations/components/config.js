@@ -2,7 +2,7 @@ import React from 'react';
 
 import TextField from '@mui/material/TextField';
 
-import locale from '../../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { createLocationString } from '../../../helpers/helpers';
 import { isEmptyStr } from '../../../helpers/helpers';
 

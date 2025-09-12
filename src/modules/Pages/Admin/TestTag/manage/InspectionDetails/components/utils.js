@@ -1,5 +1,5 @@
 import moment from 'moment';
-import locale from '../../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 const dateFormat = locale.config.format.dateFormatNoTime;
 
 export const transformRow = row => {
