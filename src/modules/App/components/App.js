@@ -25,8 +25,8 @@ browserUpdate({
     shift_page_down: true,
 });
 
-const isAdminPage = () => {
-    return window.location.pathname.startsWith('/admin/');
+const hideForAdmin = () => {
+    return window.location.href.includes('/admin/');
 };
 
 export const App = ({ account, actions }) => {
@@ -71,11 +71,11 @@ export const App = ({ account, actions }) => {
                         <auth-button />
                     </span>
                 </uq-site-header>
-                {!isAdminPage() && <proactive-chat />}
+                {!hideForAdmin() && <proactive-chat />}
                 <div role="region" aria-label="UQ Library Alerts">
                     <alert-list system="homepage" />
                 </div>
-                <cultural-advice />
+                {!hideForAdmin() && <cultural-advice />}
                 <div style={{ flexGrow: 1 }}>
                     <a name="content" />
                     <AccountContext.Provider
