@@ -32,7 +32,7 @@ const handlers = {
         user: null,
         userLoading: false,
         userLoaded: false,
-        userError: action.payload,
+        userError: action?.payload,
     }),
 };
 
