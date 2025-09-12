@@ -1,10 +1,10 @@
 import React from 'react';
-import { loadUser } from 'data/actions';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { loadUser } from 'data/actions';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-
-import locale from '../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
 export const withUser = Component => props => {
     const dispatch = useDispatch();
