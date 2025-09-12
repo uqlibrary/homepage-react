@@ -55,6 +55,9 @@ describe('withUser', () => {
                 testTagUserReducer: {
                     userLoading: false,
                     userLoaded: true,
+                    userError: false,
+                    user: {},
+                    privilege: {},
                 },
             },
         });
@@ -69,6 +72,7 @@ describe('withUser', () => {
                     userLoading: false,
                     userLoaded: true,
                     userError: 'Error',
+                    user: null,
                 },
             },
         });
@@ -84,6 +88,7 @@ describe('withUser', () => {
                     user,
                     userLoading: false,
                     userLoaded: true,
+                    userError: false,
                 },
             },
         });
