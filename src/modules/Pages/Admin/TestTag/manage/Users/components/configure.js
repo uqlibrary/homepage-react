@@ -6,7 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { isEmptyStr, isInvalidUUID } from '../../../helpers/helpers';
 
-import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
+import locale from '../../../testTag.locale';
 
 export default {
     sort: {
