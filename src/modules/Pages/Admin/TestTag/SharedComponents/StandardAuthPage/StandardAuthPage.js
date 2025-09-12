@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 
 import Typography from '@mui/material/Typography';
 
-import localeGeneral from '../../testTag.locale';
+import localeGeneral from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { hasAccess } from '../../helpers/auth';

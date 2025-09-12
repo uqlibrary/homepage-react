@@ -21,7 +21,7 @@ import TextField from '@mui/material/TextField';
 
 import ActionPanel from './ActionPanel';
 import MonthsSelector from '../../SharedComponents/MonthsSelector/MonthsSelector';
-import locale from '../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import {
     isValidTestingDeviceId,
     isValidTestingDeviceForPassInspection,

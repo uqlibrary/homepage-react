@@ -73,6 +73,15 @@ export default {
                     </Box>
                 ),
             },
+            apiError: {
+                title: 'An error occurred',
+                children: (
+                    <Box data-testid="api-error">
+                        <Typography>A problem has occurred - please try again later.</Typography>
+                        <Typography>You can contact a Test and Tag representative for assistance.</Typography>
+                    </Box>
+                ),
+            },
             locationPicker: {
                 allLabel: 'All',
                 site: {

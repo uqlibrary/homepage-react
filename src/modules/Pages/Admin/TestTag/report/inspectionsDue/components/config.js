@@ -2,7 +2,7 @@ import React from 'react';
 
 import WarningOutlined from '@mui/icons-material/WarningOutlined';
 import Tooltip from '@mui/material/Tooltip';
-import locale from '../../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 const moment = require('moment');
 
 export default {

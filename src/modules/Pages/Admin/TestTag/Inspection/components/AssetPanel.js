@@ -15,7 +15,7 @@ import AssetTypeSelector, { ADD_NEW_ID } from '../../SharedComponents/AssetTypeS
 import { isValidAssetId, isValidAssetTypeId, statusEnum } from '../utils/helpers';
 import { transformAddAssetTypeRequest } from '../utils/transformers';
 import configAssetPanel from '../../manage/AssetTypes/components/config';
-import locale from '../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { actionReducer, emptyActionState } from '../utils/hooks';
 
 const componentId = 'asset-panel';

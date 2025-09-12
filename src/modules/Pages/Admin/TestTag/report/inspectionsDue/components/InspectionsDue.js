@@ -17,7 +17,7 @@ import { useLocation, useSelectLocation } from '../../../SharedComponents/Locati
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { useConfirmationAlert } from '../../../helpers/hooks';
 
-import locale from '../../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { transformRow } from './utils';

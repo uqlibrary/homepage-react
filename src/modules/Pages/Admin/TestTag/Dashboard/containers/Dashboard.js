@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import Dashboard from '../components/Dashboard';
 import { bindActionCreators } from 'redux';
 import * as actions from 'data/actions';
-import locale from '../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { withUser } from '../../helpers/withUser';
 
 export const mapStateToProps = state => {

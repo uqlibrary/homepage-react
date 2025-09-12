@@ -56,7 +56,7 @@ export function loadUser() {
             .catch(error => {
                 dispatch({
                     type: actions.TESTTAG_USER_FAILED,
-                    payload: error.message,
+                    payload: error,
                 });
                 checkExpireSession(dispatch, error);
             });

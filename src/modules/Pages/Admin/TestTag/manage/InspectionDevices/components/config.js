@@ -6,7 +6,7 @@ import moment from 'moment';
 import TextField from '@mui/material/TextField';
 
 import { isEmptyStr } from '../../../helpers/helpers';
-import locale from '../../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { WarningOutlined } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
 const dateFormat = locale.config.format.dateFormatNoTime;
