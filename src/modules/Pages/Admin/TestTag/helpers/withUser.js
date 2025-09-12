@@ -20,11 +20,7 @@ export const withUser = Component => props => {
     if (!!user?.user_uid) {
         return <Component {...props} />;
     }
-    if (!!userError && userError?.status?.toUpperCase() !== 'OK') {
-        // usually a cors error
-        return <StandardPage standardPageId="api-error" {...locale.pages.general.apiError} />;
-    }
-    if (!!userLoaded || !!userError) {
+    if (userLoaded || !!userError) {
         return <StandardPage standardPageId="authentication-required" {...locale.pages.general.accountRequired} />;
     }
     return <ContentLoader message={locale.pages.general.checkingAuth} />;
