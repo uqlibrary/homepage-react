@@ -15,7 +15,7 @@ async function clickDeleteButton(page: Page) {
 
 test.describe('Spaces admin', () => {
     test('Shows a basic page for Spaces Location Admin', async ({ page }) => {
-        await page.goto('/admin/spaces/manage/locations?user=uqstaff');
+        await page.goto('/admin/spaces/manage/locations?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.locator('body').getByText(/Library spaces Location management/)).toBeVisible();
         await expect(page.getByTestId('spaces-location-wrapper').locator('> *')).toHaveCount(16); // 3 locations with 4 buildings 8 floors + an add button
@@ -31,7 +31,7 @@ test.describe('Spaces admin', () => {
         await expect(page.getByTestId('groundfloor-for-32')).not.toBeVisible(); // warehouse, floor 2
     });
     test('full list is accessible', async ({ page }) => {
-        await page.goto('/admin/spaces/manage/locations?user=uqstaff');
+        await page.goto('/admin/spaces/manage/locations?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.locator('body').getByText(/Library spaces Location management/)).toBeVisible();
 
@@ -39,7 +39,7 @@ test.describe('Spaces admin', () => {
     });
     test.describe('Add a campus', () => {
         async function assertCanOpenAddNewCampusDialog(page: Page) {
-            await page.goto('/admin/spaces/manage/locations?user=uqstaff');
+            await page.goto('/admin/spaces/manage/locations?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('add-new-campus-button')).toContainText('Add new Campus');
             await page.getByTestId('add-new-campus-button').click();
@@ -101,7 +101,7 @@ test.describe('Spaces admin', () => {
             await assertToastHasMessage(page, 'Please enter site name and number');
         });
         test('can save with valid site data', async ({ page }) => {
-            await page.goto('/admin/spaces/manage/locations?user=uqstaff');
+            await page.goto('/admin/spaces/manage/locations?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('add-new-campus-button')).toContainText('Add new Campus');
             await page.getByTestId('add-new-campus-button').click();
@@ -123,7 +123,7 @@ test.describe('Spaces admin', () => {
     });
     test.describe('Edit a campus', () => {
         async function assertCanOpenEditCampusDialog(page: Page, campusId: number) {
-            await page.goto('/admin/spaces/manage/locations?user=uqstaff');
+            await page.goto('/admin/spaces/manage/locations?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId(`edit-campus-${campusId}-button`)).toBeVisible();
             await page.getByTestId(`edit-campus-${campusId}-button`).click();
@@ -397,7 +397,7 @@ test.describe('Spaces admin', () => {
     });
     test.describe('Edit a building', () => {
         async function assertCanOpenEditBuildingDialog(page: Page, buildingId: number) {
-            await page.goto('/admin/spaces/manage/locations?user=uqstaff');
+            await page.goto('/admin/spaces/manage/locations?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId(`edit-building-${buildingId}-button`)).toBeVisible();
             await page.getByTestId(`edit-building-${buildingId}-button`).click();
@@ -691,7 +691,7 @@ test.describe('Spaces admin', () => {
     });
     test.describe('Edit a floor', () => {
         async function assertCanOpenEditFloorDialog(page: Page, floorId: number) {
-            await page.goto('/admin/spaces/manage/locations?user=uqstaff');
+            await page.goto('/admin/spaces/manage/locations?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId(`edit-floor-${floorId}-button`)).toBeVisible();
             await page.getByTestId(`edit-floor-${floorId}-button`).click();
@@ -811,7 +811,7 @@ test.describe('Spaces admin', () => {
     });
     test('repeated actions dont cause a problem', async ({ page }) => {
         // can we open and close dialogs repeatedly without problem
-        await page.goto('/admin/spaces/manage/locations?user=uqstaff');
+        await page.goto('/admin/spaces/manage/locations?user=libSpaces');
 
         // open main dialog to edit campus
         await expect(page.getByTestId('main-dialog')).not.toBeVisible();

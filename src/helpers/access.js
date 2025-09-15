@@ -192,7 +192,7 @@ const userHasAdGroup = (ADGroupName, account) =>
 export const isTestTagUser = account => isLoggedInUser(account) && userHasAdGroup('lib_libapi_TestTagUsers', account);
 
 export const isSpacesAdminUser = account =>
-    isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
+    isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpacesAdmin', account);
 
 export const isAlertsAdminUser = account =>
     isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpotlightAdmins', account);
@@ -224,7 +224,7 @@ export const isADlorTeamMember = (account, dlorTeamList) => {
         }
     }
 
-  return false;
+    return false;
 };
 
 export const isHospitalUser = account =>
