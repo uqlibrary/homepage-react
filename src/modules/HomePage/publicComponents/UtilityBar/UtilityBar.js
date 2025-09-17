@@ -287,11 +287,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                             Locations and hours
                         </span>
                     </StyledLocationOpenerButton>
-                    <StyledBookingLink
-                        href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
-                        data-testid="homepage-hours-bookit-link"
-                        id="bookit-link"
-                    >
+                    <StyledBookingLink href="/spaces" data-testid="homepage-hours-bookit-link" id="bookit-link">
                         <span>Book a room</span>
                     </StyledBookingLink>
                 </StyledButtonAreaDiv>

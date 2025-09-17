@@ -355,22 +355,12 @@ test.describe('Locations Panel', () => {
             await expect(page.getByText(/user has navigated to Drupal hours page/)).toBeVisible();
         });
         test('can navigate to book a room page', async ({ page }) => {
-            await page.route(/uqbookit/, route => {
-                route.fulfill({
-                    status: 200,
-                    body: 'user has navigated to Bookit page',
-                });
-            });
             await page.goto('/');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('homepage-hours-bookit-link')).toHaveText(/Book a room/);
             await page.getByTestId('homepage-hours-bookit-link').click();
-            await expect(
-                page
-                    .locator('body')
-                    .getByText(/user has navigated to Bookit page/)
-                    .first(),
-            ).toBeVisible();
+            await expect(page).toHaveURL('http://localhost:2020/spaces');
+            await expect(page.getByTestId('StandardPage-title')).toHaveText('Library spaces');
         });
         test('shows the expected values', async ({ page }) => {
             await page.goto('/');
