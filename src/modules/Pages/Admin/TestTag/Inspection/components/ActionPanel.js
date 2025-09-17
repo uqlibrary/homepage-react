@@ -12,7 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Typography from '@mui/material/Typography';
 
-import locale from '../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import TabPanel from './TabPanel';
 import { isValidRepair, isValidDiscard, statusEnum } from '../utils/helpers';
 import { isEmptyStr } from '../../helpers/helpers';

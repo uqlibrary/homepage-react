@@ -1,4 +1,4 @@
-import locale from '../../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 const moment = require('moment');
 
 export const getNameStyles = (name, inspectorName, theme) => ({

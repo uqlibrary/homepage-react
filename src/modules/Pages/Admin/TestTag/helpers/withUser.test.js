@@ -55,6 +55,9 @@ describe('withUser', () => {
                 testTagUserReducer: {
                     userLoading: false,
                     userLoaded: true,
+                    userError: false,
+                    user: {},
+                    privilege: {},
                 },
             },
         });
@@ -68,13 +71,12 @@ describe('withUser', () => {
                 testTagUserReducer: {
                     userLoading: false,
                     userLoaded: true,
-                    userError: 'Error',
+                    userError: { message: 'a message', status: 'error' },
+                    user: null,
                 },
             },
         });
-        expect(getByTestId('account-not-found')).toHaveTextContent(
-            'The requested page is only available to users with an active Test and Tag account.',
-        );
+        expect(getByTestId('api-error')).toHaveTextContent('A problem has occurred - please try again later.');
     });
 
     it('renders component when user object is available', () => {
@@ -84,6 +86,7 @@ describe('withUser', () => {
                     user,
                     userLoading: false,
                     userLoaded: true,
+                    userError: false,
                 },
             },
         });
