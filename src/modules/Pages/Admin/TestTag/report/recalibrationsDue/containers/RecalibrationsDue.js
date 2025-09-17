@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import InspectionDevices from '../../../manage/InspectionDevices/components/InspectionDevices';
 import { bindActionCreators } from 'redux';
 import * as actions from 'data/actions';
-import locale from '../../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import config from '../../../manage/InspectionDevices/components/config';
 import { PERMISSIONS } from '../../../config/auth';
 import { withUser } from '../../../helpers/withUser';

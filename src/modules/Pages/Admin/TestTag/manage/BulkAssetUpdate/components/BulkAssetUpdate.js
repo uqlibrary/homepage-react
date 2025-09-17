@@ -29,7 +29,7 @@ import { useLocation, useSelectLocation } from '../../../SharedComponents/Locati
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import FilterDialog from './FilterDialog';
 
-import locale from '../../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { isValidRoomId, isValidAssetId, isValidAssetTypeId } from '../../../Inspection/utils/helpers';

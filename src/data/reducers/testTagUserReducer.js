@@ -3,7 +3,7 @@ import { getUserPermissions } from 'modules/Pages/Admin/TestTag/helpers/auth';
 
 export const initialState = {
     user: null,
-    userLoading: false,
+    userLoading: null,
     userLoaded: false,
     userError: null,
 };
@@ -32,7 +32,7 @@ const handlers = {
         user: null,
         userLoading: false,
         userLoaded: false,
-        userError: action.payload,
+        userError: action?.payload,
     }),
 };
 

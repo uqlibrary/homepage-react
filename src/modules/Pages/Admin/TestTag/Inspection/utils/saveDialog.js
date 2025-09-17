@@ -5,7 +5,7 @@ import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import { statusEnum } from '../utils/helpers';
-import locale from '../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
 const savedDialogMessages = {

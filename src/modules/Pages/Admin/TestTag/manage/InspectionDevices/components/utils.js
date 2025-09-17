@@ -1,5 +1,5 @@
 import moment from 'moment';
-import locale from '../../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 const dateFormat = locale.pages.manage.config.dateFormat;
 
 export const emptyActionState = { isAdd: false, isEdit: false, isDelete: false, title: '', row: {} };
