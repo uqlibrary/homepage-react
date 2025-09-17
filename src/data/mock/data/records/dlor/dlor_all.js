@@ -466,6 +466,7 @@ export default {
                 },
             ],
             "object_keywords": ["software", "data analysis", "image", "video", "audio", "3d model", "coding"],
+            "object_synonyms": ["software", "data analysis", "freeware tools"],
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 1,
@@ -999,6 +1000,10 @@ export default {
                 "coding",
                 "referencing",
                 "reference"
+            ],
+            "object_synonyms": [
+                "software",
+                "data analysis", "freeware tools"
             ],
             "object_filters": [
                 {

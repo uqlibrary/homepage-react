@@ -304,8 +304,8 @@ export const DLOList = ({
         threshold: 0.2,
          keys: [
             { name: 'object_title', weight: 0.8 },
-            { name: 'object_keywords', weight: 0.6 },
-            { name: 'object_synonyms', weight: 0.6 },
+            { name: 'object_keywords', weight: 0.7 },
+            { name: 'object_synonyms', weight: 0.7 },
             { name: 'object_description', weight: 0.7 }
         ],
         //keys: ['object_title', 'object_keywords', 'object_synonyms', 'object_description'],
@@ -1017,8 +1017,7 @@ export const DLOList = ({
         console.log("XXXXKeyword search and keywordSearch", keywordSearch, keyWordSearchRef.current.value);
         if (!!keyWordSearchRef.current.value && !!keywordSearch) {
             console.log("XXXXSearching on", keyWordSearchRef.current.value);
-            console.log('XXXfuse search', fuse.search(keyWordSearchRef.current.value, fuseOptions));
-            theSearch = fuse.search(keyWordSearchRef.current.value).map(result => result.item);
+            theSearch = fuse.search(keyWordSearchRef.current.value, fuseOptions).map(result => result.item);
             console.log('XXXtheSearch', theSearch, dlorList);
         }
         
