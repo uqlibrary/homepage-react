@@ -52,7 +52,7 @@ export function getSemesterStringByTermNumber(termNumber) {
     const year = 2000 + parseInt((parseInt(termNumber, 10) - 5000 + '').substring(0, 2), 10);
 
     let semester = 1;
-    const semesterCode = parseInt(termNumber.substr(-2), 10);
+    const semesterCode = parseInt(termNumber.slice(-2), 10);
     if (semesterCode >= 50 && semesterCode <= 79) {
         semester = 2;
     } else if (semesterCode >= 80) {

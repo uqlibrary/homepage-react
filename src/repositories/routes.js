@@ -1,4 +1,4 @@
-export const zeroPaddedYear = value => (value ? ('0000' + value).substr(-4) : '*');
+export const zeroPaddedYear = value => (value ? ('0000' + value).slice(-4) : '*');
 import { API_URL } from '../config';
 
 export const CURRENT_ACCOUNT_API = () => ({
@@ -258,9 +258,9 @@ export const DLOR_DEMOGRAPHICS_REPORT_API = () => ({ apiUrl: 'dlor/admin/demogra
 export const DLOR_FAVOURITES_REPORT_API = () => ({ apiUrl: 'dlor/admin/favourites' });
 export const DLOR_ADMIN_NOTES_API = uuid => ({ apiUrl: `dlor/admin/object/notes/${uuid}` });
 
-export const DLOR_CREATE_TEAM_ADMIN_API = () => ({apiUrl: `dlor/auth/teammember`});
-export const DLOR_EDIT_TEAM_ADMIN_API = id => ({apiUrl: `dlor/auth/teammember/${id}`});
-export const DLOR_DELETE_TEAM_ADMIN_API = id => ({apiUrl: `dlor/auth/teammember/${id}`});
+export const DLOR_CREATE_TEAM_ADMIN_API = () => ({ apiUrl: 'dlor/auth/teammember' });
+export const DLOR_EDIT_TEAM_ADMIN_API = id => ({ apiUrl: `dlor/auth/teammember/${id}` });
+export const DLOR_DELETE_TEAM_ADMIN_API = id => ({ apiUrl: `dlor/auth/teammember/${id}` });
 
 export const DLOR_KEYWORDS_API = () => ({ apiUrl: 'dlor/public/keywords/list' });
 
@@ -289,3 +289,26 @@ export const LOANS_API = () => ({
     apiUrl: 'account/loans',
     options: { params: { ts: `${new Date().getTime()}` } },
 });
+
+// Locations APIs
+export const SPACES_ROOMS_ALL_API = () => ({
+    apiUrl: 'bookable_spaces/spaces/all',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
+export const WEEKLYHOURS_API = () => {
+    return {
+        apiUrl: 'library_hours/week',
+        options: { params: { weeks: 2, ts: `${new Date().getTime()}` } },
+    };
+};
+
+export const SPACES_FACILITY_TYPE_ALL_API = () => {
+    return {
+        apiUrl: 'bookable_spaces/facility_types/all',
+    };
+};
+export const SPACES_ADD_LOCATION_API = ({ type }) => ({ apiUrl: `bookable_spaces/${type}` });
+export const SPACES_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `bookable_spaces/${type}/${id}` });
+
+export const SPACES_SITE_API = () => ({ apiUrl: 'bookable_spaces/sites/all' });
