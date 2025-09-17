@@ -252,6 +252,15 @@ export const BookableSpacesList = ({
                                                             spaceOpeningHours(bookableSpace),
                                                             locationKey,
                                                         )}
+                                                        {!!bookableSpace?.space_opening_hours_override ? (
+                                                            <p
+                                                                data-testid={`override_opening_hours_${bookableSpace?.space_uuid}`}
+                                                            >
+                                                                Note: {bookableSpace.space_opening_hours_override}
+                                                            </p>
+                                                        ) : (
+                                                            ''
+                                                        )}
                                                     </>
                                                 }
                                             </StyledStandardCard>
