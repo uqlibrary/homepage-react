@@ -4,7 +4,7 @@ export default {
         "locations": [{
             space_id: "123456",
             space_uuid: "987y_isjgt_9866",
-            space_: "01-W431",
+            space_name: "01-W431",
             space_precise: "Westernmost corner",
             space_description: "A space in the Law library. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
             space_photo_url: "https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg", // https://campuses.uq.edu.au/list-rooms
@@ -33,7 +33,7 @@ export default {
         }, {
             space_id: "1234544",
             space_uuid: "9867y_isjgt_9866",
-            space_title: "6078",
+            space_name: "6078",
             space_precise: "",
             space_description: "A space at Dutton Park. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. ",
             space_photo_url: "",
@@ -62,7 +62,7 @@ export default {
         }, {
             space_id: "43534",
             space_uuid: "987y_isjgt_9867",
-            space_title: "46-342/343",
+            space_name: "46-342/343",
             space_precise: "Eastern corner",
             space_description: "A space in the Liveris building. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.",
             space_photo_url: "https://campuses.uq.edu.au/files/35424/46-342-343.JPG", // https://campuses.uq.edu.au/list-rooms

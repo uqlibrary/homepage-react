@@ -235,7 +235,7 @@ export const BookableSpacesList = ({
                                         <StyledBookableSpaceGridItem item xs={12} md={9} key={locationKey}>
                                             <StyledStandardCard
                                                 fullHeight
-                                                title={`${bookableSpace?.space_title} - ${bookableSpace?.space_type}`}
+                                                title={`${bookableSpace?.space_name} - ${bookableSpace?.space_type}`}
                                             >
                                                 {
                                                     <>

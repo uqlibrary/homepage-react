@@ -533,7 +533,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         console.log('floorDetails=', floorDetails);
         const locationType = 'floor';
         const locationId = floorDetails?.floor_id;
-        const successMessage = `Floor ${floorDetails?.floor_id_displayed} in ${floorDetails?.building_name} deleted`;
+        const successMessage = `Floor ${floorDetails?.floor_name} in ${floorDetails?.building_name} deleted`;
         const failureMessage = `catch: deleting floor ${floorDetails.floor_id} failed:`;
         deleteLocation(locationType, locationId, successMessage, failureMessage);
     }
@@ -567,7 +567,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
     }
 
     function confirmAndDeleteFloor(e, floorDetails) {
-        const line1 = `Do you really want to delete floor ${floorDetails.floor_id_displayed}?`;
+        const line1 = `Do you really want to delete floor ${floorDetails.floor_name}?`;
         const line2 = 'This will also delete associated rooms.';
         const confirmationOKButton = document.getElementById('confDialogOkButton');
         !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteFloor(e, floorDetails));
@@ -667,7 +667,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         const locationType = data?.locationType;
 
         // validate form
-        if (!data.floor_id_displayed) {
+        if (!data.floor_name) {
             displayToastMessage('Please enter floor name', true);
             return false;
         }
@@ -707,13 +707,13 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
     const floorCoreForm = floorDetails => `<input name="locationType" type="hidden" value="floor" />
         <div class="dialogRow" data-testid="floor-name">
             <label for="displayedFloorId">Floor name</label>
-            <input id="displayedFloorId" name="floor_id_displayed" type="text" required value="${floorDetails?.floor_id_displayed ??
+            <input id="displayedFloorId" name="floor_name" type="text" required value="${floorDetails?.floor_name ??
                 ''}"  maxlength="10" />
         </div>`;
 
     function showAddFloorForm(e, buildingDetails, currentGroundFloorDetails) {
         const groundFloorDescription = !!currentGroundFloorDetails
-            ? `Current ground floor is Floor ${currentGroundFloorDetails.floor_id_displayed}`
+            ? `Current ground floor is Floor ${currentGroundFloorDetails.floor_name}`
             : 'No floor is currently marked as the ground floor';
         const formBody = `<h2>Add a floor to ${buildingDetails?.building_name || 'unknown building'}</h2>
             <input name="buildingId" type="hidden" value="${buildingDetails?.building_id}" />
@@ -770,7 +770,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                 const checked = floor.floor_id === buildingDetails.ground_floor_id ? ' checked' : '';
                                 return `<li>
                                             <input type="radio" id="groundFloor-${floor.floor_id}" name="ground_floor_id" ${checked} value="${floor.floor_id}" />
-                                            <label for="groundFloor-${floor.floor_id}">Floor ${floor.floor_id_displayed}</label> 
+                                            <label for="groundFloor-${floor.floor_id}">Floor ${floor.floor_name}</label> 
                                         </li>`;
                             })
                             .join('') +
@@ -834,7 +834,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         const locationId = data[`${locationType}Id`];
 
         // validate form
-        const failureMessage = !data.floor_id_displayed && 'Please enter floor name';
+        const failureMessage = !data.floor_name && 'Please enter floor name';
         if (!!failureMessage) {
             displayToastMessage(failureMessage, true);
             return false;
@@ -966,10 +966,10 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                     color="primary"
                                     // onClick={() => showEditSiteForm(site.site_id)}
                                     onClick={() => showEditFloorForm(floor.floor_id)}
-                                    aria-label={`Edit Floor ${floor.floor_id_displayed}`}
+                                    aria-label={`Edit Floor ${floor.floor_name}`}
                                     data-testid={`edit-floor-${floor.floor_id}-button`}
                                 >
-                                    <span id={`floor-${floor.floor_id}`}>{floor.floor_id_displayed}</span>
+                                    <span id={`floor-${floor.floor_id}`}>{floor.floor_name}</span>
                                     {building.ground_floor_id === floor.floor_id && (
                                         <StyledGroundFloorIndicatorSpan
                                             id={getIdentifierForFloorGroundFloorIndicator(floor.floor_id)}

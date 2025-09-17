@@ -156,7 +156,7 @@ export const BookableSpacesDashboard = ({
                                             scope="col"
                                             sx={{ position: 'sticky', left: 0, zIndex: 10 }}
                                         >
-                                            <div>{bookableSpace?.space_title}</div>
+                                            <div>{bookableSpace?.space_name}</div>
                                             <div>{bookableSpace?.space_type}</div>
                                         </TableCell>
 
