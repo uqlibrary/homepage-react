@@ -8,7 +8,6 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -17,6 +16,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import { addBreadcrumbsToSiteHeader } from '../helpers';
+import { standardText } from 'helpers/general';
 
 const tickIcon = altText => (
     // https://mui.com/material-ui/material-icons/?selected=Done
@@ -25,6 +25,8 @@ const tickIcon = altText => (
         <title>{altText}</title>
     </svg>
 );
+
+const backgroundColorColumn = '#f0f0f0';
 
 const StyledStandardCard = styled(StandardCard)(() => ({
     '& .MuiCardHeader-root': {
@@ -42,34 +44,21 @@ const StyledTableContainer = styled(TableContainer)(() => ({
     overflow: 'auto',
     whiteSpace: 'nowrap',
 }));
-const StyledTableHeadingTypography = styled(Typography)(({ theme }) => ({
-    marginLeft: '1.5rem',
-    marginTop: '1rem',
-    padding: 0,
-    [theme.breakpoints.down('md')]: {
-        marginLeft: '1rem',
-    },
-}));
 const StyledTableHead = styled(TableHead)(() => ({
     '& tr:first-of-type th': {
         paddingBottom: 0,
     },
     '& th:first-of-type': {
         position: 'sticky',
-        backgroundColor: 'white',
         left: 0,
     },
 }));
-const standardText = theme => {
-    return {
-        color: theme.palette.secondary.main,
-        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-        fontSize: '16px',
-        fontWeight: 400,
-        letterSpacing: '0.16px',
-        lineHeight: '1.6',
-    };
-};
+
+const StyledHeadingFacilityTableCell = styled(TableCell)(() => ({
+    whiteSpace: 'break-spaces',
+    textAlign: 'center',
+}));
+
 const StyledHeaderTableRow = styled(TableRow)(({ theme }) => {
     return {
         '& th, & td': standardText(theme),
@@ -89,7 +78,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => {
 });
 const StyledStickyTableCell = styled(TableCell)(() => ({
     position: 'sticky',
-    backgroundColor: 'white',
+    backgroundColor: backgroundColorColumn,
     left: 0,
 }));
 
@@ -132,18 +121,14 @@ export const BookableSpacesDashboard = ({
         return hasThisFacility ? tickIcon(`Space has ${facilityType.facility_type_name}`) : null;
     }
 
-    const getColumnBackgroundColor = ii => (ii % 2 === 0 ? '#f0f0f0' : 'inherit');
+    const getColumnBackgroundColor = ii => (ii % 2 === 0 ? backgroundColorColumn : 'inherit');
 
     function displayListOfBookableSpaces() {
         const tableDescription = 'Manage Spaces';
         return (
             <>
                 <StyledTableContainer>
-                    <Table
-                        // stickyHeader
-                        aria-label={tableDescription}
-                        aria-describedby="tableDescriptionElement"
-                    >
+                    <Table aria-label={tableDescription} aria-describedby="tableDescriptionElement">
                         <StyledTableHead>
                             {facilityTypeList?.data?.facility_types?.length > 0 && (
                                 // top row of the two-row table head, to label the facilities block
@@ -168,20 +153,23 @@ export const BookableSpacesDashboard = ({
                                 </StyledHeaderTableRow>
                             )}
                             <StyledHeaderTableRow>
-                                <StyledStickyTableCell component="th">Name</StyledStickyTableCell>
+                                <StyledStickyTableCell
+                                    component="th"
+                                    sx={{ backgroundColor: { backgroundColorColumn } }}
+                                >
+                                    Name
+                                </StyledStickyTableCell>
                                 <TableCell component="th">Space location</TableCell>
                                 {facilityTypeList?.data?.facility_types?.length > 0 &&
                                     facilityTypeList?.data?.facility_types?.map((facilityType, ii) => {
                                         return (
-                                            <TableCell
+                                            <StyledHeadingFacilityTableCell
                                                 component="th"
                                                 key={`facilitytype-${facilityType.facility_type_id}`}
-                                                sx={{
-                                                    backgroundColor: getColumnBackgroundColor(ii),
-                                                }}
+                                                sx={{ backgroundColor: getColumnBackgroundColor(ii) }}
                                             >
                                                 {facilityType.facility_type_name}
-                                            </TableCell>
+                                            </StyledHeadingFacilityTableCell>
                                         );
                                     })}
                             </StyledHeaderTableRow>
@@ -208,6 +196,7 @@ export const BookableSpacesDashboard = ({
                                                             key={`space-${bookableSpace?.space_id}-facilitytype-${facilityType.facility_type_name}`}
                                                             sx={{
                                                                 backgroundColor: getColumnBackgroundColor(ii),
+                                                                textAlign: 'center',
                                                             }}
                                                         >
                                                             {markIfLocationHasFacility(facilityType, bookableSpace)}

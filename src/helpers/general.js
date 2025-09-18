@@ -174,3 +174,13 @@ export function removeClass(element, className) {
 export function addClass(element, className) {
     !!element && !element.classList.contains(className) && element.classList.add(className);
 }
+export const standardText = theme => {
+    return {
+        color: theme.palette.secondary.main,
+        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+        fontSize: '16px',
+        fontWeight: 400,
+        letterSpacing: '0.16px',
+        lineHeight: '1.6',
+    };
+};
