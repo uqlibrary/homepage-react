@@ -151,3 +151,8 @@ esac
 if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
     mkdir -p coverage && cp cobertura-sample-coverage.xml coverage/cobertura-coverage.xml
 fi
+
+printf "CONTENTS OF THE COVERAGE DIRECTORY:\n"
+ls -la coverage || echo "(No coverage directory)"
+
+
