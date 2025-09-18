@@ -211,7 +211,7 @@ export const isInDLOROwningTeam = (account, dlorItem, dlorTeamList) => {
     );
 };
 
-export const isADlorTeamMember = (account, dlorTeamList) => {
+export const isADlorTeamMember = (account, dlorTeamList = []) => {
     console.log('isADlorTeamMember: account=', account, ' dlorTeamList=', dlorTeamList);
     for (const team of dlorTeamList) {
         if (team.team_members && team.team_members.length > 0) {
