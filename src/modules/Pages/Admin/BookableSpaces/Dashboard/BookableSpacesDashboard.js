@@ -35,22 +35,41 @@ const StyledStandardCard = styled(StandardCard)(() => ({
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
 }));
-const StyledTableRow = styled(TableRow)(() => ({
-    '&:hover': {
-        backgroundColor: 'rgb(189 186 186)',
-        '& td': {
-            backgroundColor: 'rgb(189 186 186)',
-        },
-    },
+const StyledTableContainer = styled(TableContainer)(() => ({
+    position: 'relative',
+    overflow: 'auto',
+    whiteSpace: 'nowrap',
 }));
-const TableHeadingTypography = styled(Typography)(({ theme }) => ({
+const StyledTableHeadingTypography = styled(Typography)(({ theme }) => ({
     marginLeft: '1.5rem',
     marginTop: '1rem',
-    // width: '90%',
     padding: 0,
     [theme.breakpoints.down('md')]: {
         marginLeft: '1rem',
     },
+}));
+const StyledTableHead = styled(TableHead)(() => ({
+    '& tr:first-of-type th': {
+        paddingBottom: 0,
+    },
+    '& th': {
+        position: 'sticky',
+        // height: '100px',
+        top: 0,
+    },
+}));
+const StyledTableRow = styled(TableRow)(() => ({
+    '&:hover': {
+        backgroundColor: 'rgb(189 186 186)',
+        '& th, & td': {
+            backgroundColor: 'rgb(189 186 186)',
+        },
+    },
+}));
+const StyledStickyTableCell = styled(TableCell)(() => ({
+    position: 'sticky',
+    backgroundColor: 'white',
+    left: 0,
 }));
 
 export const BookableSpacesDashboard = ({
@@ -98,13 +117,18 @@ export const BookableSpacesDashboard = ({
         const tableDescription = 'Manage Spaces';
         return (
             <>
-                <TableHeadingTypography component={'h2'} variant={'p'} id="tableDescriptionElement">
+                <StyledTableHeadingTypography component={'h2'} variant={'p'} id="tableDescriptionElement">
                     {tableDescription}
-                </TableHeadingTypography>
-                <TableContainer>
-                    <Table stickyHeader aria-label={tableDescription} aria-describedby="tableDescriptionElement">
-                        <TableHead>
+                </StyledTableHeadingTypography>
+                <StyledTableContainer>
+                    <Table
+                        // stickyHeader
+                        aria-label={tableDescription}
+                        aria-describedby="tableDescriptionElement"
+                    >
+                        <StyledTableHead>
                             {facilityTypeList?.data?.facility_types?.length > 0 && (
+                                // top row of the two-row table head, to label the facilities block
                                 <TableRow>
                                     {[...Array(2).keys()].map((unused, index) => (
                                         <TableCell
@@ -126,7 +150,7 @@ export const BookableSpacesDashboard = ({
                                 </TableRow>
                             )}
                             <TableRow>
-                                <TableCell component="th">Name</TableCell>
+                                <StyledStickyTableCell component="th">Name</StyledStickyTableCell>
                                 <TableCell component="th">Space location</TableCell>
                                 {facilityTypeList?.data?.facility_types?.length > 0 &&
                                     facilityTypeList?.data?.facility_types?.map((facilityType, ii) => {
@@ -143,7 +167,7 @@ export const BookableSpacesDashboard = ({
                                         );
                                     })}
                             </TableRow>
-                        </TableHead>
+                        </StyledTableHead>
                         <tbody>
                             {bookableSpacesRoomList?.data?.locations?.map(bookableSpace => {
                                 return (
@@ -151,14 +175,10 @@ export const BookableSpacesDashboard = ({
                                         key={`space-${bookableSpace?.space_id}`}
                                         data-testid="exampaper-desktop-originals-table-header"
                                     >
-                                        <TableCell
-                                            component="th"
-                                            scope="col"
-                                            sx={{ position: 'sticky', left: 0, zIndex: 10 }}
-                                        >
+                                        <StyledStickyTableCell component="th" scope="col">
                                             <div>{bookableSpace?.space_name}</div>
                                             <div>{bookableSpace?.space_type}</div>
-                                        </TableCell>
+                                        </StyledStickyTableCell>
 
                                         <TableCell>{getFriendlyLocationDescription(bookableSpace)}</TableCell>
 
@@ -183,13 +203,13 @@ export const BookableSpacesDashboard = ({
                             })}
                         </tbody>
                     </Table>
-                </TableContainer>
+                </StyledTableContainer>
             </>
         );
     }
 
     return (
-        <StandardPage title="Library spaces management">
+        <StandardPage title="Spaces">
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
                     <Grid container spacing={3}>

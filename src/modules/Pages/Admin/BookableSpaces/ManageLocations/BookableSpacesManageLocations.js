@@ -199,7 +199,7 @@ function addBreadcrumbsToSiteHeader() {
 
             const listItems = [
                 `<li class="uq-breadcrumb__item">
-                     <a class="uq-breadcrumb__link" id="secondlevel-site-breadcrumb-link" data-testid="secondlevel-site-title" href="/spaces/manage">Admin</a>
+                     <a class="uq-breadcrumb__link" id="secondlevel-site-breadcrumb-link" data-testid="secondlevel-site-title" href="/admin/spaces">Admin</a>
                  </li>`,
                 '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Location management</span></li>',
             ];
