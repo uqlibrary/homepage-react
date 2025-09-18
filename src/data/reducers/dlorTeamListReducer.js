@@ -3,7 +3,7 @@ import * as actions from 'data/actions/actionTypes';
 export const initialState = {
     dlorTeamListLoading: null,
     dlorTeamListError: null,
-    dlorTeamList: null,
+    dlorTeamList: [],
 };
 
 const handlers = {

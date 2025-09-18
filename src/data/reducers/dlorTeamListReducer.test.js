@@ -16,7 +16,7 @@ describe('dlor team list reducer', () => {
         const test = dlorTeamListReducer(emptyState, { type: actions.DLOR_TEAMLIST_LOADING });
         expect(test).toEqual({
             // ...emptyState,
-            dlorTeamList: null,
+            dlorTeamList: [],
             dlorTeamListLoading: true,
             dlorTeamListError: false,
         });
