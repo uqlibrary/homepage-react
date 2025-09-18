@@ -1,12 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useAccountContext } from 'context';
 
-import { Box } from '@mui/material';
 import { Grid } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableCell from '@mui/material/TableCell';
@@ -15,15 +10,13 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 
-import MenuIcon from '@mui/icons-material/Menu';
-
 import { breadcrumbs } from 'config/routes';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import { spacesAdminLink } from 'modules/Pages/Admin/BookableSpaces/helpers';
+import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 
 const tickIcon = altText => (
     // https://mui.com/material-ui/material-icons/?selected=Done
@@ -112,10 +105,6 @@ export const BookableSpacesDashboard = ({
     facilityTypeListLoading,
     facilityTypeListError,
 }) => {
-    const { account } = useAccountContext();
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookablespacesadmin.title);
@@ -145,62 +134,10 @@ export const BookableSpacesDashboard = ({
 
     const getColumnBackgroundColor = ii => (ii % 2 === 0 ? '#f0f0f0' : 'inherit');
 
-    const handleMenuClick = event => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
-
-    const navigateToManageLocationsPage = () => {
-        window.location.href = spacesAdminLink('/manage/locations', account);
-    };
-
     function displayListOfBookableSpaces() {
         const tableDescription = 'Manage Spaces';
         return (
             <>
-                <div style={{ width: '100%' }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                        <StyledTableHeadingTypography component={'h2'} variant={'p'} id="tableDescriptionElement">
-                            {tableDescription}
-                        </StyledTableHeadingTypography>
-                        <IconButton
-                            color="primary"
-                            aria-controls={open ? 'admin-spaces-menu' : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={open ? 'true' : undefined}
-                            onClick={handleMenuClick}
-                            data-testid="admin-spaces-menu-button"
-                            id="admin-spaces-menu-button"
-                            aria-label="Admin menu"
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                    </Box>
-                    <Menu
-                        id="admin-spaces-menu"
-                        data-testid="admin-spaces-menu"
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleMenuClose}
-                        MenuListProps={{
-                            'aria-labelledby': 'admin-spaces-menu-button',
-                        }}
-                    >
-                        <MenuItem
-                            onClick={() => {
-                                navigateToManageLocationsPage();
-                                /* istanbul ignore next */
-                                handleMenuClose();
-                            }}
-                            data-testid="admin-spaces-visit-manage-locations-button"
-                        >
-                            Manage Locations
-                        </MenuItem>
-                    </Menu>
-                </div>
                 <StyledTableContainer>
                     <Table
                         // stickyHeader
@@ -291,6 +228,8 @@ export const BookableSpacesDashboard = ({
 
     return (
         <StandardPage title="Spaces">
+            <HeaderBar pageTitle="Manage Spaces" currentPage="dashboard" />
+
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
                     <Grid container spacing={3}>

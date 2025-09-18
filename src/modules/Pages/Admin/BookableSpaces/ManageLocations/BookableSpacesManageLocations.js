@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Button from '@mui/material/Button';
 import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 
 import EditIcon from '@mui/icons-material/Edit';
+
+import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -62,7 +64,7 @@ const StyledMainDialog = styled('dialog')(({ theme }) => ({
         '& div': {
             marginBottom: '0.2rem',
         },
-        '& div:not(:first-child)': {
+        '& div:not(:first-of-type)': {
             fontWeight: '300',
         },
     },
@@ -996,7 +998,9 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
     }
 
     return (
-        <StandardPage title="Spaces - manage locations">
+        <StandardPage title="Spaces">
+            <HeaderBar pageTitle="Manage locations" currentPage="manage-locations" />
+
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
                     <Grid container spacing={3} style={{ position: 'relative' }}>

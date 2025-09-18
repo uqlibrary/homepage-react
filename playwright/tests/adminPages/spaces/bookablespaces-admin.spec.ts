@@ -18,14 +18,18 @@ test.describe('Spaces Dashboard admin', () => {
         await page.goto('/admin/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
 
-        await expect(page.getByTestId('admin-spaces-visit-manage-locations-button')).not.toBeVisible();
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
+
+        const visitManageLocationsButton = page.getByTestId('admin-spaces-visit-manage-locations-button');
+
+        await expect(visitManageLocationsButton).not.toBeVisible();
         await expect(page.getByTestId('admin-spaces-menu')).not.toBeVisible();
         await expect(page.getByTestId('admin-spaces-menu-button')).toBeVisible();
         page.getByTestId('admin-spaces-menu-button').click();
         await expect(page.getByTestId('admin-spaces-menu')).toBeVisible();
-        await expect(page.getByTestId('admin-spaces-visit-manage-locations-button')).toBeVisible();
+        await expect(visitManageLocationsButton).toBeVisible();
 
-        page.getByTestId('admin-spaces-visit-manage-locations-button').click();
+        visitManageLocationsButton.click();
         await expect(page).toHaveURL('http://localhost:2020/admin/spaces/manage/locations?user=libSpaces');
     });
 });
@@ -34,7 +38,9 @@ test.describe('Spaces Location admin', () => {
     test('Shows a basic page for Spaces Location Admin', async ({ page }) => {
         await page.goto('/admin/spaces/manage/locations?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('body').getByText(/Spaces - manage locations/)).toBeVisible();
+
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage locations/)).toBeVisible();
         await expect(page.getByTestId('spaces-location-wrapper').locator('> *')).toHaveCount(16); // 3 locations with 4 buildings 8 floors + an add button
 
         // ground floors correctly marked
@@ -50,7 +56,9 @@ test.describe('Spaces Location admin', () => {
     test('full list is accessible', async ({ page }) => {
         await page.goto('/admin/spaces/manage/locations?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('body').getByText(/Spaces - manage locations/)).toBeVisible();
+
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage locations/)).toBeVisible();
 
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
@@ -903,5 +911,24 @@ test.describe('Spaces Location admin', () => {
             .getByTestId(`dialog-cancel-button`)
             .click();
         await expect(page.getByTestId('main-dialog').locator('h2')).not.toBeVisible();
+    });
+    test('can navigate from manage locations to dashboard', async ({ page }) => {
+        await page.goto('/admin/spaces/manage/locations?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage locations/)).toBeVisible();
+
+        const visitDashBoardButton = page.getByTestId('admin-spaces-visit-dashboard-button');
+
+        await expect(visitDashBoardButton).not.toBeVisible();
+        await expect(page.getByTestId('admin-spaces-menu')).not.toBeVisible();
+        await expect(page.getByTestId('admin-spaces-menu-button')).toBeVisible();
+        page.getByTestId('admin-spaces-menu-button').click();
+        await expect(page.getByTestId('admin-spaces-menu')).toBeVisible();
+        await expect(visitDashBoardButton).toBeVisible();
+
+        visitDashBoardButton.click();
+        await expect(page).toHaveURL('http://localhost:2020/admin/spaces?user=libSpaces');
     });
 });
