@@ -67,14 +67,33 @@ const StyledTableHead = styled(TableHead)(() => ({
         top: 0,
     },
 }));
-const StyledTableRow = styled(TableRow)(() => ({
-    '&:hover': {
-        backgroundColor: 'rgb(189 186 186)',
-        '& th, & td': {
+const standardText = theme => {
+    return {
+        color: theme.palette.secondary.main,
+        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+        fontSize: '16px',
+        fontWeight: 400,
+        letterSpacing: '0.16px',
+        lineHeight: '1.6',
+    };
+};
+const StyledHeaderTableRow = styled(TableRow)(({ theme }) => {
+    return {
+        '& th, & td': standardText(theme),
+    };
+});
+
+const StyledTableRow = styled(TableRow)(({ theme }) => {
+    return {
+        '& th, & td': standardText(theme),
+        '&:hover': {
             backgroundColor: 'rgb(189 186 186)',
+            '& th, & td': {
+                backgroundColor: 'rgb(189 186 186)',
+            },
         },
-    },
-}));
+    };
+});
 const StyledStickyTableCell = styled(TableCell)(() => ({
     position: 'sticky',
     backgroundColor: 'white',
@@ -191,7 +210,7 @@ export const BookableSpacesDashboard = ({
                         <StyledTableHead>
                             {facilityTypeList?.data?.facility_types?.length > 0 && (
                                 // top row of the two-row table head, to label the facilities block
-                                <TableRow>
+                                <StyledHeaderTableRow>
                                     {[...Array(2).keys()].map((unused, index) => (
                                         <TableCell
                                             component="th"
@@ -209,9 +228,9 @@ export const BookableSpacesDashboard = ({
                                     >
                                         Facilities
                                     </TableCell>
-                                </TableRow>
+                                </StyledHeaderTableRow>
                             )}
-                            <TableRow>
+                            <StyledHeaderTableRow>
                                 <StyledStickyTableCell component="th">Name</StyledStickyTableCell>
                                 <TableCell component="th">Space location</TableCell>
                                 {facilityTypeList?.data?.facility_types?.length > 0 &&
@@ -228,7 +247,7 @@ export const BookableSpacesDashboard = ({
                                             </TableCell>
                                         );
                                     })}
-                            </TableRow>
+                            </StyledHeaderTableRow>
                         </StyledTableHead>
                         <tbody>
                             {bookableSpacesRoomList?.data?.locations?.map(bookableSpace => {
