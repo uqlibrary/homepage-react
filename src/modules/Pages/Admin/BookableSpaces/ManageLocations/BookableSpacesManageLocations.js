@@ -12,8 +12,8 @@ import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { breadcrumbs } from 'config/routes';
 import { pluralise } from 'helpers/general';
+import { addBreadcrumbsToSiteHeader } from '../helpers';
 
 const StyledStandardCard = styled(StandardCard)(() => ({
     '& .MuiCardHeader-root': {
@@ -183,40 +183,11 @@ const StyledGroundFloorIndicatorSpan = styled('span')(() => ({
 
 const getIdentifierForFloorGroundFloorIndicator = floorId => `groundfloor-for-${floorId}`;
 
-function addBreadcrumbsToSiteHeader() {
-    const awaitSiteHeader = setInterval(() => {
-        const siteHeader = document.querySelector('uq-site-header');
-        const siteHeaderShadowRoot = siteHeader.shadowRoot;
-
-        if (!!siteHeaderShadowRoot) {
-            clearInterval(awaitSiteHeader);
-
-            const breadcrumbParent = !!siteHeaderShadowRoot && siteHeaderShadowRoot.getElementById('breadcrumb_nav');
-            if (breadcrumbParent.children.length > 2) {
-                return; // already added
-            }
-
-            !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookablespaces.title);
-            !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespaces.pathname);
-
-            const listItems = [
-                `<li class="uq-breadcrumb__item">
-                     <a class="uq-breadcrumb__link" id="secondlevel-site-breadcrumb-link" data-testid="secondlevel-site-title" href="/admin/spaces">Admin</a>
-                 </li>`,
-                '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Location management</span></li>',
-            ];
-            !!listItems &&
-                listItems.length > 0 &&
-                listItems.forEach(item => {
-                    breadcrumbParent.insertAdjacentHTML('beforeend', item);
-                });
-        }
-    }, 100);
-}
-
 export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoading, siteListError }) => {
     React.useEffect(() => {
-        addBreadcrumbsToSiteHeader();
+        addBreadcrumbsToSiteHeader([
+            '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Location management</span></li>',
+        ]);
 
         if (siteListError === null && siteListLoading === null && siteList === null) {
             actions.loadBookableSpaceSites();

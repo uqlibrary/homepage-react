@@ -1,4 +1,4 @@
-import { fullPath } from 'config/routes';
+import { breadcrumbs, fullPath } from 'config/routes';
 import { isSpacesAdminUser } from 'helpers/access';
 
 export const getPathRoot = () => {
@@ -36,3 +36,34 @@ export const spacesAdminLink = (spacesPath = '', /* istanbul ignore next */ acco
         ? `${getPathRoot()}/admin/spaces${spacesPath}${userString}`
         : `${getPathRoot()}/spaces${spacesPath}${userString}`;
 };
+
+export function addBreadcrumbsToSiteHeader(localChildren) {
+    const awaitSiteHeader = setInterval(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        const siteHeaderShadowRoot = siteHeader.shadowRoot;
+
+        if (!!siteHeaderShadowRoot) {
+            clearInterval(awaitSiteHeader);
+
+            const breadcrumbParent = !!siteHeaderShadowRoot && siteHeaderShadowRoot.getElementById('breadcrumb_nav');
+            if (breadcrumbParent.children.length > 2) {
+                return; // already added
+            }
+
+            !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookablespaces.title);
+            !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespaces.pathname);
+
+            const listItems = [
+                `<li class="uq-breadcrumb__item">
+                     <a class="uq-breadcrumb__link" id="secondlevel-site-breadcrumb-link" data-testid="secondlevel-site-title" href="/admin/spaces">Admin</a>
+                 </li>`,
+                ...localChildren,
+            ];
+            !!listItems &&
+                listItems.length > 0 &&
+                listItems.forEach(item => {
+                    breadcrumbParent.insertAdjacentHTML('beforeend', item);
+                });
+        }
+    }, 100);
+}
