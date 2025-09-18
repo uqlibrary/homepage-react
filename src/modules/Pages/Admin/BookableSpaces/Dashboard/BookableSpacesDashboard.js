@@ -54,10 +54,10 @@ const StyledTableHead = styled(TableHead)(() => ({
     '& tr:first-of-type th': {
         paddingBottom: 0,
     },
-    '& th': {
+    '& th:first-of-type': {
         position: 'sticky',
-        // height: '100px',
-        top: 0,
+        backgroundColor: 'white',
+        left: 0,
     },
 }));
 const standardText = theme => {

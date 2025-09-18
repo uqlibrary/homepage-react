@@ -15,10 +15,17 @@ const StyledTableHeadingTypography = styled(Typography)(({ theme }) => ({
         marginLeft: '1rem',
     },
 }));
+const StyledBox = styled(Box)(() => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: '1rem',
+    paddingBottom: '1rem',
+}));
 
 export const HeaderBar = ({ pageTitle, currentPage }) => {
     return (
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginBottom: '1rem;' }}>
+        <StyledBox>
             <StyledTableHeadingTypography
                 component={'h2'}
                 variant={'p'}
@@ -28,7 +35,7 @@ export const HeaderBar = ({ pageTitle, currentPage }) => {
                 {pageTitle}
             </StyledTableHeadingTypography>
             <AdminButton currentPage={currentPage} />
-        </Box>
+        </StyledBox>
     );
 };
 
