@@ -1509,6 +1509,8 @@ mock.onGet('exams/course/FREN1010/summary')
         }
         return [200, { status: 'OK', data: { floor_id: 99, other_fields: '...' } }];
     })
+    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'space' }).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
 
     // .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'campus', id: '.*' }).apiUrl)))
     // .reply(() => [200, { status: 'OK' }])
@@ -1518,12 +1520,16 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, { status: 'OK' }])
     .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'floor', id: '.*' }).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'space', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
 
     .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'campus', id: '.*' }).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
     .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'building', id: '.*' }).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
     .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'floor', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'space', id: '.*' }).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
     // .onDelete(/bookable_spaces\/campus|building|floor\/.*/)
     // .reply(() => {

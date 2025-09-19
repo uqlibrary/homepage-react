@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import { AdminButton } from 'modules/Pages/Admin/BookableSpaces/AdminButton';
 
 const StyledTableHeadingTypography = styled(Typography)(({ theme }) => ({
-    marginLeft: '1.5rem',
+    // marginLeft: '1.5rem',
     marginTop: '1rem',
     padding: 0,
     [theme.breakpoints.down('md')]: {

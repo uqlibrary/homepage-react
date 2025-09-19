@@ -18,21 +18,17 @@ export const AdminButton = ({ currentPage }) => {
     };
     const open = Boolean(anchorEl);
 
-    const handleMenuClick = event => {
+    const openMenu = event => {
         setAnchorEl(event.currentTarget);
     };
 
-    const handleMenuClose = () => {
+    const closeMenu = () => {
         setAnchorEl(null);
     };
 
-    const navigateToDashboardPage = () => {
-        window.location.href = spacesAdminLink('', account);
-    };
-
-    const navigateToManageLocationsPage = () => {
-        window.location.href = spacesAdminLink('/manage/locations', account);
-    };
+    function navigateToPage(spacesPath) {
+        window.location.href = spacesAdminLink(spacesPath, account);
+    }
 
     return (
         <>
@@ -41,7 +37,7 @@ export const AdminButton = ({ currentPage }) => {
                 aria-controls={open ? 'admin-spaces-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : 'false'}
-                onClick={handleMenuClick}
+                onClick={openMenu}
                 data-testid="admin-spaces-menu-button"
                 id="admin-spaces-menu-button"
                 aria-label="Admin menu"
@@ -53,37 +49,44 @@ export const AdminButton = ({ currentPage }) => {
                 data-testid="admin-spaces-menu"
                 anchorEl={anchorEl}
                 open={open}
-                onClose={handleMenuClose}
+                onClose={closeMenu}
                 MenuListProps={{
                     'aria-labelledby': 'admin-spaces-menu-button',
                 }}
                 sx={{ backgroundColor: 'white' }}
             >
-                {currentPage !== 'dashboard' && (
-                    <MenuItem
-                        onClick={() => {
-                            navigateToDashboardPage();
-                            /* istanbul ignore next */
-                            handleMenuClose();
-                        }}
-                        data-testid="admin-spaces-visit-dashboard-button"
-                    >
-                        Dashboard
-                    </MenuItem>
-                )}
+                <MenuItem
+                    onClick={() => {
+                        currentPage !== 'dashboard' && navigateToPage('');
+                        /* istanbul ignore next */
+                        currentPage !== 'dashboard' && closeMenu();
+                    }}
+                    data-testid="admin-spaces-visit-dashboard-button"
+                >
+                    Dashboard
+                </MenuItem>
 
-                {currentPage !== 'manage-locations' && (
-                    <MenuItem
-                        onClick={() => {
-                            navigateToManageLocationsPage();
-                            /* istanbul ignore next */
-                            handleMenuClose();
-                        }}
-                        data-testid="admin-spaces-visit-manage-locations-button"
-                    >
-                        Manage Locations
-                    </MenuItem>
-                )}
+                <MenuItem
+                    onClick={() => {
+                        currentPage !== 'manage-locations' && navigateToPage('/manage/locations');
+                        /* istanbul ignore next */
+                        currentPage !== 'manage-locations' && closeMenu();
+                    }}
+                    data-testid="admin-spaces-visit-manage-locations-button"
+                >
+                    Manage Locations
+                </MenuItem>
+
+                <MenuItem
+                    onClick={() => {
+                        currentPage !== 'add-space' && navigateToPage('/add');
+                        /* istanbul ignore next */
+                        currentPage !== 'add-space' && closeMenu();
+                    }}
+                    data-testid="admin-spaces-visit-add-space-button"
+                >
+                    Add new Space
+                </MenuItem>
             </Menu>
         </>
     );

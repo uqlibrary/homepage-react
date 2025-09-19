@@ -52,9 +52,11 @@ export const DLOFilterManage = lazy(() => lazyRetry(() => import('modules/Pages/
 export const DLOOwnTeamList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamListContainer')));
 export const DLOOwnTeamEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamEditContainer')));
 
-export const BookableSpacesList = lazy(() => lazyRetry(() => import('../../Pages/BookableSpaces/BookableSpacesListContainer')));
-export const BookableSpacesDashboard = lazy(() => lazyRetry(() => import('../../Pages/Admin/BookableSpaces/Dashboard/./BookableSpacesDashboardContainer')));
-export const BookableSpacesManageLocations = lazy(() => lazyRetry(() => import('../../Pages/Admin/BookableSpaces/ManageLocations/BookableSpacesManageLocationsContainer')));
+export const BookableSpacesList = lazy(() => lazyRetry(() => import('modules/Pages/BookableSpaces/BookableSpacesListContainer')));
+
+export const BookableSpacesDashboard = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Dashboard/BookableSpacesDashboardContainer')));
+export const BookableSpacesManageLocations = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/ManageLocations/BookableSpacesManageLocationsContainer')));
+export const BookableSpacesAddSpace = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/AddSpace/BookableSpacesAddSpaceContainer')));
 
 // always load components
 export { HomePageContainer as Index } from 'modules/HomePage';

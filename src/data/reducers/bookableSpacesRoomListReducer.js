@@ -4,6 +4,9 @@ export const initialState = {
     bookableSpacesRoomList: null,
     bookableSpacesRoomListLoading: null,
     bookableSpacesRoomListError: null,
+    bookableSpacesRoomAdding: null,
+    bookableSpacesRoomAddError: null,
+    bookableSpacesRoomAddResult: null,
 };
 
 const handlers = {
@@ -29,6 +32,25 @@ const handlers = {
     // [actions.SPACES_ROOM_LIST_CLEAR]: () => ({
     //     ...initialState,
     // }),
+    [actions.SPACES_LOCATION_ADDING]: state => ({
+        ...initialState,
+        ...state,
+        bookableSpacesRoomAdding: true,
+        bookableSpacesRoomAddError: false,
+    }),
+    [actions.SPACES_LOCATION_ADDED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        bookableSpacesRoomAdding: false,
+        bookableSpacesRoomAddError: false,
+        bookableSpacesRoomAddResult: action.payload,
+    }),
+    [actions.SPACES_LOCATION_ADD_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        bookableSpacesRoomAdding: false,
+        bookableSpacesRoomAddError: action.payload,
+    }),
 };
 
 export default function bookableSpacesRoomListReducer(state = initialState, action) {

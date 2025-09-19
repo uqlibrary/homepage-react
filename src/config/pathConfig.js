@@ -33,6 +33,7 @@ export const pathConfig = {
         testntagmanageusers: '/admin/testntag/manage/users',
         bookableSpacesDashboard: '/admin/spaces',
         bookableSpacesManageLocations: '/admin/spaces/manage/locations',
+        bookableSpacesAdd: '/admin/spaces/add',
     },
     bookExamBooth: '/book-exam-booth',
     dlorProtected: '/digital-learning-hub-list',
