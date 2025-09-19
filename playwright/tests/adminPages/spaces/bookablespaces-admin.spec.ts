@@ -76,9 +76,9 @@ test.describe('Spaces Location admin', () => {
             const dialog = page.getByTestId('main-dialog');
 
             await expect(dialog.getByTestId('add-campus-heading')).toContainText('Add campus');
-            await expect(dialog.getByTestId('add-campus-name').locator('label')).toContainText('Site name');
+            await expect(dialog.getByTestId('add-campus-name').locator('label')).toContainText('Campus name');
             await expect(dialog.getByTestId('add-campus-name').locator('input')).toBeVisible();
-            await expect(dialog.getByTestId('add-campus-number').locator('label')).toContainText('Site number');
+            await expect(dialog.getByTestId('add-campus-number').locator('label')).toContainText('Campus number');
             await expect(dialog.getByTestId('add-campus-number').locator('input')).toBeVisible();
 
             await expect(dialog.getByTestId('dialog-delete-button')).not.toBeVisible();
@@ -93,14 +93,14 @@ test.describe('Spaces Location admin', () => {
 
             await assertAccessibility(page, '[data-testid="main-dialog"]');
         });
-        test('validates properly for two empty site fields', async ({ page }) => {
+        test('validates properly for two empty campus fields', async ({ page }) => {
             await assertCanOpenAddNewCampusDialog(page);
 
             // save without entering anything in the form
             await page.getByTestId('dialog-save-button').click();
-            await assertToastHasMessage(page, 'Please enter site name and number');
+            await assertToastHasMessage(page, 'Please enter campus name and number');
         });
-        test('validates properly - site number field empty gives an error', async ({ page }) => {
+        test('validates properly - campus number field empty gives an error', async ({ page }) => {
             await assertCanOpenAddNewCampusDialog(page);
 
             // save after not entering the number field
@@ -111,9 +111,9 @@ test.describe('Spaces Location admin', () => {
                 .fill('name of new campus');
             await page.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Please enter site name and number');
+            await assertToastHasMessage(page, 'Please enter campus name and number');
         });
-        test('validates properly - site name field empty gives an error', async ({ page }) => {
+        test('validates properly - campus name field empty gives an error', async ({ page }) => {
             await assertCanOpenAddNewCampusDialog(page);
 
             // save after not entering the name field
@@ -123,9 +123,9 @@ test.describe('Spaces Location admin', () => {
                 .locator('input')
                 .fill('number of new campus');
             await page.getByTestId('dialog-save-button').click();
-            await assertToastHasMessage(page, 'Please enter site name and number');
+            await assertToastHasMessage(page, 'Please enter campus name and number');
         });
-        test('can save with valid site data', async ({ page }) => {
+        test('can save with valid campus data', async ({ page }) => {
             await page.goto('/admin/spaces/manage/locations?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('add-new-campus-button')).toContainText('Add new Campus');
@@ -142,7 +142,7 @@ test.describe('Spaces Location admin', () => {
                 .locator('input')
                 .fill('0076');
             await page.getByTestId('dialog-save-button').click();
-            await assertToastHasMessage(page, 'Site added');
+            await assertToastHasMessage(page, 'Campus added');
             // cant assert change happens as mock list reloads
         });
     });
@@ -157,14 +157,14 @@ test.describe('Spaces Location admin', () => {
             await expect(page.getByTestId('main-dialog').locator('h2')).toContainText('Edit campus details');
         }
 
-        test('edit site form has expected entries', async ({ page }) => {
+        test('edit campus form has expected entries', async ({ page }) => {
             await assertCanOpenEditCampusDialog(page, 1);
 
             const dialog = page.getByTestId('main-dialog');
             await expect(dialog.locator('h2')).toContainText('Edit campus details');
-            await expect(dialog.getByTestId('edit-campus-name').locator('label')).toContainText('Site name');
+            await expect(dialog.getByTestId('edit-campus-name').locator('label')).toContainText('Campus name');
             await expect(dialog.getByTestId('edit-campus-name').locator('input')).toHaveValue('St Lucia');
-            await expect(dialog.getByTestId('edit-campus-number').locator('label')).toContainText('Site number');
+            await expect(dialog.getByTestId('edit-campus-number').locator('label')).toContainText('Campus number');
             await expect(dialog.getByTestId('edit-campus-number').locator('input')).toHaveValue('01');
 
             await expect(dialog.locator('h3')).toContainText('Buildings');
@@ -203,7 +203,7 @@ test.describe('Spaces Location admin', () => {
                 .clear();
             await dialog.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Please enter site name and number');
+            await assertToastHasMessage(page, 'Please enter campus name and number');
         });
         test('validates properly - number field empty gives an error', async ({ page }) => {
             await assertCanOpenEditCampusDialog(page, 1);
@@ -215,7 +215,7 @@ test.describe('Spaces Location admin', () => {
                 .clear();
             await dialog.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Please enter site name and number');
+            await assertToastHasMessage(page, 'Please enter campus name and number');
         });
         test('validates properly - both fields empty gives an error', async ({ page }) => {
             await assertCanOpenEditCampusDialog(page, 1);
@@ -231,9 +231,9 @@ test.describe('Spaces Location admin', () => {
                 .clear();
             await dialog.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Please enter site name and number');
+            await assertToastHasMessage(page, 'Please enter campus name and number');
         });
-        test('can save changes to a site', async ({ page }) => {
+        test('can save changes to a campus', async ({ page }) => {
             await assertCanOpenEditCampusDialog(page, 1);
             const dialog = page.getByTestId('main-dialog');
 
@@ -247,10 +247,10 @@ test.describe('Spaces Location admin', () => {
                 .type('9');
             await dialog.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Change to site saved');
+            await assertToastHasMessage(page, 'Change to campus saved');
             // cant assert change happens as mock list reloads
         });
-        test('can close the site dialog with the cancel button', async ({ page }) => {
+        test('can close the campus dialog with the cancel button', async ({ page }) => {
             await assertCanOpenEditCampusDialog(page, 1);
             const dialog = page.getByTestId('main-dialog');
 
@@ -259,7 +259,7 @@ test.describe('Spaces Location admin', () => {
 
             await expect(page.getByTestId('main-dialog')).not.toBeVisible();
         });
-        test('can close the site dialog with the escape key', async ({ page }) => {
+        test('can close the campus dialog with the escape key', async ({ page }) => {
             await assertCanOpenEditCampusDialog(page, 1);
             const dialog = page.getByTestId('main-dialog');
 
@@ -267,13 +267,13 @@ test.describe('Spaces Location admin', () => {
 
             await expect(page.getByTestId('main-dialog')).not.toBeVisible();
         });
-        test('delete a site dialog is accessible', async ({ page }) => {
+        test('delete a campus dialog is accessible', async ({ page }) => {
             await assertCanOpenEditCampusDialog(page, 1);
             await clickDeleteButton(page);
 
             await assertAccessibility(page, '[data-testid="confirmation-dialog"]');
         });
-        test('can delete a site', async ({ page }) => {
+        test('can delete a campus', async ({ page }) => {
             await assertCanOpenEditCampusDialog(page, 1);
             const editDialog = page.getByTestId('main-dialog');
 
@@ -296,7 +296,7 @@ test.describe('Spaces Location admin', () => {
             await expect(editDialog.getByTestId('edit-campus-dialog-heading')).not.toBeVisible(); // the main dialog closed
             // cant assert change happens as mock list reloads
         });
-        test('can cancel a deletion of a site', async ({ page }) => {
+        test('can cancel a deletion of a campus', async ({ page }) => {
             await assertCanOpenEditCampusDialog(page, 1);
             const editDialog = page.getByTestId('main-dialog');
             await expect(editDialog.getByTestId('edit-campus-dialog-heading')).toBeVisible();
@@ -312,7 +312,7 @@ test.describe('Spaces Location admin', () => {
             await expect(editDialog).toBeVisible();
             await expect(editDialog.getByTestId('edit-campus-dialog-heading')).toBeVisible(); // the main dialog has not closed
         });
-        test.describe('Add a building to a site', () => {
+        test.describe('Add a building to a campus', () => {
             async function assertCanOpenAddBuildingDialog(page: Page) {
                 await assertCanOpenEditCampusDialog(page, 1);
                 const dialog = page.getByTestId('main-dialog');
@@ -446,7 +446,7 @@ test.describe('Spaces Location admin', () => {
             await expect(floorList.locator('ul li:last-of-type label')).toContainText('None');
             await expect(floorList.locator('ul li:last-of-type input')).toBeChecked();
 
-            const campusList = dialog.getByTestId('building-site-list');
+            const campusList = dialog.getByTestId('building-campus-list');
             await expect(campusList.locator('h3')).toContainText('Change Campus');
             await expect(campusList).toBeVisible();
             await expect(campusList.locator('ul > *')).toHaveCount(3);

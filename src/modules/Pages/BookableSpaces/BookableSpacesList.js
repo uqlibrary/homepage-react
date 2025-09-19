@@ -239,7 +239,9 @@ export const BookableSpacesList = ({
                                             >
                                                 {
                                                     <>
-                                                        <div>{getFriendlyLocationDescription(bookableSpace)}</div>
+                                                        <div data-testid="{locationKey}">
+                                                            {getFriendlyLocationDescription(bookableSpace)}
+                                                        </div>
                                                         <p>{bookableSpace?.space_description}</p>
                                                         {bookableSpace?.space_photo_url && (
                                                             <StyledLocationPhoto

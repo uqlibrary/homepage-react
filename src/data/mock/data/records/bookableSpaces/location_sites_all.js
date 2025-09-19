@@ -1,9 +1,9 @@
 export default {
     data: [
         {
-            "site_id": 1,
-            "site_id_displayed": "01",
-            "site_name": "St Lucia",
+            "campus_id": 1,
+            "campus_id_displayed": "01",
+            "campus_name": "St Lucia",
             "buildings": [
                 {
                     "building_id": 1,
@@ -41,9 +41,9 @@ export default {
             ]
         },
         {
-            "site_id": 2,
-            "site_id_displayed": "29",
-            "site_name": "Gatton",
+            "campus_id": 2,
+            "campus_id_displayed": "29",
+            "campus_name": "Gatton",
             "buildings": [
                 {
                     "building_id": 8,
@@ -80,9 +80,9 @@ export default {
             ]
         },
         {
-            "site_id": 3,
-            "site_id_displayed": "99",
-            "site_name": "Newsite",
+            "campus_id": 3,
+            "campus_id_displayed": "99",
+            "campus_name": "Newsite",
             "buildings": []
         },
     ]

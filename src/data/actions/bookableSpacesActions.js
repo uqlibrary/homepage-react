@@ -128,19 +128,19 @@ export function deleteBookableSpaceLocation({ locationType, locationId }) {
     };
 }
 
-export function loadBookableSpaceSites() {
+export function loadBookableSpaceCampuses() {
     return dispatch => {
-        dispatch({ type: actions.SPACES_SITE_LIST_LOADING });
+        dispatch({ type: actions.SPACES_CAMPUS_LIST_LOADING });
         return get(SPACES_SITE_API())
             .then(response => {
                 dispatch({
-                    type: actions.SPACES_SITE_LIST_LOADED,
+                    type: actions.SPACES_CAMPUS_LIST_LOADED,
                     payload: response.data,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.SPACES_SITE_LIST_FAILED,
+                    type: actions.SPACES_CAMPUS_LIST_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
@@ -150,13 +150,13 @@ export function loadBookableSpaceSites() {
 
 export function clearBookableSpaceSitesError() {
     return dispatch => {
-        dispatch({ type: actions.SPACES_SITE_LIST_CLEAR_ERROR });
+        dispatch({ type: actions.SPACES_CAMPUS_LIST_CLEAR_ERROR });
     };
 }
 
 export function clearBookableSpaceSites() {
     return dispatch => {
-        dispatch({ type: actions.SPACES_SITE_LIST_CLEAR });
+        dispatch({ type: actions.SPACES_CAMPUS_LIST_CLEAR });
     };
 }
 

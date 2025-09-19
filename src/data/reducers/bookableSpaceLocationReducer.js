@@ -1,30 +1,30 @@
 import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
-    siteList: null,
-    siteListLoading: null,
-    siteListError: null,
+    campusList: null,
+    campusListLoading: null,
+    campusListError: null,
 };
 
 const handlers = {
-    [actions.SPACES_SITE_LIST_LOADING]: state => ({
+    [actions.SPACES_CAMPUS_LIST_LOADING]: state => ({
         ...initialState,
         ...state,
-        siteListLoading: true,
-        siteListError: null,
+        campusListLoading: true,
+        campusListError: null,
     }),
-    [actions.SPACES_SITE_LIST_LOADED]: (state, action) => ({
+    [actions.SPACES_CAMPUS_LIST_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
-        siteListLoading: false,
-        siteListError: false,
-        siteList: action.payload,
+        campusListLoading: false,
+        campusListError: false,
+        campusList: action.payload,
     }),
-    [actions.SPACES_SITE_LIST_FAILED]: (state, action) => ({
+    [actions.SPACES_CAMPUS_LIST_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
-        siteListLoading: false,
-        siteListError: action.payload,
+        campusListLoading: false,
+        campusListError: action.payload,
     }),
 };
 

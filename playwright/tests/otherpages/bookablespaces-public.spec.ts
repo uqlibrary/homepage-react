@@ -24,6 +24,16 @@ test.describe('Spaces', () => {
             'open from 7am Monday - Friday',
         );
 
+        // the friendly location shows correctly
+        await expect(page.getByTestId('standard-card-01-w431---collaborative-space')).toBeVisible();
+        await expect(page.getByTestId('standard-card-01-w431---collaborative-space')).toContainText(
+            'Westernmost corner, 3rd Floor',
+        );
+        await expect(page.getByTestId('standard-card-01-w431---collaborative-space')).toContainText(
+            'Forgan Smith Building',
+        );
+        await expect(page.getByTestId('standard-card-01-w431---collaborative-space')).toContainText('St Lucia Campus');
+
         // TODO: show breadrumbs are correct
     });
     test('is accessible', async ({ page }) => {

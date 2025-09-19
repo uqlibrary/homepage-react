@@ -22,8 +22,8 @@ export default {
             space_is_ground_floor: 0,
             space_building_id: 1,
             space_building_name: "Forgan Smith Building",
-            space_site_id: 1,
-            space_site_name: "St Lucia",
+            space_campus_id: 1,
+            space_campus_name: "St Lucia",
             facility_types: [{
                 facility_type_id: 1,
                 facilityTypeDisplayName: 'Toilets nearby',
@@ -59,8 +59,8 @@ export default {
             space_is_ground_floor: 1,
             space_building_id: 10,
             space_building_name: "Pharmacy Australia Centre of Excellence",
-            space_site_id: 3,
-            space_site_name: "Dutton Park",
+            space_campus_id: 3,
+            space_campus_name: "Dutton Park",
         }, {
             space_id: "43534",
             space_uuid: "987y_isjgt_9867",
@@ -92,8 +92,8 @@ export default {
             space_is_ground_floor: 0,
             space_building_id: 46,
             space_building_name: "Andrew N. Liveris",
-            space_site_id: 1,
-            space_site_name: "St Lucia",
+            space_campus_id: 1,
+            space_campus_name: "St Lucia",
         }]
     }
 }

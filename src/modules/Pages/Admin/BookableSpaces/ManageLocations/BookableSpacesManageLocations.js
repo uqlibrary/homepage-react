@@ -183,14 +183,14 @@ const StyledGroundFloorIndicatorSpan = styled('span')(() => ({
 
 const getIdentifierForFloorGroundFloorIndicator = floorId => `groundfloor-for-${floorId}`;
 
-export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoading, siteListError }) => {
+export const BookableSpacesManageLocations = ({ actions, campusList, campusListLoading, campusListError }) => {
     React.useEffect(() => {
         addBreadcrumbsToSiteHeader([
             '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Location management</span></li>',
         ]);
 
-        if (siteListError === null && siteListLoading === null && siteList === null) {
-            actions.loadBookableSpaceSites();
+        if (campusListError === null && campusListLoading === null && campusList === null) {
+            actions.loadBookableSpaceCampuses();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -297,8 +297,8 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         const locationType = data?.locationType;
 
         // validate form
-        if (!data.site_name || !data.site_id_displayed) {
-            displayToastMessage('Please enter site name and number', true);
+        if (!data.campus_name || !data.campus_id_displayed) {
+            displayToastMessage('Please enter campus name and number', true);
             return false;
         }
 
@@ -309,12 +309,12 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             actions
                 .addBookableSpaceLocation(data)
                 .then(() => {
-                    displayToastMessage('Site added', false);
+                    displayToastMessage('Campus added', false);
 
-                    actions.loadBookableSpaceSites();
+                    actions.loadBookableSpaceCampuses();
                 })
                 .catch(e => {
-                    console.log('catch: adding new site failed:', e);
+                    console.log('catch: adding new campus failed:', e);
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
@@ -322,18 +322,18 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 });
     }
 
-    const siteFormCore = (siteDetails = {}, formType = 'add') => {
-        const siteName = siteDetails?.site_name ?? '';
-        const siteIdDisplayed = siteDetails?.site_id_displayed ?? '';
+    const campusFormCore = (campusDetails = {}, formType = 'add') => {
+        const campusName = campusDetails?.campus_name ?? '';
+        const campusIdDisplayed = campusDetails?.campus_id_displayed ?? '';
         return `<div>
-            <input  name="locationType" type="hidden" value="site" />
+            <input  name="locationType" type="hidden" value="campus" />
             <div class="dialogRow" data-testid="${formType}-campus-name">
-                <label for="siteName">Site name</label>
-                <input id="siteName" name="site_name" type="text" value="${siteName}" required maxlength="255" />
+                <label for="campusName">Campus name</label>
+                <input id="campusName" name="campus_name" type="text" value="${campusName}" required maxlength="255" />
             </div>
             <div class="dialogRow" data-testid="${formType}-campus-number">
-                <label for="siteNumber">Site number</label>
-                <input id="siteNumber" name="site_id_displayed" type="text" value="${siteIdDisplayed}" required maxlength="10" />
+                <label for="campusNumber">Campus number</label>
+                <input id="campusNumber" name="campus_id_displayed" type="text" value="${campusIdDisplayed}" required maxlength="10" />
             </div>
         </div>`;
     };
@@ -362,7 +362,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 .then(() => {
                     displayToastMessage('Building added', false);
 
-                    actions.loadBookableSpaceSites();
+                    actions.loadBookableSpaceCampuses();
                 })
                 .catch(e => {
                     console.log('catch: adding new building failed:', e);
@@ -383,7 +383,8 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         const locationId = data[`${locationType}Id`];
 
         // validate form
-        const failureMessage = (!data.site_name || !data.site_id_displayed) && 'Please enter site name and number';
+        const failureMessage =
+            (!data.campus_name || !data.campus_id_displayed) && 'Please enter campus name and number';
         if (!!failureMessage) {
             displayToastMessage(failureMessage, true);
             return false;
@@ -397,11 +398,11 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             actions
                 .updateBookableSpaceLocation(Object.fromEntries(formData))
                 .then(() => {
-                    displayToastMessage('Change to site saved', false);
-                    actions.loadBookableSpaceSites();
+                    displayToastMessage('Change to campus saved', false);
+                    actions.loadBookableSpaceCampuses();
                 })
                 .catch(e => {
-                    console.log('catch: saving site ', locationId, 'failed:', e);
+                    console.log('catch: saving campus ', locationId, 'failed:', e);
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
@@ -423,9 +424,9 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             </div>`;
     }
 
-    function showAddBuildingForm(e, siteDetails) {
+    function showAddBuildingForm(e, campusDetails) {
         console.log('showAddBuildingForm');
-        const formBody = `<h2>Add a building to ${siteDetails?.site_name ||
+        const formBody = `<h2>Add a building to ${campusDetails?.campus_name ||
             'unknown'} campus</h2>${buildingCoreForm()}`;
         if (!formBody) {
             return;
@@ -473,7 +474,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 .then(() => {
                     console.log('deleteLocation then');
                     displayToastMessage(successMessage, false);
-                    actions.loadBookableSpaceSites();
+                    actions.loadBookableSpaceCampuses();
                 })
                 .catch(e => {
                     console.log(failureMessage, e);
@@ -484,12 +485,12 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 });
     }
 
-    function deleteSite(e, siteDetails) {
-        console.log('deleteSite', siteDetails);
-        const locationType = 'site';
-        const locationId = siteDetails?.site_id;
-        const successMessage = `${siteDetails?.site_name} campus deleted`;
-        const failureMessage = `catch: deleting site ${locationId} failed:`;
+    function deleteSite(e, campusDetails) {
+        console.log('deleteSite', campusDetails);
+        const locationType = 'campus';
+        const locationId = campusDetails?.campus_id;
+        const successMessage = `${campusDetails?.campus_name} campus deleted`;
+        const failureMessage = `catch: deleting campus ${locationId} failed:`;
         console.log('deleteSite', locationType, locationId);
         deleteLocation(locationType, locationId, successMessage, failureMessage);
     }
@@ -522,11 +523,11 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         !!dialog && dialog.showModal();
     }
 
-    function confirmAndDeleteSite(e, siteDetails) {
-        const line1 = `Do you really want to delete ${siteDetails.site_name} campus?`;
+    function confirmAndDeleteSite(e, campusDetails) {
+        const line1 = `Do you really want to delete ${campusDetails.campus_name} campus?`;
         const line2 = 'This will also delete associated buildings.';
         const confirmationOKButton = document.getElementById('confDialogOkButton');
-        !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteSite(e, siteDetails));
+        !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteSite(e, campusDetails));
         confirmAndDeleteLocation(line1, line2);
     }
 
@@ -547,31 +548,31 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         confirmAndDeleteLocation(line1, line2);
     }
 
-    function showEditSiteForm(siteId) {
-        const siteDetails = siteId > 0 && siteList.find(s => s.site_id === siteId);
+    function showEditSiteForm(campusId) {
+        const campusDetails = campusId > 0 && campusList.find(s => s.campus_id === campusId);
 
-        if (!siteDetails) {
-            console.log(`Can't find site with site_id = "${siteId}" in sitelist from api`);
+        if (!campusDetails) {
+            console.log(`Can't find campus with campus_id = "${campusId}" in campuslist from api`);
             displayToastMessage('Sorry, something went wrong');
             return;
         }
 
         const formBody = `<h2 data-testid="edit-campus-dialog-heading">Edit campus details</h2>
-            <input  name="siteId" type="hidden" value="${siteDetails.site_id}" />${siteFormCore(
-            siteDetails,
+            <input  name="campusId" type="hidden" value="${campusDetails.campus_id}" />${campusFormCore(
+            campusDetails,
             'edit',
         )}<div class="dialogRow">
                 <h3 data-testid="campus-building-label">Buildings</h3>
                 ${
-                    siteDetails?.buildings?.length > 0
-                        ? `<ul data-testid="campus-building-list">${siteDetails.buildings
+                    campusDetails?.buildings?.length > 0
+                        ? `<ul data-testid="campus-building-list">${campusDetails.buildings
                               .map(
                                   building => `<li>${building.building_name} (${building.building_id_displayed}) </li>`,
                               )
                               .join('')}</ul>`
                         : ''
                 }
-                ${siteDetails?.buildings?.length === 0 ? '<p>No buildings</p>' : ''}
+                ${campusDetails?.buildings?.length === 0 ? '<p>No buildings</p>' : ''}
             </div>`;
 
         if (!!formBody) {
@@ -583,10 +584,10 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
             const addNewButton = document.getElementById('addNewButton');
             !!addNewButton && (addNewButton.innerText = 'Add building');
-            !!addNewButton && addNewButton.addEventListener('click', e => showAddBuildingForm(e, siteDetails));
+            !!addNewButton && addNewButton.addEventListener('click', e => showAddBuildingForm(e, campusDetails));
 
             const deleteButton = document.getElementById('deleteButton');
-            !!deleteButton && deleteButton.addEventListener('click', e => confirmAndDeleteSite(e, siteDetails));
+            !!deleteButton && deleteButton.addEventListener('click', e => confirmAndDeleteSite(e, campusDetails));
 
             const dialog = document.getElementById('popupDialog');
             !!dialog && dialog.showModal();
@@ -619,7 +620,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 .updateBookableSpaceLocation(Object.fromEntries(formData))
                 .then(() => {
                     displayToastMessage('Change to building saved', false);
-                    actions.loadBookableSpaceSites();
+                    actions.loadBookableSpaceCampuses();
                 })
                 .catch(e => {
                     console.log('catch: saving building ', locationId, 'failed:', e);
@@ -723,10 +724,10 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
     function showEditBuildingForm(buildingId, buildingSiteId) {
         const buildingDetails =
             buildingId > 0 &&
-            siteList.flatMap(site => site.buildings).find(building => building.building_id === buildingId);
+            campusList.flatMap(campus => campus.buildings).find(building => building.building_id === buildingId);
 
         if (!buildingDetails) {
-            console.log(`Can't find building with building_id = "${buildingId}" in sitelist from api`);
+            console.log(`Can't find building with building_id = "${buildingId}" in campus list from api`);
             displayToastMessage('Sorry, something went wrong');
             return;
         }
@@ -758,16 +759,15 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 ${buildingDetails?.floors?.length === 0 ? '<p>No floors</p>' : ''}
                 </div>
                 
-                <div class="dialogRow" data-testid="building-site-list">
+                <div class="dialogRow" data-testid="building-campus-list">
                     <h3>Change Campus</h3>
-                    <ul class="radioList" data-testid="change-site">
-                    ${siteList
-                        .map(site => {
-                            console.log('site=', site);
-                            const checked = site.site_id === buildingSiteId ? ' checked' : '';
+                    <ul class="radioList" data-testid="change-campus">
+                    ${campusList
+                        .map(campus => {
+                            const checked = campus.campus_id === buildingSiteId ? ' checked' : '';
                             return `<li>
-                                    <input type="radio" id="chooseSite-${site.site_id}" name="site_id" ${checked} value="${site.site_id}" />
-                                    <label for="chooseSite-${site.site_id}">${site.site_name}</label> 
+                                    <input type="radio" id="chooseSite-${campus.campus_id}" name="campus_id" ${checked} value="${campus.campus_id}" />
+                                    <label for="chooseSite-${campus.campus_id}">${campus.campus_name}</label> 
                                 </li>`;
                         })
                         .join('')}
@@ -822,7 +822,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 .updateBookableSpaceLocation(Object.fromEntries(formData))
                 .then(() => {
                     displayToastMessage('Changes to floor saved', false);
-                    actions.loadBookableSpaceSites();
+                    actions.loadBookableSpaceCampuses();
                 })
                 .catch(e => {
                     console.log('catch: saving floor ', locationId, 'failed:', e);
@@ -837,8 +837,8 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         const floorDetails =
             floorId > 0 &&
             (() => {
-                for (const site of siteList) {
-                    for (const building of site.buildings) {
+                for (const campus of campusList) {
+                    for (const building of campus.buildings) {
                         const floor = building.floors.find(floor => floor.floor_id === floorId);
                         if (floor) {
                             return {
@@ -852,7 +852,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
             })();
 
         if (!floorDetails) {
-            console.log(`Can't find floor with floor_id = "${floorId}" in sitelist from api`);
+            console.log(`Can't find floor with floor_id = "${floorId}" in campus list from api`);
             displayToastMessage('Sorry, something went wrong');
             return;
         }
@@ -878,7 +878,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
     }
 
     function showAddSiteForm() {
-        const formBody = `<h2 data-testid="add-campus-heading">Add campus</h2>${siteFormCore()}`;
+        const formBody = `<h2 data-testid="add-campus-heading">Add campus</h2>${campusFormCore()}`;
 
         if (!!formBody) {
             const dialogBodyElement = document.getElementById('dialogBody');
@@ -899,29 +899,29 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
         }
     }
 
-    function getLocationLayout(siteList) {
+    function getLocationLayout(campusList) {
         return (
             <>
-                {siteList.map(site => [
+                {campusList.map(campus => [
                     <StyledRow
-                        key={`site-${site.site_id}`}
-                        data-testid={'spaces-site-entry'}
+                        key={`campus-${campus.campus_id}`}
+                        data-testid={'spaces-campus-entry'}
                         style={{ paddingLeft: '4rem' }}
                     >
                         <StyledEditButton
-                            onClick={() => showEditSiteForm(site.site_id)}
-                            aria-label={`Edit ${site.site_name} campus details`}
-                            data-testid={`edit-campus-${site.site_id}-button`}
+                            onClick={() => showEditSiteForm(campus.campus_id)}
+                            aria-label={`Edit ${campus.campus_name} campus details`}
+                            data-testid={`edit-campus-${campus.campus_id}-button`}
                         >
-                            <span id={`site-${site.site_id}`}>{site.site_name}</span>
+                            <span id={`campus-${campus.campus_id}`}>{campus.campus_name}</span>
                             <EditIcon />
                         </StyledEditButton>
                     </StyledRow>,
-                    ...site.buildings.flatMap(building => [
+                    ...campus.buildings.flatMap(building => [
                         <StyledRow key={`building-${building.building_id}`} style={{ paddingLeft: '8rem' }}>
                             <StyledEditButton
                                 color="primary"
-                                onClick={() => showEditBuildingForm(building.building_id, site.site_id)}
+                                onClick={() => showEditBuildingForm(building.building_id, campus.campus_id)}
                                 aria-label={`Edit ${building.building_name} details`}
                                 data-testid={`edit-building-${building.building_id}-button`}
                             >
@@ -937,7 +937,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                             <StyledRow key={`location-floor-${floor.floor_id}`} style={{ paddingLeft: '12rem' }}>
                                 <StyledEditButton
                                     color="primary"
-                                    // onClick={() => showEditSiteForm(site.site_id)}
+                                    // onClick={() => showEditSiteForm(campus.campus_id)}
                                     onClick={() => showEditFloorForm(floor.floor_id)}
                                     aria-label={`Edit Floor ${floor.floor_name}`}
                                     data-testid={`edit-floor-${floor.floor_id}-button`}
@@ -976,13 +976,13 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
                     <Grid container spacing={3} style={{ position: 'relative' }}>
                         {(() => {
-                            if (!!siteListLoading) {
+                            if (!!campusListLoading) {
                                 return (
                                     <StyledGridItem item xs={12} md={9}>
                                         <InlineLoader message="Loading" />
                                     </StyledGridItem>
                                 );
-                            } else if (!!siteListError) {
+                            } else if (!!campusListError) {
                                 return (
                                     <StyledGridItem item xs={12} md={9}>
                                         <StyledStandardCard fullHeight>
@@ -990,7 +990,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                                         </StyledStandardCard>
                                     </StyledGridItem>
                                 );
-                            } else if (!siteList || siteList.length === 0) {
+                            } else if (!campusList || campusList.length === 0) {
                                 return (
                                     <StyledGridItem item xs={12} md={9}>
                                         <StyledStandardCard fullHeight>
@@ -1001,7 +1001,7 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
                             } else {
                                 return (
                                     <StyledGridItem data-testid="spaces-location-wrapper">
-                                        {getLocationLayout(siteList)}
+                                        {getLocationLayout(campusList)}
                                     </StyledGridItem>
                                 );
                             }
@@ -1071,9 +1071,9 @@ export const BookableSpacesManageLocations = ({ actions, siteList, siteListLoadi
 
 BookableSpacesManageLocations.propTypes = {
     actions: PropTypes.any,
-    siteList: PropTypes.any,
-    siteListLoading: PropTypes.any,
-    siteListError: PropTypes.any,
+    campusList: PropTypes.any,
+    campusListLoading: PropTypes.any,
+    campusListError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesManageLocations);
