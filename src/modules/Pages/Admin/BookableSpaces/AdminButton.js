@@ -5,10 +5,41 @@ import { useAccountContext } from 'context';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { styled } from '@mui/material/styles';
 
 import MenuIcon from '@mui/icons-material/Menu';
 
+import { standardText } from 'helpers/general';
+
 import { spacesAdminLink } from './helpers';
+
+const StyledMenu = styled(Menu)(({ theme }) => {
+    return {
+        '& div:not([aria-hidden="true"])': {
+            backgroundColor: '#fff',
+            border: '1px solid #dcdcdd',
+            boxShadow: 'none',
+        },
+        '& li': standardText(theme),
+        '& span:not(.clickable)': {
+            color: '#d1d0d2', // DS "Disabled form text" $grey-300
+        },
+        '& li:hover': {
+            backgroundColor: '#fff',
+            '& span:not(.clickable)': {
+                cursor: 'default',
+            },
+            '& span.clickable': {
+                backgroundColor: theme.palette.primary.main,
+                color: '#fff',
+                textDecoration: 'underline',
+            },
+            '& .MuiTouchRipple-root': {
+                display: 'none', // remove mui ripple
+            },
+        },
+    };
+});
 
 export const AdminButton = ({ currentPage }) => {
     const { account } = useAccountContext();
@@ -26,6 +57,10 @@ export const AdminButton = ({ currentPage }) => {
         setAnchorEl(null);
     };
 
+    const handleMenuOpenClose = e => {
+        !!open ? closeMenu() : openMenu(e);
+    };
+
     function navigateToPage(spacesPath) {
         window.location.href = spacesAdminLink(spacesPath, account);
     }
@@ -37,57 +72,69 @@ export const AdminButton = ({ currentPage }) => {
                 aria-controls={open ? 'admin-spaces-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : 'false'}
-                onClick={openMenu}
+                onClick={handleMenuOpenClose}
+                onKeyDown={handleMenuOpenClose}
                 data-testid="admin-spaces-menu-button"
                 id="admin-spaces-menu-button"
                 aria-label="Admin menu"
             >
                 <MenuIcon />
             </IconButton>
-            <Menu
+            <StyledMenu
                 id="admin-spaces-menu"
                 data-testid="admin-spaces-menu"
                 anchorEl={anchorEl}
                 open={open}
                 onClose={closeMenu}
+                placement="bottom-end"
                 MenuListProps={{
                     'aria-labelledby': 'admin-spaces-menu-button',
                 }}
-                sx={{ backgroundColor: 'white' }}
             >
                 <MenuItem
                     onClick={() => {
-                        currentPage !== 'dashboard' && navigateToPage('');
+                        if (currentPage === 'dashboard') {
+                            return;
+                        }
+                        navigateToPage('');
                         /* istanbul ignore next */
-                        currentPage !== 'dashboard' && closeMenu();
+                        closeMenu();
                     }}
                     data-testid="admin-spaces-visit-dashboard-button"
                 >
-                    Dashboard
+                    <span className={`${currentPage !== 'dashboard' ? 'clickable' : ''}`}>Dashboard</span>
                 </MenuItem>
 
                 <MenuItem
                     onClick={() => {
-                        currentPage !== 'manage-locations' && navigateToPage('/manage/locations');
+                        if (currentPage === 'manage-locations') {
+                            return;
+                        }
+
+                        navigateToPage('/manage/locations');
                         /* istanbul ignore next */
-                        currentPage !== 'manage-locations' && closeMenu();
+                        closeMenu();
                     }}
                     data-testid="admin-spaces-visit-manage-locations-button"
                 >
-                    Manage Locations
+                    <span className={`${currentPage !== 'manage-locations' ? 'clickable' : ''}`}>Manage Locations</span>
                 </MenuItem>
 
                 <MenuItem
                     onClick={() => {
-                        currentPage !== 'add-space' && navigateToPage('/add');
+                        if (currentPage === 'add-space') {
+                            return;
+                        }
+
+                        navigateToPage('/add');
                         /* istanbul ignore next */
-                        currentPage !== 'add-space' && closeMenu();
+                        closeMenu();
                     }}
                     data-testid="admin-spaces-visit-add-space-button"
                 >
-                    Add new Space
+                    <span className={`${currentPage !== 'add-space' ? 'clickable' : ''}`}>Add new Space</span>
                 </MenuItem>
-            </Menu>
+            </StyledMenu>
         </>
     );
 };
