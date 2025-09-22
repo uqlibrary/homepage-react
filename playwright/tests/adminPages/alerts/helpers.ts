@@ -12,5 +12,3 @@ export async function dateHasValue(page: Page, dateField: string, expectedDate: 
     const dateValue = await page.locator(dateField).getAttribute('value');
     expect(dateValue).toMatch(new RegExp(`^${expectedDate}`));
 }
-
-export const uqPurple = 'rgb(81, 36, 122)';
