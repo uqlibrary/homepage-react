@@ -7,6 +7,7 @@ import Fade from '@mui/material/Fade';
 import Drawer from '@mui/material/Drawer';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 
 /**
  * a block that shows:
@@ -65,24 +66,20 @@ export const AlertsUtilityArea = ({ actions, helpButtonLabel = 'Help', helpConte
         <Fragment>
             {!!helpContent && (
                 <StyledActionButtonPlacer>
-                    <Button
+                    <StyledPrimaryButton
                         children={helpButtonLabel}
-                        color="secondary"
                         data-testid="admin-alerts-help-button"
                         id="admin-alerts-help-button"
                         onClick={openHelpLightbox}
-                        variant="contained"
                     />
                 </StyledActionButtonPlacer>
             )}
             {!!showAddButton && (
                 <StyledActionButtonPlacer>
-                    <Button
+                    <StyledSecondaryButton
                         children="Add alert"
-                        color="primary"
-                        data-testid="admin-alerts-help-display-button"
+                        data-testid="admin-alerts-add-button"
                         onClick={() => navigateToAddPage()}
-                        variant="contained"
                     />
                 </StyledActionButtonPlacer>
             )}
@@ -101,9 +98,7 @@ export const AlertsUtilityArea = ({ actions, helpButtonLabel = 'Help', helpConte
                         <h2>{helpContent?.title || /* istanbul ignore next */ 'TBA'}</h2>
                         <div>{helpContent?.text || /* istanbul ignore next */ ''}</div>
                         <div>
-                            <Button
-                                variant="contained"
-                                color="primary"
+                            <StyledPrimaryButton
                                 className={'button'}
                                 children={helpContent?.buttonLabel || 'Close'}
                                 onClick={closeHelpLightbox}

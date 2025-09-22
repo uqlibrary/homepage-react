@@ -75,11 +75,10 @@ export const ConfirmationBox = ({
                     </Hidden>
                     {!hideActionButton && (
                         <Grid item xs={12} sm={'auto'}>
-                            <StyledTertiaryButton
+                            <StyledPrimaryButton
                                 {...(!!actionButtonVariant ? { variant: actionButtonVariant } : {})}
                                 children={locale.confirmButtonLabel}
                                 autoFocus
-                                // color={actionButtonColor || 'primary'}
                                 fullWidth
                                 onClick={_onAction}
                                 id="confirm-action"
@@ -91,7 +90,7 @@ export const ConfirmationBox = ({
                     {showAlternateActionButton && (
                         // an optional middle button that will display in a warning colour
                         <Grid item xs={12} sm={'auto'}>
-                            <StyledSecondaryButton
+                            <StyledTertiaryButton
                                 variant={'contained'}
                                 children={locale.alternateActionButtonLabel}
                                 fullWidth
@@ -104,7 +103,7 @@ export const ConfirmationBox = ({
                     )}
                     {!hideCancelButton && (
                         <Grid item xs={12} sm={'auto'}>
-                            <StyledPrimaryButton
+                            <StyledSecondaryButton
                                 variant={'contained'}
                                 // color={cancelButtonColor || 'accent'}
                                 children={locale.cancelButtonLabel}
