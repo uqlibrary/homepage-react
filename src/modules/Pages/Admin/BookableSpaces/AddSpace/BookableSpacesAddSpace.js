@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 
-import { Button } from '@mui/material';
 import { Grid } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import FormControl from '@mui/material/FormControl';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
@@ -19,63 +17,7 @@ import {
     displayToastMessage,
     spacesAdminLink,
 } from 'modules/Pages/Admin/BookableSpaces/helpers';
-
-const PrimaryButton = styled(Button)(({ theme }) => ({
-    padding: '1rem 1.5rem',
-    borderColor: theme.palette.primary.main,
-    borderWidth: '2px',
-    borderStyle: 'solid',
-    '&:hover': {
-        backgroundColor: '#fff',
-        borderColor: theme.palette.primary.main,
-        color: theme.palette.primary.main,
-        textDecoration: 'underline',
-        boxShadow: 'none',
-    },
-    '&:focus': {
-        backgroundColor: '#fff',
-        borderColor: theme.palette.primary.main,
-        color: theme.palette.primary.main,
-        textDecoration: 'underline',
-        boxShadow: 'none',
-    },
-}));
-const SecondaryButton = styled(Button)(({ theme }) => ({
-    border: '2px solid #51247a',
-    borderRadius: '.25rem',
-    boxSizing: 'border-box',
-    cursor: 'pointer',
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '.5rem',
-    fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-    fontSize: '1rem',
-    fontWeight: 500,
-    lineHeight: 1,
-    padding: '1rem 1.5rem',
-    position: 'relative',
-    textAlign: 'center',
-    textDecoration: 'none',
-
-    backgroundColor: 'rgba(0, 0, 0, 0)',
-    borderColor: theme.palette.primary.main,
-    color: theme.palette.primary.main,
-    boxShadow: 'none',
-    '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        borderColor: theme.palette.primary.main,
-        color: '#fff',
-        textDecoration: 'underline',
-        boxShadow: 'none',
-    },
-    '&:focus': {
-        backgroundColor: theme.palette.primary.main,
-        borderColor: theme.palette.primary.main,
-        color: '#fff',
-        textDecoration: 'underline',
-        boxShadow: 'none',
-    },
-}));
+import { StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 
 export const BookableSpacesAddSpace = ({
     actions,
@@ -175,6 +117,7 @@ export const BookableSpacesAddSpace = ({
                 onClose={closeConfirmationBox}
                 isOpen={confirmationOpen}
                 locale={!!bookableSpacesRoomAddError ? locale.error : locale.success}
+                cancelButtonColor="accent"
             />
 
             <StandardPage title="Spaces">
@@ -194,7 +137,7 @@ export const BookableSpacesAddSpace = ({
                                             value={formValues?.space_name || ''}
                                             onChange={handleChange('space_name')}
                                         />
-                                        {formValues?.space_name}
+                                        {/* {formValues?.space_name}*/}
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={12}>
@@ -207,12 +150,12 @@ export const BookableSpacesAddSpace = ({
                                             value={formValues?.space_type || ''}
                                             onChange={handleChange('space_type')}
                                         />
-                                        {formValues?.space_type}
+                                        {/* {formValues?.space_type}*/}
                                     </FormControl>
                                 </Grid>
 
                                 <Grid item xs={6}>
-                                    <SecondaryButton
+                                    <StyledSecondaryButton
                                         children="Cancel"
                                         data-testid="admin-spaces-form-button-cancel"
                                         onClick={() => navigateToPage('')}
@@ -220,7 +163,7 @@ export const BookableSpacesAddSpace = ({
                                     />
                                 </Grid>
                                 <Grid item xs={6} align="right">
-                                    <PrimaryButton
+                                    <StyledPrimaryButton
                                         data-testid="admin-spaces-save-button-submit"
                                         variant="contained"
                                         children="Save"

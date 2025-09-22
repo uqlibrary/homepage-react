@@ -62,6 +62,29 @@ test.describe('Spaces Location admin', () => {
 
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
+    test('save is accessible', async ({ page }) => {
+        await page.goto('/admin/spaces/add?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Add a new Space/)).toBeVisible();
+
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+        page.getByTestId('space-name')
+            .locator('input')
+            .fill('W12343');
+        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
+        page.getByTestId('space-type')
+            .locator('input')
+            .fill('Computer room');
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        page.getByTestId('admin-spaces-save-button-submit').click();
+
+        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
+
+        await assertAccessibility(page, '[aria-labelledby=":r1:"]');
+    });
     test.describe('Add a campus', () => {
         async function assertCanOpenAddNewCampusDialog(page: Page) {
             await page.goto('/admin/spaces/manage/locations?user=libSpaces');

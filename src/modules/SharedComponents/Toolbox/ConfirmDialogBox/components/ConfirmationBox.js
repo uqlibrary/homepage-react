@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
@@ -8,20 +7,10 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogContent from '@mui/material/DialogContent';
 import Grid from '@mui/material/Grid';
 import Hidden from '@mui/material/Hidden';
-import { styled } from '@mui/material/styles';
-
-const StyledAlternateButton = styled(Button)(({ theme }) => ({
-    color: theme.palette.white.main,
-    backgroundColor: theme.palette.warning.main,
-    '&:hover': {
-        backgroundColor: theme.palette.warning.dark,
-    },
-}));
+import { StyledPrimaryButton, StyledSecondaryButton, StyledTertiaryButton } from 'helpers/general';
 
 export const ConfirmationBox = ({
-    actionButtonColor,
     actionButtonVariant,
-    cancelButtonColor,
     confirmationBoxId,
     InputForm,
     hideActionButton = false,
@@ -86,11 +75,11 @@ export const ConfirmationBox = ({
                     </Hidden>
                     {!hideActionButton && (
                         <Grid item xs={12} sm={'auto'}>
-                            <Button
+                            <StyledTertiaryButton
                                 {...(!!actionButtonVariant ? { variant: actionButtonVariant } : {})}
                                 children={locale.confirmButtonLabel}
                                 autoFocus
-                                color={actionButtonColor || 'primary'}
+                                // color={actionButtonColor || 'primary'}
                                 fullWidth
                                 onClick={_onAction}
                                 id="confirm-action"
@@ -102,7 +91,7 @@ export const ConfirmationBox = ({
                     {showAlternateActionButton && (
                         // an optional middle button that will display in a warning colour
                         <Grid item xs={12} sm={'auto'}>
-                            <StyledAlternateButton
+                            <StyledSecondaryButton
                                 variant={'contained'}
                                 children={locale.alternateActionButtonLabel}
                                 fullWidth
@@ -115,9 +104,9 @@ export const ConfirmationBox = ({
                     )}
                     {!hideCancelButton && (
                         <Grid item xs={12} sm={'auto'}>
-                            <Button
+                            <StyledPrimaryButton
                                 variant={'contained'}
-                                color={cancelButtonColor || 'secondary'}
+                                // color={cancelButtonColor || 'accent'}
                                 children={locale.cancelButtonLabel}
                                 fullWidth
                                 onClick={_onCancelAction}
@@ -134,9 +123,9 @@ export const ConfirmationBox = ({
 };
 
 ConfirmationBox.propTypes = {
-    actionButtonColor: PropTypes.string,
+    // actionButtonColor: PropTypes.string,
     actionButtonVariant: PropTypes.string,
-    cancelButtonColor: PropTypes.string,
+    // cancelButtonColor: PropTypes.string,
     confirmationBoxId: PropTypes.string.isRequired,
     hideActionButton: PropTypes.bool,
     hideCancelButton: PropTypes.bool,
