@@ -18,9 +18,13 @@ const StyledTableHeadingTypography = styled(Typography)(({ theme }) => ({
 const StyledBox = styled(Box)(() => ({
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
     width: '100%',
     marginBottom: '1rem',
     paddingBottom: '1rem',
+    '& h2': {
+        marginTop: 0,
+    },
 }));
 
 export const HeaderBar = ({ pageTitle, currentPage }) => {
