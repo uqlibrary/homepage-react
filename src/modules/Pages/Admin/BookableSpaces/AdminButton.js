@@ -61,8 +61,13 @@ export const AdminButton = ({ currentPage }) => {
         !!open ? closeMenu() : openMenu(e);
     };
 
-    function navigateToPage(spacesPath) {
+    function navigateToPage(spacesPath, pageSlug) {
+        if (currentPage === pageSlug) {
+            return;
+        }
         window.location.href = spacesAdminLink(spacesPath, account);
+        /* istanbul ignore next */
+        closeMenu();
     }
 
     return (
@@ -93,12 +98,7 @@ export const AdminButton = ({ currentPage }) => {
             >
                 <MenuItem
                     onClick={() => {
-                        if (currentPage === 'dashboard') {
-                            return;
-                        }
-                        navigateToPage('');
-                        /* istanbul ignore next */
-                        closeMenu();
+                        navigateToPage('', 'dashboard');
                     }}
                     data-testid="admin-spaces-visit-dashboard-button"
                 >
@@ -107,13 +107,7 @@ export const AdminButton = ({ currentPage }) => {
 
                 <MenuItem
                     onClick={() => {
-                        if (currentPage === 'manage-locations') {
-                            return;
-                        }
-
-                        navigateToPage('/manage/locations');
-                        /* istanbul ignore next */
-                        closeMenu();
+                        navigateToPage('/manage/locations', 'manage-locations');
                     }}
                     data-testid="admin-spaces-visit-manage-locations-button"
                 >
@@ -122,13 +116,7 @@ export const AdminButton = ({ currentPage }) => {
 
                 <MenuItem
                     onClick={() => {
-                        if (currentPage === 'add-space') {
-                            return;
-                        }
-
-                        navigateToPage('/add');
-                        /* istanbul ignore next */
-                        closeMenu();
+                        navigateToPage('/add', 'add-space');
                     }}
                     data-testid="admin-spaces-visit-add-space-button"
                 >
