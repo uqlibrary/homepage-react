@@ -3,7 +3,7 @@
 exports[`AlertsListAsTable default values render correctly 1`] = `
 <div>
   <div
-    class=" css-jfcehw"
+    class=" css-1wreib7"
     data-testid="headerRow-current"
   >
     <div>
@@ -36,7 +36,7 @@ exports[`AlertsListAsTable default values render correctly 1`] = `
         class="MuiTableHead-root css-15wwp11-MuiTableHead-root"
       >
         <tr
-          class="MuiTableRow-root MuiTableRow-head md-row css-1h2y1iv-MuiTableRow-root"
+          class="MuiTableRow-root MuiTableRow-head md-row css-4wzszn-MuiTableRow-root"
           md-row=""
         >
           <th
@@ -83,7 +83,7 @@ exports[`AlertsListAsTable default values render correctly 1`] = `
         class="MuiTableBody-root css-apqrd9-MuiTableBody-root"
       >
         <tr
-          class="MuiTableRow-root css-1h2y1iv-MuiTableRow-root"
+          class="MuiTableRow-root css-4wzszn-MuiTableRow-root"
           data-testid="alert-list-no-alerts-current"
           id="alert-list-no-alerts-current"
           style="display: table-row;"

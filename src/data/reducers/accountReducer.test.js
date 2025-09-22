@@ -1,5 +1,5 @@
 import * as actions from 'data/actions/actionTypes';
-import accountReducer, { initialState, initSavingState } from './account';
+import accountReducer, { initialState, initSavingState } from './accountReducer';
 
 describe('account reducer', () => {
     let emptyState;
@@ -208,7 +208,7 @@ describe('account reducer', () => {
         });
     });
 
-    it('should set vemcount loading flag to true when loading library hours', () => {
+    it('should set vemcount loading flag to true when loading vemcount', () => {
         const test = accountReducer(emptyState, { type: actions.VEMCOUNT_LOADING });
         expect(test).toEqual({
             ...emptyState,
@@ -228,7 +228,7 @@ describe('account reducer', () => {
         });
     });
 
-    it('should set training loading flag to true when loading library hours', () => {
+    it('should set training loading flag to true when loading vemcount', () => {
         const test = accountReducer(emptyState, { type: actions.TRAINING_LOADING });
         expect(test).toEqual({
             ...emptyState,
