@@ -61,13 +61,17 @@ const StyledHeadingFacilityTableCell = styled(TableCell)(() => ({
 
 const StyledHeaderTableRow = styled(TableRow)(({ theme }) => {
     return {
-        '& th, & td': standardText(theme),
+        '& th, & td': {
+            ...standardText(theme),
+        },
     };
 });
 
 const StyledTableRow = styled(TableRow)(({ theme }) => {
     return {
-        '& th, & td': standardText(theme),
+        '& th, & td': {
+            ...standardText(theme),
+        },
         '&:hover': {
             backgroundColor: 'rgb(189 186 186)',
             '& th, & td': {

@@ -13,33 +13,33 @@ import { standardText } from 'helpers/general';
 
 import { spacesAdminLink } from './helpers';
 
-const StyledMenu = styled(Menu)(({ theme }) => {
-    return {
-        '& div:not([aria-hidden="true"])': {
-            backgroundColor: '#fff',
-            border: '1px solid #dcdcdd',
-            boxShadow: 'none',
-        },
-        '& li': standardText(theme),
+const StyledMenu = styled(Menu)(({ theme }) => ({
+    '& div:not([aria-hidden="true"])': {
+        backgroundColor: '#fff',
+        border: '1px solid #dcdcdd',
+        boxShadow: 'none',
+    },
+    '& li': {
+        ...standardText(theme),
+    },
+    '& span:not(.clickable)': {
+        color: '#d1d0d2', // DS "Disabled form text" $grey-300
+    },
+    '& li:hover': {
+        backgroundColor: '#fff',
         '& span:not(.clickable)': {
-            color: '#d1d0d2', // DS "Disabled form text" $grey-300
+            cursor: 'default',
         },
-        '& li:hover': {
-            backgroundColor: '#fff',
-            '& span:not(.clickable)': {
-                cursor: 'default',
-            },
-            '& span.clickable': {
-                backgroundColor: theme.palette.primary.main,
-                color: '#fff',
-                textDecoration: 'underline',
-            },
-            '& .MuiTouchRipple-root': {
-                display: 'none', // remove mui ripple
-            },
+        '& span.clickable': {
+            backgroundColor: theme.palette.primary.main,
+            color: '#fff',
+            textDecoration: 'underline',
         },
-    };
-});
+        '& .MuiTouchRipple-root': {
+            display: 'none', // remove mui ripple
+        },
+    },
+}));
 
 export const AdminButton = ({ currentPage }) => {
     const { account } = useAccountContext();
