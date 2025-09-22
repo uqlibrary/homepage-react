@@ -71,6 +71,10 @@ import {
 import { vemcountData } from './data/vemcount';
 import dlor_admin_notes from './data/records/dlor/dlor_admin_notes';
 import dlor_keywords from './data/records/dlor/dlor_keywords';
+import bookableSpaces_all from './data/records/bookableSpaces/bookableSpaces_all';
+import hours_weekly from './data/records/bookableSpaces/hours_weekly_2';
+import facilityTypes_all from './data/records/bookableSpaces/facilityTypes_all';
+import location_sites_all from './data/records/bookableSpaces/location_sites_all';
 
 const moment = require('moment');
 
@@ -88,6 +92,10 @@ let responseType = !!queryString
     ? queryString.get('responseType')
     : window.location.hash.substring(window.location.hash.indexOf('?')).responseType;
 responseType = responseType || 'ok';
+let hoursResponseType = !!queryString
+    ? queryString.get('hoursResponseType')
+    : window.location.hash.substring(window.location.hash.indexOf('?')).hoursResponseType;
+hoursResponseType = hoursResponseType || 'ok';
 
 // set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
@@ -188,16 +196,16 @@ mock.onGet(routes.PRINTING_API().apiUrl)
         return [200, printBalance];
     });
 
-mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
-// mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
-//     if (responseType === 'error') {
-//         return [500, {}];
-//     } else if (responseType === 'missing') {
-//         return [404, {}];
-//     } else {
-//         return [200, libHours];
-//     }
-// });
+// mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
+mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
+    if (hoursResponseType === 'error') {
+        return [500, {}];
+    } else if (hoursResponseType === 'missing') {
+        return [404, {}];
+    } else {
+        return [200, libHours];
+    }
+});
 
 // mock cant tell the difference between POSSIBLE_RECORDS_API and INCOMPLETE_NTRO_RECORDS_API calls :(
 mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(() => {
@@ -807,7 +815,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
     })
     .onPost(/dlor\/admin\/object\/notes\/.*/)
     .reply(() => {
-        return[200, dlor_admin_notes];
+        return [200, dlor_admin_notes];
     })
     .onPost(/dlor\/auth\/teammember/)
     .reply(() => {
@@ -824,7 +832,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .onGet(/dlor\/public\/keywords\/list/)
     .reply(() => {
         return [200, dlor_keywords];
-    })
+    });
 
 mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
@@ -1115,8 +1123,8 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, { status: 'OK' }])
     .onDelete(/test-and-tag\/site|building|floor\/2/)
     .reply(() => [200, { status: 'OK' }])
-    .onDelete(/test-and-tag\/site|building|floor\/.*/)
-    .reply(() => [400, { message: '52 is a test error', status: 'error' }])
+    // .onDelete(/test-and-tag\/site|building|floor\/.*/)
+    // .reply(() => [400, { message: '52 is a test error', status: 'error' }])
     // T&T MANAGE INSPECTION DEVICES
     .onGet(routes.TEST_TAG_INSPECTION_DEVICE_API().apiUrl)
     .reply(() => {
@@ -1440,8 +1448,121 @@ mock.onGet('exams/course/FREN1010/summary')
                 return [200, { ...loans, fines: [], total_fines_count: 0 }];
         }
     })
+    .onGet(routes.SPACES_ROOMS_ALL_API().apiUrl)
+    .reply(() => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (responseType === 'empty') {
+            return [200, []];
+        } else if (responseType === '404') {
+            return [404, {}];
+        } else {
+            return [200, bookableSpaces_all];
+        }
+    })
+    .onGet(routes.WEEKLYHOURS_API().apiUrl)
+    .reply(() => {
+        if (hoursResponseType === 'error') {
+            return [500, {}];
+        } else if (hoursResponseType === 'empty') {
+            return [200, []];
+        } else if (hoursResponseType === '404') {
+            return [404, {}];
+        } else {
+            return [200, resetWeeklyHourDatesToBeCurrent(hours_weekly)];
+        }
+    })
+    .onGet(routes.SPACES_FACILITY_TYPE_ALL_API().apiUrl)
+    .reply(() => {
+        if (hoursResponseType === 'error') {
+            return [500, {}];
+        } else if (hoursResponseType === 'empty') {
+            return [200, []];
+        } else if (hoursResponseType === '404') {
+            return [404, {}];
+        } else {
+            return [200, facilityTypes_all];
+        }
+    })
+    .onGet(routes.SPACES_SITE_API().apiUrl)
+    .reply(() => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (responseType === 'empty') {
+            return [200, []];
+        } else if (responseType === '404') {
+            return [404, {}];
+        } else {
+            return [200, location_sites_all];
+        }
+    })
+
+    // Bookable Spaces (site, building, floor)
+    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'campus' }).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'building' }).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'floor' }).apiUrl)
+    .reply(() => {
+        if (responseType === 'floorAddError') {
+            return [500, {}];
+        }
+        return [200, { status: 'OK', data: { floor_id: 99, other_fields: '...' } }];
+    })
+    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'space' }).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+
+    // .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'campus', id: '.*' }).apiUrl)))
+    // .reply(() => [200, { status: 'OK' }])
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'campus', id: '.*' }).apiUrl)))
+    .reply(withDelay([200, { status: 'OK' }]))
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'building', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'floor', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'space', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'campus', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'building', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'floor', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'space', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    // .onDelete(/bookable_spaces\/campus|building|floor\/.*/)
+    // .reply(() => {
+    //     if (responseType === 'error') {
+    //         return [500, {}];
+    //     }
+    //     return [200, { status: 'OK' }];
+    // })
     .onAny()
     .reply(function(config) {
         console.log('url not mocked...', config.url);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });
+
+function resetWeeklyHourDatesToBeCurrent(jsonData) {
+    // reset the mock data so it is data for this week
+    const today = new Date();
+    const currentMonday = new Date(today);
+    currentMonday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+    jsonData?.data?.locations?.forEach(location => {
+        location.departments?.forEach(department => {
+            department.weeks?.forEach((week, weekIndex) => {
+                days.forEach((day, index) => {
+                    const newDate = new Date(currentMonday);
+                    newDate.setDate(currentMonday.getDate() + index + weekIndex * 7);
+                    week[day].date = newDate.toISOString().split('T')[0];
+                });
+            });
+        });
+    });
+
+    return jsonData;
+}

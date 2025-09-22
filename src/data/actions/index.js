@@ -7,3 +7,6 @@ export * from './examSearchActions';
 export * from './examSuggestionActions';
 export * from './testTagActions';
 export * from './drupalArticlesActions';
+export * from './bookableSpacesActions';
+export * from './hoursWeeklyActions';
+export * from './facilityTypeActions';

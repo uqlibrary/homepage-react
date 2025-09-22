@@ -51,6 +51,9 @@ export default {
             testntag: {
                 title: 'Test and Tag',
             },
+            bookablespaces: {
+                title: 'Spaces Management',
+            },
         },
         learningresources: {
             title: 'Learning resources',
@@ -66,6 +69,9 @@ export default {
         },
         pastExamPaperList: {
             title: 'View exam papers',
+        },
+        bookablespaces: {
+            title: 'Spaces',
         },
     },
 };

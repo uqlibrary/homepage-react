@@ -126,9 +126,9 @@ export function loadCourseReadingListsSuggestions(keyword) {
                 const sorter = datafiltered
                     // sort to put the matching course codes at the top of the list
                     .sort(a => {
-                        const foundcode = a.name.toUpperCase().substr(0, keyword.length);
+                        const foundcode = a.name.toUpperCase().substring(0, keyword.length);
                         const searchedcode = keyword.toUpperCase();
-                        const searchedcode4 = keyword.toUpperCase().substr(0, 4);
+                        const searchedcode4 = keyword.toUpperCase().substring(0, 4);
                         // eslint-disable-next-line no-nested-ternary
                         return foundcode === searchedcode
                             ? 1
