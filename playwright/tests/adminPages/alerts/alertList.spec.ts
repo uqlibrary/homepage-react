@@ -1,6 +1,7 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { hasAWorkingHelpButton, uqPurple } from './helpers';
+import { hasAWorkingHelpButton } from './helpers';
+import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 
 test.describe('Alert Admin List page', () => {
     const numRowsHiddenAsNoDataInfo = 1;
@@ -95,26 +96,26 @@ test.describe('Alert Admin List page', () => {
         ).toBeVisible();
 
         await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
-        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('border-color', uqPurple);
-        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('color', uqPurple);
+        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('border-color', COLOR_UQPURPLE);
+        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('color', COLOR_UQPURPLE);
 
-        await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('background-color', uqPurple);
-        await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('border-color', uqPurple);
+        await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('background-color', COLOR_UQPURPLE);
+        await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('border-color', COLOR_UQPURPLE);
         await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('color', 'rgb(255, 255, 255)');
 
         const aCurrentAlert = page.getByTestId('alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245');
-        await expect(aCurrentAlert).toHaveCSS('background-color', uqPurple);
-        await expect(aCurrentAlert).toHaveCSS('border-color', uqPurple);
+        await expect(aCurrentAlert).toHaveCSS('background-color', COLOR_UQPURPLE);
+        await expect(aCurrentAlert).toHaveCSS('border-color', COLOR_UQPURPLE);
         await expect(aCurrentAlert).toHaveCSS('color', 'rgb(255, 255, 255)');
 
         const aScheduledAlert = page.getByTestId('alert-list-item-edit-d480b250-9cd8-11eb-88c0-a3882cd6c52e');
-        await expect(aScheduledAlert).toHaveCSS('background-color', uqPurple);
-        await expect(aScheduledAlert).toHaveCSS('border-color', uqPurple);
+        await expect(aScheduledAlert).toHaveCSS('background-color', COLOR_UQPURPLE);
+        await expect(aScheduledAlert).toHaveCSS('border-color', COLOR_UQPURPLE);
         await expect(aScheduledAlert).toHaveCSS('color', 'rgb(255, 255, 255)');
 
         const aPastAlert = page.getByTestId('alert-list-item-edit-d480b250-9cd8-11eb-88c0-a3882cd6c52e');
-        await expect(aPastAlert).toHaveCSS('background-color', uqPurple);
-        await expect(aPastAlert).toHaveCSS('border-color', uqPurple);
+        await expect(aPastAlert).toHaveCSS('background-color', COLOR_UQPURPLE);
+        await expect(aPastAlert).toHaveCSS('border-color', COLOR_UQPURPLE);
         await expect(aPastAlert).toHaveCSS('color', 'rgb(255, 255, 255)');
     });
 

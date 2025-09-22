@@ -1,6 +1,7 @@
 import { expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { dateHasValue, hasAWorkingHelpButton, uqPurple } from './helpers';
+import { dateHasValue, hasAWorkingHelpButton } from './helpers';
+import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 
 async function selectPriorityType(page: Page, type: string) {
     // open the select
@@ -73,19 +74,19 @@ test.describe('Alerts Admin Form Pages', () => {
 
         test('buttons have the correct styling initially', async ({ page }) => {
             const helpButton = page.getByTestId('admin-alerts-help-button');
-            await expect(helpButton).toHaveCSS('background-color', uqPurple);
-            await expect(helpButton).toHaveCSS('border-color', uqPurple);
+            await expect(helpButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+            await expect(helpButton).toHaveCSS('border-color', COLOR_UQPURPLE);
             await expect(helpButton).toHaveCSS('color', 'rgb(255, 255, 255)');
 
             const cancelButton = page.getByTestId('admin-alerts-form-button-cancel');
             await expect(cancelButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
-            await expect(cancelButton).toHaveCSS('border-color', uqPurple);
-            await expect(cancelButton).toHaveCSS('color', uqPurple);
+            await expect(cancelButton).toHaveCSS('border-color', COLOR_UQPURPLE);
+            await expect(cancelButton).toHaveCSS('color', COLOR_UQPURPLE);
 
             const previewButton = page.getByTestId('admin-alerts-form-button-preview');
             await expect(previewButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
             await expect(previewButton).toHaveCSS('border-color', 'rgb(255, 255, 255)');
-            await expect(previewButton).toHaveCSS('color', uqPurple);
+            await expect(previewButton).toHaveCSS('color', COLOR_UQPURPLE);
 
             const saveButton = page.getByTestId('admin-alerts-form-button-save');
             // before fields entered, Save button looks disabled
@@ -107,8 +108,8 @@ test.describe('Alerts Admin Form Pages', () => {
             const previewButton = page.getByTestId('admin-alerts-form-button-preview');
             await previewButton.click();
             // after clicking, the preview button looks like Primary button
-            await expect(previewButton).toHaveCSS('background-color', uqPurple);
-            await expect(previewButton).toHaveCSS('border-color', uqPurple);
+            await expect(previewButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+            await expect(previewButton).toHaveCSS('border-color', COLOR_UQPURPLE);
             await expect(previewButton).toHaveCSS('color', 'rgb(255, 255, 255)');
 
             // the alert preview appears
@@ -421,19 +422,19 @@ test.describe('Alerts Admin Form Pages', () => {
             await expect(page.getByTestId('admin-alerts-form-checkbox-linkrequired')).toBeVisible();
             await expect(saveButton).toBeDisabled();
 
-            await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('background-color', uqPurple);
-            await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('border-color', uqPurple);
+            await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('background-color', COLOR_UQPURPLE);
+            await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('border-color', COLOR_UQPURPLE);
             await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('color', 'rgb(255, 255, 255)');
 
             const cancelButton = page.getByTestId('admin-alerts-form-button-cancel');
             await expect(cancelButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
-            await expect(cancelButton).toHaveCSS('border-color', uqPurple);
-            await expect(cancelButton).toHaveCSS('color', uqPurple);
+            await expect(cancelButton).toHaveCSS('border-color', COLOR_UQPURPLE);
+            await expect(cancelButton).toHaveCSS('color', COLOR_UQPURPLE);
 
             const previewButton = page.getByTestId('admin-alerts-form-button-preview');
             await expect(previewButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
             await expect(previewButton).toHaveCSS('border-color', 'rgb(255, 255, 255)');
-            await expect(previewButton).toHaveCSS('color', uqPurple);
+            await expect(previewButton).toHaveCSS('color', COLOR_UQPURPLE);
 
             // before fields entered, Save button looks disabled
             await expect(saveButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0.12)');
@@ -443,14 +444,14 @@ test.describe('Alerts Admin Form Pages', () => {
             await page.locator('[data-testid="admin-alerts-form-title"] input').fill('Updated alert');
             await expect(saveButton).not.toBeDisabled();
             // after fields entered, looks like Primary button
-            await expect(saveButton).toHaveCSS('background-color', uqPurple);
-            await expect(saveButton).toHaveCSS('border-color', uqPurple);
+            await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+            await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
             await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
 
             // after clicking, the preview button looks like Primary button
             await previewButton.click();
-            await expect(previewButton).toHaveCSS('background-color', uqPurple);
-            await expect(previewButton).toHaveCSS('border-color', uqPurple);
+            await expect(previewButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+            await expect(previewButton).toHaveCSS('border-color', COLOR_UQPURPLE);
             await expect(previewButton).toHaveCSS('color', 'rgb(255, 255, 255)');
 
             await saveButton.click();
@@ -599,19 +600,19 @@ test.describe('Alerts Admin Form Pages', () => {
         });
         test('can clone an alert and return to list', async ({ page }) => {
             const helpButton = page.getByTestId('admin-alerts-help-button');
-            await expect(helpButton).toHaveCSS('background-color', uqPurple);
-            await expect(helpButton).toHaveCSS('border-color', uqPurple);
+            await expect(helpButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+            await expect(helpButton).toHaveCSS('border-color', COLOR_UQPURPLE);
             await expect(helpButton).toHaveCSS('color', 'rgb(255, 255, 255)');
 
             const cancelButton = page.getByTestId('admin-alerts-form-button-cancel');
             await expect(cancelButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
-            await expect(cancelButton).toHaveCSS('border-color', uqPurple);
-            await expect(cancelButton).toHaveCSS('color', uqPurple);
+            await expect(cancelButton).toHaveCSS('border-color', COLOR_UQPURPLE);
+            await expect(cancelButton).toHaveCSS('color', COLOR_UQPURPLE);
 
             const previewButton = page.getByTestId('admin-alerts-form-button-preview');
             await expect(previewButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
             await expect(previewButton).toHaveCSS('border-color', 'rgb(255, 255, 255)');
-            await expect(previewButton).toHaveCSS('color', uqPurple);
+            await expect(previewButton).toHaveCSS('color', COLOR_UQPURPLE);
 
             await expect(page.getByTestId('admin-alerts-form-checkbox-linkrequired')).toBeVisible();
             await expect(
@@ -628,21 +629,21 @@ test.describe('Alerts Admin Form Pages', () => {
 
             // // before fields entered, Save button looks disabled
             const saveButton = page.getByTestId('admin-alerts-form-button-save');
-            await expect(saveButton).toHaveCSS('background-color', uqPurple);
-            await expect(saveButton).toHaveCSS('border-color', uqPurple);
+            await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+            await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
             await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
 
             await page.locator('[data-testid="admin-alerts-form-title"] input').fill('Updated alert');
             await expect(saveButton).not.toBeDisabled();
             // after fields entered, looks like Primary button
-            await expect(saveButton).toHaveCSS('background-color', uqPurple);
-            await expect(saveButton).toHaveCSS('border-color', uqPurple);
+            await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+            await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
             await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
 
             // after clicking, the preview button looks like Primary button
             await previewButton.click();
-            await expect(previewButton).toHaveCSS('background-color', uqPurple);
-            await expect(previewButton).toHaveCSS('border-color', uqPurple);
+            await expect(previewButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+            await expect(previewButton).toHaveCSS('border-color', COLOR_UQPURPLE);
             await expect(previewButton).toHaveCSS('color', 'rgb(255, 255, 255)');
 
             await saveButton.click();
