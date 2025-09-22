@@ -207,10 +207,10 @@ export const baseButtonStyles = {
     '& .MuiTouchRipple-root': {
         display: 'none',
     },
-    '&:hover, &:focus': {
-        boxShadow: 'none',
-        textDecoration: 'underline',
-    },
+};
+export const baseHoverFocusStyles = {
+    boxShadow: 'none',
+    textDecoration: 'underline',
 };
 
 export const StyledPrimaryButton = styled(Button)(({ theme }) => ({
@@ -219,6 +219,7 @@ export const StyledPrimaryButton = styled(Button)(({ theme }) => ({
     borderColor: theme.palette.primary.main,
     color: '#fff',
     '&:hover, &:focus': {
+        ...baseHoverFocusStyles,
         backgroundColor: '#fff',
         borderColor: theme.palette.primary.main,
         color: theme.palette.primary.main,
@@ -237,6 +238,7 @@ export const StyledSecondaryButton = styled(Button)(({ theme }) => ({
     color: theme.palette.primary.main,
     borderColor: theme.palette.primary.main,
     '&:hover, &:focus': {
+        ...baseHoverFocusStyles,
         backgroundColor: theme.palette.primary.main,
         borderColor: theme.palette.primary.main,
         color: '#fff',
@@ -253,6 +255,7 @@ export const StyledTertiaryButton = styled(Button)(({ theme }) => ({
     backgroundColor: 'rgba(0, 0, 0, 0)',
     color: theme.palette.primary.main,
     '&:hover, &:focus': {
+        ...baseHoverFocusStyles,
         backgroundColor: theme.palette.primary.main,
         borderColor: theme.palette.primary.main,
         color: '#fff',
