@@ -31,6 +31,9 @@ test.describe('Masquerade', () => {
                 .first(),
         ).toBeVisible();
         await assertAccessibility(page, '[data-testid="masquerade"]');
+
+        await expect(page.getByTestId('masquerade-submit')).toBeVisible();
+        await expect(page.getByTestId('masquerade-submit')).toHaveCSS('background-color', 'rgb(81, 36, 122)');
     });
 
     test('unprivileged users cant masquerade', async ({ page }) => {

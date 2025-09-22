@@ -15,6 +15,7 @@ import MenuList from '@mui/material/MenuList';
 import { useConfirmationState } from 'hooks';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import { StyledPrimaryButton } from 'helpers/general';
 
 // based on https://material-ui.com/components/button-group/ "Split button"
 export const AlertSplitButton = ({
@@ -58,18 +59,16 @@ export const AlertSplitButton = ({
             <Grid container direction="column" alignItems="center">
                 <Grid item xs={12} sx={{ position: 'relative', minHeight: 50 }}>
                     <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
-                        <Button
+                        <StyledPrimaryButton
                             children={mainButtonLabel}
-                            color="primary"
                             data-testid={`alert-list-item-${mainButtonLabel.toLowerCase()}-${alertId}`}
                             id={`alert-list-item-${mainButtonLabel.toLowerCase()}-${alertId}`}
                             onClick={() =>
                                 mainButtonLabel === 'Edit' ? navigateToEditForm(alertId) : navigateToView(alertId)
                             }
-                            variant="contained"
+                            sx={{ borderColor: '#51247a !important' }}
                         />
-                        <Button
-                            color="primary"
+                        <StyledPrimaryButton
                             size="small"
                             aria-controls={open ? 'split-button-menu' : undefined}
                             aria-expanded={open ? 'true' : undefined}
@@ -78,9 +77,10 @@ export const AlertSplitButton = ({
                             data-testid={`alert-list-arrowicon-${alertId}`}
                             onClick={handleToggle}
                             title="More actions"
+                            sx={{ paddingInline: 0 }}
                         >
                             <ArrowDropDownIcon />
-                        </Button>
+                        </StyledPrimaryButton>
                     </ButtonGroup>
                     <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
                         {({ TransitionProps, placement }) => (

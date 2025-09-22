@@ -1,6 +1,6 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { hasAWorkingHelpButton } from './helpers';
+import { hasAWorkingHelpButton, uqPurple } from './helpers';
 
 test.describe('Alert Admin List page', () => {
     const numRowsHiddenAsNoDataInfo = 1;
@@ -93,6 +93,29 @@ test.describe('Alert Admin List page', () => {
                 .getByText(/1–5 of 78/)
                 .first(),
         ).toBeVisible();
+
+        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('border-color', uqPurple);
+        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('color', uqPurple);
+
+        await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('background-color', uqPurple);
+        await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('border-color', uqPurple);
+        await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('color', 'rgb(255, 255, 255)');
+
+        const aCurrentAlert = page.getByTestId('alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245');
+        await expect(aCurrentAlert).toHaveCSS('background-color', uqPurple);
+        await expect(aCurrentAlert).toHaveCSS('border-color', uqPurple);
+        await expect(aCurrentAlert).toHaveCSS('color', 'rgb(255, 255, 255)');
+
+        const aScheduledAlert = page.getByTestId('alert-list-item-edit-d480b250-9cd8-11eb-88c0-a3882cd6c52e');
+        await expect(aScheduledAlert).toHaveCSS('background-color', uqPurple);
+        await expect(aScheduledAlert).toHaveCSS('border-color', uqPurple);
+        await expect(aScheduledAlert).toHaveCSS('color', 'rgb(255, 255, 255)');
+
+        const aPastAlert = page.getByTestId('alert-list-item-edit-d480b250-9cd8-11eb-88c0-a3882cd6c52e');
+        await expect(aPastAlert).toHaveCSS('background-color', uqPurple);
+        await expect(aPastAlert).toHaveCSS('border-color', uqPurple);
+        await expect(aPastAlert).toHaveCSS('color', 'rgb(255, 255, 255)');
     });
 
     test('is accessible', async ({ page }) => {
@@ -110,7 +133,7 @@ test.describe('Alert Admin List page', () => {
         await hasAWorkingHelpButton(page);
     });
     test('has a working Add button on the List page', async ({ page }) => {
-        await page.getByTestId('admin-alerts-help-display-button').click();
+        await page.getByTestId('admin-alerts-add-button').click();
         await expect(page).toHaveURL('http://localhost:2020/admin/alerts/add');
     });
 
