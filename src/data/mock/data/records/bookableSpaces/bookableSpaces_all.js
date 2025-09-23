@@ -26,10 +26,18 @@ export default {
             space_campus_name: "St Lucia",
             facility_types: [{
                 facility_type_id: 1,
-                facilityTypeDisplayName: 'Toilets nearby',
+                facility_type_name: 'Noise level',
+                facility_type_special_value: 1,
+                facility_type_special_value_label: 'Low',
             }, {
                 facility_type_id: 2,
-                facilityTypeDisplayName: 'Group study tables',
+                facility_type_name: 'Whiteboard',
+            }, {
+                facility_type_id: 8,
+                facility_type_name: "Postgraduate spaces",
+            }, {
+                facility_type_id: 14,
+                facility_type_name: "Production Printing Services",
             }],
         }, {
             space_id: "1234544",
@@ -47,11 +55,16 @@ export default {
             space_latitude: "-27.496955206561836",
             space_longitude: "153.01308753792662",
             facility_types: [{
-                facility_type_id: 5,
-                facilityTypeDisplayName: 'Cafe nearby',
+                facility_type_id: 1,
+                facility_type_name: 'Noise level',
+                facility_type_special_value: 3,
+                facility_type_special_value_label: 'High',
             }, {
                 facility_type_id: 6,
-                facilityTypeDisplayName: 'Standing Desks',
+                facility_type_name: "Power outlets",
+            }, {
+                facility_type_id: 9,
+                facility_type_name: "Undergrad spaces",
             }],
             space_type: 'Group Study Room',
             space_floor_id: 65,
@@ -77,14 +90,19 @@ export default {
             space_latitude: "-27.50046410327122",
             space_longitude: "153.0141740262594",
             facility_types: [{
-                facility_type_id: 2,
-                facilityTypeDisplayName: 'Natural light',
+                facility_type_id: 1,
+                facility_type_name: 'Noise level',
+                facility_type_special_value: 2,
+                facility_type_special_value_label: 'Medium',
+            }, {
+                facility_type_id: 12,
+                facility_type_name: "Food outlets",
             }, {
                 facility_type_id: 4,
-                facilityTypeDisplayName: 'Moderated',
+                facility_type_name: 'Moderated',
             }, {
-                facility_type_id: 3,
-                facilityTypeDisplayName: 'Group study tables',
+                facility_type_id: 18,
+                facility_type_name: "Landmark",
             }],
             space_type: 'Computer room',
             space_floor_id: 72,

@@ -146,11 +146,17 @@ export const BookableSpacesList = ({
             <>
                 {bookableSpace?.facility_types?.length > 0 && <h3>Facilities</h3>}
                 {bookableSpace?.facility_types?.length > 0 && (
-                    <ul>
+                    <ul data-testid={`facility-${bookableSpace?.space_id}`}>
                         {bookableSpace?.facility_types?.map(facility => {
                             return (
-                                <li key={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}>
-                                    {facility.facilityTypeDisplayName}
+                                <li
+                                    key={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}
+                                    data-testid={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}
+                                >
+                                    {facility.facility_type_name}
+                                    {!!facility.facility_type_special_value_label
+                                        ? `: ${facility.facility_type_special_value_label}`
+                                        : ''}
                                 </li>
                             );
                         })}

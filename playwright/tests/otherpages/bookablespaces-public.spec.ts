@@ -34,6 +34,30 @@ test.describe('Spaces', () => {
         );
         await expect(page.getByTestId('standard-card-01-w431---collaborative-space')).toContainText('St Lucia Campus');
 
+        // facilities are correct
+        await expect(page.getByTestId('facility-123456')).toBeVisible();
+        await expect(page.getByTestId('facility-123456').locator(' > *')).toHaveCount(4);
+        await expect(page.getByTestId('facility-123456-1')).toContainText('Noise level');
+        await expect(page.getByTestId('facility-123456-1')).toContainText('Low');
+        await expect(page.getByTestId('facility-123456-2')).toContainText('Whiteboard');
+        await expect(page.getByTestId('facility-123456-8')).toContainText('Postgraduate spaces');
+        await expect(page.getByTestId('facility-123456-14')).toContainText('Production Printing Services');
+
+        await expect(page.getByTestId('facility-1234544')).toBeVisible();
+        await expect(page.getByTestId('facility-1234544').locator(' > *')).toHaveCount(3);
+        await expect(page.getByTestId('facility-1234544-1')).toContainText('Noise level');
+        await expect(page.getByTestId('facility-1234544-1')).toContainText('High');
+        await expect(page.getByTestId('facility-1234544-6')).toContainText('Power outlets');
+        await expect(page.getByTestId('facility-1234544-9')).toContainText('Undergrad spaces');
+
+        await expect(page.getByTestId('facility-43534')).toBeVisible();
+        await expect(page.getByTestId('facility-43534').locator(' > *')).toHaveCount(4);
+        await expect(page.getByTestId('facility-43534-1')).toContainText('Noise level');
+        await expect(page.getByTestId('facility-43534-1')).toContainText('Medium');
+        await expect(page.getByTestId('facility-43534-12')).toContainText('Food outlets');
+        await expect(page.getByTestId('facility-43534-4')).toContainText('Moderated');
+        await expect(page.getByTestId('facility-43534-18')).toContainText('Landmark');
+
         // TODO: show breadrumbs are correct
     });
     test('is accessible', async ({ page }) => {

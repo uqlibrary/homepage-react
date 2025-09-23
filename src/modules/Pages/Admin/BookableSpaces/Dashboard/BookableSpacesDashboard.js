@@ -45,9 +45,6 @@ const StyledTableContainer = styled(TableContainer)(() => ({
     whiteSpace: 'nowrap',
 }));
 const StyledTableHead = styled(TableHead)(() => ({
-    '& tr:first-of-type th': {
-        paddingBottom: 0,
-    },
     '& th:first-of-type': {
         position: 'sticky',
         left: 0,
@@ -119,16 +116,56 @@ export const BookableSpacesDashboard = ({
     }, []);
 
     function markIfLocationHasFacility(facilityType, bookableSpace) {
-        const hasThisFacility = bookableSpace?.facility_types.some(
+        const hasThisFacility = bookableSpace?.facility_types.find(
             spaceFacility => spaceFacility.facility_type_id === facilityType.facility_type_id,
         );
-        return hasThisFacility ? tickIcon(`Space has ${facilityType.facility_type_name}`) : null;
+        if (!hasThisFacility) {
+            return null;
+        }
+        if (!!hasThisFacility.facility_type_special_value_label) {
+            return hasThisFacility.facility_type_special_value_label;
+        }
+        return tickIcon(`Space has ${facilityType.facility_type_name}`);
     }
 
     const getColumnBackgroundColor = ii => (ii % 2 === 0 ? backgroundColorColumn : 'inherit');
 
+    function getFacilityHeaderCells() {
+        const listHeaderCells = [];
+        const seenGroups = new Set();
+
+        const groupCounts = facilityTypeList.data.facility_types.reduce((counts, item) => {
+            if (item.facility_type_group) {
+                counts[item.facility_type_group] = (counts[item.facility_type_group] || 0) + 1;
+            }
+            return counts;
+        }, {});
+        facilityTypeList.data.facility_types.forEach(item => {
+            if (item.facility_type_group) {
+                // If we haven't seen this group yet, add it with its total count
+                if (!seenGroups.has(item.facility_type_group)) {
+                    listHeaderCells.push({
+                        facilityTypeGroupName: item.facility_type_group,
+                        count: groupCounts[item.facility_type_group],
+                    });
+                    seenGroups.add(item.facility_type_group);
+                }
+            } else {
+                // Add individual entry for ungrouped items
+                listHeaderCells.push({
+                    facilityTypeGroupName: '',
+                    count: 1,
+                });
+            }
+        });
+        return listHeaderCells;
+    }
+
     function displayListOfBookableSpaces() {
         const tableDescription = 'Manage Spaces';
+
+        const listHeaderCells = getFacilityHeaderCells();
+
         return (
             <>
                 <StyledTableContainer>
@@ -144,16 +181,26 @@ export const BookableSpacesDashboard = ({
                                             key={`header-cell-${index}`}
                                         />
                                     ))}
-                                    <TableCell
-                                        component="th"
-                                        colSpan={facilityTypeList?.data?.facility_types?.length}
-                                        sx={{
-                                            borderBottomWidth: 0,
-                                            borderTop: '1px solid rgba(224, 224, 224, 1)',
-                                        }}
-                                    >
-                                        Facilities
-                                    </TableCell>
+                                    {!!listHeaderCells &&
+                                        listHeaderCells.length > 0 &&
+                                        listHeaderCells.map((heading, index) => (
+                                            <TableCell
+                                                key={`header-cell-${index}`}
+                                                component="th"
+                                                colSpan={heading.count}
+                                                sx={{
+                                                    borderBottomWidth: 0,
+                                                    borderTop: '1px solid rgba(224, 224, 224, 1)',
+                                                    textAlign: 'center',
+                                                    backgroundColor: `${index % 2 === 0 ? 'white' : '#f0f0f0'}`,
+                                                    borderBottomColor: `${
+                                                        index % 2 === 0 ? 'white' : '1px solid rgba(224, 224, 224, 1)'
+                                                    }`,
+                                                }}
+                                            >
+                                                {heading.facilityTypeGroupName}
+                                            </TableCell>
+                                        ))}
                                 </StyledHeaderTableRow>
                             )}
                             <StyledHeaderTableRow>
@@ -198,6 +245,7 @@ export const BookableSpacesDashboard = ({
                                                     return (
                                                         <TableCell
                                                             key={`space-${bookableSpace?.space_id}-facilitytype-${facilityType.facility_type_name}`}
+                                                            data-testid={`space-${bookableSpace?.space_id}-facilitytype-${facilityType.facility_type_name}`}
                                                             sx={{
                                                                 backgroundColor: getColumnBackgroundColor(ii),
                                                                 textAlign: 'center',
