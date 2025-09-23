@@ -782,10 +782,12 @@ export function deleteDlorTeamMember(id, team_id) {
 }
 
 export function loadDlorKeywords() {
+    console.log("loadDlorKeywords called");
     return dispatch => {
         dispatch({ type: actions.DLOR_KEYWORDS_LOADING });
         return get(DLOR_KEYWORDS_API())
             .then(response => {
+                console.log("DLOR Keywords Response", response);
                 dispatch({
                     type: actions.DLOR_KEYWORDS_LOADED,
                     payload: response.data,
