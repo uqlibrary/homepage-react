@@ -119,11 +119,9 @@ export const BookableSpacesDashboard = ({
         const hasThisFacility = bookableSpace?.facility_types.find(
             spaceFacility => spaceFacility.facility_type_id === facilityType.facility_type_id,
         );
+        console.log('hasThisFacility=', hasThisFacility);
         if (!hasThisFacility) {
             return null;
-        }
-        if (!!hasThisFacility.facility_type_special_value_label) {
-            return hasThisFacility.facility_type_special_value_label;
         }
         return tickIcon(`Space has ${facilityType.facility_type_name}`);
     }
@@ -135,20 +133,20 @@ export const BookableSpacesDashboard = ({
         const seenGroups = new Set();
 
         const groupCounts = facilityTypeList.data.facility_types.reduce((counts, item) => {
-            if (item.facility_type_group) {
-                counts[item.facility_type_group] = (counts[item.facility_type_group] || 0) + 1;
+            if (item.facility_type_group_name) {
+                counts[item.facility_type_group_name] = (counts[item.facility_type_group_name] || 0) + 1;
             }
             return counts;
         }, {});
         facilityTypeList.data.facility_types.forEach(item => {
-            if (item.facility_type_group) {
+            if (item.facility_type_group_name) {
                 // If we haven't seen this group yet, add it with its total count
-                if (!seenGroups.has(item.facility_type_group)) {
+                if (!seenGroups.has(item.facility_type_group_name)) {
                     listHeaderCells.push({
-                        facilityTypeGroupName: item.facility_type_group,
-                        count: groupCounts[item.facility_type_group],
+                        facilityTypeGroupName: item.facility_type_group_name,
+                        count: groupCounts[item.facility_type_group_name],
                     });
-                    seenGroups.add(item.facility_type_group);
+                    seenGroups.add(item.facility_type_group_name);
                 }
             } else {
                 // Add individual entry for ungrouped items

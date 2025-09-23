@@ -154,9 +154,6 @@ export const BookableSpacesList = ({
                                     data-testid={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}
                                 >
                                     {facility.facility_type_name}
-                                    {!!facility.facility_type_special_value_label
-                                        ? `: ${facility.facility_type_special_value_label}`
-                                        : ''}
                                 </li>
                             );
                         })}

@@ -26,11 +26,9 @@ export default {
             space_campus_name: "St Lucia",
             facility_types: [{
                 facility_type_id: 1,
-                facility_type_name: 'Noise level',
-                facility_type_special_value: 1,
-                facility_type_special_value_label: 'Low',
+                facility_type_name: 'Noise level Low',
             }, {
-                facility_type_id: 2,
+                facility_type_id: 4,
                 facility_type_name: 'Whiteboard',
             }, {
                 facility_type_id: 8,
@@ -55,10 +53,8 @@ export default {
             space_latitude: "-27.496955206561836",
             space_longitude: "153.01308753792662",
             facility_types: [{
-                facility_type_id: 1,
-                facility_type_name: 'Noise level',
-                facility_type_special_value: 3,
-                facility_type_special_value_label: 'High',
+                facility_type_id: 3,
+                facility_type_name: 'Noise level High',
             }, {
                 facility_type_id: 6,
                 facility_type_name: "Power outlets",
@@ -90,16 +86,15 @@ export default {
             space_latitude: "-27.50046410327122",
             space_longitude: "153.0141740262594",
             facility_types: [{
-                facility_type_id: 1,
-                facility_type_name: 'Noise level',
-                facility_type_special_value: 2,
-                facility_type_special_value_label: 'Medium',
+                facility_type_id: 2,
+                facility_type_name: 'Noise level Medium',
             }, {
                 facility_type_id: 12,
                 facility_type_name: "Food outlets",
             }, {
                 facility_type_id: 4,
                 facility_type_name: 'Moderated',
+
             }, {
                 facility_type_id: 18,
                 facility_type_name: "Landmark",

@@ -311,10 +311,10 @@ export const SPACES_FACILITY_TYPE_ALL_API = () => {
 
 // locations: type = campus, building, floor or space; id = unique record id
 // ie:
-// bookable_spaces/campus
-// bookable_spaces/building
-// bookable_spaces/floor
-// bookable_spaces/space
+// bookable_spaces/campus || bookable_spaces/campus/999
+// bookable_spaces/building || bookable_spaces/building/999
+// bookable_spaces/floor || bookable_spaces/floor/999
+// bookable_spaces/space || bookable_spaces/space/999
 export const SPACES_ADD_LOCATION_API = ({ type }) => ({ apiUrl: `bookable_spaces/${type}` });
 export const SPACES_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `bookable_spaces/${type}/${id}` });
 
