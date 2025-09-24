@@ -291,22 +291,28 @@ export const BookableSpacesAddSpace = ({
                 </Grid>
             </Grid>
         );
-    } else if (!!campusListError) {
+    } else if (!!campusListError || !!bookableSpacesRoomListError) {
         return (
             <AddSpacePage>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
-                        <p>Something went wrong - please try again later.</p>
+                        <p data-testid="add-space-error">Something went wrong - please try again later.</p>
                     </Grid>
                 </Grid>
             </AddSpacePage>
         );
-    } else if (!location.currentCampusList || location.currentCampusList.length === 0) {
+    } else if (
+        !location.currentCampusList ||
+        location.currentCampusList.length === 0 ||
+        (bookableSpacesRoomListLoading === false &&
+            bookableSpacesRoomListError === false &&
+            !bookableSpacesRoomList?.data?.locations)
+    ) {
         return (
             <AddSpacePage>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
-                        <p>
+                        <p data-testid="add-space-no-locations">
                             No buildings currently in system - please{' '}
                             <a href={spacesAdminLink('/manage/locations', account)}>create campus locations</a> and then
                             try again.

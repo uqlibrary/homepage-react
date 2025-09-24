@@ -1450,11 +1450,11 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.SPACES_ROOMS_ALL_API().apiUrl)
     .reply(() => {
-        if (responseType === 'error') {
+        if (responseType === 'error-spaces') {
             return [500, {}];
-        } else if (responseType === 'empty') {
+        } else if (responseType === 'empty-spaces') {
             return [200, []];
-        } else if (responseType === '404') {
+        } else if (responseType === '404-spaces') {
             return [404, {}];
         } else {
             return [200, bookableSpaces_all];

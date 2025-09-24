@@ -205,3 +205,36 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Duhig Tower - 4');
     });
 });
+test.describe('Spaces Admin - errors', () => {
+    test('add new space - empty locations redirects', async ({ page }) => {
+        await page.goto('/admin/spaces/add?user=libSpaces&responseType=empty-spaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Add a new Space/)).toBeVisible();
+
+        await expect(page.getByTestId('add-space-no-locations')).toBeVisible();
+        await expect(page.getByTestId('add-space-no-locations')).toContainText('No buildings currently in system');
+    });
+    test('add new space - error locations', async ({ page }) => {
+        await page.goto('/admin/spaces/add?user=libSpaces&responseType=error-spaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Add a new Space/)).toBeVisible();
+
+        await expect(page.getByTestId('add-space-error')).toBeVisible();
+        await expect(page.getByTestId('add-space-error')).toContainText(
+            'Something went wrong - please try again later.',
+        );
+    });
+    test('add new space - 404 locations', async ({ page }) => {
+        await page.goto('/admin/spaces/add?user=libSpaces&responseType=404-spaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Add a new Space/)).toBeVisible();
+
+        await expect(page.getByTestId('add-space-error')).toBeVisible();
+        await expect(page.getByTestId('add-space-error')).toContainText(
+            'Something went wrong - please try again later.',
+        );
+    });
+});
