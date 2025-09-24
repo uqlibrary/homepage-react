@@ -39,6 +39,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-building').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
 
         const cancelButton = page.getByTestId('admin-spaces-form-button-cancel');
         await expect(cancelButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
@@ -53,7 +54,18 @@ test.describe('Spaces Admin - manage locations', () => {
     test('add spaces page is accessible', async ({ page }) => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
-    test('can add new space', async ({ page }) => {
+    test.only('can add new space, with only required fields', async ({ page, context }) => {
+        await context.addCookies([
+            {
+                name: 'CYPRESS_TEST_DATA',
+                value: 'active',
+                url: 'http://localhost:2020',
+            },
+        ]);
+
+        const cookie = await page.context().cookies();
+        expect(cookie.some(c => c.name === 'CYPRESS_TEST_DATA' && c.value === 'active')).toBeTruthy();
+
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         page.getByTestId('space-name')
             .locator('input')
@@ -67,6 +79,25 @@ test.describe('Spaces Admin - manage locations', () => {
 
         await expect(page.getByTestId('message-title')).toBeVisible();
         await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
+
+        // check the data we pretended to send to the server matches what we expect
+        // acts as check of what we sent to api
+        const expectedValues = {
+            locationType: 'space',
+            space_floor_id: 1,
+            space_name: 'W12343',
+            space_type: 'Computer room',
+        };
+        const cookieValue = await page.evaluate(() => {
+            return document.cookie
+                .split('; ')
+                .find(row => row.startsWith('CYPRESS_DATA_SAVED='))
+                ?.split('=')[1];
+        });
+        expect(cookieValue).toBeDefined();
+        const decodedValue = !!cookieValue && decodeURIComponent(cookieValue);
+        const sentValues = !!decodedValue && JSON.parse(decodedValue);
+        expect(sentValues).toEqual(expectedValues);
     });
     test('add spaces page save dialog is accessible', async ({ page }) => {
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();

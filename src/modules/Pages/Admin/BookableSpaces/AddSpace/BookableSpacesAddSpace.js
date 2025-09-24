@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
+import { useCookies } from 'react-cookie';
 
 import { Grid } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
@@ -54,6 +55,7 @@ export const BookableSpacesAddSpace = ({
     console.log('spacesRoomList', bookableSpacesRoomListLoading, bookableSpacesRoomListError, bookableSpacesRoomList);
 
     const { account } = useAccountContext();
+    const [cookies, setCookie] = useCookies();
 
     const [location, setLocation1] = React.useState({});
     const setLocation = newValues => {
@@ -224,6 +226,11 @@ export const BookableSpacesAddSpace = ({
             document.activeElement.blur();
             displayToastMessage('Please enter all required fields', true);
             return;
+        }
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
         console.log('createNewSpace valuesToSend=', valuesToSend);
