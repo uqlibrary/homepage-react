@@ -24,6 +24,19 @@ import {
     spacesAdminLink,
 } from 'modules/Pages/Admin/BookableSpaces/helpers';
 
+const AddSpacePage = ({ children }) => {
+    return (
+        <StandardPage title="Spaces">
+            <HeaderBar pageTitle="Add a new Space" currentPage="add-space" />
+            <section aria-live="assertive">
+                <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
+                    {children}
+                </StandardCard>
+            </section>
+        </StandardPage>
+    );
+};
+
 export const BookableSpacesAddSpace = ({
     actions,
     bookableSpacesRoomAdding,
@@ -280,37 +293,27 @@ export const BookableSpacesAddSpace = ({
         );
     } else if (!!campusListError) {
         return (
-            <Grid container>
-                <Grid item xs={12}>
-                    <StandardCard fullHeight>
+            <AddSpacePage>
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
                         <p>Something went wrong - please try again later.</p>
-                    </StandardCard>
+                    </Grid>
                 </Grid>
-            </Grid>
+            </AddSpacePage>
         );
     } else if (!location.currentCampusList || location.currentCampusList.length === 0) {
         return (
-            <StandardPage title="Spaces">
-                <HeaderBar pageTitle="Add a new Space" currentPage="add-space" />
-
-                <section aria-live="assertive">
-                    <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
-                        <Grid container>
-                            <Grid item xs={12}>
-                                <StandardCard fullHeight>
-                                    <p>
-                                        No buildings currently in system - please{' '}
-                                        <a href={spacesAdminLink('/manage/locations', account)}>
-                                            create campus locations
-                                        </a>{' '}
-                                        and then try again.
-                                    </p>
-                                </StandardCard>
-                            </Grid>
-                        </Grid>
-                    </StandardCard>
-                </section>
-            </StandardPage>
+            <AddSpacePage>
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                        <p>
+                            No buildings currently in system - please{' '}
+                            <a href={spacesAdminLink('/manage/locations', account)}>create campus locations</a> and then
+                            try again.
+                        </p>
+                    </Grid>
+                </Grid>
+            </AddSpacePage>
         );
     } else {
         return (
@@ -329,166 +332,158 @@ export const BookableSpacesAddSpace = ({
                     cancelButtonColor="accent"
                 />
 
-                <StandardPage title="Spaces">
-                    <HeaderBar pageTitle="Add a new Space" currentPage="add-space" />
+                <AddSpacePage>
+                    <form id="spaces-addedit-form">
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <FormControl variant="standard" fullWidth>
+                                    <InputLabel htmlFor="space_name">Space name *</InputLabel>
+                                    <Input
+                                        id="space_name"
+                                        data-testid="space-name"
+                                        required
+                                        value={formValues?.space_name || ''}
+                                        onChange={handleChange('space_name')}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    id="space_type"
+                                    data-testid="space-type"
+                                    label="Space type"
+                                    variant="standard"
+                                    fullWidth
+                                    required
+                                    value={formValues?.space_type || ''}
+                                    onChange={handleChange('space_type')}
+                                    inputProps={{
+                                        list: 'space-type-list',
+                                    }}
+                                />
+                                {spaceTypeList && spaceTypeList.length > 0 && (
+                                    <datalist id="space-type-list">
+                                        {spaceTypeList.map((spaceType, index) => (
+                                            <option key={`spacetype-datalist-${index}`} value={spaceType} />
+                                        ))}
+                                    </datalist>
+                                )}
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography component={'h3'} variant={'h6'}>
+                                    Location
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <FormControl variant="standard" fullWidth>
+                                    <InputLabel id="add-space-select-campus-label">Campus *</InputLabel>
+                                    <Select
+                                        labelId="add-space-select-campus-label"
+                                        id="add-space-select-campus"
+                                        data-testid="add-space-select-campus"
+                                        value={formValues?.campus_id} //  || 1
+                                        label="Campus"
+                                        onChange={handleChange('campus_id')}
+                                        required
+                                    >
+                                        {!!location.currentCampusList &&
+                                            location.currentCampusList.length > 0 &&
+                                            location.currentCampusList.map((campus, index) => (
+                                                <MenuItem value={campus.campus_id} key={`select-campus-${index}`}>
+                                                    {campus.campus_name}
+                                                </MenuItem>
+                                            ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <FormControl variant="standard" fullWidth>
+                                    <InputLabel id="add-space-select-building-label">Building *</InputLabel>
+                                    <Select
+                                        labelId="add-space-select-building-label"
+                                        id="add-space-select-building"
+                                        data-testid="add-space-select-building"
+                                        value={formValues?.building_id}
+                                        label="Building"
+                                        onChange={handleChange('building_id')}
+                                        required
+                                    >
+                                        {!!location.currentCampusBuildings &&
+                                            location.currentCampusBuildings.length > 0 &&
+                                            location.currentCampusBuildings.map((building, index) => (
+                                                <MenuItem value={building.building_id} key={`select-building-${index}`}>
+                                                    {building.building_name}
+                                                </MenuItem>
+                                            ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <FormControl variant="standard" fullWidth>
+                                    <InputLabel id="add-space-select-floor-label">Floor *</InputLabel>
+                                    <Select
+                                        labelId="add-space-select-floor-label"
+                                        id="add-space-select-floor"
+                                        data-testid="add-space-select-floor"
+                                        value={formValues?.floor_id}
+                                        label="Floor"
+                                        onChange={handleChange('floor_id')}
+                                        required
+                                    >
+                                        {!!location.currentBuildingFloors &&
+                                            location.currentBuildingFloors?.length > 0 &&
+                                            location.currentBuildingFloors?.map((floor, index) => (
+                                                <MenuItem value={floor.floor_id} key={`select-floor-${index}`}>
+                                                    {floor.floor_name}{' '}
+                                                    {location.currentBuilding.ground_floor_id === floor.floor_id
+                                                        ? ' (Ground floor)'
+                                                        : ''}
+                                                    {`${
+                                                        window.location.host === 'localhost:2020' // perhaps remove when dev complete
+                                                            ? ' [' +
+                                                              location.currentBuilding.building_name +
+                                                              ' - ' +
+                                                              floor.floor_id +
+                                                              ']'
+                                                            : ''
+                                                    }`}
+                                                </MenuItem>
+                                            ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography component={'p'} variant={'p'}>
+                                    Required fields are marked with *
+                                </Typography>
+                            </Grid>
 
-                    <section aria-live="assertive">
-                        <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
-                            <form id="spaces-addedit-form">
-                                <Grid container spacing={3}>
-                                    <Grid item xs={12}>
-                                        <FormControl variant="standard" fullWidth>
-                                            <InputLabel htmlFor="space_name">Space name *</InputLabel>
-                                            <Input
-                                                id="space_name"
-                                                data-testid="space-name"
-                                                required
-                                                value={formValues?.space_name || ''}
-                                                onChange={handleChange('space_name')}
-                                            />
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <TextField
-                                            id="space_type"
-                                            data-testid="space-type"
-                                            label="Space type"
-                                            variant="standard"
-                                            fullWidth
-                                            required
-                                            value={formValues?.space_type || ''}
-                                            onChange={handleChange('space_type')}
-                                            inputProps={{
-                                                list: 'space-type-list',
-                                            }}
-                                        />
-                                        {spaceTypeList && spaceTypeList.length > 0 && (
-                                            <datalist id="space-type-list">
-                                                {spaceTypeList.map((spaceType, index) => (
-                                                    <option key={`spacetype-datalist-${index}`} value={spaceType} />
-                                                ))}
-                                            </datalist>
-                                        )}
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Typography component={'h3'} variant={'h6'}>
-                                            Location
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <FormControl variant="standard" fullWidth>
-                                            <InputLabel id="add-space-select-campus-label">Campus *</InputLabel>
-                                            <Select
-                                                labelId="add-space-select-campus-label"
-                                                id="add-space-select-campus"
-                                                data-testid="add-space-select-campus"
-                                                value={formValues?.campus_id} //  || 1
-                                                label="Campus"
-                                                onChange={handleChange('campus_id')}
-                                                required
-                                            >
-                                                {!!location.currentCampusList &&
-                                                    location.currentCampusList.length > 0 &&
-                                                    location.currentCampusList.map((campus, index) => (
-                                                        <MenuItem
-                                                            value={campus.campus_id}
-                                                            key={`select-campus-${index}`}
-                                                        >
-                                                            {campus.campus_name}
-                                                        </MenuItem>
-                                                    ))}
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <FormControl variant="standard" fullWidth>
-                                            <InputLabel id="add-space-select-building-label">Building *</InputLabel>
-                                            <Select
-                                                labelId="add-space-select-building-label"
-                                                id="add-space-select-building"
-                                                data-testid="add-space-select-building"
-                                                value={formValues?.building_id}
-                                                label="Building"
-                                                onChange={handleChange('building_id')}
-                                                required
-                                            >
-                                                {!!location.currentCampusBuildings &&
-                                                    location.currentCampusBuildings.length > 0 &&
-                                                    location.currentCampusBuildings.map((building, index) => (
-                                                        <MenuItem
-                                                            value={building.building_id}
-                                                            key={`select-building-${index}`}
-                                                        >
-                                                            {building.building_name}
-                                                        </MenuItem>
-                                                    ))}
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <FormControl variant="standard" fullWidth>
-                                            <InputLabel id="add-space-select-floor-label">Floor *</InputLabel>
-                                            <Select
-                                                labelId="add-space-select-floor-label"
-                                                id="add-space-select-floor"
-                                                data-testid="add-space-select-floor"
-                                                value={formValues?.floor_id}
-                                                label="Floor"
-                                                onChange={handleChange('floor_id')}
-                                                required
-                                            >
-                                                {!!location.currentBuildingFloors &&
-                                                    location.currentBuildingFloors?.length > 0 &&
-                                                    location.currentBuildingFloors?.map((floor, index) => (
-                                                        <MenuItem value={floor.floor_id} key={`select-floor-${index}`}>
-                                                            {floor.floor_name}{' '}
-                                                            {location.currentBuilding.ground_floor_id === floor.floor_id
-                                                                ? ' (Ground floor)'
-                                                                : ''}
-                                                            {`${
-                                                                window.location.host === 'localhost:2020' // perhaps remove when dev complete
-                                                                    ? ' [' +
-                                                                      location.currentBuilding.building_name +
-                                                                      ' - ' +
-                                                                      floor.floor_id +
-                                                                      ']'
-                                                                    : ''
-                                                            }`}
-                                                        </MenuItem>
-                                                    ))}
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Typography component={'p'} variant={'p'}>
-                                            Required fields are marked with *
-                                        </Typography>
-                                    </Grid>
-
-                                    <Grid item xs={6}>
-                                        <StyledSecondaryButton
-                                            children="Cancel"
-                                            data-testid="admin-spaces-form-button-cancel"
-                                            onClick={() => navigateToPage('')}
-                                            variant="contained"
-                                        />
-                                    </Grid>
-                                    <Grid item xs={6} align="right">
-                                        <StyledPrimaryButton
-                                            data-testid="admin-spaces-save-button-submit"
-                                            variant="contained"
-                                            children="Save"
-                                            onClick={createNewSpace}
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </form>
-                        </StandardCard>
-                    </section>
-                </StandardPage>
+                            <Grid item xs={6}>
+                                <StyledSecondaryButton
+                                    children="Cancel"
+                                    data-testid="admin-spaces-form-button-cancel"
+                                    onClick={() => navigateToPage('')}
+                                    variant="contained"
+                                />
+                            </Grid>
+                            <Grid item xs={6} align="right">
+                                <StyledPrimaryButton
+                                    data-testid="admin-spaces-save-button-submit"
+                                    variant="contained"
+                                    children="Save"
+                                    onClick={createNewSpace}
+                                />
+                            </Grid>
+                        </Grid>
+                    </form>
+                </AddSpacePage>
             </>
         );
     }
+};
+
+AddSpacePage.propTypes = {
+    children: PropTypes.node,
 };
 
 BookableSpacesAddSpace.propTypes = {
