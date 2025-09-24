@@ -190,7 +190,7 @@ export const BookableSpacesManageLocations = ({ actions, campusList, campusListL
         ]);
 
         if (campusListError === null && campusListLoading === null && campusList === null) {
-            actions.loadBookableSpaceCampuses();
+            actions.loadBookableSpaceCampusChildren();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -258,7 +258,7 @@ export const BookableSpacesManageLocations = ({ actions, campusList, campusListL
                 .then(() => {
                     displayToastMessage('Campus added', false);
 
-                    actions.loadBookableSpaceCampuses();
+                    actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: adding new campus failed:', e);
@@ -309,7 +309,7 @@ export const BookableSpacesManageLocations = ({ actions, campusList, campusListL
                 .then(() => {
                     displayToastMessage('Building added', false);
 
-                    actions.loadBookableSpaceCampuses();
+                    actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: adding new building failed:', e);
@@ -346,7 +346,7 @@ export const BookableSpacesManageLocations = ({ actions, campusList, campusListL
                 .updateBookableSpaceLocation(Object.fromEntries(formData))
                 .then(() => {
                     displayToastMessage('Change to campus saved', false);
-                    actions.loadBookableSpaceCampuses();
+                    actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: saving campus ', locationId, 'failed:', e);
@@ -421,7 +421,7 @@ export const BookableSpacesManageLocations = ({ actions, campusList, campusListL
                 .then(() => {
                     console.log('deleteLocation then');
                     displayToastMessage(successMessage, false);
-                    actions.loadBookableSpaceCampuses();
+                    actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log(failureMessage, e);
@@ -567,7 +567,7 @@ export const BookableSpacesManageLocations = ({ actions, campusList, campusListL
                 .updateBookableSpaceLocation(Object.fromEntries(formData))
                 .then(() => {
                     displayToastMessage('Change to building saved', false);
-                    actions.loadBookableSpaceCampuses();
+                    actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: saving building ', locationId, 'failed:', e);
@@ -769,7 +769,7 @@ export const BookableSpacesManageLocations = ({ actions, campusList, campusListL
                 .updateBookableSpaceLocation(Object.fromEntries(formData))
                 .then(() => {
                     displayToastMessage('Changes to floor saved', false);
-                    actions.loadBookableSpaceCampuses();
+                    actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: saving floor ', locationId, 'failed:', e);

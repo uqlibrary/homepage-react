@@ -119,7 +119,7 @@ export const BookableSpacesDashboard = ({
         const hasThisFacility = bookableSpace?.facility_types.find(
             spaceFacility => spaceFacility.facility_type_id === facilityType.facility_type_id,
         );
-        console.log('hasThisFacility=', hasThisFacility);
+        // console.log('hasThisFacility=', hasThisFacility);
         if (!hasThisFacility) {
             return null;
         }

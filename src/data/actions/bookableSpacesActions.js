@@ -128,7 +128,7 @@ export function deleteBookableSpaceLocation({ locationType, locationId }) {
     };
 }
 
-export function loadBookableSpaceCampuses() {
+export function loadBookableSpaceCampusChildren() {
     return dispatch => {
         dispatch({ type: actions.SPACES_CAMPUS_LIST_LOADING });
         return get(SPACES_SITE_API())
