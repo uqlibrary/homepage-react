@@ -41,7 +41,7 @@ test.describe('Spaces Location admin', () => {
 
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage locations/)).toBeVisible();
-        await expect(page.getByTestId('spaces-location-wrapper').locator('> *')).toHaveCount(16); // 3 locations with 4 buildings 8 floors + an add button
+        await expect(page.getByTestId('spaces-location-wrapper').locator('> *')).toHaveCount(17); // 3 locations with 4 buildings 9 floors + an add button
 
         // ground floors correctly marked
         await expect(page.getByTestId('groundfloor-for-1')).not.toBeVisible(); // forgan, floor 2

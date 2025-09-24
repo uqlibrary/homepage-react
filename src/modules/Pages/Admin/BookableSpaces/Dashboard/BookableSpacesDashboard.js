@@ -16,7 +16,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import { addBreadcrumbsToSiteHeader } from '../helpers';
-import { standardText } from 'helpers/general';
+import { slugifyName, standardText } from 'helpers/general';
 
 const tickIcon = altText => (
     // https://mui.com/material-ui/material-icons/?selected=Done
@@ -240,10 +240,11 @@ export const BookableSpacesDashboard = ({
                                         {facilityTypeList?.data?.facility_types?.length > 0 && (
                                             <>
                                                 {facilityTypeList?.data?.facility_types?.map((facilityType, ii) => {
+                                                    const faciltySlug = slugifyName(facilityType.facility_type_name);
                                                     return (
                                                         <TableCell
-                                                            key={`space-${bookableSpace?.space_id}-facilitytype-${facilityType.facility_type_name}`}
-                                                            data-testid={`space-${bookableSpace?.space_id}-facilitytype-${facilityType.facility_type_name}`}
+                                                            key={`space-${bookableSpace?.space_id}-facilitytype-${faciltySlug}`}
+                                                            data-testid={`space-${bookableSpace?.space_id}-facilitytype-${faciltySlug}`}
                                                             sx={{
                                                                 backgroundColor: getColumnBackgroundColor(ii),
                                                                 textAlign: 'center',
