@@ -8,6 +8,7 @@ import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -31,14 +32,13 @@ export const BookableSpacesAddSpace = ({
     campusList,
     campusListLoading,
     campusListError,
+    bookableSpacesRoomList,
+    bookableSpacesRoomListLoading,
+    bookableSpacesRoomListError,
 }) => {
-    console.log(
-        'bookableSpacesRoomAddResult',
-        bookableSpacesRoomAdding,
-        bookableSpacesRoomAddError,
-        bookableSpacesRoomAddResult,
-    );
+    console.log('addResult', bookableSpacesRoomAdding, bookableSpacesRoomAddError, bookableSpacesRoomAddResult);
     console.log('campusList', campusListLoading, campusListError, campusList);
+    console.log('spacesRoomList', bookableSpacesRoomListLoading, bookableSpacesRoomListError, bookableSpacesRoomList);
 
     const { account } = useAccountContext();
 
@@ -60,6 +60,7 @@ export const BookableSpacesAddSpace = ({
         ]);
         if (campusListLoading === null && campusListError === null && campusList === null) {
             actions.loadBookableSpaceCampusChildren();
+            actions.loadAllBookableSpacesRooms();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -241,6 +242,34 @@ export const BookableSpacesAddSpace = ({
 
     console.log('@@@@ location=', location);
     console.log('@@@@ formValues?.campus_id=', formValues?.campus_id);
+
+    // const spaceTypeList =
+    //     bookableSpacesRoomListLoading === false &&
+    //     bookableSpacesRoomListError === false &&
+    //     bookableSpacesRoomList?.data?.locations
+    //         .map(location => location.space_type)
+    //         .filter((spaceType, index, array) => array.indexOf(spaceType) === index);
+    const spaceTypeList = React.useMemo(() => {
+        if (
+            bookableSpacesRoomListLoading === false &&
+            bookableSpacesRoomListError === false &&
+            bookableSpacesRoomList?.data?.locations &&
+            Array.isArray(bookableSpacesRoomList.data.locations)
+        ) {
+            return bookableSpacesRoomList.data.locations
+                .map(location => location.space_type)
+                .filter(
+                    (spaceType, index, array) =>
+                        spaceType && // Remove null/undefined values
+                        spaceType.trim() !== '' && // Remove empty strings
+                        array.indexOf(spaceType) === index, // Remove duplicates
+                )
+                .sort(); // Sort alphabetically for better UX
+        }
+        return [];
+    }, [bookableSpacesRoomListLoading, bookableSpacesRoomListError, bookableSpacesRoomList]);
+    console.log('spaceTypeList=', spaceTypeList);
+
     if (!!campusListLoading || !formValues?.campus_id) {
         return (
             <Grid container>
@@ -320,16 +349,26 @@ export const BookableSpacesAddSpace = ({
                                         </FormControl>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <FormControl variant="standard" fullWidth>
-                                            <InputLabel htmlFor="space_type">Space type *</InputLabel>
-                                            <Input
-                                                id="space_type"
-                                                data-testid="space-type"
-                                                required
-                                                value={formValues?.space_type || ''}
-                                                onChange={handleChange('space_type')}
-                                            />
-                                        </FormControl>
+                                        <TextField
+                                            id="space_type"
+                                            data-testid="space-type"
+                                            label="Space type"
+                                            variant="standard"
+                                            fullWidth
+                                            required
+                                            value={formValues?.space_type || ''}
+                                            onChange={handleChange('space_type')}
+                                            inputProps={{
+                                                list: 'space-type-list',
+                                            }}
+                                        />
+                                        {spaceTypeList && spaceTypeList.length > 0 && (
+                                            <datalist id="space-type-list">
+                                                {spaceTypeList.map((spaceType, index) => (
+                                                    <option key={`spacetype-datalist-${index}`} value={spaceType} />
+                                                ))}
+                                            </datalist>
+                                        )}
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Typography component={'h3'} variant={'h6'}>
@@ -454,6 +493,9 @@ BookableSpacesAddSpace.propTypes = {
     campusList: PropTypes.any,
     campusListLoading: PropTypes.any,
     campusListError: PropTypes.any,
+    bookableSpacesRoomList: PropTypes.any,
+    bookableSpacesRoomListLoading: PropTypes.any,
+    bookableSpacesRoomListError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesAddSpace);
