@@ -92,7 +92,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('toast-corner-message')).toBeVisible();
         await expect(page.getByTestId('toast-corner-message')).toContainText('Please enter all required fields');
     });
-    test.only('add new space - can change the location', async ({ page }) => {
+    test('add new space - can change the location', async ({ page }) => {
         // the page loads with the expected campus-building-floor
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-campus')).toContainText('St Lucia');
@@ -100,6 +100,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-building')).toContainText('Forgan Smith Building');
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Forgan Smith Building - 1');
+        await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
 
         // open the campus dropdown
         page.getByTestId('add-space-select-campus').click();
@@ -126,6 +127,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-building')).toContainText('J.K. Murray Library');
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-floor')).toContainText('J.K. Murray Library - 29');
+        await expect(page.getByTestId('add-space-select-floor')).toContainText('Ground floor');
 
         // open the building dropdown to change building
         page.getByTestId('add-space-select-building').click();
@@ -154,6 +156,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-building')).toContainText('J.K. Murray Library');
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Library Warehouse - 31');
+        await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
 
         // open the campus dropdown
         page.getByTestId('add-space-select-campus').click();

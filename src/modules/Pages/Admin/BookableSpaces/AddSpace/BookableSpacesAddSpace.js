@@ -442,6 +442,9 @@ export const BookableSpacesAddSpace = ({
                                                     location.currentBuildingFloors?.map((floor, index) => (
                                                         <MenuItem value={floor.floor_id} key={`select-floor-${index}`}>
                                                             {floor.floor_name}{' '}
+                                                            {location.currentBuilding.ground_floor_id === floor.floor_id
+                                                                ? ' (Ground floor)'
+                                                                : ''}
                                                             {`${
                                                                 window.location.host === 'localhost:2020' // perhaps remove when dev complete
                                                                     ? ' [' +
