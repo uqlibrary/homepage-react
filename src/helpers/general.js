@@ -264,3 +264,19 @@ export const StyledTertiaryButton = styled(Button)(({ theme }) => ({
         display: 'none',
     },
 }));
+
+export const slugifyName = text => {
+    return (
+        text
+            .toString() // Ensure the input is a string
+            .toLowerCase() // Convert the string to lowercase
+            .replace(/\s+/g, '-') // Replace spaces with hyphens
+            // .replace(/-/g, '_') // Replace spaces with hyphens
+            .replace(/_/g, '-') // Replace spaces with hyphens
+            .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for hyphens
+            .replace(/\-\-+/g, '-') // Replace multiple hyphens with a single hyphen
+            .replace(/^-+/, '') // Trim hyphens from the start of the text
+            .replace(/\//, '') // Trim slashes
+            .replace(/-+$/, '')
+    );
+};

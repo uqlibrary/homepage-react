@@ -1,5 +1,3 @@
-import React from 'react';
-import parse from 'html-react-parser';
 import { fullPath } from 'config/routes';
 import { getUserPostfix } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 
@@ -178,22 +176,6 @@ export const isValidUrl = testUrl => {
         !!url?.hostname &&
         !!url?.hostname.includes('.') && // tld only domain names really dont happen, must be a dot!
         url?.hostname.length >= '12.co'.length
-    );
-};
-
-export const slugifyName = text => {
-    return (
-        text
-            .toString() // Ensure the input is a string
-            .toLowerCase() // Convert the string to lowercase
-            .replace(/\s+/g, '-') // Replace spaces with hyphens
-            // .replace(/-/g, '_') // Replace spaces with hyphens
-            .replace(/_/g, '-') // Replace spaces with hyphens
-            .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for hyphens
-            .replace(/\-\-+/g, '-') // Replace multiple hyphens with a single hyphen
-            .replace(/^-+/, '') // Trim hyphens from the start of the text
-            .replace(/\//, '') // Trim slashes
-            .replace(/-+$/, '')
     );
 };
 
