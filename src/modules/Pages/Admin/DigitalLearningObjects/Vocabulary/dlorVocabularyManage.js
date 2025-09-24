@@ -49,7 +49,7 @@ export const DLOVocabularyManage = ({
     const [formMode, setFormMode] = useState('edit');  
     const [inputValue, setInputValue] = useState('');
     const [formType, setFormType] = useState('synonym'); // synonym or keyword
-    // const [facetOrder, setFacetOrder] = useState(0); 
+    const [parentName, setParentName] = useState(''); 
     const [formValue, setFormValue] = useState('');
     const [keywordId, setKeywordId] = useState('');
     // const [facetTypeName, setFacetTypeName] = useState('');
@@ -80,10 +80,11 @@ export const DLOVocabularyManage = ({
         };
 
         console.log("THE PAYLOAD IS", payload);
-        // actions.updateFacet(id, payload)
-        // .then(
-        //     handleClose()
-        // )
+        actions.updateDlorKeywords(payload)
+        .then(() => {
+            actions.loadDlorKeywords();
+            handleClose();
+        });
     };
 
     const addNewItem = () => {
@@ -117,6 +118,7 @@ export const DLOVocabularyManage = ({
         setFormMode('edit');
         setInputValue('');
         setFormValue('');
+        setFormType('');
         // setFacetOrder(0);
         // setFacetHelp('');
         // setFacetName('');
@@ -160,10 +162,11 @@ export const DLOVocabularyManage = ({
                         </Grid>
                         <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
                             <IconButton color='primary' onClick={() => {
-                                //setFormMode('add'); 
-                                //setFacetTypeName(facetType.facet_type_name);
+                                setFormMode('add');
+                                setFormType('synonym'); 
+                                setParentName(keyword?.keyword);
                                 //setFacetTypeId(facetType.facet_type_id);
-                                //setEditBoxOpened(true)
+                                setEditBoxOpened(true)
                             }}
                             data-testid={`add-synonym-${keyword?.keyword_vocabulary_id}-button`}>   
                                 <AddIcon />
@@ -187,7 +190,10 @@ export const DLOVocabularyManage = ({
                                     <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
                                         <IconButton 
                                             color='secondary' 
-                                            onClick={() => handleEditSynonym(synonym, keyword?.keyword_vocabulary_id)}
+                                            onClick={() => {
+                                                setParentName(keyword?.keyword);
+                                                handleEditSynonym(synonym, keyword?.keyword_vocabulary_id);
+                                            }}
                                             data-testid={`edit-synonym-${keyword?.keyword_vocabulary_id}-${index}`}
                                         >
                                             <EditIcon />
@@ -236,9 +242,10 @@ export const DLOVocabularyManage = ({
                         height: 'auto',
                     }}
                 >
-                    <Typography variant="h4" id="modal-title">
+                    <Typography variant="h6" id="modal-title">
                         {formMode === "edit" ? `Edit  ` : `Add `}
                         {formType}
+                        {` in keyword ${parentName}`}
                     </Typography>
                     {formMode === "edit" &&
                         <Typography variant="p" id="modal-modal-existingName" sx={{ marginBottom: '20px', display: 'block' }}>

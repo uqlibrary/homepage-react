@@ -35,7 +35,8 @@ import {
     DLOR_EDIT_TEAM_ADMIN_API,
     DLOR_DELETE_TEAM_ADMIN_API,
     DLOR_TEAM_MEMBER_SINGLE_GET_API,
-    DLOR_KEYWORDS_API
+    DLOR_KEYWORDS_API,
+    DLOR_KEYWORDS_UPDATE_API,
 } from 'repositories/routes';
 
 const checkExpireSession = (dispatch, error) => {
@@ -796,6 +797,27 @@ export function loadDlorKeywords() {
             .catch(error => {
                 dispatch({
                     type: actions.DLOR_KEYWORDS_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+export function updateDlorKeywords(request) {
+    console.log("UpdateDlor called", request);
+    return dispatch => {
+        dispatch({ type: actions.DLOR_KEYWORDS_UPDATING });
+        return post(DLOR_KEYWORDS_UPDATE_API(), request)
+            .then(response => {
+                console.log("UPDATE RESPONSE", response);
+                dispatch({
+                    type: actions.DLOR_KEYWORDS_UPDATED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_KEYWORDS_UPDATE_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
