@@ -76,6 +76,12 @@ export default {
                             "floor_name": "2",
                         },
                     ]
+                }, {
+                    "building_id": 10,
+                    "building_name": "Incompletely entered building",
+                    "building_id_displayed": "371",
+                    "ground_floor_id": null,
+                    "floors": []
                 }
             ]
         },
