@@ -381,6 +381,7 @@ export const BookableSpacesAddSpace = ({
                                             <Select
                                                 labelId="add-space-select-campus-label"
                                                 id="add-space-select-campus"
+                                                data-testid="add-space-select-campus"
                                                 value={formValues?.campus_id} //  || 1
                                                 label="Campus"
                                                 onChange={handleChange('campus_id')}
@@ -405,6 +406,7 @@ export const BookableSpacesAddSpace = ({
                                             <Select
                                                 labelId="add-space-select-building-label"
                                                 id="add-space-select-building"
+                                                data-testid="add-space-select-building"
                                                 value={formValues?.building_id}
                                                 label="Building"
                                                 onChange={handleChange('building_id')}
@@ -429,6 +431,7 @@ export const BookableSpacesAddSpace = ({
                                             <Select
                                                 labelId="add-space-select-floor-label"
                                                 id="add-space-select-floor"
+                                                data-testid="add-space-select-floor"
                                                 value={formValues?.floor_id}
                                                 label="Floor"
                                                 onChange={handleChange('floor_id')}
