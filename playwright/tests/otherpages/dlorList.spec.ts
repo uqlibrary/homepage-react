@@ -357,13 +357,13 @@ test.describe('Digital Learning Hub', () => {
             // one more char
             await page.locator('[data-testid="dlor-homepage-keyword"] input').pressSequentially('c');
             page.locator('[data-testid="dlor-homepage-keyword"] input').press('Enter');
-            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > div')).toHaveCount(3 + extraRowCount);
+            await expect(page.getByTestId('dlor-homepage-list').locator(':scope > div')).toHaveCount(4 + extraRowCount);
 
-            // check the "Assignments" checkbox
+            // check the "Referencing" checkbox
             await expect(
-                page.locator('[data-testid="checkbox-topic-assignments"] input[type=checkbox]'),
+                page.locator('[data-testid="checkbox-topic-referencing"] input[type=checkbox]'),
             ).not.toBeChecked();
-            await page.locator('[data-testid="checkbox-topic-assignments"] input[type=checkbox]').check();
+            await page.locator('[data-testid="checkbox-topic-referencing"] input[type=checkbox]').check();
 
             // wipes all the panels
             await expect(
@@ -374,8 +374,8 @@ test.describe('Digital Learning Hub', () => {
             ).toBeVisible();
 
             // use the clear button
-            await expect(page.locator('[data-testid="checkbox-topic-assignments"] input[type=checkbox]')).toBeChecked();
-            await page.locator('[data-testid="checkbox-topic-assignments"] input[type=checkbox]').uncheck();
+            await expect(page.locator('[data-testid="checkbox-topic-referencing"] input[type=checkbox]')).toBeChecked();
+            await page.locator('[data-testid="checkbox-topic-referencing"] input[type=checkbox]').uncheck();
             await page.getByTestId('keyword-clear').click();
             // all panels showing again & keyword search field empty
             await expect(page.getByTestId('dlor-homepage-list').locator(':scope > *')).toHaveCount(
