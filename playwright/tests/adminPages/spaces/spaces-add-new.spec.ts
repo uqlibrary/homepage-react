@@ -173,6 +173,14 @@ test.describe('Spaces Admin - manage locations', () => {
             'This is a sunny corner in the Law library where you blah blah blah',
         );
 
+        await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
+        page.getByTestId('space-photo-url')
+            .locator('input')
+            .fill('https://example.com/image.jpg');
+
+        await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
+        page.getByTestId('add-space-photo-description').fill('a table and chairs in a stark white room');
+
         // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         page.getByTestId('admin-spaces-save-button-submit').click();
@@ -188,6 +196,8 @@ test.describe('Spaces Admin - manage locations', () => {
             locationType: 'space',
             space_floor_id: 32,
             space_name: 'W12343',
+            space_photo_description: 'a table and chairs in a stark white room',
+            space_photo_url: 'https://example.com/image.jpg',
             space_precise: 'northwest corner',
             space_description: 'This is a sunny corner in the Law library where you blah blah blah',
             space_type: 'Computer room',
@@ -223,12 +233,71 @@ test.describe('Spaces Admin - manage locations', () => {
 
         await assertAccessibility(page, '[aria-labelledby=":r1:"]');
     });
-    test('add new space - validation - required fields', async ({ page }) => {
+    test('add new space - validation - required fields 1', async ({ page }) => {
         // when the user has not entered required fields, they get an error
+
+        //  blank form gives an error
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         page.getByTestId('admin-spaces-save-button-submit').click();
         await expect(page.getByTestId('toast-corner-message')).toBeVisible();
         await expect(page.getByTestId('toast-corner-message')).toContainText('Please enter all required fields');
+
+        // user enters the name, but its still an error
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+        page.getByTestId('space-name')
+            .locator('input')
+            .fill('W12343');
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        page.getByTestId('admin-spaces-save-button-submit').click();
+        await expect(page.getByTestId('toast-corner-message')).toBeVisible();
+        await expect(page.getByTestId('toast-corner-message')).toContainText('Please enter all required fields');
+
+        // they enter the type
+        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
+        page.getByTestId('space-type')
+            .locator('input')
+            .fill('Computer room');
+        page.getByTestId('admin-spaces-save-button-submit').click();
+
+        // now the form is valid!
+        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
+    });
+    test.only('add new space - validation - required fields 2', async ({ page }) => {
+        // when the user has not entered required fields, they get an error
+
+        // user enters the name
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+        page.getByTestId('space-name')
+            .locator('input')
+            .fill('W12343');
+        // they enter the type
+        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
+        page.getByTestId('space-type')
+            .locator('input')
+            .fill('Computer room');
+
+        // they enter the url, but neglect the description
+        await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
+        page.getByTestId('space-photo-url')
+            .locator('input')
+            .fill('https://example.com/image.jpg');
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        page.getByTestId('admin-spaces-save-button-submit').click();
+        await expect(page.getByTestId('toast-corner-message')).toBeVisible();
+        await expect(page.getByTestId('toast-corner-message')).toContainText('Please enter all required fields');
+
+        await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
+        // page.getByTestId('add-space-photo-description').fill('a description of a room');
+        page.getByTestId('add-space-photo-description').fill(
+            'This is a sunny corner in the Law library where you blah blah blah',
+        );
+
+        page.getByTestId('admin-spaces-save-button-submit').click();
+
+        // finally the form is valid!
+        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
     });
     test('add new space - can change the location', async ({ page }) => {
         // the page loads with the expected campus-building-floor

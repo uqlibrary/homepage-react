@@ -125,9 +125,11 @@ export const BookableSpacesAddSpace = ({
         );
     }, [bookableSpacesRoomAdding, bookableSpacesRoomAddError, bookableSpacesRoomAddResult]);
 
+    const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
     const handleChange = prop => e => {
         const theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
+        console.log('handleChange', prop, theNewValue);
 
         const updatedLocation = {};
         if (prop === 'campus_id') {
@@ -170,6 +172,21 @@ export const BookableSpacesAddSpace = ({
                 ...location,
                 ...updatedLocation,
             });
+        } else if (prop === 'space_photo_url') {
+            const photoDescriptionField = document.getElementById('space_photo_description');
+            const photoDescriptionFieldLabel = document.getElementById('space_photo_description-label');
+            let newRequiredValue = false;
+            if (theNewValue !== '' && theNewValue.length > 0) {
+                // a url has been entered - the description should be required
+                newRequiredValue = true;
+
+                !!photoDescriptionFieldLabel &&
+                    (photoDescriptionFieldLabel.textContent = basePhotoDescriptionFieldLabel + ' *');
+            } else {
+                !!photoDescriptionFieldLabel &&
+                    (photoDescriptionFieldLabel.textContent = basePhotoDescriptionFieldLabel);
+            }
+            !!photoDescriptionField && photoDescriptionField.setAttribute('required', newRequiredValue);
         }
 
         const newLocation = {};
@@ -196,8 +213,13 @@ export const BookableSpacesAddSpace = ({
         window.location.href = spacesAdminLink(spacesPath, account);
     }
 
+    // validate fields value
     const formValid = valuesToSend => {
         if (!valuesToSend.space_name || !valuesToSend.space_type || !valuesToSend.space_floor_id) {
+            return false;
+        }
+        if (!!valuesToSend.space_photo_url && !valuesToSend.space_photo_description) {
+            // a photo must have an accessible description, although the photo itself is not required
             return false;
         }
 
@@ -213,10 +235,10 @@ export const BookableSpacesAddSpace = ({
         valuesToSend.space_name = formValues.space_name;
         valuesToSend.space_precise = formValues.space_precise;
         valuesToSend.space_description = formValues.space_description;
-        // valuesToSend.space_photo_url = '?'; // TODO provide fields for missing values
-        // valuesToSend.space_photo_description = '?';
+        valuesToSend.space_photo_url = formValues.space_photo_url;
+        valuesToSend.space_photo_description = formValues.space_photo_description;
         valuesToSend.space_type = formValues.space_type;
-        // valuesToSend.space_opening_hours_id = '?';
+        // valuesToSend.space_opening_hours_id = '?'; // TODO provide fields for missing values
         // valuesToSend.space_services_page = '?';
         // valuesToSend.space_opening_hours_override = '?';
         // valuesToSend.space_latitude = '?';
@@ -491,6 +513,35 @@ export const BookableSpacesAddSpace = ({
                                     onChange={handleChange('space_description')}
                                     inputProps={{
                                         'data-testid': 'add-space-description',
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl variant="standard" fullWidth>
+                                    <InputLabel htmlFor="space_photo_url">
+                                        Image url (this will eventually be drag and drop)
+                                    </InputLabel>
+                                    <Input
+                                        id="space_photo_url"
+                                        data-testid="space-photo-url"
+                                        value={formValues?.space_photo_url || ''}
+                                        onChange={handleChange('space_photo_url')}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                {/* this WONT be upgraded to CK, because it should just be plain text! */}
+                                <TextField
+                                    id="space_photo_description"
+                                    label={basePhotoDescriptionFieldLabel}
+                                    variant="standard"
+                                    fullWidth
+                                    multiline
+                                    rows={4}
+                                    value={formValues?.space_photo_description || ''}
+                                    onChange={handleChange('space_photo_description')}
+                                    inputProps={{
+                                        'data-testid': 'add-space-photo-description',
                                     }}
                                 />
                             </Grid>
