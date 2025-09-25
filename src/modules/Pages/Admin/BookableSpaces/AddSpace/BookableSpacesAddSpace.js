@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 import { useCookies } from 'react-cookie';
 
+import Autocomplete from '@mui/material/Autocomplete';
 import { Grid } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import Input from '@mui/material/Input';
@@ -24,6 +25,7 @@ import {
     displayToastMessage,
     spacesAdminLink,
 } from 'modules/Pages/Admin/BookableSpaces/helpers';
+import { ASKUS_SPRINGSHARE_ID } from 'config/locale';
 
 const AddSpacePage = ({ children }) => {
     return (
@@ -49,25 +51,34 @@ export const BookableSpacesAddSpace = ({
     bookableSpacesRoomList,
     bookableSpacesRoomListLoading,
     bookableSpacesRoomListError,
+    weeklyHours,
+    weeklyHoursLoading,
+    weeklyHoursError,
 }) => {
     console.log('addResult', bookableSpacesRoomAdding, bookableSpacesRoomAddError, bookableSpacesRoomAddResult);
     console.log('campusList', campusListLoading, campusListError, campusList);
     console.log('spacesRoomList', bookableSpacesRoomListLoading, bookableSpacesRoomListError, bookableSpacesRoomList);
+    console.log('weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
 
     const { account } = useAccountContext();
     const [cookies, setCookie] = useCookies();
 
-    const [location, setLocation1] = React.useState({});
+    const [location, setLocation1] = useState({});
     const setLocation = newValues => {
         console.log('setLocation', newValues);
         setLocation1(newValues);
     };
-    const [formValues, setFormValues2] = React.useState([]);
+    const [formValues, setFormValues2] = useState([]);
     const setFormValues = newValues => {
         console.log('setFormValues', newValues);
         setFormValues2(newValues);
     };
-    const [confirmationOpen, setConfirmationOpen] = React.useState(false);
+    const [confirmationOpen, setConfirmationOpen] = useState(false);
+
+    const [selectedOption, setSelectedOption] = useState(
+        null,
+        // initialValue ? options.find(opt => opt.lid === initialValue) : null,
+    );
 
     useEffect(() => {
         addBreadcrumbsToSiteHeader([
@@ -76,6 +87,7 @@ export const BookableSpacesAddSpace = ({
         if (campusListLoading === null && campusListError === null && campusList === null) {
             actions.loadBookableSpaceCampusChildren();
             actions.loadAllBookableSpacesRooms();
+            actions.loadWeeklyHours();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -126,6 +138,18 @@ export const BookableSpacesAddSpace = ({
     }, [bookableSpacesRoomAdding, bookableSpacesRoomAddError, bookableSpacesRoomAddResult]);
 
     const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
+
+    const handleSpringshareSelection = (event, newValue) => {
+        console.log('handleSpringshareSelection', event, newValue);
+        setSelectedOption(newValue);
+        const newValues = {
+            ...formValues,
+            ['space_opening_hours_id']: newValue.id,
+        };
+        console.log('handleSpringshareSelection newValues=', newValues);
+        setFormValues(newValues);
+    };
+
     const handleChange = prop => e => {
         const theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
@@ -227,6 +251,7 @@ export const BookableSpacesAddSpace = ({
     };
 
     const createNewSpace = () => {
+        console.log('createNewSpace formValues=', formValues);
         const valuesToSend = {};
 
         valuesToSend.locationType = 'space';
@@ -238,11 +263,11 @@ export const BookableSpacesAddSpace = ({
         valuesToSend.space_photo_url = formValues.space_photo_url;
         valuesToSend.space_photo_description = formValues.space_photo_description;
         valuesToSend.space_type = formValues.space_type;
-        // valuesToSend.space_opening_hours_id = '?'; // TODO provide fields for missing values
-        // valuesToSend.space_services_page = '?';
-        // valuesToSend.space_opening_hours_override = '?';
-        // valuesToSend.space_latitude = '?';
-        // valuesToSend.space_longitude = '?';
+        valuesToSend.space_opening_hours_id = formValues.space_opening_hours_id;
+        // valuesToSend.space_services_page = formValues.space_services_page; // TODO provide fields for missing values
+        // valuesToSend.space_opening_hours_override = formValues.space_opening_hours_override;
+        // valuesToSend.space_latitude = formValues.space_latitude;
+        // valuesToSend.space_longitude = formValues.space_longitude;
 
         if (!formValid(valuesToSend)) {
             document.activeElement.blur();
@@ -285,12 +310,6 @@ export const BookableSpacesAddSpace = ({
     console.log('@@@@ location=', location);
     console.log('@@@@ formValues?.campus_id=', formValues?.campus_id);
 
-    // const spaceTypeList =
-    //     bookableSpacesRoomListLoading === false &&
-    //     bookableSpacesRoomListError === false &&
-    //     bookableSpacesRoomList?.data?.locations
-    //         .map(location => location.space_type)
-    //         .filter((spaceType, index, array) => array.indexOf(spaceType) === index);
     const spaceTypeList = React.useMemo(() => {
         if (
             bookableSpacesRoomListLoading === false &&
@@ -310,7 +329,28 @@ export const BookableSpacesAddSpace = ({
         }
         return [];
     }, [bookableSpacesRoomListLoading, bookableSpacesRoomListError, bookableSpacesRoomList]);
-    console.log('spaceTypeList=', spaceTypeList);
+
+    const springshareList = React.useMemo(() => {
+        if (
+            weeklyHoursLoading === false &&
+            weeklyHoursError === false &&
+            weeklyHours?.data?.locations &&
+            Array.isArray(weeklyHours.data.locations)
+        ) {
+            return (
+                weeklyHours.data.locations
+                    .filter(l => l.lid !== ASKUS_SPRINGSHARE_ID)
+                    .sort((a, b) => a.display_name.localeCompare(b.display_name))
+                    // eslint-disable-next-line camelcase
+                    .map(({ lid, display_name }) => ({
+                        id: lid,
+                        // eslint-disable-next-line camelcase
+                        display_name,
+                    }))
+            );
+        }
+        return [];
+    }, [weeklyHoursLoading, weeklyHoursError, weeklyHours]);
 
     if (!!campusListLoading || !formValues?.campus_id) {
         return (
@@ -325,7 +365,11 @@ export const BookableSpacesAddSpace = ({
             <AddSpacePage>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
-                        <p data-testid="add-space-error">Something went wrong - please try again later.</p>
+                        <div data-testid="add-space-error">
+                            <p>Something went wrong - please try again later.</p>
+                            {!!campusListError && <p>Locations currently unavailable</p>}
+                            {!!bookableSpacesRoomListError && <p>Space types currently unavailable</p>}
+                        </div>
                     </Grid>
                 </Grid>
             </AddSpacePage>
@@ -501,6 +545,33 @@ export const BookableSpacesAddSpace = ({
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
+                                <Autocomplete
+                                    data-testid="add-space-springshare-id"
+                                    options={springshareList}
+                                    value={selectedOption}
+                                    onChange={handleSpringshareSelection}
+                                    getOptionLabel={option => option.display_name}
+                                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                                    renderInput={params => (
+                                        <TextField
+                                            {...params}
+                                            label="Choose the Springshare building to use for Opening hours"
+                                            placeholder="Choose a building..."
+                                            variant="outlined"
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                'data-testid': 'add-space-springshare-search-input-field',
+                                            }}
+                                            inputProps={{
+                                                ...params.inputProps,
+                                                'data-testid': 'add-space-springshare-id-autocomplete-input-wrapper',
+                                                'aria-label': 'Search for a building',
+                                            }}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
                                 {/* will upgrade this to ckeditor (or replacement) eventually*/}
                                 <TextField
                                     id="space_description"
@@ -546,11 +617,10 @@ export const BookableSpacesAddSpace = ({
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <Typography component={'p'} variant={'p'}>
-                                    Required fields are marked with *
+                                <Typography component={'p'} variant={'p'} sx={{ textAlign: 'right' }}>
+                                    Required fields are marked with a *
                                 </Typography>
                             </Grid>
-
                             <Grid item xs={6}>
                                 <StyledSecondaryButton
                                     children="Cancel"
@@ -590,6 +660,9 @@ BookableSpacesAddSpace.propTypes = {
     bookableSpacesRoomList: PropTypes.any,
     bookableSpacesRoomListLoading: PropTypes.any,
     bookableSpacesRoomListError: PropTypes.any,
+    weeklyHours: PropTypes.any,
+    weeklyHoursLoading: PropTypes.any,
+    weeklyHoursError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesAddSpace);

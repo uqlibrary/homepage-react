@@ -147,13 +147,11 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.locator('[aria-labelledby="add-space-select-building-label"] li:last-of-type')).toContainText(
             'Library Warehouse',
         );
-        // page.getByText(/Library Warehouse/).click();
         page.locator('[aria-labelledby="add-space-select-building-label"] li:last-of-type').click();
 
         // open the floor dropdown to change floor
         await expect(page.getByTestId('add-space-select-floor')).toBeVisible();
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Library Warehouse - 31');
-        // page.getByText(/J.K. Murray Library/).click();
         page.getByTestId('add-space-select-floor').click();
 
         // click on floor to change the floor
@@ -167,6 +165,11 @@ test.describe('Spaces Admin - manage locations', () => {
         page.getByTestId('add-space-precise-location')
             .locator('input')
             .fill('northwest corner');
+
+        await expect(page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper')).toBeVisible();
+
+        await page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper').click();
+        await page.getByRole('option', { name: 'Walter Harrison Law' }).click();
 
         await expect(page.getByTestId('add-space-description')).toBeVisible();
         page.getByTestId('add-space-description').fill(
@@ -201,6 +204,7 @@ test.describe('Spaces Admin - manage locations', () => {
             space_precise: 'northwest corner',
             space_description: 'This is a sunny corner in the Law library where you blah blah blah',
             space_type: 'Computer room',
+            space_opening_hours_id: 3841,
         };
         const cookieValue = await page.evaluate(() => {
             return document.cookie
@@ -213,6 +217,7 @@ test.describe('Spaces Admin - manage locations', () => {
         const sentValues = !!decodedValue && JSON.parse(decodedValue);
         // console.log('expectedValues=', expectedValues);
         // console.log('sentValues=', sentValues);
+
         expect(sentValues).toEqual(expectedValues);
     });
 
@@ -263,7 +268,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('message-title')).toBeVisible();
         await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
     });
-    test.only('add new space - validation - required fields 2', async ({ page }) => {
+    test('add new space - validation - required fields 2', async ({ page }) => {
         // when the user has not entered required fields, they get an error
 
         // user enters the name

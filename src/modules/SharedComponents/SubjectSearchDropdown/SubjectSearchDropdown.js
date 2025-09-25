@@ -174,7 +174,7 @@ export const SubjectSearchDropdown = ({
                         filterOptions={options => {
                             return options;
                         }}
-                        data-testid={`${elementId}-autocomplete`}
+                        data-testid={`${elementId}-autocomplete`} // learningResourceId-autocomplete // full-learningresource-autocomplete
                         analyticsid-testid={`${elementId}-autocomplete`}
                         aria-controls={`${elementId}-autocomplete-listbox`}
                         blurOnSelect="mouse"
