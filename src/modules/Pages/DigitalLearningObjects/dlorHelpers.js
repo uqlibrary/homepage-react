@@ -161,24 +161,6 @@ export const getDlorViewPageUrl = uuid => {
     return `${getPathRoot()}/digital-learning-hub/view/${uuid}${userString}`;
 };
 
-export const isValidUrl = testUrl => {
-    let url;
-
-    try {
-        url = new URL(testUrl);
-    } catch (_) {
-        /* istanbul ignore next */
-        return false;
-    }
-
-    return (
-        (url?.protocol === 'http:' || url?.protocol === 'https:') &&
-        !!url?.hostname &&
-        !!url?.hostname.includes('.') && // tld only domain names really dont happen, must be a dot!
-        url?.hostname.length >= '12.co'.length
-    );
-};
-
 export function convertSnakeCaseToKebabCase(snakeCaseString) {
     return snakeCaseString.replace(/_/g, '-');
 }

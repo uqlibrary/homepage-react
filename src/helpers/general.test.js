@@ -6,6 +6,7 @@ import {
     leftJoin,
     stripHtml,
     unescapeString,
+    isValidUrl,
 } from './general';
 
 describe('general helpers', () => {
@@ -92,5 +93,23 @@ describe('general helpers', () => {
             'https://web.library.uq.edu.au/support',
         );
         expect(linkToDrupal('/study', 'www.library.uq.edu.au')).toEqual('https://web.library.uq.edu.au/study');
+    });
+
+    it('should validate urls', () => {
+        expect(isValidUrl('http://example.com')).toEqual(true);
+        expect(isValidUrl('https://example.com')).toEqual(true);
+        expect(isValidUrl('https://example.com/image.jpg')).toEqual(true);
+        expect(isValidUrl('https://uq.edu.au')).toBe(true);
+
+        expect(isValidUrl('ftp://something.com')).toBe(false);
+        expect(isValidUrl('https://')).toEqual(false);
+        expect(isValidUrl('')).toEqual(false);
+        expect(isValidUrl('x')).toBe(false);
+        expect(isValidUrl(null)).toEqual(false);
+        expect(isValidUrl('https://google')).toEqual(false); // not dot - probably exists, but we are treating it as invalid, because nobody uses them, but a typo would be easy
+        expect(isValidUrl('https://s.h')).toEqual(false);
+        expect(isValidUrl('blahblahblah')).toEqual(false);
+        expect(isValidUrl('blah blah blah')).toEqual(false);
+        expect(isValidUrl('https://x.c')).toBe(false); // too short
     });
 });

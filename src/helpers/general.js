@@ -280,3 +280,20 @@ export const slugifyName = text => {
             .replace(/-+$/, '')
     );
 };
+export const isValidUrl = testUrl => {
+    let url;
+
+    try {
+        url = new URL(testUrl);
+    } catch (_) {
+        /* istanbul ignore next */
+        return false;
+    }
+
+    return (
+        (url?.protocol === 'http:' || url?.protocol === 'https:') &&
+        !!url?.hostname &&
+        !!url?.hostname.includes('.') && // tld only domain names really don't happen, must be a dot!
+        url?.hostname.length >= '12.co'.length
+    );
+};

@@ -10,7 +10,6 @@ import {
     getYoutubeUrlForPreviewEmbed,
     isPreviewableUrl,
     isValidNumber,
-    isValidUrl,
     toTitleCase,
 } from './dlorHelpers';
 
@@ -119,14 +118,6 @@ describe('helpers', () => {
 
     it('generates view urls', () => {
         expect(getDlorViewPageUrl('xyz')).toEqual('http://localhost/digital-learning-hub/view/xyz');
-    });
-
-    it('should correctly validate an url', () => {
-        expect(isValidUrl('x')).toBe(false);
-        expect(isValidUrl('ftp://x.com')).toBe(false);
-        expect(isValidUrl('https://x.c')).toBe(false);
-        expect(isValidUrl('http://apple')).toBe(false);
-        expect(isValidUrl('https://uq.edu.au')).toBe(true);
     });
 
     it('should correctly change snake case to kebab case', () => {
