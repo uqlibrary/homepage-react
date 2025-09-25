@@ -211,8 +211,8 @@ export const BookableSpacesAddSpace = ({
 
         valuesToSend.space_floor_id = formValues.floor_id;
         valuesToSend.space_name = formValues.space_name;
-        // valuesToSend.space_precise = '?'; // TODO missing setting
-        // valuesToSend.space_description = '?';
+        valuesToSend.space_precise = formValues.space_precise;
+        // valuesToSend.space_description = '?'; // TODO provide fields for missing values
         // valuesToSend.space_photo_url = '?';
         // valuesToSend.space_photo_description = '?';
         valuesToSend.space_type = formValues.space_type;
@@ -463,6 +463,19 @@ export const BookableSpacesAddSpace = ({
                                                 </MenuItem>
                                             ))}
                                     </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl variant="standard" fullWidth>
+                                    <InputLabel htmlFor="space_precise">
+                                        Description of Space placement within the building
+                                    </InputLabel>
+                                    <Input
+                                        id="space_precise"
+                                        data-testid="add-space-precise-location"
+                                        value={formValues?.space_precise || ''}
+                                        onChange={handleChange('space_precise')}
+                                    />
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>

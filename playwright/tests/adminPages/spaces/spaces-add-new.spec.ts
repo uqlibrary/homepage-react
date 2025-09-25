@@ -54,7 +54,7 @@ test.describe('Spaces Admin - manage locations', () => {
     test('add spaces page is accessible', async ({ page }) => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
-    test.only('can add new space, with only required fields', async ({ page, context }) => {
+    test('can add new space, with only required fields', async ({ page, context }) => {
         await context.addCookies([
             {
                 name: 'CYPRESS_TEST_DATA',
@@ -74,6 +74,8 @@ test.describe('Spaces Admin - manage locations', () => {
         page.getByTestId('space-type')
             .locator('input')
             .fill('Computer room');
+
+        // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         page.getByTestId('admin-spaces-save-button-submit').click();
 
@@ -98,6 +100,160 @@ test.describe('Spaces Admin - manage locations', () => {
         const decodedValue = !!cookieValue && decodeURIComponent(cookieValue);
         const sentValues = !!decodedValue && JSON.parse(decodedValue);
         expect(sentValues).toEqual(expectedValues);
+    });
+    test('can add new space, with only required fields, with all fields', async ({ page, context }) => {
+        await context.addCookies([
+            {
+                name: 'CYPRESS_TEST_DATA',
+                value: 'active',
+                url: 'http://localhost:2020',
+            },
+        ]);
+
+        const cookie = await page.context().cookies();
+        expect(cookie.some(c => c.name === 'CYPRESS_TEST_DATA' && c.value === 'active')).toBeTruthy();
+
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+        page.getByTestId('space-name')
+            .locator('input')
+            .fill('W12343');
+        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
+        page.getByTestId('space-type')
+            .locator('input')
+            .fill('Computer room');
+
+        // choose a different location
+
+        // open the campus dropdown
+        await expect(page.getByTestId('add-space-select-campus')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-campus')).toContainText('St Lucia');
+        page.getByText(/St Lucia/).click();
+
+        // click in campus list to change to campus "Gatton"
+        await expect(page.locator('[aria-labelledby="add-space-select-campus-label"] li:last-of-type')).toBeVisible();
+        await expect(page.locator('[aria-labelledby="add-space-select-campus-label"] li:last-of-type')).toContainText(
+            'Gatton',
+        );
+        page.getByText(/Gatton/).click();
+
+        // open the building dropdown to change building
+        await expect(page.getByTestId('add-space-select-building')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-building')).toContainText('J.K. Murray Library');
+        // page.getByText(/J.K. Murray Library/).click();
+        page.getByTestId('add-space-select-building').click();
+
+        // click in building list to change to building "warehouse"
+        await expect(page.locator('[aria-labelledby="add-space-select-building-label"] li:last-of-type')).toBeVisible();
+        await expect(page.locator('[aria-labelledby="add-space-select-building-label"] li:last-of-type')).toContainText(
+            'Library Warehouse',
+        );
+        // page.getByText(/Library Warehouse/).click();
+        page.locator('[aria-labelledby="add-space-select-building-label"] li:last-of-type').click();
+
+        // open the floor dropdown to change floor
+        await expect(page.getByTestId('add-space-select-floor')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-floor')).toContainText('Library Warehouse - 31');
+        // page.getByText(/J.K. Murray Library/).click();
+        page.getByTestId('add-space-select-floor').click();
+
+        // click on floor to change the floor
+        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type')).toBeVisible();
+        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type')).toContainText(
+            'Library Warehouse - 32',
+        );
+        page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type').click();
+
+        await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
+        page.getByTestId('add-space-precise-location')
+            .locator('input')
+            .fill('northwest corner');
+
+        // click save button
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        page.getByTestId('admin-spaces-save-button-submit').click();
+
+        await expect(page.getByTestId('toast-corner-message')).not.toBeVisible();
+
+        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
+
+        // check the data we pretended to send to the server matches what we expect
+        // acts as check of what we sent to api
+        const expectedValues = {
+            locationType: 'space',
+            space_floor_id: 32,
+            space_name: 'W12343',
+            space_precise: 'northwest corner',
+            space_type: 'Computer room',
+        };
+        const cookieValue = await page.evaluate(() => {
+            return document.cookie
+                .split('; ')
+                .find(row => row.startsWith('CYPRESS_DATA_SAVED='))
+                ?.split('=')[1];
+        });
+        expect(cookieValue).toBeDefined();
+        const decodedValue = !!cookieValue && decodeURIComponent(cookieValue);
+        const sentValues = !!decodedValue && JSON.parse(decodedValue);
+        // console.log('expectedValues=', expectedValues);
+        // console.log('sentValues=', sentValues);
+        expect(sentValues).toEqual(expectedValues);
+    });
+    test.skip('can add new space, with all fields', async ({ page, context }) => {
+        await context.addCookies([
+            {
+                name: 'CYPRESS_TEST_DATA',
+                value: 'active',
+                url: 'http://localhost:2020',
+            },
+        ]);
+
+        const cookie = await page.context().cookies();
+        expect(cookie.some(c => c.name === 'CYPRESS_TEST_DATA' && c.value === 'active')).toBeTruthy();
+
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+        page.getByTestId('space-name')
+            .locator('input')
+            .fill('W12343');
+        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
+        page.getByTestId('space-type')
+            .locator('input')
+            .fill('Computer room');
+
+        // choose a different location
+        page.getByTestId('add-space-select-campus').click();
+        // click on "Gatton" to change campus
+        page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:last-of-type').click();
+        // open the building dropdown to change building
+        page.getByTestId('add-space-select-building').click();
+        // click on building 'Warehouse' to change the building and floor
+        page.locator('ul[aria-labelledby="add-space-select-building-label"] li:last-of-type').click();
+        page.getByTestId('add-space-select-floor').click();
+
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        page.getByTestId('admin-spaces-save-button-submit').click();
+        //
+        // await expect(page.getByTestId('message-title')).toBeVisible();
+        // await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
+        //
+        // // check the data we pretended to send to the server matches what we expect
+        // // acts as check of what we sent to api
+        // const expectedValues = {
+        //     locationType: 'space',
+        //     space_floor_id: 1,
+        //     space_name: 'W12343',
+        //     space_type: 'Computer room',
+        // };
+        // const cookieValue = await page.evaluate(() => {
+        //     return document.cookie
+        //         .split('; ')
+        //         .find(row => row.startsWith('CYPRESS_DATA_SAVED='))
+        //         ?.split('=')[1];
+        // });
+        // expect(cookieValue).toBeDefined();
+        // const decodedValue = !!cookieValue && decodeURIComponent(cookieValue);
+        // const sentValues = !!decodedValue && JSON.parse(decodedValue);
+        // expect(sentValues).toEqual(expectedValues);
     });
     test('add spaces page save dialog is accessible', async ({ page }) => {
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
@@ -189,6 +345,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Library Warehouse - 31');
         await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
 
+        // test we can change it twice
         // open the campus dropdown
         page.getByTestId('add-space-select-campus').click();
 
