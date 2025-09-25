@@ -69,7 +69,7 @@ export const ConfirmationBox = ({
                 {!!showInputForm && /* istanbul ignore next */ <InputForm />}
             </DialogContent>
             <DialogActions>
-                <Grid container spacing={1}>
+                <Grid container spacing={1} sx={{ justifyContent: 'space-between' }}>
                     <Hidden smDown>
                         <Grid item xs />
                     </Hidden>
