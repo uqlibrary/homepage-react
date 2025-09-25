@@ -168,6 +168,11 @@ test.describe('Spaces Admin - manage locations', () => {
             .locator('input')
             .fill('northwest corner');
 
+        await expect(page.getByTestId('add-space-description')).toBeVisible();
+        page.getByTestId('add-space-description').fill(
+            'This is a sunny corner in the Law library where you blah blah blah',
+        );
+
         // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         page.getByTestId('admin-spaces-save-button-submit').click();
@@ -184,6 +189,7 @@ test.describe('Spaces Admin - manage locations', () => {
             space_floor_id: 32,
             space_name: 'W12343',
             space_precise: 'northwest corner',
+            space_description: 'This is a sunny corner in the Law library where you blah blah blah',
             space_type: 'Computer room',
         };
         const cookieValue = await page.evaluate(() => {

@@ -212,8 +212,8 @@ export const BookableSpacesAddSpace = ({
         valuesToSend.space_floor_id = formValues.floor_id;
         valuesToSend.space_name = formValues.space_name;
         valuesToSend.space_precise = formValues.space_precise;
-        // valuesToSend.space_description = '?'; // TODO provide fields for missing values
-        // valuesToSend.space_photo_url = '?';
+        valuesToSend.space_description = formValues.space_description;
+        // valuesToSend.space_photo_url = '?'; // TODO provide fields for missing values
         // valuesToSend.space_photo_description = '?';
         valuesToSend.space_type = formValues.space_type;
         // valuesToSend.space_opening_hours_id = '?';
@@ -477,6 +477,22 @@ export const BookableSpacesAddSpace = ({
                                         onChange={handleChange('space_precise')}
                                     />
                                 </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                {/* will upgrade this to ckeditor (or replacement) eventually*/}
+                                <TextField
+                                    id="space_description"
+                                    label="Space description"
+                                    variant="standard"
+                                    fullWidth
+                                    multiline
+                                    rows={4}
+                                    value={formValues?.space_description || ''}
+                                    onChange={handleChange('space_description')}
+                                    inputProps={{
+                                        'data-testid': 'add-space-description',
+                                    }}
+                                />
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography component={'p'} variant={'p'}>
