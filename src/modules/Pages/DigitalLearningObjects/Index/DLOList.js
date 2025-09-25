@@ -709,24 +709,24 @@ export const DLOList = ({
         !!block && (block.style.display = 'none');
     }
 
-    const keywordFoundIn = (object, enteredKeyword) => {
-        const enteredKeywordLower = enteredKeyword.toLowerCase();
-        if (
-            object.object_title.toLowerCase().includes(enteredKeywordLower) ||
-            object.object_description.toLowerCase().includes(enteredKeywordLower) ||
-            object.object_summary.toLowerCase().includes(enteredKeywordLower)
-        ) {
-            return true;
-        }
-        if (
-            !!object?.object_keywords?.some(k => {
-                return k.toLowerCase().startsWith(enteredKeywordLower);
-            })
-        ) {
-            return true;
-        }
-        return false;
-    };
+    // const keywordFoundIn = (object, enteredKeyword) => {
+    //     const enteredKeywordLower = enteredKeyword.toLowerCase();
+    //     if (
+    //         object.object_title.toLowerCase().includes(enteredKeywordLower) ||
+    //         object.object_description.toLowerCase().includes(enteredKeywordLower) ||
+    //         object.object_summary.toLowerCase().includes(enteredKeywordLower)
+    //     ) {
+    //         return true;
+    //     }
+    //     if (
+    //         !!object?.object_keywords?.some(k => {
+    //             return k.toLowerCase().startsWith(enteredKeywordLower);
+    //         })
+    //     ) {
+    //         return true;
+    //     }
+    //     return false;
+    // };
 
     const handleCheckboxAction = prop => e => {
         const facetTypeSlug = prop?.replace('checkbox-', '');

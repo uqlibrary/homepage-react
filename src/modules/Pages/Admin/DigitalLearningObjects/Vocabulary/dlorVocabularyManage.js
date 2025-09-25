@@ -89,19 +89,17 @@ export const DLOVocabularyManage = ({
 
     const addNewItem = () => {
         console.log("Add new item", inputValue, keywordId);
-        // const payload = {
-        //     facet_name: inputValue,
-        //     facet_type_id: facetTypeId,
-        //     facet_order: facetOrder,
-        //     facet_slug: '',
-        //     facet_help: facetHelp,
-        //     facet_show_help: facetShowHelp,
-        // };
-        // console.log("THE PAYLOAD IS", payload);
-        // actions.createFacet(payload)
-        // .then(
-        //     handleClose()
-        // )
+         const payload = {
+            keyword_type: formType,
+            keyword_old_value: formValue,
+            keyword_new_value: inputValue,
+            keyword_id: keywordId,
+        };
+        actions.updateDlorKeywords(payload)
+        .then(() => {
+            actions.loadDlorKeywords();
+            handleClose();
+        });
     }
 
     // const handleDeleteFacet = (id) => { 
@@ -156,7 +154,7 @@ export const DLOVocabularyManage = ({
                 {!!dlorKeywords && dlorKeywords.length > 0 && dlorKeywords.map(keyword => (
                     <React.Fragment key={keyword?.keyword_vocabulary_id}>
                         <Grid item xs={11}>
-                            <Typography component='h3' sx={{fontWeight: 'bold'}} data-testid={`keyword-${keyword?.keyword_vocabulary_id}-name`}>
+                            <Typography component='p' sx={{fontWeight: 'bold'}} data-testid={`keyword-${keyword?.keyword_vocabulary_id}-name`}>
                                 {keyword?.keyword} - (keyword)
                             </Typography>
                         </Grid>
@@ -254,10 +252,12 @@ export const DLOVocabularyManage = ({
                     } 
                     
                     <FormControl variant="standard" fullWidth>
-                        <InputLabel htmlFor="facet_name">New {formType} name *</InputLabel>
+                        <InputLabel htmlFor="vocabulary_name">New {formType} name *</InputLabel>
                         <Input
-                            id="facet_name"
-                            data-testid="facet-name"
+                            id="vocabulary_name"
+                            inputProps={{
+                                'data-testid': 'vocabulary-name' 
+                            }}
                             required
                             value={inputValue}
                             onChange={handleChange}
@@ -293,7 +293,7 @@ export const DLOVocabularyManage = ({
                 </div>
             </Modal> 
             {/* The modal delete confirmation */}
-            <ConfirmationBox
+            {/* <ConfirmationBox
                 actionButtonColor="primary"
                 actionButtonVariant="contained"
                 confirmationBoxId="alert-edit-save-succeeded"
@@ -307,7 +307,7 @@ export const DLOVocabularyManage = ({
                     confirmButtonLabel: 'Delete',
                     cancelButtonLabel: 'Cancel',
                 }}
-            />
+            /> */}
         </StandardPage>
     );
 };
