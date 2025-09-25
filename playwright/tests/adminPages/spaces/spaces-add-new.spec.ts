@@ -101,7 +101,7 @@ test.describe('Spaces Admin - manage locations', () => {
         const sentValues = !!decodedValue && JSON.parse(decodedValue);
         expect(sentValues).toEqual(expectedValues);
     });
-    test('can add new space, with only required fields, with all fields', async ({ page, context }) => {
+    test('can add new space, with all fields', async ({ page, context }) => {
         await context.addCookies([
             {
                 name: 'CYPRESS_TEST_DATA',
@@ -199,62 +199,7 @@ test.describe('Spaces Admin - manage locations', () => {
         // console.log('sentValues=', sentValues);
         expect(sentValues).toEqual(expectedValues);
     });
-    test.skip('can add new space, with all fields', async ({ page, context }) => {
-        await context.addCookies([
-            {
-                name: 'CYPRESS_TEST_DATA',
-                value: 'active',
-                url: 'http://localhost:2020',
-            },
-        ]);
 
-        const cookie = await page.context().cookies();
-        expect(cookie.some(c => c.name === 'CYPRESS_TEST_DATA' && c.value === 'active')).toBeTruthy();
-
-        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
-        page.getByTestId('space-name')
-            .locator('input')
-            .fill('W12343');
-        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        page.getByTestId('space-type')
-            .locator('input')
-            .fill('Computer room');
-
-        // choose a different location
-        page.getByTestId('add-space-select-campus').click();
-        // click on "Gatton" to change campus
-        page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:last-of-type').click();
-        // open the building dropdown to change building
-        page.getByTestId('add-space-select-building').click();
-        // click on building 'Warehouse' to change the building and floor
-        page.locator('ul[aria-labelledby="add-space-select-building-label"] li:last-of-type').click();
-        page.getByTestId('add-space-select-floor').click();
-
-        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        page.getByTestId('admin-spaces-save-button-submit').click();
-        //
-        // await expect(page.getByTestId('message-title')).toBeVisible();
-        // await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
-        //
-        // // check the data we pretended to send to the server matches what we expect
-        // // acts as check of what we sent to api
-        // const expectedValues = {
-        //     locationType: 'space',
-        //     space_floor_id: 1,
-        //     space_name: 'W12343',
-        //     space_type: 'Computer room',
-        // };
-        // const cookieValue = await page.evaluate(() => {
-        //     return document.cookie
-        //         .split('; ')
-        //         .find(row => row.startsWith('CYPRESS_DATA_SAVED='))
-        //         ?.split('=')[1];
-        // });
-        // expect(cookieValue).toBeDefined();
-        // const decodedValue = !!cookieValue && decodeURIComponent(cookieValue);
-        // const sentValues = !!decodedValue && JSON.parse(decodedValue);
-        // expect(sentValues).toEqual(expectedValues);
-    });
     test('add spaces page save dialog is accessible', async ({ page }) => {
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         page.getByTestId('space-name')
@@ -299,8 +244,8 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.locator('[aria-labelledby="add-space-select-campus-label"] li:first-of-type')).toContainText(
             'St Lucia',
         );
-        await expect(page.locator('[aria-labelledby="add-space-select-campus-label"] li:last-of-type')).toBeVisible();
-        await expect(page.locator('[aria-labelledby="add-space-select-campus-label"] li:last-of-type')).toContainText(
+        await expect(page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:last-of-type')).toBeVisible();
+        await expect(page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:last-of-type')).toContainText(
             'Gatton',
         );
 
@@ -333,16 +278,43 @@ test.describe('Spaces Admin - manage locations', () => {
             'Library Warehouse',
         );
 
-        // click on building 'Warehouse' to change the building and floor
+        // choose 'Warehouse' inn the building dropdown to change the building and floor
         page.locator('ul[aria-labelledby="add-space-select-building-label"] li:last-of-type').click();
 
         // the displayed building and floors have changed; campus is unchanged
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-campus')).toContainText('Gatton');
         await expect(page.getByTestId('add-space-select-building').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-building')).toContainText('J.K. Murray Library');
+        await expect(page.getByTestId('add-space-select-building')).toContainText('Library Warehouse');
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Library Warehouse - 31');
+        await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
+
+        // open the floor dropdown to change floor
+        page.getByTestId('add-space-select-floor').click();
+
+        // the popup has the two valid floors
+        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"]')).toBeVisible();
+        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"]').locator(' > *')).toHaveCount(2);
+        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"] li:first-child')).toBeVisible();
+        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"] li:first-of-type')).toContainText(
+            'Library Warehouse - 31',
+        );
+        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type')).toBeVisible();
+        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type')).toContainText(
+            'Library Warehouse - 32',
+        );
+
+        // click on other floor to change the floor
+        page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type').click();
+
+        // the displayed floor has changed; campus & building is unchanged
+        await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-campus')).toContainText('Gatton');
+        await expect(page.getByTestId('add-space-select-building').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-building')).toContainText('Library Warehouse');
+        await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-floor')).toContainText('Library Warehouse - 32');
         await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
 
         // test we can change it twice
@@ -372,16 +344,12 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.locator('[aria-labelledby="add-space-select-building-label"]').locator(' > *')).toHaveCount(
             2,
         );
-        await expect(page.locator('[aria-labelledby="add-space-select-building-label"] li:first-child')).toBeVisible();
-        await expect(
-            page.locator('[aria-labelledby="add-space-select-building-label"] li:first-of-type'),
-        ).toContainText('Forgan Smith Building');
+
+        // click on building 'Duhig Tower' to change the building and floor
         await expect(page.locator('[aria-labelledby="add-space-select-building-label"] li:last-of-type')).toBeVisible();
         await expect(page.locator('[aria-labelledby="add-space-select-building-label"] li:last-of-type')).toContainText(
             'Duhig Tower',
         );
-
-        // click on building 'Duhig Tower' to change the building and floor
         page.locator('ul[aria-labelledby="add-space-select-building-label"] li:last-of-type').click();
 
         // the displayed building and floors have changed; campus is unchanged
@@ -391,6 +359,33 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-building')).toContainText('Duhig Tower');
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Duhig Tower - 4');
+
+        // open the floor dropdown to change floor
+        page.getByTestId('add-space-select-floor').click();
+
+        // the popup has the two valid floors
+        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"]')).toBeVisible();
+        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"]').locator(' > *')).toHaveCount(2);
+        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"] li:first-child')).toBeVisible();
+        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"] li:first-of-type')).toContainText(
+            'Duhig Tower - 4',
+        );
+        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type')).toBeVisible();
+        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type')).toContainText(
+            'Duhig Tower - 5',
+        );
+
+        // click on other floor to change the floor
+        page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type').click();
+
+        // the displayed floor has changed; campus & building is unchanged
+        await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-campus')).toContainText('St Lucia');
+        await expect(page.getByTestId('add-space-select-building').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-building')).toContainText('Duhig Tower');
+        await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-floor')).toContainText('Duhig Tower - 5');
+        await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
     });
 });
 test.describe('Spaces Admin - errors', () => {
