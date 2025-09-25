@@ -163,6 +163,7 @@ export const DLOVocabularyManage = ({
                                 setFormMode('add');
                                 setFormType('synonym'); 
                                 setParentName(keyword?.keyword);
+                                setKeywordId(keyword?.keyword_vocabulary_id);
                                 //setFacetTypeId(facetType.facet_type_id);
                                 setEditBoxOpened(true)
                             }}
