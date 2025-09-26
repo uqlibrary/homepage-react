@@ -147,17 +147,17 @@ test.describe('Spaces Location admin', () => {
             // cant assert change happens as mock list reloads
         });
     });
+
+    async function assertCanOpenEditCampusDialog(page: Page, campusId: number) {
+        await page.goto('/admin/spaces/manage/locations?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.getByTestId(`edit-campus-${campusId}-button`)).toBeVisible();
+        await page.getByTestId(`edit-campus-${campusId}-button`).click();
+
+        await expect(page.getByTestId('main-dialog').locator('h2')).toBeVisible();
+        await expect(page.getByTestId('main-dialog').locator('h2')).toContainText('Edit campus details');
+    }
     test.describe('Edit a campus', () => {
-        async function assertCanOpenEditCampusDialog(page: Page, campusId: number) {
-            await page.goto('/admin/spaces/manage/locations?user=libSpaces');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId(`edit-campus-${campusId}-button`)).toBeVisible();
-            await page.getByTestId(`edit-campus-${campusId}-button`).click();
-
-            await expect(page.getByTestId('main-dialog').locator('h2')).toBeVisible();
-            await expect(page.getByTestId('main-dialog').locator('h2')).toContainText('Edit campus details');
-        }
-
         test('edit campus form has expected entries', async ({ page }) => {
             await assertCanOpenEditCampusDialog(page, 1);
 
@@ -313,121 +313,122 @@ test.describe('Spaces Location admin', () => {
             await expect(editDialog).toBeVisible();
             await expect(editDialog.getByTestId('edit-campus-dialog-heading')).toBeVisible(); // the main dialog has not closed
         });
-        test.describe('Add a building to a campus', () => {
-            async function assertCanOpenAddBuildingDialog(page: Page) {
-                await assertCanOpenEditCampusDialog(page, 1);
-                const dialog = page.getByTestId('main-dialog');
+    });
+    test.describe('Add a building to a campus', () => {
+        async function assertCanOpenAddBuildingDialog(page: Page) {
+            await assertCanOpenEditCampusDialog(page, 1);
+            const dialog = page.getByTestId('main-dialog');
 
-                await expect(dialog.getByTestId('dialog-addnew-button')).toBeVisible();
-                await expect(dialog.getByTestId('dialog-addnew-button')).toContainText('Add building');
-                await dialog.getByTestId('dialog-addnew-button').click();
+            await expect(dialog.getByTestId('dialog-addnew-button')).toBeVisible();
+            await expect(dialog.getByTestId('dialog-addnew-button')).toContainText('Add building');
+            await dialog.getByTestId('dialog-addnew-button').click();
 
-                // the new dialog contents have loaded
-                await expect(dialog.locator('h2')).toContainText('Add a building to St Lucia campus\n');
-                return dialog;
-            }
+            // the new dialog contents have loaded
+            await expect(dialog.locator('h2')).toContainText('Add a building to St Lucia campus\n');
+            return dialog;
+        }
 
-            test('building add form loads properly', async ({ page }) => {
-                await assertCanOpenAddBuildingDialog(page);
-                const dialog = page.getByTestId('main-dialog');
+        test('building add form loads properly', async ({ page }) => {
+            await assertCanOpenAddBuildingDialog(page);
+            const dialog = page.getByTestId('main-dialog');
 
-                await expect(dialog.getByTestId('building-name').locator('label')).toContainText('Building name');
-                await expect(dialog.getByTestId('building-name').locator('input')).toBeVisible();
-                await expect(dialog.getByTestId('building-number').locator('label')).toContainText('Building number');
-                await expect(dialog.getByTestId('building-number').locator('input')).toBeVisible();
+            await expect(dialog.getByTestId('building-name').locator('label')).toContainText('Building name');
+            await expect(dialog.getByTestId('building-name').locator('input')).toBeVisible();
+            await expect(dialog.getByTestId('building-number').locator('label')).toContainText('Building number');
+            await expect(dialog.getByTestId('building-number').locator('input')).toBeVisible();
 
-                await expect(dialog.getByTestId('dialog-delete-button')).not.toBeVisible();
-                await expect(dialog.getByTestId('dialog-addnew-button')).not.toBeVisible();
-                await expect(dialog.getByTestId('dialog-cancel-button')).toBeVisible();
-                await expect(dialog.getByTestId('dialog-cancel-button')).toContainText('Cancel');
-                await expect(dialog.getByTestId('dialog-save-button')).toBeVisible();
-                await expect(dialog.getByTestId('dialog-save-button')).toContainText('Save');
-            });
-            test('add building dialog is accessible', async ({ page }) => {
-                await assertCanOpenAddBuildingDialog(page);
+            await expect(dialog.getByTestId('dialog-delete-button')).not.toBeVisible();
+            await expect(dialog.getByTestId('dialog-addnew-button')).not.toBeVisible();
+            await expect(dialog.getByTestId('dialog-cancel-button')).toBeVisible();
+            await expect(dialog.getByTestId('dialog-cancel-button')).toContainText('Cancel');
+            await expect(dialog.getByTestId('dialog-save-button')).toBeVisible();
+            await expect(dialog.getByTestId('dialog-save-button')).toContainText('Save');
+        });
+        test('add building dialog is accessible', async ({ page }) => {
+            await assertCanOpenAddBuildingDialog(page);
 
-                await assertAccessibility(page, '[data-testid="main-dialog"]');
-            });
-            test('validates properly for two empty building fields', async ({ page }) => {
-                await assertCanOpenAddBuildingDialog(page);
-                const dialog = page.getByTestId('main-dialog');
+            await assertAccessibility(page, '[data-testid="main-dialog"]');
+        });
+        test('validates properly for two empty building fields', async ({ page }) => {
+            await assertCanOpenAddBuildingDialog(page);
+            const dialog = page.getByTestId('main-dialog');
 
-                // save without entering anything in the form
-                await dialog.getByTestId('dialog-save-button').click();
-                await assertToastHasMessage(page, 'Please enter building name and number');
-            });
-            test('validates properly - building number field empty gives an error', async ({ page }) => {
-                await assertCanOpenAddBuildingDialog(page);
-                const dialog = page.getByTestId('main-dialog');
+            // save without entering anything in the form
+            await dialog.getByTestId('dialog-save-button').click();
+            await assertToastHasMessage(page, 'Please enter building name and number');
+        });
+        test('validates properly - building number field empty gives an error', async ({ page }) => {
+            await assertCanOpenAddBuildingDialog(page);
+            const dialog = page.getByTestId('main-dialog');
 
-                // save after not entering the number field
-                await expect(dialog.getByTestId('building-name').locator('input')).toBeVisible();
-                await dialog
-                    .getByTestId('building-name')
-                    .locator('input')
-                    .fill('name of new building');
-                await dialog.getByTestId('dialog-save-button').click();
+            // save after not entering the number field
+            await expect(dialog.getByTestId('building-name').locator('input')).toBeVisible();
+            await dialog
+                .getByTestId('building-name')
+                .locator('input')
+                .fill('name of new building');
+            await dialog.getByTestId('dialog-save-button').click();
 
-                await assertToastHasMessage(page, 'Please enter building name and number');
-            });
-            test('validates properly - building name field empty gives an error', async ({ page }) => {
-                await assertCanOpenAddBuildingDialog(page);
-                const dialog = page.getByTestId('main-dialog');
+            await assertToastHasMessage(page, 'Please enter building name and number');
+        });
+        test('validates properly - building name field empty gives an error', async ({ page }) => {
+            await assertCanOpenAddBuildingDialog(page);
+            const dialog = page.getByTestId('main-dialog');
 
-                // save after not entering the name field
-                await expect(dialog.getByTestId('building-number').locator('input')).toBeVisible();
-                await dialog
-                    .getByTestId('building-number')
-                    .locator('input')
-                    .fill('number of new building');
-                await dialog.getByTestId('dialog-save-button').click();
-                await assertToastHasMessage(page, 'Please enter building name and number');
-            });
-            test('can save with valid building data', async ({ page }) => {
-                await assertCanOpenAddBuildingDialog(page);
-                const dialog = page.getByTestId('main-dialog');
+            // save after not entering the name field
+            await expect(dialog.getByTestId('building-number').locator('input')).toBeVisible();
+            await dialog
+                .getByTestId('building-number')
+                .locator('input')
+                .fill('number of new building');
+            await dialog.getByTestId('dialog-save-button').click();
+            await assertToastHasMessage(page, 'Please enter building name and number');
+        });
+        test('can save with valid building data', async ({ page }) => {
+            await assertCanOpenAddBuildingDialog(page);
+            const dialog = page.getByTestId('main-dialog');
 
-                await expect(dialog.getByTestId('building-name').locator('input')).toBeVisible();
-                await dialog
-                    .getByTestId('building-name')
-                    .locator('input')
-                    .fill('name of new building');
-                await expect(dialog.getByTestId('building-number').locator('input')).toBeVisible();
-                await dialog
-                    .getByTestId('building-number')
-                    .locator('input')
-                    .fill('0084');
-                await dialog.getByTestId('dialog-save-button').click();
-                await assertToastHasMessage(page, 'Building added');
-                // cant assert change happens as mock list reloads
-            });
-            test('can close the add building dialog with the cancel button', async ({ page }) => {
-                await assertCanOpenAddBuildingDialog(page);
-                const dialog = page.getByTestId('main-dialog');
+            await expect(dialog.getByTestId('building-name').locator('input')).toBeVisible();
+            await dialog
+                .getByTestId('building-name')
+                .locator('input')
+                .fill('name of new building');
+            await expect(dialog.getByTestId('building-number').locator('input')).toBeVisible();
+            await dialog
+                .getByTestId('building-number')
+                .locator('input')
+                .fill('0084');
+            await dialog.getByTestId('dialog-save-button').click();
+            await assertToastHasMessage(page, 'Building added');
+            // cant assert change happens as mock list reloads
+        });
+        test('can close the add building dialog with the cancel button', async ({ page }) => {
+            await assertCanOpenAddBuildingDialog(page);
+            const dialog = page.getByTestId('main-dialog');
 
-                await expect(dialog).toBeVisible();
-                await dialog.getByTestId('dialog-cancel-button').click();
+            await expect(dialog).toBeVisible();
+            await dialog.getByTestId('dialog-cancel-button').click();
 
-                await expect(dialog).not.toBeVisible();
-            });
-            test('can close the add building dialog with the escape key', async ({ page }) => {
-                await assertCanOpenAddBuildingDialog(page);
-                const dialog = page.getByTestId('main-dialog');
-                await expect(dialog).toBeVisible();
+            await expect(dialog).not.toBeVisible();
+        });
+        test('can close the add building dialog with the escape key', async ({ page }) => {
+            await assertCanOpenAddBuildingDialog(page);
+            const dialog = page.getByTestId('main-dialog');
+            await expect(dialog).toBeVisible();
 
-                await dialog.press('Escape');
+            await dialog.press('Escape');
 
-                await expect(dialog).not.toBeVisible();
-            });
+            await expect(dialog).not.toBeVisible();
         });
     });
+
+    async function assertCanOpenEditBuildingDialog(page: Page, buildingId: number) {
+        await page.goto('/admin/spaces/manage/locations?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.getByTestId(`edit-building-${buildingId}-button`)).toBeVisible();
+        await page.getByTestId(`edit-building-${buildingId}-button`).click();
+    }
     test.describe('Edit a building', () => {
-        async function assertCanOpenEditBuildingDialog(page: Page, buildingId: number) {
-            await page.goto('/admin/spaces/manage/locations?user=libSpaces');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId(`edit-building-${buildingId}-button`)).toBeVisible();
-            await page.getByTestId(`edit-building-${buildingId}-button`).click();
-        }
         test('edit building form has expected entries', async ({ page }) => {
             await assertCanOpenEditBuildingDialog(page, 1);
             const dialog = page.getByTestId('main-dialog');
@@ -592,127 +593,125 @@ test.describe('Spaces Location admin', () => {
 
             await expect(dialog).not.toBeVisible();
         });
-        test.describe('Add a floor to a building', () => {
-            async function assertCanOpenAddFloorDialog(page: Page, buildingId: number) {
-                await assertCanOpenEditBuildingDialog(page, buildingId);
-                const dialog = page.getByTestId('main-dialog');
-                await expect(dialog.locator('h2')).toContainText('Edit building details');
+    });
+    test.describe('Add a floor to a building', () => {
+        async function assertCanOpenAddFloorDialog(page: Page, buildingId: number) {
+            await assertCanOpenEditBuildingDialog(page, buildingId);
+            const dialog = page.getByTestId('main-dialog');
+            await expect(dialog.locator('h2')).toContainText('Edit building details');
 
-                await expect(dialog.getByTestId('dialog-addnew-button')).toBeVisible();
-                await expect(dialog.getByTestId('dialog-addnew-button')).toContainText('Add floor');
-                await dialog.getByTestId('dialog-addnew-button').click();
+            await expect(dialog.getByTestId('dialog-addnew-button')).toBeVisible();
+            await expect(dialog.getByTestId('dialog-addnew-button')).toContainText('Add floor');
+            await dialog.getByTestId('dialog-addnew-button').click();
 
-                // the new dialog contents have loaded
-                await expect(dialog.locator('h2')).toContainText('Add a floor to');
-            }
-            test('add floor dialog is accessible', async ({ page }) => {
-                await assertCanOpenAddFloorDialog(page, 1);
+            // the new dialog contents have loaded
+            await expect(dialog.locator('h2')).toContainText('Add a floor to');
+        }
+        test('add floor dialog is accessible', async ({ page }) => {
+            await assertCanOpenAddFloorDialog(page, 1);
 
-                await assertAccessibility(page, '[data-testid="main-dialog"]');
-            });
+            await assertAccessibility(page, '[data-testid="main-dialog"]');
+        });
 
-            test('floor add form loads properly', async ({ page }) => {
-                await assertCanOpenAddFloorDialog(page, 1);
-                const dialog = page.getByTestId('main-dialog');
+        test('floor add form loads properly', async ({ page }) => {
+            await assertCanOpenAddFloorDialog(page, 1);
+            const dialog = page.getByTestId('main-dialog');
 
-                await expect(dialog.getByTestId('floor-name').locator('label')).toContainText('Floor name');
-                await expect(dialog.getByTestId('floor-name').locator('input')).toBeVisible();
+            await expect(dialog.getByTestId('floor-name').locator('label')).toContainText('Floor name');
+            await expect(dialog.getByTestId('floor-name').locator('input')).toBeVisible();
 
-                await expect(dialog.getByTestId('dialog-delete-button')).not.toBeVisible();
-                await expect(dialog.getByTestId('dialog-addnew-button')).not.toBeVisible();
-                await expect(dialog.getByTestId('dialog-cancel-button')).toBeVisible();
-                await expect(dialog.getByTestId('dialog-cancel-button')).toContainText('Cancel');
-                await expect(dialog.getByTestId('dialog-save-button')).toBeVisible();
-                await expect(dialog.getByTestId('dialog-save-button')).toContainText('Save');
-            });
-            test('validates properly for empty floor field', async ({ page }) => {
-                await assertCanOpenAddFloorDialog(page, 1);
-                const dialog = page.getByTestId('main-dialog');
+            await expect(dialog.getByTestId('dialog-delete-button')).not.toBeVisible();
+            await expect(dialog.getByTestId('dialog-addnew-button')).not.toBeVisible();
+            await expect(dialog.getByTestId('dialog-cancel-button')).toBeVisible();
+            await expect(dialog.getByTestId('dialog-cancel-button')).toContainText('Cancel');
+            await expect(dialog.getByTestId('dialog-save-button')).toBeVisible();
+            await expect(dialog.getByTestId('dialog-save-button')).toContainText('Save');
+        });
+        test('validates properly for empty floor field', async ({ page }) => {
+            await assertCanOpenAddFloorDialog(page, 1);
+            const dialog = page.getByTestId('main-dialog');
 
-                // save without entering anything in the form
-                await dialog.getByTestId('dialog-save-button').click();
-                await assertToastHasMessage(page, 'Please enter floor name');
-            });
-            test('can save with valid floor data, ground floor not requested', async ({ page }) => {
-                await assertCanOpenAddFloorDialog(page, 1);
-                const dialog = page.getByTestId('main-dialog');
+            // save without entering anything in the form
+            await dialog.getByTestId('dialog-save-button').click();
+            await assertToastHasMessage(page, 'Please enter floor name');
+        });
+        test('can save with valid floor data, ground floor not requested', async ({ page }) => {
+            await assertCanOpenAddFloorDialog(page, 1);
+            const dialog = page.getByTestId('main-dialog');
 
-                await expect(dialog.getByTestId('floor-name').locator('input')).toBeVisible();
-                await dialog
-                    .getByTestId('floor-name')
-                    .locator('input')
-                    .fill('name of new floor');
-                await dialog.getByTestId('dialog-save-button').click();
+            await expect(dialog.getByTestId('floor-name').locator('input')).toBeVisible();
+            await dialog
+                .getByTestId('floor-name')
+                .locator('input')
+                .fill('name of new floor');
+            await dialog.getByTestId('dialog-save-button').click();
 
-                await assertToastHasMessage(page, 'Floor added');
-                // cant assert change happens as mock list reloads
-            });
-            test('can save with valid floor data, ground floor requested, no current ground floor', async ({
-                page,
-            }) => {
-                await assertCanOpenAddFloorDialog(page, 1);
-                const dialog = page.getByTestId('main-dialog');
+            await assertToastHasMessage(page, 'Floor added');
+            // cant assert change happens as mock list reloads
+        });
+        test('can save with valid floor data, ground floor requested, no current ground floor', async ({ page }) => {
+            await assertCanOpenAddFloorDialog(page, 1);
+            const dialog = page.getByTestId('main-dialog');
 
-                await expect(dialog.getByTestId('floor-name').locator('input')).toBeVisible();
-                await expect(dialog.getByTestId('mark-ground-floor').locator('label')).toContainText(
-                    'No floor is currently marked as the ground floor',
-                );
+            await expect(dialog.getByTestId('floor-name').locator('input')).toBeVisible();
+            await expect(dialog.getByTestId('mark-ground-floor').locator('label')).toContainText(
+                'No floor is currently marked as the ground floor',
+            );
 
-                await dialog
-                    .getByTestId('floor-name')
-                    .locator('input')
-                    .fill('name of new floor');
-                await dialog
-                    .getByTestId('mark-ground-floor')
-                    .locator('input')
-                    .setChecked(true);
-                await dialog.getByTestId('dialog-save-button').click();
+            await dialog
+                .getByTestId('floor-name')
+                .locator('input')
+                .fill('name of new floor');
+            await dialog
+                .getByTestId('mark-ground-floor')
+                .locator('input')
+                .setChecked(true);
+            await dialog.getByTestId('dialog-save-button').click();
 
-                await assertToastHasMessage(page, 'Floor added');
-                // cant assert change happens as mock list reloads
-            });
-            test('can save with valid floor data, ground floor requested, override current ground floor', async ({
-                page,
-            }) => {
-                await assertCanOpenAddFloorDialog(page, 2);
-                const dialog = page.getByTestId('main-dialog');
+            await assertToastHasMessage(page, 'Floor added');
+            // cant assert change happens as mock list reloads
+        });
+        test('can save with valid floor data, ground floor requested, override current ground floor', async ({
+            page,
+        }) => {
+            await assertCanOpenAddFloorDialog(page, 2);
+            const dialog = page.getByTestId('main-dialog');
 
-                await expect(dialog.getByTestId('floor-name').locator('input')).toBeVisible();
-                await expect(dialog.getByTestId('mark-ground-floor').locator('label')).toContainText(
-                    'Current ground floor is Floor 1',
-                );
+            await expect(dialog.getByTestId('floor-name').locator('input')).toBeVisible();
+            await expect(dialog.getByTestId('mark-ground-floor').locator('label')).toContainText(
+                'Current ground floor is Floor 1',
+            );
 
-                await dialog
-                    .getByTestId('floor-name')
-                    .locator('input')
-                    .fill('name of new floor');
-                await dialog
-                    .getByTestId('mark-ground-floor')
-                    .locator('input')
-                    .setChecked(true);
-                await dialog.getByTestId('dialog-save-button').click();
+            await dialog
+                .getByTestId('floor-name')
+                .locator('input')
+                .fill('name of new floor');
+            await dialog
+                .getByTestId('mark-ground-floor')
+                .locator('input')
+                .setChecked(true);
+            await dialog.getByTestId('dialog-save-button').click();
 
-                await assertToastHasMessage(page, 'Floor added');
-                // cant assert change happens as mock list reloads
-            });
-            test('can close the add floor dialog with the cancel button', async ({ page }) => {
-                await assertCanOpenAddFloorDialog(page, 1);
-                const dialog = page.getByTestId('main-dialog');
+            await assertToastHasMessage(page, 'Floor added');
+            // cant assert change happens as mock list reloads
+        });
+        test('can close the add floor dialog with the cancel button', async ({ page }) => {
+            await assertCanOpenAddFloorDialog(page, 1);
+            const dialog = page.getByTestId('main-dialog');
 
-                await expect(dialog).toBeVisible();
-                await dialog.getByTestId('dialog-cancel-button').click();
+            await expect(dialog).toBeVisible();
+            await dialog.getByTestId('dialog-cancel-button').click();
 
-                await expect(dialog).not.toBeVisible();
-            });
-            test('can close the add floor dialog with the escape key', async ({ page }) => {
-                await assertCanOpenAddFloorDialog(page, 1);
-                const dialog = page.getByTestId('main-dialog');
-                await expect(dialog).toBeVisible();
+            await expect(dialog).not.toBeVisible();
+        });
+        test('can close the add floor dialog with the escape key', async ({ page }) => {
+            await assertCanOpenAddFloorDialog(page, 1);
+            const dialog = page.getByTestId('main-dialog');
+            await expect(dialog).toBeVisible();
 
-                await dialog.press('Escape');
+            await dialog.press('Escape');
 
-                await expect(dialog).not.toBeVisible();
-            });
+            await expect(dialog).not.toBeVisible();
         });
     });
     test.describe('Edit a floor', () => {
