@@ -648,6 +648,11 @@ export const BookableSpacesAddSpace = ({
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
+                                <Typography component={'h3'} variant={'h6'}>
+                                    Imagery
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
                                 <FormControl variant="standard" fullWidth>
                                     <InputLabel htmlFor="space_photo_url">
                                         Image url (this will eventually be drag and drop)

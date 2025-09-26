@@ -184,6 +184,11 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
         page.getByTestId('add-space-photo-description').fill('a table and chairs in a stark white room');
 
+        await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
+        page.getByTestId('space_services_page')
+            .locator('input')
+            .fill('https://web.library.uq.edu.au/visit/walter-harrison-law-library');
+
         // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         page.getByTestId('admin-spaces-save-button-submit').click();
@@ -205,6 +210,7 @@ test.describe('Spaces Admin - manage locations', () => {
             space_description: 'This is a sunny corner in the Law library where you blah blah blah',
             space_type: 'Computer room',
             space_opening_hours_id: 3841,
+            space_services_page: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
         };
         const cookieValue = await page.evaluate(() => {
             return document.cookie
