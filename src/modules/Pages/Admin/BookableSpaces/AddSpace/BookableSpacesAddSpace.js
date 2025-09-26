@@ -17,7 +17,7 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
+import { isValidUrl, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 
 import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import {
@@ -239,15 +239,34 @@ export const BookableSpacesAddSpace = ({
 
     // validate fields value
     const formValid = valuesToSend => {
-        if (!valuesToSend.space_name || !valuesToSend.space_type || !valuesToSend.space_floor_id) {
-            return false;
+        const errorMessages = [];
+        if (!valuesToSend.space_name) {
+            errorMessages.push({ field: 'space_name', message: 'A Name is required.' });
+        }
+        if (!valuesToSend.space_type) {
+            errorMessages.push({ field: 'space_type', message: 'A Type is required.' });
+        }
+        if (!valuesToSend.space_floor_id) {
+            errorMessages.push({ field: 'space_floor_id', message: 'A location is required.' });
         }
         if (!!valuesToSend.space_photo_url && !valuesToSend.space_photo_description) {
-            // a photo must have an accessible description, although the photo itself is not required
-            return false;
+            // if a photo is supplied then it must have an accessible description; the photo itself is not required
+            errorMessages.push({
+                field: 'space_photo_description',
+                message: 'When a photo is supplied, a description must be supplied.',
+            });
+        }
+        if (!!valuesToSend.space_photo_url && !isValidUrl(valuesToSend.space_photo_url)) {
+            errorMessages.push({ field: 'space_photo_url', message: 'The photo is not valid.' });
+        }
+        if (!!valuesToSend.space_services_page && !isValidUrl(valuesToSend.space_services_page)) {
+            errorMessages.push({
+                field: 'space_services_page',
+                message: 'Please supply a valid "About" page, or clear the field.',
+            });
         }
 
-        return true;
+        return errorMessages.length > 0 ? errorMessages : true;
     };
 
     const createNewSpace = () => {
@@ -264,14 +283,19 @@ export const BookableSpacesAddSpace = ({
         valuesToSend.space_photo_description = formValues.space_photo_description;
         valuesToSend.space_type = formValues.space_type;
         valuesToSend.space_opening_hours_id = formValues.space_opening_hours_id;
-        // valuesToSend.space_services_page = formValues.space_services_page; // TODO provide fields for missing values
-        // valuesToSend.space_opening_hours_override = formValues.space_opening_hours_override;
+        valuesToSend.space_services_page = formValues.space_services_page;
+        // valuesToSend.space_opening_hours_override = formValues.space_opening_hours_override; // TODO provide fields for missing values
         // valuesToSend.space_latitude = formValues.space_latitude;
         // valuesToSend.space_longitude = formValues.space_longitude;
 
-        if (!formValid(valuesToSend)) {
+        const validationResult = formValid(valuesToSend);
+        console.log('validationResult=', validationResult);
+        if (validationResult !== true) {
             document.activeElement.blur();
-            displayToastMessage('Please enter all required fields', true);
+            const message = `<p data-count="${
+                validationResult.length
+            }">These errors occurred:</p><ul>${validationResult.map(m => `<li>${m.message}</li>`).join('')}</ul>`;
+            displayToastMessage(message, true);
             return;
         }
 
@@ -615,6 +639,19 @@ export const BookableSpacesAddSpace = ({
                                         'data-testid': 'add-space-photo-description',
                                     }}
                                 />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl variant="standard" fullWidth>
+                                    <InputLabel htmlFor="space_services_page">
+                                        The "About" page to link to (usually the Drupal building page)
+                                    </InputLabel>
+                                    <Input
+                                        id="space_services_page"
+                                        data-testid="pace_services_page"
+                                        value={formValues?.space_services_page || ''}
+                                        onChange={handleChange('space_services_page')}
+                                    />
+                                </FormControl>
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography component={'p'} variant={'p'} sx={{ textAlign: 'right' }}>

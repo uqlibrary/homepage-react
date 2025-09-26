@@ -245,7 +245,10 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         page.getByTestId('admin-spaces-save-button-submit').click();
         await expect(page.getByTestId('toast-corner-message')).toBeVisible();
-        await expect(page.getByTestId('toast-corner-message')).toContainText('Please enter all required fields');
+        await expect(page.getByTestId('toast-corner-message p[data-count="2"]')).toBeDefined();
+        await expect(page.getByTestId('toast-corner-message')).toContainText('These errors occurred');
+        await expect(page.getByTestId('toast-corner-message')).toContainText('A Name is required.');
+        await expect(page.getByTestId('toast-corner-message')).toContainText('A Type is required.');
 
         // user enters the name, but its still an error
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
@@ -255,7 +258,9 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         page.getByTestId('admin-spaces-save-button-submit').click();
         await expect(page.getByTestId('toast-corner-message')).toBeVisible();
-        await expect(page.getByTestId('toast-corner-message')).toContainText('Please enter all required fields');
+        await expect(page.getByTestId('toast-corner-message p[data-count="1"]')).toBeDefined();
+        await expect(page.getByTestId('toast-corner-message')).toContainText('These errors occurred');
+        await expect(page.getByTestId('toast-corner-message')).toContainText('A Type is required.');
 
         // they enter the type
         await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
@@ -290,7 +295,11 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         page.getByTestId('admin-spaces-save-button-submit').click();
         await expect(page.getByTestId('toast-corner-message')).toBeVisible();
-        await expect(page.getByTestId('toast-corner-message')).toContainText('Please enter all required fields');
+        await expect(page.getByTestId('toast-corner-message p[data-count="1"]')).toBeDefined();
+        await expect(page.getByTestId('toast-corner-message')).toContainText('These errors occurred');
+        await expect(page.getByTestId('toast-corner-message')).toContainText(
+            'When a photo is supplied, a description must be supplied.',
+        );
 
         await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
         // page.getByTestId('add-space-photo-description').fill('a description of a room');
