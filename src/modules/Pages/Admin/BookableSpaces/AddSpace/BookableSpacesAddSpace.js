@@ -284,8 +284,8 @@ export const BookableSpacesAddSpace = ({
         valuesToSend.space_type = formValues.space_type;
         valuesToSend.space_opening_hours_id = formValues.space_opening_hours_id;
         valuesToSend.space_services_page = formValues.space_services_page;
-        // valuesToSend.space_opening_hours_override = formValues.space_opening_hours_override; // TODO provide fields for missing values
-        // valuesToSend.space_latitude = formValues.space_latitude;
+        valuesToSend.space_opening_hours_override = formValues.space_opening_hours_override;
+        // valuesToSend.space_latitude = formValues.space_latitude; // TODO provide fields for missing values
         // valuesToSend.space_longitude = formValues.space_longitude;
 
         const validationResult = formValid(valuesToSend);
@@ -439,6 +439,11 @@ export const BookableSpacesAddSpace = ({
                     <form id="spaces-addedit-form">
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
+                                <Typography component={'h3'} variant={'h6'}>
+                                    About
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
                                 <FormControl variant="standard" fullWidth>
                                     <InputLabel htmlFor="space_name">Space name *</InputLabel>
                                     <Input
@@ -471,6 +476,35 @@ export const BookableSpacesAddSpace = ({
                                         ))}
                                     </datalist>
                                 )}
+                            </Grid>
+                            <Grid item xs={12}>
+                                {/* will upgrade this to ckeditor (or replacement) eventually*/}
+                                <TextField
+                                    id="space_description"
+                                    label="Space description"
+                                    variant="standard"
+                                    fullWidth
+                                    multiline
+                                    rows={4}
+                                    value={formValues?.space_description || ''}
+                                    onChange={handleChange('space_description')}
+                                    inputProps={{
+                                        'data-testid': 'add-space-description',
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl variant="standard" fullWidth>
+                                    <InputLabel htmlFor="space_services_page">
+                                        The "About" page to link to (usually the Drupal building page)
+                                    </InputLabel>
+                                    <Input
+                                        id="space_services_page"
+                                        data-testid="space_services_page"
+                                        value={formValues?.space_services_page || ''}
+                                        onChange={handleChange('space_services_page')}
+                                    />
+                                </FormControl>
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography component={'h3'} variant={'h6'}>
@@ -569,6 +603,11 @@ export const BookableSpacesAddSpace = ({
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
+                                <Typography component={'h3'} variant={'h6'}>
+                                    Opening hours
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
                                 <Autocomplete
                                     data-testid="add-space-springshare-id"
                                     options={springshareList}
@@ -596,20 +635,17 @@ export const BookableSpacesAddSpace = ({
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                {/* will upgrade this to ckeditor (or replacement) eventually*/}
-                                <TextField
-                                    id="space_description"
-                                    label="Space description"
-                                    variant="standard"
-                                    fullWidth
-                                    multiline
-                                    rows={4}
-                                    value={formValues?.space_description || ''}
-                                    onChange={handleChange('space_description')}
-                                    inputProps={{
-                                        'data-testid': 'add-space-description',
-                                    }}
-                                />
+                                <FormControl variant="standard" fullWidth>
+                                    <InputLabel htmlFor="space_opening_hours_override">
+                                        An extra line about opening hours, specific to this building
+                                    </InputLabel>
+                                    <Input
+                                        id="space_opening_hours_override"
+                                        data-testid="space-opening-hours-override"
+                                        value={formValues?.space_opening_hours_override || ''}
+                                        onChange={handleChange('space_opening_hours_override')}
+                                    />
+                                </FormControl>
                             </Grid>
                             <Grid item xs={12}>
                                 <FormControl variant="standard" fullWidth>
@@ -639,19 +675,6 @@ export const BookableSpacesAddSpace = ({
                                         'data-testid': 'add-space-photo-description',
                                     }}
                                 />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl variant="standard" fullWidth>
-                                    <InputLabel htmlFor="space_services_page">
-                                        The "About" page to link to (usually the Drupal building page)
-                                    </InputLabel>
-                                    <Input
-                                        id="space_services_page"
-                                        data-testid="pace_services_page"
-                                        value={formValues?.space_services_page || ''}
-                                        onChange={handleChange('space_services_page')}
-                                    />
-                                </FormControl>
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography component={'p'} variant={'p'} sx={{ textAlign: 'right' }}>
