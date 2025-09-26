@@ -285,8 +285,8 @@ export const BookableSpacesAddSpace = ({
         valuesToSend.space_opening_hours_id = formValues.space_opening_hours_id;
         valuesToSend.space_services_page = formValues.space_services_page;
         valuesToSend.space_opening_hours_override = formValues.space_opening_hours_override;
-        // valuesToSend.space_latitude = formValues.space_latitude; // TODO provide fields for missing values
-        // valuesToSend.space_longitude = formValues.space_longitude;
+        valuesToSend.space_latitude = formValues.space_latitude;
+        valuesToSend.space_longitude = formValues.space_longitude;
 
         const validationResult = formValid(valuesToSend);
         console.log('validationResult=', validationResult);
@@ -506,6 +506,30 @@ export const BookableSpacesAddSpace = ({
                                     />
                                 </FormControl>
                             </Grid>
+                            {/* <Grid item xs={6}>*/}
+                            {/*    <FormControl variant="standard" fullWidth>*/}
+                            {/*        <InputLabel htmlFor="space_latitude">*/}
+                            {/*            Latitude (to be replaced with map picker)*/}
+                            {/*        </InputLabel>*/}
+                            {/*        <Input*/}
+                            {/*            id="space_latitude"*/}
+                            {/*            data-testid="space_latitude"*/}
+                            {/*            value={formValues?.space_latitude || ''}*/}
+                            {/*            onChange={handleChange('space_latitude')}*/}
+                            {/*        />*/}
+                            {/*    </FormControl>*/}
+                            {/* </Grid>*/}
+                            {/* <Grid item xs={6}>*/}
+                            {/*    <FormControl variant="standard" fullWidth>*/}
+                            {/*        <InputLabel htmlFor="space_longitude">Longitude</InputLabel>*/}
+                            {/*        <Input*/}
+                            {/*            id="space_longitude"*/}
+                            {/*            data-testid="space_longitude"*/}
+                            {/*            value={formValues?.space_longitude || ''}*/}
+                            {/*            onChange={handleChange('space_longitude')}*/}
+                            {/*        />*/}
+                            {/*    </FormControl>*/}
+                            {/* </Grid>*/}
                             <Grid item xs={12}>
                                 <Typography component={'h3'} variant={'h6'}>
                                     Location
