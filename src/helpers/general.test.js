@@ -68,10 +68,10 @@ describe('general helpers', () => {
         expect(pluralise('record', 2)).toEqual('records');
         expect(pluralise('record', 947)).toEqual('records');
 
-        expect(pluralise('frog', 0)).toEqual('frog');
+        expect(pluralise('frog', 0)).toEqual('frogs');
         expect(pluralise('frog', 1)).toEqual('frog');
         expect(pluralise('frog', 4)).toEqual('frogs');
-        expect(pluralise('body', 0, 'bodies')).toEqual('body');
+        expect(pluralise('body', 0, 'bodies')).toEqual('bodies');
         expect(pluralise('body', 1, 'bodies')).toEqual('body');
         expect(pluralise('body', 8, 'bodies')).toEqual('bodies');
     });

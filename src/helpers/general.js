@@ -125,12 +125,11 @@ export function scrollToTopOfPage() {
 }
 
 // this is very basic, because thats all that seems required so far
-
 export const pluralise = (singularWord, count, pluralWordSpecial = null) => {
-    if (count > 1 && pluralWordSpecial !== null) {
+    if (count !== 1 && pluralWordSpecial !== null) {
         return pluralWordSpecial;
     }
-    if (count > 1) {
+    if (count !== 1) {
         return `${singularWord}s`;
     }
     return singularWord;
