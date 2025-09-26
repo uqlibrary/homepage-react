@@ -10,6 +10,8 @@ export default {
                     "building_name": "Forgan Smith Building",
                     "building_id_displayed": "0001",
                     "ground_floor_id": null,
+                    "building_about_page_default": "https://web.library.uq.edu.au/visit/walter-harrison-law-library",
+                    "building_springshare_id": 3841,
                     "floors": [
                         {
                             "floor_id": 1,
@@ -26,6 +28,8 @@ export default {
                     "building_name": "Duhig Tower",
                     "building_id_displayed": "0002",
                     "ground_floor_id": 4,
+                    "building_about_page_default": 'https://web.library.uq.edu.au/visit/duhig-tower',
+                    "building_springshare_id": 3830,
                     "floors": [
                         {
                             "floor_id": 4,
@@ -50,6 +54,8 @@ export default {
                     "building_name": "J.K. Murray Library",
                     "building_id_displayed": "8102",
                     "ground_floor_id": 29,
+                    "building_about_page_default": 'https://web.library.uq.edu.au/visit/jk-murray-library-uq-gatton',
+                    "building_springshare_id": 3833,
                     "floors": [
                         {
                             "floor_id": 29,
@@ -66,6 +72,8 @@ export default {
                     "building_name": "Library Warehouse",
                     "building_id_displayed": "8248",
                     "ground_floor_id": null,
+                    "building_about_page_default": null,
+                    "building_springshare_id": null,
                     "floors": [
                         {
                             "floor_id": 31,
@@ -81,6 +89,8 @@ export default {
                     "building_name": "Incompletely entered building",
                     "building_id_displayed": "371",
                     "ground_floor_id": null,
+                    "building_about_page_default": null,
+                    "building_springshare_id": null,
                     "floors": []
                 }
             ]

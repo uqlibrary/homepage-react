@@ -13,7 +13,11 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { pluralise } from 'helpers/general';
-import { addBreadcrumbsToSiteHeader, displayToastMessage } from '../helpers';
+import {
+    addBreadcrumbsToSiteHeader,
+    displayToastMessage,
+    springshareLocations,
+} from 'modules/Pages/Admin/BookableSpaces/helpers';
 
 const StyledStandardCard = styled(StandardCard)(() => ({
     '& .MuiCardHeader-root': {
@@ -183,14 +187,25 @@ const StyledGroundFloorIndicatorSpan = styled('span')(() => ({
 
 const getIdentifierForFloorGroundFloorIndicator = floorId => `groundfloor-for-${floorId}`;
 
-export const BookableSpacesManageLocations = ({ actions, campusList, campusListLoading, campusListError }) => {
+export const BookableSpacesManageLocations = ({
+    actions,
+    campusList,
+    campusListLoading,
+    campusListError,
+    weeklyHours,
+    weeklyHoursLoading,
+    weeklyHoursError,
+}) => {
+    console.log('campusList', campusListLoading, campusListError, campusList);
+    console.log('weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
     React.useEffect(() => {
         addBreadcrumbsToSiteHeader([
             '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Location management</span></li>',
         ]);
 
         if (campusListError === null && campusListLoading === null && campusList === null) {
-            actions.loadBookableSpaceCampusChildren();
+            actions.loadBookableSpaceCampusChildren(); // get campusList
+            actions.loadWeeklyHours(); // get weeklyHours
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -204,6 +219,20 @@ export const BookableSpacesManageLocations = ({ actions, campusList, campusListL
     function hideBusyIcon(busyWhileSavingIcon) {
         !!busyWhileSavingIcon && (busyWhileSavingIcon.style.display = 'none');
     }
+
+    const springshareList = React.useMemo(() => {
+        console.log('springshareList:', weeklyHoursLoading, weeklyHoursError, weeklyHours);
+        if (
+            weeklyHoursLoading === false &&
+            weeklyHoursError === false &&
+            weeklyHours?.data?.locations &&
+            Array.isArray(weeklyHours.data.locations)
+        ) {
+            console.log('springshareLocations(weeklyHours)=', springshareLocations(weeklyHours));
+            return springshareLocations(weeklyHours);
+        }
+        return [];
+    }, [weeklyHoursLoading, weeklyHoursError, weeklyHours]);
 
     function removeAnyListeners(element) {
         if (!element) {
@@ -360,15 +389,42 @@ export const BookableSpacesManageLocations = ({ actions, campusList, campusListL
     function buildingCoreForm(buildingDetails = {}) {
         return `<input name="locationType" type="hidden" value="building" />
             <div class="dialogRow" data-testid="building-name">
-                <label for="buildingName">Building name</label>
+                <label for="buildingName">Building name *</label>
                 <input id="buildingName" name="building_name" type="text" value="${buildingDetails?.building_name ||
                     ''}" required  maxlength="255" />
             </div>
             <div class="dialogRow" data-testid="building-number">
-                <label for="buildingNumber">Building number</label>
+                <label for="buildingNumber">Building number *</label>
                 <input id="buildingNumber" name="building_id_displayed" type="text" value="${buildingDetails?.building_id_displayed ||
                     ''}" required  maxlength="10" />
-            </div>`;
+            </div>
+            <div class="dialogRow" data-testid="building_springshare_id">
+                <h3>Choose the Springshare Opening hours to associate with this building</h3>
+                <ul>
+                     <li>
+                        <input type="radio" name="building_springshare_id" id="building_springshare_id-0" value="0" checked />
+                        <label for="building_springshare_id-0">None</label>
+                     </li>
+                        ${springshareList
+                            .map(springshareItem => {
+                                console.log('buildingDetails=', buildingDetails.building_springshare_id);
+                                console.log('springshareList s=', springshareItem);
+                                const checked =
+                                    buildingDetails.building_springshare_id === springshareItem.id ? ' checked' : '';
+                                return `<li style="padding-block: 0.25rem">
+                                    <input type="radio" name="building_springshare_id" id="building_springshare_id-${springshareItem.id}" value="${springshareItem.id}"${checked} />
+                                    <label for="building_springshare_id-${springshareItem.id}">${springshareItem.display_name}</label>
+                                 </li>`;
+                            })
+                            .join('')}
+                </ul>
+            </div>
+            <div class="dialogRow" data-testid="building_about_page_default">
+                <label for="building_about_page_default">The "About" page for this building (usually the Drupal building page)</label>
+                <input id="building_about_page_default" name="building_about_page_default" type="text" value="${buildingDetails?.building_about_page_default ||
+                    ''}"  maxlength="255" />
+            </div>
+            `;
     }
 
     function showAddBuildingForm(e, campusDetails) {
@@ -969,7 +1025,7 @@ export const BookableSpacesManageLocations = ({ actions, campusList, campusListL
                         />
                         <StyledButton
                             id="confDialogOkButton"
-                            children={'primary'}
+                            className={'primary'}
                             children={'Yes'}
                             data-testid="confirmation-dialog-accept-button"
                         />
@@ -1021,6 +1077,9 @@ BookableSpacesManageLocations.propTypes = {
     campusList: PropTypes.any,
     campusListLoading: PropTypes.any,
     campusListError: PropTypes.any,
+    weeklyHours: PropTypes.any,
+    weeklyHoursLoading: PropTypes.any,
+    weeklyHoursError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesManageLocations);

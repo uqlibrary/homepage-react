@@ -25,8 +25,8 @@ import {
     addBreadcrumbsToSiteHeader,
     displayToastMessage,
     spacesAdminLink,
+    springshareLocations,
 } from 'modules/Pages/Admin/BookableSpaces/helpers';
-import { ASKUS_SPRINGSHARE_ID } from 'config/locale';
 
 const AddSpacePage = ({ children }) => {
     return (
@@ -97,15 +97,28 @@ export const BookableSpacesAddSpace = ({
             '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Add a Space</span></li>',
         ]);
         if (campusListLoading === null && campusListError === null && campusList === null) {
-            actions.loadBookableSpaceCampusChildren();
-            actions.loadAllBookableSpacesRooms();
-            actions.loadWeeklyHours();
+            actions.loadBookableSpaceCampusChildren(); // get campusList
+            actions.loadAllBookableSpacesRooms(); // get bookableSpacesRoomList
+            actions.loadWeeklyHours(); // get weeklyHours
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const validCampusList = campusList => campusList?.filter(c => c.buildings?.length > 0) || [];
     const validBuildingList = buildingList => buildingList?.filter(b => b.floors.length > 0) || [];
+
+    const springshareList = React.useMemo(() => {
+        if (
+            weeklyHoursLoading === false &&
+            weeklyHoursError === false &&
+            weeklyHours?.data?.locations &&
+            Array.isArray(weeklyHours.data.locations)
+        ) {
+            console.log('springshareLocations(weeklyHours)=', springshareLocations(weeklyHours));
+            return springshareLocations(weeklyHours);
+        }
+        return [];
+    }, [weeklyHoursLoading, weeklyHoursError, weeklyHours]);
 
     useEffect(() => {
         console.log('@@@ formValues=', formValues);
@@ -138,8 +151,16 @@ export const BookableSpacesAddSpace = ({
                 ['campus_id']: locnTemp.campus_id,
                 ['building_id']: locnTemp.building_id,
                 ['floor_id']: locnTemp.floor_id,
+                ['building_springshare_id']: locnTemp.currentBuilding.building_springshare_id,
             };
             setFormValues(newValues);
+
+            console.log('@@@ springshareList=', springshareList);
+            setSelectedOption({
+                id: locnTemp.currentBuilding.building_springshare_id, // preset the springshare id
+                display_name: springshareList.find(s => s.id === locnTemp.currentBuilding.building_springshare_id)
+                    ?.display_name,
+            });
         }
     }, [campusList, campusListError, campusListLoading, formValues]);
 
@@ -152,7 +173,8 @@ export const BookableSpacesAddSpace = ({
     const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
 
     const handleSpringshareSelection = (event, newValue) => {
-        console.log('handleSpringshareSelection', event, newValue);
+        console.log('handleSpringshareSelection newValue', newValue);
+        console.log('handleSpringshareSelection e', event);
         setSelectedOption(newValue);
         const newValues = {
             ...formValues,
@@ -206,6 +228,19 @@ export const BookableSpacesAddSpace = ({
     const reportErrorMessage = fieldName => {
         return errorMessages?.find(m => m.field === fieldName)?.message;
     };
+
+    // const reportCurrentBuildingAboutPage = location => {
+    //     console.log('location?.currentCampusBuildings=', location?.currentCampusBuildings);
+    //     console.log('location=', location);
+    //     console.log('formValues=', formValues);
+    //     return location?.currentBuilding?.building_about_page_default ? (
+    //         <a href="{location?.currentBuilding?.building_about_page_default}">
+    //             {location?.currentBuilding?.building_about_page_default}
+    //         </a>
+    //     ) : (
+    //         'none'
+    //     );
+    // };
 
     const handleChange = prop => e => {
         const theNewValue =
@@ -381,28 +416,6 @@ export const BookableSpacesAddSpace = ({
         return [];
     }, [bookableSpacesRoomListLoading, bookableSpacesRoomListError, bookableSpacesRoomList]);
 
-    const springshareList = React.useMemo(() => {
-        if (
-            weeklyHoursLoading === false &&
-            weeklyHoursError === false &&
-            weeklyHours?.data?.locations &&
-            Array.isArray(weeklyHours.data.locations)
-        ) {
-            return (
-                weeklyHours.data.locations
-                    .filter(l => l.lid !== ASKUS_SPRINGSHARE_ID)
-                    .sort((a, b) => a.display_name.localeCompare(b.display_name))
-                    // eslint-disable-next-line camelcase
-                    .map(({ lid, display_name }) => ({
-                        id: lid,
-                        // eslint-disable-next-line camelcase
-                        display_name,
-                    }))
-            );
-        }
-        return [];
-    }, [weeklyHoursLoading, weeklyHoursError, weeklyHours]);
-
     if (!!campusListLoading || !formValues?.campus_id) {
         return (
             <Grid container>
@@ -533,9 +546,27 @@ export const BookableSpacesAddSpace = ({
                                 </StyledErrorMessageTypography>
                             </Grid>
                             <Grid item xs={12}>
+                                <Typography component={'p'}>
+                                    The "About" page for this building:{' '}
+                                    {/* <span>{reportCurrentBuildingAboutPage(location)}</span>*/}
+                                    <span>
+                                        {location?.currentBuilding?.building_about_page_default ? (
+                                            <a
+                                                target="_blank"
+                                                href={location?.currentBuilding?.building_about_page_default}
+                                            >
+                                                {location?.currentBuilding?.building_about_page_default}
+                                            </a>
+                                        ) : (
+                                            'none'
+                                        )}
+                                    </span>
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
                                 <FormControl variant="standard" fullWidth>
                                     <InputLabel htmlFor="space_services_page">
-                                        The "About" page to link to (usually the Drupal building page)
+                                        Use a different page for this Space:
                                     </InputLabel>
                                     <Input
                                         id="space_services_page"

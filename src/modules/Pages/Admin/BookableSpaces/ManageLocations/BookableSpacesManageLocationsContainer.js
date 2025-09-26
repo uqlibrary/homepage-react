@@ -7,6 +7,7 @@ import BookableSpacesManageLocations from './BookableSpacesManageLocations';
 const mapStateToProps = state => {
     return {
         ...state.get('bookableSpaceLocationReducer'),
+        ...state.get('weeklyHoursReducer'),
     };
 };
 

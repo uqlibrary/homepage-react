@@ -1,5 +1,6 @@
 import { breadcrumbs, fullPath } from 'config/routes';
 import { isSpacesAdminUser } from 'helpers/access';
+import { ASKUS_SPRINGSHARE_ID } from 'config/locale';
 
 export const getPathRoot = () => {
     /* istanbul ignore next */
@@ -125,3 +126,16 @@ export function displayToastMessage(message, isError = true) {
         !!styles && styles.remove();
     }, hideDelay + 1000);
 }
+export const springshareLocations = weeklyHours => {
+    return (
+        weeklyHours.data.locations
+            .filter(l => l.lid !== ASKUS_SPRINGSHARE_ID)
+            .sort((a, b) => a.display_name.localeCompare(b.display_name))
+            // eslint-disable-next-line camelcase
+            .map(({ lid, display_name }) => ({
+                id: lid,
+                // eslint-disable-next-line camelcase
+                display_name,
+            }))
+    );
+};
