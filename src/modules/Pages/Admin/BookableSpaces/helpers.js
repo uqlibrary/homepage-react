@@ -69,6 +69,7 @@ export function addBreadcrumbsToSiteHeader(localChildren) {
 }
 
 export function displayToastMessage(message, isError = true) {
+    const messageLocal = !!message && !message.startsWith('<') ? `<p>${message}</p>` : message;
     const backgroundColor = isError ? '#D62929' : '#4aa74e';
     const icon = isError
         ? 'url("data:image/svg+xml,%3csvg viewBox=%270 0 24 24%27 fill=%27none%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M20.127 18.545a1.18 1.18 0 0 1-1.055 1.706H4.929a1.18 1.18 0 0 1-1.055-1.706l7.072-14.143a1.179 1.179 0 0 1 2.109 0l7.072 14.143Z%27 stroke=%27%23fff%27 stroke-width=%271.5%27%3e%3c/path%3e%3cpath d=%27M12 9v4%27 stroke=%27%23fff%27 stroke-width=%271.5%27 stroke-linecap=%27round%27%3e%3c/path%3e%3ccircle cx=%2711.9%27 cy=%2716.601%27 r=%271.1%27 fill=%27%23fff%27%3e%3c/circle%3e%3c/svg%3e")'
@@ -81,26 +82,30 @@ export function displayToastMessage(message, isError = true) {
                 .toast {
                     background-color: ${backgroundColor};
                     color: #fff;
-                    padding: .5rem 1.5rem .5rem 2.5rem;
+                    inset: .5rem .5rem auto;
+                    padding: 0.5rem 1rem 0.5rem 3rem;
+                    margin-inline: auto;
+                    inline-size: fit-content;
                     background-image: ${icon};
                     background-repeat: no-repeat;
                     background-size: 1.5rem;
                     background-position: 0.75rem center;
+                    border-radius: 0.5rem;
                     position: fixed;
-                    bottom: 0.5rem;
-                    left: 0.5rem;
                     transition: opacity 500ms ease-out;
-                    p {
+                    z-index: 99;
+                    p, ul {
                         font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
                         font-size: 1rem;
                         font-weight: 400;
                         letter-spacing: 0.16px;
                         line-height: 25.6px;
+                        margin-block: 0.5rem;
                     }
                 }
             </style>
             <div id="toast-corner-message" class="toast" data-testid="toast-corner-message">
-                <p>${message}</p>
+                ${messageLocal}
             </div>
         `;
 
