@@ -11,13 +11,14 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { isValidUrl, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
+import { isValidUrl, standardText, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 
 import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import {
@@ -39,6 +40,12 @@ const AddSpacePage = ({ children }) => {
         </StandardPage>
     );
 };
+
+const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
+    ...standardText(theme),
+    color: theme.palette.error.light,
+    marginTop: 4,
+}));
 
 export const BookableSpacesAddSpace = ({
     actions,
@@ -74,6 +81,11 @@ export const BookableSpacesAddSpace = ({
         setFormValues2(newValues);
     };
     const [confirmationOpen, setConfirmationOpen] = useState(false);
+    const [errorMessages, setErrorMessages2] = useState([]);
+    const setErrorMessages = m => {
+        console.log('setErrorMessages', m);
+        setErrorMessages2(m);
+    };
 
     const [selectedOption, setSelectedOption] = useState(
         null,
@@ -148,6 +160,51 @@ export const BookableSpacesAddSpace = ({
         };
         console.log('handleSpringshareSelection newValues=', newValues);
         setFormValues(newValues);
+    };
+
+    // validate fields value
+    const formValid = valuesToSend => {
+        const errorMessages = [];
+        if (!valuesToSend.space_name) {
+            errorMessages.push({ field: 'space_name', message: 'A Name is required.' });
+        }
+        if (!valuesToSend.space_type) {
+            errorMessages.push({ field: 'space_type', message: 'A Type is required.' });
+        }
+        if (!valuesToSend.space_floor_id) {
+            errorMessages.push({ field: 'space_floor_id', message: 'A location is required.' });
+        }
+        if (!!valuesToSend.space_photo_url && !valuesToSend.space_photo_description) {
+            // if a photo is supplied then it must have an accessible description; the photo itself is not required
+            errorMessages.push({
+                field: 'space_photo_description',
+                message: 'When a photo is supplied, a description must be supplied.',
+            });
+        }
+        if (!!valuesToSend.space_photo_url && !isValidUrl(valuesToSend.space_photo_url)) {
+            errorMessages.push({ field: 'space_photo_url', message: 'The photo is not valid.' });
+        }
+        if (!!valuesToSend.space_services_page && !isValidUrl(valuesToSend.space_services_page)) {
+            errorMessages.push({
+                field: 'space_services_page',
+                message: 'Please supply a valid "About" page, or clear the field.',
+            });
+        }
+
+        return errorMessages.length > 0 ? errorMessages : true;
+    };
+
+    const handleFieldCompletion = e => {
+        console.log('handleFieldCompletion', e?.target, e);
+        const validationResult = formValid(formValues);
+        console.log('validationResult=', validationResult);
+        if (validationResult !== true) {
+            setErrorMessages(validationResult);
+        }
+    };
+
+    const reportErrorMessage = fieldName => {
+        return errorMessages?.find(m => m.field === fieldName)?.message;
     };
 
     const handleChange = prop => e => {
@@ -237,38 +294,6 @@ export const BookableSpacesAddSpace = ({
         window.location.href = spacesAdminLink(spacesPath, account);
     }
 
-    // validate fields value
-    const formValid = valuesToSend => {
-        const errorMessages = [];
-        if (!valuesToSend.space_name) {
-            errorMessages.push({ field: 'space_name', message: 'A Name is required.' });
-        }
-        if (!valuesToSend.space_type) {
-            errorMessages.push({ field: 'space_type', message: 'A Type is required.' });
-        }
-        if (!valuesToSend.space_floor_id) {
-            errorMessages.push({ field: 'space_floor_id', message: 'A location is required.' });
-        }
-        if (!!valuesToSend.space_photo_url && !valuesToSend.space_photo_description) {
-            // if a photo is supplied then it must have an accessible description; the photo itself is not required
-            errorMessages.push({
-                field: 'space_photo_description',
-                message: 'When a photo is supplied, a description must be supplied.',
-            });
-        }
-        if (!!valuesToSend.space_photo_url && !isValidUrl(valuesToSend.space_photo_url)) {
-            errorMessages.push({ field: 'space_photo_url', message: 'The photo is not valid.' });
-        }
-        if (!!valuesToSend.space_services_page && !isValidUrl(valuesToSend.space_services_page)) {
-            errorMessages.push({
-                field: 'space_services_page',
-                message: 'Please supply a valid "About" page, or clear the field.',
-            });
-        }
-
-        return errorMessages.length > 0 ? errorMessages : true;
-    };
-
     const createNewSpace = () => {
         console.log('createNewSpace formValues=', formValues);
         const valuesToSend = {};
@@ -291,6 +316,8 @@ export const BookableSpacesAddSpace = ({
         const validationResult = formValid(valuesToSend);
         console.log('validationResult=', validationResult);
         if (validationResult !== true) {
+            setErrorMessages(validationResult);
+
             document.activeElement.blur();
             const message = `<p data-count="${
                 validationResult.length
@@ -452,7 +479,11 @@ export const BookableSpacesAddSpace = ({
                                         required
                                         value={formValues?.space_name || ''}
                                         onChange={handleChange('space_name')}
+                                        onBlur={handleFieldCompletion}
                                     />
+                                    <StyledErrorMessageTypography component={'div'}>
+                                        {reportErrorMessage('space_name')}
+                                    </StyledErrorMessageTypography>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
@@ -468,7 +499,11 @@ export const BookableSpacesAddSpace = ({
                                     inputProps={{
                                         list: 'space-type-list',
                                     }}
+                                    onBlur={handleFieldCompletion}
                                 />
+                                <StyledErrorMessageTypography component={'div'}>
+                                    {reportErrorMessage('space_type')}
+                                </StyledErrorMessageTypography>
                                 {spaceTypeList && spaceTypeList.length > 0 && (
                                     <datalist id="space-type-list">
                                         {spaceTypeList.map((spaceType, index) => (
@@ -491,7 +526,11 @@ export const BookableSpacesAddSpace = ({
                                     inputProps={{
                                         'data-testid': 'add-space-description',
                                     }}
+                                    onBlur={handleFieldCompletion}
                                 />
+                                <StyledErrorMessageTypography component={'div'}>
+                                    {reportErrorMessage('space_description')}
+                                </StyledErrorMessageTypography>
                             </Grid>
                             <Grid item xs={12}>
                                 <FormControl variant="standard" fullWidth>
@@ -503,7 +542,11 @@ export const BookableSpacesAddSpace = ({
                                         data-testid="space_services_page"
                                         value={formValues?.space_services_page || ''}
                                         onChange={handleChange('space_services_page')}
+                                        onBlur={handleFieldCompletion}
                                     />
+                                    <StyledErrorMessageTypography component={'div'}>
+                                        {reportErrorMessage('space_services_page')}
+                                    </StyledErrorMessageTypography>
                                 </FormControl>
                             </Grid>
                             {/* <Grid item xs={6}>*/}
@@ -516,7 +559,9 @@ export const BookableSpacesAddSpace = ({
                             {/*            data-testid="space_latitude"*/}
                             {/*            value={formValues?.space_latitude || ''}*/}
                             {/*            onChange={handleChange('space_latitude')}*/}
+                            {/*            onBlur={handleFieldCompletion}*/}
                             {/*        />*/}
+                            {/*        <StyledErrorMessageTypography component={'div'}>{reportErrorMessage('space_latitude')}</StyledErrorMessageTypography>*/}
                             {/*    </FormControl>*/}
                             {/* </Grid>*/}
                             {/* <Grid item xs={6}>*/}
@@ -527,7 +572,9 @@ export const BookableSpacesAddSpace = ({
                             {/*            data-testid="space_longitude"*/}
                             {/*            value={formValues?.space_longitude || ''}*/}
                             {/*            onChange={handleChange('space_longitude')}*/}
+                            {/*            onBlur={handleFieldCompletion}*/}
                             {/*        />*/}
+                            {/*        <StyledErrorMessageTypography component={'div'}>{reportErrorMessage('space_longitude')}</StyledErrorMessageTypography>*/}
                             {/*    </FormControl>*/}
                             {/* </Grid>*/}
                             <Grid item xs={12}>
@@ -546,6 +593,7 @@ export const BookableSpacesAddSpace = ({
                                         label="Campus"
                                         onChange={handleChange('campus_id')}
                                         required
+                                        // onBlur={handleFieldCompletion}
                                     >
                                         {!!location.currentCampusList &&
                                             location.currentCampusList.length > 0 &&
@@ -555,6 +603,7 @@ export const BookableSpacesAddSpace = ({
                                                 </MenuItem>
                                             ))}
                                     </Select>
+                                    {/* <StyledErrorMessageTypography component={'div'}>{reportErrorMessage('??')}</StyledErrorMessageTypography>*/}
                                 </FormControl>
                             </Grid>
                             <Grid item xs={4}>
@@ -568,6 +617,7 @@ export const BookableSpacesAddSpace = ({
                                         label="Building"
                                         onChange={handleChange('building_id')}
                                         required
+                                        // onBlur={handleFieldCompletion}
                                     >
                                         {!!location.currentCampusBuildings &&
                                             location.currentCampusBuildings.length > 0 &&
@@ -577,6 +627,7 @@ export const BookableSpacesAddSpace = ({
                                                 </MenuItem>
                                             ))}
                                     </Select>
+                                    {/* <StyledErrorMessageTypography component={'div'}>{reportErrorMessage('??')}</StyledErrorMessageTypography>*/}
                                 </FormControl>
                             </Grid>
                             <Grid item xs={4}>
@@ -611,6 +662,7 @@ export const BookableSpacesAddSpace = ({
                                                 </MenuItem>
                                             ))}
                                     </Select>
+                                    {/* <StyledErrorMessageTypography component={'div'}>{reportErrorMessage('??')}</StyledErrorMessageTypography>*/}
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
@@ -623,7 +675,11 @@ export const BookableSpacesAddSpace = ({
                                         data-testid="add-space-precise-location"
                                         value={formValues?.space_precise || ''}
                                         onChange={handleChange('space_precise')}
+                                        onBlur={handleFieldCompletion}
                                     />
+                                    <StyledErrorMessageTypography component={'div'}>
+                                        {reportErrorMessage('space_precise')}
+                                    </StyledErrorMessageTypography>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
@@ -656,7 +712,11 @@ export const BookableSpacesAddSpace = ({
                                             }}
                                         />
                                     )}
+                                    // onBlur={handleFieldCompletion}
                                 />
+                                <StyledErrorMessageTypography component={'div'}>
+                                    {reportErrorMessage('space_opening_hours_id')}
+                                </StyledErrorMessageTypography>
                             </Grid>
                             <Grid item xs={12}>
                                 <FormControl variant="standard" fullWidth>
@@ -668,7 +728,11 @@ export const BookableSpacesAddSpace = ({
                                         data-testid="space-opening-hours-override"
                                         value={formValues?.space_opening_hours_override || ''}
                                         onChange={handleChange('space_opening_hours_override')}
+                                        onBlur={handleFieldCompletion}
                                     />
+                                    <StyledErrorMessageTypography component={'div'}>
+                                        {reportErrorMessage('space_opening_hours_override')}
+                                    </StyledErrorMessageTypography>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
@@ -686,7 +750,11 @@ export const BookableSpacesAddSpace = ({
                                         data-testid="space-photo-url"
                                         value={formValues?.space_photo_url || ''}
                                         onChange={handleChange('space_photo_url')}
+                                        onBlur={handleFieldCompletion}
                                     />
+                                    <StyledErrorMessageTypography component={'div'}>
+                                        {reportErrorMessage('space_photo_url')}
+                                    </StyledErrorMessageTypography>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
@@ -703,7 +771,11 @@ export const BookableSpacesAddSpace = ({
                                     inputProps={{
                                         'data-testid': 'add-space-photo-description',
                                     }}
+                                    onBlur={handleFieldCompletion}
                                 />
+                                <StyledErrorMessageTypography component={'div'}>
+                                    {reportErrorMessage('space_photo_description')}
+                                </StyledErrorMessageTypography>
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography component={'p'} variant={'p'} sx={{ textAlign: 'right' }}>
