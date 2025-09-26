@@ -1,7 +1,9 @@
-import { expect, test } from '@uq/pw/test';
+import { expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
 import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
+
+const inputField = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('input');
 
 test.describe('Spaces Admin - manage locations', () => {
     test('can navigate from dashboard to add new', async ({ page }) => {
@@ -113,14 +115,10 @@ test.describe('Spaces Admin - manage locations', () => {
         const cookie = await page.context().cookies();
         expect(cookie.some(c => c.name === 'CYPRESS_TEST_DATA' && c.value === 'active')).toBeTruthy();
 
-        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
-        page.getByTestId('space-name')
-            .locator('input')
-            .fill('W12343');
-        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        page.getByTestId('space-type')
-            .locator('input')
-            .fill('Computer room');
+        await expect(inputField('space-name', page)).toBeVisible();
+        inputField('space-name', page).fill('W12343');
+        await expect(inputField('space-type', page)).toBeVisible();
+        inputField('space-type', page).fill('Computer room');
 
         // choose a different location
 
@@ -161,10 +159,8 @@ test.describe('Spaces Admin - manage locations', () => {
         );
         page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type').click();
 
-        await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
-        page.getByTestId('add-space-precise-location')
-            .locator('input')
-            .fill('northwest corner');
+        await expect(inputField('add-space-precise-location', page)).toBeVisible();
+        inputField('add-space-precise-location', page).fill('northwest corner');
 
         await expect(page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper')).toBeVisible();
 
@@ -176,18 +172,14 @@ test.describe('Spaces Admin - manage locations', () => {
             'This is a sunny corner in the Law library where you blah blah blah',
         );
 
-        await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
-        page.getByTestId('space-photo-url')
-            .locator('input')
-            .fill('https://example.com/image.jpg');
+        await expect(inputField('space-photo-url', page)).toBeVisible();
+        inputField('space-photo-url', page).fill('https://example.com/image.jpg');
 
         await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
         page.getByTestId('add-space-photo-description').fill('a table and chairs in a stark white room');
 
-        await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
-        page.getByTestId('space_services_page')
-            .locator('input')
-            .fill('https://web.library.uq.edu.au/visit/walter-harrison-law-library');
+        await expect(inputField('space_services_page', page)).toBeVisible();
+        inputField('space_services_page', page).fill('https://web.library.uq.edu.au/visit/walter-harrison-law-library');
 
         // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
