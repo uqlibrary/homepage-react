@@ -150,6 +150,22 @@ export const DLOVocabularyManage = ({
                     },
                 ]}
             />
+            <Button
+                color="primary"
+                data-testid="admin-dlor-add-keyword-button"
+                data-analyticsid="admin-dlor-add-keyword-button"
+                variant="contained"
+                children="Add new keyword"
+                onClick={() => {
+                    setFormMode('add');
+                    setFormType('keyword');
+                    setParentName('');
+                    setKeywordId('');
+                    //setFacetTypeId(facetType.facet_type_id);
+                    setEditBoxOpened(true)
+                }}
+                sx={{ mb: 2 }}
+            />
             <Grid container alignItems="center">
                 {!!dlorKeywords && dlorKeywords.length > 0 && dlorKeywords.map(keyword => (
                     <React.Fragment key={keyword?.keyword_vocabulary_id}>
@@ -244,7 +260,7 @@ export const DLOVocabularyManage = ({
                     <Typography variant="h6" id="modal-title">
                         {formMode === "edit" ? `Edit  ` : `Add `}
                         {formType}
-                        {` in keyword ${parentName}`}
+                        {!!parentName && ` in keyword ${parentName}`}
                     </Typography>
                     {formMode === "edit" &&
                         <Typography variant="p" id="modal-modal-existingName" sx={{ marginBottom: '20px', display: 'block' }}>
