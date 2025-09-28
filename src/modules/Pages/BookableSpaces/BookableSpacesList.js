@@ -242,7 +242,7 @@ export const BookableSpacesList = ({
                                             >
                                                 {
                                                     <>
-                                                        <div data-testid="{locationKey}">
+                                                        <div data-testid={locationKey}>
                                                             {getFriendlyLocationDescription(bookableSpace)}
                                                         </div>
                                                         <p>{bookableSpace?.space_description}</p>

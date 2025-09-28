@@ -27,6 +27,7 @@ import {
     spacesAdminLink,
     springshareLocations,
 } from 'modules/Pages/Admin/BookableSpaces/helpers';
+import { getFriendlyLocationDescription } from '../../../BookableSpaces/spacesHelpers';
 
 const AddSpacePage = ({ children }) => {
     return (
@@ -712,6 +713,20 @@ export const BookableSpacesAddSpace = ({
                                         {reportErrorMessage('space_precise')}
                                     </StyledErrorMessageTypography>
                                 </FormControl>
+                                <div data-testid="add-space-pretty-location">
+                                    <Typography component={'h4'} variant={'h6'}>
+                                        "Pretty" location
+                                    </Typography>
+                                    {getFriendlyLocationDescription({
+                                        space_is_ground_floor:
+                                            location?.currentFloor?.floor_id ===
+                                            location?.currentBuilding?.ground_floor_id,
+                                        space_floor_name: location?.currentFloor?.floor_name,
+                                        space_precise: formValues?.space_precise,
+                                        space_building_name: location?.currentBuilding?.building_name,
+                                        space_campus_name: location?.currentCampus?.campus_name,
+                                    })}
+                                </div>
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography component={'h3'} variant={'h6'}>

@@ -22,10 +22,10 @@ export const isInt = value => {
 
 export function getFriendlyFloorName(bookableSpace) {
     let floorName = `Floor ${bookableSpace?.space_floor_name}`;
-    if (!!bookableSpace.space_is_ground_floor) {
+    if (!!bookableSpace?.space_is_ground_floor) {
         floorName = 'Ground floor';
     } else if (isInt(bookableSpace?.space_floor_name)) {
-        // some floors are like "2A"
+        // some floors are like "2A" so can't be made an ordinal number
         const floorNumberAsOrdinal =
             bookableSpace?.space_floor_name + getOrdinalSuffixFor(bookableSpace?.space_floor_name);
         floorName = `${floorNumberAsOrdinal} Floor`;
@@ -38,7 +38,7 @@ export function getFriendlyLocationDescription(bookableSpace) {
         <>
             <div>{getFriendlyFloorName(bookableSpace)}</div>
             <div>{bookableSpace?.space_building_name}</div>
-            <div>{bookableSpace?.space_campus_name} Campus</div>
+            <div>{`${bookableSpace?.space_campus_name} Campus`}</div>
         </>
     );
 }

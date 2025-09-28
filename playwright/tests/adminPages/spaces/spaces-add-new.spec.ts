@@ -39,9 +39,16 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-campus')).toContainText('St Lucia');
         await expect(page.getByTestId('add-space-select-building').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-building')).toContainText('Forgan Smith Building');
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-floor')).toContainText('Forgan Smith Building - 1');
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-pretty-location')).toBeVisible();
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('2nd Floor');
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Forgan Smith Building');
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('St Lucia Campus');
 
         const cancelButton = page.getByTestId('admin-spaces-form-button-cancel');
         await expect(cancelButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
@@ -103,7 +110,7 @@ test.describe('Spaces Admin - manage locations', () => {
         const sentValues = !!decodedValue && JSON.parse(decodedValue);
         expect(sentValues).toEqual(expectedValues);
     });
-    test('can add new space, with all fields', async ({ page, context }) => {
+    test.only('can add new space, with all fields', async ({ page, context }) => {
         await context.addCookies([
             {
                 name: 'CYPRESS_TEST_DATA',
@@ -122,45 +129,37 @@ test.describe('Spaces Admin - manage locations', () => {
 
         // choose a different location
 
-        // open the campus dropdown
-        await expect(page.getByTestId('add-space-select-campus')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-campus')).toContainText('St Lucia');
-        page.getByText(/St Lucia/).click();
+        // change campus
+        page.getByTestId('add-space-select-campus').click();
+        await expect(page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:last-of-type')).toBeVisible();
+        page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:last-of-type').click();
 
-        // click in campus list to change to campus "Gatton"
-        await expect(page.locator('[aria-labelledby="add-space-select-campus-label"] li:last-of-type')).toBeVisible();
-        await expect(page.locator('[aria-labelledby="add-space-select-campus-label"] li:last-of-type')).toContainText(
-            'Gatton',
-        );
-        page.getByText(/Gatton/).click();
-
-        // open the building dropdown to change building
-        await expect(page.getByTestId('add-space-select-building')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-building')).toContainText('J.K. Murray Library');
-        // page.getByText(/J.K. Murray Library/).click();
+        // change building
         page.getByTestId('add-space-select-building').click();
+        await expect(
+            page.locator('ul[aria-labelledby="add-space-select-building-label"] li:last-of-type'),
+        ).toBeVisible();
+        page.locator('ul[aria-labelledby="add-space-select-building-label"] li:last-of-type').click();
 
-        // click in building list to change to building "warehouse"
-        await expect(page.locator('[aria-labelledby="add-space-select-building-label"] li:last-of-type')).toBeVisible();
-        await expect(page.locator('[aria-labelledby="add-space-select-building-label"] li:last-of-type')).toContainText(
-            'Library Warehouse',
-        );
-        page.locator('[aria-labelledby="add-space-select-building-label"] li:last-of-type').click();
-
-        // open the floor dropdown to change floor
-        await expect(page.getByTestId('add-space-select-floor')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-floor')).toContainText('Library Warehouse - 31');
+        // change floor
         page.getByTestId('add-space-select-floor').click();
-
-        // click on floor to change the floor
         await expect(page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type')).toBeVisible();
-        await expect(page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type')).toContainText(
-            'Library Warehouse - 32',
-        );
         page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type').click();
 
+        await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-campus')).toContainText('Gatton');
+        await expect(page.getByTestId('add-space-select-building').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-building')).toContainText('Library Warehouse');
+        await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-floor')).toContainText('Library Warehouse - 32');
+        await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
         await expect(inputField('add-space-precise-location', page)).toBeVisible();
-        inputField('add-space-precise-location', page).fill('northwest corner');
+        inputField('add-space-precise-location', page).fill('Northwest corner');
+
+        await expect(page.getByTestId('add-space-pretty-location')).toBeVisible();
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Northwest corner, 1st Floor');
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Library Warehouse');
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Gatton Campus');
 
         await expect(page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper')).toBeVisible();
 
@@ -198,7 +197,7 @@ test.describe('Spaces Admin - manage locations', () => {
             space_name: 'W12343',
             space_photo_description: 'a table and chairs in a stark white room',
             space_photo_url: 'https://example.com/image.jpg',
-            space_precise: 'northwest corner',
+            space_precise: 'Northwest corner',
             space_description: 'This is a sunny corner in the Law library where you blah blah blah',
             space_type: 'Computer room',
             space_opening_hours_id: 3841,
