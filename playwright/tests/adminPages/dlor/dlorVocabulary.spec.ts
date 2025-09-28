@@ -39,8 +39,14 @@ test.describe('Digital Learning Hub admin', () => {
             await page.getByTestId("vocabulary-name").fill("test");
             await page.getByTestId('admin-dlor-filter-confirm-button').click();
             await expect(page.getByTestId('admin-dlor-filter-confirm-button')).not.toBeVisible();
+            //add a vocabulary item
+            await page.getByTestId('admin-dlor-add-keyword-button').click();
+            await page.getByTestId("vocabulary-name").fill("test");
+            await page.getByTestId('admin-dlor-filter-confirm-button').click();
+            await expect(page.getByTestId('admin-dlor-filter-confirm-button')).not.toBeVisible();
+
         });
-        test('candelete an item', async ({ page }) => {
+        test('can delete an item', async ({ page }) => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(
                 page
