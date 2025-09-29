@@ -2,7 +2,6 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import SimpleBackdrop from '@mui/material/Backdrop';
-import Button from '@mui/material/Button';
 import Fade from '@mui/material/Fade';
 import Drawer from '@mui/material/Drawer';
 import { styled } from '@mui/material/styles';
@@ -66,7 +65,7 @@ export const AlertsUtilityArea = ({ actions, helpButtonLabel = 'Help', helpConte
         <Fragment>
             {!!helpContent && (
                 <StyledActionButtonPlacer>
-                    <StyledPrimaryButton
+                    <StyledSecondaryButton
                         children={helpButtonLabel}
                         data-testid="admin-alerts-help-button"
                         id="admin-alerts-help-button"
@@ -76,7 +75,7 @@ export const AlertsUtilityArea = ({ actions, helpButtonLabel = 'Help', helpConte
             )}
             {!!showAddButton && (
                 <StyledActionButtonPlacer>
-                    <StyledSecondaryButton
+                    <StyledPrimaryButton
                         children="Add alert"
                         data-testid="admin-alerts-add-button"
                         onClick={() => navigateToAddPage()}
