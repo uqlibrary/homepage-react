@@ -102,13 +102,18 @@ export const DLOVocabularyManage = ({
         });
     }
 
-    // const handleDeleteFacet = (id) => { 
-    //     console.log("delete facet", id);
-    //     actions.deleteFacet(id)
-    //     .then(
-    //         setConfirmDeleteModal(false)
-    //     )
-    // }
+    const handleDeleteSynonym = () => { 
+        const payload = {
+            keyword_old_value: formValue,
+            keyword_id: keywordId,
+        };
+        actions.deleteDlorSynonym(payload)
+        .then(() => {
+            actions.loadDlorKeywords();
+            setConfirmDeleteModal(false);
+            handleClose();
+        })
+    }
 
     const handleClose = () => {
         console.log("testing");
@@ -235,9 +240,9 @@ export const DLOVocabularyManage = ({
                                     <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
                                         <IconButton color='secondary' onClick={() =>{ 
                                             // console.log('Delete facet'); 
-                                            // setFacet(facet);
-                                            // setConfirmDeleteModal(true);
-                                            // //handleDeleteFacet(facet?.facet_id)
+                                            setKeywordId(keyword?.keyword_vocabulary_id);
+                                            setFormValue(synonym);
+                                            setConfirmDeleteModal(true);
                                         }}
                                             data-testid={`delete-facet-${keyword?.keyword_vocabulary_id}-${index}`}
                                         >
@@ -328,11 +333,11 @@ export const DLOVocabularyManage = ({
                 </div>
             </Modal> 
             {/* The modal delete confirmation */}
-            {/* <ConfirmationBox
+            <ConfirmationBox
                 actionButtonColor="primary"
                 actionButtonVariant="contained"
-                confirmationBoxId="alert-edit-save-succeeded"
-                onAction={() => handleDeleteFacet(facet.facet_id)}
+                confirmationBoxId="synonym-delete-confirmation"
+                onAction={() => handleDeleteSynonym()}
                 onClose={() => setEditBoxOpened(false)}
                 onCancelAction={() => setConfirmDeleteModal(false)}
                 isOpen={confirmDeleteModal}
@@ -342,7 +347,7 @@ export const DLOVocabularyManage = ({
                     confirmButtonLabel: 'Delete',
                     cancelButtonLabel: 'Cancel',
                 }}
-            /> */}
+            />
         </StandardPage>
     );
 };

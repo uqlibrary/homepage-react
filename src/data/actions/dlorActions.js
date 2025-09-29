@@ -37,6 +37,7 @@ import {
     DLOR_TEAM_MEMBER_SINGLE_GET_API,
     DLOR_KEYWORDS_API,
     DLOR_KEYWORDS_UPDATE_API,
+    DLOR_KEYWORDS_DESTROY_API,
 } from 'repositories/routes';
 
 const checkExpireSession = (dispatch, error) => {
@@ -810,6 +811,26 @@ export function updateDlorKeywords(request) {
         return post(DLOR_KEYWORDS_UPDATE_API(), request)
             .then(response => {
                 console.log("UPDATE RESPONSE", response);
+                dispatch({
+                    type: actions.DLOR_KEYWORDS_UPDATED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_KEYWORDS_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function deleteDlorSynonym(request) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_KEYWORDS_UPDATING });
+        return destroy(DLOR_KEYWORDS_DESTROY_API(), request)
+            .then(response => {
                 dispatch({
                     type: actions.DLOR_KEYWORDS_UPDATED,
                     payload: response.data,
