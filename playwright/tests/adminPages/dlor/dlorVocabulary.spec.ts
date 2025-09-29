@@ -44,6 +44,11 @@ test.describe('Digital Learning Hub admin', () => {
             await page.getByTestId("vocabulary-name").fill("test");
             await page.getByTestId('admin-dlor-filter-confirm-button').click();
             await expect(page.getByTestId('admin-dlor-filter-confirm-button')).not.toBeVisible();
+            //edit a vocabulary item
+            await page.getByTestId('edit-keyword-1-button').click();
+            await page.getByTestId("vocabulary-name").fill("test");
+            await page.getByTestId('admin-dlor-filter-confirm-button').click();
+            await expect(page.getByTestId('admin-dlor-filter-confirm-button')).not.toBeVisible();
 
         });
         test('can delete an item', async ({ page }) => {

@@ -169,12 +169,30 @@ export const DLOVocabularyManage = ({
             <Grid container alignItems="center">
                 {!!dlorKeywords && dlorKeywords.length > 0 && dlorKeywords.map(keyword => (
                     <React.Fragment key={keyword?.keyword_vocabulary_id}>
-                        <Grid item xs={11}>
+                        <Grid item xs={10} sx={{ display: 'flex', padding: '8px 0px', backgroundColor: '#d0d0d0' }}>
                             <Typography component='p' sx={{fontWeight: 'bold'}} data-testid={`keyword-${keyword?.keyword_vocabulary_id}-name`}>
                                 {keyword?.keyword} - (keyword)
                             </Typography>
                         </Grid>
-                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center', backgroundColor: '#d0d0d0' }}>
+                            <IconButton 
+                                color='secondary' 
+                                onClick={() => {
+                                    setFormMode('edit');
+                                    setFormType('keyword');
+                                    setParentName('');
+                                    setEditBoxOpened(true);
+                                    setKeywordId(keyword?.keyword_vocabulary_id);
+                                    setFormValue(keyword?.keyword);
+                                    
+                                    // handleEditSynonym(synonym, keyword?.keyword_vocabulary_id);
+                                }}
+                                data-testid={`edit-keyword-${keyword?.keyword_vocabulary_id}-button`}
+                            >
+                                <EditIcon />
+                            </IconButton>
+                        </Grid>
+                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center', backgroundColor: '#d0d0d0' }}>
                             <IconButton color='primary' onClick={() => {
                                 setFormMode('add');
                                 setFormType('synonym'); 
