@@ -7,6 +7,7 @@ import {
     stripHtml,
     unescapeString,
     isValidUrl,
+    standardText,
 } from './general';
 
 describe('general helpers', () => {
@@ -93,6 +94,18 @@ describe('general helpers', () => {
             'https://web.library.uq.edu.au/support',
         );
         expect(linkToDrupal('/study', 'www.library.uq.edu.au')).toEqual('https://web.library.uq.edu.au/study');
+    });
+
+    it('standard text is as expected', () => {
+        // coverage test
+        expect(standardText({ palette: { secondary: { main: '#ff0' } } })).toEqual({
+            color: '#ff0',
+            fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+            fontSize: '16px',
+            fontWeight: 400,
+            letterSpacing: '0.16px',
+            lineHeight: '1.6',
+        });
     });
 
     it('should validate urls', () => {

@@ -110,7 +110,7 @@ test.describe('Spaces Admin - manage locations', () => {
         const sentValues = !!decodedValue && JSON.parse(decodedValue);
         expect(sentValues).toEqual(expectedValues);
     });
-    test.only('can add new space, with all fields', async ({ page, context }) => {
+    test('can add new space, with all fields', async ({ page, context }) => {
         await context.addCookies([
             {
                 name: 'CYPRESS_TEST_DATA',
