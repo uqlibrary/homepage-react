@@ -148,6 +148,6 @@ case "$PIPE_NUM" in
 esac
 
 # Copy empty file to prevent a build failure as we only report on combined cobertura coverage when $TEST_COVERAGE=1
-if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
+#if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
     mkdir -p coverage && cp cobertura-sample-coverage.xml coverage/cobertura-coverage.xml
-fi
+#fi
