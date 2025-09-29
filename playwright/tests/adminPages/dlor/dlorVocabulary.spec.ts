@@ -66,6 +66,18 @@ test.describe('Digital Learning Hub admin', () => {
             await page.getByTestId('cancel-synonym-delete-confirmation').click();
             await expect(page.getByTestId('confirm-synonym-delete-confirmation')).not.toBeVisible();
         });
+        test('Admin menu works', async ({ page }) => {
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await page.getByTestId('dlor-breadcrumb-admin-homelink').click();
+            await page.getByTestId('admin-dlor-menu-button').click();
+            await page.getByTestId('admin-dlor-visit-manage-vocabulary-button').click();
+            await expect(
+                page
+                    .locator('h1')
+                    .first()
+                    .getByText('Digital Learning Hub - Keyword Vocabulary Management'),
+            ).toBeVisible();
+        });
 
         
 
