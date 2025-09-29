@@ -207,13 +207,13 @@ export const BookableSpacesManageLocations = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    function showBusyIcon(id) {
+    function showBusyIcon(id = 'busy-icon-while-saving') {
         const busyWhileSavingIcon = document.getElementById(id);
         !!busyWhileSavingIcon && (busyWhileSavingIcon.style.display = 'block');
-        return busyWhileSavingIcon;
     }
 
-    function hideBusyIcon(busyWhileSavingIcon) {
+    function hideBusyIcon(id = 'busy-icon-while-saving') {
+        const busyWhileSavingIcon = document.getElementById(id);
         !!busyWhileSavingIcon && (busyWhileSavingIcon.style.display = 'none');
     }
 
@@ -277,7 +277,7 @@ export const BookableSpacesManageLocations = ({
 
         closeDialog(e);
 
-        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        showBusyIcon();
         !!locationType &&
             actions
                 .addBookableSpaceLocation(data)
@@ -291,7 +291,7 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon(busyWhileSavingIcon);
+                    hideBusyIcon();
                 });
     }
 
@@ -328,7 +328,7 @@ export const BookableSpacesManageLocations = ({
 
         closeDialog(e);
 
-        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        showBusyIcon();
         !!locationType &&
             actions
                 .addBookableSpaceLocation(data)
@@ -342,7 +342,7 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon(busyWhileSavingIcon);
+                    hideBusyIcon();
                 });
     }
 
@@ -363,7 +363,7 @@ export const BookableSpacesManageLocations = ({
             return false;
         }
 
-        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        showBusyIcon();
         closeDialog(e);
 
         !!locationType &&
@@ -379,7 +379,7 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon(busyWhileSavingIcon);
+                    hideBusyIcon();
                 });
     };
 
@@ -462,7 +462,7 @@ export const BookableSpacesManageLocations = ({
 
     function deleteLocation(locationType, locationId, successMessage, failureMessage) {
         console.log('deleteLocation', locationType, locationId);
-        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        showBusyIcon();
 
         closeDeletionConfirmation(); // close delete conf dialog
         closeDialog(); // close main dialog
@@ -481,7 +481,7 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon(busyWhileSavingIcon);
+                    hideBusyIcon();
                 });
     }
 
@@ -611,7 +611,7 @@ export const BookableSpacesManageLocations = ({
             return false;
         }
 
-        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        showBusyIcon();
         closeDialog(e);
 
         !!locationType &&
@@ -627,7 +627,7 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon(busyWhileSavingIcon);
+                    hideBusyIcon();
                 });
     };
 
@@ -646,7 +646,7 @@ export const BookableSpacesManageLocations = ({
             return false;
         }
 
-        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        showBusyIcon();
         closeDialog(e);
 
         !!locationType &&
@@ -674,7 +674,7 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon(busyWhileSavingIcon);
+                    hideBusyIcon();
                 });
     }
 
@@ -813,7 +813,7 @@ export const BookableSpacesManageLocations = ({
             return false;
         }
 
-        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        showBusyIcon();
         closeDialog(e);
 
         !!locationType &&
@@ -829,7 +829,7 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon(busyWhileSavingIcon);
+                    hideBusyIcon();
                 });
     };
 
