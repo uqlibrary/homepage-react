@@ -134,9 +134,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
         },
     },
 }));
-const StyledGridItem = styled(Grid)(() => ({
-    marginTop: '12px',
-}));
 const StyledBusyIconDiv = styled('div')(() => ({
     width: '100%',
     height: '100%',
@@ -960,13 +957,6 @@ export const BookableSpacesManageLocations = ({
                         )),
                     ]),
                 ])}
-                <StyledButton
-                    className={'primary'}
-                    style={{ marginLeft: '4rem', marginTop: '2rem' }}
-                    children={'Add new Campus'}
-                    onClick={showAddSiteForm}
-                    data-testid="add-new-campus-button"
-                />
             </>
         );
     }
@@ -978,40 +968,43 @@ export const BookableSpacesManageLocations = ({
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
                     <Grid container spacing={3} style={{ position: 'relative' }}>
-                        {(() => {
-                            if (!!campusListLoading) {
-                                return (
-                                    <StyledGridItem item xs={12} md={9}>
-                                        <InlineLoader message="Loading" />
-                                    </StyledGridItem>
-                                );
-                            } else if (!!campusListError) {
-                                return (
-                                    <StyledGridItem item xs={12} md={9}>
+                        <Grid item xs={12} md={8} style={{ marginTop: '12px' }}>
+                            {(() => {
+                                if (!!campusListLoading) {
+                                    return <InlineLoader message="Loading" />;
+                                } else if (!!campusListError) {
+                                    return (
                                         <StyledStandardCard fullHeight>
                                             <p>Something went wrong - please try again later.</p>
                                         </StyledStandardCard>
-                                    </StyledGridItem>
-                                );
-                            } else if (!campusList || campusList.length === 0) {
-                                return (
-                                    <StyledGridItem item xs={12} md={9}>
+                                    );
+                                } else if (!campusList || campusList.length === 0) {
+                                    return (
                                         <StyledStandardCard fullHeight>
-                                            <p>No spaces currently in system - please try again soon.</p>
+                                            <p>No spaces currently in system.</p>
                                         </StyledStandardCard>
-                                    </StyledGridItem>
-                                );
-                            } else {
-                                return (
-                                    <StyledGridItem data-testid="spaces-location-wrapper">
-                                        {getLocationLayout(campusList)}
-                                    </StyledGridItem>
-                                );
-                            }
-                        })()}
-                        <StyledBusyIconDiv id="busy-icon-while-saving" style={{ display: 'none' }}>
-                            <InlineLoader message="Saving" />
-                        </StyledBusyIconDiv>
+                                    );
+                                } else {
+                                    return (
+                                        <div data-testid="spaces-location-wrapper">{getLocationLayout(campusList)}</div>
+                                    );
+                                }
+                            })()}
+                            <StyledBusyIconDiv id="busy-icon-while-saving" style={{ display: 'none' }}>
+                                <InlineLoader message="Saving" />
+                            </StyledBusyIconDiv>
+                        </Grid>
+                        <Grid item xs={12} md={4} style={{ paddingTop: 0 }}>
+                            <div style={{ padding: '1rem' }}>
+                                <StyledButton
+                                    className={'primary'}
+                                    style={{ marginLeft: '2rem', marginTop: '2rem', textTransform: 'initial' }}
+                                    children={'Add new Campus'}
+                                    onClick={showAddSiteForm}
+                                    data-testid="add-new-campus-button"
+                                />
+                            </div>
+                        </Grid>
                     </Grid>
                 </StandardCard>
                 <dialog id="confirmationDialog" className="confirmationDialog" data-testid="confirmation-dialog">
