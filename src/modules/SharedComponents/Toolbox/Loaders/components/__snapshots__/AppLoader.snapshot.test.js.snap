@@ -10,7 +10,7 @@ exports[`Component AppLoader should render as expected 1`] = `
     >
       <span
         aria-label="Loading Library website"
-        class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary white css-a0wk1a-MuiCircularProgress-root"
+        class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary white css-u4ps4u-MuiCircularProgress-root"
         role="progressbar"
         style="width: 80px; height: 80px;"
       >

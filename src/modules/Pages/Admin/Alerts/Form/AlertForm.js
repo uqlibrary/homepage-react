@@ -29,7 +29,7 @@ import {
     systemList,
 } from '../alerthelpers';
 import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
-import { scrollToTopOfPage } from 'helpers/general';
+import { scrollToTopOfPage, StyledPrimaryButton, StyledSecondaryButton, StyledTertiaryButton } from 'helpers/general';
 import { useNavigate } from 'react-router-dom';
 import { breadcrumbs } from 'config/routes';
 
@@ -60,14 +60,6 @@ const StyledBox = styled(Grid)(() => ({
     border: '1px solid rgb(211, 211, 211)',
     marginTop: '1em',
     paddingBottom: '1em',
-}));
-
-const StyledSaveButton = styled(Button)(() => ({
-    '&:disabled': {
-        color: 'rgba(0, 0, 0, 0.26)',
-        boxShadow: 'none',
-        backgroundColor: 'rgba(0, 0, 0, 0.12)',
-    },
 }));
 
 export const isValidUrl = testurl => {
@@ -793,24 +785,21 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 )}
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                     <Grid item xs={3} align="left">
-                        <Button
-                            color="secondary"
+                        <StyledSecondaryButton
                             children="Cancel"
                             data-testid="admin-alerts-form-button-cancel"
                             onClick={() => navigateToListPage()}
-                            variant="contained"
                         />
                     </Grid>
                     <Grid item xs={9} align="right">
-                        <Button
+                        <StyledTertiaryButton
                             data-testid="admin-alerts-form-button-preview"
                             color={!!showPreview ? 'primary' : 'secondary'}
                             children="Preview"
                             onClick={displayPreview}
                             style={{ marginRight: '0.5rem' }}
-                            variant={!!showPreview ? 'outlined' : 'contained'}
                         />
-                        <StyledSaveButton
+                        <StyledPrimaryButton
                             color="primary"
                             data-testid="admin-alerts-form-button-save"
                             variant="contained"
