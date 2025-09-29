@@ -1,5 +1,6 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
+import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 
 test.describe('Masquerade', () => {
     test('Masquerade Admin Accessibility', async ({ page }) => {
@@ -33,7 +34,7 @@ test.describe('Masquerade', () => {
         await assertAccessibility(page, '[data-testid="masquerade"]');
 
         await expect(page.getByTestId('masquerade-submit')).toBeVisible();
-        await expect(page.getByTestId('masquerade-submit')).toHaveCSS('background-color', 'rgb(81, 36, 122)');
+        await expect(page.getByTestId('masquerade-submit')).toHaveCSS('background-color', COLOR_UQPURPLE);
     });
 
     test('unprivileged users cant masquerade', async ({ page }) => {
