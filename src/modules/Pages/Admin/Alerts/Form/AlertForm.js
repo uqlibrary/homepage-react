@@ -789,7 +789,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         <StyledTertiaryButton
                             id="admin-alerts-form-button-preview"
                             data-testid="admin-alerts-form-button-preview"
-                            color={!!showPreview ? 'primary' : 'secondary'}
                             children="Preview"
                             onClick={displayPreview}
                             style={{ marginRight: '0.5rem' }}

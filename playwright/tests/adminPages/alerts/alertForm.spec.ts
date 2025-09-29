@@ -106,10 +106,6 @@ test.describe('Alerts Admin Form Pages', () => {
 
             const previewButton = page.getByTestId('admin-alerts-form-button-preview');
             await previewButton.click();
-            // after clicking, the preview button looks like Primary button
-            await expect(previewButton).toHaveCSS('background-color', uqPurple);
-            await expect(previewButton).toHaveCSS('border-color', uqPurple);
-            await expect(previewButton).toHaveCSS('color', 'rgb(255, 255, 255)');
 
             // the alert preview appears
             await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alerttitle', '');
