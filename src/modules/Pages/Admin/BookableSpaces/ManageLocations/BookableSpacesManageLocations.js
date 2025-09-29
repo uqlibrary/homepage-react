@@ -35,7 +35,11 @@ const StyledMainDialog = styled('dialog')(({ theme }) => ({
         paddingInline: '1rem',
     },
     '& .dialogRow': {
-        padding: '1rem',
+        padding: '0.5rem 1rem',
+        '& h3': {
+            marginBottom: 0,
+            marginTop: '0.5rem',
+        },
         '& label': {
             fontWeight: 500,
             display: 'block',
@@ -49,6 +53,9 @@ const StyledMainDialog = styled('dialog')(({ theme }) => ({
         },
         '& :focus-visible': {
             outlineColor: theme.palette.primary.light,
+        },
+        '& ul': {
+            marginBlock: 0,
         },
         '& li': {
             paddingBlock: '0.5rem',
