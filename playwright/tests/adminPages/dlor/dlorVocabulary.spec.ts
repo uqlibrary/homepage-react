@@ -60,6 +60,11 @@ test.describe('Digital Learning Hub admin', () => {
                     .getByText('Digital Learning Hub - Keyword Vocabulary Management'),
             ).toBeVisible();
             await page.getByTestId('delete-facet-1-0').click();
+            await page.getByTestId('confirm-synonym-delete-confirmation').click();
+            await expect(page.getByTestId('confirm-synonym-delete-confirmation')).not.toBeVisible();
+            await page.getByTestId('delete-facet-1-0').click();
+            await page.getByTestId('cancel-synonym-delete-confirmation').click();
+            await expect(page.getByTestId('confirm-synonym-delete-confirmation')).not.toBeVisible();
         });
 
         
