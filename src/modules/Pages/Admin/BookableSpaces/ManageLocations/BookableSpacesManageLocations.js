@@ -19,14 +19,6 @@ import {
     springshareLocations,
 } from 'modules/Pages/Admin/BookableSpaces/helpers';
 
-const StyledStandardCard = styled(StandardCard)(() => ({
-    '& .MuiCardHeader-root': {
-        paddingBottom: 0,
-    },
-    '& .MuiCardContent-root': {
-        paddingBlock: 0,
-    },
-}));
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
     border: '1px solid rgba(38, 85, 115, 0.15)',
@@ -250,12 +242,12 @@ export const BookableSpacesManageLocations = ({
         removeAnyListeners(saveButton);
     }
 
-    function saveNewSite(e) {
+    const saveNewCampus = e => {
         const form = e.target.closest('form');
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
-        console.log('saveNewSite data', data);
+        console.log('saveNewCampus data', data);
         const locationType = data?.locationType;
 
         // validate form
@@ -282,7 +274,8 @@ export const BookableSpacesManageLocations = ({
                 .finally(() => {
                     showSavingProgress(false);
                 });
-    }
+        return true;
+    };
 
     const campusFormCore = (campusDetails = {}, formType = 'add') => {
         const campusName = campusDetails?.campus_name ?? '';
@@ -300,7 +293,7 @@ export const BookableSpacesManageLocations = ({
         </div>`;
     };
 
-    function saveNewBuilding(e) {
+    const saveNewBuilding = e => {
         const form = e.target.closest('form');
         console.log('saveNewBuilding form=', form);
 
@@ -333,7 +326,8 @@ export const BookableSpacesManageLocations = ({
                 .finally(() => {
                     showSavingProgress(false);
                 });
-    }
+        return true;
+    };
 
     const saveChangeToSite = e => {
         const form = e.target.closest('form');
@@ -370,6 +364,7 @@ export const BookableSpacesManageLocations = ({
                 .finally(() => {
                     showSavingProgress(false);
                 });
+        return true;
     };
 
     function buildingCoreForm(buildingDetails = {}) {
@@ -618,9 +613,10 @@ export const BookableSpacesManageLocations = ({
                 .finally(() => {
                     showSavingProgress(false);
                 });
+        return true;
     };
 
-    function saveNewFloor(e) {
+    const saveNewFloor = e => {
         const form = e.target.closest('form');
         console.log('saveNewFloor form=', form);
 
@@ -665,7 +661,8 @@ export const BookableSpacesManageLocations = ({
                 .finally(() => {
                     showSavingProgress(false);
                 });
-    }
+        return true;
+    };
 
     const floorCoreForm = floorDetails => `<input name="locationType" type="hidden" value="floor" />
         <div class="dialogRow" data-testid="floor-name">
@@ -820,6 +817,7 @@ export const BookableSpacesManageLocations = ({
                 .finally(() => {
                     showSavingProgress(false);
                 });
+        return true;
     };
 
     function showEditFloorForm(floorId) {
@@ -884,7 +882,7 @@ export const BookableSpacesManageLocations = ({
             !!dialog && dialog.showModal();
 
             const saveButton = document.getElementById('saveButton');
-            !!saveButton && saveButton.addEventListener('click', saveNewSite);
+            !!saveButton && saveButton.addEventListener('click', saveNewCampus);
         }
     }
 
@@ -964,17 +962,9 @@ export const BookableSpacesManageLocations = ({
                                 } else if (!!campusListLoading) {
                                     return <InlineLoader message="Loading" />;
                                 } else if (!!campusListError) {
-                                    return (
-                                        <StyledStandardCard fullHeight>
-                                            <p>Something went wrong - please try again later.</p>
-                                        </StyledStandardCard>
-                                    );
+                                    return <p>Something went wrong - please try again later.</p>;
                                 } else if (!campusList || campusList.length === 0) {
-                                    return (
-                                        <StyledStandardCard fullHeight>
-                                            <p>No spaces currently in system.</p>
-                                        </StyledStandardCard>
-                                    );
+                                    return <p>No spaces currently in system.</p>;
                                 } else {
                                     return (
                                         <div data-testid="spaces-location-wrapper">{getLocationLayout(campusList)}</div>
