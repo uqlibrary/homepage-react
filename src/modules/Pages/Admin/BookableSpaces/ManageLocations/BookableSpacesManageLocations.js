@@ -19,14 +19,6 @@ import {
     springshareLocations,
 } from 'modules/Pages/Admin/BookableSpaces/helpers';
 
-const StyledStandardCard = styled(StandardCard)(() => ({
-    '& .MuiCardHeader-root': {
-        paddingBottom: 0,
-    },
-    '& .MuiCardContent-root': {
-        paddingBlock: 0,
-    },
-}));
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
     border: '1px solid rgba(38, 85, 115, 0.15)',
@@ -35,7 +27,11 @@ const StyledMainDialog = styled('dialog')(({ theme }) => ({
         paddingInline: '1rem',
     },
     '& .dialogRow': {
-        padding: '1rem',
+        padding: '0.5rem 1rem',
+        '& h3': {
+            marginBottom: 0,
+            marginTop: '0.5rem',
+        },
         '& label': {
             fontWeight: 500,
             display: 'block',
@@ -49,6 +45,9 @@ const StyledMainDialog = styled('dialog')(({ theme }) => ({
         },
         '& :focus-visible': {
             outlineColor: theme.palette.primary.light,
+        },
+        '& ul': {
+            marginBlock: 0,
         },
         '& li': {
             paddingBlock: '0.5rem',
@@ -134,20 +133,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
         },
     },
 }));
-const StyledGridItem = styled(Grid)(() => ({
-    marginTop: '12px',
-}));
-const StyledBusyIconDiv = styled('div')(() => ({
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#fff',
-    opacity: '80%',
-    zIndex: 99,
-    position: 'absolute',
-    top: 0,
-    paddingTop: '4rem',
-    marginTop: '12px',
-}));
 const StyledEditButton = styled(Button)(({ theme }) => ({
     '& svg': {
         color: 'grey',
@@ -198,6 +183,9 @@ export const BookableSpacesManageLocations = ({
 }) => {
     console.log('campusList', campusListLoading, campusListError, campusList);
     console.log('weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
+
+    const [savingProgressShown, showSavingProgress] = React.useState(false);
+
     React.useEffect(() => {
         addBreadcrumbsToSiteHeader([
             '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Location management</span></li>',
@@ -209,16 +197,6 @@ export const BookableSpacesManageLocations = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    function showBusyIcon(id) {
-        const busyWhileSavingIcon = document.getElementById(id);
-        !!busyWhileSavingIcon && (busyWhileSavingIcon.style.display = 'block');
-        return busyWhileSavingIcon;
-    }
-
-    function hideBusyIcon(busyWhileSavingIcon) {
-        !!busyWhileSavingIcon && (busyWhileSavingIcon.style.display = 'none');
-    }
 
     const springshareList = React.useMemo(() => {
         console.log('springshareList:', weeklyHoursLoading, weeklyHoursError, weeklyHours);
@@ -264,12 +242,12 @@ export const BookableSpacesManageLocations = ({
         removeAnyListeners(saveButton);
     }
 
-    function saveNewSite(e) {
+    const saveNewCampus = e => {
         const form = e.target.closest('form');
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
-        console.log('saveNewSite data', data);
+        console.log('saveNewCampus data', data);
         const locationType = data?.locationType;
 
         // validate form
@@ -280,7 +258,7 @@ export const BookableSpacesManageLocations = ({
 
         closeDialog(e);
 
-        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        showSavingProgress(true);
         !!locationType &&
             actions
                 .addBookableSpaceLocation(data)
@@ -294,9 +272,10 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon(busyWhileSavingIcon);
+                    showSavingProgress(false);
                 });
-    }
+        return true;
+    };
 
     const campusFormCore = (campusDetails = {}, formType = 'add') => {
         const campusName = campusDetails?.campus_name ?? '';
@@ -314,7 +293,7 @@ export const BookableSpacesManageLocations = ({
         </div>`;
     };
 
-    function saveNewBuilding(e) {
+    const saveNewBuilding = e => {
         const form = e.target.closest('form');
         console.log('saveNewBuilding form=', form);
 
@@ -331,7 +310,7 @@ export const BookableSpacesManageLocations = ({
 
         closeDialog(e);
 
-        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        showSavingProgress(true);
         !!locationType &&
             actions
                 .addBookableSpaceLocation(data)
@@ -345,9 +324,10 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon(busyWhileSavingIcon);
+                    showSavingProgress(false);
                 });
-    }
+        return true;
+    };
 
     const saveChangeToSite = e => {
         const form = e.target.closest('form');
@@ -366,7 +346,7 @@ export const BookableSpacesManageLocations = ({
             return false;
         }
 
-        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        showSavingProgress(true);
         closeDialog(e);
 
         !!locationType &&
@@ -382,8 +362,9 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon(busyWhileSavingIcon);
+                    showSavingProgress(false);
                 });
+        return true;
     };
 
     function buildingCoreForm(buildingDetails = {}) {
@@ -465,7 +446,7 @@ export const BookableSpacesManageLocations = ({
 
     function deleteLocation(locationType, locationId, successMessage, failureMessage) {
         console.log('deleteLocation', locationType, locationId);
-        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        showSavingProgress(true);
 
         closeDeletionConfirmation(); // close delete conf dialog
         closeDialog(); // close main dialog
@@ -484,7 +465,7 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon(busyWhileSavingIcon);
+                    showSavingProgress(false);
                 });
     }
 
@@ -614,7 +595,7 @@ export const BookableSpacesManageLocations = ({
             return false;
         }
 
-        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        showSavingProgress(true);
         closeDialog(e);
 
         !!locationType &&
@@ -630,11 +611,12 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon(busyWhileSavingIcon);
+                    showSavingProgress(false);
                 });
+        return true;
     };
 
-    function saveNewFloor(e) {
+    const saveNewFloor = e => {
         const form = e.target.closest('form');
         console.log('saveNewFloor form=', form);
 
@@ -649,7 +631,7 @@ export const BookableSpacesManageLocations = ({
             return false;
         }
 
-        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        showSavingProgress(true);
         closeDialog(e);
 
         !!locationType &&
@@ -677,9 +659,10 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon(busyWhileSavingIcon);
+                    showSavingProgress(false);
                 });
-    }
+        return true;
+    };
 
     const floorCoreForm = floorDetails => `<input name="locationType" type="hidden" value="floor" />
         <div class="dialogRow" data-testid="floor-name">
@@ -816,7 +799,7 @@ export const BookableSpacesManageLocations = ({
             return false;
         }
 
-        const busyWhileSavingIcon = showBusyIcon('busy-icon-while-saving');
+        showSavingProgress(true);
         closeDialog(e);
 
         !!locationType &&
@@ -832,8 +815,9 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon(busyWhileSavingIcon);
+                    showSavingProgress(false);
                 });
+        return true;
     };
 
     function showEditFloorForm(floorId) {
@@ -898,7 +882,7 @@ export const BookableSpacesManageLocations = ({
             !!dialog && dialog.showModal();
 
             const saveButton = document.getElementById('saveButton');
-            !!saveButton && saveButton.addEventListener('click', saveNewSite);
+            !!saveButton && saveButton.addEventListener('click', saveNewCampus);
         }
     }
 
@@ -960,13 +944,6 @@ export const BookableSpacesManageLocations = ({
                         )),
                     ]),
                 ])}
-                <StyledButton
-                    className={'primary'}
-                    style={{ marginLeft: '4rem', marginTop: '2rem' }}
-                    children={'Add new Campus'}
-                    onClick={showAddSiteForm}
-                    data-testid="add-new-campus-button"
-                />
             </>
         );
     }
@@ -978,40 +955,34 @@ export const BookableSpacesManageLocations = ({
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
                     <Grid container spacing={3} style={{ position: 'relative' }}>
-                        {(() => {
-                            if (!!campusListLoading) {
-                                return (
-                                    <StyledGridItem item xs={12} md={9}>
-                                        <InlineLoader message="Loading" />
-                                    </StyledGridItem>
-                                );
-                            } else if (!!campusListError) {
-                                return (
-                                    <StyledGridItem item xs={12} md={9}>
-                                        <StyledStandardCard fullHeight>
-                                            <p>Something went wrong - please try again later.</p>
-                                        </StyledStandardCard>
-                                    </StyledGridItem>
-                                );
-                            } else if (!campusList || campusList.length === 0) {
-                                return (
-                                    <StyledGridItem item xs={12} md={9}>
-                                        <StyledStandardCard fullHeight>
-                                            <p>No spaces currently in system - please try again soon.</p>
-                                        </StyledStandardCard>
-                                    </StyledGridItem>
-                                );
-                            } else {
-                                return (
-                                    <StyledGridItem data-testid="spaces-location-wrapper">
-                                        {getLocationLayout(campusList)}
-                                    </StyledGridItem>
-                                );
-                            }
-                        })()}
-                        <StyledBusyIconDiv id="busy-icon-while-saving" style={{ display: 'none' }}>
-                            <InlineLoader message="Saving" />
-                        </StyledBusyIconDiv>
+                        <Grid item xs={12} md={8} style={{ marginTop: '12px' }}>
+                            {(() => {
+                                if (!!savingProgressShown) {
+                                    return <InlineLoader message="Saving" />;
+                                } else if (!!campusListLoading) {
+                                    return <InlineLoader message="Loading" />;
+                                } else if (!!campusListError) {
+                                    return <p>Something went wrong - please try again later.</p>;
+                                } else if (!campusList || campusList.length === 0) {
+                                    return <p>No spaces currently in system.</p>;
+                                } else {
+                                    return (
+                                        <div data-testid="spaces-location-wrapper">{getLocationLayout(campusList)}</div>
+                                    );
+                                }
+                            })()}
+                        </Grid>
+                        <Grid item xs={12} md={4} style={{ paddingTop: 0 }}>
+                            <div style={{ padding: '1rem' }}>
+                                <StyledButton
+                                    className={'primary'}
+                                    style={{ marginLeft: '2rem', marginTop: '2rem', textTransform: 'initial' }}
+                                    children={'Add new Campus'}
+                                    onClick={showAddSiteForm}
+                                    data-testid="add-new-campus-button"
+                                />
+                            </div>
+                        </Grid>
                     </Grid>
                 </StandardCard>
                 <dialog id="confirmationDialog" className="confirmationDialog" data-testid="confirmation-dialog">

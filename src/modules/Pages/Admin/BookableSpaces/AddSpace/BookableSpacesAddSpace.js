@@ -88,10 +88,11 @@ export const BookableSpacesAddSpace = ({
         setErrorMessages2(m);
     };
 
-    const [selectedOption, setSelectedOption] = useState(
-        null,
-        // initialValue ? options.find(opt => opt.lid === initialValue) : null,
-    );
+    const [selectedOption, setSelectedOption2] = useState(null);
+    const setSelectedOption = newValue => {
+        console.log('setSelectedOption', newValue);
+        setSelectedOption2(newValue);
+    };
 
     useEffect(() => {
         addBreadcrumbsToSiteHeader([
@@ -243,6 +244,8 @@ export const BookableSpacesAddSpace = ({
     //     );
     // };
 
+    const noSpringshareHourslabel = 'No Springshare building hours will display';
+
     const handleChange = prop => e => {
         const theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
@@ -268,6 +271,12 @@ export const BookableSpacesAddSpace = ({
                 ...location,
                 ...updatedLocation,
             });
+            setSelectedOption({
+                id: updatedLocation.currentBuilding?.building_springshare_id || -1,
+                display_name:
+                    springshareList?.find(s => s.id === updatedLocation.currentBuilding.building_springshare_id)
+                        ?.display_name || noSpringshareHourslabel,
+            });
         } else if (prop === 'building_id') {
             updatedLocation.currentCampusList = validCampusList(campusList);
             updatedLocation.currentCampus = !!formValues.campus_id
@@ -275,7 +284,7 @@ export const BookableSpacesAddSpace = ({
                 : {};
             updatedLocation.campus_id = updatedLocation.currentCampus?.campus_id;
 
-            updatedLocation.currentCampusBuildings = updatedLocation.currentCampus?.buildings;
+            updatedLocation.currentCampusBuildings = validBuildingList(updatedLocation?.currentCampus?.buildings || []);
             updatedLocation.currentBuilding = updatedLocation.currentCampusBuildings?.find(
                 b => b.building_id === theNewValue,
             );
@@ -288,6 +297,12 @@ export const BookableSpacesAddSpace = ({
             setLocation({
                 ...location,
                 ...updatedLocation,
+            });
+            setSelectedOption({
+                id: updatedLocation.currentBuilding.building_springshare_id,
+                display_name: springshareList.find(
+                    s => s.id === updatedLocation.currentBuilding.building_springshare_id,
+                )?.display_name,
             });
         } else if (prop === 'space_photo_url') {
             const photoDescriptionField = document.getElementById('space_photo_description');
@@ -396,6 +411,14 @@ export const BookableSpacesAddSpace = ({
 
     console.log('@@@@ location=', location);
     console.log('@@@@ formValues?.campus_id=', formValues?.campus_id);
+
+    const springshareListWithUnselected = React.useMemo(() => {
+        const unselectedOption = {
+            id: -1,
+            display_name: noSpringshareHourslabel,
+        };
+        return [unselectedOption, ...springshareList];
+    }, [springshareList]);
 
     const spaceTypeList = React.useMemo(() => {
         if (
@@ -736,10 +759,10 @@ export const BookableSpacesAddSpace = ({
                             <Grid item xs={12}>
                                 <Autocomplete
                                     data-testid="add-space-springshare-id"
-                                    options={springshareList}
+                                    options={springshareListWithUnselected}
                                     value={selectedOption}
                                     onChange={handleSpringshareSelection}
-                                    getOptionLabel={option => option.display_name}
+                                    getOptionLabel={option => option?.display_name || noSpringshareHourslabel}
                                     isOptionEqualToValue={(option, value) => option.id === value.id}
                                     renderInput={params => (
                                         <TextField
