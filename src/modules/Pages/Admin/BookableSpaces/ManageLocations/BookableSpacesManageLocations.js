@@ -141,17 +141,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
         },
     },
 }));
-const StyledBusyIconDiv = styled('div')(() => ({
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#fff',
-    opacity: '80%',
-    zIndex: 99,
-    position: 'absolute',
-    top: 0,
-    paddingTop: '4rem',
-    marginTop: '12px',
-}));
 const StyledEditButton = styled(Button)(({ theme }) => ({
     '& svg': {
         color: 'grey',
@@ -202,6 +191,9 @@ export const BookableSpacesManageLocations = ({
 }) => {
     console.log('campusList', campusListLoading, campusListError, campusList);
     console.log('weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
+
+    const [savingProgressShown, showSavingProgress] = React.useState(false);
+
     React.useEffect(() => {
         addBreadcrumbsToSiteHeader([
             '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Location management</span></li>',
@@ -213,16 +205,6 @@ export const BookableSpacesManageLocations = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    function showBusyIcon(id = 'busy-icon-while-saving') {
-        const busyWhileSavingIcon = document.getElementById(id);
-        !!busyWhileSavingIcon && (busyWhileSavingIcon.style.display = 'block');
-    }
-
-    function hideBusyIcon(id = 'busy-icon-while-saving') {
-        const busyWhileSavingIcon = document.getElementById(id);
-        !!busyWhileSavingIcon && (busyWhileSavingIcon.style.display = 'none');
-    }
 
     const springshareList = React.useMemo(() => {
         console.log('springshareList:', weeklyHoursLoading, weeklyHoursError, weeklyHours);
@@ -284,7 +266,7 @@ export const BookableSpacesManageLocations = ({
 
         closeDialog(e);
 
-        showBusyIcon();
+        showSavingProgress(true);
         !!locationType &&
             actions
                 .addBookableSpaceLocation(data)
@@ -298,7 +280,7 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon();
+                    showSavingProgress(false);
                 });
     }
 
@@ -335,7 +317,7 @@ export const BookableSpacesManageLocations = ({
 
         closeDialog(e);
 
-        showBusyIcon();
+        showSavingProgress(true);
         !!locationType &&
             actions
                 .addBookableSpaceLocation(data)
@@ -349,7 +331,7 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon();
+                    showSavingProgress(false);
                 });
     }
 
@@ -370,7 +352,7 @@ export const BookableSpacesManageLocations = ({
             return false;
         }
 
-        showBusyIcon();
+        showSavingProgress(true);
         closeDialog(e);
 
         !!locationType &&
@@ -386,7 +368,7 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon();
+                    showSavingProgress(false);
                 });
     };
 
@@ -469,7 +451,7 @@ export const BookableSpacesManageLocations = ({
 
     function deleteLocation(locationType, locationId, successMessage, failureMessage) {
         console.log('deleteLocation', locationType, locationId);
-        showBusyIcon();
+        showSavingProgress(true);
 
         closeDeletionConfirmation(); // close delete conf dialog
         closeDialog(); // close main dialog
@@ -488,7 +470,7 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon();
+                    showSavingProgress(false);
                 });
     }
 
@@ -618,7 +600,7 @@ export const BookableSpacesManageLocations = ({
             return false;
         }
 
-        showBusyIcon();
+        showSavingProgress(true);
         closeDialog(e);
 
         !!locationType &&
@@ -634,7 +616,7 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon();
+                    showSavingProgress(false);
                 });
     };
 
@@ -653,7 +635,7 @@ export const BookableSpacesManageLocations = ({
             return false;
         }
 
-        showBusyIcon();
+        showSavingProgress(true);
         closeDialog(e);
 
         !!locationType &&
@@ -681,7 +663,7 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon();
+                    showSavingProgress(false);
                 });
     }
 
@@ -820,7 +802,7 @@ export const BookableSpacesManageLocations = ({
             return false;
         }
 
-        showBusyIcon();
+        showSavingProgress(true);
         closeDialog(e);
 
         !!locationType &&
@@ -836,7 +818,7 @@ export const BookableSpacesManageLocations = ({
                     displayToastMessage('Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
-                    hideBusyIcon();
+                    showSavingProgress(false);
                 });
     };
 
@@ -977,7 +959,9 @@ export const BookableSpacesManageLocations = ({
                     <Grid container spacing={3} style={{ position: 'relative' }}>
                         <Grid item xs={12} md={8} style={{ marginTop: '12px' }}>
                             {(() => {
-                                if (!!campusListLoading) {
+                                if (!!savingProgressShown) {
+                                    return <InlineLoader message="Saving" />;
+                                } else if (!!campusListLoading) {
                                     return <InlineLoader message="Loading" />;
                                 } else if (!!campusListError) {
                                     return (
@@ -997,9 +981,6 @@ export const BookableSpacesManageLocations = ({
                                     );
                                 }
                             })()}
-                            <StyledBusyIconDiv id="busy-icon-while-saving" style={{ display: 'none' }}>
-                                <InlineLoader message="Saving" />
-                            </StyledBusyIconDiv>
                         </Grid>
                         <Grid item xs={12} md={4} style={{ paddingTop: 0 }}>
                             <div style={{ padding: '1rem' }}>
