@@ -51,7 +51,7 @@ import {
 import {
     dlorAdminLink,
     isValidEmail,
-    splitStringToArrayOnComma,
+    splitStringToArrayOnPipe,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { isDlorAdminUser, isInDLOROwningTeam } from 'helpers/access';
@@ -225,7 +225,7 @@ export const DlorForm = ({
     useEffect(() => {
         // map the keywords from the keyword string BACK into the selectedKeywords structure
         if (!!formValues?.object_keywords_string && formValues?.object_keywords_string.length > 0) {
-            const keywordStrings = splitStringToArrayOnComma(formValues.object_keywords_string || /* istanbul ignore next */ '');
+            const keywordStrings = splitStringToArrayOnPipe(formValues.object_keywords_string || /* istanbul ignore next */ '');
 
             const newKeywordsArray = keywordStrings.map((keyword, index) => {
                 return {
