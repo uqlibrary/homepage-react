@@ -240,18 +240,16 @@ mock.onPut(`/${routes.ALERT_UPDATE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db72
         },
     ]),
 );
-// mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(withDelay([500, {}]));
 mock.onDelete(routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
     withDelay([200, []]),
 );
-// mock.onDelete(routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(withDelay([500, []]));
 mock.onDelete(routes.ALERT_DELETE_API({ id: 'd23f2e10-d7d6-11eb-a928-71f3ef9d35d9' }).apiUrl).reply(
     withDelay([200, []]),
 );
 mock.onDelete(routes.ALERT_DELETE_API({ id: 'da181a00-d476-11eb-8596-2540419539a9' }).apiUrl).reply(
     withDelay([200, []]),
 );
-mock.onDelete(routes.ALERT_DELETE_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08' }).apiUrl).reply(
+mock.onDelete(routes.ALERT_DELETE_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f09' }).apiUrl).reply(
     withDelay([200, []]),
 );
 mock.onDelete(routes.ALERT_DELETE_API({ id: '0aa12a30-996a-11eb-b009-3f6ded4fdb35' }).apiUrl).reply(
@@ -324,11 +322,11 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: '0aa12a30-996a-11eb-b009-3f6ded4fdb35' }
     ]),
 );
 
-mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08' }).apiUrl).reply(
+mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f09' }).apiUrl).reply(
     withDelay([
         200,
         {
-            id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08',
+            id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f09',
             start: '2021-06-27 14:00:57',
             end: '2021-06-27 14:50:57',
             title: 'Network outage, Duhig Tower, 2.30-2.45pm today.',
@@ -340,6 +338,19 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08' }
         },
     ]),
 );
+mock.onGet(routes.ALERT_BY_ID_API({ id: '232d6880-996a-11eb-8a79-e7fddae87baf' }).apiUrl).reply(withDelay([404, {}]));
+
+function getSpecificAlert(alertId) {
+    return alertList.find(alert => alert?.id === alertId);
+}
+mock.onGet(/alert\/.*/).reply(config => {
+    const urlparts = config.url.split('/').pop();
+    const alertId = urlparts.split('?')[0];
+    if (alertId === '232d6880-996a-11eb-8a79-e7fddae87baf') {
+        return [404, { status: 'error', message: 'No records found for that UUID' }];
+    }
+    return [200, getSpecificAlert(alertId)];
+});
 
 // Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
 fetchMock.mock(
@@ -807,7 +818,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
     })
     .onPost(/dlor\/admin\/object\/notes\/.*/)
     .reply(() => {
-        return[200, dlor_admin_notes];
+        return [200, dlor_admin_notes];
     })
     .onPost(/dlor\/auth\/teammember/)
     .reply(() => {
@@ -824,7 +835,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .onGet(/dlor\/public\/keywords\/list/)
     .reply(() => {
         return [200, dlor_keywords];
-    })
+    });
 
 mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
