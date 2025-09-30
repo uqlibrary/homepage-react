@@ -116,7 +116,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         alertWrapper.parentElement.style.visibility = !!showThePreview ? 'visible' : 'hidden';
         alertWrapper.parentElement.style.opacity = !!showThePreview ? '1' : '0';
 
-        !!showThePreview && document.getElementById('admin-alerts-form-button-preview')?.blur();
+        document.getElementById('admin-alerts-form-button-preview')?.blur();
 
         setPreviewOpen(showThePreview);
     };
