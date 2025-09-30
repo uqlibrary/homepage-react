@@ -320,6 +320,8 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Forgan Smith Building - 1');
         await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
 
+        await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue('Walter Harrison Law');
+
         // open the campus dropdown
         page.getByTestId('add-space-select-campus').click();
 
@@ -347,6 +349,10 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-floor')).toContainText('J.K. Murray Library - 29');
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Ground floor');
 
+        await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue(
+            'JK Murray (UQ Gatton)',
+        );
+
         // open the building dropdown to change building
         page.getByTestId('add-space-select-building').click();
 
@@ -364,7 +370,7 @@ test.describe('Spaces Admin - manage locations', () => {
             'Library Warehouse',
         );
 
-        // choose 'Warehouse' inn the building dropdown to change the building and floor
+        // choose 'Warehouse' in the building dropdown to change the building and floor
         page.locator('ul[aria-labelledby="add-space-select-building-label"] li:last-of-type').click();
 
         // the displayed building and floors have changed; campus is unchanged
@@ -375,6 +381,10 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Library Warehouse - 31');
         await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
+
+        await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue(
+            'No Springshare building hours will display',
+        );
 
         // open the floor dropdown to change floor
         page.getByTestId('add-space-select-floor').click();
@@ -403,7 +413,25 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Library Warehouse - 32');
         await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
 
+        await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue(
+            'No Springshare building hours will display',
+        );
+
         // test we can change it twice
+
+        // open the building dropdown to change building
+        page.getByTestId('add-space-select-building').click();
+
+        // the popup has the two valid buildings (this was showing all 3 at one point)
+        await expect(page.locator('[aria-labelledby="add-space-select-building-label"]')).toBeVisible();
+        await expect(page.locator('[aria-labelledby="add-space-select-building-label"]').locator(' > *')).toHaveCount(
+            2,
+        );
+        await expect(
+            page.locator('ul[aria-labelledby="add-space-select-building-label"] li:first-child'),
+        ).toBeVisible();
+        page.locator('ul[aria-labelledby="add-space-select-building-label"] li:first-of-type').click();
+
         // open the campus dropdown
         page.getByTestId('add-space-select-campus').click();
 
@@ -421,6 +449,8 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-building')).toContainText('Forgan Smith Building');
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Forgan Smith Building - 1');
+
+        await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue('Walter Harrison Law');
 
         // open the building dropdown to change building
         page.getByTestId('add-space-select-building').click();
@@ -445,6 +475,8 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-building')).toContainText('Duhig Tower');
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Duhig Tower - 4');
+
+        await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue('Duhig Tower');
 
         // open the floor dropdown to change floor
         page.getByTestId('add-space-select-floor').click();
@@ -472,6 +504,8 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Duhig Tower - 5');
         await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
+
+        await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue('Duhig Tower');
     });
 });
 test.describe('Spaces Admin - errors', () => {
