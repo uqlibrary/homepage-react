@@ -112,7 +112,7 @@ export const DLOEdit = ({
         team_name_edit: dlorItem?.owner.team_name,
         team_manager_edit: dlorItem?.owner.team_manager,
         team_email_edit: dlorItem?.owner.team_email,
-        object_keywords_string: dlorItem?.object_keywords?.join(', '),
+        object_keywords_string: dlorItem?.object_keywords?.join('|'),
         object_keywords: dlorItem?.object_keywords || [],
         facets: dlorItem?.object_filters,
         object_link_types: dlorItem?.object_link_types,
