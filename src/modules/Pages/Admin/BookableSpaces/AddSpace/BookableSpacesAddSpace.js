@@ -88,11 +88,14 @@ export const BookableSpacesAddSpace = ({
         setErrorMessages2(m);
     };
 
-    const [selectedOption, setSelectedOption2] = useState(null);
-    const setSelectedOption = newValue => {
-        console.log('setSelectedOption', newValue);
-        setSelectedOption2(newValue);
+    const [selectedSpringshareOption, setSpringshareOption2] = useState(null);
+    const setSpringshareOption = newValue => {
+        console.log('setSpringshareOption', newValue);
+        setSpringshareOption2(newValue);
     };
+
+    const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
+    const noSpringshareHoursLabel = 'No Springshare building hours will display (click to change)';
 
     useEffect(() => {
         addBreadcrumbsToSiteHeader([
@@ -111,15 +114,21 @@ export const BookableSpacesAddSpace = ({
 
     const springshareList = React.useMemo(() => {
         if (
-            weeklyHoursLoading === false &&
-            weeklyHoursError === false &&
-            weeklyHours?.data?.locations &&
-            Array.isArray(weeklyHours.data.locations)
+            weeklyHoursLoading !== false ||
+            weeklyHoursError !== false ||
+            !weeklyHours?.data?.locations ||
+            !Array.isArray(weeklyHours.data.locations)
         ) {
-            console.log('springshareLocations(weeklyHours)=', springshareLocations(weeklyHours));
-            return springshareLocations(weeklyHours);
+            return [];
         }
-        return [];
+
+        const unselectedOption = {
+            id: -1,
+            display_name: noSpringshareHoursLabel,
+        };
+        const newVar = [unselectedOption, ...springshareLocations(weeklyHours)];
+        console.log('calculate springshareList=', newVar);
+        return newVar;
     }, [weeklyHoursLoading, weeklyHoursError, weeklyHours]);
 
     useEffect(() => {
@@ -158,7 +167,7 @@ export const BookableSpacesAddSpace = ({
             setFormValues(newValues);
 
             console.log('@@@ springshareList=', springshareList);
-            setSelectedOption({
+            setSpringshareOption({
                 id: locnTemp.currentBuilding.building_springshare_id, // preset the springshare id
                 display_name: springshareList.find(s => s.id === locnTemp.currentBuilding.building_springshare_id)
                     ?.display_name,
@@ -172,18 +181,26 @@ export const BookableSpacesAddSpace = ({
         );
     }, [bookableSpacesRoomAdding, bookableSpacesRoomAddError, bookableSpacesRoomAddResult]);
 
-    const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
-
     const handleSpringshareSelection = (event, newValue) => {
         console.log('handleSpringshareSelection newValue', newValue);
         console.log('handleSpringshareSelection e', event);
-        setSelectedOption(newValue);
-        const newValues = {
+        let newSpringshare = { id: -1, display_name: noSpringshareHoursLabel };
+        if (!!newValue?.id && !!newValue.display_name) {
+            newSpringshare = newValue;
+        } else if (!!newValue?.id) {
+            const newValueId = newValue?.id;
+            newSpringshare = {
+                id: newValueId,
+                display_name: springshareList?.find(s => s.id === newValueId)?.display_name || noSpringshareHoursLabel,
+            };
+        }
+        console.log('newSpringshare', newSpringshare);
+        setSpringshareOption(newSpringshare);
+
+        setFormValues({
             ...formValues,
-            ['space_opening_hours_id']: newValue.id,
-        };
-        console.log('handleSpringshareSelection newValues=', newValues);
-        setFormValues(newValues);
+            ['space_opening_hours_id']: newSpringshare.id,
+        });
     };
 
     // validate fields value
@@ -244,8 +261,6 @@ export const BookableSpacesAddSpace = ({
     //     );
     // };
 
-    const noSpringshareHourslabel = 'No Springshare building hours will display';
-
     const handleChange = prop => e => {
         const theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
@@ -271,11 +286,11 @@ export const BookableSpacesAddSpace = ({
                 ...location,
                 ...updatedLocation,
             });
-            setSelectedOption({
-                id: updatedLocation.currentBuilding?.building_springshare_id || -1,
+            const buildingSpringshareId = updatedLocation?.currentBuilding?.building_springshare_id || -1;
+            setSpringshareOption({
+                id: buildingSpringshareId,
                 display_name:
-                    springshareList?.find(s => s.id === updatedLocation.currentBuilding.building_springshare_id)
-                        ?.display_name || noSpringshareHourslabel,
+                    springshareList?.find(s => s.id === buildingSpringshareId)?.display_name || noSpringshareHoursLabel,
             });
         } else if (prop === 'building_id') {
             updatedLocation.currentCampusList = validCampusList(campusList);
@@ -298,7 +313,7 @@ export const BookableSpacesAddSpace = ({
                 ...location,
                 ...updatedLocation,
             });
-            setSelectedOption({
+            setSpringshareOption({
                 id: updatedLocation.currentBuilding.building_springshare_id,
                 display_name: springshareList.find(
                     s => s.id === updatedLocation.currentBuilding.building_springshare_id,
@@ -412,14 +427,6 @@ export const BookableSpacesAddSpace = ({
     console.log('@@@@ location=', location);
     console.log('@@@@ formValues?.campus_id=', formValues?.campus_id);
 
-    const springshareListWithUnselected = React.useMemo(() => {
-        const unselectedOption = {
-            id: -1,
-            display_name: noSpringshareHourslabel,
-        };
-        return [unselectedOption, ...springshareList];
-    }, [springshareList]);
-
     const spaceTypeList = React.useMemo(() => {
         if (
             bookableSpacesRoomListLoading === false &&
@@ -439,6 +446,22 @@ export const BookableSpacesAddSpace = ({
         }
         return [];
     }, [bookableSpacesRoomListLoading, bookableSpacesRoomListError, bookableSpacesRoomList]);
+
+    const reportCurrentBuildingAboutPage = location => (
+        <>
+            {location?.currentBuilding?.building_about_page_default ? (
+                <a
+                    target="_blank"
+                    href={location?.currentBuilding?.building_about_page_default}
+                    data-testid="add-space-about-page"
+                >
+                    {location?.currentBuilding?.building_about_page_default}
+                </a>
+            ) : (
+                <span data-testid="add-space-about-page">none</span>
+            )}
+        </>
+    );
 
     if (!!campusListLoading || !formValues?.campus_id) {
         return (
@@ -572,19 +595,7 @@ export const BookableSpacesAddSpace = ({
                             <Grid item xs={12}>
                                 <Typography component={'p'}>
                                     The "About" page for this building:{' '}
-                                    {/* <span>{reportCurrentBuildingAboutPage(location)}</span>*/}
-                                    <span>
-                                        {location?.currentBuilding?.building_about_page_default ? (
-                                            <a
-                                                target="_blank"
-                                                href={location?.currentBuilding?.building_about_page_default}
-                                            >
-                                                {location?.currentBuilding?.building_about_page_default}
-                                            </a>
-                                        ) : (
-                                            'none'
-                                        )}
-                                    </span>
+                                    <span>{reportCurrentBuildingAboutPage(location)}</span>
                                 </Typography>
                             </Grid>
                             <Grid item xs={12}>
@@ -759,10 +770,10 @@ export const BookableSpacesAddSpace = ({
                             <Grid item xs={12}>
                                 <Autocomplete
                                     data-testid="add-space-springshare-id"
-                                    options={springshareListWithUnselected}
-                                    value={selectedOption}
+                                    options={springshareList}
+                                    value={selectedSpringshareOption}
                                     onChange={handleSpringshareSelection}
-                                    getOptionLabel={option => option?.display_name || noSpringshareHourslabel}
+                                    getOptionLabel={option => option?.display_name || noSpringshareHoursLabel}
                                     isOptionEqualToValue={(option, value) => option.id === value.id}
                                     renderInput={params => (
                                         <TextField

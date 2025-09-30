@@ -321,6 +321,9 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
 
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue('Walter Harrison Law');
+        await expect(page.getByTestId('add-space-about-page')).toContainText(
+            'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
+        );
 
         // open the campus dropdown
         page.getByTestId('add-space-select-campus').click();
@@ -351,6 +354,9 @@ test.describe('Spaces Admin - manage locations', () => {
 
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue(
             'JK Murray (UQ Gatton)',
+        );
+        await expect(page.getByTestId('add-space-about-page')).toContainText(
+            'https://web.library.uq.edu.au/visit/jk-murray-library-uq-gatton',
         );
 
         // open the building dropdown to change building
@@ -383,8 +389,9 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
 
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue(
-            'No Springshare building hours will display',
+            'No Springshare building hours will display (click to change)',
         );
+        await expect(page.getByTestId('add-space-about-page')).toContainText('none');
 
         // open the floor dropdown to change floor
         page.getByTestId('add-space-select-floor').click();
@@ -414,8 +421,9 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
 
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue(
-            'No Springshare building hours will display',
+            'No Springshare building hours will display (click to change)',
         );
+        await expect(page.getByTestId('add-space-about-page')).toContainText('none');
 
         // test we can change it twice
 
@@ -451,6 +459,9 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Forgan Smith Building - 1');
 
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue('Walter Harrison Law');
+        await expect(page.getByTestId('add-space-about-page')).toContainText(
+            'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
+        );
 
         // open the building dropdown to change building
         page.getByTestId('add-space-select-building').click();
@@ -477,6 +488,9 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Duhig Tower - 4');
 
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue('Duhig Tower');
+        await expect(page.getByTestId('add-space-about-page')).toContainText(
+            'https://web.library.uq.edu.au/visit/duhig-tower',
+        );
 
         // open the floor dropdown to change floor
         page.getByTestId('add-space-select-floor').click();
@@ -506,6 +520,9 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
 
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue('Duhig Tower');
+        await expect(page.getByTestId('add-space-about-page')).toContainText(
+            'https://web.library.uq.edu.au/visit/duhig-tower',
+        );
     });
 });
 test.describe('Spaces Admin - errors', () => {
