@@ -155,7 +155,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                         {selectedItems.map((item, index) => {
                             const isKeywordAvailable = data.some(
-                                (availableItem) => availableItem.keyword === item.keyword
+                                (availableItem) => availableItem.keyword.trim() === item.keyword.trim()
                             );
 
                             return (
