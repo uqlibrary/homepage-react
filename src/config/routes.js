@@ -21,6 +21,7 @@ export const flattedPathConfigExact = [
     '/admin/dlor/team/manage',
     '/admin/dlor/team/add',
     '/admin/dlor/filters',
+    '/admin/dlor/vocabulary',
     '/admin/masquerade',
     '/admin/masquerade/',
     '/admin/testntag',
@@ -249,6 +250,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             element: <components.DLOFilterManage />,
             exact: true,
             pageTitle: 'Manage Filters',
+        },
+        {
+            path: pathConfig.admin.dlorvocabularymanage,
+            element: <components.DLOVocabularyManage />,
+            exact: true,
+            pageTitle: 'Manage Vocabulary',
         },
     ];
     const authenticatedDlorDisplay = [

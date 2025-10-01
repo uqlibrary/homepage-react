@@ -172,6 +172,9 @@ export const DLOAdminHomepage = ({
     const navigateToFilterManagePage = () => {
         window.location.href = dlorAdminLink('/filters', account);
     };
+    const navigateToVocabularyManagePage = () => {
+        window.location.href = dlorAdminLink('/vocabulary', account);
+    };
 
     const navigateToSeriesListPage = () => {
         window.location.href = dlorAdminLink('/series/manage', account);
@@ -393,6 +396,16 @@ export const DLOAdminHomepage = ({
                             data-testid="admin-dlor-visit-manage-filters-button"
                         >
                             Manage filters
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                navigateToVocabularyManagePage();
+                                /* istanbul ignore next */
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-visit-manage-vocabulary-button"
+                        >
+                            Manage keyword vocabulary
                         </MenuItem>
                         <MenuItem
                             onClick={() => {
