@@ -68,7 +68,7 @@ export const AlertSplitButton = ({
                             onClick={() =>
                                 mainButtonLabel === 'Edit' ? navigateToEditForm(alertId) : navigateToView(alertId)
                             }
-                            sx={{ borderColor: '#51247a !important' }}
+                            sx={{ borderColor: '#51247a !important', marginRight: '-6px', height: 52 }}
                         />
                         <StyledPrimaryButton
                             size="small"
@@ -79,7 +79,7 @@ export const AlertSplitButton = ({
                             data-testid={`alert-list-arrowicon-${alertId}`}
                             onClick={handleToggle}
                             title="More actions"
-                            sx={{ paddingInline: 0 }}
+                            sx={{ paddingInline: 0, marginLeft: '-6px', height: 52 }}
                         >
                             <ArrowDropDownIcon />
                         </StyledPrimaryButton>
