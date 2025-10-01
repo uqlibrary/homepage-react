@@ -56,6 +56,8 @@ import { LocalFireDepartment } from '@mui/icons-material';
 
 import {exportDLORDataToCSV} from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 
+import Fuse from 'fuse.js';
+
 const StyledSkipLinkButton = styled(Button)(({ theme }) => ({
     // hidden when not focused
     position: 'absolute',
@@ -292,6 +294,23 @@ export const DLOList = ({
     dlorTeamListLoading,
     dlorTeamListError,
 }) => {
+    console.log("LIST:", dlorList, dlorListLoading, dlorListError);
+    const fuseOptions = {
+        includeScore: true,
+        includeMatches: true,
+        ignoreLocation: true,
+        ignoreFieldNorm: true,
+        minMatchCharLength: 2,
+        threshold: 0.2,
+         keys: [
+            { name: 'object_title', weight: 0.8 },
+            { name: 'object_keywords', weight: 0.7 },
+            { name: 'object_synonyms', weight: 0.7 },
+            { name: 'object_description', weight: 0.7 }
+        ],
+        //keys: ['object_title', 'object_keywords', 'object_synonyms', 'object_description'],
+    };
+    const fuse = React.useMemo(() => new Fuse(dlorList || [], fuseOptions), [dlorList, fuseOptions]);
     // console.log('permissions', isLibraryStaff(account), isStaff(account), isUQOnlyUser(account));
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [selectedGradAttributes, setSelectedGradAttributes] = useState([]);
@@ -300,6 +319,8 @@ export const DLOList = ({
     const [keywordSearch, setKeywordSearch] = useState('');
     const [isKeywordClearable, setIsKeywordClearable] = useState(false);
     const keyWordSearchRef = useRef('');
+
+    const [fuzzyMatchSearch, setFuzzyMatchSearch] = useState([]);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const menuOpen = Boolean(anchorEl);
@@ -446,6 +467,7 @@ export const DLOList = ({
 
     // search icon pressed or loaded from url
     const handleSearchIconPressed = () => {
+        
         handleKeywordChange();
         updateUrl('keyword');
     };
@@ -455,6 +477,7 @@ export const DLOList = ({
     };
 
     const handleKeywordCharacterEntry = e => {
+        e.preventDefault();
         /* istanbul ignore next */
         if (e.key === 'Tab') {
             return;
@@ -462,6 +485,7 @@ export const DLOList = ({
         const keyword = e.target.value;
         setIsKeywordClearable(true);
         if (isReturnKeyPressed(e)) {
+            console.log('Return key pressed');
             if (keywordIsSearchable(keyword)) {
                 setKeywordSearch(keyword);
                 setPaginationPage(1);
@@ -685,24 +709,24 @@ export const DLOList = ({
         !!block && (block.style.display = 'none');
     }
 
-    const keywordFoundIn = (object, enteredKeyword) => {
-        const enteredKeywordLower = enteredKeyword.toLowerCase();
-        if (
-            object.object_title.toLowerCase().includes(enteredKeywordLower) ||
-            object.object_description.toLowerCase().includes(enteredKeywordLower) ||
-            object.object_summary.toLowerCase().includes(enteredKeywordLower)
-        ) {
-            return true;
-        }
-        if (
-            !!object?.object_keywords?.some(k => {
-                return k.toLowerCase().startsWith(enteredKeywordLower);
-            })
-        ) {
-            return true;
-        }
-        return false;
-    };
+    // const keywordFoundIn = (object, enteredKeyword) => {
+    //     const enteredKeywordLower = enteredKeyword.toLowerCase();
+    //     if (
+    //         object.object_title.toLowerCase().includes(enteredKeywordLower) ||
+    //         object.object_description.toLowerCase().includes(enteredKeywordLower) ||
+    //         object.object_summary.toLowerCase().includes(enteredKeywordLower)
+    //     ) {
+    //         return true;
+    //     }
+    //     if (
+    //         !!object?.object_keywords?.some(k => {
+    //             return k.toLowerCase().startsWith(enteredKeywordLower);
+    //         })
+    //     ) {
+    //         return true;
+    //     }
+    //     return false;
+    // };
 
     const handleCheckboxAction = prop => e => {
         const facetTypeSlug = prop?.replace('checkbox-', '');
@@ -989,7 +1013,15 @@ export const DLOList = ({
     const numberItemsPerPage = 10;
 
     function filterDlorList() {
-        const sortedList = dlorList
+        let theSearch = dlorList;
+        console.log("XXXXKeyword search and keywordSearch", keywordSearch, keyWordSearchRef.current.value);
+        if (!!keyWordSearchRef.current.value && !!keywordSearch) {
+            console.log("XXXXSearching on", keyWordSearchRef.current.value);
+            theSearch = fuse.search(keyWordSearchRef.current.value, fuseOptions).map(result => result.item);
+            console.log('XXXtheSearch', theSearch, dlorList);
+        }
+        
+        const sortedList = theSearch
             .filter(item => {
                 if (item.object_restrict_to === 'uqlibrarystaff') {
                     return isLibraryStaff(account);
@@ -1022,6 +1054,8 @@ export const DLOList = ({
                     isAccessible,
                 };
             });
+
+        console.log("XXXSorted List before search", sortedList);
 
         // Helper function to check if an item is favorited
         function isFavorited(item) {
@@ -1072,14 +1106,17 @@ export const DLOList = ({
 
         // Group selectedFilters by facetTypeSlug
         const groupedFilters = parseSelectedFilters(selectedFilters);
+        console.log("XXXXSorted ListXXXXX", sortedList);
+        
+        //console.log('Searches on this filtered list', fuse.search(sortedList, fuseOptions))
 
         const filteredList = sortedList?.filter(d => {
             const passesCheckboxFilter = filterDlor(d, groupedFilters);
-            const passesKeyWordFilter =
-                !keywordSearch || // keyword not supplied - don't block
-                !keywordIsSearchable(keywordSearch) || // keyword too short to be useful - don't block
-                !!keywordFoundIn(d, keywordSearch); // DO block the Object by keyword
-            return passesCheckboxFilter && passesKeyWordFilter;
+            // const passesKeyWordFilter =
+            //     !keywordSearch || // keyword not supplied - don't block
+            //     !keywordIsSearchable(keywordSearch) || // keyword too short to be useful - don't block
+            //     !!keywordFoundIn(d, keywordSearch); // DO block the Object by keyword
+            return passesCheckboxFilter // && passesKeyWordFilter;
         });
 
         // Return the filtered list with favorites first
