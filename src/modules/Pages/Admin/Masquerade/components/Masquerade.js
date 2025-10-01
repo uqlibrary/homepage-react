@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
@@ -10,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import txt from './masquerade.locale';
+import { StyledPrimaryButton } from 'helpers/general';
 
 const StyledStandardCard = styled(StandardCard)(() => ({
     backgroundColor: 'white',
@@ -59,13 +59,11 @@ const Masquerade = ({ account }) => {
                         />
                     </Grid>
                     <Grid item xs={12} sm={'auto'}>
-                        <Button
-                            variant="contained"
+                        <StyledPrimaryButton
                             id="submitMasquerade"
                             data-analyticsid="submitMasquerade"
                             data-testid="masquerade-submit"
                             fullWidth
-                            color="primary"
                             children={txt.labels.submit}
                             disabled={loading}
                             onClick={masqueradeAs}
