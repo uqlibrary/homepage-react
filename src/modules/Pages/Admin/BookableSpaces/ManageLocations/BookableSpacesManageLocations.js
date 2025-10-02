@@ -789,24 +789,27 @@ export const BookableSpacesManageLocations = ({
             <input name="ground_floor_id_old" type="hidden" value="${buildingDetails?.ground_floor_id ??
                 ''}" />${buildingCoreForm(buildingDetails)}<div class="dialogRow" data-testid="building-floor-list">
                 <h3>Floors - Choose ground floor:</h3>
-                ${buildingDetails?.floors?.length > 0 &&
-                    '<ul class="radioList">' +
-                        buildingDetails?.floors
-                            .map(floor => {
-                                const checked = floor.floor_id === buildingDetails.ground_floor_id ? ' checked' : '';
-                                return `<li>
+                ${
+                    buildingDetails?.floors?.length > 0
+                        ? '<ul class="radioList">' +
+                          buildingDetails?.floors
+                              .map(floor => {
+                                  const checked = floor.floor_id === buildingDetails.ground_floor_id ? ' checked' : '';
+                                  return `<li>
                                             <input type="radio" id="groundFloor-${floor.floor_id}" name="ground_floor_id" ${checked} value="${floor.floor_id}" />
                                             <label for="groundFloor-${floor.floor_id}">Floor ${floor.floor_name}</label> 
                                         </li>`;
-                            })
-                            .join('') +
-                        `<li>
+                              })
+                              .join('') +
+                          `<li>
                             <input type="radio" id="groundFloor-none" name="ground_floor_id" ${
                                 !buildingDetails.ground_floor_id ? ' checked' : ''
                             } />
                             <label for="groundFloor-none">None</label> 
                         </li>
-                    </ul>`}
+                    </ul>`
+                        : ''
+                }
                         
                 ${buildingDetails?.floors?.length === 0 ? '<p>No floors</p>' : ''}
                 </div>
