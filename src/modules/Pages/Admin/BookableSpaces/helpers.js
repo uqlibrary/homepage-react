@@ -128,7 +128,9 @@ export function displayToastMessage(message, isError = true) {
 }
 export const springshareLocations = weeklyHours => {
     return (
-        weeklyHours.data.locations
+        !!weeklyHours?.locations &&
+        weeklyHours.locations.length > 0 &&
+        weeklyHours.locations
             .filter(l => l.lid !== ASKUS_SPRINGSHARE_ID)
             .sort((a, b) => a.display_name.localeCompare(b.display_name))
             // eslint-disable-next-line camelcase
