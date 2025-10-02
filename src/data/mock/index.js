@@ -1550,14 +1550,14 @@ mock.onGet('exams/course/FREN1010/summary')
     });
 
 function resetWeeklyHourDatesToBeCurrent(jsonData) {
-    // reset the mock data so it is data for this week
+    // reset the mock data so it is data for this week, so we can label them "today" and "tomorrow"
     const today = new Date();
     const currentMonday = new Date(today);
     currentMonday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
 
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-    jsonData?.data?.locations?.forEach(location => {
+    jsonData?.locations?.forEach(location => {
         location.departments?.forEach(department => {
             department.weeks?.forEach((week, weekIndex) => {
                 days.forEach((day, index) => {

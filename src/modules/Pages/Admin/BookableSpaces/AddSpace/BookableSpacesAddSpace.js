@@ -122,8 +122,8 @@ export const BookableSpacesAddSpace = ({
         if (
             weeklyHoursLoading !== false ||
             weeklyHoursError !== false ||
-            !weeklyHours?.data?.locations ||
-            !Array.isArray(weeklyHours.data.locations)
+            !weeklyHours?.locations ||
+            !Array.isArray(weeklyHours.locations)
         ) {
             return [];
         }

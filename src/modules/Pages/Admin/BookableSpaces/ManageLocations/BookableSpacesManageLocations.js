@@ -206,8 +206,8 @@ export const BookableSpacesManageLocations = ({
         if (
             weeklyHoursLoading === false &&
             weeklyHoursError === false &&
-            weeklyHours?.data?.locations &&
-            Array.isArray(weeklyHours.data.locations)
+            weeklyHours?.locations &&
+            Array.isArray(weeklyHours.locations)
         ) {
             console.log('springshareLocations(weeklyHours)=', springshareLocations(weeklyHours));
             return springshareLocations(weeklyHours);
@@ -422,18 +422,23 @@ export const BookableSpacesManageLocations = ({
                         <input type="radio" name="building_springshare_id" id="building_springshare_id-0" value="0" checked />
                         <label for="building_springshare_id-0">None</label>
                      </li>
-                        ${springshareList
-                            .map(springshareItem => {
-                                console.log('buildingDetails=', buildingDetails.building_springshare_id);
-                                console.log('springshareList s=', springshareItem);
-                                const checked =
-                                    buildingDetails.building_springshare_id === springshareItem.id ? ' checked' : '';
-                                return `<li style="padding-block: 0.25rem">
+                        ${(!!springshareList &&
+                            springshareList.length > 0 &&
+                            springshareList
+                                .map(springshareItem => {
+                                    console.log('buildingDetails=', buildingDetails.building_springshare_id);
+                                    console.log('springshareList s=', springshareItem);
+                                    const checked =
+                                        buildingDetails.building_springshare_id === springshareItem.id
+                                            ? ' checked'
+                                            : '';
+                                    return `<li style="padding-block: 0.25rem">
                                     <input type="radio" name="building_springshare_id" id="building_springshare_id-${springshareItem.id}" data-testid="building_springshare_id-${springshareItem.id}" value="${springshareItem.id}"${checked} />
                                     <label for="building_springshare_id-${springshareItem.id}">${springshareItem.display_name}</label>
                                  </li>`;
-                            })
-                            .join('')}
+                                })
+                                .join('')) ||
+                            ''}
                 </ul>
             </div>
             <div class="dialogRow" data-testid="building_about_page_default">

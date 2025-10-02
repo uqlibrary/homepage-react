@@ -134,7 +134,7 @@ export const BookableSpacesList = ({
             return null; // <p>Opening hours currently unavailable - please try again later</p>;
         }
 
-        let openingDetails = weeklyHours?.data?.locations?.find(openingHours => {
+        let openingDetails = weeklyHours?.locations?.find(openingHours => {
             return openingHours.lid === bookableSpace.space_opening_hours_id;
         });
         !!openingDetails && (openingDetails = convertWeeksToDays(openingDetails));
