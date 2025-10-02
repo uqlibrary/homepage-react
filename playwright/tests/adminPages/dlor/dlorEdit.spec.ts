@@ -1003,7 +1003,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await expect(
                     page
                         .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
-                        .getByText('Request failed with status code 400'),
+                        .getByText('There was a problem with the input.'),
                 ).toBeVisible();
                 await expect(page.getByTestId('confirm-dlor-save-outcome').getByText('View Object')).toBeVisible();
                 await expect(page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object')).toBeVisible();
