@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useCookies } from 'react-cookie';
 
 import Button from '@mui/material/Button';
 import { Grid } from '@mui/material';
@@ -184,6 +185,8 @@ export const BookableSpacesManageLocations = ({
     console.log('campusList', campusListLoading, campusListError, campusList);
     console.log('weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
 
+    const [cookies, setCookie] = useCookies();
+
     const [savingProgressShown, showSavingProgress] = React.useState(false);
 
     React.useEffect(() => {
@@ -247,29 +250,39 @@ export const BookableSpacesManageLocations = ({
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
-        console.log('saveNewCampus data', data);
-        const locationType = data?.locationType;
+        console.log('data=', data);
 
         // validate form
-        if (!data.campus_name || !data.campus_id_displayed) {
+        if (!data.campus_name || !data.campus_number) {
             displayToastMessage('Please enter campus name and number', true);
             return false;
         }
 
         closeDialog(e);
-
         showSavingProgress(true);
+
+        const locationType = data?.locationType;
+        const valuesToSend = {
+            campus_name: data.campus_name,
+            campus_number: data.campus_number,
+        };
+        console.log('saveNewCampus valuesToSend', valuesToSend);
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
         !!locationType &&
             actions
-                .addBookableSpaceLocation(data)
+                .addBookableSpaceLocation(valuesToSend, locationType)
                 .then(() => {
                     displayToastMessage('Campus added', false);
-
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: adding new campus failed:', e);
-                    displayToastMessage('Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage('[BSML-001] Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -279,7 +292,7 @@ export const BookableSpacesManageLocations = ({
 
     const campusFormCore = (campusDetails = {}, formType = 'add') => {
         const campusName = campusDetails?.campus_name ?? '';
-        const campusIdDisplayed = campusDetails?.campus_id_displayed ?? '';
+        const campusNumber = campusDetails?.campus_number ?? '';
         return `<div>
             <input  name="locationType" type="hidden" value="campus" />
             <div class="dialogRow" data-testid="${formType}-campus-name">
@@ -288,7 +301,7 @@ export const BookableSpacesManageLocations = ({
             </div>
             <div class="dialogRow" data-testid="${formType}-campus-number">
                 <label for="campusNumber">Campus number</label>
-                <input id="campusNumber" name="campus_id_displayed" type="text" value="${campusIdDisplayed}" required maxlength="10" />
+                <input id="campusNumber" name="campus_number" type="text" value="${campusNumber}" required maxlength="10" />
             </div>
         </div>`;
     };
@@ -300,20 +313,33 @@ export const BookableSpacesManageLocations = ({
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
         console.log('saveNewBuilding data', data);
-        const locationType = data?.locationType;
 
         // validate form
-        if (!data.building_name || !data.building_id_displayed) {
+        if (!data.building_name || !data.building_number) {
             displayToastMessage('Please enter building name and number', true);
             return false;
         }
 
         closeDialog(e);
-
         showSavingProgress(true);
+
+        const locationType = data?.locationType;
+        const valuesToSend = {
+            building_name: data.building_name,
+            building_campus_id: data.building_campus_id,
+            building_number: data.building_number,
+            building_about_page_default: data.building_about_page_default,
+            building_springshare_id: data.building_springshare_id,
+        };
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
         !!locationType &&
             actions
-                .addBookableSpaceLocation(data)
+                .addBookableSpaceLocation(valuesToSend, locationType)
                 .then(() => {
                     displayToastMessage('Building added', false);
 
@@ -321,7 +347,7 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log('catch: adding new building failed:', e);
-                    displayToastMessage('Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage('[BSML-002] Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -329,37 +355,47 @@ export const BookableSpacesManageLocations = ({
         return true;
     };
 
-    const saveChangeToSite = e => {
+    const saveChangeToCampus = e => {
         const form = e.target.closest('form');
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
-        console.log('saveChangeToSite data=', data);
+        console.log('saveChangeToCampus data=', data);
         const locationType = data?.locationType;
         const locationId = data[`${locationType}Id`];
 
         // validate form
-        const failureMessage =
-            (!data.campus_name || !data.campus_id_displayed) && 'Please enter campus name and number';
+        const failureMessage = (!data.campus_name || !data.campus_number) && 'Please enter campus name and number';
         if (!!failureMessage) {
             displayToastMessage(failureMessage, true);
             return false;
         }
 
+        const valuesToSend = {
+            campus_name: data.campus_name,
+            campus_number: data.campus_number,
+        };
+        console.log('saveChangeToCampus valuesToSend', valuesToSend);
+
         showSavingProgress(true);
         closeDialog(e);
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
 
         !!locationType &&
             !!locationId &&
             actions
-                .updateBookableSpaceLocation(Object.fromEntries(formData))
+                .updateBookableSpaceLocation(valuesToSend, locationType)
                 .then(() => {
                     displayToastMessage('Change to campus saved', false);
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: saving campus ', locationId, 'failed:', e);
-                    displayToastMessage('Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage('[BSML-003] Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -376,7 +412,7 @@ export const BookableSpacesManageLocations = ({
             </div>
             <div class="dialogRow" data-testid="building-number">
                 <label for="buildingNumber">Building number *</label>
-                <input id="buildingNumber" name="building_id_displayed" type="text" value="${buildingDetails?.building_id_displayed ||
+                <input id="buildingNumber" name="building_number" type="text" value="${buildingDetails?.building_number ||
                     ''}" required  maxlength="10" />
             </div>
             <div class="dialogRow" data-testid="building_springshare_id">
@@ -393,7 +429,7 @@ export const BookableSpacesManageLocations = ({
                                 const checked =
                                     buildingDetails.building_springshare_id === springshareItem.id ? ' checked' : '';
                                 return `<li style="padding-block: 0.25rem">
-                                    <input type="radio" name="building_springshare_id" id="building_springshare_id-${springshareItem.id}" value="${springshareItem.id}"${checked} />
+                                    <input type="radio" name="building_springshare_id" id="building_springshare_id-${springshareItem.id}" data-testid="building_springshare_id-${springshareItem.id}" value="${springshareItem.id}"${checked} />
                                     <label for="building_springshare_id-${springshareItem.id}">${springshareItem.display_name}</label>
                                  </li>`;
                             })
@@ -409,9 +445,11 @@ export const BookableSpacesManageLocations = ({
     }
 
     function showAddBuildingForm(e, campusDetails) {
-        console.log('showAddBuildingForm');
-        const formBody = `<h2>Add a building to ${campusDetails?.campus_name ||
-            'unknown'} campus</h2>${buildingCoreForm()}`;
+        const formBody = `<h2>Add a building to ${campusDetails?.campus_name || 'unknown'} campus</h2>
+            ${buildingCoreForm()}
+            <input id="buildingCampusId" name="building_campus_id" type="hidden" value="${campusDetails?.campus_id ||
+                ''}" required  maxlength="10" />
+            `;
         if (!formBody) {
             return;
         }
@@ -426,7 +464,7 @@ export const BookableSpacesManageLocations = ({
         !!deleteButton && (deleteButton.style.display = 'none');
 
         const saveButton = document.getElementById('saveButton');
-        !!saveButton && saveButton.removeEventListener('click', saveChangeToSite);
+        !!saveButton && saveButton.removeEventListener('click', saveChangeToCampus);
         !!saveButton && saveButton.addEventListener('click', saveNewBuilding);
 
         const dialog = document.getElementById('popupDialog');
@@ -462,7 +500,7 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log(failureMessage, e);
-                    displayToastMessage('Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage('[BSML-004] Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -550,9 +588,7 @@ export const BookableSpacesManageLocations = ({
                 ${
                     campusDetails?.buildings?.length > 0
                         ? `<ul data-testid="campus-building-list">${campusDetails.buildings
-                              .map(
-                                  building => `<li>${building.building_name} (${building.building_id_displayed}) </li>`,
-                              )
+                              .map(building => `<li>${building.building_name} (${building.building_number}) </li>`)
                               .join('')}</ul>`
                         : ''
                 }
@@ -564,7 +600,7 @@ export const BookableSpacesManageLocations = ({
             !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
             const saveButton = document.getElementById('saveButton');
-            !!saveButton && saveButton.addEventListener('click', saveChangeToSite);
+            !!saveButton && saveButton.addEventListener('click', saveChangeToCampus);
 
             const addNewButton = document.getElementById('addNewButton');
             !!addNewButton && (addNewButton.innerText = 'Add building');
@@ -589,7 +625,7 @@ export const BookableSpacesManageLocations = ({
 
         // validate form
         const failureMessage =
-            (!data.building_name || !data.building_id_displayed) && 'Please enter building name and number';
+            (!data.building_name || !data.building_number) && 'Please enter building name and number';
         if (!!failureMessage) {
             displayToastMessage(failureMessage, true);
             return false;
@@ -598,17 +634,32 @@ export const BookableSpacesManageLocations = ({
         showSavingProgress(true);
         closeDialog(e);
 
+        const valuesToSend = {
+            building_name: data.building_name,
+            building_campus_id: data.campus_id,
+            building_number: data.building_number,
+            building_ground_floor_id: data.building_ground_floor_id,
+            building_about_page_default: data.building_about_page_default,
+            building_springshare_id: data.building_springshare_id,
+        };
+        console.log('saveChangeToBuilding valuesToSend', valuesToSend);
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
         !!locationType &&
             !!locationId &&
             actions
-                .updateBookableSpaceLocation(Object.fromEntries(formData))
+                .updateBookableSpaceLocation(valuesToSend, locationType)
                 .then(() => {
                     displayToastMessage('Change to building saved', false);
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: saving building ', locationId, 'failed:', e);
-                    displayToastMessage('Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage('[BSML-005] Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -623,7 +674,6 @@ export const BookableSpacesManageLocations = ({
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
         console.log('saveNewFloor data', data);
-        const locationType = data?.locationType;
 
         // validate form
         if (!data.floor_name) {
@@ -634,9 +684,20 @@ export const BookableSpacesManageLocations = ({
         showSavingProgress(true);
         closeDialog(e);
 
+        const locationType = data?.locationType;
+        const valuesToSend = {
+            floor_name: data.floor_name,
+            floor_building_id: data.floor_building_id,
+        };
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
         !!locationType &&
             actions
-                .addBookableSpaceLocation(data)
+                .addBookableSpaceLocation(valuesToSend, locationType)
                 .then(newFloor => {
                     if (!!data.isGroundFloor && data?.isGroundFloor === 'Y') {
                         const buildingData = {
@@ -644,7 +705,7 @@ export const BookableSpacesManageLocations = ({
                             buildingId: data.buildingId,
                             ground_floor_id: newFloor.data.floor_id,
                         };
-                        return actions.updateBookableSpaceLocation(buildingData);
+                        return actions.updateBookableSpaceLocation(buildingData, locationType);
                     } else {
                         return true;
                     }
@@ -656,7 +717,7 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log('catch: adding new floor failed:', e);
-                    displayToastMessage('Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage('[BSML-006] Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -789,8 +850,6 @@ export const BookableSpacesManageLocations = ({
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
         console.log('saveChangeToFloor data=', data);
-        const locationType = data?.locationType;
-        const locationId = data[`${locationType}Id`];
 
         // validate form
         const failureMessage = !data.floor_name && 'Please enter floor name';
@@ -802,17 +861,31 @@ export const BookableSpacesManageLocations = ({
         showSavingProgress(true);
         closeDialog(e);
 
+        const locationType = data?.locationType;
+        const locationId = data[`${locationType}Id`];
+
+        const valuesToSend = {
+            floor_name: data.floor_name,
+            floor_building_id: data.floor_building_id,
+        };
+        console.log('saveChangeToBuilding valuesToSend', valuesToSend);
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
         !!locationType &&
             !!locationId &&
             actions
-                .updateBookableSpaceLocation(Object.fromEntries(formData))
+                .updateBookableSpaceLocation(valuesToSend, locationType)
                 .then(() => {
                     displayToastMessage('Changes to floor saved', false);
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: saving floor ', locationId, 'failed:', e);
-                    displayToastMessage('Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage('[BSML-007] Sorry, an error occurred - the admins have been informed');
                 })
                 .finally(() => {
                     showSavingProgress(false);

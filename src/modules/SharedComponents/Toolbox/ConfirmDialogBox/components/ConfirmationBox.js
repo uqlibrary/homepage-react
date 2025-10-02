@@ -73,7 +73,7 @@ export const ConfirmationBox = ({
                     <Hidden smDown>
                         <Grid item xs />
                     </Hidden>
-                    {!hideActionButton && (
+                    {!hideActionButton && !!locale.confirmButtonLabel && (
                         <Grid item xs={12} sm={'auto'}>
                             <StyledPrimaryButton
                                 {...(!!actionButtonVariant ? { variant: actionButtonVariant } : {})}
@@ -87,8 +87,8 @@ export const ConfirmationBox = ({
                             />
                         </Grid>
                     )}
-                    {showAlternateActionButton && (
-                        // an optional middle button that will display in a warning colour
+                    {showAlternateActionButton && !!locale.alternateActionButtonLabel && (
+                        // an optional middle button
                         <Grid item xs={12} sm={'auto'}>
                             <StyledTertiaryButton
                                 variant={'contained'}
@@ -101,7 +101,7 @@ export const ConfirmationBox = ({
                             />
                         </Grid>
                     )}
-                    {!hideCancelButton && (
+                    {!hideCancelButton && !!locale.cancelButtonLabel && (
                         <Grid item xs={12} sm={'auto'}>
                             <StyledSecondaryButton
                                 variant={'contained'}

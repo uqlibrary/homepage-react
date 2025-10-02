@@ -1510,7 +1510,12 @@ mock.onGet('exams/course/FREN1010/summary')
         return [200, { status: 'OK', data: { floor_id: 99, other_fields: '...' } }];
     })
     .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'space' }).apiUrl)
-    .reply(() => [200, { status: 'OK' }])
+    .reply(() => {
+        if (responseType === 'spaceAddError') {
+            return [400, { status: 'error', message: 'space-name is not valid' }];
+        }
+        return [200, { status: 'OK' }];
+    })
 
     // .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'campus', id: '.*' }).apiUrl)))
     // .reply(() => [200, { status: 'OK' }])

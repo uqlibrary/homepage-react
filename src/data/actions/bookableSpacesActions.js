@@ -35,8 +35,7 @@ export function loadAllBookableSpacesRooms() {
     };
 }
 
-export function addBookableSpaceLocation(request) {
-    const locationType = request?.locationType;
+export function addBookableSpaceLocation(request, locationType) {
     console.log('addBookableSpaceLocation', locationType, request);
     return dispatch => {
         dispatch({ type: actions.SPACES_LOCATION_ADDING });
@@ -67,8 +66,7 @@ export function addBookableSpaceLocation(request) {
     };
 }
 
-export function updateBookableSpaceLocation(request) {
-    const locationType = request?.locationType;
+export function updateBookableSpaceLocation(request, locationType) {
     return dispatch => {
         dispatch({ type: actions.SPACES_LOCATION_UPDATING });
         const url = SPACES_MODIFY_LOCATION_API({ type: locationType, id: request[`${locationType}Id`] });

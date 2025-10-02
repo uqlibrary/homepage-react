@@ -1,5 +1,6 @@
-import { expect, Page, test } from '@uq/pw/test';
+import { BrowserContext, expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
+import { ARMUS_SPRINGSHARE_ID, CENTRAL_SPRINGSHARE_ID } from '../../../../src/config/locale';
 
 async function assertToastHasMessage(page: Page, msg: string) {
     await expect(page.getByTestId('toast-corner-message')).toBeVisible();
@@ -34,6 +35,42 @@ test.describe('Spaces Admin - manage locations', () => {
     });
 });
 
+// this function sets up a cookie which will record the data that would be sent to the server
+// this will let us confirm that what we _expected_ is what actually would go to the server
+const setTestDataCookie = async (context: BrowserContext, page: Page) => {
+    await context.addCookies([
+        {
+            name: 'CYPRESS_TEST_DATA',
+            value: 'active',
+            url: 'http://localhost:2020',
+        },
+    ]);
+
+    const cookie = await page.context().cookies();
+    expect(cookie.some(c => c.name === 'CYPRESS_TEST_DATA' && c.value === 'active')).toBeTruthy();
+};
+
+const assertExpectedDataSentToServer = async (page: Page, expectedValues: unknown) => {
+    // rename to assertExpectedDataSentToServer
+    // make input fields focus
+    const cookie = await page.context().cookies();
+    expect(cookie.some(c => c.name === 'CYPRESS_DATA_SAVED')).toBeTruthy();
+
+    // check the data we pretended to send to the server matches what we expect
+    // acts as check of what we sent to api
+    const cookieValue = await page.evaluate(() => {
+        return document.cookie
+            .split('; ')
+            .find(row => row.startsWith('CYPRESS_DATA_SAVED='))
+            ?.split('=')[1];
+    });
+    expect(cookieValue).toBeDefined();
+    const decodedValue = !!cookieValue && decodeURIComponent(cookieValue);
+    const sentValues = !!decodedValue && JSON.parse(decodedValue);
+    // console.log('sentValues=', sentValues);
+    // console.log('expectedValues=', expectedValues);
+    expect(sentValues).toEqual(expectedValues);
+};
 test.describe('Spaces Location admin', () => {
     test('Shows a basic page for Spaces Location Admin', async ({ page }) => {
         await page.goto('/admin/spaces/manage/locations?user=libSpaces');
@@ -127,7 +164,9 @@ test.describe('Spaces Location admin', () => {
             await page.getByTestId('dialog-save-button').click();
             await assertToastHasMessage(page, 'Please enter campus name and number');
         });
-        test('can save with valid campus data', async ({ page }) => {
+        test('can save with valid campus data', async ({ page, context }) => {
+            await setTestDataCookie(context, page);
+
             await page.goto('/admin/spaces/manage/locations?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('add-new-campus-button')).toContainText('Add new Campus');
@@ -146,6 +185,12 @@ test.describe('Spaces Location admin', () => {
             await page.getByTestId('dialog-save-button').click();
             await assertToastHasMessage(page, 'Campus added');
             // cant assert change happens as mock list reloads
+
+            const expectedValues = {
+                campus_name: 'name of new campus',
+                campus_number: '0076',
+            };
+            await assertExpectedDataSentToServer(page, expectedValues);
         });
     });
 
@@ -235,12 +280,14 @@ test.describe('Spaces Location admin', () => {
 
             await assertToastHasMessage(page, 'Please enter campus name and number');
         });
-        test('can save changes to a campus', async ({ page }) => {
+        test('can save changes to a campus', async ({ page, context }) => {
+            await setTestDataCookie(context, page);
+
             await assertCanOpenEditCampusDialog(page, 1);
             const dialog = page.getByTestId('main-dialog');
 
             await dialog
-                .getByTestId('edit-campus-number')
+                .getByTestId('edit-campus-name')
                 .locator('input')
                 .type(' append');
             await dialog
@@ -251,6 +298,12 @@ test.describe('Spaces Location admin', () => {
 
             await assertToastHasMessage(page, 'Change to campus saved');
             // cant assert change happens as mock list reloads
+
+            const expectedValues = {
+                campus_name: ' appendSt Lucia',
+                campus_number: '901',
+            };
+            await assertExpectedDataSentToServer(page, expectedValues);
         });
         test('can close the campus dialog with the cancel button', async ({ page }) => {
             await assertCanOpenEditCampusDialog(page, 1);
@@ -385,23 +438,40 @@ test.describe('Spaces Location admin', () => {
             await dialog.getByTestId('dialog-save-button').click();
             await assertToastHasMessage(page, 'Please enter building name and number');
         });
-        test('can save with valid building data', async ({ page }) => {
+        test('can save with valid building data', async ({ page, context }) => {
+            await setTestDataCookie(context, page);
+
             await assertCanOpenAddBuildingDialog(page);
             const dialog = page.getByTestId('main-dialog');
 
-            await expect(dialog.getByTestId('building-name').locator('input')).toBeVisible();
-            await dialog
-                .getByTestId('building-name')
-                .locator('input')
-                .fill('name of new building');
-            await expect(dialog.getByTestId('building-number').locator('input')).toBeVisible();
-            await dialog
-                .getByTestId('building-number')
-                .locator('input')
-                .fill('0084');
+            const buildingNameInputField = dialog.getByTestId('building-name').locator('input');
+            await expect(buildingNameInputField).toBeVisible();
+            await buildingNameInputField.fill('name of new building');
+
+            const buildingNumberInputField = dialog.getByTestId('building-number').locator('input');
+            await expect(buildingNumberInputField).toBeVisible();
+            await buildingNumberInputField.fill('0084');
+
+            const armusRadioButton = page.getByTestId(`building_springshare_id-${CENTRAL_SPRINGSHARE_ID}`);
+            await expect(armusRadioButton).toBeVisible();
+            await armusRadioButton.click();
+
+            const buildingAboutPageInputField = dialog.getByTestId('building_about_page_default').locator('input');
+            await expect(buildingAboutPageInputField).toBeVisible();
+            await buildingAboutPageInputField.fill('https://example.com');
+
             await dialog.getByTestId('dialog-save-button').click();
             await assertToastHasMessage(page, 'Building added');
             // cant assert change happens as mock list reloads
+
+            const expectedValues = {
+                building_name: 'name of new building',
+                building_campus_id: '1',
+                building_number: '0084',
+                building_about_page_default: 'https://example.com',
+                building_springshare_id: '3842',
+            };
+            await assertExpectedDataSentToServer(page, expectedValues);
         });
         test('can close the add building dialog with the cancel button', async ({ page }) => {
             await assertCanOpenAddBuildingDialog(page);
@@ -496,7 +566,7 @@ test.describe('Spaces Location admin', () => {
 
             await assertAccessibility(page, '[data-testid="confirmation-dialog"]');
         });
-        test('can delete a building', async ({ page }) => {
+        test('can delete a building', async ({ page, context }) => {
             await assertCanOpenEditBuildingDialog(page, 1);
             const editDialog = page.getByTestId('main-dialog');
 
@@ -559,22 +629,39 @@ test.describe('Spaces Location admin', () => {
 
             await assertToastHasMessage(page, 'Please enter building name and number');
         });
-        test('can save changes to a building', async ({ page }) => {
+        test('can save changes to a building', async ({ page, context }) => {
+            await setTestDataCookie(context, page);
+
             await assertCanOpenEditBuildingDialog(page, 1);
             const dialog = page.getByTestId('main-dialog');
 
-            await dialog
-                .getByTestId('building-number')
-                .locator('input')
-                .type(' append');
-            await dialog
-                .getByTestId('building-number')
-                .locator('input')
-                .type('9');
+            const buildingNameinputElement = dialog.getByTestId('building-name').locator('input');
+            await expect(buildingNameinputElement).toBeVisible();
+            await expect(buildingNameinputElement).toHaveValue('Forgan Smith Building');
+            await buildingNameinputElement.type(' append');
+
+            const buildingNumberInputElement = dialog.getByTestId('building-number').locator('input');
+            await expect(buildingNumberInputElement).toBeVisible();
+            await expect(buildingNumberInputElement).toHaveValue('0001');
+            await buildingNumberInputElement.type('9');
+            const armusRadioButton = page.getByTestId(`building_springshare_id-${ARMUS_SPRINGSHARE_ID}`);
+            await expect(armusRadioButton).toBeVisible();
+            await armusRadioButton.click();
+
             await dialog.getByTestId('dialog-save-button').click();
 
             await assertToastHasMessage(page, 'Change to building saved');
             // cant assert change happens as mock list reloads
+
+            const expectedValues = {
+                building_name: ' appendForgan Smith Building',
+                building_number: '90001',
+                building_about_page_default: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library', // unchanged
+                building_campus_id: '1', // unchanged
+                building_ground_floor_id: undefined, // unchanged
+                building_springshare_id: '3823',
+            };
+            await assertExpectedDataSentToServer(page, expectedValues);
         });
         test('can close the building dialog with the cancel button', async ({ page }) => {
             await assertCanOpenEditBuildingDialog(page, 1);
@@ -628,7 +715,7 @@ test.describe('Spaces Location admin', () => {
             await expect(dialog.getByTestId('dialog-save-button')).toBeVisible();
             await expect(dialog.getByTestId('dialog-save-button')).toContainText('Save');
         });
-        test('validates properly for empty floor field', async ({ page }) => {
+        test('validates properly for empty floor field', async ({ page, context }) => {
             await assertCanOpenAddFloorDialog(page, 1);
             const dialog = page.getByTestId('main-dialog');
 
@@ -636,7 +723,9 @@ test.describe('Spaces Location admin', () => {
             await dialog.getByTestId('dialog-save-button').click();
             await assertToastHasMessage(page, 'Please enter floor name');
         });
-        test('can save with valid floor data, ground floor not requested', async ({ page }) => {
+        test('can save with valid floor data, ground floor not requested', async ({ page, context }) => {
+            await setTestDataCookie(context, page);
+
             await assertCanOpenAddFloorDialog(page, 1);
             const dialog = page.getByTestId('main-dialog');
 
@@ -644,13 +733,23 @@ test.describe('Spaces Location admin', () => {
             await dialog
                 .getByTestId('floor-name')
                 .locator('input')
-                .fill('name of new floor');
+                .fill('new name');
             await dialog.getByTestId('dialog-save-button').click();
 
             await assertToastHasMessage(page, 'Floor added');
             // cant assert change happens as mock list reloads
+
+            const expectedValues = {
+                floor_name: 'new name',
+            };
+            await assertExpectedDataSentToServer(page, expectedValues);
         });
-        test('can save with valid floor data, ground floor requested, no current ground floor', async ({ page }) => {
+        test('can save with valid floor data, ground floor requested, no current ground floor', async ({
+            page,
+            context,
+        }) => {
+            await setTestDataCookie(context, page);
+
             await assertCanOpenAddFloorDialog(page, 1);
             const dialog = page.getByTestId('main-dialog');
 
@@ -662,7 +761,7 @@ test.describe('Spaces Location admin', () => {
             await dialog
                 .getByTestId('floor-name')
                 .locator('input')
-                .fill('name of new floor');
+                .fill('new name');
             await dialog
                 .getByTestId('mark-ground-floor')
                 .locator('input')
@@ -671,10 +770,18 @@ test.describe('Spaces Location admin', () => {
 
             await assertToastHasMessage(page, 'Floor added');
             // cant assert change happens as mock list reloads
+
+            const expectedValues = {
+                floor_name: 'new name',
+            };
+            await assertExpectedDataSentToServer(page, expectedValues);
         });
         test('can save with valid floor data, ground floor requested, override current ground floor', async ({
             page,
+            context,
         }) => {
+            await setTestDataCookie(context, page);
+
             await assertCanOpenAddFloorDialog(page, 2);
             const dialog = page.getByTestId('main-dialog');
 
@@ -686,7 +793,7 @@ test.describe('Spaces Location admin', () => {
             await dialog
                 .getByTestId('floor-name')
                 .locator('input')
-                .fill('name of new floor');
+                .fill('new name');
             await dialog
                 .getByTestId('mark-ground-floor')
                 .locator('input')
@@ -695,6 +802,11 @@ test.describe('Spaces Location admin', () => {
 
             await assertToastHasMessage(page, 'Floor added');
             // cant assert change happens as mock list reloads
+
+            const expectedValues = {
+                floor_name: 'new name',
+            };
+            await assertExpectedDataSentToServer(page, expectedValues);
         });
         test('can close the add floor dialog with the cancel button', async ({ page }) => {
             await assertCanOpenAddFloorDialog(page, 1);
@@ -802,7 +914,9 @@ test.describe('Spaces Location admin', () => {
 
             await assertToastHasMessage(page, 'Please enter floor name');
         });
-        test('can save changes to a floor', async ({ page }) => {
+        test('can save changes to a floor', async ({ page, context }) => {
+            await setTestDataCookie(context, page);
+
             await assertCanOpenEditFloorDialog(page, 1);
             const dialog = page.getByTestId('main-dialog');
 
@@ -814,6 +928,11 @@ test.describe('Spaces Location admin', () => {
 
             await assertToastHasMessage(page, 'Changes to floor saved');
             // cant assert change happens as mock list reloads
+
+            const expectedValues = {
+                floor_name: ' append2',
+            };
+            await assertExpectedDataSentToServer(page, expectedValues);
         });
         test('can close the floor dialog with the cancel button', async ({ page }) => {
             await assertCanOpenEditFloorDialog(page, 1);

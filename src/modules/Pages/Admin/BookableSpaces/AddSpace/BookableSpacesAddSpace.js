@@ -94,6 +94,12 @@ export const BookableSpacesAddSpace = ({
         setSpringshareOption2(newValue);
     };
 
+    // const [savingProgressShown, showSavingProgress2] = useState(false);
+    // const showSavingProgress = x => {
+    //     console.log('showSavingProgress', x);
+    //     showSavingProgress2(x);
+    // };
+
     const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
     const noSpringshareHoursLabel = 'No Springshare building hours will display (click to change)';
 
@@ -176,6 +182,7 @@ export const BookableSpacesAddSpace = ({
     }, [campusList, campusListError, campusListLoading, formValues]);
 
     useEffect(() => {
+        // showSavingProgress(false);
         setConfirmationOpen(
             !bookableSpacesRoomAdding && (!!bookableSpacesRoomAddError || !!bookableSpacesRoomAddResult),
         );
@@ -362,10 +369,10 @@ export const BookableSpacesAddSpace = ({
 
     const createNewSpace = () => {
         console.log('createNewSpace formValues=', formValues);
+
+        // showSavingProgress(true);
+
         const valuesToSend = {};
-
-        valuesToSend.locationType = 'space';
-
         valuesToSend.space_floor_id = formValues.floor_id;
         valuesToSend.space_name = formValues.space_name;
         valuesToSend.space_precise = formValues.space_precise;
@@ -398,7 +405,12 @@ export const BookableSpacesAddSpace = ({
         }
 
         console.log('createNewSpace valuesToSend=', valuesToSend);
-        actions.addBookableSpaceLocation(valuesToSend);
+        actions
+            .addBookableSpaceLocation(valuesToSend, 'space')
+            .then(() => {})
+            .catch(e => {
+                console.log('catch: adding new space failed:', e);
+            });
     };
 
     const clearForm = () => {
@@ -463,6 +475,9 @@ export const BookableSpacesAddSpace = ({
         </>
     );
 
+    // if (!!savingProgressShown) {
+    //     return <InlineLoader message="Saving" />;
+    // } else
     if (!!campusListLoading || !formValues?.campus_id) {
         return (
             <Grid container>

@@ -187,7 +187,7 @@ test.describe('Digital Learning Hub admin Add Team', () => {
             const dialog = page.getByTestId('dialogbox-dlor-team-save-outcome');
             await dialog.waitFor({ state: 'visible' });
 
-            await expect(dialog).toContainText(/Request failed with status code 400/);
+            await expect(dialog).toContainText(/There was a problem with the input./);
             await expect(page.getByTestId('confirm-dlor-team-save-outcome')).toHaveText(/Close/);
             await page.getByTestId('confirm-dlor-team-save-outcome').click();
 

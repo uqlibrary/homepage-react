@@ -2,13 +2,13 @@ export default {
     data: [
         {
             "campus_id": 1,
-            "campus_id_displayed": "01",
+            "campus_number": "01",
             "campus_name": "St Lucia",
             "buildings": [
                 {
                     "building_id": 1,
                     "building_name": "Forgan Smith Building",
-                    "building_id_displayed": "0001",
+                    "building_number": "0001",
                     "ground_floor_id": null,
                     "building_about_page_default": "https://web.library.uq.edu.au/visit/walter-harrison-law-library",
                     "building_springshare_id": 3841,
@@ -26,7 +26,7 @@ export default {
                 {
                     "building_id": 2,
                     "building_name": "Duhig Tower",
-                    "building_id_displayed": "0002",
+                    "building_number": "0002",
                     "ground_floor_id": 4,
                     "building_about_page_default": 'https://web.library.uq.edu.au/visit/duhig-tower',
                     "building_springshare_id": 3830,
@@ -46,13 +46,13 @@ export default {
         },
         {
             "campus_id": 2,
-            "campus_id_displayed": "29",
+            "campus_number": "29",
             "campus_name": "Gatton",
             "buildings": [
                 {
                     "building_id": 8,
                     "building_name": "J.K. Murray Library",
-                    "building_id_displayed": "8102",
+                    "building_number": "8102",
                     "ground_floor_id": 29,
                     "building_about_page_default": 'https://web.library.uq.edu.au/visit/jk-murray-library-uq-gatton',
                     "building_springshare_id": 3833,
@@ -70,7 +70,7 @@ export default {
                 {
                     "building_id": 9,
                     "building_name": "Library Warehouse",
-                    "building_id_displayed": "8248",
+                    "building_number": "8248",
                     "ground_floor_id": null,
                     "building_about_page_default": null,
                     "building_springshare_id": null,
@@ -87,7 +87,7 @@ export default {
                 }, {
                     "building_id": 10,
                     "building_name": "Incompletely entered building",
-                    "building_id_displayed": "371",
+                    "building_number": "371",
                     "ground_floor_id": null,
                     "building_about_page_default": null,
                     "building_springshare_id": null,
@@ -97,7 +97,7 @@ export default {
         },
         {
             "campus_id": 3,
-            "campus_id_displayed": "99",
+            "campus_number": "99",
             "campus_name": "Newsite",
             "buildings": []
         },
