@@ -308,15 +308,19 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('message-title')).toBeVisible();
         await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
     });
-    test('add new space - can change the location', async ({ page }) => {
+    test.only('add new space - can change the location', async ({ page }) => {
+        const campusSelector = page.getByTestId('add-space-select-campus');
+        const buildingSelector = page.getByTestId('add-space-select-building');
+        const floorSelector = page.getByTestId('add-space-select-floor');
+
         // the page loads with the expected campus-building-floor
-        await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-campus')).toContainText('St Lucia');
-        await expect(page.getByTestId('add-space-select-building').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-building')).toContainText('Forgan Smith Building');
-        await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-floor')).toContainText('Forgan Smith Building - 1');
-        await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
+        await expect(campusSelector.locator('input')).toBeVisible();
+        await expect(campusSelector).toContainText('St Lucia');
+        await expect(buildingSelector.locator('input')).toBeVisible();
+        await expect(buildingSelector).toContainText('Forgan Smith Building');
+        await expect(floorSelector.locator('input')).toBeVisible();
+        await expect(floorSelector).toContainText('Forgan Smith Building - 1');
+        await expect(floorSelector).not.toContainText('Ground floor');
 
         await expect(page.getByTestId('add-space-about-page')).toContainText(
             'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
@@ -324,7 +328,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue('Walter Harrison Law');
 
         // open the campus dropdown
-        page.getByTestId('add-space-select-campus').click();
+        campusSelector.click();
 
         // the popup that opens holds the two valid campuses
         await expect(page.locator('[aria-labelledby="add-space-select-campus-label"]')).toBeVisible();
@@ -342,13 +346,13 @@ test.describe('Spaces Admin - add new space', () => {
         page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:last-of-type').click();
 
         // the displayed campus, building and floor shown have changed
-        await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-campus')).toContainText('Gatton');
-        await expect(page.getByTestId('add-space-select-building').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-building')).toContainText('J.K. Murray Library');
-        await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-floor')).toContainText('J.K. Murray Library - 29');
-        await expect(page.getByTestId('add-space-select-floor')).toContainText('Ground floor');
+        await expect(campusSelector.locator('input')).toBeVisible();
+        await expect(campusSelector).toContainText('Gatton');
+        await expect(buildingSelector.locator('input')).toBeVisible();
+        await expect(buildingSelector).toContainText('J.K. Murray Library');
+        await expect(floorSelector.locator('input')).toBeVisible();
+        await expect(floorSelector).toContainText('J.K. Murray Library - 29');
+        await expect(floorSelector).toContainText('Ground floor');
 
         await expect(page.getByTestId('add-space-about-page')).toContainText(
             'https://web.library.uq.edu.au/visit/jk-murray-library-uq-gatton',
@@ -358,7 +362,7 @@ test.describe('Spaces Admin - add new space', () => {
         );
 
         // open the building dropdown to change building
-        page.getByTestId('add-space-select-building').click();
+        buildingSelector.click();
 
         // the popup has the two valid buildings
         await expect(page.locator('[aria-labelledby="add-space-select-building-label"]')).toBeVisible();
@@ -378,13 +382,13 @@ test.describe('Spaces Admin - add new space', () => {
         page.locator('ul[aria-labelledby="add-space-select-building-label"] li:last-of-type').click();
 
         // the displayed building and floors have changed; campus is unchanged
-        await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-campus')).toContainText('Gatton');
-        await expect(page.getByTestId('add-space-select-building').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-building')).toContainText('Library Warehouse');
-        await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-floor')).toContainText('Library Warehouse - 31');
-        await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
+        await expect(campusSelector.locator('input')).toBeVisible();
+        await expect(campusSelector).toContainText('Gatton');
+        await expect(buildingSelector.locator('input')).toBeVisible();
+        await expect(buildingSelector).toContainText('Library Warehouse');
+        await expect(floorSelector.locator('input')).toBeVisible();
+        await expect(floorSelector).toContainText('Library Warehouse - 31');
+        await expect(floorSelector).not.toContainText('Ground floor');
 
         await expect(page.getByTestId('add-space-about-page')).toContainText('none');
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue(
@@ -392,7 +396,7 @@ test.describe('Spaces Admin - add new space', () => {
         );
 
         // open the floor dropdown to change floor
-        page.getByTestId('add-space-select-floor').click();
+        floorSelector.click();
 
         // the popup has the two valid floors
         await expect(page.locator('[aria-labelledby="add-space-select-floor-label"]')).toBeVisible();
@@ -410,13 +414,13 @@ test.describe('Spaces Admin - add new space', () => {
         page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type').click();
 
         // the displayed floor has changed; campus & building is unchanged
-        await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-campus')).toContainText('Gatton');
-        await expect(page.getByTestId('add-space-select-building').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-building')).toContainText('Library Warehouse');
-        await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-floor')).toContainText('Library Warehouse - 32');
-        await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
+        await expect(campusSelector.locator('input')).toBeVisible();
+        await expect(campusSelector).toContainText('Gatton');
+        await expect(buildingSelector.locator('input')).toBeVisible();
+        await expect(buildingSelector).toContainText('Library Warehouse');
+        await expect(floorSelector.locator('input')).toBeVisible();
+        await expect(floorSelector).toContainText('Library Warehouse - 32');
+        await expect(floorSelector).not.toContainText('Ground floor');
 
         await expect(page.getByTestId('add-space-about-page')).toContainText('none');
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue(
@@ -426,7 +430,7 @@ test.describe('Spaces Admin - add new space', () => {
         // test we can change it twice
 
         // open the building dropdown to change building
-        page.getByTestId('add-space-select-building').click();
+        buildingSelector.click();
 
         // the popup has the two valid buildings (this was showing all 3 at one point)
         await expect(page.locator('[aria-labelledby="add-space-select-building-label"]')).toBeVisible();
@@ -439,7 +443,7 @@ test.describe('Spaces Admin - add new space', () => {
         page.locator('ul[aria-labelledby="add-space-select-building-label"] li:first-of-type').click();
 
         // open the campus dropdown
-        page.getByTestId('add-space-select-campus').click();
+        campusSelector.click();
 
         // the popup that opens holds the two valid campuses
         await expect(page.locator('[aria-labelledby="add-space-select-campus-label"]')).toBeVisible();
@@ -449,12 +453,12 @@ test.describe('Spaces Admin - add new space', () => {
         page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:first-of-type').click();
 
         // the displayed campus, building and floor shown have changed
-        await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-campus')).toContainText('St Lucia');
-        await expect(page.getByTestId('add-space-select-building').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-building')).toContainText('Forgan Smith Building');
-        await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-floor')).toContainText('Forgan Smith Building - 1');
+        await expect(campusSelector.locator('input')).toBeVisible();
+        await expect(campusSelector).toContainText('St Lucia');
+        await expect(buildingSelector.locator('input')).toBeVisible();
+        await expect(buildingSelector).toContainText('Forgan Smith Building');
+        await expect(floorSelector.locator('input')).toBeVisible();
+        await expect(floorSelector).toContainText('Forgan Smith Building - 1');
 
         await expect(page.getByTestId('add-space-about-page')).toContainText(
             'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
@@ -462,7 +466,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue('Walter Harrison Law');
 
         // open the building dropdown to change building
-        page.getByTestId('add-space-select-building').click();
+        buildingSelector.click();
 
         // the popup has the two valid buildings
         await expect(page.locator('[aria-labelledby="add-space-select-building-label"]')).toBeVisible();
@@ -478,12 +482,12 @@ test.describe('Spaces Admin - add new space', () => {
         page.locator('ul[aria-labelledby="add-space-select-building-label"] li:last-of-type').click();
 
         // the displayed building and floors have changed; campus is unchanged
-        await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-campus')).toContainText('St Lucia');
-        await expect(page.getByTestId('add-space-select-building').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-building')).toContainText('Duhig Tower');
-        await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-floor')).toContainText('Duhig Tower - 4');
+        await expect(campusSelector.locator('input')).toBeVisible();
+        await expect(campusSelector).toContainText('St Lucia');
+        await expect(buildingSelector.locator('input')).toBeVisible();
+        await expect(buildingSelector).toContainText('Duhig Tower');
+        await expect(floorSelector.locator('input')).toBeVisible();
+        await expect(floorSelector).toContainText('Duhig Tower - 4');
 
         await expect(page.getByTestId('add-space-about-page')).toContainText(
             'https://web.library.uq.edu.au/visit/duhig-tower',
@@ -491,7 +495,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toHaveValue('Duhig Tower');
 
         // open the floor dropdown to change floor
-        page.getByTestId('add-space-select-floor').click();
+        floorSelector.click();
 
         // the popup has the two valid floors
         await expect(page.locator('[aria-labelledby="add-space-select-floor-label"]')).toBeVisible();
@@ -509,13 +513,13 @@ test.describe('Spaces Admin - add new space', () => {
         page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type').click();
 
         // the displayed floor has changed; campus & building is unchanged
-        await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-campus')).toContainText('St Lucia');
-        await expect(page.getByTestId('add-space-select-building').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-building')).toContainText('Duhig Tower');
-        await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-select-floor')).toContainText('Duhig Tower - 5');
-        await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
+        await expect(campusSelector.locator('input')).toBeVisible();
+        await expect(campusSelector).toContainText('St Lucia');
+        await expect(buildingSelector.locator('input')).toBeVisible();
+        await expect(buildingSelector).toContainText('Duhig Tower');
+        await expect(floorSelector.locator('input')).toBeVisible();
+        await expect(floorSelector).toContainText('Duhig Tower - 5');
+        await expect(floorSelector).not.toContainText('Ground floor');
 
         await expect(page.getByTestId('add-space-about-page')).toContainText(
             'https://web.library.uq.edu.au/visit/duhig-tower',
