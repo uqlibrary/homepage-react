@@ -741,6 +741,7 @@ test.describe('Spaces Location admin', () => {
 
             const expectedValues = {
                 floor_name: 'new name',
+                floor_building_id: '1',
             };
             await assertExpectedDataSentToServer(page, expectedValues);
         });
@@ -773,6 +774,7 @@ test.describe('Spaces Location admin', () => {
 
             const expectedValues = {
                 floor_name: 'new name',
+                floor_building_id: '1',
             };
             await assertExpectedDataSentToServer(page, expectedValues);
         });
@@ -805,6 +807,7 @@ test.describe('Spaces Location admin', () => {
 
             const expectedValues = {
                 floor_name: 'new name',
+                floor_building_id: '2',
             };
             await assertExpectedDataSentToServer(page, expectedValues);
         });

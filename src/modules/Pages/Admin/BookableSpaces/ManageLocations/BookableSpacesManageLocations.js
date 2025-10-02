@@ -692,8 +692,9 @@ export const BookableSpacesManageLocations = ({
         const locationType = data?.locationType;
         const valuesToSend = {
             floor_name: data.floor_name,
-            floor_building_id: data.floor_building_id,
+            floor_building_id: data.buildingId,
         };
+        console.log('saveNewFloor valuesToSend=', valuesToSend);
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
