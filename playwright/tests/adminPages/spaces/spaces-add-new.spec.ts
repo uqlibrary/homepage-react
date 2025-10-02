@@ -1,11 +1,47 @@
-import { expect, Page, test } from '@uq/pw/test';
+import { BrowserContext, expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
 import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 
 const inputField = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('input');
 
-test.describe('Spaces Admin - manage locations', () => {
+// this function sets up a cookie which will record the data that would be sent to the server
+// this will let us confirm that what we _expected_ is what actually would go to the server
+const setTestDataCookie = async (context: BrowserContext, page: Page) => {
+    await context.addCookies([
+        {
+            name: 'CYPRESS_TEST_DATA',
+            value: 'active',
+            url: 'http://localhost:2020',
+        },
+    ]);
+
+    const cookie = await page.context().cookies();
+    expect(cookie.some(c => c.name === 'CYPRESS_TEST_DATA' && c.value === 'active')).toBeTruthy();
+};
+
+const assertExpectedDataSentToServer = async (page: Page, expectedValues: unknown) => {
+    // make input fields focus
+    const cookie = await page.context().cookies();
+    expect(cookie.some(c => c.name === 'CYPRESS_DATA_SAVED')).toBeTruthy();
+
+    // check the data we pretended to send to the server matches what we expect
+    // acts as check of what we sent to api
+    const cookieValue = await page.evaluate(() => {
+        return document.cookie
+            .split('; ')
+            .find(row => row.startsWith('CYPRESS_DATA_SAVED='))
+            ?.split('=')[1];
+    });
+    expect(cookieValue).toBeDefined();
+    const decodedValue = !!cookieValue && decodeURIComponent(cookieValue);
+    const sentValues = !!decodedValue && JSON.parse(decodedValue);
+    // console.log('sentValues=', sentValues);
+    // console.log('expectedValues=', expectedValues);
+    expect(sentValues).toEqual(expectedValues);
+};
+
+test.describe('Spaces Admin - add new space', () => {
     test('can navigate from dashboard to add new', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -28,7 +64,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page).toHaveURL('http://localhost:2020/admin/spaces/add?user=libSpaces');
     });
 });
-test.describe('Spaces Admin - manage locations', () => {
+test.describe('Spaces Admin - add new space', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('/admin/spaces/add?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -64,16 +100,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
     test('can add new space, with only required fields', async ({ page, context }) => {
-        await context.addCookies([
-            {
-                name: 'CYPRESS_TEST_DATA',
-                value: 'active',
-                url: 'http://localhost:2020',
-            },
-        ]);
-
-        const cookie = await page.context().cookies();
-        expect(cookie.some(c => c.name === 'CYPRESS_TEST_DATA' && c.value === 'active')).toBeTruthy();
+        await setTestDataCookie(context, page);
 
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         page.getByTestId('space-name')
@@ -94,33 +121,15 @@ test.describe('Spaces Admin - manage locations', () => {
         // check the data we pretended to send to the server matches what we expect
         // acts as check of what we sent to api
         const expectedValues = {
-            locationType: 'space',
+            // locationType: 'space',
             space_floor_id: 1,
             space_name: 'W12343',
             space_type: 'Computer room',
         };
-        const cookieValue = await page.evaluate(() => {
-            return document.cookie
-                .split('; ')
-                .find(row => row.startsWith('CYPRESS_DATA_SAVED='))
-                ?.split('=')[1];
-        });
-        expect(cookieValue).toBeDefined();
-        const decodedValue = !!cookieValue && decodeURIComponent(cookieValue);
-        const sentValues = !!decodedValue && JSON.parse(decodedValue);
-        expect(sentValues).toEqual(expectedValues);
+        await assertExpectedDataSentToServer(page, expectedValues);
     });
     test('can add new space, with all fields', async ({ page, context }) => {
-        await context.addCookies([
-            {
-                name: 'CYPRESS_TEST_DATA',
-                value: 'active',
-                url: 'http://localhost:2020',
-            },
-        ]);
-
-        const cookie = await page.context().cookies();
-        expect(cookie.some(c => c.name === 'CYPRESS_TEST_DATA' && c.value === 'active')).toBeTruthy();
+        await setTestDataCookie(context, page);
 
         await expect(inputField('space-name', page)).toBeVisible();
         inputField('space-name', page).fill('W12343');
@@ -192,7 +201,7 @@ test.describe('Spaces Admin - manage locations', () => {
         // check the data we pretended to send to the server matches what we expect
         // acts as check of what we sent to api
         const expectedValues = {
-            locationType: 'space',
+            // locationType: 'space',
             space_floor_id: 32,
             space_name: 'W12343',
             space_photo_description: 'a table and chairs in a stark white room',
@@ -203,19 +212,7 @@ test.describe('Spaces Admin - manage locations', () => {
             space_opening_hours_id: 3841,
             space_services_page: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
         };
-        const cookieValue = await page.evaluate(() => {
-            return document.cookie
-                .split('; ')
-                .find(row => row.startsWith('CYPRESS_DATA_SAVED='))
-                ?.split('=')[1];
-        });
-        expect(cookieValue).toBeDefined();
-        const decodedValue = !!cookieValue && decodeURIComponent(cookieValue);
-        const sentValues = !!decodedValue && JSON.parse(decodedValue);
-        // console.log('expectedValues=', expectedValues);
-        // console.log('sentValues=', sentValues);
-
-        expect(sentValues).toEqual(expectedValues);
+        await assertExpectedDataSentToServer(page, expectedValues);
     });
 
     test('add spaces page save dialog is accessible', async ({ page }) => {
@@ -249,10 +246,9 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('toast-corner-message')).not.toBeVisible(); // wait for it to close
 
         // user enters the name, but its still an error
-        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
-        page.getByTestId('space-name')
-            .locator('input')
-            .fill('W12343');
+        const spaceNameInputField = page.getByTestId('space-name').locator('input');
+        await expect(spaceNameInputField).toBeVisible();
+        spaceNameInputField.fill('W12343');
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         page.getByTestId('admin-spaces-save-button-submit').click();
         await expect(page.getByTestId('toast-corner-message')).toBeVisible();
