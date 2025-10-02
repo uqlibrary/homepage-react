@@ -308,7 +308,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('message-title')).toBeVisible();
         await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
     });
-    test.only('add new space - can change the location', async ({ page }) => {
+    test('add new space - can change the location', async ({ page }) => {
         const campusSelector = page.getByTestId('add-space-select-campus');
         const buildingSelector = page.getByTestId('add-space-select-building');
         const floorSelector = page.getByTestId('add-space-select-floor');
