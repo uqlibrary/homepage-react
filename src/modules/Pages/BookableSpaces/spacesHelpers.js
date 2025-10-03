@@ -37,7 +37,10 @@ export function getFriendlyLocationDescription(bookableSpace) {
     return (
         <>
             <div>{getFriendlyFloorName(bookableSpace)}</div>
-            <div>{bookableSpace?.space_building_name}</div>
+            {bookableSpace?.space_library_name && <div>{bookableSpace?.space_library_name}</div>}
+            <div>
+                {bookableSpace?.space_building_name} (Building {bookableSpace?.space_building_number})
+            </div>
             <div>{`${bookableSpace?.space_campus_name} Campus`}</div>
         </>
     );

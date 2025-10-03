@@ -163,13 +163,13 @@ export const BookableSpacesList = ({
         );
     }
 
-    function openingHoursComponent(openingHoursList, locationKey) {
+    function openingHoursComponent(openingHoursList, locationKey, libraryName) {
         if (openingHoursList.length === 0) {
             return null;
         }
         return (
             <>
-                <h3>Building opening hours</h3>
+                <h3>{libraryName} opening hours</h3>
                 <table style={{ width: '100%' }}>
                     <thead>
                         <tr>
@@ -256,6 +256,7 @@ export const BookableSpacesList = ({
                                                         {openingHoursComponent(
                                                             spaceOpeningHours(bookableSpace),
                                                             locationKey,
+                                                            bookableSpace.space_library_name,
                                                         )}
                                                         {!!bookableSpace?.space_opening_hours_override ? (
                                                             <p

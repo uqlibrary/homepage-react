@@ -4,14 +4,15 @@ export default {
             "campus_id": 1,
             "campus_number": "01",
             "campus_name": "St Lucia",
-            "buildings": [
+            "libraries": [
                 {
-                    "building_id": 1,
+                    "library_id": 1,
+                    "library_name": "Walter Harrison Law Library",
                     "building_name": "Forgan Smith Building",
                     "building_number": "0001",
                     "ground_floor_id": null,
-                    "building_about_page_default": "https://web.library.uq.edu.au/visit/walter-harrison-law-library",
-                    "building_springshare_id": 3841,
+                    "library_about_page_default": "https://web.library.uq.edu.au/visit/walter-harrison-law-library",
+                    "library_springshare_id": 3841,
                     "floors": [
                         {
                             "floor_id": 1,
@@ -24,12 +25,13 @@ export default {
                     ]
                 },
                 {
-                    "building_id": 2,
+                    "library_id": 2,
+                    "library_name": "Central Library",
                     "building_name": "Duhig Tower",
                     "building_number": "0002",
                     "ground_floor_id": 4,
-                    "building_about_page_default": 'https://web.library.uq.edu.au/visit/duhig-tower',
-                    "building_springshare_id": 3830,
+                    "library_about_page_default": 'https://web.library.uq.edu.au/visit/duhig-tower',
+                    "library_springshare_id": 3830,
                     "floors": [
                         {
                             "floor_id": 4,
@@ -48,14 +50,15 @@ export default {
             "campus_id": 2,
             "campus_number": "29",
             "campus_name": "Gatton",
-            "buildings": [
+            "libraries": [
                 {
-                    "building_id": 8,
-                    "building_name": "J.K. Murray Library",
+                    "library_id": 8,
+                    "library_name": "J.K. Murray Library",
+                    "building_name": null,
                     "building_number": "8102",
                     "ground_floor_id": 29,
-                    "building_about_page_default": 'https://web.library.uq.edu.au/visit/jk-murray-library-uq-gatton',
-                    "building_springshare_id": 3833,
+                    "library_about_page_default": 'https://web.library.uq.edu.au/visit/jk-murray-library-uq-gatton',
+                    "library_springshare_id": 3833,
                     "floors": [
                         {
                             "floor_id": 29,
@@ -68,12 +71,13 @@ export default {
                     ]
                 },
                 {
-                    "building_id": 9,
+                    "library_id": 9,
+                    "library_name": null,
                     "building_name": "Library Warehouse",
                     "building_number": "8248",
                     "ground_floor_id": null,
-                    "building_about_page_default": null,
-                    "building_springshare_id": null,
+                    "library_about_page_default": null,
+                    "library_springshare_id": null,
                     "floors": [
                         {
                             "floor_id": 31,
@@ -85,12 +89,13 @@ export default {
                         },
                     ]
                 }, {
-                    "building_id": 10,
-                    "building_name": "Incompletely entered building",
+                    "library_id": 10,
+                    "library_name": "Incompletely entered library",
+                    "building_name": null,
                     "building_number": "371",
                     "ground_floor_id": null,
-                    "building_about_page_default": null,
-                    "building_springshare_id": null,
+                    "library_about_page_default": null,
+                    "library_springshare_id": null,
                     "floors": []
                 }
             ]
@@ -99,7 +104,7 @@ export default {
             "campus_id": 3,
             "campus_number": "99",
             "campus_name": "Newsite",
-            "buildings": []
+            "libraries": []
         },
     ]
 };
