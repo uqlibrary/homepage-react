@@ -245,237 +245,6 @@ export const BookableSpacesManageLocations = ({
         removeAnyListeners(saveButton);
     }
 
-    const saveNewCampus = e => {
-        const form = e.target.closest('form');
-
-        const formData = new FormData(form);
-        const data = !!formData && Object.fromEntries(formData);
-        console.log('data=', data);
-
-        // validate form
-        if (!data.campus_name || !data.campus_number) {
-            displayToastMessage('Please enter campus name and number', true);
-            return false;
-        }
-
-        closeDialog(e);
-        showSavingProgress(true);
-
-        const locationType = data?.locationType;
-        const valuesToSend = {
-            campus_name: data.campus_name,
-            campus_number: data.campus_number,
-        };
-        console.log('saveNewCampus valuesToSend', valuesToSend);
-
-        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
-        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
-            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
-        }
-
-        !!locationType &&
-            actions
-                .addBookableSpaceLocation(valuesToSend, locationType)
-                .then(() => {
-                    displayToastMessage('Campus added', false);
-                    actions.loadBookableSpaceCampusChildren();
-                })
-                .catch(e => {
-                    console.log('catch: adding new campus failed:', e);
-                    displayToastMessage('[BSML-001] Sorry, an error occurred - the admins have been informed');
-                })
-                .finally(() => {
-                    showSavingProgress(false);
-                });
-        return true;
-    };
-
-    const campusFormCore = (campusDetails = {}, formType = 'add') => {
-        const campusName = campusDetails?.campus_name ?? '';
-        const campusNumber = campusDetails?.campus_number ?? '';
-        return `<div>
-            <input  name="locationType" type="hidden" value="campus" />
-            <div class="dialogRow" data-testid="${formType}-campus-name">
-                <label for="campusName">Campus name</label>
-                <input id="campusName" name="campus_name" type="text" value="${campusName}" required maxlength="255" />
-            </div>
-            <div class="dialogRow" data-testid="${formType}-campus-number">
-                <label for="campusNumber">Campus number</label>
-                <input id="campusNumber" name="campus_number" type="text" value="${campusNumber}" required maxlength="10" />
-            </div>
-        </div>`;
-    };
-
-    const saveNewBuilding = e => {
-        const form = e.target.closest('form');
-        console.log('saveNewBuilding form=', form);
-
-        const formData = new FormData(form);
-        const data = !!formData && Object.fromEntries(formData);
-        console.log('saveNewBuilding data', data);
-
-        // validate form
-        if (!data.building_name || !data.building_number) {
-            displayToastMessage('Please enter building name and number', true);
-            return false;
-        }
-
-        closeDialog(e);
-        showSavingProgress(true);
-
-        const locationType = data?.locationType;
-        const valuesToSend = {
-            building_name: data.building_name,
-            building_campus_id: data.building_campus_id,
-            building_number: data.building_number,
-            building_about_page_default: data.building_about_page_default,
-            building_springshare_id: data.building_springshare_id,
-        };
-
-        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
-        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
-            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
-        }
-
-        !!locationType &&
-            actions
-                .addBookableSpaceLocation(valuesToSend, locationType)
-                .then(() => {
-                    displayToastMessage('Building added', false);
-
-                    actions.loadBookableSpaceCampusChildren();
-                })
-                .catch(e => {
-                    console.log('catch: adding new building failed:', e);
-                    displayToastMessage('[BSML-002] Sorry, an error occurred - the admins have been informed');
-                })
-                .finally(() => {
-                    showSavingProgress(false);
-                });
-        return true;
-    };
-
-    const saveChangeToCampus = e => {
-        const form = e.target.closest('form');
-
-        const formData = new FormData(form);
-        const data = !!formData && Object.fromEntries(formData);
-        console.log('saveChangeToCampus data=', data);
-        const locationType = data?.locationType;
-        const locationId = data[`${locationType}Id`];
-
-        // validate form
-        const failureMessage = (!data.campus_name || !data.campus_number) && 'Please enter campus name and number';
-        if (!!failureMessage) {
-            displayToastMessage(failureMessage, true);
-            return false;
-        }
-
-        const valuesToSend = {
-            campus_name: data.campus_name,
-            campus_number: data.campus_number,
-        };
-        console.log('saveChangeToCampus valuesToSend', valuesToSend);
-
-        showSavingProgress(true);
-        closeDialog(e);
-
-        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
-        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
-            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
-        }
-
-        !!locationType &&
-            !!locationId &&
-            actions
-                .updateBookableSpaceLocation(valuesToSend, locationType)
-                .then(() => {
-                    displayToastMessage('Change to campus saved', false);
-                    actions.loadBookableSpaceCampusChildren();
-                })
-                .catch(e => {
-                    console.log('catch: saving campus ', locationId, 'failed:', e);
-                    displayToastMessage('[BSML-003] Sorry, an error occurred - the admins have been informed');
-                })
-                .finally(() => {
-                    showSavingProgress(false);
-                });
-        return true;
-    };
-
-    function buildingCoreForm(buildingDetails = {}) {
-        return `<input name="locationType" type="hidden" value="building" />
-            <div class="dialogRow" data-testid="building-name">
-                <label for="buildingName">Building name *</label>
-                <input id="buildingName" name="building_name" type="text" value="${buildingDetails?.building_name ||
-                    ''}" required  maxlength="255" />
-            </div>
-            <div class="dialogRow" data-testid="building-number">
-                <label for="buildingNumber">Building number *</label>
-                <input id="buildingNumber" name="building_number" type="text" value="${buildingDetails?.building_number ||
-                    ''}" required  maxlength="10" />
-            </div>
-            <div class="dialogRow" data-testid="building_springshare_id">
-                <h3>Choose the Springshare Opening hours to associate with this building</h3>
-                <ul>
-                     <li>
-                        <input type="radio" name="building_springshare_id" id="building_springshare_id-0" value="0" checked />
-                        <label for="building_springshare_id-0">None</label>
-                     </li>
-                        ${(!!springshareList &&
-                            springshareList.length > 0 &&
-                            springshareList
-                                .map(springshareItem => {
-                                    console.log('buildingDetails=', buildingDetails.building_springshare_id);
-                                    console.log('springshareList s=', springshareItem);
-                                    const checked =
-                                        buildingDetails.building_springshare_id === springshareItem.id
-                                            ? ' checked'
-                                            : '';
-                                    return `<li style="padding-block: 0.25rem">
-                                    <input type="radio" name="building_springshare_id" id="building_springshare_id-${springshareItem.id}" data-testid="building_springshare_id-${springshareItem.id}" value="${springshareItem.id}"${checked} />
-                                    <label for="building_springshare_id-${springshareItem.id}">${springshareItem.display_name}</label>
-                                 </li>`;
-                                })
-                                .join('')) ||
-                            ''}
-                </ul>
-            </div>
-            <div class="dialogRow" data-testid="building_about_page_default">
-                <label for="building_about_page_default">The "About" page for this building (usually the Drupal building page)</label>
-                <input id="building_about_page_default" name="building_about_page_default" type="text" value="${buildingDetails?.building_about_page_default ||
-                    ''}"  maxlength="255" />
-            </div>
-            `;
-    }
-
-    function showAddBuildingForm(e, campusDetails) {
-        const formBody = `<h2>Add a building to ${campusDetails?.campus_name || 'unknown'} campus</h2>
-            ${buildingCoreForm()}
-            <input id="buildingCampusId" name="building_campus_id" type="hidden" value="${campusDetails?.campus_id ||
-                ''}" required  maxlength="10" />
-            `;
-        if (!formBody) {
-            return;
-        }
-
-        const dialogBodyElement = document.getElementById('dialogBody');
-        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
-
-        const addNewButton = document.getElementById('addNewButton');
-        !!addNewButton && (addNewButton.style.display = 'none');
-
-        const deleteButton = document.getElementById('deleteButton');
-        !!deleteButton && (deleteButton.style.display = 'none');
-
-        const saveButton = document.getElementById('saveButton');
-        !!saveButton && saveButton.removeEventListener('click', saveChangeToCampus);
-        !!saveButton && saveButton.addEventListener('click', saveNewBuilding);
-
-        const dialog = document.getElementById('popupDialog');
-        !!dialog && dialog.showModal();
-    }
-
     function closeDeletionConfirmation() {
         const dialog = document.getElementById('confirmationDialog');
         !!dialog && dialog.close();
@@ -487,8 +256,8 @@ export const BookableSpacesManageLocations = ({
         removeAnyListeners(confirmationOKButton);
     }
 
-    function deleteLocation(locationType, locationId, successMessage, failureMessage) {
-        console.log('deleteLocation', locationType, locationId);
+    function deleteGenericLocation(locationType, locationId, successMessage, failureMessage) {
+        console.log('deleteGenericLocation', locationType, locationId);
         showSavingProgress(true);
 
         closeDeletionConfirmation(); // close delete conf dialog
@@ -499,7 +268,7 @@ export const BookableSpacesManageLocations = ({
             actions
                 .deleteBookableSpaceLocation({ locationType, locationId })
                 .then(() => {
-                    console.log('deleteLocation then');
+                    console.log('deleteGenericLocation then');
                     displayToastMessage(successMessage, false);
                     actions.loadBookableSpaceCampusChildren();
                 })
@@ -512,34 +281,7 @@ export const BookableSpacesManageLocations = ({
                 });
     }
 
-    function deleteSite(e, campusDetails) {
-        console.log('deleteSite', campusDetails);
-        const locationType = 'campus';
-        const locationId = campusDetails?.campus_id;
-        const successMessage = `${campusDetails?.campus_name} campus deleted`;
-        const failureMessage = `catch: deleting campus ${locationId} failed:`;
-        console.log('deleteSite', locationType, locationId);
-        deleteLocation(locationType, locationId, successMessage, failureMessage);
-    }
-
-    function deleteBuilding(e, buildingDetails) {
-        const locationType = 'building';
-        const locationId = buildingDetails?.building_id;
-        const successMessage = `${buildingDetails?.building_name} deleted`;
-        const failureMessage = `catch: deleting building ${locationId} failed:`;
-        deleteLocation(locationType, locationId, successMessage, failureMessage);
-    }
-
-    function deleteFloor(e, floorDetails) {
-        console.log('floorDetails=', floorDetails);
-        const locationType = 'floor';
-        const locationId = floorDetails?.floor_id;
-        const successMessage = `Floor ${floorDetails?.floor_name} in ${floorDetails?.building_name} deleted`;
-        const failureMessage = `catch: deleting floor ${floorDetails.floor_id} failed:`;
-        deleteLocation(locationType, locationId, successMessage, failureMessage);
-    }
-
-    function confirmAndDeleteLocation(line1, line2) {
+    function showConfirmAndDeleteGenericLocationDialog(line1, line2) {
         const confirmationMessageElement = document.getElementById('confDialogMessage');
         !!confirmationMessageElement && (confirmationMessageElement.innerHTML = `<p>${line1}</p><p>${line2}</p>`);
 
@@ -548,75 +290,6 @@ export const BookableSpacesManageLocations = ({
 
         const dialog = document.getElementById('confirmationDialog');
         !!dialog && dialog.showModal();
-    }
-
-    function confirmAndDeleteSite(e, campusDetails) {
-        const line1 = `Do you really want to delete ${campusDetails.campus_name} campus?`;
-        const line2 = 'This will also delete associated buildings.';
-        const confirmationOKButton = document.getElementById('confDialogOkButton');
-        !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteSite(e, campusDetails));
-        confirmAndDeleteLocation(line1, line2);
-    }
-
-    function confirmAndDeleteBuilding(e, buildingDetails) {
-        const line1 = `Do you really want to delete ${buildingDetails.building_name}?`;
-        const line2 = 'This will also delete associated floors.';
-        const confirmationOKButton = document.getElementById('confDialogOkButton');
-        !!confirmationOKButton &&
-            confirmationOKButton.addEventListener('click', e => deleteBuilding(e, buildingDetails));
-        confirmAndDeleteLocation(line1, line2);
-    }
-
-    function confirmAndDeleteFloor(e, floorDetails) {
-        const line1 = `Do you really want to delete floor ${floorDetails.floor_name}?`;
-        const line2 = 'This will also delete associated rooms.';
-        const confirmationOKButton = document.getElementById('confDialogOkButton');
-        !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteFloor(e, floorDetails));
-        confirmAndDeleteLocation(line1, line2);
-    }
-
-    function showEditSiteForm(campusId) {
-        const campusDetails = campusId > 0 && campusList.find(s => s.campus_id === campusId);
-
-        if (!campusDetails) {
-            console.log(`Can't find campus with campus_id = "${campusId}" in campuslist from api`);
-            displayToastMessage('Sorry, something went wrong');
-            return;
-        }
-
-        const formBody = `<h2 data-testid="edit-campus-dialog-heading">Edit campus details</h2>
-            <input  name="campusId" type="hidden" value="${campusDetails.campus_id}" />${campusFormCore(
-            campusDetails,
-            'edit',
-        )}<div class="dialogRow">
-                <h3 data-testid="campus-building-label">Buildings</h3>
-                ${
-                    campusDetails?.buildings?.length > 0
-                        ? `<ul data-testid="campus-building-list">${campusDetails.buildings
-                              .map(building => `<li>${building.building_name} (${building.building_number}) </li>`)
-                              .join('')}</ul>`
-                        : ''
-                }
-                ${campusDetails?.buildings?.length === 0 ? '<p>No buildings</p>' : ''}
-            </div>`;
-
-        if (!!formBody) {
-            const dialogBodyElement = document.getElementById('dialogBody');
-            !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
-
-            const saveButton = document.getElementById('saveButton');
-            !!saveButton && saveButton.addEventListener('click', saveChangeToCampus);
-
-            const addNewButton = document.getElementById('addNewButton');
-            !!addNewButton && (addNewButton.innerText = 'Add building');
-            !!addNewButton && addNewButton.addEventListener('click', e => showAddBuildingForm(e, campusDetails));
-
-            const deleteButton = document.getElementById('deleteButton');
-            !!deleteButton && deleteButton.addEventListener('click', e => confirmAndDeleteSite(e, campusDetails));
-
-            const dialog = document.getElementById('popupDialog');
-            !!dialog && dialog.showModal();
-        }
     }
 
     const saveChangeToBuilding = e => {
@@ -672,6 +345,64 @@ export const BookableSpacesManageLocations = ({
         return true;
     };
 
+    const saveChangeToCampus = e => {
+        const form = e.target.closest('form');
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+        console.log('saveChangeToCampus data=', data);
+        const locationType = data?.locationType;
+        const locationId = data[`${locationType}Id`];
+
+        // validate form
+        const failureMessage = (!data.campus_name || !data.campus_number) && 'Please enter campus name and number';
+        if (!!failureMessage) {
+            displayToastMessage(failureMessage, true);
+            return false;
+        }
+
+        const valuesToSend = {
+            campus_name: data.campus_name,
+            campus_number: data.campus_number,
+        };
+        console.log('saveChangeToCampus valuesToSend', valuesToSend);
+
+        showSavingProgress(true);
+        closeDialog(e);
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
+        !!locationType &&
+            !!locationId &&
+            actions
+                .updateBookableSpaceLocation(valuesToSend, locationType)
+                .then(() => {
+                    displayToastMessage('Change to campus saved', false);
+                    actions.loadBookableSpaceCampusChildren();
+                })
+                .catch(e => {
+                    console.log('catch: saving campus ', locationId, 'failed:', e);
+                    displayToastMessage('[BSML-003] Sorry, an error occurred - the admins have been informed');
+                })
+                .finally(() => {
+                    showSavingProgress(false);
+                });
+        return true;
+    };
+
+    /*
+     * FLOOR FUNCTIONS
+     */
+    const floorCoreForm = floorDetails => `<input name="locationType" type="hidden" value="floor" />
+        <div class="dialogRow" data-testid="floor-name">
+            <label for="displayedFloorId">Floor name</label>
+            <input id="displayedFloorId" name="floor_name" type="text" required value="${floorDetails?.floor_name ??
+                ''}"  maxlength="10" />
+        </div>`;
+
     const saveNewFloor = e => {
         const form = e.target.closest('form');
         console.log('saveNewFloor form=', form);
@@ -692,8 +423,9 @@ export const BookableSpacesManageLocations = ({
         const locationType = data?.locationType;
         const valuesToSend = {
             floor_name: data.floor_name,
-            floor_building_id: data.floor_building_id,
+            floor_building_id: data.buildingId,
         };
+        console.log('saveNewFloor valuesToSend=', valuesToSend);
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
@@ -730,13 +462,6 @@ export const BookableSpacesManageLocations = ({
         return true;
     };
 
-    const floorCoreForm = floorDetails => `<input name="locationType" type="hidden" value="floor" />
-        <div class="dialogRow" data-testid="floor-name">
-            <label for="displayedFloorId">Floor name</label>
-            <input id="displayedFloorId" name="floor_name" type="text" required value="${floorDetails?.floor_name ??
-                ''}"  maxlength="10" />
-        </div>`;
-
     function showAddFloorForm(e, buildingDetails, currentGroundFloorDetails) {
         const groundFloorDescription = !!currentGroundFloorDetails
             ? `Current ground floor is Floor ${currentGroundFloorDetails.floor_name}`
@@ -768,82 +493,6 @@ export const BookableSpacesManageLocations = ({
         const saveButton = document.getElementById('saveButton');
         !!saveButton && saveButton.removeEventListener('click', saveChangeToBuilding);
         !!saveButton && saveButton.addEventListener('click', saveNewFloor);
-
-        const dialog = document.getElementById('popupDialog');
-        !!dialog && dialog.showModal();
-    }
-
-    function showEditBuildingForm(buildingId, buildingSiteId) {
-        const buildingDetails =
-            buildingId > 0 &&
-            campusList.flatMap(campus => campus.buildings).find(building => building.building_id === buildingId);
-
-        if (!buildingDetails) {
-            console.log(`Can't find building with building_id = "${buildingId}" in campus list from api`);
-            displayToastMessage('Sorry, something went wrong');
-            return;
-        }
-
-        const formBody = `<h2>Edit building details</h2>
-            <input name="buildingId" type="hidden" value="${buildingDetails?.building_id}" />
-            <input name="ground_floor_id_old" type="hidden" value="${buildingDetails?.ground_floor_id ??
-                ''}" />${buildingCoreForm(buildingDetails)}<div class="dialogRow" data-testid="building-floor-list">
-                <h3>Floors - Choose ground floor:</h3>
-                ${buildingDetails?.floors?.length > 0 &&
-                    '<ul class="radioList">' +
-                        buildingDetails?.floors
-                            .map(floor => {
-                                const checked = floor.floor_id === buildingDetails.ground_floor_id ? ' checked' : '';
-                                return `<li>
-                                            <input type="radio" id="groundFloor-${floor.floor_id}" name="ground_floor_id" ${checked} value="${floor.floor_id}" />
-                                            <label for="groundFloor-${floor.floor_id}">Floor ${floor.floor_name}</label> 
-                                        </li>`;
-                            })
-                            .join('') +
-                        `<li>
-                            <input type="radio" id="groundFloor-none" name="ground_floor_id" ${
-                                !buildingDetails.ground_floor_id ? ' checked' : ''
-                            } />
-                            <label for="groundFloor-none">None</label> 
-                        </li>
-                    </ul>`}
-                        
-                ${buildingDetails?.floors?.length === 0 ? '<p>No floors</p>' : ''}
-                </div>
-                
-                <div class="dialogRow" data-testid="building-campus-list">
-                    <h3>Change Campus</h3>
-                    <ul class="radioList" data-testid="change-campus">
-                    ${campusList
-                        .map(campus => {
-                            const checked = campus.campus_id === buildingSiteId ? ' checked' : '';
-                            return `<li>
-                                    <input type="radio" id="chooseSite-${campus.campus_id}" name="campus_id" ${checked} value="${campus.campus_id}" />
-                                    <label for="chooseSite-${campus.campus_id}">${campus.campus_name}</label> 
-                                </li>`;
-                        })
-                        .join('')}
-                    </ul>
-                </div>`;
-
-        const dialogBodyElement = document.getElementById('dialogBody');
-        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
-
-        const addNewButton = document.getElementById('addNewButton');
-        !!addNewButton && (addNewButton.innerText = 'Add floor');
-        const currentGroundFloorDetails = buildingDetails.floors.find(
-            f => buildingDetails.ground_floor_id === f.floor_id,
-        );
-        !!addNewButton &&
-            addNewButton.addEventListener('click', e =>
-                showAddFloorForm(e, buildingDetails, currentGroundFloorDetails),
-            );
-
-        const saveButton = document.getElementById('saveButton');
-        !!saveButton && saveButton.addEventListener('click', saveChangeToBuilding);
-
-        const deleteButton = document.getElementById('deleteButton');
-        !!deleteButton && deleteButton.addEventListener('click', e => confirmAndDeleteBuilding(e, buildingDetails));
 
         const dialog = document.getElementById('popupDialog');
         !!dialog && dialog.showModal();
@@ -898,6 +547,23 @@ export const BookableSpacesManageLocations = ({
         return true;
     };
 
+    function deleteFloor(e, floorDetails) {
+        console.log('floorDetails=', floorDetails);
+        const locationType = 'floor';
+        const locationId = floorDetails?.floor_id;
+        const successMessage = `Floor ${floorDetails?.floor_name} in ${floorDetails?.building_name} deleted`;
+        const failureMessage = `catch: deleting floor ${floorDetails.floor_id} failed:`;
+        deleteGenericLocation(locationType, locationId, successMessage, failureMessage);
+    }
+
+    function showConfirmAndDeleteFloorDialog(e, floorDetails) {
+        const line1 = `Do you really want to delete floor ${floorDetails.floor_name}?`;
+        const line2 = 'This will also delete associated rooms.';
+        const confirmationOKButton = document.getElementById('confDialogOkButton');
+        !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteFloor(e, floorDetails));
+        showConfirmAndDeleteGenericLocationDialog(line1, line2);
+    }
+
     function showEditFloorForm(floorId) {
         const floorDetails =
             floorId > 0 &&
@@ -936,13 +602,299 @@ export const BookableSpacesManageLocations = ({
         !!saveButton && saveButton.addEventListener('click', saveChangeToFloor);
 
         const deleteButton = document.getElementById('deleteButton');
-        !!deleteButton && deleteButton.addEventListener('click', e => confirmAndDeleteFloor(e, floorDetails));
+        !!deleteButton && deleteButton.addEventListener('click', e => showConfirmAndDeleteFloorDialog(e, floorDetails));
 
         const dialog = document.getElementById('popupDialog');
         !!dialog && dialog.showModal();
     }
 
-    function showAddSiteForm() {
+    /*
+     * BUILDING FUNCTIONS
+     */
+    function buildingCoreForm(buildingDetails = {}) {
+        return `<input name="locationType" type="hidden" value="building" />
+            <div class="dialogRow" data-testid="building-name">
+                <label for="buildingName">Building name *</label>
+                <input id="buildingName" name="building_name" type="text" value="${buildingDetails?.building_name ||
+                    ''}" required  maxlength="255" />
+            </div>
+            <div class="dialogRow" data-testid="building-number">
+                <label for="buildingNumber">Building number *</label>
+                <input id="buildingNumber" name="building_number" type="text" value="${buildingDetails?.building_number ||
+                    ''}" required  maxlength="10" />
+            </div>
+            <div class="dialogRow" data-testid="building_springshare_id">
+                <h3>Choose the Springshare Opening hours to associate with this building</h3>
+                <ul>
+                     <li>
+                        <input type="radio" name="building_springshare_id" id="building_springshare_id-0" value="0" checked />
+                        <label for="building_springshare_id-0">None</label>
+                     </li>
+                        ${(!!springshareList &&
+                            springshareList.length > 0 &&
+                            springshareList
+                                .map(springshareItem => {
+                                    console.log('buildingDetails=', buildingDetails.building_springshare_id);
+                                    console.log('springshareList s=', springshareItem);
+                                    const checked =
+                                        buildingDetails.building_springshare_id === springshareItem.id
+                                            ? ' checked'
+                                            : '';
+                                    return `<li style="padding-block: 0.25rem">
+                                    <input type="radio" name="building_springshare_id" id="building_springshare_id-${springshareItem.id}" data-testid="building_springshare_id-${springshareItem.id}" value="${springshareItem.id}"${checked} />
+                                    <label for="building_springshare_id-${springshareItem.id}">${springshareItem.display_name}</label>
+                                 </li>`;
+                                })
+                                .join('')) ||
+                            ''}
+                </ul>
+            </div>
+            <div class="dialogRow" data-testid="building_about_page_default">
+                <label for="building_about_page_default">The "About" page for this building (usually the Drupal building page)</label>
+                <input id="building_about_page_default" name="building_about_page_default" type="text" value="${buildingDetails?.building_about_page_default ||
+                    ''}"  maxlength="255" />
+            </div>
+            `;
+    }
+
+    const saveNewBuilding = e => {
+        const form = e.target.closest('form');
+        console.log('saveNewBuilding form=', form);
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+        console.log('saveNewBuilding data', data);
+
+        // validate form
+        if (!data.building_name || !data.building_number) {
+            displayToastMessage('Please enter building name and number', true);
+            return false;
+        }
+
+        closeDialog(e);
+        showSavingProgress(true);
+
+        const locationType = data?.locationType;
+        const valuesToSend = {
+            building_name: data.building_name,
+            building_campus_id: data.building_campus_id,
+            building_number: data.building_number,
+            building_about_page_default: data.building_about_page_default,
+            building_springshare_id: data.building_springshare_id,
+        };
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
+        !!locationType &&
+            actions
+                .addBookableSpaceLocation(valuesToSend, locationType)
+                .then(() => {
+                    displayToastMessage('Building added', false);
+
+                    actions.loadBookableSpaceCampusChildren();
+                })
+                .catch(e => {
+                    console.log('catch: adding new building failed:', e);
+                    displayToastMessage('[BSML-002] Sorry, an error occurred - the admins have been informed');
+                })
+                .finally(() => {
+                    showSavingProgress(false);
+                });
+        return true;
+    };
+
+    function showAddBuildingForm(e, campusDetails) {
+        const formBody = `<h2>Add a building to ${campusDetails?.campus_name || 'unknown'} campus</h2>
+            ${buildingCoreForm()}
+            <input id="buildingCampusId" name="building_campus_id" type="hidden" value="${campusDetails?.campus_id ||
+                ''}" required  maxlength="10" />
+            `;
+        if (!formBody) {
+            return;
+        }
+
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+        const addNewButton = document.getElementById('addNewButton');
+        !!addNewButton && (addNewButton.style.display = 'none');
+
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton && (deleteButton.style.display = 'none');
+
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton.removeEventListener('click', saveChangeToCampus);
+        !!saveButton && saveButton.addEventListener('click', saveNewBuilding);
+
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog.showModal();
+    }
+
+    function deleteBuilding(e, buildingDetails) {
+        const locationType = 'building';
+        const locationId = buildingDetails?.building_id;
+        const successMessage = `${buildingDetails?.building_name} deleted`;
+        const failureMessage = `catch: deleting building ${locationId} failed:`;
+        deleteGenericLocation(locationType, locationId, successMessage, failureMessage);
+    }
+
+    function showConfirmAndDeleteBuildingDialog(e, buildingDetails) {
+        const line1 = `Do you really want to delete ${buildingDetails.building_name}?`;
+        const line2 = 'This will also delete associated floors.';
+        const confirmationOKButton = document.getElementById('confDialogOkButton');
+        !!confirmationOKButton &&
+            confirmationOKButton.addEventListener('click', e => deleteBuilding(e, buildingDetails));
+        showConfirmAndDeleteGenericLocationDialog(line1, line2);
+    }
+
+    function showEditBuildingForm(buildingId, buildingSiteId) {
+        const buildingDetails =
+            buildingId > 0 &&
+            campusList.flatMap(campus => campus.buildings).find(building => building.building_id === buildingId);
+
+        if (!buildingDetails) {
+            console.log(`Can't find building with building_id = "${buildingId}" in campus list from api`);
+            displayToastMessage('Sorry, something went wrong');
+            return;
+        }
+
+        const formBody = `<h2>Edit building details</h2>
+            <input name="buildingId" type="hidden" value="${buildingDetails?.building_id}" />
+            <input name="ground_floor_id_old" type="hidden" value="${buildingDetails?.ground_floor_id ??
+                ''}" />${buildingCoreForm(buildingDetails)}<div class="dialogRow" data-testid="building-floor-list">
+                <h3>Floors - Choose ground floor:</h3>
+                ${
+                    buildingDetails?.floors?.length > 0
+                        ? '<ul class="radioList">' +
+                          buildingDetails?.floors
+                              .map(floor => {
+                                  const checked = floor.floor_id === buildingDetails.ground_floor_id ? ' checked' : '';
+                                  return `<li>
+                                            <input type="radio" id="groundFloor-${floor.floor_id}" name="ground_floor_id" ${checked} value="${floor.floor_id}" />
+                                            <label for="groundFloor-${floor.floor_id}">Floor ${floor.floor_name}</label> 
+                                        </li>`;
+                              })
+                              .join('') +
+                          `<li>
+                            <input type="radio" id="groundFloor-none" name="ground_floor_id" ${
+                                !buildingDetails.ground_floor_id ? ' checked' : ''
+                            } />
+                            <label for="groundFloor-none">None</label> 
+                        </li>
+                    </ul>`
+                        : ''
+                }
+                        
+                ${buildingDetails?.floors?.length === 0 ? '<p>No floors</p>' : ''}
+                </div>
+                
+                <div class="dialogRow" data-testid="building-campus-list">
+                    <h3>Change Campus</h3>
+                    <ul class="radioList" data-testid="change-campus">
+                    ${campusList
+                        .map(campus => {
+                            const checked = campus.campus_id === buildingSiteId ? ' checked' : '';
+                            return `<li>
+                                    <input type="radio" id="chooseSite-${campus.campus_id}" name="campus_id" ${checked} value="${campus.campus_id}" />
+                                    <label for="chooseSite-${campus.campus_id}">${campus.campus_name}</label> 
+                                </li>`;
+                        })
+                        .join('')}
+                    </ul>
+                </div>`;
+
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+        const addNewButton = document.getElementById('addNewButton');
+        !!addNewButton && (addNewButton.innerText = 'Add floor');
+        const currentGroundFloorDetails = buildingDetails.floors.find(
+            f => buildingDetails.ground_floor_id === f.floor_id,
+        );
+        !!addNewButton &&
+            addNewButton.addEventListener('click', e =>
+                showAddFloorForm(e, buildingDetails, currentGroundFloorDetails),
+            );
+
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton.addEventListener('click', saveChangeToBuilding);
+
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton &&
+            deleteButton.addEventListener('click', e => showConfirmAndDeleteBuildingDialog(e, buildingDetails));
+
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog.showModal();
+    }
+
+    /*
+     * CAMPUS FUNCTIONS
+     */
+    const campusFormCore = (campusDetails = {}, formType = 'add') => {
+        const campusName = campusDetails?.campus_name ?? '';
+        const campusNumber = campusDetails?.campus_number ?? '';
+        return `<div>
+            <input  name="locationType" type="hidden" value="campus" />
+            <div class="dialogRow" data-testid="${formType}-campus-name">
+                <label for="campusName">Campus name</label>
+                <input id="campusName" name="campus_name" type="text" value="${campusName}" required maxlength="255" />
+            </div>
+            <div class="dialogRow" data-testid="${formType}-campus-number">
+                <label for="campusNumber">Campus number</label>
+                <input id="campusNumber" name="campus_number" type="text" value="${campusNumber}" required maxlength="10" />
+            </div>
+        </div>`;
+    };
+
+    const saveNewCampus = e => {
+        const form = e.target.closest('form');
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+        console.log('data=', data);
+
+        // validate form
+        if (!data.campus_name || !data.campus_number) {
+            displayToastMessage('Please enter campus name and number', true);
+            return false;
+        }
+
+        closeDialog(e);
+        showSavingProgress(true);
+
+        const locationType = data?.locationType;
+        const valuesToSend = {
+            campus_name: data.campus_name,
+            campus_number: data.campus_number,
+        };
+        console.log('saveNewCampus valuesToSend', valuesToSend);
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
+        !!locationType &&
+            actions
+                .addBookableSpaceLocation(valuesToSend, locationType)
+                .then(() => {
+                    displayToastMessage('Campus added', false);
+                    actions.loadBookableSpaceCampusChildren();
+                })
+                .catch(e => {
+                    console.log('catch: adding new campus failed:', e);
+                    displayToastMessage('[BSML-001] Sorry, an error occurred - the admins have been informed');
+                })
+                .finally(() => {
+                    showSavingProgress(false);
+                });
+        return true;
+    };
+
+    function showAddCampusForm() {
         const formBody = `<h2 data-testid="add-campus-heading">Add campus</h2>${campusFormCore()}`;
 
         if (!!formBody) {
@@ -964,7 +916,70 @@ export const BookableSpacesManageLocations = ({
         }
     }
 
-    function getLocationLayout(campusList) {
+    function deleteCampus(e, campusDetails) {
+        console.log('deleteCampus', campusDetails);
+        const locationType = 'campus';
+        const locationId = campusDetails?.campus_id;
+        const successMessage = `${campusDetails?.campus_name} campus deleted`;
+        const failureMessage = `catch: deleting campus ${locationId} failed:`;
+        console.log('deleteCampus', locationType, locationId);
+        deleteGenericLocation(locationType, locationId, successMessage, failureMessage);
+    }
+
+    function showConfirmAndDeleteCampusDialog(e, campusDetails) {
+        const line1 = `Do you really want to delete ${campusDetails.campus_name} campus?`;
+        const line2 = 'This will also delete associated buildings.';
+        const confirmationOKButton = document.getElementById('confDialogOkButton');
+        !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteCampus(e, campusDetails));
+        showConfirmAndDeleteGenericLocationDialog(line1, line2);
+    }
+
+    function showEditCampusForm(campusId) {
+        const campusDetails = campusId > 0 && campusList.find(s => s.campus_id === campusId);
+
+        if (!campusDetails) {
+            console.log(`Can't find campus with campus_id = "${campusId}" in campuslist from api`);
+            displayToastMessage('Sorry, something went wrong');
+            return;
+        }
+
+        const formBody = `<h2 data-testid="edit-campus-dialog-heading">Edit campus details</h2>
+            <input  name="campusId" type="hidden" value="${campusDetails.campus_id}" />${campusFormCore(
+            campusDetails,
+            'edit',
+        )}<div class="dialogRow">
+                <h3 data-testid="campus-building-label">Buildings</h3>
+                ${
+                    campusDetails?.buildings?.length > 0
+                        ? `<ul data-testid="campus-building-list">${campusDetails.buildings
+                              .map(building => `<li>${building.building_name} (${building.building_number}) </li>`)
+                              .join('')}</ul>`
+                        : ''
+                }
+                ${campusDetails?.buildings?.length === 0 ? '<p>No buildings</p>' : ''}
+            </div>`;
+
+        if (!!formBody) {
+            const dialogBodyElement = document.getElementById('dialogBody');
+            !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+            const saveButton = document.getElementById('saveButton');
+            !!saveButton && saveButton.addEventListener('click', saveChangeToCampus);
+
+            const addNewButton = document.getElementById('addNewButton');
+            !!addNewButton && (addNewButton.innerText = 'Add building');
+            !!addNewButton && addNewButton.addEventListener('click', e => showAddBuildingForm(e, campusDetails));
+
+            const deleteButton = document.getElementById('deleteButton');
+            !!deleteButton &&
+                deleteButton.addEventListener('click', e => showConfirmAndDeleteCampusDialog(e, campusDetails));
+
+            const dialog = document.getElementById('popupDialog');
+            !!dialog && dialog.showModal();
+        }
+    }
+
+    function getPageLayout(campusList) {
         return (
             <>
                 {campusList.map(campus => [
@@ -974,7 +989,7 @@ export const BookableSpacesManageLocations = ({
                         style={{ paddingLeft: '4rem' }}
                     >
                         <StyledEditButton
-                            onClick={() => showEditSiteForm(campus.campus_id)}
+                            onClick={() => showEditCampusForm(campus.campus_id)}
                             aria-label={`Edit ${campus.campus_name} campus details`}
                             data-testid={`edit-campus-${campus.campus_id}-button`}
                         >
@@ -1002,7 +1017,7 @@ export const BookableSpacesManageLocations = ({
                             <StyledRow key={`location-floor-${floor.floor_id}`} style={{ paddingLeft: '12rem' }}>
                                 <StyledEditButton
                                     color="primary"
-                                    // onClick={() => showEditSiteForm(campus.campus_id)}
+                                    // onClick={() => showEditCampusForm(campus.campus_id)}
                                     onClick={() => showEditFloorForm(floor.floor_id)}
                                     aria-label={`Edit Floor ${floor.floor_name}`}
                                     data-testid={`edit-floor-${floor.floor_id}-button`}
@@ -1044,9 +1059,7 @@ export const BookableSpacesManageLocations = ({
                                 } else if (!campusList || campusList.length === 0) {
                                     return <p>No spaces currently in system.</p>;
                                 } else {
-                                    return (
-                                        <div data-testid="spaces-location-wrapper">{getLocationLayout(campusList)}</div>
-                                    );
+                                    return <div data-testid="spaces-location-wrapper">{getPageLayout(campusList)}</div>;
                                 }
                             })()}
                         </Grid>
@@ -1056,7 +1069,7 @@ export const BookableSpacesManageLocations = ({
                                     className={'primary'}
                                     style={{ marginLeft: '2rem', marginTop: '2rem', textTransform: 'initial' }}
                                     children={'Add new Campus'}
-                                    onClick={showAddSiteForm}
+                                    onClick={showAddCampusForm}
                                     data-testid="add-new-campus-button"
                                 />
                             </div>
