@@ -1497,10 +1497,10 @@ mock.onGet('exams/course/FREN1010/summary')
         }
     })
 
-    // Bookable Spaces (site, building, floor)
+    // Bookable Spaces (site, library, floor)
     .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'campus' }).apiUrl)
     .reply(() => [200, { status: 'OK' }])
-    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'building' }).apiUrl)
+    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'library' }).apiUrl)
     .reply(() => [200, { status: 'OK' }])
     .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'floor' }).apiUrl)
     .reply(() => {
@@ -1521,7 +1521,7 @@ mock.onGet('exams/course/FREN1010/summary')
     // .reply(() => [200, { status: 'OK' }])
     .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'campus', id: '.*' }).apiUrl)))
     .reply(withDelay([200, { status: 'OK' }]))
-    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'building', id: '.*' }).apiUrl)))
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'library', id: '.*' }).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
     .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'floor', id: '.*' }).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
@@ -1530,13 +1530,13 @@ mock.onGet('exams/course/FREN1010/summary')
 
     .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'campus', id: '.*' }).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
-    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'building', id: '.*' }).apiUrl)))
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'library', id: '.*' }).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
     .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'floor', id: '.*' }).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
     .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'space', id: '.*' }).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
-    // .onDelete(/bookable_spaces\/campus|building|floor\/.*/)
+    // .onDelete(/bookable_spaces\/campus|library|floor\/.*/)
     // .reply(() => {
     //     if (responseType === 'error') {
     //         return [500, {}];

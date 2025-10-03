@@ -101,7 +101,7 @@ export const BookableSpacesAddSpace = ({
     // };
 
     const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
-    const noSpringshareHoursLabel = 'No Springshare building hours will display (click to change)';
+    const noSpringshareHoursLabel = 'No Springshare opening hours will display (click to change)';
 
     useEffect(() => {
         addBreadcrumbsToSiteHeader([
@@ -115,8 +115,8 @@ export const BookableSpacesAddSpace = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const validCampusList = campusList => campusList?.filter(c => c.buildings?.length > 0) || [];
-    const validBuildingList = buildingList => buildingList?.filter(b => b.floors.length > 0) || [];
+    const validCampusList = campusList => campusList?.filter(c => c.libraries?.length > 0) || [];
+    const validLibraryList = libraryList => libraryList?.filter(l => l.floors.length > 0) || [];
 
     const springshareList = React.useMemo(() => {
         if (
@@ -150,12 +150,12 @@ export const BookableSpacesAddSpace = ({
             locnTemp.currentCampus = locnTemp.currentCampusList.at(0) || {};
             locnTemp.campus_id = locnTemp.currentCampus?.campus_id;
 
-            locnTemp.currentCampusBuildings = validBuildingList(locnTemp?.currentCampus?.buildings || []);
-            locnTemp.currentBuilding = locnTemp.currentCampusBuildings?.at(0) || {};
-            locnTemp.building_id = locnTemp.currentBuilding?.building_id;
+            locnTemp.currentCampusLibraries = validLibraryList(locnTemp?.currentCampus?.libraries || []);
+            locnTemp.currentLibrary = locnTemp.currentCampusLibraries?.at(0) || {};
+            locnTemp.library_id = locnTemp.currentLibrary?.library_id;
 
-            locnTemp.currentBuildingFloors = locnTemp.currentBuilding?.floors || [];
-            locnTemp.currentFloor = locnTemp.currentBuildingFloors?.at(0) || {};
+            locnTemp.currentLibraryFloors = locnTemp.currentLibrary?.floors || [];
+            locnTemp.currentFloor = locnTemp.currentLibraryFloors?.at(0) || {};
             locnTemp.floor_id = locnTemp.currentFloor?.floor_id;
             console.log('setLocation 1');
             setLocation({
@@ -166,16 +166,16 @@ export const BookableSpacesAddSpace = ({
             const newValues = {
                 ...formValues,
                 ['campus_id']: locnTemp.campus_id,
-                ['building_id']: locnTemp.building_id,
+                ['library_id']: locnTemp.library_id,
                 ['floor_id']: locnTemp.floor_id,
-                ['building_springshare_id']: locnTemp.currentBuilding.building_springshare_id,
+                ['library_springshare_id']: locnTemp.currentLibrary.library_springshare_id,
             };
             setFormValues(newValues);
 
             console.log('@@@ springshareList=', springshareList);
             setSpringshareOption({
-                id: locnTemp.currentBuilding.building_springshare_id, // preset the springshare id
-                display_name: springshareList.find(s => s.id === locnTemp.currentBuilding.building_springshare_id)
+                id: locnTemp.currentLibrary.library_springshare_id, // preset the springshare id
+                display_name: springshareList.find(s => s.id === locnTemp.currentLibrary.library_springshare_id)
                     ?.display_name,
             });
         }
@@ -255,13 +255,13 @@ export const BookableSpacesAddSpace = ({
         return errorMessages?.find(m => m.field === fieldName)?.message;
     };
 
-    // const reportCurrentBuildingAboutPage = location => {
-    //     console.log('location?.currentCampusBuildings=', location?.currentCampusBuildings);
+    // const reportCurrentLibraryAboutPage = location => {
+    //     console.log('location?.currentCampusLibraries=', location?.currentCampusLibraries);
     //     console.log('location=', location);
     //     console.log('formValues=', formValues);
-    //     return location?.currentBuilding?.building_about_page_default ? (
-    //         <a href="{location?.currentBuilding?.building_about_page_default}">
-    //             {location?.currentBuilding?.building_about_page_default}
+    //     return location?.currentLibrary?.library_about_page_default ? (
+    //         <a href="{location?.currentLibrary?.library_about_page_default}">
+    //             {location?.currentLibrary?.library_about_page_default}
     //         </a>
     //     ) : (
     //         'none'
@@ -281,39 +281,39 @@ export const BookableSpacesAddSpace = ({
                 : {};
             updatedLocation.campus_id = updatedLocation.currentCampus?.campus_id;
 
-            updatedLocation.currentCampusBuildings = validBuildingList(updatedLocation?.currentCampus?.buildings);
-            updatedLocation.currentBuilding = updatedLocation.currentCampusBuildings?.at(0);
-            updatedLocation.building_id = updatedLocation.currentBuilding?.building_id;
+            updatedLocation.currentCampusLibraries = validLibraryList(updatedLocation?.currentCampus?.libraries);
+            updatedLocation.currentLibrary = updatedLocation.currentCampusLibraries?.at(0);
+            updatedLocation.library_id = updatedLocation.currentLibrary?.library_id;
 
-            updatedLocation.currentBuildingFloors = updatedLocation.currentBuilding?.floors;
-            updatedLocation.currentFloor = updatedLocation.currentBuildingFloors?.at(0);
+            updatedLocation.currentLibraryFloors = updatedLocation.currentLibrary?.floors;
+            updatedLocation.currentFloor = updatedLocation.currentLibraryFloors?.at(0);
             updatedLocation.floor_id = updatedLocation.currentFloor?.floor_id;
             console.log('setLocation 2');
             setLocation({
                 ...location,
                 ...updatedLocation,
             });
-            const buildingSpringshareId = updatedLocation?.currentBuilding?.building_springshare_id || -1;
+            const librarySpringshareId = updatedLocation?.currentLibrary?.library_springshare_id || -1;
             setSpringshareOption({
-                id: buildingSpringshareId,
+                id: librarySpringshareId,
                 display_name:
-                    springshareList?.find(s => s.id === buildingSpringshareId)?.display_name || noSpringshareHoursLabel,
+                    springshareList?.find(s => s.id === librarySpringshareId)?.display_name || noSpringshareHoursLabel,
             });
-        } else if (prop === 'building_id') {
+        } else if (prop === 'library_id') {
             updatedLocation.currentCampusList = validCampusList(campusList);
             updatedLocation.currentCampus = !!formValues.campus_id
                 ? updatedLocation.currentCampusList?.find(c => c.campus_id === formValues.campus_id)
                 : {};
             updatedLocation.campus_id = updatedLocation.currentCampus?.campus_id;
 
-            updatedLocation.currentCampusBuildings = validBuildingList(updatedLocation?.currentCampus?.buildings || []);
-            updatedLocation.currentBuilding = updatedLocation.currentCampusBuildings?.find(
-                b => b.building_id === theNewValue,
+            updatedLocation.currentCampusLibraries = validLibraryList(updatedLocation?.currentCampus?.libraries || []);
+            updatedLocation.currentLibrary = updatedLocation.currentCampusLibraries?.find(
+                l => l.library_id === theNewValue,
             );
-            updatedLocation.building_id = updatedLocation.currentBuilding?.building_id;
+            updatedLocation.library_id = updatedLocation.currentLibrary?.library_id;
 
-            updatedLocation.currentBuildingFloors = updatedLocation.currentBuilding?.floors;
-            updatedLocation.currentFloor = updatedLocation.currentBuildingFloors?.at(0);
+            updatedLocation.currentLibraryFloors = updatedLocation.currentLibrary?.floors;
+            updatedLocation.currentFloor = updatedLocation.currentLibraryFloors?.at(0);
             updatedLocation.floor_id = updatedLocation.currentFloor?.floor_id;
             console.log('setLocation 3');
             setLocation({
@@ -321,10 +321,9 @@ export const BookableSpacesAddSpace = ({
                 ...updatedLocation,
             });
             setSpringshareOption({
-                id: updatedLocation.currentBuilding.building_springshare_id,
-                display_name: springshareList.find(
-                    s => s.id === updatedLocation.currentBuilding.building_springshare_id,
-                )?.display_name,
+                id: updatedLocation.currentLibrary.library_springshare_id,
+                display_name: springshareList.find(s => s.id === updatedLocation.currentLibrary.library_springshare_id)
+                    ?.display_name,
             });
         } else if (prop === 'space_photo_url') {
             const photoDescriptionField = document.getElementById('space_photo_description');
@@ -347,8 +346,8 @@ export const BookableSpacesAddSpace = ({
         if (!!updatedLocation?.campus_id) {
             newLocation.campus_id = updatedLocation?.campus_id;
         }
-        if (!!updatedLocation?.building_id) {
-            newLocation.building_id = updatedLocation?.building_id;
+        if (!!updatedLocation?.library_id) {
+            newLocation.library_id = updatedLocation?.library_id;
         }
         if (!!updatedLocation?.floor_id) {
             newLocation.floor_id = updatedLocation?.floor_id;
@@ -459,15 +458,15 @@ export const BookableSpacesAddSpace = ({
         return [];
     }, [bookableSpacesRoomListLoading, bookableSpacesRoomListError, bookableSpacesRoomList]);
 
-    const reportCurrentBuildingAboutPage = location => (
+    const reportCurrentLibraryAboutPage = location => (
         <>
-            {location?.currentBuilding?.building_about_page_default ? (
+            {location?.currentLibrary?.library_about_page_default ? (
                 <a
                     target="_blank"
-                    href={location?.currentBuilding?.building_about_page_default}
+                    href={location?.currentLibrary?.library_about_page_default}
                     data-testid="add-space-about-page"
                 >
-                    {location?.currentBuilding?.building_about_page_default}
+                    {location?.currentLibrary?.library_about_page_default}
                 </a>
             ) : (
                 <span data-testid="add-space-about-page">none</span>
@@ -512,7 +511,7 @@ export const BookableSpacesAddSpace = ({
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <p data-testid="add-space-no-locations">
-                            No buildings currently in system - please{' '}
+                            No Libraries currently in system - please{' '}
                             <a href={spacesAdminLink('/manage/locations', account)}>create campus locations</a> and then
                             try again.
                         </p>
@@ -609,8 +608,8 @@ export const BookableSpacesAddSpace = ({
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography component={'p'}>
-                                    The "About" page for this building:{' '}
-                                    <span>{reportCurrentBuildingAboutPage(location)}</span>
+                                    The "About" page for this Library:{' '}
+                                    <span>{reportCurrentLibraryAboutPage(location)}</span>
                                 </Typography>
                             </Grid>
                             <Grid item xs={12}>
@@ -689,22 +688,22 @@ export const BookableSpacesAddSpace = ({
                             </Grid>
                             <Grid item xs={4}>
                                 <FormControl variant="standard" fullWidth>
-                                    <InputLabel id="add-space-select-building-label">Building *</InputLabel>
+                                    <InputLabel id="add-space-select-library-label">Library *</InputLabel>
                                     <Select
-                                        labelId="add-space-select-building-label"
-                                        id="add-space-select-building"
-                                        data-testid="add-space-select-building"
-                                        value={formValues?.building_id}
-                                        label="Building"
-                                        onChange={handleChange('building_id')}
+                                        labelId="add-space-select-library-label"
+                                        id="add-space-select-library"
+                                        data-testid="add-space-select-library"
+                                        value={formValues?.library_id}
+                                        label="Library"
+                                        onChange={handleChange('library_id')}
                                         required
                                         // onBlur={handleFieldCompletion}
                                     >
-                                        {!!location.currentCampusBuildings &&
-                                            location.currentCampusBuildings.length > 0 &&
-                                            location.currentCampusBuildings.map((building, index) => (
-                                                <MenuItem value={building.building_id} key={`select-building-${index}`}>
-                                                    {building.building_name}
+                                        {!!location.currentCampusLibraries &&
+                                            location.currentCampusLibraries.length > 0 &&
+                                            location.currentCampusLibraries.map((library, index) => (
+                                                <MenuItem value={library.library_id} key={`select-library-${index}`}>
+                                                    {library.library_name || library.building_name}
                                                 </MenuItem>
                                             ))}
                                     </Select>
@@ -723,25 +722,26 @@ export const BookableSpacesAddSpace = ({
                                         onChange={handleChange('floor_id')}
                                         required
                                     >
-                                        {!!location.currentBuildingFloors &&
-                                            location.currentBuildingFloors?.length > 0 &&
-                                            location.currentBuildingFloors?.map((floor, index) => (
-                                                <MenuItem value={floor.floor_id} key={`select-floor-${index}`}>
-                                                    {floor.floor_name}{' '}
-                                                    {location.currentBuilding.ground_floor_id === floor.floor_id
-                                                        ? ' (Ground floor)'
-                                                        : ''}
-                                                    {`${
-                                                        window.location.host === 'localhost:2020' // perhaps remove when dev complete
-                                                            ? ' [' +
-                                                              location.currentBuilding.building_name +
-                                                              ' - ' +
-                                                              floor.floor_id +
-                                                              ']'
-                                                            : ''
-                                                    }`}
-                                                </MenuItem>
-                                            ))}
+                                        {!!location.currentLibraryFloors &&
+                                            location.currentLibraryFloors?.length > 0 &&
+                                            location.currentLibraryFloors?.map((floor, index) => {
+                                                const libraryName =
+                                                    location.currentLibrary.library_name ||
+                                                    location.currentLibrary.building_name;
+                                                return (
+                                                    <MenuItem value={floor.floor_id} key={`select-floor-${index}`}>
+                                                        {floor.floor_name}{' '}
+                                                        {location.currentLibrary.ground_floor_id === floor.floor_id
+                                                            ? ' (Ground floor)'
+                                                            : ''}
+                                                        {`${
+                                                            window.location.host === 'localhost:2020' // to make the Select more readable to we poor devs, also makes more accurate test
+                                                                ? ' [' + libraryName + ' - ' + floor.floor_id + ']'
+                                                                : ''
+                                                        }`}
+                                                    </MenuItem>
+                                                );
+                                            })}
                                     </Select>
                                     {/* <StyledErrorMessageTypography component={'div'}>{reportErrorMessage('??')}</StyledErrorMessageTypography>*/}
                                 </FormControl>
@@ -749,7 +749,7 @@ export const BookableSpacesAddSpace = ({
                             <Grid item xs={12}>
                                 <FormControl variant="standard" fullWidth>
                                     <InputLabel htmlFor="space_precise">
-                                        Description of Space placement within the building
+                                        Description of Space placement within the Library
                                     </InputLabel>
                                     <Input
                                         id="space_precise"
@@ -769,10 +769,12 @@ export const BookableSpacesAddSpace = ({
                                     {getFriendlyLocationDescription({
                                         space_is_ground_floor:
                                             location?.currentFloor?.floor_id ===
-                                            location?.currentBuilding?.ground_floor_id,
+                                            location?.currentLibrary?.ground_floor_id,
                                         space_floor_name: location?.currentFloor?.floor_name,
                                         space_precise: formValues?.space_precise,
-                                        space_building_name: location?.currentBuilding?.building_name,
+                                        space_library_name: location?.currentLibrary?.library_name,
+                                        space_building_name: location?.currentLibrary?.building_name,
+                                        space_building_number: location?.currentLibrary?.building_number,
                                         space_campus_name: location?.currentCampus?.campus_name,
                                     })}
                                 </div>
@@ -793,8 +795,8 @@ export const BookableSpacesAddSpace = ({
                                     renderInput={params => (
                                         <TextField
                                             {...params}
-                                            label="Choose the Springshare building to use for Opening hours"
-                                            placeholder="Choose a building..."
+                                            label="Choose the Springshare Library to use for Opening hours"
+                                            placeholder="Choose a Library..."
                                             variant="outlined"
                                             InputProps={{
                                                 ...params.InputProps,
@@ -803,7 +805,7 @@ export const BookableSpacesAddSpace = ({
                                             inputProps={{
                                                 ...params.inputProps,
                                                 'data-testid': 'add-space-springshare-id-autocomplete-input-wrapper',
-                                                'aria-label': 'Search for a building',
+                                                'aria-label': 'Search for a Library',
                                             }}
                                         />
                                     )}
@@ -816,7 +818,7 @@ export const BookableSpacesAddSpace = ({
                             <Grid item xs={12}>
                                 <FormControl variant="standard" fullWidth>
                                     <InputLabel htmlFor="space_opening_hours_override">
-                                        An extra line about opening hours, specific to this building
+                                        An extra line about opening hours, specific to this Space
                                     </InputLabel>
                                     <Input
                                         id="space_opening_hours_override"
