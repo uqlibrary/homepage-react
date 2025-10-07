@@ -395,15 +395,22 @@ export const BookableSpacesManageLocations = ({
         return true;
     };
 
+    // allow for having spaces in a building where we don't have a Library
+    const displayedLibraryName = libraryDetails =>
+        libraryDetails?.library_name || libraryDetails?.building_name || 'unknown Library';
+
     /*
      * FLOOR FUNCTIONS
      */
-    const floorCoreForm = floorDetails => `<input name="locationType" type="hidden" value="floor" />
+    const floorCoreForm = (floorDetails = {}) => {
+        const floorNameFieldLabel = Object.keys(floorDetails).length === 0 ? 'New floor name' : 'Floor name';
+        return `<input name="locationType" type="hidden" value="floor" />
         <div class="dialogRow" data-testid="floor-name">
-            <label for="displayedFloorId">Floor name</label>
+            <label for="displayedFloorId">${floorNameFieldLabel}</label>
             <input id="displayedFloorId" name="floor_name" type="text" required value="${floorDetails?.floor_name ??
                 ''}"  maxlength="10" />
         </div>`;
+    };
 
     const saveNewFloor = e => {
         const form = e.target.closest('form');
@@ -452,7 +459,7 @@ export const BookableSpacesManageLocations = ({
                 .then(() => {
                     displayToastMessage('Floor added', false);
 
-                    actions.loadAllBookableSpacesRooms();
+                    actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: adding new floor failed:', e);
@@ -468,7 +475,7 @@ export const BookableSpacesManageLocations = ({
         const groundFloorDescription = !!currentGroundFloorDetails
             ? `Current ground floor is Floor ${currentGroundFloorDetails.floor_name}`
             : 'No floor is currently marked as the ground floor';
-        const formBody = `<h2>Add a floor to ${libraryDetails?.library_name || 'unknown library'}</h2>
+        const formBody = `<h2>Add a floor to ${displayedLibraryName(libraryDetails)}</h2>
             <input name="libraryId" type="hidden" value="${libraryDetails?.library_id}" />
             ${floorCoreForm()}
             <div class="dialogRow dialogRowSideBySide" data-testid="mark-ground-floor">
@@ -553,7 +560,7 @@ export const BookableSpacesManageLocations = ({
         console.log('floorDetails=', floorDetails);
         const locationType = 'floor';
         const locationId = floorDetails?.floor_id;
-        const successMessage = `Floor ${floorDetails?.floor_name} in ${floorDetails?.library_name} deleted`;
+        const successMessage = `Floor ${floorDetails?.floor_name} in ${displayedLibraryName(floorDetails)} deleted`;
         const failureMessage = `catch: deleting floor ${floorDetails.floor_id} failed:`;
         deleteGenericLocation(locationType, locationId, successMessage, failureMessage);
     }
@@ -576,7 +583,7 @@ export const BookableSpacesManageLocations = ({
                         if (floor) {
                             return {
                                 ...floor,
-                                library_name: library.library_name,
+                                library_name: displayedLibraryName(library),
                             };
                         }
                     }
@@ -614,9 +621,10 @@ export const BookableSpacesManageLocations = ({
      * LIBRARY FUNCTIONS
      */
     function libraryCoreForm(libraryDetails = {}) {
+        const libraryNameFieldLabel = Object.keys(libraryDetails).length === 0 ? 'New Library name' : 'Library name';
         return `<input name="locationType" type="hidden" value="library" />
             <div class="dialogRow" data-testid="library-name">
-                <label for="libraryName">Library name *</label>
+                <label for="libraryName">${libraryNameFieldLabel} *</label>
                 <input id="libraryName" name="library_name" type="text" value="${libraryDetails?.library_name ||
                     ''}" required  maxlength="255" />
             </div>
@@ -752,7 +760,7 @@ export const BookableSpacesManageLocations = ({
     }
 
     function showConfirmAndDeleteLibraryDialog(e, libraryDetails) {
-        const line1 = `Do you really want to delete ${libraryDetails.library_name}?`;
+        const line1 = `Do you really want to delete ${displayedLibraryName(libraryDetails)}?`;
         const line2 = 'This will also delete associated floors.';
         const confirmationOKButton = document.getElementById('confDialogOkButton');
         !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteLibrary(e, libraryDetails));
@@ -840,17 +848,19 @@ export const BookableSpacesManageLocations = ({
     /*
      * CAMPUS FUNCTIONS
      */
-    const campusFormCore = (campusDetails = {}, formType = 'add') => {
+    const campusCoreForm = (campusDetails = {}) => {
+        const campusNameFieldLabel = Object.keys(campusDetails).length === 0 ? 'New campus name' : 'Campus name';
+        const formType = Object.keys(campusDetails).length === 0 ? 'add' : 'edit';
         const campusName = campusDetails?.campus_name ?? '';
         const campusNumber = campusDetails?.campus_number ?? '';
         return `<div>
             <input  name="locationType" type="hidden" value="campus" />
             <div class="dialogRow" data-testid="${formType}-campus-name">
-                <label for="campusName">Campus name</label>
+                <label for="campusName">${campusNameFieldLabel} *</label>
                 <input id="campusName" name="campus_name" type="text" value="${campusName}" required maxlength="255" />
             </div>
             <div class="dialogRow" data-testid="${formType}-campus-number">
-                <label for="campusNumber">Campus number</label>
+                <label for="campusNumber">Campus number *</label>
                 <input id="campusNumber" name="campus_number" type="text" value="${campusNumber}" required maxlength="10" />
             </div>
         </div>`;
@@ -902,7 +912,7 @@ export const BookableSpacesManageLocations = ({
     };
 
     function showAddCampusForm() {
-        const formBody = `<h2 data-testid="add-campus-heading">Add campus</h2>${campusFormCore()}`;
+        const formBody = `<h2 data-testid="add-campus-heading">Add campus</h2>${campusCoreForm()}`;
 
         if (!!formBody) {
             const dialogBodyElement = document.getElementById('dialogBody');
@@ -951,15 +961,14 @@ export const BookableSpacesManageLocations = ({
         }
 
         const formBody = `<h2 data-testid="edit-campus-dialog-heading">Edit campus details</h2>
-            <input  name="campusId" type="hidden" value="${campusDetails.campus_id}" />${campusFormCore(
+            <input  name="campusId" type="hidden" value="${campusDetails.campus_id}" />${campusCoreForm(
             campusDetails,
-            'edit',
         )}<div class="dialogRow">
                 <h3 data-testid="campus-library-label">Libraries</h3>
                 ${
                     campusDetails?.libraries?.length > 0
                         ? `<ul data-testid="campus-library-list">${campusDetails.libraries
-                              .map(library => `<li>${library.library_name}</li>`)
+                              .map(library => `<li>${displayedLibraryName(library)}</li>`)
                               .join('')}</ul>`
                         : ''
                 }
@@ -1009,10 +1018,10 @@ export const BookableSpacesManageLocations = ({
                             <StyledEditButton
                                 color="primary"
                                 onClick={() => showEditLibraryForm(library.library_id, campus.campus_id)}
-                                aria-label={`Edit ${library.library_name} details`}
+                                aria-label={`Edit ${displayedLibraryName(library)} details`}
                                 data-testid={`edit-library-${library.library_id}-button`}
                             >
-                                <span id={`library-${library.library_id}`}>{`${library.library_name}`}</span>
+                                <span id={`library-${library.library_id}`}>{`${displayedLibraryName(library)}`}</span>
                                 <span style={{ paddingLeft: '0.5rem' }}>{`(${library.floors.length} ${pluralise(
                                     'Floor',
                                     library.floors.length,
