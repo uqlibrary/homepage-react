@@ -19,14 +19,17 @@ export function loadAllBookableSpacesRooms() {
     return dispatch => {
         // dispatch({ type: actions.SPACES_ROOM_LIST_CLEAR });
         dispatch({ type: actions.SPACES_ROOM_LIST_LOADING });
+        console.log('loadAllBookableSpacesRooms start', SPACES_ROOMS_ALL_API());
         return get(SPACES_ROOMS_ALL_API())
             .then(response => {
+                console.log('loadAllBookableSpacesRooms loaded', response);
                 dispatch({
                     type: actions.SPACES_ROOM_LIST_LOADED,
                     payload: response,
                 });
             })
             .catch(error => {
+                console.log('loadAllBookableSpacesRooms error', error);
                 dispatch({
                     type: actions.SPACES_ROOM_LIST_FAILED,
                     payload: error.message,

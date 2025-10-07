@@ -363,7 +363,10 @@ export const BookableSpacesAddSpace = ({
     };
 
     function navigateToPage(spacesPath) {
+        // reload spaces to get new one
+        // actions.loadAllBookableSpacesRooms().then(() => {
         window.location.href = spacesAdminLink(spacesPath, account);
+        // });
     }
 
     const createNewSpace = () => {
