@@ -95,7 +95,18 @@ export const BookableSpacesDashboard = ({
     facilityTypeListLoading,
     facilityTypeListError,
 }) => {
+    console.log('BookableSpacesDashboard top');
+    console.log(
+        'bookableSpacesRoomList',
+        bookableSpacesRoomListLoading,
+        bookableSpacesRoomListError,
+        bookableSpacesRoomList,
+    );
+    console.log('weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
+    console.log('facilityTypeList', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
+
     React.useEffect(() => {
+        console.log('BookableSpacesDashboard PAGE LOADED');
         addBreadcrumbsToSiteHeader([
             '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Dashboard</span></li>',
         ]);

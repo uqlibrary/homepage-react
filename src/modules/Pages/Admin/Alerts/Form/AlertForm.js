@@ -116,6 +116,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         alertWrapper.parentElement.style.visibility = !!showThePreview ? 'visible' : 'hidden';
         alertWrapper.parentElement.style.opacity = !!showThePreview ? '1' : '0';
 
+        document.getElementById('admin-alerts-form-button-preview')?.blur();
+
         setPreviewOpen(showThePreview);
     };
 
@@ -480,8 +482,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             <form>
                 {alertStatus === 'error' && (
                     /* istanbul ignore next */ <ConfirmationBox
-                        actionButtonColor="primary"
-                        actionButtonVariant="contained"
                         confirmationBoxId="alert-error"
                         onAction={
                             /* istanbul ignore next */ () =>
@@ -496,8 +496,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 )}
                 {alertStatus !== 'error' && defaults.type === 'edit' && (
                     <ConfirmationBox
-                        actionButtonColor="primary"
-                        actionButtonVariant="contained"
                         confirmationBoxId="alert-edit-save-succeeded"
                         onAction={handleConfirmation}
                         onClose={hideConfirmation}
@@ -508,8 +506,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 )}
                 {alertStatus !== 'error' && defaults.type === 'add' && (
                     <ConfirmationBox
-                        actionButtonColor="secondary"
-                        actionButtonVariant="contained"
                         confirmationBoxId="alert-add-save-succeeded"
                         onAction={handleConfirmation}
                         onClose={hideConfirmation}
@@ -520,8 +516,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 )}
                 {alertStatus !== 'error' && defaults.type === 'clone' && (
                     <ConfirmationBox
-                        actionButtonColor="secondary"
-                        actionButtonVariant="contained"
                         confirmationBoxId="alert-clone-save-succeeded"
                         onClose={hideConfirmation}
                         onAction={() => reloadClonePage()}
@@ -793,8 +787,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     </Grid>
                     <Grid item xs={9} align="right">
                         <StyledTertiaryButton
+                            id="admin-alerts-form-button-preview"
                             data-testid="admin-alerts-form-button-preview"
-                            color={!!showPreview ? 'primary' : 'secondary'}
                             children="Preview"
                             onClick={displayPreview}
                             style={{ marginRight: '0.5rem' }}

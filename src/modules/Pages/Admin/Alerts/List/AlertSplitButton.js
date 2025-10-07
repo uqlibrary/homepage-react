@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Grid from '@mui/material/Grid';
@@ -11,11 +10,16 @@ import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
+import { styled } from '@mui/material/styles';
 
 import { useConfirmationState } from 'hooks';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-import { StyledPrimaryButton } from 'helpers/general';
+import { standardText, StyledPrimaryButton } from 'helpers/general';
+
+export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+    ...standardText(theme),
+}));
 
 // based on https://material-ui.com/components/button-group/ "Split button"
 export const AlertSplitButton = ({
@@ -47,8 +51,6 @@ export const AlertSplitButton = ({
     return (
         <React.Fragment>
             <ConfirmationBox
-                actionButtonColor="secondary"
-                actionButtonVariant="contained"
                 confirmationBoxId="alert-delete-confirm"
                 onAction={() => deleteAlertById(alertId)}
                 onClose={hideDeleteConfirmation}
@@ -66,7 +68,7 @@ export const AlertSplitButton = ({
                             onClick={() =>
                                 mainButtonLabel === 'Edit' ? navigateToEditForm(alertId) : navigateToView(alertId)
                             }
-                            sx={{ borderColor: '#51247a !important' }}
+                            sx={{ borderColor: '#51247a !important', marginRight: '-6px', height: 52 }}
                         />
                         <StyledPrimaryButton
                             size="small"
@@ -77,7 +79,7 @@ export const AlertSplitButton = ({
                             data-testid={`alert-list-arrowicon-${alertId}`}
                             onClick={handleToggle}
                             title="More actions"
-                            sx={{ paddingInline: 0 }}
+                            sx={{ paddingInline: 0, marginLeft: '-6px', height: 52 }}
                         >
                             <ArrowDropDownIcon />
                         </StyledPrimaryButton>
@@ -97,20 +99,20 @@ export const AlertSplitButton = ({
                                 <Paper sx={{ marginTop: '-50px' }}>
                                     <ClickAwayListener onClickAway={handleClose}>
                                         <MenuList id="split-button-menu">
-                                            <MenuItem
+                                            <StyledMenuItem
                                                 data-testid={`${alertId}-clone-button`}
                                                 key={`${alertId}-clone-button`}
                                                 onClick={() => navigateToCloneForm(alertId)}
                                             >
                                                 Clone
-                                            </MenuItem>
-                                            <MenuItem
+                                            </StyledMenuItem>
+                                            <StyledMenuItem
                                                 data-testid={`${alertId}-delete-button`}
                                                 key={`${alertId}-delete-button`}
                                                 onClick={showDeleteConfirmation}
                                             >
                                                 Delete
-                                            </MenuItem>
+                                            </StyledMenuItem>
                                         </MenuList>
                                     </ClickAwayListener>
                                 </Paper>

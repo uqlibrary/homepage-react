@@ -10,7 +10,6 @@ import Hidden from '@mui/material/Hidden';
 import { StyledPrimaryButton, StyledSecondaryButton, StyledTertiaryButton } from 'helpers/general';
 
 export const ConfirmationBox = ({
-    actionButtonVariant,
     confirmationBoxId,
     InputForm,
     hideActionButton = false,
@@ -37,6 +36,7 @@ export const ConfirmationBox = ({
     actionProps = {},
     altActionProps = {},
     cancelProps = {},
+    autoFocusPrimaryButton = false,
 }) => {
     const _onAction = () => {
         onClose?.();
@@ -69,16 +69,15 @@ export const ConfirmationBox = ({
                 {!!showInputForm && /* istanbul ignore next */ <InputForm />}
             </DialogContent>
             <DialogActions>
-                <Grid container spacing={1} sx={{ justifyContent: 'space-between' }}>
+                <Grid container spacing={1} justifyContent="space-between">
                     <Hidden smDown>
                         <Grid item xs />
                     </Hidden>
                     {!hideActionButton && !!locale.confirmButtonLabel && (
                         <Grid item xs={12} sm={'auto'}>
                             <StyledPrimaryButton
-                                {...(!!actionButtonVariant ? { variant: actionButtonVariant } : {})}
                                 children={locale.confirmButtonLabel}
-                                autoFocus
+                                autoFocus={!!autoFocusPrimaryButton}
                                 fullWidth
                                 onClick={_onAction}
                                 id="confirm-action"
@@ -121,7 +120,6 @@ export const ConfirmationBox = ({
 };
 
 ConfirmationBox.propTypes = {
-    actionButtonVariant: PropTypes.string,
     confirmationBoxId: PropTypes.string.isRequired,
     hideActionButton: PropTypes.bool,
     hideCancelButton: PropTypes.bool,
@@ -142,6 +140,7 @@ ConfirmationBox.propTypes = {
     cancelProps: PropTypes.object,
     disableButtonsWhenBusy: PropTypes.bool,
     isBusy: PropTypes.bool,
+    autoFocusPrimaryButton: PropTypes.bool,
 };
 
 export default React.memo(ConfirmationBox);
