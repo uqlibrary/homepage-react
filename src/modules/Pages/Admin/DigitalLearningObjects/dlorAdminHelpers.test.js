@@ -2,7 +2,8 @@ import { dlorAdminLink, getUserPostfix, isValidEmail, splitStringToArrayOnPipe }
 
 describe('helpers', () => {
     it('splits keywords correctly', () => {
-        // These have been rewritten, as they are no longer manually entered - they are selected from a list. This is for backwards compat only
+        // These have been rewritten, as they are no longer manually entered - they are selected from a list.
+        // This is for backwards compat only
         expect(splitStringToArrayOnPipe('abc|def|hij')).toEqual(['abc', 'def', 'hij']);
         expect(splitStringToArrayOnPipe('"abc, abc"|def|hij')).toEqual(['abc, abc', 'def', 'hij']);
         expect(splitStringToArrayOnPipe('abc')).toEqual(['abc']);
@@ -10,7 +11,7 @@ describe('helpers', () => {
         expect(splitStringToArrayOnPipe('')).toEqual('');
     });
     it('generates admin links correctly', () => {
-        const account = { id: 'dloradmn', groups: ['lib_dlor_admins']};
+        const account = { id: 'dloradmn', groups: ['lib_dlor_admins'] };
         expect(dlorAdminLink('/add', account)).toEqual('http://localhost/admin/dlor/add');
         expect(dlorAdminLink(undefined, account)).toEqual('http://localhost/admin/dlor');
     });

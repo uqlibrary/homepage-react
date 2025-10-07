@@ -14,10 +14,10 @@ const truncateToXDecimals = (number, places) => {
     /* Not how the scoring works with fuse, but just in case */
     /* istanbul ignore next */
     if (decimalIndex === -1) {
-        return number; 
+        return number;
     }
 
-    const truncatedStr = numStr.substring(0, decimalIndex + (places + 1)); 
+    const truncatedStr = numStr.substring(0, decimalIndex + (places + 1));
     return parseFloat(truncatedStr);
 };
 
@@ -53,26 +53,21 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
         onSelectedItemsChange(selectedItems);
     }, [selectedItems, onSelectedItemsChange]);
 
-    const getOptionLabel = (option) => {
+    const getOptionLabel = option => {
         return option?.keyword;
     };
 
     const handleSelectionChange = (event, newValue) => {
-    
-        const fuseResult = fuseResults.length > 0
-            ? fuseResults.find(
-                (result) => result.item.keyword === newValue.keyword
-            )
-            : fuse.search(newValue.keyword).find(result => result.item.keyword === newValue.keyword);
+        const fuseResult =
+            fuseResults.length > 0
+                ? fuseResults.find(result => result.item.keyword === newValue.keyword)
+                : fuse.search(newValue.keyword).find(result => result.item.keyword === newValue.keyword);
 
         const score = fuseResult?.score;
-    
-        // Check for existing item using the keyword_id
-        const existingItemIndex = selectedItems.findIndex(
-            (item) => item.keyword === newValue.keyword
-        );
 
-    
+        // Check for existing item using the keyword_id
+        const existingItemIndex = selectedItems.findIndex(item => item.keyword === newValue.keyword);
+
         // Create a flat object with only the needed properties
         const newItem = {
             keyword: newValue.keyword,
@@ -80,12 +75,12 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
             score: score,
         };
 
-    
         let updatedItems;
         if (existingItemIndex > -1) {
-            
             // Compare scores on the flat object
-            if (truncateToXDecimals(newItem.score, 8) < truncateToXDecimals(selectedItems[existingItemIndex].score, 8)) {
+            if (
+                truncateToXDecimals(newItem.score, 8) < truncateToXDecimals(selectedItems[existingItemIndex].score, 8)
+            ) {
                 updatedItems = [...selectedItems];
                 updatedItems[existingItemIndex] = newItem;
             } else {
@@ -113,10 +108,10 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
         setInputValue('');
     };
 
-    const handleChipDelete = (itemToDelete) => () => {
+    const handleChipDelete = itemToDelete => () => {
         // Filter the array using the keyword_id from the flat object
-        setSelectedItems((selectedItems) =>
-            selectedItems.filter((item) => item.keyword_vocabulary_id !== itemToDelete.keyword_vocabulary_id)
+        setSelectedItems(selectedItems =>
+            selectedItems.filter(item => item.keyword_vocabulary_id !== itemToDelete.keyword_vocabulary_id),
         );
     };
 
@@ -134,7 +129,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
                 options={options}
                 getOptionLabel={getOptionLabel}
                 filterOptions={filterOptions}
-                renderInput={(params) => (
+                renderInput={params => (
                     <TextField
                         {...params}
                         label="Search and select tags"
@@ -155,7 +150,7 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                         {selectedItems.map((item, index) => {
                             const isKeywordAvailable = data.some(
-                                (availableItem) => availableItem.keyword.trim() === item.keyword.trim()
+                                availableItem => availableItem.keyword.trim() === item.keyword.trim(),
                             );
 
                             return (
@@ -173,13 +168,11 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
                             );
                         })}
                         {selectedItems.some(
-                            (item) =>
-                                !data.some(
-                                    (availableItem) => availableItem.keyword === item.keyword
-                                )
+                            item => !data.some(availableItem => availableItem.keyword === item.keyword),
                         ) && (
                             <Box sx={{ width: '100%' }}>
-                                <strong>Note:</strong> Tags highlighted in red are not located in our controlled vocabulary, and may not be effective in searches.
+                                <strong>Note:</strong> Tags highlighted in red are not located in our controlled
+                                vocabulary, and may not be effective in searches.
                             </Box>
                         )}
                     </Box>
@@ -192,11 +185,13 @@ const FuzzySearch = ({ data, fuseOptions, delay, onSelectedItemsChange, existing
 };
 
 FuzzySearch.propTypes = {
-    data: PropTypes.arrayOf(PropTypes.shape({
-        keyword: PropTypes.string.isRequired,
-        synonyms: PropTypes.arrayOf(PropTypes.string),
-        keyword_vocabulary_id: PropTypes.number.isRequired,
-    })).isRequired,
+    data: PropTypes.arrayOf(
+        PropTypes.shape({
+            keyword: PropTypes.string.isRequired,
+            synonyms: PropTypes.arrayOf(PropTypes.string),
+            keyword_vocabulary_id: PropTypes.number.isRequired,
+        }),
+    ).isRequired,
     fuseOptions: PropTypes.object,
     delay: PropTypes.number,
     onSelectedItemsChange: PropTypes.func.isRequired, // Add the new prop
