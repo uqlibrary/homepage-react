@@ -115,7 +115,7 @@ test.describe('Spaces Location admin', () => {
             const dialog = page.getByTestId('main-dialog');
 
             await expect(dialog.getByTestId('add-campus-heading')).toContainText('Add campus');
-            await expect(dialog.getByTestId('add-campus-name').locator('label')).toContainText('Campus name');
+            await expect(dialog.getByTestId('add-campus-name').locator('label')).toContainText('New campus name');
             await expect(dialog.getByTestId('add-campus-name').locator('input')).toBeVisible();
             await expect(dialog.getByTestId('add-campus-number').locator('label')).toContainText('Campus number');
             await expect(dialog.getByTestId('add-campus-number').locator('input')).toBeVisible();
@@ -387,7 +387,7 @@ test.describe('Spaces Location admin', () => {
             await assertCanOpenAddLibraryDialog(page);
             const dialog = page.getByTestId('main-dialog');
 
-            await expect(dialog.getByTestId('library-name').locator('label')).toContainText('Library name');
+            await expect(dialog.getByTestId('library-name').locator('label')).toContainText('New Library name');
             await expect(dialog.getByTestId('library-name').locator('input')).toBeVisible();
             await expect(dialog.getByTestId('building-name').locator('label')).toContainText('Building name');
             await expect(dialog.getByTestId('building-name').locator('input')).toBeVisible();
@@ -755,7 +755,7 @@ test.describe('Spaces Location admin', () => {
             await assertCanOpenAddFloorDialog(page, 1);
             const dialog = page.getByTestId('main-dialog');
 
-            await expect(dialog.getByTestId('floor-name').locator('label')).toContainText('Floor name');
+            await expect(dialog.getByTestId('floor-name').locator('label')).toContainText('New floor name');
             await expect(dialog.getByTestId('floor-name').locator('input')).toBeVisible();
 
             await expect(dialog.getByTestId('dialog-delete-button')).not.toBeVisible();
