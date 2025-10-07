@@ -65,7 +65,7 @@ export const BookableSpacesAddSpace = ({
 }) => {
     console.log('addResult', bookableSpacesRoomAdding, bookableSpacesRoomAddError, bookableSpacesRoomAddResult);
     console.log('campusList', campusListLoading, campusListError, campusList);
-    console.log('spacesRoomList', bookableSpacesRoomListLoading, bookableSpacesRoomListError, bookableSpacesRoomList);
+    console.log('xspacesRoomList', bookableSpacesRoomListLoading, bookableSpacesRoomListError, bookableSpacesRoomList);
     console.log('weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
 
     const { account } = useAccountContext();
@@ -364,9 +364,9 @@ export const BookableSpacesAddSpace = ({
 
     function navigateToPage(spacesPath) {
         // reload spaces to get new one
-        // actions.loadAllBookableSpacesRooms().then(() => {
-        window.location.href = spacesAdminLink(spacesPath, account);
-        // });
+        actions.loadAllBookableSpacesRooms().then(() => {
+            window.location.href = spacesAdminLink(spacesPath, account);
+        });
     }
 
     const createNewSpace = () => {
@@ -480,7 +480,7 @@ export const BookableSpacesAddSpace = ({
     // if (!!savingProgressShown) {
     //     return <InlineLoader message="Saving" />;
     // } else
-    if (!!campusListLoading || !formValues?.campus_id) {
+    if (!!bookableSpacesRoomListLoading || !!campusListLoading || !formValues?.campus_id) {
         return (
             <Grid container>
                 <Grid item xs={12}>
