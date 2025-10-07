@@ -99,7 +99,6 @@ const fuseOptions = {
     keys: ['keyword', 'synonyms'],
 };
 
-
 const moment = require('moment');
 
 const StyledErrorCountBadge = styled(Badge)(() => ({
@@ -175,9 +174,6 @@ export const DlorForm = ({
     dlorKeywords,
     mode,
 }) => {
-    
-
-
     const [cookies, setCookie] = useCookies();
     const { account } = useAccountContext();
 
@@ -208,33 +204,34 @@ export const DlorForm = ({
 
     const [selectedKeywords, setSelectedKeywords] = useState([]);
 
-    
-    const handleSelectedItemsChange = (newItems) => {
-            setSelectedKeywords(newItems);
+    const handleSelectedItemsChange = newItems => {
+        setSelectedKeywords(newItems);
     };
 
     useEffect(() => {
         const keywordIds = selectedKeywords.map(item => item.keyword_vocabulary_id);
         setFormValues(prevValues => ({
             ...prevValues,
-            object_keyword_ids: keywordIds, 
-            object_keywords: selectedKeywords.map(item => item.keyword), 
+            object_keyword_ids: keywordIds,
+            object_keywords: selectedKeywords.map(item => item.keyword),
         }));
     }, [selectedKeywords]);
 
     useEffect(() => {
         // map the keywords from the keyword string BACK into the selectedKeywords structure
         if (!!formValues?.object_keywords_string && formValues?.object_keywords_string.length > 0) {
-            const keywordStrings = splitStringToArrayOnPipe(formValues.object_keywords_string || /* istanbul ignore next */ '');
+            const keywordStrings = splitStringToArrayOnPipe(
+                formValues.object_keywords_string || /* istanbul ignore next */ '',
+            );
 
             const newKeywordsArray = keywordStrings.map((keyword, index) => {
                 return {
                     keyword: keyword,
-                    keyword_vocabulary_id: index + 100000, 
-                    score: 1
+                    keyword_vocabulary_id: index + 100000,
+                    score: 1,
                 };
             });
-            
+
             setSelectedKeywords(newKeywordsArray);
         }
     }, [formValues.object_keywords_string]);
@@ -452,7 +449,7 @@ export const DlorForm = ({
     function validatePanelFiltering(currentValues) {
         let fourthPanelErrorCount = 0;
         // ensure there is at least one keyword selected.
-        console.log("currentValues", currentValues);
+        console.log('currentValues', currentValues);
         currentValues?.object_keywords?.length < 1 && fourthPanelErrorCount++;
 
         function isDeepStructure(variable) {
@@ -553,7 +550,6 @@ export const DlorForm = ({
         let theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
 
-        
         if (['object_is_featured', 'object_cultural_advice'].includes(prop)) {
             theNewValue = !!e.target.checked ? 1 : 0;
         }
@@ -585,7 +581,6 @@ export const DlorForm = ({
         // amalgamate new value into data set
         const newValues = { ...formValues, [prop]: theNewValue };
 
-        
         setFormValues(newValues);
     };
 
@@ -606,7 +601,6 @@ export const DlorForm = ({
         setFormValues(newValues);
     };
 
-    
     const stepPanelContentOwnership = React.useMemo(
         () => (
             <>
@@ -1540,8 +1534,14 @@ export const DlorForm = ({
                     }}
                 >
                     <h1>Preview of your notification:</h1>
-                    <p>Below is a preview of the notification that will be sent to users that have subscribed to updates for this object.</p>
-                    <p>These notifications should be for significant changes only, and this information is intended for ALL subscribers to this object (internal and external)</p>
+                    <p>
+                        Below is a preview of the notification that will be sent to users that have subscribed to
+                        updates for this object.
+                    </p>
+                    <p>
+                        These notifications should be for significant changes only, and this information is intended for
+                        ALL subscribers to this object (internal and external)
+                    </p>
                     <StyledLightboxHeaderBox id="notify-lightbox-title">
                         <Typography variant="h6" component="h2" data-testid="notify-lightbox-title">
                             Object change notification
@@ -1730,7 +1730,7 @@ export const DlorForm = ({
         delete valuesToSend.team_manager_edit;
         delete valuesToSend.team_email_edit;
 
-        //valuesToSend.object_keywords = splitStringToArrayOnComma(valuesToSend.object_keywords_string);
+        // valuesToSend.object_keywords = splitStringToArrayOnComma(valuesToSend.object_keywords_string);
         delete valuesToSend.object_keywords_string;
 
         if (mode === 'add') {

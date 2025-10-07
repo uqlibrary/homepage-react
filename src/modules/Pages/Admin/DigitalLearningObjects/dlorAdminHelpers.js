@@ -8,19 +8,17 @@ export function splitStringToArrayOnPipe(keywordString) {
     let result = '';
 
     if (!!keywordString) {
-        let processedString = keywordString
+        const processedString = keywordString
             // Only keep alphanumeric characters, hyphens, spaces, commas, pipe, and double quotes
             .replace(/[^a-zA-Z0-9-, |"]/g, '')
             .trim(); // Trim once initially
 
-        let splitArray = processedString.split(/\|(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+        const splitArray = processedString.split(/\|(?=(?:(?:[^"]*"){2})*[^"]*$)/);
 
         /* istanbul ignore else */
         if (!!splitArray && splitArray.length > 0) {
             result = splitArray.map(keyword => {
-                return keyword
-                    .replace(/^"|"$/g, '')
-                    .trim();
+                return keyword.replace(/^"|"$/g, '').trim();
             });
         }
     }
