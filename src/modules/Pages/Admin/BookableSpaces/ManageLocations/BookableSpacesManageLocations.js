@@ -395,6 +395,10 @@ export const BookableSpacesManageLocations = ({
         return true;
     };
 
+    // allow for having spaces in a building where we don't have a Library
+    const displayedLibraryName = libraryDetails =>
+        libraryDetails?.library_name || libraryDetails?.building_name || 'unknown Library';
+
     /*
      * FLOOR FUNCTIONS
      */
@@ -468,7 +472,7 @@ export const BookableSpacesManageLocations = ({
         const groundFloorDescription = !!currentGroundFloorDetails
             ? `Current ground floor is Floor ${currentGroundFloorDetails.floor_name}`
             : 'No floor is currently marked as the ground floor';
-        const formBody = `<h2>Add a floor to ${libraryDetails?.library_name || 'unknown library'}</h2>
+        const formBody = `<h2>Add a floor to ${displayedLibraryName(libraryDetails)}</h2>
             <input name="libraryId" type="hidden" value="${libraryDetails?.library_id}" />
             ${floorCoreForm()}
             <div class="dialogRow dialogRowSideBySide" data-testid="mark-ground-floor">
@@ -553,7 +557,7 @@ export const BookableSpacesManageLocations = ({
         console.log('floorDetails=', floorDetails);
         const locationType = 'floor';
         const locationId = floorDetails?.floor_id;
-        const successMessage = `Floor ${floorDetails?.floor_name} in ${floorDetails?.library_name} deleted`;
+        const successMessage = `Floor ${floorDetails?.floor_name} in ${displayedLibraryName(floorDetails)} deleted`;
         const failureMessage = `catch: deleting floor ${floorDetails.floor_id} failed:`;
         deleteGenericLocation(locationType, locationId, successMessage, failureMessage);
     }
@@ -576,7 +580,7 @@ export const BookableSpacesManageLocations = ({
                         if (floor) {
                             return {
                                 ...floor,
-                                library_name: library.library_name,
+                                library_name: displayedLibraryName(library),
                             };
                         }
                     }
@@ -752,7 +756,7 @@ export const BookableSpacesManageLocations = ({
     }
 
     function showConfirmAndDeleteLibraryDialog(e, libraryDetails) {
-        const line1 = `Do you really want to delete ${libraryDetails.library_name}?`;
+        const line1 = `Do you really want to delete ${displayedLibraryName(libraryDetails)}?`;
         const line2 = 'This will also delete associated floors.';
         const confirmationOKButton = document.getElementById('confDialogOkButton');
         !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteLibrary(e, libraryDetails));
@@ -959,7 +963,7 @@ export const BookableSpacesManageLocations = ({
                 ${
                     campusDetails?.libraries?.length > 0
                         ? `<ul data-testid="campus-library-list">${campusDetails.libraries
-                              .map(library => `<li>${library.library_name}</li>`)
+                              .map(library => `<li>${displayedLibraryName(library)}</li>`)
                               .join('')}</ul>`
                         : ''
                 }
@@ -1009,10 +1013,10 @@ export const BookableSpacesManageLocations = ({
                             <StyledEditButton
                                 color="primary"
                                 onClick={() => showEditLibraryForm(library.library_id, campus.campus_id)}
-                                aria-label={`Edit ${library.library_name} details`}
+                                aria-label={`Edit ${displayedLibraryName(library)} details`}
                                 data-testid={`edit-library-${library.library_id}-button`}
                             >
-                                <span id={`library-${library.library_id}`}>{`${library.library_name}`}</span>
+                                <span id={`library-${library.library_id}`}>{`${displayedLibraryName(library)}`}</span>
                                 <span style={{ paddingLeft: '0.5rem' }}>{`(${library.floors.length} ${pluralise(
                                     'Floor',
                                     library.floors.length,
