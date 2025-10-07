@@ -294,7 +294,6 @@ export const DLOList = ({
     dlorTeamListLoading,
     dlorTeamListError,
 }) => {
-    console.log("LIST:", dlorList, dlorListLoading, dlorListError);
     const fuseOptions = {
         includeScore: true,
         includeMatches: true,
@@ -311,7 +310,6 @@ export const DLOList = ({
         //keys: ['object_title', 'object_keywords', 'object_synonyms', 'object_description'],
     };
     const fuse = React.useMemo(() => new Fuse(dlorList || [], fuseOptions), [dlorList, fuseOptions]);
-    // console.log('permissions', isLibraryStaff(account), isStaff(account), isUQOnlyUser(account));
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [selectedGradAttributes, setSelectedGradAttributes] = useState([]);
     const [filterListTrimmed, setFilterListTrimmed] = useState([]);
@@ -336,18 +334,14 @@ export const DLOList = ({
     // Looking into a potential flag for facets to indicate if they are candidate displays similar to graduate attributes.
     // For now, using an array to store selected helper text display as graduate attribute style.
 
-    console.log("TEAM LIST", dlorTeamList, dlorTeamListLoading, dlorTeamListError);
-
     const [paginationPage, setPaginationPage] = React.useState(1);
 
     const FilterGraduateAttributes = (filterList, filterId, mode) => {
-        console.log("FilterList", filterList, filterId, mode);
         if (mode === 'push') {
             const ga = filterList
                 .filter(item => item.facet_type_name === 'Graduate attributes')
                 .flatMap(item => item.facet_list);
             const gaAlternate = [...ga, ...filterFacetsWithShowHelp(filterList)]
-            console.log('GA', ga, gaAlternate, filterId);
             const filteredGraduateAttributes = gaAlternate.filter(facet => Number(facet.facet_id) === Number(filterId));
 
             setSelectedGradAttributes([...selectedGradAttributes, ...filteredGraduateAttributes]);
@@ -360,13 +354,10 @@ export const DLOList = ({
     };
 
     function filterFacetsWithShowHelp(data) {
-        console.log("filterFacetsWithShowHelp RAW DATA", data);
-    return data.flatMap(facetType =>
-        facetType.facet_list.filter(item => !!item.facet_show_help)
-    );
-}
-
-    console.log("filterFacetsWithShowHelp", filterFacetsWithShowHelp(dlorFilterList || []), dlorFilterList);
+        return data.flatMap(facetType =>
+            facetType.facet_list.filter(item => !!item.facet_show_help)
+        );
+    }
 
     /* istanbul ignore next */
     function skipToElement() {
@@ -440,8 +431,6 @@ export const DLOList = ({
     };
 
     const clearKeywordField = e => {
-        console.log('e', e);
-        console.log('Testing if this was clicked');
         setKeywordSearch('');
         keyWordSearchRef.current.value = '';
         setPaginationPage(1); // set pagination back to page 1
@@ -485,7 +474,6 @@ export const DLOList = ({
         const keyword = e.target.value;
         setIsKeywordClearable(true);
         if (isReturnKeyPressed(e)) {
-            console.log('Return key pressed');
             if (keywordIsSearchable(keyword)) {
                 setKeywordSearch(keyword);
                 setPaginationPage(1);
@@ -732,8 +720,6 @@ export const DLOList = ({
         const facetTypeSlug = prop?.replace('checkbox-', '');
 
         const facetId = e.target.value;
-
-        // console.log('FACET ID', facetId, e.target.labels[0].innerText);
 
         const checkboxId = `${facetTypeSlug}-${facetId}`;
         const individualFilterId = `${facetTypeSlug}-${facetId}`;
@@ -1014,11 +1000,8 @@ export const DLOList = ({
 
     function filterDlorList() {
         let theSearch = dlorList;
-        console.log("XXXXKeyword search and keywordSearch", keywordSearch, keyWordSearchRef.current.value);
         if (!!keyWordSearchRef.current.value && !!keywordSearch) {
-            console.log("XXXXSearching on", keyWordSearchRef.current.value);
             theSearch = fuse.search(keyWordSearchRef.current.value, fuseOptions).map(result => result.item);
-            console.log('XXXtheSearch', theSearch, dlorList);
         }
         
         const sortedList = theSearch
@@ -1054,8 +1037,6 @@ export const DLOList = ({
                     isAccessible,
                 };
             });
-
-        console.log("XXXSorted List before search", sortedList);
 
         // Helper function to check if an item is favorited
         function isFavorited(item) {
@@ -1106,10 +1087,7 @@ export const DLOList = ({
 
         // Group selectedFilters by facetTypeSlug
         const groupedFilters = parseSelectedFilters(selectedFilters);
-        console.log("XXXXSorted ListXXXXX", sortedList);
         
-        //console.log('Searches on this filtered list', fuse.search(sortedList, fuseOptions))
-
         const filteredList = sortedList?.filter(d => {
             const passesCheckboxFilter = filterDlor(d, groupedFilters);
             // const passesKeyWordFilter =
@@ -1382,8 +1360,6 @@ export const DLOList = ({
 }
 
     const containsGraduateAttributes = selectedFilters.some(filter => filter.includes('graduate_attributes') || containsFacetWithShowHelp(selectedFilters, filterListTrimmed));
-
-    console.log("selectedFilters", selectedFilters, selectedGradAttributes);
 
     // sort the grad attributes display set in alpha order.
     selectedGradAttributes.sort((a, b) => {
