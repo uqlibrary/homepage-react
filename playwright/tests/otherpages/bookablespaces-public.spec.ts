@@ -27,7 +27,7 @@ test.describe('Spaces', () => {
         // the friendly location shows correctly
         await expect(page.getByTestId('standard-card-01-w431---collaborative-space')).toBeVisible();
         await expect(page.getByTestId('standard-card-01-w431---collaborative-space')).toContainText(
-            'Westernmost corner, 3rd Floor',
+            'Westernmost corner, 2nd Floor',
         );
         await expect(page.getByTestId('standard-card-01-w431---collaborative-space')).toContainText(
             'Forgan Smith Building',

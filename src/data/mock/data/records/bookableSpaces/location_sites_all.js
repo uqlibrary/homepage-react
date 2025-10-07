@@ -40,7 +40,6 @@ export default {
                         {
                             "floor_id": 5,
                             "floor_name": "2",
-                            "asset_count": 0,
                         },
                     ]
                 },

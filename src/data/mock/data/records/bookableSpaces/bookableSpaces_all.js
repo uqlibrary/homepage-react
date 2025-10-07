@@ -18,7 +18,7 @@ export default {
             space_longitude: "153.01308753792662",
             space_type: 'Collaborative space',
             space_floor_id: 1,
-            space_floor_name: "3",
+            space_floor_name: "2",
             space_is_ground_floor: 0,
             space_library_id: 1,
             space_library_name: 'Walter Harrison Law Library',

@@ -21,7 +21,7 @@ export const isInt = value => {
 };
 
 export function getFriendlyFloorName(bookableSpace) {
-    let floorName = `Floor ${bookableSpace?.space_floor_name}`;
+    let floorName = bookableSpace?.space_floor_name;
     if (!!bookableSpace?.space_is_ground_floor) {
         floorName = 'Ground floor';
     } else if (isInt(bookableSpace?.space_floor_name)) {
