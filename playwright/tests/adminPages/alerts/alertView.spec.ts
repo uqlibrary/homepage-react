@@ -118,7 +118,7 @@ test.describe('Alerts Admin View Page - other page tests', () => {
         await expect(page.getByTestId('admin-alerts-view-updated-by')).not.toBeVisible();
     });
     test('tells the user when alert appeared on all systems', async ({ page }) => {
-        await page.goto('http://localhost:2020/admin/alerts/view/cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08?user=uqstaff');
+        await page.goto('http://localhost:2020/admin/alerts/view/cc0ab120-d4a3-11eb-b5ee-6593c1ac8f09?user=uqstaff');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(
             page
