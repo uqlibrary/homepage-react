@@ -452,7 +452,7 @@ export const BookableSpacesManageLocations = ({
                 .then(() => {
                     displayToastMessage('Floor added', false);
 
-                    actions.loadAllBookableSpacesRooms();
+                    actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: adding new floor failed:', e);
