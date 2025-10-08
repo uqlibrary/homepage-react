@@ -1,4 +1,4 @@
-import { BrowserContext, Page, Locator, expect } from '@uq/pw/test';
+import { BrowserContext, Page, Locator, expect, test } from '@uq/pw/test';
 
 /**
  * Helper to set input value.
@@ -104,3 +104,41 @@ export async function removeVpnNeededToast(page: Page) {
 export async function mockReusable(page: Page) {
     await mockXHRResponse(page, 'https://assets.library.uq.edu.au/reusable-webcomponents/**');
 }
+
+// this function sets up a cookie which will record the data that would be sent to the server
+// this will let us confirm that what we _expected_ is what actually would go to the server
+// CYPRESS_DATA_SAVED is set in the application code, gating it with a "if localhost"
+export const setTestDataCookie = async (context: BrowserContext, page: Page) => {
+    await context.addCookies([
+        {
+            name: 'CYPRESS_TEST_DATA',
+            value: 'active',
+            url: 'http://localhost:2020',
+        },
+    ]);
+
+    const cookie = await page.context().cookies();
+    expect(cookie.some(c => c.name === 'CYPRESS_TEST_DATA' && c.value === 'active')).toBeTruthy();
+};
+
+export const assertExpectedDataSentToServer = async (page: Page, expectedValues: unknown) => {
+    // rename to assertExpectedDataSentToServer
+    // make input fields focus
+    const cookie = await page.context().cookies();
+    expect(cookie.some(c => c.name === 'CYPRESS_DATA_SAVED')).toBeTruthy();
+
+    // check the data we pretended to send to the server matches what we expect
+    // acts as check of what we sent to api
+    const cookieValue = await page.evaluate(() => {
+        return document.cookie
+            .split('; ')
+            .find(row => row.startsWith('CYPRESS_DATA_SAVED='))
+            ?.split('=')[1];
+    });
+    expect(cookieValue).toBeDefined();
+    const decodedValue = !!cookieValue && decodeURIComponent(cookieValue);
+    const sentValues = !!decodedValue && JSON.parse(decodedValue);
+    // console.log('sentValues=', sentValues);
+    // console.log('expectedValues=', expectedValues);
+    expect(sentValues).toEqual(expectedValues);
+};

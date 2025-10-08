@@ -1,45 +1,10 @@
-import { BrowserContext, expect, Page, test } from '@uq/pw/test';
+import { expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
+import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
 
 import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 
 const inputField = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('input');
-
-// this function sets up a cookie which will record the data that would be sent to the server
-// this will let us confirm that what we _expected_ is what actually would go to the server
-const setTestDataCookie = async (context: BrowserContext, page: Page) => {
-    await context.addCookies([
-        {
-            name: 'CYPRESS_TEST_DATA',
-            value: 'active',
-            url: 'http://localhost:2020',
-        },
-    ]);
-
-    const cookie = await page.context().cookies();
-    expect(cookie.some(c => c.name === 'CYPRESS_TEST_DATA' && c.value === 'active')).toBeTruthy();
-};
-
-const assertExpectedDataSentToServer = async (page: Page, expectedValues: unknown) => {
-    // make input fields focus
-    const cookie = await page.context().cookies();
-    expect(cookie.some(c => c.name === 'CYPRESS_DATA_SAVED')).toBeTruthy();
-
-    // check the data we pretended to send to the server matches what we expect
-    // acts as check of what we sent to api
-    const cookieValue = await page.evaluate(() => {
-        return document.cookie
-            .split('; ')
-            .find(row => row.startsWith('CYPRESS_DATA_SAVED='))
-            ?.split('=')[1];
-    });
-    expect(cookieValue).toBeDefined();
-    const decodedValue = !!cookieValue && decodeURIComponent(cookieValue);
-    const sentValues = !!decodedValue && JSON.parse(decodedValue);
-    // console.log('sentValues=', sentValues);
-    // console.log('expectedValues=', expectedValues);
-    expect(sentValues).toEqual(expectedValues);
-};
 
 test.describe('Spaces Admin - add new space', () => {
     test('can navigate from dashboard to add new', async ({ page }) => {

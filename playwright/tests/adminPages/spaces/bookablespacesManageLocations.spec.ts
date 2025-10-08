@@ -1,6 +1,7 @@
-import { BrowserContext, expect, Page, test } from '@uq/pw/test';
+import { expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { ARMUS_SPRINGSHARE_ID, CENTRAL_SPRINGSHARE_ID } from '../../../../src/config/locale';
+import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
 
 async function assertToastHasMessage(page: Page, msg: string) {
     await expect(page.getByTestId('toast-corner-message')).toBeVisible();
@@ -35,42 +36,6 @@ test.describe('Spaces Admin - manage locations', () => {
     });
 });
 
-// this function sets up a cookie which will record the data that would be sent to the server
-// this will let us confirm that what we _expected_ is what actually would go to the server
-const setTestDataCookie = async (context: BrowserContext, page: Page) => {
-    await context.addCookies([
-        {
-            name: 'CYPRESS_TEST_DATA',
-            value: 'active',
-            url: 'http://localhost:2020',
-        },
-    ]);
-
-    const cookie = await page.context().cookies();
-    expect(cookie.some(c => c.name === 'CYPRESS_TEST_DATA' && c.value === 'active')).toBeTruthy();
-};
-
-const assertExpectedDataSentToServer = async (page: Page, expectedValues: unknown) => {
-    // rename to assertExpectedDataSentToServer
-    // make input fields focus
-    const cookie = await page.context().cookies();
-    expect(cookie.some(c => c.name === 'CYPRESS_DATA_SAVED')).toBeTruthy();
-
-    // check the data we pretended to send to the server matches what we expect
-    // acts as check of what we sent to api
-    const cookieValue = await page.evaluate(() => {
-        return document.cookie
-            .split('; ')
-            .find(row => row.startsWith('CYPRESS_DATA_SAVED='))
-            ?.split('=')[1];
-    });
-    expect(cookieValue).toBeDefined();
-    const decodedValue = !!cookieValue && decodeURIComponent(cookieValue);
-    const sentValues = !!decodedValue && JSON.parse(decodedValue);
-    // console.log('sentValues=', sentValues);
-    // console.log('expectedValues=', expectedValues);
-    expect(sentValues).toEqual(expectedValues);
-};
 test.describe('Spaces Location admin', () => {
     test('Shows a basic page for Spaces Location Admin', async ({ page }) => {
         await page.goto('/admin/spaces/manage/locations?user=libSpaces');
