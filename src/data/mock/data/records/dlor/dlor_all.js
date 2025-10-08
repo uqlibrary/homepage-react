@@ -67,6 +67,9 @@ export default {
             "object_keywords": [
                 "accessible content", "study hacks", "universal design",
             ],
+            "object_synonyms": [
+                "accessible", "accessibility", "universal design", "inclusive design", "inclusive content", "digital accessibility",
+            ],
             "owner": {
                 "publishing_user_username": "uqldegro",
                 "team_id": 1,
@@ -173,6 +176,7 @@ export default {
                 },
             ],
             "object_keywords": ["search", "evaluate", "literature", "strategy"],
+            "object_synonyms": ["searching", "search", "literature search", "systematic review", "scoping review", "advanced search", "database search", "research"],
             "owner": {
                 "publishing_user_username": "uqjsmith",
                 "team_id": 2,
@@ -462,6 +466,7 @@ export default {
                 },
             ],
             "object_keywords": ["software", "data analysis", "image", "video", "audio", "3d model", "coding"],
+            "object_synonyms": ["software", "data analysis", "freeware tools"],
             "owner": {
                 "publishing_user_username": "uquser1",
                 "team_id": 1,
@@ -995,6 +1000,10 @@ export default {
                 "coding",
                 "referencing",
                 "reference"
+            ],
+            "object_synonyms": [
+                "software",
+                "data analysis", "freeware tools"
             ],
             "object_filters": [
                 {

@@ -4,27 +4,26 @@ import { get } from 'repositories/generic';
 import { isDlorAdminUser } from 'helpers/access';
 
 const moment = require('moment');
-export function splitStringToArrayOnComma(keywordString) {
-    let splitStringToArrayOnComma = '';
+export function splitStringToArrayOnPipe(keywordString) {
+    let result = '';
+
     if (!!keywordString) {
-        // split 'abc, "def, def", "hij"'
-        // to ['abc', 'def, def', 'hij']
-        splitStringToArrayOnComma = keywordString
-            .replace(/[^a-zA-Z0-9- ,"]/g, '')
-            .replace(/,/g, ', ') // if they didnt put a space after the comma, add one
-            .replace(/,  /g, ', ') // (then correct any doubles)
-            .trim()
-            .split(/, (?=(?:(?:[^"]*"){2})*[^"]*$)/); // split on the comma, except commas inside quotes
+        const processedString = keywordString
+            // Only keep alphanumeric characters, hyphens, spaces, commas, pipe, and double quotes
+            .replace(/[^a-zA-Z0-9-, |"]/g, '')
+            .trim(); // Trim once initially
+
+        const splitArray = processedString.split(/\|(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+
         /* istanbul ignore else */
-        if (!!splitStringToArrayOnComma && splitStringToArrayOnComma.length > 0) {
-            splitStringToArrayOnComma = splitStringToArrayOnComma.map(keyword => {
-                return keyword
-                    .replace(/^"|"$/g, '') // get rid of surrounding quotes
-                    .trim();
+        if (!!splitArray && splitArray.length > 0) {
+            result = splitArray.map(keyword => {
+                return keyword.replace(/^"|"$/g, '').trim();
             });
         }
     }
-    return splitStringToArrayOnComma;
+
+    return result;
 }
 
 /**

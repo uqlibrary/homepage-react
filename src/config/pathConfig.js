@@ -18,6 +18,7 @@ export const pathConfig = {
         dlorseriesedit: dlorSeriesId => `/admin/dlor/series/edit/${dlorSeriesId}`,
         dlorseriesadd: '/admin/dlor/series/add',
         dlorfiltersmanage: '/admin/dlor/filters',
+        dlorvocabularymanage: '/admin/dlor/vocabulary',
         masquerade: '/admin/masquerade',
         testntagdashboard: '/admin/testntag',
         testntaginspect: '/admin/testntag/inspect',
