@@ -58,6 +58,7 @@ export const BookableSpacesList = lazy(() => lazyRetry(() => import('modules/Pag
 
 export const BookableSpacesDashboard = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Dashboard/BookableSpacesDashboardContainer')));
 export const BookableSpacesManageLocations = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/ManageLocations/BookableSpacesManageLocationsContainer')));
+export const BookableSpacesManageFacilities = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/ManageFacilities/BookableSpacesManageFacilitiesContainer')));
 export const BookableSpacesAddSpace = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/AddSpace/BookableSpacesAddSpaceContainer')));
 
 // always load components

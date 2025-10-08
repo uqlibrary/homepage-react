@@ -35,6 +35,7 @@ export const pathConfig = {
         bookableSpacesDashboard: '/admin/spaces',
         bookableSpacesManageLocations: '/admin/spaces/manage/locations',
         bookableSpacesAdd: '/admin/spaces/add',
+        bookableSpacesManageFacilityTypes: '/admin/spaces/manage/facilitytypes',
     },
     bookExamBooth: '/book-exam-booth',
     dlorProtected: '/digital-learning-hub-list',
