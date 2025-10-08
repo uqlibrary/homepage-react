@@ -191,6 +191,12 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(inputField('space_services_page', page)).toBeVisible();
         inputField('space_services_page', page).fill('https://web.library.uq.edu.au/visit/walter-harrison-law-library');
 
+        await expect(page.getByTestId('facilityType-input')).toBeVisible();
+        await page.getByTestId('facilityType-input').click();
+        await page.getByRole('option', { name: 'Noise level Low' }).click();
+        await page.getByTestId('facilityType-input').click();
+        await page.getByRole('option', { name: 'Capacity (??)' }).click();
+
         // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         page.getByTestId('admin-spaces-save-button-submit').click();
@@ -213,6 +219,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_type: 'Computer room',
             space_opening_hours_id: 3841,
             space_services_page: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
+            facility_types: ['0', '4'],
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });

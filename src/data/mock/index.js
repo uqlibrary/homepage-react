@@ -75,6 +75,7 @@ import bookableSpaces_all from './data/records/bookableSpaces/bookableSpaces_all
 import hours_weekly from './data/records/bookableSpaces/hours_weekly_2';
 import facilityTypes_all from './data/records/bookableSpaces/facilityTypes_all';
 import location_sites_all from './data/records/bookableSpaces/location_sites_all';
+import newSpace from './data/records/bookableSpaces/newSpace';
 
 const moment = require('moment');
 
@@ -1529,7 +1530,7 @@ mock.onGet('exams/course/FREN1010/summary')
         if (responseType === 'spaceAddError') {
             return [400, { status: 'error', message: 'space-name is not valid' }];
         }
-        return [200, { status: 'OK' }];
+        return [200, { status: 'OK', data: newSpace }];
     })
 
     // .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'campus', id: '.*' }).apiUrl)))

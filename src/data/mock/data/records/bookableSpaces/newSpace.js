@@ -1,0 +1,41 @@
+export default {
+    space: {
+        space_id: "1234544",
+        space_uuid: "9867y_isjgt_9866",
+        space_name: "6078",
+        space_precise: "",
+        space_description: "A space at Dutton Park. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. ",
+        space_photo_url: "",
+        space_photo_description: "",
+        space_opening_hours_id: 3967,
+        space_services_page: "https://web.library.uq.edu.au/visit/dutton-park-health-sciences-library",
+        space_opening_hours_override: 'this space opens at 8am',
+        created_at: "2025-08-01 10:00:00",
+        updated_at: "2025-08-01 11:00:00",
+        space_latitude: "-27.496955206561836",
+        space_longitude: "153.01308753792662",
+        space_type: 'Group Study Room',
+        space_floor_id: 65,
+        space_floor_name: "1",
+        space_is_ground_floor: 1,
+        space_library_id: 10,
+        space_library_name: 'Dutton Park Health Sciences',
+        space_building_name: "Pharmacy Australia Centre of Excellence",
+        space_building_number: "870",
+        space_campus_id: 3,
+        space_campus_name: "Dutton Park",
+    },
+    facility_types: [{
+        spacefacilitytype_space_id: 1234544,
+        spacefacilitytype_facility_id: 10,
+        spacefacilitytype_id: 1,
+    }, {
+        spacefacilitytype_space_id: 1234544,
+        spacefacilitytype_facility_id: 11,
+        spacefacilitytype_id: 2,
+    }, {
+        spacefacilitytype_space_id: 1234544,
+        spacefacilitytype_facility_id: 12,
+        spacefacilitytype_id: 3,
+    }]
+}
