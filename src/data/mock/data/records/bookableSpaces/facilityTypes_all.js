@@ -21,7 +21,7 @@ export default {
             facility_type_group_type: 'choose-one',
         }, {
             facility_type_id: 4,
-            facility_type_name: "Whiteboard",
+            facility_type_name: "AT technology",
             facility_type_group_name: "Room Features",
             facility_type_group_order: 2,
             facility_type_group_type: 'choose-many',
@@ -39,19 +39,19 @@ export default {
             facility_type_group_type: 'choose-many',
         }, {
             facility_type_id: 7,
-            facility_type_name: "Power outlets",
-            facility_type_group_name: "Room Features",
-            facility_type_group_order: 2,
-            facility_type_group_type: 'choose-many',
-        }, {
-            facility_type_id: 8,
             facility_type_name: "Exam Friendly",
             facility_type_group_name: "Room Features",
             facility_type_group_order: 2,
             facility_type_group_type: 'choose-many',
         }, {
-            facility_type_id: 9,
+            facility_type_id: 8,
             facility_type_name: "Postgraduate spaces",
+            facility_type_group_name: "Room Features",
+            facility_type_group_order: 2,
+            facility_type_group_type: 'choose-many',
+        }, {
+            facility_type_id: 9,
+            facility_type_name: "Power outlets",
             facility_type_group_name: "Room Features",
             facility_type_group_order: 2,
             facility_type_group_type: 'choose-many',
@@ -63,7 +63,7 @@ export default {
             facility_type_group_type: 'choose-many',
         }, {
             facility_type_id: 11,
-            facility_type_name: "AT technology",
+            facility_type_name: "Whiteboard",
             facility_type_group_name: "Room Features",
             facility_type_group_order: 2,
             facility_type_group_type: 'choose-many',
@@ -75,13 +75,13 @@ export default {
             facility_type_group_type: 'choose-many',
         }, {
             facility_type_id: 13,
-            facility_type_name: "Food outlets",
+            facility_type_name: "AskUs service",
             facility_type_group_name: "Services",
             facility_type_group_order: 4,
             facility_type_group_type: 'choose-many',
         }, {
             facility_type_id: 14,
-            facility_type_name: "AskUs service",
+            facility_type_name: "Food outlets",
             facility_type_group_name: "Services",
             facility_type_group_order: 4,
             facility_type_group_type: 'choose-many',
@@ -99,13 +99,13 @@ export default {
             facility_type_group_type: 'choose-many',
         }, {
             facility_type_id: 17,
-            facility_type_name: "Displays",
+            facility_type_name: "Contains Artwork",
             facility_type_group_name: "Outdoor",
             facility_type_group_order: 5,
             facility_type_group_type: 'choose-many',
         }, {
             facility_type_id: 18,
-            facility_type_name: "Contains Artwork",
+            facility_type_name: "Displays",
             facility_type_group_name: "Outdoor",
             facility_type_group_order: 5,
             facility_type_group_type: 'choose-many',

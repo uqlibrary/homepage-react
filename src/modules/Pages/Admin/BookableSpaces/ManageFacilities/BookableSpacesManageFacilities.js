@@ -15,7 +15,7 @@ import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { StyledPrimaryButton } from 'helpers/general';
+import { slugifyName, StyledPrimaryButton } from 'helpers/general';
 import { addBreadcrumbsToSiteHeader } from 'modules/Pages/Admin/BookableSpaces/helpers';
 
 export const BookableSpacesManageFacilities = ({
@@ -184,7 +184,11 @@ export const BookableSpacesManageFacilities = ({
                 {/* TODO change to grid */}
                 <div style={{ display: 'flex', gap: '2rem' }}>
                     {sortedGroups.map(facilityGroup => (
-                        <div key={facilityGroup.groupName} style={{ minWidth: '200px' }}>
+                        <div
+                            data-testid={`facilitygroup-${slugifyName(facilityGroup.groupName)}`}
+                            key={facilityGroup.groupName}
+                            style={{ minWidth: '200px' }}
+                        >
                             <Typography component={'h3'} variant={'h6'} style={{ whiteSpace: 'nowrap' }}>
                                 {facilityGroup.groupName}
                             </Typography>
@@ -203,12 +207,16 @@ export const BookableSpacesManageFacilities = ({
                                             inputProps={{
                                                 'aria-label': `Edit ${facilityType.facility_type_name} facility type, part of ${facilityType.facility_type_group_name}`,
                                                 // maxLength: 100
+                                                'data-testid': `facilitytype-input-${facilityType.facility_type_id}`,
                                             }}
                                         />
                                     );
                                 })}
                             </div>
-                            <AddIcon onClick={() => displayGroupAddItemForm(facilityGroup.groupId)} />
+                            <AddIcon
+                                onClick={() => displayGroupAddItemForm(facilityGroup.groupId)}
+                                data-testid={`add-type-${slugifyName(facilityGroup.groupName)}`}
+                            />
                         </div>
                     ))}
                 </div>
@@ -240,7 +248,7 @@ export const BookableSpacesManageFacilities = ({
                                     style={{ marginLeft: '2rem', marginTop: '2rem', textTransform: 'initial' }}
                                     children={addFormDefaultLabel}
                                     onClick={showHideAddCampusForm}
-                                    data-testid="add-new-campus-button"
+                                    data-testid="add-new-group-button"
                                 />
                             </div>
                             <form id="add-new-facility=group-form" style={{ marginBottom: '2rem', display: 'none' }}>
