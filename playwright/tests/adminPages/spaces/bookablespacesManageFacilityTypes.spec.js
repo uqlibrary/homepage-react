@@ -1,5 +1,7 @@
-import { BrowserContext, expect, Page, test } from '@uq/pw/test';
+import { expect, Page, test } from '@uq/pw/test';
 import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
+import { assertAccessibility } from '@uq/pw/lib/axe';
+import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
 
 test.describe('Spaces Admin - manage facility types', () => {
     test('can navigate from dashboard to manage facility types', async ({ page }) => {
@@ -36,8 +38,6 @@ test.describe('Spaces Admin - manage facility types', () => {
         await expect(addGroupButton).toHaveCSS('color', 'rgb(255, 255, 255)');
 
         await expect(page.getByTestId('facilitygroup-noise-level').getByTestId('facilitytype-input-1')).toBeVisible();
-        // await expect(page.getByTestId('facilitygroup-noise-level').getByTestId('facilitytype-input-1')).toContainText(
-        // await expect(page.getByTestId('facilitygroup-noise-level')).toContainText('Noise level Low');
         await expect(page.getByTestId('facilitygroup-noise-level').getByTestId('facilitytype-input-1')).toHaveValue(
             'Noise level Low',
         );
@@ -114,5 +114,59 @@ test.describe('Spaces Admin - manage facility types', () => {
         await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
         await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
         await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
+    });
+    test('is accessible on open', async ({ page }) => {
+        await assertAccessibility(page, '[data-testid="StandardPage"]');
+    });
+    test('can clear new group form', async ({ page }) => {
+        await expect(page.getByTestId('add-new-group-button')).toBeVisible();
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await page.getByTestId('add-new-group-button').click();
+
+        await expect(page.getByTestId('new-group-name')).toHaveText('');
+        await page.getByTestId('new-group-name').click();
+        await page.getByTestId('new-group-name').fill('New group');
+
+        await expect(page.getByTestId('new-group-first')).toHaveText('');
+        await page.getByTestId('new-group-first').click();
+        await page.getByTestId('new-group-first').fill('First type in group');
+
+        // close the form
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Clear new Group form');
+        await page.getByTestId('add-new-group-button').click();
+
+        // reopen the form
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await page.getByTestId('add-new-group-button').click();
+
+        // the text fields are empty
+        await expect(page.getByTestId('new-group-name')).toHaveText('');
+        await expect(page.getByTestId('new-group-first')).toHaveText('');
+    });
+    test.only('can save new group', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        await expect(page.getByTestId('new-group-name')).not.toBeVisible();
+        await expect(page.getByTestId('new-group-first')).not.toBeVisible();
+
+        await expect(page.getByTestId('add-new-group-button')).toBeVisible();
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await page.getByTestId('add-new-group-button').click();
+        await expect(page.getByTestId('new-group-name')).toBeVisible();
+        await expect(page.getByTestId('new-group-first')).toBeVisible();
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Clear new Group form');
+
+        await page.getByTestId('new-group-name').click();
+        await page.getByTestId('new-group-name').fill('New group');
+
+        await page.getByTestId('new-group-first').click();
+        await page.getByTestId('new-group-first').fill('First type in group');
+
+        await page.getByTestId('spaces-facilitytypes-saveChange').click();
+
+        const expectedValues = {
+            facility_type_group_name: 'New group',
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
     });
 });

@@ -121,8 +121,7 @@ export const setTestDataCookie = async (context: BrowserContext, page: Page) => 
     expect(cookie.some(c => c.name === 'CYPRESS_TEST_DATA' && c.value === 'active')).toBeTruthy();
 };
 
-export const assertExpectedDataSentToServer = async (page: Page, expectedValues: unknown) => {
-    // rename to assertExpectedDataSentToServer
+export const assertExpectedDataSentToServer = async (page: Page, expectedValues: object) => {
     // make input fields focus
     const cookie = await page.context().cookies();
     expect(cookie.some(c => c.name === 'CYPRESS_DATA_SAVED')).toBeTruthy();

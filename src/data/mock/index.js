@@ -1500,6 +1500,27 @@ mock.onGet('exams/course/FREN1010/summary')
             return [200, facilityTypes_all];
         }
     })
+    .onPost(routes.SPACES_FACILITY_TYPE_CHANGE_API().apiUrl)
+    .reply(withDelay([200, { status: 'OK' }]))
+    .onPost(routes.SPACES_FACILITY_TYPE_GROUP_CHANGE_API().apiUrl)
+    .reply(() => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (responseType === 'empty') {
+            return [200, []];
+        } else if (responseType === '404') {
+            return [404, {}];
+        } else {
+            // some random data
+            const result = {
+                facility_type_group_name: 'new group name',
+                facility_type_group_id: 88,
+                facility_type_group_order: 99,
+                facility_type_group_type: 'choose-many',
+            };
+            return [200, { status: 'OK', data: result }];
+        }
+    })
     .onGet(routes.SPACES_SITE_API().apiUrl)
     .reply(() => {
         if (responseType === 'error') {

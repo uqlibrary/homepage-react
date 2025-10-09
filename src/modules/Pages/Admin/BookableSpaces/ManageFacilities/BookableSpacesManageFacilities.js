@@ -16,16 +16,29 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { slugifyName, StyledPrimaryButton } from 'helpers/general';
-import { addBreadcrumbsToSiteHeader } from 'modules/Pages/Admin/BookableSpaces/helpers';
+import { addBreadcrumbsToSiteHeader, displayToastMessage } from 'modules/Pages/Admin/BookableSpaces/helpers';
 
 export const BookableSpacesManageFacilities = ({
     actions,
     facilityTypeList,
     facilityTypeListLoading,
     facilityTypeListError,
+    facilityTypeAdding,
+    facilityTypeAddError,
+    facilityTypeAdded,
+    facilityTypeGroupAdding,
+    facilityTypeAddGroupError,
+    facilityTypeGroupAdded,
 }) => {
-    console.log('facilityTypeList', facilityTypeList, facilityTypeListLoading, facilityTypeListError);
-    console.log('facilityTypeList?.data?.facility_types', facilityTypeList?.data?.facility_types);
+    // console.log('load facilityTypeList', facilityTypeList, facilityTypeListLoading, facilityTypeListError);
+    // console.log('load facilityTypeAdded', facilityTypeAdded, facilityTypeAdding, facilityTypeAddError);
+    console.log(
+        'load facilityTypeGroupAdded',
+        facilityTypeGroupAdded,
+        facilityTypeGroupAdding,
+        facilityTypeAddGroupError,
+    );
+    // console.log('facilityTypeList?.data?.facility_types', facilityTypeList?.data?.facility_types);
 
     const [cookies, setCookie] = useCookies();
 
@@ -112,39 +125,96 @@ export const BookableSpacesManageFacilities = ({
     };
 
     const saveChange = e => {
-        console.log('saveChange e=', e);
-        const valuesToSend = {};
-
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
-        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
-            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
-        }
-    };
 
-    const addFormDefaultLabel = 'Add new Facility Group';
+        console.log('saveChange e=', e);
+        console.log('saveChange formValues=', formValues);
+        // if (
+        //     // !!formValues.addNew &&
+        //     !!formValues.newGroupName &&
+        //     !!formValues.firstGroupEntryName
+        // ) {
+        const valuesToSendGroup = {};
+        valuesToSendGroup.facility_type_group_name = formValues.newGroupName;
+        if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            console.log('setting CYPRESS_DATA_SAVED to', valuesToSendGroup);
+            setCookie('CYPRESS_DATA_SAVED', valuesToSendGroup);
+        }
+        const groupSaved = false;
+        return actions.createSpacesFacilityTypeGroup(valuesToSendGroup);
+        // .then(response => {
+        //     groupSaved = true;
+        //     console.log('response:', response);
+        //     const newGroupId = response?.data?.facility_type_group_id || false;
+        //     if (!newGroupId) {
+        //         throw 'Facility Type Group creation failed';
+        //     }
+        //     const tempFormValues = { ...formValues };
+        //     delete tempFormValues.newGroupName;
+        //     setFormValues(tempFormValues);
+        //
+        //     const valuesToSend = {};
+        //     valuesToSend.facility_type_name = formValues.firstGroupEntryName;
+        //     valuesToSend.facility_type__group_id = newGroupId;
+        //     !!newGroupId && actions.createSpacesFacilityType(valuesToSend);
+        // })
+        // .then(() => {
+        //     displayToastMessage('Group created', false);
+        //     const tempFormValues = { ...formValues };
+        //     delete tempFormValues.firstGroupEntryName;
+        //     setFormValues(tempFormValues);
+        // })
+        // .catch(error => {
+        //     if (!!groupSaved) {
+        //         // save type failed
+        //         console.log('save facility type failed', error);
+        //         displayToastMessage(
+        //             '[BSMF-001] Sorry, we were unable to create the first type for that group - the admins have been informed',
+        //         );
+        //     } else {
+        //         // save group failed
+        //         console.log('save facility type group failed', error);
+        //         displayToastMessage('[BSMF-002] Sorry, an error occurred - the admins have been informed');
+        //     }
+        // })
+        // .finally(() => {
+        //     actions.loadAllFacilityTypes(); // reload updated values
+        // })
+        // }
+    };
+    const addFormDefaultLabel = 'Add new Facility group';
+    const isAddNewGroupFormClosed = addNewForm => addNewForm.style.display === 'none';
+    const openAddNewGroupForm = (addNewForm, formShowHideButton) => {
+        addNewForm.style.display = 'block';
+        !!formShowHideButton && (formShowHideButton.innerText = 'Clear new Group form');
+        setFormValues({
+            ...formValues,
+            // ['addNew']: true,
+        });
+    };
+    const closeAddNewGroupForm = (addNewForm, formShowHideButton) => {
+        addNewForm.style.display = 'none';
+        !!formShowHideButton && (formShowHideButton.innerText = addFormDefaultLabel);
+        const tempFormValues = { ...formValues };
+        delete tempFormValues.newGroupName;
+        delete tempFormValues.firstGroupEntryName;
+        setFormValues({
+            ...tempFormValues,
+            // ['addNew']: false,
+        });
+    };
     const showHideAddCampusForm = () => {
         const addNewForm = document.getElementById('add-new-facility=group-form');
         const formShowHideButton = document.getElementById('showHideAddCampusFormButton');
         if (!addNewForm) {
             return null;
         }
-        if (addNewForm.style.display === 'none') {
-            addNewForm.style.display = 'block';
-            !!formShowHideButton && (formShowHideButton.innerText = 'Clear new Group form');
-            setFormValues({
-                ...formValues,
-                ['addNew']: true,
-            });
+
+        if (isAddNewGroupFormClosed(addNewForm)) {
+            openAddNewGroupForm(addNewForm, formShowHideButton);
         } else {
-            addNewForm.style.display = 'none';
-            !!formShowHideButton && (formShowHideButton.innerText = addFormDefaultLabel);
             console.log('ere');
-            setFormValues({
-                ...formValues,
-                ['addNew']: false,
-                newGroupName: null,
-                firstGroupEntryName: null,
-            });
+            closeAddNewGroupForm(addNewForm, formShowHideButton);
             console.log('after');
         }
         document.activeElement.blur();
@@ -227,7 +297,7 @@ export const BookableSpacesManageFacilities = ({
                         fullWidth
                         children="Save changes"
                         onClick={saveChange}
-                        onKeyUp={saveChange}
+                        // onKeyUp={saveChange}
                         style={{ width: 'auto' }}
                     />
                 </div>
@@ -259,20 +329,26 @@ export const BookableSpacesManageFacilities = ({
                                     <InputLabel htmlFor="newGroupname">Name of new Facility type group</InputLabel>
                                     <Input
                                         id="newGroupname"
-                                        data-testid="new-group-name"
-                                        value={formValues?.newGroupName}
+                                        value={formValues?.newGroupName || ''}
                                         onChange={handleChange('newGroupName')}
-                                        inputProps={{ maxLength: 255 }}
+                                        inputProps={{
+                                            maxLength: 255,
+                                            'data-testid': 'new-group-name',
+                                        }}
                                     />
                                 </FormControl>
                                 <FormControl variant="standard" fullWidth>
-                                    <InputLabel htmlFor="firstGroupEntry">Name of first Group Facility type</InputLabel>
+                                    <InputLabel htmlFor="firstGroupEntry">
+                                        Name of first Facility type in group
+                                    </InputLabel>
                                     <Input
                                         id="firstGroupEntry"
-                                        data-testid="new-group-first"
-                                        value={formValues?.firstGroupEntryName}
+                                        value={formValues?.firstGroupEntryName || ''}
                                         onChange={handleChange('firstGroupEntryName')}
-                                        inputProps={{ maxLength: 255 }}
+                                        inputProps={{
+                                            maxLength: 255,
+                                            'data-testid': 'new-group-first',
+                                        }}
                                     />
                                 </FormControl>
                             </form>
@@ -284,7 +360,7 @@ export const BookableSpacesManageFacilities = ({
                                 // if (!!savingProgressShown) {
                                 //     return <InlineLoader message="Saving" />;
                                 // } else
-                                if (!!facilityTypeListLoading) {
+                                if (!!facilityTypeGroupAdding || !!facilityTypeAdding || !!facilityTypeListLoading) {
                                     return <InlineLoader message="Loading" />;
                                 } else if (!!facilityTypeListError) {
                                     return <p>Something went wrong - please try again later.</p>;
@@ -310,6 +386,12 @@ BookableSpacesManageFacilities.propTypes = {
     facilityTypeList: PropTypes.any,
     facilityTypeListLoading: PropTypes.any,
     facilityTypeListError: PropTypes.any,
+    facilityTypeAdding: PropTypes.any,
+    facilityTypeAddError: PropTypes.any,
+    facilityTypeAdded: PropTypes.any,
+    facilityTypeGroupAdding: PropTypes.any,
+    facilityTypeAddGroupError: PropTypes.any,
+    facilityTypeGroupAdded: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesManageFacilities);

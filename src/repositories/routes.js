@@ -311,6 +311,18 @@ export const SPACES_FACILITY_TYPE_ALL_API = () => {
     };
 };
 
+export const SPACES_FACILITY_TYPE_CHANGE_API = () => {
+    return {
+        apiUrl: 'bookable_spaces/facility_types',
+    };
+};
+
+export const SPACES_FACILITY_TYPE_GROUP_CHANGE_API = () => {
+    return {
+        apiUrl: 'bookable_spaces/facility_types/group',
+    };
+};
+
 // locations: type = campus, building, floor or space; id = unique record id
 // ie:
 // bookable_spaces/campus || bookable_spaces/campus/999

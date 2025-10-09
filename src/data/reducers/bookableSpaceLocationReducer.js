@@ -33,5 +33,6 @@ export default function bookableSpaceLocationReducer(state = initialState, actio
     if (!handler) {
         return state;
     }
+    console.log('bookableSpaceLocationReducer', action.type, state, action);
     return handler(state, action);
 }
