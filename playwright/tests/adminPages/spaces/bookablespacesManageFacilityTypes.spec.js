@@ -143,7 +143,7 @@ test.describe('Spaces Admin - manage facility types', () => {
         await expect(page.getByTestId('new-group-name')).toHaveText('');
         await expect(page.getByTestId('new-group-first')).toHaveText('');
     });
-    test.only('can save new group', async ({ page, context }) => {
+    test('can save new group', async ({ page, context }) => {
         await setTestDataCookie(context, page);
 
         await expect(page.getByTestId('new-group-name')).not.toBeVisible();
@@ -168,5 +168,32 @@ test.describe('Spaces Admin - manage facility types', () => {
             facility_type_group_name: 'New group',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
+    });
+});
+test.describe('Spaces Admin - other pages', () => {
+    test('can save new group when none current', async ({ page }) => {
+        await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces&responseType=facilityTypesAllEmpty');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
+
+        // TODO
+        // no showhide button
+        // no table showing
+        // form shows
+        // form works
+    });
+    test('works with single entry', async ({ page }) => {
+        await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces&responseType=facilityTypesWithOne');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
+
+        // TODO looks as expected
+    });
+    test('api error', async ({ page }) => {
+        await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces&responseType=facilityTypesAll404');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
+
+        await expect(page.getByTestId('apiError').getByText(/Something went wrong/)).toBeVisible();
     });
 });

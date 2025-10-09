@@ -93,10 +93,6 @@ let responseType = !!queryString
     ? queryString.get('responseType')
     : window.location.hash.substring(window.location.hash.indexOf('?')).responseType;
 responseType = responseType || 'ok';
-let hoursResponseType = !!queryString
-    ? queryString.get('hoursResponseType')
-    : window.location.hash.substring(window.location.hash.indexOf('?')).hoursResponseType;
-hoursResponseType = hoursResponseType || 'ok';
 
 // set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
@@ -199,9 +195,9 @@ mock.onGet(routes.PRINTING_API().apiUrl)
 
 // mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
 mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
-    if (hoursResponseType === 'error') {
+    if (responseType === 'libHoursError') {
         return [500, {}];
-    } else if (hoursResponseType === 'missing') {
+    } else if (responseType === 'libHoursMissing') {
         return [404, {}];
     } else {
         return [200, libHours];
@@ -1478,11 +1474,11 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.WEEKLYHOURS_API().apiUrl)
     .reply(() => {
-        if (hoursResponseType === 'error') {
+        if (responseType === 'weeklyHoursError') {
             return [500, {}];
-        } else if (hoursResponseType === 'empty') {
+        } else if (responseType === 'weeklyHoursEmpty') {
             return [200, []];
-        } else if (hoursResponseType === '404') {
+        } else if (responseType === 'weeklyHours404') {
             return [404, {}];
         } else {
             return [200, resetWeeklyHourDatesToBeCurrent(hours_weekly)];
@@ -1490,12 +1486,28 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.SPACES_FACILITY_TYPE_ALL_API().apiUrl)
     .reply(() => {
-        if (hoursResponseType === 'error') {
+        if (responseType === 'facilityTypesAllError') {
             return [500, {}];
-        } else if (hoursResponseType === 'empty') {
+        } else if (responseType === 'facilityTypesAllEmpty') {
             return [200, []];
-        } else if (hoursResponseType === '404') {
+        } else if (responseType === 'facilityTypesAll404') {
             return [404, {}];
+        } else if (responseType === 'facilityTypesWithOne') {
+            const singleEntry = {
+                status: 'OK',
+                data: {
+                    facility_types: [
+                        {
+                            facility_type_id: 1,
+                            facility_type_name: 'Noise level Low',
+                            facility_type_group_name: 'Noise level',
+                            facility_type_group_order: 1,
+                            facility_type_group_type: 'choose-one',
+                        },
+                    ],
+                },
+            };
+            return [200, singleEntry];
         } else {
             return [200, facilityTypes_all];
         }
