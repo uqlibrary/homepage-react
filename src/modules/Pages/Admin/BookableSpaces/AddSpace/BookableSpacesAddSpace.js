@@ -380,9 +380,10 @@ export const BookableSpacesAddSpace = ({
     }
 
     function chooseFacilityType(e) {
+        const facilityTypeid = e.target.id.replace('facilityType-option-', '');
+
         const facilityTypes = formValues.facility_types || [];
-        !facilityTypes.includes(e.target.textContent) &&
-            facilityTypes.push(e.target.id.replace('facilityType-option-', ''));
+        !facilityTypes.includes(e.target.textContent) && facilityTypes.push(facilityTypeid);
         const newValues = {
             ...formValues,
             ['facility_types']: facilityTypes,
@@ -499,6 +500,18 @@ export const BookableSpacesAddSpace = ({
         </>
     );
 
+    const getFacilityTypes = data => {
+        const facilityTypes = [];
+        data?.facility_type_groups.forEach(group => {
+            group.facility_type_children?.forEach(facilityType => {
+                facilityTypes.push({
+                    facility_type_id: facilityType.facility_type_id,
+                    facility_type_name: facilityType.facility_type_name,
+                });
+            });
+        });
+        return facilityTypes;
+    };
     // if (!!savingProgressShown) {
     //     return <InlineLoader message="Saving" />;
     // } else
@@ -661,8 +674,11 @@ export const BookableSpacesAddSpace = ({
                                 <Autocomplete
                                     multiple
                                     id="facilityType"
-                                    options={facilityTypeList?.data?.facility_types || []}
+                                    options={getFacilityTypes(facilityTypeList?.data) || []}
                                     getOptionLabel={item => item.facility_type_name}
+                                    isOptionEqualToValue={(option, value) =>
+                                        option.facility_type_id === value.facility_type_id
+                                    }
                                     filterSelectedOptions
                                     onChange={item => chooseFacilityType(item)}
                                     renderInput={params => (

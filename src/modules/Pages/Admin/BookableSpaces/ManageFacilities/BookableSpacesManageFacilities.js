@@ -38,7 +38,7 @@ export const BookableSpacesManageFacilities = ({
     //     facilityTypeGroupAdding,
     //     facilityTypeAddGroupError,
     // );
-    // console.log('facilityTypeList?.data?.facility_types', facilityTypeList?.data?.facility_types);
+    // console.log('facilityTypeList?.data?.facility_type_groups', facilityTypeList?.data?.facility_type_groups);
 
     const [cookies, setCookie] = useCookies();
 
@@ -69,11 +69,15 @@ export const BookableSpacesManageFacilities = ({
         if (
             facilityTypeListError === false &&
             facilityTypeListLoading === false &&
-            facilityTypeList?.data?.facility_types?.length > 0
+            facilityTypeList?.data?.facility_type_groups?.length > 0
         ) {
             setFormValues({
-                // ...formValues,
-                ['facility_types']: facilityTypeList?.data?.facility_types,
+                ['facility_types']: facilityTypeList?.data?.facility_types?.flatMap(group =>
+                    group.facility_type_children.map(child => ({
+                        facility_type_id: child.facility_type_id,
+                        facility_type_name: child.facility_type_name,
+                    })),
+                ),
             });
         }
     }, [facilityTypeListLoading, facilityTypeListError, facilityTypeList]);
@@ -99,10 +103,9 @@ export const BookableSpacesManageFacilities = ({
 
         if (prop.startsWith('facilitytype-')) {
             const facilityTypeid = parseInt(prop.replace('facilitytype-', ''), 10);
-            const updatedData = formValues.facility_types.map(f =>
+            const updatedData = formValues.facility_type_groups.map(f =>
                 f?.facility_type_id === facilityTypeid ? { ...f, facility_type_name: theNewValue } : f,
             );
-            console.log('handleChange after facilityTypes=', updatedData);
             setFormValues({
                 ...formValues,
                 facility_types: updatedData,
@@ -113,15 +116,6 @@ export const BookableSpacesManageFacilities = ({
                 [prop]: theNewValue,
             });
         }
-
-        // const id = e?.target.id;
-        // const value = e?.target?.value;
-        // console.log('handleChange ', id, e);
-        // console.log('handleChange value=', value);
-        // setFormValues({
-        //     ...formValues,
-        //     [id]: value,
-        // });
     };
 
     const saveChange = e => {
@@ -183,6 +177,8 @@ export const BookableSpacesManageFacilities = ({
                     actions.loadAllFacilityTypes(); // reload updated values
                 });
         }
+
+        return true;
     };
     const addFormDefaultLabel = 'Add new Facility group';
     const isAddNewGroupFormClosed = addNewForm => addNewForm.style.display === 'none';
@@ -224,39 +220,16 @@ export const BookableSpacesManageFacilities = ({
     };
 
     const displayFacilityTypes = () => {
-        // if (!facilityTypeList?.data?.facility_types) {
-        //     return null;
-        // }
-
-        // Group facility types by facility_type_group_name
-        const groupedFacilities =
-            facilityTypeList?.data?.facility_types?.reduce((groups, facility) => {
-                const groupName = facility.facility_type_group_name;
-                if (!groups[groupName]) {
-                    groups[groupName] = {
-                        groupName: groupName,
-                        groupOrder: facility.facility_type_group_order,
-                        groupType: facility.facility_type_group_type,
-                        facilities: [],
-                    };
-                }
-                groups[groupName].facilities.push(facility);
-                return groups;
-            }, {}) || [];
-
-        // Convert to array and sort by group order
-        const sortedGroups = Object.values(groupedFacilities)
-            .sort((a, b) => a.groupOrder - b.groupOrder)
-            .map((group, index) => ({
-                ...group,
-                groupId: index + 1,
-            }));
+        const sortedGroups =
+            facilityTypeList?.data?.facility_type_groups?.sort(
+                (a, b) => a.facility_type_group_order - b.facility_type_group_order,
+            ) || [];
 
         const formDisplay = dataAvailable =>
             !!dataAvailable ? { marginBottom: '2rem', display: 'none' } : { marginBottom: '2rem' };
         return (
             <>
-                {!!facilityTypeList?.data?.facility_types && (
+                {!!facilityTypeList?.data?.facility_type_groups && (
                     <div style={{ margin: '0 0 2rem -2rem' }}>
                         <StyledPrimaryButton
                             id="showHideAddCampusFormButton"
@@ -267,9 +240,12 @@ export const BookableSpacesManageFacilities = ({
                         />
                     </div>
                 )}
-                {!facilityTypeList?.data?.facility_types && <p>No facility types currently in system.</p>}
+                {!facilityTypeList?.data?.facility_type_groups && <p>No facility types currently in system.</p>}
                 <form>
-                    <div id="add-new-facility-group-form" style={formDisplay(!!facilityTypeList?.data?.facility_types)}>
+                    <div
+                        id="add-new-facility-group-form"
+                        style={formDisplay(!!facilityTypeList?.data?.facility_type_groups)}
+                    >
                         <Typography component={'h3'} variant={'h6'}>
                             New Facility group
                         </Typography>
@@ -300,25 +276,25 @@ export const BookableSpacesManageFacilities = ({
                     </div>
                     {/* TODO change to grid */}
                     <div style={{ display: 'flex', gap: '2rem' }}>
-                        {sortedGroups.map(facilityGroup => (
+                        {sortedGroups.map(group => (
                             <div
-                                data-testid={`facilitygroup-${slugifyName(facilityGroup.groupName)}`}
-                                key={facilityGroup.groupName}
+                                data-testid={`facilitygroup-${slugifyName(group.facility_type_group_name)}`}
+                                key={group.facility_type_group_name}
                                 style={{ minWidth: '200px' }}
                             >
                                 <Typography component={'h3'} variant={'h6'} style={{ whiteSpace: 'nowrap' }}>
-                                    {facilityGroup.groupName}
+                                    {group.facility_type_group_name}
                                 </Typography>
 
                                 <div>
-                                    {facilityGroup.facilities.map(facilityType => {
+                                    {group.facility_type_children.map(facilityType => {
                                         return (
                                             <Input
                                                 key={`facilitytype-input-${facilityType.facility_type_id}`}
                                                 value={
-                                                    formValues.facility_types?.find(
+                                                    formValues.facility_type_groups?.find(
                                                         f => f?.facility_type_id === facilityType?.facility_type_id,
-                                                    )?.facility_type_name
+                                                    )?.facility_type_name || facilityType.facility_type_name
                                                 }
                                                 onChange={handleChange(`facilitytype-${facilityType.facility_type_id}`)}
                                                 inputProps={{
@@ -331,8 +307,8 @@ export const BookableSpacesManageFacilities = ({
                                     })}
                                 </div>
                                 <AddIcon
-                                    onClick={() => displayGroupAddItemForm(facilityGroup.groupId)}
-                                    data-testid={`add-type-${slugifyName(facilityGroup.groupName)}`}
+                                    onClick={() => displayGroupAddItemForm(group.groupId)}
+                                    data-testid={`add-type-${slugifyName(group.facility_type_group_name)}`}
                                 />
                             </div>
                         ))}
