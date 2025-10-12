@@ -54,7 +54,7 @@ import { isDlorAdminUser, isLibraryStaff, isUQOnlyUser, isStaff, isADlorTeamMemb
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { LocalFireDepartment } from '@mui/icons-material';
 
-import {exportDLORDataToCSV} from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { exportDLORDataToCSV } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 
 import Fuse from 'fuse.js';
 
@@ -294,21 +294,24 @@ export const DLOList = ({
     dlorTeamListLoading,
     dlorTeamListError,
 }) => {
-    const fuseOptions = {
-        includeScore: true,
-        includeMatches: true,
-        ignoreLocation: true,
-        ignoreFieldNorm: true,
-        minMatchCharLength: 2,
-        threshold: 0.2,
-         keys: [
-            { name: 'object_title', weight: 0.8 },
-            { name: 'object_keywords', weight: 0.7 },
-            { name: 'object_synonyms', weight: 0.7 },
-            { name: 'object_description', weight: 0.7 }
-        ],
-        //keys: ['object_title', 'object_keywords', 'object_synonyms', 'object_description'],
-    };
+    const fuseOptions = React.useMemo(
+        () => ({
+            includeScore: true,
+            includeMatches: true,
+            ignoreLocation: true,
+            ignoreFieldNorm: true,
+            minMatchCharLength: 2,
+            threshold: 0.2,
+            keys: [
+                { name: 'object_title', weight: 0.8 },
+                { name: 'object_keywords', weight: 0.7 },
+                { name: 'object_synonyms', weight: 0.7 },
+                { name: 'object_description', weight: 0.7 },
+            ],
+            // keys: ['object_title', 'object_keywords', 'object_synonyms', 'object_description'],
+        }),
+        [],
+    );
     const fuse = React.useMemo(() => new Fuse(dlorList || [], fuseOptions), [dlorList, fuseOptions]);
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [selectedGradAttributes, setSelectedGradAttributes] = useState([]);
@@ -331,7 +334,8 @@ export const DLOList = ({
         setAnchorEl(null);
     };
 
-    // Looking into a potential flag for facets to indicate if they are candidate displays similar to graduate attributes.
+    // Looking into a potential flag for facets to indicate if they are candidate displays
+    // similar to graduate attributes.
     // For now, using an array to store selected helper text display as graduate attribute style.
 
     const [paginationPage, setPaginationPage] = React.useState(1);
@@ -341,7 +345,7 @@ export const DLOList = ({
             const ga = filterList
                 .filter(item => item.facet_type_name === 'Graduate attributes')
                 .flatMap(item => item.facet_list);
-            const gaAlternate = [...ga, ...filterFacetsWithShowHelp(filterList)]
+            const gaAlternate = [...ga, ...filterFacetsWithShowHelp(filterList)];
             const filteredGraduateAttributes = gaAlternate.filter(facet => Number(facet.facet_id) === Number(filterId));
 
             setSelectedGradAttributes([...selectedGradAttributes, ...filteredGraduateAttributes]);
@@ -354,9 +358,7 @@ export const DLOList = ({
     };
 
     function filterFacetsWithShowHelp(data) {
-        return data.flatMap(facetType =>
-            facetType.facet_list.filter(item => !!item.facet_show_help)
-        );
+        return data.flatMap(facetType => facetType.facet_list.filter(item => !!item.facet_show_help));
     }
 
     /* istanbul ignore next */
@@ -371,10 +373,10 @@ export const DLOList = ({
     const heroBackgroundImageDlor = require('../../../../../public/images/digital-learning-hub-hero-shot-wide.png');
 
     useEffect(() => {
-            if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {
-                actions.loadOwningTeams();
-            }
-        }, [actions, dlorTeamList, dlorTeamListError, dlorTeamListLoading]);
+        if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {
+            actions.loadOwningTeams();
+        }
+    }, [actions, dlorTeamList, dlorTeamListError, dlorTeamListLoading]);
 
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -456,7 +458,6 @@ export const DLOList = ({
 
     // search icon pressed or loaded from url
     const handleSearchIconPressed = () => {
-        
         handleKeywordChange();
         updateUrl('keyword');
     };
@@ -600,9 +601,11 @@ export const DLOList = ({
                     .filter(item => item.facet_type_name === 'Graduate attributes')
                     .flatMap(item => item.facet_list);
 
-                     const gaAlternate = [...ga, ...filterFacetsWithShowHelp(dlorFilterList)]
+                const gaAlternate = [...ga, ...filterFacetsWithShowHelp(dlorFilterList)];
 
-                const filteredGraduateAttributes = gaAlternate.filter(facet => Number(facet.facet_id) === Number(facetId));
+                const filteredGraduateAttributes = gaAlternate.filter(
+                    facet => Number(facet.facet_id) === Number(facetId),
+                );
                 selectedGraduateAttributes = [...selectedGraduateAttributes, ...filteredGraduateAttributes];
             });
             setSelectedFilters(facettypelist);
@@ -1003,7 +1006,42 @@ export const DLOList = ({
         if (!!keyWordSearchRef.current.value && !!keywordSearch) {
             theSearch = fuse.search(keyWordSearchRef.current.value, fuseOptions).map(result => result.item);
         }
-        
+
+        // Helper function to check if an item is favorited
+        function isFavorited(item) {
+            return dlorFavouritesList?.some(fav => fav.object_public_uuid === item.object_public_uuid);
+        }
+        // Helper function to check if the current user is the owner/publisher
+        function isMine(item, userEmail, userid) {
+            return item.object_publishing_user_email === userEmail || item.owner?.publishing_user_username === userid;
+        }
+
+        const url = new URL(document.URL);
+        const rawsearchparams = !!url && url.searchParams;
+        const params = !!rawsearchparams && new URLSearchParams(rawsearchparams);
+        if (params.has('type') && params.get('type').length > 0) {
+            // not implemented yet
+            switch (params.get('type')) {
+                case 'favourite':
+                    theSearch = theSearch.filter(isFavorited);
+                    break;
+                case 'followed':
+                case 'mine':
+                    theSearch = theSearch.filter(item => isMine(item, account?.mail, account?.id));
+                    break;
+                case 'popular':
+                    theSearch = theSearch.filter(item => !!item.is_popular);
+                    break;
+                case 'new':
+                case 'featured':
+                    theSearch = theSearch.filter(item => !!item.object_is_featured);
+                    break;
+                default:
+                    // not a valid type so remove it
+                    params.delete('type');
+            }
+        }
+
         const sortedList = theSearch
             .filter(item => {
                 if (item.object_restrict_to === 'uqlibrarystaff') {
@@ -1087,14 +1125,14 @@ export const DLOList = ({
 
         // Group selectedFilters by facetTypeSlug
         const groupedFilters = parseSelectedFilters(selectedFilters);
-        
+
         const filteredList = sortedList?.filter(d => {
             const passesCheckboxFilter = filterDlor(d, groupedFilters);
             // const passesKeyWordFilter =
             //     !keywordSearch || // keyword not supplied - don't block
             //     !keywordIsSearchable(keywordSearch) || // keyword too short to be useful - don't block
             //     !!keywordFoundIn(d, keywordSearch); // DO block the Object by keyword
-            return passesCheckboxFilter // && passesKeyWordFilter;
+            return passesCheckboxFilter; // && passesKeyWordFilter;
         });
 
         // Return the filtered list with favorites first
@@ -1343,23 +1381,24 @@ export const DLOList = ({
     const contactFormLink = 'https://forms.office.com/r/8t0ugSZgE7';
 
     function containsFacetWithShowHelp(selectedFilters, filterListTrimmed) {
-    // Build a Set of all facet ids with facet_show_help === true
-    const facetIdsWithShowHelp = new Set(
-        filterListTrimmed.flatMap(facetType =>
-            facetType.facet_list
-                .filter(item => item.facet_show_help === true)
-                .map(item => String(item.facet_id))
-        )
-    );
-    // Check if any selected filter matches a facet id with show help
-    return selectedFilters.some(filter => {
-        const parts = filter.split('-');
-        const facetId = parts[1];
-        return facetIdsWithShowHelp.has(facetId);
-    });
-}
+        // Build a Set of all facet ids with facet_show_help === true
+        const facetIdsWithShowHelp = new Set(
+            filterListTrimmed.flatMap(facetType =>
+                facetType.facet_list.filter(item => item.facet_show_help === true).map(item => String(item.facet_id)),
+            ),
+        );
+        // Check if any selected filter matches a facet id with show help
+        return selectedFilters.some(filter => {
+            const parts = filter.split('-');
+            const facetId = parts[1];
+            return facetIdsWithShowHelp.has(facetId);
+        });
+    }
 
-    const containsGraduateAttributes = selectedFilters.some(filter => filter.includes('graduate_attributes') || containsFacetWithShowHelp(selectedFilters, filterListTrimmed));
+    const containsGraduateAttributes = selectedFilters.some(
+        filter =>
+            filter.includes('graduate_attributes') || containsFacetWithShowHelp(selectedFilters, filterListTrimmed),
+    );
 
     // sort the grad attributes display set in alpha order.
     selectedGradAttributes.sort((a, b) => {
@@ -1399,15 +1438,15 @@ export const DLOList = ({
                     {!!isADlorTeamMember(account, dlorTeamList) && (
                         <Grid item xs={1} md="auto" sx={{ textAlign: 'right' }}>
                             <IconButton
-                            color="primary"
-                            aria-controls={menuOpen ? 'team-admin-dlor-menu' : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={menuOpen ? 'true' : undefined}
-                            onClick={handleMenuClick}
-                            data-testid="admin-dlor-team-admin-menu-button"
-                            aria-label="Team admin menu"
-                        >
-                            <MoreVertIcon />
+                                color="primary"
+                                aria-controls={menuOpen ? 'team-admin-dlor-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={menuOpen ? 'true' : undefined}
+                                onClick={handleMenuClick}
+                                data-testid="admin-dlor-team-admin-menu-button"
+                                aria-label="Team admin menu"
+                            >
+                                <MoreVertIcon />
                             </IconButton>
                             <Menu
                                 id="team-admin-dlor-menu"
@@ -1442,34 +1481,34 @@ export const DLOList = ({
                                 <Divider />
                                 <MenuItem
                                     onClick={() => {
-                                       exportDLORDataToCSV(dlorList, 'dlor_data.csv');
-                                       handleMenuClose();
+                                        exportDLORDataToCSV(dlorList, 'dlor_data.csv');
+                                        handleMenuClose();
                                     }}
                                     data-testid="admin-dlor-export-team-objects--button"
                                 >
                                     Export Object data to CSV
                                 </MenuItem>
-
-
-
-                                
-                                
                             </Menu>
                         </Grid>
                     )}
-                    {!!account?.id && !!!isDlorAdminUser(account) && !!!isADlorTeamMember(account || /* istanbul ignore next */ null, dlorTeamList || /* istanbul ignore next */ null) && (
-                        <Grid item xs={12} md="auto" sx={{ textAlign: 'right' }}>
-                            <UqActionLink
-                                data-testid="dlor-homepage-request-new-item"
-                                onClick={handleRequestNewItem}
-                                title="Request a new item"
-                                sx={{ display: 'flex', alignItems: 'center' }}
-                            >
-                                Submit new object request&nbsp;
-                                {/* <OpenInNewIcon /> */}
-                            </UqActionLink>
-                        </Grid>
-                    )}
+                    {!!account?.id &&
+                        !!!isDlorAdminUser(account) &&
+                        !!!isADlorTeamMember(
+                            account || /* istanbul ignore next */ null,
+                            dlorTeamList || /* istanbul ignore next */ null,
+                        ) && (
+                            <Grid item xs={12} md="auto" sx={{ textAlign: 'right' }}>
+                                <UqActionLink
+                                    data-testid="dlor-homepage-request-new-item"
+                                    onClick={handleRequestNewItem}
+                                    title="Request a new item"
+                                    sx={{ display: 'flex', alignItems: 'center' }}
+                                >
+                                    Submit new object request&nbsp;
+                                    {/* <OpenInNewIcon /> */}
+                                </UqActionLink>
+                            </Grid>
+                        )}
                     <Grid item xs={12} sx={{ marginTop: '20px' }}>
                         <LoginPrompt account={account} />
                     </Grid>
@@ -1683,6 +1722,9 @@ DLOList.propTypes = {
     dlorFavouritesLoading: PropTypes.bool,
     dlorFavouritesError: PropTypes.any,
     account: PropTypes.object,
+    dlorTeamList: PropTypes.array,
+    dlorTeamListLoading: PropTypes.bool,
+    dlorTeamListError: PropTypes.any,
 };
 
 export default DLOList;
