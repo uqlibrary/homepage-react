@@ -31,24 +31,25 @@ test.describe('Digital Learning Hub admin', () => {
                     .getByText('Digital Learning Hub - Keyword Vocabulary Management'),
             ).toBeVisible();
             await page.getByTestId('edit-synonym-1-0').click();
-            await page.getByTestId('vocabulary-name').fill('test');
+            await page.getByTestId("vocabulary-name").fill("test");
             await page.getByTestId('admin-dlor-filter-confirm-button').click();
             await expect(page.getByTestId('admin-dlor-filter-confirm-button')).not.toBeVisible();
 
             await page.getByTestId('add-synonym-1-button').click();
-            await page.getByTestId('vocabulary-name').fill('test');
+            await page.getByTestId("vocabulary-name").fill("test");
             await page.getByTestId('admin-dlor-filter-confirm-button').click();
             await expect(page.getByTestId('admin-dlor-filter-confirm-button')).not.toBeVisible();
-            // add a vocabulary item
+            //add a vocabulary item
             await page.getByTestId('admin-dlor-add-keyword-button').click();
-            await page.getByTestId('vocabulary-name').fill('test');
+            await page.getByTestId("vocabulary-name").fill("test");
             await page.getByTestId('admin-dlor-filter-confirm-button').click();
             await expect(page.getByTestId('admin-dlor-filter-confirm-button')).not.toBeVisible();
-            // edit a vocabulary item
+            //edit a vocabulary item
             await page.getByTestId('edit-keyword-1-button').click();
-            await page.getByTestId('vocabulary-name').fill('test');
+            await page.getByTestId("vocabulary-name").fill("test");
             await page.getByTestId('admin-dlor-filter-confirm-button').click();
             await expect(page.getByTestId('admin-dlor-filter-confirm-button')).not.toBeVisible();
+
         });
         test('can delete an item', async ({ page }) => {
             await page.setViewportSize({ width: 1300, height: 1000 });
@@ -77,5 +78,8 @@ test.describe('Digital Learning Hub admin', () => {
                     .getByText('Digital Learning Hub - Keyword Vocabulary Management'),
             ).toBeVisible();
         });
+
+
+
     });
 });

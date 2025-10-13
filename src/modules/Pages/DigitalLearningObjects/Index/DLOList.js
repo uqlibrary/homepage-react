@@ -290,7 +290,7 @@ export const DLOList = ({
     dlorTeamListLoading,
     dlorTeamListError,
 }) => {
-    console.log('LIST:', dlorList, dlorListLoading, dlorListError);
+    console.log("LIST:", dlorList, dlorListLoading, dlorListError);
     const fuseOptions = {
         includeScore: true,
         includeMatches: true,
@@ -298,13 +298,13 @@ export const DLOList = ({
         ignoreFieldNorm: true,
         minMatchCharLength: 2,
         threshold: 0.2,
-        keys: [
+         keys: [
             { name: 'object_title', weight: 0.8 },
             { name: 'object_keywords', weight: 0.7 },
             { name: 'object_synonyms', weight: 0.7 },
-            { name: 'object_description', weight: 0.7 },
+            { name: 'object_description', weight: 0.7 }
         ],
-        // keys: ['object_title', 'object_keywords', 'object_synonyms', 'object_description'],
+        //keys: ['object_title', 'object_keywords', 'object_synonyms', 'object_description'],
     };
     const fuse = React.useMemo(() => new Fuse(dlorList || [], fuseOptions), [dlorList, fuseOptions]);
     // console.log('permissions', isLibraryStaff(account), isStaff(account), isUQOnlyUser(account));
@@ -461,6 +461,7 @@ export const DLOList = ({
 
     // search icon pressed or loaded from url
     const handleSearchIconPressed = () => {
+
         handleKeywordChange();
         updateUrl('keyword');
     };
@@ -1009,9 +1010,9 @@ export const DLOList = ({
 
     function filterDlorList() {
         let theSearch = dlorList;
-        console.log('XXXXKeyword search and keywordSearch', keywordSearch, keyWordSearchRef.current.value);
+        console.log("XXXXKeyword search and keywordSearch", keywordSearch, keyWordSearchRef.current.value);
         if (!!keyWordSearchRef.current.value && !!keywordSearch) {
-            console.log('XXXXSearching on', keyWordSearchRef.current.value);
+            console.log("XXXXSearching on", keyWordSearchRef.current.value);
             theSearch = fuse.search(keyWordSearchRef.current.value, fuseOptions).map(result => result.item);
             console.log('XXXtheSearch', theSearch, dlorList);
         }
@@ -1050,7 +1051,7 @@ export const DLOList = ({
                 };
             });
 
-        console.log('XXXSorted List before search', sortedList);
+        console.log("XXXSorted List before search", sortedList);
 
         // Helper function to check if an item is favorited
         function isFavorited(item) {
@@ -1101,9 +1102,9 @@ export const DLOList = ({
 
         // Group selectedFilters by facetTypeSlug
         const groupedFilters = parseSelectedFilters(selectedFilters);
-        console.log('XXXXSorted ListXXXXX', sortedList);
+        console.log("XXXXSorted ListXXXXX", sortedList);
 
-        // console.log('Searches on this filtered list', fuse.search(sortedList, fuseOptions))
+        //console.log('Searches on this filtered list', fuse.search(sortedList, fuseOptions))
 
         const filteredList = sortedList?.filter(d => {
             const passesCheckboxFilter = filterDlor(d, groupedFilters);
@@ -1111,7 +1112,7 @@ export const DLOList = ({
             //     !keywordSearch || // keyword not supplied - don't block
             //     !keywordIsSearchable(keywordSearch) || // keyword too short to be useful - don't block
             //     !!keywordFoundIn(d, keywordSearch); // DO block the Object by keyword
-            return passesCheckboxFilter; // && passesKeyWordFilter;
+            return passesCheckboxFilter // && passesKeyWordFilter;
         });
 
         // Return the filtered list with favorites first

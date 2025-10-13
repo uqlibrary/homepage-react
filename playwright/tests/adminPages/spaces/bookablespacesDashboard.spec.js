@@ -40,6 +40,13 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('space-43534-facilitytype-noise-level-high')).toBeVisible();
         await expect(greenTick('space-43534-facilitytype-noise-level-high')).not.toBeVisible();
     });
+    test('single result is as expected', async ({ page }) => {
+        await page.goto('/admin/spaces?user=libSpaces&responseType=facilityTypesWithOne');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
+
+        await expect(page.getByTestId('spaces-dashboard-header-row').locator('> th')).toHaveCount(3);
+    });
     test('spaces dashboard page is accessible', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });

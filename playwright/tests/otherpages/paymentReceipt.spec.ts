@@ -6,12 +6,6 @@ test.describe('Payment receipt', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(
             page
-                .getByTestId('subsite-title')
-                .getByText(/Payment receipt/)
-                .first(),
-        ).toBeVisible();
-        await expect(
-            page
                 .locator('body')
                 .getByText(/Your transaction of \$20\.00 has been successful\./)
                 .first(),

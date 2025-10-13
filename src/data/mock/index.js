@@ -1486,27 +1486,38 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.SPACES_FACILITY_TYPE_ALL_API().apiUrl)
     .reply(() => {
+        const emptyFacilityTypes = {
+            status: 'OK',
+            data: {
+                facility_type_groups: [],
+            },
+        };
+        const singleEntry = {
+            status: 'OK',
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 4,
+                        facility_type_group_name: 'Noise level',
+                        facility_type_group_order: 1,
+                        facility_type_group_type: 'choose-one',
+                        facility_type_children: [
+                            {
+                                facility_type_id: 1,
+                                facility_type_name: 'Noise level Low',
+                            },
+                        ],
+                    },
+                ],
+            },
+        };
         if (responseType === 'facilityTypesAllError') {
             return [500, {}];
-        } else if (responseType === 'facilityTypesAllEmpty') {
-            return [200, []];
         } else if (responseType === 'facilityTypesAll404') {
             return [404, {}];
+        } else if (responseType === 'facilityTypesAllEmpty') {
+            return [200, emptyFacilityTypes];
         } else if (responseType === 'facilityTypesWithOne') {
-            const singleEntry = {
-                status: 'OK',
-                data: {
-                    facility_types: [
-                        {
-                            facility_type_id: 1,
-                            facility_type_name: 'Noise level Low',
-                            facility_type_group_name: 'Noise level',
-                            facility_type_group_order: 1,
-                            facility_type_group_type: 'choose-one',
-                        },
-                    ],
-                },
-            };
             return [200, singleEntry];
         } else {
             return [200, facilityTypes_all];
