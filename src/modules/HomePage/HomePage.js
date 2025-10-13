@@ -302,17 +302,17 @@ export const HomePage = ({
                                                     </StyledGridItemLoggedInLeftMost>
                                                 )}
                                                 <StyledGridItemLoggedInLeftMost
-                                                                item
-                                                                xs={12}
-                                                                data-testid="espace-links-panel"
-                                                            >
-                                                                <DigitalLearningHub
-                                                                    title="Digital Learning Hub"
-                                                                    showFirstLink={false}
-                                                                    subText="Modules, videos and guides to build digital skills"
-                                                                    author={author}
-                                                                />
-                                                            </StyledGridItemLoggedInLeftMost>
+                                                    item
+                                                    xs={12}
+                                                    data-testid="espace-links-panel"
+                                                >
+                                                    <DigitalLearningHub
+                                                        title="Digital Learning Hub"
+                                                        showFirstLink={false}
+                                                        subText="Modules, videos and guides to build digital skills"
+                                                        author={author}
+                                                    />
+                                                </StyledGridItemLoggedInLeftMost>
                                             </Grid>
                                         </Grid>
                                         <Grid item uqDsDesktop={8} xs={12}>
@@ -367,15 +367,13 @@ export const HomePage = ({
                                                 {/* DIITAL LEARNING HUB PANEL START*/}
                                                 <Grid item uqDsDesktop={6} xs={12}>
                                                     <Grid container>
-                                                            <StyledGridItemLoggedIn
-                                                                item
-                                                                xs={12}
-                                                                data-testid="espace-links-panel"
-                                                            >
-                                                                <DigitalLearningHub
-                                                                    author={author}
-                                                                />
-                                                            </StyledGridItemLoggedIn>
+                                                        <StyledGridItemLoggedIn
+                                                            item
+                                                            xs={12}
+                                                            data-testid="espace-links-panel"
+                                                        >
+                                                            <DigitalLearningHub author={author} />
+                                                        </StyledGridItemLoggedIn>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
