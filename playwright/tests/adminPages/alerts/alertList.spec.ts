@@ -86,13 +86,14 @@ test.describe('Alert Admin List page', () => {
                 .first(),
         ).toBeVisible();
 
-        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('background-color', COLOR_UQPURPLE);
         await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('border-color', COLOR_UQPURPLE);
-        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('color', COLOR_UQPURPLE);
+        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('color', 'rgb(255, 255, 255)');
 
-        await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('background-color', COLOR_UQPURPLE);
-        await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('border-color', COLOR_UQPURPLE);
-        await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('color', 'rgb(255, 255, 255)');
+        const helpButton = page.getByTestId('admin-alerts-help-button');
+        await expect(helpButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+        await expect(helpButton).toHaveCSS('border-color', COLOR_UQPURPLE);
+        await expect(helpButton).toHaveCSS('color', COLOR_UQPURPLE);
 
         const aCurrentAlert = page.getByTestId('alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245');
         await expect(aCurrentAlert).toHaveCSS('background-color', COLOR_UQPURPLE);
@@ -394,7 +395,7 @@ test.describe('Alert Admin List page', () => {
             await page.getByTestId('alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245').check();
             await expect(page.getByTestId('headerRow-current')).toBeDefined();
             await expect(page.getByTestId('headerRow-current')).toBeVisible();
-            await expect(page.getByTestId('headerRow-current')).toHaveCSS('background-color', uqPurple);
+            await expect(page.getByTestId('headerRow-current')).toHaveCSS('background-color', COLOR_UQPURPLE);
             await expect(
                 page
                     .locator('[data-testid="headerRow-current"] span.deleteManager span')
@@ -434,7 +435,7 @@ test.describe('Alert Admin List page', () => {
             await page.getByTestId('alert-list-item-checkbox-d480b250-9cd8-11eb-88c0-a3882cd6c52e').check();
             await expect(page.getByTestId('headerRow-scheduled')).toBeDefined();
             await expect(page.getByTestId('headerRow-scheduled')).toBeVisible();
-            await expect(page.getByTestId('headerRow-scheduled')).toHaveCSS('background-color', uqPurple);
+            await expect(page.getByTestId('headerRow-scheduled')).toHaveCSS('background-color', COLOR_UQPURPLE);
             await expect(
                 page
                     .locator('[data-testid="headerRow-scheduled"] span.deleteManager span')
