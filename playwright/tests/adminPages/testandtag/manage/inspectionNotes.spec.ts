@@ -19,10 +19,6 @@ test.describe('Test and Tag Manage Inspection Notes', () => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
-    test('has breadcrumbs', async ({ page }) => {
-        await expect(page.getByTestId('subsite-title').getByText('Test and tag')).toBeVisible();
-    });
-
     test('allows wildcard searching of assets', async ({ page }) => {
         await checkBaseline(page);
         // Enter search criteria

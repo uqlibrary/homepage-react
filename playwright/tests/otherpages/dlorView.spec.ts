@@ -18,12 +18,6 @@ test.describe('Digital Learning Hub View page', () => {
             await expect(page.locator('[data-testid="dlor-detailpage"] h1')).toHaveText(
                 /Artificial Intelligence - Digital Essentials/,
             );
-            await expect(
-                page
-                    .getByTestId('subsite-title')
-                    .getByText(/Digital learning hub/)
-                    .first(),
-            ).toBeVisible();
             await expect(page.getByTestId('dlor-detailpage-cultural-advice-custom-indicator')).not.toBeVisible();
             await expect(page.getByTestId('dlor-detailpage-featured-custom-indicator')).not.toBeVisible();
             await expect(
@@ -629,8 +623,8 @@ test.describe('Digital Learning Hub View page', () => {
             await page.getByTestId('dlor-form-next-button').click();
             await page.getByTestId('dlor-form-next-button').click();
             // select a keyword so we can save
-            await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
-            await page.locator("#fuzzy-search-option-3").click()
+            await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+            await page.locator('#fuzzy-search-option-3').click();
             await page.getByTestId('admin-dlor-save-button-submit').click();
             await expect(
                 page

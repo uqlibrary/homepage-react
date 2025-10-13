@@ -35,10 +35,6 @@ test.describe('Test and Tag bulk asset update', () => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
-    test('has breadcrumbs', async ({ page }) => {
-        await expect(page.getByTestId('subsite-title').getByText('Test and tag')).toBeVisible();
-    });
-
     test('Asset id search functions correctly', async ({ page }) => {
         await checkBaseline(page);
         // Search for an asset

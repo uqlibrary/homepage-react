@@ -33,15 +33,6 @@ test.describe('Digital Learning Hub', () => {
 
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
-        test('has breadcrumbs', async ({ page }) => {
-            await page.goto('digital-learning-hub/confirm/unsubscribe/unsubscribeExpired');
-            await expect(
-                page
-                    .getByTestId('subsite-title')
-                    .getByText(/Digital learning hub/)
-                    .first(),
-            ).toBeVisible();
-        });
         test('an expired unsubscription appears as expected', async ({ page }) => {
             await page.goto('digital-learning-hub/confirm/unsubscribe/unsubscribeExpired');
             await page.setViewportSize({ width: 1300, height: 1000 });

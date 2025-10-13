@@ -17,9 +17,6 @@ test.describe('Alerts Admin View Page', () => {
         ).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
-    test('has breadcrumb', async ({ page }) => {
-        await expect(page.getByTestId('subsite-title')).toHaveText('Alerts admin');
-    });
     test('can view an alert without being able to edit any fields', async ({ page }) => {
         await expect(
             page

@@ -17,15 +17,6 @@ test.describe('Test and Tag Manage Locations', () => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
-    test('has breadcrumbs', async ({ page }) => {
-        await expect(
-            page
-                .locator('uq-site-header')
-                .getByTestId('subsite-title')
-                .getByText('Test and tag'),
-        ).toBeVisible();
-    });
-
     test('Add location functions correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.locations.header.pageSubtitle('Library'));

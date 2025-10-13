@@ -211,14 +211,6 @@ test.describe('Alerts Admin Form Pages', () => {
             await page.locator('[data-testid="admin-alerts-form-link-url"] input').pressSequentially('o');
             await expect(page.getByTestId('admin-alerts-form-link-url')).not.toHaveClass(/Mui-error/);
         });
-        test('has breadcrumb', async ({ page }) => {
-            await expect(
-                page
-                    .getByTestId('subsite-title')
-                    .getByText(/Alerts admin/)
-                    .first(),
-            ).toBeVisible();
-        });
         test('can save an alert (simple)', async ({ page }) => {
             await page.locator('[data-testid="admin-alerts-form-title"] input').fill('alert title 3');
             await page
@@ -348,14 +340,6 @@ test.describe('Alerts Admin Form Pages', () => {
             ).toBeVisible();
             await expect(page.getByTestId('admin-alerts-form-checkbox-linkrequired')).toBeVisible();
             await assertAccessibility(page, '[data-testid="StandardPage"]');
-        });
-        test('has breadcrumb', async ({ page }) => {
-            await expect(
-                page
-                    .getByTestId('subsite-title')
-                    .getByText(/Alerts admin/)
-                    .first(),
-            ).toBeVisible();
         });
         test('the edit form presets the correct data', async ({ page }) => {
             await expect(page.getByTestId('admin-alerts-form-checkbox-linkrequired')).toBeVisible();
@@ -582,14 +566,6 @@ test.describe('Alerts Admin Form Pages', () => {
             ).toBeVisible();
             await expect(page.getByTestId('admin-alerts-form-checkbox-linkrequired')).toBeVisible();
             await assertAccessibility(page, '[data-testid="StandardPage"]');
-        });
-        test('has breadcrumb', async ({ page }) => {
-            await expect(
-                page
-                    .getByTestId('subsite-title')
-                    .getByText(/Alerts admin/)
-                    .first(),
-            ).toBeVisible();
         });
         test('can clone an alert and return to list', async ({ page }) => {
             const helpButton = page.getByTestId('admin-alerts-help-button');

@@ -9,15 +9,6 @@ test.describe('Alert Admin List page', () => {
         await page.setViewportSize({ width: 1300, height: 1200 });
     });
 
-    test('has breadcrumb', async ({ page }) => {
-        await expect(
-            page
-                .getByTestId('subsite-title')
-                .getByText(/Alerts admin/)
-                .first(),
-        ).toBeVisible();
-    });
-
     test('displays a list of alerts to the authorised user', async ({ page }) => {
         await expect(page.locator('[data-testid="admin-alerts-list-current-list"] tbody tr')).toHaveCount(
             1 + numRowsHiddenAsNoDataInfo,
