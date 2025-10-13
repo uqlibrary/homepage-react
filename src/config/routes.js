@@ -51,6 +51,7 @@ export const flattedPathConfigExact = [
     '/admin/spaces',
     '/admin/spaces/manage/locations',
     '/admin/spaces/add',
+    '/admin/spaces/manage/facilitytypes',
 ];
 export const flattedPathConfig = [
     '/admin/alerts/edit',
@@ -387,6 +388,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.admin.bookableSpacesManageLocations,
             element: <components.BookableSpacesManageLocations />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespaces.title,
+        },
+        {
+            path: pathConfig.admin.bookableSpacesManageFacilityTypes,
+            element: <components.BookableSpacesManageFacilities />,
             exact: true,
             pageTitle: locale.pages.admin.bookablespaces.title,
         },

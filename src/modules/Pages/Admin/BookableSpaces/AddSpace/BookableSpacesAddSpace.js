@@ -27,7 +27,7 @@ import {
     spacesAdminLink,
     springshareLocations,
 } from 'modules/Pages/Admin/BookableSpaces/helpers';
-import { getFriendlyLocationDescription } from '../../../BookableSpaces/spacesHelpers';
+import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const AddSpacePage = ({ children }) => {
     return (
@@ -62,11 +62,20 @@ export const BookableSpacesAddSpace = ({
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
+    facilityTypeList,
+    facilityTypeListLoading,
+    facilityTypeListError,
 }) => {
-    console.log('addResult', bookableSpacesRoomAdding, bookableSpacesRoomAddError, bookableSpacesRoomAddResult);
+    console.log(
+        'addBookableSpaceLocation',
+        bookableSpacesRoomAdding,
+        bookableSpacesRoomAddError,
+        bookableSpacesRoomAddResult,
+    );
     console.log('campusList', campusListLoading, campusListError, campusList);
     console.log('xspacesRoomList', bookableSpacesRoomListLoading, bookableSpacesRoomListError, bookableSpacesRoomList);
     console.log('weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
+    console.log('facilityTypeList', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
 
     const { account } = useAccountContext();
     const [cookies, setCookie] = useCookies();
@@ -111,6 +120,7 @@ export const BookableSpacesAddSpace = ({
             actions.loadBookableSpaceCampusChildren(); // get campusList
             actions.loadAllBookableSpacesRooms(); // get bookableSpacesRoomList
             actions.loadWeeklyHours(); // get weeklyHours
+            actions.loadAllFacilityTypes(); // get facility types
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -369,6 +379,18 @@ export const BookableSpacesAddSpace = ({
         });
     }
 
+    function chooseFacilityType(e) {
+        const facilityTypeid = e.target.id.replace('facilityType-option-', '');
+
+        const facilityTypes = formValues.facility_types || [];
+        !facilityTypes.includes(e.target.textContent) && facilityTypes.push(facilityTypeid);
+        const newValues = {
+            ...formValues,
+            ['facility_types']: facilityTypes,
+        };
+        setFormValues(newValues);
+    }
+
     const createNewSpace = () => {
         console.log('createNewSpace formValues=', formValues);
 
@@ -387,6 +409,7 @@ export const BookableSpacesAddSpace = ({
         valuesToSend.space_opening_hours_override = formValues.space_opening_hours_override;
         valuesToSend.space_latitude = formValues.space_latitude;
         valuesToSend.space_longitude = formValues.space_longitude;
+        valuesToSend.facility_types = formValues.facility_types;
 
         const validationResult = formValid(valuesToSend);
         console.log('validationResult=', validationResult);
@@ -477,6 +500,18 @@ export const BookableSpacesAddSpace = ({
         </>
     );
 
+    const getFacilityTypes = data => {
+        const facilityTypes = [];
+        data?.facility_type_groups.forEach(group => {
+            group.facility_type_children?.forEach(facilityType => {
+                facilityTypes.push({
+                    facility_type_id: facilityType.facility_type_id,
+                    facility_type_name: facilityType.facility_type_name,
+                });
+            });
+        });
+        return facilityTypes;
+    };
     // if (!!savingProgressShown) {
     //     return <InlineLoader message="Saving" />;
     // } else
@@ -631,6 +666,37 @@ export const BookableSpacesAddSpace = ({
                                         {reportErrorMessage('space_services_page')}
                                     </StyledErrorMessageTypography>
                                 </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <InputLabel htmlFor="facilityType" id="facilityTypeLabel">
+                                    Facility types
+                                </InputLabel>
+                                <Autocomplete
+                                    multiple
+                                    id="facilityType"
+                                    options={getFacilityTypes(facilityTypeList?.data) || []}
+                                    getOptionLabel={item => item.facility_type_name}
+                                    isOptionEqualToValue={(option, value) =>
+                                        option.facility_type_id === value.facility_type_id
+                                    }
+                                    filterSelectedOptions
+                                    onChange={item => chooseFacilityType(item)}
+                                    renderInput={params => (
+                                        <TextField
+                                            variant="standard"
+                                            {...params}
+                                            fullWidth
+                                            label="Choose one or more facility types from the list"
+                                            inputProps={{
+                                                ...params.inputProps,
+                                                id: 'facilityType-input',
+                                                'data-analyticsid': 'facilityType-input',
+                                                'data-testid': 'facilityType-input',
+                                                'aria-labelledby': 'facilityTypeLabel',
+                                            }}
+                                        />
+                                    )}
+                                />
                             </Grid>
                             {/* <Grid item xs={6}>*/}
                             {/*    <FormControl variant="standard" fullWidth>*/}
@@ -924,6 +990,9 @@ BookableSpacesAddSpace.propTypes = {
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.any,
     weeklyHoursError: PropTypes.any,
+    facilityTypeList: PropTypes.any,
+    facilityTypeListLoading: PropTypes.any,
+    facilityTypeListError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesAddSpace);

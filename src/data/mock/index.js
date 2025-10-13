@@ -75,6 +75,7 @@ import bookableSpaces_all from './data/records/bookableSpaces/bookableSpaces_all
 import hours_weekly from './data/records/bookableSpaces/hours_weekly_2';
 import facilityTypes_all from './data/records/bookableSpaces/facilityTypes_all';
 import location_sites_all from './data/records/bookableSpaces/location_sites_all';
+import newSpace from './data/records/bookableSpaces/newSpace';
 
 const moment = require('moment');
 
@@ -92,10 +93,6 @@ let responseType = !!queryString
     ? queryString.get('responseType')
     : window.location.hash.substring(window.location.hash.indexOf('?')).responseType;
 responseType = responseType || 'ok';
-let hoursResponseType = !!queryString
-    ? queryString.get('hoursResponseType')
-    : window.location.hash.substring(window.location.hash.indexOf('?')).hoursResponseType;
-hoursResponseType = hoursResponseType || 'ok';
 
 // set session cookie in mock mode
 if (!!user && user.length > 0 && user !== 'public') {
@@ -198,9 +195,9 @@ mock.onGet(routes.PRINTING_API().apiUrl)
 
 // mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
 mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
-    if (hoursResponseType === 'error') {
+    if (responseType === 'libHoursError') {
         return [500, {}];
-    } else if (hoursResponseType === 'missing') {
+    } else if (responseType === 'libHoursMissing') {
         return [404, {}];
     } else {
         return [200, libHours];
@@ -1477,11 +1474,11 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.WEEKLYHOURS_API().apiUrl)
     .reply(() => {
-        if (hoursResponseType === 'error') {
+        if (responseType === 'weeklyHoursError') {
             return [500, {}];
-        } else if (hoursResponseType === 'empty') {
+        } else if (responseType === 'weeklyHoursEmpty') {
             return [200, []];
-        } else if (hoursResponseType === '404') {
+        } else if (responseType === 'weeklyHours404') {
             return [404, {}];
         } else {
             return [200, resetWeeklyHourDatesToBeCurrent(hours_weekly)];
@@ -1489,14 +1486,51 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onGet(routes.SPACES_FACILITY_TYPE_ALL_API().apiUrl)
     .reply(() => {
-        if (hoursResponseType === 'error') {
+        if (responseType === 'facilityTypesAllError') {
             return [500, {}];
-        } else if (hoursResponseType === 'empty') {
+        } else if (responseType === 'facilityTypesAllEmpty') {
             return [200, []];
-        } else if (hoursResponseType === '404') {
+        } else if (responseType === 'facilityTypesAll404') {
             return [404, {}];
+        } else if (responseType === 'facilityTypesWithOne') {
+            const singleEntry = {
+                status: 'OK',
+                data: {
+                    facility_types: [
+                        {
+                            facility_type_id: 1,
+                            facility_type_name: 'Noise level Low',
+                            facility_type_group_name: 'Noise level',
+                            facility_type_group_order: 1,
+                            facility_type_group_type: 'choose-one',
+                        },
+                    ],
+                },
+            };
+            return [200, singleEntry];
         } else {
             return [200, facilityTypes_all];
+        }
+    })
+    .onPost(routes.SPACES_FACILITY_TYPE_CHANGE_API().apiUrl)
+    .reply(withDelay([200, { status: 'OK' }]))
+    .onPost(routes.SPACES_FACILITY_TYPE_GROUP_CHANGE_API().apiUrl)
+    .reply(() => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (responseType === 'empty') {
+            return [200, []];
+        } else if (responseType === '404') {
+            return [404, {}];
+        } else {
+            // some random data
+            const result = {
+                facility_type_group_name: 'new group name',
+                facility_type_group_id: 88,
+                facility_type_group_order: 99,
+                facility_type_group_type: 'choose-many',
+            };
+            return [200, { status: 'OK', data: result }];
         }
     })
     .onGet(routes.SPACES_SITE_API().apiUrl)
@@ -1529,7 +1563,7 @@ mock.onGet('exams/course/FREN1010/summary')
         if (responseType === 'spaceAddError') {
             return [400, { status: 'error', message: 'space-name is not valid' }];
         }
-        return [200, { status: 'OK' }];
+        return [200, { status: 'OK', data: newSpace }];
     })
 
     // .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'campus', id: '.*' }).apiUrl)))

@@ -1,4 +1,4 @@
-import facilityTypeReducer, { initialState } from './facilityTypeReducer';
+import bookablespacesFacilityTypeReducer, { initialState } from './bookablespacesFacilityTypeReducer';
 import * as actions from '../actions/actionTypes';
 
 describe('facility type reducer', () => {
@@ -11,7 +11,7 @@ describe('facility type reducer', () => {
     });
 
     it('should handle a failing Facility Type list API call', () => {
-        const test = facilityTypeReducer(emptyState, {
+        const test = bookablespacesFacilityTypeReducer(emptyState, {
             type: actions.SPACES_FACILITY_TYPE_FAILED,
             payload: 'failed!',
         });
@@ -23,7 +23,7 @@ describe('facility type reducer', () => {
     });
 
     it('should set Facility Type list values when successfully loaded', () => {
-        const test = facilityTypeReducer(emptyState, {
+        const test = bookablespacesFacilityTypeReducer(emptyState, {
             type: actions.SPACES_FACILITY_TYPE_LOADED,
             payload: [],
         });
@@ -36,7 +36,7 @@ describe('facility type reducer', () => {
     });
 
     it('should set Facility Type list Status flags to loading when loading', () => {
-        const test = facilityTypeReducer(emptyState, {
+        const test = bookablespacesFacilityTypeReducer(emptyState, {
             type: actions.SPACES_FACILITY_TYPE_LOADING,
         });
         expect(test).toEqual({

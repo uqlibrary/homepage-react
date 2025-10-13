@@ -122,6 +122,17 @@ export const AdminButton = ({ currentPage }) => {
                 >
                     <span className={`${currentPage !== 'add-space' ? 'clickable' : ''}`}>Add new Space</span>
                 </MenuItem>
+
+                <MenuItem
+                    onClick={() => {
+                        navigateToPage('/manage/facilitytypes', 'manage-facilities');
+                    }}
+                    data-testid="admin-spaces-visit-manage-facilities-button"
+                >
+                    <span className={`${currentPage !== 'manage-facilities' ? 'clickable' : ''}`}>
+                        Manage Facilities
+                    </span>
+                </MenuItem>
             </StyledMenu>
         </>
     );

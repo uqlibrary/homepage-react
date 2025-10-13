@@ -13,18 +13,12 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
+import DoneIcon from '@mui/icons-material/Done';
+
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import { addBreadcrumbsToSiteHeader } from '../helpers';
 import { slugifyName, standardText } from 'helpers/general';
-
-const tickIcon = altText => (
-    // https://mui.com/material-ui/material-icons/?selected=Done
-    <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" height="24" width="24">
-        <path stroke="green" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z" />
-        <title>{altText}</title>
-    </svg>
-);
 
 const backgroundColorColumn = '#f0f0f0';
 
@@ -126,61 +120,51 @@ export const BookableSpacesDashboard = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    function markIfLocationHasFacility(facilityType, bookableSpace) {
-        const hasThisFacility = bookableSpace?.facility_types.find(
-            spaceFacility => spaceFacility.facility_type_id === facilityType.facility_type_id,
-        );
-        // console.log('hasThisFacility=', hasThisFacility);
-        if (!hasThisFacility) {
-            return null;
-        }
-        return tickIcon(`Space has ${facilityType.facility_type_name}`);
+    function hasFacility(facilityType, bookableSpace) {
+        return bookableSpace?.facility_types.some(spaceFacility => {
+            return spaceFacility.facility_type_id === facilityType.facility_type_id;
+        });
     }
 
     const getColumnBackgroundColor = ii => (ii % 2 === 0 ? backgroundColorColumn : 'inherit');
 
-    function getFacilityHeaderCells() {
-        const listHeaderCells = [];
-        const seenGroups = new Set();
+    function prefilterFacilityData(data) {
+        // first ensure sorted in sort order
+        const sortedGroups = [...data?.facility_type_groups].sort(
+            (a, b) => a.facility_type_group_order - b.facility_type_group_order,
+        );
 
-        const groupCounts = facilityTypeList.data.facility_types.reduce((counts, item) => {
-            if (item.facility_type_group_name) {
-                counts[item.facility_type_group_name] = (counts[item.facility_type_group_name] || 0) + 1;
-            }
-            return counts;
-        }, {});
-        facilityTypeList.data.facility_types.forEach(item => {
-            if (item.facility_type_group_name) {
-                // If we haven't seen this group yet, add it with its total count
-                if (!seenGroups.has(item.facility_type_group_name)) {
-                    listHeaderCells.push({
-                        facilityTypeGroupName: item.facility_type_group_name,
-                        count: groupCounts[item.facility_type_group_name],
-                    });
-                    seenGroups.add(item.facility_type_group_name);
-                }
-            } else {
-                // Add individual entry for ungrouped items
-                listHeaderCells.push({
-                    facilityTypeGroupName: '',
-                    count: 1,
-                });
-            }
+        // then add an overall sort order, to help us to tiger stripe the columns
+        let overallCounter = 1;
+        return sortedGroups.map(group => {
+            // sort the facility types alphabetically (they should already be, but...)
+            const sortedChildren = [...group.facility_type_children].sort((a, b) =>
+                a.facility_type_name.localeCompare(b.facility_type_name),
+            );
+
+            const childrenWithCounter = sortedChildren.map(child => ({
+                ...child,
+                overall_order: overallCounter++,
+            }));
+
+            return {
+                ...group,
+                facility_type_children: childrenWithCounter,
+            };
         });
-        return listHeaderCells;
     }
 
     function displayListOfBookableSpaces() {
         const tableDescription = 'Manage Spaces';
 
-        const listHeaderCells = getFacilityHeaderCells();
+        const sortedFacilityTypeGroups = prefilterFacilityData(facilityTypeList?.data);
 
         return (
             <>
                 <StyledTableContainer>
                     <Table aria-label={tableDescription} aria-describedby="tableDescriptionElement">
                         <StyledTableHead>
-                            {facilityTypeList?.data?.facility_types?.length > 0 && (
+                            {facilityTypeList?.data?.facility_type_groups?.length > 0 && (
                                 // top row of the two-row table head, to label the facilities block
                                 <StyledHeaderTableRow>
                                     {[...Array(2).keys()].map((unused, index) => (
@@ -190,13 +174,12 @@ export const BookableSpacesDashboard = ({
                                             key={`header-cell-${index}`}
                                         />
                                     ))}
-                                    {!!listHeaderCells &&
-                                        listHeaderCells.length > 0 &&
-                                        listHeaderCells.map((heading, index) => (
+                                    {sortedFacilityTypeGroups.map((group, index) => {
+                                        return (
                                             <TableCell
                                                 key={`header-cell-${index}`}
                                                 component="th"
-                                                colSpan={heading.count}
+                                                colSpan={group.facility_type_children?.length}
                                                 sx={{
                                                     borderBottomWidth: 0,
                                                     borderTop: '1px solid rgba(224, 224, 224, 1)',
@@ -207,9 +190,10 @@ export const BookableSpacesDashboard = ({
                                                     }`,
                                                 }}
                                             >
-                                                {heading.facilityTypeGroupName}
+                                                {group.facility_type_group_name}
                                             </TableCell>
-                                        ))}
+                                        );
+                                    })}
                                 </StyledHeaderTableRow>
                             )}
                             <StyledHeaderTableRow>
@@ -220,18 +204,19 @@ export const BookableSpacesDashboard = ({
                                     Name
                                 </StyledStickyTableCell>
                                 <TableCell component="th">Space location</TableCell>
-                                {facilityTypeList?.data?.facility_types?.length > 0 &&
-                                    facilityTypeList?.data?.facility_types?.map((facilityType, ii) => {
-                                        return (
-                                            <StyledHeadingFacilityTableCell
-                                                component="th"
-                                                key={`facilitytype-${facilityType.facility_type_id}`}
-                                                sx={{ backgroundColor: getColumnBackgroundColor(ii) }}
-                                            >
-                                                {facilityType.facility_type_name}
-                                            </StyledHeadingFacilityTableCell>
-                                        );
-                                    })}
+                                {sortedFacilityTypeGroups.map(group =>
+                                    group.facility_type_children.map(facilityType => (
+                                        <StyledHeadingFacilityTableCell
+                                            component="th"
+                                            key={`facilitytype-${facilityType.facility_type_id}`}
+                                            sx={{
+                                                backgroundColor: getColumnBackgroundColor(facilityType.overall_order),
+                                            }}
+                                        >
+                                            {facilityType.facility_type_name}
+                                        </StyledHeadingFacilityTableCell>
+                                    )),
+                                )}
                             </StyledHeaderTableRow>
                         </StyledTableHead>
                         <tbody>
@@ -248,25 +233,32 @@ export const BookableSpacesDashboard = ({
 
                                         <TableCell>{getFriendlyLocationDescription(bookableSpace)}</TableCell>
 
-                                        {facilityTypeList?.data?.facility_types?.length > 0 && (
-                                            <>
-                                                {facilityTypeList?.data?.facility_types?.map((facilityType, ii) => {
-                                                    const faciltySlug = slugifyName(facilityType.facility_type_name);
+                                        {sortedFacilityTypeGroups?.length > 0 &&
+                                            sortedFacilityTypeGroups?.map(group => {
+                                                return group?.facility_type_children.map(facilityType => {
+                                                    const facilitySlug = slugifyName(facilityType.facility_type_name);
                                                     return (
                                                         <TableCell
-                                                            key={`space-${bookableSpace?.space_id}-facilitytype-${faciltySlug}`}
-                                                            data-testid={`space-${bookableSpace?.space_id}-facilitytype-${faciltySlug}`}
+                                                            key={`space-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
+                                                            data-testid={`space-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
                                                             sx={{
-                                                                backgroundColor: getColumnBackgroundColor(ii),
+                                                                backgroundColor: getColumnBackgroundColor(
+                                                                    facilityType.overall_order,
+                                                                ),
                                                                 textAlign: 'center',
                                                             }}
                                                         >
-                                                            {markIfLocationHasFacility(facilityType, bookableSpace)}
+                                                            {hasFacility(facilityType, bookableSpace) ? (
+                                                                <DoneIcon
+                                                                    titleAccess={`Space has ${facilityType.facility_type_name}`}
+                                                                    style={{ stroke: 'green' }}
+                                                                    data-testid={`tick-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
+                                                                />
+                                                            ) : null}
                                                         </TableCell>
                                                     );
-                                                })}
-                                            </>
-                                        )}
+                                                });
+                                            })}
                                     </StyledTableRow>
                                 );
                             })}

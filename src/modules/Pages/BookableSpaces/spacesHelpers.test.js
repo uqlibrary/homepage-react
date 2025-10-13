@@ -151,11 +151,11 @@ describe('spaces helpers', () => {
             }),
         ).toEqual('Westernmost corner, 3rd Floor');
         expect(getFriendlyFloorName({ space_precise: 'Eastern corner', space_floor_name: '2A' })).toEqual(
-            'Eastern corner, Floor 2A',
+            'Eastern corner, 2A',
         );
         expect(getFriendlyFloorName({ space_precise: '', space_floor_name: '1' })).toEqual('1st Floor');
-        expect(getFriendlyFloorName({ space_floor_name: '3A' })).toEqual('Floor 3A');
-        expect(getFriendlyFloorName({ space_precise: '', space_floor_name: '3A' })).toEqual('Floor 3A');
+        expect(getFriendlyFloorName({ space_floor_name: '3A' })).toEqual('3A');
+        expect(getFriendlyFloorName({ space_precise: '', space_floor_name: '3A' })).toEqual('3A');
         expect(getFriendlyFloorName({ space_is_ground_floor: true })).toEqual('Ground floor');
         expect(getFriendlyFloorName({ space_is_ground_floor: true, space_precise: 'Eastern corner' })).toEqual(
             'Eastern corner, Ground floor',
