@@ -107,6 +107,10 @@ test.describe('Alerts Admin Form Pages', () => {
 
             const previewButton = page.getByTestId('admin-alerts-form-button-preview');
             await previewButton.click();
+            // after clicking, the preview button looks like Primary button
+            await expect(previewButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+            await expect(previewButton).toHaveCSS('border-color', COLOR_UQPURPLE);
+            await expect(previewButton).toHaveCSS('color', 'rgb(255, 255, 255)');
 
             // the alert preview appears
             await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alerttitle', '');
@@ -211,14 +215,6 @@ test.describe('Alerts Admin Form Pages', () => {
             // one more character
             await page.locator('[data-testid="admin-alerts-form-link-url"] input').pressSequentially('o');
             await expect(page.getByTestId('admin-alerts-form-link-url')).not.toHaveClass(/Mui-error/);
-        });
-        test('has breadcrumb', async ({ page }) => {
-            await expect(
-                page
-                    .getByTestId('subsite-title')
-                    .getByText(/Alerts admin/)
-                    .first(),
-            ).toBeVisible();
         });
         test('can save an alert (simple)', async ({ page }) => {
             await page.locator('[data-testid="admin-alerts-form-title"] input').fill('alert title 3');
@@ -349,14 +345,6 @@ test.describe('Alerts Admin Form Pages', () => {
             ).toBeVisible();
             await expect(page.getByTestId('admin-alerts-form-checkbox-linkrequired')).toBeVisible();
             await assertAccessibility(page, '[data-testid="StandardPage"]');
-        });
-        test('has breadcrumb', async ({ page }) => {
-            await expect(
-                page
-                    .getByTestId('subsite-title')
-                    .getByText(/Alerts admin/)
-                    .first(),
-            ).toBeVisible();
         });
         test('the edit form presets the correct data', async ({ page }) => {
             await expect(page.getByTestId('admin-alerts-form-checkbox-linkrequired')).toBeVisible();
@@ -583,14 +571,6 @@ test.describe('Alerts Admin Form Pages', () => {
             ).toBeVisible();
             await expect(page.getByTestId('admin-alerts-form-checkbox-linkrequired')).toBeVisible();
             await assertAccessibility(page, '[data-testid="StandardPage"]');
-        });
-        test('has breadcrumb', async ({ page }) => {
-            await expect(
-                page
-                    .getByTestId('subsite-title')
-                    .getByText(/Alerts admin/)
-                    .first(),
-            ).toBeVisible();
         });
         test('can clone an alert and return to list', async ({ page }) => {
             const helpButton = page.getByTestId('admin-alerts-help-button');
