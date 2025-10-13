@@ -42,6 +42,15 @@ export const BookableSpacesManageFacilities = ({
 
     const [cookies, setCookie] = useCookies();
 
+    // saveButtonVisibility values
+    const saveButtonVisibilityHidden = 0; // Always hidden
+    const saveButtonVisibilityCurrentlyVisible = 1; // Visible when New form open
+    const saveButtonVisibilityAlwaysVisible = 2; // Always visible because there are facility type entries
+    const [saveButtonVisibility, setSaveButtonVisibility2] = React.useState(saveButtonVisibilityHidden);
+    const setSaveButtonVisibility = v => {
+        console.log('setSaveButtonVisibility', v);
+        setSaveButtonVisibility2(v);
+    };
     const [formValues, setFormValues2] = React.useState([]);
     const setFormValues = v => {
         console.log('setFormValues', v);
@@ -79,6 +88,8 @@ export const BookableSpacesManageFacilities = ({
                     })),
                 ),
             });
+            console.log('setSaveButtonVisibility at 1, to', saveButtonVisibilityAlwaysVisible);
+            setSaveButtonVisibility(saveButtonVisibilityAlwaysVisible);
         }
     }, [facilityTypeListLoading, facilityTypeListError, facilityTypeList]);
 
@@ -123,11 +134,11 @@ export const BookableSpacesManageFacilities = ({
 
         console.log('saveChange e=', e);
         console.log('saveChange formValues=', formValues);
-        if (
-            // !!formValues.addNew &&
-            !!formValues.newGroupName &&
-            !!formValues.firstGroupEntryName
-        ) {
+        if (!!formValues.addNew && (!formValues.newGroupName || !formValues.firstGroupEntryName)) {
+            console.log('invalid'); // TODO
+        }
+
+        if (!!formValues.addNew && !!formValues.newGroupName && !!formValues.firstGroupEntryName) {
             const valuesToSendGroup = {};
             valuesToSendGroup.facility_type_group_name = formValues.newGroupName;
             const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
@@ -181,14 +192,22 @@ export const BookableSpacesManageFacilities = ({
         return true;
     };
     const addFormDefaultLabel = 'Add new Facility group';
-    const isAddNewGroupFormClosed = addNewForm => addNewForm.style.display === 'none';
+    const isAddNewGroupFormClosed = () => {
+        const addNewForm = document.getElementById('add-new-facility-group-form');
+        console.log('addNewForm?.style.display=', addNewForm?.style.display);
+        return addNewForm?.style.display === 'none';
+    };
     const openAddNewGroupForm = (addNewForm, formShowHideButton) => {
         addNewForm.style.display = 'block';
         !!formShowHideButton && (formShowHideButton.innerText = 'Clear new Group form');
         setFormValues({
             ...formValues,
-            // ['addNew']: true,
+            ['addNew']: true,
         });
+        if (saveButtonVisibility !== saveButtonVisibilityAlwaysVisible) {
+            console.log('setSaveButtonVisibility at 2 to', saveButtonVisibilityCurrentlyVisible);
+            setSaveButtonVisibility(saveButtonVisibilityCurrentlyVisible);
+        }
     };
     const closeAddNewGroupForm = (addNewForm, formShowHideButton) => {
         addNewForm.style.display = 'none';
@@ -198,22 +217,47 @@ export const BookableSpacesManageFacilities = ({
         delete tempFormValues.firstGroupEntryName;
         setFormValues({
             ...tempFormValues,
-            // ['addNew']: false,
+            ['addNew']: false,
         });
+        console.log('saveButtonVisibility=', saveButtonVisibility);
+        if (saveButtonVisibility !== saveButtonVisibilityAlwaysVisible) {
+            console.log('setSaveButtonVisibility at 3', saveButtonVisibilityHidden);
+            setSaveButtonVisibility(saveButtonVisibilityHidden);
+        }
     };
     const showHideAddCampusForm = () => {
         const addNewForm = document.getElementById('add-new-facility-group-form');
-        const formShowHideButton = document.getElementById('showHideAddCampusFormButton');
         if (!addNewForm) {
+            console.log('showHideAddCampusForm no form to open');
             return null;
         }
 
-        if (isAddNewGroupFormClosed(addNewForm)) {
+        const formShowHideButton = document.getElementById('showHideAddCampusFormButton');
+        if (isAddNewGroupFormClosed()) {
+            console.log('showHideAddCampusForm opening form');
             openAddNewGroupForm(addNewForm, formShowHideButton);
+
+            const newGroupnamebutton = document.getElementById('newGroupname');
+            !!newGroupnamebutton && newGroupnamebutton.setAttribute('required', true);
+            const firstGroupEntrybutton = document.getElementById('firstGroupEntry');
+            !!firstGroupEntrybutton && firstGroupEntrybutton.setAttribute('required', true);
+
+            if (saveButtonVisibility !== saveButtonVisibilityAlwaysVisible) {
+                console.log(
+                    'showHideAddCampusForm setSaveButtonVisibility at 4 to',
+                    saveButtonVisibilityCurrentlyVisible,
+                );
+                setSaveButtonVisibility(saveButtonVisibilityCurrentlyVisible);
+            }
         } else {
-            console.log('ere');
+            console.log('showHideAddCampusForm closing form');
+            const newGroupnamebutton = document.getElementById('newGroupname');
+            !!newGroupnamebutton && newGroupnamebutton.setAttribute('required', false);
+            const firstGroupEntrybutton = document.getElementById('firstGroupEntry');
+            !!firstGroupEntrybutton && firstGroupEntrybutton.setAttribute('required', false);
+            console.log('showHideAddCampusForm ere');
             closeAddNewGroupForm(addNewForm, formShowHideButton);
-            console.log('after');
+            console.log('showHideAddCampusForm after');
         }
         document.activeElement.blur();
         return true;
@@ -229,18 +273,20 @@ export const BookableSpacesManageFacilities = ({
             !!dataAvailable ? { marginBottom: '2rem', display: 'none' } : { marginBottom: '2rem' };
         return (
             <>
-                {!!facilityTypeList?.data?.facility_type_groups && (
-                    <div style={{ margin: '0 0 2rem -2rem' }}>
-                        <StyledPrimaryButton
-                            id="showHideAddCampusFormButton"
-                            style={{ marginLeft: '2rem', marginTop: '2rem', textTransform: 'initial' }}
-                            children={addFormDefaultLabel}
-                            onClick={showHideAddCampusForm}
-                            data-testid="add-new-group-button"
-                        />
-                    </div>
+                {/* {!!facilityTypeList?.data?.facility_type_groups && (*/}
+                <div style={{ margin: '0 0 2rem -2rem' }}>
+                    <StyledPrimaryButton
+                        id="showHideAddCampusFormButton"
+                        style={{ marginLeft: '2rem', marginTop: '2rem', textTransform: 'initial' }}
+                        children={addFormDefaultLabel}
+                        onClick={showHideAddCampusForm}
+                        data-testid="add-new-group-button"
+                    />
+                </div>
+                {/* )}*/}
+                {facilityTypeList?.data?.facility_type_groups?.length === 0 && (
+                    <p data-testid="space-facility-types-empty-message">No facility types currently in system.</p>
                 )}
-                {!facilityTypeList?.data?.facility_type_groups && <p>No facility types currently in system.</p>}
                 <form>
                     <div
                         id="add-new-facility-group-form"
@@ -313,17 +359,19 @@ export const BookableSpacesManageFacilities = ({
                             </div>
                         ))}
                     </div>
-                    <div style={{ marginTop: '2rem' }}>
-                        <StyledPrimaryButton
-                            id="saveChange"
-                            data-testid="spaces-facilitytypes-saveChange"
-                            fullWidth
-                            children="Save changes"
-                            onClick={saveChange}
-                            // onKeyUp={saveChange}
-                            style={{ width: 'auto' }}
-                        />
-                    </div>
+                    {!!saveButtonVisibility && (
+                        <div style={{ marginTop: '2rem' }}>
+                            <StyledPrimaryButton
+                                id="saveChange"
+                                data-testid="spaces-facilitytypes-save-button"
+                                fullWidth
+                                children="Save changes"
+                                onClick={saveChange}
+                                onKeyUp={saveChange}
+                                style={{ width: 'auto' }}
+                            />
+                        </div>
+                    )}
                 </form>
             </>
         );

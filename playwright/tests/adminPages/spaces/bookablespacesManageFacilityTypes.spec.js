@@ -109,7 +109,7 @@ test.describe('Spaces Admin - manage facility types', () => {
         );
         await expect(page.getByTestId('facilitygroup-outdoor').getByTestId('add-type-outdoor')).toBeVisible();
 
-        const saveButton = page.getByTestId('spaces-facilitytypes-saveChange');
+        const saveButton = page.getByTestId('spaces-facilitytypes-save-button');
         await expect(saveButton).toBeVisible();
         await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
         await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
@@ -162,7 +162,7 @@ test.describe('Spaces Admin - manage facility types', () => {
         await page.getByTestId('new-group-first').click();
         await page.getByTestId('new-group-first').fill('First type in group');
 
-        await page.getByTestId('spaces-facilitytypes-saveChange').click();
+        await page.getByTestId('spaces-facilitytypes-save-button').click();
 
         const expectedValues = {
             facility_type_group_name: 'New group',
@@ -188,6 +188,40 @@ test.describe('Spaces Admin - other pages', () => {
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
 
         // TODO looks as expected
+    });
+    test('as expected when there are no facility types', async ({ page }) => {
+        await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces&responseType=facilityTypesAllEmpty');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
+
+        await expect(
+            page.getByTestId('space-facility-types-empty-message').getByText(/No facility types currently in system/),
+        ).toBeVisible();
+        await expect(page.getByTestId('add-new-group-button')).toBeVisible();
+        await expect(page.getByTestId('spaces-facilitytypes-save-button')).not.toBeVisible();
+
+        // there is no data so a table of current facility types does not appear
+        await expect(page.getByTestId('spaces-facility-groups').locator('> *')).toHaveCount(0);
+
+        // the 'add new group" form is not open
+        await expect(page.getByTestId('new-group-name')).not.toBeVisible();
+        await expect(page.getByTestId('new-group-first')).not.toBeVisible();
+        await expect(page.getByTestId('spaces-facilitytypes-save-button')).not.toBeVisible();
+
+        // open the "add new group" form
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await page.getByTestId('add-new-group-button').click();
+
+        // form is now ready to add
+        await expect(page.getByTestId('new-group-name')).toBeVisible();
+        await expect(page.getByTestId('new-group-first')).toBeVisible();
+        await expect(page.getByTestId('spaces-facilitytypes-save-button')).toBeVisible();
+        // the add process is no different to when there are children, so don't bother testing it here
+
+        // close the form and the save button disappears, because there aren't currently any facility types
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Clear new Group form');
+        await page.getByTestId('add-new-group-button').click();
+        await expect(page.getByTestId('spaces-facilitytypes-save-button')).not.toBeVisible();
     });
     test('api error', async ({ page }) => {
         await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces&responseType=facilityTypesAll404');
