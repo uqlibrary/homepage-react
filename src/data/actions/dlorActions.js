@@ -39,14 +39,7 @@ import {
     DLOR_KEYWORDS_UPDATE_API,
     DLOR_KEYWORDS_DESTROY_API,
 } from 'repositories/routes';
-
-const checkExpireSession = (dispatch, error) => {
-    const triggerLogoutStatus = [401];
-    if (!!error?.status && triggerLogoutStatus.includes(error.status)) {
-        // They are no longer allowed. Log them out
-        dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
-    }
-};
+import { checkExpireSession } from './actionhelpers';
 
 export function loadCurrentDLORs() {
     return dispatch => {

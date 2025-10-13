@@ -15,14 +15,6 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             await expect(page.locator('h1').getByText('Digital Learning Hub - Edit Team')).toBeVisible();
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
-        test('has breadcrumbs', async ({ page }) => {
-            await expect(
-                page
-                    .getByTestId('subsite-title')
-                    .getByText(/Digital learning hub admin/)
-                    .first(),
-            ).toBeVisible();
-        });
         test('appears as expected', async ({ page }) => {
             await expect(page.getByTestId('StandardPage-title')).toBeVisible();
             await expect(

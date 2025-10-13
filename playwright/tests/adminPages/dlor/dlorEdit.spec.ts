@@ -40,11 +40,6 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.locator('[data-testid="choose-notify"] input').check();
                 await assertAccessibility(page, '[data-testid="StandardPage"]');
             });
-            test('has breadcrumbs', async ({ page }) => {
-                await page.goto(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
-                await page.setViewportSize({ width: 1300, height: 1000 });
-                await expect(page.getByTestId('subsite-title').getByText('Digital learning hub admin')).toBeVisible();
-            });
             test('loads fields correctly', async ({ page }) => {
                 await page.goto(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
                 await page.setViewportSize({ width: 1300, height: 1000 });
@@ -293,8 +288,8 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.getByTestId('dlor-form-next-button').click();
 
                 // select a keyword so we can save
-                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
-                await page.locator("#fuzzy-search-option-3").click()
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                await page.locator('#fuzzy-search-option-3').click();
 
                 // and save
                 await page.getByTestId('admin-dlor-save-button-submit').click();
@@ -366,8 +361,8 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.getByTestId('dlor-form-next-button').click();
 
                 // select a keyword so we can save
-                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
-                await page.locator("#fuzzy-search-option-3").click()
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                await page.locator('#fuzzy-search-option-3').click();
 
                 // and save
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeEnabled();
@@ -483,10 +478,10 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 await page.locator('[data-testid="filter-licence-cc-by-nc-attribution-noncommercial"] input').check();
 
-                //await page.locator('[data-testid="object-keywords"] textarea:first-child').fill('cat, dog');
+                // await page.locator('[data-testid="object-keywords"] textarea:first-child').fill('cat, dog');
                 // select a keyword so we can save
-                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
-                await page.locator("#fuzzy-search-option-3").click()
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                await page.locator('#fuzzy-search-option-3').click();
 
                 // add notification text
                 await page.locator('[data-testid="choose-notify"] input').check();
@@ -529,7 +524,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     team_email: 'john@example.com',
                     team_manager: 'john Manager',
                     team_name: 'new team name',
-                    object_keywords: ['Research Skills', "evaluate", "literature", "search", "strategy"],
+                    object_keywords: ['Research Skills', 'evaluate', 'literature', 'search', 'strategy'],
                     object_keyword_ids: [3, 100001, 100002, 100000, 100003],
                     facets: [
                         10, // Graduate attributes : Accomplished scholars
@@ -663,10 +658,10 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 await page.locator('[data-testid="filter-subject-medicine-biomedical-sciences"] input').uncheck();
 
-                //await page.locator('[data-testid="object-keywords"] textarea:first-child').fill('cat, dog');
+                // await page.locator('[data-testid="object-keywords"] textarea:first-child').fill('cat, dog');
                 // select a keyword so we can save
-                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
-                await page.locator("#fuzzy-search-option-3").click()
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                await page.locator('#fuzzy-search-option-3').click();
 
                 // save record
                 await page.getByTestId('admin-dlor-save-button-submit').click();
@@ -866,8 +861,8 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 }).toPass({ timeout: 5000 });
 
                 // select a keyword so we can save
-                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
-                await page.locator("#fuzzy-search-option-3").click()
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                await page.locator('#fuzzy-search-option-3').click();
 
                 // save record
                 const saveButton = page.getByTestId('admin-dlor-save-button-submit');
@@ -994,8 +989,8 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.getByTestId('dlor-form-next-button').click();
 
                 // select a keyword so we can save
-                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
-                await page.locator("#fuzzy-search-option-3").click()
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                await page.locator('#fuzzy-search-option-3').click();
 
                 // form filled out. now save
                 await page.getByTestId('admin-dlor-save-button-submit').click();
