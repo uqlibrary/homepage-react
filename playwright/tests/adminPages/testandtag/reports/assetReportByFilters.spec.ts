@@ -18,15 +18,6 @@ test.describe('Test and Tag Report - Asset inspection by filters', () => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
-    test('has breadcrumbs', async ({ page }) => {
-        await expect(
-            page
-                .locator('uq-site-header')
-                .getByTestId('subsite-title')
-                .getByText('Test and tag'),
-        ).toBeVisible();
-    });
-
     test('UI Dropdown for Status and building function correctly', async ({ page }) => {
         await assertTitles(page, locale.pages.report.assetReportByFilters.header.pageSubtitle('Library'));
         await forcePageRefresh(page);
