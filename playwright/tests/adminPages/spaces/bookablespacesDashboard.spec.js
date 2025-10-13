@@ -45,8 +45,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
 
-        await expect(page.getByTestId('spaces-dashboard-header-row').locator('th')).toBeVisible();
-        await expect(page.getByTestId('spaces-dashboard-header-row').locator('> *')).toHaveCount(3);
+        await expect(page.getByTestId('spaces-dashboard-header-row').locator('> th')).toHaveCount(3);
     });
     test('spaces dashboard page is accessible', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
