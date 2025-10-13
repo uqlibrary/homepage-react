@@ -81,6 +81,26 @@ Mock data is provided for all pages and actions under `src/mock/`.
 
 ### Development notes
 
+#### Reusable components
+
+`standardText` 
+
+Apply the standard DS styles to any item. Can be used like this:
+
+```javascript
+export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+   ...standardText(theme),
+}));
+```
+
+Three buttons, from the [DS](https://design-system.uq.edu.au/storybook-html/index.html?path=/docs/components-button--docs)
+
+* `StyledPrimaryButton`
+* `StyledSecondaryButton`
+* `StyledTertiaryButton`
+
+These are tags, so can be used like: `<StyledPrimaryButton>Click me</StyledPrimaryButton>`
+
 #### Naming conventions
 
 - React components and files of components and related files (eg scss) are to be named with upper case (eg
