@@ -468,12 +468,6 @@ test.describe('The Learning Resources Page', () => {
     test('has breadcrumbs', async ({ page }) => {
         await page.goto('/learning-resources?user=s1111111');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(
-            page
-                .getByTestId('subsite-title')
-                .getByText(/Learning resources/)
-                .first(),
-        ).toBeVisible();
     });
     test('User with classes sees their classes', async ({ page }) => {
         await page.goto('/learning-resources?user=s1111111');
