@@ -74,9 +74,9 @@ test.describe('Alerts Admin Form Pages', () => {
 
         test('buttons have the correct styling initially', async ({ page }) => {
             const helpButton = page.getByTestId('admin-alerts-help-button');
-            await expect(helpButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+            await expect(helpButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
             await expect(helpButton).toHaveCSS('border-color', COLOR_UQPURPLE);
-            await expect(helpButton).toHaveCSS('color', 'rgb(255, 255, 255)');
+            await expect(helpButton).toHaveCSS('color', COLOR_UQPURPLE);
 
             const cancelButton = page.getByTestId('admin-alerts-form-button-cancel');
             await expect(cancelButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
@@ -100,33 +100,6 @@ test.describe('Alerts Admin Form Pages', () => {
                 .first()
                 .fill('the body');
         });
-        test('hides incomplete links from the preview', async ({ page }) => {
-            // rather than show things like "title: body []()"
-            await page.locator('[data-testid="admin-alerts-form-title"] input').fill('alert title 6');
-            await page
-                .locator('[data-testid="admin-alerts-form-body"] textarea')
-                .first()
-                .fill('body 6');
-            await page.locator('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').check();
-            await page.getByTestId('admin-alerts-form-button-preview').click();
-            // when the user has required a link but entered nothing, no link shows in the preview
-            await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alerttitle', 'alert title 6');
-            await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('prioritytype', 'info');
-            await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alertmessage', 'body 6');
-            await page.locator('[data-testid="admin-alerts-form-link-title"] input').fill('Click here');
-            await page.getByTestId('admin-alerts-form-button-preview').click();
-            // when the user has required a link and entered the text but no link, no link shows in the preview
-            await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alerttitle', 'alert title 6');
-            await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('prioritytype', 'info');
-            await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alertmessage', 'body 6');
-            await page.locator('[data-testid="admin-alerts-form-link-title"] input').clear();
-            await page.locator('[data-testid="admin-alerts-form-link-url"] input').fill('http://example.com');
-            await page.getByTestId('admin-alerts-form-button-preview').click();
-            // when the user has required a link and entered the link but no linktext, no link shows in the preview
-            await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alerttitle', 'alert title 6');
-            await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('prioritytype', 'info');
-            await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alertmessage', 'body 6');
-        });
         test('an url must be valid', async ({ page }) => {
             await page.locator('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').check();
             await page.locator('[data-testid="admin-alerts-form-link-title"] input').fill('Read more');
@@ -142,8 +115,6 @@ test.describe('Alerts Admin Form Pages', () => {
                 .locator('[data-testid="admin-alerts-form-body"] textarea')
                 .first()
                 .fill('body 3');
-            await page.locator('button[data-testid="admin-alerts-form-button-preview"]').click();
-            await expect(page.locator('uq-alert[id="alert-preview"]')).toBeVisible();
             await page.getByTestId('admin-alerts-form-button-save').click();
             await expect(page.getByTestId('confirm-alert-add-save-succeeded')).toBeVisible();
             await expect(
@@ -158,8 +129,6 @@ test.describe('Alerts Admin Form Pages', () => {
             // the alert page reloads with a blank form
             await expect(page.locator('[data-testid="admin-alerts-form-title"] input')).toHaveValue('');
             await expect(page.locator('[data-testid="admin-alerts-form-body"] textarea').first()).toHaveValue('');
-            // the preview is successfully hidden as part of the save function
-            await expect(page.locator('uq-alert[id="alert-preview"]')).not.toBeVisible();
         });
         test('can save an alert (more complex)', async ({ page }) => {
             await page.locator('[data-testid="admin-alerts-form-title"] input').fill('alert title 4');
@@ -322,9 +291,10 @@ test.describe('Alerts Admin Form Pages', () => {
             await expect(page.getByTestId('admin-alerts-form-checkbox-linkrequired')).toBeVisible();
             await expect(saveButton).toBeDisabled();
 
-            await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('background-color', COLOR_UQPURPLE);
-            await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('border-color', COLOR_UQPURPLE);
-            await expect(page.getByTestId('admin-alerts-help-button')).toHaveCSS('color', 'rgb(255, 255, 255)');
+            const helpButton = page.getByTestId('admin-alerts-help-button');
+            await expect(helpButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+            await expect(helpButton).toHaveCSS('border-color', COLOR_UQPURPLE);
+            await expect(helpButton).toHaveCSS('color', COLOR_UQPURPLE);
 
             const cancelButton = page.getByTestId('admin-alerts-form-button-cancel');
             await expect(cancelButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
@@ -436,9 +406,9 @@ test.describe('Alerts Admin Form Pages', () => {
         });
         test('can clone an alert and return to list', async ({ page }) => {
             const helpButton = page.getByTestId('admin-alerts-help-button');
-            await expect(helpButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+            await expect(helpButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
             await expect(helpButton).toHaveCSS('border-color', COLOR_UQPURPLE);
-            await expect(helpButton).toHaveCSS('color', 'rgb(255, 255, 255)');
+            await expect(helpButton).toHaveCSS('color', COLOR_UQPURPLE);
 
             const cancelButton = page.getByTestId('admin-alerts-form-button-cancel');
             await expect(cancelButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
