@@ -86,10 +86,9 @@ test.describe('Alert Admin List page', () => {
                 .first(),
         ).toBeVisible();
 
-        const addButton = page.getByTestId('admin-alerts-add-button');
-        await expect(addButton).toHaveCSS('background-color', COLOR_UQPURPLE);
-        await expect(addButton).toHaveCSS('border-color', COLOR_UQPURPLE);
-        await expect(addButton).toHaveCSS('color', 'rgb(255, 255, 255)');
+        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('background-color', COLOR_UQPURPLE);
+        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('border-color', COLOR_UQPURPLE);
+        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('color', 'rgb(255, 255, 255)');
 
         const helpButton = page.getByTestId('admin-alerts-help-button');
         await expect(helpButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
