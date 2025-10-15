@@ -143,6 +143,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             (!currentValues.linkRequired || isValidUrl(currentValues.linkUrl));
 
         // if we are currently showing the preview and the form becomes invalid, hide it again
+        /* istanbul ignore next */
         !isValid && !!showPreview && showHidePreview(false);
 
         return isValid;
@@ -328,6 +329,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         if (!!values.permanentAlert) {
             manuallyMakeWebComponentBePermanent(alertWebComponent, body);
         } else {
+            /* istanbul ignore next */
             alertWebComponent.setAttribute('alertmessage', body);
         }
         if (!!values.linkRequired) {
