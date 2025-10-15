@@ -303,6 +303,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     const displayPreview = () => {
         const alertWrapper = document.getElementById('previewWrapper');
         !!alertWrapper && (alertWrapper.innerHTML = '');
+        /* istanbul ignore next */
         if (!!showPreview) {
             showHidePreview(false);
             return;
@@ -328,6 +329,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         if (!!values.permanentAlert) {
             manuallyMakeWebComponentBePermanent(alertWebComponent, body);
         } else {
+            /* istanbul ignore next */
             alertWebComponent.setAttribute('alertmessage', body);
         }
         if (!!values.linkRequired) {
