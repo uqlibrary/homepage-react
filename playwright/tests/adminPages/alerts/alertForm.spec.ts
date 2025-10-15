@@ -111,6 +111,13 @@ test.describe('Alerts Admin Form Pages', () => {
         });
         test('can save an alert (simple)', async ({ page }) => {
             await page.locator('[data-testid="admin-alerts-form-title"] input').fill('alert title 3');
+
+            // this solves many coverage issues! Actually test of preview happens in e2e
+            const previewButton = page.getByTestId('admin-alerts-form-button-preview');
+            await previewButton.click();
+            // then hide it again
+            await previewButton.click();
+
             await page
                 .locator('[data-testid="admin-alerts-form-body"] textarea')
                 .first()
