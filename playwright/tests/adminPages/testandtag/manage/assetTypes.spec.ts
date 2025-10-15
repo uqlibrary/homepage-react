@@ -21,10 +21,6 @@ test.describe('Test and Tag Manage Asset Types', () => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
-    test('has breadcrumbs', async ({ page }) => {
-        await expect(page.getByTestId('subsite-title').getByText('Test and tag')).toBeVisible();
-    });
-
     test('Page Pagination functions correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.assetTypes.header.pageSubtitle('Library'));

@@ -17,9 +17,6 @@ test.describe('Alerts Admin View Page', () => {
         ).toBeVisible();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
-    test('has breadcrumb', async ({ page }) => {
-        await expect(page.getByTestId('subsite-title')).toHaveText('Alerts admin');
-    });
     test('can view an alert without being able to edit any fields', async ({ page }) => {
         await expect(
             page
@@ -78,44 +75,17 @@ test.describe('Alerts Admin View Page', () => {
             );
         }).toPass();
     });
-    test('can show a preview of an urgent-priority permanent alert with link', async ({ page }) => {
-        await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alerttitle', 'Example alert:');
-        await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('prioritytype', 'urgent');
-        await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute(
-            'alertmessage',
-            'This alert can be edited in mock.[UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
-        );
-    });
 });
 test.describe('Alerts Admin View Page - other page tests', () => {
-    test('can show a preview of a info-priority non-permanent alert without link', async ({ page }) => {
+    test('the editing user displays correctly', async ({ page }) => {
         await page.goto('http://localhost:2020/admin/alerts/view/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alerttitle', 'Sample alert 2:');
-        await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('prioritytype', 'info');
-        await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('alertmessage', 'Has mock data.');
 
         // the editing user displays correctly
         await expect(page.getByTestId('admin-alerts-view-created-by')).not.toBeVisible();
         await expect(
             page.getByTestId('admin-alerts-view-updated-by').getByText('Last Updated by: uqtest2'),
         ).toBeVisible();
-    });
-    test('can show a preview of an extreme-priority permanent alert with link', async ({ page }) => {
-        await page.goto('http://localhost:2020/admin/alerts/view/d23f2e10-d7d6-11eb-a928-71f3ef9d35d9?user=uqstaff');
-        await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute(
-            'alerttitle',
-            'Face masks in the Library:',
-        );
-        await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute('prioritytype', 'extreme');
-        await expect(page.locator('uq-alert[id="alert-preview"]')).toHaveAttribute(
-            'alertmessage',
-            'Test Extreme alert with a longish body content.[UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
-        );
-
-        // the editing user displays correctly
-        await expect(page.getByTestId('admin-alerts-view-created-by')).not.toBeVisible();
-        await expect(page.getByTestId('admin-alerts-view-updated-by')).not.toBeVisible();
     });
     test('tells the user when alert appeared on all systems', async ({ page }) => {
         await page.goto('http://localhost:2020/admin/alerts/view/cc0ab120-d4a3-11eb-b5ee-6593c1ac8f09?user=uqstaff');

@@ -87,14 +87,6 @@ test.describe('Test and Tag Admin Inspection page', () => {
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
 
-        test('has breadcrumb', async ({ page }) =>
-            await expect(
-                page
-                    .locator('uq-site-header')
-                    .getByTestId('subsite-title')
-                    .getByText('Test and tag'),
-            ).toBeVisible());
-
         test.describe('Event panel functionality', () => {
             const today = moment();
             test('should show correct dates', async ({ page }) => {

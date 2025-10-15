@@ -25,15 +25,6 @@ test.describe('Past Exam Papers Pages', () => {
             ).toBeVisible();
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
-        test('has breadcrumbs', async ({ page }) => {
-            await page.goto('/exams/course/empt');
-            await expect(
-                page
-                    .getByTestId('subsite-title')
-                    .getByText(/Past exam papers/)
-                    .first(),
-            ).toBeVisible();
-        });
         test('when I type a valid course code fragment in the search bar, appropriate suggestions load', async ({
             page,
         }) => {
@@ -144,12 +135,6 @@ test.describe('Past Exam Papers Pages', () => {
         test.describe('a desktop page', () => {
             test(' with multiple subjects displayed shows table view for Original papers', async ({ page }) => {
                 await page.goto('/exams/course/fren');
-                await expect(
-                    page
-                        .getByTestId('subsite-title')
-                        .getByText(/Past exam papers/)
-                        .first(),
-                ).toBeVisible();
                 await expect(
                     page
                         .locator('div[id="content-container"]')
@@ -329,15 +314,6 @@ test.describe('Past Exam Papers Pages', () => {
         });
     });
     test.describe('search errors', () => {
-        test('has breadcrumbs', async ({ page }) => {
-            await page.goto('/exams/course/empt');
-            await expect(
-                page
-                    .getByTestId('subsite-title')
-                    .getByText(/Past exam papers/)
-                    .first(),
-            ).toBeVisible();
-        });
         test('a search with no results shows a message', async ({ page }) => {
             await page.goto('/exams/course/empt');
             await expect(

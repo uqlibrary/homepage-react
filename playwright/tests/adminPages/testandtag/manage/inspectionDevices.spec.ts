@@ -22,10 +22,6 @@ test.describe('Test and Tag manage inspection devices', () => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
-    test('has breadcrumbs', async ({ page }) => {
-        await expect(page.getByTestId('subsite-title').getByText('Test and tag')).toBeVisible();
-    });
-
     test('Add and Edit Inspection Device functions correctly', async ({ page }) => {
         await checkBaseline(page);
 

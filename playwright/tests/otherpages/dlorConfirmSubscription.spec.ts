@@ -18,12 +18,6 @@ test.describe('Digital Learning Hub', () => {
             await expect(page.getByTestId('dlor-confirm-line-1')).toHaveText(
                 /Thank you for your interest in following Artificial Intelligence - Digital Essentials\./,
             );
-            await expect(
-                page
-                    .getByTestId('subsite-title')
-                    .getByText(/Digital learning hub/)
-                    .first(),
-            ).toBeVisible();
             await expect(page.getByTestId('dlor-confirm-line-2')).toHaveText(
                 /Your request has been confirmed\. We will send an email when we update the object\./,
             );

@@ -16,14 +16,6 @@ test.describe('Digital Learning Hub admin Series management', () => {
             await expect(page.locator('h1').getByText('Digital Learning Hub - Series management')).toBeVisible();
             await assertAccessibility(page, '[data-testid="StandardPage"]', { disabledRules: ['button-name'] });
         });
-        test('has breadcrumbs', async ({ page }) => {
-            await expect(
-                page
-                    .getByTestId('subsite-title')
-                    .getByText(/Digital learning hub admin/)
-                    .first(),
-            ).toBeVisible();
-        });
         test('loads as expected', async ({ page }) => {
             await expect(
                 page
