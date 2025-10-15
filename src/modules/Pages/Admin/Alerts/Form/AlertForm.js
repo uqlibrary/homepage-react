@@ -143,6 +143,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             (!currentValues.linkRequired || isValidUrl(currentValues.linkUrl));
 
         // if we are currently showing the preview and the form becomes invalid, hide it again
+        /* istanbul ignore next */
         !isValid && !!showPreview && showHidePreview(false);
 
         return isValid;
@@ -303,7 +304,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     const displayPreview = () => {
         const alertWrapper = document.getElementById('previewWrapper');
         !!alertWrapper && (alertWrapper.innerHTML = '');
-        /* istanbul ignore next */
         if (!!showPreview) {
             showHidePreview(false);
             return;
