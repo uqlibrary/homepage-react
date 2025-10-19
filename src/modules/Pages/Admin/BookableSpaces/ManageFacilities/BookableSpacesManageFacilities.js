@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 
 import { Grid } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import AddIcon from '@mui/icons-material/Add';
@@ -15,8 +17,43 @@ import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { scrollToTopOfPage, slugifyName, StyledPrimaryButton } from 'helpers/general';
+import { scrollToTopOfPage, slugifyName, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 import { addBreadcrumbsToSiteHeader, displayToastMessage } from 'modules/Pages/Admin/BookableSpaces/helpers';
+
+const StyledMainDialog = styled('dialog')(({ theme }) => ({
+    width: '80%',
+    border: '1px solid rgba(38, 85, 115, 0.15)',
+    maxWidth: '1136px',
+    '& h2': {
+        paddingInline: '1rem',
+    },
+    '& .dialogRow': {
+        padding: '0.5rem 1rem',
+        '& label': {
+            fontWeight: 500,
+            display: 'block',
+        },
+        '& input[type="text"]': {
+            padding: '0.5rem',
+            width: '90%',
+        },
+        '& input:not(:valid)': {
+            outline: '1px solid red',
+        },
+        '& :focus-visible': {
+            outlineColor: theme.palette.primary.light,
+        },
+    },
+
+    '& .dialogFooter': {
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginTop: '1rem',
+        '& button': {
+            marginLeft: '0.5rem',
+        },
+    },
+}));
 
 export const BookableSpacesManageFacilities = ({
     actions,
@@ -80,31 +117,92 @@ export const BookableSpacesManageFacilities = ({
             facilityTypeListLoading === false &&
             facilityTypeList?.data?.facility_type_groups?.length > 0
         ) {
+            const facilityTypesToStore = facilityTypeList?.data?.facility_type_groups?.flatMap(group =>
+                group.facility_type_children.map(child => ({
+                    facility_type_id: child.facility_type_id,
+                    facility_type_name: child.facility_type_name,
+                })),
+            );
             setFormValues({
-                ['facility_types']: facilityTypeList?.data?.facility_types?.flatMap(group =>
-                    group.facility_type_children.map(child => ({
-                        facility_type_id: child.facility_type_id,
-                        facility_type_name: child.facility_type_name,
-                    })),
-                ),
+                ['facility_types']: facilityTypesToStore,
             });
             console.log('setSaveButtonVisibility at 1, to', saveButtonVisibilityAlwaysVisible);
             setSaveButtonVisibility(saveButtonVisibilityAlwaysVisible);
         }
     }, [facilityTypeListLoading, facilityTypeListError, facilityTypeList]);
 
+    function closeDialog(e = null) {
+        const dialog = !e ? document.getElementById('popupDialog') : e.target.closest('dialog');
+        !!dialog && dialog.close();
+    }
+
+    const saveNewFacilityType = e => {
+        const form = e.target.closest('form');
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+
+        // validate form
+        const failureMessage = !data.facility_type_name && 'Please enter a facility type name';
+        if (!!failureMessage) {
+            displayToastMessage(failureMessage, true);
+            return false;
+        }
+
+        const valuesToSend = {
+            facility_type__group_id: data.facility_type__group_id,
+            facility_type_name: data.facility_type_name,
+        };
+
+        // showSavingProgress(true);
+        closeDialog(e);
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
+        actions
+            .createSpacesFacilityType(valuesToSend)
+            .then(() => {
+                displayToastMessage('Facility type created', false);
+                actions.loadAllFacilityTypes(); // reload facility types
+            })
+            .catch(e => {
+                console.log(
+                    'catch: saving facility type ',
+                    data.facility_type__group_id,
+                    data.facility_type_name,
+                    'failed:',
+                    e,
+                );
+                displayToastMessage('[BSMF-001] Sorry, an error occurred - the admins have been informed');
+            });
+        return true;
+    };
+
     const displayGroupAddItemForm = e => {
-        console.log('displayGroupAddItemForm e=', e);
-        const newField = (
-            <Input
-                // id="alertTitle"
-                // data-testid="admin-alerts-form-title"
-                value=""
-                // onChange={handleChange('alertTitle')}
-                // inputProps={{ maxLength: 100 }}
-                aria-label="Add facility type to {facility.facility_type_group_name}"
-            />
+        const buttonClicked = e.target.closest('button');
+        const groupId = buttonClicked.getAttribute('data-groupid');
+
+        const thisGroup = facilityTypeList?.data?.facility_type_groups.find(
+            g => g.facility_type_group_id === parseInt(groupId, 10),
         );
+        const groupname = thisGroup?.facility_type_group_name;
+        const formBody = `<div>
+                <h2 data-testid="add-facility-type-heading">Add a Facility Type to ${groupname}</h2>
+                <input type="hidden" name="facility_type__group_id" value="${groupId}" />
+                <div class="dialogRow">
+                    <label for="newFacilityType">New Facility type for Group</label>
+                    <input type="text" name="facility_type_name" id="newFacilityType" value="" required />
+                </div>
+            </div>`;
+
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog.showModal();
     };
 
     const handleChange = prop => e => {
@@ -332,7 +430,7 @@ export const BookableSpacesManageFacilities = ({
                                     {group.facility_type_group_name}
                                 </Typography>
 
-                                <div>
+                                <div id={`listWrapper-${group.facility_type_group_id}`}>
                                     {group.facility_type_children.map(facilityType => {
                                         return (
                                             <Input
@@ -352,10 +450,15 @@ export const BookableSpacesManageFacilities = ({
                                         );
                                     })}
                                 </div>
-                                <AddIcon
-                                    onClick={() => displayGroupAddItemForm(group.groupId)}
-                                    data-testid={`add-type-${slugifyName(group.facility_type_group_name)}`}
-                                />
+                                <IconButton
+                                    color="primary"
+                                    data-testid={`add-group-${group.facility_type_group_id}-button`}
+                                    id={`add-group-${group.facility_type_group_id}-button`}
+                                    onClick={displayGroupAddItemForm}
+                                    data-groupid={group.facility_type_group_id}
+                                >
+                                    <AddIcon data-testid={`add-type-${slugifyName(group.facility_type_group_name)}`} />
+                                </IconButton>
                             </div>
                         ))}
                     </div>
@@ -394,7 +497,39 @@ export const BookableSpacesManageFacilities = ({
                                 ) {
                                     return <p data-testid="apiError">Something went wrong - please try again later.</p>;
                                 } else {
-                                    return <div data-testid="spaces-location-wrapper">{displayFacilityTypes()}</div>;
+                                    return (
+                                        <div data-testid="spaces-location-wrapper">
+                                            {displayFacilityTypes()}
+                                            <StyledMainDialog
+                                                id={'popupDialog'}
+                                                closedby="any"
+                                                data-testid="main-dialog"
+                                            >
+                                                <form>
+                                                    <div id="dialogBody">xxx</div>
+                                                    <div id="dialogFooter" className={'dialogFooter'}>
+                                                        <div>
+                                                            <StyledSecondaryButton
+                                                                className={'secondary'}
+                                                                children={'Cancel'}
+                                                                onClick={closeDialog}
+                                                                data-testid="dialog-cancel-button"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <StyledPrimaryButton
+                                                                id={'saveButton'}
+                                                                className={'primary'}
+                                                                children={'Save'}
+                                                                onClick={saveNewFacilityType}
+                                                                data-testid="dialog-save-button"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </StyledMainDialog>
+                                        </div>
+                                    );
                                 }
                             })()}
                         </Grid>

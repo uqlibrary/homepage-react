@@ -23,7 +23,7 @@ test.describe('Spaces Admin - manage facility types', () => {
         await expect(page).toHaveURL('http://localhost:2020/admin/spaces/manage/facilitytypes?user=libSpaces');
     });
 });
-test.describe('Spaces Admin - manage facility types', () => {
+test.describe('Spaces Admin - manage facility types page', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -115,7 +115,7 @@ test.describe('Spaces Admin - manage facility types', () => {
         await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
         await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
     });
-    test('is accessible on open', async ({ page }) => {
+    test('is accessible on initial load', async ({ page }) => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
     test('can clear new group form', async ({ page }) => {
@@ -168,6 +168,50 @@ test.describe('Spaces Admin - manage facility types', () => {
             facility_type_group_name: 'New group',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
+    });
+});
+test.describe('Spaces Admin - adding new facility types', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
+    });
+    test('can save new type', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        await expect(page.getByTestId('add-facility-type-heading')).not.toBeVisible();
+        await page.getByTestId('add-group-4-button').click();
+
+        await expect(page.getByTestId('add-facility-type-heading')).toBeVisible();
+        await expect(page.getByTestId('add-facility-type-heading')).toHaveText('Add a Facility Type to Noise level');
+        await page.getByRole('textbox', { name: 'New Facility type for Group' }).fill('New type');
+        await page.getByTestId('dialog-save-button').click();
+
+        const expectedValues = {
+            facility_type__group_id: '4',
+            facility_type_name: 'New type',
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
+    test('dialog is accessible', async ({ page }) => {
+        await expect(page.getByTestId('add-facility-type-heading')).not.toBeVisible();
+        await page.getByTestId('add-group-1-button').click();
+        await expect(page.getByTestId('add-facility-type-heading')).toBeVisible();
+        await expect(page.getByTestId('add-facility-type-heading')).toHaveText('Add a Facility Type to Room Features');
+
+        await assertAccessibility(page, '[data-testid="main-dialog"]');
+    });
+    test('can cancel dialog', async ({ page }) => {
+        await expect(page.getByTestId('main-dialog')).not.toBeVisible();
+
+        await page.getByTestId('add-group-2-button').click();
+        await expect(page.getByTestId('main-dialog')).toBeVisible();
+        await expect(page.getByTestId('add-facility-type-heading')).toBeVisible();
+        await expect(page.getByTestId('add-facility-type-heading')).toHaveText('Add a Facility Type to Services');
+
+        await page.getByTestId('dialog-cancel-button').click();
+        await expect(page.getByTestId('main-dialog')).not.toBeVisible();
     });
 });
 test.describe('Spaces Admin - other pages', () => {
