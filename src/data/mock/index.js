@@ -1546,7 +1546,7 @@ mock.onGet('exams/course/FREN1010/summary')
             return [200, { status: 'OK', data: result }];
         }
     })
-    .onPost(routes.SPACES_FACILITY_TYPE_GROUP_CHANGE_API().apiUrl)
+    .onPost(routes.SPACES_FACILITY_TYPE_GROUP_CREATE_API().apiUrl)
     .reply(() => {
         if (responseType === 'error') {
             return [500, {}];

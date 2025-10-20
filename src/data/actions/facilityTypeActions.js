@@ -4,7 +4,7 @@ import {
     SPACES_FACILITY_TYPE_ALL_API,
     SPACES_FACILITY_TYPE_CREATE_API,
     SPACES_FACILITY_TYPE_UPDATE_API,
-    SPACES_FACILITY_TYPE_GROUP_CHANGE_API,
+    SPACES_FACILITY_TYPE_GROUP_CREATE_API,
 } from 'repositories/routes';
 
 const checkExpireSession = (dispatch, error) => {
@@ -115,7 +115,7 @@ export function createSpacesFacilityTypeGroup(request) {
     console.log('saveNewFacilityGroupType start', request);
     return dispatch => {
         dispatch({ type: actions.SPACES_FACILITY_TYPE_GROUP_CREATING });
-        const url = SPACES_FACILITY_TYPE_GROUP_CHANGE_API();
+        const url = SPACES_FACILITY_TYPE_GROUP_CREATE_API();
         console.log('action saveNewFacilityGroupType loading', url);
         return post(url, request)
             .then(response => {
