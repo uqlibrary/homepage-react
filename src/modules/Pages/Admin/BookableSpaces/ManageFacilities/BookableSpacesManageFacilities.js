@@ -17,7 +17,7 @@ import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { scrollToTopOfPage, slugifyName, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
+import { pluralise, scrollToTopOfPage, slugifyName, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 import { addBreadcrumbsToSiteHeader, displayToastMessage } from 'modules/Pages/Admin/BookableSpaces/helpers';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
@@ -244,32 +244,36 @@ export const BookableSpacesManageFacilities = ({
             'facilityTypeList?.data?.facility_type_groups?.facility_type_children=',
             facilityTypeList?.data?.facility_type_groups?.facility_type_children,
         );
+        // Collect all the update operations that need to be performed
+        const updatePromises = [];
+
         facilityTypeList?.data?.facility_type_groups?.forEach(ft => {
-            console.log('ft =', ft);
-            console.log('ft.facility_type_children =', ft.facility_type_children);
             ft?.facility_type_children.forEach(c => {
-                console.log('child=', c.facility_type_id, c.facility_type_name);
                 const matchingFormValue = formValues?.facility_types.find(
                     f => f.facility_type_id === c.facility_type_id,
                 );
-                console.log('matchingFormValue=', matchingFormValue);
-                if (matchingFormValue.facility_type_name !== c.facility_type_name) {
-                    console.log(
-                        '#### SAVE ',
-                        matchingFormValue.facility_type_name,
-                        'for',
-                        matchingFormValue.facility_type_id,
-                    );
-                    const valuesToSend = {};
-                    valuesToSend.facility_type_name = matchingFormValue.facility_type_name;
-                    valuesToSend.facility_type_id = matchingFormValue.facility_type_id;
-                    console.log('valuesToSend=', valuesToSend);
 
-                    actions
+                if (matchingFormValue.facility_type_name !== c.facility_type_name) {
+                    const valuesToSend = {
+                        facility_type_name: matchingFormValue.facility_type_name,
+                        facility_type_id: matchingFormValue.facility_type_id,
+                    };
+
+                    // this is only use to check when we send a single example, but better than nothing
+                    const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+                        ? cookies.CYPRESS_TEST_DATA
+                        : null;
+                    if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+                        console.log('setting CYPRESS_DATA_SAVED to', valuesToSend);
+                        setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+                    }
+
+                    // Add the promise to our collection instead of handling it immediately
+                    const updatePromise = actions
                         .updateSpacesFacilityType(valuesToSend)
                         .then(() => {
-                            displayToastMessage('Facility types updated', false);
-                            actions.loadAllFacilityTypes(); // reload facility types
+                            console.log(`Successfully updated facility type: ${valuesToSend.facility_type_name}`);
+                            return { success: true, id: valuesToSend.facility_type_id };
                         })
                         .catch(e => {
                             console.log(
@@ -279,17 +283,60 @@ export const BookableSpacesManageFacilities = ({
                                 ') failed:',
                                 e,
                             );
-                            displayToastMessage('[BSMF-002] Sorry, an error occurred - the admins have been informed');
-                        })
-                        .finally(() => {
-                            console.log('------------------');
+                            return { success: false, id: valuesToSend.facility_type_id, error: e };
                         });
+
+                    updatePromises.push(updatePromise);
                 }
-                console.log('============================');
             });
         });
 
-        // save group changes
+        // If there are no updates needed, exit early
+        if (updatePromises.length > 0) {
+            // Wait for all update operations to complete
+            Promise.allSettled(updatePromises)
+                .then(results => {
+                    // Count successes and failures
+                    const successCount = results.filter(result => result.status === 'fulfilled' && result.value.success)
+                        .length;
+                    const failureCount = results.length - successCount;
+
+                    // Display appropriate toast message
+                    if (failureCount === 0) {
+                        // All succeeded
+                        displayToastMessage(`Facility ${pluralise('type', successCount)} updated`, false);
+                    } else {
+                        // Some or all failed
+                        if (successCount > 0) {
+                            displayToastMessage(
+                                `[BSMF-002] Update failed: ${successCount} of ${results.length} facility ${pluralise(
+                                    'type',
+                                    results.length,
+                                )} updated successfully. ${failureCount} failed - the admins have been informed`,
+                            );
+                        } else {
+                            displayToastMessage(
+                                `[BSMF-003] Update failed: All ${failureCount} facility type updates failed - the admins have been informed`,
+                            );
+                        }
+                    }
+                })
+                .catch(error => {
+                    // This shouldn't happen with allSettled, but just in case
+                    console.error('Unexpected error in facility type updates:', error);
+                    displayToastMessage(
+                        '[BSMF-004] Sorry, an unexpected error occurred - the admins have been informed',
+                    );
+                    actions.loadAllFacilityTypes();
+                })
+                .finally(() => {
+                    // Reload facility types only once after all operations complete
+                    actions.loadAllFacilityTypes();
+                    console.log('------------------');
+                });
+        }
+
+        // save any Group changes
         if (!!formValues.addNew && (!formValues.newGroupName || !formValues.firstGroupEntryName)) {
             console.log('invalid'); // TODO
         }
@@ -331,12 +378,12 @@ export const BookableSpacesManageFacilities = ({
                         // save type failed
                         console.log('save facility type failed', error);
                         displayToastMessage(
-                            '[BSMF-001] Sorry, we were unable to create the first type for that group - the admins have been informed',
+                            '[BSMF-005] Sorry, we were unable to create the first type for that group - the admins have been informed',
                         );
                     } else {
                         // save group failed
                         console.log('save facility type group failed', error);
-                        displayToastMessage('[BSMF-002] Sorry, an error occurred - the admins have been informed');
+                        displayToastMessage('[BSMF-006] Sorry, an error occurred - the admins have been informed');
                     }
                 })
                 .finally(() => {
@@ -553,12 +600,7 @@ export const BookableSpacesManageFacilities = ({
                                     !!facilityTypeListLoading
                                 ) {
                                     return <InlineLoader message="Loading" />;
-                                } else if (
-                                    !!facilityTypeAddError ||
-                                    !!facilityTypeUpdateError ||
-                                    !!facilityTypeAddGroupError ||
-                                    !!facilityTypeListError
-                                ) {
+                                } else if (!!facilityTypeListError) {
                                     return <p data-testid="apiError">Something went wrong - please try again later.</p>;
                                 } else {
                                     return (

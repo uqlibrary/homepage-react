@@ -2,6 +2,7 @@ import { expect, Page, test } from '@uq/pw/test';
 import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
+import { assertToastHasMessage } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
 
 test.describe('Spaces Admin - manage facility types', () => {
     test('can navigate from dashboard to manage facility types', async ({ page }) => {
@@ -168,6 +169,43 @@ test.describe('Spaces Admin - manage facility types page', () => {
             facility_type_group_name: 'New group',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
+    });
+    test('can edit single facility type successfully', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        const facilityTypeId = 1;
+        const updatedFacilityTypeName = 'Noise level Other';
+
+        await expect(page.getByTestId(`facilitytype-input-${facilityTypeId}`)).toBeVisible();
+        await expect(page.getByTestId(`facilitytype-input-${facilityTypeId}`)).toHaveValue('Noise level Low');
+        await page.getByTestId(`facilitytype-input-${facilityTypeId}`).click();
+        await page.getByTestId(`facilitytype-input-${facilityTypeId}`).fill(updatedFacilityTypeName);
+        await page.getByTestId('spaces-facilitytypes-save-button').click();
+
+        // success
+        await assertToastHasMessage(page, 'Facility type updated');
+
+        const expectedValues = {
+            facility_type_name: updatedFacilityTypeName,
+            facility_type_id: facilityTypeId,
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
+    test('can edit multiple facility type successfully', async ({ page }) => {
+        await expect(page.getByTestId('facilitytype-input-4')).toBeVisible();
+        await expect(page.getByTestId('facilitytype-input-4')).toHaveValue('AT technology');
+        await page.getByTestId('facilitytype-input-4').click();
+        await page.getByTestId('facilitytype-input-4').fill('Another Technology');
+
+        await expect(page.getByTestId('facilitytype-input-12')).toBeVisible();
+        await expect(page.getByTestId('facilitytype-input-12')).toHaveValue('Opening hours');
+        await page.getByTestId('facilitytype-input-12').click();
+        await page.getByTestId('facilitytype-input-12').fill('Closing hours');
+
+        await page.getByTestId('spaces-facilitytypes-save-button').click();
+
+        // success
+        await assertToastHasMessage(page, 'Facility types updated');
     });
 });
 test.describe('Spaces Admin - adding new facility types', () => {

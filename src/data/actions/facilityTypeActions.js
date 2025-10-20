@@ -2,7 +2,8 @@ import * as actions from './actionTypes';
 import { get, post, put } from 'repositories/generic';
 import {
     SPACES_FACILITY_TYPE_ALL_API,
-    SPACES_FACILITY_TYPE_CHANGE_API,
+    SPACES_FACILITY_TYPE_CREATE_API,
+    SPACES_FACILITY_TYPE_UPDATE_API,
     SPACES_FACILITY_TYPE_GROUP_CHANGE_API,
 } from 'repositories/routes';
 
@@ -41,7 +42,7 @@ export function createSpacesFacilityType(request) {
     console.log('createSpacesFacilityType', request);
     return dispatch => {
         dispatch({ type: actions.SPACES_FACILITY_TYPE_CREATING });
-        const url = SPACES_FACILITY_TYPE_CHANGE_API();
+        const url = SPACES_FACILITY_TYPE_CREATE_API();
         return post(url, request)
             .then(response => {
                 if (response?.status?.toLowerCase() === 'ok') {
@@ -70,13 +71,17 @@ export function createSpacesFacilityType(request) {
 
 export function updateSpacesFacilityType(request) {
     console.log('updateSpacesFacilityType', request);
-    if (!request) {
-        return false;
-    }
-    console.log('updateSpacesFacilityType', request);
     return dispatch => {
+        if (!request || !request.facility_type_id) {
+            console.log('updateSpacesFacilityType: missing facility_type_id');
+            dispatch({
+                type: actions.SPACES_FACILITY_TYPE_UPDATE_FAILED,
+                payload: 'invalid request: no facility type id',
+            });
+            return false;
+        }
         dispatch({ type: actions.SPACES_FACILITY_TYPE_UPDATING });
-        const url = SPACES_FACILITY_TYPE_CHANGE_API();
+        const url = SPACES_FACILITY_TYPE_UPDATE_API(request.facility_type_id);
         return put(url, request)
             .then(response => {
                 if (response?.status?.toLowerCase() === 'ok') {
