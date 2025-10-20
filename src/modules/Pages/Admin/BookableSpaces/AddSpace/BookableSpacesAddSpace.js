@@ -506,7 +506,7 @@ export const BookableSpacesAddSpace = ({
             group.facility_type_children?.forEach(facilityType => {
                 facilityTypes.push({
                     facility_type_id: facilityType.facility_type_id,
-                    facility_type_name: facilityType.facility_type_name,
+                    facility_type_name: `${group.facility_type_group_name}: ${facilityType.facility_type_name}`,
                 });
             });
         });
