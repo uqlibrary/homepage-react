@@ -1,5 +1,5 @@
 import * as actions from './actionTypes';
-import { get, post } from 'repositories/generic';
+import { get, post, put } from 'repositories/generic';
 import {
     SPACES_FACILITY_TYPE_ALL_API,
     SPACES_FACILITY_TYPE_CHANGE_API,
@@ -60,6 +60,41 @@ export function createSpacesFacilityType(request) {
             .catch(error => {
                 dispatch({
                     type: actions.SPACES_FACILITY_TYPE_CREATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function updateSpacesFacilityType(request) {
+    console.log('updateSpacesFacilityType', request);
+    if (!request) {
+        return false;
+    }
+    console.log('updateSpacesFacilityType', request);
+    return dispatch => {
+        dispatch({ type: actions.SPACES_FACILITY_TYPE_UPDATING });
+        const url = SPACES_FACILITY_TYPE_CHANGE_API();
+        return put(url, request)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.SPACES_FACILITY_TYPE_UPDATED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.SPACES_FACILITY_TYPE_UPDATE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_FACILITY_TYPE_UPDATE_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);

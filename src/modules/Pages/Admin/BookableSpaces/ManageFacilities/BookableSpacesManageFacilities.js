@@ -66,9 +66,13 @@ export const BookableSpacesManageFacilities = ({
     facilityTypeGroupAdding,
     facilityTypeAddGroupError,
     facilityTypeGroupAdded,
+    facilityTypeUpdating,
+    facilityTypeUpdateError,
+    facilityTypeUpdated,
 }) => {
     console.log('load facilityTypeList', facilityTypeList, facilityTypeListLoading, facilityTypeListError);
     // console.log('load facilityTypeAdded', facilityTypeAdded, facilityTypeAdding, facilityTypeAddError);
+    console.log('load facilityTypeUpdated', facilityTypeUpdated, facilityTypeUpdating, facilityTypeUpdateError);
     // console.log(
     //     'load facilityTypeGroupAdded',
     //     facilityTypeGroupAdded,
@@ -170,10 +174,10 @@ export const BookableSpacesManageFacilities = ({
             })
             .catch(e => {
                 console.log(
-                    'catch: saving facility type ',
+                    'catch: saving facility type (',
                     data.facility_type__group_id,
                     data.facility_type_name,
-                    'failed:',
+                    ') failed:',
                     e,
                 );
                 displayToastMessage('[BSMF-001] Sorry, an error occurred - the admins have been informed');
@@ -212,7 +216,7 @@ export const BookableSpacesManageFacilities = ({
 
         if (prop.startsWith('facilitytype-')) {
             const facilityTypeid = parseInt(prop.replace('facilitytype-', ''), 10);
-            const updatedData = formValues.facility_type_groups.map(f =>
+            const updatedData = formValues?.facility_types?.map(f =>
                 f?.facility_type_id === facilityTypeid ? { ...f, facility_type_name: theNewValue } : f,
             );
             setFormValues({
@@ -232,10 +236,63 @@ export const BookableSpacesManageFacilities = ({
 
         console.log('saveChange e=', e);
         console.log('saveChange formValues=', formValues);
+
+        // save type changes
+        const formTypesChanged = false;
+        console.log('facilityTypeList?.data?.facility_type_groups=', facilityTypeList?.data?.facility_type_groups);
+        console.log(
+            'facilityTypeList?.data?.facility_type_groups?.facility_type_children=',
+            facilityTypeList?.data?.facility_type_groups?.facility_type_children,
+        );
+        facilityTypeList?.data?.facility_type_groups?.forEach(ft => {
+            console.log('ft =', ft);
+            console.log('ft.facility_type_children =', ft.facility_type_children);
+            ft?.facility_type_children.forEach(c => {
+                console.log('child=', c.facility_type_id, c.facility_type_name);
+                const matchingFormValue = formValues?.facility_types.find(
+                    f => f.facility_type_id === c.facility_type_id,
+                );
+                console.log('matchingFormValue=', matchingFormValue);
+                if (matchingFormValue.facility_type_name !== c.facility_type_name) {
+                    console.log(
+                        '#### SAVE ',
+                        matchingFormValue.facility_type_name,
+                        'for',
+                        matchingFormValue.facility_type_id,
+                    );
+                    const valuesToSend = {};
+                    valuesToSend.facility_type_name = matchingFormValue.facility_type_name;
+                    valuesToSend.facility_type_id = matchingFormValue.facility_type_id;
+                    console.log('valuesToSend=', valuesToSend);
+
+                    actions
+                        .updateSpacesFacilityType(valuesToSend)
+                        .then(() => {
+                            displayToastMessage('Facility types updated', false);
+                            actions.loadAllFacilityTypes(); // reload facility types
+                        })
+                        .catch(e => {
+                            console.log(
+                                'catch: updating facility type (',
+                                valuesToSend.facility_type_id,
+                                valuesToSend.facility_type_name,
+                                ') failed:',
+                                e,
+                            );
+                            displayToastMessage('[BSMF-002] Sorry, an error occurred - the admins have been informed');
+                        })
+                        .finally(() => {
+                            console.log('------------------');
+                        });
+                }
+                console.log('============================');
+            });
+        });
+
+        // save group changes
         if (!!formValues.addNew && (!formValues.newGroupName || !formValues.firstGroupEntryName)) {
             console.log('invalid'); // TODO
         }
-
         if (!!formValues.addNew && !!formValues.newGroupName && !!formValues.firstGroupEntryName) {
             const valuesToSendGroup = {};
             valuesToSendGroup.facility_type_group_name = formValues.newGroupName;
@@ -434,9 +491,10 @@ export const BookableSpacesManageFacilities = ({
                                     {group.facility_type_children.map(facilityType => {
                                         return (
                                             <Input
+                                                id={`facilitytype-input-${facilityType.facility_type_id}`}
                                                 key={`facilitytype-input-${facilityType.facility_type_id}`}
                                                 value={
-                                                    formValues.facility_type_groups?.find(
+                                                    formValues.facility_types?.find(
                                                         f => f?.facility_type_id === facilityType?.facility_type_id,
                                                     )?.facility_type_name || facilityType.facility_type_name
                                                 }
@@ -488,10 +546,16 @@ export const BookableSpacesManageFacilities = ({
                     <Grid container>
                         <Grid item xs={12} md={4} style={{ paddingTop: 0 }}>
                             {(() => {
-                                if (!!facilityTypeGroupAdding || !!facilityTypeAdding || !!facilityTypeListLoading) {
+                                if (
+                                    !!facilityTypeUpdating ||
+                                    !!facilityTypeGroupAdding ||
+                                    !!facilityTypeAdding ||
+                                    !!facilityTypeListLoading
+                                ) {
                                     return <InlineLoader message="Loading" />;
                                 } else if (
                                     !!facilityTypeAddError ||
+                                    !!facilityTypeUpdateError ||
                                     !!facilityTypeAddGroupError ||
                                     !!facilityTypeListError
                                 ) {
@@ -551,6 +615,9 @@ BookableSpacesManageFacilities.propTypes = {
     facilityTypeGroupAdding: PropTypes.any,
     facilityTypeAddGroupError: PropTypes.any,
     facilityTypeGroupAdded: PropTypes.any,
+    facilityTypeUpdating: PropTypes.any,
+    facilityTypeUpdateError: PropTypes.any,
+    facilityTypeUpdated: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesManageFacilities);

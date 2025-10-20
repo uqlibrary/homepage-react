@@ -54,6 +54,25 @@ const handlers = {
         facilityTypeAdding: false,
         facilityTypeAddError: action.payload,
     }),
+    [actions.SPACES_FACILITY_TYPE_UPDATING]: state => ({
+        ...initialState,
+        ...state,
+        facilityTypeUpdating: true,
+        facilityTypeUpdateError: false,
+    }),
+    [actions.SPACES_FACILITY_TYPE_UPDATED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        facilityTypeUpdating: false,
+        facilityTypeUpdateError: false,
+        facilityTypeUpdated: action.payload,
+    }),
+    [actions.SPACES_FACILITY_TYPE_UPDATE_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        facilityTypeUpdating: false,
+        facilityTypeUpdateError: action.payload,
+    }),
     [actions.SPACES_FACILITY_TYPE_GROUP_CREATING]: state => ({
         ...initialState,
         ...state,
