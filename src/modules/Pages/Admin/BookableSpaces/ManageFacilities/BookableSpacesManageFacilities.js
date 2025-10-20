@@ -465,125 +465,6 @@ export const BookableSpacesManageFacilities = ({
         return true;
     };
 
-    const displayFacilityTypes = () => {
-        const sortedGroups =
-            facilityTypeList?.data?.facility_type_groups?.sort(
-                (a, b) => a.facility_type_group_order - b.facility_type_group_order,
-            ) || [];
-
-        const formDisplay = dataAvailable =>
-            !!dataAvailable ? { marginBottom: '2rem', display: 'none' } : { marginBottom: '2rem' };
-        return (
-            <>
-                {/* {!!facilityTypeList?.data?.facility_type_groups && (*/}
-                <div style={{ margin: '0 0 2rem -2rem' }}>
-                    <StyledPrimaryButton
-                        id="showHideAddCampusFormButton"
-                        style={{ marginLeft: '2rem', marginTop: '2rem', textTransform: 'initial' }}
-                        children={addFormDefaultLabel}
-                        onClick={showHideAddCampusForm}
-                        data-testid="add-new-group-button"
-                    />
-                </div>
-                {/* )}*/}
-                {facilityTypeList?.data?.facility_type_groups?.length === 0 && (
-                    <p data-testid="space-facility-types-empty-message">No facility types currently in system.</p>
-                )}
-                <form>
-                    <div
-                        id="add-new-facility-group-form"
-                        style={formDisplay(!!facilityTypeList?.data?.facility_type_groups)}
-                    >
-                        <Typography component={'h3'} variant={'h6'}>
-                            New Facility group
-                        </Typography>
-                        <FormControl variant="standard" fullWidth>
-                            <InputLabel htmlFor="newGroupname">Name of new Facility type group</InputLabel>
-                            <Input
-                                id="newGroupname"
-                                value={formValues?.newGroupName || ''}
-                                onChange={handleChange('newGroupName')}
-                                inputProps={{
-                                    maxLength: 255,
-                                    'data-testid': 'new-group-name',
-                                }}
-                            />
-                        </FormControl>
-                        <FormControl variant="standard" fullWidth>
-                            <InputLabel htmlFor="firstGroupEntry">Name of first Facility type in group</InputLabel>
-                            <Input
-                                id="firstGroupEntry"
-                                value={formValues?.firstGroupEntryName || ''}
-                                onChange={handleChange('firstGroupEntryName')}
-                                inputProps={{
-                                    maxLength: 255,
-                                    'data-testid': 'new-group-first',
-                                }}
-                            />
-                        </FormControl>
-                    </div>
-                    {/* TODO change to grid */}
-                    <div style={{ display: 'flex', gap: '2rem' }}>
-                        {sortedGroups.map(group => (
-                            <div
-                                data-testid={`facilitygroup-${slugifyName(group.facility_type_group_name)}`}
-                                key={group.facility_type_group_name}
-                                style={{ minWidth: '200px' }}
-                            >
-                                <Typography component={'h3'} variant={'h6'} style={{ whiteSpace: 'nowrap' }}>
-                                    {group.facility_type_group_name}
-                                </Typography>
-
-                                <div id={`listWrapper-${group.facility_type_group_id}`}>
-                                    {group.facility_type_children.map(facilityType => {
-                                        return (
-                                            <Input
-                                                id={`facilitytype-input-${facilityType.facility_type_id}`}
-                                                key={`facilitytype-input-${facilityType.facility_type_id}`}
-                                                value={
-                                                    formValues.facility_types?.find(
-                                                        f => f?.facility_type_id === facilityType?.facility_type_id,
-                                                    )?.facility_type_name || facilityType.facility_type_name
-                                                }
-                                                onChange={handleChange(`facilitytype-${facilityType.facility_type_id}`)}
-                                                inputProps={{
-                                                    'aria-label': `Edit ${facilityType.facility_type_name} facility type, part of ${facilityType.facility_type_group_name}`,
-                                                    // maxLength: 100
-                                                    'data-testid': `facilitytype-input-${facilityType.facility_type_id}`,
-                                                }}
-                                            />
-                                        );
-                                    })}
-                                </div>
-                                <IconButton
-                                    color="primary"
-                                    data-testid={`add-group-${group.facility_type_group_id}-button`}
-                                    id={`add-group-${group.facility_type_group_id}-button`}
-                                    onClick={displayGroupAddItemForm}
-                                    data-groupid={group.facility_type_group_id}
-                                >
-                                    <AddIcon data-testid={`add-type-${slugifyName(group.facility_type_group_name)}`} />
-                                </IconButton>
-                            </div>
-                        ))}
-                    </div>
-                    {!!saveButtonVisibility && (
-                        <div style={{ marginTop: '2rem' }}>
-                            <StyledPrimaryButton
-                                id="saveChange"
-                                data-testid="spaces-facilitytypes-save-button"
-                                fullWidth
-                                children="Save changes"
-                                onClick={saveChange}
-                                onKeyUp={saveChange}
-                                style={{ width: 'auto' }}
-                            />
-                        </div>
-                    )}
-                </form>
-            </>
-        );
-    };
     return (
         <StandardPage title="Spaces">
             <HeaderBar pageTitle="Manage Facility types" currentPage="manage-facilities" />
@@ -591,55 +472,198 @@ export const BookableSpacesManageFacilities = ({
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
                     <Grid container>
-                        <Grid item xs={12} md={4} style={{ paddingTop: 0 }}>
-                            {(() => {
-                                if (
-                                    !!facilityTypeUpdating ||
-                                    !!facilityTypeGroupAdding ||
-                                    !!facilityTypeAdding ||
-                                    !!facilityTypeListLoading
-                                ) {
-                                    return <InlineLoader message="Loading" />;
-                                } else if (!!facilityTypeListError) {
-                                    return <p data-testid="apiError">Something went wrong - please try again later.</p>;
-                                } else {
-                                    return (
-                                        <div data-testid="spaces-location-wrapper">
-                                            {displayFacilityTypes()}
-                                            <StyledMainDialog
-                                                id={'popupDialog'}
-                                                closedby="any"
-                                                data-testid="main-dialog"
+                        {(() => {
+                            if (
+                                !!facilityTypeUpdating ||
+                                !!facilityTypeGroupAdding ||
+                                !!facilityTypeAdding ||
+                                !!facilityTypeListLoading
+                            ) {
+                                return (
+                                    <Grid item xs={12}>
+                                        <InlineLoader message="Loading" />
+                                    </Grid>
+                                );
+                            } else if (!!facilityTypeListError) {
+                                return (
+                                    <Grid item xs={12}>
+                                        <p data-testid="apiError">Something went wrong - please try again later.</p>
+                                    </Grid>
+                                );
+                            } else {
+                                const sortedGroups =
+                                    facilityTypeList?.data?.facility_type_groups?.sort(
+                                        (a, b) => a.facility_type_group_order - b.facility_type_group_order,
+                                    ) || [];
+
+                                const formDisplay = dataAvailable =>
+                                    !!dataAvailable
+                                        ? { marginBottom: '2rem', display: 'none' }
+                                        : { marginBottom: '2rem' };
+                                return (
+                                    <>
+                                        <Grid item xs={12}>
+                                            <StyledPrimaryButton
+                                                id="showHideAddCampusFormButton"
+                                                style={{
+                                                    marginBottom: '2rem',
+                                                    textTransform: 'initial',
+                                                }}
+                                                children={addFormDefaultLabel}
+                                                onClick={showHideAddCampusForm}
+                                                data-testid="add-new-group-button"
+                                            />
+                                        </Grid>
+
+                                        {facilityTypeList?.data?.facility_type_groups?.length === 0 && (
+                                            <Grid item xs={12}>
+                                                <p data-testid="space-facility-types-empty-message">
+                                                    No facility types currently in system.
+                                                </p>
+                                            </Grid>
+                                        )}
+
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            id="add-new-facility-group-form"
+                                            style={formDisplay(!!facilityTypeList?.data?.facility_type_groups)}
+                                        >
+                                            <Typography component={'h3'} variant={'h6'}>
+                                                New Facility group
+                                            </Typography>
+                                            <FormControl variant="standard" fullWidth>
+                                                <InputLabel htmlFor="newGroupname">
+                                                    Name of new Facility type group
+                                                </InputLabel>
+                                                <Input
+                                                    id="newGroupname"
+                                                    value={formValues?.newGroupName || ''}
+                                                    onChange={handleChange('newGroupName')}
+                                                    inputProps={{
+                                                        maxLength: 255,
+                                                        'data-testid': 'new-group-name',
+                                                    }}
+                                                />
+                                            </FormControl>
+                                            <FormControl variant="standard" fullWidth>
+                                                <InputLabel htmlFor="firstGroupEntry">
+                                                    Name of first Facility type in group
+                                                </InputLabel>
+                                                <Input
+                                                    id="firstGroupEntry"
+                                                    value={formValues?.firstGroupEntryName || ''}
+                                                    onChange={handleChange('firstGroupEntryName')}
+                                                    inputProps={{
+                                                        maxLength: 255,
+                                                        'data-testid': 'new-group-first',
+                                                    }}
+                                                />
+                                            </FormControl>
+                                        </Grid>
+
+                                        {sortedGroups.map(group => (
+                                            <Grid
+                                                item
+                                                xs={12}
+                                                sm={3}
+                                                data-testid={`facilitygroup-${slugifyName(
+                                                    group.facility_type_group_name,
+                                                )}`}
+                                                key={group.facility_type_group_name}
+                                                style={{ maxWidth: '200px' }}
                                             >
-                                                <form>
-                                                    <div id="dialogBody">xxx</div>
-                                                    <div id="dialogFooter" className={'dialogFooter'}>
-                                                        <div>
-                                                            <StyledSecondaryButton
-                                                                className={'secondary'}
-                                                                children={'Cancel'}
-                                                                onClick={closeDialog}
-                                                                data-testid="dialog-cancel-button"
-                                                            />
-                                                        </div>
-                                                        <div>
-                                                            <StyledPrimaryButton
-                                                                id={'saveButton'}
-                                                                className={'primary'}
-                                                                children={'Save'}
-                                                                onClick={saveNewFacilityType}
-                                                                data-testid="dialog-save-button"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </StyledMainDialog>
-                                        </div>
-                                    );
-                                }
-                            })()}
-                        </Grid>
+                                                <Typography
+                                                    component={'h3'}
+                                                    variant={'h6'}
+                                                    style={{ whiteSpace: 'nowrap' }}
+                                                >
+                                                    {group.facility_type_group_name}
+                                                </Typography>
+
+                                                {group.facility_type_children.map(facilityType => {
+                                                    return (
+                                                        <Input
+                                                            id={`facilitytype-input-${facilityType.facility_type_id}`}
+                                                            key={`facilitytype-input-${facilityType.facility_type_id}`}
+                                                            value={
+                                                                formValues.facility_types?.find(
+                                                                    f =>
+                                                                        f?.facility_type_id ===
+                                                                        facilityType?.facility_type_id,
+                                                                )?.facility_type_name || facilityType.facility_type_name
+                                                            }
+                                                            onChange={handleChange(
+                                                                `facilitytype-${facilityType.facility_type_id}`,
+                                                            )}
+                                                            inputProps={{
+                                                                'aria-label': `Edit ${facilityType.facility_type_name} facility type, part of ${facilityType.facility_type_group_name}`,
+                                                                'data-testid': `facilitytype-input-${facilityType.facility_type_id}`,
+                                                                maxLength: 255,
+                                                            }}
+                                                        />
+                                                    );
+                                                })}
+
+                                                <IconButton
+                                                    color="primary"
+                                                    data-testid={`add-group-${group.facility_type_group_id}-button`}
+                                                    id={`add-group-${group.facility_type_group_id}-button`}
+                                                    onClick={displayGroupAddItemForm}
+                                                    data-groupid={group.facility_type_group_id}
+                                                    style={{ paddingInline: 0, display: 'block' }}
+                                                >
+                                                    <AddIcon
+                                                        data-testid={`add-type-${slugifyName(
+                                                            group.facility_type_group_name,
+                                                        )}`}
+                                                    />
+                                                </IconButton>
+                                            </Grid>
+                                        ))}
+
+                                        {!!saveButtonVisibility && (
+                                            <Grid item xs={12} style={{ marginTop: '2rem' }}>
+                                                <StyledPrimaryButton
+                                                    id="saveChange"
+                                                    data-testid="spaces-facilitytypes-save-button"
+                                                    fullWidth
+                                                    children="Save changes"
+                                                    onClick={saveChange}
+                                                    onKeyUp={saveChange}
+                                                    style={{ width: 'auto' }}
+                                                />
+                                            </Grid>
+                                        )}
+                                    </>
+                                );
+                            }
+                        })()}
                     </Grid>
+                    <StyledMainDialog id={'popupDialog'} closedby="any" data-testid="main-dialog">
+                        <form>
+                            <div id="dialogBody" />
+                            <div id="dialogFooter" className={'dialogFooter'}>
+                                <div>
+                                    <StyledSecondaryButton
+                                        className={'secondary'}
+                                        children={'Cancel'}
+                                        onClick={closeDialog}
+                                        data-testid="dialog-cancel-button"
+                                    />
+                                </div>
+                                <div>
+                                    <StyledPrimaryButton
+                                        id={'saveButton'}
+                                        className={'primary'}
+                                        children={'Save'}
+                                        onClick={saveNewFacilityType}
+                                        data-testid="dialog-save-button"
+                                    />
+                                </div>
+                            </div>
+                        </form>
+                    </StyledMainDialog>
                 </StandardCard>
             </section>
         </StandardPage>
