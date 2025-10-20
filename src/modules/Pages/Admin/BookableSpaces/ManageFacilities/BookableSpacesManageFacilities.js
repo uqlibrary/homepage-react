@@ -612,6 +612,7 @@ export const BookableSpacesManageFacilities = ({
                                                     onClick={displayGroupAddItemForm}
                                                     data-groupid={group.facility_type_group_id}
                                                     style={{ paddingInline: 0, display: 'block' }}
+                                                    aria-label={`Add another facility type for ${group.facility_type_group_name}`}
                                                 >
                                                     <AddIcon
                                                         data-testid={`add-type-${slugifyName(
