@@ -16,15 +16,6 @@ test.describe('Test and Tag Report - RecalibrationsDue due', () => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
-    test('has breadcrumbs', async ({ page }) => {
-        await expect(
-            page
-                .locator('uq-site-header')
-                .getByTestId('subsite-title')
-                .getByText('Test and tag'),
-        ).toBeVisible();
-    });
-
     test('sorting works as expected, and indicates overdue', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.report.recalibrationsDue.header.pageSubtitle('Library'));

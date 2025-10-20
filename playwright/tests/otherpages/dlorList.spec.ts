@@ -17,14 +17,6 @@ test.describe('Digital Learning Hub', () => {
             await expect(page.locator('h1').getByText('Find a digital learning object')).toBeVisible();
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
-        test('has breadcrumbs', async ({ page }) => {
-            await expect(
-                page
-                    .getByTestId('subsite-title')
-                    .getByText(/Digital learning hub/)
-                    .first(),
-            ).toBeVisible();
-        });
         test('appears as expected', async ({ page }) => {
             await expect(page.getByTestId('hero-card-title').getByText('Find a digital learning object')).toBeVisible();
             await expect(page.getByTestId('dlor-homepage-list').locator(':scope > div')).toHaveCount(

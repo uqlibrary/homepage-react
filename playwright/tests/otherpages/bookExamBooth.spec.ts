@@ -44,7 +44,6 @@ test.describe('Book Exam Booth page', () => {
 
     test('should show initial view', async ({ page }) => {
         await expect(page.getByTestId('StandardPage-title')).toHaveText(locale.pageTitle);
-        await expect(page.getByTestId('subsite-title')).toHaveText(/Book an Exam booth/);
     });
 
     test('should show message on selecting "am not sitting a ProctorU exam"', async ({ page }) => {

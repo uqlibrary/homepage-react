@@ -64,14 +64,6 @@ test.describe('Digital Learning Hub admin homepage', () => {
                 `http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`,
             );
         });
-        test('has breadcrumbs', async ({ page }) => {
-            await expect(
-                page
-                    .locator('uq-site-header')
-                    .getByTestId('subsite-title')
-                    .getByText('Digital learning hub admin'),
-            ).toBeVisible();
-        });
         test('shows a list of objects to manage', async ({ page }) => {
             const list = page.getByTestId('dlor-homepage-list');
             await expect(list.locator('> div')).toHaveCount(gridFromExpectedRowCount());

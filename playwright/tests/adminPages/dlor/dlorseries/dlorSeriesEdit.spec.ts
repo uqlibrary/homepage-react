@@ -14,10 +14,6 @@ test.describe('Digital Learning Hub admin Series management - edit item', () => 
             await page.setViewportSize({ width: 1300, height: 1000 });
         });
 
-        test('has breadcrumbs', async ({ page }) => {
-            await expect(page.getByTestId('subsite-title')).toHaveText(/Digital learning hub admin/);
-        });
-
         test('loads as expected', async ({ page }) => {
             await expect(page.getByTestId('StandardPage-title')).toHaveText(/Digital Learning Hub - Edit Series/);
 

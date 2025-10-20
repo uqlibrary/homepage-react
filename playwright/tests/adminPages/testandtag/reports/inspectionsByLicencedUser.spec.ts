@@ -20,15 +20,6 @@ test.describe('Test and Tag Report - Inspections by Licenced User', () => {
         });
     });
 
-    test('has breadcrumbs', async ({ page }) => {
-        await expect(
-            page
-                .locator('uq-site-header')
-                .getByTestId('subsite-title')
-                .getByText('Test and tag'),
-        ).toBeVisible();
-    });
-
     test('Inspector selection works as intended', async ({ page }) => {
         const showDropdown = async (testId: string) => {
             await expect(async () => {

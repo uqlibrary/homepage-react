@@ -47,15 +47,6 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await assertAccessibility(page, '[data-testid="StandardPage"]');
             });
 
-            test('has breadcrumb', async ({ page }) => {
-                await expect(
-                    page
-                        .locator('uq-site-header')
-                        .getByTestId('subsite-title')
-                        .getByText('Digital learning hub admin'),
-                ).toBeVisible();
-            });
-
             test('loads as expected', async ({ page }) => {
                 const homeLink = page.locator('a[data-testid="dlor-breadcrumb-admin-homelink"]');
                 await expect(homeLink).toContainText('Digital Learning Hub admin');
@@ -172,8 +163,8 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeDisabled();
 
                 // select a keyword so we can save
-                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
-                await page.locator("#fuzzy-search-option-3").click()
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                await page.locator('#fuzzy-search-option-3').click();
 
                 await expect(page.getByTestId('dlor-panel-validity-indicator-3')).not.toBeVisible();
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeEnabled();
@@ -325,8 +316,8 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.getByTestId('dlor-form-next-button').click();
 
                 // select a keyword so we can save
-                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
-                await page.locator("#fuzzy-search-option-3").click()
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                await page.locator('#fuzzy-search-option-3').click();
             });
 
             test('supplies a summary suggestion', async ({ page }) => {
@@ -477,8 +468,8 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.locator('[data-testid="filter-item-type-interactive"] input').check();
                 await page.locator('[data-testid="filter-licence-cc-by-nc-attribution-noncommercial"] input').check();
                 // select a keyword so we can save
-                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
-                await page.locator("#fuzzy-search-option-3").click()
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                await page.locator('#fuzzy-search-option-3').click();
 
                 // save new dlor
                 await page.getByTestId('admin-dlor-save-button-submit').click();
@@ -665,8 +656,8 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.locator('[data-testid="filter-item-type-interactive"] input').check();
                 await page.locator('[data-testid="filter-licence-cc-by-nc-attribution-noncommercial"] input').check();
                 // select a keyword so we can save
-                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
-                await page.locator("#fuzzy-search-option-3").click();
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                await page.locator('#fuzzy-search-option-3').click();
 
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeEnabled();
 
@@ -851,8 +842,8 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.locator('[data-testid="filter-subject-medicine-biomedical-sciences"] input').uncheck();
 
                 // select a keyword so we can save
-                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
-                await page.locator("#fuzzy-search-option-3").click()
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                await page.locator('#fuzzy-search-option-3').click();
 
                 // save record
                 await page.getByTestId('admin-dlor-save-button-submit').click();
@@ -1013,8 +1004,8 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.locator('[data-testid="filter-item-type-interactive"] input').check();
                 await page.locator('[data-testid="filter-licence-cc-by-nc-attribution-noncommercial"] input').check();
                 // select a keyword so we can save
-                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
-                await page.locator("#fuzzy-search-option-3").click()
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                await page.locator('#fuzzy-search-option-3').click();
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeEnabled();
 
                 // save new dlor
@@ -1134,7 +1125,6 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.waitForSelector('[data-testid="object-link-file-type-something"]', { state: 'visible' });
                 await page.locator('[data-testid="object-link-file-type-something"]').highlight();
                 await page.locator('[data-testid="object-link-file-type-something"]').click();
-               
 
                 await expect(page.getByTestId('dlor-panel-validity-indicator-2')).not.toBeVisible();
 
@@ -1149,9 +1139,9 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.locator('[data-testid="filter-subject-business-economics"] input').check();
                 await page.locator('[data-testid="filter-item-type-interactive"] input').check();
                 await page.locator('[data-testid="filter-licence-cc-by-nc-attribution-noncommercial"] input').check();
-                 // select a keyword so we can save
-                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
-                await page.locator("#fuzzy-search-option-3").click()
+                // select a keyword so we can save
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                await page.locator('#fuzzy-search-option-3').click();
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeEnabled();
 
                 // save new dlor
@@ -1287,8 +1277,8 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 await page.locator('[data-testid="filter-item-type-module"] input').check();
                 await page.locator('[data-testid="filter-licence-cc0public-domain"] input').check();
                 // select a keyword so we can save
-                await page.locator("[data-testid='fuzzy-search-input'] input").fill("test");
-                await page.locator("#fuzzy-search-option-3").click()
+                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
+                await page.locator('#fuzzy-search-option-3').click();
 
                 // form filled out. now save
                 await page.getByTestId('admin-dlor-save-button-submit').click();

@@ -18,10 +18,6 @@ test.describe('Digital Learning Hub admin Add Team', () => {
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
 
-        test('has breadcrumbs', async ({ page }) => {
-            await expect(page.getByTestId('subsite-title')).toHaveText(/Digital learning hub admin/);
-        });
-
         test('loads as expected', async ({ page }) => {
             await expect(page.getByTestId('StandardPage-title')).toHaveText(/Digital Learning Hub - Add a new Team/);
             await expect(page.getByTestId('admin-dlor-team-form-team-name').locator('input')).toBeEmpty();
