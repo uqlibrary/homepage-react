@@ -184,7 +184,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_type: 'Computer room',
             space_opening_hours_id: 3841,
             space_services_page: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
-            facility_types: ['0', '4'],
+            facility_types: ['1', '6'],
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });

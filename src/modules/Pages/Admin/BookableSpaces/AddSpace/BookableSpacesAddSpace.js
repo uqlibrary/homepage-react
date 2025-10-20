@@ -681,6 +681,11 @@ export const BookableSpacesAddSpace = ({
                                     }
                                     filterSelectedOptions
                                     onChange={item => chooseFacilityType(item)}
+                                    renderOption={(props, option) => (
+                                        <li {...props} id={option.facility_type_id}>
+                                            {option.facility_type_name}
+                                        </li>
+                                    )}
                                     renderInput={params => (
                                         <TextField
                                             variant="standard"
