@@ -2,11 +2,7 @@ import { expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { ARMUS_SPRINGSHARE_ID, CENTRAL_SPRINGSHARE_ID } from '../../../../src/config/locale';
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
-
-async function assertToastHasMessage(page: Page, msg: string) {
-    await expect(page.getByTestId('toast-corner-message')).toBeVisible();
-    await expect(page.getByTestId('toast-corner-message')).toContainText(msg);
-}
+import { assertToastHasMessage } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
 
 async function clickDeleteButton(page: Page) {
     const mainDialog = page.getByTestId('main-dialog');
