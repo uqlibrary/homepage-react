@@ -224,12 +224,12 @@ to keep initial load to a minimum following optimisation has been added to the p
 
 ### Unit testing
 
-Jest is used as testing tool for unit tests. Any HTMl markup is to be tested with snapshots.
+Jest is used as testing tool for unit tests. 
 
 - install jest `npm install jest -g`
 - run tests `npm test`
 
-Before committing changes, locally run tests and update stapshots (if required). To update snapshots run
+Before committing changes, locally run tests and update any remaining stapshots (if required). To update snapshots run
 `npm run test:unit:update`.
 
 [Code coverage](coverage/jest/index.html) is available (after running `npm test`)
@@ -240,15 +240,43 @@ Before committing changes, locally run tests and update stapshots (if required).
 - [Rendered components](https://github.com/uqlibrary/homepage-react/blob/master/src/modules/README.md#testing)
 - [Reducers](https://github.com/uqlibrary/homepage-react/blob/master/src/reducers/README.md#testing)
 
-### E2E testing
+### Interactive testing
 
-We use [Playwright](https://playwright.dev/docs/writing-tests) for our E2E testing.
+We use [Playwright](https://playwright.dev/docs/writing-tests) for our interactive testing.
 
 To run tests, simply use `npm run test:e2e`.
 
 To run all tests, including unit tests, use `npm run test:all`.\
 Then, to generate a combined code coverage report, use `npm run cc:reportAll`.\
 This workflow is useful for confidently pushing changes upstream.
+
+#### To test data sent to the api is as-expected
+
+In the component, save the sent data to a cookie (only when on localhost), so: just before the call to the action that sends a save request to the api, include code like:
+```javascript
+const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+    setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+}
+```
+eg https://github.com/uqlibrary/homepage-react/blob/8b9cd9d7902449e45c8285eabf36c0b368a34a4b/src/modules/Pages/Admin/BookableSpaces/ManageLocations/BookableSpacesManageLocations.js#L327
+
+Then in the test, start the test function with a setup call
+```javascript
+await setTestDataCookie(context, page);
+```
+eg https://github.com/uqlibrary/homepage-react/blob/8b9cd9d7902449e45c8285eabf36c0b368a34a4b/playwright/tests/adminPages/spaces/bookablespacesAddNew.spec.ts#L70
+
+and then test the values you are expecting were what was sent to the api:
+```javascript
+const expectedValues = {
+    space_floor_id: 1,
+    space_name: 'W12343',
+    space_type: 'Computer room',
+};
+await assertExpectedDataSentToServer(page, expectedValues);
+```
+eg https://github.com/uqlibrary/homepage-react/blob/8b9cd9d7902449e45c8285eabf36c0b368a34a4b/playwright/tests/adminPages/spaces/bookablespacesAddNew.spec.ts#L90
 
 #### Parallelism
 
@@ -283,7 +311,7 @@ the "Build Details" tab.
 
 #### Standardised selectors to target elements
 
-- We are following the best practice recommended by playwright to target elements using `data-testid` attribute
+- We are following the best practice recommended by playwright to target elements using `data-testid` attribute where possible
 
 #### Gotchas
 
@@ -297,17 +325,17 @@ before the component reaches its final state.
 
 ### Code Coverage
 
-We require 100% coverage, but untestable/ unvaluable sections can be exlcude with istanbul (search the code base for examples)
+We require 100% coverage, but untestable/ non-valuable sections can be exlcuded with istanbul (search the code base for examples)
 
 To run the complete test suite and get code coverage, run `npm run test:cc`
 
 This will run unit tests (jest) and e2e tests (playwright) and then merge the coverage of the 2 to give complete coverage. Coverage reports are at `coverage/index.html` after the run.
 
-This will wipe previous coverage file.
+This will wipe any previous coverage files.
 
-On the server, coverage is checked on these branches: production, master, staging and any branch whose name includes the string 'coverage'
+On the server, coverage is checked on these branches: production, master, staging and any branch that is listed in the Git Triggers section of pipeline `homepage-development-coverage`.
 
-AWS Coverage checking is split between the two pipelines, both to make the run quicker, and because it reduces test flakiness. The package,json has a group of `!` lines in the nyc exclude section. The `bin/codebuild-test.sh` script will reverse some of these for each pipeline (but they are _not excluded_ in a local run, meaning we can split in pipeline on AWS and still check coverage locally!).  
+(if it doesn't appear in `homepage-development-coverage` then it needs to be includes included in the Git Triggers section of `homepage-development` to be built at all)
 
 ## Mocking
 
@@ -340,8 +368,6 @@ The following access is required:
 masquerade - on account record (CURRENT_ACCOUNT_API) eg <https://api.library.uq.edu.au/staging/account>, canMasquerade = true or false; when true, masqueradeType = full or readonly
 
 admin - on author record (AUTHOR_DETAILS_API) eg <https://api.library.uq.edu.au/staging/authors/details/uqldegro>, is_administrator = 0 or 1
-
-(there is also is_super_administrator, 0 or 1, which gives access to the security tab)
 
 ## Reviewing
 
