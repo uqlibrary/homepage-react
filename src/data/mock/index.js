@@ -1472,6 +1472,23 @@ mock.onGet('exams/course/FREN1010/summary')
             return [200, bookableSpaces_all];
         }
     })
+    // SPACES_SINGLE_API
+    .onGet(/bookable_spaces\/space\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const spaceUuid = urlparts.split('?')[0]; //strip any params off the url, eg userid
+        if (spaceUuid === 'error') {
+            return [500, { status: 'error', message: 'Server error' }];
+        } else if (spaceUuid === 'missingRecord') {
+            return [200, { status: 'ok', data: {} }]; // empty records are a 200
+        } else if (spaceUuid === '404') {
+            // route missing - unlikely
+            return [404, { status: 'error', message: 'Not Found' }];
+        } else {
+            const result = bookableSpaces_all.data.locations.find(space => space.space_uuid === spaceUuid) || {};
+            return [200, { data: result }];
+        }
+    })
     .onGet(routes.WEEKLYHOURS_API().apiUrl)
     .reply(() => {
         if (responseType === 'weeklyHoursError') {

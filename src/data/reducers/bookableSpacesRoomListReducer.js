@@ -7,6 +7,9 @@ export const initialState = {
     bookableSpacesRoomAdding: null,
     bookableSpacesRoomAddError: null,
     bookableSpacesRoomAddResult: null,
+    bookableSpaceGetting: null,
+    bookableSpaceGetError: null,
+    bookableSpaceGetResult: null,
 };
 
 const handlers = {
@@ -32,6 +35,25 @@ const handlers = {
     // [actions.SPACES_ROOM_LIST_CLEAR]: () => ({
     //     ...initialState,
     // }),
+    [actions.SPACES_ROOM_GET_LOADING]: state => ({
+        ...initialState,
+        ...state,
+        bookableSpaceGetting: true,
+        bookableSpaceGetError: false,
+    }),
+    [actions.SPACES_ROOM_GET_LOADED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        bookableSpaceGetting: false,
+        bookableSpaceGetError: false,
+        bookableSpaceGetResult: action.payload,
+    }),
+    [actions.SPACES_ROOM_GET_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        bookableSpaceGetting: false,
+        bookableSpaceGetError: action.payload,
+    }),
     [actions.SPACES_LOCATION_ADDING]: state => ({
         ...initialState,
         ...state,

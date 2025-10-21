@@ -2,6 +2,7 @@ import * as actions from './actionTypes';
 import { destroy, get, post, put } from 'repositories/generic';
 import {
     SPACES_ADD_LOCATION_API,
+    SPACES_SINGLE_API,
     SPACES_MODIFY_LOCATION_API,
     SPACES_ALL_API,
     SPACES_SITE_API,
@@ -14,6 +15,30 @@ const checkExpireSession = (dispatch, error) => {
         dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
     }
 };
+
+export function loadABookableSpacesRoom(spacesUuid) {
+    return dispatch => {
+        // dispatch({ type: actions.SPACES_ROOM_GET_CLEAR });
+        dispatch({ type: actions.SPACES_ROOM_GET_LOADING });
+        const url = SPACES_SINGLE_API({ uuid: spacesUuid });
+        console.log('loadABookableSpacesRoom call:', url);
+        return get(url)
+            .then(response => {
+                console.log('loadABookableSpacesRoom loaded', response);
+                dispatch({
+                    type: actions.SPACES_ROOM_GET_LOADED,
+                    payload: response,
+                });
+            })
+            .catch(error => {
+                console.log('loadABookableSpacesRoom error', error);
+                dispatch({
+                    type: actions.SPACES_ROOM_GET_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
 
 export function loadAllBookableSpacesRooms() {
     return dispatch => {

@@ -292,11 +292,12 @@ export const LOANS_API = () => ({
     options: { params: { ts: `${new Date().getTime()}` } },
 });
 
-// Locations APIs
+// Spaces APIs
 export const SPACES_ALL_API = () => ({
     apiUrl: 'bookable_spaces/spaces/all',
     options: { params: { ts: `${new Date().getTime()}` } },
 });
+export const SPACES_SINGLE_API = ({ uuid }) => ({ apiUrl: `bookable_spaces/space/${uuid}` });
 
 export const WEEKLYHOURS_API = () => {
     return {

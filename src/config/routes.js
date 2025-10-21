@@ -379,7 +379,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    const spacesId = ':spacesId';
+    const spaceUuid = ':spaceUuid';
     const bookableSpacesAdminPages = [
         {
             path: pathConfig.admin.bookableSpacesDashboard,
@@ -407,7 +407,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.admin.bookablespaces.title,
         },
         {
-            path: pathConfig.admin.bookableSpacesEdit(spacesId),
+            path: pathConfig.admin.bookableSpacesEdit(spaceUuid),
             element: <components.BookableSpacesEditSpace />,
             exact: true,
             pageTitle: locale.pages.admin.bookablespaces.title,

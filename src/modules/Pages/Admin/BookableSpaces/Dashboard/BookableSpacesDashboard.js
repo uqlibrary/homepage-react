@@ -1,13 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useAccountContext } from 'context';
 
 import { Grid } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+
+import EditIcon from '@mui/icons-material/Edit';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -17,7 +21,7 @@ import DoneIcon from '@mui/icons-material/Done';
 
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
-import { addBreadcrumbsToSiteHeader } from '../helpers';
+import { addBreadcrumbsToSiteHeader, spacesAdminLink } from 'modules/Pages/Admin/BookableSpaces/helpers';
 import { slugifyName, standardText } from 'helpers/general';
 
 const backgroundColorColumn = '#f0f0f0';
@@ -99,6 +103,8 @@ export const BookableSpacesDashboard = ({
     console.log('weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
     console.log('facilityTypeList', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
 
+    const { account } = useAccountContext();
+
     React.useEffect(() => {
         console.log('BookableSpacesDashboard PAGE LOADED');
         addBreadcrumbsToSiteHeader([
@@ -153,6 +159,14 @@ export const BookableSpacesDashboard = ({
             };
         });
     }
+
+    const openEditSpacePage = e => {
+        const buttonClicked = e.target.closest('button');
+        const spaceuuid = !!buttonClicked && buttonClicked.getAttribute('data-spaceuuid');
+        !!spaceuuid && (window.location.href = spacesAdminLink(`/admin/spaces/edit/${spaceuuid}`, account));
+        /* istanbul ignore next */
+        !spaceuuid && console.log('no valid button clicked');
+    };
 
     function displayListOfBookableSpaces() {
         const tableDescription = 'Manage Spaces';
@@ -227,7 +241,18 @@ export const BookableSpacesDashboard = ({
                                         data-testid="exampaper-desktop-originals-table-header"
                                     >
                                         <StyledStickyTableCell component="th" scope="col">
-                                            <div>{bookableSpace?.space_name}</div>
+                                            <div>
+                                                <IconButton
+                                                    color="primary"
+                                                    data-testid={`edit-space-${bookableSpace?.space_id}-button`}
+                                                    data-spaceuuid={bookableSpace?.space_uuid}
+                                                    onClick={openEditSpacePage}
+                                                    aria-label={`Edit ${bookableSpace?.space_name}`}
+                                                >
+                                                    <EditIcon style={{ width: '1rem' }} />
+                                                </IconButton>
+                                                {bookableSpace?.space_name}
+                                            </div>
                                             <div>{bookableSpace?.space_type}</div>
                                         </StyledStickyTableCell>
 

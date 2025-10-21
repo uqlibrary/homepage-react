@@ -1,17 +1,174 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useCookies } from 'react-cookie';
+import { useParams } from 'react-router';
 
-export const BookableSpacesEditSpace = ({ actions }) => {
-    React.useEffect(() => {
-        console.log('empty BookableSpacesEditSpace');
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+
+import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
+import { EditSpaceForm } from '../EditSpaceForm';
+import { addBreadcrumbsToSiteHeader } from 'modules/Pages/Admin/BookableSpaces/helpers';
+
+const EditSpacePage = ({ children }) => {
+    return (
+        <StandardPage title="Spaces">
+            <HeaderBar pageTitle="Add a new Space" currentPage="add-space" />
+            <section aria-live="assertive">
+                <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
+                    {children}
+                </StandardCard>
+            </section>
+        </StandardPage>
+    );
+};
+
+export const BookableSpacesEditSpace = ({
+    actions,
+    bookableSpacesRoomAdding,
+    bookableSpacesRoomAddError,
+    bookableSpacesRoomAddResult,
+    campusList,
+    campusListLoading,
+    campusListError,
+    bookableSpacesRoomList,
+    bookableSpacesRoomListLoading,
+    bookableSpacesRoomListError,
+    weeklyHours,
+    weeklyHoursLoading,
+    weeklyHoursError,
+    facilityTypeList,
+    facilityTypeListLoading,
+    facilityTypeListError,
+    bookableSpaceGetting,
+    bookableSpaceGetError,
+    bookableSpaceGetResult,
+}) => {
+    console.log('bookableSpaceGet:', bookableSpaceGetting, bookableSpaceGetError, bookableSpaceGetResult);
+
+    // "spaceUuid" matching the param passed in pathConfig.js and config/routes.js
+    const { spaceUuid } = useParams();
+    console.log('BookableSpacesEditSpace spaceUuid=', spaceUuid);
+
+    const [cookies, setCookie] = useCookies();
+    const [formValues, setFormValues2] = useState([]);
+    const setFormValues = newValues => {
+        console.log('setFormValues', newValues);
+        setFormValues2(newValues);
+    };
+
+    useEffect(() => {
+        addBreadcrumbsToSiteHeader([
+            '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Add a Space</span></li>',
+        ]);
+
+        if (
+            !!spaceUuid &&
+            bookableSpaceGetting === null &&
+            bookableSpaceGetError === null &&
+            bookableSpaceGetResult === null
+        ) {
+            actions.loadABookableSpacesRoom(spaceUuid);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return <div>empty BookableSpacesEditSpace</div>;
+    useEffect(() => {
+        if (bookableSpaceGetting === false && bookableSpaceGetError === false) {
+            console.log('use bookableSpaceGetResult = ', bookableSpaceGetResult);
+            setFormValues({
+                facility_types: bookableSpaceGetResult?.data?.facility_types,
+                building_name: bookableSpaceGetResult?.data?.space_building_name,
+                building_number: bookableSpaceGetResult?.data?.space_building_number,
+                library_name: bookableSpaceGetResult?.data?.space_library_name,
+                library_id: bookableSpaceGetResult?.data?.space_library_id,
+                floor_name: bookableSpaceGetResult?.data?.space_floor_name,
+                floor_id: bookableSpaceGetResult?.data?.space_floor_id,
+                campus_name: bookableSpaceGetResult?.data?.space_campus_name,
+                campus_id: bookableSpaceGetResult?.data?.space_campus_id,
+                space_description: bookableSpaceGetResult?.data?.space_description,
+                space_id: bookableSpaceGetResult?.data?.space_id,
+                space_is_ground_floor: bookableSpaceGetResult?.data?.space_is_ground_floor,
+                space_latitude: bookableSpaceGetResult?.data?.space_latitude,
+                space_longitude: bookableSpaceGetResult?.data?.space_longitude,
+                space_name: bookableSpaceGetResult?.data?.space_name,
+                space_opening_hours_id: bookableSpaceGetResult?.data?.space_opening_hours_id,
+                space_opening_hours_override: bookableSpaceGetResult?.data?.space_opening_hours_override,
+                space_photo_description: bookableSpaceGetResult?.data?.space_photo_description,
+                space_photo_url: bookableSpaceGetResult?.data?.space_photo_url,
+                space_precise: bookableSpaceGetResult?.data?.space_precise,
+                space_services_page: bookableSpaceGetResult?.data?.space_services_page,
+                space_type: bookableSpaceGetResult?.data?.space_type,
+                space_uuid: bookableSpaceGetResult?.data?.space_uuid,
+            });
+        }
+    }, [bookableSpaceGetting, bookableSpaceGetError, bookableSpaceGetResult]);
+
+    const updateSpace = valuesToSend => {
+        console.log('updateSpace valuesToSend=', valuesToSend);
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
+        console.log('TODO SEND CHANGES!!!!!');
+
+        // actions
+        //     .addBookableSpaceLocation(valuesToSend, 'space')
+        //     .then(() => {})
+        //     .catch(e => {
+        //         console.log('catch: adding new space failed:', e);
+        //     });
+    };
+
+    console.log('BookableSpacesEditSpace campusListLoading=', campusListLoading);
+    return (
+        <EditSpaceForm
+            actions={actions}
+            bookableSpacesRoomAdding={bookableSpacesRoomAdding}
+            bookableSpacesRoomAddError={bookableSpacesRoomAddError}
+            bookableSpacesRoomAddResult={bookableSpacesRoomAddResult}
+            campusList={campusList}
+            campusListLoading={campusListLoading}
+            campusListError={campusListError}
+            bookableSpacesRoomList={bookableSpacesRoomList}
+            bookableSpacesRoomListLoading={bookableSpacesRoomListLoading}
+            bookableSpacesRoomListError={bookableSpacesRoomListError}
+            weeklyHours={weeklyHours}
+            weeklyHoursLoading={weeklyHoursLoading}
+            weeklyHoursError={weeklyHoursError}
+            facilityTypeList={facilityTypeList}
+            facilityTypeListLoading={facilityTypeListLoading}
+            facilityTypeListError={facilityTypeListError}
+            formValues={formValues}
+            setFormValues={setFormValues}
+            saveToDb={updateSpace}
+            PageWrapper={EditSpacePage}
+        />
+    );
 };
 
 BookableSpacesEditSpace.propTypes = {
     actions: PropTypes.any,
+    bookableSpacesRoomAdding: PropTypes.any,
+    bookableSpacesRoomAddError: PropTypes.any,
+    bookableSpacesRoomAddResult: PropTypes.any,
+    campusList: PropTypes.any,
+    campusListLoading: PropTypes.any,
+    campusListError: PropTypes.any,
+    bookableSpacesRoomList: PropTypes.any,
+    bookableSpacesRoomListLoading: PropTypes.any,
+    bookableSpacesRoomListError: PropTypes.any,
+    weeklyHours: PropTypes.any,
+    weeklyHoursLoading: PropTypes.any,
+    weeklyHoursError: PropTypes.any,
+    facilityTypeList: PropTypes.any,
+    facilityTypeListLoading: PropTypes.any,
+    facilityTypeListError: PropTypes.any,
+    bookableSpaceGetting: PropTypes.any,
+    bookableSpaceGetError: PropTypes.any,
+    bookableSpaceGetResult: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesEditSpace);
