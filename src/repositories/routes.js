@@ -293,7 +293,7 @@ export const LOANS_API = () => ({
 });
 
 // Locations APIs
-export const SPACES_ROOMS_ALL_API = () => ({
+export const SPACES_ALL_API = () => ({
     apiUrl: 'bookable_spaces/spaces/all',
     options: { params: { ts: `${new Date().getTime()}` } },
 });

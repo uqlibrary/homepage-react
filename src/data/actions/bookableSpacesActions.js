@@ -3,7 +3,7 @@ import { destroy, get, post, put } from 'repositories/generic';
 import {
     SPACES_ADD_LOCATION_API,
     SPACES_MODIFY_LOCATION_API,
-    SPACES_ROOMS_ALL_API,
+    SPACES_ALL_API,
     SPACES_SITE_API,
 } from 'repositories/routes';
 
@@ -19,8 +19,8 @@ export function loadAllBookableSpacesRooms() {
     return dispatch => {
         // dispatch({ type: actions.SPACES_ROOM_LIST_CLEAR });
         dispatch({ type: actions.SPACES_ROOM_LIST_LOADING });
-        console.log('loadAllBookableSpacesRooms start', SPACES_ROOMS_ALL_API());
-        return get(SPACES_ROOMS_ALL_API())
+        console.log('loadAllBookableSpacesRooms start', SPACES_ALL_API());
+        return get(SPACES_ALL_API())
             .then(response => {
                 console.log('loadAllBookableSpacesRooms loaded', response);
                 dispatch({

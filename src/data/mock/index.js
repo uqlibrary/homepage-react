@@ -1460,7 +1460,7 @@ mock.onGet('exams/course/FREN1010/summary')
                 return [200, { ...loans, fines: [], total_fines_count: 0 }];
         }
     })
-    .onGet(routes.SPACES_ROOMS_ALL_API().apiUrl)
+    .onGet(routes.SPACES_ALL_API().apiUrl)
     .reply(() => {
         if (responseType === 'error-spaces') {
             return [500, {}];
