@@ -68,6 +68,7 @@ export const flattedPathConfig = [
     '/digital-learning-hub/submit',
     '/digital-learning-hub/edit',
     '/exams/course',
+    '/admin/spaces/edit',
 ];
 
 export const getRoutesConfig = ({ components = {}, account = null }) => {
@@ -378,6 +379,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const spacesId = ':spacesId';
     const bookableSpacesAdminPages = [
         {
             path: pathConfig.admin.bookableSpacesDashboard,
@@ -401,6 +403,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.admin.bookableSpacesAdd,
             // element: <components.BookableSpacesAddSpace />,
             element: <components.BookableSpacesAddSpace />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespaces.title,
+        },
+        {
+            path: pathConfig.admin.bookableSpacesEdit(spacesId),
+            element: <components.BookableSpacesEditSpace />,
             exact: true,
             pageTitle: locale.pages.admin.bookablespaces.title,
         },

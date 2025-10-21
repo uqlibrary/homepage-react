@@ -60,6 +60,7 @@ export const BookableSpacesDashboard = lazy(() => lazyRetry(() => import('module
 export const BookableSpacesManageLocations = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/ManageLocations/BookableSpacesManageLocationsContainer')));
 export const BookableSpacesManageFacilities = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/ManageFacilities/BookableSpacesManageFacilitiesContainer')));
 export const BookableSpacesAddSpace = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/AddSpace/BookableSpacesAddSpaceContainer')));
+export const BookableSpacesEditSpace = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/EditSpace/BookableSpacesEditSpaceContainer')));
 
 // always load components
 export { HomePageContainer as Index } from 'modules/HomePage';
