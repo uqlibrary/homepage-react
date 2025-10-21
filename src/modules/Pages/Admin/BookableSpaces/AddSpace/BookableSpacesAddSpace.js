@@ -550,8 +550,10 @@ export const BookableSpacesAddSpace = ({
                     <Grid item xs={12}>
                         <p data-testid="add-space-no-locations">
                             No Libraries currently in system - please{' '}
-                            <a href={spacesAdminLink('/manage/locations', account)}>create campus locations</a> and then
-                            try again.
+                            <a href={spacesAdminLink('/admin/spaces/manage/locations', account)}>
+                                create campus locations
+                            </a>{' '}
+                            and then try again.
                         </p>
                     </Grid>
                 </Grid>
@@ -564,7 +566,7 @@ export const BookableSpacesAddSpace = ({
                     actionButtonColor="primary"
                     actionButtonVariant="contained"
                     confirmationBoxId="spaces-save-outcome"
-                    onAction={() => navigateToPage('')}
+                    onAction={() => navigateToPage('/admin/spaces')}
                     hideCancelButton={!locale.success.cancelButtonLabel}
                     cancelButtonLabel={locale.success.cancelButtonLabel}
                     onCancelAction={() => clearForm()}
@@ -957,7 +959,7 @@ export const BookableSpacesAddSpace = ({
                                 <StyledSecondaryButton
                                     children="Cancel"
                                     data-testid="admin-spaces-form-button-cancel"
-                                    onClick={() => navigateToPage('')}
+                                    onClick={() => navigateToPage('/admin/spaces')}
                                     variant="contained"
                                 />
                             </Grid>

@@ -98,7 +98,7 @@ export const AdminButton = ({ currentPage }) => {
             >
                 <MenuItem
                     onClick={() => {
-                        navigateToPage('', 'dashboard');
+                        navigateToPage('/admin/spaces', 'dashboard');
                     }}
                     data-testid="admin-spaces-visit-dashboard-button"
                 >
@@ -107,7 +107,7 @@ export const AdminButton = ({ currentPage }) => {
 
                 <MenuItem
                     onClick={() => {
-                        navigateToPage('/manage/locations', 'manage-locations');
+                        navigateToPage('/admin/spaces/manage/locations', 'manage-locations');
                     }}
                     data-testid="admin-spaces-visit-manage-locations-button"
                 >
@@ -116,7 +116,7 @@ export const AdminButton = ({ currentPage }) => {
 
                 <MenuItem
                     onClick={() => {
-                        navigateToPage('/add', 'add-space');
+                        navigateToPage('/admin/spaces/add', 'add-space');
                     }}
                     data-testid="admin-spaces-visit-add-space-button"
                 >
@@ -125,7 +125,7 @@ export const AdminButton = ({ currentPage }) => {
 
                 <MenuItem
                     onClick={() => {
-                        navigateToPage('/manage/facilitytypes', 'manage-facilities');
+                        navigateToPage('/admin/spaces/manage/facilitytypes', 'manage-facilities');
                     }}
                     data-testid="admin-spaces-visit-manage-facilities-button"
                 >

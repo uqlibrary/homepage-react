@@ -33,9 +33,10 @@ export function getUserPostfix(appendType = '?') {
 
 export const spacesAdminLink = (spacesPath = '', /* istanbul ignore next */ account = null) => {
     const userString = getUserPostfix();
-    return isSpacesAdminUser(account)
-        ? `${getPathRoot()}/admin/spaces${spacesPath}${userString}`
-        : `${getPathRoot()}/spaces${spacesPath}${userString}`;
+    if (isSpacesAdminUser(account)) {
+        return `${getPathRoot()}${spacesPath}${userString}`;
+    }
+    return '';
 };
 
 export function addBreadcrumbsToSiteHeader(localChildren) {
