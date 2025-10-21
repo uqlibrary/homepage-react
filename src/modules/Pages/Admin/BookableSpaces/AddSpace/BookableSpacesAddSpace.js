@@ -9,7 +9,7 @@ import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import { EditSpaceForm } from '../EditSpaceForm';
 import { addBreadcrumbsToSiteHeader } from 'modules/Pages/Admin/BookableSpaces/helpers';
 
-const AddSpacePage = ({ children }) => {
+const PageWrapper = ({ children }) => {
     return (
         <StandardPage title="Spaces">
             <HeaderBar pageTitle="Add a new Space" currentPage="add-space" />
@@ -114,12 +114,12 @@ export const BookableSpacesAddSpace = ({
             formValues={formValues}
             setFormValues={setFormValues}
             saveToDb={createNewSpace}
-            PageWrapper={AddSpacePage}
+            PageWrapper={PageWrapper}
         />
     );
 };
 
-AddSpacePage.propTypes = {
+PageWrapper.propTypes = {
     children: PropTypes.node,
 };
 

@@ -10,10 +10,10 @@ import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import { EditSpaceForm } from '../EditSpaceForm';
 import { addBreadcrumbsToSiteHeader } from 'modules/Pages/Admin/BookableSpaces/helpers';
 
-const EditSpacePage = ({ children }) => {
+const PageWrapper = ({ children }) => {
     return (
         <StandardPage title="Spaces">
-            <HeaderBar pageTitle="Add a new Space" currentPage="add-space" />
+            <HeaderBar pageTitle="Edit Space" currentPage="edit-space" />
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
                     {children}
@@ -144,7 +144,7 @@ export const BookableSpacesEditSpace = ({
             formValues={formValues}
             setFormValues={setFormValues}
             saveToDb={updateSpace}
-            PageWrapper={EditSpacePage}
+            PageWrapper={PageWrapper}
         />
     );
 };
@@ -169,6 +169,9 @@ BookableSpacesEditSpace.propTypes = {
     bookableSpaceGetting: PropTypes.any,
     bookableSpaceGetError: PropTypes.any,
     bookableSpaceGetResult: PropTypes.any,
+};
+PageWrapper.propTypes = {
+    children: PropTypes.node,
 };
 
 export default React.memo(BookableSpacesEditSpace);
