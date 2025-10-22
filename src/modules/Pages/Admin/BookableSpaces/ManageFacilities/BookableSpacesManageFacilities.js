@@ -18,7 +18,11 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { pluralise, scrollToTopOfPage, slugifyName, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
-import { addBreadcrumbsToSiteHeader, displayToastMessage } from 'modules/Pages/Admin/BookableSpaces/helpers';
+import {
+    addBreadcrumbsToSiteHeader,
+    displayToastMessage,
+    getFlatFacilityTypeList,
+} from 'modules/Pages/Admin/BookableSpaces/helpers';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
@@ -116,21 +120,14 @@ export const BookableSpacesManageFacilities = ({
 
     React.useEffect(() => {
         // initial the form on load
-        if (
+        const facilityTypeListHasLoaded =
             facilityTypeListError === false &&
             facilityTypeListLoading === false &&
-            facilityTypeList?.data?.facility_type_groups?.length > 0
-        ) {
-            const facilityTypesToStore = facilityTypeList?.data?.facility_type_groups?.flatMap(group =>
-                group.facility_type_children.map(child => ({
-                    facility_type_id: child.facility_type_id,
-                    facility_type_name: child.facility_type_name,
-                })),
-            );
+            facilityTypeList?.data?.facility_type_groups?.length > 0;
+        if (facilityTypeListHasLoaded) {
             setFormValues({
-                ['facility_types']: facilityTypesToStore,
+                ['facility_types']: getFlatFacilityTypeList(facilityTypeList),
             });
-            console.log('setSaveButtonVisibility at 1, to', saveButtonVisibilityAlwaysVisible);
             setSaveButtonVisibility(saveButtonVisibilityAlwaysVisible);
         }
     }, [facilityTypeListLoading, facilityTypeListError, facilityTypeList]);
