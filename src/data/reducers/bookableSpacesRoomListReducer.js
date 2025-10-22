@@ -1,4 +1,5 @@
 import * as actions from 'data/actions/actionTypes';
+import { SPACES_LOCATION_UPDATING } from 'data/actions/actionTypes';
 
 export const initialState = {
     bookableSpacesRoomList: null,
@@ -10,6 +11,9 @@ export const initialState = {
     bookableSpaceGetting: null,
     bookableSpaceGetError: null,
     bookableSpaceGetResult: null,
+    bookableSpacesRoomUpdating: null,
+    bookableSpacesRoomUpdateError: null,
+    bookableSpacesRoomUpdateResult: null,
 };
 
 const handlers = {
@@ -73,6 +77,25 @@ const handlers = {
         bookableSpacesRoomAdding: false,
         bookableSpacesRoomAddError: action.payload,
     }),
+    [actions.SPACES_LOCATION_UPDATING]: state => ({
+        ...initialState,
+        ...state,
+        bookableSpacesRoomUpdating: true,
+        bookableSpacesRoomUpdateError: false,
+    }),
+    [actions.SPACES_LOCATION_UPDATED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        bookableSpacesRoomUpdating: false,
+        bookableSpacesRoomUpdateError: false,
+        bookableSpacesRoomUpdateResult: action.payload,
+    }),
+    [actions.SPACES_LOCATION_UPDATE_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        bookableSpacesRoomUpdating: false,
+        bookableSpacesRoomUpdateError: action.payload,
+    }),
 };
 
 export default function bookableSpacesRoomListReducer(state = initialState, action) {
@@ -80,5 +103,6 @@ export default function bookableSpacesRoomListReducer(state = initialState, acti
     if (!handler) {
         return state;
     }
+    console.log('bookableSpacesRoomListReducer', action.type, state);
     return handler(state, action);
 }

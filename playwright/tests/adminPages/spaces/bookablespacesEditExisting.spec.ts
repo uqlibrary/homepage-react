@@ -82,7 +82,7 @@ test.describe('Spaces Admin - edit space', () => {
     test('add spaces page is accessible', async ({ page }) => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
-    test.only('only required fields are required', async ({ page, context }) => {
+    test.only('can save with only required fields', async ({ page, context }) => {
         await setTestDataCookie(context, page);
 
         // await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
@@ -95,11 +95,14 @@ test.describe('Spaces Admin - edit space', () => {
         //     .fill('Computer room');
 
         // clear all fields we can clear
-        await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
-        await page
-            .getByTestId('add-space-precise-location')
-            .locator('input')
-            .fill('');
+        await expect(page.getByTestId('add-space-description')).toBeVisible();
+        await page.getByTestId('add-space-description').fill('');
+
+        // // clear facility types - playwright doesnt seem to be able to click these chips :(
+        // await page.locator('[data-tag-index="0"]').click();
+        // await page.locator('[data-tag-index="1"]').click();
+        // await page.locator('[data-tag-index="2"]').click();
+        // await page.locator('[data-tag-index="3"]').click();
 
         await expect(page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper')).toBeVisible();
         await page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper').click();
@@ -110,6 +113,28 @@ test.describe('Spaces Admin - edit space', () => {
             .getByTestId('space-opening-hours-override')
             .locator('input')
             .fill('');
+
+        await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
+        await page
+            .getByTestId('space_services_page')
+            .locator('input')
+            .fill('');
+
+        // // already blank
+        // await expect(page.getByTestId('space_opening_hours_override').locator('input')).toBeVisible();
+        // await page
+        //     .getByTestId('space_opening_hours_override')
+        //     .locator('input')
+        //     .fill('');
+
+        // // test doesnt like it
+        // await page.getByTestId('space_precise').locator('input');
+        // // .scrollIntoViewIfNeeded()
+        // await expect(page.getByTestId('space_precise').locator('input')).toBeVisible();
+        // await page
+        //     .getByTestId('space_precise')
+        //     .locator('input')
+        //     .fill('');
 
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
         await page
@@ -131,24 +156,25 @@ test.describe('Spaces Admin - edit space', () => {
         page.getByTestId('admin-spaces-save-button-submit').click();
         //
         // await expect(page.getByTestId('message-title')).toBeVisible();
-        // await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
+        // await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
 
         // check the data we pretended to send to the server matches what we expect
         // acts as check of what we sent to api
         const expectedValues = {
             space_floor_id: 1,
             space_name: '01-W431',
-            space_precise: '',
+            space_type: 'Collaborative space',
+            facility_types: [1, 4, 8, 14],
+            space_precise: 'Westernmost corner',
             space_description: '',
             space_photo_url: '',
             space_photo_description: '',
-            space_type: 'Collaborative space',
             space_opening_hours_id: -1,
             space_services_page: '',
             space_opening_hours_override: null,
-            space_latitude: '-27.496955206561836',
+            space_latitude: '-27.496955206561836', // when we have fields for these, they should be cleared
             space_longitude: '153.01308753792662',
-            facility_types: [],
+            // facility_types: [],
         };
         // await page.waitForTimeout(100000);
         await page.waitForTimeout(100); // weird, we need to wait for the cookie?

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 // import { useCookies } from 'react-cookie';
-
 import Autocomplete from '@mui/material/Autocomplete';
 import { Grid } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
@@ -18,7 +17,12 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { isValidUrl, standardText, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 
-import { displayToastMessage, spacesAdminLink, springshareLocations } from 'modules/Pages/Admin/BookableSpaces/helpers';
+import {
+    displayToastMessage,
+    getFlatFacilityTypeList,
+    spacesAdminLink,
+    springshareLocations,
+} from 'modules/Pages/Admin/BookableSpaces/helpers';
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
@@ -48,15 +52,25 @@ export const EditSpaceForm = ({
     setFormValues,
     saveToDb,
     PageWrapper,
+    bookableSpacesRoomUpdating,
+    bookableSpacesRoomUpdateError,
+    bookableSpacesRoomUpdateResult,
+    mode,
 }) => {
     console.log(
-        'EditSpaceForm addBookableSpaceLocation',
+        'EditSpaceForm updateBookableSpaceLocation',
         bookableSpacesRoomAdding,
         bookableSpacesRoomAddError,
         bookableSpacesRoomAddResult,
     );
+    console.log(
+        'EditSpaceForm bookableSpacesRoomUpdateResult',
+        bookableSpacesRoomUpdating,
+        bookableSpacesRoomUpdateError,
+        bookableSpacesRoomUpdateResult,
+    );
     console.log('EditSpaceForm campusList', campusListLoading, campusListError, campusList);
-    console.log('EditSpaceForm formValues', formValues);
+    console.log('EditSpaceForm formValues', Object.keys(formValues).length, formValues);
     console.log(
         'EditSpaceForm xspacesRoomList',
         bookableSpacesRoomListLoading,
@@ -74,6 +88,7 @@ export const EditSpaceForm = ({
         console.log('EditSpaceForm setLocation', newValues);
         setLocation1(newValues);
     };
+
     const [confirmationOpen, setConfirmationOpen] = useState(false);
     const [errorMessages, setErrorMessages2] = useState([]);
     const setErrorMessages = m => {
@@ -179,6 +194,13 @@ export const EditSpaceForm = ({
             !bookableSpacesRoomAdding && (!!bookableSpacesRoomAddError || !!bookableSpacesRoomAddResult),
         );
     }, [bookableSpacesRoomAdding, bookableSpacesRoomAddError, bookableSpacesRoomAddResult]);
+
+    useEffect(() => {
+        // showSavingProgress(false);
+        setConfirmationOpen(
+            !bookableSpacesRoomUpdating && (!!bookableSpacesRoomUpdateError || !!bookableSpacesRoomUpdateResult),
+        );
+    }, [bookableSpacesRoomUpdating, bookableSpacesRoomUpdateError, bookableSpacesRoomUpdateResult]);
 
     const handleSpringshareSelection = (event, newValue) => {
         console.log('EditSpaceForm handleSpringshareSelection newValue', newValue);
@@ -363,19 +385,13 @@ export const EditSpaceForm = ({
 
     function chooseFacilityType(e) {
         const clickedChip = e.target.closest('[role="button"]');
-        // console.log('chooseFacilityType e.target.closest=', clickedChip);
-        const facilityTypeRemovalIndex = !!clickedChip?.hasAttribute('data-tag-index')
+        const idChipDeleted = !!clickedChip?.hasAttribute('data-tag-index')
             ? parseInt(clickedChip.getAttribute('data-tag-index'), 10)
             : null;
-        // console.log('facilityTypeRemovalIndex', facilityTypeRemovalIndex, formValues.facility_types);
 
-        if (!!facilityTypeRemovalIndex) {
+        if (idChipDeleted !== null) {
             // a chip has been clicked to remove it
-            const newFacilityTypes = [
-                ...formValues.facility_types.slice(0, facilityTypeRemovalIndex),
-                ...formValues.facility_types.slice(facilityTypeRemovalIndex + 1),
-            ];
-
+            const newFacilityTypes = formValues.facility_types.filter((_, idChip) => idChip !== idChipDeleted);
             const newFormValues = {
                 ...formValues,
                 ['facility_types']: newFacilityTypes,
@@ -384,28 +400,13 @@ export const EditSpaceForm = ({
             return;
         }
 
-        console.log('chooseFacilityType e.target=', e.target);
-        console.log('chooseFacilityType formValues', formValues);
-        console.log('chooseFacilityType formValues.facility_types=', formValues.facility_types);
-
         const selectedFacilityTypeid = parseInt(e.target.id.replace('facilityType-option-', ''), 10);
 
         const ft = formValues?.facility_types || [];
-        const ftl =
-            facilityTypeList?.data?.facility_type_groups?.flatMap(group =>
-                group.facility_type_children.map(child => ({
-                    facility_type_id: child.facility_type_id,
-                    facility_type_name: child.facility_type_name,
-                })),
-            ) || [];
-        console.log('ftl=', ftl);
-        console.log('selectedFacilityTypeid=', selectedFacilityTypeid);
 
-        // Find the matching entry in ftl
-        const matchingEntry = ftl.find(item => item.facility_type_id === selectedFacilityTypeid);
-        console.log(selectedFacilityTypeid, 'matchingEntry=', matchingEntry);
+        const flatFacilityTypeList = getFlatFacilityTypeList(facilityTypeList);
 
-        console.log('oldFacilityTypes', formValues?.facility_types);
+        const matchingEntry = flatFacilityTypeList.find(item => item.facility_type_id === selectedFacilityTypeid);
         let newFacilityTypes = [];
         if (matchingEntry) {
             // Remove existing entry (if any) and add the new/updated one
@@ -414,17 +415,7 @@ export const EditSpaceForm = ({
                 { ...matchingEntry },
             ];
         }
-        console.log('newFacilityTypes', newFacilityTypes);
 
-        // const facilityType = formValues?.facility_types.find(ft => ft.facility_type_id === selectedFacilityTypeid) || {};
-        // // const facilityTypes = formValues.facility_types || [];
-        // const newFacilityTypes =
-        //     formValues?.facility_types.map(ft => {
-        //         if (ft.facility_type_id === selectedFacilityTypeid) {
-        //             const newFacilityTypeEntry = facilityTypeList.find(ftl => ftl.facility_type_id === selectedFacilityTypeid);
-        //         }
-        //     }) || [];
-        // !newFacilityTypes.includes(e.target.textContent) && newFacilityTypes.push(selectedFacilityTypeid);
         const newValues = {
             ...formValues,
             ['facility_types']: newFacilityTypes,
@@ -442,16 +433,16 @@ export const EditSpaceForm = ({
 
     const locale = {
         success: {
-            confirmationTitle: 'A Space has been added',
+            confirmationTitle: mode === 'add' ? 'A Space has been added' : 'The Space has been updated',
             confirmationMessage: '',
             cancelButtonLabel: 'Add another Space',
-            confirmButtonLabel: 'Return to list page',
+            confirmButtonLabel: 'Return to dashboard',
         },
         error: {
-            confirmationTitle: bookableSpacesRoomAddError,
+            confirmationTitle: mode === 'add' ? bookableSpacesRoomAddError : bookableSpacesRoomUpdateError,
             confirmationMessage: '',
             cancelButtonLabel: 'Add another Space',
-            confirmButtonLabel: 'Return to list page',
+            confirmButtonLabel: 'Return to dashboard',
         },
     };
 
@@ -506,24 +497,38 @@ export const EditSpaceForm = ({
         });
         return facilityTypes;
     };
-    // if (!!savingProgressShown) {
-    //     return <InlineLoader message="Saving" />;
+
+    const facilityTypesHaveChanged = (arr1, arr2) => {
+        console.log('facilityTypesHaveChanged arr1=', arr1);
+        console.log('facilityTypesHaveChanged arr2=', arr2);
+        // Check if lengths are different
+        if (arr1?.length !== arr2?.length) {
+            return true;
+        }
+
+        // Sort both arrays (create copies to avoid mutation)
+        const sorted1 = [...arr1].sort((a, b) => a - b);
+        const sorted2 = [...arr2].sort((a, b) => a - b);
+
+        // Compare element by element
+        return !sorted1.every((value, index) => value === sorted2[index]);
+    };
+
     const handleSaveClick = () => {
-        console.log('handleSaveClick formValues=', formValues);
         const valuesToSend = {};
-        valuesToSend.space_floor_id = formValues.floor_id;
         valuesToSend.space_name = formValues.space_name;
+        valuesToSend.space_type = formValues.space_type;
+        valuesToSend.space_floor_id = formValues.floor_id;
         valuesToSend.space_precise = formValues.space_precise;
         valuesToSend.space_description = formValues.space_description;
         valuesToSend.space_photo_url = formValues.space_photo_url;
         valuesToSend.space_photo_description = formValues.space_photo_description;
-        valuesToSend.space_type = formValues.space_type;
         valuesToSend.space_opening_hours_id = formValues.space_opening_hours_id;
         valuesToSend.space_services_page = formValues.space_services_page;
         valuesToSend.space_opening_hours_override = formValues.space_opening_hours_override;
         valuesToSend.space_latitude = formValues.space_latitude;
         valuesToSend.space_longitude = formValues.space_longitude;
-        valuesToSend.facility_types = formValues.facility_types;
+        valuesToSend.facility_types = formValues.facility_types?.map(ft => ft.facility_type_id);
 
         const validationResult = formValid(valuesToSend);
         console.log('EditSpaceForm handleSaveClick validationResult=', validationResult);
@@ -600,7 +605,7 @@ export const EditSpaceForm = ({
                     actionButtonVariant="contained"
                     confirmationBoxId="spaces-save-outcome"
                     onAction={() => navigateToPage('/admin/spaces')}
-                    hideCancelButton={!locale.success.cancelButtonLabel}
+                    hideCancelButton={mode === 'edit' || !locale.success.cancelButtonLabel}
                     cancelButtonLabel={locale.success.cancelButtonLabel}
                     onCancelAction={() => clearForm()}
                     onClose={closeConfirmationBox}
@@ -878,7 +883,7 @@ export const EditSpaceForm = ({
                                 </div>
                             </Grid>
                             <Grid item xs={12}>
-                                <Typography component={'h3'} variant={'h6'}>
+                                <Typography component={'h4'} variant={'h6'}>
                                     Opening hours
                                 </Typography>
                             </Grid>
@@ -1037,10 +1042,14 @@ EditSpaceForm.propTypes = {
     facilityTypeList: PropTypes.any,
     facilityTypeListLoading: PropTypes.any,
     facilityTypeListError: PropTypes.any,
+    bookableSpacesRoomUpdating: PropTypes.any,
+    bookableSpacesRoomUpdateError: PropTypes.any,
+    bookableSpacesRoomUpdateResult: PropTypes.any,
     formValues: PropTypes.any,
     setFormValues: PropTypes.any,
     saveToDb: PropTypes.func,
     PageWrapper: PropTypes.any,
+    mode: PropTypes.string,
 };
 
 export default React.memo(EditSpaceForm);

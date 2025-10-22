@@ -25,9 +25,9 @@ const PageWrapper = ({ children }) => {
 
 export const BookableSpacesEditSpace = ({
     actions,
-    bookableSpacesRoomAdding,
-    bookableSpacesRoomAddError,
-    bookableSpacesRoomAddResult,
+    bookableSpacesRoomUpdating,
+    bookableSpacesRoomUpdateError,
+    bookableSpacesRoomUpdateResult,
     campusList,
     campusListLoading,
     campusListError,
@@ -126,9 +126,9 @@ export const BookableSpacesEditSpace = ({
     return (
         <EditSpaceForm
             actions={actions}
-            bookableSpacesRoomAdding={bookableSpacesRoomAdding}
-            bookableSpacesRoomAddError={bookableSpacesRoomAddError}
-            bookableSpacesRoomAddResult={bookableSpacesRoomAddResult}
+            bookableSpacesRoomUpdating={bookableSpacesRoomUpdating}
+            bookableSpacesRoomUpdateError={bookableSpacesRoomUpdateError}
+            bookableSpacesRoomUpdateResult={bookableSpacesRoomUpdateResult}
             campusList={campusList}
             campusListLoading={campusListLoading}
             campusListError={campusListError}
@@ -145,6 +145,7 @@ export const BookableSpacesEditSpace = ({
             setFormValues={setFormValues}
             saveToDb={updateSpace}
             PageWrapper={PageWrapper}
+            mode="edit"
         />
     );
 };

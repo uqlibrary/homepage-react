@@ -115,6 +115,7 @@ export const BookableSpacesAddSpace = ({
             setFormValues={setFormValues}
             saveToDb={createNewSpace}
             PageWrapper={PageWrapper}
+            mode="add"
         />
     );
 };
