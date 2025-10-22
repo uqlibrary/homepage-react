@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 
 import Autocomplete from '@mui/material/Autocomplete';
 import { Grid } from '@mui/material';
@@ -67,7 +67,7 @@ export const EditSpaceForm = ({
     console.log('EditSpaceForm facilityTypeList', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
 
     const { account } = useAccountContext();
-    const [cookies, setCookie] = useCookies();
+    // const [cookies, setCookie] = useCookies();
 
     const [location, setLocation1] = useState({});
     const setLocation = newValues => {
@@ -362,13 +362,72 @@ export const EditSpaceForm = ({
     }
 
     function chooseFacilityType(e) {
-        const facilityTypeid = e.target.id.replace('facilityType-option-', '');
+        const clickedChip = e.target.closest('[role="button"]');
+        // console.log('chooseFacilityType e.target.closest=', clickedChip);
+        const facilityTypeRemovalIndex = !!clickedChip?.hasAttribute('data-tag-index')
+            ? parseInt(clickedChip.getAttribute('data-tag-index'), 10)
+            : null;
+        // console.log('facilityTypeRemovalIndex', facilityTypeRemovalIndex, formValues.facility_types);
 
-        const facilityTypes = formValues.facility_types || [];
-        !facilityTypes.includes(e.target.textContent) && facilityTypes.push(facilityTypeid);
+        if (!!facilityTypeRemovalIndex) {
+            // a chip has been clicked to remove it
+            const newFacilityTypes = [
+                ...formValues.facility_types.slice(0, facilityTypeRemovalIndex),
+                ...formValues.facility_types.slice(facilityTypeRemovalIndex + 1),
+            ];
+
+            const newFormValues = {
+                ...formValues,
+                ['facility_types']: newFacilityTypes,
+            };
+            setFormValues(newFormValues);
+            return;
+        }
+
+        console.log('chooseFacilityType e.target=', e.target);
+        console.log('chooseFacilityType formValues', formValues);
+        console.log('chooseFacilityType formValues.facility_types=', formValues.facility_types);
+
+        const selectedFacilityTypeid = parseInt(e.target.id.replace('facilityType-option-', ''), 10);
+
+        const ft = formValues?.facility_types || [];
+        const ftl =
+            facilityTypeList?.data?.facility_type_groups?.flatMap(group =>
+                group.facility_type_children.map(child => ({
+                    facility_type_id: child.facility_type_id,
+                    facility_type_name: child.facility_type_name,
+                })),
+            ) || [];
+        console.log('ftl=', ftl);
+        console.log('selectedFacilityTypeid=', selectedFacilityTypeid);
+
+        // Find the matching entry in ftl
+        const matchingEntry = ftl.find(item => item.facility_type_id === selectedFacilityTypeid);
+        console.log(selectedFacilityTypeid, 'matchingEntry=', matchingEntry);
+
+        console.log('oldFacilityTypes', formValues?.facility_types);
+        let newFacilityTypes = [];
+        if (matchingEntry) {
+            // Remove existing entry (if any) and add the new/updated one
+            newFacilityTypes = [
+                ...ft.filter(item => item.facility_type_id !== selectedFacilityTypeid),
+                { ...matchingEntry },
+            ];
+        }
+        console.log('newFacilityTypes', newFacilityTypes);
+
+        // const facilityType = formValues?.facility_types.find(ft => ft.facility_type_id === selectedFacilityTypeid) || {};
+        // // const facilityTypes = formValues.facility_types || [];
+        // const newFacilityTypes =
+        //     formValues?.facility_types.map(ft => {
+        //         if (ft.facility_type_id === selectedFacilityTypeid) {
+        //             const newFacilityTypeEntry = facilityTypeList.find(ftl => ftl.facility_type_id === selectedFacilityTypeid);
+        //         }
+        //     }) || [];
+        // !newFacilityTypes.includes(e.target.textContent) && newFacilityTypes.push(selectedFacilityTypeid);
         const newValues = {
             ...formValues,
-            ['facility_types']: facilityTypes,
+            ['facility_types']: newFacilityTypes,
         };
         setFormValues(newValues);
     }
@@ -450,6 +509,7 @@ export const EditSpaceForm = ({
     // if (!!savingProgressShown) {
     //     return <InlineLoader message="Saving" />;
     const handleSaveClick = () => {
+        console.log('handleSaveClick formValues=', formValues);
         const valuesToSend = {};
         valuesToSend.space_floor_id = formValues.floor_id;
         valuesToSend.space_name = formValues.space_name;
@@ -466,7 +526,7 @@ export const EditSpaceForm = ({
         valuesToSend.facility_types = formValues.facility_types;
 
         const validationResult = formValid(valuesToSend);
-        console.log('EditSpaceForm validationResult=', validationResult);
+        console.log('EditSpaceForm handleSaveClick validationResult=', validationResult);
         if (validationResult !== true) {
             setErrorMessages(validationResult);
 
@@ -488,7 +548,6 @@ export const EditSpaceForm = ({
         formValues?.campus_id,
     );
     if (!!bookableSpacesRoomListLoading || !!campusListLoading || !formValues?.campus_id) {
-        console.log('EditSpaceForm RENDER loading');
         return (
             <Grid container>
                 <Grid item xs={12}>
@@ -497,7 +556,6 @@ export const EditSpaceForm = ({
             </Grid>
         );
     } else if (!!campusListError || !!bookableSpacesRoomListError) {
-        console.log('EditSpaceForm RENDER error');
         return (
             <PageWrapper>
                 <Grid container spacing={3}>
@@ -518,7 +576,6 @@ export const EditSpaceForm = ({
             bookableSpacesRoomListError === false &&
             !bookableSpacesRoomList?.data?.locations)
     ) {
-        console.log('EditSpaceForm RENDER empty');
         return (
             <PageWrapper>
                 <Grid container spacing={3}>
@@ -535,7 +592,7 @@ export const EditSpaceForm = ({
             </PageWrapper>
         );
     } else {
-        console.log('EditSpaceForm RENDER data');
+        console.log('RENDER formValues.facility_types=', formValues?.facility_types);
         return (
             <>
                 <ConfirmationBox
@@ -623,29 +680,6 @@ export const EditSpaceForm = ({
                                 </StyledErrorMessageTypography>
                             </Grid>
                             <Grid item xs={12}>
-                                <Typography component={'p'}>
-                                    The "About" page for this Library:{' '}
-                                    <span>{reportCurrentLibraryAboutPage(location)}</span>
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl variant="standard" fullWidth>
-                                    <InputLabel htmlFor="space_services_page">
-                                        Use a different page for this Space:
-                                    </InputLabel>
-                                    <Input
-                                        id="space_services_page"
-                                        data-testid="space_services_page"
-                                        value={formValues?.space_services_page || ''}
-                                        onChange={handleChange('space_services_page')}
-                                        onBlur={handleFieldCompletion}
-                                    />
-                                    <StyledErrorMessageTypography component={'div'}>
-                                        {reportErrorMessage('space_services_page')}
-                                    </StyledErrorMessageTypography>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12}>
                                 <InputLabel htmlFor="facilityType" id="facilityTypeLabel">
                                     Facility types
                                 </InputLabel>
@@ -653,6 +687,7 @@ export const EditSpaceForm = ({
                                     multiple
                                     id="facilityType"
                                     options={getFacilityTypes(facilityTypeList?.data) || []}
+                                    value={formValues.facility_types || []}
                                     getOptionLabel={item => item.facility_type_name}
                                     isOptionEqualToValue={(option, value) =>
                                         option.facility_type_id === value.facility_type_id
@@ -679,6 +714,17 @@ export const EditSpaceForm = ({
                                             }}
                                         />
                                     )}
+                                    // renderValue={(value, getTagProps) =>
+                                    //     value.map((option, index) => (
+                                    //         <Chip
+                                    //             label={!!option.facility_type_name || option}
+                                    //             id={`facility-type-chip-${index}`}
+                                    //             data-testid={`facility-type-chip-${index}`}
+                                    //             {...getTagProps({ index })}
+                                    //             onClick={console.log('clicked chip ' + index)}
+                                    //         />
+                                    //     ))
+                                    // }
                                 />
                             </Grid>
                             {/* <Grid item xs={6}>*/}
@@ -866,8 +912,6 @@ export const EditSpaceForm = ({
                                 <StyledErrorMessageTypography component={'div'}>
                                     {reportErrorMessage('space_opening_hours_id')}
                                 </StyledErrorMessageTypography>
-                            </Grid>
-                            <Grid item xs={12}>
                                 <FormControl variant="standard" fullWidth>
                                     <InputLabel htmlFor="space_opening_hours_override">
                                         An extra line about opening hours, specific to this Space
@@ -881,6 +925,27 @@ export const EditSpaceForm = ({
                                     />
                                     <StyledErrorMessageTypography component={'div'}>
                                         {reportErrorMessage('space_opening_hours_override')}
+                                    </StyledErrorMessageTypography>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography component={'p'}>
+                                    The "About" page for this Library:{' '}
+                                    <span>{reportCurrentLibraryAboutPage(location)}</span>
+                                </Typography>
+                                <FormControl variant="standard" fullWidth>
+                                    <InputLabel htmlFor="space_services_page">
+                                        Enter a different page for this Space:
+                                    </InputLabel>
+                                    <Input
+                                        id="space_services_page"
+                                        data-testid="space_services_page"
+                                        value={formValues?.space_services_page || ''}
+                                        onChange={handleChange('space_services_page')}
+                                        onBlur={handleFieldCompletion}
+                                    />
+                                    <StyledErrorMessageTypography component={'div'}>
+                                        {reportErrorMessage('space_services_page')}
                                     </StyledErrorMessageTypography>
                                 </FormControl>
                             </Grid>

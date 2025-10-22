@@ -94,12 +94,16 @@ export function addBookableSpaceLocation(request, locationType) {
     };
 }
 
-export function updateBookableSpaceLocation(request, locationType) {
+export function updateBookableSpaceLocation(request, locationType, _locationId = null) {
+    console.log('updateBookableSpaceLocation', locationType, _locationId, request);
+    const locationId = !!_locationId ? _locationId : request[`${locationType}Id`];
     return dispatch => {
         dispatch({ type: actions.SPACES_LOCATION_UPDATING });
-        const url = SPACES_MODIFY_LOCATION_API({ type: locationType, id: request[`${locationType}Id`] });
+        const url = SPACES_MODIFY_LOCATION_API({ type: locationType, id: locationId });
+        console.log('updateBookableSpaceLocation calling', url);
         return put(url, request)
             .then(response => {
+                console.log('updateBookableSpaceLocation good', response);
                 if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.SPACES_LOCATION_UPDATED,
@@ -114,6 +118,7 @@ export function updateBookableSpaceLocation(request, locationType) {
                 return Promise.resolve(response);
             })
             .catch(error => {
+                console.log('updateBookableSpaceLocation bad', error);
                 dispatch({
                     type: actions.SPACES_LOCATION_UPDATE_FAILED,
                     payload: error.message,

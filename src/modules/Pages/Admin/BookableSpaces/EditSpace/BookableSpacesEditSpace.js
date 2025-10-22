@@ -108,18 +108,18 @@ export const BookableSpacesEditSpace = ({
         console.log('updateSpace valuesToSend=', valuesToSend);
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        console.log('cypressTestCookie=', cypressTestCookie);
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            console.log('set cookie CYPRESS_DATA_SAVED');
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
-        console.log('TODO SEND CHANGES!!!!!');
-
-        // actions
-        //     .addBookableSpaceLocation(valuesToSend, 'space')
-        //     .then(() => {})
-        //     .catch(e => {
-        //         console.log('catch: adding new space failed:', e);
-        //     });
+        actions
+            .updateBookableSpaceLocation(valuesToSend, 'space', formValues.space_id)
+            .then(() => {})
+            .catch(e => {
+                console.log('catch: adding new space failed:', e);
+            });
     };
 
     console.log('BookableSpacesEditSpace campusListLoading=', campusListLoading);

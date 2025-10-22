@@ -30,13 +30,13 @@ export default {
                 facility_type_id: 1,
                 facility_type_name: 'Noise level Low',
             }, {
-                facility_type_id: 4,
+                facility_type_id: 4, // 11, ?
                 facility_type_name: 'Whiteboard',
             }, {
                 facility_type_id: 8,
                 facility_type_name: "Postgraduate spaces",
             }, {
-                facility_type_id: 14,
+                facility_type_id: 14, // 15, ?
                 facility_type_name: "Production Printing Services",
             }],
         }, {
