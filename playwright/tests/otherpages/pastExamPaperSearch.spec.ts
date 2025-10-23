@@ -1,4 +1,4 @@
-import { test, expect } from '@uq/pw/test';
+import { expect, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
 test.describe('Past Exam Papers Pages', () => {
@@ -133,7 +133,7 @@ test.describe('Past Exam Papers Pages', () => {
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
         test.describe('a desktop page', () => {
-            test(' with multiple subjects displayed shows table view for Original papers', async ({ page }) => {
+            test('with multiple subjects displayed shows table view for Original papers', async ({ page }) => {
                 await page.goto('/exams/course/fren');
                 await expect(
                     page
@@ -145,57 +145,148 @@ test.describe('Past Exam Papers Pages', () => {
                 // sample papers are correct
                 await expect(
                     page
-                        .getByTestId('exampaper-desktop-sample-link-course0-semester0-paper0')
+                        .getByTestId('exampaper-desktop-sample-link-FREN1010-semester0-paper0')
                         .getByText(/FREN1010 Sem\.2 2020/)
                         .first(),
                 ).toBeVisible();
 
-                // original papers are correct
+                // four columns: one course label and three semesters; 22 rows: 21 subjects + one header row
                 await expect(
                     page.getByTestId('exampaper-desktop-originals-table-header').locator(':scope > *'),
                 ).toHaveCount(4);
                 await expect(
                     page.getByTestId('exampaper-desktop-originals-table-body').locator(':scope > *'),
                 ).toHaveCount(22);
-                await expect(
-                    page
-                        .getByTestId('exampaper-desktop-originals-link-course1-semester1-paper0')
-                        .getByText(/FREN2010/)
-                        .first(),
-                ).toBeVisible();
-                await expect(
-                    page
-                        .getByTestId('exampaper-desktop-originals-link-course1-semester1-paper0')
-                        .getByText(/Final/)
-                        .first(),
-                ).toBeVisible();
-                await expect(
-                    page
-                        .getByTestId('exampaper-desktop-originals-link-course4-semester1-paper0')
-                        .getByText(/FREN2082/)
-                        .first(),
-                ).toBeVisible();
-                await expect(
-                    page
-                        .getByTestId('exampaper-desktop-originals-link-course4-semester1-paper0')
-                        .getByText(/a special french paper/)
-                        .first(),
-                ).toBeVisible();
-                await expect(
-                    page
-                        .getByTestId('exampaper-desktop-originals-link-course4-semester0-paper0')
-                        .getByText(/FREN2082/)
-                        .first(),
-                ).toBeVisible();
-                await expect(
-                    page
-                        .locator(
-                            '[data-testid="exampaper-desktop-originals-link-course4-semester0-paper0"] span:first-child',
-                        )
-                        .getByText(/Final Paper/)
-                        .first(),
-                ).toBeVisible();
+
+                // FREN1010 row one, column one, cell is empty
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN1010-semester0')).toBeDefined();
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN1010-semester0')).toBeEmpty();
+
+                // FREN1010 row one, column two, cell has two links
+                const paper1A = page.getByTestId('exampaper-desktop-originals-link-FREN1010-semester1-paper0');
+                await expect(paper1A.getByText(/FREN1010/).first()).toBeVisible();
+                await expect(paper1A.getByText(/Paper A/).first()).toBeVisible();
+                expect(await paper1A.innerHTML()).toBe('FREN1010<span><br>Paper A</span>');
+                await expect(paper1A).toHaveAttribute(
+                    'href',
+                    'https://files.library.uq.edu.au/exams/2019/Semester_Two_Final_Examinations__2018_FREN1020_613.pdf',
+                );
+
+                const paper1B = page.getByTestId('exampaper-desktop-originals-link-FREN1010-semester1-paper1');
+                await expect(paper1B.getByText(/FREN1010/).first()).toBeVisible();
+                await expect(paper1B.getByText(/Paper B/).first()).toBeVisible();
+                expect(await paper1B.innerHTML()).toBe('FREN1010<span><br>Paper B</span>');
+                await expect(paper1B).toHaveAttribute(
+                    'href',
+                    'https://files.library.uq.edu.au/exams/2019/Semester_Two_Final_Examinations__2018_FREN1020_614.pdf',
+                );
+
+                // FREN1010 row one, column three, cell is empty
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN1010-semester2')).toBeDefined();
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN1010-semester2')).toBeEmpty();
+
+                // FREN2010 row two, column one, cell has link
+                const paper2 = page.getByTestId('exampaper-desktop-originals-link-FREN2010-semester0-paper0');
+                await expect(paper2.getByText(/FREN2010/).first()).toBeVisible();
+                await expect(paper2).toHaveAttribute(
+                    'href',
+                    'https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_8461.pdf',
+                );
+
+                // FREN2010 row two, column two, cell is empty
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN2010-semester1')).toBeDefined();
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN2010-semester1')).toBeEmpty();
+
+                // FREN2010 row two, column three, cell has link
+                const paper3 = page.getByTestId('exampaper-desktop-originals-link-FREN2010-semester2-paper0');
+                await expect(paper3.getByText(/FREN2010/).first()).toBeVisible();
+                await expect(paper3.getByText(/Final/).first()).toBeVisible();
+                expect(await paper3.innerHTML()).toBe('FREN2010<span><br>Final</span>');
+                await expect(paper3).toHaveAttribute(
+                    'href',
+                    'https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2019_FREN7221_school.pdf',
+                );
+
+                // FREN2080 row three, column one, cell has link
+                const paper4 = page.getByTestId('exampaper-desktop-originals-link-FREN2080-semester0-paper0');
+                await expect(paper4.getByText(/FREN2080/).first()).toBeVisible();
+                await expect(paper4).toHaveAttribute(
+                    'href',
+                    'https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_8462.pdf',
+                );
+
+                // FREN2080 row three, column two, cell is empty
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN2080-semester1')).toBeDefined();
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN2080-semester1')).toBeEmpty();
+
+                // FREN2080 row three, column three, cell is empty
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN2080-semester2')).toBeDefined();
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN2080-semester2')).toBeEmpty();
+
+                // FREN2081 row four, column one, cell has link
+                const paper5 = page.getByTestId('exampaper-desktop-originals-link-FREN2081-semester0-paper0');
+                await expect(paper5.getByText(/FREN2081/).first()).toBeVisible();
+                await expect(paper5).toHaveAttribute(
+                    'href',
+                    'https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_8463.pdf',
+                );
+
+                // FREN2081 row four, column two, cell is empty
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN2081-semester1')).toBeDefined();
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN2081-semester1')).toBeEmpty();
+
+                // FREN2081 row four, column three, cell is empty
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN2081-semester2')).toBeDefined();
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN2081-semester2')).toBeEmpty();
+
+                // FREN2082 row five, column one, cell has link
+                const paper6 = page.getByTestId('exampaper-desktop-originals-link-FREN2082-semester0-paper0');
+                await expect(paper6.getByText(/Final Paper/).first()).toBeVisible();
+                await expect(paper6.getByText(/FREN2082/).first()).toBeVisible();
+                expect(await paper6.innerHTML()).toBe('<span>Final Paper<br></span>FREN2082');
+                await expect(paper6).toHaveAttribute(
+                    'href',
+                    'https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_8464.pdf',
+                );
+
+                // FREN2082 row five, column two, cell has two links
+                const paper7A = page.getByTestId('exampaper-desktop-originals-link-FREN2082-semester1-paper0');
+                await expect(paper7A.getByText(/FREN2082/).first()).toBeVisible();
+                await expect(paper7A.getByText(/a special french paper/).first()).toBeVisible();
+                expect(await paper7A.innerHTML()).toBe('FREN2082<span><br>a special french paper</span>');
+                await expect(paper7A).toHaveAttribute(
+                    'href',
+                    'https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_847.pdf',
+                );
+
+                const paper7B = page.getByTestId('exampaper-desktop-originals-link-FREN2082-semester1-paper1');
+                await expect(paper7B.getByText(/FREN2082/).first()).toBeVisible();
+                await expect(paper7B).toHaveAttribute(
+                    'href',
+                    'https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_848.pdf',
+                );
+
+                // FREN2082 row five, column three, cell is empty
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN2082-semester2')).toBeDefined();
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN2082-semester2')).toBeEmpty();
+
+                // FREN2083 row six, column one, cell has link
+                const paper8 = page.getByTestId('exampaper-desktop-originals-link-FREN2083-semester0-paper0');
+                await expect(paper8.getByText(/FREN2083/).first()).toBeVisible();
+                await expect(paper8).toHaveAttribute(
+                    'href',
+                    'https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_8465.pdf',
+                );
+
+                // FREN2083 row six, column two, cell is empty
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN2083-semester1')).toBeDefined();
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN2083-semester1')).toBeEmpty();
+
+                // FREN2083 row six, column three, cell is empty
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN2083-semester2')).toBeDefined();
+                await expect(page.getByTestId('exampaper-desktop-originals-FREN2083-semester2')).toBeEmpty();
             });
+
             test('with one subject and no sample papers shows originals in Simple view', async ({ page }) => {
                 await page.goto('/exams/course/PHYS1001?user=s1111111');
                 await expect(
@@ -231,7 +322,7 @@ test.describe('Past Exam Papers Pages', () => {
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-desktop-sample-link-course0-semester0-paper0')
+                        .getByTestId('exampaper-desktop-sample-link-DENT1050-semester0-paper0')
                         .getByText(/DENT1050 Sem\.2 2022/)
                         .first(),
                 ).toBeVisible();
@@ -243,44 +334,44 @@ test.describe('Past Exam Papers Pages', () => {
                 await page.setViewportSize({ width: 414, height: 736 });
 
                 // sample papers are correct
-                await expect(page.getByTestId('exampaper-mobile-sample-link-course0-semester0-paper0')).toHaveText(
+                await expect(page.getByTestId('exampaper-mobile-sample-link-FREN1010-semester0-paper0')).toHaveText(
                     /FREN1010 Sem\.2 2020/,
                 );
 
                 // original papers are correct
                 await expect(
                     page
-                        .getByTestId('exampaper-mobile-original-link-course0-semester0-paper0')
+                        .getByTestId('exampaper-mobile-original-link-FREN1010-semester0-paper0')
                         .getByText('FREN1010 Sem.1 2020 Paper A'),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-mobile-original-link-course0-semester0-paper1')
+                        .getByTestId('exampaper-mobile-original-link-FREN1010-semester0-paper1')
                         .getByText('FREN1010 Sem.1 2020 Paper B'),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-mobile-original-link-course1-semester0-paper0')
+                        .getByTestId('exampaper-mobile-original-link-FREN2010-semester0-paper0')
                         .getByText('FREN2010 Sem.1 2021'),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-mobile-original-link-course1-semester1-paper0')
+                        .getByTestId('exampaper-mobile-original-link-FREN2010-semester1-paper0')
                         .getByText('FREN2010 Sem.1 2019 Final'),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-mobile-original-link-course4-semester1-paper0')
+                        .getByTestId('exampaper-mobile-original-link-FREN2082-semester1-paper0')
                         .getByText('FREN2082 Sem.1 2020 a special french paper'),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-mobile-original-link-course4-semester1-paper1')
+                        .getByTestId('exampaper-mobile-original-link-FREN2082-semester1-paper1')
                         .getByText('FREN2082 Sem.1 2020 Paper 2'),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-mobile-original-link-course4-semester0-paper0')
+                        .getByTestId('exampaper-mobile-original-link-FREN2082-semester0-paper0')
                         .getByText('FREN2082 Sem.1 2021 (Final Paper)'),
                 ).toBeVisible();
             });
@@ -320,7 +411,7 @@ test.describe('Past Exam Papers Pages', () => {
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-mobile-sample-link-course0-semester0-paper0')
+                        .getByTestId('exampaper-mobile-sample-link-DENT1050-semester0-paper0')
                         .getByText(/DENT1050 Sem\.2 2022/)
                         .first(),
                 ).toBeVisible();
