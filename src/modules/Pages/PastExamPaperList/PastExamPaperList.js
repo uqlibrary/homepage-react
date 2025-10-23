@@ -205,6 +205,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                 <div key={`exampaper-${formatType}-detail-${pp}`}>
                                                     {!!paper.paperUrl && (
                                                         <div
+                                                            data-testid={`exampaper-${formatType}-detail-${pp}-child`}
                                                             style={{
                                                                 marginTop: showMobileView ? 20 : 0,
                                                                 marginBottom: showMobileView ? 20 : 8,
@@ -212,7 +213,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                         >
                                                             <a
                                                                 href={paper.paperUrl}
-                                                                data-testid={`exampaper-${formatType}-link-${cc}-${ss}-${pp}`}
+                                                                data-testid={`exampaper-${formatType}-link-course${cc}-semester${ss}-paper${pp}`}
                                                                 target="_blank"
                                                             >
                                                                 {linklabel}
@@ -270,42 +271,44 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                 <StyledTableLeftCell component="th" scope="row">
                     <StyledH3Typography variant="h3">{getCourseCode(course)}</StyledH3Typography>
                 </StyledTableLeftCell>
-                {course.map((semester, ss) => {
-                    return (
-                        <StyledTableCell key={`exampaper-desktop-originals-${ss}`}>
-                            {semester.map((paper, pp) => {
-                                return (
-                                    <div
-                                        key={`exampaper-desktop-originals-detail-${pp}`}
-                                        className={pp > 0 ? 'secondaryExamDetail' : null}
-                                    >
-                                        {!!paper.paperUrl ? (
-                                            <a
-                                                data-testid={`exampaper-desktop-originals-link-${cc}-${ss}-${pp}`}
-                                                href={paper.paperUrl}
-                                                target="_blank"
-                                            >
-                                                {!!paper.examType && (
-                                                    <span>
-                                                        {paper.examType}
-                                                        <br />
-                                                    </span>
-                                                )}
-                                                <span>{paper.courseCode}</span>
-                                                {!!paper.examNote && (
-                                                    <span>
-                                                        <br />
-                                                        {paper.examNote}
-                                                    </span>
-                                                )}
-                                            </a>
-                                        ) : /* istanbul ignore next */ null}
-                                    </div>
-                                );
-                            })}
-                        </StyledTableCell>
-                    );
-                })}
+                {!!course &&
+                    course.length > 0 &&
+                    course.map((semester, ss) => {
+                        return (
+                            <StyledTableCell key={`exampaper-desktop-originals-${ss}`}>
+                                {semester.map((paper, pp) => {
+                                    return (
+                                        <div
+                                            key={`exampaper-desktop-originals-detail-${pp}`}
+                                            className={pp > 0 ? 'secondaryExamDetail' : null}
+                                        >
+                                            {!!paper.paperUrl ? (
+                                                <a
+                                                    data-testid={`exampaper-desktop-originals-link-course${cc}-semester${ss}-paper${pp}`}
+                                                    href={paper.paperUrl}
+                                                    target="_blank"
+                                                >
+                                                    {!!paper.examType && (
+                                                        <span>
+                                                            {paper.examType}
+                                                            <br />
+                                                        </span>
+                                                    )}
+                                                    <span>{paper.courseCode}</span>
+                                                    {!!paper.examNote && (
+                                                        <span>
+                                                            <br />
+                                                            {paper.examNote}
+                                                        </span>
+                                                    )}
+                                                </a>
+                                            ) : /* istanbul ignore next */ null}
+                                        </div>
+                                    );
+                                })}
+                            </StyledTableCell>
+                        );
+                    })}
             </>
         );
     };
@@ -397,7 +400,11 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                         <>
                             <UserInstructions />
                             {sampleExamPaperList?.papers?.length > 0 && (
-                                <StyledStandardCard noHeader style={{ margin: '-16px -16px 4.5rem -16px' }}>
+                                <StyledStandardCard
+                                    standardCardId="sample-paper-block"
+                                    noHeader
+                                    style={{ margin: '-16px -16px 4.5rem -16px' }}
+                                >
                                     <Typography
                                         variant="h2"
                                         style={{ fontSize: 32, fontWeight: 500, color: colourBlack }}
@@ -415,7 +422,11 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                     />
                                 </StyledStandardCard>
                             )}
-                            <StyledStandardCard noHeader style={{ margin: '-32px -16px 80px -16px' }}>
+                            <StyledStandardCard
+                                standardCardId="original-paper-block"
+                                noHeader
+                                style={{ margin: '-32px -16px 80px -16px' }}
+                            >
                                 <Typography
                                     variant="h2"
                                     style={{ fontSize: 32, fontWeight: 500, color: colourBlack }}

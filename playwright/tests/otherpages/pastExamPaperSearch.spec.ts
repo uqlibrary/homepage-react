@@ -145,7 +145,7 @@ test.describe('Past Exam Papers Pages', () => {
                 // sample papers are correct
                 await expect(
                     page
-                        .getByTestId('exampaper-desktop-sample-link-0-0-0')
+                        .getByTestId('exampaper-desktop-sample-link-course0-semester0-paper0')
                         .getByText(/FREN1010 Sem\.2 2020/)
                         .first(),
                 ).toBeVisible();
@@ -159,37 +159,39 @@ test.describe('Past Exam Papers Pages', () => {
                 ).toHaveCount(22);
                 await expect(
                     page
-                        .getByTestId('exampaper-desktop-originals-link-1-1-0')
+                        .getByTestId('exampaper-desktop-originals-link-course1-semester1-paper0')
                         .getByText(/FREN2010/)
                         .first(),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-desktop-originals-link-1-1-0')
+                        .getByTestId('exampaper-desktop-originals-link-course1-semester1-paper0')
                         .getByText(/Final/)
                         .first(),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-desktop-originals-link-4-1-0')
+                        .getByTestId('exampaper-desktop-originals-link-course4-semester1-paper0')
                         .getByText(/FREN2082/)
                         .first(),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-desktop-originals-link-4-1-0')
+                        .getByTestId('exampaper-desktop-originals-link-course4-semester1-paper0')
                         .getByText(/a special french paper/)
                         .first(),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-desktop-originals-link-4-0-0')
+                        .getByTestId('exampaper-desktop-originals-link-course4-semester0-paper0')
                         .getByText(/FREN2082/)
                         .first(),
                 ).toBeVisible();
                 await expect(
                     page
-                        .locator('[data-testid="exampaper-desktop-originals-link-4-0-0"] span:first-child')
+                        .locator(
+                            '[data-testid="exampaper-desktop-originals-link-course4-semester0-paper0"] span:first-child',
+                        )
                         .getByText(/Final Paper/)
                         .first(),
                 ).toBeVisible();
@@ -229,7 +231,7 @@ test.describe('Past Exam Papers Pages', () => {
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-desktop-sample-link-0-0-0')
+                        .getByTestId('exampaper-desktop-sample-link-course0-semester0-paper0')
                         .getByText(/DENT1050 Sem\.2 2022/)
                         .first(),
                 ).toBeVisible();
@@ -241,32 +243,44 @@ test.describe('Past Exam Papers Pages', () => {
                 await page.setViewportSize({ width: 414, height: 736 });
 
                 // sample papers are correct
-                await expect(page.getByTestId('exampaper-mobile-sample-link-0-0-0')).toHaveText(/FREN1010 Sem\.2 2020/);
+                await expect(page.getByTestId('exampaper-mobile-sample-link-course0-semester0-paper0')).toHaveText(
+                    /FREN1010 Sem\.2 2020/,
+                );
 
                 // original papers are correct
                 await expect(
-                    page.getByTestId('exampaper-mobile-original-link-0-0-0').getByText('FREN1010 Sem.1 2020 Paper A'),
-                ).toBeVisible();
-                await expect(
-                    page.getByTestId('exampaper-mobile-original-link-0-0-1').getByText('FREN1010 Sem.1 2020 Paper B'),
-                ).toBeVisible();
-                await expect(
-                    page.getByTestId('exampaper-mobile-original-link-1-0-0').getByText('FREN2010 Sem.1 2021'),
-                ).toBeVisible();
-                await expect(
-                    page.getByTestId('exampaper-mobile-original-link-1-1-0').getByText('FREN2010 Sem.1 2019 Final'),
+                    page
+                        .getByTestId('exampaper-mobile-original-link-course0-semester0-paper0')
+                        .getByText('FREN1010 Sem.1 2020 Paper A'),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-mobile-original-link-4-1-0')
+                        .getByTestId('exampaper-mobile-original-link-course0-semester0-paper1')
+                        .getByText('FREN1010 Sem.1 2020 Paper B'),
+                ).toBeVisible();
+                await expect(
+                    page
+                        .getByTestId('exampaper-mobile-original-link-course1-semester0-paper0')
+                        .getByText('FREN2010 Sem.1 2021'),
+                ).toBeVisible();
+                await expect(
+                    page
+                        .getByTestId('exampaper-mobile-original-link-course1-semester1-paper0')
+                        .getByText('FREN2010 Sem.1 2019 Final'),
+                ).toBeVisible();
+                await expect(
+                    page
+                        .getByTestId('exampaper-mobile-original-link-course4-semester1-paper0')
                         .getByText('FREN2082 Sem.1 2020 a special french paper'),
                 ).toBeVisible();
                 await expect(
-                    page.getByTestId('exampaper-mobile-original-link-4-1-1').getByText('FREN2082 Sem.1 2020 Paper 2'),
+                    page
+                        .getByTestId('exampaper-mobile-original-link-course4-semester1-paper1')
+                        .getByText('FREN2082 Sem.1 2020 Paper 2'),
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-mobile-original-link-4-0-0')
+                        .getByTestId('exampaper-mobile-original-link-course4-semester0-paper0')
                         .getByText('FREN2082 Sem.1 2021 (Final Paper)'),
                 ).toBeVisible();
             });
@@ -306,7 +320,7 @@ test.describe('Past Exam Papers Pages', () => {
                 ).toBeVisible();
                 await expect(
                     page
-                        .getByTestId('exampaper-mobile-sample-link-0-0-0')
+                        .getByTestId('exampaper-mobile-sample-link-course0-semester0-paper0')
                         .getByText(/DENT1050 Sem\.2 2022/)
                         .first(),
                 ).toBeVisible();
