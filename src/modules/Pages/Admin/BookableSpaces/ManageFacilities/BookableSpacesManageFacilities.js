@@ -177,7 +177,9 @@ export const BookableSpacesManageFacilities = ({
                     ') failed:',
                     e,
                 );
-                displayToastMessage('[BSMF-001] Sorry, an error occurred - the admins have been informed');
+                displayToastMessage(
+                    '[BSMF-001] Sorry, an error occurred and the facility type was not created - the admins have been informed',
+                );
             });
         return true;
     };
@@ -279,6 +281,9 @@ export const BookableSpacesManageFacilities = ({
                                 valuesToSend.facility_type_name,
                                 ') failed:',
                                 e,
+                            );
+                            displayToastMessage(
+                                '[BSAS-007] Sorry, an error occurred - Updating the Facility type failed. The admins have been informed.',
                             );
                             return { success: false, id: valuesToSend.facility_type_id, error: e };
                         });

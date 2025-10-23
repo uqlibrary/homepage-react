@@ -1,5 +1,4 @@
 import * as actions from 'data/actions/actionTypes';
-import { SPACES_LOCATION_UPDATING } from 'data/actions/actionTypes';
 
 export const initialState = {
     bookableSpacesRoomList: null,

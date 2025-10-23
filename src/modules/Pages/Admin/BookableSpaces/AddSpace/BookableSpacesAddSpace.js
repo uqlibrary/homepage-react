@@ -7,7 +7,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import { EditSpaceForm } from '../EditSpaceForm';
-import { addBreadcrumbsToSiteHeader } from 'modules/Pages/Admin/BookableSpaces/helpers';
+import { addBreadcrumbsToSiteHeader, displayToastMessage } from 'modules/Pages/Admin/BookableSpaces/helpers';
 
 const PageWrapper = ({ children }) => {
     return (
@@ -65,7 +65,6 @@ export const BookableSpacesAddSpace = ({
 
     const [formValues, setFormValues2] = useState([]);
     const setFormValues = newValues => {
-        console.log('setFormValues', newValues);
         setFormValues2(newValues);
     };
 
@@ -77,19 +76,19 @@ export const BookableSpacesAddSpace = ({
     }, []);
 
     const createNewSpace = valuesToSend => {
-        console.log('createNewSpace formValues=', valuesToSend);
-
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
-        console.log('createNewSpace valuesToSend=', valuesToSend);
         actions
             .addBookableSpaceLocation(valuesToSend, 'space')
             .then(() => {})
             .catch(e => {
                 console.log('catch: adding new space failed:', e);
+                displayToastMessage(
+                    '[BSAS-001] Sorry, an error occurred - Saving the new Space failed. The admins have been informed.',
+                );
             });
     };
 

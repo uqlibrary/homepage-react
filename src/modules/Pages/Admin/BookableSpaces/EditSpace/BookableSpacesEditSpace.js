@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router';
 
+import { Grid } from '@mui/material';
+
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import { EditSpaceForm } from '../EditSpaceForm';
-import { addBreadcrumbsToSiteHeader } from 'modules/Pages/Admin/BookableSpaces/helpers';
+import { addBreadcrumbsToSiteHeader, displayToastMessage } from 'modules/Pages/Admin/BookableSpaces/helpers';
 
 const PageWrapper = ({ children }) => {
     return (
@@ -48,12 +50,10 @@ export const BookableSpacesEditSpace = ({
 
     // "spaceUuid" matching the param passed in pathConfig.js and config/routes.js
     const { spaceUuid } = useParams();
-    console.log('BookableSpacesEditSpace spaceUuid=', spaceUuid);
 
     const [cookies, setCookie] = useCookies();
     const [formValues, setFormValues2] = useState([]);
     const setFormValues = newValues => {
-        console.log('setFormValues', newValues);
         setFormValues2(newValues);
     };
 
@@ -74,8 +74,7 @@ export const BookableSpacesEditSpace = ({
     }, []);
 
     useEffect(() => {
-        if (bookableSpaceGetting === false && bookableSpaceGetError === false) {
-            console.log('use bookableSpaceGetResult = ', bookableSpaceGetResult);
+        if (bookableSpaceGetting === false && bookableSpaceGetError === false && !!bookableSpaceGetResult?.data) {
             setFormValues({
                 facility_types: bookableSpaceGetResult?.data?.facility_types,
                 building_name: bookableSpaceGetResult?.data?.space_building_name,
@@ -105,12 +104,8 @@ export const BookableSpacesEditSpace = ({
     }, [bookableSpaceGetting, bookableSpaceGetError, bookableSpaceGetResult]);
 
     const updateSpace = valuesToSend => {
-        console.log('updateSpace valuesToSend=', valuesToSend);
-
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
-        console.log('cypressTestCookie=', cypressTestCookie);
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
-            console.log('set cookie CYPRESS_DATA_SAVED');
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
@@ -119,10 +114,28 @@ export const BookableSpacesEditSpace = ({
             .then(() => {})
             .catch(e => {
                 console.log('catch: adding new space failed:', e);
+                displayToastMessage(
+                    '[BSAS-001] Sorry, an error occurred - Saving the changed Space failed. The admins have been informed.',
+                );
             });
     };
 
-    console.log('BookableSpacesEditSpace campusListLoading=', campusListLoading);
+    if (
+        bookableSpaceGetting === false &&
+        bookableSpaceGetError === false &&
+        !!bookableSpaceGetResult?.data &&
+        Object.keys(bookableSpaceGetResult?.data).length === 0
+    ) {
+        return (
+            <PageWrapper>
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                        <p data-testid="missing-record">There is no Space with ID "{spaceUuid}".</p>
+                    </Grid>
+                </Grid>
+            </PageWrapper>
+        );
+    }
     return (
         <EditSpaceForm
             actions={actions}
@@ -145,6 +158,7 @@ export const BookableSpacesEditSpace = ({
             setFormValues={setFormValues}
             saveToDb={updateSpace}
             PageWrapper={PageWrapper}
+            bookableSpaceGetError={bookableSpaceGetError}
             mode="edit"
         />
     );
@@ -170,6 +184,9 @@ BookableSpacesEditSpace.propTypes = {
     bookableSpaceGetting: PropTypes.any,
     bookableSpaceGetError: PropTypes.any,
     bookableSpaceGetResult: PropTypes.any,
+    bookableSpacesRoomUpdating: PropTypes.any,
+    bookableSpacesRoomUpdateError: PropTypes.any,
+    bookableSpacesRoomUpdateResult: PropTypes.any,
 };
 PageWrapper.propTypes = {
     children: PropTypes.node,

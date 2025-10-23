@@ -274,7 +274,9 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log(failureMessage, e);
-                    displayToastMessage('[BSML-004] Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage(
+                        '[BSML-004] Sorry, an error occurred and the location was not deleted - the admins have been informed',
+                    );
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -339,7 +341,9 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log('catch: saving library ', locationId, 'failed:', e);
-                    displayToastMessage('[BSML-005] Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage(
+                        '[BSML-005] Sorry, an error occurred and the Location change did not save - the admins have been informed',
+                    );
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -387,7 +391,9 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log('catch: saving campus ', locationId, 'failed:', e);
-                    displayToastMessage('[BSML-003] Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage(
+                        '[BSML-003] Sorry, an error occurred and the Location change did not save - the admins have been informed',
+                    );
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -463,7 +469,9 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log('catch: adding new floor failed:', e);
-                    displayToastMessage('[BSML-006] Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage(
+                        '[BSML-006] Sorry, an error occurred and the Location change did not save - the admins have been informed',
+                    );
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -548,7 +556,9 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log('catch: saving floor ', locationId, 'failed:', e);
-                    displayToastMessage('[BSML-007] Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage(
+                        '[BSML-007] Sorry, an error occurred and the Location change did not save - the admins have been informed',
+                    );
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -716,7 +726,9 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log('catch: adding new library failed:', e);
-                    displayToastMessage('[BSML-002] Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage(
+                        '[BSML-002] Sorry, an error occurred and the Location change did not save - the admins have been informed',
+                    );
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -903,7 +915,9 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log('catch: adding new campus failed:', e);
-                    displayToastMessage('[BSML-001] Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage(
+                        '[BSML-001] Sorry, an error occurred and the Location change did not save - the admins have been informed.',
+                    );
                 })
                 .finally(() => {
                     showSavingProgress(false);

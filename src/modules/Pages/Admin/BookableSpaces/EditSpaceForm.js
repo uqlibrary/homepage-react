@@ -56,6 +56,7 @@ export const EditSpaceForm = ({
     bookableSpacesRoomUpdateError,
     bookableSpacesRoomUpdateResult,
     mode,
+    bookableSpaceGetError,
 }) => {
     console.log(
         'EditSpaceForm updateBookableSpaceLocation',
@@ -85,20 +86,17 @@ export const EditSpaceForm = ({
 
     const [location, setLocation1] = useState({});
     const setLocation = newValues => {
-        console.log('EditSpaceForm setLocation', newValues);
         setLocation1(newValues);
     };
 
     const [confirmationOpen, setConfirmationOpen] = useState(false);
     const [errorMessages, setErrorMessages2] = useState([]);
     const setErrorMessages = m => {
-        console.log('EditSpaceForm setErrorMessages', m);
         setErrorMessages2(m);
     };
 
     const [selectedSpringshareOption, setSpringshareOption2] = useState(null);
     const setSpringshareOption = newValue => {
-        console.log('EditSpaceForm setSpringshareOption', newValue);
         setSpringshareOption2(newValue);
     };
 
@@ -139,13 +137,11 @@ export const EditSpaceForm = ({
             id: -1,
             display_name: noSpringshareHoursLabel,
         };
-        const newVar = [unselectedOption, ...springshareLocations(weeklyHours)];
-        console.log('EditSpaceForm calculate springshareList=', newVar);
-        return newVar;
+
+        return [unselectedOption, ...springshareLocations(weeklyHours)];
     }, [weeklyHoursLoading, weeklyHoursError, weeklyHours]);
 
     useEffect(() => {
-        console.log('EditSpaceForm @@@ formValues=', formValues);
         if (
             campusListLoading === false &&
             campusListError === false &&
@@ -164,7 +160,6 @@ export const EditSpaceForm = ({
             locnTemp.currentLibraryFloors = locnTemp.currentLibrary?.floors || [];
             locnTemp.currentFloor = locnTemp.currentLibraryFloors?.at(0) || {};
             locnTemp.floor_id = locnTemp.currentFloor?.floor_id;
-            console.log('setLocation 1');
             setLocation({
                 ...location,
                 ...locnTemp,
@@ -179,7 +174,6 @@ export const EditSpaceForm = ({
             };
             setFormValues(newValues);
 
-            console.log('@@@ springshareList=', springshareList);
             setSpringshareOption({
                 id: locnTemp.currentLibrary.library_springshare_id, // preset the springshare id
                 display_name: springshareList.find(s => s.id === locnTemp.currentLibrary.library_springshare_id)
@@ -203,8 +197,6 @@ export const EditSpaceForm = ({
     }, [bookableSpacesRoomUpdating, bookableSpacesRoomUpdateError, bookableSpacesRoomUpdateResult]);
 
     const handleSpringshareSelection = (event, newValue) => {
-        console.log('EditSpaceForm handleSpringshareSelection newValue', newValue);
-        console.log('EditSpaceForm handleSpringshareSelection e', event);
         let newSpringshare = { id: -1, display_name: noSpringshareHoursLabel };
         if (!!newValue?.id && !!newValue.display_name) {
             newSpringshare = newValue;
@@ -215,7 +207,6 @@ export const EditSpaceForm = ({
                 display_name: springshareList?.find(s => s.id === newValueId)?.display_name || noSpringshareHoursLabel,
             };
         }
-        console.log('EditSpaceForm newSpringshare', newSpringshare);
         setSpringshareOption(newSpringshare);
 
         setFormValues({
@@ -257,9 +248,7 @@ export const EditSpaceForm = ({
     };
 
     const handleFieldCompletion = e => {
-        console.log('EditSpaceForm handleFieldCompletion', e?.target, e);
         const validationResult = formValid(formValues);
-        console.log('EditSpaceForm validationResult=', validationResult);
         if (validationResult !== true) {
             setErrorMessages(validationResult);
         }
@@ -285,7 +274,6 @@ export const EditSpaceForm = ({
     const handleChange = prop => e => {
         const theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
-        console.log('EditSpaceForm handleChange', prop, theNewValue);
 
         const updatedLocation = {};
         if (prop === 'campus_id') {
@@ -302,7 +290,6 @@ export const EditSpaceForm = ({
             updatedLocation.currentLibraryFloors = updatedLocation.currentLibrary?.floors;
             updatedLocation.currentFloor = updatedLocation.currentLibraryFloors?.at(0);
             updatedLocation.floor_id = updatedLocation.currentFloor?.floor_id;
-            console.log('EditSpaceForm setLocation 2');
             setLocation({
                 ...location,
                 ...updatedLocation,
@@ -329,7 +316,6 @@ export const EditSpaceForm = ({
             updatedLocation.currentLibraryFloors = updatedLocation.currentLibrary?.floors;
             updatedLocation.currentFloor = updatedLocation.currentLibraryFloors?.at(0);
             updatedLocation.floor_id = updatedLocation.currentFloor?.floor_id;
-            console.log('EditSpaceForm setLocation 3');
             setLocation({
                 ...location,
                 ...updatedLocation,
@@ -372,7 +358,6 @@ export const EditSpaceForm = ({
             [prop]: theNewValue,
         };
 
-        console.log('EditSpaceForm handleChange newValues=', newValues);
         setFormValues(newValues);
     };
 
@@ -446,9 +431,6 @@ export const EditSpaceForm = ({
         },
     };
 
-    console.log('EditSpaceForm @@@@ location=', location);
-    console.log('EditSpaceForm @@@@ formValues?.campus_id=', formValues?.campus_id);
-
     const spaceTypeList = React.useMemo(() => {
         if (
             bookableSpacesRoomListLoading === false &&
@@ -499,8 +481,6 @@ export const EditSpaceForm = ({
     };
 
     const facilityTypesHaveChanged = (arr1, arr2) => {
-        console.log('facilityTypesHaveChanged arr1=', arr1);
-        console.log('facilityTypesHaveChanged arr2=', arr2);
         // Check if lengths are different
         if (arr1?.length !== arr2?.length) {
             return true;
@@ -531,7 +511,6 @@ export const EditSpaceForm = ({
         valuesToSend.facility_types = formValues.facility_types?.map(ft => ft.facility_type_id);
 
         const validationResult = formValid(valuesToSend);
-        console.log('EditSpaceForm handleSaveClick validationResult=', validationResult);
         if (validationResult !== true) {
             setErrorMessages(validationResult);
 
@@ -560,15 +539,16 @@ export const EditSpaceForm = ({
                 </Grid>
             </Grid>
         );
-    } else if (!!campusListError || !!bookableSpacesRoomListError) {
+    } else if (!!campusListError || !!bookableSpacesRoomListError || !!bookableSpaceGetError) {
         return (
             <PageWrapper>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <div data-testid="add-space-error">
                             <p>Something went wrong - please try again later.</p>
-                            {!!campusListError && <p>Locations currently unavailable</p>}
-                            {!!bookableSpacesRoomListError && <p>Space types currently unavailable</p>}
+                            {!!campusListError && <p>Locations currently unavailable.</p>}
+                            {!!bookableSpacesRoomListError && <p>Space types currently unavailable.</p>}
+                            {!!bookableSpaceGetError && <p>Space details currently unavailable.</p>}
                         </div>
                     </Grid>
                 </Grid>
@@ -1050,6 +1030,7 @@ EditSpaceForm.propTypes = {
     saveToDb: PropTypes.func,
     PageWrapper: PropTypes.any,
     mode: PropTypes.string,
+    bookableSpaceGetError: PropTypes.any,
 };
 
 export default React.memo(EditSpaceForm);
