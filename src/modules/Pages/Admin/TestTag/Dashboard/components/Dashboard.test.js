@@ -7,7 +7,6 @@ import configData from '../../../../../../data/mock/data/testing/testAndTag/test
 import userData from '../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 
 import { default as localeData } from '../../testTag.locale.js';
-import { getUserPermissions } from '../../helpers/auth';
 import { PERMISSIONS } from '../../config/auth';
 
 const redHex = '#951126';
@@ -30,16 +29,12 @@ function setup(testProps = {}, renderer = rtlRender) {
             dashboardConfigLoading: false,
             dashboardConfigLoaded: true,
         },
-        testTagUserReducer: {
-            userLoading: false,
-            userLoaded: true,
-            userError: false,
-            user: userData,
-            privilege: getUserPermissions(user.privileges ?? {}),
+        accountReducer: {
+            accountLoading: false,
+            account: { tnt: userData },
         },
         ...state,
     };
-
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
             <WithRouter>
@@ -142,17 +137,26 @@ describe('Dashboard component', () => {
         expect(getByTestId('dashboard-devices-due-recalibration-overdue-text')).toHaveStyle(`color: ${redHex}`);
     });
 
+    // HERE - fix the next 3 tests to match the below state object. Then
+    // continue to update the rest of the tests shown in the search panel to the left
     it('renders component for admin-only', () => {
         const loadDashboardFn = jest.fn();
         const { getByTestId, queryByTestId, getByText } = setup({
             actions: { loadDashboard: loadDashboardFn },
-            user: {
-                ...userData,
-                privileges: {
-                    can_admin: 1,
-                    can_inspect: 0,
-                    can_alter: 0,
-                    can_see_reports: 0,
+            state: {
+                accountReducer: {
+                    accountLoading: false,
+                    account: {
+                        tnt: {
+                            ...userData,
+                            privileges: {
+                                can_admin: 1,
+                                can_inspect: 0,
+                                can_alter: 0,
+                                can_see_reports: 0,
+                            },
+                        },
+                    },
                 },
             },
         });

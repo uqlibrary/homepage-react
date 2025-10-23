@@ -18,7 +18,7 @@ import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import { transformRow, transformUpdateRequest, transformAddRequest, emptyActionState, actionReducer } from './utils';
-import { useConfirmationAlert } from '../../../helpers/hooks';
+import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import config from './configure';
 import { breadcrumbs } from 'config/routes';
 
@@ -27,7 +27,8 @@ const componentId = 'user-management';
 const Users = ({ actions, userListLoading, userList, userListError }) => {
     const pageLocale = locale.pages.manage.users;
 
-    const { user } = useSelector(state => state.get?.('testTagUserReducer'));
+    const { user } = useAccountUser();
+
     const userDepartment = user?.user_department ?? /* istanbul ignore next */ null;
     const userUID = user?.user_uid ?? /* istanbul ignore next */ null;
 

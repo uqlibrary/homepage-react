@@ -10,6 +10,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { hasAccess } from '../../helpers/auth';
 import TestTagHeader from '../TestTagHeader/TestTagHeader';
+import { useAccountUser } from '../../helpers/hooks';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     '& .formControl': {
@@ -31,10 +32,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
 }));
 
 const StandardAuthPage = ({ title = '', locale = null, requiredPermissions, inclusive = true, children, ...props }) => {
-    const { userLoading, userLoaded, userError, user, privilege } = useSelector(state =>
-        state.get('testTagUserReducer'),
-    );
-
+    const { user, userLoading, userLoaded, userError, privilege } = useAccountUser();
     const defaultAllow =
         (!!user && typeof user === 'object' && Object.keys(user).length > 0) || /* istanbul ignore next */ false;
     const userAllow = !!privilege
@@ -54,10 +52,10 @@ const StandardAuthPage = ({ title = '', locale = null, requiredPermissions, incl
     return (
         <StyledWrapper>
             <StandardPage title={title} {...props}>
-                {!userLoading && (userLoaded || userError) && !shouldHaveAccess && (
+                {!userLoading && userError && !shouldHaveAccess && (
                     <Typography variant={'h6'}>{localeGeneral.pages.general.pageUnavailable}</Typography>
                 )}
-                {userLoaded && !userError && shouldHaveAccess && (
+                {userLoaded && shouldHaveAccess && (
                     <>
                         <TestTagHeader departmentText={headerDepartmentText} breadcrumbs={locale?.breadcrumbs ?? []} />
                         {children}

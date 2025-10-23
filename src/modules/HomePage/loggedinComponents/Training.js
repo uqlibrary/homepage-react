@@ -332,7 +332,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                 <div className={'flexContent'} role="region" aria-label="UQ training Events list">
                                     {filteredTrainingEvents &&
                                         filteredTrainingEvents.length > 0 &&
-                                        filteredTrainingEvents.map((event, index) => {
+                                        filteredTrainingEvents?.map?.((event, index) => {
                                             return (
                                                 <Grid
                                                     container

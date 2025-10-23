@@ -1,6 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux';
+
+import { getUserPermissions } from './auth';
 
 const moment = require('moment');
+
+export const useAccountUser = () => {
+    const { account = {}, accountLoading = false } = useSelector(state => state.get('accountReducer')) || {};
+    const privilege = useMemo(() => getUserPermissions(account.tnt?.privileges || {}), [account.tnt?.privileges]);
+    return {
+        user: account?.tnt || null,
+        userLoading: accountLoading,
+        userLoaded: !accountLoading && !!account?.tnt,
+        userError: !accountLoading && account?.tnt === null,
+        privilege,
+    };
+};
 
 export const useLocation = (defaultSiteId = -1, defaultBuildingId = -1, defaultFloorId = -1, defaultRoomId = -1) => {
     const [location, _setLocation] = useState({
