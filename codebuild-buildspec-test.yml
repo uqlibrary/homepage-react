@@ -38,7 +38,6 @@ artifacts:
   files:
     - '**/*'
   name: builds/$CODEBUILD_BUILD_NUMBER/coverage
-  base-directory: coverage
 cache:
   paths:
     - '/root/.npm/**/*'
