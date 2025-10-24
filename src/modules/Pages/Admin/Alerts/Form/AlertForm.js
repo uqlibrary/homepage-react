@@ -29,7 +29,7 @@ import {
     systemList,
 } from '../alerthelpers';
 import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
-import { scrollToTopOfPage } from 'helpers/general';
+import { scrollToTopOfPage, StyledPrimaryButton, StyledSecondaryButton, StyledTertiaryButton } from 'helpers/general';
 import { useNavigate } from 'react-router-dom';
 import { breadcrumbs } from 'config/routes';
 
@@ -60,14 +60,6 @@ const StyledBox = styled(Grid)(() => ({
     border: '1px solid rgb(211, 211, 211)',
     marginTop: '1em',
     paddingBottom: '1em',
-}));
-
-const StyledSaveButton = styled(Button)(() => ({
-    '&:disabled': {
-        color: 'rgba(0, 0, 0, 0.26)',
-        boxShadow: 'none',
-        backgroundColor: 'rgba(0, 0, 0, 0.12)',
-    },
 }));
 
 export const isValidUrl = testurl => {
@@ -124,6 +116,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         alertWrapper.parentElement.style.visibility = !!showThePreview ? 'visible' : 'hidden';
         alertWrapper.parentElement.style.opacity = !!showThePreview ? '1' : '0';
 
+        document.getElementById('admin-alerts-form-button-preview')?.blur();
+
         setPreviewOpen(showThePreview);
     };
 
@@ -149,6 +143,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             (!currentValues.linkRequired || isValidUrl(currentValues.linkUrl));
 
         // if we are currently showing the preview and the form becomes invalid, hide it again
+        /* istanbul ignore next */
         !isValid && !!showPreview && showHidePreview(false);
 
         return isValid;
@@ -334,6 +329,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         if (!!values.permanentAlert) {
             manuallyMakeWebComponentBePermanent(alertWebComponent, body);
         } else {
+            /* istanbul ignore next */
             alertWebComponent.setAttribute('alertmessage', body);
         }
         if (!!values.linkRequired) {
@@ -488,8 +484,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             <form>
                 {alertStatus === 'error' && (
                     /* istanbul ignore next */ <ConfirmationBox
-                        actionButtonColor="primary"
-                        actionButtonVariant="contained"
                         confirmationBoxId="alert-error"
                         onAction={
                             /* istanbul ignore next */ () =>
@@ -504,8 +498,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 )}
                 {alertStatus !== 'error' && defaults.type === 'edit' && (
                     <ConfirmationBox
-                        actionButtonColor="primary"
-                        actionButtonVariant="contained"
                         confirmationBoxId="alert-edit-save-succeeded"
                         onAction={handleConfirmation}
                         onClose={hideConfirmation}
@@ -516,8 +508,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 )}
                 {alertStatus !== 'error' && defaults.type === 'add' && (
                     <ConfirmationBox
-                        actionButtonColor="secondary"
-                        actionButtonVariant="contained"
                         confirmationBoxId="alert-add-save-succeeded"
                         onAction={handleConfirmation}
                         onClose={hideConfirmation}
@@ -528,8 +518,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 )}
                 {alertStatus !== 'error' && defaults.type === 'clone' && (
                     <ConfirmationBox
-                        actionButtonColor="secondary"
-                        actionButtonVariant="contained"
                         confirmationBoxId="alert-clone-save-succeeded"
                         onClose={hideConfirmation}
                         onAction={() => reloadClonePage()}
@@ -793,24 +781,21 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 )}
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                     <Grid item xs={3} align="left">
-                        <Button
-                            color="secondary"
+                        <StyledSecondaryButton
                             children="Cancel"
                             data-testid="admin-alerts-form-button-cancel"
                             onClick={() => navigateToListPage()}
-                            variant="contained"
                         />
                     </Grid>
                     <Grid item xs={9} align="right">
-                        <Button
+                        <StyledTertiaryButton
+                            id="admin-alerts-form-button-preview"
                             data-testid="admin-alerts-form-button-preview"
-                            color={!!showPreview ? 'primary' : 'secondary'}
                             children="Preview"
                             onClick={displayPreview}
                             style={{ marginRight: '0.5rem' }}
-                            variant={!!showPreview ? 'outlined' : 'contained'}
                         />
-                        <StyledSaveButton
+                        <StyledPrimaryButton
                             color="primary"
                             data-testid="admin-alerts-form-button-save"
                             variant="contained"

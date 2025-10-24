@@ -51,10 +51,10 @@ import {
 import {
     dlorAdminLink,
     isValidEmail,
-    splitStringToArrayOnComma,
+    splitStringToArrayOnPipe,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
-import { isDlorAdminUser } from 'helpers/access';
+import { isDlorAdminUser, isInDLOROwningTeam } from 'helpers/access';
 import { breadcrumbs } from 'config/routes';
 import { pluralise } from 'helpers/general';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -71,6 +71,33 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import parse from 'html-react-parser';
+
+import Fuse from 'fuse.js';
+import FuzzySearch from 'modules/Pages/DigitalLearningObjects/SharedComponents/FuzzySearch';
+
+// const fuseData = [
+//     {
+//         keyword: "Aboriginal and Torres Strait Islander",
+//         synonyms: ["ATSI", "Reconciliation", "Culture", "Indigenising curriculum"],
+//         keyword_id: 1,
+//     },
+//     {
+//         keyword: "Information Technology",
+//         synonyms: ["AI", "Artificial Intelligence", "Web Crawling", "Programming", "Coding", "Software", "Hardware", "Computing"],
+//         keyword_id: 2,
+//     },
+//     {
+//         keyword: "Research Skills",
+//         synonyms: ["Literature Review", "Data Analysis", "Academic Writing", "Referencing"],
+//         keyword_id: 3,
+//     },
+// ];
+
+const fuseOptions = {
+    includeScore: true,
+    threshold: 0.5,
+    keys: ['keyword', 'synonyms'],
+};
 
 const moment = require('moment');
 
@@ -144,10 +171,9 @@ export const DlorForm = ({
     dlorAdminNotesLoadError,
     dlorAdminNotes,
     formDefaults,
+    dlorKeywords,
     mode,
 }) => {
-    console.log('Form Defaults form', formDefaults);
-    console.log('Admin notes', dlorAdminNotes);
     const [cookies, setCookie] = useCookies();
     const { account } = useAccountContext();
 
@@ -176,6 +202,40 @@ export const DlorForm = ({
     const linkInteractionTypeSelectRef = useRef(formValues?.object_link_interaction_type || 'none');
     const linkFileTypeSelectRef = useRef(formValues.object_link_file_type || 'new');
 
+    const [selectedKeywords, setSelectedKeywords] = useState([]);
+
+    const handleSelectedItemsChange = newItems => {
+        setSelectedKeywords(newItems);
+    };
+
+    useEffect(() => {
+        const keywordIds = selectedKeywords.map(item => item.keyword_vocabulary_id);
+        setFormValues(prevValues => ({
+            ...prevValues,
+            object_keyword_ids: keywordIds,
+            object_keywords: selectedKeywords.map(item => item.keyword),
+        }));
+    }, [selectedKeywords]);
+
+    useEffect(() => {
+        // map the keywords from the keyword string BACK into the selectedKeywords structure
+        if (!!formValues?.object_keywords_string && formValues?.object_keywords_string.length > 0) {
+            const keywordStrings = splitStringToArrayOnPipe(
+                formValues.object_keywords_string || /* istanbul ignore next */ '',
+            );
+
+            const newKeywordsArray = keywordStrings.map((keyword, index) => {
+                return {
+                    keyword: keyword,
+                    keyword_vocabulary_id: index + 100000,
+                    score: 1,
+                };
+            });
+
+            setSelectedKeywords(newKeywordsArray);
+        }
+    }, [formValues.object_keywords_string]);
+
     const flatMapFacets = facetList => {
         return facetList?.flatMap(facet => facet?.filter_values?.map(value => value?.id)).sort((a, b) => a - b);
     };
@@ -192,14 +252,6 @@ export const DlorForm = ({
     }, []);
 
     useEffect(() => {
-        // console.log(
-        //     'useEffect FIRST l=',
-        //     dlorItemSaving,
-        //     '; e=',
-        //     dlorSavedItemError,
-        //     '; dlorSavedItem=',
-        //     dlorSavedItem,
-        // );
         setConfirmationOpen(!dlorItemSaving && (!!dlorSavedItemError || !!dlorSavedItem));
     }, [dlorItemSaving, dlorSavedItemError, dlorSavedItem]);
 
@@ -258,15 +310,7 @@ export const DlorForm = ({
         }
     }, [editorReady]);
 
-    // useEffect(() => {
-    //     console.log("UseEffect formDefaults", formDefaults, formValues);
-    //     if (!!!formDefaults.object_publishing_user) {
-    //         console.log("SETTING FORM DEFAULTS");
-    //         setFormValues({...formValues, object_publishing_user: formDefaults.object_publishing_user});
-    //     }
-    // }, [formDefaults]);
-
-    // these match the values in dlor cypress admin tests
+    // these match the values in dlor playwright admin tests
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
     const summaryMinimumLength = 20;
@@ -315,22 +359,20 @@ export const DlorForm = ({
                     mode: 'manual',
                     label: 'Editing',
                     attributes: {
-                        href: 'javascript:void(0);'
-                    }
-                }
-            }
-        }
+                        href: 'javascript:void(0);',
+                    },
+                },
+            },
+        },
     };
 
     const isValidUsername = testUserName => {
-        console.log('TEST THE USERNAME, ', testUserName);
         return testUserName?.length >= 4 && testUserName?.length <= 8;
     };
 
     function validatePanelOwnership(currentValues) {
         let firstPanelErrorCount = 0;
         // valid user id is 8 or 9 char
-        console.log('currentValues', currentValues);
         !isValidUsername(currentValues?.object_publishing_user) && firstPanelErrorCount++;
 
         if (
@@ -406,7 +448,9 @@ export const DlorForm = ({
 
     function validatePanelFiltering(currentValues) {
         let fourthPanelErrorCount = 0;
-        currentValues?.object_keywords_string?.length < keywordMinimumLength && fourthPanelErrorCount++;
+        // ensure there is at least one keyword selected.
+        console.log('currentValues', currentValues);
+        currentValues?.object_keywords?.length < 1 && fourthPanelErrorCount++;
 
         function isDeepStructure(variable) {
             return Array.isArray(variable) ? typeof variable[0] === 'object' && variable[0] !== null : false;
@@ -506,8 +550,6 @@ export const DlorForm = ({
         let theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
 
-        console.log('The new value', theNewValue);
-
         if (['object_is_featured', 'object_cultural_advice'].includes(prop)) {
             theNewValue = !!e.target.checked ? 1 : 0;
         }
@@ -539,8 +581,6 @@ export const DlorForm = ({
         // amalgamate new value into data set
         const newValues = { ...formValues, [prop]: theNewValue };
 
-        console.log('The new values are', newValues);
-
         setFormValues(newValues);
     };
 
@@ -561,8 +601,6 @@ export const DlorForm = ({
         setFormValues(newValues);
     };
 
-    console.log('IS ADMIN', isDlorAdminUser(account));
-
     const stepPanelContentOwnership = React.useMemo(
         () => (
             <>
@@ -573,7 +611,7 @@ export const DlorForm = ({
                             id="object_publishing_user"
                             data-testid="object-publishing-user"
                             required
-                            disabled={!isDlorAdminUser(account)}
+                            disabled={!isDlorAdminUser(account) && !isInDLOROwningTeam(account, dlorItem, dlorTeamList)}
                             value={formValues?.object_publishing_user || ''}
                             onChange={handleChange('object_publishing_user')}
                             sx={{ width: '20em' }}
@@ -683,7 +721,7 @@ export const DlorForm = ({
                             A change here will affect all Objects for this team.
                             <br />
                             You can also{' '}
-                            <a target="_blank" href={dlorAdminLink('/team/manage')}>
+                            <a target="_blank" href={dlorAdminLink('/team/manage', account)}>
                                 Manage Teams
                             </a>
                         </Box>
@@ -703,12 +741,12 @@ export const DlorForm = ({
                                 id="team_email_edit"
                                 data-testid="dlor-form-team-email-edit"
                                 required
-                                value={formValues?.team_email_edit || ''}
+                                value={formValues?.team_email_edit || /* istanbul ignore next */ ''}
                                 onChange={handleChange('team_email_edit')}
                                 type="email"
                                 error={!isValidEmail(formValues?.team_email_edit)}
                             />
-                            {!isValidEmail(formValues?.team_email_edit) && (
+                            {/* istanbul ignore next */ !isValidEmail(formValues?.team_email_edit) && (
                                 <StyledErrorMessageBox data-testid="error-message-team-email-edit">
                                     This email address is not valid.
                                 </StyledErrorMessageBox>
@@ -785,7 +823,7 @@ export const DlorForm = ({
                         <Grid item xs={12}>
                             <Accordion sx={{ marginTop: 2 }}>
                                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                    <Typography variant="p">Admin Notes</Typography>
+                                    <Typography variant="p">Existing Admin Notes</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     <TableContainer component={Paper}>
@@ -911,7 +949,6 @@ export const DlorForm = ({
                         characterCount(formValues?.object_title?.length, titleMinimumLength, 'object_title')}
                 </FormControl>
             </Grid>
-            {console.log('THE FORM VALUES:', formValues)}
             <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
@@ -1440,39 +1477,17 @@ export const DlorForm = ({
                 })}
             <Grid item xs={12}>
                 <Typography component={'h2'} variant={'h6'}>
-                    Keywords
+                    Tags
                 </Typography>
             </Grid>
-            <Grid item xs={12} style={{ paddingTop: 0 }}>
-                <FormControl variant="standard" fullWidth>
-                    <InputLabel htmlFor="object_keywords">
-                        Keywords - enter a comma separated list of keywords *
-                    </InputLabel>
-                    <Input
-                        id="object_keywords"
-                        data-testid="object-keywords"
-                        multiline
-                        required
-                        rows={2}
-                        value={formValues?.object_keywords_string || ''}
-                        onChange={handleChange('object_keywords_string')}
-                    />
-                    {!!formValues?.object_keywords_string &&
-                        characterCount(
-                            formValues?.object_keywords_string?.length,
-                            keywordMinimumLength,
-                            'object_keywords_string',
-                        )}
-                    <Box
-                        sx={{
-                            fontSize: '0.8em',
-                            marginBlock: '12px',
-                        }}
-                    >
-                        If you need a keyword with a comma within it, surround the keyword with double quotes, like:
-                        cat, "dog, dog", mouse
-                    </Box>
-                </FormControl>
+            <Grid item xs={12} style={{ paddingTop: 20 }}>
+                <FuzzySearch
+                    data={dlorKeywords}
+                    fuseOptions={fuseOptions}
+                    delay={300}
+                    onSelectedItemsChange={handleSelectedItemsChange}
+                    existingItems={selectedKeywords}
+                />
             </Grid>
             {mode === 'edit' && (
                 <Grid item xs={12}>
@@ -1486,7 +1501,7 @@ export const DlorForm = ({
                                     checked={isNotifying}
                                 />
                             }
-                            label="Notify following users?"
+                            label="Notify subscribers of significant updates?"
                         />
                         {!!isNotifying && (
                             <Button onClick={openNotifyLightbox} data-testid="notify-reedit-button">
@@ -1518,6 +1533,15 @@ export const DlorForm = ({
                         p: 4,
                     }}
                 >
+                    <h1>Preview of your notification:</h1>
+                    <p>
+                        Below is a preview of the notification that will be sent to users that have subscribed to
+                        updates for this object.
+                    </p>
+                    <p>
+                        These notifications should be for significant changes only, and this information is intended for
+                        ALL subscribers to this object (internal and external)
+                    </p>
                     <StyledLightboxHeaderBox id="notify-lightbox-title">
                         <Typography variant="h6" component="h2" data-testid="notify-lightbox-title">
                             Object change notification
@@ -1627,7 +1651,6 @@ export const DlorForm = ({
             actions.loadFileTypeList();
         }
 
-        // console.log('useEffect 2ND l=', dlorItemSaving, ' e=', dlorSavedItemError, ' dlorSavedItem=', dlorSavedItem);
         setConfirmationOpen(!dlorItemSaving && (!!dlorSavedItemError || !!dlorSavedItem));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -1652,6 +1675,29 @@ export const DlorForm = ({
             setConfirmationOpen(true);
         }
     }, [dlorSavedItem, dlorSavedItemError]);
+
+    // Helper function to check access
+    const userHasEditAccess = account => {
+        // 1. DLOR Admin
+        if (isDlorAdminUser(account)) return true;
+
+        // 2. Owner of the object
+        if (formDefaults?.object_publishing_user && account?.id === formDefaults.object_publishing_user) return true;
+        // 3. In the team that owns the object
+        /* istanbul ignore else */
+        if (Array.isArray(dlorTeamList) && formDefaults?.object_owning_team_id) {
+            const owningTeam = dlorTeamList.find(t => t.team_id === formDefaults.object_owning_team_id);
+            if (
+                owningTeam &&
+                Array.isArray(owningTeam.team_members) &&
+                owningTeam.team_members.some(member => member.team_admin_username === account?.id)
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    };
 
     const saveDlor = () => {
         const valuesToSend = { ...formValues };
@@ -1684,7 +1730,7 @@ export const DlorForm = ({
         delete valuesToSend.team_manager_edit;
         delete valuesToSend.team_email_edit;
 
-        valuesToSend.object_keywords = splitStringToArrayOnComma(valuesToSend.object_keywords_string);
+        // valuesToSend.object_keywords = splitStringToArrayOnComma(valuesToSend.object_keywords_string);
         delete valuesToSend.object_keywords_string;
 
         if (mode === 'add') {
@@ -1723,7 +1769,6 @@ export const DlorForm = ({
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
-
         const saveDlorPromise =
             mode === 'add'
                 ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
@@ -1739,7 +1784,7 @@ export const DlorForm = ({
                 const objectUuid =
                     mode === 'edit' ? dlorItem?.object_public_uuid : dlorSavedItem?.data?.object_public_uuid;
                 const noteContent = formValues.object_admin_notes;
-                actions.saveDlorAdminNote(objectUuid, noteContent);
+                !!noteContent && !!objectUuid && actions.saveDlorAdminNote(objectUuid, noteContent);
             }
         });
     };
@@ -1766,25 +1811,20 @@ export const DlorForm = ({
         setConfirmationOpen(false);
         actions.clearADlor();
         window.location.href = getDlorViewPageUrl(uuid);
+        /* istanbul ignore next */
         scrollToTopOfPage();
     };
-
-    // const navigateToDlorAdminHomePage = () => {
-    //     setConfirmationOpen(false);
-    //     actions.clearADlor();
-    //     window.location.href = dlorAdminLink();
-    //     scrollToTopOfPage();
-    // };
 
     const navigateToListPage = isAdmin => {
         setConfirmationOpen(false);
         actions.clearADlor();
-        window.location.href = isAdmin ? dlorAdminLink() : '/digital-learning-hub';
+        window.location.href = dlorAdminLink(undefined, account);
+        /* istanbul ignore next */
         scrollToTopOfPage();
     };
 
     const navigateToPreviousPage = () => {
-        window.location.href = dlorAdminLink();
+        window.location.href = dlorAdminLink(undefined, account);
     };
 
     function closeConfirmationBox() {
@@ -1799,11 +1839,12 @@ export const DlorForm = ({
     const handleNext = () => {
         setEditorReady(false);
         setActiveStep(prevActiveStep => prevActiveStep + 1);
-    }
+    };
+
     const handleBack = () => {
         setEditorReady(false);
         setActiveStep(prevActiveStep => prevActiveStep - 1);
-    }
+    };
 
     if (!!dlorTeamListLoading || dlorFilterListLoading || !!dlorItemSaving || !!dlorItemLoading) {
         return (
@@ -1845,6 +1886,14 @@ export const DlorForm = ({
             // index must = 3
             return validatePanelFiltering(formValues);
         }
+    }
+
+    if (!userHasEditAccess(account)) {
+        return (
+            <Typography variant="body1" color="error" data-testid="dlor-form-no-access">
+                You do not have permission to edit this object. If you believe this is an error, please contact support.
+            </Typography>
+        );
     }
 
     return (

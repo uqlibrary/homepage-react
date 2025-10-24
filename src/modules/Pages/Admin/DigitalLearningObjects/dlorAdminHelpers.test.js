@@ -1,18 +1,19 @@
-import { dlorAdminLink, getUserPostfix, isValidEmail, splitStringToArrayOnComma } from './dlorAdminHelpers';
+import { dlorAdminLink, getUserPostfix, isValidEmail, splitStringToArrayOnPipe } from './dlorAdminHelpers';
 
 describe('helpers', () => {
     it('splits keywords correctly', () => {
-        expect(splitStringToArrayOnComma('abc, def, hij')).toEqual(['abc', 'def', 'hij']);
-        expect(splitStringToArrayOnComma('abc, d"e"f, hij')).toEqual(['abc', 'd"e"f', 'hij']);
-        expect(splitStringToArrayOnComma('abc, "def, def", "hij"')).toEqual(['abc', 'def, def', 'hij']);
-        expect(splitStringToArrayOnComma('"abc, abc", def, "hij"')).toEqual(['abc, abc', 'def', 'hij']);
-        expect(splitStringToArrayOnComma('abc')).toEqual(['abc']);
-        expect(splitStringToArrayOnComma('abc,def,hij')).toEqual(['abc', 'def', 'hij']);
-        expect(splitStringToArrayOnComma('')).toEqual('');
+        // These have been rewritten, as they are no longer manually entered - they are selected from a list.
+        // This is for backwards compat only
+        expect(splitStringToArrayOnPipe('abc|def|hij')).toEqual(['abc', 'def', 'hij']);
+        expect(splitStringToArrayOnPipe('"abc, abc"|def|hij')).toEqual(['abc, abc', 'def', 'hij']);
+        expect(splitStringToArrayOnPipe('abc')).toEqual(['abc']);
+        expect(splitStringToArrayOnPipe('abc|def|hij')).toEqual(['abc', 'def', 'hij']);
+        expect(splitStringToArrayOnPipe('')).toEqual('');
     });
     it('generates admin links correctly', () => {
-        expect(dlorAdminLink('/add')).toEqual('http://localhost/admin/dlor/add');
-        expect(dlorAdminLink()).toEqual('http://localhost/admin/dlor');
+        const account = { id: 'dloradmn', groups: ['lib_dlor_admins'] };
+        expect(dlorAdminLink('/add', account)).toEqual('http://localhost/admin/dlor/add');
+        expect(dlorAdminLink(undefined, account)).toEqual('http://localhost/admin/dlor');
     });
     it('generates validates emails correctly', () => {
         expect(isValidEmail('blah')).toEqual(false); // simple

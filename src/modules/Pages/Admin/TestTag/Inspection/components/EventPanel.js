@@ -5,13 +5,12 @@ import PropTypes from 'prop-types';
 import Grid from '@mui/material/Unstable_Grid2';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import TextField from '@mui/material/TextField';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import locale from '../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import LocationPicker from '../../SharedComponents/LocationPicker/LocationPicker';
 
 const componentId = 'event-panel';
@@ -49,6 +48,7 @@ const EventPanel = ({
 
     const updateEventDate = newDate => {
         const manualDate = newDate.isBefore(moment(), 'day');
+        /* istanbul ignore next */
         if (newDate.isValid()) {
             handleChange('action_date')(newDate);
         }

@@ -15,7 +15,7 @@ import {
     DLOR_TEAM_DELETE_API,
     DLOR_TEAM_LIST_API,
     DLOR_TEAM_SINGLE_GET_API,
-    DLOR_TEAM_UPDATE_API,
+    DLOR_ADMIN_TEAM_UPDATE_API,
     DLOR_SERIES_CREATE_API,
     DLOR_SERIES_DELETE_API,
     DLOR_SERIES_LIST_API,
@@ -31,15 +31,15 @@ import {
     DLOR_FAVOURITES_API,
     DLOR_DEMOGRAPHICS_REPORT_API,
     DLOR_ADMIN_NOTES_API,
+    DLOR_CREATE_TEAM_ADMIN_API,
+    DLOR_EDIT_TEAM_ADMIN_API,
+    DLOR_DELETE_TEAM_ADMIN_API,
+    DLOR_TEAM_MEMBER_SINGLE_GET_API,
+    DLOR_KEYWORDS_API,
+    DLOR_KEYWORDS_UPDATE_API,
+    DLOR_KEYWORDS_DESTROY_API,
 } from 'repositories/routes';
-
-const checkExpireSession = (dispatch, error) => {
-    const triggerLogoutStatus = [401];
-    if (!!error?.status && triggerLogoutStatus.includes(error.status)) {
-        // They are no longer allowed. Log them out
-        dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
-    }
-};
+import { checkExpireSession } from './actionhelpers';
 
 export function loadCurrentDLORs() {
     return dispatch => {
@@ -283,7 +283,7 @@ export function loadADLORTeam(dlorId) {
 export function updateDlorTeam(teamId, request) {
     return dispatch => {
         dispatch({ type: actions.DLOR_UPDATING });
-        return put(DLOR_TEAM_UPDATE_API(teamId), request)
+        return put(DLOR_ADMIN_TEAM_UPDATE_API(teamId), request)
             .then(response => {
                 dispatch({
                     type: actions.DLOR_UPDATED,
@@ -670,7 +670,6 @@ export function loadDlorAdminNotes(uuid) {
         dispatch({ type: actions.DLOR_ADMIN_NOTES_LOADING });
         return get(DLOR_ADMIN_NOTES_API(uuid))
             .then(response => {
-                console.log('DLOR Admin Notes Response', response);
                 dispatch({
                     type: actions.DLOR_ADMIN_NOTES_LOADED,
                     payload: response.data,
@@ -689,7 +688,6 @@ export function loadDlorAdminNotes(uuid) {
 // eslint-disable-next-line camelcase
 export function saveDlorAdminNote(uuid, object_admin_note_content) {
     return dispatch => {
-        console.log('Saving Dlor Admin Note', uuid, object_admin_note_content);
         dispatch({ type: actions.DLOR_ADMIN_NOTES_LOADING });
         return post(DLOR_ADMIN_NOTES_API(uuid), {
             // eslint-disable-next-line camelcase
@@ -705,6 +703,135 @@ export function saveDlorAdminNote(uuid, object_admin_note_content) {
             .catch(error => {
                 dispatch({
                     type: actions.DLOR_ADMIN_NOTES_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function addDlorTeamMember(request) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_TEAM_LOADING });
+        return post(DLOR_CREATE_TEAM_ADMIN_API(), request)
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_TEAM_LOADED,
+                    payload: response.data,
+                });
+                // refresh the team after change
+                dispatch(loadADLORTeam(request.team_id));
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_TEAM_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function editDlorTeamMember(id, request) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_TEAM_LOADING });
+        return put(DLOR_EDIT_TEAM_ADMIN_API(id), request)
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_TEAM_LOADED,
+                    payload: response.data,
+                });
+                // refresh the team after change
+                dispatch(loadADLORTeam(request.team_id));
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_TEAM_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function deleteDlorTeamMember(id, team_id) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_TEAM_LOADING });
+        return destroy(DLOR_DELETE_TEAM_ADMIN_API(id))
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_TEAM_LOADED,
+                    payload: response.data,
+                });
+                // refresh the team after change
+                dispatch(loadADLORTeam(team_id));
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_TEAM_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function loadDlorKeywords() {
+    console.log('loadDlorKeywords called');
+    return dispatch => {
+        dispatch({ type: actions.DLOR_KEYWORDS_LOADING });
+        return get(DLOR_KEYWORDS_API())
+            .then(response => {
+                console.log('DLOR Keywords Response', response);
+                dispatch({
+                    type: actions.DLOR_KEYWORDS_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_KEYWORDS_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+export function updateDlorKeywords(request) {
+    console.log('UpdateDlor called', request);
+    return dispatch => {
+        dispatch({ type: actions.DLOR_KEYWORDS_UPDATING });
+        return post(DLOR_KEYWORDS_UPDATE_API(), request)
+            .then(response => {
+                console.log('UPDATE RESPONSE', response);
+                dispatch({
+                    type: actions.DLOR_KEYWORDS_UPDATED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_KEYWORDS_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function deleteDlorSynonym(request) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_KEYWORDS_UPDATING });
+        return destroy(DLOR_KEYWORDS_DESTROY_API(), request)
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_KEYWORDS_UPDATED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_KEYWORDS_UPDATE_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);

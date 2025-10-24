@@ -48,6 +48,11 @@ export const PastExamPaperList = lazy(() => lazyRetry(() => import('modules/Page
 export const DLONew = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Objects/DLOAddContainer')));
 export const DLOOwnEdit = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Objects/DLOEditContainer')));
 export const DLOFilterManage = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Filters/DLOFilterManageContainer')));
+export const DLOVocabularyManage = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Vocabulary/dlorVocabularyManageContainer')));
+
+// seperate route for team managers
+export const DLOOwnTeamList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamListContainer')));
+export const DLOOwnTeamEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamEditContainer')));
 // always load components
 export { HomePageContainer as Index } from 'modules/HomePage';
 export { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';

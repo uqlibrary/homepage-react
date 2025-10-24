@@ -1,5 +1,25 @@
 import global from 'locale/global';
-const moment = require('moment');
+import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
+
+/* istanbul ignore next */
+const tryCatch = (callback, _default = undefined) => {
+    try {
+        return callback();
+    } catch (e) {
+        return _default;
+    }
+};
+
+export const isDevEnv = () => tryCatch(() => process.env.BRANCH === 'development', false);
+
+export const isJestTest = () => tryCatch(() => !!process.env.JEST_WORKER_ID, false);
+
+/* istanbul ignore next */
+export const isPlaywrightTest = () => tryCatch(() => !!process?.env?.PW_IS_RUNNING, false);
+
+/* istanbul ignore next */
+export const isTest = () => isJestTest() || isPlaywrightTest();
 
 export const leftJoin = (objArr1, objArr2, key1, key2) => {
     if (!objArr2) {
@@ -156,3 +176,91 @@ export function removeClass(element, className) {
 export function addClass(element, className) {
     !!element && !element.classList.contains(className) && element.classList.add(className);
 }
+export const standardText = theme => {
+    return {
+        color: theme.palette.secondary.main,
+        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+        fontSize: '16px',
+        fontWeight: 400,
+        letterSpacing: '0.16px',
+        lineHeight: '1.6',
+    };
+};
+
+// Common base styles that can be inherited
+export const baseButtonStyles = {
+    borderRadius: '.25rem',
+    borderStyle: 'solid',
+    borderWidth: '2px',
+    boxShadow: 'none',
+    boxSizing: 'border-box',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+    fontSize: '1rem',
+    fontWeight: 500,
+    lineHeight: '1', // 1rem
+    padding: '1rem 1.5rem',
+    textAlign: 'center',
+    textDecoration: 'none',
+    textTransform: 'none',
+    '& .MuiTouchRipple-root': {
+        display: 'none',
+    },
+};
+export const baseHoverFocusStyles = {
+    boxShadow: 'none',
+    textDecoration: 'underline',
+};
+
+export const StyledPrimaryButton = styled(Button)(({ theme }) => ({
+    ...baseButtonStyles,
+    backgroundColor: theme.palette.primary.main,
+    borderColor: theme.palette.primary.main,
+    color: '#fff',
+    '&:hover, &:focus': {
+        ...baseHoverFocusStyles,
+        backgroundColor: '#fff',
+        borderColor: theme.palette.primary.main,
+        color: theme.palette.primary.main,
+    },
+    '&:disabled': {
+        color: 'rgba(0, 0, 0, 0.26)',
+        boxShadow: 'none',
+        backgroundColor: 'rgba(0, 0, 0, 0.12)',
+        borderColor: 'rgba(0, 0, 0, 0.12)',
+    },
+}));
+export const StyledSecondaryButton = styled(Button)(({ theme }) => ({
+    ...baseButtonStyles,
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    color: theme.palette.primary.main,
+    borderColor: theme.palette.primary.main,
+    '&:hover, &:focus': {
+        ...baseHoverFocusStyles,
+        backgroundColor: theme.palette.primary.main,
+        borderColor: theme.palette.primary.main,
+        color: '#fff',
+    },
+    '& .MuiTouchRipple-root': {
+        display: 'none',
+    },
+}));
+
+export const StyledTertiaryButton = styled(Button)(({ theme }) => ({
+    ...baseButtonStyles,
+    borderColor: '#fff',
+    textDecoration: 'underline',
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    color: theme.palette.primary.main,
+    '&:hover, &:focus': {
+        ...baseHoverFocusStyles,
+        backgroundColor: theme.palette.primary.main,
+        borderColor: theme.palette.primary.main,
+        color: '#fff',
+    },
+    '& .MuiTouchRipple-root': {
+        display: 'none',
+    },
+}));

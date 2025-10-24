@@ -34,14 +34,7 @@ import {
     TEST_TAG_ADD_USER_API,
     TEST_TAG_DELETE_USER_API,
 } from 'repositories/routes';
-
-const checkExpireSession = (dispatch, error) => {
-    const triggerLogoutStatus = [401];
-    if (!!error?.status && triggerLogoutStatus.includes(error.status)) {
-        // They are no longer allowed. Log them out
-        dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
-    }
-};
+import { checkExpireSession } from './actionhelpers';
 
 export function loadUser() {
     return dispatch => {
@@ -56,7 +49,7 @@ export function loadUser() {
             .catch(error => {
                 dispatch({
                     type: actions.TESTTAG_USER_FAILED,
-                    payload: error.message,
+                    payload: error,
                 });
                 checkExpireSession(dispatch, error);
             });

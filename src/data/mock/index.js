@@ -28,6 +28,7 @@ import { espaceSearchResponse, loans, printBalance } from './data/general';
 import { alertList } from './data/alertsLong';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
 import examSearch_PHYS1001 from './data/records/learningResources/examSearch_PHYS1001';
+import examSearch_ENGG from './data/records/learningResources/examSearch_ENGG';
 import examSearch_DENT80 from './data/records/learningResources/examSearch_DENT80';
 import testTag_user from './data/records/testAndTag/test_tag_user';
 import testTag_user_UQPF from './data/records/testAndTag/test_tag_userUQPF';
@@ -70,6 +71,7 @@ import {
 } from './data/journalSearchFavourites';
 import { vemcountData } from './data/vemcount';
 import dlor_admin_notes from './data/records/dlor/dlor_admin_notes';
+import dlor_keywords from './data/records/dlor/dlor_keywords';
 
 const moment = require('moment');
 
@@ -225,7 +227,7 @@ mock.onAny(routes.ALERTS_CREATE_API().apiUrl).reply(
     ]),
 );
 // mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(withDelay([500, {}]));
-mock.onAny(routes.ALERT_UPDATE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
+mock.onPut(`/${routes.ALERT_UPDATE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl}`).reply(
     withDelay([
         200,
         {
@@ -239,18 +241,16 @@ mock.onAny(routes.ALERT_UPDATE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' 
         },
     ]),
 );
-// mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(withDelay([500, {}]));
 mock.onDelete(routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
     withDelay([200, []]),
 );
-// mock.onDelete(routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(withDelay([500, []]));
 mock.onDelete(routes.ALERT_DELETE_API({ id: 'd23f2e10-d7d6-11eb-a928-71f3ef9d35d9' }).apiUrl).reply(
     withDelay([200, []]),
 );
 mock.onDelete(routes.ALERT_DELETE_API({ id: 'da181a00-d476-11eb-8596-2540419539a9' }).apiUrl).reply(
     withDelay([200, []]),
 );
-mock.onDelete(routes.ALERT_DELETE_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08' }).apiUrl).reply(
+mock.onDelete(routes.ALERT_DELETE_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f09' }).apiUrl).reply(
     withDelay([200, []]),
 );
 mock.onDelete(routes.ALERT_DELETE_API({ id: '0aa12a30-996a-11eb-b009-3f6ded4fdb35' }).apiUrl).reply(
@@ -323,11 +323,11 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: '0aa12a30-996a-11eb-b009-3f6ded4fdb35' }
     ]),
 );
 
-mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08' }).apiUrl).reply(
+mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f09' }).apiUrl).reply(
     withDelay([
         200,
         {
-            id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08',
+            id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f09',
             start: '2021-06-27 14:00:57',
             end: '2021-06-27 14:50:57',
             title: 'Network outage, Duhig Tower, 2.30-2.45pm today.',
@@ -339,6 +339,19 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08' }
         },
     ]),
 );
+mock.onGet(routes.ALERT_BY_ID_API({ id: '232d6880-996a-11eb-8a79-e7fddae87baf' }).apiUrl).reply(withDelay([404, {}]));
+
+function getSpecificAlert(alertId) {
+    return alertList.find(alert => alert?.id === alertId);
+}
+mock.onGet(/alert\/.*/).reply(config => {
+    const urlparts = config.url.split('/').pop();
+    const alertId = urlparts.split('?')[0];
+    if (alertId === '232d6880-996a-11eb-8a79-e7fddae87baf') {
+        return [404, { status: 'error', message: 'No records found for that UUID' }];
+    }
+    return [200, getSpecificAlert(alertId)];
+});
 
 // Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
 fetchMock.mock(
@@ -391,7 +404,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
             return getSpecificDlorObject(dlorId);
         }
     })
-    .onGet(/dlor\/admin\/team\/.*/)
+    .onGet(/dlor\/auth\/team\/.*/)
     .reply(config => {
         const urlparts = config.url.split('/').pop();
         const teamId = urlparts.split('?')[0];
@@ -417,7 +430,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
             return getSpecificDlorObject(dlorId);
         }
     })
-    .onGet('dlor/public/list/full')
+    .onGet(/dlor\/(admin|public)\/list\/full/)
     .reply(() => {
         if (responseType === 'fullListError') {
             return [500, {}];
@@ -490,7 +503,7 @@ mock.onGet(/dlor\/public\/find\/.*/)
             ];
         }
     })
-    .onPut(/dlor\/admin\/team\/.*/)
+    .onPut(/dlor\/auth\/team\/.*/)
     .reply(config => {
         const urlparts = config.url.split('/').pop();
         const teamId = urlparts.split('?')[0];
@@ -807,6 +820,26 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .onPost(/dlor\/admin\/object\/notes\/.*/)
     .reply(() => {
         return [200, dlor_admin_notes];
+    })
+    .onPost(/dlor\/auth\/teammember/)
+    .reply(() => {
+        return [200, { data: [] }];
+    })
+    .onPost(/dlor\/admin\/keywords/)
+    .reply(() => {
+        return [200, { data: [] }];
+    })
+    .onPut(/dlor\/auth\/teammember\/\d+/)
+    .reply(() => {
+        return [200, { data: { success: true } }];
+    })
+    .onDelete(/dlor\/auth\/teammember\/\d+/)
+    .reply(() => {
+        return [200, { data: { success: true } }];
+    })
+    .onGet(/dlor\/public\/keywords\/list/)
+    .reply(() => {
+        return [200, dlor_keywords];
     });
 
 mock.onGet('exams/course/FREN1010/summary')
@@ -1014,6 +1047,16 @@ mock.onGet('exams/course/FREN1010/summary')
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];
+    })
+    .onGet(/exams\/search.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const engSuffix = urlparts.split('?')[0];
+        if (!!engSuffix.toLowerCase().startsWith('engg')) {
+            const result = filterExamPaperListByPattern(examSearch_ENGG, `${engSuffix}`);
+            return [200, result];
+        }
+        return [404, []];
     })
 
     /** TEST AND TAG ROUTES **/
@@ -1428,3 +1471,31 @@ mock.onGet('exams/course/FREN1010/summary')
         console.log('url not mocked...', config.url);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });
+
+function filterExamPaperListByPattern(data, pattern) {
+    // Create a deep copy of the original data to avoid mutation
+    const filteredData = {
+        minYear: data.minYear,
+        maxYear: data.maxYear,
+        periods: [...data.periods],
+        papers: [],
+    };
+
+    // Filter the papers array
+    data.papers.forEach(courseGroup => {
+        // Filter each course group (array of period arrays)
+        const filteredCourseGroup = courseGroup
+            .map(periodArray => {
+                // Filter each period array to only include matching course codes
+                return periodArray.filter(exam => exam.courseCode && exam.courseCode.startsWith(pattern));
+            })
+            .filter(periodArray => periodArray.length > 0); // Remove empty period arrays
+
+        // Only add the course group if it has matching courses
+        if (filteredCourseGroup.length > 0) {
+            filteredData.papers.push(filteredCourseGroup);
+        }
+    });
+
+    return filteredData;
+}

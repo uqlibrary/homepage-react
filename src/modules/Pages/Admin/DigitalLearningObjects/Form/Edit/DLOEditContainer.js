@@ -6,11 +6,13 @@ import DLOEdit from './DLOEdit';
 
 const mapStateToProps = state => {
     return {
+        ...state.get('accountReducer'),
         ...state.get('dlorFilterListReducer'),
         ...state.get('dlorGetSingleReducer'),
         ...state.get('dlorTeamListReducer'),
         ...state.get('dlorUpdateReducer'),
         ...state.get('dlorAdminNotesReducer'),
+        ...state.get('dlorKeywordsReducer'),
     };
 };
 

@@ -26,7 +26,7 @@ import {
     systemList,
 } from '../alerthelpers';
 import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
-import { scrollToTopOfPage } from 'helpers/general';
+import { scrollToTopOfPage, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
 
 export const AlertsView = ({ actions, alert, alertStatus }) => {
@@ -353,7 +353,7 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
                             style={{ marginTop: '1rem' }}
                         >
                             <Grid item xs={3} align="left">
-                                <Button
+                                <StyledSecondaryButton
                                     color="secondary"
                                     children="Cancel"
                                     data-testid="admin-alerts-view-button-cancel"
@@ -362,7 +362,7 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
                                 />
                             </Grid>
                             <Grid item xs={9} align="right">
-                                <Button
+                                <StyledPrimaryButton
                                     color="primary"
                                     data-testid="admin-alerts-view-button-save"
                                     variant="contained"

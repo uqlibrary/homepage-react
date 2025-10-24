@@ -15,7 +15,7 @@ import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/Confi
 
 import { useConfirmationAlert } from '../../../helpers/hooks';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
-import locale from '../../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
 import config from './config';
 import { transformRow, transformUpdateRequest, emptyActionState, actionReducer } from './utils';

@@ -18,6 +18,7 @@ export const pathConfig = {
         dlorseriesedit: dlorSeriesId => `/admin/dlor/series/edit/${dlorSeriesId}`,
         dlorseriesadd: '/admin/dlor/series/add',
         dlorfiltersmanage: '/admin/dlor/filters',
+        dlorvocabularymanage: '/admin/dlor/vocabulary',
         masquerade: '/admin/masquerade',
         testntagdashboard: '/admin/testntag',
         testntaginspect: '/admin/testntag/inspect',
@@ -44,4 +45,6 @@ export const pathConfig = {
     pastExamPaperSearch: '/exams',
     dlorSubmit: '/digital-learning-hub/submit',
     dlorOwnObjectEdit: dlorId => `/digital-learning-hub/edit/${dlorId}`,
+    dlorOwnTeamList: '/digital-learning-hub/team/manage',
+    dlorOwnTeamEdit: dlorTeamId => `/digital-learning-hub/team/edit/${dlorTeamId}`,
 };

@@ -34,6 +34,7 @@ import { breadcrumbs } from 'config/routes';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { useAccountContext } from 'context';
 
 const StyledDraggableListItem = styled('li')(({ theme }) => ({
     display: 'flex',
@@ -152,6 +153,7 @@ export const DLOSeriesEdit = ({
     dlorSeries,
     mode,
 }) => {
+    const { account } = useAccountContext();
     const handleEditorChange = (fieldname, newContent) => {
         const newValues = { ...formValues, [fieldname]: newContent };
         setFormValues(newValues);
@@ -277,11 +279,12 @@ export const DLOSeriesEdit = ({
 
     const navigateToSeriesManagementHomePage = () => {
         closeConfirmationBox();
-        window.location.href = dlorAdminLink('/series/manage');
+        window.location.href = dlorAdminLink('/series/manage', account);
+        /* istanbul ignore next */
         scrollToTopOfPage();
     };
     const navigateToPreviousPage = () => {
-        window.location.href = dlorAdminLink('/series/manage');
+        window.location.href = dlorAdminLink('/series/manage', account);
     };
 
     const clearForm = () => {
@@ -393,7 +396,7 @@ export const DLOSeriesEdit = ({
                 <DlorAdminBreadcrumbs
                     breadCrumbList={[
                         {
-                            link: dlorAdminLink('/series/manage'),
+                            link: dlorAdminLink('/series/manage', account),
                             title: 'Series management',
                         },
                         {

@@ -21,6 +21,7 @@ export const flattedPathConfigExact = [
     '/admin/dlor/team/manage',
     '/admin/dlor/team/add',
     '/admin/dlor/filters',
+    '/admin/dlor/vocabulary',
     '/admin/masquerade',
     '/admin/masquerade/',
     '/admin/testntag',
@@ -250,6 +251,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             exact: true,
             pageTitle: 'Manage Filters',
         },
+        {
+            path: pathConfig.admin.dlorvocabularymanage,
+            element: <components.DLOVocabularyManage />,
+            exact: true,
+            pageTitle: 'Manage Vocabulary',
+        },
     ];
     const authenticatedDlorDisplay = [
         {
@@ -262,6 +269,20 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.dlorViewSecure(dlorId),
             element: <components.DLOView />,
             pageTitle: 'Digital Learning Object Repository - View Object',
+        },
+    ];
+
+    const dlorTeamAdminDisplay = [
+        {
+            path: pathConfig.dlorOwnTeamList,
+            element: <components.DLOOwnTeamList />,
+            exact: true,
+            pageTitle: 'Digital Learning Object Repository - Team Management',
+        },
+        {
+            path: pathConfig.dlorOwnTeamEdit(dlorTeamId),
+            element: <components.DLOOwnTeamEdit />,
+            pageTitle: 'Digital Learning Object Repository - Edit Team',
         },
     ];
 
@@ -347,6 +368,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isDlorAdminUser(account) ? dlorAdminDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
         ...(account && isTestTagUser(account) ? testntagDisplay : []),
+        ...(account ? dlorTeamAdminDisplay : []),
         ...(account ? authenticatedDlorDisplay : []),
         {
             path: '*',

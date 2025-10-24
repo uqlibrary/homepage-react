@@ -4,7 +4,7 @@ import React from 'react';
 
 import TextField from '@mui/material/TextField';
 
-import locale from '../../../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { isEmptyStr } from '../../../helpers/helpers';
 
 export default {
@@ -39,7 +39,8 @@ export default {
                         multiline
                         minRows={3}
                         disabled={row?.last_inspect_status !== locale.config.inspectStatus.failed ?? false}
-                        required={row?.last_inspect_status === locale.config.inspectStatus.failed ?? false} />
+                        required={row?.last_inspect_status === locale.config.inspectStatus.failed ?? false}
+                    />
                 );
             },
 
@@ -57,7 +58,8 @@ export default {
                     multiline
                     minRows={3}
                     disabled={row?.asset_status !== locale.config.assetStatus.discarded}
-                    required={row?.asset_status === locale.config.assetStatus.discarded} />
+                    required={row?.asset_status === locale.config.assetStatus.discarded}
+                />
             ),
             validate: (value, row) => {
                 // should return true if a validation error exists
@@ -73,7 +75,8 @@ export default {
                     multiline
                     minRows={3}
                     disabled={row?.asset_status !== locale.config.assetStatus.outforrepair}
-                    required={row?.asset_status === locale.config.assetStatus.outforrepair} />
+                    required={row?.asset_status === locale.config.assetStatus.outforrepair}
+                />
             ),
             validate: (value, row) => {
                 // should return true if a validation error exists

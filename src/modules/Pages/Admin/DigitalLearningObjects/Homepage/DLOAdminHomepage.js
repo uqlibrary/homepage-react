@@ -41,6 +41,7 @@ import {
     fetchAndExportFavouritesToCSV,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { breadcrumbs } from 'config/routes';
+import { useAccountContext } from 'context';
 
 const StyledPageListItemGridContainer = styled(Grid)(() => ({
     paddingTop: '10px',
@@ -82,6 +83,7 @@ export const DLOAdminHomepage = ({
     dlorDemographicsLoading,
     dlorDemographicsError,
 }) => {
+    const { account } = useAccountContext();
     const statusTypes = [
         {
             type: 'new',
@@ -160,27 +162,30 @@ export const DLOAdminHomepage = ({
     }, [actions, dlorList, dlorListError, dlorListLoading]);
 
     const navigateToAddPage = () => {
-        window.location.href = dlorAdminLink('/add');
+        window.location.href = dlorAdminLink('/add', account);
     };
 
     const navigateToTeamsListPage = () => {
-        window.location.href = dlorAdminLink('/team/manage');
+        window.location.href = dlorAdminLink('/team/manage', account);
     };
 
     const navigateToFilterManagePage = () => {
-        window.location.href = dlorAdminLink('/filters');
+        window.location.href = dlorAdminLink('/filters', account);
+    };
+    const navigateToVocabularyManagePage = () => {
+        window.location.href = dlorAdminLink('/vocabulary', account);
     };
 
     const navigateToSeriesListPage = () => {
-        window.location.href = dlorAdminLink('/series/manage');
+        window.location.href = dlorAdminLink('/series/manage', account);
     };
 
     const navigateToAddSeriesPage = () => {
-        window.location.href = dlorAdminLink('/series/add');
+        window.location.href = dlorAdminLink('/series/add', account);
     };
 
     const navigateToEditPage = uuid => {
-        window.location.href = dlorAdminLink(`/edit/${uuid}`);
+        window.location.href = dlorAdminLink(`/edit/${uuid}`, account);
     };
 
     const confirmDelete = objectUuid => {
@@ -216,7 +221,7 @@ export const DLOAdminHomepage = ({
         setCheckedStatusType(newStatusTypeSet);
     };
 
-    const numberItemsPerPage = 10; // value also set in cypress dlorHomepage.spec
+    const numberItemsPerPage = 10; // value also set in playwright dlorHomepage.spec
 
     function keywordIsSearchable(keyword) {
         // don't filter on something terribly short
@@ -355,6 +360,7 @@ export const DLOAdminHomepage = ({
                         <MenuItem
                             onClick={() => {
                                 navigateToAddSeriesPage();
+                                /* istanbul ignore next */
                                 handleMenuClose();
                             }}
                             data-testid="admin-dlor-visit-add-series-button"
@@ -364,6 +370,7 @@ export const DLOAdminHomepage = ({
                         <MenuItem
                             onClick={() => {
                                 navigateToSeriesListPage();
+                                /* istanbul ignore next */
                                 handleMenuClose();
                             }}
                             data-testid="admin-dlor-visit-manage-series-button"
@@ -373,6 +380,7 @@ export const DLOAdminHomepage = ({
                         <MenuItem
                             onClick={() => {
                                 navigateToTeamsListPage();
+                                /* istanbul ignore next */
                                 handleMenuClose();
                             }}
                             data-testid="admin-dlor-visit-manage-teams-button"
@@ -382,6 +390,7 @@ export const DLOAdminHomepage = ({
                         <MenuItem
                             onClick={() => {
                                 navigateToFilterManagePage();
+                                /* istanbul ignore next */
                                 handleMenuClose();
                             }}
                             data-testid="admin-dlor-visit-manage-filters-button"
@@ -390,7 +399,18 @@ export const DLOAdminHomepage = ({
                         </MenuItem>
                         <MenuItem
                             onClick={() => {
+                                navigateToVocabularyManagePage();
+                                /* istanbul ignore next */
+                                handleMenuClose();
+                            }}
+                            data-testid="admin-dlor-visit-manage-vocabulary-button"
+                        >
+                            Manage keyword vocabulary
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() => {
                                 navigateToAddPage();
+                                /* istanbul ignore next */
                                 handleMenuClose();
                             }}
                             data-testid="admin-dlor-visit-add-button"
@@ -401,6 +421,7 @@ export const DLOAdminHomepage = ({
                         <MenuItem
                             onClick={() => {
                                 exportDLORDataToCSV(dlorList, 'dlor_data.csv');
+                                /* istanbul ignore next */
                                 handleMenuClose();
                             }}
                             data-testid="admin-dlor-export-dlordata-button"
@@ -410,6 +431,7 @@ export const DLOAdminHomepage = ({
                         <MenuItem
                             onClick={() => {
                                 exportDemographicsToCSV(dlorDemographics, 'dlor_demographics.csv');
+                                /* istanbul ignore next */
                                 handleMenuClose();
                             }}
                             data-testid="admin-dlor-export-demographicsdata-button"
@@ -421,7 +443,7 @@ export const DLOAdminHomepage = ({
                                 try {
                                     setIsExportingFavourites(true);
                                     await fetchAndExportFavouritesToCSV('dlor_favourites.csv');
-                                } catch (error) {
+                                } catch (error) /* istanbul ignore next */ {
                                     console.error('Failed to export favourites:', error);
                                 } finally {
                                     setIsExportingFavourites(false);

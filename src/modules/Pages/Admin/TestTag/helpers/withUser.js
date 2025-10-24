@@ -1,10 +1,10 @@
 import React from 'react';
-import { loadUser } from 'data/actions';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { loadUser } from 'data/actions';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-
-import locale from '../testTag.locale';
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
 export const withUser = Component => props => {
     const dispatch = useDispatch();
@@ -17,10 +17,15 @@ export const withUser = Component => props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userLoading, userLoaded, userError]);
 
-    if (!!user?.user_uid) return <Component {...props} />;
-    else {
-        if (userLoaded || !!userError) {
-            return <StandardPage standardPageId="authentication-required" {...locale.pages.general.accountRequired} />;
-        } else return <ContentLoader message={locale.pages.general.checkingAuth} />;
+    if (!!user?.user_uid) {
+        return <Component {...props} />;
     }
+    if (!!userError && userError?.status?.toUpperCase() !== 'OK') {
+        // usually a cors error
+        return <StandardPage standardPageId="api-error" {...locale.pages.general.apiError} />;
+    }
+    if (!!userLoaded || !!userError) {
+        return <StandardPage standardPageId="authentication-required" {...locale.pages.general.accountRequired} />;
+    }
+    return <ContentLoader message={locale.pages.general.checkingAuth} />;
 };
