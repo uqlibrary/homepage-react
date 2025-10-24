@@ -30,7 +30,7 @@ phases:
       - set
       - bin/codebuild-test.sh
       - ls -al
-      - ls -al */*
+      - ls -al coverage/*
 reports:
   coverage-report:
     files:
