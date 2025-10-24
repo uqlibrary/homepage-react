@@ -8,17 +8,20 @@ import { styled } from '@mui/material/styles';
 
 import EditIcon from '@mui/icons-material/Edit';
 
-import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
-
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { pluralise } from 'helpers/general';
+import { baseButtonStyles, pluralise } from 'helpers/general';
+
+import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import {
     addBreadcrumbsToSiteHeader,
+    closeDeletionConfirmation,
+    closeDialog,
     displayToastMessage,
+    showConfirmAndDeleteGenericLocationDialog,
     springshareLocations,
-} from 'modules/Pages/Admin/BookableSpaces/helpers';
+} from '../bookableSpacesAdminHelpers';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
@@ -86,25 +89,13 @@ const StyledConfirmationButtons = styled('div')(() => ({
     justifyContent: 'space-between',
 }));
 const StyledButton = styled(Button)(({ theme }) => ({
+    ...baseButtonStyles,
     backgroundColor: theme.palette.primary.light,
-    borderWidth: '2px',
-    borderStyle: 'solid',
     borderColor: theme.palette.primary.light,
-    borderRadius: '.25rem',
-    boxSizing: 'border-box',
     color: '#fff',
-    cursor: 'pointer',
-    display: 'inline-flex',
     alignItems: 'center',
     gap: '.5rem',
-    fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-    fontSize: '1rem',
-    fontWeight: 500,
-    lineHeight: 1,
-    padding: '1rem 1.5rem',
     position: 'relative',
-    textAlign: 'center',
-    textDecoration: 'none',
     transition: 'background-color 200ms ease-out, color 200ms ease-out, border 200ms ease-out',
     '&.secondary': {
         backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -215,47 +206,6 @@ export const BookableSpacesManageLocations = ({
         return [];
     }, [weeklyHoursLoading, weeklyHoursError, weeklyHours]);
 
-    function removeAnyListeners(element) {
-        if (!element) {
-            return false;
-        }
-        // we cant actually generically remove listeners - but we can start form scratch
-        const clonedElement = element.cloneNode(true);
-        element.replaceWith(clonedElement);
-        return clonedElement;
-    }
-
-    function closeDialog(e = null) {
-        const dialog = !e ? document.getElementById('popupDialog') : e.target.closest('dialog');
-        !!dialog && dialog.close();
-
-        const dialogBodyElement = document.getElementById('dialogBody');
-        !!dialogBodyElement && (dialogBodyElement.innerHTML = '');
-
-        const addNewButton = document.getElementById('addNewButton');
-        !!addNewButton && (addNewButton.innerText = 'Add new');
-        !!addNewButton && (addNewButton.style.display = 'inline');
-        removeAnyListeners(addNewButton);
-
-        const deleteButton = document.getElementById('deleteButton');
-        !!deleteButton && (deleteButton.style.display = 'inline');
-        removeAnyListeners(deleteButton);
-
-        const saveButton = document.getElementById('saveButton');
-        removeAnyListeners(saveButton);
-    }
-
-    function closeDeletionConfirmation() {
-        const dialog = document.getElementById('confirmationDialog');
-        !!dialog && dialog.close();
-
-        const confirmationCancelButton = document.getElementById('confDialogCancelButton');
-        removeAnyListeners(confirmationCancelButton);
-
-        const confirmationOKButton = document.getElementById('confDialogOkButton');
-        removeAnyListeners(confirmationOKButton);
-    }
-
     function deleteGenericLocation(locationType, locationId, successMessage, failureMessage) {
         console.log('deleteGenericLocation', locationType, locationId);
         showSavingProgress(true);
@@ -281,17 +231,6 @@ export const BookableSpacesManageLocations = ({
                 .finally(() => {
                     showSavingProgress(false);
                 });
-    }
-
-    function showConfirmAndDeleteGenericLocationDialog(line1, line2) {
-        const confirmationMessageElement = document.getElementById('confDialogMessage');
-        !!confirmationMessageElement && (confirmationMessageElement.innerHTML = `<p>${line1}</p><p>${line2}</p>`);
-
-        const confirmationCancelButton = document.getElementById('confDialogCancelButton');
-        !!confirmationCancelButton && confirmationCancelButton.addEventListener('click', closeDeletionConfirmation);
-
-        const dialog = document.getElementById('confirmationDialog');
-        !!dialog && dialog.showModal();
     }
 
     const saveChangeToLibrary = e => {

@@ -11,7 +11,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 import { standardText } from 'helpers/general';
 
-import { spacesAdminLink } from './helpers';
+import { spacesAdminLink } from './bookableSpacesAdminHelpers';
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
     '& div:not([aria-hidden="true"])': {

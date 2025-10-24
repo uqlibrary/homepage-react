@@ -7,7 +7,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import { EditSpaceForm } from '../EditSpaceForm';
-import { addBreadcrumbsToSiteHeader, displayToastMessage } from 'modules/Pages/Admin/BookableSpaces/helpers';
+import { addBreadcrumbsToSiteHeader, displayToastMessage } from '../bookableSpacesAdminHelpers';
 
 const PageWrapper = ({ children }) => {
     return (

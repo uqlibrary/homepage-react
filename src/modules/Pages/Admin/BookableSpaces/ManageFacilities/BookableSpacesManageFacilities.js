@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 
+import Button from '@mui/material/Button';
 import { Grid } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Input from '@mui/material/Input';
@@ -11,18 +12,23 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import WarningOutlined from '@mui/icons-material/WarningOutlined';
 
-import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
-
+import { addClass, baseButtonStyles, removeClass } from 'helpers/general';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { pluralise, scrollToTopOfPage, slugifyName, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
+
+import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import {
     addBreadcrumbsToSiteHeader,
+    closeDeletionConfirmation,
     displayToastMessage,
     getFlatFacilityTypeList,
-} from 'modules/Pages/Admin/BookableSpaces/helpers';
+} from '../bookableSpacesAdminHelpers';
+import locale from '../../TestTag/testTag.locale';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
@@ -50,15 +56,39 @@ const StyledMainDialog = styled('dialog')(({ theme }) => ({
     },
 
     '& .dialogFooter': {
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginTop: '1rem',
-        '& button': {
-            marginLeft: '0.5rem',
+        '& div': {
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginTop: '1rem',
+            '& button': {
+                marginLeft: '0.5rem',
+            },
+        },
+        '& svg': {
+            width: '1rem',
+            height: '1rem',
+            color: theme.palette.error.light,
+            '&.hidden': {
+                display: 'none',
+            },
         },
     },
 }));
-
+// a primary button, but with a red color
+const StyledDeleteButton = styled(Button)(({ theme }) => ({
+    ...baseButtonStyles,
+    backgroundColor: theme.palette.error.light,
+    borderColor: theme.palette.error.light,
+    color: '#fff',
+    alignItems: 'center',
+    gap: '.5rem',
+    position: 'relative',
+    transition: 'background-color 200ms ease-out, color 200ms ease-out, border 200ms ease-out',
+    '&:hover': {
+        backgroundColor: '#fff',
+        color: theme.palette.error.light,
+    },
+}));
 export const BookableSpacesManageFacilities = ({
     actions,
     facilityTypeList,
@@ -73,6 +103,9 @@ export const BookableSpacesManageFacilities = ({
     facilityTypeUpdating,
     facilityTypeUpdateError,
     facilityTypeUpdated,
+    bookableSpacesRoomList,
+    bookableSpacesRoomListLoading,
+    bookableSpacesRoomListError,
 }) => {
     console.log('load facilityTypeList', facilityTypeList, facilityTypeListLoading, facilityTypeListError);
     // console.log('load facilityTypeAdded', facilityTypeAdded, facilityTypeAdding, facilityTypeAddError);
@@ -114,6 +147,7 @@ export const BookableSpacesManageFacilities = ({
 
         if (facilityTypeListError === null && facilityTypeListLoading === null && facilityTypeList === null) {
             actions.loadAllFacilityTypes(); // get facility types
+            actions.loadAllBookableSpacesRooms(); // get bookableSpacesRoomList
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -132,19 +166,65 @@ export const BookableSpacesManageFacilities = ({
         }
     }, [facilityTypeListLoading, facilityTypeListError, facilityTypeList]);
 
+    const warningTextId = 'warningtext';
+    const clearUserWarningMessage = () => {
+        const warningtextElement = document.getElementById(warningTextId);
+        !!warningtextElement && warningtextElement.remove();
+
+        const warningIcon = document.getElementById('warning-icon');
+        addClass(warningIcon, 'hidden');
+    };
+
+    const displayUserWarningMessage = warningMessage => {
+        const warningMessageNode = document.createTextNode(warningMessage);
+
+        const primaryTextElement = document.createElement('span');
+        !!primaryTextElement && (primaryTextElement.id = warningTextId);
+        !!primaryTextElement && !!warningMessageNode && primaryTextElement.appendChild(warningMessageNode);
+
+        const dialogMessageElement = document.getElementById('dialogMessage');
+        !!dialogMessageElement && !!primaryTextElement && dialogMessageElement.appendChild(primaryTextElement);
+
+        const warningIcon = document.getElementById('warning-icon');
+        removeClass(warningIcon, 'hidden');
+    };
+
     function closeDialog(e = null) {
         const dialog = !e ? document.getElementById('popupDialog') : e.target.closest('dialog');
         !!dialog && dialog.close();
+
+        clearUserWarningMessage();
+
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = '');
+
+        const addNewButton = document.getElementById('addNewButton');
+        !!addNewButton && (addNewButton.innerText = 'Add new');
+        !!addNewButton && (addNewButton.style.display = 'inline');
+        removeAnyListeners(addNewButton);
+
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton && (deleteButton.style.display = 'inline'); // if we hid it, unhide it
+        removeAnyListeners(deleteButton);
+
+        const saveButton = document.getElementById('saveButton');
+        removeAnyListeners(saveButton);
     }
 
     const saveNewFacilityType = e => {
         const form = e.target.closest('form');
+        console.log('e=', e);
+        console.log('e.target=', e.target);
+        console.log('form=', form);
 
-        const formData = new FormData(form);
+        const formData = !!form && new FormData(form);
+        console.log('formData=', formData);
         const data = !!formData && Object.fromEntries(formData);
+        console.log('data=', data);
 
         // validate form
         const failureMessage = !data.facility_type_name && 'Please enter a facility type name';
+        console.log('failureMessage=', failureMessage);
         if (!!failureMessage) {
             displayToastMessage(failureMessage, true);
             return false;
@@ -184,6 +264,98 @@ export const BookableSpacesManageFacilities = ({
         return true;
     };
 
+    const saveChangeToFacilityType = e => {
+        const form = e.target.closest('form');
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+        console.log('saveChangeToFacilityType data=', data);
+
+        const valuesToSend = {
+            facility_type_name: data?.facility_type_name,
+            facility_type_id: data?.facility_type_id,
+        };
+
+        closeDialog();
+
+        !!data.facility_type_name &&
+            !!data.facility_type_id &&
+            actions
+                .updateSpacesFacilityType(valuesToSend)
+                .then(() => {
+                    console.log(`Successfully updated facility type: ${valuesToSend.facility_type_name}`);
+                    displayToastMessage('Facility type created', false);
+                    // return { success: true, id: valuesToSend.facility_type_id };
+                })
+                .catch(e => {
+                    console.log(
+                        'catch: updating facility type (',
+                        valuesToSend?.facility_type_id,
+                        valuesToSend?.facility_type_name,
+                        ') failed:',
+                        e,
+                    );
+                    displayToastMessage(
+                        '[BSMF-008] Sorry, an error occurred - Updating the Facility type failed. The admins have been informed.',
+                    );
+                    // return { success: false, id: valuesToSend.facility_type_id, error: e };
+                })
+                .finally(() => {
+                    // Reload facility types only once after all operations complete
+                    actions.loadAllFacilityTypes();
+                    console.log('------------------');
+                });
+    };
+
+    const displayEditFacilityTypeForm = e => {
+        const buttonClicked = e.target.closest('button');
+        const _facilityTypeId = buttonClicked.getAttribute('data-facilitytypeid');
+        const facilityTypeId = !!_facilityTypeId && parseInt(_facilityTypeId, 10);
+
+        // show the form
+        const flatFacilityTypeList = getFlatFacilityTypeList(facilityTypeList);
+        const facilityTypeDetails = flatFacilityTypeList.find(item => item.facility_type_id === facilityTypeId);
+        const formBody = `<div>
+                <h2 data-testid="add-facility-type-heading">Edit a Facility Type</h2>
+                <input type="hidden" name="facility_type_id" value="${facilityTypeId}" />
+                <div class="dialogRow">
+                    <label for="newFacilityType">Facility type name</label>
+                    <input type="text" name="facility_type_name" id="newFacilityType" value="${facilityTypeDetails.facility_type_name}" required />
+                </div>
+            </div>`;
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+        // add a deletion warning message about how many Spaces are affected
+        const spacesWithThisFacilityType = bookableSpacesRoomList?.data?.locations?.filter(location => {
+            return location.facility_types.some(facilityType => facilityType.facility_type_id === facilityTypeId);
+        });
+        const spacesWithThisFacilityTypeCount = spacesWithThisFacilityType?.length || 0;
+        const warningMessage = `This facility type will be removed from ${spacesWithThisFacilityTypeCount} Spaces if you delete it. The Spaces will not be deleted`;
+        displayUserWarningMessage(warningMessage);
+
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton.addEventListener('click', saveChangeToFacilityType);
+
+        // const addNewButton = document.getElementById('addNewButton');
+        // !!addNewButton && (addNewButton.innerText = 'Add Library');
+        // !!addNewButton && addNewButton.addEventListener('click', e => showAddLibraryForm(e, campusDetails));
+
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton &&
+            deleteButton.addEventListener('click', e => showConfirmAndDeleteFacilityTypeDialog(e, facilityTypeDetails));
+
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog.showModal();
+    };
+
+    function showConfirmAndDeleteFacilityTypeDialog(e, facilityTypeDetails) {
+        const line1 = `Do you really want to delete ${facilityTypeDetails.facility_type_name}?`;
+        const confirmationOKButton = document.getElementById('confDialogOkButton');
+        !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteCampus(e, campusDetails));
+        showConfirmAndDeleteGenericLocationDialog(line1, line2);
+    }
+
     const displayGroupAddItemForm = e => {
         const buttonClicked = e.target.closest('button');
         const groupId = buttonClicked.getAttribute('data-groupid');
@@ -203,6 +375,16 @@ export const BookableSpacesManageFacilities = ({
 
         const dialogBodyElement = document.getElementById('dialogBody');
         !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+        // const saveButton = document.getElementById('saveButton');
+        // !!saveButton && saveButton.addEventListener('click', saveChangeToCampus);
+        //
+        // const addNewButton = document.getElementById('addNewButton');
+        // !!addNewButton && (addNewButton.innerText = 'Add Library');
+        // !!addNewButton && addNewButton.addEventListener('click', e => showAddLibraryForm(e, campusDetails));
+
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton && (deleteButton.style.display = 'none');
 
         const dialog = document.getElementById('popupDialog');
         !!dialog && dialog.showModal();
@@ -585,25 +767,52 @@ export const BookableSpacesManageFacilities = ({
 
                                                 {group.facility_type_children.map(facilityType => {
                                                     return (
-                                                        <Input
-                                                            id={`facilitytype-input-${facilityType.facility_type_id}`}
-                                                            key={`facilitytype-input-${facilityType.facility_type_id}`}
-                                                            value={
-                                                                formValues.facility_types?.find(
+                                                        <div key={`facilitytype-list-${facilityType.facility_type_id}`}>
+                                                            {/* <Input*/}
+                                                            {/*    id={`facilitytype-input-${facilityType.facility_type_id}`}*/}
+                                                            {/*    key={`facilitytype-input-${facilityType.facility_type_id}`}*/}
+                                                            {/*    value={*/}
+                                                            {/*        formValues.facility_types?.find(*/}
+                                                            {/*            f =>*/}
+                                                            {/*                f?.facility_type_id ===*/}
+                                                            {/*                facilityType?.facility_type_id,*/}
+                                                            {/*        )?.facility_type_name ||*/}
+                                                            {/*        facilityType.facility_type_name*/}
+                                                            {/*    }*/}
+                                                            {/*    onChange={handleChange(*/}
+                                                            {/*        `facilitytype-${facilityType.facility_type_id}`,*/}
+                                                            {/*    )}*/}
+                                                            {/*    inputProps={{*/}
+                                                            {/*        'aria-label': `Edit ${facilityType.facility_type_name} facility type, part of ${facilityType.facility_type_group_name}`,*/}
+                                                            {/*        'data-testid': `facilitytype-input-${facilityType.facility_type_id}`,*/}
+                                                            {/*        maxLength: 255,*/}
+                                                            {/*    }}*/}
+                                                            {/* />*/}
+                                                            <IconButton
+                                                                color="primary"
+                                                                data-testid={`edit-facility-type-${facilityType.facility_type_id}-button`}
+                                                                id={`edit-facility-type-${facilityType.facility_type_id}-button`}
+                                                                onClick={displayEditFacilityTypeForm}
+                                                                data-facilitytypeid={facilityType.facility_type_id}
+                                                                style={{ paddingInline: 0, marginRight: '0.25rem' }}
+                                                                aria-label={`Edit facility type ${facilityType.facility_type_name}`}
+                                                            >
+                                                                <EditIcon
+                                                                    // data-testid={`edit-facility-type-${slugifyName(
+                                                                    //     facilityType.facility_type_name,
+                                                                    // )}`}
+                                                                    style={{ width: '1rem', height: '1rem' }}
+                                                                />
+                                                            </IconButton>
+                                                            <Typography component={'span'} variant={'p'}>
+                                                                {formValues.facility_types?.find(
                                                                     f =>
                                                                         f?.facility_type_id ===
                                                                         facilityType?.facility_type_id,
-                                                                )?.facility_type_name || facilityType.facility_type_name
-                                                            }
-                                                            onChange={handleChange(
-                                                                `facilitytype-${facilityType.facility_type_id}`,
-                                                            )}
-                                                            inputProps={{
-                                                                'aria-label': `Edit ${facilityType.facility_type_name} facility type, part of ${facilityType.facility_type_group_name}`,
-                                                                'data-testid': `facilitytype-input-${facilityType.facility_type_id}`,
-                                                                maxLength: 255,
-                                                            }}
-                                                        />
+                                                                )?.facility_type_name ||
+                                                                    facilityType.facility_type_name}
+                                                            </Typography>
+                                                        </div>
                                                     );
                                                 })}
 
@@ -625,19 +834,19 @@ export const BookableSpacesManageFacilities = ({
                                             </Grid>
                                         ))}
 
-                                        {!!saveButtonVisibility && (
-                                            <Grid item xs={12} style={{ marginTop: '2rem' }}>
-                                                <StyledPrimaryButton
-                                                    id="saveChange"
-                                                    data-testid="spaces-facilitytypes-save-button"
-                                                    fullWidth
-                                                    children="Save changes"
-                                                    onClick={saveChange}
-                                                    onKeyUp={saveChange}
-                                                    style={{ width: 'auto' }}
-                                                />
-                                            </Grid>
-                                        )}
+                                        {/* {!!saveButtonVisibility && (*/}
+                                        {/*    <Grid item xs={12} style={{ marginTop: '2rem' }}>*/}
+                                        {/*        <StyledPrimaryButton*/}
+                                        {/*            id="saveChange"*/}
+                                        {/*            data-testid="spaces-facilitytypes-save-button"*/}
+                                        {/*            fullWidth*/}
+                                        {/*            children="Save changes"*/}
+                                        {/*            onClick={saveChange}*/}
+                                        {/*            onKeyUp={saveChange}*/}
+                                        {/*            style={{ width: 'auto' }}*/}
+                                        {/*        />*/}
+                                        {/*    </Grid>*/}
+                                        {/* )}*/}
                                     </>
                                 );
                             }
@@ -647,22 +856,33 @@ export const BookableSpacesManageFacilities = ({
                         <form>
                             <div id="dialogBody" />
                             <div id="dialogFooter" className={'dialogFooter'}>
+                                <p id="dialogMessage" data-testid="dialogMessage">
+                                    <WarningOutlined className="hidden" id="warning-icon" data-testid="warning-icon" />
+                                </p>
                                 <div>
-                                    <StyledSecondaryButton
-                                        className={'secondary'}
-                                        children={'Cancel'}
-                                        onClick={closeDialog}
-                                        data-testid="dialog-cancel-button"
-                                    />
-                                </div>
-                                <div>
-                                    <StyledPrimaryButton
-                                        id={'saveButton'}
-                                        className={'primary'}
-                                        children={'Save'}
-                                        onClick={saveNewFacilityType}
-                                        data-testid="dialog-save-button"
-                                    />
+                                    <div>
+                                        <StyledDeleteButton
+                                            id={'deleteButton'}
+                                            className={'alert'}
+                                            children={'Delete'}
+                                            data-testid="dialog-delete-button"
+                                        />
+                                    </div>
+                                    <div>
+                                        <StyledSecondaryButton
+                                            className={'secondary'}
+                                            children={'Cancel'}
+                                            onClick={closeDialog}
+                                            data-testid="dialog-cancel-button"
+                                        />
+                                        <StyledPrimaryButton
+                                            id={'saveButton'}
+                                            className={'primary'}
+                                            children={'Save'}
+                                            onClick={saveNewFacilityType}
+                                            data-testid="dialog-save-button"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -687,6 +907,9 @@ BookableSpacesManageFacilities.propTypes = {
     facilityTypeUpdating: PropTypes.any,
     facilityTypeUpdateError: PropTypes.any,
     facilityTypeUpdated: PropTypes.any,
+    bookableSpacesRoomList: PropTypes.any,
+    bookableSpacesRoomListLoading: PropTypes.any,
+    bookableSpacesRoomListError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesManageFacilities);

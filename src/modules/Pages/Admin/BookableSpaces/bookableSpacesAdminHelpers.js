@@ -153,3 +153,55 @@ export const getFlatFacilityTypeList = facilityTypes => {
         ) || []
     );
 };
+
+export function removeAnyListeners(element) {
+    if (!element) {
+        return false;
+    }
+    // we cant actually generically remove listeners - but we can start from scratch
+    const clonedElement = element.cloneNode(true);
+    element.replaceWith(clonedElement);
+    return clonedElement;
+}
+
+export function closeDeletionConfirmation() {
+    const dialog = document.getElementById('confirmationDialog');
+    !!dialog && dialog.close();
+
+    const confirmationCancelButton = document.getElementById('confDialogCancelButton');
+    removeAnyListeners(confirmationCancelButton);
+
+    const confirmationOKButton = document.getElementById('confDialogOkButton');
+    removeAnyListeners(confirmationOKButton);
+}
+
+export function showConfirmAndDeleteGenericLocationDialog(line1, line2) {
+    const confirmationMessageElement = document.getElementById('confDialogMessage');
+    !!confirmationMessageElement && (confirmationMessageElement.innerHTML = `<p>${line1}</p><p>${line2}</p>`);
+
+    const confirmationCancelButton = document.getElementById('confDialogCancelButton');
+    !!confirmationCancelButton && confirmationCancelButton.addEventListener('click', closeDeletionConfirmation);
+
+    const dialog = document.getElementById('confirmationDialog');
+    !!dialog && dialog.showModal();
+}
+
+export function closeDialog(e = null) {
+    const dialog = !e ? document.getElementById('popupDialog') : e.target.closest('dialog');
+    !!dialog && dialog.close();
+
+    const dialogBodyElement = document.getElementById('dialogBody');
+    !!dialogBodyElement && (dialogBodyElement.innerHTML = '');
+
+    const addNewButton = document.getElementById('addNewButton');
+    !!addNewButton && (addNewButton.innerText = 'Add new');
+    !!addNewButton && (addNewButton.style.display = 'inline');
+    removeAnyListeners(addNewButton);
+
+    const deleteButton = document.getElementById('deleteButton');
+    !!deleteButton && (deleteButton.style.display = 'inline');
+    removeAnyListeners(deleteButton);
+
+    const saveButton = document.getElementById('saveButton');
+    removeAnyListeners(saveButton);
+}

@@ -22,7 +22,7 @@ import {
     getFlatFacilityTypeList,
     spacesAdminLink,
     springshareLocations,
-} from 'modules/Pages/Admin/BookableSpaces/helpers';
+} from './bookableSpacesAdminHelpers';
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({

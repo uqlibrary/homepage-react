@@ -21,7 +21,7 @@ import DoneIcon from '@mui/icons-material/Done';
 
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
-import { addBreadcrumbsToSiteHeader, spacesAdminLink } from 'modules/Pages/Admin/BookableSpaces/helpers';
+import { addBreadcrumbsToSiteHeader, spacesAdminLink } from '../bookableSpacesAdminHelpers';
 import { slugifyName, standardText } from 'helpers/general';
 
 const backgroundColorColumn = '#f0f0f0';
