@@ -270,6 +270,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             element: <components.DLOView />,
             pageTitle: 'Digital Learning Object Repository - View Object',
         },
+        {
+            path: pathConfig.dlorDashboard,
+            element: <components.DLODashboard />,
+            exact: true,
+            pageTitle: 'Digital Learning Object Repository - Dashboard',
+        },
     ];
 
     const dlorTeamAdminDisplay = [
