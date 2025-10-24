@@ -36,7 +36,8 @@ reports:
     file-format: 'COBERTURAXML'
 artifacts:
   files:
-    - '**/*'
+    - 'coverage/**/*'
+    - 'playwright/.results/**/trace.zip'
   name: builds/$CODEBUILD_BUILD_NUMBER/coverage
 cache:
   paths:
