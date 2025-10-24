@@ -30,7 +30,7 @@ phases:
       - set
       - bin/codebuild-test.sh
       - ls -al
-      - ls -al coverage/*
+      - ls -al coverage/* || echo "No coverage dir"
 reports:
   coverage-report:
     files:
