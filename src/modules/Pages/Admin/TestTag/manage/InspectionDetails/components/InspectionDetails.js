@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';

@@ -7,7 +7,7 @@ const moment = require('moment');
 
 export const useAccountUser = () => {
     const { account = {}, accountLoading = false } = useSelector(state => state.get('accountReducer')) || {};
-    const privilege = useMemo(() => getUserPermissions(account.tnt?.privileges || {}), [account.tnt?.privileges]);
+    const privilege = useMemo(() => getUserPermissions(account?.tnt?.privileges || {}), [account?.tnt?.privileges]);
     return {
         user: account?.tnt || null,
         userLoading: accountLoading,

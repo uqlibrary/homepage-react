@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 
 import Typography from '@mui/material/Typography';
@@ -32,7 +31,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
 }));
 
 const StandardAuthPage = ({ title = '', locale = null, requiredPermissions, inclusive = true, children, ...props }) => {
-    const { user, userLoading, userLoaded, userError, privilege } = useAccountUser();
+    const { user, userLoading, userLoaded, privilege } = useAccountUser();
     const defaultAllow =
         (!!user && typeof user === 'object' && Object.keys(user).length > 0) || /* istanbul ignore next */ false;
     const userAllow = !!privilege
@@ -52,7 +51,7 @@ const StandardAuthPage = ({ title = '', locale = null, requiredPermissions, incl
     return (
         <StyledWrapper>
             <StandardPage title={title} {...props}>
-                {!userLoading && userError && !shouldHaveAccess && (
+                {!userLoading && !shouldHaveAccess && (
                     <Typography variant={'h6'}>{localeGeneral.pages.general.pageUnavailable}</Typography>
                 )}
                 {userLoaded && shouldHaveAccess && (

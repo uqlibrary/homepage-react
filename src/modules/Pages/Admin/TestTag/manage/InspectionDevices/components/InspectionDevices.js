@@ -1,6 +1,5 @@
 import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 
 import Grid from '@mui/material/Unstable_Grid2';

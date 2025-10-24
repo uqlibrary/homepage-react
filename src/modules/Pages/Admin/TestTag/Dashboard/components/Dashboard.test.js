@@ -13,11 +13,11 @@ const redHex = '#951126';
 
 function setup(testProps = {}, renderer = rtlRender) {
     const {
-        state = {},
         actions = {},
         dashboardConfig = configData,
         dashboardConfigLoading = false,
         dashboardConfigError = null,
+        accountLoading = false,
         user = { ...userData },
         locale = { ...localeData },
         ...props
@@ -30,10 +30,9 @@ function setup(testProps = {}, renderer = rtlRender) {
             dashboardConfigLoaded: true,
         },
         accountReducer: {
-            accountLoading: false,
-            account: { tnt: userData },
+            accountLoading,
+            account: { tnt: user },
         },
-        ...state,
     };
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
@@ -137,26 +136,17 @@ describe('Dashboard component', () => {
         expect(getByTestId('dashboard-devices-due-recalibration-overdue-text')).toHaveStyle(`color: ${redHex}`);
     });
 
-    // HERE - fix the next 3 tests to match the below state object. Then
-    // continue to update the rest of the tests shown in the search panel to the left
     it('renders component for admin-only', () => {
         const loadDashboardFn = jest.fn();
         const { getByTestId, queryByTestId, getByText } = setup({
             actions: { loadDashboard: loadDashboardFn },
-            state: {
-                accountReducer: {
-                    accountLoading: false,
-                    account: {
-                        tnt: {
-                            ...userData,
-                            privileges: {
-                                can_admin: 1,
-                                can_inspect: 0,
-                                can_alter: 0,
-                                can_see_reports: 0,
-                            },
-                        },
-                    },
+            user: {
+                ...userData,
+                privileges: {
+                    can_admin: 1,
+                    can_inspect: 0,
+                    can_alter: 0,
+                    can_see_reports: 0,
                 },
             },
         });

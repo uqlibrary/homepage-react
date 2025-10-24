@@ -8,8 +8,6 @@ import assetData from '../../../../../../../data/mock/data/testing/testAndTag/te
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 import buildingList from '../../../../../../../data/mock/data/testing/testAndTag/testTagTaggedBuildingList';
 
-import { getUserPermissions } from '../../../helpers/auth';
-
 function setup(testProps = {}, renderer = rtlRender) {
     const {
         state = {},
@@ -26,12 +24,9 @@ function setup(testProps = {}, renderer = rtlRender) {
     } = testProps;
 
     const _state = {
-        testTagUserReducer: {
-            userLoading: false,
-            userLoaded: true,
-            userError: false,
-            user: userData,
-            privilege: getUserPermissions(userData.privileges ?? {}),
+        accountReducer: {
+            accountLoading: false,
+            account: { tnt: userData },
         },
         ...state,
     };
