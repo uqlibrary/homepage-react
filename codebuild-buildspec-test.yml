@@ -29,6 +29,8 @@ phases:
     commands:
       - set
       - bin/codebuild-test.sh
+      - ls -al
+      - ls -al */*
 reports:
   coverage-report:
     files:
