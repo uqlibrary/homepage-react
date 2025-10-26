@@ -1,5 +1,5 @@
 import * as actions from './actionTypes';
-import { get, post, put } from 'repositories/generic';
+import { destroy, get, post, put } from 'repositories/generic';
 import {
     SPACES_FACILITY_TYPE_ALL_API,
     SPACES_FACILITY_TYPE_CREATE_API,
@@ -81,8 +81,43 @@ export function updateSpacesFacilityType(request) {
             return false;
         }
         dispatch({ type: actions.SPACES_FACILITY_TYPE_UPDATING });
-        const url = SPACES_FACILITY_TYPE_UPDATE_API(request.facility_type_id);
+        const url = SPACES_FACILITY_TYPE_UPDATE_API({ id: request.facility_type_id });
+        console.log('updateSpacesFacilityType request.facility_type_id ', request.facility_type_id);
+        console.log('updateSpacesFacilityType url ', url);
         return put(url, request)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.SPACES_FACILITY_TYPE_UPDATED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.SPACES_FACILITY_TYPE_UPDATE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_FACILITY_TYPE_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function deleteSpacesFacilityType(id) {
+    console.log('deleteSpacesFacilityType', id);
+    return dispatch => {
+        dispatch({ type: actions.SPACES_FACILITY_TYPE_UPDATING });
+        const url = SPACES_FACILITY_TYPE_UPDATE_API({ id: id });
+        console.log('deleteSpacesFacilityType id ', id);
+        console.log('deleteSpacesFacilityType url ', url);
+        return destroy(url)
             .then(response => {
                 if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({

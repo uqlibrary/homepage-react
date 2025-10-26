@@ -170,42 +170,104 @@ test.describe('Spaces Admin - manage facility types page', () => {
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
-    test('can edit single facility type successfully', async ({ page, context }) => {
+    test('can edit facility type successfully', async ({ page, context }) => {
         await setTestDataCookie(context, page);
 
-        const facilityTypeId = 1;
-        const updatedFacilityTypeName = 'Noise level Other';
+        const facilityTypeId = '1';
 
-        await expect(page.getByTestId(`facilitytype-input-${facilityTypeId}`)).toBeVisible();
-        await expect(page.getByTestId(`facilitytype-input-${facilityTypeId}`)).toHaveValue('Noise level Low');
-        await page.getByTestId(`facilitytype-input-${facilityTypeId}`).click();
-        await page.getByTestId(`facilitytype-input-${facilityTypeId}`).fill(updatedFacilityTypeName);
-        await page.getByTestId('spaces-facilitytypes-save-button').click();
+        // open edit dialog
+        await expect(page.getByTestId(`edit-facility-type-${facilityTypeId}-button`)).toBeVisible();
+        await page.getByTestId(`edit-facility-type-${facilityTypeId}-button`).click();
+
+        // check dialog contents as expected
+        await expect(page.getByTestId('dialog-delete-button')).toBeVisible();
+        await expect(page.getByTestId('dialog-cancel-button')).toBeVisible();
+        await expect(page.getByTestId('dialog-save-button')).toBeVisible();
+        await expect(page.getByTestId('main-dialog').locator('h2')).toBeVisible();
+        await expect(page.getByTestId('main-dialog').locator('h2')).toContainText('Edit a Facility Type');
+        await expect(page.getByTestId(`facilitytype-name-${facilityTypeId}`)).toContainText('Noise level Low');
+        await expect(page.getByTestId('dialogMessage')).toContainText(
+            'This facility type will be removed from 1 Space if you delete it. The Space will not be deleted.',
+        );
+
+        await page.getByTestId('facility_type_name').type('prepend ');
+        await page.getByTestId('dialog-save-button').click();
 
         // success
         await assertToastHasMessage(page, 'Facility type updated');
 
         const expectedValues = {
-            facility_type_name: updatedFacilityTypeName,
+            facility_type_name: 'prepend Noise level Low',
             facility_type_id: facilityTypeId,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
-    test('can edit multiple facility type successfully', async ({ page }) => {
-        await expect(page.getByTestId('facilitytype-input-4')).toBeVisible();
-        await expect(page.getByTestId('facilitytype-input-4')).toHaveValue('AT technology');
-        await page.getByTestId('facilitytype-input-4').click();
-        await page.getByTestId('facilitytype-input-4').fill('Another Technology');
+    test('has correct deletion warnings fpr different types', async ({ page, context }) => {
+        await expect(page.getByTestId(`edit-facility-type-2-button`)).toBeVisible();
+        await page.getByTestId(`edit-facility-type-2-button`).click();
+        await expect(
+            page.getByText(
+                'This facility type will be removed from 1 Space if you delete it. The Space will not be deleted.',
+            ),
+        ).toBeVisible();
+        await expect(page.getByTestId('dialog-cancel-button')).toBeVisible();
+        await page.getByTestId('dialog-cancel-button').click();
 
-        await expect(page.getByTestId('facilitytype-input-12')).toBeVisible();
-        await expect(page.getByTestId('facilitytype-input-12')).toHaveValue('Opening hours');
-        await page.getByTestId('facilitytype-input-12').click();
-        await page.getByTestId('facilitytype-input-12').fill('Closing hours');
+        await expect(page.getByTestId(`edit-facility-type-4-button`)).toBeVisible();
+        await page.getByTestId(`edit-facility-type-4-button`).click();
+        // the old text was removed from the page
+        await expect(
+            page.getByText(
+                'This facility type will be removed from 1 Space if you delete it. The Space will not be deleted.',
+            ),
+        ).not.toBeVisible();
+        // the new text is present
+        await expect(
+            page.getByText(
+                'This facility type will be removed from 2 Spaces if you delete it. The Spaces will not be deleted.',
+            ),
+        ).toBeVisible();
+        await expect(page.getByTestId('dialog-cancel-button')).toBeVisible();
+        await page.getByTestId('dialog-cancel-button').click();
 
-        await page.getByTestId('spaces-facilitytypes-save-button').click();
+        await expect(page.getByTestId(`edit-facility-type-17-button`)).toBeVisible();
+        await page.getByTestId(`edit-facility-type-17-button`).click();
+        // the old text was removed from the page
+        await expect(
+            page.getByText(
+                'This facility type will be removed from 2 Spaces if you delete it. The Spaces will not be deleted.',
+            ),
+        ).not.toBeVisible();
+        // the new text is present
+        await expect(
+            page.getByText('This facility type can be deleted - it is not currently showing for any Spaces.'),
+        ).toBeVisible();
+    });
+    test.only('can delete facility type successfully', async ({ page }) => {
+        const facilityTypeId = 17;
+        const facilityTypeName = 'Contains Artwork';
+
+        // open edit dialog
+        await expect(page.getByTestId(`edit-facility-type-${facilityTypeId}-button`)).toBeVisible();
+        await page.getByTestId(`edit-facility-type-${facilityTypeId}-button`).click();
+
+        // check dialog contents as expected
+        await expect(page.getByTestId('dialog-delete-button')).toBeVisible();
+        await expect(page.getByTestId(`facilitytype-name-${facilityTypeId}`)).toContainText(facilityTypeName);
+        await expect(page.getByTestId('confirmation-dialog')).not.toBeVisible();
+        await page.getByTestId('dialog-delete-button').click();
+
+        await expect(page.getByTestId('confirmation-dialog')).toBeVisible();
+        const confirmationDialog = page.getByTestId('confirmation-dialog');
+        await expect(confirmationDialog.getByTestId('confirmation-dialog-message')).toContainText(
+            `Do you really want to delete ${facilityTypeName}?`,
+        );
+        await expect(confirmationDialog.getByTestId('confirmation-dialog-accept-button')).toBeVisible();
+        await expect(confirmationDialog.getByTestId('confirmation-dialog-accept-button')).toContainText('Yes');
+        await confirmationDialog.getByTestId('confirmation-dialog-accept-button').click();
 
         // success
-        await assertToastHasMessage(page, 'Facility types updated');
+        await assertToastHasMessage(page, `${facilityTypeName} deleted`);
     });
 });
 test.describe('Spaces Admin - adding new facility types', () => {

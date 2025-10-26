@@ -19,7 +19,7 @@ import {
     closeDeletionConfirmation,
     closeDialog,
     displayToastMessage,
-    showConfirmAndDeleteGenericLocationDialog,
+    showGenericConfirmAndDeleteDialog,
     springshareLocations,
 } from '../bookableSpacesAdminHelpers';
 
@@ -519,7 +519,7 @@ export const BookableSpacesManageLocations = ({
         const line2 = 'This will also delete associated rooms.';
         const confirmationOKButton = document.getElementById('confDialogOkButton');
         !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteFloor(e, floorDetails));
-        showConfirmAndDeleteGenericLocationDialog(line1, line2);
+        showGenericConfirmAndDeleteDialog(line1, line2);
     }
 
     function showEditFloorForm(floorId) {
@@ -715,7 +715,7 @@ export const BookableSpacesManageLocations = ({
         const line2 = 'This will also delete associated floors.';
         const confirmationOKButton = document.getElementById('confDialogOkButton');
         !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteLibrary(e, libraryDetails));
-        showConfirmAndDeleteGenericLocationDialog(line1, line2);
+        showGenericConfirmAndDeleteDialog(line1, line2);
     }
 
     function showEditLibraryForm(libraryId, libraryCampusId) {
@@ -901,7 +901,7 @@ export const BookableSpacesManageLocations = ({
         const line2 = 'This will also delete associated Libraries.';
         const confirmationOKButton = document.getElementById('confDialogOkButton');
         !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteCampus(e, campusDetails));
-        showConfirmAndDeleteGenericLocationDialog(line1, line2);
+        showGenericConfirmAndDeleteDialog(line1, line2);
     }
 
     function showEditCampusForm(campusId) {

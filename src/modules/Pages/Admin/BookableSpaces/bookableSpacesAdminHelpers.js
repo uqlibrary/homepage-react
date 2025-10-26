@@ -168,6 +168,9 @@ export function closeDeletionConfirmation() {
     const dialog = document.getElementById('confirmationDialog');
     !!dialog && dialog.close();
 
+    const confirmationMessageElement = document.getElementById('confDialogMessage');
+    !!confirmationMessageElement && (confirmationMessageElement.innerHTML = '');
+
     const confirmationCancelButton = document.getElementById('confDialogCancelButton');
     removeAnyListeners(confirmationCancelButton);
 
@@ -175,9 +178,11 @@ export function closeDeletionConfirmation() {
     removeAnyListeners(confirmationOKButton);
 }
 
-export function showConfirmAndDeleteGenericLocationDialog(line1, line2) {
+export function showGenericConfirmAndDeleteDialog(line1, line2 = '') {
     const confirmationMessageElement = document.getElementById('confDialogMessage');
-    !!confirmationMessageElement && (confirmationMessageElement.innerHTML = `<p>${line1}</p><p>${line2}</p>`);
+    let innerHTML = `<p>${line1}</p>`;
+    !!line2 && (innerHTML += `<p>${line2}</p>`);
+    !!confirmationMessageElement && (confirmationMessageElement.innerHTML = innerHTML);
 
     const confirmationCancelButton = document.getElementById('confDialogCancelButton');
     !!confirmationCancelButton && confirmationCancelButton.addEventListener('click', closeDeletionConfirmation);
@@ -189,6 +194,9 @@ export function showConfirmAndDeleteGenericLocationDialog(line1, line2) {
 export function closeDialog(e = null) {
     const dialog = !e ? document.getElementById('popupDialog') : e.target.closest('dialog');
     !!dialog && dialog.close();
+
+    const dialogMessageElement = document.getElementById('dialogMessage');
+    !!dialogMessageElement && (dialogMessageElement.innerHTML = '');
 
     const dialogBodyElement = document.getElementById('dialogBody');
     !!dialogBodyElement && (dialogBodyElement.innerHTML = '');

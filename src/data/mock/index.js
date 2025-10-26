@@ -1542,6 +1542,8 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onPost(routes.SPACES_FACILITY_TYPE_CREATE_API().apiUrl)
     .reply(withDelay([200, { status: 'OK' }]))
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_UPDATE_API({ id: '.*' }).apiUrl)))
+    .reply(withDelay([200, { status: 'OK' }]))
     .onPut(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_UPDATE_API({ id: '.*' }).apiUrl)))
     .reply(() => {
         if (responseType === 'error') {
