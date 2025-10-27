@@ -3,7 +3,6 @@ import Users from './Users';
 import { rtlRender, WithRouter, act, fireEvent, waitFor, WithReduxStore } from 'test-utils';
 import Immutable from 'immutable';
 
-import { getUserPermissions } from '../../../helpers/auth';
 import locale from '../../../testTag.locale';
 
 const actions = {
@@ -80,16 +79,13 @@ const userList = [
     },
 ];
 
-const theUser = userList[3];
+const userData = userList[3];
 function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, actions = {}, ...props } = testProps;
     const _state = {
-        testTagUserReducer: {
-            userLoading: false,
-            userLoaded: true,
-            userError: false,
-            user: theUser,
-            privilege: getUserPermissions(theUser.privileges ?? {}),
+        accountReducer: {
+            accountLoading: false,
+            account: { tnt: userData },
         },
         ...state,
     };

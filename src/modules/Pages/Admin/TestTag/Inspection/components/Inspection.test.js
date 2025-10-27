@@ -16,7 +16,6 @@ import floorData from '../../../../../../data/mock/data/testing/testAndTag/testT
 import roomData from '../../../../../../data/mock/data/testing/testAndTag/testTagRooms';
 
 import locale from '../../testTag.locale.js';
-import { getUserPermissions } from '../../helpers/auth';
 
 const currentRetestList = [
     { value: '3', label: '3 months' },
@@ -56,7 +55,6 @@ const selectOptionFromListByIndex = (index, actions) => {
 
 function setup(testProps = {}, renderer = rtlRender) {
     const {
-        state = {},
         actions = {},
         defaultFormValues = DEFAULT_FORM_VALUES,
         assetsListError = null,
@@ -69,6 +67,7 @@ function setup(testProps = {}, renderer = rtlRender) {
         saveInspectionSaving = false,
         saveInspectionSuccess = null,
         saveInspectionError = null,
+        accountLoading = false,
         user = { ...userData },
         ...props
     } = testProps;
@@ -79,12 +78,9 @@ function setup(testProps = {}, renderer = rtlRender) {
             inspectionConfigLoading: false,
             inspectionConfigLoaded: true,
         },
-        testTagUserReducer: {
-            userLoading: false,
-            userLoaded: true,
-            userError: false,
-            user: userData,
-            privilege: getUserPermissions(userData.privileges ?? {}),
+        accountReducer: {
+            accountLoading,
+            account: { tnt: user },
         },
         testTagLocationReducer: {
             siteList: configData.sites,
@@ -103,7 +99,6 @@ function setup(testProps = {}, renderer = rtlRender) {
             assetTypesListLoading: false,
             assetTypesListError: null,
         },
-        ...state,
     };
 
     return renderer(

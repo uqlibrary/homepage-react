@@ -1,22 +1,11 @@
 import React from 'react';
-import {
-    rtlRender,
-    WithRouter,
-    WithReduxStore,
-    waitForElementToBeRemoved,
-    userEvent,
-    within,
-    act,
-    waitFor,
-} from 'test-utils';
+import { rtlRender, WithRouter, WithReduxStore, waitForElementToBeRemoved, userEvent, waitFor } from 'test-utils';
 import Immutable from 'immutable';
 
 import siteList from '../../../../../../../../data/mock/data/testing/testAndTag/testTagSites';
 import floorList from '../../../../../../../../data/mock/data/testing/testAndTag/testTagFloors';
 import roomList from '../../../../../../../../data/mock/data/testing/testAndTag/testTagRooms';
 import userData from '../../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
-
-import { getUserPermissions } from '../../../../helpers/auth';
 
 const defaultLocationState = {
     siteList,
@@ -37,18 +26,14 @@ import { locationType } from '../../../../SharedComponents/LocationPicker/utils'
 
 function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, actions = {}, ...props } = testProps;
-    const _userData = { ...userData, privileges: { ...userData.privileges, can_admin: 1 } };
 
     const _state = {
         testTagLocationReducer: {
             ...defaultLocationState,
         },
-        testTagUserReducer: {
-            userLoading: false,
-            userLoaded: true,
-            userError: false,
-            user: _userData,
-            privilege: getUserPermissions(_userData.privileges ?? {}),
+        accountReducer: {
+            accountLoading: false,
+            account: { tnt: { ...userData, privileges: { ...userData.privileges, can_admin: 1 } } },
         },
         ...state,
     };
@@ -61,23 +46,6 @@ function setup(testProps = {}, renderer = rtlRender) {
         </WithReduxStore>,
     );
 }
-const assertRowText = (row, values) => {
-    values.every(
-        (value, index) => values === undefined || expect(within(row[index]).getByText(value)).toBeInTheDocument(),
-    );
-};
-const assertHeader = (grid, values, rowIndex = 0) => {
-    const headerRow = within(grid).getAllByRole('row')[rowIndex];
-    const headerCells = within(headerRow).getAllByRole('columnheader');
-    assertRowText(headerCells, values);
-    return headerCells;
-};
-const assertRow = (grid, values, rowIndex) => {
-    const row = within(grid).getAllByRole('row')[rowIndex];
-    const cells = within(row).getAllByRole('cell');
-    assertRowText(cells, values);
-    return cells;
-};
 
 describe('Locations', () => {
     beforeEach(() => {

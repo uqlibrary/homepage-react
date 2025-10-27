@@ -21,8 +21,6 @@ import * as actions from '../../../../../../../data/actions/actionTypes';
 import * as tntActions from '../../../../../../../data/actions/testTagActions';
 import * as repositories from 'repositories';
 
-import { getUserPermissions } from '../../../helpers/auth';
-
 const defaultLocationState = {
     siteList,
     siteListLoading: false,
@@ -59,12 +57,9 @@ function setup(testProps = {}, renderer = rtlRender) {
         testTagLocationReducer: {
             ...defaultLocationState,
         },
-        testTagUserReducer: {
-            userLoading: false,
-            userLoaded: true,
-            userError: false,
-            user: userData,
-            privilege: getUserPermissions(userData.privileges ?? {}),
+        accountReducer: {
+            accountLoading: false,
+            account: { tnt: userData },
         },
         testTagAssetTypesReducer: {
             assetTypesList: assetTypeData,

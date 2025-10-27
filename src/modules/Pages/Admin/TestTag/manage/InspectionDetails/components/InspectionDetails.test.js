@@ -7,7 +7,6 @@ import * as repositories from 'repositories';
 import * as actions from '../../../../../../../data/actions/actionTypes';
 
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
-import { getUserPermissions } from '../../../helpers/auth';
 import locale from '../../../testTag.locale';
 
 const testActions = {
@@ -69,12 +68,9 @@ const mockAPIReturn = [
 function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, actions = {}, ...props } = testProps;
     const _state = {
-        testTagUserReducer: {
-            userLoading: false,
-            userLoaded: true,
-            userError: false,
-            user: userData,
-            privilege: getUserPermissions(userData.privileges ?? {}),
+        accountReducer: {
+            accountLoading: false,
+            account: { tnt: userData },
         },
         testTagAssetsReducer: {
             assetsList: mockAPIReturn,
