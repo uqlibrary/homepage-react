@@ -8,7 +8,7 @@ A repo for the Library of The University of Queensland website homepage
 
 ## Technology
 
-- Code: `React (~16.8), Javascript (ES2015 - Babel), Immutable, SASS`
+- Code: `React (~16.8), Javascript (ES2015 - Babel), Immutable,  SASS`
 - State: `Redux, ReduxForm`
 - Design: `Google Material Design` - [Material UI](https://v0.material-ui.com/#/components/app-bar)
 - Build and dev tools: `Webpack`
