@@ -4,6 +4,7 @@ import {
     isAlertsAdminUser,
     isEspaceAuthor,
     isHdrStudent,
+    isTestTagUser,
 } from './access';
 import { accounts } from 'data/mock/data';
 
@@ -50,6 +51,65 @@ describe('access', () => {
                 id: 'uqstaffnonpriv',
                 groups: ['DC=uq', 'DC=edu', 'DC=au'],
                 user_group: 'LIBRARYSTAFFB',
+            }),
+        ).toEqual(false);
+    });
+
+    it('should identify TestTag users correctly', () => {
+        // Valid TestTag user with tnt data
+        expect(
+            isTestTagUser({
+                id: 'uqstaff',
+                tnt: {
+                    id: 123,
+                    privileges: { read: 1 },
+                },
+            }),
+        ).toEqual(true);
+
+        // No account provided
+        expect(isTestTagUser(null)).toEqual(false);
+        expect(isTestTagUser(undefined)).toEqual(false);
+        expect(isTestTagUser()).toEqual(false);
+
+        // Empty account object
+        expect(isTestTagUser({})).toEqual(false);
+
+        // Account without id (not logged in)
+        expect(
+            isTestTagUser({
+                tnt: { id: 123 },
+            }),
+        ).toEqual(false);
+
+        // Account without tnt property
+        expect(
+            isTestTagUser({
+                id: 'uqstaff',
+            }),
+        ).toEqual(false);
+
+        // Account with empty tnt object
+        expect(
+            isTestTagUser({
+                id: 'uqstaff',
+                tnt: {},
+            }),
+        ).toEqual(false);
+
+        // Account with tnt as null
+        expect(
+            isTestTagUser({
+                id: 'uqstaff',
+                tnt: null,
+            }),
+        ).toEqual(false);
+
+        // Account with tnt as undefined
+        expect(
+            isTestTagUser({
+                id: 'uqstaff',
+                tnt: undefined,
             }),
         ).toEqual(false);
     });
