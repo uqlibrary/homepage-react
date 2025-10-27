@@ -121,9 +121,7 @@ test.describe('Spaces Admin - create new group dialog', () => {
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
     });
-    test('can save new group', async ({ page, context }) => {
-        await setTestDataCookie(context, page);
-
+    test('can save new group', async ({ page }) => {
         await expect(page.getByTestId('new-group-name')).not.toBeVisible();
         await expect(page.getByTestId('new-group-first')).not.toBeVisible();
 
@@ -144,9 +142,7 @@ test.describe('Spaces Admin - create new group dialog', () => {
         await assertToastHasMessage(page, 'Facility type created');
         // not testing content as the double send confuses this
     });
-    test('new group dialog is accessible', async ({ page, context }) => {
-        await setTestDataCookie(context, page);
-
+    test('new group dialog is accessible', async ({ page }) => {
         await expect(page.getByTestId('new-group-name')).not.toBeVisible();
         await expect(page.getByTestId('new-group-first')).not.toBeVisible();
 
@@ -157,9 +153,7 @@ test.describe('Spaces Admin - create new group dialog', () => {
         await expect(page.getByTestId('new-group-first')).toBeVisible();
         await assertAccessibility(page, '[data-testid="main-dialog"]');
     });
-    test('save new group has required fields, no fields', async ({ page, context }) => {
-        await setTestDataCookie(context, page);
-
+    test('save new group has required fields, no fields', async ({ page }) => {
         await expect(page.getByTestId('new-group-name')).not.toBeVisible();
         await expect(page.getByTestId('new-group-first')).not.toBeVisible();
 
@@ -173,9 +167,7 @@ test.describe('Spaces Admin - create new group dialog', () => {
         await page.getByTestId('dialog-save-button').click();
         await assertToastHasMessage(page, 'Please enter both fields.');
     });
-    test('save new group has required fields, group only', async ({ page, context }) => {
-        await setTestDataCookie(context, page);
-
+    test('save new group has required fields, group only', async ({ page }) => {
         await expect(page.getByTestId('new-group-name')).not.toBeVisible();
         await expect(page.getByTestId('new-group-first')).not.toBeVisible();
 
@@ -191,9 +183,7 @@ test.describe('Spaces Admin - create new group dialog', () => {
         await page.getByTestId('dialog-save-button').click();
         await assertToastHasMessage(page, 'Please enter both fields.');
     });
-    test('save new group has required fields, type only', async ({ page, context }) => {
-        await setTestDataCookie(context, page);
-
+    test('save new group has required fields, type only', async ({ page }) => {
         await expect(page.getByTestId('new-group-name')).not.toBeVisible();
         await expect(page.getByTestId('new-group-first')).not.toBeVisible();
 
@@ -217,9 +207,7 @@ test.describe('Spaces Admin - edit facility type dialog', () => {
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
     });
-    test('the edit facility type dialog appears as expected', async ({ page, context }) => {
-        await setTestDataCookie(context, page);
-
+    test('the edit facility type dialog appears as expected', async ({ page }) => {
         const facilityTypeId = '1';
 
         // open edit dialog
@@ -258,7 +246,16 @@ test.describe('Spaces Admin - edit facility type dialog', () => {
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
-    test('has correct deletion warnings fpr different types', async ({ page, context }) => {
+    test('the edit facility type dialog is accessible', async ({ page }) => {
+        const facilityTypeId = '1';
+
+        // open edit dialog
+        await expect(page.getByTestId(`edit-facility-type-${facilityTypeId}-button`)).toBeVisible();
+        await page.getByTestId(`edit-facility-type-${facilityTypeId}-button`).click();
+
+        await assertAccessibility(page, '[data-testid="main-dialog"]');
+    });
+    test('has correct deletion warnings for different types', async ({ page }) => {
         await expect(page.getByTestId(`edit-facility-type-2-button`)).toBeVisible();
         await page.getByTestId(`edit-facility-type-2-button`).click();
         await expect(
@@ -266,6 +263,7 @@ test.describe('Spaces Admin - edit facility type dialog', () => {
                 'This facility type will be removed from 1 Space if you delete it. The Space will not be deleted.',
             ),
         ).toBeVisible();
+        await expect(page.getByTestId('warning-icon')).toBeVisible();
         await expect(page.getByTestId('dialog-cancel-button')).toBeVisible();
         await page.getByTestId('dialog-cancel-button').click();
 
@@ -283,6 +281,7 @@ test.describe('Spaces Admin - edit facility type dialog', () => {
                 'This facility type will be removed from 2 Spaces if you delete it. The Spaces will not be deleted.',
             ),
         ).toBeVisible();
+        await expect(page.getByTestId('warning-icon')).toBeVisible();
         await expect(page.getByTestId('dialog-cancel-button')).toBeVisible();
         await page.getByTestId('dialog-cancel-button').click();
 
@@ -298,6 +297,14 @@ test.describe('Spaces Admin - edit facility type dialog', () => {
         await expect(
             page.getByText('This facility type can be deleted - it is not currently showing for any Spaces.'),
         ).toBeVisible();
+        await expect(page.getByTestId('warning-icon')).not.toBeVisible();
+        await expect(page.getByTestId('dialog-cancel-button')).toBeVisible();
+        await page.getByTestId('dialog-cancel-button').click();
+
+        // check the warning icon comes back
+        await expect(page.getByTestId(`edit-facility-type-2-button`)).toBeVisible();
+        await page.getByTestId(`edit-facility-type-2-button`).click();
+        await expect(page.getByTestId('warning-icon')).toBeVisible();
     });
     test('can delete facility type successfully', async ({ page }) => {
         const facilityTypeId = 17;
@@ -375,19 +382,6 @@ test.describe('Spaces Admin - other pages', () => {
         await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces&responseType=facilityTypesAllEmpty');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
-
-        // TODO
-        // no showhide button
-        // no table showing
-        // form shows
-        // form works
-    });
-    test('works with single entry', async ({ page }) => {
-        await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces&responseType=facilityTypesWithOne');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
-
-        // TODO looks as expected
     });
     test('as expected when there are no facility types', async ({ page }) => {
         await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces&responseType=facilityTypesAllEmpty');
@@ -415,8 +409,15 @@ test.describe('Spaces Admin - other pages', () => {
         await expect(page.getByTestId('new-group-first')).toBeVisible();
         // the add process is no different to when there are children, so don't bother testing it here
     });
-    test('api error', async ({ page }) => {
+    test('api error 404', async ({ page }) => {
         await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces&responseType=facilityTypesAll404');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
+
+        await expect(page.getByTestId('apiError').getByText(/Something went wrong/)).toBeVisible();
+    });
+    test('api error 500', async ({ page }) => {
+        await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces&responseType=facilityTypesAllError');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
 

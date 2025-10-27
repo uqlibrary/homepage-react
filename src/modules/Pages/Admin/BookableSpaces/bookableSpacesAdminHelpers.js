@@ -1,6 +1,7 @@
 import { breadcrumbs, fullPath } from 'config/routes';
 import { isSpacesAdminUser } from 'helpers/access';
 import { ASKUS_SPRINGSHARE_ID } from 'config/locale';
+import { addClass, removeClass } from '../../../../helpers/general';
 
 export const getPathRoot = () => {
     /* istanbul ignore next */
@@ -195,8 +196,11 @@ export function closeDialog(e = null) {
     const dialog = !e ? document.getElementById('popupDialog') : e.target.closest('dialog');
     !!dialog && dialog.close();
 
-    const dialogMessageElement = document.getElementById('dialogMessage');
+    const dialogMessageElement = document.getElementById('dialogMessageContent');
     !!dialogMessageElement && (dialogMessageElement.innerHTML = '');
+
+    const warningIcon = document.getElementById('warning-icon');
+    addClass(warningIcon, 'hidden');
 
     const dialogBodyElement = document.getElementById('dialogBody');
     !!dialogBodyElement && (dialogBodyElement.innerHTML = '');

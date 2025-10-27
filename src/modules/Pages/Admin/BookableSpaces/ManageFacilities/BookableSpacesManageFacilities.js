@@ -188,18 +188,18 @@ export const BookableSpacesManageFacilities = ({
     //     addClass(warningIcon, 'hidden');
     // };
 
-    const displayUserWarningMessage = warningMessage => {
+    const displayUserWarningMessage = (warningMessage, showWarningIcon) => {
         const warningMessageNode = document.createTextNode(warningMessage);
 
         const primaryTextElement = document.createElement('span');
         !!primaryTextElement && (primaryTextElement.id = warningTextId);
         !!primaryTextElement && !!warningMessageNode && primaryTextElement.appendChild(warningMessageNode);
 
-        const dialogMessageElement = document.getElementById('dialogMessage');
+        const dialogMessageElement = document.getElementById('dialogMessageContent');
         !!dialogMessageElement && !!primaryTextElement && dialogMessageElement.appendChild(primaryTextElement);
 
         const warningIcon = document.getElementById('warning-icon');
-        removeClass(warningIcon, 'hidden');
+        !!showWarningIcon && removeClass(warningIcon, 'hidden');
     };
 
     // function closeDialog(e = null) {
@@ -336,7 +336,7 @@ export const BookableSpacesManageFacilities = ({
             count > 0
                 ? `This facility type will be removed from ${count} ${plural} if you delete it. The ${plural} will not be deleted.`
                 : 'This facility type can be deleted - it is not currently showing for any Spaces.';
-        displayUserWarningMessage(warningMessage);
+        displayUserWarningMessage(warningMessage, count > 0);
 
         const saveButton = document.getElementById('saveButton');
         !!saveButton && saveButton.addEventListener('click', saveChangeToFacilityType);
@@ -693,6 +693,7 @@ export const BookableSpacesManageFacilities = ({
                             <div id="dialogFooter" className={'dialogFooter'}>
                                 <p id="dialogMessage" data-testid="dialogMessage">
                                     <WarningOutlined className="hidden" id="warning-icon" data-testid="warning-icon" />
+                                    <span id="dialogMessageContent" />
                                 </p>
                                 <div>
                                     <div>
