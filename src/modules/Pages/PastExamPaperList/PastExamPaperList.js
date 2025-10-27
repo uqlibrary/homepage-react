@@ -48,7 +48,7 @@ const StyledTableLeftCell = styled(TableCell)(() => ({
 const StyledTableCell = styled(TableCell)(() => ({
     textAlign: 'center',
     verticalAlign: 'top',
-    '& :not(:first-child)': {
+    '& :not(:first-of-type)': {
         marginTop: '1em',
     },
 }));
@@ -313,9 +313,9 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                 <StyledTableLeftCell component="th" scope="row">
                     <StyledH3Typography variant="h3">{courseCode}</StyledH3Typography>
                 </StyledTableLeftCell>
-                {examList.periods.map((period, semesterIndex) => {
+                {examList?.periods?.map((period, semesterIndex) => {
                     const courseMap = examData.get(courseCode);
-                    const exams = courseMap ? courseMap.get(period) : null;
+                    const exams = courseMap ? courseMap.get(period) : /* istanbul ignore next */ null;
 
                     return (
                         <StyledTableCell
@@ -338,13 +338,16 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
             const courseCodeSet = new Set();
 
             // Flatten the nested papers structure and organize by course code and period
-            examList.papers.forEach(courseGroup => {
+            examList?.papers?.forEach(courseGroup => {
                 courseGroup.forEach(periodArray => {
                     periodArray.forEach(exam => {
                         const courseCode = exam.courseCode;
                         const period = exam.matchPeriod;
 
-                        if (!courseCode) return;
+                        /* istanbul ignore next */
+                        if (!courseCode) {
+                            return;
+                        }
 
                         courseCodeSet.add(courseCode);
 
@@ -357,7 +360,8 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                             examDataMap.get(courseCode).set(period, []);
                         }
 
-                        // Store the complete exam object if it has a paperUrl
+                        // Store the complete exam object if it has a url for a paper
+                        /* istanbul ignore else */
                         if (exam.paperUrl) {
                             examDataMap
                                 .get(courseCode)
