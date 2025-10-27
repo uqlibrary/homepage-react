@@ -17,10 +17,15 @@ const StyledStandardCard = styled(StandardCard)(() => ({
 }));
 
 export const DigitalLearningHub = ({
+    dlorStatistics,
+    dlorStatisticsLoading,
+    dlorStatisticsError,
+    account,
     title = 'Build Digital Skills',
     showFirstLink = true,
     subText = 'Find modules, videos and guides for study and teaching',
 }) => {
+    const hasStatistics = !!account && !dlorStatisticsLoading && !dlorStatisticsError && dlorStatistics;
     return (
         <StyledStandardCard
             subCard
@@ -32,13 +37,15 @@ export const DigitalLearningHub = ({
         >
             <Grid container padding={3} spacing={2}>
                 <Grid item xs={12}>
-                    {!!showFirstLink && <a href="#">Digital Learning Hub</a>}
+                    {!!showFirstLink && <a href="/digital-learning-hub">Digital Learning Hub</a>}
                     <StyledBodyCopyDiv style={{ marginTop: !!showFirstLink ? '8px' : '0px' }}>
                         {subText}
                     </StyledBodyCopyDiv>
-                    <StyledBodyCopyDiv style={{ marginTop: '8px' }}>
-                        <a href="#">Your favourites (2)</a>
-                    </StyledBodyCopyDiv>
+                    {hasStatistics && (
+                        <StyledBodyCopyDiv style={{ marginTop: '8px' }}>
+                            <a href="#">Your favourites (2)</a>
+                        </StyledBodyCopyDiv>
+                    )}
                     <StyledBodyCopyDiv style={{ marginTop: '8px' }}>
                         <a href="#">Objects you are following (3)</a>
                     </StyledBodyCopyDiv>
@@ -56,6 +63,9 @@ DigitalLearningHub.propTypes = {
     title: PropTypes.string,
     showFirstLink: PropTypes.bool,
     subText: PropTypes.string,
+    dlorStatistics: PropTypes.object,
+    dlorStatisticsLoading: PropTypes.bool,
+    dlorStatisticsError: PropTypes.any,
 };
 
 export default DigitalLearningHub;

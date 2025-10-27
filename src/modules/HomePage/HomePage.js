@@ -22,6 +22,8 @@ import {
     loadLoans,
     loadVemcountList,
 } from 'data/actions';
+
+import { loadDlorStatistics } from 'data/actions/dlorActions';
 import { canSeeLearningResourcesPanel, isEspaceAuthor, canSeeReadPublish, canSeeTrainingPanel } from 'helpers/access';
 import UtilityBar from './publicComponents/UtilityBar/UtilityBar';
 
@@ -134,6 +136,9 @@ export const HomePage = ({
     vemcount,
     vemcountLoading,
     vemcountError,
+    dlorStatistics,
+    dlorStatisticsLoading,
+    dlorStatisticsError,
 }) => {
     const dispatch = useDispatch();
 
@@ -199,8 +204,16 @@ export const HomePage = ({
         }
     }, [accountLoading, account, loans, loansLoading, dispatch]);
 
+    useEffect(() => {
+        if (!!account && !dlorStatistics && !dlorStatisticsLoading && !dlorStatisticsError) {
+            dispatch(loadDlorStatistics());
+        }
+    }, [account, dlorStatistics, dlorStatisticsLoading, dlorStatisticsError, dispatch]);
+
     const verySimplelayout =
         !canSeeLearningResourcesPanel(account) && !isEspaceAuthor(account, author) && !canSeeReadPublish(account);
+
+    console.log('DLOR STATISTISCS IN HOMEPAGE:', dlorStatistics, dlorStatisticsLoading, dlorStatisticsError);
     return (
         <>
             <StyledPortalContainer id="search-portal-container" data-testid="search-portal-container">
@@ -301,18 +314,18 @@ export const HomePage = ({
                                                         />
                                                     </StyledGridItemLoggedInLeftMost>
                                                 )}
-                                                <StyledGridItemLoggedInLeftMost
+                                                {/* <StyledGridItemLoggedInLeftMost
                                                     item
                                                     xs={12}
                                                     data-testid="espace-links-panel"
                                                 >
                                                     <DigitalLearningHub
-                                                        title="Digital Learning Hub"
+                                                        title="Find Digital Resources"
                                                         showFirstLink={false}
-                                                        subText="Modules, videos and guides to build digital skills"
+                                                        subText="Modules, videos and guides to build skills"
                                                         author={author}
                                                     />
-                                                </StyledGridItemLoggedInLeftMost>
+                                                </StyledGridItemLoggedInLeftMost> */}
                                             </Grid>
                                         </Grid>
                                         <Grid item uqDsDesktop={8} xs={12}>
@@ -372,7 +385,12 @@ export const HomePage = ({
                                                             xs={12}
                                                             data-testid="espace-links-panel"
                                                         >
-                                                            <DigitalLearningHub author={author} />
+                                                            <DigitalLearningHub
+                                                                dlorStatistics={dlorStatistics}
+                                                                account={account}
+                                                                dlorStatisticsLoading={dlorStatisticsLoading}
+                                                                dlorStatisticsError={dlorStatisticsError}
+                                                            />
                                                         </StyledGridItemLoggedIn>
                                                     </Grid>
                                                 </Grid>
@@ -422,6 +440,9 @@ HomePage.propTypes = {
     vemcount: PropTypes.object,
     vemcountLoading: PropTypes.bool,
     vemcountError: PropTypes.bool,
+    dlorStatistics: PropTypes.object,
+    dlorStatisticsLoading: PropTypes.bool,
+    dlorStatisticsError: PropTypes.any,
 };
 
 export default HomePage;

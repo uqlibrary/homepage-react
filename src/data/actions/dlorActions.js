@@ -38,6 +38,7 @@ import {
     DLOR_KEYWORDS_API,
     DLOR_KEYWORDS_UPDATE_API,
     DLOR_KEYWORDS_DESTROY_API,
+    DLOR_STATISTICS_API,
 } from 'repositories/routes';
 import { checkExpireSession } from './actionhelpers';
 
@@ -832,6 +833,27 @@ export function deleteDlorSynonym(request) {
             .catch(error => {
                 dispatch({
                     type: actions.DLOR_KEYWORDS_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function loadDlorStatistics() {
+    console.log('loadDlorStatistics action creator called');
+    return dispatch => {
+        dispatch({ type: actions.DLOR_STATISTICS_LOADING });
+        return get(DLOR_STATISTICS_API())
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_STATISTICS_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_STATISTICS_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
