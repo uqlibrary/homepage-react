@@ -5,9 +5,6 @@ import { useCookies } from 'react-cookie';
 import Button from '@mui/material/Button';
 import { Grid } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
@@ -15,20 +12,26 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import WarningOutlined from '@mui/icons-material/WarningOutlined';
 
-import { addClass, baseButtonStyles, removeClass } from 'helpers/general';
+import {
+    baseButtonStyles,
+    pluralise,
+    removeClass,
+    slugifyName,
+    StyledPrimaryButton,
+    StyledSecondaryButton,
+} from 'helpers/general';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { pluralise, scrollToTopOfPage, slugifyName, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 
 import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import {
     addBreadcrumbsToSiteHeader,
     closeDeletionConfirmation,
+    closeDialog,
     displayToastMessage,
     getFlatFacilityTypeList,
     showGenericConfirmAndDeleteDialog,
-    closeDialog,
 } from '../bookableSpacesAdminHelpers';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
@@ -125,6 +128,10 @@ export const BookableSpacesManageFacilities = ({
     // console.log('facilityTypeList?.data?.facility_type_groups', facilityTypeList?.data?.facility_type_groups);
 
     const [cookies, setCookie] = useCookies();
+    // const setCookie = (cookiename, value) => {
+    //     console.log('setCookie', cookiename, value);
+    //     setCookie2(cookiename, value);
+    // };
 
     // saveButtonVisibility values
     const saveButtonVisibilityHidden = 0; // Always hidden
@@ -254,23 +261,22 @@ export const BookableSpacesManageFacilities = ({
     }
 
     const saveChangeToFacilityType = () => {
-        // const form = e.target.closest('form');
-
-        // const formData = new FormData(form);
-        // const data = !!formData && Object.fromEntries(formData);
-        // console.log('saveChangeToFacilityType data=', data);
-
         const valuesToSend = {
             facility_type_name: document.getElementById('facility_type_name')?.value,
             facility_type_id: document.getElementById('facility_type_id')?.value,
         };
+        console.log('saveChangeToFacilityType valuesToSend=', valuesToSend);
 
         closeDialog();
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        console.log('cypressTestCookie=', cypressTestCookie);
+        console.log('window.location.host=', window.location.host);
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            console.log('setting CYPRESS_DATA_SAVED', valuesToSend);
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
+        console.log('cookies=', cookies);
 
         !!valuesToSend.facility_type_name &&
             !!valuesToSend.facility_type_id &&
@@ -343,20 +349,13 @@ export const BookableSpacesManageFacilities = ({
     };
 
     const saveNewFacilityType = e => {
-        console.log('e=', e);
-        console.log('e.target=', e.target);
         const form = e.target.closest('form');
-        console.log('form=', form);
 
         const formData = !!form && new FormData(form);
-        console.log('formData=', formData);
         const data = !!formData && Object.fromEntries(formData);
-        console.log('data=', data);
 
         // validate form
         const failureMessage = !data.facility_type_name && 'Please enter a facility type name';
-        console.log('data.facility_type_name=', data.facility_type_name);
-        console.log('failureMessage=', failureMessage);
         if (!!failureMessage) {
             displayToastMessage(failureMessage, true);
             return false;
@@ -397,6 +396,7 @@ export const BookableSpacesManageFacilities = ({
     };
 
     const openDialogAddTypeToGroupForm = e => {
+        // here
         const buttonClicked = e.target.closest('button');
         const groupId = buttonClicked.getAttribute('data-groupid');
 
@@ -426,98 +426,110 @@ export const BookableSpacesManageFacilities = ({
         !!dialog && dialog.showModal();
     };
 
-    const handleChange = prop => e => {
-        const theNewValue = e.target.value;
+    const saveNewFacilityTypeGroup = e => {
+        const form = e.target.closest('form');
 
-        console.log('handleChange', prop, theNewValue, formValues);
+        const formData = !!form && new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
 
-        if (prop.startsWith('facilitytype-')) {
-            const facilityTypeid = parseInt(prop.replace('facilitytype-', ''), 10);
-            const updatedData = formValues?.facility_types?.map(f =>
-                f?.facility_type_id === facilityTypeid ? { ...f, facility_type_name: theNewValue } : f,
-            );
-            setFormValues({
-                ...formValues,
-                facility_types: updatedData,
+        // validate form
+        const failureMessage =
+            (!data.facility_type_name || !data.facility_type_group_name) && 'Please enter both fields.';
+        if (!!failureMessage) {
+            displayToastMessage(failureMessage, true);
+            return false;
+        }
+
+        closeDialog(e);
+
+        const groupValuesToSend = {
+            facility_type_group_name: data.facility_type_group_name,
+            facility_type_group_order: 0,
+            // 'facility_type_group_type' => (one of: 'choose-one', 'choose-many'), // TODO
+        };
+
+        let groupCreated = false;
+        actions
+            .createSpacesFacilityTypeGroup(groupValuesToSend)
+            .then(response => {
+                console.log('createSpacesFacilityTypeGroup success response=', response);
+                groupCreated = true;
+                const typeValuesToSend = {
+                    facility_type__group_id: response?.data?.facility_type_group_id,
+                    facility_type_name: data.facility_type_name,
+                };
+                // const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+                // if (
+                //     !!cypressTestCookie &&
+                //     window.location.host === 'localhost:2020' &&
+                //     cypressTestCookie === 'active'
+                // ) {
+                //     setCookie('CYPRESS_DATA_SAVED', typeValuesToSend);
+                // }
+                actions.createSpacesFacilityType(typeValuesToSend);
+            })
+            .then(() => {
+                displayToastMessage('Facility type created', false);
+                actions.loadAllFacilityTypes(); // reload facility types
+            })
+            .catch(e => {
+                if (groupCreated) {
+                    // type create failed
+                    console.log(
+                        'catch: saving facility type (',
+                        data.facility_type__group_id,
+                        data.facility_type_name,
+                        ') failed:',
+                        e,
+                    );
+                    displayToastMessage(
+                        '[BSMF-001] Sorry, an error occurred and the facility type was not created - the admins have been informed',
+                    );
+                } else {
+                    // group create failed
+                    console.log(
+                        'catch: saving facility type (',
+                        data.facility_type__group_id,
+                        data.facility_type_name,
+                        ') failed:',
+                        e,
+                    );
+                    displayToastMessage(
+                        '[BSMF-010] Sorry, an error occurred and the facility group and type was not created - the admins have been informed',
+                    );
+                }
             });
-        } else {
-            setFormValues({
-                ...formValues,
-                [prop]: theNewValue,
-            });
-        }
-    };
-
-    const addFormDefaultLabel = 'Add new Facility group';
-    const isAddNewGroupFormClosed = () => {
-        const addNewForm = document.getElementById('add-new-facility-group-form');
-        console.log('addNewForm?.style.display=', addNewForm?.style.display);
-        return addNewForm?.style.display === 'none';
-    };
-    const openAddNewGroupForm = (addNewForm, formShowHideButton) => {
-        addNewForm.style.display = 'block';
-        !!formShowHideButton && (formShowHideButton.innerText = 'Clear new Group form');
-        setFormValues({
-            ...formValues,
-            ['addNew']: true,
-        });
-        if (saveButtonVisibility !== saveButtonVisibilityAlwaysVisible) {
-            console.log('setSaveButtonVisibility at 2 to', saveButtonVisibilityCurrentlyVisible);
-            setSaveButtonVisibility(saveButtonVisibilityCurrentlyVisible);
-        }
-    };
-    const closeAddNewGroupForm = (addNewForm, formShowHideButton) => {
-        addNewForm.style.display = 'none';
-        !!formShowHideButton && (formShowHideButton.innerText = addFormDefaultLabel);
-        const tempFormValues = { ...formValues };
-        delete tempFormValues.newGroupName;
-        delete tempFormValues.firstGroupEntryName;
-        setFormValues({
-            ...tempFormValues,
-            ['addNew']: false,
-        });
-        console.log('saveButtonVisibility=', saveButtonVisibility);
-        if (saveButtonVisibility !== saveButtonVisibilityAlwaysVisible) {
-            console.log('setSaveButtonVisibility at 3', saveButtonVisibilityHidden);
-            setSaveButtonVisibility(saveButtonVisibilityHidden);
-        }
-    };
-    const showHideAddCampusForm = () => {
-        const addNewForm = document.getElementById('add-new-facility-group-form');
-        if (!addNewForm) {
-            console.log('showHideAddCampusForm no form to open');
-            return null;
-        }
-
-        const formShowHideButton = document.getElementById('showHideAddCampusFormButton');
-        if (isAddNewGroupFormClosed()) {
-            console.log('showHideAddCampusForm opening form');
-            openAddNewGroupForm(addNewForm, formShowHideButton);
-
-            const newGroupnamebutton = document.getElementById('newGroupname');
-            !!newGroupnamebutton && newGroupnamebutton.setAttribute('required', true);
-            const firstGroupEntrybutton = document.getElementById('firstGroupEntry');
-            !!firstGroupEntrybutton && firstGroupEntrybutton.setAttribute('required', true);
-
-            if (saveButtonVisibility !== saveButtonVisibilityAlwaysVisible) {
-                console.log(
-                    'showHideAddCampusForm setSaveButtonVisibility at 4 to',
-                    saveButtonVisibilityCurrentlyVisible,
-                );
-                setSaveButtonVisibility(saveButtonVisibilityCurrentlyVisible);
-            }
-        } else {
-            console.log('showHideAddCampusForm closing form');
-            const newGroupnamebutton = document.getElementById('newGroupname');
-            !!newGroupnamebutton && newGroupnamebutton.setAttribute('required', false);
-            const firstGroupEntrybutton = document.getElementById('firstGroupEntry');
-            !!firstGroupEntrybutton && firstGroupEntrybutton.setAttribute('required', false);
-            console.log('showHideAddCampusForm ere');
-            closeAddNewGroupForm(addNewForm, formShowHideButton);
-            console.log('showHideAddCampusForm after');
-        }
-        document.activeElement.blur();
         return true;
+    };
+    const openDialogAddGroup = () => {
+        const formBody = `<div id="add-new-facility-group-form" style="margin-bottom: 2rem; display: block;">
+            <h3>New Facility type group</h3>
+            <div class="dialogRow">
+                <label for="newGroupname">Name of new Facility type group</label>
+                <div>
+                    <input aria-invalid="false" id="newGroupname" name="facility_type_group_name" type="text" maxlength="255" data-testid="new-group-name" required>
+                </div>
+            </div>
+            <div class="dialogRow">
+                <label for="firstGroupEntry">Name of first Facility type in this new group</label>
+                <div>
+                    <input aria-invalid="false" id="firstGroupEntry" name="facility_type_name" type="text" maxlength="255" data-testid="new-group-first" required>
+                </div>
+            </div>
+        </div>`;
+
+        const dialogBodyElement = document.getElementById('dialogBody');
+        console.log('dialogBodyElement=', dialogBodyElement);
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton.addEventListener('click', saveNewFacilityTypeGroup);
+
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton && (deleteButton.style.display = 'none');
+
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog.showModal();
     };
 
     return (
@@ -559,13 +571,12 @@ export const BookableSpacesManageFacilities = ({
                                     <>
                                         <Grid item xs={12}>
                                             <StyledPrimaryButton
-                                                id="showHideAddCampusFormButton"
                                                 style={{
                                                     marginBottom: '2rem',
-                                                    textTransform: 'initial',
+                                                    // textTransform: 'initial',
                                                 }}
-                                                children={addFormDefaultLabel}
-                                                onClick={showHideAddCampusForm}
+                                                children={'Add new Facility group'}
+                                                onClick={openDialogAddGroup}
                                                 data-testid="add-new-group-button"
                                             />
                                         </Grid>
@@ -577,46 +588,6 @@ export const BookableSpacesManageFacilities = ({
                                                 </p>
                                             </Grid>
                                         )}
-
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            id="add-new-facility-group-form"
-                                            style={formDisplay(!!facilityTypeList?.data?.facility_type_groups)}
-                                        >
-                                            <Typography component={'h3'} variant={'h6'}>
-                                                New Facility group
-                                            </Typography>
-                                            <FormControl variant="standard" fullWidth>
-                                                <InputLabel htmlFor="newGroupname">
-                                                    Name of new Facility type group
-                                                </InputLabel>
-                                                <Input
-                                                    id="newGroupname"
-                                                    value={formValues?.newGroupName || ''}
-                                                    onChange={handleChange('newGroupName')}
-                                                    inputProps={{
-                                                        maxLength: 255,
-                                                        'data-testid': 'new-group-name',
-                                                    }}
-                                                />
-                                            </FormControl>
-                                            <FormControl variant="standard" fullWidth>
-                                                <InputLabel htmlFor="firstGroupEntry">
-                                                    Name of first Facility type in group
-                                                </InputLabel>
-                                                <Input
-                                                    id="firstGroupEntry"
-                                                    value={formValues?.firstGroupEntryName || ''}
-                                                    onChange={handleChange('firstGroupEntryName')}
-                                                    inputProps={{
-                                                        maxLength: 255,
-                                                        'data-testid': 'new-group-first',
-                                                    }}
-                                                />
-                                            </FormControl>
-                                        </Grid>
-
                                         {sortedGroups.map(group => (
                                             <Grid
                                                 item
@@ -683,7 +654,6 @@ export const BookableSpacesManageFacilities = ({
                                                 </IconButton>
                                             </Grid>
                                         ))}
-
                                         {/* {!!saveButtonVisibility && (*/}
                                         {/*    <Grid item xs={12} style={{ marginTop: '2rem' }}>*/}
                                         {/*        <StyledPrimaryButton*/}

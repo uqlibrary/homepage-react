@@ -38,111 +38,88 @@ test.describe('Spaces Admin - manage facility types page', () => {
         await expect(addGroupButton).toHaveCSS('border-color', COLOR_UQPURPLE);
         await expect(addGroupButton).toHaveCSS('color', 'rgb(255, 255, 255)');
 
-        await expect(page.getByTestId('facilitygroup-noise-level').getByTestId('facilitytype-input-1')).toBeVisible();
-        await expect(page.getByTestId('facilitygroup-noise-level').getByTestId('facilitytype-input-1')).toHaveValue(
+        await expect(page.getByTestId('facilitygroup-noise-level').getByTestId('facilitytype-name-1')).toBeVisible();
+        await expect(page.getByTestId('facilitygroup-noise-level').getByTestId('facilitytype-name-1')).toContainText(
             'Noise level Low',
         );
-        await expect(page.getByTestId('facilitygroup-noise-level').getByTestId('facilitytype-input-2')).toHaveValue(
+        await expect(page.getByTestId('facilitygroup-noise-level').getByTestId('facilitytype-name-2')).toContainText(
             'Noise level Medium',
         );
-        await expect(page.getByTestId('facilitygroup-noise-level').getByTestId('facilitytype-input-3')).toHaveValue(
+        await expect(page.getByTestId('facilitygroup-noise-level').getByTestId('facilitytype-name-3')).toContainText(
             'Noise level High',
         );
         await expect(page.getByTestId('facilitygroup-noise-level').getByTestId('add-type-noise-level')).toBeVisible();
 
-        await expect(page.getByTestId('facilitygroup-room-features').getByTestId('facilitytype-input-4')).toHaveValue(
-            'AT technology',
-        );
-        await expect(page.getByTestId('facilitygroup-room-features').getByTestId('facilitytype-input-5')).toHaveValue(
-            'AV equipment',
-        );
-        await expect(page.getByTestId('facilitygroup-room-features').getByTestId('facilitytype-input-6')).toHaveValue(
-            'Capacity (??)',
-        );
-        await expect(page.getByTestId('facilitygroup-room-features').getByTestId('facilitytype-input-7')).toHaveValue(
-            'Exam Friendly',
-        );
-        await expect(page.getByTestId('facilitygroup-room-features').getByTestId('facilitytype-input-8')).toHaveValue(
-            'Postgraduate spaces',
-        );
-        await expect(page.getByTestId('facilitygroup-room-features').getByTestId('facilitytype-input-9')).toHaveValue(
-            'Power outlets',
-        );
-        await expect(page.getByTestId('facilitygroup-room-features').getByTestId('facilitytype-input-10')).toHaveValue(
-            'Undergrad spaces',
-        );
-        await expect(page.getByTestId('facilitygroup-room-features').getByTestId('facilitytype-input-11')).toHaveValue(
-            'Whiteboard',
-        );
         await expect(
             page.getByTestId('facilitygroup-room-features').getByTestId('add-type-room-features'),
         ).toBeVisible();
-
-        await expect(page.getByTestId('facilitygroup-opening-hours').getByTestId('facilitytype-input-12')).toHaveValue(
-            'Opening hours',
+        await expect(page.getByTestId('facilitygroup-room-features').getByTestId('facilitytype-name-4')).toContainText(
+            'AT technology',
         );
+        await expect(page.getByTestId('facilitygroup-room-features').getByTestId('facilitytype-name-5')).toContainText(
+            'AV equipment',
+        );
+        await expect(page.getByTestId('facilitygroup-room-features').getByTestId('facilitytype-name-6')).toContainText(
+            'Capacity (??)',
+        );
+        await expect(page.getByTestId('facilitygroup-room-features').getByTestId('facilitytype-name-7')).toContainText(
+            'Exam Friendly',
+        );
+        await expect(page.getByTestId('facilitygroup-room-features').getByTestId('facilitytype-name-8')).toContainText(
+            'Postgraduate spaces',
+        );
+        await expect(page.getByTestId('facilitygroup-room-features').getByTestId('facilitytype-name-9')).toContainText(
+            'Power outlets',
+        );
+        await expect(page.getByTestId('facilitygroup-room-features').getByTestId('facilitytype-name-10')).toContainText(
+            'Undergrad spaces',
+        );
+        await expect(page.getByTestId('facilitygroup-room-features').getByTestId('facilitytype-name-11')).toContainText(
+            'Whiteboard',
+        );
+
         await expect(
             page.getByTestId('facilitygroup-opening-hours').getByTestId('add-type-opening-hours'),
         ).toBeVisible();
+        await expect(page.getByTestId('facilitygroup-opening-hours').getByTestId('facilitytype-name-12')).toContainText(
+            'Opening hours',
+        );
 
-        await expect(page.getByTestId('facilitygroup-services').getByTestId('facilitytype-input-13')).toHaveValue(
+        await expect(page.getByTestId('facilitygroup-services').getByTestId('facilitytype-name-13')).toContainText(
             'AskUs service',
         );
-        await expect(page.getByTestId('facilitygroup-services').getByTestId('facilitytype-input-14')).toHaveValue(
+        await expect(page.getByTestId('facilitygroup-services').getByTestId('facilitytype-name-14')).toContainText(
             'Food outlets',
         );
-        await expect(page.getByTestId('facilitygroup-services').getByTestId('facilitytype-input-15')).toHaveValue(
+        await expect(page.getByTestId('facilitygroup-services').getByTestId('facilitytype-name-15')).toContainText(
             'Production Printing Services',
         );
-        await expect(page.getByTestId('facilitygroup-services').getByTestId('facilitytype-input-16')).toHaveValue(
+        await expect(page.getByTestId('facilitygroup-services').getByTestId('facilitytype-name-16')).toContainText(
             'Retail Outlets',
         );
         await expect(page.getByTestId('facilitygroup-services').getByTestId('add-type-services')).toBeVisible();
 
-        await expect(page.getByTestId('facilitygroup-outdoor').getByTestId('facilitytype-input-17')).toHaveValue(
+        await expect(page.getByTestId('facilitygroup-outdoor').getByTestId('facilitytype-name-17')).toContainText(
             'Contains Artwork',
         );
-        await expect(page.getByTestId('facilitygroup-outdoor').getByTestId('facilitytype-input-18')).toHaveValue(
+        await expect(page.getByTestId('facilitygroup-outdoor').getByTestId('facilitytype-name-18')).toContainText(
             'Displays',
         );
-        await expect(page.getByTestId('facilitygroup-outdoor').getByTestId('facilitytype-input-19')).toHaveValue(
+        await expect(page.getByTestId('facilitygroup-outdoor').getByTestId('facilitytype-name-19')).toContainText(
             'Landmark',
         );
         await expect(page.getByTestId('facilitygroup-outdoor').getByTestId('add-type-outdoor')).toBeVisible();
-
-        const saveButton = page.getByTestId('spaces-facilitytypes-save-button');
-        await expect(saveButton).toBeVisible();
-        await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
-        await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
-        await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
     });
     test('is accessible on initial load', async ({ page }) => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
-    test('can clear new group form', async ({ page }) => {
-        await expect(page.getByTestId('add-new-group-button')).toBeVisible();
-        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
-        await page.getByTestId('add-new-group-button').click();
-
-        await expect(page.getByTestId('new-group-name')).toHaveText('');
-        await page.getByTestId('new-group-name').click();
-        await page.getByTestId('new-group-name').fill('New group');
-
-        await expect(page.getByTestId('new-group-first')).toHaveText('');
-        await page.getByTestId('new-group-first').click();
-        await page.getByTestId('new-group-first').fill('First type in group');
-
-        // close the form
-        await expect(page.getByTestId('add-new-group-button')).toHaveText('Clear new Group form');
-        await page.getByTestId('add-new-group-button').click();
-
-        // reopen the form
-        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
-        await page.getByTestId('add-new-group-button').click();
-
-        // the text fields are empty
-        await expect(page.getByTestId('new-group-name')).toHaveText('');
-        await expect(page.getByTestId('new-group-first')).toHaveText('');
+});
+test.describe('Spaces Admin - create new group dialog', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
     });
     test('can save new group', async ({ page, context }) => {
         await setTestDataCookie(context, page);
@@ -155,7 +132,6 @@ test.describe('Spaces Admin - manage facility types page', () => {
         await page.getByTestId('add-new-group-button').click();
         await expect(page.getByTestId('new-group-name')).toBeVisible();
         await expect(page.getByTestId('new-group-first')).toBeVisible();
-        await expect(page.getByTestId('add-new-group-button')).toHaveText('Clear new Group form');
 
         await page.getByTestId('new-group-name').click();
         await page.getByTestId('new-group-name').fill('New group');
@@ -163,14 +139,85 @@ test.describe('Spaces Admin - manage facility types page', () => {
         await page.getByTestId('new-group-first').click();
         await page.getByTestId('new-group-first').fill('First type in group');
 
-        await page.getByTestId('spaces-facilitytypes-save-button').click();
+        await page.getByTestId('dialog-save-button').click();
 
-        const expectedValues = {
-            facility_type_group_name: 'New group',
-        };
-        await assertExpectedDataSentToServer(page, expectedValues);
+        await assertToastHasMessage(page, 'Facility type created');
+        // not testing content as the double send confuses this
     });
-    test('can edit facility type successfully', async ({ page, context }) => {
+    test('new group dialog is accessible', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        await expect(page.getByTestId('new-group-name')).not.toBeVisible();
+        await expect(page.getByTestId('new-group-first')).not.toBeVisible();
+
+        await expect(page.getByTestId('add-new-group-button')).toBeVisible();
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await page.getByTestId('add-new-group-button').click();
+        await expect(page.getByTestId('new-group-name')).toBeVisible();
+        await expect(page.getByTestId('new-group-first')).toBeVisible();
+        await assertAccessibility(page, '[data-testid="main-dialog"]');
+    });
+    test('save new group has required fields, no fields', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        await expect(page.getByTestId('new-group-name')).not.toBeVisible();
+        await expect(page.getByTestId('new-group-first')).not.toBeVisible();
+
+        await expect(page.getByTestId('add-new-group-button')).toBeVisible();
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await page.getByTestId('add-new-group-button').click();
+        await expect(page.getByTestId('new-group-name')).toBeVisible();
+        await expect(page.getByTestId('new-group-first')).toBeVisible();
+
+        // no fields gives error
+        await page.getByTestId('dialog-save-button').click();
+        await assertToastHasMessage(page, 'Please enter both fields.');
+    });
+    test('save new group has required fields, group only', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        await expect(page.getByTestId('new-group-name')).not.toBeVisible();
+        await expect(page.getByTestId('new-group-first')).not.toBeVisible();
+
+        await expect(page.getByTestId('add-new-group-button')).toBeVisible();
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await page.getByTestId('add-new-group-button').click();
+        await expect(page.getByTestId('new-group-name')).toBeVisible();
+        await expect(page.getByTestId('new-group-first')).toBeVisible();
+
+        // one field gives error
+        await page.getByTestId('new-group-name').click();
+        await page.getByTestId('new-group-name').fill('New group');
+        await page.getByTestId('dialog-save-button').click();
+        await assertToastHasMessage(page, 'Please enter both fields.');
+    });
+    test('save new group has required fields, type only', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        await expect(page.getByTestId('new-group-name')).not.toBeVisible();
+        await expect(page.getByTestId('new-group-first')).not.toBeVisible();
+
+        await expect(page.getByTestId('add-new-group-button')).toBeVisible();
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await page.getByTestId('add-new-group-button').click();
+        await expect(page.getByTestId('new-group-name')).toBeVisible();
+        await expect(page.getByTestId('new-group-first')).toBeVisible();
+
+        await page.getByTestId('new-group-name').clear();
+        await page.getByTestId('new-group-first').click();
+        await page.getByTestId('new-group-first').fill('First type in group');
+        await page.getByTestId('dialog-save-button').click();
+        await assertToastHasMessage(page, 'Please enter both fields.');
+    });
+});
+test.describe('Spaces Admin - edit facility type dialog', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
+    });
+    test('the edit facility type dialog appears as expected', async ({ page, context }) => {
         await setTestDataCookie(context, page);
 
         const facilityTypeId = '1';
@@ -189,6 +236,15 @@ test.describe('Spaces Admin - manage facility types page', () => {
         await expect(page.getByTestId('dialogMessage')).toContainText(
             'This facility type will be removed from 1 Space if you delete it. The Space will not be deleted.',
         );
+    });
+    test('can edit facility type successfully', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        const facilityTypeId = '1';
+
+        // open edit dialog
+        await expect(page.getByTestId(`edit-facility-type-${facilityTypeId}-button`)).toBeVisible();
+        await page.getByTestId(`edit-facility-type-${facilityTypeId}-button`).click();
 
         await page.getByTestId('facility_type_name').type('prepend ');
         await page.getByTestId('dialog-save-button').click();
@@ -243,7 +299,7 @@ test.describe('Spaces Admin - manage facility types page', () => {
             page.getByText('This facility type can be deleted - it is not currently showing for any Spaces.'),
         ).toBeVisible();
     });
-    test.only('can delete facility type successfully', async ({ page }) => {
+    test('can delete facility type successfully', async ({ page }) => {
         const facilityTypeId = 17;
         const facilityTypeName = 'Contains Artwork';
 
@@ -342,7 +398,6 @@ test.describe('Spaces Admin - other pages', () => {
             page.getByTestId('space-facility-types-empty-message').getByText(/No facility types currently in system/),
         ).toBeVisible();
         await expect(page.getByTestId('add-new-group-button')).toBeVisible();
-        await expect(page.getByTestId('spaces-facilitytypes-save-button')).not.toBeVisible();
 
         // there is no data so a table of current facility types does not appear
         await expect(page.getByTestId('spaces-facility-groups').locator('> *')).toHaveCount(0);
@@ -350,7 +405,6 @@ test.describe('Spaces Admin - other pages', () => {
         // the 'add new group" form is not open
         await expect(page.getByTestId('new-group-name')).not.toBeVisible();
         await expect(page.getByTestId('new-group-first')).not.toBeVisible();
-        await expect(page.getByTestId('spaces-facilitytypes-save-button')).not.toBeVisible();
 
         // open the "add new group" form
         await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
@@ -359,13 +413,7 @@ test.describe('Spaces Admin - other pages', () => {
         // form is now ready to add
         await expect(page.getByTestId('new-group-name')).toBeVisible();
         await expect(page.getByTestId('new-group-first')).toBeVisible();
-        await expect(page.getByTestId('spaces-facilitytypes-save-button')).toBeVisible();
         // the add process is no different to when there are children, so don't bother testing it here
-
-        // close the form and the save button disappears, because there aren't currently any facility types
-        await expect(page.getByTestId('add-new-group-button')).toHaveText('Clear new Group form');
-        await page.getByTestId('add-new-group-button').click();
-        await expect(page.getByTestId('spaces-facilitytypes-save-button')).not.toBeVisible();
     });
     test('api error', async ({ page }) => {
         await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces&responseType=facilityTypesAll404');
