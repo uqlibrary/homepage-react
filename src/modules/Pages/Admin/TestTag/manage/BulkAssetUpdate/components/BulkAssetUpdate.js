@@ -435,9 +435,9 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                             />
                         </Grid>
 
-                        <Grid container spacing={3}>
+                        <Grid container spacing={0} padding={0} mt={3}>
                             <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
-                                <Grid xs={12} sm={6}>
+                                <Grid xs={12} sm={6} sx={{ paddingRight: { xs: 0, sm: 2 } }}>
                                     <Grid container spacing={3}>
                                         <Grid xs={12}>
                                             <FormControlLabel
@@ -472,9 +472,9 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     </Grid>
                                 </Grid>
                             </AuthWrapper>
-                            <Grid xs={12} sm={6}>
+                            <Grid xs={12} sm={6} sx={{ marginTop: { xs: 3, sm: 0 } }}>
                                 <Grid container spacing={3}>
-                                    <Grid xs={12}>
+                                    <Grid xs={12} width={'100%'}>
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
@@ -499,13 +499,13 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             label={stepTwoLocale.checkbox.status}
                                         />
                                     </Grid>
-                                    <Grid xs={12}>
+                                    <Grid xs={12} width={'100%'}>
                                         <TextField
                                             {...stepTwoLocale.discardReason}
                                             required={formValues.hasDiscardStatus}
                                             error={formValues.hasDiscardStatus && isEmptyStr(formValues.discard_reason)}
                                             multiline
-                                            minRows={2}
+                                            minRows={1}
                                             variant="standard"
                                             id={`${componentId}-discard-reason-input`}
                                             InputProps={{ fullWidth: true }}
@@ -530,7 +530,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid container spacing={3}>
+                        <Grid container spacing={3} mt={3}>
                             <Grid xs={12} sm={6}>
                                 <FormControlLabel
                                     control={
@@ -548,7 +548,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                 />
                             </Grid>
                         </Grid>
-                        <Grid container spacing={4} className={'actionButtons'}>
+                        <Grid container spacing={4} padding={2} className={'actionButtons'}>
                             <Grid xs={12} sm={6} container justifyContent="flex-start">
                                 <Button
                                     variant="outlined"
