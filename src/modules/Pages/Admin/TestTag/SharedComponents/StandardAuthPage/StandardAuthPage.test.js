@@ -3,7 +3,6 @@ import StandardAuthPage from './StandardAuthPage';
 import { render, WithReduxStore } from 'test-utils';
 import Immutable from 'immutable';
 
-import { getUserPermissions } from '../../helpers/auth';
 import { PERMISSIONS } from '../../config/auth';
 import locale from '../../testTag.locale';
 import userData from '../../../../../../data/mock/data/testing/testAndTag/testTagUser';
@@ -22,14 +21,11 @@ function setup(testProps = {}, renderer = render) {
     const { state = {}, ...props } = testProps;
 
     const _state = {
-        testTagUserReducer: {
-            user: userData,
-            privilege: getUserPermissions(userData.privileges),
-            userLoading: false,
-            userLoaded: true,
-            userError: null,
+        accountReducer: {
+            accountLoading: false,
+            account: { tnt: userData },
+            ...state,
         },
-        ...state,
     };
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
@@ -80,13 +76,7 @@ describe('StandardAuthPage', () => {
         const mockSubtitleFn = jest.fn(dept => `Subtitle for ${dept}`);
         const { getByTestId, getByText } = setup({
             state: {
-                testTagUserReducer: {
-                    user: { ...userData, department_display_name: undefined },
-                    privilege: getUserPermissions(userData.privileges),
-                    userLoading: false,
-                    userLoaded: true,
-                    userError: null,
-                },
+                account: { tnt: { ...userData, department_display_name: undefined } },
             },
             locale: { header: { pageSubtitle: mockSubtitleFn } },
             inclusive: false,
@@ -118,10 +108,9 @@ describe('StandardAuthPage', () => {
     it('renders component with denied text when error loading user', () => {
         const { getByText } = setup({
             state: {
-                testTagUserReducer: {
+                account: {
                     userLoading: false,
-                    userLoaded: false,
-                    userError: true,
+                    tnt: null,
                 },
             },
         });

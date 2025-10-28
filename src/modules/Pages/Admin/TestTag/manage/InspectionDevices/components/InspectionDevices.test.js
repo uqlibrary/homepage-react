@@ -6,7 +6,6 @@ import { PERMISSIONS } from '../../../config/auth';
 
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 import inspectionDevices from '../../../../../../../data/mock/data/records/testAndTag/test_tag_inspection_devices';
-import { getUserPermissions } from '../../../helpers/auth';
 import locale from '../../../testTag.locale';
 import config from './config';
 
@@ -20,12 +19,9 @@ const actions = {
 function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, actions = {}, ...props } = testProps;
     const _state = {
-        testTagUserReducer: {
-            userLoading: false,
-            userLoaded: true,
-            userError: false,
-            user: userData,
-            privilege: getUserPermissions(userData.privileges ?? {}),
+        accountReducer: {
+            accountLoading: false,
+            account: { tnt: userData },
         },
 
         testTagInspectionDevicesReducer: {

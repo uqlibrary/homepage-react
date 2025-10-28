@@ -57,7 +57,10 @@ function setup(testProps = {}, renderer = rtlRender) {
 
     const _state = {
         testTagOnLoadInspectionReducer: { inspectionConfig: configData, inspectionConfigLoading: false },
-        testTagUserReducer: { user: userData },
+        accountReducer: {
+            accountLoading: false,
+            account: { tnt: userData },
+        },
         ...state,
     };
 
