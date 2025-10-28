@@ -37,6 +37,7 @@ export default {
             failed: 'FAILED',
             outforrepair: 'OUTFORREPAIR',
             discarded: 'DISCARDED',
+            instorage: 'INSTORAGE',
         },
         inspectStatus: {
             passed: 'PASSED',
