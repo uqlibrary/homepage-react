@@ -10,7 +10,6 @@ export { default as examLearningResourceReducer } from './examLearningResourceRe
 export { default as publicFileUploadReducer } from './publicFileUploadReducer';
 export { default as examSearchReducer } from './examSearchReducer';
 export { default as examSuggestionReducer } from './examSuggestionReducer';
-export { default as testTagUserReducer } from './testTagUserReducer';
 export { default as testTagOnLoadDashboardReducer } from './testTagOnLoadDashboardReducer';
 export { default as testTagOnLoadInspectionReducer } from './testTagOnLoadInspectionReducer';
 export { default as testTagLocationReducer } from './testTagLocationReducer';

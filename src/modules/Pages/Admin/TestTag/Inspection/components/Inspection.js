@@ -21,7 +21,7 @@ import AssetPanel from './AssetPanel';
 import { statusEnum } from '../utils/helpers';
 import { scrollToTopOfPage } from 'helpers/general';
 import { useValidation } from '../utils/hooks';
-import { useLocation, useForm, useConfirmationAlert } from '../../helpers/hooks';
+import { useLocation, useForm, useConfirmationAlert, useAccountUser } from '../../helpers/hooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { transformer } from '../utils/transformers';
 import { saveInspectionTransformer } from '../transformers/saveInspectionTransformer';
@@ -143,7 +143,6 @@ const StyledWrapper = styled('div')(({ theme }) => ({
 }));
 
 const Inspection = ({
-    user,
     actions,
     defaultFormValues,
     defaultNextTestDateValue,
@@ -160,6 +159,9 @@ const Inspection = ({
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
+
+    const { user } = useAccountUser();
+
     const inspectionLocale = locale.pages.inspect;
 
     const [selectedAsset, setSelectedAsset] = useState({});

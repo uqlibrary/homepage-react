@@ -34,7 +34,7 @@ import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { isValidRoomId, isValidAssetId, isValidAssetTypeId } from '../../../Inspection/utils/helpers';
 import { isEmptyObject, isEmptyStr } from '../../../helpers/helpers';
-import { useForm, useObjectList, useConfirmationAlert } from '../../../helpers/hooks';
+import { useForm, useObjectList, useConfirmationAlert, useAccountUser } from '../../../helpers/hooks';
 import { transformRow, transformRequest } from './utils';
 import AuthWrapper from '../../../SharedComponents/AuthWrapper/AuthWrapper';
 import { breadcrumbs } from 'config/routes';
@@ -72,7 +72,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('md')) || false;
 
-    const { user } = useSelector(state => state.get('testTagUserReducer'));
+    const { user } = useAccountUser();
 
     const locationStore = useSelector(state => state.get('testTagLocationReducer'));
     const { location, setLocation, resetLocation } = useLocation();
