@@ -108,7 +108,7 @@ export const BookableSpacesDashboard = ({
     React.useEffect(() => {
         console.log('BookableSpacesDashboard PAGE LOADED');
         addBreadcrumbsToSiteHeader([
-            '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Dashboard</span></li>',
+            '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Manage Spaces</span></li>',
         ]);
         if (
             bookableSpacesRoomListError === null &&

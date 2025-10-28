@@ -102,7 +102,7 @@ export const AdminButton = ({ currentPage }) => {
                     }}
                     data-testid="admin-spaces-visit-dashboard-button"
                 >
-                    <span className={`${currentPage !== 'dashboard' ? 'clickable' : ''}`}>Dashboard</span>
+                    <span className={`${currentPage !== 'dashboard' ? 'clickable' : ''}`}>Manage Spaces</span>
                 </MenuItem>
 
                 <MenuItem
