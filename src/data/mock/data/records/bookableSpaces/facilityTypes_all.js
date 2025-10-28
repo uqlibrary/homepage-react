@@ -88,6 +88,18 @@ export default {
                 "facility_type_id": 19,
                 "facility_type_name": "Landmark",
             }]
+        }, {
+            "facility_type_group_id": 6,
+            "facility_type_group_name": "Unused",
+            "facility_type_group_order": 5,
+            "facility_type_group_type": 'choose-many',
+            "facility_type_children": [{
+                "facility_type_id": 20,
+                "facility_type_name": "Unused A",
+            }, {
+                "facility_type_id": 21,
+                "facility_type_name": "Unused B",
+            }]
         }]
     }
 }

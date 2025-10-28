@@ -5,6 +5,7 @@ import {
     SPACES_FACILITY_TYPE_CREATE_API,
     SPACES_FACILITY_TYPE_UPDATE_API,
     SPACES_FACILITY_TYPE_GROUP_CREATE_API,
+    SPACES_FACILITY_TYPE_GROUP_UPDATE_API,
 } from 'repositories/routes';
 
 const checkExpireSession = (dispatch, error) => {
@@ -172,6 +173,38 @@ export function createSpacesFacilityTypeGroup(request) {
                 console.log('action saveNewFacilityGroupType error', error);
                 dispatch({
                     type: actions.SPACES_FACILITY_TYPE_GROUP_CREATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
+export function deleteSpacesFacilityTypeGroup(id) {
+    return dispatch => {
+        dispatch({ type: actions.SPACES_FACILITY_TYPE_UPDATING });
+        const url = SPACES_FACILITY_TYPE_GROUP_UPDATE_API({ id: id });
+        console.log('deleteSpacesFacilityTypeGroup id ', id);
+        console.log('deleteSpacesFacilityTypeGroup url ', url);
+        return destroy(url)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.SPACES_FACILITY_TYPE_UPDATED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.SPACES_FACILITY_TYPE_UPDATE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_FACILITY_TYPE_UPDATE_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);

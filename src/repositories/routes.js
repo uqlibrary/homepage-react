@@ -308,7 +308,8 @@ export const WEEKLYHOURS_API = () => {
 
 export const SPACES_FACILITY_TYPE_ALL_API = () => ({ apiUrl: 'bookable_spaces/facility_types/all' });
 
-export const SPACES_FACILITY_TYPE_GROUP_CREATE_API = () => ({ apiUrl: 'bookable_spaces/facility_types/group' });
+export const SPACES_FACILITY_TYPE_GROUP_CREATE_API = () => ({ apiUrl: 'bookable_spaces/facility_groups' });
+export const SPACES_FACILITY_TYPE_GROUP_UPDATE_API = ({ id }) => ({ apiUrl: `bookable_spaces/facility_groups/${id}` });
 
 export const SPACES_FACILITY_TYPE_CREATE_API = () => ({ apiUrl: 'bookable_spaces/facility_types' });
 export const SPACES_FACILITY_TYPE_UPDATE_API = ({ id }) => ({ apiUrl: `bookable_spaces/facility_types/${id}` });
