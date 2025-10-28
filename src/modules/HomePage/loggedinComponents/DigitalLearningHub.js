@@ -43,14 +43,18 @@ export const DigitalLearningHub = ({
                     </StyledBodyCopyDiv>
                     {hasStatistics && (
                         <StyledBodyCopyDiv style={{ marginTop: '8px' }}>
-                            <a href="#">Your favourites (2)</a>
+                            <a href="/digital-learning-hub?type=favourite">
+                                Your favourites ({dlorStatistics?.my_favourites})
+                            </a>
                         </StyledBodyCopyDiv>
                     )}
                     <StyledBodyCopyDiv style={{ marginTop: '8px' }}>
-                        <a href="#">Objects you are following (3)</a>
+                        <a href="/digital-learning-hub?type=featured">
+                            Featured objects ({dlorStatistics?.featured_objects})
+                        </a>
                     </StyledBodyCopyDiv>
                     <StyledBodyCopyDiv style={{ marginTop: '8px' }}>
-                        <a href="#">New objects (23)</a>
+                        <a href="/digital-learning-hub?type=popular">Popular objects</a>
                     </StyledBodyCopyDiv>
                 </Grid>
             </Grid>

@@ -17,6 +17,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Divider } from '@mui/material';
+import Chip from '@mui/material/Chip';
+import { useSearchParams } from 'react-router-dom';
 
 import DescriptionIcon from '@mui/icons-material/Description';
 import LaptopIcon from '@mui/icons-material/Laptop';
@@ -320,8 +322,17 @@ export const DLOList = ({
     const [keywordSearch, setKeywordSearch] = useState('');
     const [isKeywordClearable, setIsKeywordClearable] = useState(false);
     const keyWordSearchRef = useRef('');
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const [fuzzyMatchSearch, setFuzzyMatchSearch] = useState([]);
+    const [viewType, setViewType] = useState('');
+
+    React.useEffect(() => {
+        const url = new URL(document.URL);
+        const rawsearchparams = !!url && url.searchParams;
+        const params = !!rawsearchparams && new URLSearchParams(rawsearchparams);
+        params.has('type') && setViewType(params.get('type'));
+    }, []);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const menuOpen = Boolean(anchorEl);
@@ -663,7 +674,7 @@ export const DLOList = ({
             setFiltersFromUrl();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dlorFilterList, dlorList]);
+    }, [dlorFilterList, dlorList, viewType]);
 
     function getPopupId(facetType) {
         return `dlor-list-${facetType?.facet_type_slug}-help-popup`;
@@ -1023,9 +1034,9 @@ export const DLOList = ({
             // not implemented yet
             switch (params.get('type')) {
                 case 'favourite':
+                case 'followed':
                     theSearch = theSearch.filter(isFavorited);
                     break;
-                case 'followed':
                 case 'mine':
                     theSearch = theSearch.filter(item => isMine(item, account?.mail, account?.id));
                     break;
@@ -1577,6 +1588,37 @@ export const DLOList = ({
                             }}
                             inputRef={keyWordSearchRef}
                         />
+                        {!!viewType && (
+                            <Grid item xs={12} sx={{ marginLeft: '12px', marginBottom: '12px' }}>
+                                Restricting the list view to:
+                                <Chip
+                                    data-testid="detailpage-notify-button"
+                                    disabled={!account?.id}
+                                    onClick={() => {
+                                        const newParams = new URLSearchParams(searchParams);
+                                        newParams.delete('type');
+                                        setSearchParams(newParams);
+                                        setViewType('');
+                                        // filterDlorList();
+                                    }}
+                                    icon={<CloseIcon />}
+                                    label={viewType}
+                                    sx={{
+                                        marginLeft: '8px',
+                                        backgroundColor: '#51247a',
+                                        color: 'white',
+                                        paddingLeft: '5px',
+                                        '& .MuiChip-label': {
+                                            color: 'white !important',
+                                            fontWeight: 'bold',
+                                        },
+                                        '& .MuiChip-icon': {
+                                            color: 'white !important',
+                                        },
+                                    }}
+                                />
+                            </Grid>
+                        )}
                         {/* Graduate attribute container */}
                         {containsGraduateAttributes ? (
                             <div
