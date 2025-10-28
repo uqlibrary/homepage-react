@@ -5,7 +5,6 @@ export default {
         "new_objects": 8,
         "my_objects": 0,
         "my_favourites": 1,
-        "my_subscriptions": 0,
         "total_subscriptions": 1,
         "my_alerts": 1,
         "cultural_advice_objects": 8,
