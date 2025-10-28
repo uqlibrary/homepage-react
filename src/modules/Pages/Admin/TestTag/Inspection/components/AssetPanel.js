@@ -17,6 +17,7 @@ import { transformAddAssetTypeRequest } from '../utils/transformers';
 import configAssetPanel from '../../manage/AssetTypes/components/config';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { actionReducer, emptyActionState } from '../utils/hooks';
+import { useAccountUser } from '../../helpers/hooks';
 
 const componentId = 'asset-panel';
 const componentIdLower = 'asset_panel';
@@ -42,7 +43,7 @@ const AssetPanel = ({
 
     const { inspectionConfigLoading } = useSelector(state => state.get?.('testTagOnLoadInspectionReducer'));
 
-    const { user } = useSelector(state => state.get('testTagUserReducer'));
+    const { user } = useAccountUser();
 
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
     const [shouldAutoFocus, setShouldAutoFocus] = React.useState(false);

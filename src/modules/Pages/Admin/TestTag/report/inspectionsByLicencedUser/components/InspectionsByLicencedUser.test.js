@@ -12,8 +12,6 @@ import inspectionData from '../../../../../../../data/mock/data/testing/testAndT
 import inspectorsData from '../../../../../../../data/mock/data/testing/testAndTag/testTagLicencedInspectors';
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 
-import { getUserPermissions } from '../../../helpers/auth';
-
 const panelRegExp = input => input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\|]/g, '\\$&');
 
 const selectOptionFromListByIndex = (index, actions) => {
@@ -42,12 +40,9 @@ function setup(testProps = {}, renderer = rtlRender) {
     } = testProps;
 
     const _state = {
-        testTagUserReducer: {
-            userLoading: false,
-            userLoaded: true,
-            userError: false,
-            user: userData,
-            privilege: getUserPermissions(userData.privileges ?? {}),
+        accountReducer: {
+            accountLoading: false,
+            account: { tnt: userData },
         },
         ...state,
     };
