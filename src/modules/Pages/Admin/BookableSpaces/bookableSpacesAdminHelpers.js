@@ -107,7 +107,7 @@ export function displayToastMessage(message, isError = true) {
                     }
                 }
             </style>
-            <div id="toast-corner-message" class="toast" data-testid="toast-corner-message">
+            <div id="toast-message" class="toast" data-testid="toast-message">
                 ${messageLocal}
             </div>
         `;
@@ -116,13 +116,15 @@ export function displayToastMessage(message, isError = true) {
     !!html && !!template && (template.innerHTML = html);
     const body = document.querySelector('body');
     !!body && !!template && body.appendChild(template.content.cloneNode(true));
-    const hideDelay = isError ? 10000 : 3000;
+    // error messages show for longer to give them time to copy it,
+    // but not on dev, as playwright wont wait that long for it to appear :(
+    const hideDelay = isError && window.location.hostname !== 'localhost' ? /* istanbul ignore next */ 10000 : 3000;
     setTimeout(() => {
-        const toast = document.getElementById('toast-corner-message');
+        const toast = document.getElementById('toast-message');
         !!toast && (toast.style.opacity = 0);
     }, hideDelay);
     setTimeout(() => {
-        const toast = document.getElementById('toast-corner-message');
+        const toast = document.getElementById('toast-message');
         !!toast && toast.remove();
         const styles = document.getElementById('locations-toast-styles');
         !!styles && styles.remove();
