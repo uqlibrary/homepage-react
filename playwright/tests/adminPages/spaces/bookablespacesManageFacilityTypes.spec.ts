@@ -1,4 +1,4 @@
-import { expect, Page, test } from '@uq/pw/test';
+import { expect, test } from '@uq/pw/test';
 import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
@@ -247,36 +247,147 @@ test.describe('Spaces Admin - edit group dialog', () => {
     });
     test('edit group dialog loads as expected', async ({ page }) => {
         // form fields not present
-        await expect(page.getByTestId('facility_type_group_name')).not.toBeVisible();
-        await expect(page.getByTestId('dialog-cancel-button')).not.toBeVisible();
-        await expect(page.getByTestId('dialog-save-button')).not.toBeVisible();
+        const noiseLevelGroupEditButton = page.getByTestId('edit-group-4-button');
+        const groupNameEditField = page.getByTestId('facility_type_group_name');
+        const deleteButton = page.getByTestId('dialog-delete-button');
+        const cancelButton = page.getByTestId('dialog-cancel-button');
+        const saveButton = page.getByTestId('dialog-save-button');
+
+        await expect(groupNameEditField).not.toBeVisible();
+        await expect(deleteButton).not.toBeVisible();
+        await expect(cancelButton).not.toBeVisible();
+        await expect(saveButton).not.toBeVisible();
 
         // open the dialog
-        await expect(page.getByTestId('edit-group-4-button')).toBeVisible();
-        await page.getByTestId('edit-group-4-button').click();
+        await expect(noiseLevelGroupEditButton).toBeVisible();
+        await noiseLevelGroupEditButton.click();
 
         // form fields present
-        await expect(page.getByTestId('facility_type_group_name')).toBeVisible();
-        await expect(page.getByTestId('dialog-cancel-button')).toBeVisible();
-        await expect(page.getByTestId('dialog-save-button')).toBeVisible();
+        await expect(groupNameEditField).toBeVisible();
+        await expect(groupNameEditField).toHaveValue('Noise level');
+        await expect(deleteButton).toBeVisible();
+        await expect(cancelButton).toBeVisible();
+        await expect(saveButton).toBeVisible();
 
         // close the dialog
-        await page.getByTestId('dialog-cancel-button').click();
+        await cancelButton.click();
 
         // form fields not present
-        await expect(page.getByTestId('facility_type_group_name')).not.toBeVisible();
-        await expect(page.getByTestId('dialog-cancel-button')).not.toBeVisible();
-        await expect(page.getByTestId('dialog-save-button')).not.toBeVisible();
+        await expect(groupNameEditField).not.toBeVisible();
+        await expect(deleteButton).not.toBeVisible();
+        await expect(cancelButton).not.toBeVisible();
+        await expect(saveButton).not.toBeVisible();
 
-        // open the dialog and the form appears again
+        // open the dialog and the form appears again (check for redraw failures)
         await expect(page.getByTestId('add-new-group-button')).toBeVisible();
         await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
-        await page.getByTestId('add-new-group-button').click();
+        await noiseLevelGroupEditButton.click();
 
         // form fields present
-        await expect(page.getByTestId('facility_type_group_name')).toBeVisible();
-        await expect(page.getByTestId('dialog-cancel-button')).toBeVisible();
-        await expect(page.getByTestId('dialog-save-button')).toBeVisible();
+        await expect(groupNameEditField).toBeVisible();
+        await expect(groupNameEditField).toHaveValue('Noise level');
+        await expect(deleteButton).toBeVisible();
+        await expect(cancelButton).toBeVisible();
+        await expect(saveButton).toBeVisible();
+    });
+    test('has correct deletion warnings for different types', async ({ page }) => {
+        const cancelButton = page.getByTestId('dialog-cancel-button');
+
+        const noiseLevelGroupEditButton = page.getByTestId('edit-group-4-button');
+        await noiseLevelGroupEditButton.click();
+        await expect(page.getByTestId(`dialogMessage`)).toBeVisible();
+        await expect(page.getByTestId(`dialogMessage`)).toContainText(
+            "This facility group's child types will be removed from 3 Spaces if you delete it. The Spaces will not be deleted.",
+        );
+        await cancelButton.click();
+
+        const openingHoursGroupEditButton = page.getByTestId('edit-group-5-button');
+        await openingHoursGroupEditButton.click();
+        await expect(page.getByTestId(`dialogMessage`)).toBeVisible();
+        await expect(page.getByTestId(`dialogMessage`)).toContainText(
+            "This facility group's child types will be removed from 1 Space if you delete it. The Space will not be deleted.",
+        );
+        await cancelButton.click();
+
+        const unusedGroupEditButton = page.getByTestId('edit-group-6-button');
+        await unusedGroupEditButton.click();
+        await expect(page.getByTestId(`dialogMessage`)).toBeVisible();
+        await expect(page.getByTestId(`dialogMessage`)).toContainText(
+            'This facility group can be deleted - none of its child types are currently showing for any Spaces.',
+        );
+    });
+    test('can save a group name change', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        const noiseLevelGroupEditButton = page.getByTestId('edit-group-4-button');
+        const saveButton = page.getByTestId('dialog-save-button');
+        const groupNameField = page.getByTestId('facility_type_group_name');
+
+        await noiseLevelGroupEditButton.click();
+
+        await groupNameField.click();
+        await groupNameField.fill('Noise level appended');
+
+        await saveButton.click();
+
+        const expectedValues = {
+            facility_type_group_name: 'Noise level appended',
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
+    test('save group name change is accessible', async ({ page, context }) => {
+        const noiseLevelGroupEditButton = page.getByTestId('edit-group-4-button');
+
+        await noiseLevelGroupEditButton.click();
+
+        await assertAccessibility(page, '[data-testid="main-dialog"]');
+    });
+    test('can delete groups', async ({ page }) => {
+        const noiseLevelGroupEditButton = page.getByTestId(`edit-group-4-button`);
+        const deleteButton = page.getByTestId('dialog-delete-button');
+        const confirmationDialog = page.getByTestId('confirmation-dialog');
+        const deleteRejectButton = confirmationDialog.getByTestId('confirmation-dialog-reject-button');
+        const deleteAcceptButton = confirmationDialog.getByTestId('confirmation-dialog-accept-button');
+        const confirmationPrompt = confirmationDialog.getByTestId(`confirmation-dialog-message`);
+
+        const groupName = 'Noise level';
+
+        // open edit dialog
+        await noiseLevelGroupEditButton.click();
+
+        // check dialog contents as expected
+        await expect(page.getByTestId(`facility_type_group_name`)).toHaveValue(groupName);
+        await expect(deleteButton).toBeVisible();
+        await expect(confirmationDialog).not.toBeVisible();
+
+        // click 'delete' button
+        await deleteButton.click();
+
+        // delete confirmation dialog looks as expected
+        await expect(confirmationDialog).toBeVisible();
+        await expect(confirmationPrompt).toContainText(`Do you really want to delete ${groupName}?`);
+        await expect(deleteRejectButton).toBeVisible();
+        await expect(deleteAcceptButton).toBeVisible();
+
+        // can reject the deletion
+        await deleteRejectButton.click();
+        await expect(confirmationDialog).not.toBeVisible();
+
+        // reopen it
+        await deleteButton.click();
+
+        // delete confirmation dialog looks as expected
+        await expect(confirmationDialog).toBeVisible();
+        await expect(confirmationPrompt).toContainText(`Do you really want to delete ${groupName}?`);
+        await expect(deleteRejectButton).toBeVisible();
+        await expect(deleteAcceptButton).toBeVisible();
+        await expect(deleteAcceptButton).toContainText('Yes');
+
+        // now delete it
+        await deleteAcceptButton.click();
+
+        // success
+        await assertToastHasMessage(page, `${groupName} deleted`);
     });
 
     // dialog closes after save
@@ -288,7 +399,7 @@ test.describe('Spaces Admin - edit facility type dialog', () => {
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
     });
-    test('the edit facility type dialog appears as expected', async ({ page }) => {
+    test('the edit facility type dialog loads as expected', async ({ page }) => {
         const facilityTypeId = '1';
 
         // open edit dialog
@@ -420,6 +531,55 @@ test.describe('Spaces Admin - adding new facility types', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
+    });
+    test('the add facility type dialog loads as expected', async ({ page }) => {
+        const addTypetoNoiseLevelGroupButton = page.getByTestId('add-group-4-button');
+        const addDialog = page.getByTestId('main-dialog');
+        const addDialogHeading = addDialog.locator('h2');
+        const addDialogTextField = addDialog.getByTestId('facility_type_name');
+        const addDialogCancelButton = addDialog.getByTestId('dialog-cancel-button');
+        const addDialogSaveButton = addDialog.getByTestId('dialog-save-button');
+
+        // the form fields are not visible on load
+        await expect(addDialog).not.toBeVisible();
+        await expect(addDialogHeading).not.toBeVisible();
+        await expect(addDialogTextField).not.toBeVisible();
+        await expect(addDialogCancelButton).not.toBeVisible();
+        await expect(addDialogSaveButton).not.toBeVisible();
+
+        // load the "add facility type to group" dialog
+        await addTypetoNoiseLevelGroupButton.click();
+
+        // confirm the dialog is as expected
+        await expect(addDialog).toBeVisible();
+        await expect(addDialogHeading).toBeVisible();
+        await expect(addDialogHeading).toContainText('Add a Facility Type to Noise level');
+        await expect(addDialogTextField).toBeVisible();
+        await expect(addDialogTextField).toBeEmpty();
+        await expect(addDialogCancelButton).toBeVisible();
+        await expect(addDialogSaveButton).toBeVisible();
+
+        // close the dialog
+        addDialogCancelButton.click();
+
+        // the form fields are gone again
+        await expect(addDialog).toBeVisible();
+        await expect(addDialogHeading).not.toBeVisible();
+        await expect(addDialogTextField).not.toBeVisible();
+        await expect(addDialogCancelButton).not.toBeVisible();
+        await expect(addDialogSaveButton).not.toBeVisible();
+
+        // reload the dialog
+        await addTypetoNoiseLevelGroupButton.click();
+
+        // and the dialog reloads
+        await expect(addDialog).toBeVisible();
+        await expect(addDialogHeading).toBeVisible();
+        await expect(addDialogHeading).toContainText('Add a Facility Type to Noise level');
+        await expect(addDialogTextField).toBeVisible();
+        await expect(addDialogTextField).toBeEmpty();
+        await expect(addDialogCancelButton).toBeVisible();
+        await expect(addDialogSaveButton).toBeVisible();
     });
     test('can save new type', async ({ page, context }) => {
         await setTestDataCookie(context, page);
