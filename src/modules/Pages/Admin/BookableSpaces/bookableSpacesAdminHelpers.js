@@ -116,7 +116,7 @@ export function displayToastMessage(message, isError = true) {
     !!html && !!template && (template.innerHTML = html);
     const body = document.querySelector('body');
     !!body && !!template && body.appendChild(template.content.cloneNode(true));
-    const hideDelay = 3000;
+    const hideDelay = isError ? 10000 : 3000;
     setTimeout(() => {
         const toast = document.getElementById('toast-corner-message');
         !!toast && (toast.style.opacity = 0);
