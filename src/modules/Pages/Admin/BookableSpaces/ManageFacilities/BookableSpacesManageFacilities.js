@@ -33,6 +33,7 @@ import {
     getFlatFacilityTypeList,
     showGenericConfirmAndDeleteDialog,
 } from '../bookableSpacesAdminHelpers';
+import { updateSpacesFacilityGroup } from '../../../../../data/actions';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
@@ -507,8 +508,8 @@ export const BookableSpacesManageFacilities = ({
     };
 
     const updateFacilityTypeGroup = e => {
+        const groupId = document.getElementById('facility_type_group_id')?.value;
         const valuesToSend = {
-            facility_type_group_id: document.getElementById('facility_type_group_id')?.value,
             facility_type_group_name: document.getElementById('facility_type_group_name')?.value,
         };
         console.log('updateFacilityTypeGroup valuesToSend=', valuesToSend);
@@ -524,33 +525,34 @@ export const BookableSpacesManageFacilities = ({
         }
         console.log('cookies=', cookies);
 
-        !!valuesToSend.facility_type_name &&
-            !!valuesToSend.facility_type_id &&
-            actions
-                .updateSpacesFacilityType(valuesToSend)
-                .then(() => {
-                    console.log(`Successfully updated facility type: ${valuesToSend.facility_type_name}`);
-                    displayToastMessage('Facility type updated', false);
-                    // return { success: true, id: valuesToSend.facility_type_id };
-                })
-                .catch(e => {
-                    console.log(
-                        'catch: updating facility type (',
-                        valuesToSend?.facility_type_id,
-                        valuesToSend?.facility_type_name,
-                        ') failed:',
-                        e,
-                    );
-                    displayToastMessage(
-                        '[BSMF-008] Sorry, an error occurred - Updating the Facility type failed. The admins have been informed.',
-                    );
-                    // return { success: false, id: valuesToSend.facility_type_id, error: e };
-                })
-                .finally(() => {
-                    // Reload facility types only once after all operations complete
-                    actions.loadAllFacilityTypes();
-                    console.log('------------------');
-                });
+        actions
+            .updateSpacesFacilityGroup(valuesToSend, groupId)
+            .then(() => {
+                console.log('updateSpacesFacilityGroup THEN');
+                console.log(`Successfully updated facility type: ${valuesToSend.facility_type_group_name}`);
+                displayToastMessage('Facility type updated', false);
+                // return { success: true, id: valuesToSend.facility_type_group_id };
+            })
+            .catch(e => {
+                console.log('updateSpacesFacilityGroup ERROR');
+                console.log(
+                    'catch: updating facility type (',
+                    valuesToSend?.facility_type_group_id,
+                    valuesToSend?.facility_type_group_name,
+                    ') failed:',
+                    e,
+                );
+                displayToastMessage(
+                    '[BSMF-008] Sorry, an error occurred - Updating the Facility type failed. The admins have been informed.',
+                );
+                // return { success: false, id: valuesToSend.facility_type_group_id, error: e };
+            })
+            .finally(() => {
+                console.log('updateSpacesFacilityGroup FINALLY');
+                // Reload facility types only once after all operations complete
+                actions.loadAllFacilityTypes();
+                console.log('------------------');
+            });
     };
 
     const deleteFacilityTypeGroup = (e, facilityTypeGroupDetails) => {
@@ -689,10 +691,7 @@ export const BookableSpacesManageFacilities = ({
                                     <>
                                         <Grid item xs={12}>
                                             <StyledPrimaryButton
-                                                style={{
-                                                    marginBottom: '2rem',
-                                                    // textTransform: 'initial',
-                                                }}
+                                                style={{ marginBottom: '2rem' }}
                                                 children={'Add new Facility group'}
                                                 onClick={openDialogAddGroup}
                                                 data-testid="add-new-group-button"
@@ -731,7 +730,7 @@ export const BookableSpacesManageFacilities = ({
                                                             data-testid={`edit-group-${groupId}-button`}
                                                             id={`edit-group-${groupId}-button`}
                                                             onClick={openDialogForEditGroup}
-                                                            data-facilitytypeid={groupId}
+                                                            // data-facilitytypeid={groupId}
                                                             aria-label={`Edit facility type ${groupName}`}
                                                             data-groupid={groupId}
                                                         >
@@ -800,19 +799,6 @@ export const BookableSpacesManageFacilities = ({
                                                 </Grid>
                                             );
                                         })}
-                                        {/* {!!saveButtonVisibility && (*/}
-                                        {/*    <Grid item xs={12} style={{ marginTop: '2rem' }}>*/}
-                                        {/*        <StyledPrimaryButton*/}
-                                        {/*            id="saveChange"*/}
-                                        {/*            data-testid="spaces-facilitytypes-save-button"*/}
-                                        {/*            fullWidth*/}
-                                        {/*            children="Save changes"*/}
-                                        {/*            onClick={saveChange}*/}
-                                        {/*            onKeyUp={saveChange}*/}
-                                        {/*            style={{ width: 'auto' }}*/}
-                                        {/*        />*/}
-                                        {/*    </Grid>*/}
-                                        {/* )}*/}
                                     </>
                                 );
                             }

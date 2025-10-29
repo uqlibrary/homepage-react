@@ -111,6 +111,46 @@ export function updateSpacesFacilityType(request) {
     };
 }
 
+export function updateSpacesFacilityGroup(request, groupId) {
+    console.log('updateSpacesFacilityGroup start ', groupId, request);
+    return dispatch => {
+        if (!request || !request.facility_type_group_name) {
+            console.log('updateSpacesFacilityGroup: missing facility_type_group_name');
+            dispatch({
+                type: actions.SPACES_FACILITY_TYPE_UPDATE_FAILED,
+                payload: 'invalid request: no facility group name supplied',
+            });
+            return Promise.reject({});
+        }
+        dispatch({ type: actions.SPACES_FACILITY_TYPE_GROUP_UPDATING });
+        const url = SPACES_FACILITY_TYPE_GROUP_UPDATE_API({ id: groupId });
+        console.log('updateSpacesFacilityGroup url ', url);
+        return put(url, request)
+            .then(response => {
+                if (response?.status?.toLowerCase() === 'ok') {
+                    dispatch({
+                        type: actions.SPACES_FACILITY_TYPE_GROUP_UPDATED,
+                        payload: response,
+                    });
+                } else {
+                    dispatch({
+                        type: actions.SPACES_FACILITY_TYPE_GROUP_UPDATE_FAILED,
+                        payload: response.message,
+                    });
+                }
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPACES_FACILITY_TYPE_GROUP_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                return Promise.reject(error);
+            });
+    };
+}
+
 export function deleteSpacesFacilityType(id) {
     console.log('deleteSpacesFacilityType', id);
     return dispatch => {

@@ -121,6 +121,44 @@ test.describe('Spaces Admin - create new group dialog', () => {
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
     });
+    test('dialog loads as expected', async ({ page }) => {
+        // form fields not present
+        await expect(page.getByTestId('new-group-name')).not.toBeVisible();
+        await expect(page.getByTestId('new-group-first')).not.toBeVisible();
+        await expect(page.getByTestId('dialog-cancel-button')).not.toBeVisible();
+        await expect(page.getByTestId('dialog-save-button')).not.toBeVisible();
+
+        // open the dialog
+        await expect(page.getByTestId('add-new-group-button')).toBeVisible();
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await page.getByTestId('add-new-group-button').click();
+
+        // form fields present
+        await expect(page.getByTestId('new-group-name')).toBeVisible();
+        await expect(page.getByTestId('new-group-first')).toBeVisible();
+        await expect(page.getByTestId('dialog-cancel-button')).toBeVisible();
+        await expect(page.getByTestId('dialog-save-button')).toBeVisible();
+
+        // close the dialog
+        await page.getByTestId('dialog-cancel-button').click();
+
+        // form fields not present
+        await expect(page.getByTestId('new-group-name')).not.toBeVisible();
+        await expect(page.getByTestId('new-group-first')).not.toBeVisible();
+        await expect(page.getByTestId('dialog-cancel-button')).not.toBeVisible();
+        await expect(page.getByTestId('dialog-save-button')).not.toBeVisible();
+
+        // open the dialog
+        await expect(page.getByTestId('add-new-group-button')).toBeVisible();
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await page.getByTestId('add-new-group-button').click();
+
+        // form fields present
+        await expect(page.getByTestId('new-group-name')).toBeVisible();
+        await expect(page.getByTestId('new-group-first')).toBeVisible();
+        await expect(page.getByTestId('dialog-cancel-button')).toBeVisible();
+        await expect(page.getByTestId('dialog-save-button')).toBeVisible();
+    });
     test('can save new group', async ({ page }) => {
         await expect(page.getByTestId('new-group-name')).not.toBeVisible();
         await expect(page.getByTestId('new-group-first')).not.toBeVisible();
@@ -199,6 +237,49 @@ test.describe('Spaces Admin - create new group dialog', () => {
         await page.getByTestId('dialog-save-button').click();
         await assertToastHasMessage(page, 'Please enter both fields.');
     });
+});
+test.describe('Spaces Admin - edit group dialog', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
+    });
+    test('edit group dialog loads as expected', async ({ page }) => {
+        // form fields not present
+        await expect(page.getByTestId('facility_type_group_name')).not.toBeVisible();
+        await expect(page.getByTestId('dialog-cancel-button')).not.toBeVisible();
+        await expect(page.getByTestId('dialog-save-button')).not.toBeVisible();
+
+        // open the dialog
+        await expect(page.getByTestId('edit-group-4-button')).toBeVisible();
+        await page.getByTestId('edit-group-4-button').click();
+
+        // form fields present
+        await expect(page.getByTestId('facility_type_group_name')).toBeVisible();
+        await expect(page.getByTestId('dialog-cancel-button')).toBeVisible();
+        await expect(page.getByTestId('dialog-save-button')).toBeVisible();
+
+        // close the dialog
+        await page.getByTestId('dialog-cancel-button').click();
+
+        // form fields not present
+        await expect(page.getByTestId('facility_type_group_name')).not.toBeVisible();
+        await expect(page.getByTestId('dialog-cancel-button')).not.toBeVisible();
+        await expect(page.getByTestId('dialog-save-button')).not.toBeVisible();
+
+        // open the dialog and the form appears again
+        await expect(page.getByTestId('add-new-group-button')).toBeVisible();
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await page.getByTestId('add-new-group-button').click();
+
+        // form fields present
+        await expect(page.getByTestId('facility_type_group_name')).toBeVisible();
+        await expect(page.getByTestId('dialog-cancel-button')).toBeVisible();
+        await expect(page.getByTestId('dialog-save-button')).toBeVisible();
+    });
+
+    // dialog closes after save
 });
 test.describe('Spaces Admin - edit facility type dialog', () => {
     test.beforeEach(async ({ page }) => {
