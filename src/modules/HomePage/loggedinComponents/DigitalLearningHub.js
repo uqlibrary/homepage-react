@@ -21,7 +21,7 @@ export const DigitalLearningHub = ({
     dlorStatisticsLoading,
     dlorStatisticsError,
     account,
-    title = 'Build Digital Skills',
+    title = 'Build digital skills',
     subText = 'Find modules, videos and guides for study and teaching',
 }) => {
     const hasStatistics = !!account && !dlorStatisticsLoading && !dlorStatisticsError && dlorStatistics;
@@ -49,9 +49,6 @@ export const DigitalLearningHub = ({
                         <a href="/digital-learning-hub?type=featured">
                             Featured objects ({dlorStatistics?.featured_objects})
                         </a>
-                    </StyledBodyCopyDiv>
-                    <StyledBodyCopyDiv style={{ marginTop: '8px' }}>
-                        <a href="/digital-learning-hub?type=popular">Popular objects</a>
                     </StyledBodyCopyDiv>
                 </Grid>
             </Grid>
