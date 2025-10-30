@@ -30,10 +30,9 @@ import {
     closeDeletionConfirmation,
     closeDialog,
     displayToastMessage,
-    getFlatFacilityTypeList,
     showGenericConfirmAndDeleteDialog,
 } from '../bookableSpacesAdminHelpers';
-import { updateSpacesFacilityGroup } from '../../../../../data/actions';
+import { getFlatFacilityTypeList } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
@@ -375,7 +374,7 @@ export const BookableSpacesManageFacilities = ({
         const buttonClicked = e.target.closest('button');
         const groupId = buttonClicked.getAttribute('data-groupid');
 
-        const thisGroup = facilityTypeList?.data?.facility_type_groups.find(
+        const thisGroup = facilityTypeList?.data?.facility_type_groups?.find(
             g => g.facility_type_group_id === parseInt(groupId, 10),
         );
         const groupname = thisGroup?.facility_type_group_name;

@@ -1,7 +1,7 @@
 import { breadcrumbs, fullPath } from 'config/routes';
 import { isSpacesAdminUser } from 'helpers/access';
 import { ASKUS_SPRINGSHARE_ID } from 'config/locale';
-import { addClass, removeClass } from '../../../../helpers/general';
+import { addClass } from 'helpers/general';
 
 export const getPathRoot = () => {
     /* istanbul ignore next */
@@ -143,17 +143,6 @@ export const springshareLocations = weeklyHours => {
                 // eslint-disable-next-line camelcase
                 display_name,
             }))
-    );
-};
-
-export const getFlatFacilityTypeList = facilityTypes => {
-    return (
-        facilityTypes?.data?.facility_type_groups?.flatMap(group =>
-            group.facility_type_children.map(child => ({
-                facility_type_id: child.facility_type_id,
-                facility_type_name: child.facility_type_name,
-            })),
-        ) || []
     );
 };
 

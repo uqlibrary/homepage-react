@@ -17,13 +17,8 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { isValidUrl, standardText, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 
-import {
-    displayToastMessage,
-    getFlatFacilityTypeList,
-    spacesAdminLink,
-    springshareLocations,
-} from './bookableSpacesAdminHelpers';
-import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { displayToastMessage, spacesAdminLink, springshareLocations } from './bookableSpacesAdminHelpers';
+import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),

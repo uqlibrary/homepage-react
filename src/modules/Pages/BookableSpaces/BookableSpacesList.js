@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Grid } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import { Grid, InputLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { getFriendlyLocationDescription } from './spacesHelpers';
+import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { breadcrumbs } from 'config/routes';
 
 const StyledStandardCard = styled(StandardCard)(() => ({
@@ -17,6 +19,9 @@ const StyledStandardCard = styled(StandardCard)(() => ({
     '& .MuiCardContent-root': {
         paddingBlock: 0,
     },
+}));
+const StyledInputLabel = styled(InputLabel)(({ theme }) => ({
+    color: theme.palette.secondary.main,
 }));
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
@@ -33,7 +38,23 @@ export const BookableSpacesList = ({
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
+    facilityTypeList,
+    facilityTypeListLoading,
+    facilityTypeListError,
 }) => {
+    console.log(
+        'BookableSpacesList load facilityTypeList:',
+        facilityTypeListLoading,
+        facilityTypeListError,
+        facilityTypeList,
+    );
+
+    const [facilityTypeFilters, setFacilityTypeFilters2] = React.useState([]);
+    const setFacilityTypeFilters = data => {
+        console.log('setFacilityTypeFilters', data);
+        setFacilityTypeFilters2(data);
+    };
+
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
         !!siteHeader && siteHeader.setAttribute('secondleveltitle', breadcrumbs.bookablespaces.title);
@@ -48,8 +69,108 @@ export const BookableSpacesList = ({
         if (weeklyHoursError === null && weeklyHoursLoading === null && weeklyHours === null) {
             actions.loadWeeklyHours();
         }
+        if (facilityTypeListError === null && facilityTypeListLoading === null && facilityTypeList === null) {
+            actions.loadAllFacilityTypes();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const getFilteredFacilityTypeList = (bookableSpacesRoomList, facilityTypeList) => {
+        // get a list of the filters used in spaces
+        const spaceFilters = bookableSpacesRoomList?.data?.locations
+            .flatMap(location => location.facility_types || [])
+            .map(facilityType => facilityType.facility_type_id);
+        const spaceFiltersSet = new Set(spaceFilters);
+
+        // filter facility types so we only show the checkboxes where there is an associated space
+        // (remove the group completely if it has no shown checkboxes)
+        return {
+            ...facilityTypeList,
+            data: {
+                ...facilityTypeList.data,
+                facility_type_groups: facilityTypeList.data.facility_type_groups
+                    .map(group => ({
+                        ...group,
+                        facility_type_children: (group.facility_type_children || []).filter(child =>
+                            spaceFiltersSet.has(child.facility_type_id),
+                        ),
+                    }))
+                    .filter(group => group.facility_type_children.length > 0),
+            },
+        };
+    };
+    React.useEffect(() => {
+        if (
+            facilityTypeListError === false &&
+            facilityTypeListLoading === false &&
+            facilityTypeList?.data?.facility_type_groups?.length > 0 &&
+            facilityTypeFilters?.length === 0
+        ) {
+            // Filter the facility type list
+            const filteredFacilityTypeList = getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList);
+            console.log('filteredFacilityTypeList=', filteredFacilityTypeList?.data?.facility_type_groups);
+
+            const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
+            const newFilters = flatFacilityTypeList.map(facilityType => ({
+                facility_type_id: facilityType.facility_type_id,
+                selected: false,
+            }));
+            console.log('newFilters=', newFilters);
+            setFacilityTypeFilters(newFilters);
+        }
+    }, [facilityTypeListError, facilityTypeListLoading, facilityTypeList, facilityTypeFilters, bookableSpacesRoomList]);
+
+    const getSpaceId = spaceId => {
+        return `space-${spaceId}`;
+    };
+
+    function showSpace(spaceFacilityTypes, facilityTypeToGroup, facilityTypeFilters) {
+        // Create a map of facility_type_id to group_id for quick lookup
+        // Group selected filters by their facility type group
+        const selectedFiltersByGroup = {};
+        facilityTypeFilters.forEach(filter => {
+            if (filter.selected) {
+                const groupId = facilityTypeToGroup[filter.facility_type_id];
+                if (groupId) {
+                    if (!selectedFiltersByGroup[groupId]) {
+                        selectedFiltersByGroup[groupId] = [];
+                    }
+                    selectedFiltersByGroup[groupId].push(filter.facility_type_id);
+                }
+            }
+        });
+
+        // If no filters are selected, show all spaces
+        if (Object.keys(selectedFiltersByGroup).length === 0) {
+            return true;
+        }
+
+        // AND between groups
+        for (const groupId in selectedFiltersByGroup) {
+            const selectedFiltersInGroup = selectedFiltersByGroup[groupId];
+
+            // OR within group
+            const hasMatchInGroup = selectedFiltersInGroup.some(filterId => spaceFacilityTypes.includes(filterId));
+            if (!hasMatchInGroup) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    const handleFilterSelection = (e, facilityTypeId) => {
+        console.log('handleFilterSelection facilityTypeId=', facilityTypeId);
+        console.log('handleFilterSelection facilityTypeFilters=', facilityTypeFilters);
+
+        const newFilters = facilityTypeFilters?.filter(ftf => {
+            return ftf.facility_type_id !== facilityTypeId;
+        });
+        newFilters.push({
+            facility_type_id: facilityTypeId,
+            selected: e.target.checked,
+        });
+        setFacilityTypeFilters(newFilters);
+    };
 
     function filterNext7Days(departmentData) {
         // Get today's date (start of day)
@@ -141,28 +262,6 @@ export const BookableSpacesList = ({
         return openingDetails?.department?.next7days || [];
     };
 
-    function spaceFacilities(bookableSpace) {
-        return (
-            <>
-                {bookableSpace?.facility_types?.length > 0 && <h3>Facilities</h3>}
-                {bookableSpace?.facility_types?.length > 0 && (
-                    <ul data-testid={`facility-${bookableSpace?.space_id}`}>
-                        {bookableSpace?.facility_types?.map(facility => {
-                            return (
-                                <li
-                                    key={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}
-                                    data-testid={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}
-                                >
-                                    {facility.facility_type_name}
-                                </li>
-                            );
-                        })}
-                    </ul>
-                )}
-            </>
-        );
-    }
-
     function openingHoursComponent(openingHoursList, locationKey, libraryName) {
         if (openingHoursList.length === 0) {
             return null;
@@ -198,6 +297,91 @@ export const BookableSpacesList = ({
         );
     }
 
+    const spaceGrid = bookableSpace => {
+        const locationKey = `space-${bookableSpace?.space_id}`;
+        return (
+            <>
+                <div data-testid={locationKey}>{getFriendlyLocationDescription(bookableSpace)}</div>
+                <p>{bookableSpace?.space_description}</p>
+                {bookableSpace?.space_photo_url && (
+                    <StyledLocationPhoto
+                        src={bookableSpace?.space_photo_url}
+                        alt={bookableSpace?.space_photo_description}
+                    />
+                )}
+                {bookableSpace?.facility_types?.length > 0 && (
+                    <>
+                        <h3>Facilities</h3>
+                        <ul data-testid={`facility-${bookableSpace?.space_id}`}>
+                            {bookableSpace?.facility_types?.map(facility => {
+                                return (
+                                    <li
+                                        key={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}
+                                        data-testid={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}
+                                    >
+                                        {facility.facility_type_name}
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </>
+                )}
+                {openingHoursComponent(spaceOpeningHours(bookableSpace), locationKey, bookableSpace.space_library_name)}
+                {!!bookableSpace?.space_opening_hours_override ? (
+                    <p data-testid={`override_opening_hours_${bookableSpace?.space_uuid}`}>
+                        Note: {bookableSpace.space_opening_hours_override}
+                    </p>
+                ) : (
+                    ''
+                )}
+            </>
+        );
+    };
+    const showFilterSidebar = () => {
+        if (facilityTypeList?.data?.facility_type_groups?.length === 0) {
+            return null;
+        }
+
+        const filteredFacilityTypeList = getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList);
+        const sortedUsedGroups = [...filteredFacilityTypeList?.data?.facility_type_groups].sort(
+            (a, b) => a.facility_type_group_order - b.facility_type_group_order,
+        );
+
+        return (
+            <>
+                <Typography component={'h3'} variant={'h6'}>
+                    Active filters
+                </Typography>
+                {sortedUsedGroups.map(group => (
+                    <div key={group.facility_type_group_id} className="facility-group">
+                        <h3 className="group-heading">{group.facility_type_group_name}</h3>
+                        <ul style={{ paddingLeft: 0 }}>
+                            {group.facility_type_children && group.facility_type_children.length > 0 ? (
+                                group.facility_type_children.map(facilityType => (
+                                    <li
+                                        key={`facility-type-listitem-${facilityType.facility_type_id}`}
+                                        data-testid={`facility-type-listitem-${facilityType.facility_type_id}`}
+                                        style={{ listStyle: 'none', paddingLeft: 0 }}
+                                    >
+                                        <StyledInputLabel title={facilityType.facility_type_name}>
+                                            <Checkbox
+                                                // checked={!!facilityTypeFilters.facility_type_id}
+                                                onChange={e => handleFilterSelection(e, facilityType.facility_type_id)}
+                                                data-testid={`filtertype-${facilityType.facility_type_id}`}
+                                            />
+                                            {facilityType.facility_type_name}
+                                        </StyledInputLabel>
+                                    </li>
+                                ))
+                            ) : (
+                                <li className="no-items">No facility types available</li>
+                            )}
+                        </ul>
+                    </div>
+                ))}
+            </>
+        );
+    };
     return (
         <StandardPage title="Library spaces">
             <section aria-live="assertive">
@@ -216,63 +400,78 @@ export const BookableSpacesList = ({
                                 return (
                                     <StyledBookableSpaceGridItem item xs={12} md={9}>
                                         <StyledStandardCard fullHeight>
-                                            <p>Something went wrong - please try again later.</p>
+                                            <p data-testid="spaces-error">
+                                                Something went wrong - please try again later.
+                                            </p>
                                         </StyledStandardCard>
                                     </StyledBookableSpaceGridItem>
                                 );
                             } else if (
                                 !bookableSpacesRoomList?.data?.locations ||
-                                bookableSpacesRoomList?.data?.locations.length === 0
+                                bookableSpacesRoomList?.data?.locations?.length === 0
                             ) {
                                 return (
                                     <StyledBookableSpaceGridItem item xs={12} md={9}>
                                         <StyledStandardCard fullHeight>
-                                            <p>No locations found - please try again soon.</p>
+                                            <p data-testid="no-spaces">No locations found - please try again soon.</p>
                                         </StyledStandardCard>
                                     </StyledBookableSpaceGridItem>
                                 );
                             } else {
-                                return bookableSpacesRoomList?.data?.locations.map(bookableSpace => {
-                                    const locationKey = `space-${bookableSpace?.space_id}`;
-                                    return (
-                                        <StyledBookableSpaceGridItem item xs={12} md={9} key={locationKey}>
-                                            <StyledStandardCard
-                                                fullHeight
-                                                title={`${bookableSpace?.space_name} - ${bookableSpace?.space_type}`}
-                                            >
-                                                {
-                                                    <>
-                                                        <div data-testid={locationKey}>
-                                                            {getFriendlyLocationDescription(bookableSpace)}
-                                                        </div>
-                                                        <p>{bookableSpace?.space_description}</p>
-                                                        {bookableSpace?.space_photo_url && (
-                                                            <StyledLocationPhoto
-                                                                src={bookableSpace?.space_photo_url}
-                                                                alt={bookableSpace?.space_photo_description}
-                                                            />
-                                                        )}
-                                                        {spaceFacilities(bookableSpace)}
-                                                        {openingHoursComponent(
-                                                            spaceOpeningHours(bookableSpace),
-                                                            locationKey,
-                                                            bookableSpace.space_library_name,
-                                                        )}
-                                                        {!!bookableSpace?.space_opening_hours_override ? (
-                                                            <p
-                                                                data-testid={`override_opening_hours_${bookableSpace?.space_uuid}`}
-                                                            >
-                                                                Note: {bookableSpace.space_opening_hours_override}
-                                                            </p>
-                                                        ) : (
-                                                            ''
-                                                        )}
-                                                    </>
-                                                }
-                                            </StyledStandardCard>
-                                        </StyledBookableSpaceGridItem>
-                                    );
+                                const facilityTypeToGroup = {};
+                                getFilteredFacilityTypeList(
+                                    bookableSpacesRoomList,
+                                    facilityTypeList,
+                                ).data.facility_type_groups.forEach(group => {
+                                    group.facility_type_children.forEach(child => {
+                                        facilityTypeToGroup[child.facility_type_id] = group.facility_type_group_id;
+                                    });
                                 });
+                                const filteredSpaceLocations = bookableSpacesRoomList?.data?.locations?.filter(s => {
+                                    const spaceFacilityTypes = s.facility_types.map(item => item.facility_type_id);
+                                    return showSpace(spaceFacilityTypes, facilityTypeToGroup, facilityTypeFilters);
+                                });
+
+                                return (
+                                    <>
+                                        <Grid item xs={9}>
+                                            <Grid container data-testid={'space-wrapper'}>
+                                                {filteredSpaceLocations.length === 0 && (
+                                                    <Grid item xs={9} data-testid={'no-spaces-visible'}>
+                                                        <p>
+                                                            No Spaces match these filters - change your selection in the
+                                                            sidebar to show some spaces.
+                                                        </p>
+                                                    </Grid>
+                                                )}
+                                                {filteredSpaceLocations.length > 0 &&
+                                                    filteredSpaceLocations?.map(bookableSpace => {
+                                                        const locationKey = getSpaceId(bookableSpace?.space_id);
+                                                        return (
+                                                            <StyledBookableSpaceGridItem
+                                                                item
+                                                                xs={12}
+                                                                key={locationKey}
+                                                                id={locationKey}
+                                                                data-testid={locationKey}
+                                                                style={{ display: 'block' }}
+                                                            >
+                                                                <StyledStandardCard
+                                                                    fullHeight
+                                                                    title={`${bookableSpace?.space_name} - ${bookableSpace?.space_type}`}
+                                                                >
+                                                                    {spaceGrid(bookableSpace)}
+                                                                </StyledStandardCard>
+                                                            </StyledBookableSpaceGridItem>
+                                                        );
+                                                    })}
+                                            </Grid>
+                                        </Grid>
+                                        <StyledBookableSpaceGridItem item xs={3} style={{ padding: '1em' }}>
+                                            {showFilterSidebar()}
+                                        </StyledBookableSpaceGridItem>
+                                    </>
+                                );
                             }
                         })()}
                     </Grid>
@@ -290,6 +489,9 @@ BookableSpacesList.propTypes = {
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
+    facilityTypeList: PropTypes.any,
+    facilityTypeListLoading: PropTypes.any,
+    facilityTypeListError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesList);

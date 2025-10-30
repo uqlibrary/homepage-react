@@ -45,3 +45,13 @@ export function getFriendlyLocationDescription(bookableSpace) {
         </>
     );
 }
+export const getFlatFacilityTypeList = facilityTypes => {
+    return (
+        facilityTypes?.data?.facility_type_groups?.flatMap(group =>
+            group.facility_type_children.map(child => ({
+                facility_type_id: child.facility_type_id,
+                facility_type_name: child.facility_type_name,
+            })),
+        ) || []
+    );
+};
