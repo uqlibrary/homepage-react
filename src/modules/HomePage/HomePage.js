@@ -383,7 +383,7 @@ export const HomePage = ({
                                                         <StyledGridItemLoggedIn
                                                             item
                                                             xs={12}
-                                                            data-testid="espace-links-panel"
+                                                            data-testid="dlor-links-panel"
                                                         >
                                                             <DigitalLearningHub
                                                                 dlorStatistics={dlorStatistics}

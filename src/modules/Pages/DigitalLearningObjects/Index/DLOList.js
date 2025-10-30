@@ -1019,11 +1019,12 @@ export const DLOList = ({
         }
 
         // Helper function to check if an item is favorited
-        function isFavorited(item) {
+        function isFavoritedFiltered(item) {
             return dlorFavouritesList?.some(fav => fav.object_public_uuid === item.object_public_uuid);
         }
         // Helper function to check if the current user is the owner/publisher
         function isMine(item, userEmail, userid) {
+            console.log('isMine check for item:', item);
             return item.object_publishing_user_email === userEmail || item.owner?.publishing_user_username === userid;
         }
 
@@ -1035,15 +1036,15 @@ export const DLOList = ({
             switch (params.get('type')) {
                 case 'favourite':
                 case 'followed':
-                    theSearch = theSearch.filter(isFavorited);
+                    theSearch = theSearch.filter(item => isFavoritedFiltered(item));
                     break;
                 case 'mine':
+                    console.log('theSearch before mine filter:', theSearch);
                     theSearch = theSearch.filter(item => isMine(item, account?.mail, account?.id));
                     break;
                 case 'popular':
                     theSearch = theSearch.filter(item => !!item.is_popular);
                     break;
-                case 'new':
                 case 'featured':
                     theSearch = theSearch.filter(item => !!item.object_is_featured);
                     break;
@@ -1592,7 +1593,7 @@ export const DLOList = ({
                             <Grid item xs={12} sx={{ marginLeft: '12px', marginBottom: '12px' }}>
                                 Restricting the list view to:
                                 <Chip
-                                    data-testid="detailpage-notify-button"
+                                    data-testid="homepage-view-type-chip"
                                     disabled={!account?.id}
                                     onClick={() => {
                                         const newParams = new URLSearchParams(searchParams);

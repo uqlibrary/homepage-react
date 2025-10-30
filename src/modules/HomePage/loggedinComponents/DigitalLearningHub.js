@@ -22,7 +22,6 @@ export const DigitalLearningHub = ({
     dlorStatisticsError,
     account,
     title = 'Build Digital Skills',
-    showFirstLink = true,
     subText = 'Find modules, videos and guides for study and teaching',
 }) => {
     const hasStatistics = !!account && !dlorStatisticsLoading && !dlorStatisticsError && dlorStatistics;
@@ -37,10 +36,8 @@ export const DigitalLearningHub = ({
         >
             <Grid container padding={3} spacing={2}>
                 <Grid item xs={12}>
-                    {!!showFirstLink && <a href="/digital-learning-hub">Digital Learning Hub</a>}
-                    <StyledBodyCopyDiv style={{ marginTop: !!showFirstLink ? '8px' : '0px' }}>
-                        {subText}
-                    </StyledBodyCopyDiv>
+                    <a href="/digital-learning-hub">Digital Learning Hub</a>
+                    <StyledBodyCopyDiv style={{ marginTop: '8px' }}>{subText}</StyledBodyCopyDiv>
                     {hasStatistics && (
                         <StyledBodyCopyDiv style={{ marginTop: '8px' }}>
                             <a href="/digital-learning-hub?type=favourite">
@@ -65,7 +62,6 @@ export const DigitalLearningHub = ({
 DigitalLearningHub.propTypes = {
     account: PropTypes.object,
     title: PropTypes.string,
-    showFirstLink: PropTypes.bool,
     subText: PropTypes.string,
     dlorStatistics: PropTypes.object,
     dlorStatisticsLoading: PropTypes.bool,
