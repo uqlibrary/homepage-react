@@ -991,4 +991,47 @@ test.describe('Digital Learning Hub', () => {
             ).toBeVisible();
         });
     });
+    test.describe('Filters from Frontend', () => {
+        test('show only specific type of favourite if requested', async ({ page }) => {
+            await page.goto('digital-learning-hub?user=s1111111&type=favourite');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await mockReusable(page);
+            await expect(page.locator('[data-testid="dlor-homepage-panel-kj5t-8yg4-kj4f"]')).toBeVisible();
+            await expect(page.locator('[data-testid="homepage-view-type-chip"]')).toBeVisible();
+            await page.locator('[data-testid="homepage-view-type-chip"]').click();
+            await expect(page.locator('[data-testid="homepage-view-type-chip"]')).not.toBeVisible();
+        });
+        test('show only specific type of mine if requested', async ({ page }) => {
+            await page.goto('digital-learning-hub?user=s1111111&type=mine');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await mockReusable(page);
+            await expect(page.locator('[data-testid="homepage-view-type-chip"]')).toBeVisible();
+            await page.locator('[data-testid="homepage-view-type-chip"]').click();
+            await expect(page.locator('[data-testid="homepage-view-type-chip"]')).not.toBeVisible();
+        });
+        test('show only specific type of popular if requested', async ({ page }) => {
+            await page.goto('digital-learning-hub?user=s1111111&type=popular');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await mockReusable(page);
+            await expect(page.locator('[data-testid="homepage-view-type-chip"]')).toBeVisible();
+            await page.locator('[data-testid="homepage-view-type-chip"]').click();
+            await expect(page.locator('[data-testid="homepage-view-type-chip"]')).not.toBeVisible();
+        });
+        test('show only specific type of featured if requested', async ({ page }) => {
+            await page.goto('digital-learning-hub?user=s1111111&type=featured');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await mockReusable(page);
+            await expect(page.locator('[data-testid="homepage-view-type-chip"]')).toBeVisible();
+            await page.locator('[data-testid="homepage-view-type-chip"]').click();
+            await expect(page.locator('[data-testid="homepage-view-type-chip"]')).not.toBeVisible();
+        });
+        test('ignore any other type', async ({ page }) => {
+            await page.goto('digital-learning-hub?user=s1111111&type=expired');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await mockReusable(page);
+            await expect(page.locator('[data-testid="homepage-view-type-chip"]')).toBeVisible();
+            await page.locator('[data-testid="homepage-view-type-chip"]').click();
+            await expect(page.locator('[data-testid="homepage-view-type-chip"]')).not.toBeVisible();
+        });
+    });
 });
