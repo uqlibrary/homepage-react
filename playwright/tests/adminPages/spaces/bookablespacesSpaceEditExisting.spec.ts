@@ -47,8 +47,16 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('add-space-pretty-location')).toContainText('St Lucia Campus');
 
         await expect(page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper')).toBeVisible();
-        await expect(page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper')).toHaveValue(
-            'Walter Harrison Law',
+
+        // this is flakey on AWS. try different method of showing this is the current field
+        // await expect(page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper')).toHaveValue(
+        //     'Walter Harrison Law',
+        // );
+
+        // show the current selection is correct by opening the dropdown and showing the correct entry has the mui "focused" style
+        await page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper').click();
+        await expect(page.getByRole('option', { name: 'Walter Harrison Law' })).toHaveClass(
+            'MuiAutocomplete-option Mui-focused',
         );
 
         await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
