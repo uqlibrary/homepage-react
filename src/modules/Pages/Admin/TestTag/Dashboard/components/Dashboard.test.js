@@ -7,18 +7,17 @@ import configData from '../../../../../../data/mock/data/testing/testAndTag/test
 import userData from '../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 
 import { default as localeData } from '../../testTag.locale.js';
-import { getUserPermissions } from '../../helpers/auth';
 import { PERMISSIONS } from '../../config/auth';
 
 const redHex = '#951126';
 
 function setup(testProps = {}, renderer = rtlRender) {
     const {
-        state = {},
         actions = {},
         dashboardConfig = configData,
         dashboardConfigLoading = false,
         dashboardConfigError = null,
+        accountLoading = false,
         user = { ...userData },
         locale = { ...localeData },
         ...props
@@ -30,16 +29,11 @@ function setup(testProps = {}, renderer = rtlRender) {
             dashboardConfigLoading: false,
             dashboardConfigLoaded: true,
         },
-        testTagUserReducer: {
-            userLoading: false,
-            userLoaded: true,
-            userError: false,
-            user: userData,
-            privilege: getUserPermissions(user.privileges ?? {}),
+        accountReducer: {
+            accountLoading,
+            account: { tnt: user },
         },
-        ...state,
     };
-
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
             <WithRouter>

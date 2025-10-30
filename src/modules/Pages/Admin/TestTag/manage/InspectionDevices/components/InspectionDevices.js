@@ -1,6 +1,5 @@
 import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 
 import Grid from '@mui/material/Unstable_Grid2';
@@ -15,7 +14,7 @@ import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 
-import { useConfirmationAlert } from '../../../helpers/hooks';
+import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { emptyActionState, actionReducer, transformRow, transformAddRequest, transformUpdateRequest } from './utils';
 import { breadcrumbs } from 'config/routes';
@@ -47,7 +46,8 @@ const InspectionDevices = ({
 
     const [actionState, actionDispatch] = useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);
-    const { user } = useSelector(state => state.get('testTagUserReducer'));
+
+    const { user } = useAccountUser();
 
     const onCloseConfirmationAlert = () => actions.clearInspectionDevicesError();
     const { confirmationAlert, openConfirmationAlert, closeConfirmationAlert } = useConfirmationAlert({

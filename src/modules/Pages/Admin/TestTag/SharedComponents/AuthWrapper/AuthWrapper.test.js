@@ -3,30 +3,20 @@ import AuthWrapper from './AuthWrapper';
 import { render, WithReduxStore } from 'test-utils';
 import Immutable from 'immutable';
 
-import { getUserPermissions } from '../../helpers/auth';
 import { PERMISSIONS } from '../../config/auth';
 import userData from '../../../../../../data/mock/data/testing/testAndTag/testTagUser';
-/*
-  requiredPermissions: PropTypes.array,
-    fallback: PropTypes.node,
-    inclusive: PropTypes.bool,
-    children: PropTypes.any,
-    */
+
 const fallbackText = 'This is a fallback';
 const contentText = 'This is the protected content';
 
 function setup(testProps = {}, renderer = render) {
-    const { state = {}, ...props } = testProps;
+    const { state: { user = {} } = {}, ...props } = testProps;
 
     const _state = {
-        testTagUserReducer: {
-            user: userData,
-            privilege: getUserPermissions(userData.privileges),
-            userLoading: false,
-            userLoaded: true,
-            userError: null,
+        accountReducer: {
+            accountLoading: false,
+            account: { tnt: { ...userData, ...user } },
         },
-        ...state,
     };
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
@@ -46,7 +36,7 @@ describe('AuthWrapper', () => {
     it('renders fallback when no user available ', () => {
         const { getByText, queryByText } = setup({
             state: {
-                testTagUserReducer: { user: {} },
+                user: {},
             },
         });
         expect(getByText(fallbackText)).toBeInTheDocument();
@@ -70,10 +60,7 @@ describe('AuthWrapper', () => {
         };
         const { getByText, queryByText } = setup({
             state: {
-                testTagUserReducer: {
-                    user,
-                    privilege: getUserPermissions(user.privileges),
-                },
+                user,
             },
             inclusive: true,
             requiredPermissions: [PERMISSIONS.can_inspect, PERMISSIONS.can_see_reports],
@@ -91,12 +78,7 @@ describe('AuthWrapper', () => {
             },
         };
         const { getByText, queryByText } = setup({
-            state: {
-                testTagUserReducer: {
-                    user,
-                    privilege: getUserPermissions(user.privileges),
-                },
-            },
+            state: { user },
             requiredPermissions: [PERMISSIONS.can_inspect, PERMISSIONS.can_see_reports],
         });
         expect(queryByText(fallbackText)).not.toBeInTheDocument();

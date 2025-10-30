@@ -5,7 +5,6 @@ import Immutable from 'immutable';
 
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 import assetTypeData from '../../../../../../../data/mock/data/records/testAndTag/test_tag_asset_types';
-import { getUserPermissions } from '../../../helpers/auth';
 import locale from '../../../testTag.locale';
 
 const actions = {
@@ -19,12 +18,9 @@ const actions = {
 function setup(testProps = {}, renderer = rtlRender) {
     const { state = {}, actions = {}, ...props } = testProps;
     const _state = {
-        testTagUserReducer: {
-            userLoading: false,
-            userLoaded: true,
-            userError: false,
-            user: userData,
-            privilege: getUserPermissions(userData.privileges ?? {}),
+        accountReducer: {
+            accountLoading: false,
+            account: { tnt: userData },
         },
 
         testTagAssetTypesReducer: {

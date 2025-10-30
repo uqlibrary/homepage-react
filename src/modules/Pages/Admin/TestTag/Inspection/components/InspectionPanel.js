@@ -28,6 +28,7 @@ import {
     isValidFailReason,
     statusEnum,
 } from '../utils/helpers';
+import { useAccountUser } from '../../helpers/hooks';
 
 const rootId = 'inspection-panel';
 const rootIdLower = 'inspection_panel';
@@ -67,7 +68,7 @@ const InspectionPanel = ({
     const pageLocale = locale.pages.inspect;
     const monthsOptions = locale.config.monthsOptions;
 
-    const { user } = useSelector(state => state.get('testTagUserReducer'));
+    const { user } = useAccountUser();
 
     const { inspectionConfig, inspectionConfigLoading } = useSelector(state =>
         state.get?.('testTagOnLoadInspectionReducer'),
