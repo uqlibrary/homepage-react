@@ -236,6 +236,7 @@ export default {
                 failedLabel: 'Fail',
                 repairLabel: 'REPAIR',
                 discardedLabel: 'DISCARD',
+                inStorageLabel: 'IN STORAGE',
                 noneLabel: 'NONE',
             },
 
@@ -756,7 +757,9 @@ export default {
                 },
             },
             bulkassetupdate: {
-                config: {},
+                config: {
+                    validAssetStatusOptions: [{ label: 'IN STORAGE', value: 'INSTORAGE' }],
+                },
                 breadcrumbs: [
                     {
                         title: 'Manage - Bulk asset update',
@@ -806,6 +809,12 @@ export default {
                                 title: 'Asset Type',
                                 labelAll: 'All Asset Types',
                             },
+                            assetStatus: {
+                                props: {
+                                    label: 'Asset status',
+                                },
+                                title: 'Asset Status',
+                            },
                             ariaClearNotes: 'Clear test notes search',
                             testNoteSearch: {
                                 label: 'Search test notes',
@@ -853,6 +862,7 @@ export default {
                                 status: 'Discard Asset',
                                 assetType: 'Update Asset Type',
                                 notes: 'Clear test notes',
+                                assetStatus: 'Update Asset Status',
                             },
                             discardReason: {
                                 label: 'Discarding Reason',
