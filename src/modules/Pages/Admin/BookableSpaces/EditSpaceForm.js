@@ -389,7 +389,10 @@ export const EditSpaceForm = ({
 
         const ft = formValues?.facility_types || [];
 
-        const flatFacilityTypeList = getFlatFacilityTypeList(facilityTypeList);
+        const flatFacilityTypeList =
+            facilityTypeListLoading === false &&
+            facilityTypeListError === false &&
+            getFlatFacilityTypeList(facilityTypeList);
 
         const matchingEntry = flatFacilityTypeList.find(item => item.facility_type_id === selectedFacilityTypeid);
         let newFacilityTypes = [];
@@ -408,13 +411,17 @@ export const EditSpaceForm = ({
         setFormValues(newValues);
     }
 
-    const clearForm = () => {
-        setConfirmationOpen(false);
-        window.location.reload(false);
-    };
     function closeConfirmationBox() {
         setConfirmationOpen(false);
     }
+    const returnToDashboard = () => {
+        closeConfirmationBox();
+        navigateToPage('/admin/spaces');
+    };
+    const clearForm = () => {
+        closeConfirmationBox();
+        window.location.reload(false);
+    };
 
     const locale = {
         success: {
@@ -584,7 +591,7 @@ export const EditSpaceForm = ({
                     actionButtonColor="primary"
                     actionButtonVariant="contained"
                     confirmationBoxId="spaces-save-outcome"
-                    onAction={() => navigateToPage('/admin/spaces')}
+                    onAction={() => returnToDashboard()}
                     hideCancelButton={mode === 'edit' || !locale.success.cancelButtonLabel}
                     cancelButtonLabel={locale.success.cancelButtonLabel}
                     onCancelAction={() => clearForm()}
