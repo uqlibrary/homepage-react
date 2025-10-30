@@ -265,7 +265,7 @@ export const DLOR_DELETE_TEAM_ADMIN_API = id => ({ apiUrl: `dlor/auth/teammember
 export const DLOR_KEYWORDS_API = () => ({ apiUrl: 'dlor/public/keywords/list' });
 export const DLOR_KEYWORDS_UPDATE_API = () => ({ apiUrl: 'dlor/admin/keywords' });
 export const DLOR_KEYWORDS_DESTROY_API = () => ({ apiUrl: 'dlor/admin/keywords/delete' });
-export const DLOR_STATISTICS_API = () => ({ apiUrl: 'dlor/auth/statistics' });
+export const DLOR_STATISTICS_API = () => ({ apiUrl: 'dlor/auth/stats' });
 
 const productionRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage';
 const stagingRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage';
