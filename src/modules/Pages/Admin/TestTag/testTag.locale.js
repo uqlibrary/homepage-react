@@ -38,6 +38,7 @@ export default {
             outforrepair: 'OUTFORREPAIR',
             discarded: 'DISCARDED',
             instorage: 'INSTORAGE',
+            missing: 'MISSING',
         },
         inspectStatus: {
             passed: 'PASSED',
@@ -237,6 +238,7 @@ export default {
                 repairLabel: 'REPAIR',
                 discardedLabel: 'DISCARD',
                 inStorageLabel: 'IN STORAGE',
+                missingLabel: 'MISSING',
                 noneLabel: 'NONE',
             },
 
@@ -758,7 +760,10 @@ export default {
             },
             bulkassetupdate: {
                 config: {
-                    validAssetStatusOptions: [{ label: 'IN STORAGE', value: 'INSTORAGE' }],
+                    validAssetStatusOptions: [
+                        { label: 'IN STORAGE', value: 'INSTORAGE' },
+                        { label: 'MISSING', value: 'MISSING' },
+                    ],
                 },
                 breadcrumbs: [
                     {
@@ -1159,6 +1164,16 @@ export default {
                             id: 1,
                             label: 'Out for repair',
                             value: 'OUTFORREPAIR',
+                        },
+                        {
+                            id: 2,
+                            label: 'In storage',
+                            value: 'INSTORAGE',
+                        },
+                        {
+                            id: 3,
+                            label: 'Missing',
+                            value: 'MISSING',
                         },
                     ],
                     keyboardDatePicker: {

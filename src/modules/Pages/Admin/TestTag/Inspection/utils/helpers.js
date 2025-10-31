@@ -8,6 +8,7 @@ export const statusEnum = locale => ({
     OUTFORREPAIR: { label: locale?.repairLabel, value: 'OUTFORREPAIR' },
     DISCARDED: { label: locale?.discardedLabel, value: 'DISCARDED' },
     INSTORAGE: { label: locale?.inStorageLabel, value: 'INSTORAGE' },
+    MISSING: { label: locale?.missingLabel, value: 'MISSING' },
     NONE: { label: locale?.noneLabel, value: 'NONE' },
 });
 
