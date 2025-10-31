@@ -277,7 +277,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                   confirmButtonLabel: (
                                       <CircularProgress
                                           color="inherit"
-                                          size={25}
+                                          size={15}
                                           id={`${componentIdLower}-confirmation-progress`}
                                           data-testid={`${componentIdLower}-confirmation-progress`}
                                       />
