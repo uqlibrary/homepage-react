@@ -200,6 +200,25 @@ test.describe('Test and Tag bulk asset update', () => {
         await expect(page.getByTestId('confirmation_alert-success-alert')).toBeVisible();
     });
 
+    test('Updates Asset Status', async ({ page }) => {
+        await checkBaseline(page);
+        // Select all rows
+        await selectAllRows(page);
+        // Update asset type
+        await page.locator('#bulk_asset_update-asset-status-checkbox').click();
+        await expect(page.getByTestId('asset_status_selector-bulk-asset-update-input')).toHaveAttribute('required');
+        await page.getByTestId('asset_status_selector-bulk-asset-update-input').click();
+        await page.locator('#asset_status_selector-bulk-asset-update-option-0').click();
+
+        // Commit the change
+        await page.getByTestId('bulk_asset_update-submit-button').click();
+        // Confirmation showing?
+        await expect(page.getByTestId('dialogbox-bulk-asset-update')).toBeVisible();
+        // Commit
+        await page.getByTestId('confirm-bulk-asset-update').click();
+        await expect(page.getByTestId('confirmation_alert-success-alert')).toBeVisible();
+    });
+
     test('Clear Test notes', async ({ page }) => {
         await checkBaseline(page);
         // Select all rows

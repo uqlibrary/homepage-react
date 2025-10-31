@@ -1,6 +1,17 @@
 import { isEmptyStr } from '../../helpers/helpers';
 const moment = require('moment');
 
+export const statusEnum = locale => ({
+    CURRENT: { label: locale?.currentLabel, value: 'CURRENT' },
+    PASSED: { label: locale?.passLabel, value: 'PASSED' },
+    FAILED: { label: locale?.failedLabel, value: 'FAILED' },
+    OUTFORREPAIR: { label: locale?.repairLabel, value: 'OUTFORREPAIR' },
+    DISCARDED: { label: locale?.discardedLabel, value: 'DISCARDED' },
+    INSTORAGE: { label: locale?.inStorageLabel, value: 'INSTORAGE' },
+    MISSING: { label: locale?.missingLabel, value: 'MISSING' },
+    NONE: { label: locale?.noneLabel, value: 'NONE' },
+});
+
 export const isValidEventDate = (date, format) => {
     if (isEmptyStr(date)) return false;
     const today = new moment();
@@ -21,6 +32,15 @@ export const isValidNextTestDate = (inspection, passedValue, format) => {
 };
 export const isValidAssetId = assetId => {
     return !isEmptyStr(assetId);
+};
+export const isValidAssetStatus = (assetStatus, testStatusEnum) => {
+    /* istanbul ignore next */
+    if (!!!testStatusEnum) return false;
+
+    return (
+        !isEmptyStr(assetStatus) &&
+        Object.entries(testStatusEnum).findIndex(status => status[1].value === assetStatus) !== -1
+    );
 };
 export const isValidRoomId = roomId => !!roomId && Number.isFinite(roomId) && roomId > 0;
 export const isValidAssetTypeId = assetTypeId => !!assetTypeId && Number.isFinite(assetTypeId) && assetTypeId > 0;
@@ -73,12 +93,3 @@ export const isValidDiscard = ({ formValues, lastInspection, passed: passValue, 
         lastInspection?.inspect_status === passValue ||
         lastInspection?.inspect_status === failValue) &&
     isValidDiscardedDetails(formValues.discard_reason);
-
-export const statusEnum = locale => ({
-    CURRENT: { label: locale.currentLabel, value: 'CURRENT' },
-    PASSED: { label: locale.passLabel, value: 'PASSED' },
-    FAILED: { label: locale.failedLabel, value: 'FAILED' },
-    OUTFORREPAIR: { label: locale.repairLabel, value: 'OUTFORREPAIR' },
-    DISCARDED: { label: locale.discardedLabel, value: 'DISCARDED' },
-    NONE: { label: locale.noneLabel, value: 'NONE' },
-});

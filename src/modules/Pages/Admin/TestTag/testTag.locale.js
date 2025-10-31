@@ -37,6 +37,8 @@ export default {
             failed: 'FAILED',
             outforrepair: 'OUTFORREPAIR',
             discarded: 'DISCARDED',
+            instorage: 'INSTORAGE',
+            missing: 'MISSING',
         },
         inspectStatus: {
             passed: 'PASSED',
@@ -235,6 +237,8 @@ export default {
                 failedLabel: 'Fail',
                 repairLabel: 'REPAIR',
                 discardedLabel: 'DISCARD',
+                inStorageLabel: 'IN STORAGE',
+                missingLabel: 'MISSING',
                 noneLabel: 'NONE',
             },
 
@@ -755,7 +759,12 @@ export default {
                 },
             },
             bulkassetupdate: {
-                config: {},
+                config: {
+                    validAssetStatusOptions: [
+                        { label: 'IN STORAGE', value: 'INSTORAGE' },
+                        { label: 'MISSING', value: 'MISSING' },
+                    ],
+                },
                 breadcrumbs: [
                     {
                         title: 'Manage - Bulk asset update',
@@ -805,6 +814,12 @@ export default {
                                 title: 'Asset Type',
                                 labelAll: 'All Asset Types',
                             },
+                            assetStatus: {
+                                props: {
+                                    label: 'Asset status',
+                                },
+                                title: 'Asset Status',
+                            },
                             ariaClearNotes: 'Clear test notes search',
                             testNoteSearch: {
                                 label: 'Search test notes',
@@ -852,6 +867,7 @@ export default {
                                 status: 'Discard Asset',
                                 assetType: 'Update Asset Type',
                                 notes: 'Clear test notes',
+                                assetStatus: 'Update Asset Status',
                             },
                             discardReason: {
                                 label: 'Discarding Reason',
@@ -1148,6 +1164,16 @@ export default {
                             id: 1,
                             label: 'Out for repair',
                             value: 'OUTFORREPAIR',
+                        },
+                        {
+                            id: 2,
+                            label: 'In storage',
+                            value: 'INSTORAGE',
+                        },
+                        {
+                            id: 3,
+                            label: 'Missing',
+                            value: 'MISSING',
                         },
                     ],
                     keyboardDatePicker: {

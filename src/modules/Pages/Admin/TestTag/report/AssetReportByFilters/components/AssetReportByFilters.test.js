@@ -108,13 +108,40 @@ describe('AssetReportByFilters', () => {
 
         expect(getByText('Asset tests report for Library')).toBeInTheDocument();
 
-        // select site
+        // select Out for Repair status
         await userEvent.click(getByTestId('asset_status_selector-assets-inspected-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'Out for repair');
 
         await waitFor(() =>
             expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
                 assetStatus: 'OUTFORREPAIR',
+                inspectionDateFrom: null,
+                inspectionDateTo: null,
+                locationId: null,
+                locationType: 'building',
+            }),
+        );
+
+        // select Out for In Storage status
+        await userEvent.click(getByTestId('asset_status_selector-assets-inspected-input'));
+        await userEvent.selectOptions(getByRole('listbox'), 'In storage');
+
+        await waitFor(() =>
+            expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
+                assetStatus: 'INSTORAGE',
+                inspectionDateFrom: null,
+                inspectionDateTo: null,
+                locationId: null,
+                locationType: 'building',
+            }),
+        );
+        // select Out for Repair status
+        await userEvent.click(getByTestId('asset_status_selector-assets-inspected-input'));
+        await userEvent.selectOptions(getByRole('listbox'), 'Missing');
+
+        await waitFor(() =>
+            expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
+                assetStatus: 'MISSING',
                 inspectionDateFrom: null,
                 inspectionDateTo: null,
                 locationId: null,
