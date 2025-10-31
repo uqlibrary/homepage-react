@@ -47,7 +47,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2010",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_8461.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -74,7 +74,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2080",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_8462.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -96,7 +96,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2081",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_8463.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -118,7 +118,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2082",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_8464.pdf",
                     "examNote": "",
                     "examType": "Final Paper",
                     "examYear": "2021",
@@ -153,7 +153,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2083",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_8465.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -175,7 +175,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2084",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_8466.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -197,7 +197,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2085",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_8467.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -219,7 +219,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2086",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_8468.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -241,7 +241,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2087",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_8469.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -263,7 +263,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2088",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_84610.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -285,7 +285,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2089",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_84611.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -307,7 +307,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2090",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_84612.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -329,7 +329,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2091",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_84613.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -351,7 +351,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2092",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_84614.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -373,7 +373,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2093",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_84615.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -395,7 +395,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2094",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_84616.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -417,7 +417,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2095",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_84617.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -439,7 +439,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2096",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_84618.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -461,7 +461,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2097",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_84619.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -483,7 +483,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2098",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_84620.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
@@ -505,7 +505,7 @@ export default {
             [
                 {
                     "courseCode": "FREN2099",
-                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_84621.pdf",
                     "examNote": "",
                     "examType": "",
                     "examYear": "2021",
