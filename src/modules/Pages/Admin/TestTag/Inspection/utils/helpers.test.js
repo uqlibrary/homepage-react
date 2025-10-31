@@ -89,6 +89,7 @@ describe('Helper functions', () => {
         expect(isValidAssetStatus('OUTFORREPAIR', testStatusEnum)).toBe(true);
         expect(isValidAssetStatus('DISCARDED', testStatusEnum)).toBe(true);
         expect(isValidAssetStatus('INSTORAGE', testStatusEnum)).toBe(true);
+        expect(isValidAssetStatus('MISSING', testStatusEnum)).toBe(true);
         expect(isValidAssetStatus('NONE', testStatusEnum)).toBe(true);
 
         // Invalid statuses
@@ -344,6 +345,10 @@ describe('Helper functions', () => {
             INSTORAGE: {
                 label: 'IN STORAGE',
                 value: 'INSTORAGE',
+            },
+            MISSING: {
+                label: 'MISSING',
+                value: 'MISSING',
             },
             NONE: {
                 label: 'NONE',
