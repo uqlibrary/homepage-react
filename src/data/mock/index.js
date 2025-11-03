@@ -63,6 +63,7 @@ import dlor_series_view from './data/records/dlor/dlor_series_view';
 import dlor_series_view_nodescription from './data/records/dlor/dlor_series_view_nodescription';
 import { dlor_demographics_report } from './data/dlorDemographics';
 import { dlor_favourites_report } from './data/dlorFavourites';
+import  dlor_statistics  from './data/records/dlor/dlor_statistics';
 import { drupalArticles } from './data/drupalArticles';
 import {
     journalSearchFavourites,
@@ -840,6 +841,10 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .onGet(/dlor\/public\/keywords\/list/)
     .reply(() => {
         return [200, dlor_keywords];
+    })
+    .onGet(routes.DLOR_STATISTICS_API().apiUrl)
+    .reply(() => {
+        return [200, dlor_statistics];
     });
 
 mock.onGet('exams/course/FREN1010/summary')
