@@ -1149,6 +1149,9 @@ export default {
                         asset_status: {
                             label: 'Status',
                         },
+                        user_name: {
+                            label: 'Last tested by',
+                        },
                     },
                     filterStatusLabel: 'With status',
                     filterBuildingLabel: 'Tagged building',
