@@ -85,7 +85,7 @@ describe('AssetReportByFilters', () => {
         expect(row.getByText('2015-10-01')).toBeInTheDocument();
 
         // expect a red cell with alert icon
-        expect(row.getAllByRole('cell')[4]).toHaveStyle('background-color: #951126');
+        expect(row.getAllByRole('cell')[5]).toHaveStyle('background-color: #951126');
         expect(row.getByText('2016-10-01')).toBeInTheDocument();
         expect(row.getByTestId('tooltip-overdue')).toBeInTheDocument();
 
