@@ -18,9 +18,10 @@ export default {
     },
     fields: {
         asset_barcode: { fieldParams: { minWidth: 120 } },
-        building_name: { fieldParams: { minWidth: 180, flex: 1 } },
-        asset_type_name: { fieldParams: { minWidth: 180, flex: 1 } },
-        asset_test_date: { fieldParams: { minWidth: 150 } },
+        building_name: { fieldParams: { minWidth: 200, flex: 1 } },
+        asset_type_name: { fieldParams: { minWidth: 200, flex: 1 } },
+        asset_test_date: { fieldParams: { minWidth: 100 } },
+        user_name: { fieldParams: { minWidth: 150 } },
         asset_next_test_due_date: {
             fieldParams: {
                 renderCell: params => {
@@ -45,7 +46,7 @@ export default {
                         </>
                     );
                 },
-                minWidth: 150,
+                minWidth: 125,
             },
         },
         asset_status: { fieldParams: { width: 140 } },
