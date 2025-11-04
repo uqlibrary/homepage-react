@@ -18,7 +18,24 @@ export default {
     },
     fields: {
         asset_barcode: { fieldParams: { minWidth: 120 } },
-        building_name: { fieldParams: { minWidth: 200, flex: 1 } },
+        location: {
+            fieldParams: {
+                renderCell: params => {
+                    const siteName = params.row?.site_name || /* istanbul ignore next */ '';
+                    const buildingNum = params.row?.building_id_displayed || /* istanbul ignore next */ '';
+                    const floorNum = params.row?.floor_id_displayed || /* istanbul ignore next */ '';
+                    const roomNum = params.row?.room_id_displayed || /* istanbul ignore next */ '';
+                    return locale.pages.report.assetReportByFilters.form.formattedLocation(
+                        siteName,
+                        buildingNum,
+                        floorNum,
+                        roomNum,
+                    );
+                },
+                minWidth: 200,
+                flex: 1,
+            },
+        },
         asset_type_name: { fieldParams: { minWidth: 200, flex: 1 } },
         asset_test_date: { fieldParams: { minWidth: 100 } },
         user_name: { fieldParams: { minWidth: 150 } },

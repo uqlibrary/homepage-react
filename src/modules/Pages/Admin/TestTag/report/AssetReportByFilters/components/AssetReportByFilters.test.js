@@ -80,7 +80,7 @@ describe('AssetReportByFilters', () => {
         // check first row is as expected
         const row = within(getAllByRole('row')[1]);
         expect(row.getByText('UQL000004')).toBeInTheDocument();
-        expect(row.getByText('J.K. Murray Library')).toBeInTheDocument();
+        expect(row.getByText('Gatton / 8102 / 1 / 102')).toBeInTheDocument();
         expect(row.getByText('PowerBoard')).toBeInTheDocument();
         expect(row.getByText('2015-10-01')).toBeInTheDocument();
 
