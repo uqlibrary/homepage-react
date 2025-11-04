@@ -22,13 +22,22 @@ export const transformRequest = formValues => {
     if (!!formValues.hasDiscardStatus) {
         formValues.hasLocation = false;
         formValues.hasAssetType = false;
+        formValues.hasAssetStatus = false;
+        formValues.hasClearNotes = false;
+    } else if (!!formValues.hasAssetStatus) {
+        formValues.hasLocation = false;
+        formValues.hasAssetType = false;
+        formValues.hasDiscardStatus = false;
+        formValues.hasClearNotes = false;
     } else {
         formValues.hasDiscardStatus = false;
+        formValues.hasAssetStatus = false;
     }
     return {
         asset: formValues.asset_list.reduce((cumulative, current) => [...cumulative, current.asset_id], []),
         ...(!!formValues.hasLocation ? { asset_room_id_last_seen: formValues.location.room } : {}),
         ...(!!formValues.hasAssetType ? { asset_type_id: formValues.asset_type.asset_type_id } : {}),
+        ...(!!formValues.hasAssetStatus ? { asset_status: formValues.asset_status.value } : {}),
         ...(!!formValues.hasDiscardStatus ? { is_discarding: 1, discard_reason: formValues.discard_reason } : {}),
         ...(!!formValues.hasClearNotes ? { clear_comments: 1 } : {}),
     };
