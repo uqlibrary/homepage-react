@@ -400,7 +400,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                             id={`${componentIdLower}-location-checkbox`}
                                             data-testid={`${componentIdLower}-location-checkbox`}
                                             color="primary"
-                                            disabled={formValues.hasDiscardStatus || formValues.hasAssetStatus}
+                                            disabled={formValues.hasDiscardStatus || formValues.hasAssetType}
                                         />
                                     }
                                     label={stepTwoLocale.checkbox.location}
@@ -409,7 +409,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                             <AutoLocationPicker
                                 id={componentId}
                                 disabled={
-                                    !formValues.hasLocation || formValues.hasDiscardStatus || formValues.hasAssetStatus
+                                    !formValues.hasLocation || formValues.hasDiscardStatus || formValues.hasAssetType
                                 }
                                 actions={actions}
                                 location={location}
@@ -455,6 +455,53 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                         </Grid>
 
                         <Grid container spacing={0} padding={0} mt={3}>
+                            <AuthWrapper requiredPermissions={[PERMISSIONS.can_alter]}>
+                                <Grid xs={12} sm={6} sx={{ paddingRight: { xs: 0, sm: 2 } }}>
+                                    <Grid container spacing={3}>
+                                        <Grid xs={12}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={
+                                                            !!formValues.hasAssetStatus &&
+                                                            !formValues.hasDiscardStatus &&
+                                                            !formValues.hasAssetType
+                                                        }
+                                                        onChange={handleCheckboxChange}
+                                                        name="hasAssetStatus"
+                                                        id={`${componentIdLower}-asset-status-checkbox`}
+                                                        data-testid={`${componentIdLower}-asset-status-checkbox`}
+                                                        color="primary"
+                                                        disabled={
+                                                            formValues.hasAssetType || formValues.hasDiscardStatus
+                                                        }
+                                                    />
+                                                }
+                                                label={stepTwoLocale.checkbox.assetStatus}
+                                            />
+                                        </Grid>
+                                        <Grid xs={12}>
+                                            <AssetStatusSelector
+                                                id={componentId}
+                                                options={validAssetStatusOptions}
+                                                label={pageLocale.form.assetStatus.label}
+                                                actions={actions}
+                                                onChange={handleChange('asset_status')}
+                                                disabled={
+                                                    !formValues.hasAssetStatus ||
+                                                    formValues.hasAssetType ||
+                                                    formValues.hasDiscardStatus
+                                                }
+                                                required={formValues.hasAssetStatus}
+                                                value={formValues.asset_status?.value}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </AuthWrapper>
+                        </Grid>
+
+                        <Grid container spacing={0} padding={0} mt={3}>
                             <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
                                 <Grid xs={12} sm={6} sx={{ paddingRight: { xs: 0, sm: 2 } }}>
                                     <Grid container spacing={3}>
@@ -471,7 +518,9 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                                         data-testid={`${componentIdLower}-asset-type-checkbox`}
                                                         color="primary"
                                                         disabled={
-                                                            formValues.hasDiscardStatus || formValues.hasAssetStatus
+                                                            formValues.hasLocation ||
+                                                            formValues.hasDiscardStatus ||
+                                                            formValues.hasAssetStatus
                                                         }
                                                     />
                                                 }
@@ -486,6 +535,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                                 onChange={handleChange('asset_type')}
                                                 disabled={
                                                     !formValues.hasAssetType ||
+                                                    formValues.hasLocation ||
                                                     formValues.hasDiscardStatus ||
                                                     formValues.hasAssetStatus
                                                 }
@@ -558,66 +608,14 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid container spacing={0} padding={0} mt={3}>
-                            <AuthWrapper requiredPermissions={[PERMISSIONS.can_alter]}>
-                                <Grid xs={12} sm={6} sx={{ paddingRight: { xs: 0, sm: 2 } }}>
-                                    <Grid container spacing={3}>
-                                        <Grid xs={12}>
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        checked={
-                                                            !!formValues.hasAssetStatus &&
-                                                            !formValues.hasDiscardStatus &&
-                                                            !formValues.hasAssetType &&
-                                                            !formValues.hasLocation &&
-                                                            !formValues.hasClearNotes
-                                                        }
-                                                        onChange={handleCheckboxChange}
-                                                        name="hasAssetStatus"
-                                                        id={`${componentIdLower}-asset-status-checkbox`}
-                                                        data-testid={`${componentIdLower}-asset-status-checkbox`}
-                                                        color="primary"
-                                                        disabled={
-                                                            formValues.hasAssetType ||
-                                                            formValues.hasLocation ||
-                                                            formValues.hasClearNotes ||
-                                                            formValues.hasDiscardStatus
-                                                        }
-                                                    />
-                                                }
-                                                label={stepTwoLocale.checkbox.assetStatus}
-                                            />
-                                        </Grid>
-                                        <Grid xs={12}>
-                                            <AssetStatusSelector
-                                                id={componentId}
-                                                options={validAssetStatusOptions}
-                                                label={pageLocale.form.assetStatus.label}
-                                                actions={actions}
-                                                onChange={handleChange('asset_status')}
-                                                disabled={
-                                                    !formValues.hasAssetStatus ||
-                                                    formValues.hasAssetType ||
-                                                    formValues.hasLocation ||
-                                                    formValues.hasClearNotes ||
-                                                    formValues.hasDiscardStatus
-                                                }
-                                                required={formValues.hasAssetStatus}
-                                                value={formValues.asset_status?.value}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                            </AuthWrapper>
-                        </Grid>
+
                         <Grid container spacing={3} mt={3}>
                             <Grid xs={12} sm={6}>
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            checked={!formValues.hasDiscardStatus && !!formValues.hasClearNotes}
-                                            disabled={formValues.hasDiscardStatus || formValues.hasAssetStatus}
+                                            checked={!formValues.hasDiscardStatus && formValues.hasClearNotes}
+                                            disabled={formValues.hasDiscardStatus}
                                             onChange={handleCheckboxChange}
                                             name="hasClearNotes"
                                             id={`${componentIdLower}-notes-checkbox`}
