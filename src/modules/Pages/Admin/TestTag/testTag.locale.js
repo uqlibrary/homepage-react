@@ -1134,8 +1134,8 @@ export default {
                         asset_barcode: {
                             label: 'Barcode',
                         },
-                        building_name: {
-                            label: 'Building name',
+                        location: {
+                            label: 'Location (Site/Bld/Flr/Rm)',
                         },
                         asset_type_name: {
                             label: 'Asset type',
@@ -1185,6 +1185,8 @@ export default {
                         endDateLabel: 'Tagged date to',
                         endDateAriaLabel: 'change end date',
                     },
+                    formattedLocation: (siteName, buildingNum, floorNum, roomNum) =>
+                        `${siteName} / ${buildingNum} / ${floorNum} / ${roomNum}`,
                 },
                 errors: {
                     startDate: 'Start date must be before End Date',
