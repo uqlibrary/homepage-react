@@ -72,26 +72,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import parse from 'html-react-parser';
 
-import Fuse from 'fuse.js';
 import FuzzySearch from 'modules/Pages/DigitalLearningObjects/SharedComponents/FuzzySearch';
-
-// const fuseData = [
-//     {
-//         keyword: "Aboriginal and Torres Strait Islander",
-//         synonyms: ["ATSI", "Reconciliation", "Culture", "Indigenising curriculum"],
-//         keyword_id: 1,
-//     },
-//     {
-//         keyword: "Information Technology",
-//         synonyms: ["AI", "Artificial Intelligence", "Web Crawling", "Programming", "Coding", "Software", "Hardware", "Computing"],
-//         keyword_id: 2,
-//     },
-//     {
-//         keyword: "Research Skills",
-//         synonyms: ["Literature Review", "Data Analysis", "Academic Writing", "Referencing"],
-//         keyword_id: 3,
-//     },
-// ];
 
 const fuseOptions = {
     includeScore: true,
@@ -166,9 +147,9 @@ export const DlorForm = ({
     dlorFileTypeList,
     dlorFileTypeListLoading,
     dlorFileTypeListError,
-    dlorAdminNotesLoading,
-    dlorAdminNotesLoaded,
-    dlorAdminNotesLoadError,
+    // dlorAdminNotesLoading,
+    // dlorAdminNotesLoaded,
+    // dlorAdminNotesLoadError,
     dlorAdminNotes,
     formDefaults,
     dlorKeywords,
@@ -178,6 +159,7 @@ export const DlorForm = ({
     const { account } = useAccountContext();
 
     const [confirmationOpen, setConfirmationOpen] = useState(false);
+    const [isRequestKeywordOpened, setIsRequestKeywordOpened] = useState(false);
 
     const [showTeamForm, setShowTeamForm] = useState(false); // enable-disable the Team creation fields
 
@@ -194,6 +176,7 @@ export const DlorForm = ({
 
     const [summarySuggestionOpen, setSummarySuggestionOpen] = useState(false);
     const [formValues, setFormValues] = useState(formDefaults);
+    const [requestedKeywordValues, setRequestedKeywordValues] = useState({});
     const [summaryContent, setSummaryContent] = useState('');
     const [isNotifying, setIsNotifying] = useState(false);
     const [isNotificationLightboxOpen, setIsNotificationLightboxOpen] = useState(false);
@@ -203,6 +186,20 @@ export const DlorForm = ({
     const linkFileTypeSelectRef = useRef(formValues.object_link_file_type || 'new');
 
     const [selectedKeywords, setSelectedKeywords] = useState([]);
+
+    const sendKeywordRequestEmail = () => {
+        actions
+            .requestNewKeyword(requestedKeywordValues)
+            .then(() => {
+                setRequestedKeywordValues({});
+                setIsRequestKeywordOpened(false);
+                console.log('Keyword request sent successfully');
+            })
+
+            .catch(error => {
+                console.error('Error sending keyword request:', error);
+            });
+    };
 
     const handleSelectedItemsChange = newItems => {
         setSelectedKeywords(newItems);
@@ -757,9 +754,6 @@ export const DlorForm = ({
                 <Grid item xs={12}>
                     {mode === 'edit' ? (
                         <>
-                            {/* <Typography component={'p'}>
-                                    Next Review Date: {formValues?.object_review_date_next} (edit to come)
-                                </Typography> */}
                             <DatePicker
                                 slotProps={{
                                     textField: {
@@ -776,9 +770,6 @@ export const DlorForm = ({
                         </>
                     ) : (
                         <>
-                            {/* <Typography component={'p'}>
-                                    Next Review Date: {formValues?.object_review_date_next} (setting to come)
-                                </Typography> */}
                             <DatePicker
                                 label="Last Review Date"
                                 slotProps={{
@@ -1488,6 +1479,111 @@ export const DlorForm = ({
                     onSelectedItemsChange={handleSelectedItemsChange}
                     existingItems={selectedKeywords}
                 />
+
+                <p> Can't find a keyword you need? Please contact us to request a new keyword for our vocabulary</p>
+                <Button onClick={() => setIsRequestKeywordOpened(true)} data-testid="dlor-request-keyword-button">
+                    Request new keyword
+                </Button>
+                <Modal
+                    open={isRequestKeywordOpened}
+                    onClose={() => console.log('closing request keyword modal')}
+                    aria-labelledby="request-keyword-lightbox-title"
+                    aria-describedby="request-keyword-lightbox-description"
+                    data-testid="request-keyword-modal"
+                    sx={{ zIndex: 1000 }}
+                    disableEnforceFocus
+                >
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            maxWidth: 500, // Maximum width of the modal (300px on desktop/large screens)
+                            width: '90%',
+                            bgcolor: 'background.paper',
+                            boxShadow: 24,
+                            p: 4,
+                        }}
+                    >
+                        <Typography component={'h2'} variant={'h6'} sx={{ marginTop: 0, paddingTop: 0 }}>
+                            Request a new keyword
+                        </Typography>
+                        <FormControl variant="standard" fullWidth title="Request a new keyword">
+                            <InputLabel htmlFor="requested_keyword">Requested Keyword</InputLabel>
+                            <Input
+                                id="requested_keyword"
+                                data-testid="requested_keyword"
+                                required
+                                value={requestedKeywordValues?.requested_keyword || ''}
+                                onChange={e => {
+                                    setRequestedKeywordValues({
+                                        ...requestedKeywordValues,
+                                        requested_keyword: e.target.value,
+                                        requested_object_uuid: dlorItem?.object_public_uuid,
+                                    });
+                                    // console.log('requestedKeywordValues', requestedKeywordValues);
+                                }}
+                                error={
+                                    !!requestedKeywordValues?.requested_keyword &&
+                                    requestedKeywordValues?.requested_keyword.length < 3
+                                }
+                            />
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth sx={{ marginTop: 3 }} title="Reason for Request">
+                            <InputLabel htmlFor="request_reason">Reason for Request</InputLabel>
+                            <Input
+                                id="request_reason"
+                                data-testid="request_reason"
+                                required
+                                multiline
+                                rows={4}
+                                value={requestedKeywordValues?.request_reason || ''}
+                                onChange={e => {
+                                    setRequestedKeywordValues({
+                                        ...requestedKeywordValues,
+                                        request_reason: e.target.value,
+                                    });
+                                }}
+                            />
+                        </FormControl>
+                        <Typography component={'p'} sx={{ marginTop: '10px', paddingTop: 0 }}>
+                            In order for an object to be created, a keyword must be assigned. If you find there are no
+                            suitable keywords available, you can request a new keyword to apply to your object.
+                        </Typography>
+                        <Typography component={'p'} sx={{ marginTop: '10px', paddingTop: 0 }}>
+                            In the mean time, please select the most appropriate existing keyword, and we will update it
+                            once your requested keyword has been reviewed and added to the vocabulary.
+                        </Typography>
+                        <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+                            {/* Cancel Button */}
+                            <Button
+                                color="secondary"
+                                children="Cancel"
+                                data-testid="admin-dlor-form-keyword-cancel"
+                                onClick={() => {
+                                    setRequestedKeywordValues({});
+                                    setIsRequestKeywordOpened(false);
+                                }}
+                                variant="contained"
+                            />
+
+                            <Button
+                                color="primary"
+                                children="Request Keyword"
+                                data-testid="admin-dlor-form-keyword-confirm"
+                                onClick={() => {
+                                    sendKeywordRequestEmail();
+                                }}
+                                variant="contained"
+                                disabled={
+                                    !requestedKeywordValues?.requested_keyword ||
+                                    requestedKeywordValues.requested_keyword.length < 3
+                                }
+                            />
+                        </Box>
+                    </Box>
+                </Modal>
             </Grid>
             {mode === 'edit' && (
                 <Grid item xs={12}>
@@ -2019,6 +2115,7 @@ DlorForm.propTypes = {
     dlorAdminNotesLoaded: PropTypes.bool,
     dlorAdminNotesLoadError: PropTypes.any,
     dlorAdminNotes: PropTypes.array,
+    dlorKeywords: PropTypes.array,
     formDefaults: PropTypes.object,
     mode: PropTypes.string,
 };

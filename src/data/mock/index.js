@@ -837,6 +837,10 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .reply(() => {
         return [200, { data: { success: true } }];
     })
+    .onPost(/dlor\/auth\/keywords\/request/)
+    .reply(() => {
+        return [200, { data: { success: true } }];
+    })
     .onGet(/dlor\/public\/keywords\/list/)
     .reply(() => {
         return [200, dlor_keywords];
