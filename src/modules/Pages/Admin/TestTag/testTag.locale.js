@@ -764,6 +764,14 @@ export default {
                         { label: 'IN STORAGE', value: 'INSTORAGE' },
                         { label: 'MISSING', value: 'MISSING' },
                     ],
+                    monthsOptions: [
+                        { value: '', label: 'Any' },
+                        { value: '12', label: '1 year' },
+                        { value: '24', label: '2 years' },
+                        { value: '36', label: '3 years' },
+                        { value: '48', label: '4 years' },
+                        { value: '60', label: '5 years' },
+                    ],
                 },
                 breadcrumbs: [
                     {
@@ -883,6 +891,9 @@ export default {
                                 success: 'Bulk Asset update successful',
                                 failed: 'Unable to bulk update Assets',
                             },
+                            filterToDateLabel: 'where next inspection date is within',
+                            filterToDateFormatted: value =>
+                                value !== '' ? `Include assets up to ${value}` : 'Includes all assets',
                         },
                     },
                 },

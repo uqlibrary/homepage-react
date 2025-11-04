@@ -1,7 +1,9 @@
 /* istanbul ignore file */
 
 export default {
-    defaults: {},
+    defaults: {
+        monthsPeriod: '',
+    },
     form: {
         sort: {
             defaultSortColumn: 'asset_id_displayed',

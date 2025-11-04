@@ -28,6 +28,7 @@ import AssetStatusSelector from '../../../SharedComponents/AssetStatusSelector/A
 import FooterBar from '../../../SharedComponents/DataTable/FooterBar';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import MonthsSelector from '../../../SharedComponents/MonthsSelector/MonthsSelector';
 import FilterDialog from './FilterDialog';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
@@ -45,6 +46,8 @@ import { useForm, useObjectList, useConfirmationAlert, useAccountUser } from '..
 import { transformRow, transformRequest } from './utils';
 import AuthWrapper from '../../../SharedComponents/AuthWrapper/AuthWrapper';
 import { breadcrumbs } from 'config/routes';
+
+const moment = require('moment');
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     flexGrow: 1,
@@ -66,6 +69,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const pageLocale = locale.pages.manage.bulkassetupdate;
     const stepOneLocale = pageLocale.form.step.one;
     const stepTwoLocale = pageLocale.form.step.two;
+    const monthsOptions = pageLocale.config.monthsOptions;
 
     const list = useObjectList([], transformRow, { key: 'asset_id' });
     const [step, setStep] = useState(1);
@@ -145,6 +149,8 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         actionDataFieldKeys: { valueKey: 'asset_id_displayed' },
         actionTooltips: stepOneLocale.actionTooltips,
     });
+
+    const today = moment().format(locale.config.format.dateFormatNoTime);
 
     const handleNextStepButton = () => {
         setStep(2);
@@ -452,6 +458,22 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     },
                                 }}
                             />
+                            <Grid xs={12} sm={6}>
+                                <MonthsSelector
+                                    id={componentId}
+                                    label={stepTwoLocale.filterToDateLabel}
+                                    options={monthsOptions}
+                                    currentValue={formValues.monthRange}
+                                    required={false}
+                                    responsive
+                                    onChange={handleChange('monthRange')}
+                                    nextDateTextFormatter={stepTwoLocale.filterToDateFormatted}
+                                    fromDate={today}
+                                    fromDateFormat={locale.pages.report.config.dateFormat}
+                                    dateDisplayFormat={locale.pages.report.config.dateFormatDisplay}
+                                    classNames={{ formControl: 'formControl', select: 'formSelect' }}
+                                />
+                            </Grid>
                         </Grid>
 
                         <Grid container spacing={0} padding={0} mt={3}>
