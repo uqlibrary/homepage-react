@@ -290,7 +290,7 @@ test.describe('Spaces Admin - edit group dialog', () => {
         await expect(cancelButton).toBeVisible();
         await expect(saveButton).toBeVisible();
     });
-    test('has correct deletion warnings for different types', async ({ page }) => {
+    test('has correct deletion warnings for different groups', async ({ page }) => {
         const cancelButton = page.getByTestId('dialog-cancel-button');
 
         const noiseLevelGroupEditButton = page.getByTestId('edit-group-4-button');
@@ -301,8 +301,8 @@ test.describe('Spaces Admin - edit group dialog', () => {
         );
         await cancelButton.click();
 
-        const openingHoursGroupEditButton = page.getByTestId('edit-group-5-button');
-        await openingHoursGroupEditButton.click();
+        const outdoorsGroupEditButton = page.getByTestId('edit-group-3-button');
+        await outdoorsGroupEditButton.click();
         await expect(page.getByTestId(`dialogMessage`)).toBeVisible();
         await expect(page.getByTestId(`dialogMessage`)).toContainText(
             "This facility group's child types will be removed from 1 Space if you delete it. The Space will not be deleted.",
@@ -448,54 +448,47 @@ test.describe('Spaces Admin - edit facility type dialog', () => {
         await assertAccessibility(page, '[data-testid="main-dialog"]');
     });
     test('has correct deletion warnings for different types', async ({ page }) => {
-        await expect(page.getByTestId(`edit-facility-type-2-button`)).toBeVisible();
-        await page.getByTestId(`edit-facility-type-2-button`).click();
-        await expect(
-            page.getByText(
-                'This facility type will be removed from 1 Space if you delete it. The Space will not be deleted.',
-            ),
-        ).toBeVisible();
+        const noiseLevelMediumEditButton = page.getByTestId(`edit-facility-type-2-button`);
+        const whiteboardEditButton = page.getByTestId(`edit-facility-type-11-button`);
+        const containsArtworkEditButton = page.getByTestId(`edit-facility-type-17-button`);
+
+        const hasONEspaceWarningMessage =
+            'This facility type will be removed from 1 Space if you delete it. The Space will not be deleted.';
+        const hasTWOspacesWarningMessage =
+            'This facility type will be removed from 2 Spaces if you delete it. The Spaces will not be deleted.';
+        const hasNoSpacesWarninhMessage =
+            'This facility type can be deleted - it is not currently showing for any Spaces.';
+
+        await expect(noiseLevelMediumEditButton).toBeVisible();
+        await noiseLevelMediumEditButton.click();
+        await expect(page.getByText(hasONEspaceWarningMessage)).toBeVisible();
         await expect(page.getByTestId('warning-icon')).toBeVisible();
         await expect(page.getByTestId('dialog-cancel-button')).toBeVisible();
         await page.getByTestId('dialog-cancel-button').click();
 
-        await expect(page.getByTestId(`edit-facility-type-4-button`)).toBeVisible();
-        await page.getByTestId(`edit-facility-type-4-button`).click();
+        await expect(whiteboardEditButton).toBeVisible();
+        await whiteboardEditButton.click();
         // the old text was removed from the page
-        await expect(
-            page.getByText(
-                'This facility type will be removed from 1 Space if you delete it. The Space will not be deleted.',
-            ),
-        ).not.toBeVisible();
+        await expect(page.getByText(hasONEspaceWarningMessage)).not.toBeVisible();
         // the new text is present
-        await expect(
-            page.getByText(
-                'This facility type will be removed from 2 Spaces if you delete it. The Spaces will not be deleted.',
-            ),
-        ).toBeVisible();
+        await expect(page.getByText(hasTWOspacesWarningMessage)).toBeVisible();
         await expect(page.getByTestId('warning-icon')).toBeVisible();
         await expect(page.getByTestId('dialog-cancel-button')).toBeVisible();
         await page.getByTestId('dialog-cancel-button').click();
 
-        await expect(page.getByTestId(`edit-facility-type-17-button`)).toBeVisible();
-        await page.getByTestId(`edit-facility-type-17-button`).click();
+        await expect(containsArtworkEditButton).toBeVisible();
+        await containsArtworkEditButton.click();
         // the old text was removed from the page
-        await expect(
-            page.getByText(
-                'This facility type will be removed from 2 Spaces if you delete it. The Spaces will not be deleted.',
-            ),
-        ).not.toBeVisible();
+        await expect(page.getByText(hasTWOspacesWarningMessage)).not.toBeVisible();
         // the new text is present
-        await expect(
-            page.getByText('This facility type can be deleted - it is not currently showing for any Spaces.'),
-        ).toBeVisible();
+        await expect(page.getByText(hasNoSpacesWarninhMessage)).toBeVisible();
         await expect(page.getByTestId('warning-icon')).not.toBeVisible();
         await expect(page.getByTestId('dialog-cancel-button')).toBeVisible();
         await page.getByTestId('dialog-cancel-button').click();
 
-        // check the warning icon comes back
-        await expect(page.getByTestId(`edit-facility-type-2-button`)).toBeVisible();
-        await page.getByTestId(`edit-facility-type-2-button`).click();
+        // check the warning icon comes back on later click
+        await expect(noiseLevelMediumEditButton).toBeVisible();
+        await noiseLevelMediumEditButton.click();
         await expect(page.getByTestId('warning-icon')).toBeVisible();
     });
     test('can delete facility type successfully', async ({ page }) => {

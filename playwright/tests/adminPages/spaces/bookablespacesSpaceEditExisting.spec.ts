@@ -90,6 +90,11 @@ test.describe('Spaces Admin - edit space', () => {
     test('add spaces page is accessible', async ({ page }) => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
+    const NOISE_LEVEL_LOW = 1;
+    const NOISE_LEVEL_MEDIUM = 2;
+    const WHITEBOARD = 11;
+    const POSTGRADUATE_SPACE = 8;
+    const PRINTING = 15;
     test('can save with only required fields', async ({ page, context }) => {
         await setTestDataCookie(context, page);
 
@@ -157,7 +162,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_floor_id: 1,
             space_name: '01-W431', // required field
             space_type: 'Collaborative space', // required field
-            facility_types: [1, 4, 8, 14],
+            facility_types: [NOISE_LEVEL_LOW, WHITEBOARD, POSTGRADUATE_SPACE, PRINTING], // cant clear the facility types
             space_precise: '',
             space_description: '',
             space_photo_url: '',
@@ -244,7 +249,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_floor_id: 32,
             space_name: 'New space name', // required field
             space_type: 'New space type', // required field
-            facility_types: [1, 4, 8, 14, 2],
+            facility_types: [NOISE_LEVEL_LOW, WHITEBOARD, POSTGRADUATE_SPACE, PRINTING, NOISE_LEVEL_MEDIUM],
             space_precise: 'somewhere deep in the bowels of the warehouse',
             space_description: 'a long description that has a number of words',
             space_photo_url: 'http://example.com/x.png',

@@ -180,14 +180,6 @@ export const BookableSpacesManageFacilities = ({
     }, [facilityTypeListLoading, facilityTypeListError, facilityTypeList]);
 
     const warningTextId = 'warningtext';
-    // const clearUserWarningMessage = () => {
-    //     const warningtextElement = document.getElementById(warningTextId);
-    //     !!warningtextElement && warningtextElement.remove();
-    //
-    //     const warningIcon = document.getElementById('warning-icon');
-    //     addClass(warningIcon, 'hidden');
-    // };
-
     const displayUserWarningMessage = (warningMessage, showWarningIcon) => {
         const warningMessageNode = document.createTextNode(warningMessage);
 
@@ -729,7 +721,6 @@ export const BookableSpacesManageFacilities = ({
                                                             data-testid={`edit-group-${groupId}-button`}
                                                             id={`edit-group-${groupId}-button`}
                                                             onClick={openDialogForEditGroup}
-                                                            // data-facilitytypeid={groupId}
                                                             aria-label={`Edit facility type ${groupName}`}
                                                             data-groupid={groupId}
                                                         >

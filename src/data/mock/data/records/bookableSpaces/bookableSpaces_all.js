@@ -63,6 +63,9 @@ export default {
             }, {
                 facility_type_id: 10,
                 facility_type_name: "Undergrad spaces",
+            }, {
+                facility_type_id:  11,
+                facility_type_name: 'Whiteboard',
             }],
             space_type: 'Group Study Room',
             space_floor_id: 65,

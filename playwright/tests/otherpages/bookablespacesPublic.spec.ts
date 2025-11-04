@@ -8,7 +8,7 @@ test.describe('Spaces', () => {
         await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
 
         // there are 3 spaces on the demo page
-        await expect(page.getByTestId('library-spaces').locator('> *')).toHaveCount(3);
+        await expect(page.getByTestId('space-wrapper').locator('> *')).toHaveCount(3);
 
         // the first and second opening hours are labelled 'today' and 'tomorrow'
         await expect(page.getByTestId('space-123456-openingHours-0')).toBeVisible();
@@ -38,22 +38,23 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId('facility-123456')).toBeVisible();
         await expect(page.getByTestId('facility-123456').locator(' > *')).toHaveCount(4);
         await expect(page.getByTestId('facility-123456-1')).toContainText('Noise level Low');
-        await expect(page.getByTestId('facility-123456-4')).toContainText('Whiteboard');
+        await expect(page.getByTestId('facility-123456-11')).toContainText('Whiteboard');
         await expect(page.getByTestId('facility-123456-8')).toContainText('Postgraduate spaces');
-        await expect(page.getByTestId('facility-123456-14')).toContainText('Production Printing Services');
+        await expect(page.getByTestId('facility-123456-15')).toContainText('Production Printing Services');
 
         await expect(page.getByTestId('facility-1234544')).toBeVisible();
-        await expect(page.getByTestId('facility-1234544').locator(' > *')).toHaveCount(3);
+        await expect(page.getByTestId('facility-1234544').locator(' > *')).toHaveCount(4);
         await expect(page.getByTestId('facility-1234544-3')).toContainText('Noise level High');
-        await expect(page.getByTestId('facility-1234544-6')).toContainText('Power outlets');
-        await expect(page.getByTestId('facility-1234544-9')).toContainText('Undergrad spaces');
+        await expect(page.getByTestId('facility-1234544-9')).toContainText('Power outlets');
+        await expect(page.getByTestId('facility-1234544-10')).toContainText('Undergrad spaces');
+        await expect(page.getByTestId('facility-1234544-11')).toContainText('Whiteboard');
 
         await expect(page.getByTestId('facility-43534')).toBeVisible();
         await expect(page.getByTestId('facility-43534').locator(' > *')).toHaveCount(4);
         await expect(page.getByTestId('facility-43534-2')).toContainText('Noise level Medium');
-        await expect(page.getByTestId('facility-43534-12')).toContainText('Food outlets');
-        await expect(page.getByTestId('facility-43534-4')).toContainText('Moderated');
-        await expect(page.getByTestId('facility-43534-18')).toContainText('Landmark');
+        await expect(page.getByTestId('facility-43534-14')).toContainText('Food outlets');
+        await expect(page.getByTestId('facility-43534-7')).toContainText('Exam Friendly');
+        await expect(page.getByTestId('facility-43534-19')).toContainText('Landmark');
 
         // TODO: show breadrumbs are correct
     });

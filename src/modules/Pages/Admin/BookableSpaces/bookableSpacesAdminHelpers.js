@@ -193,6 +193,9 @@ export function closeDialog(e = null) {
     const warningIcon = document.getElementById('warning-icon');
     addClass(warningIcon, 'hidden');
 
+    const dialogWarningText = document.getElementById('warningtext');
+    !!dialogWarningText && dialogWarningText.remove();
+
     const dialogBodyElement = document.getElementById('dialogBody');
     !!dialogBodyElement && (dialogBodyElement.innerHTML = '');
 
