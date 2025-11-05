@@ -77,14 +77,6 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId('no-spaces')).toBeVisible();
         await expect(page.getByTestId('no-spaces')).toContainText('No locations found - please try again soon.');
     });
-    test('spaces load error', async ({ page }) => {
-        await page.goto('spaces?responseType=error-spaces');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
-
-        await expect(page.getByTestId('spaces-error')).toBeVisible();
-        await expect(page.getByTestId('spaces-error')).toContainText('Something went wrong - please try again later.');
-    });
     test('can show-hide block contents', async ({ page }) => {
         await page.goto('spaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -217,5 +209,34 @@ test.describe('Spaces', () => {
         await expect(forganSmithCollaborativeSpace).toBeVisible();
         await expect(duttonParkGroupStudyRoom).not.toBeVisible();
         await expect(andrewLiverisComputerRoom).toBeVisible();
+    });
+});
+test.describe('Spaces errors', () => {
+    test('spaces list load error', async ({ page }) => {
+        await page.goto('spaces?responseType=error-spaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
+
+        await expect(page.getByTestId('spaces-error')).toBeVisible();
+        await expect(page.getByTestId('spaces-error')).toContainText('Something went wrong - please try again later.');
+    });
+    test('facilities list load error', async ({ page }) => {
+        await page.goto('spaces?responseType=facilityTypesAllError');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
+
+        await expect(page.getByTestId('spaces-error')).toBeVisible();
+        await expect(page.getByTestId('spaces-error')).toContainText('Something went wrong - please try again later.');
+    });
+    test('weekly hours list load error', async ({ page }) => {
+        await page.goto('spaces?responseType=weeklyHoursError');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
+
+        page.getByTestId('expand-button-space-123456').click();
+        await expect(page.getByTestId('weekly-hours-error-123456')).toBeVisible();
+        await expect(page.getByTestId('weekly-hours-error-123456')).toContainText(
+            'General opening hours currently unavailable - please try again later.',
+        );
     });
 });

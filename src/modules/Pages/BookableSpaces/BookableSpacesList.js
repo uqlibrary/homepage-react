@@ -110,8 +110,8 @@ export const BookableSpacesList = ({
         return {
             ...facilityTypeList,
             data: {
-                ...facilityTypeList.data,
-                facility_type_groups: facilityTypeList.data.facility_type_groups
+                ...facilityTypeList?.data,
+                facility_type_groups: facilityTypeList?.data?.facility_type_groups
                     .map(group => ({
                         ...group,
                         facility_type_children: (group.facility_type_children || []).filter(child =>
@@ -151,7 +151,7 @@ export const BookableSpacesList = ({
         // Create a map of facility_type_id to group_id for quick lookup
         // Group selected filters by their facility type group
         const selectedFiltersByGroup = {};
-        facilityTypeFilters.forEach(filter => {
+        facilityTypeFilters?.forEach(filter => {
             if (filter.selected) {
                 const groupId = facilityTypeToGroup[filter.facility_type_id];
                 if (groupId) {
@@ -173,7 +173,7 @@ export const BookableSpacesList = ({
             const selectedFiltersInGroup = selectedFiltersByGroup[groupId];
 
             // OR within group
-            const hasMatchInGroup = selectedFiltersInGroup.some(filterId => spaceFacilityTypes.includes(filterId));
+            const hasMatchInGroup = selectedFiltersInGroup.some(filterId => spaceFacilityTypes?.includes(filterId));
             if (!hasMatchInGroup) {
                 return false;
             }
@@ -274,10 +274,6 @@ export const BookableSpacesList = ({
     }
 
     const spaceOpeningHours = bookableSpace => {
-        if (!!weeklyHoursError) {
-            return null; // <p>Opening hours currently unavailable - please try again later</p>;
-        }
-
         let openingDetails = weeklyHours?.locations?.find(openingHours => {
             return openingHours.lid === bookableSpace.space_opening_hours_id;
         });
@@ -285,9 +281,18 @@ export const BookableSpacesList = ({
         return openingDetails?.department?.next7days || [];
     };
 
-    function openingHoursComponent(openingHoursList, locationKey, libraryName) {
-        if (openingHoursList.length === 0) {
-            return null;
+    function openingHoursComponent(bookableSpace, locationKey, libraryName) {
+        if (weeklyHoursLoading === false && !!weeklyHoursError) {
+            const spaceId = bookableSpace?.space_id || /* istanbul ignore next */ 'unknown';
+            return (
+                <p data-testid={`weekly-hours-error-${spaceId}`}>
+                    General opening hours currently unavailable - please try again later.
+                </p>
+            );
+        }
+        const openingHoursList = spaceOpeningHours(bookableSpace);
+        if (openingHoursList?.length === 0) {
+            return <p>Opening hours currently unavailable - please try again later</p>;
         }
         return (
             <>
@@ -295,7 +300,7 @@ export const BookableSpacesList = ({
                 <table style={{ width: '100%' }}>
                     <thead>
                         <tr>
-                            {openingHoursList.map((d, index) => (
+                            {openingHoursList?.map((d, index) => (
                                 <th
                                     style={{ textAlign: 'center' }}
                                     key={`${locationKey}-openingHours-${index}`}
@@ -308,7 +313,7 @@ export const BookableSpacesList = ({
                     </thead>
                     <tbody>
                         <tr>
-                            {openingHoursList.map((d, index) => (
+                            {openingHoursList?.map((d, index) => (
                                 <td style={{ textAlign: 'center' }} key={`${locationKey}-openingtd-${index}`}>
                                     {d.rendered}
                                 </td>
@@ -395,11 +400,7 @@ export const BookableSpacesList = ({
                             </ul>
                         </>
                     )}
-                    {openingHoursComponent(
-                        spaceOpeningHours(bookableSpace),
-                        locationKey,
-                        bookableSpace.space_library_name,
-                    )}
+                    {openingHoursComponent(bookableSpace, locationKey, bookableSpace.space_library_name)}
                     {!!bookableSpace?.space_opening_hours_override ? (
                         <p data-testid={`override_opening_hours_${bookableSpace?.space_uuid}`}>
                             Note: {bookableSpace.space_opening_hours_override}
@@ -490,7 +491,7 @@ export const BookableSpacesList = ({
                                         </StyledStandardCard>
                                     </StyledBookableSpaceGridItem>
                                 );
-                            } else if (!!bookableSpacesRoomListError) {
+                            } else if (!!bookableSpacesRoomListError || !!facilityTypeListError) {
                                 return (
                                     <StyledBookableSpaceGridItem item xs={12} md={9}>
                                         <StyledStandardCard fullHeight>
@@ -516,7 +517,7 @@ export const BookableSpacesList = ({
                                 getFilteredFacilityTypeList(
                                     bookableSpacesRoomList,
                                     facilityTypeList,
-                                ).data.facility_type_groups.forEach(group => {
+                                )?.data?.facility_type_groups?.forEach(group => {
                                     group.facility_type_children.forEach(child => {
                                         facilityTypeToGroup[child.facility_type_id] = group.facility_type_group_id;
                                     });
