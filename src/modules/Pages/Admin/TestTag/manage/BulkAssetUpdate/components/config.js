@@ -2,7 +2,7 @@
 
 export default {
     defaults: {
-        monthsPeriod: '',
+        monthsPeriod: 0,
     },
     form: {
         sort: {

@@ -7,7 +7,7 @@ import config from '../components/config';
 
 const DEFAULT_FORM_VALUES = {
     asset_list: [],
-    hasLocation: false,
+    hasLocation: true,
     hasDiscardStatus: false,
     hasAssetType: false,
     hasAssetStatus: false,
@@ -16,7 +16,7 @@ const DEFAULT_FORM_VALUES = {
     discard_reason: undefined,
     asset_status: undefined,
     hasClearNotes: false,
-    monthRange: config.defaults.monthsPeriod || '',
+    monthRange: config.defaults.monthsPeriod || '-1',
 };
 
 export const mapStateToProps = () => {

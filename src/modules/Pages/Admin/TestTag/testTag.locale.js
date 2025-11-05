@@ -765,7 +765,7 @@ export default {
                         { label: 'MISSING', value: 'MISSING' },
                     ],
                     monthsOptions: [
-                        { value: '', label: 'Any' },
+                        { value: '-1', label: 'Any' },
                         { value: '12', label: '1 year' },
                         { value: '24', label: '2 years' },
                         { value: '36', label: '3 years' },
@@ -872,10 +872,13 @@ export default {
                             },
                             checkbox: {
                                 location: 'Update Location',
-                                status: 'Discard Asset',
+                                discardAsset: 'Discard Asset',
                                 assetType: 'Update Asset Type',
                                 notes: 'Clear test notes',
                                 assetStatus: 'Update Asset Status',
+                            },
+                            locationType: {
+                                title: 'Location',
                             },
                             discardReason: {
                                 label: 'Discarding Reason',
@@ -893,7 +896,7 @@ export default {
                             },
                             filterToDateLabel: 'where next inspection date is within',
                             filterToDateFormatted: value =>
-                                value !== '' ? `Include assets up to ${value}` : 'Includes all assets',
+                                value !== '' ? `(Includes assets up to ${value})` : '(Includes all assets)',
                         },
                     },
                 },
