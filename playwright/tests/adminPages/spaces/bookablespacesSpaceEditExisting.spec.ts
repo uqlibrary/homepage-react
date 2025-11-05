@@ -91,9 +91,9 @@ test.describe('Spaces Admin - edit space', () => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
     const NOISE_LEVEL_LOW = 1;
-    const NOISE_LEVEL_MEDIUM = 2;
-    const WHITEBOARD = 11;
+    const EXAM_FRIENDLY = 7;
     const POSTGRADUATE_SPACE = 8;
+    const WHITEBOARD = 11;
     const PRINTING = 15;
     test('can save with only required fields', async ({ page, context }) => {
         await setTestDataCookie(context, page);
@@ -103,11 +103,41 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('add-space-description')).toBeVisible();
         await page.getByTestId('add-space-description').fill('');
 
-        // // clear facility types - playwright doesnt seem to be able to click these chips :(
-        // await page.locator('[data-tag-index="0"]').click();
-        // await page.locator('[data-tag-index="1"]').click();
-        // await page.locator('[data-tag-index="2"]').click();
-        // await page.locator('[data-tag-index="3"]').click();
+        // clear facility types
+        await expect(page.getByTestId(`filtertype-${NOISE_LEVEL_LOW}`).locator('input')).toBeVisible();
+        await expect(page.getByTestId(`filtertype-${NOISE_LEVEL_LOW}`).locator('input')).toBeChecked();
+        await expect(page.getByTestId(`facility-type-listitem-${NOISE_LEVEL_LOW}`)).toContainText('Noise level Low');
+        await page
+            .getByTestId(`filtertype-${NOISE_LEVEL_LOW}`)
+            .locator('input')
+            .click();
+
+        await expect(page.getByTestId(`filtertype-${POSTGRADUATE_SPACE}`).locator('input')).toBeVisible();
+        await expect(page.getByTestId(`filtertype-${POSTGRADUATE_SPACE}`).locator('input')).toBeChecked();
+        await expect(page.getByTestId(`facility-type-listitem-${POSTGRADUATE_SPACE}`)).toContainText(
+            'Postgraduate spaces',
+        );
+        await page
+            .getByTestId(`filtertype-${POSTGRADUATE_SPACE}`)
+            .locator('input')
+            .click();
+        await expect(page.getByTestId(`filtertype-${WHITEBOARD}`).locator('input')).toBeVisible();
+        await expect(page.getByTestId(`filtertype-${WHITEBOARD}`).locator('input')).toBeChecked();
+        await expect(page.getByTestId(`facility-type-listitem-${WHITEBOARD}`)).toContainText('Whiteboard');
+        await page
+            .getByTestId(`filtertype-${WHITEBOARD}`)
+            .locator('input')
+            .click();
+
+        await expect(page.getByTestId(`filtertype-${PRINTING}`).locator('input')).toBeVisible();
+        await expect(page.getByTestId(`filtertype-${PRINTING}`).locator('input')).toBeChecked();
+        await expect(page.getByTestId(`facility-type-listitem-${PRINTING}`)).toContainText(
+            'Production Printing Services',
+        );
+        await page
+            .getByTestId(`filtertype-${PRINTING}`)
+            .locator('input')
+            .click();
 
         // locations are inherently unclearable
 
@@ -162,7 +192,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_floor_id: 1,
             space_name: '01-W431', // required field
             space_type: 'Collaborative space', // required field
-            facility_types: [NOISE_LEVEL_LOW, WHITEBOARD, POSTGRADUATE_SPACE, PRINTING], // cant clear the facility types
+            facility_types: [],
             space_precise: '',
             space_description: '',
             space_photo_url: '',
@@ -190,8 +220,21 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('add-space-description')).toBeVisible();
         await page.getByTestId('add-space-description').fill('a long description that has a number of words');
 
-        await page.getByTestId('facilityType-input').click();
-        await page.getByRole('option', { name: 'Noise level: Noise level Medium' }).click();
+        // select a new facility type
+        await expect(page.getByTestId(`filtertype-${EXAM_FRIENDLY}`).locator('input')).toBeVisible();
+        await expect(page.getByTestId(`facility-type-listitem-${EXAM_FRIENDLY}`)).toContainText('Exam Friendly');
+        await page
+            .getByTestId(`filtertype-${EXAM_FRIENDLY}`)
+            .locator('input')
+            .click();
+
+        // unselect an existing facility type
+        await expect(page.getByTestId(`filtertype-${WHITEBOARD}`).locator('input')).toBeVisible();
+        await expect(page.getByTestId(`facility-type-listitem-${WHITEBOARD}`)).toContainText('Whiteboard');
+        await page
+            .getByTestId(`filtertype-${WHITEBOARD}`)
+            .locator('input')
+            .click();
 
         await page.getByRole('combobox', { name: 'Campus * St Lucia' }).click();
         await page.getByRole('option', { name: 'Gatton' }).click();
@@ -249,7 +292,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_floor_id: 32,
             space_name: 'New space name', // required field
             space_type: 'New space type', // required field
-            facility_types: [NOISE_LEVEL_LOW, WHITEBOARD, POSTGRADUATE_SPACE, PRINTING, NOISE_LEVEL_MEDIUM],
+            facility_types: [NOISE_LEVEL_LOW, POSTGRADUATE_SPACE, PRINTING, EXAM_FRIENDLY],
             space_precise: 'somewhere deep in the bowels of the warehouse',
             space_description: 'a long description that has a number of words',
             space_photo_url: 'http://example.com/x.png',

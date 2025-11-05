@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 // import { useCookies } from 'react-cookie';
 import Autocomplete from '@mui/material/Autocomplete';
+import Checkbox from '@mui/material/Checkbox';
 import { Grid } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import Input from '@mui/material/Input';
@@ -18,12 +19,22 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { isValidUrl, standardText, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 
 import { displayToastMessage, spacesAdminLink, springshareLocations } from './bookableSpacesAdminHelpers';
-import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import {
+    getFilteredFacilityTypeList,
+    getFlatFacilityTypeList,
+    getFriendlyLocationDescription,
+} from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),
     color: theme.palette.error.light,
     marginTop: 4,
+}));
+
+const StyledFilterWrapper = styled('div')(() => ({
+    width: '100%',
+    display: 'flex',
+    overflowX: 'auto',
 }));
 
 export const EditSpaceForm = ({
@@ -54,7 +65,7 @@ export const EditSpaceForm = ({
     bookableSpaceGetError,
 }) => {
     console.log(
-        'EditSpaceForm updateBookableSpaceLocation',
+        '#### TOP OF FORM EditSpaceForm updateBookableSpaceLocation',
         bookableSpacesRoomAdding,
         bookableSpacesRoomAddError,
         bookableSpacesRoomAddResult,
@@ -253,25 +264,32 @@ export const EditSpaceForm = ({
         return errorMessages?.find(m => m.field === fieldName)?.message;
     };
 
-    // const reportCurrentLibraryAboutPage = location => {
-    //     console.log('EditSpaceForm location?.currentCampusLibraries=', location?.currentCampusLibraries);
-    //     console.log('EditSpaceForm location=', location);
-    //     console.log('EditSpaceForm formValues=', formValues);
-    //     return location?.currentLibrary?.library_about_page_default ? (
-    //         <a href="{location?.currentLibrary?.library_about_page_default}">
-    //             {location?.currentLibrary?.library_about_page_default}
-    //         </a>
-    //     ) : (
-    //         'none'
-    //     );
-    // };
-
-    const handleChange = prop => e => {
-        const theNewValue =
+    const handleChange = _prop => e => {
+        let theNewValue =
             e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
 
         const updatedLocation = {};
-        if (prop === 'campus_id') {
+        let prop = _prop;
+        if (_prop === 'facility_type_id') {
+            prop = 'facility_types';
+            const clickedFacilityTypeId = parseInt(e?.target?.id?.replace('filtertype-', ''), 10);
+            const newCheckboxAdded = theNewValue;
+            if (newCheckboxAdded) {
+                // it doesn't exist and we must add it
+                theNewValue = [
+                    ...(formValues?.facility_types || []),
+                    {
+                        facility_type_id: clickedFacilityTypeId,
+                        facility_type_name: getFlatFacilityTypeList(facilityTypeList)?.find(
+                            f => f.facility_type_id === clickedFacilityTypeId,
+                        )?.facility_type_name,
+                    },
+                ];
+            } else {
+                // it must exist and we are removing it
+                theNewValue = formValues.facility_types.filter(f => f.facility_type_id !== clickedFacilityTypeId);
+            }
+        } else if (_prop === 'campus_id') {
             updatedLocation.currentCampusList = validCampusList(campusList);
             updatedLocation.currentCampus = !!formValues.campus_id
                 ? updatedLocation.currentCampusList?.find(c => c.campus_id === theNewValue)
@@ -295,7 +313,7 @@ export const EditSpaceForm = ({
                 display_name:
                     springshareList?.find(s => s.id === librarySpringshareId)?.display_name || noSpringshareHoursLabel,
             });
-        } else if (prop === 'library_id') {
+        } else if (_prop === 'library_id') {
             updatedLocation.currentCampusList = validCampusList(campusList);
             updatedLocation.currentCampus = !!formValues.campus_id
                 ? updatedLocation.currentCampusList?.find(c => c.campus_id === formValues.campus_id)
@@ -320,7 +338,7 @@ export const EditSpaceForm = ({
                 display_name: springshareList.find(s => s.id === updatedLocation.currentLibrary.library_springshare_id)
                     ?.display_name,
             });
-        } else if (prop === 'space_photo_url') {
+        } else if (_prop === 'space_photo_url') {
             const photoDescriptionField = document.getElementById('space_photo_description');
             const photoDescriptionFieldLabel = document.getElementById('space_photo_description-label');
             let newRequiredValue = false;
@@ -361,49 +379,6 @@ export const EditSpaceForm = ({
         actions.loadAllBookableSpacesRooms().then(() => {
             window.location.href = spacesAdminLink(spacesPath, account);
         });
-    }
-
-    function chooseFacilityType(e) {
-        const clickedChip = e.target.closest('[role="button"]');
-        const idChipDeleted = !!clickedChip?.hasAttribute('data-tag-index')
-            ? parseInt(clickedChip.getAttribute('data-tag-index'), 10)
-            : null;
-
-        if (idChipDeleted !== null) {
-            // a chip has been clicked to remove it
-            const newFacilityTypes = formValues.facility_types.filter((_, idChip) => idChip !== idChipDeleted);
-            const newFormValues = {
-                ...formValues,
-                ['facility_types']: newFacilityTypes,
-            };
-            setFormValues(newFormValues);
-            return;
-        }
-
-        const selectedFacilityTypeid = parseInt(e.target.id.replace('facilityType-option-', ''), 10);
-
-        const ft = formValues?.facility_types || [];
-
-        const flatFacilityTypeList =
-            facilityTypeListLoading === false &&
-            facilityTypeListError === false &&
-            getFlatFacilityTypeList(facilityTypeList);
-
-        const matchingEntry = flatFacilityTypeList.find(item => item.facility_type_id === selectedFacilityTypeid);
-        let newFacilityTypes = [];
-        if (matchingEntry) {
-            // Remove existing entry (if any) and add the new/updated one
-            newFacilityTypes = [
-                ...ft.filter(item => item.facility_type_id !== selectedFacilityTypeid),
-                { ...matchingEntry },
-            ];
-        }
-
-        const newValues = {
-            ...formValues,
-            ['facility_types']: newFacilityTypes,
-        };
-        setFormValues(newValues);
     }
 
     function closeConfirmationBox() {
@@ -481,19 +456,58 @@ export const EditSpaceForm = ({
         });
         return facilityTypes;
     };
-
-    const facilityTypesHaveChanged = (arr1, arr2) => {
-        // Check if lengths are different
-        if (arr1?.length !== arr2?.length) {
-            return true;
+    const showFilterCheckboxes = () => {
+        if (facilityTypeList?.data?.facility_type_groups?.length === 0) {
+            return <p>No filter types in system.</p>;
         }
 
-        // Sort both arrays (create copies to avoid mutation)
-        const sorted1 = [...arr1].sort((a, b) => a - b);
-        const sorted2 = [...arr2].sort((a, b) => a - b);
+        const filteredFacilityTypeList = getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList);
+        const sortedUsedGroups = [...filteredFacilityTypeList?.data?.facility_type_groups].sort(
+            (a, b) => a.facility_type_group_order - b.facility_type_group_order,
+        );
 
-        // Compare element by element
-        return !sorted1.every((value, index) => value === sorted2[index]);
+        return (
+            <>
+                {sortedUsedGroups.map(group => (
+                    <div key={group?.facility_type_group_id} className="facility-group">
+                        <Typography component={'h5'} variant={'h6'} className="group-heading">
+                            {group?.facility_type_group_name}
+                        </Typography>
+                        <ul style={{ paddingLeft: 0 }}>
+                            {group?.facility_type_children && group?.facility_type_children?.length > 0 ? (
+                                group?.facility_type_children?.map(facilityType => {
+                                    const isChecked = () => {
+                                        const found = formValues?.facility_types?.find(
+                                            ft => ft?.facility_type_id === facilityType?.facility_type_id,
+                                        );
+                                        return found;
+                                    };
+                                    return (
+                                        <li
+                                            key={`facility-type-listitem-${facilityType.facility_type_id}`}
+                                            data-testid={`facility-type-listitem-${facilityType.facility_type_id}`}
+                                            style={{ listStyle: 'none', paddingLeft: 0 }}
+                                        >
+                                            <InputLabel title={facilityType.facility_type_name}>
+                                                <Checkbox
+                                                    checked={!!isChecked()}
+                                                    data-testid={`filtertype-${facilityType.facility_type_id}`}
+                                                    id={`filtertype-${facilityType.facility_type_id}`}
+                                                    onChange={handleChange('facility_type_id')}
+                                                />
+                                                {facilityType.facility_type_name}
+                                            </InputLabel>
+                                        </li>
+                                    );
+                                })
+                            ) : (
+                                <li className="no-items">No facility types available</li>
+                            )}
+                        </ul>
+                    </div>
+                ))}
+            </>
+        );
     };
 
     const handleSaveClick = () => {
@@ -667,52 +681,10 @@ export const EditSpaceForm = ({
                                 </StyledErrorMessageTypography>
                             </Grid>
                             <Grid item xs={12}>
-                                <InputLabel htmlFor="facilityType" id="facilityTypeLabel">
+                                <Typography component={'h4'} variant={'h6'}>
                                     Facility types
-                                </InputLabel>
-                                <Autocomplete
-                                    multiple
-                                    id="facilityType"
-                                    options={getFacilityTypes(facilityTypeList?.data) || []}
-                                    value={formValues.facility_types || []}
-                                    getOptionLabel={item => item.facility_type_name}
-                                    isOptionEqualToValue={(option, value) =>
-                                        option.facility_type_id === value.facility_type_id
-                                    }
-                                    filterSelectedOptions
-                                    onChange={item => chooseFacilityType(item)}
-                                    renderOption={(props, option) => (
-                                        <li {...props} id={option.facility_type_id}>
-                                            {option.facility_type_name}
-                                        </li>
-                                    )}
-                                    renderInput={params => (
-                                        <TextField
-                                            variant="standard"
-                                            {...params}
-                                            fullWidth
-                                            label="Choose one or more facility types from the list"
-                                            inputProps={{
-                                                ...params.inputProps,
-                                                id: 'facilityType-input',
-                                                'data-analyticsid': 'facilityType-input',
-                                                'data-testid': 'facilityType-input',
-                                                'aria-labelledby': 'facilityTypeLabel',
-                                            }}
-                                        />
-                                    )}
-                                    // renderValue={(value, getTagProps) =>
-                                    //     value.map((option, index) => (
-                                    //         <Chip
-                                    //             label={!!option.facility_type_name || option}
-                                    //             id={`facility-type-chip-${index}`}
-                                    //             data-testid={`facility-type-chip-${index}`}
-                                    //             {...getTagProps({ index })}
-                                    //             onClick={console.log('clicked chip ' + index)}
-                                    //         />
-                                    //     ))
-                                    // }
-                                />
+                                </Typography>
+                                <StyledFilterWrapper>{showFilterCheckboxes()}</StyledFilterWrapper>
                             </Grid>
                             {/* <Grid item xs={6}>*/}
                             {/*    <FormControl variant="standard" fullWidth>*/}

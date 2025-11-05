@@ -6,6 +6,9 @@ import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 
 const inputField = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('input');
 
+const NOISE_LEVEL_MEDIUM = 2;
+const EXAM_FRIENDLY = 7;
+
 test.describe('Spaces Admin - add new space', () => {
     test('can navigate from dashboard to add new', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
@@ -156,11 +159,21 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(inputField('space_services_page', page)).toBeVisible();
         inputField('space_services_page', page).fill('https://web.library.uq.edu.au/visit/walter-harrison-law-library');
 
-        await expect(page.getByTestId('facilityType-input')).toBeVisible();
-        await page.getByTestId('facilityType-input').click();
-        await page.getByRole('option', { name: 'Noise level Low' }).click();
-        await page.getByTestId('facilityType-input').click();
-        await page.getByRole('option', { name: 'Capacity (??)' }).click();
+        await expect(page.getByTestId(`filtertype-${NOISE_LEVEL_MEDIUM}`).locator('input')).toBeVisible();
+        await expect(page.getByTestId(`facility-type-listitem-${NOISE_LEVEL_MEDIUM}`)).toContainText(
+            'Noise level Medium',
+        );
+        await page
+            .getByTestId(`filtertype-${NOISE_LEVEL_MEDIUM}`)
+            .locator('input')
+            .click();
+
+        await expect(page.getByTestId(`filtertype-${EXAM_FRIENDLY}`).locator('input')).toBeVisible();
+        await expect(page.getByTestId(`facility-type-listitem-${EXAM_FRIENDLY}`)).toContainText('Exam Friendly');
+        await page
+            .getByTestId(`filtertype-${EXAM_FRIENDLY}`)
+            .locator('input')
+            .click();
 
         // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
@@ -184,7 +197,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_type: 'Computer room',
             space_opening_hours_id: 3841,
             space_services_page: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
-            facility_types: [1, 6],
+            facility_types: [NOISE_LEVEL_MEDIUM, EXAM_FRIENDLY],
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });

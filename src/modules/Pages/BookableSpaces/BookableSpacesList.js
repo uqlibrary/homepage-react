@@ -13,7 +13,11 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import {
+    getFilteredFacilityTypeList,
+    getFlatFacilityTypeList,
+    getFriendlyLocationDescription,
+} from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { breadcrumbs } from 'config/routes';
 
 const StyledStandardCard = styled(StandardCard)(() => ({
@@ -97,31 +101,6 @@ export const BookableSpacesList = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    const getFilteredFacilityTypeList = (bookableSpacesRoomList, facilityTypeList) => {
-        // get a list of the filters used in spaces
-        const spaceFilters = bookableSpacesRoomList?.data?.locations
-            .flatMap(location => location.facility_types || [])
-            .map(facilityType => facilityType.facility_type_id);
-        const spaceFiltersSet = new Set(spaceFilters);
-
-        // filter facility types so we only show the checkboxes where there is an associated space
-        // (remove the group completely if it has no shown checkboxes)
-        return {
-            ...facilityTypeList,
-            data: {
-                ...facilityTypeList?.data,
-                facility_type_groups: facilityTypeList?.data?.facility_type_groups
-                    .map(group => ({
-                        ...group,
-                        facility_type_children: (group.facility_type_children || []).filter(child =>
-                            spaceFiltersSet.has(child.facility_type_id),
-                        ),
-                    }))
-                    .filter(group => group.facility_type_children.length > 0),
-            },
-        };
-    };
     React.useEffect(() => {
         if (
             facilityTypeListError === false &&
