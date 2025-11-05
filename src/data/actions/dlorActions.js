@@ -849,7 +849,6 @@ export function loadDlorStatistics() {
             .then(response => {
                 dispatch({
                     type: actions.DLOR_STATISTICS_LOADED,
-
                     payload: response.data,
                 });
             })
@@ -859,11 +858,11 @@ export function loadDlorStatistics() {
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
-                
             });
     };
-};
-    // request for new keyword email action
+}
+
+// request for new keyword email action
 export function requestNewKeyword(request) {
     console.log('request new keyword called', request);
     return dispatch => {
@@ -873,7 +872,11 @@ export function requestNewKeyword(request) {
                 console.log('KEYWORD RESPONSE', response);
                 dispatch({
                     type: actions.DLOR_KEYWORDS_UPDATED,
-                    console.log('TESTING');
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                console.log('TESTING');
                 dispatch({
                     type: actions.DLOR_KEYWORDS_UPDATE_FAILED,
                     payload: error.message,
