@@ -1460,7 +1460,7 @@ mock.onGet('exams/course/FREN1010/summary')
                 return [200, { ...loans, fines: [], total_fines_count: 0 }];
         }
     })
-    .onGet(routes.SPACES_ROOMS_ALL_API().apiUrl)
+    .onGet(routes.SPACES_ALL_API().apiUrl)
     .reply(() => {
         if (responseType === 'error-spaces') {
             return [500, {}];
@@ -1470,6 +1470,23 @@ mock.onGet('exams/course/FREN1010/summary')
             return [404, {}];
         } else {
             return [200, bookableSpaces_all];
+        }
+    })
+    // SPACES_SINGLE_API
+    .onGet(/bookable_spaces\/space\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const spaceUuid = urlparts.split('?')[0]; //strip any params off the url, eg userid
+        if (spaceUuid === 'error') {
+            return [500, { status: 'error', message: 'Server error' }];
+        } else if (spaceUuid === 'missingRecord') {
+            return [200, { status: 'ok', data: {} }]; // empty records are a 200
+        } else if (spaceUuid === '404') {
+            // route missing - unlikely
+            return [404, { status: 'error', message: 'Not Found' }];
+        } else {
+            const result = bookableSpaces_all.data.locations.find(space => space.space_uuid === spaceUuid) || {};
+            return [200, { data: result }];
         }
     })
     .onGet(routes.WEEKLYHOURS_API().apiUrl)
@@ -1525,6 +1542,8 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onPost(routes.SPACES_FACILITY_TYPE_CREATE_API().apiUrl)
     .reply(withDelay([200, { status: 'OK' }]))
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_UPDATE_API({ id: '.*' }).apiUrl)))
+    .reply(withDelay([200, { status: 'OK' }]))
     .onPut(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_UPDATE_API({ id: '.*' }).apiUrl)))
     .reply(() => {
         if (responseType === 'error') {
@@ -1565,6 +1584,29 @@ mock.onGet('exams/course/FREN1010/summary')
             return [200, { status: 'OK', data: result }];
         }
     })
+    .onPut(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_GROUP_UPDATE_API({ id: '.*' }).apiUrl)))
+    .reply(() => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (responseType === 'empty') {
+            return [200, []];
+        } else if (responseType === '404') {
+            return [404, {}];
+        } else if (responseType === 'randomfailures') {
+            return [404, {}];
+        } else {
+            // some random data
+            const result = {
+                facility_type_group_name: 'edited group name',
+                facility_type_group_id: 88,
+                facility_type_group_order: 99,
+                facility_type_group_type: 'choose-many',
+            };
+            return [200, { status: 'OK', data: result }];
+        }
+    })
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_GROUP_UPDATE_API({ id: '.*' }).apiUrl)))
+    .reply(withDelay([200, { status: 'OK' }]))
     .onGet(routes.SPACES_SITE_API().apiUrl)
     .reply(() => {
         if (responseType === 'error') {

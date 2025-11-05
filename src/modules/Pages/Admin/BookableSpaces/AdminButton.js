@@ -8,10 +8,12 @@ import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 
 import MenuIcon from '@mui/icons-material/Menu';
+import GradeIcon from '@mui/icons-material/Grade';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 import { standardText } from 'helpers/general';
 
-import { spacesAdminLink } from './helpers';
+import { spacesAdminLink } from './bookableSpacesAdminHelpers';
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
     '& div:not([aria-hidden="true"])': {
@@ -23,7 +25,7 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
         ...standardText(theme),
     },
     '& span:not(.clickable)': {
-        color: '#d1d0d2', // DS "Disabled form text" $grey-300
+        fontWeight: 'bold',
     },
     '& li:hover': {
         backgroundColor: '#fff',
@@ -70,6 +72,13 @@ export const AdminButton = ({ currentPage }) => {
         closeMenu();
     }
 
+    const icon = isCurrent =>
+        isCurrent ? (
+            <GradeIcon fontSize={'small'} style={{ paddingRight: '0.3rem', marginBottom: '2px' }} />
+        ) : (
+            <ArrowForwardIcon fontSize={'small'} style={{ paddingRight: '0.3rem' }} />
+        );
+
     return (
         <>
             <IconButton
@@ -98,37 +107,41 @@ export const AdminButton = ({ currentPage }) => {
             >
                 <MenuItem
                     onClick={() => {
-                        navigateToPage('', 'dashboard');
+                        navigateToPage('/admin/spaces', 'dashboard');
                     }}
                     data-testid="admin-spaces-visit-dashboard-button"
                 >
-                    <span className={`${currentPage !== 'dashboard' ? 'clickable' : ''}`}>Dashboard</span>
+                    {icon(currentPage === 'dashboard')}
+                    <span className={`${currentPage !== 'dashboard' ? 'clickable' : ''}`}>Manage Spaces</span>
                 </MenuItem>
 
                 <MenuItem
                     onClick={() => {
-                        navigateToPage('/manage/locations', 'manage-locations');
+                        navigateToPage('/admin/spaces/manage/locations', 'manage-locations');
                     }}
                     data-testid="admin-spaces-visit-manage-locations-button"
                 >
+                    {icon(currentPage === 'manage-locations')}
                     <span className={`${currentPage !== 'manage-locations' ? 'clickable' : ''}`}>Manage Locations</span>
                 </MenuItem>
 
                 <MenuItem
                     onClick={() => {
-                        navigateToPage('/add', 'add-space');
+                        navigateToPage('/admin/spaces/add', 'add-space');
                     }}
                     data-testid="admin-spaces-visit-add-space-button"
                 >
+                    {icon(currentPage === 'add-space')}
                     <span className={`${currentPage !== 'add-space' ? 'clickable' : ''}`}>Add new Space</span>
                 </MenuItem>
 
                 <MenuItem
                     onClick={() => {
-                        navigateToPage('/manage/facilitytypes', 'manage-facilities');
+                        navigateToPage('/admin/spaces/manage/facilitytypes', 'manage-facilities');
                     }}
                     data-testid="admin-spaces-visit-manage-facilities-button"
                 >
+                    {icon(currentPage === 'manage-facilities')}
                     <span className={`${currentPage !== 'manage-facilities' ? 'clickable' : ''}`}>
                         Manage Facilities
                     </span>

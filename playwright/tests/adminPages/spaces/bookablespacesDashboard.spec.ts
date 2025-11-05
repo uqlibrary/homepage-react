@@ -7,7 +7,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible(); // page had loaded
 
-        const greenTick = id =>
+        const greenTick = (id: string) =>
             page.getByTestId(`${id}`).locator('svg path[d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"]');
 
         // 01-W431 has Low noise levels

@@ -166,7 +166,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         page.getByTestId('admin-spaces-save-button-submit').click();
 
-        await expect(page.getByTestId('toast-corner-message')).not.toBeVisible();
+        await expect(page.getByTestId('toast-message')).not.toBeVisible();
 
         await expect(page.getByTestId('message-title')).toBeVisible();
         await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
@@ -184,7 +184,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_type: 'Computer room',
             space_opening_hours_id: 3841,
             space_services_page: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
-            facility_types: ['1', '6'],
+            facility_types: [1, 6],
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
@@ -212,12 +212,12 @@ test.describe('Spaces Admin - add new space', () => {
         //  blank form gives an error
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         page.getByTestId('admin-spaces-save-button-submit').click();
-        await expect(page.getByTestId('toast-corner-message')).toBeVisible();
-        await expect(page.getByTestId('toast-corner-message p[data-count="2"]')).toBeDefined();
-        await expect(page.getByTestId('toast-corner-message')).toContainText('These errors occurred');
-        await expect(page.getByTestId('toast-corner-message')).toContainText('A Name is required.');
-        await expect(page.getByTestId('toast-corner-message')).toContainText('A Type is required.');
-        await expect(page.getByTestId('toast-corner-message')).not.toBeVisible(); // wait for it to close
+        await expect(page.getByTestId('toast-message')).toBeVisible();
+        await expect(page.getByTestId('toast-message p[data-count="2"]')).toBeDefined();
+        await expect(page.getByTestId('toast-message')).toContainText('These errors occurred');
+        await expect(page.getByTestId('toast-message')).toContainText('A Name is required.');
+        await expect(page.getByTestId('toast-message')).toContainText('A Type is required.');
+        await expect(page.getByTestId('toast-message')).not.toBeVisible(); // wait for it to close
 
         // user enters the name, but its still an error
         const spaceNameInputField = page.getByTestId('space-name').locator('input');
@@ -225,11 +225,11 @@ test.describe('Spaces Admin - add new space', () => {
         spaceNameInputField.fill('W12343');
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         page.getByTestId('admin-spaces-save-button-submit').click();
-        await expect(page.getByTestId('toast-corner-message')).toBeVisible();
-        await expect(page.getByTestId('toast-corner-message p[data-count="1"]')).toBeDefined();
-        await expect(page.getByTestId('toast-corner-message')).toContainText('These errors occurred');
-        await expect(page.getByTestId('toast-corner-message')).toContainText('A Type is required.');
-        await expect(page.getByTestId('toast-corner-message')).not.toBeVisible(); // wait for it to close
+        await expect(page.getByTestId('toast-message')).toBeVisible();
+        await expect(page.getByTestId('toast-message p[data-count="1"]')).toBeDefined();
+        await expect(page.getByTestId('toast-message')).toContainText('These errors occurred');
+        await expect(page.getByTestId('toast-message')).toContainText('A Type is required.');
+        await expect(page.getByTestId('toast-message')).not.toBeVisible(); // wait for it to close
 
         // they enter the type
         await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
@@ -263,10 +263,10 @@ test.describe('Spaces Admin - add new space', () => {
             .fill('https://example.com/image.jpg');
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
         page.getByTestId('admin-spaces-save-button-submit').click();
-        await expect(page.getByTestId('toast-corner-message')).toBeVisible();
-        await expect(page.getByTestId('toast-corner-message p[data-count="1"]')).toBeDefined();
-        await expect(page.getByTestId('toast-corner-message')).toContainText('These errors occurred');
-        await expect(page.getByTestId('toast-corner-message')).toContainText(
+        await expect(page.getByTestId('toast-message')).toBeVisible();
+        await expect(page.getByTestId('toast-message p[data-count="1"]')).toBeDefined();
+        await expect(page.getByTestId('toast-message')).toContainText('These errors occurred');
+        await expect(page.getByTestId('toast-message')).toContainText(
             'When a photo is supplied, a description must be supplied.',
         );
 

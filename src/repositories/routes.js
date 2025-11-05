@@ -292,11 +292,12 @@ export const LOANS_API = () => ({
     options: { params: { ts: `${new Date().getTime()}` } },
 });
 
-// Locations APIs
-export const SPACES_ROOMS_ALL_API = () => ({
+// Spaces APIs
+export const SPACES_ALL_API = () => ({
     apiUrl: 'bookable_spaces/spaces/all',
     options: { params: { ts: `${new Date().getTime()}` } },
 });
+export const SPACES_SINGLE_API = ({ uuid }) => ({ apiUrl: `bookable_spaces/space/${uuid}` });
 
 export const WEEKLYHOURS_API = () => {
     return {
@@ -307,7 +308,8 @@ export const WEEKLYHOURS_API = () => {
 
 export const SPACES_FACILITY_TYPE_ALL_API = () => ({ apiUrl: 'bookable_spaces/facility_types/all' });
 
-export const SPACES_FACILITY_TYPE_GROUP_CREATE_API = () => ({ apiUrl: 'bookable_spaces/facility_types/group' });
+export const SPACES_FACILITY_TYPE_GROUP_CREATE_API = () => ({ apiUrl: 'bookable_spaces/facility_groups' });
+export const SPACES_FACILITY_TYPE_GROUP_UPDATE_API = ({ id }) => ({ apiUrl: `bookable_spaces/facility_groups/${id}` });
 
 export const SPACES_FACILITY_TYPE_CREATE_API = () => ({ apiUrl: 'bookable_spaces/facility_types' });
 export const SPACES_FACILITY_TYPE_UPDATE_API = ({ id }) => ({ apiUrl: `bookable_spaces/facility_types/${id}` });

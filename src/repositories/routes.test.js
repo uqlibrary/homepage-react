@@ -141,10 +141,10 @@ describe('Backend routes method', () => {
         MockDate.reset();
     });
 
-    it('should construct url for SPACES_ROOMS_ALL_API', () => {
+    it('should construct url for SPACES_ALL_API', () => {
         const MockDate = require('mockdate');
         MockDate.set('2020-01-01T00:00:00.000Z', 10);
-        expect(routes.SPACES_ROOMS_ALL_API()).toEqual({
+        expect(routes.SPACES_ALL_API()).toEqual({
             apiUrl: 'bookable_spaces/spaces/all',
             options: { params: { ts: '1577836800000' } },
         });

@@ -7,6 +7,12 @@ export const initialState = {
     bookableSpacesRoomAdding: null,
     bookableSpacesRoomAddError: null,
     bookableSpacesRoomAddResult: null,
+    bookableSpaceGetting: null,
+    bookableSpaceGetError: null,
+    bookableSpaceGetResult: null,
+    bookableSpacesRoomUpdating: null,
+    bookableSpacesRoomUpdateError: null,
+    bookableSpacesRoomUpdateResult: null,
 };
 
 const handlers = {
@@ -32,6 +38,25 @@ const handlers = {
     // [actions.SPACES_ROOM_LIST_CLEAR]: () => ({
     //     ...initialState,
     // }),
+    [actions.SPACES_ROOM_GET_LOADING]: state => ({
+        ...initialState,
+        ...state,
+        bookableSpaceGetting: true,
+        bookableSpaceGetError: false,
+    }),
+    [actions.SPACES_ROOM_GET_LOADED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        bookableSpaceGetting: false,
+        bookableSpaceGetError: false,
+        bookableSpaceGetResult: action.payload,
+    }),
+    [actions.SPACES_ROOM_GET_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        bookableSpaceGetting: false,
+        bookableSpaceGetError: action.payload,
+    }),
     [actions.SPACES_LOCATION_ADDING]: state => ({
         ...initialState,
         ...state,
@@ -51,6 +76,25 @@ const handlers = {
         bookableSpacesRoomAdding: false,
         bookableSpacesRoomAddError: action.payload,
     }),
+    [actions.SPACES_LOCATION_UPDATING]: state => ({
+        ...initialState,
+        ...state,
+        bookableSpacesRoomUpdating: true,
+        bookableSpacesRoomUpdateError: false,
+    }),
+    [actions.SPACES_LOCATION_UPDATED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        bookableSpacesRoomUpdating: false,
+        bookableSpacesRoomUpdateError: false,
+        bookableSpacesRoomUpdateResult: action.payload,
+    }),
+    [actions.SPACES_LOCATION_UPDATE_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        bookableSpacesRoomUpdating: false,
+        bookableSpacesRoomUpdateError: action.payload,
+    }),
 };
 
 export default function bookableSpacesRoomListReducer(state = initialState, action) {
@@ -58,5 +102,6 @@ export default function bookableSpacesRoomListReducer(state = initialState, acti
     if (!handler) {
         return state;
     }
+    console.log('bookableSpacesRoomListReducer', action.type, state);
     return handler(state, action);
 }

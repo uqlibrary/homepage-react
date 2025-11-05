@@ -7,6 +7,7 @@ import BookableSpacesManageFacilities from './BookableSpacesManageFacilities';
 const mapStateToProps = state => {
     return {
         ...state.get('bookablespacesFacilityTypeReducer'),
+        ...state.get('bookableSpacesRoomListReducer'),
     };
 };
 

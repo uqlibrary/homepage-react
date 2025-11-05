@@ -2,8 +2,9 @@ import * as actions from './actionTypes';
 import { destroy, get, post, put } from 'repositories/generic';
 import {
     SPACES_ADD_LOCATION_API,
+    SPACES_SINGLE_API,
     SPACES_MODIFY_LOCATION_API,
-    SPACES_ROOMS_ALL_API,
+    SPACES_ALL_API,
     SPACES_SITE_API,
 } from 'repositories/routes';
 
@@ -15,12 +16,36 @@ const checkExpireSession = (dispatch, error) => {
     }
 };
 
+export function loadABookableSpacesRoom(spacesUuid) {
+    return dispatch => {
+        // dispatch({ type: actions.SPACES_ROOM_GET_CLEAR });
+        dispatch({ type: actions.SPACES_ROOM_GET_LOADING });
+        const url = SPACES_SINGLE_API({ uuid: spacesUuid });
+        console.log('loadABookableSpacesRoom call:', url);
+        return get(url)
+            .then(response => {
+                console.log('loadABookableSpacesRoom loaded', response);
+                dispatch({
+                    type: actions.SPACES_ROOM_GET_LOADED,
+                    payload: response,
+                });
+            })
+            .catch(error => {
+                console.log('loadABookableSpacesRoom error', error);
+                dispatch({
+                    type: actions.SPACES_ROOM_GET_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
 export function loadAllBookableSpacesRooms() {
     return dispatch => {
         // dispatch({ type: actions.SPACES_ROOM_LIST_CLEAR });
         dispatch({ type: actions.SPACES_ROOM_LIST_LOADING });
-        console.log('loadAllBookableSpacesRooms start', SPACES_ROOMS_ALL_API());
-        return get(SPACES_ROOMS_ALL_API())
+        console.log('loadAllBookableSpacesRooms start', SPACES_ALL_API());
+        return get(SPACES_ALL_API())
             .then(response => {
                 console.log('loadAllBookableSpacesRooms loaded', response);
                 dispatch({
@@ -69,12 +94,16 @@ export function addBookableSpaceLocation(request, locationType) {
     };
 }
 
-export function updateBookableSpaceLocation(request, locationType) {
+export function updateBookableSpaceLocation(request, locationType, _locationId = null) {
+    console.log('updateBookableSpaceLocation', locationType, _locationId, request);
+    const locationId = !!_locationId ? _locationId : request[`${locationType}Id`];
     return dispatch => {
         dispatch({ type: actions.SPACES_LOCATION_UPDATING });
-        const url = SPACES_MODIFY_LOCATION_API({ type: locationType, id: request[`${locationType}Id`] });
+        const url = SPACES_MODIFY_LOCATION_API({ type: locationType, id: locationId });
+        console.log('updateBookableSpaceLocation calling', url);
         return put(url, request)
             .then(response => {
+                console.log('updateBookableSpaceLocation good', response);
                 if (response?.status?.toLowerCase() === 'ok') {
                     dispatch({
                         type: actions.SPACES_LOCATION_UPDATED,
@@ -89,6 +118,7 @@ export function updateBookableSpaceLocation(request, locationType) {
                 return Promise.resolve(response);
             })
             .catch(error => {
+                console.log('updateBookableSpaceLocation bad', error);
                 dispatch({
                     type: actions.SPACES_LOCATION_UPDATE_FAILED,
                     payload: error.message,

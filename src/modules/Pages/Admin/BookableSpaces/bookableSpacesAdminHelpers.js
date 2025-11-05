@@ -1,6 +1,7 @@
 import { breadcrumbs, fullPath } from 'config/routes';
 import { isSpacesAdminUser } from 'helpers/access';
 import { ASKUS_SPRINGSHARE_ID } from 'config/locale';
+import { addClass } from 'helpers/general';
 
 export const getPathRoot = () => {
     /* istanbul ignore next */
@@ -33,9 +34,10 @@ export function getUserPostfix(appendType = '?') {
 
 export const spacesAdminLink = (spacesPath = '', /* istanbul ignore next */ account = null) => {
     const userString = getUserPostfix();
-    return isSpacesAdminUser(account)
-        ? `${getPathRoot()}/admin/spaces${spacesPath}${userString}`
-        : `${getPathRoot()}/spaces${spacesPath}${userString}`;
+    if (isSpacesAdminUser(account)) {
+        return `${getPathRoot()}${spacesPath}${userString}`;
+    }
+    return '';
 };
 
 export function addBreadcrumbsToSiteHeader(localChildren) {
@@ -105,7 +107,7 @@ export function displayToastMessage(message, isError = true) {
                     }
                 }
             </style>
-            <div id="toast-corner-message" class="toast" data-testid="toast-corner-message">
+            <div id="toast-message" class="toast" data-testid="toast-message">
                 ${messageLocal}
             </div>
         `;
@@ -114,13 +116,15 @@ export function displayToastMessage(message, isError = true) {
     !!html && !!template && (template.innerHTML = html);
     const body = document.querySelector('body');
     !!body && !!template && body.appendChild(template.content.cloneNode(true));
-    const hideDelay = 3000;
+    // error messages show for longer to give them time to copy it,
+    // but not on dev, as playwright wont wait that long for it to appear :(
+    const hideDelay = isError && window.location.hostname !== 'localhost' ? /* istanbul ignore next */ 10000 : 3000;
     setTimeout(() => {
-        const toast = document.getElementById('toast-corner-message');
+        const toast = document.getElementById('toast-message');
         !!toast && (toast.style.opacity = 0);
     }, hideDelay);
     setTimeout(() => {
-        const toast = document.getElementById('toast-corner-message');
+        const toast = document.getElementById('toast-message');
         !!toast && toast.remove();
         const styles = document.getElementById('locations-toast-styles');
         !!styles && styles.remove();
@@ -141,3 +145,69 @@ export const springshareLocations = weeklyHours => {
             }))
     );
 };
+
+export function removeAnyListeners(element) {
+    if (!element) {
+        return false;
+    }
+    // we cant actually generically remove listeners - but we can start from scratch
+    const clonedElement = element.cloneNode(true);
+    element.replaceWith(clonedElement);
+    return clonedElement;
+}
+
+export function closeDeletionConfirmation() {
+    const dialog = document.getElementById('confirmationDialog');
+    !!dialog && dialog.close();
+
+    const confirmationMessageElement = document.getElementById('confDialogMessage');
+    !!confirmationMessageElement && (confirmationMessageElement.innerHTML = '');
+
+    const confirmationCancelButton = document.getElementById('confDialogCancelButton');
+    removeAnyListeners(confirmationCancelButton);
+
+    const confirmationOKButton = document.getElementById('confDialogOkButton');
+    removeAnyListeners(confirmationOKButton);
+}
+
+export function showGenericConfirmAndDeleteDialog(line1, line2 = '') {
+    const confirmationMessageElement = document.getElementById('confDialogMessage');
+    let innerHTML = `<p>${line1}</p>`;
+    !!line2 && (innerHTML += `<p>${line2}</p>`);
+    !!confirmationMessageElement && (confirmationMessageElement.innerHTML = innerHTML);
+
+    const confirmationCancelButton = document.getElementById('confDialogCancelButton');
+    !!confirmationCancelButton && confirmationCancelButton.addEventListener('click', closeDeletionConfirmation);
+
+    const dialog = document.getElementById('confirmationDialog');
+    !!dialog && dialog.showModal();
+}
+
+export function closeDialog(e = null) {
+    const dialog = !e ? document.getElementById('popupDialog') : e.target.closest('dialog');
+    !!dialog && dialog.close();
+
+    const dialogMessageElement = document.getElementById('dialogMessageContent');
+    !!dialogMessageElement && (dialogMessageElement.innerHTML = '');
+
+    const warningIcon = document.getElementById('warning-icon');
+    addClass(warningIcon, 'hidden');
+
+    const dialogWarningText = document.getElementById('warningtext');
+    !!dialogWarningText && dialogWarningText.remove();
+
+    const dialogBodyElement = document.getElementById('dialogBody');
+    !!dialogBodyElement && (dialogBodyElement.innerHTML = '');
+
+    const addNewButton = document.getElementById('addNewButton');
+    !!addNewButton && (addNewButton.innerText = 'Add new');
+    !!addNewButton && (addNewButton.style.display = 'inline');
+    removeAnyListeners(addNewButton);
+
+    const deleteButton = document.getElementById('deleteButton');
+    !!deleteButton && (deleteButton.style.display = 'inline');
+    removeAnyListeners(deleteButton);
+
+    const saveButton = document.getElementById('saveButton');
+    removeAnyListeners(saveButton);
+}

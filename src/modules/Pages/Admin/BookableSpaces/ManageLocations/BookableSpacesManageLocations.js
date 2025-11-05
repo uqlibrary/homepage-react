@@ -8,17 +8,20 @@ import { styled } from '@mui/material/styles';
 
 import EditIcon from '@mui/icons-material/Edit';
 
-import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
-
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { pluralise } from 'helpers/general';
+import { baseButtonStyles, pluralise } from 'helpers/general';
+
+import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import {
     addBreadcrumbsToSiteHeader,
+    closeDeletionConfirmation,
+    closeDialog,
     displayToastMessage,
+    showGenericConfirmAndDeleteDialog,
     springshareLocations,
-} from 'modules/Pages/Admin/BookableSpaces/helpers';
+} from '../bookableSpacesAdminHelpers';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
@@ -86,25 +89,13 @@ const StyledConfirmationButtons = styled('div')(() => ({
     justifyContent: 'space-between',
 }));
 const StyledButton = styled(Button)(({ theme }) => ({
+    ...baseButtonStyles,
     backgroundColor: theme.palette.primary.light,
-    borderWidth: '2px',
-    borderStyle: 'solid',
     borderColor: theme.palette.primary.light,
-    borderRadius: '.25rem',
-    boxSizing: 'border-box',
     color: '#fff',
-    cursor: 'pointer',
-    display: 'inline-flex',
     alignItems: 'center',
     gap: '.5rem',
-    fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-    fontSize: '1rem',
-    fontWeight: 500,
-    lineHeight: 1,
-    padding: '1rem 1.5rem',
     position: 'relative',
-    textAlign: 'center',
-    textDecoration: 'none',
     transition: 'background-color 200ms ease-out, color 200ms ease-out, border 200ms ease-out',
     '&.secondary': {
         backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -215,47 +206,6 @@ export const BookableSpacesManageLocations = ({
         return [];
     }, [weeklyHoursLoading, weeklyHoursError, weeklyHours]);
 
-    function removeAnyListeners(element) {
-        if (!element) {
-            return false;
-        }
-        // we cant actually generically remove listeners - but we can start form scratch
-        const clonedElement = element.cloneNode(true);
-        element.replaceWith(clonedElement);
-        return clonedElement;
-    }
-
-    function closeDialog(e = null) {
-        const dialog = !e ? document.getElementById('popupDialog') : e.target.closest('dialog');
-        !!dialog && dialog.close();
-
-        const dialogBodyElement = document.getElementById('dialogBody');
-        !!dialogBodyElement && (dialogBodyElement.innerHTML = '');
-
-        const addNewButton = document.getElementById('addNewButton');
-        !!addNewButton && (addNewButton.innerText = 'Add new');
-        !!addNewButton && (addNewButton.style.display = 'inline');
-        removeAnyListeners(addNewButton);
-
-        const deleteButton = document.getElementById('deleteButton');
-        !!deleteButton && (deleteButton.style.display = 'inline');
-        removeAnyListeners(deleteButton);
-
-        const saveButton = document.getElementById('saveButton');
-        removeAnyListeners(saveButton);
-    }
-
-    function closeDeletionConfirmation() {
-        const dialog = document.getElementById('confirmationDialog');
-        !!dialog && dialog.close();
-
-        const confirmationCancelButton = document.getElementById('confDialogCancelButton');
-        removeAnyListeners(confirmationCancelButton);
-
-        const confirmationOKButton = document.getElementById('confDialogOkButton');
-        removeAnyListeners(confirmationOKButton);
-    }
-
     function deleteGenericLocation(locationType, locationId, successMessage, failureMessage) {
         console.log('deleteGenericLocation', locationType, locationId);
         showSavingProgress(true);
@@ -274,22 +224,13 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log(failureMessage, e);
-                    displayToastMessage('[BSML-004] Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage(
+                        '[BSML-004] Sorry, an error occurred and the location was not deleted - the admins have been informed',
+                    );
                 })
                 .finally(() => {
                     showSavingProgress(false);
                 });
-    }
-
-    function showConfirmAndDeleteGenericLocationDialog(line1, line2) {
-        const confirmationMessageElement = document.getElementById('confDialogMessage');
-        !!confirmationMessageElement && (confirmationMessageElement.innerHTML = `<p>${line1}</p><p>${line2}</p>`);
-
-        const confirmationCancelButton = document.getElementById('confDialogCancelButton');
-        !!confirmationCancelButton && confirmationCancelButton.addEventListener('click', closeDeletionConfirmation);
-
-        const dialog = document.getElementById('confirmationDialog');
-        !!dialog && dialog.showModal();
     }
 
     const saveChangeToLibrary = e => {
@@ -339,7 +280,9 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log('catch: saving library ', locationId, 'failed:', e);
-                    displayToastMessage('[BSML-005] Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage(
+                        '[BSML-005] Sorry, an error occurred and the Location change did not save - the admins have been informed',
+                    );
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -387,7 +330,9 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log('catch: saving campus ', locationId, 'failed:', e);
-                    displayToastMessage('[BSML-003] Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage(
+                        '[BSML-003] Sorry, an error occurred and the Location change did not save - the admins have been informed',
+                    );
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -463,7 +408,9 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log('catch: adding new floor failed:', e);
-                    displayToastMessage('[BSML-006] Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage(
+                        '[BSML-006] Sorry, an error occurred and the Location change did not save - the admins have been informed',
+                    );
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -548,7 +495,9 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log('catch: saving floor ', locationId, 'failed:', e);
-                    displayToastMessage('[BSML-007] Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage(
+                        '[BSML-007] Sorry, an error occurred and the Location change did not save - the admins have been informed',
+                    );
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -570,7 +519,7 @@ export const BookableSpacesManageLocations = ({
         const line2 = 'This will also delete associated rooms.';
         const confirmationOKButton = document.getElementById('confDialogOkButton');
         !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteFloor(e, floorDetails));
-        showConfirmAndDeleteGenericLocationDialog(line1, line2);
+        showGenericConfirmAndDeleteDialog(line1, line2);
     }
 
     function showEditFloorForm(floorId) {
@@ -716,7 +665,9 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log('catch: adding new library failed:', e);
-                    displayToastMessage('[BSML-002] Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage(
+                        '[BSML-002] Sorry, an error occurred and the Location change did not save - the admins have been informed',
+                    );
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -764,7 +715,7 @@ export const BookableSpacesManageLocations = ({
         const line2 = 'This will also delete associated floors.';
         const confirmationOKButton = document.getElementById('confDialogOkButton');
         !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteLibrary(e, libraryDetails));
-        showConfirmAndDeleteGenericLocationDialog(line1, line2);
+        showGenericConfirmAndDeleteDialog(line1, line2);
     }
 
     function showEditLibraryForm(libraryId, libraryCampusId) {
@@ -903,7 +854,9 @@ export const BookableSpacesManageLocations = ({
                 })
                 .catch(e => {
                     console.log('catch: adding new campus failed:', e);
-                    displayToastMessage('[BSML-001] Sorry, an error occurred - the admins have been informed');
+                    displayToastMessage(
+                        '[BSML-001] Sorry, an error occurred and the Location change did not save - the admins have been informed.',
+                    );
                 })
                 .finally(() => {
                     showSavingProgress(false);
@@ -948,7 +901,7 @@ export const BookableSpacesManageLocations = ({
         const line2 = 'This will also delete associated Libraries.';
         const confirmationOKButton = document.getElementById('confDialogOkButton');
         !!confirmationOKButton && confirmationOKButton.addEventListener('click', e => deleteCampus(e, campusDetails));
-        showConfirmAndDeleteGenericLocationDialog(line1, line2);
+        showGenericConfirmAndDeleteDialog(line1, line2);
     }
 
     function showEditCampusForm(campusId) {
