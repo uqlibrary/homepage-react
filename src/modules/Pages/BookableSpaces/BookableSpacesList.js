@@ -3,8 +3,12 @@ import PropTypes from 'prop-types';
 
 import Checkbox from '@mui/material/Checkbox';
 import { Grid, InputLabel } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -28,6 +32,13 @@ const StyledBookableSpaceGridItem = styled(Grid)(() => ({
 }));
 const StyledLocationPhoto = styled('img')(() => ({
     maxWidth: '100%',
+}));
+const StyledDescription = styled('div')(() => ({
+    '&.truncated p': {
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+    },
 }));
 
 export const BookableSpacesList = ({
@@ -297,43 +308,111 @@ export const BookableSpacesList = ({
         );
     }
 
+    const spaceExtraElementsId = spaceId => `space-more-${spaceId}`;
+    const spaceDescriptionElementsId = spaceId => `space-description-${spaceId}`;
+    const expandButtonElementId = spaceId => `expand-button-space-${spaceId}`;
+    const collapseButtonElementId = spaceId => `collapse-button-space-${spaceId}`;
+    const expandSpace = spaceId => {
+        const spaceBlock = document.getElementById(spaceExtraElementsId(spaceId));
+        !!spaceBlock && (spaceBlock.style.display = 'block');
+
+        const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
+        !!spaceDescription &&
+            spaceDescription.classList.contains('truncated') &&
+            spaceDescription.classList.remove('truncated');
+
+        const expandButton = document.getElementById(expandButtonElementId(spaceId));
+        !!expandButton && (expandButton.style.display = 'none');
+        const collapseButton = document.getElementById(collapseButtonElementId(spaceId));
+        !!collapseButton && (collapseButton.style.display = 'block');
+    };
+    const collapseSpace = spaceId => {
+        const spaceBlock = document.getElementById(spaceExtraElementsId(spaceId));
+        !!spaceBlock && (spaceBlock.style.display = 'none');
+
+        const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
+        !!spaceDescription &&
+            !spaceDescription.classList.contains('truncated') &&
+            spaceDescription.classList.add('truncated');
+
+        const expandButton = document.getElementById(expandButtonElementId(spaceId));
+        !!expandButton && (expandButton.style.display = 'block');
+        const collapseButton = document.getElementById(collapseButtonElementId(spaceId));
+        !!collapseButton && (collapseButton.style.display = 'none');
+    };
     const spaceGrid = bookableSpace => {
         const locationKey = `space-${bookableSpace?.space_id}`;
         return (
             <>
                 <div data-testid={locationKey}>{getFriendlyLocationDescription(bookableSpace)}</div>
-                <p>{bookableSpace?.space_description}</p>
-                {bookableSpace?.space_photo_url && (
-                    <StyledLocationPhoto
-                        src={bookableSpace?.space_photo_url}
-                        alt={bookableSpace?.space_photo_description}
-                    />
-                )}
-                {bookableSpace?.facility_types?.length > 0 && (
-                    <>
-                        <h3>Facilities</h3>
-                        <ul data-testid={`facility-${bookableSpace?.space_id}`}>
-                            {bookableSpace?.facility_types?.map(facility => {
-                                return (
-                                    <li
-                                        key={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}
-                                        data-testid={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}
-                                    >
-                                        {facility.facility_type_name}
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </>
-                )}
-                {openingHoursComponent(spaceOpeningHours(bookableSpace), locationKey, bookableSpace.space_library_name)}
-                {!!bookableSpace?.space_opening_hours_override ? (
-                    <p data-testid={`override_opening_hours_${bookableSpace?.space_uuid}`}>
-                        Note: {bookableSpace.space_opening_hours_override}
-                    </p>
-                ) : (
-                    ''
-                )}
+                <StyledDescription
+                    id={spaceDescriptionElementsId(bookableSpace?.space_id)}
+                    data-testid={spaceDescriptionElementsId(bookableSpace?.space_id)}
+                    className={'truncated'}
+                >
+                    <p>{bookableSpace?.space_description}</p>
+                </StyledDescription>
+                <div
+                    id={spaceExtraElementsId(bookableSpace?.space_id)}
+                    data-testid={spaceExtraElementsId(bookableSpace?.space_id)}
+                    style={{ display: 'none' }}
+                >
+                    {bookableSpace?.space_photo_url && (
+                        <StyledLocationPhoto
+                            src={bookableSpace?.space_photo_url}
+                            alt={bookableSpace?.space_photo_description}
+                        />
+                    )}
+                    {bookableSpace?.facility_types?.length > 0 && (
+                        <>
+                            <h3>Facilities</h3>
+                            <ul data-testid={`facility-${bookableSpace?.space_id}`}>
+                                {bookableSpace?.facility_types?.map(facility => {
+                                    return (
+                                        <li
+                                            key={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}
+                                            data-testid={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}
+                                        >
+                                            {facility.facility_type_name}
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </>
+                    )}
+                    {openingHoursComponent(
+                        spaceOpeningHours(bookableSpace),
+                        locationKey,
+                        bookableSpace.space_library_name,
+                    )}
+                    {!!bookableSpace?.space_opening_hours_override ? (
+                        <p data-testid={`override_opening_hours_${bookableSpace?.space_uuid}`}>
+                            Note: {bookableSpace.space_opening_hours_override}
+                        </p>
+                    ) : (
+                        ''
+                    )}
+                </div>
+                <div style={{ float: 'right' }}>
+                    <IconButton
+                        id={expandButtonElementId(bookableSpace?.space_id)}
+                        data-testid={expandButtonElementId(bookableSpace?.space_id)}
+                        onClick={() => expandSpace(bookableSpace?.space_id)}
+                        aria-label="Expand Space details"
+                        style={{ display: 'block' }}
+                    >
+                        <KeyboardArrowDownIcon />
+                    </IconButton>
+                    <IconButton
+                        id={collapseButtonElementId(bookableSpace?.space_id)}
+                        data-testid={collapseButtonElementId(bookableSpace?.space_id)}
+                        onClick={() => collapseSpace(bookableSpace?.space_id)}
+                        aria-label="Collapse Space details"
+                        style={{ display: 'none' }}
+                    >
+                        <KeyboardArrowUpIcon />
+                    </IconButton>
+                </div>
             </>
         );
     };
