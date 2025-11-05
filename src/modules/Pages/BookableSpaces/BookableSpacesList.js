@@ -314,7 +314,9 @@ export const BookableSpacesList = ({
     const collapseButtonElementId = spaceId => `collapse-button-space-${spaceId}`;
     const expandSpace = spaceId => {
         const spaceBlock = document.getElementById(spaceExtraElementsId(spaceId));
-        !!spaceBlock && (spaceBlock.style.display = 'block');
+        !!spaceBlock && (spaceBlock.style.visibility = 'visible');
+        !!spaceBlock && (spaceBlock.style.height = 'auto');
+        !!spaceBlock && (spaceBlock.style.opacity = '1');
 
         const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
         !!spaceDescription &&
@@ -328,7 +330,9 @@ export const BookableSpacesList = ({
     };
     const collapseSpace = spaceId => {
         const spaceBlock = document.getElementById(spaceExtraElementsId(spaceId));
-        !!spaceBlock && (spaceBlock.style.display = 'none');
+        !!spaceBlock && (spaceBlock.style.visibility = 'none');
+        !!spaceBlock && (spaceBlock.style.height = '0');
+        !!spaceBlock && (spaceBlock.style.opacity = '0');
 
         const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
         !!spaceDescription &&
@@ -355,7 +359,12 @@ export const BookableSpacesList = ({
                 <div
                     id={spaceExtraElementsId(bookableSpace?.space_id)}
                     data-testid={spaceExtraElementsId(bookableSpace?.space_id)}
-                    style={{ display: 'none' }}
+                    style={{
+                        visibility: 'hidden',
+                        height: 0,
+                        opacity: 0,
+                        transition: 'opacity 0.2s ease, height 0.2s ease',
+                    }}
                 >
                     {bookableSpace?.space_photo_url && (
                         <StyledLocationPhoto
