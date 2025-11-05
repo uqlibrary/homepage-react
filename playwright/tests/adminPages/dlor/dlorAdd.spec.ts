@@ -204,14 +204,6 @@ test.describe('Add an object to the Digital Learning Hub', () => {
 
                 // Test 2: Trigger the SUCCESSFUL action (required to proceed)
 
-                // Clear and re-fill the modal fields.
-                await page.locator('[data-testid="requested_keyword"] input').clear();
-                await page.locator('[data-testid="requested_keyword"] input').fill('testkeyword_success');
-                await page.locator('[data-testid="request_reason"] textarea#request_reason').clear();
-                await page
-                    .locator('[data-testid="request_reason"] textarea#request_reason')
-                    .fill('testkeyword reason_success');
-
                 // Click confirm, triggering the SUCCESSFUL API call (no mock active)
                 await page.locator('[data-testid="admin-dlor-form-keyword-confirm"]').click();
 
