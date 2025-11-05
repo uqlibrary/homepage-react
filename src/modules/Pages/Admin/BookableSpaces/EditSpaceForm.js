@@ -46,8 +46,53 @@ const StyledFacilityGroupCheckboxBlock = styled('div')(() => ({
     '& li': {
         listStyle: 'none',
         paddingLeft: 0,
+        '& label': {
+            width: '200px',
+            whiteSpace: 'normal',
+            overflow: 'auto',
+            textOverflow: 'iniital',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '8px',
+            paddingTop: '9px', // 9px: top align checkbox and label, allowing for checkbox hover affect
+            transition: 'color 0.2s ease',
+            '&:hover': {
+                cursor: 'pointer',
+                color: 'rgba(0, 0, 0, 1)',
+            },
+            '& > span:first-child': {
+                flexShrink: 0,
+                display: 'flex',
+                alignItems: 'center',
+                marginTop: '-9px', // 9px: top align checkbox and label, allowing for checkbox hover affect
+            },
+            '& input[type="checkbox"]': {
+                margin: 0,
+            },
+        },
     },
 }));
+// const StyledFacilityGroupCheckboxBlock = styled('div')(() => ({
+//     '& h5': {
+//         fontWeight: 300,
+//         fontSize: '1.1rem',
+//         marginLeft: '0.6rem',
+//     },
+//     '& ul': {
+//         paddingLeft: 0,
+//         marginRight: '0.5rem',
+//     },
+//     '& li': {
+//         listStyle: 'none',
+//         paddingLeft: 0,
+//         '& label': {
+//             maxWidth: '200px',
+//             whiteSpace: 'normal',
+//             overflow: 'auto',
+//             textOverflow: 'iniital',
+//         },
+//     },
+// }));
 
 export const EditSpaceForm = ({
     actions,
