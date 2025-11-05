@@ -19,11 +19,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { isValidUrl, standardText, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 
 import { displayToastMessage, spacesAdminLink, springshareLocations } from './bookableSpacesAdminHelpers';
-import {
-    getFilteredFacilityTypeList,
-    getFlatFacilityTypeList,
-    getFriendlyLocationDescription,
-} from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),
@@ -35,6 +31,22 @@ const StyledFilterWrapper = styled('div')(() => ({
     width: '100%',
     display: 'flex',
     overflowX: 'auto',
+}));
+
+const StyledFacilityGroupCheckboxBlock = styled('div')(() => ({
+    '& h5': {
+        fontWeight: 300,
+        fontSize: '1.1rem',
+        marginLeft: '0.6rem',
+    },
+    '& ul': {
+        paddingLeft: 0,
+        marginRight: '0.5rem',
+    },
+    '& li': {
+        listStyle: 'none',
+        paddingLeft: 0,
+    },
 }));
 
 export const EditSpaceForm = ({
@@ -461,32 +473,28 @@ export const EditSpaceForm = ({
             return <p>No filter types in system.</p>;
         }
 
-        const filteredFacilityTypeList = getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList);
-        const sortedUsedGroups = [...filteredFacilityTypeList?.data?.facility_type_groups].sort(
+        const sortedUsedGroups = [...facilityTypeList?.data?.facility_type_groups].sort(
             (a, b) => a.facility_type_group_order - b.facility_type_group_order,
         );
 
         return (
             <>
                 {sortedUsedGroups.map(group => (
-                    <div key={group?.facility_type_group_id} className="facility-group">
-                        <Typography component={'h5'} variant={'h6'} className="group-heading">
+                    <StyledFacilityGroupCheckboxBlock key={group?.facility_type_group_id}>
+                        <Typography component={'h5'} variant={'h6'}>
                             {group?.facility_type_group_name}
                         </Typography>
-                        <ul style={{ paddingLeft: 0 }}>
+                        <ul data-testid="facility-type-checkbox-list">
                             {group?.facility_type_children && group?.facility_type_children?.length > 0 ? (
                                 group?.facility_type_children?.map(facilityType => {
-                                    const isChecked = () => {
-                                        const found = formValues?.facility_types?.find(
+                                    const isChecked = () =>
+                                        formValues?.facility_types?.find(
                                             ft => ft?.facility_type_id === facilityType?.facility_type_id,
                                         );
-                                        return found;
-                                    };
                                     return (
                                         <li
                                             key={`facility-type-listitem-${facilityType.facility_type_id}`}
                                             data-testid={`facility-type-listitem-${facilityType.facility_type_id}`}
-                                            style={{ listStyle: 'none', paddingLeft: 0 }}
                                         >
                                             <InputLabel title={facilityType.facility_type_name}>
                                                 <Checkbox
@@ -504,7 +512,7 @@ export const EditSpaceForm = ({
                                 <li className="no-items">No facility types available</li>
                             )}
                         </ul>
-                    </div>
+                    </StyledFacilityGroupCheckboxBlock>
                 ))}
             </>
         );

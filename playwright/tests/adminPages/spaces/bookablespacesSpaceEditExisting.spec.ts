@@ -48,11 +48,15 @@ test.describe('Spaces Admin - edit space', () => {
 
         await expect(page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper')).toBeVisible();
 
-        // this is flakey on AWS. try different method of showing this is the current field
-        // await expect(page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper')).toHaveValue(
-        //     'Walter Harrison Law',
-        // );
+        // all the facility types appear in the "space form", not juyst the ones currently attached to a space
+        const numberFacilityTypesInMockFacilityTypes = 21;
+        await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
+            numberFacilityTypesInMockFacilityTypes,
+        );
 
+        // this is flakey on AWS.
+        // await expect(page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper')).toHaveValue('Walter Harrison Law');
+        // try different method of showing this is the current field
         // show the current selection is correct by opening the dropdown and showing the correct entry has the mui "focused" style
         await page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper').click();
         await expect(page.getByRole('option', { name: 'Walter Harrison Law' })).toHaveClass(
