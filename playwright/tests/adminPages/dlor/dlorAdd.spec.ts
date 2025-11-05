@@ -162,7 +162,67 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 ).toBeVisible();
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeDisabled();
 
-                // select a keyword so we can save
+                // request a keyword to check form - cancel to make sure it's dismissed properly
+                await page.locator('[data-testid="dlor-request-keyword-button"]').click();
+                await page.locator('[data-testid="admin-dlor-form-keyword-cancel"]').click();
+                await expect(page.locator('[data-testid="admin-dlor-form-keyword-confirm"]')).not.toBeVisible();
+
+                // -------------------------------------------------------------------------
+                // 🔥 FINAL BLOCK: API Failure (for coverage) followed by Success
+                // -------------------------------------------------------------------------
+
+                const KEYWORD_REQUEST_ENDPOINT = '**/dlor/auth/keywords/request';
+
+                // 1. Activate the failure mock: Forces a 500 status code response.
+                await page.route(KEYWORD_REQUEST_ENDPOINT, async route => {
+                    await route.fulfill({
+                        status: 500, // Forces the API request to fail
+                        contentType: 'application/json',
+                        body: JSON.stringify({ error: 'Forced Playwright Error' }),
+                    });
+                });
+
+                // Test 1: Trigger the FAILING action
+                // Open the modal
+                await page.locator('[data-testid="dlor-request-keyword-button"]').click();
+                await page.locator('[data-testid="requested_keyword"] input').fill('testkeyword_fail');
+                await page
+                    .locator('[data-testid="request_reason"] textarea#request_reason')
+                    .fill('testkeyword reason_fail');
+
+                // Click confirm, triggering the FAILED API call
+                await page.locator('[data-testid="admin-dlor-form-keyword-confirm"]').click();
+
+                // Assertion for failure: Wait for the network operation to complete.
+                await page.waitForTimeout(500);
+
+                // ✅ FINAL ASSERTION: The modal must remain visible, proving the .catch() ran.
+                await expect(page.locator('[data-testid="admin-dlor-form-keyword-confirm"]')).toBeVisible();
+
+                // 2. CRITICAL: Stop the failure mock (Unroute)
+                await page.unroute(KEYWORD_REQUEST_ENDPOINT);
+
+                // Test 2: Trigger the SUCCESSFUL action (required to proceed)
+
+                // Clear and re-fill the modal fields.
+                await page.locator('[data-testid="requested_keyword"] input').clear();
+                await page.locator('[data-testid="requested_keyword"] input').fill('testkeyword_success');
+                await page.locator('[data-testid="request_reason"] textarea#request_reason').clear();
+                await page
+                    .locator('[data-testid="request_reason"] textarea#request_reason')
+                    .fill('testkeyword reason_success');
+
+                // Click confirm, triggering the SUCCESSFUL API call (no mock active)
+                await page.locator('[data-testid="admin-dlor-form-keyword-confirm"]').click();
+
+                // Assert success: the modal closes correctly.
+                await expect(page.locator('[data-testid="admin-dlor-form-keyword-confirm"]')).not.toBeVisible();
+
+                // -------------------------------------------------------------------------
+                // END OF KEYWORD REQUEST LOGIC
+                // -------------------------------------------------------------------------
+
+                // select a keyword so we can save (Original flow continues)
                 await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
                 await page.locator('#fuzzy-search-option-3').click();
 

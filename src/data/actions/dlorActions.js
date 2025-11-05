@@ -854,11 +854,13 @@ export function requestNewKeyword(request) {
                 });
             })
             .catch(error => {
+                console.log('TESTING');
                 dispatch({
                     type: actions.DLOR_KEYWORDS_UPDATE_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
+                throw error;
             });
     };
 }

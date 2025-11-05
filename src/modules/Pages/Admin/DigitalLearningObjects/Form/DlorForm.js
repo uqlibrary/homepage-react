@@ -188,17 +188,11 @@ export const DlorForm = ({
     const [selectedKeywords, setSelectedKeywords] = useState([]);
 
     const sendKeywordRequestEmail = () => {
-        actions
-            .requestNewKeyword(requestedKeywordValues)
-            .then(() => {
-                setRequestedKeywordValues({});
-                setIsRequestKeywordOpened(false);
-                console.log('Keyword request sent successfully');
-            })
-
-            .catch(error => {
-                console.error('Error sending keyword request:', error);
-            });
+        actions.requestNewKeyword(requestedKeywordValues).then(() => {
+            setRequestedKeywordValues({});
+            setIsRequestKeywordOpened(false);
+            console.log('Keyword request sent successfully');
+        });
     };
 
     const handleSelectedItemsChange = newItems => {
@@ -1480,13 +1474,12 @@ export const DlorForm = ({
                     existingItems={selectedKeywords}
                 />
 
-                <p> Can't find a keyword you need? Please contact us to request a new keyword for our vocabulary</p>
+                <p> Can't find a tag you need? Please contact us to request a new tag for our vocabulary</p>
                 <Button onClick={() => setIsRequestKeywordOpened(true)} data-testid="dlor-request-keyword-button">
-                    Request new keyword
+                    Suggest new tag
                 </Button>
                 <Modal
                     open={isRequestKeywordOpened}
-                    onClose={() => console.log('closing request keyword modal')}
                     aria-labelledby="request-keyword-lightbox-title"
                     aria-describedby="request-keyword-lightbox-description"
                     data-testid="request-keyword-modal"
@@ -1507,10 +1500,10 @@ export const DlorForm = ({
                         }}
                     >
                         <Typography component={'h2'} variant={'h6'} sx={{ marginTop: 0, paddingTop: 0 }}>
-                            Request a new keyword
+                            Suggest new tag
                         </Typography>
                         <FormControl variant="standard" fullWidth title="Request a new keyword">
-                            <InputLabel htmlFor="requested_keyword">Requested Keyword</InputLabel>
+                            <InputLabel htmlFor="requested_keyword">Suggested tag</InputLabel>
                             <Input
                                 id="requested_keyword"
                                 data-testid="requested_keyword"
@@ -1548,12 +1541,12 @@ export const DlorForm = ({
                             />
                         </FormControl>
                         <Typography component={'p'} sx={{ marginTop: '10px', paddingTop: 0 }}>
-                            In order for an object to be created, a keyword must be assigned. If you find there are no
-                            suitable keywords available, you can request a new keyword to apply to your object.
+                            In order for an object to be created, a tag must be assigned. If you find there are no
+                            suitable tags available, you can request a new tag to apply to your object.
                         </Typography>
                         <Typography component={'p'} sx={{ marginTop: '10px', paddingTop: 0 }}>
-                            In the mean time, please select the most appropriate existing keyword, and we will update it
-                            once your requested keyword has been reviewed and added to the vocabulary.
+                            In the mean time, please select the most appropriate existing tag, and we will update it
+                            once your suggested tag has been reviewed and added to the vocabulary.
                         </Typography>
                         <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
                             {/* Cancel Button */}
