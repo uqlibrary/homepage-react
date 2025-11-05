@@ -40,6 +40,18 @@ const StyledDescription = styled('div')(() => ({
         textOverflow: 'ellipsis',
     },
 }));
+const StyledHideableBlock = styled('div')(() => ({
+    '&.visible': {
+        visibility: 'visible',
+        height: 'auto',
+        opacity: 1,
+    },
+    '&.hidden': {
+        visibility: 'hidden',
+        height: 0,
+        opacity: 0,
+    },
+}));
 
 export const BookableSpacesList = ({
     actions,
@@ -314,9 +326,8 @@ export const BookableSpacesList = ({
     const collapseButtonElementId = spaceId => `collapse-button-space-${spaceId}`;
     const expandSpace = spaceId => {
         const spaceBlock = document.getElementById(spaceExtraElementsId(spaceId));
-        !!spaceBlock && (spaceBlock.style.visibility = 'visible');
-        !!spaceBlock && (spaceBlock.style.height = 'auto');
-        !!spaceBlock && (spaceBlock.style.opacity = '1');
+        !!spaceBlock && spaceBlock.classList.contains('hidden') && spaceBlock.classList.remove('hidden');
+        !!spaceBlock && !spaceBlock.classList.contains('visible') && spaceBlock.classList.add('visible');
 
         const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
         !!spaceDescription &&
@@ -330,9 +341,8 @@ export const BookableSpacesList = ({
     };
     const collapseSpace = spaceId => {
         const spaceBlock = document.getElementById(spaceExtraElementsId(spaceId));
-        !!spaceBlock && (spaceBlock.style.visibility = 'none');
-        !!spaceBlock && (spaceBlock.style.height = '0');
-        !!spaceBlock && (spaceBlock.style.opacity = '0');
+        !!spaceBlock && !spaceBlock.classList.contains('hidden') && spaceBlock.classList.add('hidden');
+        !!spaceBlock && !!spaceBlock.classList.contains('visible') && spaceBlock.classList.remove('visible');
 
         const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
         !!spaceDescription &&
@@ -356,15 +366,11 @@ export const BookableSpacesList = ({
                 >
                     <p>{bookableSpace?.space_description}</p>
                 </StyledDescription>
-                <div
+                <StyledHideableBlock
                     id={spaceExtraElementsId(bookableSpace?.space_id)}
                     data-testid={spaceExtraElementsId(bookableSpace?.space_id)}
-                    style={{
-                        visibility: 'hidden',
-                        height: 0,
-                        opacity: 0,
-                        transition: 'opacity 0.2s ease, height 0.2s ease',
-                    }}
+                    className={'hidden'}
+                    style={{ transition: 'opacity 0.3s ease-in-out, height 0.3s ease-in-out' }}
                 >
                     {bookableSpace?.space_photo_url && (
                         <StyledLocationPhoto
@@ -401,7 +407,7 @@ export const BookableSpacesList = ({
                     ) : (
                         ''
                     )}
-                </div>
+                </StyledHideableBlock>
                 <div style={{ float: 'right' }}>
                     <IconButton
                         id={expandButtonElementId(bookableSpace?.space_id)}
