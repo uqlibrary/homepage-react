@@ -35,6 +35,11 @@ test.describe('Spaces', () => {
             'open from 7am Monday - Friday',
         );
 
+        // description only displayed where provided
+        await expect(page.getByTestId('space-description-123456')).toHaveCount(1);
+        await expect(page.getByTestId('space-description-1234544')).toHaveCount(1);
+        await expect(page.getByTestId('space-description-43534')).toHaveCount(0);
+
         // facilities are correct
         await expect(page.getByTestId('facility-123456')).toBeDefined();
         await expect(page.getByTestId('facility-123456')).not.toBeVisible();

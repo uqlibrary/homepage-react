@@ -364,13 +364,15 @@ export const BookableSpacesList = ({
         return (
             <>
                 <div data-testid={locationKey}>{getFriendlyLocationDescription(bookableSpace)}</div>
-                <StyledDescription
-                    id={spaceDescriptionElementsId(bookableSpace?.space_id)}
-                    data-testid={spaceDescriptionElementsId(bookableSpace?.space_id)}
-                    className={'truncated'}
-                >
-                    <p>{bookableSpace?.space_description}</p>
-                </StyledDescription>
+                {bookableSpace?.space_description?.length > 0 && (
+                    <StyledDescription
+                        id={spaceDescriptionElementsId(bookableSpace?.space_id)}
+                        data-testid={spaceDescriptionElementsId(bookableSpace?.space_id)}
+                        className={'truncated'}
+                    >
+                        <p>{bookableSpace?.space_description}</p>
+                    </StyledDescription>
+                )}
                 <StyledHideableBlock
                     id={spaceExtraElementsId(bookableSpace?.space_id)}
                     data-testid={spaceExtraElementsId(bookableSpace?.space_id)}

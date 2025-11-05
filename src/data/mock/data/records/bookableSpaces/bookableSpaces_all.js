@@ -82,7 +82,7 @@ export default {
             space_uuid: "987y_isjgt_9867",
             space_name: "46-342/343",
             space_precise: "Eastern corner",
-            space_description: "A space in the Liveris building. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.",
+            space_description: null,
             space_photo_url: "https://campuses.uq.edu.au/files/35424/46-342-343.JPG", // https://campuses.uq.edu.au/list-rooms
             space_photo_description: 'a large room with many tables, each wih 4 chairs',
             space_opening_hours_id: null,
