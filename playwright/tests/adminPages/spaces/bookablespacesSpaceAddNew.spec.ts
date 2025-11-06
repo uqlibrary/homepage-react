@@ -317,6 +317,10 @@ test.describe('Spaces Admin - add new space', () => {
 
         // inexplicably, this line is completely flakey on AWS, but fine locally :(
         // await expect(springshareSelector).toHaveValue('Walter Harrison Law');
+        await page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper').click();
+        await expect(page.getByRole('option', { name: 'Walter Harrison Law' })).toHaveClass(
+            'MuiAutocomplete-option Mui-focused',
+        );
 
         // open the campus dropdown
         campusSelector.click();

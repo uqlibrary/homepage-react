@@ -608,16 +608,24 @@ export const EditSpaceForm = ({
                 </Grid>
             </Grid>
         );
-    } else if (!!campusListError || !!bookableSpacesRoomListError || !!bookableSpaceGetError) {
+    } else if (
+        !!campusListError ||
+        !!bookableSpacesRoomListError ||
+        !!bookableSpaceGetError ||
+        !!facilityTypeListError ||
+        !!weeklyHoursError
+    ) {
         return (
             <PageWrapper>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <div data-testid="add-space-error">
                             <p>Something went wrong - please try again later.</p>
-                            {!!campusListError && <p>Locations currently unavailable.</p>}
-                            {!!bookableSpacesRoomListError && <p>Space types currently unavailable.</p>}
-                            {!!bookableSpaceGetError && <p>Space details currently unavailable.</p>}
+                            {!!campusListError && <p>Campus-building data had a problem.</p>}
+                            {!!bookableSpacesRoomListError && <p>Space types list had a problem.</p>}
+                            {!!bookableSpaceGetError && <p>Space details had a problem.</p>}
+                            {!!facilityTypeListError && <p>Facility type details had a problem.</p>}
+                            {!!weeklyHoursError && <p>Opening hours details had a problem.</p>}
                         </div>
                     </Grid>
                 </Grid>

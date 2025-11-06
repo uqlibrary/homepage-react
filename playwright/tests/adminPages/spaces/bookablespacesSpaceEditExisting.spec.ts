@@ -331,7 +331,7 @@ test.describe('Spaces Admin - edit space', () => {
             await expect(page.getByTestId('add-space-error')).toContainText(
                 'Something went wrong - please try again later.',
             );
-            await expect(page.getByTestId('add-space-error')).toContainText('Space details currently unavailable.');
+            await expect(page.getByTestId('add-space-error')).toContainText('Space details had a problem.');
         });
         test('edit new space - 404 locations', async ({ page }) => {
             await page.goto('/admin/spaces/edit/missingRecord?user=libSpaces');
