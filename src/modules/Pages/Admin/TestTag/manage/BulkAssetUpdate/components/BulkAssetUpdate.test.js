@@ -118,7 +118,7 @@ describe('BulkAssetUpdate', () => {
         expect(getByTestId('footer_bar-bulk-asset-update-action-button')).toHaveAttribute('disabled');
     });
 
-    it.skip('adds row items from filterDialog popup', async () => {
+    it('adds row items from filterDialog popup', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
         const { getByText, getByTestId, getAllByRole, queryByTestId, findByTestId } = setup({
@@ -180,7 +180,7 @@ describe('BulkAssetUpdate', () => {
         expect(getByTestId('footer_bar-bulk-asset-update-action-button')).not.toHaveAttribute('disabled');
     });
 
-    it.skip('shows step 2', async () => {
+    it('shows step 2', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
         const { getByText, getByTestId, queryByTestId, findByTestId } = setup({
@@ -222,19 +222,19 @@ describe('BulkAssetUpdate', () => {
 
         // check state of UI elements
         // location
-        expect(getByTestId('bulk_asset_update-location-checkbox')).not.toHaveClass('Mui-checked');
+        expect(getByTestId('accordionWithCheckbox-location-checkbox')).not.toHaveClass('Mui-checked');
         expect(getByTestId('location_picker-bulk-asset-update-site-input')).toHaveAttribute('disabled');
         expect(getByTestId('location_picker-bulk-asset-update-building-input')).toHaveAttribute('disabled');
         expect(getByTestId('location_picker-bulk-asset-update-floor-input')).toHaveAttribute('disabled');
         expect(getByTestId('location_picker-bulk-asset-update-room-input')).toHaveAttribute('disabled');
         // asset type
-        expect(getByTestId('bulk_asset_update-asset-type-checkbox')).not.toHaveClass('Mui-checked');
+        expect(getByTestId('accordionWithCheckbox-assetType-checkbox')).not.toHaveClass('Mui-checked');
         expect(getByTestId('asset_type_selector-bulk-asset-update-input')).toHaveAttribute('disabled');
         // discard reason
         expect(getByTestId('bulk_asset_update-notes-checkbox')).not.toHaveClass('Mui-checked');
         expect(getByTestId('bulk-asset-update-discard-reason-input')).toHaveAttribute('disabled');
         // clear test notes
-        expect(getByTestId('bulk_asset_update-status-checkbox')).not.toHaveClass('Mui-checked');
+        expect(getByTestId('bulk_asset_update-notes-checkbox')).not.toHaveClass('Mui-checked');
         // submit button
         expect(getByTestId('bulk_asset_update-submit-button')).toHaveAttribute('disabled');
 
@@ -244,7 +244,7 @@ describe('BulkAssetUpdate', () => {
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
     });
 
-    it.skip('handles update request not including discard asset', async () => {
+    it('handles update request not including discard asset', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
         const bulkAssetUpdateFn = jest.fn(() => Promise.resolve());
@@ -289,7 +289,7 @@ describe('BulkAssetUpdate', () => {
 
         // check state of UI elements
         // location
-        await userEvent.click(getByTestId('bulk_asset_update-location-checkbox'));
+        await userEvent.click(getByTestId('accordionWithCheckbox-location-checkbox'));
 
         await userEvent.click(getByTestId('location_picker-bulk-asset-update-site-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'St Lucia');
@@ -300,12 +300,8 @@ describe('BulkAssetUpdate', () => {
         await userEvent.click(getByTestId('location_picker-bulk-asset-update-room-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'W212');
 
-        expect(getByTestId('bulk_asset_update-status-checkbox')).toHaveClass('Mui-disabled');
-
-        // asset type
-        await userEvent.click(getByTestId('bulk_asset_update-asset-type-checkbox'));
-        await userEvent.click(getByTestId('asset_type_selector-bulk-asset-update-input'));
-        await userEvent.selectOptions(getByRole('listbox'), 'PowerBoard');
+        expect(getByTestId('bulk_asset_update-notes-checkbox')).not.toHaveClass('Mui-disabled');
+        expect(getByTestId('accordionWithCheckbox-assetType-checkbox')).toHaveClass('Mui-disabled');
 
         // clear test notes
         await userEvent.click(getByTestId('bulk_asset_update-notes-checkbox'));
@@ -325,24 +321,16 @@ describe('BulkAssetUpdate', () => {
 
         await userEvent.click(getByTestId('confirm-bulk-asset-update'));
 
-        /*
-        expect(getByTestId('confirm-bulk-asset-update')).toHaveAttribute('disabled');
-        expect(getByTestId('cancel-bulk-asset-update')).toHaveAttribute('disabled');
-        expect(
-            within(getByTestId('confirm-bulk-asset-update')).getByTestId('bulk_asset_update-confirmation-progress'),
-        ).toBeInTheDocument(); */
-
         expect(getByTestId('confirmation_alert-success')).toBeInTheDocument();
 
         expect(bulkAssetUpdateFn).toHaveBeenCalledWith({
             asset: [1, 2],
             asset_room_id_last_seen: 1,
-            asset_type_id: 3,
             clear_comments: 1,
         });
     });
 
-    it.skip('handles update request including discard asset', async () => {
+    it('handles update request including discard asset', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
         const bulkAssetUpdateFn = jest.fn(() => Promise.resolve());
@@ -386,14 +374,14 @@ describe('BulkAssetUpdate', () => {
         expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
 
         // discard reason - checking this option disables the others
-        await userEvent.click(getByTestId('bulk_asset_update-status-checkbox'));
+        await userEvent.click(getByTestId('accordionWithCheckbox-discardStatus-checkbox'));
         expect(getByTestId('bulk-asset-update-discard-reason-input')).not.toHaveAttribute('disabled');
         await userEvent.type(getByTestId('bulk-asset-update-discard-reason-input'), 'Test discard notes');
 
         // location
-        expect(getByTestId('bulk_asset_update-location-checkbox')).toHaveClass('Mui-disabled');
+        expect(getByTestId('accordionWithCheckbox-location-checkbox')).toHaveClass('Mui-disabled');
         // asset type
-        expect(getByTestId('bulk_asset_update-asset-type-checkbox')).toHaveClass('Mui-disabled');
+        expect(getByTestId('accordionWithCheckbox-assetType-checkbox')).toHaveClass('Mui-disabled');
         // clear test notes
         expect(getByTestId('bulk_asset_update-notes-checkbox')).toHaveClass('Mui-disabled');
 
@@ -414,13 +402,6 @@ describe('BulkAssetUpdate', () => {
             ),
         ).toBeInTheDocument();
         await userEvent.click(getByTestId('confirm-bulk-asset-update'));
-        // await waitFor(() => expect(getByTestId('bulk_asset_update-confirmation-progress')).toBeInTheDocument());
-        // debug(undefined, 100000);
-        /* expect(getByTestId('confirm-bulk-asset-update')).toHaveAttribute('disabled');
-        expect(getByTestId('cancel-bulk-asset-update')).toHaveAttribute('disabled');
-        expect(
-            within(getByTestId('confirm-bulk-asset-update')).getByTestId('bulk_asset_update-confirmation-progress'),
-        ).toBeInTheDocument(); */
 
         expect(getByTestId('confirmation_alert-success')).toBeInTheDocument();
 

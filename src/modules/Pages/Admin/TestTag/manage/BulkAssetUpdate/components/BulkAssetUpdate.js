@@ -11,10 +11,6 @@ import Checkbox from '@mui/material/Checkbox';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
-import Accordion from '@mui/material/Accordion';
-import AccordionActions from '@mui/material/AccordionActions';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
 
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -50,6 +46,7 @@ import { useForm, useObjectList, useConfirmationAlert, useAccountUser } from '..
 import { transformRow, transformRequest } from './utils';
 import AuthWrapper from '../../../SharedComponents/AuthWrapper/AuthWrapper';
 import { breadcrumbs } from 'config/routes';
+import { AccordionWithCheckbox } from './AccordionWithCheckbox';
 
 const moment = require('moment');
 
@@ -66,69 +63,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     '& .nextDateLabel': { ...theme.typography.body2 },
 }));
 
-const StyledAccordion = styled(Accordion)(({ theme }) => ({
-    '&.Mui-disabled': {
-        backgroundColor: theme.palette.background.paper,
-        color: theme.palette.text.primary,
-        opacity: 0.8,
-    },
-    '& .MuiAccordionSummary-root.Mui-disabled': {
-        opacity: 0.8,
-        '& .MuiAccordionSummary-content': {
-            backgroundColor: theme.palette.background.paper,
-            color: theme.palette.text.primary,
-            opacity: 0.8,
-        },
-    },
-}));
-
 const componentId = 'bulk-asset-update';
 const componentIdLower = 'bulk_asset_update';
 const validAssetStatusOptions = locale.pages.manage.bulkassetupdate.config.validAssetStatusOptions;
-
-export const AccordionSummaryWithCheckbox = ({
-    name,
-    label,
-    disabled = false,
-    unavailableLabel = 'Unavailable with other options',
-    ...props
-}) => (
-    <AccordionSummary expandIcon={<></>} aria-controls={`${name}-content`} id={`${name}-header`}>
-        <FormControlLabel
-            control={
-                <Checkbox
-                    id={`${componentIdLower}-location-checkbox`}
-                    data-testid={`${componentIdLower}-location-checkbox`}
-                    name={name}
-                    disabled={disabled}
-                    color="primary"
-                    inputProps={{
-                        style: { zIndex: 1 },
-                    }}
-                    {...props}
-                />
-            }
-            onClick={e => {
-                e.stopPropagation();
-            }}
-            label={
-                disabled ? (
-                    <>
-                        {label} - {unavailableLabel}
-                    </>
-                ) : (
-                    label
-                )
-            }
-        />
-    </AccordionSummary>
-);
-AccordionSummaryWithCheckbox.propTypes = {
-    name: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-    disabled: PropTypes.bool,
-    unavailableLabel: PropTypes.string,
-};
 
 const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const pageLocale = locale.pages.manage.bulkassetupdate;
@@ -186,7 +123,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         resetLocation();
         actions.clearAssetsMine();
         list.clear();
-        setStep(2);
+        setStep(1);
     };
 
     useEffect(() => {
@@ -468,218 +405,216 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                         </Grid>
                         <Grid container spacing={3}>
                             <Grid xs={12}>
-                                <StyledAccordion
-                                    defaultExpanded
+                                <AccordionWithCheckbox
+                                    id="location"
+                                    label={stepTwoLocale.checkbox.location}
                                     disabled={isLocationDisabled}
-                                    expanded={formValues.hasLocation}
+                                    slotProps={{
+                                        accordion: {
+                                            defaultExpanded: true,
+                                            expanded: formValues.hasLocation,
+                                        },
+                                        accordionActions: {
+                                            disabled: !formValues.location,
+                                            onClick: () => {
+                                                handleLocationUpdate({ site: -1, building: -1, floor: -1, room: -1 });
+                                                handleChange('monthRange')('-1');
+                                            },
+                                        },
+                                        checkbox: {
+                                            name: 'hasLocation',
+                                            checked: formValues.hasLocation,
+                                            onClick: handleCheckboxChange,
+                                        },
+                                    }}
                                 >
-                                    <AccordionSummaryWithCheckbox
-                                        disabled={isLocationDisabled}
-                                        name="hasLocation"
-                                        label={stepTwoLocale.checkbox.location}
-                                        checked={formValues.hasLocation}
-                                        onClick={handleCheckboxChange}
-                                    />
-                                    <AccordionDetails>
-                                        <Grid container spacing={3}>
-                                            <AutoLocationPicker
+                                    <Grid container spacing={3}>
+                                        <AutoLocationPicker
+                                            id={componentId}
+                                            disabled={!formValues.hasLocation}
+                                            actions={actions}
+                                            location={location}
+                                            setLocation={handleLocationUpdate}
+                                            locale={locale.pages.general.locationPicker}
+                                            inputProps={{
+                                                site: {
+                                                    required: formValues.hasLocation,
+                                                    error:
+                                                        !formValues.hasDiscardStatus &&
+                                                        formValues.hasLocation &&
+                                                        location.site === -1,
+                                                },
+                                                building: {
+                                                    required: formValues.hasLocation && location.site !== -1,
+                                                    error:
+                                                        !formValues.hasDiscardStatus &&
+                                                        formValues.hasLocation &&
+                                                        location.site !== -1 &&
+                                                        location.building === -1,
+                                                },
+                                                floor: {
+                                                    required: formValues.hasLocation && location.building !== -1,
+                                                    error:
+                                                        !formValues.hasDiscardStatus &&
+                                                        formValues.hasLocation &&
+                                                        location.site !== -1 &&
+                                                        location.building !== -1 &&
+                                                        location.floor === -1,
+                                                },
+                                                room: {
+                                                    required: formValues.hasLocation && location.floor !== -1,
+                                                    error:
+                                                        !formValues.hasDiscardStatus &&
+                                                        formValues.hasLocation &&
+                                                        location.site !== -1 &&
+                                                        location.building !== -1 &&
+                                                        location.floor !== -1 &&
+                                                        location.room === -1,
+                                                },
+                                            }}
+                                        />
+                                        <Grid xs={12} sm={4}>
+                                            <MonthsSelector
                                                 id={componentId}
                                                 disabled={!formValues.hasLocation}
-                                                actions={actions}
-                                                location={location}
-                                                setLocation={handleLocationUpdate}
-                                                locale={locale.pages.general.locationPicker}
-                                                inputProps={{
-                                                    site: {
-                                                        required: formValues.hasLocation,
-                                                        error:
-                                                            !formValues.hasDiscardStatus &&
-                                                            formValues.hasLocation &&
-                                                            location.site === -1,
-                                                    },
-                                                    building: {
-                                                        required: formValues.hasLocation && location.site !== -1,
-                                                        error:
-                                                            !formValues.hasDiscardStatus &&
-                                                            formValues.hasLocation &&
-                                                            location.site !== -1 &&
-                                                            location.building === -1,
-                                                    },
-                                                    floor: {
-                                                        required: formValues.hasLocation && location.building !== -1,
-                                                        error:
-                                                            !formValues.hasDiscardStatus &&
-                                                            formValues.hasLocation &&
-                                                            location.site !== -1 &&
-                                                            location.building !== -1 &&
-                                                            location.floor === -1,
-                                                    },
-                                                    room: {
-                                                        required: formValues.hasLocation && location.floor !== -1,
-                                                        error:
-                                                            !formValues.hasDiscardStatus &&
-                                                            formValues.hasLocation &&
-                                                            location.site !== -1 &&
-                                                            location.building !== -1 &&
-                                                            location.floor !== -1 &&
-                                                            location.room === -1,
-                                                    },
+                                                label={stepTwoLocale.filterToDateLabel}
+                                                options={monthsOptions}
+                                                currentValue={formValues.monthRange}
+                                                required={false}
+                                                responsive
+                                                onChange={handleChange('monthRange')}
+                                                nextDateTextFormatter={stepTwoLocale.filterToDateFormatted}
+                                                fromDate={today}
+                                                fromDateFormat={locale.pages.report.config.dateFormat}
+                                                dateDisplayFormat={locale.pages.report.config.dateFormatDisplay}
+                                                classNames={{
+                                                    formControl: 'formControl',
+                                                    select: 'formSelect',
+                                                    nextDateLabel: 'nextDateLabel',
                                                 }}
                                             />
-                                            <Grid xs={12} sm={4}>
-                                                <MonthsSelector
+                                        </Grid>
+                                    </Grid>
+                                </AccordionWithCheckbox>
+                                <AuthWrapper requiredPermissions={[PERMISSIONS.can_alter]}>
+                                    <AccordionWithCheckbox
+                                        id="assetStatus"
+                                        label={stepTwoLocale.checkbox.assetStatus}
+                                        disabled={isAssetStatusDisabled}
+                                        slotProps={{
+                                            accordion: {
+                                                expanded: formValues.hasAssetStatus,
+                                            },
+                                            accordionActions: {
+                                                disabled: !formValues.asset_status?.value,
+                                                onClick: () => {
+                                                    handleChange('asset_status')('');
+                                                },
+                                            },
+                                            checkbox: {
+                                                name: 'hasAssetStatus',
+                                                checked: formValues.hasAssetStatus,
+                                                onClick: handleCheckboxChange,
+                                            },
+                                        }}
+                                    >
+                                        <Grid container>
+                                            <Grid xs={12} sm={6}>
+                                                <AssetStatusSelector
                                                     id={componentId}
-                                                    disabled={!formValues.hasLocation}
-                                                    label={stepTwoLocale.filterToDateLabel}
-                                                    options={monthsOptions}
-                                                    currentValue={formValues.monthRange}
-                                                    required={false}
-                                                    responsive
-                                                    onChange={handleChange('monthRange')}
-                                                    nextDateTextFormatter={stepTwoLocale.filterToDateFormatted}
-                                                    fromDate={today}
-                                                    fromDateFormat={locale.pages.report.config.dateFormat}
-                                                    dateDisplayFormat={locale.pages.report.config.dateFormatDisplay}
-                                                    classNames={{
-                                                        formControl: 'formControl',
-                                                        select: 'formSelect',
-                                                        nextDateLabel: 'nextDateLabel',
-                                                    }}
+                                                    options={validAssetStatusOptions}
+                                                    label={pageLocale.form.assetStatus.label}
+                                                    actions={actions}
+                                                    onChange={handleChange('asset_status')}
+                                                    required={formValues.hasAssetStatus}
+                                                    value={formValues.asset_status}
+                                                    disabled={!formValues.hasAssetStatus}
                                                 />
                                             </Grid>
                                         </Grid>
-                                    </AccordionDetails>
-                                    <AccordionActions>
-                                        <Button
-                                            disabled={!formValues.location}
-                                            onClick={() => {
-                                                handleLocationUpdate({ site: -1, building: -1, floor: -1, room: -1 });
-                                                handleChange('monthRange')('-1');
-                                            }}
-                                        >
-                                            Clear
-                                        </Button>
-                                    </AccordionActions>
-                                </StyledAccordion>
-                                <AuthWrapper requiredPermissions={[PERMISSIONS.can_alter]}>
-                                    <StyledAccordion
-                                        disabled={isAssetStatusDisabled}
-                                        expanded={formValues.hasAssetStatus}
-                                    >
-                                        <AccordionSummaryWithCheckbox
-                                            disabled={isAssetStatusDisabled}
-                                            name="hasAssetStatus"
-                                            label={stepTwoLocale.checkbox.assetStatus}
-                                            checked={formValues.hasAssetStatus}
-                                            onClick={handleCheckboxChange}
-                                        />
-                                        <AccordionDetails>
-                                            <Grid container>
-                                                <Grid xs={12} sm={6}>
-                                                    <AssetStatusSelector
-                                                        id={componentId}
-                                                        options={validAssetStatusOptions}
-                                                        label={pageLocale.form.assetStatus.label}
-                                                        actions={actions}
-                                                        onChange={handleChange('asset_status')}
-                                                        required={formValues.hasAssetStatus}
-                                                        value={formValues.asset_status}
-                                                        disabled={!formValues.hasAssetStatus}
-                                                    />
-                                                </Grid>
-                                            </Grid>
-                                        </AccordionDetails>
-                                        <AccordionActions>
-                                            <Button
-                                                disabled={!formValues.asset_status?.value}
-                                                onClick={() => {
-                                                    handleChange('asset_status')('');
-                                                }}
-                                            >
-                                                Clear
-                                            </Button>
-                                        </AccordionActions>
-                                    </StyledAccordion>
+                                    </AccordionWithCheckbox>
                                 </AuthWrapper>
                                 <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
-                                    <StyledAccordion disabled={isAssetTypeDisabled} expanded={formValues.hasAssetType}>
-                                        <AccordionSummaryWithCheckbox
-                                            disabled={isAssetTypeDisabled}
-                                            name="hasAssetType"
-                                            label={stepTwoLocale.checkbox.assetType}
-                                            checked={formValues.hasAssetType}
-                                            onClick={handleCheckboxChange}
-                                        />
-                                        <AccordionDetails>
-                                            <Grid container>
-                                                <Grid xs={12} sm={6}>
-                                                    <AssetTypeSelector
-                                                        id={componentId}
-                                                        locale={pageLocale.form.assetType}
-                                                        actions={actions}
-                                                        onChange={handleChange('asset_type')}
-                                                        required={formValues.hasAssetType}
-                                                        value={formValues.asset_type?.asset_type_id}
-                                                        validateAssetTypeId={isValidAssetTypeId}
-                                                        disabled={!formValues.hasAssetType}
-                                                    />
-                                                </Grid>
-                                            </Grid>
-                                        </AccordionDetails>
-                                        <AccordionActions>
-                                            <Button
-                                                disabled={!formValues?.asset_type}
-                                                onClick={() => {
+                                    <AccordionWithCheckbox
+                                        id="assetType"
+                                        label={stepTwoLocale.checkbox.assetType}
+                                        disabled={isAssetTypeDisabled}
+                                        slotProps={{
+                                            accordion: {
+                                                expanded: formValues.hasAssetType,
+                                            },
+                                            accordionActions: {
+                                                disabled: !formValues?.asset_type,
+                                                onClick: () => {
                                                     handleChange('asset_type')('');
-                                                }}
-                                            >
-                                                Clear
-                                            </Button>
-                                        </AccordionActions>
-                                    </StyledAccordion>
+                                                },
+                                            },
+                                            checkbox: {
+                                                name: 'hasAssetType',
+                                                checked: formValues.hasAssetType,
+                                                onClick: handleCheckboxChange,
+                                            },
+                                        }}
+                                    >
+                                        <Grid container>
+                                            <Grid xs={12} sm={6}>
+                                                <AssetTypeSelector
+                                                    id={componentId}
+                                                    locale={pageLocale.form.assetType}
+                                                    actions={actions}
+                                                    onChange={handleChange('asset_type')}
+                                                    required={formValues.hasAssetType}
+                                                    value={formValues.asset_type?.asset_type_id}
+                                                    validateAssetTypeId={isValidAssetTypeId}
+                                                    disabled={!formValues.hasAssetType}
+                                                />
+                                            </Grid>
+                                        </Grid>
+                                    </AccordionWithCheckbox>
                                 </AuthWrapper>
-                                <StyledAccordion disabled={isDiscardedDisabled} expanded={formValues.hasDiscardStatus}>
-                                    <AccordionSummaryWithCheckbox
-                                        disabled={isDiscardedDisabled}
-                                        name="hasDiscardStatus"
-                                        label={stepTwoLocale.checkbox.discardAsset}
-                                        checked={formValues.hasDiscardStatus}
-                                        onClick={handleCheckboxChange}
-                                    />
-                                    <AccordionDetails>
-                                        <TextField
-                                            {...stepTwoLocale.discardReason}
-                                            required={formValues.hasDiscardStatus}
-                                            error={formValues.hasDiscardStatus && isEmptyStr(formValues.discard_reason)}
-                                            multiline
-                                            minRows={3}
-                                            variant="standard"
-                                            id={`${componentId}-discard-reason-input`}
-                                            InputProps={{ fullWidth: true }}
-                                            InputLabelProps={{
-                                                shrink: true,
-                                                htmlFor: `${componentId}-discard-reason-input`,
-                                            }}
-                                            inputProps={{
-                                                'data-testid': `${componentId}-discard-reason-input`,
-                                            }}
-                                            value={formValues?.discard_reason ?? ''}
-                                            onChange={handleChange('discard_reason')}
-                                            fullWidth
-                                            disabled={!formValues.hasDiscardStatus}
-                                        />
-                                    </AccordionDetails>
-                                    <AccordionActions>
-                                        <Button
-                                            disabled={!formValues?.discard_reason}
-                                            onClick={() => {
+                                <AccordionWithCheckbox
+                                    id="discardStatus"
+                                    label={stepTwoLocale.checkbox.discardAsset}
+                                    disabled={isDiscardedDisabled}
+                                    slotProps={{
+                                        accordion: {
+                                            expanded: formValues.hasDiscardStatus,
+                                        },
+                                        accordionActions: {
+                                            disabled: !formValues?.discard_reason,
+                                            onClick: () => {
                                                 handleChange('discard_reason')('');
-                                            }}
-                                        >
-                                            Clear
-                                        </Button>
-                                    </AccordionActions>
-                                </StyledAccordion>
+                                            },
+                                        },
+                                        checkbox: {
+                                            name: 'hasDiscardStatus',
+                                            checked: formValues.hasDiscardStatus,
+                                            onClick: handleCheckboxChange,
+                                        },
+                                    }}
+                                >
+                                    <TextField
+                                        {...stepTwoLocale.discardReason}
+                                        required={formValues.hasDiscardStatus}
+                                        error={formValues.hasDiscardStatus && isEmptyStr(formValues.discard_reason)}
+                                        multiline
+                                        minRows={3}
+                                        variant="standard"
+                                        id={`${componentId}-discard-reason-input`}
+                                        InputProps={{ fullWidth: true }}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                            htmlFor: `${componentId}-discard-reason-input`,
+                                        }}
+                                        inputProps={{
+                                            'data-testid': `${componentId}-discard-reason-input`,
+                                        }}
+                                        value={formValues?.discard_reason ?? ''}
+                                        onChange={handleChange('discard_reason')}
+                                        fullWidth
+                                        disabled={!formValues.hasDiscardStatus}
+                                    />
+                                </AccordionWithCheckbox>
                             </Grid>
                         </Grid>
 

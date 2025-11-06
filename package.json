@@ -5,6 +5,7 @@
     "license": "MIT",
     "repository": "github:uqlibrary/homepage-react",
     "scripts": {
+        "jest-preview": "jest-preview",
         "analyse": "webpack --config=./webpack-dist.config --profile --json > stats.json",
         "build": "webpack --config=./webpack-dist.config",
         "build:dev": "webpack --config=./webpack.config",
@@ -120,6 +121,7 @@
         "jest-cli": "^29.7.0",
         "jest-environment-jsdom": "^29.7.0",
         "jest-localstorage-mock": "^2.4.26",
+        "jest-preview": "^0.3.2",
         "jsdom": "^23.2.0",
         "jsdom-global": "^3.0.2",
         "mini-css-extract-plugin": "^2.8.0",
