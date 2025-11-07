@@ -1649,7 +1649,19 @@ mock.onGet('exams/course/FREN1010/summary')
     .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'floor', id: '.*' }).apiUrl)))
     .reply(() => [200, { status: 'OK' }])
     .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'space', id: '.*' }).apiUrl)))
-    .reply(() => [200, { status: 'OK' }])
+    .reply(() => {
+        if (responseType === 'spaceUpdate500Error') {
+            return [
+                500,
+                {
+                    status: 'error',
+                    message:
+                        'SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for rds failed: Name does not resolve (Connection: rds_db, SQL: select count(*) as aggregate from `facility_type` where `facility_type_id` = 2)',
+                },
+            ];
+        }
+        return [200, { status: 'OK' }];
+    })
 
     .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'campus', id: '.*' }).apiUrl)))
     .reply(() => [200, { status: 'OK' }])

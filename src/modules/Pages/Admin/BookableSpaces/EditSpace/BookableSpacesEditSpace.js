@@ -114,9 +114,6 @@ export const BookableSpacesEditSpace = ({
             .then(() => {})
             .catch(e => {
                 console.log('catch: adding new space failed:', e);
-                displayToastMessage(
-                    '[BSAS-001] Sorry, an error occurred - Saving the changed Space failed. The admins have been informed.',
-                );
             });
     };
 

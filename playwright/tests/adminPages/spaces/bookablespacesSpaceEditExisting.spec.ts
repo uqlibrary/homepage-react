@@ -320,18 +320,18 @@ test.describe('Spaces Admin - edit space', () => {
         await assertAccessibility(page, '[data-testid="dialogbox-spaces-save-outcome"]');
     });
 
-    test.describe('Spaces Admin - errors', () => {
+    test.describe('Spaces Admin - load errors', () => {
         test('edit new space - error locations', async ({ page }) => {
             await page.goto('/admin/spaces/edit/error?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
             // wait for page to load
             await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
 
-            await expect(page.getByTestId('add-space-error')).toBeVisible();
-            await expect(page.getByTestId('add-space-error')).toContainText(
+            await expect(page.getByTestId('load-space-form-error')).toBeVisible();
+            await expect(page.getByTestId('load-space-form-error')).toContainText(
                 'Something went wrong - please try again later.',
             );
-            await expect(page.getByTestId('add-space-error')).toContainText('Space details had a problem.');
+            await expect(page.getByTestId('load-space-form-error')).toContainText('Space details had a problem.');
         });
         test('edit new space - 404 locations', async ({ page }) => {
             await page.goto('/admin/spaces/edit/missingRecord?user=libSpaces');
@@ -341,6 +341,45 @@ test.describe('Spaces Admin - edit space', () => {
 
             await expect(page.getByTestId('missing-record')).toBeVisible();
             await expect(page.getByTestId('missing-record')).toContainText('There is no Space with ID "missingRecord"'); // 'missingRecord' is the id in mock when it is missing
+        });
+        test('edit new space - weeklyHours api error', async ({ page }) => {
+            await page.goto('/admin/spaces/edit/987y_isjgt_9866?user=libSpaces&responseType=weeklyHoursError');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            // wait for page to load
+            await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+
+            await expect(page.getByTestId('load-space-form-error')).toBeVisible();
+            await expect(page.getByTestId('load-space-form-error')).toContainText(
+                'Something went wrong - please try again later.',
+            );
+            await expect(page.getByTestId('load-space-form-error')).toContainText(
+                'Opening hours details had a problem.',
+            );
+        });
+    });
+
+    test.describe('Spaces Admin - save errors', () => {
+        test('edit new space - server 500', async ({ page }) => {
+            await page.goto('/admin/spaces/edit/987y_isjgt_9866?user=libSpaces&responseType=spaceUpdate500Error');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            // wait for page to load
+            await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+
+            // change a checkbox
+            const examFriendlyCheckbox = page.getByTestId('facility-type-listitem-7');
+            await expect(examFriendlyCheckbox.locator('label')).toBeVisible();
+            await expect(examFriendlyCheckbox.locator('label')).toContainText('Exam Friendly');
+            await examFriendlyCheckbox.locator('input').check();
+
+            // save the change
+            await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+            await expect(page.getByTestId('admin-spaces-save-button-submit')).toContainText('Save');
+            await page.getByTestId('admin-spaces-save-button-submit').click();
+
+            await expect(page.getByTestId('message-title')).toBeVisible();
+            await expect(page.getByTestId('message-title')).toContainText(
+                'An error has occurred during the request and this request cannot be processed. Please contact webmaster@library.uq.edu.au or try again later.',
+            );
         });
     });
 });

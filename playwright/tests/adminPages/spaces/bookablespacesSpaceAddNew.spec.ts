@@ -513,8 +513,8 @@ test.describe('Spaces Admin - errors', () => {
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Add a new Space/)).toBeVisible();
 
-        await expect(page.getByTestId('add-space-error')).toBeVisible();
-        await expect(page.getByTestId('add-space-error')).toContainText(
+        await expect(page.getByTestId('load-space-form-error')).toBeVisible();
+        await expect(page.getByTestId('load-space-form-error')).toContainText(
             'Something went wrong - please try again later.',
         );
     });
@@ -524,8 +524,8 @@ test.describe('Spaces Admin - errors', () => {
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Add a new Space/)).toBeVisible();
 
-        await expect(page.getByTestId('add-space-error')).toBeVisible();
-        await expect(page.getByTestId('add-space-error')).toContainText(
+        await expect(page.getByTestId('load-space-form-error')).toBeVisible();
+        await expect(page.getByTestId('load-space-form-error')).toContainText(
             'Something went wrong - please try again later.',
         );
     });

@@ -121,8 +121,9 @@ export const EditSpaceForm = ({
     mode,
     bookableSpaceGetError,
 }) => {
+    console.log('#### START TOP OF FORM');
     console.log(
-        '#### TOP OF FORM EditSpaceForm updateBookableSpaceLocation',
+        'EditSpaceForm updateBookableSpaceLocation',
         bookableSpacesRoomAdding,
         bookableSpacesRoomAddError,
         bookableSpacesRoomAddResult,
@@ -143,6 +144,7 @@ export const EditSpaceForm = ({
     );
     console.log('EditSpaceForm weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
     console.log('EditSpaceForm facilityTypeList', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
+    console.log('#### END TOP OF FORM');
 
     const { account } = useAccountContext();
     // const [cookies, setCookie] = useCookies();
@@ -462,6 +464,7 @@ export const EditSpaceForm = ({
             confirmationMessage: '',
             cancelButtonLabel: 'Add another Space',
             confirmButtonLabel: 'Return to dashboard',
+            alternateActionButtonLabel: 'Close',
         },
     };
 
@@ -518,7 +521,9 @@ export const EditSpaceForm = ({
             return <p>No filter types in system.</p>;
         }
 
-        const sortedUsedGroups = [...facilityTypeList?.data?.facility_type_groups].sort(
+        console.log('facilityTypeList?.data?.facility_type_groups=', facilityTypeList?.data?.facility_type_groups);
+        const facilityTypeGroups = facilityTypeList?.data?.facility_type_groups || [];
+        const sortedUsedGroups = [...facilityTypeGroups].sort(
             (a, b) => a.facility_type_group_order - b.facility_type_group_order,
         );
 
@@ -619,7 +624,7 @@ export const EditSpaceForm = ({
             <PageWrapper>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
-                        <div data-testid="add-space-error">
+                        <div data-testid="load-space-form-error">
                             <p>Something went wrong - please try again later.</p>
                             {!!campusListError && <p>Campus-building data had a problem.</p>}
                             {!!bookableSpacesRoomListError && <p>Space types list had a problem.</p>}
@@ -664,10 +669,15 @@ export const EditSpaceForm = ({
                     onAction={() => returnToDashboard()}
                     hideCancelButton={mode === 'edit' || !locale.success.cancelButtonLabel}
                     cancelButtonLabel={locale.success.cancelButtonLabel}
+                    showAlternateActionButton={!!bookableSpacesRoomUpdateError}
+                    alternateActionButtonLabel="Close"
+                    onAlternateAction={closeConfirmationBox}
                     onCancelAction={() => clearForm()}
                     onClose={closeConfirmationBox}
                     isOpen={confirmationOpen}
-                    locale={!!bookableSpacesRoomAddError ? locale.error : locale.success}
+                    locale={
+                        !!bookableSpacesRoomAddError || !!bookableSpacesRoomUpdateError ? locale.error : locale.success
+                    }
                     cancelButtonColor="accent"
                 />
 
