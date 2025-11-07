@@ -39,6 +39,7 @@ export default {
             discarded: 'DISCARDED',
             instorage: 'INSTORAGE',
             missing: 'MISSING',
+            awaitingtest: 'AWAITINGTEST',
         },
         inspectStatus: {
             passed: 'PASSED',
@@ -857,7 +858,7 @@ export default {
                         },
                         two: {
                             title: 'Step 2: Choose bulk update actions',
-                            subtext: (count, pluraliser) => (
+                            alertMessageAssetsChosen: (count, pluraliser) => (
                                 <>
                                     You have selected{' '}
                                     <Typography variant="body1" component="span" style={{ fontWeight: 'bold' }}>
@@ -866,6 +867,25 @@ export default {
                                     {pluraliser('asset', count)} to bulk update.
                                 </>
                             ),
+                            alertMessageAssetsExcluded: (list, pluraliser) => {
+                                const count = list.length;
+                                const excludedList = list.map(item => item.asset_id_displayed);
+                                return count > 0 ? (
+                                    <p>
+                                        Excluded{' '}
+                                        <Typography variant="body1" component="span" style={{ fontWeight: 'bold' }}>
+                                            {count}
+                                        </Typography>{' '}
+                                        {pluraliser('asset', count)} because their next inspection date falls outside of
+                                        the chosen range, or their current status is incompatible with the selected
+                                        options:
+                                        <br />
+                                        <strong>{excludedList.join(', ')}</strong>
+                                    </p>
+                                ) : (
+                                    <></>
+                                );
+                            },
                             button: {
                                 previous: 'Back',
                                 submit: 'Bulk Update',

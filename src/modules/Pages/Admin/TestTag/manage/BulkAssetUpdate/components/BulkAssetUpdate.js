@@ -74,6 +74,8 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const monthsOptions = pageLocale.config.monthsOptions;
 
     const list = useObjectList([], transformRow, { key: 'asset_id' });
+    const excludedList = useObjectList([], null, { key: 'asset_id' });
+
     const [step, setStep] = useState(1);
     const assignAssetDefaults = () => ({ ...defaultFormValues });
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -180,6 +182,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const handleConfirmDialogAction = () => {
         // Send data to the server and save update
         setConfirmDialogueBusy(true);
+        console.log(formValues);
         const clonedData = structuredClone(formValues);
         const request = transformRequest(clonedData);
         actions
@@ -210,7 +213,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     };
 
     const handleCheckboxChange = e => {
-        // e.stopPropagation?.();
         // checkboxes use 'checked' value on the target to set t/f values,
         // so the standard formValues handleChange wont work without
         // a bit of help sending through the actual value.
@@ -262,11 +264,54 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         formValues.hasClearNotes,
     ]);
 
+    const validateListRules = () => {
+        if (!validFormValues) return;
+        const targetDate = moment()
+            .startOf('day')
+            .add(formValues.monthRange, 'months');
+        for (const asset of list.data) {
+            // if location
+            if (formValues.hasLocation) {
+                // next inspection date range selected
+                if (formValues.monthRange !== '-1') {
+                    const nextTestDueDate = moment(
+                        asset.asset_next_test_due_date,
+                        locale.config.format.dateFormatNoTime,
+                    );
+                    if (nextTestDueDate.isAfter(targetDate)) {
+                        // exclude this asset
+                        excludedList.addEnd(asset);
+                        list.deleteWith('asset_id', asset.asset_id);
+                        continue; // already excluded this asset, dont need further checks
+                    }
+                }
+
+                // if asset status selected, validate
+                if (formValues.hasAssetStatus) {
+                    if (
+                        [
+                            locale.config.assetStatus.failed,
+                            locale.config.assetStatus.outforrepair,
+                            locale.config.assetStatus.discarded,
+                            locale.config.assetStatus.awaitingtest,
+                        ].includes(asset.asset_status)
+                    ) {
+                        // exclude this asset
+                        excludedList.addEnd(asset);
+                        list.deleteWith('asset_id', asset.asset_id);
+                    }
+                }
+            }
+        }
+    };
+
     const isLocationDisabled = formValues.hasAssetType || formValues.hasDiscardStatus;
     const isAssetStatusDisabled = formValues.hasAssetType || formValues.hasDiscardStatus;
     const isAssetTypeDisabled = formValues.hasLocation || formValues.hasDiscardStatus || formValues.hasAssetStatus;
     const isDiscardedDisabled =
         formValues.hasAssetType || formValues.hasLocation || formValues.hasClearNotes || formValues.hasAssetStatus;
+
+    if (list.data.length > 0 && step === 2) validateListRules();
 
     return (
         <StandardAuthPage
@@ -344,7 +389,10 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                         id={`${componentIdLower}-count-alert`}
                                         data-testid={`${componentIdLower}-count-alert`}
                                     >
-                                        {stepTwoLocale.subtext(list.data.length, locale.pages.general.pluraliser)}
+                                        {stepTwoLocale.alertMessageAssetsChosen(
+                                            list.data.length,
+                                            locale.pages.general.pluraliser,
+                                        )}
                                     </Alert>
                                 </Grid>
                             </Grid>
@@ -399,7 +447,14 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                                     id={`${componentIdLower}-summary-alert`}
                                     data-testid={`${componentIdLower}-summary-alert`}
                                 >
-                                    {stepTwoLocale.subtext(list.data.length, locale.pages.general.pluraliser)}
+                                    {stepTwoLocale.alertMessageAssetsChosen(
+                                        list.data.length,
+                                        locale.pages.general.pluraliser,
+                                    )}
+                                    {stepTwoLocale.alertMessageAssetsExcluded(
+                                        excludedList.data,
+                                        locale.pages.general.pluraliser,
+                                    )}
                                 </Alert>
                             </Grid>
                         </Grid>
