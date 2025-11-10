@@ -123,7 +123,7 @@ export const EditSpaceForm = ({
 }) => {
     console.log('#### START TOP OF FORM');
     console.log(
-        'EditSpaceForm updateBookableSpaceLocation',
+        'EditSpaceForm bookableSpacesRoomAddResult',
         bookableSpacesRoomAdding,
         bookableSpacesRoomAddError,
         bookableSpacesRoomAddResult,
@@ -441,13 +441,16 @@ export const EditSpaceForm = ({
     }
 
     function closeConfirmationBox() {
+        console.log('closeConfirmationBox');
         setConfirmationOpen(false);
     }
     const returnToDashboard = () => {
+        console.log('returnToDashboard');
         closeConfirmationBox();
         navigateToPage('/admin/spaces');
     };
     const clearForm = () => {
+        console.log('clearForm');
         closeConfirmationBox();
         window.location.reload(false);
     };

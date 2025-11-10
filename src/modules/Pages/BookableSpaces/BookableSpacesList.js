@@ -175,13 +175,16 @@ export const BookableSpacesList = ({
     };
 
     function filterNext7Days(departmentData) {
+        console.log('filterNext7Days 1 departmentData=', departmentData);
         // Get today's date (start of day)
         const today = new Date();
         today.setHours(0, 0, 0, 0);
+        console.log('filterNext7Days 2 today=', today);
 
         // Calculate the end date (6 days from today)
         const endDate = new Date(today);
         endDate.setDate(today.getDate() + 6);
+        console.log('filterNext7Days 3 endDate=', endDate);
 
         // Filter days to include only the next 7 days starting from today
         const filteredDays = departmentData.days.filter(day => {
@@ -190,9 +193,11 @@ export const BookableSpacesList = ({
 
             return dayDate >= today && dayDate <= endDate;
         });
+        console.log('filterNext7Days 4 filteredDays=', filteredDays);
 
         // Sort by date to ensure chronological order
         filteredDays.sort((a, b) => new Date(a.date) - new Date(b.date));
+        console.log('filterNext7Days 5 filteredDays=', filteredDays);
 
         filteredDays.map((d, index) => {
             if (index <= 1) {
@@ -200,6 +205,7 @@ export const BookableSpacesList = ({
             }
             return d;
         });
+        console.log('filterNext7Days 6 filteredDays=', filteredDays);
 
         // Return the department with filtered days
         const result = {
@@ -207,14 +213,17 @@ export const BookableSpacesList = ({
             next7days: filteredDays,
         };
         delete result.days;
+        console.log('filterNext7Days 7 result=', result);
 
         return result;
     }
 
     // rewrite the hours-by-week into one long list of days
     function convertWeeksToDays(data) {
+        console.log('convertWeeksToDays 1 data=', data);
         // Create a deep copy to avoid mutating the original data
         const location = JSON.parse(JSON.stringify(data));
+        console.log('convertWeeksToDays 2 location=', location);
 
         // Define the order of days for consistent sorting
         const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -225,7 +234,9 @@ export const BookableSpacesList = ({
             ...location,
             department: location.departments.find(dept => displayedDepartments.includes(dept.name)),
         };
+        console.log('convertWeeksToDays 3 filteredData=', filteredData);
         delete filteredData.departments;
+        console.log('convertWeeksToDays 4 filteredData=', filteredData);
 
         if (filteredData.department.weeks && Array.isArray(filteredData.department.weeks)) {
             const allDays = [];
@@ -247,14 +258,19 @@ export const BookableSpacesList = ({
             allDays.sort((a, b) => new Date(a.date) - new Date(b.date));
             filteredData.department.days = allDays;
         }
+        console.log('convertWeeksToDays 5 filteredData=', filteredData);
+
         !!filteredData.department.days && (filteredData.department = filterNext7Days(filteredData.department));
+        console.log('convertWeeksToDays 6 filteredData=', filteredData);
 
         return filteredData;
     }
 
     const spaceOpeningHours = bookableSpace => {
+        console.log('spaceOpeningHours 1 bookableSpace=', bookableSpace);
+        console.log('spaceOpeningHours 2 weeklyHours=', weeklyHours);
         let openingDetails = weeklyHours?.locations?.find(openingHours => {
-            return openingHours.lid === bookableSpace.space_opening_hours_id;
+            return openingHours.lid === bookableSpace?.space_opening_hours_id;
         });
         !!openingDetails && (openingDetails = convertWeeksToDays(openingDetails));
         return openingDetails?.department?.next7days || [];
@@ -381,10 +397,10 @@ export const BookableSpacesList = ({
                             </ul>
                         </>
                     )}
-                    {openingHoursComponent(bookableSpace, locationKey, bookableSpace.space_library_name)}
+                    {openingHoursComponent(bookableSpace, locationKey, bookableSpace?.space_library_name)}
                     {!!bookableSpace?.space_opening_hours_override ? (
                         <p data-testid={`override_opening_hours_${bookableSpace?.space_uuid}`}>
-                            Note: {bookableSpace.space_opening_hours_override}
+                            Note: {bookableSpace?.space_opening_hours_override}
                         </p>
                     ) : (
                         ''
