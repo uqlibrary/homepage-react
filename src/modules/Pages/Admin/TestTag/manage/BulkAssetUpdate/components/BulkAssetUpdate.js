@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
@@ -81,7 +81,8 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [confirmDialogueBusy, setConfirmDialogueBusy] = useState(false);
     const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
-    const { formValues, resetFormValues, handleChange } = useForm({
+    const currentFormValueSignature = useRef('{}');
+    const { formValues, signature: formValueSignature, resetFormValues, handleChange } = useForm({
         defaultValues: { ...assignAssetDefaults() },
     });
 
@@ -125,6 +126,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         resetLocation();
         actions.clearAssetsMine();
         list.clear();
+        excludedList.clear();
         setStep(1);
     };
 
@@ -160,6 +162,9 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         setStep(2);
     };
     const handlePrevStepButton = () => {
+        currentFormValueSignature.current = '{}';
+        list.importTransformedData(excludedList.data);
+        excludedList.clear();
         setStep(1);
     };
 
@@ -182,7 +187,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const handleConfirmDialogAction = () => {
         // Send data to the server and save update
         setConfirmDialogueBusy(true);
-        console.log(formValues);
         const clonedData = structuredClone(formValues);
         const request = transformRequest(clonedData);
         actions
@@ -264,28 +268,37 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         formValues.hasClearNotes,
     ]);
 
-    const validateListRules = () => {
-        if (!validFormValues) return;
-        const targetDate = moment()
-            .startOf('day')
-            .add(formValues.monthRange, 'months');
-        for (const asset of list.data) {
-            // if location
-            if (formValues.hasLocation) {
-                // next inspection date range selected
-                if (formValues.monthRange !== '-1') {
-                    const nextTestDueDate = moment(
-                        asset.asset_next_test_due_date,
-                        locale.config.format.dateFormatNoTime,
-                    );
-                    if (nextTestDueDate.isAfter(targetDate)) {
-                        // exclude this asset
-                        excludedList.addEnd(asset);
-                        list.deleteWith('asset_id', asset.asset_id);
-                        continue; // already excluded this asset, dont need further checks
+    React.useEffect(() => {
+        // whenever form values change, we need to
+        // revalidate the list against the new rules
+        if (!list.data.length > 0 || step !== 2) return;
+
+        if (currentFormValueSignature.current !== formValueSignature) {
+            currentFormValueSignature.current = formValueSignature;
+            let listCopy = [...list.data, ...excludedList.data];
+            const listToExclude = [];
+
+            const targetDate = moment()
+                .startOf('day')
+                .add(formValues.monthRange, 'months');
+
+            for (const asset of listCopy) {
+                // if location
+                if (formValues.hasLocation) {
+                    // next inspection date range selected
+                    if (formValues.monthRange !== '-1') {
+                        const nextTestDueDate = moment(
+                            asset.asset_next_test_due_date,
+                            locale.config.format.dateFormatNoTime,
+                        );
+                        if (nextTestDueDate.isAfter(targetDate)) {
+                            // exclude this asset
+                            listToExclude.push(asset);
+                            listCopy = listCopy.filter(item => item.asset_id !== asset.asset_id);
+                            continue; // already excluded this asset, dont need further checks
+                        }
                     }
                 }
-
                 // if asset status selected, validate
                 if (formValues.hasAssetStatus) {
                     if (
@@ -297,21 +310,25 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                         ].includes(asset.asset_status)
                     ) {
                         // exclude this asset
-                        excludedList.addEnd(asset);
-                        list.deleteWith('asset_id', asset.asset_id);
+                        listToExclude.push(asset);
+                        listCopy = listCopy.filter(item => item.asset_id !== asset.asset_id);
                     }
                 }
             }
+            list.clear();
+            excludedList.clear();
+            list.importTransformedData(listCopy);
+            excludedList.importTransformedData(listToExclude);
         }
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formValueSignature]);
 
     const isLocationDisabled = formValues.hasAssetType || formValues.hasDiscardStatus;
     const isAssetStatusDisabled = formValues.hasAssetType || formValues.hasDiscardStatus;
     const isAssetTypeDisabled = formValues.hasLocation || formValues.hasDiscardStatus || formValues.hasAssetStatus;
     const isDiscardedDisabled =
         formValues.hasAssetType || formValues.hasLocation || formValues.hasClearNotes || formValues.hasAssetStatus;
-
-    if (list.data.length > 0 && step === 2) validateListRules();
+    // if (list.data.length > 0 && step === 2) validateListRules();
 
     return (
         <StandardAuthPage

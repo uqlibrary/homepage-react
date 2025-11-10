@@ -25,7 +25,6 @@ const AssetStatusSelector = ({
     const componentId = `${rootId}-${id}`;
     const [currentValue, setCurrentValue] = useState(initialOptionIndex > -1 ? options[initialOptionIndex] : '');
     const handleOnChange = (event, newValue) => {
-        console.log(newValue);
         setCurrentValue(newValue);
         onChange?.(newValue);
     };
