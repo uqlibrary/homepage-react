@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { createContext, useState, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import { getUserPermissions } from './auth';
@@ -30,6 +30,8 @@ export const useLocation = (defaultSiteId = -1, defaultBuildingId = -1, defaultF
     };
     return { location, setLocation };
 };
+
+export const FormContext = createContext(null);
 export const useForm = (
     /* istanbul ignore next */ { defaultValues = {}, defaultDateFormat = 'YYYY-MM-DD HH:mm' } = {},
 ) => {

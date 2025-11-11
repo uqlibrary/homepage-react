@@ -12,6 +12,7 @@ const DEFAULT_FORM_VALUES = {
     hasAssetType: false,
     hasAssetStatus: false,
     location: undefined,
+    fullLocation: undefined,
     asset_type: undefined,
     discard_reason: undefined,
     asset_status: undefined,

@@ -837,6 +837,10 @@ export default {
                         },
                     },
                     step: {
+                        button: {
+                            previous: 'Back',
+                            submit: 'Bulk Update',
+                        },
                         one: {
                             title: 'Step 1: Choose assets to update in bulk',
                             addText: 'ADD NEW ASSET',
@@ -858,38 +862,7 @@ export default {
                         },
                         two: {
                             title: 'Step 2: Choose bulk update actions',
-                            alertMessageAssetsChosen: (count, pluraliser) => (
-                                <>
-                                    You have selected{' '}
-                                    <Typography variant="body1" component="span" style={{ fontWeight: 'bold' }}>
-                                        {count}
-                                    </Typography>{' '}
-                                    {pluraliser('asset', count)} to bulk update.
-                                </>
-                            ),
-                            alertMessageAssetsExcluded: (list, pluraliser) => {
-                                const count = list.length;
-                                const excludedList = list.map(item => item.asset_id_displayed);
-                                return count > 0 ? (
-                                    <p>
-                                        Excluded{' '}
-                                        <Typography variant="body1" component="span" style={{ fontWeight: 'bold' }}>
-                                            {count}
-                                        </Typography>{' '}
-                                        {pluraliser('asset', count)} because their next inspection date falls outside of
-                                        the chosen range, or their current status is incompatible with the selected
-                                        options:
-                                        <br />
-                                        <strong>{excludedList.join(', ')}</strong>
-                                    </p>
-                                ) : (
-                                    <></>
-                                );
-                            },
-                            button: {
-                                previous: 'Back',
-                                submit: 'Bulk Update',
-                            },
+
                             checkbox: {
                                 location: 'Update Location',
                                 discardAsset: 'Discard Asset',
@@ -903,20 +876,50 @@ export default {
                             discardReason: {
                                 label: 'Discarding Reason',
                             },
-                            dialogBulkUpdateConfirm: {
-                                confirmButtonLabel: 'Proceed',
-                                cancelButtonLabel: 'Cancel',
-                                confirmationMessage:
-                                    'Are you sure you wish to proceed with this bulk update of selected assets?',
-                                confirmationTitle: 'Bulk Update Selected Assets',
-                            },
-                            snackbars: {
-                                success: 'Bulk Asset update successful',
-                                failed: 'Unable to bulk update Assets',
-                            },
+
                             filterToDateLabel: 'where next inspection date is within',
                             filterToDateFormatted: value =>
                                 value !== '' ? `(Includes assets up to ${value})` : '(Includes all assets)',
+                        },
+                    },
+                    alert: {
+                        alertMessageAssetsChosen: (count, pluraliser) => (
+                            <>
+                                You have selected{' '}
+                                <Typography variant="body1" component="span" style={{ fontWeight: 'bold' }}>
+                                    {count}
+                                </Typography>{' '}
+                                {pluraliser('asset', count)} to bulk update.
+                            </>
+                        ),
+                        alertMessageAssetsExcluded: (list, pluraliser) => {
+                            const count = list.length;
+                            const excludedList = list.map(item => item.asset_id_displayed);
+                            return count > 0 ? (
+                                <p>
+                                    Excluded{' '}
+                                    <Typography variant="body1" component="span" style={{ fontWeight: 'bold' }}>
+                                        {count}
+                                    </Typography>{' '}
+                                    {pluraliser('asset', count)} because their next inspection date falls outside of the
+                                    chosen range, or their current status is incompatible with the selected options:
+                                    <br />
+                                    <strong>{excludedList.join(', ')}</strong>
+                                </p>
+                            ) : (
+                                <></>
+                            );
+                        },
+                        dialogBulkUpdateConfirm: {
+                            confirmButtonLabel: 'Proceed',
+                            cancelButtonLabel: 'Cancel',
+                            confirmationMessage:
+                                'Are you sure you wish to proceed with this bulk update of selected assets?',
+                            confirmationTitle: 'Bulk Update Selected Assets',
+                        },
+                        snackbars: {
+                            success: 'Bulk Asset update successful',
+                            failed: 'Unable to bulk update Assets',
                         },
                     },
                 },
