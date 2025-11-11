@@ -175,12 +175,11 @@ export const EditSpaceForm = ({
     const noSpringshareHoursLabel = 'No Springshare opening hours will display (click to change)';
 
     useEffect(() => {
-        // if (campusListLoading === null && campusListError === null && campusList === null) {
-        if (campusList === null) {
+        if (campusListLoading === null && campusListError === null && campusList === null) {
             actions.loadBookableSpaceCampusChildren(); // get list of campuses, buildings and floors
-            actions.loadAllBookableSpacesRooms(); // get bookableSpacesRoomList
-            actions.loadWeeklyHours(); // get weeklyHours
-            actions.loadAllFacilityTypes(); // get facility types
+            actions.loadAllBookableSpacesRooms(); // get list of Spaces
+            actions.loadWeeklyHours(); // get weeklyHours for each library from springshare
+            actions.loadAllFacilityTypes(); // get list of facility types
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

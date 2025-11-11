@@ -46,7 +46,16 @@ export const BookableSpacesEditSpace = ({
     bookableSpaceGetError,
     bookableSpaceGetResult,
 }) => {
-    console.log('bookableSpaceGet:', bookableSpaceGetting, bookableSpaceGetError, bookableSpaceGetResult);
+    console.log('Edit bookableSpaceGet:', bookableSpaceGetting, bookableSpaceGetError, bookableSpaceGetResult);
+    console.log('Edit campusList:', campusListLoading, campusListError, campusList);
+    console.log('Edit weeklyHours:', weeklyHoursLoading, weeklyHoursError, weeklyHours);
+    console.log('Edit weeklyHours:', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
+    console.log(
+        'Edit bookableSpacesRoomList:',
+        bookableSpacesRoomListLoading,
+        bookableSpacesRoomListError,
+        bookableSpacesRoomList,
+    );
 
     // "spaceUuid" matching the param passed in pathConfig.js and config/routes.js
     const { spaceUuid } = useParams();
