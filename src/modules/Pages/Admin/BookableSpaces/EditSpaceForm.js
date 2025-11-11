@@ -184,15 +184,16 @@ export const EditSpaceForm = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const validCampusList = campusList => campusList?.filter(c => c.libraries?.length > 0) || [];
-    const validLibraryList = libraryList => libraryList?.filter(l => l.floors.length > 0) || [];
+    const validCampusList = campusList => campusList?.filter(c => c?.libraries?.length > 0) || [];
+    const validLibraryList = libraryList => libraryList?.filter(l => l?.floors.length > 0) || [];
 
     const springshareList = React.useMemo(() => {
         if (
             weeklyHoursLoading !== false ||
             weeklyHoursError !== false ||
             !weeklyHours?.locations ||
-            !Array.isArray(weeklyHours.locations)
+            !Array.isArray(weeklyHours.locations) ||
+            weeklyHours.locations.length === 0
         ) {
             return [];
         }
@@ -210,20 +211,20 @@ export const EditSpaceForm = ({
             campusListLoading === false &&
             campusListError === false &&
             campusList?.length > 0 &&
-            formValues.length === 0
+            formValues?.length === 0
         ) {
             const locnTemp = {};
             locnTemp.currentCampusList = validCampusList(campusList);
-            locnTemp.currentCampus = locnTemp.currentCampusList.at(0) || {};
-            locnTemp.campus_id = locnTemp.currentCampus?.campus_id;
+            locnTemp.currentCampus = locnTemp?.currentCampusList?.at(0) || {};
+            locnTemp.campus_id = locnTemp?.currentCampus?.campus_id;
 
             locnTemp.currentCampusLibraries = validLibraryList(locnTemp?.currentCampus?.libraries || []);
-            locnTemp.currentLibrary = locnTemp.currentCampusLibraries?.at(0) || {};
-            locnTemp.library_id = locnTemp.currentLibrary?.library_id;
+            locnTemp.currentLibrary = locnTemp?.currentCampusLibraries?.at(0) || {};
+            locnTemp.library_id = locnTemp?.currentLibrary?.library_id;
 
-            locnTemp.currentLibraryFloors = locnTemp.currentLibrary?.floors || [];
-            locnTemp.currentFloor = locnTemp.currentLibraryFloors?.at(0) || {};
-            locnTemp.floor_id = locnTemp.currentFloor?.floor_id;
+            locnTemp.currentLibraryFloors = locnTemp?.currentLibrary?.floors || [];
+            locnTemp.currentFloor = locnTemp?.currentLibraryFloors?.at(0) || {};
+            locnTemp.floor_id = locnTemp?.currentFloor?.floor_id;
             setLocation({
                 ...location,
                 ...locnTemp,
@@ -231,16 +232,16 @@ export const EditSpaceForm = ({
 
             const newValues = {
                 ...formValues,
-                ['campus_id']: locnTemp.campus_id,
-                ['library_id']: locnTemp.library_id,
-                ['floor_id']: locnTemp.floor_id,
-                ['library_springshare_id']: locnTemp.currentLibrary.library_springshare_id,
+                ['campus_id']: locnTemp?.campus_id,
+                ['library_id']: locnTemp?.library_id,
+                ['floor_id']: locnTemp?.floor_id,
+                ['library_springshare_id']: locnTemp?.currentLibrary?.library_springshare_id,
             };
             setFormValues(newValues);
 
             setSpringshareOption({
-                id: locnTemp.currentLibrary.library_springshare_id, // preset the springshare id
-                display_name: springshareList.find(s => s.id === locnTemp.currentLibrary.library_springshare_id)
+                id: locnTemp?.currentLibrary?.library_springshare_id, // preset the springshare id
+                display_name: springshareList?.find(s => s?.id === locnTemp?.currentLibrary?.library_springshare_id)
                     ?.display_name,
             });
         }
@@ -262,53 +263,53 @@ export const EditSpaceForm = ({
 
     const handleSpringshareSelection = (event, newValue) => {
         let newSpringshare = { id: -1, display_name: noSpringshareHoursLabel };
-        if (!!newValue?.id && !!newValue.display_name) {
+        if (!!newValue?.id && !!newValue?.display_name) {
             newSpringshare = newValue;
         } else if (!!newValue?.id) {
             const newValueId = newValue?.id;
             newSpringshare = {
                 id: newValueId,
-                display_name: springshareList?.find(s => s.id === newValueId)?.display_name || noSpringshareHoursLabel,
+                display_name: springshareList?.find(s => s?.id === newValueId)?.display_name || noSpringshareHoursLabel,
             };
         }
         setSpringshareOption(newSpringshare);
 
         setFormValues({
             ...formValues,
-            ['space_opening_hours_id']: newSpringshare.id,
+            ['space_opening_hours_id']: newSpringshare?.id,
         });
     };
 
     // validate fields value
     const formValid = valuesToSend => {
         const errorMessages = [];
-        if (!valuesToSend.space_name) {
+        if (!valuesToSend?.space_name) {
             errorMessages.push({ field: 'space_name', message: 'A Name is required.' });
         }
-        if (!valuesToSend.space_type) {
+        if (!valuesToSend?.space_type) {
             errorMessages.push({ field: 'space_type', message: 'A Type is required.' });
         }
-        if (!valuesToSend.space_floor_id) {
+        if (!valuesToSend?.space_floor_id) {
             errorMessages.push({ field: 'space_floor_id', message: 'A location is required.' });
         }
-        if (!!valuesToSend.space_photo_url && !valuesToSend.space_photo_description) {
+        if (!!valuesToSend?.space_photo_url && !valuesToSend?.space_photo_description) {
             // if a photo is supplied then it must have an accessible description; the photo itself is not required
             errorMessages.push({
                 field: 'space_photo_description',
                 message: 'When a photo is supplied, a description must be supplied.',
             });
         }
-        if (!!valuesToSend.space_photo_url && !isValidUrl(valuesToSend.space_photo_url)) {
+        if (!!valuesToSend?.space_photo_url && !isValidUrl(valuesToSend?.space_photo_url)) {
             errorMessages.push({ field: 'space_photo_url', message: 'The photo is not valid.' });
         }
-        if (!!valuesToSend.space_services_page && !isValidUrl(valuesToSend.space_services_page)) {
+        if (!!valuesToSend?.space_services_page && !isValidUrl(valuesToSend?.space_services_page)) {
             errorMessages.push({
                 field: 'space_services_page',
                 message: 'Please supply a valid "About" page, or clear the field.',
             });
         }
 
-        return errorMessages.length > 0 ? errorMessages : true;
+        return errorMessages?.length > 0 ? errorMessages : true;
     };
 
     const handleFieldCompletion = e => {
@@ -319,12 +320,12 @@ export const EditSpaceForm = ({
     };
 
     const reportErrorMessage = fieldName => {
-        return errorMessages?.find(m => m.field === fieldName)?.message;
+        return errorMessages?.find(m => m?.field === fieldName)?.message;
     };
 
     const handleChange = _prop => e => {
         let theNewValue =
-            e.target.hasOwnProperty('checked') && e.target.type !== 'radio' ? e.target.checked : e.target.value;
+            e?.target?.hasOwnProperty('checked') && e?.target?.type !== 'radio' ? e?.target?.checked : e?.target?.value;
 
         const updatedLocation = {};
         let prop = _prop;
@@ -339,28 +340,28 @@ export const EditSpaceForm = ({
                     {
                         facility_type_id: clickedFacilityTypeId,
                         facility_type_name: getFlatFacilityTypeList(facilityTypeList)?.find(
-                            f => f.facility_type_id === clickedFacilityTypeId,
+                            f => f?.facility_type_id === clickedFacilityTypeId,
                         )?.facility_type_name,
                     },
                 ];
             } else {
                 // it must exist and we are removing it
-                theNewValue = formValues.facility_types.filter(f => f.facility_type_id !== clickedFacilityTypeId);
+                theNewValue = formValues?.facility_types?.filter(f => f?.facility_type_id !== clickedFacilityTypeId);
             }
         } else if (_prop === 'campus_id') {
             updatedLocation.currentCampusList = validCampusList(campusList);
-            updatedLocation.currentCampus = !!formValues.campus_id
-                ? updatedLocation.currentCampusList?.find(c => c.campus_id === theNewValue)
+            updatedLocation.currentCampus = !!formValues?.campus_id
+                ? updatedLocation?.currentCampusList?.find(c => c?.campus_id === theNewValue)
                 : {};
-            updatedLocation.campus_id = updatedLocation.currentCampus?.campus_id;
+            updatedLocation.campus_id = updatedLocation?.currentCampus?.campus_id;
 
             updatedLocation.currentCampusLibraries = validLibraryList(updatedLocation?.currentCampus?.libraries);
-            updatedLocation.currentLibrary = updatedLocation.currentCampusLibraries?.at(0);
-            updatedLocation.library_id = updatedLocation.currentLibrary?.library_id;
+            updatedLocation.currentLibrary = updatedLocation?.currentCampusLibraries?.at(0);
+            updatedLocation.library_id = updatedLocation?.currentLibrary?.library_id;
 
-            updatedLocation.currentLibraryFloors = updatedLocation.currentLibrary?.floors;
-            updatedLocation.currentFloor = updatedLocation.currentLibraryFloors?.at(0);
-            updatedLocation.floor_id = updatedLocation.currentFloor?.floor_id;
+            updatedLocation.currentLibraryFloors = updatedLocation?.currentLibrary?.floors;
+            updatedLocation.currentFloor = updatedLocation?.currentLibraryFloors?.at(0);
+            updatedLocation.floor_id = updatedLocation?.currentFloor?.floor_id;
             setLocation({
                 ...location,
                 ...updatedLocation,
@@ -369,38 +370,39 @@ export const EditSpaceForm = ({
             setSpringshareOption({
                 id: librarySpringshareId,
                 display_name:
-                    springshareList?.find(s => s.id === librarySpringshareId)?.display_name || noSpringshareHoursLabel,
+                    springshareList?.find(s => s?.id === librarySpringshareId)?.display_name || noSpringshareHoursLabel,
             });
         } else if (_prop === 'library_id') {
             updatedLocation.currentCampusList = validCampusList(campusList);
-            updatedLocation.currentCampus = !!formValues.campus_id
-                ? updatedLocation.currentCampusList?.find(c => c.campus_id === formValues.campus_id)
+            updatedLocation.currentCampus = !!formValues?.campus_id
+                ? updatedLocation?.currentCampusList?.find(c => c?.campus_id === formValues?.campus_id)
                 : {};
-            updatedLocation.campus_id = updatedLocation.currentCampus?.campus_id;
+            updatedLocation.campus_id = updatedLocation?.currentCampus?.campus_id;
 
             updatedLocation.currentCampusLibraries = validLibraryList(updatedLocation?.currentCampus?.libraries || []);
-            updatedLocation.currentLibrary = updatedLocation.currentCampusLibraries?.find(
-                l => l.library_id === theNewValue,
+            updatedLocation.currentLibrary = updatedLocation?.currentCampusLibraries?.find(
+                l => l?.library_id === theNewValue,
             );
-            updatedLocation.library_id = updatedLocation.currentLibrary?.library_id;
+            updatedLocation.library_id = updatedLocation?.currentLibrary?.library_id;
 
-            updatedLocation.currentLibraryFloors = updatedLocation.currentLibrary?.floors;
-            updatedLocation.currentFloor = updatedLocation.currentLibraryFloors?.at(0);
-            updatedLocation.floor_id = updatedLocation.currentFloor?.floor_id;
+            updatedLocation.currentLibraryFloors = updatedLocation?.currentLibrary?.floors;
+            updatedLocation.currentFloor = updatedLocation?.currentLibraryFloors?.at(0);
+            updatedLocation.floor_id = updatedLocation?.currentFloor?.floor_id;
             setLocation({
                 ...location,
                 ...updatedLocation,
             });
             setSpringshareOption({
-                id: updatedLocation.currentLibrary.library_springshare_id,
-                display_name: springshareList.find(s => s.id === updatedLocation.currentLibrary.library_springshare_id)
-                    ?.display_name,
+                id: updatedLocation?.currentLibrary?.library_springshare_id,
+                display_name: springshareList?.find(
+                    s => s?.id === updatedLocation?.currentLibrary?.library_springshare_id,
+                )?.display_name,
             });
         } else if (_prop === 'space_photo_url') {
             const photoDescriptionField = document.getElementById('space_photo_description');
             const photoDescriptionFieldLabel = document.getElementById('space_photo_description-label');
             let newRequiredValue = false;
-            if (theNewValue !== '' && theNewValue.length > 0) {
+            if (theNewValue !== '' && theNewValue?.length > 0) {
                 // a url has been entered - the description should be required
                 newRequiredValue = true;
 
@@ -410,7 +412,7 @@ export const EditSpaceForm = ({
                 !!photoDescriptionFieldLabel &&
                     (photoDescriptionFieldLabel.textContent = basePhotoDescriptionFieldLabel);
             }
-            !!photoDescriptionField && photoDescriptionField.setAttribute('required', newRequiredValue);
+            !!photoDescriptionField && photoDescriptionField?.setAttribute('required', newRequiredValue);
         }
 
         const newLocation = {};
@@ -465,15 +467,16 @@ export const EditSpaceForm = ({
             bookableSpacesRoomListLoading === false &&
             bookableSpacesRoomListError === false &&
             bookableSpacesRoomList?.data?.locations &&
-            Array.isArray(bookableSpacesRoomList.data.locations)
+            Array.isArray(bookableSpacesRoomList?.data?.locations) &&
+            bookableSpacesRoomList?.data?.locations?.length > 0
         ) {
-            return bookableSpacesRoomList.data.locations
-                .map(location => location.space_type)
+            return bookableSpacesRoomList?.data?.locations
+                .map(location => location?.space_type)
                 .filter(
                     (spaceType, index, array) =>
                         spaceType && // Remove null/undefined values
-                        spaceType.trim() !== '' && // Remove empty strings
-                        array.indexOf(spaceType) === index, // Remove duplicates
+                        spaceType?.trim() !== '' && // Remove empty strings
+                        array?.indexOf(spaceType) === index, // Remove duplicates
                 )
                 .sort(); // Sort alphabetically for better UX
         }
@@ -498,11 +501,11 @@ export const EditSpaceForm = ({
 
     const getFacilityTypes = data => {
         const facilityTypes = [];
-        data?.facility_type_groups.forEach(group => {
-            group.facility_type_children?.forEach(facilityType => {
+        data?.facility_type_groups?.forEach(group => {
+            group?.facility_type_children?.forEach(facilityType => {
                 facilityTypes.push({
-                    facility_type_id: facilityType.facility_type_id,
-                    facility_type_name: `${group.facility_type_group_name}: ${facilityType.facility_type_name}`,
+                    facility_type_id: facilityType?.facility_type_id,
+                    facility_type_name: `${group?.facility_type_group_name}: ${facilityType?.facility_type_name}`,
                 });
             });
         });
@@ -515,13 +518,13 @@ export const EditSpaceForm = ({
 
         console.log('facilityTypeList?.data?.facility_type_groups=', facilityTypeList?.data?.facility_type_groups);
         const facilityTypeGroups = facilityTypeList?.data?.facility_type_groups || [];
-        const sortedUsedGroups = [...facilityTypeGroups].sort(
-            (a, b) => a.facility_type_group_order - b.facility_type_group_order,
+        const sortedUsedGroups = [...facilityTypeGroups]?.sort(
+            (a, b) => a?.facility_type_group_order - b?.facility_type_group_order,
         );
 
         return (
             <>
-                {sortedUsedGroups.map(group => (
+                {sortedUsedGroups?.map(group => (
                     <StyledFacilityGroupCheckboxBlock key={group?.facility_type_group_id}>
                         <Typography component={'h5'} variant={'h6'}>
                             {group?.facility_type_group_name}
@@ -535,17 +538,17 @@ export const EditSpaceForm = ({
                                         );
                                     return (
                                         <li
-                                            key={`facility-type-listitem-${facilityType.facility_type_id}`}
-                                            data-testid={`facility-type-listitem-${facilityType.facility_type_id}`}
+                                            key={`facility-type-listitem-${facilityType?.facility_type_id}`}
+                                            data-testid={`facility-type-listitem-${facilityType?.facility_type_id}`}
                                         >
-                                            <InputLabel title={facilityType.facility_type_name}>
+                                            <InputLabel title={facilityType?.facility_type_name}>
                                                 <Checkbox
                                                     checked={!!isChecked()}
-                                                    data-testid={`filtertype-${facilityType.facility_type_id}`}
-                                                    id={`filtertype-${facilityType.facility_type_id}`}
+                                                    data-testid={`filtertype-${facilityType?.facility_type_id}`}
+                                                    id={`filtertype-${facilityType?.facility_type_id}`}
                                                     onChange={handleChange('facility_type_id')}
                                                 />
-                                                {facilityType.facility_type_name}
+                                                {facilityType?.facility_type_name}
                                             </InputLabel>
                                         </li>
                                     );
@@ -562,19 +565,19 @@ export const EditSpaceForm = ({
 
     const handleSaveClick = () => {
         const valuesToSend = {};
-        valuesToSend.space_name = formValues.space_name;
-        valuesToSend.space_type = formValues.space_type;
-        valuesToSend.space_floor_id = formValues.floor_id;
-        valuesToSend.space_precise = formValues.space_precise;
-        valuesToSend.space_description = formValues.space_description;
-        valuesToSend.space_photo_url = formValues.space_photo_url;
-        valuesToSend.space_photo_description = formValues.space_photo_description;
-        valuesToSend.space_opening_hours_id = formValues.space_opening_hours_id;
-        valuesToSend.space_services_page = formValues.space_services_page;
-        valuesToSend.space_opening_hours_override = formValues.space_opening_hours_override;
-        valuesToSend.space_latitude = formValues.space_latitude;
-        valuesToSend.space_longitude = formValues.space_longitude;
-        valuesToSend.facility_types = formValues.facility_types?.map(ft => ft.facility_type_id);
+        valuesToSend.space_name = formValues?.space_name;
+        valuesToSend.space_type = formValues?.space_type;
+        valuesToSend.space_floor_id = formValues?.floor_id;
+        valuesToSend.space_precise = formValues?.space_precise;
+        valuesToSend.space_description = formValues?.space_description;
+        valuesToSend.space_photo_url = formValues?.space_photo_url;
+        valuesToSend.space_photo_description = formValues?.space_photo_description;
+        valuesToSend.space_opening_hours_id = formValues?.space_opening_hours_id;
+        valuesToSend.space_services_page = formValues?.space_services_page;
+        valuesToSend.space_opening_hours_override = formValues?.space_opening_hours_override;
+        valuesToSend.space_latitude = formValues?.space_latitude;
+        valuesToSend.space_longitude = formValues?.space_longitude;
+        valuesToSend.facility_types = formValues?.facility_types?.map(ft => ft?.facility_type_id);
 
         const validationResult = formValid(valuesToSend);
         if (validationResult !== true) {
@@ -582,8 +585,8 @@ export const EditSpaceForm = ({
 
             document.activeElement.blur();
             const message = `<p data-count="${
-                validationResult.length
-            }">These errors occurred:</p><ul>${validationResult.map(m => `<li>${m.message}</li>`).join('')}</ul>`;
+                validationResult?.length
+            }">These errors occurred:</p><ul>${validationResult?.map(m => `<li>${m?.message}</li>`)?.join('')}</ul>`;
             displayToastMessage(message, true);
         } else {
             saveToDb(valuesToSend);
@@ -629,8 +632,8 @@ export const EditSpaceForm = ({
             </PageWrapper>
         );
     } else if (
-        !location.currentCampusList ||
-        location.currentCampusList.length === 0 ||
+        !location?.currentCampusList ||
+        location?.currentCampusList?.length === 0 ||
         (bookableSpacesRoomListLoading === false &&
             bookableSpacesRoomListError === false &&
             !bookableSpacesRoomList?.data?.locations)
@@ -733,9 +736,9 @@ export const EditSpaceForm = ({
                                 <StyledErrorMessageTypography component={'div'}>
                                     {reportErrorMessage('space_type')}
                                 </StyledErrorMessageTypography>
-                                {spaceTypeList && spaceTypeList.length > 0 && (
+                                {spaceTypeList && spaceTypeList?.length > 0 && (
                                     <datalist id="space-type-list">
-                                        {spaceTypeList.map((spaceType, index) => (
+                                        {spaceTypeList?.map((spaceType, index) => (
                                             <option key={`spacetype-datalist-${index}`} value={spaceType} />
                                         ))}
                                     </datalist>
@@ -813,11 +816,11 @@ export const EditSpaceForm = ({
                                         required
                                         // onBlur={handleFieldCompletion}
                                     >
-                                        {!!location.currentCampusList &&
-                                            location.currentCampusList.length > 0 &&
-                                            location.currentCampusList.map((campus, index) => (
-                                                <MenuItem value={campus.campus_id} key={`select-campus-${index}`}>
-                                                    {campus.campus_name}
+                                        {!!location?.currentCampusList &&
+                                            location?.currentCampusList?.length > 0 &&
+                                            location?.currentCampusList?.map((campus, index) => (
+                                                <MenuItem value={campus?.campus_id} key={`select-campus-${index}`}>
+                                                    {campus?.campus_name}
                                                 </MenuItem>
                                             ))}
                                     </Select>
@@ -837,11 +840,11 @@ export const EditSpaceForm = ({
                                         required
                                         // onBlur={handleFieldCompletion}
                                     >
-                                        {!!location.currentCampusLibraries &&
-                                            location.currentCampusLibraries.length > 0 &&
-                                            location.currentCampusLibraries.map((library, index) => (
-                                                <MenuItem value={library.library_id} key={`select-library-${index}`}>
-                                                    {library.library_name || library.building_name}
+                                        {!!location?.currentCampusLibraries &&
+                                            location?.currentCampusLibraries?.length > 0 &&
+                                            location?.currentCampusLibraries?.map((library, index) => (
+                                                <MenuItem value={library?.library_id} key={`select-library-${index}`}>
+                                                    {library?.library_name || library?.building_name}
                                                 </MenuItem>
                                             ))}
                                     </Select>
@@ -860,21 +863,21 @@ export const EditSpaceForm = ({
                                         onChange={handleChange('floor_id')}
                                         required
                                     >
-                                        {!!location.currentLibraryFloors &&
-                                            location.currentLibraryFloors?.length > 0 &&
-                                            location.currentLibraryFloors?.map((floor, index) => {
+                                        {!!location?.currentLibraryFloors &&
+                                            location?.currentLibraryFloors?.length > 0 &&
+                                            location?.currentLibraryFloors?.map((floor, index) => {
                                                 const libraryName =
-                                                    location.currentLibrary.library_name ||
-                                                    location.currentLibrary.building_name;
+                                                    location?.currentLibrary?.library_name ||
+                                                    location?.currentLibrary?.building_name;
                                                 return (
-                                                    <MenuItem value={floor.floor_id} key={`select-floor-${index}`}>
-                                                        {floor.floor_name}{' '}
-                                                        {location.currentLibrary.ground_floor_id === floor.floor_id
+                                                    <MenuItem value={floor?.floor_id} key={`select-floor-${index}`}>
+                                                        {floor?.floor_name}{' '}
+                                                        {location?.currentLibrary?.ground_floor_id === floor?.floor_id
                                                             ? ' (Ground floor)'
                                                             : ''}
                                                         {`${
                                                             window.location.host === 'localhost:2020' // to make the Select more readable to we poor devs, also makes more accurate test
-                                                                ? ' [' + libraryName + ' - ' + floor.floor_id + ']'
+                                                                ? ' [' + libraryName + ' - ' + floor?.floor_id + ']'
                                                                 : ''
                                                         }`}
                                                     </MenuItem>
@@ -929,7 +932,7 @@ export const EditSpaceForm = ({
                                     value={selectedSpringshareOption}
                                     onChange={handleSpringshareSelection}
                                     getOptionLabel={option => option?.display_name || noSpringshareHoursLabel}
-                                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                                    isOptionEqualToValue={(option, value) => option?.id === value?.id}
                                     renderInput={params => (
                                         <TextField
                                             {...params}
@@ -937,11 +940,11 @@ export const EditSpaceForm = ({
                                             placeholder="Choose a Library..."
                                             variant="outlined"
                                             InputProps={{
-                                                ...params.InputProps,
+                                                ...params?.InputProps,
                                                 'data-testid': 'add-space-springshare-search-input-field',
                                             }}
                                             inputProps={{
-                                                ...params.inputProps,
+                                                ...params?.inputProps,
                                                 'data-testid': 'add-space-springshare-id-autocomplete-input-wrapper',
                                                 'aria-label': 'Search for a Library',
                                             }}
