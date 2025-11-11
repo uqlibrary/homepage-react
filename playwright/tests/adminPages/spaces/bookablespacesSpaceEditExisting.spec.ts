@@ -4,7 +4,7 @@ import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/he
 
 import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 
-test.describe('Spaces Admin - add new space', () => {
+test.describe('Spaces Admin - edit spaces', () => {
     test('can navigate from dashboard to edit page', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -91,7 +91,7 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
         await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
     });
-    test('add spaces page is accessible', async ({ page }) => {
+    test('edit spaces page is accessible', async ({ page }) => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
     const NOISE_LEVEL_LOW = 1;
@@ -209,6 +209,49 @@ test.describe('Spaces Admin - edit space', () => {
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
+    test('can re-edit after save', async ({ page }) => {
+        // click save button
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        page.getByTestId('admin-spaces-save-button-submit').click();
+
+        // change the title so when we reload the page from "edit again" we can check the page has actually reloaded
+        // by showing the immmutable mock data has reverted
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-name').locator('input')).toHaveValue('01-W431');
+        page.getByTestId('space-name')
+            .locator('input')
+            .fill('New space name');
+
+        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
+        await expect(page.getByTestId('confirm-spaces-save-outcome')).toBeVisible();
+        await expect(page.getByTestId('confirm-spaces-save-outcome')).toContainText('Return to dashboard');
+        await expect(page.getByTestId('cancel-spaces-save-outcome')).toBeVisible();
+        await expect(page.getByTestId('cancel-spaces-save-outcome')).toContainText('Edit record again');
+        page.getByTestId('cancel-spaces-save-outcome').click();
+
+        await expect(page.getByTestId('message-title')).not.toBeVisible();
+        await expect(page).toHaveURL('http://localhost:2020/admin/spaces/edit/987y_isjgt_9866?user=libSpaces');
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+        // page has reloaded, not just closed dialog, as mock data has reverted
+        await expect(page.getByTestId('space-name').locator('input')).toHaveValue('01-W431');
+    });
+    test('can return to dashboard after save', async ({ page }) => {
+        // click save button
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        page.getByTestId('admin-spaces-save-button-submit').click();
+
+        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
+        await expect(page.getByTestId('confirm-spaces-save-outcome')).toBeVisible();
+        await expect(page.getByTestId('confirm-spaces-save-outcome')).toContainText('Return to dashboard');
+        await expect(page.getByTestId('cancel-spaces-save-outcome')).toBeVisible();
+        await expect(page.getByTestId('cancel-spaces-save-outcome')).toContainText('Edit record again');
+        page.getByTestId('confirm-spaces-save-outcome').click();
+
+        await expect(page.getByTestId('message-title')).not.toBeVisible();
+        await expect(page).toHaveURL('http://localhost:2020/admin/spaces?user=libSpaces');
+    });
     test('can change all fields in edit', async ({ page, context }) => {
         await setTestDataCookie(context, page);
 
@@ -321,7 +364,7 @@ test.describe('Spaces Admin - edit space', () => {
     });
 
     test.describe('Spaces Admin - load errors', () => {
-        test('edit new space - error locations', async ({ page }) => {
+        test('edit space - error locations', async ({ page }) => {
             await page.goto('/admin/spaces/edit/error?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
             // wait for page to load
@@ -333,7 +376,7 @@ test.describe('Spaces Admin - edit space', () => {
             );
             await expect(page.getByTestId('load-space-form-error')).toContainText('Space details had a problem.');
         });
-        test('edit new space - 404 locations', async ({ page }) => {
+        test('edit space - 404 locations', async ({ page }) => {
             await page.goto('/admin/spaces/edit/missingRecord?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
             // wait for page to load
@@ -342,7 +385,7 @@ test.describe('Spaces Admin - edit space', () => {
             await expect(page.getByTestId('missing-record')).toBeVisible();
             await expect(page.getByTestId('missing-record')).toContainText('There is no Space with ID "missingRecord"'); // 'missingRecord' is the id in mock when it is missing
         });
-        test('edit new space - weeklyHours api error', async ({ page }) => {
+        test('edit space - weeklyHours api error', async ({ page }) => {
             await page.goto('/admin/spaces/edit/987y_isjgt_9866?user=libSpaces&responseType=weeklyHoursError');
             await page.setViewportSize({ width: 1300, height: 1000 });
             // wait for page to load
@@ -359,7 +402,7 @@ test.describe('Spaces Admin - edit space', () => {
     });
 
     test.describe('Spaces Admin - save errors', () => {
-        test('edit new space - server 500', async ({ page }) => {
+        test('edit space - server 500', async ({ page }) => {
             await page.goto('/admin/spaces/edit/987y_isjgt_9866?user=libSpaces&responseType=spaceUpdate500Error');
             await page.setViewportSize({ width: 1300, height: 1000 });
             // wait for page to load

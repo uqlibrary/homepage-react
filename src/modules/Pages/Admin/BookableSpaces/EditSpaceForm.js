@@ -446,29 +446,19 @@ export const EditSpaceForm = ({
     }
     const returnToDashboard = () => {
         console.log('returnToDashboard');
-        closeConfirmationBox();
+        // closeConfirmationBox();
         navigateToPage('/admin/spaces');
     };
     const clearForm = () => {
         console.log('clearForm');
-        closeConfirmationBox();
+        // closeConfirmationBox();
         window.location.reload(false);
     };
-
-    const locale = {
-        success: {
-            confirmationTitle: mode === 'add' ? 'A Space has been added' : 'The Space has been updated',
-            confirmationMessage: '',
-            cancelButtonLabel: 'Add another Space',
-            confirmButtonLabel: 'Return to dashboard',
-        },
-        error: {
-            confirmationTitle: mode === 'add' ? bookableSpacesRoomAddError : bookableSpacesRoomUpdateError,
-            confirmationMessage: '',
-            cancelButtonLabel: 'Add another Space',
-            confirmButtonLabel: 'Return to dashboard',
-            alternateActionButtonLabel: 'Close',
-        },
+    const reEditRecord = () => {
+        console.log('reEditRecord');
+        // closeConfirmationBox();
+        clearForm();
+        navigateToPage(window.location.href);
     };
 
     const spaceTypeList = React.useMemo(() => {
@@ -663,21 +653,39 @@ export const EditSpaceForm = ({
         );
     } else {
         console.log('RENDER formValues.facility_types=', formValues?.facility_types);
+        const locale = {
+            success: {
+                confirmationTitle: mode === 'add' ? 'A Space has been added' : 'The Space has been updated',
+                confirmationMessage: '',
+                confirmButtonLabel: 'Return to dashboard',
+                cancelButtonLabel: mode === 'add' ? 'Add another Space' : 'Edit record again',
+            },
+            error: {
+                confirmationTitle: mode === 'add' ? bookableSpacesRoomAddError : bookableSpacesRoomUpdateError,
+                confirmationMessage: '',
+                confirmButtonLabel: 'Return to dashboard',
+                cancelButtonLabel: mode === 'add' ? 'Add another Space' : 'Edit record again',
+                alternateActionButtonLabel: 'Close',
+            },
+        };
+
         return (
             <>
                 <ConfirmationBox
-                    actionButtonColor="primary"
-                    actionButtonVariant="contained"
                     confirmationBoxId="spaces-save-outcome"
+                    isOpen={confirmationOpen}
+                    onClose={closeConfirmationBox}
                     onAction={() => returnToDashboard()}
-                    hideCancelButton={mode === 'edit' || !locale.success.cancelButtonLabel}
-                    cancelButtonLabel={locale.success.cancelButtonLabel}
+                    //
+                    hideCancelButton={!locale.success.cancelButtonLabel}
+                    onCancelAction={() => {
+                        mode === 'edit' ? reEditRecord() : clearForm();
+                    }}
+                    //
                     showAlternateActionButton={!!bookableSpacesRoomUpdateError}
                     alternateActionButtonLabel="Close"
                     onAlternateAction={closeConfirmationBox}
-                    onCancelAction={() => clearForm()}
-                    onClose={closeConfirmationBox}
-                    isOpen={confirmationOpen}
+                    //
                     locale={
                         !!bookableSpacesRoomAddError || !!bookableSpacesRoomUpdateError ? locale.error : locale.success
                     }
