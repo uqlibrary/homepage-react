@@ -35,7 +35,7 @@ const validAssetStatusOptions = locale.pages.manage.bulkassetupdate.config.valid
 
 const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep, onSubmit }) => {
     const componentId = `${id}-step-two`;
-    const componentIdLower = componentId.toLowerCase();
+    const componentIdLower = componentId.replace(/-/g, '_');
 
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('md')) || false;
@@ -414,14 +414,14 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                             multiline
                             minRows={3}
                             variant="standard"
-                            id={`${componentId}-discard-reason-input`}
+                            id={`${componentIdLower}-discard-reason-input`}
                             InputProps={{ fullWidth: true }}
                             InputLabelProps={{
                                 shrink: true,
-                                htmlFor: `${componentId}-discard-reason-input`,
+                                htmlFor: `${componentIdLower}-discard-reason-input`,
                             }}
                             inputProps={{
-                                'data-testid': `${componentId}-discard-reason-input`,
+                                'data-testid': `${componentIdLower}-discard-reason-input`,
                             }}
                             value={formValues?.discard_reason ?? ''}
                             onChange={handleChange('discard_reason')}

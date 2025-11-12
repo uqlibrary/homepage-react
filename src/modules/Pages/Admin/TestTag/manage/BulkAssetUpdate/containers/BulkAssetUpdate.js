@@ -5,7 +5,7 @@ import * as actions from 'data/actions';
 import { withUser } from '../../../helpers/withUser';
 import config from '../components/config';
 
-const DEFAULT_FORM_VALUES = {
+export const DEFAULT_FORM_VALUES = {
     asset_list: [],
     hasLocation: true,
     hasDiscardStatus: false,

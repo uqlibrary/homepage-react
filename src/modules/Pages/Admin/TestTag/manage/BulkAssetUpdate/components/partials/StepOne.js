@@ -24,7 +24,7 @@ import { useAccountUser } from '../../../../helpers/hooks';
 
 const StepOne = ({ id, list, actions, isFilterDialogOpen, setIsFilterDialogOpen, resetForm, nextStep }) => {
     const componentId = `${id}-step-one`;
-    const componentIdLower = componentId.toLowerCase();
+    const componentIdLower = componentId.replace(/-/g, '_');
 
     const pageLocale = locale.pages.manage.bulkassetupdate;
     const stepOneLocale = pageLocale.form.step.one;
