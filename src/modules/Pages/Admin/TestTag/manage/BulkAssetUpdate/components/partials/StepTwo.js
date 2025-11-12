@@ -214,7 +214,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                         {pageLocale.form.alert.alertMessageAssetsExcluded(
                             excludedList.data,
                             locale.pages.general.pluraliser,
-                            makeAssetExcludedMessage({ maxItems: 1, excludedList }),
+                            makeAssetExcludedMessage({ excludedList }),
                         )}
                     </Alert>
                 </Grid>

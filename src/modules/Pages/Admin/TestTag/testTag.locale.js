@@ -924,11 +924,11 @@ export default {
                                         assets?
                                         {excludedListString ? (
                                             <>
-                                                <br />
-                                                <strong>{excludedListString}</strong>
-                                                <br />
-                                                These will be re-added to your selected list in Step 1 after this bulk
-                                                update operation is complete.
+                                                <p>
+                                                    <strong>{excludedListString}</strong>
+                                                </p>
+                                                Excluded assets will be re-added to your selected list in Step 1 after
+                                                this bulk update operation is complete.
                                             </>
                                         ) : (
                                             <></>

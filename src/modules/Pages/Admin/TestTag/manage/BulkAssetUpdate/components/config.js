@@ -1,5 +1,7 @@
 /* istanbul ignore file */
 
+export const MAXEXCLUDEDMOREITEMS = 10;
+
 export default {
     defaults: {
         monthsPeriod: 0,

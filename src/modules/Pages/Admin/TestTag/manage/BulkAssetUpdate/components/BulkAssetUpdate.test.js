@@ -328,7 +328,7 @@ describe('BulkAssetUpdate', () => {
 
         expect(getByText('Bulk Update Selected Assets')).toBeInTheDocument();
         expect(
-            getByText('Are you sure you wish to proceed with this bulk update of selected assets?'),
+            getByText('Are you sure you wish to proceed with this bulk update of 2 selected assets?'),
         ).toBeInTheDocument();
 
         await userEvent.click(getByTestId('confirm-bulk-asset-update'));
@@ -413,7 +413,7 @@ describe('BulkAssetUpdate', () => {
         ).toBeInTheDocument();
         expect(
             within(getByTestId('dialogbox-bulk-asset-update')).getByText(
-                'Are you sure you wish to proceed with this bulk update of selected assets?',
+                'Are you sure you wish to proceed with this bulk update of 2 selected assets?',
             ),
         ).toBeInTheDocument();
         await userEvent.click(getByTestId('confirm-bulk-asset-update'));
@@ -533,7 +533,7 @@ describe('BulkAssetUpdate', () => {
             ).toBeInTheDocument();
             expect(
                 within(getByTestId('dialogbox-bulk-asset-update')).getByText(
-                    'Are you sure you wish to proceed with this bulk update of selected assets?',
+                    'Are you sure you wish to proceed with this bulk update of 2 selected assets?',
                 ),
             ).toBeInTheDocument();
 

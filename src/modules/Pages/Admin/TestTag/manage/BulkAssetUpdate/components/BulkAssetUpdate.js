@@ -117,10 +117,10 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
 
     const dialogMessageObject = React.useMemo(() => {
         if (confirmDialogOpen && excludedList.data.length > 0) {
-            const excludedListString = makeAssetExcludedMessage({ maxItems: 1, excludedList });
+            const excludedListString = makeAssetExcludedMessage({ excludedList });
             return pageLocale.form.alert.dialogBulkUpdateConfirm(list.data.length, excludedListString);
         }
-        return {};
+        return pageLocale.form.alert.dialogBulkUpdateConfirm(list.data.length);
     }, [confirmDialogOpen, excludedList, list.data.length, pageLocale.form.alert]);
 
     return (

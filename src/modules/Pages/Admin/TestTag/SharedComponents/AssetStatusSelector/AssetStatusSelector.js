@@ -34,7 +34,9 @@ const AssetStatusSelector = ({
     );
 
     React.useEffect(() => {
-        setCurrentValue(value);
+        if (value) {
+            setCurrentValue(value);
+        }
     }, [value]);
 
     return (
