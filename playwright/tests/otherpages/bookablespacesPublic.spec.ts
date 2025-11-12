@@ -1,4 +1,4 @@
-import { test, expect } from '@uq/pw/test';
+import { expect, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
 test.describe('Spaces', () => {
@@ -139,6 +139,7 @@ test.describe('Spaces', () => {
         const examFriendlyCheckbox = page.getByTestId('facility-type-listitem-7');
         const foodOutletsCheckbox = page.getByTestId('facility-type-listitem-14');
         const prodPrintingCheckbox = page.getByTestId('facility-type-listitem-15');
+        const lowNoiseExcludeCheckboxlabel = page.getByTestId('reject-filtertype-label-1');
 
         const forganSmithCollaborativeSpace = page.getByTestId('space-123456').locator('h2');
         const duttonParkGroupStudyRoom = page.getByTestId('space-1234544').locator('h2');
@@ -152,9 +153,9 @@ test.describe('Spaces', () => {
         await expect(andrewLiverisComputerRoom).toBeVisible();
 
         // filter to show "Low Noise" only
-        await expect(lowNoiseCheckbox.locator('label')).toBeVisible();
-        await expect(lowNoiseCheckbox.locator('label')).toContainText('Noise level Low');
-        await lowNoiseCheckbox.locator('input').check();
+        await expect(lowNoiseCheckbox.locator('label:first-of-type')).toBeVisible();
+        await expect(lowNoiseCheckbox.locator('label:first-of-type')).toContainText('Noise level Low');
+        await lowNoiseCheckbox.locator('span input').check();
 
         // selecting "Low Noise" makes two disappear
         await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(1);
@@ -164,9 +165,9 @@ test.describe('Spaces', () => {
         await expect(andrewLiverisComputerRoom).not.toBeVisible();
 
         // add 'exam friendly'
-        await expect(examFriendlyCheckbox.locator('label')).toBeVisible();
-        await expect(examFriendlyCheckbox.locator('label')).toContainText('Exam Friendly');
-        await examFriendlyCheckbox.locator('input').check();
+        await expect(examFriendlyCheckbox.locator('label:first-of-type')).toBeVisible();
+        await expect(examFriendlyCheckbox.locator('label:first-of-type')).toContainText('Exam Friendly');
+        await examFriendlyCheckbox.locator('span input').check();
 
         // selecting "exam friendly" & "Low Noise" means none are visible, and the user is prompted
         await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(1); // "no spaces" message
@@ -176,7 +177,7 @@ test.describe('Spaces', () => {
         await expect(andrewLiverisComputerRoom).not.toBeVisible();
 
         // uncheck "Low Noise" makes Computer room (#3) appear
-        await lowNoiseCheckbox.locator('input').uncheck();
+        await lowNoiseCheckbox.locator('span input').uncheck();
         await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(1);
         await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
         await expect(forganSmithCollaborativeSpace).not.toBeVisible();
@@ -184,7 +185,7 @@ test.describe('Spaces', () => {
         await expect(andrewLiverisComputerRoom).toBeVisible();
 
         // uncheck other filter and all the Spaces appear
-        await examFriendlyCheckbox.locator('input').uncheck();
+        await examFriendlyCheckbox.locator('span input').uncheck();
 
         await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(3);
         await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
@@ -194,9 +195,9 @@ test.describe('Spaces', () => {
 
         // show checkboxes do an 'OR' within groups
         // choose food outlets, 1 Space appears
-        await expect(foodOutletsCheckbox.locator('label')).toBeVisible();
-        await expect(foodOutletsCheckbox.locator('label')).toContainText('Food outlets');
-        await foodOutletsCheckbox.locator('input').check();
+        await expect(foodOutletsCheckbox.locator('label:first-of-type')).toBeVisible();
+        await expect(foodOutletsCheckbox.locator('label:first-of-type')).toContainText('Food outlets');
+        await foodOutletsCheckbox.locator('span input').check();
 
         await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(1);
         await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
@@ -205,13 +206,23 @@ test.describe('Spaces', () => {
         await expect(andrewLiverisComputerRoom).toBeVisible();
 
         // add production printing, which is in the same group, and a second one appears
-        await expect(prodPrintingCheckbox.locator('label')).toBeVisible();
-        await expect(prodPrintingCheckbox.locator('label')).toContainText('Production Printing Services');
-        await prodPrintingCheckbox.locator('input').check();
+        await expect(prodPrintingCheckbox.locator('label:first-of-type')).toBeVisible();
+        await expect(prodPrintingCheckbox.locator('label:first-of-type')).toContainText('Production Printing Services');
+        await prodPrintingCheckbox.locator('span input').check();
 
         await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(2);
         await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
         await expect(forganSmithCollaborativeSpace).toBeVisible();
+        await expect(duttonParkGroupStudyRoom).not.toBeVisible();
+        await expect(andrewLiverisComputerRoom).toBeVisible();
+
+        // select "exclude low noise areas" filter
+        await lowNoiseCheckbox.locator('span.fortestfocus').click(); // a hack of the page so playwright can tap on the exclude filter
+        await expect(lowNoiseExcludeCheckboxlabel).toBeVisible();
+        await lowNoiseExcludeCheckboxlabel.check();
+        await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(1);
+        await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
+        await expect(forganSmithCollaborativeSpace).not.toBeVisible();
         await expect(duttonParkGroupStudyRoom).not.toBeVisible();
         await expect(andrewLiverisComputerRoom).toBeVisible();
     });
