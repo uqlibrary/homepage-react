@@ -28,6 +28,7 @@ import { isEmptyObject, isEmptyStr } from '../../../../helpers/helpers';
 import { PERMISSIONS } from '../../../../config/auth';
 import { AccordionWithCheckbox } from '../AccordionWithCheckbox';
 import { FormContext } from '../../../../helpers/hooks';
+import { makeAssetExcludedMessage } from '../utils';
 
 const moment = require('moment');
 
@@ -213,6 +214,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                         {pageLocale.form.alert.alertMessageAssetsExcluded(
                             excludedList.data,
                             locale.pages.general.pluraliser,
+                            makeAssetExcludedMessage({ maxItems: 1, excludedList }),
                         )}
                     </Alert>
                 </Grid>

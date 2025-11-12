@@ -892,9 +892,9 @@ export default {
                                 {pluraliser('asset', count)} to bulk update.
                             </>
                         ),
-                        alertMessageAssetsExcluded: (list, pluraliser) => {
+                        alertMessageAssetsExcluded: (list, pluraliser, excludedListString) => {
                             const count = list.length;
-                            const excludedList = list.map(item => item.asset_id_displayed);
+
                             return count > 0 ? (
                                 <p>
                                     Excluded{' '}
@@ -903,19 +903,40 @@ export default {
                                     </Typography>{' '}
                                     {pluraliser('asset', count)} because their next inspection date falls outside of the
                                     chosen range, or their current status is incompatible with the selected options:
-                                    <br />
-                                    <strong>{excludedList.join(', ')}</strong>
+                                    {excludedListString && (
+                                        <>
+                                            <br />
+                                            <strong>{excludedListString}</strong>
+                                        </>
+                                    )}
                                 </p>
                             ) : (
                                 <></>
                             );
                         },
-                        dialogBulkUpdateConfirm: {
-                            confirmButtonLabel: 'Proceed',
-                            cancelButtonLabel: 'Cancel',
-                            confirmationMessage:
-                                'Are you sure you wish to proceed with this bulk update of selected assets?',
-                            confirmationTitle: 'Bulk Update Selected Assets',
+                        dialogBulkUpdateConfirm: (count, excludedListString) => {
+                            return {
+                                confirmButtonLabel: 'Proceed',
+                                cancelButtonLabel: 'Cancel',
+                                confirmationMessage: (
+                                    <div>
+                                        Are you sure you wish to proceed with this bulk update of {count} selected
+                                        assets?
+                                        {excludedListString ? (
+                                            <>
+                                                <br />
+                                                <strong>{excludedListString}</strong>
+                                                <br />
+                                                These will be re-added to your selected list in Step 1 after this bulk
+                                                update operation is complete.
+                                            </>
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </div>
+                                ),
+                                confirmationTitle: 'Bulk Update Selected Assets',
+                            };
                         },
                         snackbars: {
                             success: 'Bulk Asset update successful',

@@ -12,7 +12,7 @@ import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
 import { PERMISSIONS } from '../../../config/auth';
 import { useForm, useObjectList, useConfirmationAlert } from '../../../helpers/hooks';
-import { transformRow, transformRequest } from './utils';
+import { transformRow, transformRequest, makeAssetExcludedMessage } from './utils';
 import { breadcrumbs } from 'config/routes';
 import { FormContext } from '../../../helpers/hooks';
 import StepOne from './partials/StepOne';
@@ -41,12 +41,11 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const excludedList = useObjectList([], null, { key: 'asset_id' });
 
     const [step, setStep] = useState(1);
-    const assignAssetDefaults = () => ({ ...defaultFormValues });
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [confirmDialogueBusy, setConfirmDialogueBusy] = useState(false);
 
     const { formValues, signature: formValueSignature, resetFormValues, handleChange } = useForm({
-        defaultValues: { ...assignAssetDefaults() },
+        defaultValues: { ...defaultFormValues },
     });
 
     const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
@@ -61,16 +60,16 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     });
 
     const resetForm = useCallback(() => {
-        const newFormValues = assignAssetDefaults();
+        const newFormValues = { ...defaultFormValues };
         setConfirmDialogueBusy(false);
         setConfirmDialogOpen(false);
         resetFormValues(newFormValues);
         actions.clearAssetsMine();
         list.clear();
+        if (excludedList.data.length > 0) list.importTransformedData(excludedList.data);
         excludedList.clear();
         setStep(1);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [actions, defaultFormValues, excludedList, list, resetFormValues]);
 
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -116,6 +115,14 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
             });
     };
 
+    const dialogMessageObject = React.useMemo(() => {
+        if (confirmDialogOpen && excludedList.data.length > 0) {
+            const excludedListString = makeAssetExcludedMessage({ maxItems: 1, excludedList });
+            return pageLocale.form.alert.dialogBulkUpdateConfirm(list.data.length, excludedListString);
+        }
+        return {};
+    }, [confirmDialogOpen, excludedList, list.data.length, pageLocale.form.alert]);
+
     return (
         <StandardAuthPage
             title={locale.pages.general.pageTitle}
@@ -134,9 +141,9 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
                     isOpen={confirmDialogOpen}
                     locale={
                         !confirmDialogueBusy
-                            ? pageLocale.form.alert.dialogBulkUpdateConfirm
+                            ? dialogMessageObject
                             : {
-                                  ...pageLocale.form.alert.dialogBulkUpdateConfirm,
+                                  ...dialogMessageObject,
                                   confirmButtonLabel: (
                                       <CircularProgress
                                           color="inherit"
