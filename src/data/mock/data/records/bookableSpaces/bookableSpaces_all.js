@@ -26,19 +26,60 @@ export default {
             space_building_number: "01",
             space_campus_id: 1,
             space_campus_name: "St Lucia",
-            facility_types: [{
-                facility_type_id: 1,
-                facility_type_name: 'Noise level Low',
-            }, {
-                facility_type_id:  11,
-                facility_type_name: 'Whiteboard',
-            }, {
-                facility_type_id: 8,
-                facility_type_name: "Postgraduate spaces",
-            }, {
-                facility_type_id: 15,
-                facility_type_name: "Production Printing Services",
-            }],
+            facility_types: [
+                {
+                    "facility_type_id": 23,
+                    "facility_type_name": "Toilets, female"
+                },
+                {
+                    "facility_type_id": 22,
+                    "facility_type_name": "Toilets, male"
+                },
+                {
+                    "facility_type_id": 29,
+                    "facility_type_name": "Recharge Station"
+                },
+                {
+                    "facility_type_id": 31,
+                    "facility_type_name": "Self-printing & scanning"
+                },
+                {
+                    "facility_type_id": 17,
+                    "facility_type_name": "Low noise level"
+                },
+                {
+                    "facility_type_id": 5,
+                    "facility_type_name": "Computer"
+                },
+                {
+                    "facility_type_id": 33,
+                    "facility_type_name": "Client accessible power point"
+                },
+                {
+                    "facility_type_id": 38,
+                    "facility_type_name": "Whiteboard"
+                },
+                {
+                    "facility_type_id": 39,
+                    "facility_type_name": "Adjustable desks"
+                },
+                {
+                    "facility_type_id": 8,
+                    "facility_type_name": "AV equipment"
+                },
+                {
+                    "facility_type_id": 13,
+                    "facility_type_name": "Postgraduate spaces"
+                },
+                {
+                    "facility_type_id": 14,
+                    "facility_type_name": "Undergrad spaces"
+                },
+                {
+                    "facility_type_id": 57,
+                    "facility_type_name": "Contains Artwork"
+                }
+            ],
         }, {
             space_id: "1234544",
             space_uuid: "9867y_isjgt_9866",
@@ -54,19 +95,68 @@ export default {
             updated_at: "2025-08-01 11:00:00",
             space_latitude: "-27.496955206561836",
             space_longitude: "153.01308753792662",
-            facility_types: [{
-                facility_type_id: 3,
-                facility_type_name: 'Noise level High',
-            }, {
-                facility_type_id: 9,
-                facility_type_name: "Power outlets",
-            }, {
-                facility_type_id: 10,
-                facility_type_name: "Undergrad spaces",
-            }, {
-                facility_type_id:  11,
-                facility_type_name: 'Whiteboard',
-            }],
+            facility_types: [
+                {
+                    "facility_type_id": 23,
+                    "facility_type_name": "Toilets, female"
+                },
+                {
+                    "facility_type_id": 22,
+                    "facility_type_name": "Toilets, male"
+                },
+                {
+                    "facility_type_id": 29,
+                    "facility_type_name": "Recharge Station"
+                },
+                {
+                    "facility_type_id": 31,
+                    "facility_type_name": "Self-printing & scanning"
+                },
+                {
+                    "facility_type_id": 5,
+                    "facility_type_name": "Computer"
+                },
+                {
+                    "facility_type_id": 32,
+                    "facility_type_name": "BYOD station"
+                },
+                {
+                    "facility_type_id": 33,
+                    "facility_type_name": "Client accessible power point"
+                },
+                {
+                    "facility_type_id": 34,
+                    "facility_type_name": "on-desk USB-A"
+                },
+                {
+                    "facility_type_id": 35,
+                    "facility_type_name": "Qi chargers"
+                },
+                {
+                    "facility_type_id": 36,
+                    "facility_type_name": "On-desk USB-C, Low Power "
+                },
+                {
+                    "facility_type_id": 42,
+                    "facility_type_name": "General Collections"
+                },
+                {
+                    "facility_type_id": 44,
+                    "facility_type_name": "Requested items"
+                },
+                {
+                    "facility_type_id": 45,
+                    "facility_type_name": "Lending"
+                },
+                {
+                    "facility_type_id": 46,
+                    "facility_type_name": "Return station"
+                },
+                {
+                    "facility_type_id": 10,
+                    "facility_type_name": "High noise level "
+                }
+            ],
             space_type: 'Group Study Room',
             space_floor_id: 65,
             space_floor_name: "1",
@@ -92,20 +182,48 @@ export default {
             updated_at: "2025-08-01 11:00:00",
             space_latitude: "-27.50046410327122",
             space_longitude: "153.0141740262594",
-            facility_types: [{
-                facility_type_id: 2,
-                facility_type_name: 'Noise level Medium',
-            }, {
-                facility_type_id: 14,
-                facility_type_name: "Food outlets",
-            }, {
-                facility_type_id: 7,
-                facility_type_name: 'Exam Friendly',
-
-            }, {
-                facility_type_id: 19,
-                facility_type_name: "Landmark",
-            }],
+            facility_types: [
+                {
+                    "facility_type_id": 19,
+                    "facility_type_name": "Bookable"
+                },
+                {
+                    "facility_type_id": 23,
+                    "facility_type_name": "Toilets, female"
+                },
+                {
+                    "facility_type_id": 22,
+                    "facility_type_name": "Toilets, male"
+                },
+                {
+                    "facility_type_id": 29,
+                    "facility_type_name": "Recharge Station"
+                },
+                {
+                    "facility_type_id": 31,
+                    "facility_type_name": "Self-printing & scanning"
+                },
+                {
+                    "facility_type_id": 33,
+                    "facility_type_name": "Client accessible power point"
+                },
+                {
+                    "facility_type_id": 8,
+                    "facility_type_name": "AV equipment"
+                },
+                {
+                    "facility_type_id": 50,
+                    "facility_type_name": "Natural"
+                },
+                {
+                    "facility_type_id": 13,
+                    "facility_type_name": "Postgraduate spaces"
+                },
+                {
+                    "facility_type_id": 14,
+                    "facility_type_name": "Undergrad spaces"
+                }
+            ],
             space_type: 'Computer room',
             space_floor_id: 72,
             space_floor_name: "2A",
