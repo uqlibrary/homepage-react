@@ -9,7 +9,7 @@ export default {
           "asset_barcode": "UQL000001",
           "asset_room_id_last_seen": 1,
           "asset_department_owned_by": "UQL",
-          "asset_status": "AWAITINGTEST",
+          "asset_status": "MISSING",
           "created_at": "2023-08-01T05:39:04.000000Z",
           "updated_at": "2023-08-01T05:39:04.000000Z",
           "asset_type_id": 3,

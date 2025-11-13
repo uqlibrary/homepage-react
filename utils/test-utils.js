@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import preview, { jestPreviewConfigure } from 'jest-preview';
 
 import userEvent from '@testing-library/user-event';
 
@@ -43,6 +44,12 @@ export const WithReduxStore = ({ initialState = Immutable.Map(), children }) => 
     </Provider>
 );
 
+const enableJestPreviewOnTestFailure = (options = {}) =>
+    jestPreviewConfigure({
+        autoPreview: true,
+        ...options,
+    });
+
 module.exports = {
     ...domTestingLib,
     ...reactTestingLib,
@@ -50,4 +57,6 @@ module.exports = {
     WithRouter,
     WithReduxStore,
     userEvent,
+    preview,
+    enableJestPreviewOnTestFailure,
 };

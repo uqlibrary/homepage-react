@@ -3,6 +3,7 @@ import {
     isValidEventDate,
     isValidNextTestDate,
     isValidAssetId,
+    isValidAssetStatus,
     isValidRoomId,
     isValidAssetTypeId,
     isValidTestingDeviceId,
@@ -79,6 +80,32 @@ describe('Helper functions', () => {
     it('isValidAssetId function validates asset ids', () => {
         expect(isValidAssetId('uql12345')).toBe(true);
         checkStandardArguments(isValidAssetId, false);
+    });
+    it('isValidAssetStatus function validates asset status', () => {
+        // Valid statuses
+        expect(isValidAssetStatus('CURRENT', testStatusEnum)).toBe(true);
+        expect(isValidAssetStatus('PASSED', testStatusEnum)).toBe(true);
+        expect(isValidAssetStatus('FAILED', testStatusEnum)).toBe(true);
+        expect(isValidAssetStatus('OUTFORREPAIR', testStatusEnum)).toBe(true);
+        expect(isValidAssetStatus('DISCARDED', testStatusEnum)).toBe(true);
+        expect(isValidAssetStatus('INSTORAGE', testStatusEnum)).toBe(true);
+        expect(isValidAssetStatus('MISSING', testStatusEnum)).toBe(true);
+        expect(isValidAssetStatus('NONE', testStatusEnum)).toBe(true);
+
+        // Invalid statuses
+        expect(isValidAssetStatus('INVALID_STATUS', testStatusEnum)).toBe(false);
+        expect(isValidAssetStatus('passed', testStatusEnum)).toBe(false); // case sensitive
+        expect(isValidAssetStatus('', testStatusEnum)).toBe(false);
+        expect(isValidAssetStatus(null, testStatusEnum)).toBe(false);
+        expect(isValidAssetStatus(undefined, testStatusEnum)).toBe(false);
+        expect(isValidAssetStatus(123, testStatusEnum)).toBe(false);
+        expect(isValidAssetStatus({}, testStatusEnum)).toBe(false);
+        expect(isValidAssetStatus([], testStatusEnum)).toBe(false);
+
+        // Invalid testStatusEnum
+        expect(isValidAssetStatus('PASSED', null)).toBe(false);
+        expect(isValidAssetStatus('PASSED', undefined)).toBe(false);
+        expect(isValidAssetStatus('PASSED', {})).toBe(false);
     });
     it('isValidRoomId function validates room ids', () => {
         expect(isValidRoomId(1)).toBe(true);
@@ -298,14 +325,6 @@ describe('Helper functions', () => {
         ).toBe(false);
         expect(isValid({ formValues: invalidObject2, lastInspection: {} })).toBe(false);
         expect(isValid({ formValues: validObject2, lastInspection: { inspect_status: 'OUTFORREPAIR' } })).toBe(false);
-        // expect(
-        //     isValid({
-        //         formValues: validObject2,
-        //         lastInspection: { inspect_status: 'PASSED' },
-        //         passed: 'PASSED',
-        //         failed: 'FAILED',
-        //     }),
-        // ).toBe(false);
         expect(isValid({ formValues: validObject2, lastInspection: {} })).toBe(false);
         expect(isValid({ formValues: invalidObject5, lastInspection: {} })).toBe(false);
     });
@@ -322,6 +341,14 @@ describe('Helper functions', () => {
             FAILED: {
                 label: 'Fail',
                 value: 'FAILED',
+            },
+            INSTORAGE: {
+                label: 'IN STORAGE',
+                value: 'INSTORAGE',
+            },
+            MISSING: {
+                label: 'MISSING',
+                value: 'MISSING',
             },
             NONE: {
                 label: 'NONE',

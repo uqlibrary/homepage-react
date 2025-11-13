@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { createContext, useState, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import { getUserPermissions } from './auth';
@@ -30,27 +30,37 @@ export const useLocation = (defaultSiteId = -1, defaultBuildingId = -1, defaultF
     };
     return { location, setLocation };
 };
+
+export const FormContext = createContext(null);
 export const useForm = (
     /* istanbul ignore next */ { defaultValues = {}, defaultDateFormat = 'YYYY-MM-DD HH:mm' } = {},
 ) => {
     const [formValues, setFormValues] = useState({ ...defaultValues });
+    const thisSig = useRef(JSON.stringify({ ...defaultValues }));
+
+    const updateSig = values => {
+        thisSig.current = JSON.stringify(values);
+    };
 
     const handleChange = prop => event => {
         let propValue = event?.target?.value ?? event;
-        if (prop.indexOf('date') > -1) {
+        if (prop?.indexOf('date') > -1) {
             propValue = moment(propValue).format(defaultDateFormat);
         }
         setFormValues(prevState => {
-            return { ...prevState, [prop]: propValue };
+            const newVals = { ...prevState, [prop]: propValue };
+            updateSig(newVals);
+            return newVals;
         });
     };
 
     const resetFormValues = newFormValues => {
         const newValues = { ...formValues, ...newFormValues };
+        updateSig(newValues);
         setFormValues(newValues);
     };
 
-    return { formValues, resetFormValues, handleChange };
+    return { formValues, resetFormValues, handleChange, signature: thisSig.current };
 };
 
 export const useObjectList = (list = [], transform, options = {}) => {
@@ -74,6 +84,8 @@ export const useObjectList = (list = [], transform, options = {}) => {
         }
     };
 
+    const contains = (item, key) => data.findIndex(entry => entry[key] === item[key]) > -1;
+
     const addStart = item => {
         addAt(0, item);
     };
@@ -95,7 +107,11 @@ export const useObjectList = (list = [], transform, options = {}) => {
         _setData([]);
     };
 
-    return { data, addAt, addStart, addEnd, deleteAt, deleteWith, clear };
+    const importTransformedData = newData => {
+        _setData(prev => [...prev, ...newData]);
+    };
+
+    return { data, addAt, addStart, addEnd, deleteAt, deleteWith, clear, contains, importTransformedData };
 };
 
 export const useConfirmationAlert = ({ duration, onClose = null, errorMessage = null, errorMessageFormatter }) => {

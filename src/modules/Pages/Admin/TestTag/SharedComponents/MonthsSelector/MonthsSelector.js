@@ -91,11 +91,14 @@ const MonthsSelector = ({
                     component={'span'}
                     id={`${componentId}-next-date-label`}
                     data-testid={`${componentId}-next-date-label`}
+                    className={classNames?.nextDateLabel}
                 >
                     {nextDateTextFormatter(
-                        moment(fromDate, fromDateFormat)
-                            .add(currentValue, 'months')
-                            .format(dateDisplayFormat),
+                        currentValue === '-1'
+                            ? ''
+                            : moment(fromDate, fromDateFormat)
+                                  .add(currentValue, 'months')
+                                  .format(dateDisplayFormat),
                     )}
                 </Typography>
             )}
@@ -116,7 +119,11 @@ MonthsSelector.propTypes = {
     fromDate: PropTypes.string,
     fromDateFormat: PropTypes.string,
     dateDisplayFormat: PropTypes.string,
-    classNames: PropTypes.shape({ formControl: PropTypes.string, select: PropTypes.string }),
+    classNames: PropTypes.shape({
+        formControl: PropTypes.string,
+        select: PropTypes.string,
+        nextDateLabel: PropTypes.string,
+    }),
 };
 
 export default React.memo(MonthsSelector);

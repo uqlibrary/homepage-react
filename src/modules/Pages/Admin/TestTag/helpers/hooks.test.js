@@ -1,6 +1,16 @@
-import { useLocation, useForm, useObjectList, useConfirmationAlert } from './hooks';
+import { useAccountUser, useLocation, useForm, useObjectList, useConfirmationAlert } from './hooks';
 import { renderHook, act } from '@testing-library/react';
 import moment from 'moment';
+import * as reactRedux from 'react-redux';
+import * as auth from './auth';
+
+jest.mock('react-redux', () => ({
+    useSelector: jest.fn(),
+}));
+
+jest.mock('./auth', () => ({
+    getUserPermissions: jest.fn(),
+}));
 
 describe('hooks', () => {
     describe('useLocation', () => {
@@ -372,6 +382,149 @@ describe('hooks', () => {
                 result.current.closeConfirmationAlert();
             });
             expect(onCloseMock).toHaveBeenCalled();
+        });
+    });
+
+    describe('useAccountUser', () => {
+        beforeEach(() => {
+            jest.clearAllMocks();
+        });
+
+        it('should return null user when account is not loaded, defaults fallback', () => {
+            reactRedux.useSelector.mockReturnValue();
+            auth.getUserPermissions.mockReturnValue(0);
+
+            const { result } = renderHook(() => useAccountUser());
+
+            expect(result.current.user).toBeNull();
+            expect(result.current.userLoading).toBe(false);
+            expect(result.current.userLoaded).toBe(false);
+            expect(result.current.userError).toBe(false);
+            expect(result.current.privilege).toBe(0);
+        });
+
+        it('should return null user when account is not loaded', () => {
+            reactRedux.useSelector.mockReturnValue({
+                account: {},
+                accountLoading: true,
+            });
+            auth.getUserPermissions.mockReturnValue(0);
+
+            const { result } = renderHook(() => useAccountUser());
+
+            expect(result.current.user).toBeNull();
+            expect(result.current.userLoading).toBe(true);
+            expect(result.current.userLoaded).toBe(false);
+            expect(result.current.userError).toBe(false);
+            expect(result.current.privilege).toBe(0);
+        });
+
+        it('should return user data when account is loaded', () => {
+            const mockUser = {
+                id: 123,
+                name: 'Test User',
+                email: 'test@example.com',
+                privileges: { read: 1, write: 1 },
+            };
+
+            reactRedux.useSelector.mockReturnValue({
+                account: {
+                    tnt: mockUser,
+                },
+                accountLoading: false,
+            });
+            auth.getUserPermissions.mockReturnValue(3);
+
+            const { result } = renderHook(() => useAccountUser());
+
+            expect(result.current.user).toEqual(mockUser);
+            expect(result.current.userLoading).toBe(false);
+            expect(result.current.userLoaded).toBe(true);
+            expect(result.current.userError).toBe(false);
+            expect(result.current.privilege).toBe(3);
+        });
+
+        it('should return error state when account loading failed', () => {
+            reactRedux.useSelector.mockReturnValue({
+                account: {
+                    tnt: null,
+                },
+                accountLoading: false,
+            });
+            auth.getUserPermissions.mockReturnValue(0);
+
+            const { result } = renderHook(() => useAccountUser());
+
+            expect(result.current.user).toBeNull();
+            expect(result.current.userLoading).toBe(false);
+            expect(result.current.userLoaded).toBe(false);
+            expect(result.current.userError).toBe(true);
+            expect(result.current.privilege).toBe(0);
+        });
+
+        it('should handle missing account reducer', () => {
+            reactRedux.useSelector.mockReturnValue(undefined);
+            auth.getUserPermissions.mockReturnValue(0);
+
+            const { result } = renderHook(() => useAccountUser());
+
+            expect(result.current.user).toBeNull();
+            expect(result.current.userLoading).toBe(false);
+            expect(result.current.userLoaded).toBe(false);
+            expect(result.current.userError).toBe(false);
+        });
+
+        it('should handle account without tnt property', () => {
+            reactRedux.useSelector.mockReturnValue({
+                account: {},
+                accountLoading: false,
+            });
+            auth.getUserPermissions.mockReturnValue(0);
+
+            const { result } = renderHook(() => useAccountUser());
+
+            expect(result.current.user).toBeNull();
+            expect(result.current.userLoading).toBe(false);
+            expect(result.current.userLoaded).toBe(false);
+            expect(result.current.userError).toBe(false);
+        });
+
+        it('should call getUserPermissions with correct privileges', () => {
+            const mockPrivileges = { read: 1, write: 1, delete: 1 };
+            const mockUser = {
+                id: 123,
+                privileges: mockPrivileges,
+            };
+
+            reactRedux.useSelector.mockReturnValue({
+                account: {
+                    tnt: mockUser,
+                },
+                accountLoading: false,
+            });
+            auth.getUserPermissions.mockReturnValue(7);
+
+            renderHook(() => useAccountUser());
+
+            expect(auth.getUserPermissions).toHaveBeenCalledWith(mockPrivileges);
+        });
+
+        it('should call getUserPermissions with empty object when privileges are missing', () => {
+            const mockUser = {
+                id: 123,
+            };
+
+            reactRedux.useSelector.mockReturnValue({
+                account: {
+                    tnt: mockUser,
+                },
+                accountLoading: false,
+            });
+            auth.getUserPermissions.mockReturnValue(0);
+
+            renderHook(() => useAccountUser());
+
+            expect(auth.getUserPermissions).toHaveBeenCalledWith({});
         });
     });
 });
