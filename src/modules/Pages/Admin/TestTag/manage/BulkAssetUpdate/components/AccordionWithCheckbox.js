@@ -32,8 +32,10 @@ const componentIdLower = 'accordionWithCheckbox';
 export const AccordionWithCheckbox = ({ id, children, label, slotProps, disabled = false }) => (
     <StyledAccordion {...slotProps?.accordion} disabled={disabled}>
         <AccordionSummary
+            role={'heading'}
+            aria-level={1}
+            tabIndex={-1}
             expandIcon={<></>}
-            aria-controls={`${id}-content`}
             id={`${id}-header`}
             {...slotProps?.accordionSummary}
         >

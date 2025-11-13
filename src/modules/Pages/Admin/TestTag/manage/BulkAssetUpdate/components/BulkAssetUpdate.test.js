@@ -114,7 +114,7 @@ describe('BulkAssetUpdate', () => {
 
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
         expect(getByTestId('asset_selector-bulk-asset-update-step-one-input')).toBeInTheDocument();
-        expect(getByTestId('bulk_asset_update_step_one-feature-button')).toBeInTheDocument();
+        expect(getByTestId('bulk_asset_update-step-one-feature-button')).toBeInTheDocument();
         expect(getByTestId('data_table-bulk-asset-update-step-one')).toBeInTheDocument();
         expect(getAllByRole('row').length).toBe(1); // just the header initially in the table
         expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).toHaveAttribute('disabled');
@@ -135,7 +135,7 @@ describe('BulkAssetUpdate', () => {
         });
 
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-        await userEvent.click(getByTestId('bulk_asset_update_step_one-feature-button'));
+        await userEvent.click(getByTestId('bulk_asset_update-step-one-feature-button'));
         expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).toHaveAttribute('disabled');
 
         await findByTestId('filter_dialog-bulk-asset-update-step-one');
@@ -150,7 +150,7 @@ describe('BulkAssetUpdate', () => {
         await waitForElementToBeRemoved(queryByTestId('filter_dialog-bulk-asset-update-step-one'));
 
         await waitFor(() =>
-            expect(getByTestId('bulk_asset_update_step_one-count-alert')).toHaveTextContent(
+            expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
                 'You have selected 2 assets to bulk update.',
             ),
         );
@@ -174,7 +174,7 @@ describe('BulkAssetUpdate', () => {
         await waitFor(() => expect(getAllByRole('row').length).toBe(2), { timeout: 2000 }); // header and 1 row
 
         await waitFor(() =>
-            expect(getByTestId('bulk_asset_update_step_one-count-alert')).toHaveTextContent(
+            expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
                 'You have selected 1 asset to bulk update.',
             ),
         );
@@ -197,7 +197,7 @@ describe('BulkAssetUpdate', () => {
         });
 
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-        await userEvent.click(getByTestId('bulk_asset_update_step_one-feature-button'));
+        await userEvent.click(getByTestId('bulk_asset_update-step-one-feature-button'));
         expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).toHaveAttribute('disabled');
 
         await findByTestId('filter_dialog-bulk-asset-update-step-one');
@@ -212,7 +212,7 @@ describe('BulkAssetUpdate', () => {
         await waitForElementToBeRemoved(queryByTestId('filter_dialog-bulk-asset-update-step-one'));
 
         await waitFor(() =>
-            expect(getByTestId('bulk_asset_update_step_one-count-alert')).toHaveTextContent(
+            expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
                 'You have selected 2 assets to bulk update.',
             ),
         );
@@ -266,7 +266,7 @@ describe('BulkAssetUpdate', () => {
         });
 
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-        await userEvent.click(getByTestId('bulk_asset_update_step_one-feature-button'));
+        await userEvent.click(getByTestId('bulk_asset_update-step-one-feature-button'));
         expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).toHaveAttribute('disabled');
 
         await findByTestId('filter_dialog-bulk-asset-update-step-one');
@@ -281,7 +281,7 @@ describe('BulkAssetUpdate', () => {
         await waitForElementToBeRemoved(queryByTestId('filter_dialog-bulk-asset-update-step-one'));
 
         await waitFor(() =>
-            expect(getByTestId('bulk_asset_update_step_one-count-alert')).toHaveTextContent(
+            expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
                 'You have selected 2 assets to bulk update.',
             ),
         );
@@ -360,7 +360,7 @@ describe('BulkAssetUpdate', () => {
         });
 
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-        await userEvent.click(getByTestId('bulk_asset_update_step_one-feature-button'));
+        await userEvent.click(getByTestId('bulk_asset_update-step-one-feature-button'));
         expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).toHaveAttribute('disabled');
 
         await findByTestId('filter_dialog-bulk-asset-update-step-one');
@@ -375,7 +375,7 @@ describe('BulkAssetUpdate', () => {
         await waitForElementToBeRemoved(queryByTestId('filter_dialog-bulk-asset-update-step-one'));
 
         await waitFor(() =>
-            expect(getByTestId('bulk_asset_update_step_one-count-alert')).toHaveTextContent(
+            expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
                 'You have selected 2 assets to bulk update.',
             ),
         );
@@ -475,7 +475,7 @@ describe('BulkAssetUpdate', () => {
             });
 
             expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-            await userEvent.click(getByTestId('bulk_asset_update_step_one-feature-button'));
+            await userEvent.click(getByTestId('bulk_asset_update-step-one-feature-button'));
 
             await findByTestId('filter_dialog-bulk-asset-update-step-one');
 
@@ -485,7 +485,7 @@ describe('BulkAssetUpdate', () => {
             await waitForElementToBeRemoved(() => queryByTestId('filter_dialog-bulk-asset-update-step-one'));
 
             // reopen filter so we can test things in step 2
-            await userEvent.click(getByTestId('bulk_asset_update_step_one-feature-button'));
+            await userEvent.click(getByTestId('bulk_asset_update-step-one-feature-button'));
 
             await findByTestId('filter_dialog-bulk-asset-update-step-one');
             const frow1 = within(getByTestId('filter_dialog-bulk-asset-update-step-one')).getAllByRole('row')[1];
@@ -505,7 +505,7 @@ describe('BulkAssetUpdate', () => {
             }
 
             await waitFor(() =>
-                expect(getByTestId('bulk_asset_update_step_one-count-alert')).toHaveTextContent(
+                expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
                     'You have selected 2 assets to bulk update.',
                 ),
             );

@@ -9,19 +9,19 @@ test.describe('Test and Tag bulk asset update', () => {
     });
 
     const selectAllRows = async (page: Page) => {
-        await page.getByTestId('bulk_asset_update-feature-button').click();
+        await page.getByTestId('bulk_asset_update-step-one-feature-button').click();
         await expect(
             page
-                .getByTestId('filter_dialog-bulk-asset-update-title')
+                .getByTestId('filter_dialog-bulk-asset-update-step-one-title')
                 .getByText(locale.pages.manage.bulkassetupdate.form.filterDialog.title),
         ).toBeVisible();
         await expect((await getFieldValue(page, 'asset_barcode', 0)).getByText('UQL000001')).toBeVisible();
         await page.locator('input[aria-label="Select all rows"]').click();
-        await page.getByTestId('filter_dialog-bulk-asset-update-action-button').click();
+        await page.getByTestId('filter_dialog-bulk-asset-update-step-one-action-button').click();
         await expect((await getFieldValue(page, 'asset_id_displayed', 0)).getByText('UQL000001')).toBeVisible();
         await expect((await getFieldValue(page, 'asset_id_displayed', 4)).getByText('UQL001993')).toBeVisible();
-        await page.getByTestId('footer_bar-bulk-asset-update-action-button').click();
-        await expect(page.getByTestId('bulk_asset_update-summary-alert')).toBeVisible();
+        await page.getByTestId('footer_bar-bulk-asset-update-step-one-action-button').click();
+        await expect(page.getByTestId('bulk_asset_update_step_two-summary-alert')).toBeVisible();
     };
 
     const checkBaseline = async (page: Page) => {
@@ -38,42 +38,42 @@ test.describe('Test and Tag bulk asset update', () => {
     test('Asset id search functions correctly', async ({ page }) => {
         await checkBaseline(page);
         // Search for an asset
-        await page.getByTestId('asset_selector-bulk-asset-update-input').fill('5');
+        await page.getByTestId('asset_selector-bulk-asset-update-step-one-input').fill('5');
         await expect((await getFieldValue(page, 'asset_id_displayed', 0)).getByText('UQL000005')).toBeVisible();
 
         // Search for an additional asset
-        await page.getByTestId('asset_selector-bulk-asset-update-input').fill('6');
+        await page.getByTestId('asset_selector-bulk-asset-update-step-one-input').fill('6');
         await expect((await getFieldValue(page, 'asset_id_displayed', 1)).getByText('UQL000006')).toBeVisible();
 
         // Search for an exact asset
-        await page.getByTestId('asset_selector-bulk-asset-update-input').fill('UQL310000');
+        await page.getByTestId('asset_selector-bulk-asset-update-step-one-input').fill('UQL310000');
         await expect((await getFieldValue(page, 'asset_id_displayed', 2)).getByText('UQL310000')).toBeVisible();
-        await expect(page.getByTestId('bulk_asset_update-count-alert')).toBeVisible();
+        await expect(page.getByTestId('bulk_asset_update-step-one-count-alert')).toBeVisible();
 
         // Clear the assets
         await page.getByTestId('action_cell-5-delete-button').click();
         await page.getByTestId('action_cell-6-delete-button').click();
         await page.getByTestId('action_cell-310000-delete-button').click();
-        await expect(page.getByTestId('bulk_asset_update-count-alert')).not.toBeVisible();
+        await expect(page.getByTestId('bulk_asset_update-step-one-count-alert')).not.toBeVisible();
 
         // coverage ==>
-        await page.getByTestId('asset_selector-bulk-asset-update-input').click();
+        await page.getByTestId('asset_selector-bulk-asset-update-step-one-input').click();
         await page
-            .getByTestId('asset_selector-bulk-asset-update')
+            .getByTestId('asset_selector-bulk-asset-update-step-one')
             .locator('[type="button"][title="Clear"]')
             .click();
-        await expect(page.getByTestId('asset_selector-bulk-asset-update-input')).toHaveValue('');
+        await expect(page.getByTestId('asset_selector-bulk-asset-update-step-one-input')).toHaveValue('');
         // <== end coverage
 
-        await page.getByTestId('asset_selector-bulk-asset-update-input').click();
+        await page.getByTestId('asset_selector-bulk-asset-update-step-one-input').click();
     });
 
     test.describe('filter dialog', () => {
         test('all components respond to user input', async ({ page }) => {
-            await page.getByTestId('bulk_asset_update-feature-button').click();
+            await page.getByTestId('bulk_asset_update-step-one-feature-button').click();
             await expect(
                 page
-                    .getByTestId('filter_dialog-bulk-asset-update-title')
+                    .getByTestId('filter_dialog-bulk-asset-update-step-one-title')
                     .getByText(locale.pages.manage.bulkassetupdate.form.filterDialog.title),
             ).toBeVisible();
 
@@ -105,8 +105,8 @@ test.describe('Test and Tag bulk asset update', () => {
             await expect(page.getByTestId('asset_type_selector-filter-dialog-input')).toHaveValue('Power Cord - C13');
 
             // notes
-            await page.getByTestId('filter_dialog-bulk-asset-update-search-notes-input').fill('Test notes');
-            await expect(page.getByTestId('filter_dialog-bulk-asset-update-search-notes-input')).toHaveValue(
+            await page.getByTestId('filter_dialog-bulk-asset-update-step-one-search-notes-input').fill('Test notes');
+            await expect(page.getByTestId('filter_dialog-bulk-asset-update-step-one-search-notes-input')).toHaveValue(
                 'Test notes',
             );
 
@@ -125,8 +125,10 @@ test.describe('Test and Tag bulk asset update', () => {
                 .locator('[type="button"][title="Clear"]')
                 .click();
             await expect(page.getByTestId('asset_type_selector-filter-dialog-input')).toHaveValue('');
-            await page.getByTestId('filter_dialog-bulk-asset-update-clear-search-notes').click();
-            await expect(page.getByTestId('filter_dialog-bulk-asset-update-search-notes-input')).toHaveValue('');
+            await page.getByTestId('filter_dialog-bulk-asset-update-step-one-clear-search-notes').click();
+            await expect(page.getByTestId('filter_dialog-bulk-asset-update-step-one-search-notes-input')).toHaveValue(
+                '',
+            );
         });
 
         test('Asset search by feature works correctly', async ({ page }) => {
@@ -144,36 +146,43 @@ test.describe('Test and Tag bulk asset update', () => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
 
         // Update location
-        await page.locator('#bulk_asset_update-location-checkbox').click();
-        await expect(page.getByTestId('location_picker-bulk-asset-update-site-input')).toHaveAttribute('required');
-        await page.getByTestId('location_picker-bulk-asset-update-site-input').click();
-        await page.locator('#location_picker-bulk-asset-update-site-option-0').click();
-        await expect(page.getByTestId('location_picker-bulk-asset-update-building-input')).toHaveAttribute('required');
-        await page.getByTestId('location_picker-bulk-asset-update-building-input').click();
-        await page.locator('#location_picker-bulk-asset-update-building-option-0').click();
-        await expect(page.getByTestId('location_picker-bulk-asset-update-floor-input')).toHaveAttribute('required');
-        await page.getByTestId('location_picker-bulk-asset-update-floor-input').click();
-        await page.locator('#location_picker-bulk-asset-update-floor-option-0').click();
-        await expect(page.getByTestId('location_picker-bulk-asset-update-room-input')).toHaveAttribute('required');
-        await page.getByTestId('location_picker-bulk-asset-update-room-input').click();
-        await page.locator('#location_picker-bulk-asset-update-room-option-0').click();
+        await expect(page.getByTestId('location_picker-bulk-asset-update-step-two-site-input')).toHaveAttribute(
+            'required',
+        );
+        await page.getByTestId('location_picker-bulk-asset-update-step-two-site-input').click();
+        await page.locator('#location_picker-bulk-asset-update-step-two-site-option-0').click();
+        await expect(page.getByTestId('location_picker-bulk-asset-update-step-two-building-input')).toHaveAttribute(
+            'required',
+        );
+        await page.getByTestId('location_picker-bulk-asset-update-step-two-building-input').click();
+        await page.locator('#location_picker-bulk-asset-update-step-two-building-option-0').click();
+        await expect(page.getByTestId('location_picker-bulk-asset-update-step-two-floor-input')).toHaveAttribute(
+            'required',
+        );
+        await page.getByTestId('location_picker-bulk-asset-update-step-two-floor-input').click();
+        await page.locator('#location_picker-bulk-asset-update-step-two-floor-option-0').click();
+        await expect(page.getByTestId('location_picker-bulk-asset-update-step-two-room-input')).toHaveAttribute(
+            'required',
+        );
+        await page.getByTestId('location_picker-bulk-asset-update-step-two-room-input').click();
+        await page.locator('#location_picker-bulk-asset-update-step-two-room-option-0').click();
 
         // coverage ==>
         // test clearing selected room by unselecting a floor
-        await page.getByTestId('location_picker-bulk-asset-update-floor-input').click();
-        await page.locator('#location_picker-bulk-asset-update-floor-option-1').click(); // change floor
-        await expect(page.getByTestId('location_picker-bulk-asset-update-floor-input')).toHaveValue('3');
-        await expect(page.getByTestId('location_picker-bulk-asset-update-room-input')).toHaveValue('');
+        await page.getByTestId('location_picker-bulk-asset-update-step-two-floor-input').click();
+        await page.locator('#location_picker-bulk-asset-update-step-two-floor-option-1').click(); // change floor
+        await expect(page.getByTestId('location_picker-bulk-asset-update-step-two-floor-input')).toHaveValue('3');
+        await expect(page.getByTestId('location_picker-bulk-asset-update-step-two-room-input')).toHaveValue('');
 
         // reset
-        await page.getByTestId('location_picker-bulk-asset-update-floor-input').click();
-        await page.locator('#location_picker-bulk-asset-update-floor-option-0').click();
-        await page.getByTestId('location_picker-bulk-asset-update-room-input').click();
-        await page.locator('#location_picker-bulk-asset-update-room-option-0').click();
+        await page.getByTestId('location_picker-bulk-asset-update-step-two-floor-input').click();
+        await page.locator('#location_picker-bulk-asset-update-step-two-floor-option-0').click();
+        await page.getByTestId('location_picker-bulk-asset-update-step-two-room-input').click();
+        await page.locator('#location_picker-bulk-asset-update-step-two-room-option-0').click();
         // <== end coverage
 
         // Commit the change
-        await page.getByTestId('bulk_asset_update-submit-button').click();
+        await page.getByTestId('bulk_asset_update_step_two-submit-button').click();
         // Confirmation showing?
         await expect(page.getByTestId('dialogbox-bulk-asset-update')).toBeVisible();
         // Commit
@@ -185,14 +194,20 @@ test.describe('Test and Tag bulk asset update', () => {
         await checkBaseline(page);
         // Select all rows
         await selectAllRows(page);
+
+        // uncheck location
+        await page.locator('#accordionWithCheckbox-location-checkbox').click();
+
         // Update asset type
-        await page.locator('#bulk_asset_update-asset-type-checkbox').click();
-        await expect(page.getByTestId('asset_type_selector-bulk-asset-update-input')).toHaveAttribute('required');
-        await page.getByTestId('asset_type_selector-bulk-asset-update-input').click();
-        await page.locator('#asset_type_selector-bulk-asset-update-option-1').click();
+        await page.locator('#accordionWithCheckbox-assetType-checkbox').click();
+        await expect(page.getByTestId('asset_type_selector-bulk-asset-update-step-two-input')).toHaveAttribute(
+            'required',
+        );
+        await page.getByTestId('asset_type_selector-bulk-asset-update-step-two-input').click();
+        await page.locator('#asset_type_selector-bulk-asset-update-step-two-option-1').click();
 
         // Commit the change
-        await page.getByTestId('bulk_asset_update-submit-button').click();
+        await page.getByTestId('bulk_asset_update_step_two-submit-button').click();
         // Confirmation showing?
         await expect(page.getByTestId('dialogbox-bulk-asset-update')).toBeVisible();
         // Commit
@@ -204,14 +219,20 @@ test.describe('Test and Tag bulk asset update', () => {
         await checkBaseline(page);
         // Select all rows
         await selectAllRows(page);
+
+        // uncheck location
+        await page.locator('#accordionWithCheckbox-location-checkbox').click();
+
         // Update asset type
-        await page.locator('#bulk_asset_update-asset-status-checkbox').click();
-        await expect(page.getByTestId('asset_status_selector-bulk-asset-update-input')).toHaveAttribute('required');
-        await page.getByTestId('asset_status_selector-bulk-asset-update-input').click();
-        await page.locator('#asset_status_selector-bulk-asset-update-option-0').click();
+        await page.locator('#accordionWithCheckbox-assetStatus-checkbox').click();
+        await expect(page.getByTestId('asset_status_selector-bulk-asset-update-step-two-input')).toHaveAttribute(
+            'required',
+        );
+        await page.getByTestId('asset_status_selector-bulk-asset-update-step-two-input').click();
+        await page.locator('#asset_status_selector-bulk-asset-update-step-two-option-0').click();
 
         // Commit the change
-        await page.getByTestId('bulk_asset_update-submit-button').click();
+        await page.getByTestId('bulk_asset_update_step_two-submit-button').click();
         // Confirmation showing?
         await expect(page.getByTestId('dialogbox-bulk-asset-update')).toBeVisible();
         // Commit
@@ -223,10 +244,14 @@ test.describe('Test and Tag bulk asset update', () => {
         await checkBaseline(page);
         // Select all rows
         await selectAllRows(page);
+
+        // uncheck location
+        await page.locator('#accordionWithCheckbox-location-checkbox').click();
+
         // Update notes
-        await page.locator('#bulk_asset_update-notes-checkbox').click();
+        await page.locator('#bulk_asset_update_step_two-notes-checkbox').click();
         // Commit the change
-        await page.getByTestId('bulk_asset_update-submit-button').click();
+        await page.getByTestId('bulk_asset_update_step_two-submit-button').click();
         // Confirmation showing?
         await expect(page.getByTestId('dialogbox-bulk-asset-update')).toBeVisible();
         // Commit
@@ -238,12 +263,16 @@ test.describe('Test and Tag bulk asset update', () => {
         await checkBaseline(page);
         // Select all rows
         await selectAllRows(page);
+
+        // uncheck location
+        await page.locator('#accordionWithCheckbox-location-checkbox').click();
+
         // Update status
-        await page.locator('#bulk_asset_update-status-checkbox').click();
-        await expect(page.getByTestId('bulk-asset-update-discard-reason-input')).toHaveAttribute('required');
-        await page.getByTestId('bulk-asset-update-discard-reason-input').fill('Cypress test');
+        await page.locator('#accordionWithCheckbox-discardStatus-checkbox').click();
+        await expect(page.getByTestId('bulk_asset_update_step_two-discard-reason-input')).toHaveAttribute('required');
+        await page.getByTestId('bulk_asset_update_step_two-discard-reason-input').fill('Cypress test');
         // Commit the change
-        await page.getByTestId('bulk_asset_update-submit-button').click();
+        await page.getByTestId('bulk_asset_update_step_two-submit-button').click();
         // Confirmation showing?
         await expect(page.getByTestId('dialogbox-bulk-asset-update')).toBeVisible();
         // Commit
@@ -255,12 +284,17 @@ test.describe('Test and Tag bulk asset update', () => {
         await checkBaseline(page);
         // Select all rows
         await selectAllRows(page);
-        await page.locator('#bulk_asset_update-notes-checkbox').click();
-        await page.getByTestId('bulk_asset_update-submit-button').click();
+
+        // uncheck location
+        await page.locator('#accordionWithCheckbox-location-checkbox').click();
+
+        // select notes
+        await page.locator('#bulk_asset_update_step_two-notes-checkbox').click();
+        await page.getByTestId('bulk_asset_update_step_two-submit-button').click();
         // Cancel
         await page.getByTestId('cancel-bulk-asset-update').click();
-        await page.getByTestId('bulk_asset_update-back-button').click();
-        await page.getByTestId('footer_bar-bulk-asset-update-alt-button').click();
+        await page.getByTestId('bulk_asset_update_step_two-back-button').click();
+        await page.getByTestId('footer_bar-bulk-asset-update-step-one-alt-button').click();
         await expect(page.getByTestId('confirmation_alert-success-alert')).not.toBeVisible();
     });
 });
