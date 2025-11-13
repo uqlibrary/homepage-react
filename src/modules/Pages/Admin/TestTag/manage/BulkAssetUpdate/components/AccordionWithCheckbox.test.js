@@ -50,7 +50,8 @@ describe('AccordionWithCheckbox', () => {
 
         const accordionSummary = container.querySelector('#test-id-header');
         expect(accordionSummary).toBeInTheDocument();
-        expect(accordionSummary).toHaveAttribute('aria-controls', 'test-id-content');
+        expect(accordionSummary).toHaveAttribute('role', 'heading');
+        expect(accordionSummary).toHaveAttribute('aria-level', '1');
     });
 
     it('renders children content inside accordion details', () => {
