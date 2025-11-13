@@ -4,7 +4,7 @@ import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/he
 
 import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 
-test.describe('Spaces Admin - add new space', () => {
+test.describe('Spaces Admin - edit spaces', () => {
     test('can navigate from dashboard to edit page', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -48,11 +48,15 @@ test.describe('Spaces Admin - edit space', () => {
 
         await expect(page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper')).toBeVisible();
 
-        // this is flakey on AWS. try different method of showing this is the current field
-        // await expect(page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper')).toHaveValue(
-        //     'Walter Harrison Law',
-        // );
+        // all the facility types appear in the "space form", not juyst the ones currently attached to a space
+        const numberFacilityTypesInMockFacilityTypes = 21;
+        await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
+            numberFacilityTypesInMockFacilityTypes,
+        );
 
+        // this is flakey on AWS.
+        // await expect(page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper')).toHaveValue('Walter Harrison Law');
+        // try different method of showing this is the current field
         // show the current selection is correct by opening the dropdown and showing the correct entry has the mui "focused" style
         await page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper').click();
         await expect(page.getByRole('option', { name: 'Walter Harrison Law' })).toHaveClass(
@@ -87,13 +91,13 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
         await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
     });
-    test('add spaces page is accessible', async ({ page }) => {
+    test('edit spaces page is accessible', async ({ page }) => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
     const NOISE_LEVEL_LOW = 1;
-    const NOISE_LEVEL_MEDIUM = 2;
-    const WHITEBOARD = 11;
+    const EXAM_FRIENDLY = 7;
     const POSTGRADUATE_SPACE = 8;
+    const WHITEBOARD = 11;
     const PRINTING = 15;
     test('can save with only required fields', async ({ page, context }) => {
         await setTestDataCookie(context, page);
@@ -103,11 +107,41 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('add-space-description')).toBeVisible();
         await page.getByTestId('add-space-description').fill('');
 
-        // // clear facility types - playwright doesnt seem to be able to click these chips :(
-        // await page.locator('[data-tag-index="0"]').click();
-        // await page.locator('[data-tag-index="1"]').click();
-        // await page.locator('[data-tag-index="2"]').click();
-        // await page.locator('[data-tag-index="3"]').click();
+        // clear facility types
+        await expect(page.getByTestId(`filtertype-${NOISE_LEVEL_LOW}`).locator('input')).toBeVisible();
+        await expect(page.getByTestId(`filtertype-${NOISE_LEVEL_LOW}`).locator('input')).toBeChecked();
+        await expect(page.getByTestId(`facility-type-listitem-${NOISE_LEVEL_LOW}`)).toContainText('Noise level Low');
+        await page
+            .getByTestId(`filtertype-${NOISE_LEVEL_LOW}`)
+            .locator('input')
+            .click();
+
+        await expect(page.getByTestId(`filtertype-${POSTGRADUATE_SPACE}`).locator('input')).toBeVisible();
+        await expect(page.getByTestId(`filtertype-${POSTGRADUATE_SPACE}`).locator('input')).toBeChecked();
+        await expect(page.getByTestId(`facility-type-listitem-${POSTGRADUATE_SPACE}`)).toContainText(
+            'Postgraduate spaces',
+        );
+        await page
+            .getByTestId(`filtertype-${POSTGRADUATE_SPACE}`)
+            .locator('input')
+            .click();
+        await expect(page.getByTestId(`filtertype-${WHITEBOARD}`).locator('input')).toBeVisible();
+        await expect(page.getByTestId(`filtertype-${WHITEBOARD}`).locator('input')).toBeChecked();
+        await expect(page.getByTestId(`facility-type-listitem-${WHITEBOARD}`)).toContainText('Whiteboard');
+        await page
+            .getByTestId(`filtertype-${WHITEBOARD}`)
+            .locator('input')
+            .click();
+
+        await expect(page.getByTestId(`filtertype-${PRINTING}`).locator('input')).toBeVisible();
+        await expect(page.getByTestId(`filtertype-${PRINTING}`).locator('input')).toBeChecked();
+        await expect(page.getByTestId(`facility-type-listitem-${PRINTING}`)).toContainText(
+            'Production Printing Services',
+        );
+        await page
+            .getByTestId(`filtertype-${PRINTING}`)
+            .locator('input')
+            .click();
 
         // locations are inherently unclearable
 
@@ -162,7 +196,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_floor_id: 1,
             space_name: '01-W431', // required field
             space_type: 'Collaborative space', // required field
-            facility_types: [NOISE_LEVEL_LOW, WHITEBOARD, POSTGRADUATE_SPACE, PRINTING], // cant clear the facility types
+            facility_types: [],
             space_precise: '',
             space_description: '',
             space_photo_url: '',
@@ -174,6 +208,49 @@ test.describe('Spaces Admin - edit space', () => {
             space_longitude: '153.01308753792662',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
+    });
+    test('can re-edit after save', async ({ page }) => {
+        // click save button
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        page.getByTestId('admin-spaces-save-button-submit').click();
+
+        // change the title so when we reload the page from "edit again" we can check the page has actually reloaded
+        // by showing the immmutable mock data has reverted
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-name').locator('input')).toHaveValue('01-W431');
+        page.getByTestId('space-name')
+            .locator('input')
+            .fill('New space name');
+
+        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
+        await expect(page.getByTestId('confirm-spaces-save-outcome')).toBeVisible();
+        await expect(page.getByTestId('confirm-spaces-save-outcome')).toContainText('Return to dashboard');
+        await expect(page.getByTestId('cancel-spaces-save-outcome')).toBeVisible();
+        await expect(page.getByTestId('cancel-spaces-save-outcome')).toContainText('Edit record again');
+        page.getByTestId('cancel-spaces-save-outcome').click();
+
+        await expect(page.getByTestId('message-title')).not.toBeVisible();
+        await expect(page).toHaveURL('http://localhost:2020/admin/spaces/edit/987y_isjgt_9866?user=libSpaces');
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+        // page has reloaded, not just closed dialog, as mock data has reverted
+        await expect(page.getByTestId('space-name').locator('input')).toHaveValue('01-W431');
+    });
+    test('can return to dashboard after save', async ({ page }) => {
+        // click save button
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        page.getByTestId('admin-spaces-save-button-submit').click();
+
+        await expect(page.getByTestId('message-title')).toBeVisible();
+        await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
+        await expect(page.getByTestId('confirm-spaces-save-outcome')).toBeVisible();
+        await expect(page.getByTestId('confirm-spaces-save-outcome')).toContainText('Return to dashboard');
+        await expect(page.getByTestId('cancel-spaces-save-outcome')).toBeVisible();
+        await expect(page.getByTestId('cancel-spaces-save-outcome')).toContainText('Edit record again');
+        page.getByTestId('confirm-spaces-save-outcome').click();
+
+        await expect(page.getByTestId('message-title')).not.toBeVisible();
+        await expect(page).toHaveURL('http://localhost:2020/admin/spaces?user=libSpaces');
     });
     test('can change all fields in edit', async ({ page, context }) => {
         await setTestDataCookie(context, page);
@@ -190,8 +267,21 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('add-space-description')).toBeVisible();
         await page.getByTestId('add-space-description').fill('a long description that has a number of words');
 
-        await page.getByTestId('facilityType-input').click();
-        await page.getByRole('option', { name: 'Noise level: Noise level Medium' }).click();
+        // select a new facility type
+        await expect(page.getByTestId(`filtertype-${EXAM_FRIENDLY}`).locator('input')).toBeVisible();
+        await expect(page.getByTestId(`facility-type-listitem-${EXAM_FRIENDLY}`)).toContainText('Exam Friendly');
+        await page
+            .getByTestId(`filtertype-${EXAM_FRIENDLY}`)
+            .locator('input')
+            .click();
+
+        // unselect an existing facility type
+        await expect(page.getByTestId(`filtertype-${WHITEBOARD}`).locator('input')).toBeVisible();
+        await expect(page.getByTestId(`facility-type-listitem-${WHITEBOARD}`)).toContainText('Whiteboard');
+        await page
+            .getByTestId(`filtertype-${WHITEBOARD}`)
+            .locator('input')
+            .click();
 
         await page.getByRole('combobox', { name: 'Campus * St Lucia' }).click();
         await page.getByRole('option', { name: 'Gatton' }).click();
@@ -249,7 +339,7 @@ test.describe('Spaces Admin - edit space', () => {
             space_floor_id: 32,
             space_name: 'New space name', // required field
             space_type: 'New space type', // required field
-            facility_types: [NOISE_LEVEL_LOW, WHITEBOARD, POSTGRADUATE_SPACE, PRINTING, NOISE_LEVEL_MEDIUM],
+            facility_types: [NOISE_LEVEL_LOW, POSTGRADUATE_SPACE, PRINTING, EXAM_FRIENDLY],
             space_precise: 'somewhere deep in the bowels of the warehouse',
             space_description: 'a long description that has a number of words',
             space_photo_url: 'http://example.com/x.png',
@@ -273,20 +363,20 @@ test.describe('Spaces Admin - edit space', () => {
         await assertAccessibility(page, '[data-testid="dialogbox-spaces-save-outcome"]');
     });
 
-    test.describe('Spaces Admin - errors', () => {
-        test('edit new space - error locations', async ({ page }) => {
+    test.describe('Spaces Admin - load errors', () => {
+        test('edit space - error locations', async ({ page }) => {
             await page.goto('/admin/spaces/edit/error?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
             // wait for page to load
             await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
 
-            await expect(page.getByTestId('add-space-error')).toBeVisible();
-            await expect(page.getByTestId('add-space-error')).toContainText(
+            await expect(page.getByTestId('load-space-form-error')).toBeVisible();
+            await expect(page.getByTestId('load-space-form-error')).toContainText(
                 'Something went wrong - please try again later.',
             );
-            await expect(page.getByTestId('add-space-error')).toContainText('Space details currently unavailable.');
+            await expect(page.getByTestId('load-space-form-error')).toContainText('Space details had a problem.');
         });
-        test('edit new space - 404 locations', async ({ page }) => {
+        test('edit space - 404 locations', async ({ page }) => {
             await page.goto('/admin/spaces/edit/missingRecord?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
             // wait for page to load
@@ -294,6 +384,45 @@ test.describe('Spaces Admin - edit space', () => {
 
             await expect(page.getByTestId('missing-record')).toBeVisible();
             await expect(page.getByTestId('missing-record')).toContainText('There is no Space with ID "missingRecord"'); // 'missingRecord' is the id in mock when it is missing
+        });
+        test('edit space - weeklyHours api error', async ({ page }) => {
+            await page.goto('/admin/spaces/edit/987y_isjgt_9866?user=libSpaces&responseType=weeklyHoursError');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            // wait for page to load
+            await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+
+            await expect(page.getByTestId('load-space-form-error')).toBeVisible();
+            await expect(page.getByTestId('load-space-form-error')).toContainText(
+                'Something went wrong - please try again later.',
+            );
+            await expect(page.getByTestId('load-space-form-error')).toContainText(
+                'Opening hours details had a problem.',
+            );
+        });
+    });
+
+    test.describe('Spaces Admin - save errors', () => {
+        test('edit space - server 500', async ({ page }) => {
+            await page.goto('/admin/spaces/edit/987y_isjgt_9866?user=libSpaces&responseType=spaceUpdate500Error');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            // wait for page to load
+            await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+
+            // change a checkbox
+            const examFriendlyCheckbox = page.getByTestId('facility-type-listitem-7');
+            await expect(examFriendlyCheckbox.locator('label')).toBeVisible();
+            await expect(examFriendlyCheckbox.locator('label')).toContainText('Exam Friendly');
+            await examFriendlyCheckbox.locator('input').check();
+
+            // save the change
+            await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+            await expect(page.getByTestId('admin-spaces-save-button-submit')).toContainText('Save');
+            await page.getByTestId('admin-spaces-save-button-submit').click();
+
+            await expect(page.getByTestId('message-title')).toBeVisible();
+            await expect(page.getByTestId('message-title')).toContainText(
+                'An error has occurred during the request and this request cannot be processed. Please contact webmaster@library.uq.edu.au or try again later.',
+            );
         });
     });
 });

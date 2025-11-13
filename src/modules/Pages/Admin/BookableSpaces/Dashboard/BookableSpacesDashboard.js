@@ -25,6 +25,7 @@ import { addBreadcrumbsToSiteHeader, spacesAdminLink } from '../bookableSpacesAd
 import { slugifyName, standardText } from 'helpers/general';
 
 const backgroundColorColumn = '#f0f0f0';
+const borderColour = '1px solid rgb(224 224 224 / 1)';
 
 const StyledStandardCard = styled(StandardCard)(() => ({
     '& .MuiCardHeader-root': {
@@ -54,27 +55,23 @@ const StyledHeadingFacilityTableCell = styled(TableCell)(() => ({
     textAlign: 'center',
 }));
 
-const StyledHeaderTableRow = styled(TableRow)(({ theme }) => {
-    return {
-        '& th, & td': {
-            ...standardText(theme),
-        },
-    };
-});
+const StyledHeaderTableRow = styled(TableRow)(({ theme }) => ({
+    '& th, & td': {
+        ...standardText(theme),
+    },
+}));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => {
-    return {
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '& th, & td': {
+        ...standardText(theme),
+    },
+    '&:hover': {
+        backgroundColor: 'rgb(189 186 186)',
         '& th, & td': {
-            ...standardText(theme),
-        },
-        '&:hover': {
             backgroundColor: 'rgb(189 186 186)',
-            '& th, & td': {
-                backgroundColor: 'rgb(189 186 186)',
-            },
         },
-    };
-});
+    },
+}));
 const StyledStickyTableCell = styled(TableCell)(() => ({
     position: 'sticky',
     backgroundColor: backgroundColorColumn,
@@ -142,13 +139,13 @@ export const BookableSpacesDashboard = ({
 
         // then add an overall sort order, to help us to tiger stripe the columns
         let overallCounter = 1;
-        return sortedGroups.map(group => {
+        return sortedGroups?.map(group => {
             // sort the facility types alphabetically (they should already be, but...)
             const sortedChildren = [...group.facility_type_children].sort((a, b) =>
                 a.facility_type_name.localeCompare(b.facility_type_name),
             );
 
-            const childrenWithCounter = sortedChildren.map(child => ({
+            const childrenWithCounter = sortedChildren?.map(child => ({
                 ...child,
                 overall_order: overallCounter++,
             }));
@@ -188,7 +185,7 @@ export const BookableSpacesDashboard = ({
                                             key={`header-cell-${index}`}
                                         />
                                     ))}
-                                    {sortedFacilityTypeGroups.map((group, index) => {
+                                    {sortedFacilityTypeGroups?.map((group, index) => {
                                         return (
                                             <TableCell
                                                 key={`header-cell-${index}`}
@@ -196,12 +193,10 @@ export const BookableSpacesDashboard = ({
                                                 colSpan={group.facility_type_children?.length}
                                                 sx={{
                                                     borderBottomWidth: 0,
-                                                    borderTop: '1px solid rgba(224, 224, 224, 1)',
+                                                    borderTop: borderColour,
                                                     textAlign: 'center',
                                                     backgroundColor: `${index % 2 === 0 ? 'white' : '#f0f0f0'}`,
-                                                    borderBottomColor: `${
-                                                        index % 2 === 0 ? 'white' : '1px solid rgba(224, 224, 224, 1)'
-                                                    }`,
+                                                    borderLeft: borderColour,
                                                 }}
                                             >
                                                 {group.facility_type_group_name}
@@ -218,13 +213,14 @@ export const BookableSpacesDashboard = ({
                                     Name
                                 </StyledStickyTableCell>
                                 <TableCell component="th">Space location</TableCell>
-                                {sortedFacilityTypeGroups.map(group =>
-                                    group.facility_type_children.map(facilityType => (
+                                {sortedFacilityTypeGroups?.map(group =>
+                                    group?.facility_type_children?.map(facilityType => (
                                         <StyledHeadingFacilityTableCell
                                             component="th"
                                             key={`facilitytype-${facilityType.facility_type_id}`}
                                             sx={{
                                                 backgroundColor: getColumnBackgroundColor(facilityType.overall_order),
+                                                borderLeft: borderColour,
                                             }}
                                         >
                                             {facilityType.facility_type_name}
@@ -260,7 +256,7 @@ export const BookableSpacesDashboard = ({
 
                                         {sortedFacilityTypeGroups?.length > 0 &&
                                             sortedFacilityTypeGroups?.map(group => {
-                                                return group?.facility_type_children.map(facilityType => {
+                                                return group?.facility_type_children?.map(facilityType => {
                                                     const facilitySlug = slugifyName(facilityType.facility_type_name);
                                                     return (
                                                         <TableCell
@@ -271,6 +267,7 @@ export const BookableSpacesDashboard = ({
                                                                     facilityType.overall_order,
                                                                 ),
                                                                 textAlign: 'center',
+                                                                borderInline: borderColour,
                                                             }}
                                                         >
                                                             {hasFacility(facilityType, bookableSpace) ? (
@@ -305,9 +302,7 @@ export const BookableSpacesDashboard = ({
                             if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
                                 return (
                                     <StyledBookableSpaceGridItem item xs={12} md={9}>
-                                        <StyledStandardCard fullHeight>
-                                            <InlineLoader message="Loading" />
-                                        </StyledStandardCard>
+                                        <InlineLoader message="Loading" />
                                     </StyledBookableSpaceGridItem>
                                 );
                             } else if (!!bookableSpacesRoomListError || !!facilityTypeListError) {

@@ -13,10 +13,17 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import {
+    getFilteredFacilityTypeList,
+    getFlatFacilityTypeList,
+    getFriendlyLocationDescription,
+} from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { breadcrumbs } from 'config/routes';
+import { standardText } from 'helpers/general';
 
-const StyledStandardCard = styled(StandardCard)(() => ({
+const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
+    ...standardText(theme),
+    fontWeight: '400 !important',
     '& .MuiCardHeader-root': {
         paddingBottom: 0,
     },
@@ -24,8 +31,41 @@ const StyledStandardCard = styled(StandardCard)(() => ({
         paddingBlock: 0,
     },
 }));
-const StyledInputLabel = styled(InputLabel)(({ theme }) => ({
-    color: theme.palette.secondary.main,
+const svgOrangeCheckbox =
+    "data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMidYMid meet' focusable='false'%3E%3Cpath fill='%23c13e2a' d='M22.2,20.9l-1.3-1.3C21,19.4,21,19.2,21,19v-8h-2v6.7l-4.6-4.6l6-6l-1.4-1.4l-6,6L6.3,5H15V3H5C4.8,3,4.6,3,4.4,3.1L3,1.7L1.8,2.9l1.3,1.3C3.1,4.4,3,4.7,3,5v14c0,1.1,0.9,2,2,2h14c0.3,0,0.6-0.1,0.8-0.2l1.2,1.2L22.2,20.9z M5,19V6l6.9,6.9l-1.4,1.4l-3.1-3.1L6,12.6l4.5,4.5l2.8-2.8L18,19H5z'%3E%3C/path%3E%3C/svg%3E";
+
+const rejectedCheckboxStyle = {
+    backgroundImage: `url("${svgOrangeCheckbox}")`,
+    backgroundRepeat: 'no-repeat',
+    display: 'inline-block',
+    padding: 0,
+    height: '40px',
+    width: '40px',
+    backgroundSize: '50%',
+    paddingLeft: '6px',
+    marginTop: '8px',
+    marginBottom: '-8px',
+    marginLeft: '5px',
+    cursor: 'pointer',
+};
+const StyledInputListItem = styled('li')(({ theme }) => ({
+    '& label': {
+        ...standardText(theme),
+        display: 'inline',
+    },
+    '&:hover label.rejectedFacilityTypeLabel': rejectedCheckboxStyle,
+    '&:focus label.rejectedFacilityTypeLabel': rejectedCheckboxStyle,
+    '&:has(> input:checked) label.rejectedFacilityTypeLabel': rejectedCheckboxStyle,
+    '@media (pointer:coarse)': {
+        // show the reject checkbox on mobile, as they can't hover
+        'label.rejectedFacilityTypeLabel': rejectedCheckboxStyle,
+    },
+    '& input.rejectedFilterType': {
+        display: 'none',
+    },
+    '& span:not(.fortestfocus)': {
+        cursor: 'pointer',
+    },
 }));
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
@@ -97,31 +137,6 @@ export const BookableSpacesList = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    const getFilteredFacilityTypeList = (bookableSpacesRoomList, facilityTypeList) => {
-        // get a list of the filters used in spaces
-        const spaceFilters = bookableSpacesRoomList?.data?.locations
-            .flatMap(location => location.facility_types || [])
-            .map(facilityType => facilityType.facility_type_id);
-        const spaceFiltersSet = new Set(spaceFilters);
-
-        // filter facility types so we only show the checkboxes where there is an associated space
-        // (remove the group completely if it has no shown checkboxes)
-        return {
-            ...facilityTypeList,
-            data: {
-                ...facilityTypeList?.data,
-                facility_type_groups: facilityTypeList?.data?.facility_type_groups
-                    .map(group => ({
-                        ...group,
-                        facility_type_children: (group.facility_type_children || []).filter(child =>
-                            spaceFiltersSet.has(child.facility_type_id),
-                        ),
-                    }))
-                    .filter(group => group.facility_type_children.length > 0),
-            },
-        };
-    };
     React.useEffect(() => {
         if (
             facilityTypeListError === false &&
@@ -150,7 +165,10 @@ export const BookableSpacesList = ({
     function showSpace(spaceFacilityTypes, facilityTypeToGroup, facilityTypeFilters) {
         // Create a map of facility_type_id to group_id for quick lookup
         // Group selected filters by their facility type group
+        console.log('showSpace facilityTypeFilters=', facilityTypeFilters);
         const selectedFiltersByGroup = {};
+        const rejectedFilters = [];
+
         facilityTypeFilters?.forEach(filter => {
             if (filter.selected) {
                 const groupId = facilityTypeToGroup[filter.facility_type_id];
@@ -161,9 +179,25 @@ export const BookableSpacesList = ({
                     selectedFiltersByGroup[groupId].push(filter.facility_type_id);
                 }
             }
+
+            // Collect rejected facility types
+            if (filter.unselected) {
+                rejectedFilters.push(filter.facility_type_id);
+            }
         });
 
-        // If no filters are selected, show all spaces
+        console.log('showSpace selectedFiltersByGroup=', selectedFiltersByGroup);
+        console.log('showSpace rejectedFilters=', rejectedFilters);
+
+        // check if space should be excluded due to rejected facility types
+        if (rejectedFilters.length > 0) {
+            const hasRejectedFacility = rejectedFilters.some(rejectedId => spaceFacilityTypes?.includes(rejectedId));
+            if (hasRejectedFacility) {
+                return false;
+            }
+        }
+
+        // If no inclusion filters are selected, show all spaces (that haven't been rejected)
         if (Object.keys(selectedFiltersByGroup).length === 0) {
             return true;
         }
@@ -181,6 +215,26 @@ export const BookableSpacesList = ({
         return true;
     }
 
+    const handleFilterRejection = (e, facilityTypeId) => {
+        console.log('handleFilterRejection facilityTypeId=', facilityTypeId);
+        console.log('handleFilterRejection facilityTypeFilters=', facilityTypeFilters);
+        console.log(
+            'after:',
+            facilityTypeFilters?.filter(ftf => {
+                return ftf.facility_type_id !== facilityTypeId;
+            }),
+        );
+        const newFilters = facilityTypeFilters?.filter(ftf => {
+            return ftf.facility_type_id !== facilityTypeId;
+        });
+        newFilters.push({
+            facility_type_id: facilityTypeId,
+            selected: false,
+            unselected: !!e.target.checked,
+        });
+        setFacilityTypeFilters(newFilters);
+    };
+
     const handleFilterSelection = (e, facilityTypeId) => {
         console.log('handleFilterSelection facilityTypeId=', facilityTypeId);
         console.log('handleFilterSelection facilityTypeFilters=', facilityTypeFilters);
@@ -190,19 +244,23 @@ export const BookableSpacesList = ({
         });
         newFilters.push({
             facility_type_id: facilityTypeId,
-            selected: e.target.checked,
+            selected: !!e.target.checked,
+            unselected: false,
         });
         setFacilityTypeFilters(newFilters);
     };
 
     function filterNext7Days(departmentData) {
+        console.log('filterNext7Days 1 departmentData=', departmentData);
         // Get today's date (start of day)
         const today = new Date();
         today.setHours(0, 0, 0, 0);
+        console.log('filterNext7Days 2 today=', today);
 
         // Calculate the end date (6 days from today)
         const endDate = new Date(today);
         endDate.setDate(today.getDate() + 6);
+        console.log('filterNext7Days 3 endDate=', endDate);
 
         // Filter days to include only the next 7 days starting from today
         const filteredDays = departmentData.days.filter(day => {
@@ -211,9 +269,11 @@ export const BookableSpacesList = ({
 
             return dayDate >= today && dayDate <= endDate;
         });
+        console.log('filterNext7Days 4 filteredDays=', filteredDays);
 
         // Sort by date to ensure chronological order
         filteredDays.sort((a, b) => new Date(a.date) - new Date(b.date));
+        console.log('filterNext7Days 5 filteredDays=', filteredDays);
 
         filteredDays.map((d, index) => {
             if (index <= 1) {
@@ -221,6 +281,7 @@ export const BookableSpacesList = ({
             }
             return d;
         });
+        console.log('filterNext7Days 6 filteredDays=', filteredDays);
 
         // Return the department with filtered days
         const result = {
@@ -228,14 +289,17 @@ export const BookableSpacesList = ({
             next7days: filteredDays,
         };
         delete result.days;
+        console.log('filterNext7Days 7 result=', result);
 
         return result;
     }
 
     // rewrite the hours-by-week into one long list of days
     function convertWeeksToDays(data) {
+        console.log('convertWeeksToDays 1 data=', data);
         // Create a deep copy to avoid mutating the original data
         const location = JSON.parse(JSON.stringify(data));
+        console.log('convertWeeksToDays 2 location=', location);
 
         // Define the order of days for consistent sorting
         const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -246,7 +310,9 @@ export const BookableSpacesList = ({
             ...location,
             department: location.departments.find(dept => displayedDepartments.includes(dept.name)),
         };
+        console.log('convertWeeksToDays 3 filteredData=', filteredData);
         delete filteredData.departments;
+        console.log('convertWeeksToDays 4 filteredData=', filteredData);
 
         if (filteredData.department.weeks && Array.isArray(filteredData.department.weeks)) {
             const allDays = [];
@@ -268,14 +334,19 @@ export const BookableSpacesList = ({
             allDays.sort((a, b) => new Date(a.date) - new Date(b.date));
             filteredData.department.days = allDays;
         }
+        console.log('convertWeeksToDays 5 filteredData=', filteredData);
+
         !!filteredData.department.days && (filteredData.department = filterNext7Days(filteredData.department));
+        console.log('convertWeeksToDays 6 filteredData=', filteredData);
 
         return filteredData;
     }
 
     const spaceOpeningHours = bookableSpace => {
+        console.log('spaceOpeningHours 1 bookableSpace=', bookableSpace);
+        console.log('spaceOpeningHours 2 weeklyHours=', weeklyHours);
         let openingDetails = weeklyHours?.locations?.find(openingHours => {
-            return openingHours.lid === bookableSpace.space_opening_hours_id;
+            return openingHours.lid === bookableSpace?.space_opening_hours_id;
         });
         !!openingDetails && (openingDetails = convertWeeksToDays(openingDetails));
         return openingDetails?.department?.next7days || [];
@@ -364,13 +435,15 @@ export const BookableSpacesList = ({
         return (
             <>
                 <div data-testid={locationKey}>{getFriendlyLocationDescription(bookableSpace)}</div>
-                <StyledDescription
-                    id={spaceDescriptionElementsId(bookableSpace?.space_id)}
-                    data-testid={spaceDescriptionElementsId(bookableSpace?.space_id)}
-                    className={'truncated'}
-                >
-                    <p>{bookableSpace?.space_description}</p>
-                </StyledDescription>
+                {bookableSpace?.space_description?.length > 0 && (
+                    <StyledDescription
+                        id={spaceDescriptionElementsId(bookableSpace?.space_id)}
+                        data-testid={spaceDescriptionElementsId(bookableSpace?.space_id)}
+                        className={'truncated'}
+                    >
+                        <p>{bookableSpace?.space_description}</p>
+                    </StyledDescription>
+                )}
                 <StyledHideableBlock
                     id={spaceExtraElementsId(bookableSpace?.space_id)}
                     data-testid={spaceExtraElementsId(bookableSpace?.space_id)}
@@ -400,10 +473,10 @@ export const BookableSpacesList = ({
                             </ul>
                         </>
                     )}
-                    {openingHoursComponent(bookableSpace, locationKey, bookableSpace.space_library_name)}
+                    {openingHoursComponent(bookableSpace, locationKey, bookableSpace?.space_library_name)}
                     {!!bookableSpace?.space_opening_hours_override ? (
                         <p data-testid={`override_opening_hours_${bookableSpace?.space_uuid}`}>
-                            Note: {bookableSpace.space_opening_hours_override}
+                            Note: {bookableSpace?.space_opening_hours_override}
                         </p>
                     ) : (
                         ''
@@ -453,20 +526,39 @@ export const BookableSpacesList = ({
                         <ul style={{ paddingLeft: 0 }}>
                             {group.facility_type_children && group.facility_type_children.length > 0 ? (
                                 group.facility_type_children.map(facilityType => (
-                                    <li
+                                    <StyledInputListItem
                                         key={`facility-type-listitem-${facilityType.facility_type_id}`}
                                         data-testid={`facility-type-listitem-${facilityType.facility_type_id}`}
-                                        style={{ listStyle: 'none', paddingLeft: 0 }}
+                                        style={{ listStyle: 'none', paddingLeft: 0, display: 'flex' }}
                                     >
-                                        <StyledInputLabel title={facilityType.facility_type_name}>
+                                        <InputLabel
+                                            title={`Only show Spaces with ${facilityType.facility_type_name}`}
+                                            for={`filtertype-${facilityType.facility_type_id}`}
+                                        >
                                             <Checkbox
-                                                // checked={!!facilityTypeFilters.facility_type_id}
                                                 onChange={e => handleFilterSelection(e, facilityType.facility_type_id)}
                                                 data-testid={`filtertype-${facilityType.facility_type_id}`}
+                                                id={`filtertype-${facilityType.facility_type_id}`}
                                             />
-                                            {facilityType.facility_type_name}
-                                        </StyledInputLabel>
-                                    </li>
+                                            <span>{facilityType.facility_type_name}</span>
+                                        </InputLabel>
+                                        <input
+                                            type="checkbox"
+                                            id={`reject-filtertype-${facilityType.facility_type_id}`}
+                                            data-testid={`reject-filtertype-${facilityType.facility_type_id}`}
+                                            className="rejectedFilterType"
+                                            onChange={e => handleFilterRejection(e, facilityType.facility_type_id)}
+                                            aria-label={`Exclude Spaces with ${facilityType.facility_type_name}`}
+                                            // data-filtergroup={`filtertype-${group.facility_type_group_id}`}
+                                        />
+                                        <label
+                                            htmlFor={`reject-filtertype-${facilityType.facility_type_id}`}
+                                            className="rejectedFacilityTypeLabel"
+                                            data-testid={`reject-filtertype-label-${facilityType.facility_type_id}`}
+                                            title={`Exclude Spaces with ${facilityType.facility_type_name}`}
+                                        />
+                                        <span className="fortestfocus" style={{ width: '10px' }} />
+                                    </StyledInputListItem>
                                 ))
                             ) : (
                                 <li className="no-items">No facility types available</li>
@@ -486,9 +578,7 @@ export const BookableSpacesList = ({
                             if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading) {
                                 return (
                                     <StyledBookableSpaceGridItem item xs={12} md={9}>
-                                        <StyledStandardCard fullHeight>
-                                            <InlineLoader message="Loading" />
-                                        </StyledStandardCard>
+                                        <InlineLoader message="Loading" />
                                     </StyledBookableSpaceGridItem>
                                 );
                             } else if (!!bookableSpacesRoomListError || !!facilityTypeListError) {
@@ -529,7 +619,7 @@ export const BookableSpacesList = ({
 
                                 return (
                                     <>
-                                        <Grid item xs={9}>
+                                        <Grid item xs={8} md={9}>
                                             <Grid container data-testid={'space-wrapper'}>
                                                 {filteredSpaceLocations.length === 0 && (
                                                     <Grid item xs={9} data-testid={'no-spaces-visible'}>
