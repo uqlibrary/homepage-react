@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import { Grid, InputLabel } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
@@ -9,6 +10,7 @@ import Typography from '@mui/material/Typography';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -49,13 +51,18 @@ const rejectedCheckboxStyle = {
     cursor: 'pointer',
 };
 const StyledInputListItem = styled('li')(({ theme }) => ({
+    listStyle: 'none',
+    paddingLeft: 0,
+    display: 'flex',
     '& label': {
         ...standardText(theme),
         display: 'inline',
     },
+    // when we hover or focus on the reject-checkbox, style the label to be orange
     '&:hover label.rejectedFacilityTypeLabel': rejectedCheckboxStyle,
     '&:focus label.rejectedFacilityTypeLabel': rejectedCheckboxStyle,
     '&:has(> input:checked) label.rejectedFacilityTypeLabel': rejectedCheckboxStyle,
+    '&:has(> input:inline-focus) label.rejectedFacilityTypeLabel': rejectedCheckboxStyle,
     '@media (pointer:coarse)': {
         // show the reject checkbox on mobile, as they can't hover
         'label.rejectedFacilityTypeLabel': rejectedCheckboxStyle,
@@ -69,6 +76,71 @@ const StyledInputListItem = styled('li')(({ theme }) => ({
 }));
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
+}));
+const StyledSidebarContainer = styled(Grid)(() => ({
+    position: 'sticky',
+    top: 0,
+    maxHeight: '100vh',
+    overflowY: 'auto',
+    paddingInline: '1em',
+    marginBlock: '1em',
+    '&::-webkit-scrollbar': {
+        width: '8px',
+    },
+    '&::-webkit-scrollbar-track': {
+        background: '#f1f1f1',
+        borderRadius: '4px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+        background: '#c1c1c1',
+        borderRadius: '4px',
+        '&:hover': {
+            background: '#a8a8a8',
+        },
+    },
+    // Firefox scrollbar styling
+    scrollbarWidth: 'thin',
+    scrollbarColor: '#c1c1c1 #f1f1f1',
+}));
+const StyleFacilityGroup = styled('div')(() => ({
+    // styling here
+}));
+const StyledFilterSpaceList = styled('ul')(() => ({
+    paddingLeft: 0,
+}));
+const StyledCartoucheList = styled('ul')(({ theme }) => ({
+    listStyle: 'none',
+    display: 'inline',
+    margin: 0,
+    padding: 0,
+    '& li': {
+        listStyle: 'none',
+        display: 'inline',
+        margin: 0,
+        padding: 0,
+        '& button': {
+            margin: '0 0.5rem 0.5rem 0',
+            display: 'inline-flex',
+            alignItems: 'center',
+            borderRadius: '12px',
+            border: `1px solid ${theme.palette.primary.main}`,
+            textTransform: 'none',
+            padding: '0.1rem 0.25rem 0.1rem 0.5rem',
+            '&:hover, :focus': {
+                backgroundColor: '#fff',
+                '& span': {
+                    textDecoration: 'underline',
+                },
+            },
+            '& svg': {
+                width: '0.7em',
+                height: '0.7em',
+            },
+            '&.unselectedFilter span': {
+                textDecoration: 'line-through',
+            },
+        },
+    },
 }));
 const StyledLocationPhoto = styled('img')(() => ({
     maxWidth: '100%',
@@ -117,6 +189,17 @@ export const BookableSpacesList = ({
         console.log('setFacilityTypeFilters', data);
         setFacilityTypeFilters2(data);
     };
+    const setFilters = (facilityTypeId, isSelected, isUnselected) => {
+        const newFilters = facilityTypeFilters?.filter(ftf => {
+            return ftf.facility_type_id !== facilityTypeId;
+        });
+        newFilters.push({
+            facility_type_id: facilityTypeId,
+            selected: isSelected,
+            unselected: isUnselected,
+        });
+        setFacilityTypeFilters(newFilters);
+    };
 
     React.useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -152,6 +235,7 @@ export const BookableSpacesList = ({
             const newFilters = flatFacilityTypeList.map(facilityType => ({
                 facility_type_id: facilityType.facility_type_id,
                 selected: false,
+                unselected: false,
             }));
             console.log('newFilters=', newFilters);
             setFacilityTypeFilters(newFilters);
@@ -165,7 +249,6 @@ export const BookableSpacesList = ({
     function showSpace(spaceFacilityTypes, facilityTypeToGroup, facilityTypeFilters) {
         // Create a map of facility_type_id to group_id for quick lookup
         // Group selected filters by their facility type group
-        console.log('showSpace facilityTypeFilters=', facilityTypeFilters);
         const selectedFiltersByGroup = {};
         const rejectedFilters = [];
 
@@ -185,9 +268,6 @@ export const BookableSpacesList = ({
                 rejectedFilters.push(filter.facility_type_id);
             }
         });
-
-        console.log('showSpace selectedFiltersByGroup=', selectedFiltersByGroup);
-        console.log('showSpace rejectedFilters=', rejectedFilters);
 
         // check if space should be excluded due to rejected facility types
         if (rejectedFilters.length > 0) {
@@ -215,52 +295,70 @@ export const BookableSpacesList = ({
         return true;
     }
 
+    // hide listitems that are checked
+    const showHideActiveFilterListItems = (facilityTypeId, e) => {
+        console.log('showHideActiveFilterListItems facilityTypeId=', facilityTypeId);
+        const listItemId = `facility-type-listitem-${facilityTypeId}`;
+        console.log('showHideActiveFilterListItems listItemId=', listItemId);
+        const listItemElement = document.getElementById(listItemId);
+        console.log('showHideActiveFilterListItems e.target.checked=', e.target.checked);
+        console.log('showHideActiveFilterListItems listItemElement=', listItemElement);
+        console.log('showHideActiveFilterListItems listItemElement.classList=', listItemElement?.classList);
+        !!e.target.checked &&
+            !!listItemElement &&
+            !listItemElement.classList.contains('checkedCheckbox') &&
+            console.log('showHideActiveFilterListItems add checkedCheckbox');
+        !!listItemElement &&
+            !listItemElement.classList.contains('checkedCheckbox') &&
+            listItemElement.classList.add('checkedCheckbox');
+        !e.target.checked &&
+            !!listItemElement &&
+            !!listItemElement.classList.contains('checkedCheckbox') &&
+            listItemElement.classList.remove('checkedCheckbox');
+        !e.target.checked &&
+            !!listItemElement &&
+            !!listItemElement.classList.contains('checkedCheckbox') &&
+            console.log('showHideActiveFilterListItems remove checkedCheckbox');
+    };
+
+    const scrollToTopOfContent = () => {
+        const topOfPage = document.getElementById('topofcontent');
+        console.log('topOfPage=', topOfPage);
+        !!topOfPage && typeof topOfPage.scrollIntoView === 'function' && topOfPage.scrollIntoView();
+
+        const topOfSidebar = document.getElementById('topOfSidebar');
+        console.log('topOfSidebar=', topOfSidebar);
+        !!topOfSidebar &&
+            typeof topOfSidebar.scrollIntoView === 'function' &&
+            topOfSidebar.scrollIntoView({
+                behavior: 'smooth',
+            });
+    };
+
     const handleFilterRejection = (e, facilityTypeId) => {
-        console.log('handleFilterRejection facilityTypeId=', facilityTypeId);
-        console.log('handleFilterRejection facilityTypeFilters=', facilityTypeFilters);
-        console.log(
-            'after:',
-            facilityTypeFilters?.filter(ftf => {
-                return ftf.facility_type_id !== facilityTypeId;
-            }),
-        );
-        const newFilters = facilityTypeFilters?.filter(ftf => {
-            return ftf.facility_type_id !== facilityTypeId;
-        });
-        newFilters.push({
-            facility_type_id: facilityTypeId,
-            selected: false,
-            unselected: !!e.target.checked,
-        });
-        setFacilityTypeFilters(newFilters);
+        showHideActiveFilterListItems(facilityTypeId, e);
+
+        setFilters(facilityTypeId, false, !!e.target.checked);
+
+        scrollToTopOfContent();
     };
 
     const handleFilterSelection = (e, facilityTypeId) => {
-        console.log('handleFilterSelection facilityTypeId=', facilityTypeId);
-        console.log('handleFilterSelection facilityTypeFilters=', facilityTypeFilters);
+        showHideActiveFilterListItems(facilityTypeId, e);
 
-        const newFilters = facilityTypeFilters?.filter(ftf => {
-            return ftf.facility_type_id !== facilityTypeId;
-        });
-        newFilters.push({
-            facility_type_id: facilityTypeId,
-            selected: !!e.target.checked,
-            unselected: false,
-        });
-        setFacilityTypeFilters(newFilters);
+        setFilters(facilityTypeId, !!e.target.checked, false);
+
+        scrollToTopOfContent();
     };
 
     function filterNext7Days(departmentData) {
-        console.log('filterNext7Days 1 departmentData=', departmentData);
         // Get today's date (start of day)
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        console.log('filterNext7Days 2 today=', today);
 
         // Calculate the end date (6 days from today)
         const endDate = new Date(today);
         endDate.setDate(today.getDate() + 6);
-        console.log('filterNext7Days 3 endDate=', endDate);
 
         // Filter days to include only the next 7 days starting from today
         const filteredDays = departmentData.days.filter(day => {
@@ -269,11 +367,9 @@ export const BookableSpacesList = ({
 
             return dayDate >= today && dayDate <= endDate;
         });
-        console.log('filterNext7Days 4 filteredDays=', filteredDays);
 
         // Sort by date to ensure chronological order
         filteredDays.sort((a, b) => new Date(a.date) - new Date(b.date));
-        console.log('filterNext7Days 5 filteredDays=', filteredDays);
 
         filteredDays.map((d, index) => {
             if (index <= 1) {
@@ -281,7 +377,6 @@ export const BookableSpacesList = ({
             }
             return d;
         });
-        console.log('filterNext7Days 6 filteredDays=', filteredDays);
 
         // Return the department with filtered days
         const result = {
@@ -289,17 +384,14 @@ export const BookableSpacesList = ({
             next7days: filteredDays,
         };
         delete result.days;
-        console.log('filterNext7Days 7 result=', result);
 
         return result;
     }
 
     // rewrite the hours-by-week into one long list of days
     function convertWeeksToDays(data) {
-        console.log('convertWeeksToDays 1 data=', data);
         // Create a deep copy to avoid mutating the original data
         const location = JSON.parse(JSON.stringify(data));
-        console.log('convertWeeksToDays 2 location=', location);
 
         // Define the order of days for consistent sorting
         const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -310,9 +402,7 @@ export const BookableSpacesList = ({
             ...location,
             department: location.departments.find(dept => displayedDepartments.includes(dept.name)),
         };
-        console.log('convertWeeksToDays 3 filteredData=', filteredData);
         delete filteredData.departments;
-        console.log('convertWeeksToDays 4 filteredData=', filteredData);
 
         if (filteredData.department.weeks && Array.isArray(filteredData.department.weeks)) {
             const allDays = [];
@@ -334,10 +424,8 @@ export const BookableSpacesList = ({
             allDays.sort((a, b) => new Date(a.date) - new Date(b.date));
             filteredData.department.days = allDays;
         }
-        console.log('convertWeeksToDays 5 filteredData=', filteredData);
 
         !!filteredData.department.days && (filteredData.department = filterNext7Days(filteredData.department));
-        console.log('convertWeeksToDays 6 filteredData=', filteredData);
 
         return filteredData;
     }
@@ -505,40 +593,111 @@ export const BookableSpacesList = ({
             </>
         );
     };
+    const deSelectSelected = e => {
+        const button = e?.target.closest('button');
+        const facilityTypeId = parseInt(button.id.replace('button-deselect-selected-', ''), 10);
+
+        showHideActiveFilterListItems(facilityTypeId, e);
+
+        setFilters(facilityTypeId, false, false);
+    };
     const showFilterSidebar = () => {
         if (facilityTypeList?.data?.facility_type_groups?.length === 0) {
             return null;
         }
 
         const filteredFacilityTypeList = getFilteredFacilityTypeList(bookableSpacesRoomList, facilityTypeList);
-        const sortedUsedGroups = [...filteredFacilityTypeList?.data?.facility_type_groups].sort(
-            (a, b) => a.facility_type_group_order - b.facility_type_group_order,
-        );
+        const sortedUsedGroups =
+            !!filteredFacilityTypeList?.data?.facility_type_groups &&
+            filteredFacilityTypeList?.data?.facility_type_groups.length > 0
+                ? [...filteredFacilityTypeList?.data?.facility_type_groups].sort(
+                      (a, b) => a.facility_type_group_order - b.facility_type_group_order,
+                  )
+                : [];
 
+        const hasActiveFilters = facilityTypeFilters?.some(f => !!f.selected || !!f.unselected);
+        console.log('hasActiveFilters=', hasActiveFilters);
+
+        const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
         return (
             <>
+                {!!hasActiveFilters && (
+                    <>
+                        <span id="topOfSidebar" />
+                        <Typography component={'h3'} variant={'h6'}>
+                            Active filters
+                        </Typography>
+                        <StyledCartoucheList data-testid={'button-deselect-list'}>
+                            {facilityTypeFilters?.map(f => {
+                                if (!!f.selected) {
+                                    const facilityTypeRecord = flatFacilityTypeList.find(
+                                        flat => flat.facility_type_id === f.facility_type_id,
+                                    );
+                                    return (
+                                        <li key={`cartouche-select-${f.facility_type_id}`}>
+                                            <Button
+                                                id={`button-deselect-selected-${f.facility_type_id}`}
+                                                data-testid={`button-deselect-selected-${f.facility_type_id}`}
+                                                onClick={deSelectSelected}
+                                                className="selectedFilter"
+                                                aria-label={`${facilityTypeRecord.facility_type_name} selected - click to deselect`}
+                                            >
+                                                <span>{facilityTypeRecord?.facility_type_name}</span> <CloseIcon />
+                                            </Button>
+                                        </li>
+                                    );
+                                }
+                                if (!!f.unselected) {
+                                    const facilityTypeRecord = flatFacilityTypeList.find(
+                                        flat => flat.facility_type_id === f.facility_type_id,
+                                    );
+                                    return (
+                                        <li key={`cartouche-unselect-${f.facility_type_id}`}>
+                                            <Button
+                                                id={`button-deselect-selected-${f.facility_type_id}`}
+                                                data-testid={`button-deselect-unselected-${f.facility_type_id}`}
+                                                onClick={deSelectSelected}
+                                                className="unselectedFilter"
+                                                aria-label={`${facilityTypeRecord.facility_type_name} excluded - click to deselect`}
+                                            >
+                                                <span>{facilityTypeRecord?.facility_type_name}</span> <CloseIcon />
+                                            </Button>
+                                        </li>
+                                    );
+                                }
+                                return null;
+                            })}
+                        </StyledCartoucheList>
+                    </>
+                )}
                 <Typography component={'h3'} variant={'h6'}>
-                    Active filters
+                    Filter Spaces
                 </Typography>
                 {sortedUsedGroups.map(group => (
-                    <div key={group.facility_type_group_id} className="facility-group">
+                    <StyleFacilityGroup key={group.facility_type_group_id} className="facility-group">
                         <h3 className="group-heading">{group.facility_type_group_name}</h3>
-                        <ul style={{ paddingLeft: 0 }}>
+                        <StyledFilterSpaceList>
                             {group.facility_type_children && group.facility_type_children.length > 0 ? (
                                 group.facility_type_children.map(facilityType => (
                                     <StyledInputListItem
                                         key={`facility-type-listitem-${facilityType.facility_type_id}`}
+                                        id={`facility-type-listitem-${facilityType.facility_type_id}`}
                                         data-testid={`facility-type-listitem-${facilityType.facility_type_id}`}
-                                        style={{ listStyle: 'none', paddingLeft: 0, display: 'flex' }}
                                     >
                                         <InputLabel
                                             title={`Only show Spaces with ${facilityType.facility_type_name}`}
-                                            for={`filtertype-${facilityType.facility_type_id}`}
+                                            htmlFor={`filtertype-${facilityType.facility_type_id}`}
                                         >
                                             <Checkbox
                                                 onChange={e => handleFilterSelection(e, facilityType.facility_type_id)}
                                                 data-testid={`filtertype-${facilityType.facility_type_id}`}
                                                 id={`filtertype-${facilityType.facility_type_id}`}
+                                                className="selectedFilterType"
+                                                checked={
+                                                    facilityTypeFilters?.find(
+                                                        f1 => f1.facility_type_id === facilityType.facility_type_id,
+                                                    )?.selected || false
+                                                }
                                             />
                                             <span>{facilityType.facility_type_name}</span>
                                         </InputLabel>
@@ -549,7 +708,11 @@ export const BookableSpacesList = ({
                                             className="rejectedFilterType"
                                             onChange={e => handleFilterRejection(e, facilityType.facility_type_id)}
                                             aria-label={`Exclude Spaces with ${facilityType.facility_type_name}`}
-                                            // data-filtergroup={`filtertype-${group.facility_type_group_id}`}
+                                            checked={
+                                                facilityTypeFilters?.find(
+                                                    f1 => f1.facility_type_id === facilityType.facility_type_id,
+                                                )?.unselected || false
+                                            }
                                         />
                                         <label
                                             htmlFor={`reject-filtertype-${facilityType.facility_type_id}`}
@@ -563,14 +726,14 @@ export const BookableSpacesList = ({
                             ) : (
                                 <li className="no-items">No facility types available</li>
                             )}
-                        </ul>
-                    </div>
+                        </StyledFilterSpaceList>
+                    </StyleFacilityGroup>
                 ))}
             </>
         );
     };
     return (
-        <StandardPage title="Library spaces">
+        <StandardPage title="Library spaces" standardPageId="topofcontent">
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
                     <Grid container spacing={3} data-testid="library-spaces">
@@ -652,9 +815,9 @@ export const BookableSpacesList = ({
                                                     })}
                                             </Grid>
                                         </Grid>
-                                        <StyledBookableSpaceGridItem item xs={3} style={{ padding: '1em' }}>
+                                        <StyledSidebarContainer item xs={3}>
                                             {showFilterSidebar()}
-                                        </StyledBookableSpaceGridItem>
+                                        </StyledSidebarContainer>
                                     </>
                                 );
                             }

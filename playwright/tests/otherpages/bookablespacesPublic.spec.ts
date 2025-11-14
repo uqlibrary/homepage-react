@@ -156,7 +156,7 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId('expand-button-space-123456')).toBeVisible();
         await expect(page.getByTestId('collapse-button-space-123456')).not.toBeVisible();
     });
-    test('can filter', async ({ page }) => {
+    test('can filter with sidebar checkboxes', async ({ page }) => {
         await page.goto('spaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
@@ -243,15 +243,98 @@ test.describe('Spaces', () => {
         await expect(duttonParkGroupStudyRoom).toBeVisible();
         await expect(andrewLiverisComputerRoom).toBeVisible();
 
-        // select "exclude bookable" filter, and we are down to 2 showing
+        // select "exclude bookable" filter
         await bookableCheckbox.locator('span.fortestfocus').click(); // a hack of the page so playwright can tap on the exclude filter
         await expect(bookableExcludeCheckboxlabel).toBeVisible();
         await bookableExcludeCheckboxlabel.check();
+
+        // and we are down to 2 showing
         await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(2);
         await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
         await expect(forganSmithCollaborativeSpace).toBeVisible();
         await expect(duttonParkGroupStudyRoom).toBeVisible();
         await expect(andrewLiverisComputerRoom).not.toBeVisible();
+    });
+    test('can unfilter by cartouche', async ({ page }) => {
+        await page.goto('spaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
+
+        const bookableId = 19;
+        const bookableCheckbox = page.getByTestId(`facility-type-listitem-${bookableId}`);
+        const bookableExcludeCheckboxlabel = page.getByTestId(`reject-filtertype-label-${bookableId}`);
+        const bookableUnsetCartouche = page.getByTestId(`button-deselect-unselected-${bookableId}`);
+        const avEquipmentId = 8;
+        const avEquipmentCheckbox = page.getByTestId(`facility-type-listitem-${avEquipmentId}`);
+        const avEquipmentUnsetCartouche = page.getByTestId(`button-deselect-selected-${avEquipmentId}`);
+
+        const forganSmithCollaborativeSpace = page.getByTestId('space-123456').locator('h2');
+        const duttonParkGroupStudyRoom = page.getByTestId('space-1234544').locator('h2');
+        const andrewLiverisComputerRoom = page.getByTestId('space-43534').locator('h2');
+
+        // there are initially 3 Spaces visible on the page
+        await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(3);
+        await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
+        await expect(forganSmithCollaborativeSpace).toBeVisible();
+        await expect(duttonParkGroupStudyRoom).toBeVisible();
+        await expect(andrewLiverisComputerRoom).toBeVisible();
+
+        // filter to show "AV equipment" only
+        await expect(avEquipmentCheckbox.locator('label:first-of-type')).toBeVisible();
+        await expect(avEquipmentCheckbox.locator('label:first-of-type')).toContainText('AV equipment');
+        await avEquipmentCheckbox.locator('span input').check();
+
+        // only 2 Spaces visible on the page
+        await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(2);
+        await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
+        await expect(forganSmithCollaborativeSpace).toBeVisible();
+        await expect(duttonParkGroupStudyRoom).not.toBeVisible();
+
+        // cartouche visible
+        await expect(avEquipmentUnsetCartouche).toBeVisible();
+        await expect(avEquipmentUnsetCartouche).toContainText('AV equipment');
+        await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(1);
+
+        // select "exclude bookable" filter
+        await bookableCheckbox.locator('span.fortestfocus').click(); // a hack of the page so playwright can tap on the exclude filter
+        await expect(bookableExcludeCheckboxlabel).toBeVisible();
+        await bookableExcludeCheckboxlabel.check();
+
+        // and we are down to 1 showing
+        await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(1);
+        await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
+        await expect(forganSmithCollaborativeSpace).toBeVisible();
+        await expect(duttonParkGroupStudyRoom).not.toBeVisible();
+        await expect(andrewLiverisComputerRoom).not.toBeVisible();
+
+        // cartouche visible
+        await expect(avEquipmentUnsetCartouche).toBeVisible();
+        await expect(avEquipmentUnsetCartouche).toContainText('AV equipment');
+        await expect(bookableUnsetCartouche).toBeVisible();
+        await expect(bookableUnsetCartouche).toContainText('Bookable');
+        await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(2);
+
+        // now unfilter using the cartouches
+        await avEquipmentUnsetCartouche.click();
+
+        // back to 2 Spaces visible on the page
+        await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(2);
+        await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
+        await expect(forganSmithCollaborativeSpace).toBeVisible();
+        await expect(duttonParkGroupStudyRoom).toBeVisible();
+        await expect(andrewLiverisComputerRoom).not.toBeVisible();
+
+        await bookableUnsetCartouche.click();
+
+        // back to 3 Spaces visible on the page
+        await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(3);
+        await expect(page.getByTestId('no-spaces-visible')).not.toBeVisible();
+        await expect(forganSmithCollaborativeSpace).toBeVisible();
+        await expect(duttonParkGroupStudyRoom).toBeVisible();
+        await expect(andrewLiverisComputerRoom).toBeVisible();
+
+        // no cartouches left
+        await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(0);
     });
 });
 test.describe('Spaces errors', () => {
