@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Unstable_Grid2';
@@ -7,6 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
+import Typography from '@mui/material/Typography';
 
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -23,12 +24,13 @@ import { useLocation, useSelectLocation } from '../../../../SharedComponents/Loc
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
-import { isValidRoomId, isValidAssetTypeId, isValidAssetStatus } from '../../../../Inspection/utils/helpers';
-import { isEmptyObject, isEmptyStr } from '../../../../helpers/helpers';
+import { isValidAssetTypeId } from '../../../../Inspection/utils/helpers';
+import { isEmptyStr } from '../../../../helpers/helpers';
 import { PERMISSIONS } from '../../../../config/auth';
 import { AccordionWithCheckbox } from '../AccordionWithCheckbox';
 import { FormContext } from '../../../../helpers/hooks';
 import { makeAssetExcludedMessage } from '../utils';
+import { validateFormValues } from '../validation';
 
 const moment = require('moment');
 
@@ -70,48 +72,17 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
         prevStep();
     };
 
-    const validFormValues = React.useMemo(() => {
-        const validLocation =
-            !formValues.hasLocation ||
-            (!isEmptyObject(formValues.location) &&
-                isValidRoomId(formValues.location?.room ?? /* istanbul ignore next */ 0));
-
-        const validDiscardStatus = !formValues.hasDiscardStatus || !isEmptyStr(formValues.discard_reason);
-
-        const validAssetType =
-            !formValues.hasAssetType ||
-            (!isEmptyObject(formValues.asset_type) &&
-                isValidAssetTypeId(formValues.asset_type?.asset_type_id ?? /* istanbul ignore next */ 0));
-
-        const validAssetStatus =
-            !formValues.hasAssetStatus ||
-            (!isEmptyObject(formValues.asset_status) &&
-                isValidAssetStatus(formValues.asset_status?.value, validAssetStatusOptions));
-
-        const isValid =
-            (formValues.hasLocation ||
-                formValues.hasDiscardStatus ||
-                formValues.hasAssetType ||
-                formValues.hasClearNotes ||
-                formValues.hasAssetStatus) &&
-            validLocation &&
-            validDiscardStatus &&
-            validAssetType &&
-            validAssetStatus;
-
-        return isValid;
-    }, [
-        formValues.discard_reason,
-        formValues.asset_type,
-        formValues.asset_status,
-        formValues.hasAssetType,
-        formValues.hasLocation,
-        formValues.hasDiscardStatus,
-        formValues.hasAssetStatus,
-        formValues.location,
-        formValues.hasClearNotes,
-    ]);
-
+    const validFormValues = useMemo(() => validateFormValues(formValues), [formValues]);
+    const assetStatusOptionExcludes = [
+        locale.config.assetStatus.failed,
+        locale.config.assetStatus.outforrepair,
+        locale.config.assetStatus.discarded,
+        locale.config.assetStatus.awaitingtest,
+    ];
+    // here, need test for new validation function
+    // and need to move this next effect in to a
+    // new hooks file or same new validation file
+    // but as a hook like useValidateSelectedOptions or something
     React.useEffect(() => {
         // whenever form values change, we need to
         // revalidate the list against the new rules
@@ -134,7 +105,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                             asset.asset_next_test_due_date,
                             locale.config.format.dateFormatNoTime,
                         );
-                        if (nextTestDueDate.isAfter(targetDate)) {
+                        if (nextTestDueDate.isBefore(targetDate)) {
                             // exclude this asset
                             listToExclude.push(asset);
                             listCopy = listCopy.filter(item => item.asset_id !== asset.asset_id);
@@ -144,14 +115,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                 }
                 // if asset status selected, validate
                 if (formValues.hasAssetStatus) {
-                    if (
-                        [
-                            locale.config.assetStatus.failed,
-                            locale.config.assetStatus.outforrepair,
-                            locale.config.assetStatus.discarded,
-                            locale.config.assetStatus.awaitingtest,
-                        ].includes(asset.asset_status)
-                    ) {
+                    if (assetStatusOptionExcludes.includes(asset.asset_status)) {
                         // exclude this asset
                         listToExclude.push(asset);
                         listCopy = listCopy.filter(item => item.asset_id !== asset.asset_id);
@@ -334,7 +298,13 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                 },
                             }}
                         >
-                            <Grid container>
+                            <Grid container spacing={3}>
+                                <Grid xs={12}>
+                                    <Typography variant="body2">
+                                        Selecting this option will exclude any chosen assets with status:{' '}
+                                        {assetStatusOptionExcludes.join(', ')}
+                                    </Typography>
+                                </Grid>
                                 <Grid xs={12} sm={6}>
                                     <AssetStatusSelector
                                         id={componentId}
