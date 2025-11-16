@@ -10,7 +10,6 @@ export { default as examLearningResourceReducer } from './examLearningResourceRe
 export { default as publicFileUploadReducer } from './publicFileUploadReducer';
 export { default as examSearchReducer } from './examSearchReducer';
 export { default as examSuggestionReducer } from './examSuggestionReducer';
-export { default as testTagUserReducer } from './testTagUserReducer';
 export { default as testTagOnLoadDashboardReducer } from './testTagOnLoadDashboardReducer';
 export { default as testTagOnLoadInspectionReducer } from './testTagOnLoadInspectionReducer';
 export { default as testTagLocationReducer } from './testTagLocationReducer';
@@ -44,6 +43,7 @@ export { default as dlorDemographicsReducer } from './dlorDemographicsReducer';
 export { default as dlorFavouritesReducer } from './dlorFavouritesReducer';
 export { default as dlorAdminNotesReducer } from './dlorAdminNotesReducer';
 export { default as dlorKeywordsReducer } from './dlorKeywordsReducer';
+export { default as dlorStatisticsReducer } from './dlorStatisticsReducer';
 export { default as bookableSpacesRoomListReducer } from './bookableSpacesRoomListReducer';
 export { default as weeklyHoursReducer } from './weeklyHoursReducer';
 export { default as bookablespacesFacilityTypeReducer } from './bookablespacesFacilityTypeReducer';
