@@ -126,26 +126,26 @@ test.describe('LibraryUpdates', () => {
             //  XXXXX
             const firstBox = await getBoundingBox(page, 'drupal-article-0', {
                 x: 29,
-                y: 3059.234375,
-                width: 767,
-                height: 255.65625,
+                y: 3539.765625,
+                width: 782,
+                height: 260.65625,
             });
             expect(firstBox.x).toBeLessThan(30);
 
             const secondBox = await getBoundingBox(page, 'drupal-article-1', {
                 x: 29,
-                y: 3348.890625,
-                width: 366.5,
-                height: 432.328125,
+                y: 3834.421875,
+                width: 374,
+                height: 437.328125,
             });
             expect(secondBox.x).toBe(firstBox.x);
             expect(secondBox.y).toBeGreaterThan(firstBox.y + firstBox.height);
 
             const thirdBox = await getBoundingBox(page, 'drupal-article-2', {
                 x: 429.5,
-                y: 3348.890625,
+                y: 3834.421875,
                 width: 366.5,
-                height: 432.328125,
+                height: 437.328125,
             });
             expect(thirdBox.y).toBe(secondBox.y);
             expect(thirdBox.y + thirdBox.height).toBe(secondBox.y + secondBox.height);

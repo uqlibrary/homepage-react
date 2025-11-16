@@ -189,7 +189,8 @@ export const isUQOnlyUser = account =>
 const userHasAdGroup = (ADGroupName, account) =>
     !!account && !!account.groups && !!account.groups.find(group => group.includes(ADGroupName));
 
-export const isTestTagUser = account => isLoggedInUser(account) && userHasAdGroup('lib_libapi_TestTagUsers', account);
+export const isTestTagUser = account =>
+    !!account && isLoggedInUser(account) && account.hasOwnProperty('tnt') && Object.keys(account.tnt ?? []).length > 0;
 
 export const isSpacesAdminUser = account =>
     isLoggedInUser(account) && userHasAdGroup('lib_libapi_SpacesAdmin', account);

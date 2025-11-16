@@ -19,8 +19,6 @@ import siteList from '../../../../../../../data/mock/data/testing/testAndTag/tes
 import floorList from '../../../../../../../data/mock/data/testing/testAndTag/testTagFloors';
 import roomList from '../../../../../../../data/mock/data/testing/testAndTag/testTagRooms';
 
-import { getUserPermissions } from '../../../helpers/auth';
-
 const defaultLocationState = {
     siteList,
     siteListLoading: false,
@@ -49,12 +47,9 @@ function setup(testProps = {}, renderer = rtlRender) {
         testTagLocationReducer: {
             ...defaultLocationState,
         },
-        testTagUserReducer: {
-            userLoading: false,
-            userLoaded: true,
-            userError: false,
-            user: userData,
-            privilege: getUserPermissions(userData.privileges ?? {}),
+        accountReducer: {
+            accountLoading: false,
+            account: { tnt: userData },
         },
         ...state,
     };

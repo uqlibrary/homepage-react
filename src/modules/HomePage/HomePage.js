@@ -22,6 +22,8 @@ import {
     loadLoans,
     loadVemcountList,
 } from 'data/actions';
+
+import { loadDlorStatistics } from 'data/actions/dlorActions';
 import { canSeeLearningResourcesPanel, isEspaceAuthor, canSeeReadPublish, canSeeTrainingPanel } from 'helpers/access';
 import UtilityBar from './publicComponents/UtilityBar/UtilityBar';
 
@@ -31,6 +33,7 @@ import Training from './loggedinComponents/Training';
 import ReferencingPanel from './loggedinComponents/ReferencingPanel';
 import ReadPublish from './loggedinComponents/ReadPublish';
 import AccountPanel from './loggedinComponents/AccountPanel/AccountPanel';
+import DigitalLearningHub from './loggedinComponents/DigitalLearningHub';
 
 const StyledPortalContainer = styled('div')(() => ({
     paddingTop: 48,
@@ -133,6 +136,9 @@ export const HomePage = ({
     vemcount,
     vemcountLoading,
     vemcountError,
+    dlorStatistics,
+    dlorStatisticsLoading,
+    dlorStatisticsError,
 }) => {
     const dispatch = useDispatch();
 
@@ -198,8 +204,16 @@ export const HomePage = ({
         }
     }, [accountLoading, account, loans, loansLoading, dispatch]);
 
+    useEffect(() => {
+        if (!!account && !dlorStatistics && !dlorStatisticsLoading && !dlorStatisticsError) {
+            dispatch(loadDlorStatistics());
+        }
+    }, [account, dlorStatistics, dlorStatisticsLoading, dlorStatisticsError, dispatch]);
+
     const verySimplelayout =
         !canSeeLearningResourcesPanel(account) && !isEspaceAuthor(account, author) && !canSeeReadPublish(account);
+
+    console.log('DLOR STATISTISCS IN HOMEPAGE:', dlorStatistics, dlorStatisticsLoading, dlorStatisticsError);
     return (
         <>
             <StyledPortalContainer id="search-portal-container" data-testid="search-portal-container">
@@ -300,6 +314,18 @@ export const HomePage = ({
                                                         />
                                                     </StyledGridItemLoggedInLeftMost>
                                                 )}
+                                                {/* <StyledGridItemLoggedInLeftMost
+                                                    item
+                                                    xs={12}
+                                                    data-testid="espace-links-panel"
+                                                >
+                                                    <DigitalLearningHub
+                                                        title="Find Digital Resources"
+                                                        showFirstLink={false}
+                                                        subText="Modules, videos and guides to build skills"
+                                                        author={author}
+                                                    />
+                                                </StyledGridItemLoggedInLeftMost> */}
                                             </Grid>
                                         </Grid>
                                         <Grid item uqDsDesktop={8} xs={12}>
@@ -351,6 +377,23 @@ export const HomePage = ({
                                                         )}
                                                     </Grid>
                                                 </Grid>
+                                                {/* DIITAL LEARNING HUB PANEL START*/}
+                                                <Grid item uqDsDesktop={6} xs={12}>
+                                                    <Grid container>
+                                                        <StyledGridItemLoggedIn
+                                                            item
+                                                            xs={12}
+                                                            data-testid="dlor-links-panel"
+                                                        >
+                                                            <DigitalLearningHub
+                                                                dlorStatistics={dlorStatistics}
+                                                                account={account}
+                                                                dlorStatisticsLoading={dlorStatisticsLoading}
+                                                                dlorStatisticsError={dlorStatisticsError}
+                                                            />
+                                                        </StyledGridItemLoggedIn>
+                                                    </Grid>
+                                                </Grid>
                                             </Grid>
                                         </Grid>
                                     </>
@@ -397,6 +440,9 @@ HomePage.propTypes = {
     vemcount: PropTypes.object,
     vemcountLoading: PropTypes.bool,
     vemcountError: PropTypes.bool,
+    dlorStatistics: PropTypes.object,
+    dlorStatisticsLoading: PropTypes.bool,
+    dlorStatisticsError: PropTypes.any,
 };
 
 export default HomePage;

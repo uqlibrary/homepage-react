@@ -108,6 +108,29 @@ const noEndNoteInReferencing = async (page: Page) => {
 // we test that each user type gets the correct elements on the homepage
 // we shouldn't test the mylibrary button here, same, as that is built in reusable-webcomponents
 // everyone has catalogue and referencing
+
+// The problem with these tests is, because we're tracking location of items, if an item changes position, the tests seem to fail.
+// the new digital leaarning hub panel is causing issues in tablet view, so we hide it for the tests. These are tested ELSEWHERE.
+
+const OBJECT_TO_HIDE_SELECTOR = '#digitallearninghub-panel';
+
+test.beforeEach(async ({ page }) => {
+    try {
+        const elementLocator = page.locator(OBJECT_TO_HIDE_SELECTOR);
+
+        await elementLocator.waitFor({ state: 'visible', timeout: 5000 });
+
+        await page.evaluate(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                (element as HTMLElement).style.display = 'none';
+            }
+        }, OBJECT_TO_HIDE_SELECTOR);
+    } catch (e) {
+        console.log(`Optional object ${OBJECT_TO_HIDE_SELECTOR} is being skipped in this test intentionally.`);
+    }
+});
+
 test.describe('Personalised Homepage', () => {
     test("Renders an on-campus undergraduate student's home page correctly", async ({ page }) => {
         await expectUserToDisplayCorrectFirstName(page, 's1111111', 'Michael');

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
@@ -13,7 +12,7 @@ import AssetSelector from '../../../SharedComponents/AssetSelector/AssetSelector
 import UpdateDialog from '../../../SharedComponents/UpdateDialog/UpdateDialog';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 
-import { useConfirmationAlert } from '../../../helpers/hooks';
+import { useAccountUser, useConfirmationAlert } from '../../../helpers/hooks';
 import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/DataTable/DataTableHooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { PERMISSIONS } from '../../../config/auth';
@@ -43,7 +42,7 @@ const InspectionDetails = ({ actions, assetsList, assetsListLoading, assetsListE
         errorMessageFormatter: locale.config.alerts.error,
     });
 
-    const { user } = useSelector(state => state.get('testTagUserReducer'));
+    const { user } = useAccountUser();
 
     const [actionState, actionDispatch] = React.useReducer(actionReducer, { ...emptyActionState });
     const [dialogueBusy, setDialogueBusy] = React.useState(false);

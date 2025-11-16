@@ -45,12 +45,8 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import HeroCard from 'modules/Pages/DigitalLearningObjects/SharedComponents/HeroCard';
-import {
-    convertSnakeCaseToKebabCase,
-    getDlorViewPageUrl,
-    slugifyName,
-} from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
-import { isEscapeKeyPressed, isReturnKeyPressed } from 'helpers/general';
+import { convertSnakeCaseToKebabCase, getDlorViewPageUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { isEscapeKeyPressed, isReturnKeyPressed, slugifyName } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
 import { isDlorAdminUser, isLibraryStaff, isUQOnlyUser, isStaff, isADlorTeamMember } from 'helpers/access';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';

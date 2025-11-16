@@ -109,6 +109,105 @@ describe('utils', () => {
             // Assert that the result matches the expected output
             expect(result).toEqual(expectedOutput);
         });
+        it('should return the expected result when asset status is being updated', () => {
+            // Provide sample input values for formValues with hasAssetStatus
+            const formValues = {
+                hasDiscardStatus: false,
+                hasAssetStatus: true,
+                hasLocation: true,
+                hasAssetType: true,
+                hasClearNotes: true,
+                asset_list: [{ asset_id: 4 }, { asset_id: 5 }],
+                location: {
+                    room: 'Room 2',
+                },
+                asset_type: {
+                    asset_type_id: 2,
+                },
+                asset_status: {
+                    value: 'INSTORAGE',
+                },
+            };
+
+            // Define the expected output - hasAssetStatus should clear other flags
+            const expectedOutput = {
+                asset: [4, 5],
+                asset_status: 'INSTORAGE',
+            };
+
+            // Call the transformRequest function with the sample input values
+            const result = transformRequest(formValues);
+
+            // Assert that the result matches the expected output
+            expect(result).toEqual(expectedOutput);
+            // Verify that other flags were cleared
+            expect(formValues.hasLocation).toBe(false);
+            expect(formValues.hasAssetType).toBe(false);
+            expect(formValues.hasDiscardStatus).toBe(false);
+            expect(formValues.hasClearNotes).toBe(false);
+        });
+        it('should handle different asset status values correctly', () => {
+            const statuses = ['CURRENT', 'PASSED', 'FAILED', 'OUTFORREPAIR', 'DISCARDED', 'INSTORAGE', 'NONE'];
+
+            statuses.forEach(status => {
+                const formValues = {
+                    hasAssetStatus: true,
+                    asset_list: [{ asset_id: 1 }],
+                    asset_status: {
+                        value: status,
+                    },
+                };
+
+                const result = transformRequest(formValues);
+
+                expect(result).toEqual({
+                    asset: [1],
+                    asset_status: status,
+                });
+            });
+        });
+        it('should not include asset_status when hasAssetStatus is false', () => {
+            const formValues = {
+                hasAssetStatus: false,
+                hasLocation: true,
+                asset_list: [{ asset_id: 1 }],
+                location: {
+                    room: 'Room 1',
+                },
+                asset_status: {
+                    value: 'INSTORAGE',
+                },
+            };
+
+            const result = transformRequest(formValues);
+
+            expect(result).toEqual({
+                asset: [1],
+                asset_room_id_last_seen: 'Room 1',
+            });
+            expect(result.asset_status).toBeUndefined();
+        });
+        it('should prioritize hasDiscardStatus over hasAssetStatus', () => {
+            const formValues = {
+                hasDiscardStatus: true,
+                hasAssetStatus: true,
+                asset_list: [{ asset_id: 1 }],
+                discard_reason: 'Broken',
+                asset_status: {
+                    value: 'INSTORAGE',
+                },
+            };
+
+            const result = transformRequest(formValues);
+
+            expect(result).toEqual({
+                asset: [1],
+                is_discarding: 1,
+                discard_reason: 'Broken',
+            });
+            expect(result.asset_status).toBeUndefined();
+            expect(formValues.hasAssetStatus).toBe(false);
+        });
     });
     describe('transformFilterRow', () => {
         it('should transform the row correctly', () => {
