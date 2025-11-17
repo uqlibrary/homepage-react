@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CloseIcon from '@mui/icons-material/Close';
+import ReplayIcon from '@mui/icons-material/Replay';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -101,6 +102,25 @@ const StyledSidebarContainer = styled(Grid)(() => ({
     // Firefox scrollbar styling
     scrollbarWidth: 'thin',
     scrollbarColor: '#c1c1c1 #f1f1f1',
+    '& > button': {
+        margin: '0 0.5rem 0.5rem 0',
+        display: 'inline-flex',
+        alignItems: 'center',
+        textTransform: 'none',
+        textDecoration: 'underline',
+        padding: '0.1rem 0.25rem 0.1rem 0',
+        lineHeight: 'normal',
+        '&:hover, &:focus': {
+            backgroundColor: 'transparent',
+        },
+        '& span': {
+            marginLeft: '0.25rem',
+            '&:hover, &:focus': {
+                backgroundColor: '#51247a',
+                color: '#fff',
+            },
+        },
+    },
 }));
 const StyleFacilityGroup = styled('div')(() => ({
     // styling here
@@ -124,7 +144,7 @@ const StyledCartoucheList = styled('ul')(({ theme }) => ({
             alignItems: 'center',
             borderRadius: '12px',
             border: `1px solid ${theme.palette.primary.main}`,
-            textTransform: 'none',
+            textTransform: 'none !important',
             padding: '0.1rem 0.25rem 0.1rem 0.5rem',
             '&:hover, :focus': {
                 backgroundColor: '#fff',
@@ -297,27 +317,26 @@ export const BookableSpacesList = ({
 
     // hide listitems that are checked
     const showHideActiveFilterListItems = (facilityTypeId, e) => {
-        console.log('showHideActiveFilterListItems facilityTypeId=', facilityTypeId);
         const listItemId = `facility-type-listitem-${facilityTypeId}`;
-        console.log('showHideActiveFilterListItems listItemId=', listItemId);
+        console.log(
+            'showHideActiveFilterListItems facilityTypeId=',
+            facilityTypeId,
+            'checked=',
+            e.target.checked,
+            'listItemId=',
+            listItemId,
+            e.target,
+        );
         const listItemElement = document.getElementById(listItemId);
-        console.log('showHideActiveFilterListItems e.target.checked=', e.target.checked);
-        console.log('showHideActiveFilterListItems listItemElement=', listItemElement);
-        console.log('showHideActiveFilterListItems listItemElement.classList=', listItemElement?.classList);
         !!e.target.checked &&
             !!listItemElement &&
             !listItemElement.classList.contains('checkedCheckbox') &&
+            listItemElement.classList.add('checkedCheckbox') &&
             console.log('showHideActiveFilterListItems add checkedCheckbox');
-        !!listItemElement &&
-            !listItemElement.classList.contains('checkedCheckbox') &&
-            listItemElement.classList.add('checkedCheckbox');
         !e.target.checked &&
             !!listItemElement &&
             !!listItemElement.classList.contains('checkedCheckbox') &&
-            listItemElement.classList.remove('checkedCheckbox');
-        !e.target.checked &&
-            !!listItemElement &&
-            !!listItemElement.classList.contains('checkedCheckbox') &&
+            listItemElement.classList.remove('checkedCheckbox') &&
             console.log('showHideActiveFilterListItems remove checkedCheckbox');
     };
 
@@ -596,10 +615,22 @@ export const BookableSpacesList = ({
     const deSelectSelected = e => {
         const button = e?.target.closest('button');
         const facilityTypeId = parseInt(button.id.replace('button-deselect-selected-', ''), 10);
+        console.log('deSelectSelected button=', facilityTypeId, button);
 
         showHideActiveFilterListItems(facilityTypeId, e);
 
         setFilters(facilityTypeId, false, false);
+    };
+    const deSelectAll = () => {
+        // reset the facility types to all false - the render will clear the buttons and checkboxes for us!
+        const newFacilityTypes = facilityTypeFilters.map(ft => {
+            return {
+                facility_type_id: ft.facility_type_id,
+                selected: false,
+                unselected: false,
+            };
+        });
+        setFacilityTypeFilters(newFacilityTypes);
     };
     const showFilterSidebar = () => {
         if (facilityTypeList?.data?.facility_type_groups?.length === 0) {
@@ -619,6 +650,8 @@ export const BookableSpacesList = ({
         console.log('hasActiveFilters=', hasActiveFilters);
 
         const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
+        const checkFiltersList = facilityTypeFilters?.filter(f => !!f.selected || !!f.unselected);
+        console.log('checkFiltersList', checkFiltersList?.length, checkFiltersList);
         return (
             <>
                 {!!hasActiveFilters && (
@@ -627,7 +660,7 @@ export const BookableSpacesList = ({
                         <Typography component={'h3'} variant={'h6'}>
                             Active filters
                         </Typography>
-                        <StyledCartoucheList data-testid={'button-deselect-list'}>
+                        <StyledCartoucheList id={'button-deselect-list'} data-testid={'button-deselect-list'}>
                             {facilityTypeFilters?.map(f => {
                                 if (!!f.selected) {
                                     const facilityTypeRecord = flatFacilityTypeList.find(
@@ -640,7 +673,7 @@ export const BookableSpacesList = ({
                                                 data-testid={`button-deselect-selected-${f.facility_type_id}`}
                                                 onClick={deSelectSelected}
                                                 className="selectedFilter"
-                                                aria-label={`${facilityTypeRecord.facility_type_name} selected - click to deselect`}
+                                                title={`${facilityTypeRecord.facility_type_name} selected - click to deselect`}
                                             >
                                                 <span>{facilityTypeRecord?.facility_type_name}</span> <CloseIcon />
                                             </Button>
@@ -668,67 +701,81 @@ export const BookableSpacesList = ({
                                 return null;
                             })}
                         </StyledCartoucheList>
+                        {checkFiltersList?.length > 0 && (
+                            <Button
+                                id={'button-deselect-all-filters'}
+                                data-testid={'button-deselect-all-filters'}
+                                onClick={deSelectAll}
+                            >
+                                <ReplayIcon />
+                                <span>Remove all filters</span>
+                            </Button>
+                        )}
                     </>
                 )}
-                <Typography component={'h3'} variant={'h6'}>
-                    Filter Spaces
-                </Typography>
-                {sortedUsedGroups.map(group => (
-                    <StyleFacilityGroup key={group.facility_type_group_id} className="facility-group">
-                        <h3 className="group-heading">{group.facility_type_group_name}</h3>
-                        <StyledFilterSpaceList>
-                            {group.facility_type_children && group.facility_type_children.length > 0 ? (
-                                group.facility_type_children.map(facilityType => (
-                                    <StyledInputListItem
-                                        key={`facility-type-listitem-${facilityType.facility_type_id}`}
-                                        id={`facility-type-listitem-${facilityType.facility_type_id}`}
-                                        data-testid={`facility-type-listitem-${facilityType.facility_type_id}`}
-                                    >
-                                        <InputLabel
-                                            title={`Only show Spaces with ${facilityType.facility_type_name}`}
-                                            htmlFor={`filtertype-${facilityType.facility_type_id}`}
+                <div data-testid="sidebarCheckboxes">
+                    <Typography component={'h3'} variant={'h6'}>
+                        Filter Spaces
+                    </Typography>
+                    {sortedUsedGroups.map(group => (
+                        <StyleFacilityGroup key={group.facility_type_group_id} className="facility-group">
+                            <h3 className="group-heading">{group.facility_type_group_name}</h3>
+                            <StyledFilterSpaceList>
+                                {group.facility_type_children && group.facility_type_children.length > 0 ? (
+                                    group.facility_type_children.map(facilityType => (
+                                        <StyledInputListItem
+                                            key={`facility-type-listitem-${facilityType.facility_type_id}`}
+                                            id={`facility-type-listitem-${facilityType.facility_type_id}`}
+                                            data-testid={`facility-type-listitem-${facilityType.facility_type_id}`}
                                         >
-                                            <Checkbox
-                                                onChange={e => handleFilterSelection(e, facilityType.facility_type_id)}
-                                                data-testid={`filtertype-${facilityType.facility_type_id}`}
-                                                id={`filtertype-${facilityType.facility_type_id}`}
-                                                className="selectedFilterType"
+                                            <InputLabel
+                                                title={`Only show Spaces with ${facilityType.facility_type_name}`}
+                                                htmlFor={`filtertype-${facilityType.facility_type_id}`}
+                                            >
+                                                <Checkbox
+                                                    onChange={e =>
+                                                        handleFilterSelection(e, facilityType.facility_type_id)
+                                                    }
+                                                    data-testid={`filtertype-${facilityType.facility_type_id}`}
+                                                    id={`filtertype-${facilityType.facility_type_id}`}
+                                                    className="selectedFilterType"
+                                                    checked={
+                                                        facilityTypeFilters?.find(
+                                                            f1 => f1.facility_type_id === facilityType.facility_type_id,
+                                                        )?.selected || false
+                                                    }
+                                                />
+                                                <span>{facilityType.facility_type_name}</span>
+                                            </InputLabel>
+                                            <input
+                                                type="checkbox"
+                                                id={`reject-filtertype-${facilityType.facility_type_id}`}
+                                                data-testid={`reject-filtertype-${facilityType.facility_type_id}`}
+                                                className="rejectedFilterType"
+                                                onChange={e => handleFilterRejection(e, facilityType.facility_type_id)}
+                                                aria-label={`Exclude Spaces with ${facilityType.facility_type_name}`}
                                                 checked={
                                                     facilityTypeFilters?.find(
                                                         f1 => f1.facility_type_id === facilityType.facility_type_id,
-                                                    )?.selected || false
+                                                    )?.unselected || false
                                                 }
                                             />
-                                            <span>{facilityType.facility_type_name}</span>
-                                        </InputLabel>
-                                        <input
-                                            type="checkbox"
-                                            id={`reject-filtertype-${facilityType.facility_type_id}`}
-                                            data-testid={`reject-filtertype-${facilityType.facility_type_id}`}
-                                            className="rejectedFilterType"
-                                            onChange={e => handleFilterRejection(e, facilityType.facility_type_id)}
-                                            aria-label={`Exclude Spaces with ${facilityType.facility_type_name}`}
-                                            checked={
-                                                facilityTypeFilters?.find(
-                                                    f1 => f1.facility_type_id === facilityType.facility_type_id,
-                                                )?.unselected || false
-                                            }
-                                        />
-                                        <label
-                                            htmlFor={`reject-filtertype-${facilityType.facility_type_id}`}
-                                            className="rejectedFacilityTypeLabel"
-                                            data-testid={`reject-filtertype-label-${facilityType.facility_type_id}`}
-                                            title={`Exclude Spaces with ${facilityType.facility_type_name}`}
-                                        />
-                                        <span className="fortestfocus" style={{ width: '10px' }} />
-                                    </StyledInputListItem>
-                                ))
-                            ) : (
-                                <li className="no-items">No facility types available</li>
-                            )}
-                        </StyledFilterSpaceList>
-                    </StyleFacilityGroup>
-                ))}
+                                            <label
+                                                htmlFor={`reject-filtertype-${facilityType.facility_type_id}`}
+                                                className="rejectedFacilityTypeLabel"
+                                                data-testid={`reject-filtertype-label-${facilityType.facility_type_id}`}
+                                                title={`Exclude Spaces with ${facilityType.facility_type_name}`}
+                                            />
+                                            <span className="fortestfocus" style={{ width: '10px' }} />
+                                        </StyledInputListItem>
+                                    ))
+                                ) : (
+                                    <li className="no-items">No facility types available</li>
+                                )}
+                            </StyledFilterSpaceList>
+                        </StyleFacilityGroup>
+                    ))}
+                </div>
             </>
         );
     };

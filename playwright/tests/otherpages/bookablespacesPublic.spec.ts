@@ -336,6 +336,48 @@ test.describe('Spaces', () => {
         // no cartouches left
         await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(0);
     });
+    test('can clear all filters with one click', async ({ page }) => {
+        await page.goto('spaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
+
+        await page.goto('spaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
+
+        const bookableId = 19;
+        const bookableCheckbox = page.getByTestId(`facility-type-listitem-${bookableId}`);
+        const bookableExcludeCheckboxlabel = page.getByTestId(`reject-filtertype-label-${bookableId}`);
+        const bookableUnsetCartouche = page.getByTestId(`button-deselect-unselected-${bookableId}`);
+        const avEquipmentId = 8;
+        const avEquipmentCheckbox = page.getByTestId(`facility-type-listitem-${avEquipmentId}`);
+
+        // select some filters
+        await avEquipmentCheckbox.locator('span input').check();
+        console.log('bookableUnsetCartouche=', bookableUnsetCartouche);
+
+        await bookableCheckbox.locator('span.fortestfocus').click(); // a hack of the page so playwright can tap on the exclude filter
+        await expect(bookableExcludeCheckboxlabel).toBeVisible();
+        await bookableExcludeCheckboxlabel.check();
+
+        // correct number of cartouches showing
+        await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(2);
+        // correct number of panels showing
+        await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(1);
+
+        // click deselect-all-cartouches
+        await expect(page.getByTestId('button-deselect-all-filters')).toBeVisible();
+        page.getByTestId('button-deselect-all-filters').click();
+
+        // all panels visible
+        await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(3);
+        // all cartouches removed
+        await expect(page.getByTestId('button-deselect-list').locator(':scope > *')).toHaveCount(0);
+        // no checkboxes checked
+        await expect(page.getByTestId('sidebarCheckboxes').locator(':scope > *[type="checkbox"]:checked')).toHaveCount(
+            0,
+        );
+    });
 });
 test.describe('Spaces errors', () => {
     test('spaces list load error', async ({ page }) => {
