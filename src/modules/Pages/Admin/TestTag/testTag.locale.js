@@ -37,6 +37,8 @@ export default {
             failed: 'FAILED',
             outforrepair: 'OUTFORREPAIR',
             discarded: 'DISCARDED',
+            instorage: 'INSTORAGE',
+            missing: 'MISSING',
         },
         inspectStatus: {
             passed: 'PASSED',
@@ -235,6 +237,8 @@ export default {
                 failedLabel: 'Fail',
                 repairLabel: 'REPAIR',
                 discardedLabel: 'DISCARD',
+                inStorageLabel: 'IN STORAGE',
+                missingLabel: 'MISSING',
                 noneLabel: 'NONE',
             },
 
@@ -755,7 +759,12 @@ export default {
                 },
             },
             bulkassetupdate: {
-                config: {},
+                config: {
+                    validAssetStatusOptions: [
+                        { label: 'IN STORAGE', value: 'INSTORAGE' },
+                        { label: 'MISSING', value: 'MISSING' },
+                    ],
+                },
                 breadcrumbs: [
                     {
                         title: 'Manage - Bulk asset update',
@@ -805,6 +814,12 @@ export default {
                                 title: 'Asset Type',
                                 labelAll: 'All Asset Types',
                             },
+                            assetStatus: {
+                                props: {
+                                    label: 'Asset status',
+                                },
+                                title: 'Asset Status',
+                            },
                             ariaClearNotes: 'Clear test notes search',
                             testNoteSearch: {
                                 label: 'Search test notes',
@@ -852,6 +867,7 @@ export default {
                                 status: 'Discard Asset',
                                 assetType: 'Update Asset Type',
                                 notes: 'Clear test notes',
+                                assetStatus: 'Update Asset Status',
                             },
                             discardReason: {
                                 label: 'Discarding Reason',
@@ -1118,8 +1134,8 @@ export default {
                         asset_barcode: {
                             label: 'Barcode',
                         },
-                        building_name: {
-                            label: 'Building name',
+                        location: {
+                            label: 'Location (Site/Bld/Flr/Rm)',
                         },
                         asset_type_name: {
                             label: 'Asset type',
@@ -1132,6 +1148,9 @@ export default {
                         },
                         asset_status: {
                             label: 'Status',
+                        },
+                        user_name: {
+                            label: 'Last tested by',
                         },
                     },
                     filterStatusLabel: 'With status',
@@ -1149,6 +1168,16 @@ export default {
                             label: 'Out for repair',
                             value: 'OUTFORREPAIR',
                         },
+                        {
+                            id: 2,
+                            label: 'In storage',
+                            value: 'INSTORAGE',
+                        },
+                        {
+                            id: 3,
+                            label: 'Missing',
+                            value: 'MISSING',
+                        },
                     ],
                     keyboardDatePicker: {
                         startDateLabel: 'Tagged date from',
@@ -1156,6 +1185,8 @@ export default {
                         endDateLabel: 'Tagged date to',
                         endDateAriaLabel: 'change end date',
                     },
+                    formattedLocation: (siteName, buildingNum, floorNum, roomNum) =>
+                        `${siteName} / ${buildingNum} / ${floorNum} / ${roomNum}`,
                 },
                 errors: {
                     startDate: 'Start date must be before End Date',

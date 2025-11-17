@@ -30,9 +30,9 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
     },
 }));
 
-export const StandardPage = ({ title, children }) => {
+export const StandardPage = ({ title, children, standardPageId }) => {
     return (
-        <div className="layout-card">
+        <div className="layout-card" id={standardPageId} data-testid={standardPageId}>
             <Grid justifyContent={'flex-start'} container spacing={0} data-testid="StandardPage" id="StandardPage">
                 {title && (
                     <StyledGrid item xs className={'title'}>
@@ -58,6 +58,7 @@ StandardPage.propTypes = {
     title: PropTypes.any,
     help: PropTypes.object,
     children: PropTypes.any,
+    standardPageId: PropTypes.string,
 };
 
 export default StandardPage;

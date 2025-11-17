@@ -8,8 +8,6 @@ import floorList from '../../../../../../../data/mock/data/testing/testAndTag/te
 import roomList from '../../../../../../../data/mock/data/testing/testAndTag/testTagRooms';
 import assetTypeData from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssetTypes';
 
-import { getUserPermissions } from '../../../helpers/auth';
-
 const defaultLocationState = {
     siteList,
     siteListLoading: false,
@@ -46,12 +44,9 @@ function setup(testProps = {}, renderer = rtlRender) {
         testTagLocationReducer: {
             ...defaultLocationState,
         },
-        testTagUserReducer: {
-            userLoading: false,
-            userLoaded: true,
-            userError: false,
-            user: userData,
-            privilege: getUserPermissions(userData.privileges ?? {}),
+        accountReducer: {
+            accountLoading: false,
+            account: { tnt: userData },
         },
         testTagAssetTypesReducer: {
             assetTypesList: assetTypeData,

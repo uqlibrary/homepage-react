@@ -101,6 +101,9 @@ test.describe('Spaces Admin - add new space', () => {
     test('can add new space, with all fields', async ({ page, context }) => {
         await setTestDataCookie(context, page);
 
+        const ASKUS_FILTER_TYPE = 54;
+        const MICROWAVE_FILTER_TYPE = 4;
+
         await expect(inputField('space-name', page)).toBeVisible();
         inputField('space-name', page).fill('W12343');
         await expect(inputField('space-type', page)).toBeVisible();
@@ -159,19 +162,17 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(inputField('space_services_page', page)).toBeVisible();
         inputField('space_services_page', page).fill('https://web.library.uq.edu.au/visit/walter-harrison-law-library');
 
-        await expect(page.getByTestId(`filtertype-${NOISE_LEVEL_MEDIUM}`).locator('input')).toBeVisible();
-        await expect(page.getByTestId(`facility-type-listitem-${NOISE_LEVEL_MEDIUM}`)).toContainText(
-            'Noise level Medium',
-        );
+        await expect(page.getByTestId(`filtertype-${ASKUS_FILTER_TYPE}`).locator('input')).toBeVisible();
+        await expect(page.getByTestId(`facility-type-listitem-${ASKUS_FILTER_TYPE}`)).toContainText('AskUs service');
         await page
-            .getByTestId(`filtertype-${NOISE_LEVEL_MEDIUM}`)
+            .getByTestId(`filtertype-${ASKUS_FILTER_TYPE}`)
             .locator('input')
             .click();
 
-        await expect(page.getByTestId(`filtertype-${EXAM_FRIENDLY}`).locator('input')).toBeVisible();
-        await expect(page.getByTestId(`facility-type-listitem-${EXAM_FRIENDLY}`)).toContainText('Exam Friendly');
+        await expect(page.getByTestId(`filtertype-${MICROWAVE_FILTER_TYPE}`).locator('input')).toBeVisible();
+        await expect(page.getByTestId(`facility-type-listitem-${MICROWAVE_FILTER_TYPE}`)).toContainText('Microwave');
         await page
-            .getByTestId(`filtertype-${EXAM_FRIENDLY}`)
+            .getByTestId(`filtertype-${MICROWAVE_FILTER_TYPE}`)
             .locator('input')
             .click();
 
@@ -197,7 +198,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_type: 'Computer room',
             space_opening_hours_id: 3841,
             space_services_page: 'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
-            facility_types: [NOISE_LEVEL_MEDIUM, EXAM_FRIENDLY],
+            facility_types: [ASKUS_FILTER_TYPE, MICROWAVE_FILTER_TYPE],
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });

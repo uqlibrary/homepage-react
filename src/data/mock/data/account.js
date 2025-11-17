@@ -98,6 +98,22 @@ export const accounts = {
         'canMasqueradeType': 'full',
         "blocked": false,
         "user_group": "LIBRARYSTAFFB",
+        "tnt": {
+            "department_display_name": "Library",
+            "department_visual_inspection_device_id": 3,
+            "user_current_flag": 1,
+            "user_department": "UQL",
+            "user_id": 3,
+            "user_licence_number": "LICENCE12345",
+            "user_name": "TnT Admin",
+            "user_uid": "uqtesttag",
+            "privileges": {
+                "can_admin": 1,
+                "can_inspect": 1,
+                "can_alter": 1,
+                "can_see_reports": 1
+            },
+        },
     },
     uqpf: {
         "id": "uqpf",
@@ -118,6 +134,22 @@ export const accounts = {
         "tokenBased": false,
         "canMasquerade": false,
         "blocked": false,
+        "tnt": {
+            "department_display_name": "Properties and Facilities",
+            "department_visual_inspection_device_id": 3,
+            "user_current_flag": 1,
+            "user_department": "UQL",
+            "user_id": 1,
+            "user_licence_number": "LICENCE12345",
+            "user_name": "TnT uqpf",
+            "user_uid": "uqpf",
+            "privileges": {
+                "can_admin": 0,
+                "can_inspect": 0,
+                "can_alter": 1,
+                "can_see_reports": 0
+            },
+        },
     },
     uqttadmin: {
         "id": "uqttadmin",
@@ -138,6 +170,22 @@ export const accounts = {
         'canMasqueradeType': 'full',
         "blocked": false,
         "user_group": "LIBRARYSTAFFB",
+        "tnt": {
+            "department_display_name": "Library",
+            "department_visual_inspection_device_id": 3,
+            "user_current_flag": 1,
+            "user_department": "UQL",
+            "user_id": 3,
+            "user_licence_number": "LICENCE12345",
+            "user_name": "TnT Admin",
+            "user_uid": "uqtesttag",
+            "privileges": {
+                "can_admin": 1,
+                "can_inspect": 0,
+                "can_alter": 0,
+                "can_see_reports": 0
+            },
+        },
     },
     uqttreport: {
         "id": "uqttreport",
@@ -158,6 +206,22 @@ export const accounts = {
         'canMasqueradeType': 'full',
         "blocked": false,
         "user_group": "LIBRARYSTAFFB",
+        "tnt": {
+            "department_display_name": "Library",
+            "department_visual_inspection_device_id": 3,
+            "user_current_flag": 1,
+            "user_department": "UQL",
+            "user_id": 3,
+            "user_licence_number": "LICENCE12345",
+            "user_name": "TnT Admin",
+            "user_uid": "uqtesttag",
+            "privileges": {
+                "can_admin": 0,
+                "can_inspect": 0,
+                "can_alter": 0,
+                "can_see_reports": 1
+            },
+        },
     },
     uqttinspect: {
         "id": "uqttinspect",
@@ -178,6 +242,22 @@ export const accounts = {
         'canMasqueradeType': 'full',
         "blocked": false,
         "user_group": "LIBRARYSTAFFB",
+        "tnt": {
+            "department_display_name": "Library",
+            "department_visual_inspection_device_id": 3,
+            "user_current_flag": 1,
+            "user_department": "UQL",
+            "user_id": 3,
+            "user_licence_number": "LICENCE12345",
+            "user_name": "TnT Admin",
+            "user_uid": "uqtesttag",
+            "privileges": {
+                "can_admin": 0,
+                "can_inspect": 1,
+                "can_alter": 0,
+                "can_see_reports": 0
+            },
+        },
     },
     uqttalter: {
         "id": "uqttalter",
@@ -198,6 +278,22 @@ export const accounts = {
         'canMasqueradeType': 'full',
         "blocked": false,
         "user_group": "LIBRARYSTAFFB",
+        "tnt": {
+            "department_display_name": "Library",
+            "department_visual_inspection_device_id": 3,
+            "user_current_flag": 1,
+            "user_department": "UQL",
+            "user_id": 3,
+            "user_licence_number": "LICENCE12345",
+            "user_name": "TnT Admin",
+            "user_uid": "uqtesttag",
+            "privileges": {
+                "can_admin": 0,
+                "can_inspect": 0,
+                "can_alter": 1,
+                "can_see_reports": 0
+            },
+        },
     },
     uqstaffnonpriv: {
         "id": "uqstaffnonpriv",
