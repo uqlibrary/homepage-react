@@ -404,7 +404,7 @@ Homepage includes GTM (Google Tag Manager). GTM is set at webpack build time in 
 setup as an environmental variable at CI level if required.
 
 GTM is very flexible and easy to configure to track required events. See more details on
-[Google Analytics](https://www.google.com.au/analytics/tag-manager/)
+[Google Analytics](https://www.google.com.au/analytics/tag-manager/).
 
 
 ## To work with api locally
