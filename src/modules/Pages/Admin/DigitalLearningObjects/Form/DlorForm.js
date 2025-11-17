@@ -882,29 +882,42 @@ export const DlorForm = ({
     }, [formDefaults.object_publishing_user]);
 
     const suggestSummary = (enteredDescription, requiredLength = 150) => {
-        const plainSummary = html2text.fromString(enteredDescription);
-        // if they enter a complete sentence, use just that sentences up to the requiredlength point
-        const fullStopLocation = plainSummary.indexOf('.');
-        if (fullStopLocation !== -1) {
+        // 1. Convert and Clean
+        const rawSummary = html2text.fromString(enteredDescription);
+        const urlCleanupRegex = /\s?\[.*?\]/g;
+        const plainSummary = rawSummary.replace(urlCleanupRegex, '').trim();
+
+        // 2. Priority 1: Full Sentence (if period exists)
+        // Now checks for a period followed by a space, a capital letter, or the end of the string.
+        const sentenceEndRegex = /\.(?=\s|[A-Z]|$)/;
+        const match = plainSummary.match(sentenceEndRegex);
+
+        if (match) {
+            const fullStopLocation = match.index;
             return plainSummary.substring(0, fullStopLocation + 1);
         }
 
+        // 3. Priority 2: Newline/Paragraph Break
         const lastCarriageReturnIndex = plainSummary.indexOf('\n');
         if (lastCarriageReturnIndex !== -1) {
-            return plainSummary.substring(0, lastCarriageReturnIndex + 1).trim(); // remove carriage return from end
+            return plainSummary.substring(0, lastCarriageReturnIndex).trim();
         }
 
-        // while its short, return the shortness
+        // 4. Priority 3: Length-Based Trimming (Fall-through for unpunctuated/very long text)
+
+        // a) If the whole summary is short, return it as is.
         /* istanbul ignore else */
         if (plainSummary?.length <= requiredLength) {
             return plainSummary;
         }
 
-        // return the first n characters, breaking at a word break
+        // b) If the text is long, trim it to the required length and break cleanly at the last word.
         /* istanbul ignore next */
         const trimmedString = plainSummary?.slice(0, requiredLength + 1);
+
         /* istanbul ignore next */
         const slice = trimmedString.slice(0, Math.min(trimmedString?.length, trimmedString?.lastIndexOf(' ')));
+
         /* istanbul ignore next */
         return slice;
     };
