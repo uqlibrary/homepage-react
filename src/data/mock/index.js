@@ -28,6 +28,7 @@ import { espaceSearchResponse, loans, printBalance } from './data/general';
 import { alertList } from './data/alertsLong';
 import examSearch_FREN from './data/records/learningResources/examSearch_FREN';
 import examSearch_PHYS1001 from './data/records/learningResources/examSearch_PHYS1001';
+import examSearch_ENGG from './data/records/learningResources/examSearch_ENGG';
 import examSearch_DENT80 from './data/records/learningResources/examSearch_DENT80';
 import testTag_user from './data/records/testAndTag/test_tag_user';
 import testTag_user_UQPF from './data/records/testAndTag/test_tag_userUQPF';
@@ -62,6 +63,7 @@ import dlor_series_view from './data/records/dlor/dlor_series_view';
 import dlor_series_view_nodescription from './data/records/dlor/dlor_series_view_nodescription';
 import { dlor_demographics_report } from './data/dlorDemographics';
 import { dlor_favourites_report } from './data/dlorFavourites';
+import  dlor_statistics  from './data/records/dlor/dlor_statistics';
 import { drupalArticles } from './data/drupalArticles';
 import {
     journalSearchFavourites,
@@ -839,6 +841,10 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .onGet(/dlor\/public\/keywords\/list/)
     .reply(() => {
         return [200, dlor_keywords];
+    })
+    .onGet(routes.DLOR_STATISTICS_API().apiUrl)
+    .reply(() => {
+        return [200, dlor_statistics];
     });
 
 mock.onGet('exams/course/FREN1010/summary')
@@ -1046,6 +1052,16 @@ mock.onGet('exams/course/FREN1010/summary')
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];
+    })
+    .onGet(/exams\/search.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const engSuffix = urlparts.split('?')[0];
+        if (!!engSuffix.toLowerCase().startsWith('engg')) {
+            const result = filterExamPaperListByPattern(examSearch_ENGG, `${engSuffix}`);
+            return [200, result];
+        }
+        return [404, []];
     })
 
     /** TEST AND TAG ROUTES **/
@@ -1460,3 +1476,31 @@ mock.onGet('exams/course/FREN1010/summary')
         console.log('url not mocked...', config.url);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });
+
+function filterExamPaperListByPattern(data, pattern) {
+    // Create a deep copy of the original data to avoid mutation
+    const filteredData = {
+        minYear: data.minYear,
+        maxYear: data.maxYear,
+        periods: [...data.periods],
+        papers: [],
+    };
+
+    // Filter the papers array
+    data.papers.forEach(courseGroup => {
+        // Filter each course group (array of period arrays)
+        const filteredCourseGroup = courseGroup
+            .map(periodArray => {
+                // Filter each period array to only include matching course codes
+                return periodArray.filter(exam => exam.courseCode && exam.courseCode.startsWith(pattern));
+            })
+            .filter(periodArray => periodArray.length > 0); // Remove empty period arrays
+
+        // Only add the course group if it has matching courses
+        if (filteredCourseGroup.length > 0) {
+            filteredData.papers.push(filteredCourseGroup);
+        }
+    });
+
+    return filteredData;
+}

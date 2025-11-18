@@ -8,8 +8,6 @@ import assetData from '../../../../../../../data/mock/data/testing/testAndTag/te
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 import buildingList from '../../../../../../../data/mock/data/testing/testAndTag/testTagTaggedBuildingList';
 
-import { getUserPermissions } from '../../../helpers/auth';
-
 function setup(testProps = {}, renderer = rtlRender) {
     const {
         state = {},
@@ -26,12 +24,9 @@ function setup(testProps = {}, renderer = rtlRender) {
     } = testProps;
 
     const _state = {
-        testTagUserReducer: {
-            userLoading: false,
-            userLoaded: true,
-            userError: false,
-            user: userData,
-            privilege: getUserPermissions(userData.privileges ?? {}),
+        accountReducer: {
+            accountLoading: false,
+            account: { tnt: userData },
         },
         ...state,
     };
@@ -85,12 +80,12 @@ describe('AssetReportByFilters', () => {
         // check first row is as expected
         const row = within(getAllByRole('row')[1]);
         expect(row.getByText('UQL000004')).toBeInTheDocument();
-        expect(row.getByText('J.K. Murray Library')).toBeInTheDocument();
+        expect(row.getByText('Gatton / 8102 / 1 / 102')).toBeInTheDocument();
         expect(row.getByText('PowerBoard')).toBeInTheDocument();
         expect(row.getByText('2015-10-01')).toBeInTheDocument();
 
         // expect a red cell with alert icon
-        expect(row.getAllByRole('cell')[4]).toHaveStyle('background-color: #951126');
+        expect(row.getAllByRole('cell')[5]).toHaveStyle('background-color: #951126');
         expect(row.getByText('2016-10-01')).toBeInTheDocument();
         expect(row.getByTestId('tooltip-overdue')).toBeInTheDocument();
 
@@ -113,13 +108,40 @@ describe('AssetReportByFilters', () => {
 
         expect(getByText('Asset tests report for Library')).toBeInTheDocument();
 
-        // select site
+        // select Out for Repair status
         await userEvent.click(getByTestId('asset_status_selector-assets-inspected-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'Out for repair');
 
         await waitFor(() =>
             expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
                 assetStatus: 'OUTFORREPAIR',
+                inspectionDateFrom: null,
+                inspectionDateTo: null,
+                locationId: null,
+                locationType: 'building',
+            }),
+        );
+
+        // select Out for In Storage status
+        await userEvent.click(getByTestId('asset_status_selector-assets-inspected-input'));
+        await userEvent.selectOptions(getByRole('listbox'), 'In storage');
+
+        await waitFor(() =>
+            expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
+                assetStatus: 'INSTORAGE',
+                inspectionDateFrom: null,
+                inspectionDateTo: null,
+                locationId: null,
+                locationType: 'building',
+            }),
+        );
+        // select Out for Repair status
+        await userEvent.click(getByTestId('asset_status_selector-assets-inspected-input'));
+        await userEvent.selectOptions(getByRole('listbox'), 'Missing');
+
+        await waitFor(() =>
+            expect(loadAssetReportByFiltersFn).toHaveBeenLastCalledWith({
+                assetStatus: 'MISSING',
                 inspectionDateFrom: null,
                 inspectionDateTo: null,
                 locationId: null,

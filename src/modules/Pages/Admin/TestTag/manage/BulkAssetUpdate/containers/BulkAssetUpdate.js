@@ -9,9 +9,11 @@ const DEFAULT_FORM_VALUES = {
     hasLocation: false,
     hasDiscardStatus: false,
     hasAssetType: false,
+    hasAssetStatus: false,
     location: undefined,
     asset_type: undefined,
     discard_reason: undefined,
+    asset_status: undefined,
     hasClearNotes: false,
 };
 

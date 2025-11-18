@@ -20,6 +20,7 @@ describe('Auth custom hooks', () => {
         expect(hasAccess(null, [1])).toEqual(false);
         // test NONE permissions, access
         expect(hasAccess(null)).toEqual(true);
+        expect(hasAccess()).toEqual(true);
         // test can_alter permissions
         expect(hasAccess(PERMISSIONS.can_alter, [1])).toEqual(true);
         expect(hasAccess(PERMISSIONS.can_alter, [2])).toEqual(false);
