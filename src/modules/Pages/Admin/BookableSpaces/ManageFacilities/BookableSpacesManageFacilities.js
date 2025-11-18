@@ -673,22 +673,17 @@ export const BookableSpacesManageFacilities = ({
                                     facilityTypeList?.data?.facility_type_groups?.sort(
                                         (a, b) => a.facility_type_group_order - b.facility_type_group_order,
                                     ) || [];
-
-                                const formDisplay = dataAvailable =>
-                                    !!dataAvailable
-                                        ? { marginBottom: '2rem', display: 'none' }
-                                        : { marginBottom: '2rem' };
                                 return (
                                     <>
                                         <Grid item xs={12}>
                                             <StyledPrimaryButton
                                                 style={{ marginBottom: '2rem' }}
-                                                children={'Add new Facility group'}
                                                 onClick={openDialogAddGroup}
                                                 data-testid="add-new-group-button"
-                                            />
+                                            >
+                                                Add new Facility type group
+                                            </StyledPrimaryButton>
                                         </Grid>
-
                                         {facilityTypeList?.data?.facility_type_groups?.length === 0 && (
                                             <Grid item xs={12}>
                                                 <p data-testid="space-facility-types-empty-message">

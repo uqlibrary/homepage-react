@@ -143,7 +143,7 @@ export const AdminButton = ({ currentPage }) => {
                 >
                     {icon(currentPage === 'manage-facilities')}
                     <span className={`${currentPage !== 'manage-facilities' ? 'clickable' : ''}`}>
-                        Manage Facilities
+                        Manage Facility Types
                     </span>
                 </MenuItem>
             </StyledMenu>

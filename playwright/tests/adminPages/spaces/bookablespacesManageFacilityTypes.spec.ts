@@ -225,7 +225,7 @@ test.describe('Spaces Admin - create new group dialog', () => {
 
         // open the dialog
         await expect(page.getByTestId('add-new-group-button')).toBeVisible();
-        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility type group');
         await page.getByTestId('add-new-group-button').click();
 
         // form fields present
@@ -245,7 +245,7 @@ test.describe('Spaces Admin - create new group dialog', () => {
 
         // open the dialog
         await expect(page.getByTestId('add-new-group-button')).toBeVisible();
-        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility type group');
         await page.getByTestId('add-new-group-button').click();
 
         // form fields present
@@ -259,7 +259,7 @@ test.describe('Spaces Admin - create new group dialog', () => {
         await expect(page.getByTestId('new-group-first')).not.toBeVisible();
 
         await expect(page.getByTestId('add-new-group-button')).toBeVisible();
-        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility type group');
         await page.getByTestId('add-new-group-button').click();
         await expect(page.getByTestId('new-group-name')).toBeVisible();
         await expect(page.getByTestId('new-group-first')).toBeVisible();
@@ -280,7 +280,7 @@ test.describe('Spaces Admin - create new group dialog', () => {
         await expect(page.getByTestId('new-group-first')).not.toBeVisible();
 
         await expect(page.getByTestId('add-new-group-button')).toBeVisible();
-        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility type group');
         await page.getByTestId('add-new-group-button').click();
         await expect(page.getByTestId('new-group-name')).toBeVisible();
         await expect(page.getByTestId('new-group-first')).toBeVisible();
@@ -291,7 +291,7 @@ test.describe('Spaces Admin - create new group dialog', () => {
         await expect(page.getByTestId('new-group-first')).not.toBeVisible();
 
         await expect(page.getByTestId('add-new-group-button')).toBeVisible();
-        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility type group');
         await page.getByTestId('add-new-group-button').click();
         await expect(page.getByTestId('new-group-name')).toBeVisible();
         await expect(page.getByTestId('new-group-first')).toBeVisible();
@@ -305,7 +305,7 @@ test.describe('Spaces Admin - create new group dialog', () => {
         await expect(page.getByTestId('new-group-first')).not.toBeVisible();
 
         await expect(page.getByTestId('add-new-group-button')).toBeVisible();
-        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility type group');
         await page.getByTestId('add-new-group-button').click();
         await expect(page.getByTestId('new-group-name')).toBeVisible();
         await expect(page.getByTestId('new-group-first')).toBeVisible();
@@ -321,7 +321,7 @@ test.describe('Spaces Admin - create new group dialog', () => {
         await expect(page.getByTestId('new-group-first')).not.toBeVisible();
 
         await expect(page.getByTestId('add-new-group-button')).toBeVisible();
-        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility type group');
         await page.getByTestId('add-new-group-button').click();
         await expect(page.getByTestId('new-group-name')).toBeVisible();
         await expect(page.getByTestId('new-group-first')).toBeVisible();
@@ -376,7 +376,7 @@ test.describe('Spaces Admin - edit group dialog', () => {
 
         // open the dialog and the form appears again (check for redraw failures)
         await expect(page.getByTestId('add-new-group-button')).toBeVisible();
-        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility type group');
         await noiseLevelGroupEditButton.click();
 
         // form fields present
@@ -740,7 +740,7 @@ test.describe('Spaces Admin - other pages', () => {
         await expect(page.getByTestId('new-group-first')).not.toBeVisible();
 
         // open the "add new group" form
-        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility group');
+        await expect(page.getByTestId('add-new-group-button')).toHaveText('Add new Facility type group');
         await page.getByTestId('add-new-group-button').click();
 
         // form is now ready to add
