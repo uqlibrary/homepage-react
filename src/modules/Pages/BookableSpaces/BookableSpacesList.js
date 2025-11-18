@@ -146,18 +146,21 @@ const StyledCartoucheList = styled('ul')(({ theme }) => ({
             border: `1px solid ${theme.palette.primary.main}`,
             textTransform: 'none !important',
             padding: '0.1rem 0.25rem 0.1rem 0.5rem',
+            '&.unselectedFilter span': {
+                textDecoration: 'line-through',
+            },
             '&:hover, :focus': {
                 backgroundColor: '#fff',
                 '& span': {
                     textDecoration: 'underline',
                 },
+                '&.unselectedFilter span': {
+                    textDecoration: 'underline line-through',
+                },
             },
             '& svg': {
                 width: '0.7em',
                 height: '0.7em',
-            },
-            '&.unselectedFilter span': {
-                textDecoration: 'line-through',
             },
         },
     },
@@ -342,11 +345,9 @@ export const BookableSpacesList = ({
 
     const scrollToTopOfContent = () => {
         const topOfPage = document.getElementById('topofcontent');
-        console.log('topOfPage=', topOfPage);
         !!topOfPage && typeof topOfPage.scrollIntoView === 'function' && topOfPage.scrollIntoView();
 
         const topOfSidebar = document.getElementById('topOfSidebar');
-        console.log('topOfSidebar=', topOfSidebar);
         !!topOfSidebar &&
             typeof topOfSidebar.scrollIntoView === 'function' &&
             topOfSidebar.scrollIntoView({
