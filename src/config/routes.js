@@ -41,6 +41,7 @@ export const flattedPathConfigExact = [
     '/digital-learning-hub',
     'https://www.library.uq.edu.au/404.js',
     '/digital-learning-hub-list',
+    '/digital-learning-hub/dashboard',
 ];
 export const flattedPathConfig = [
     '/admin/alerts/edit',
