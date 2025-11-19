@@ -57,8 +57,8 @@ exports[`Component Masquerade Should render form as expected 1`] = `
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard css-4g43m5-MuiFormLabel-root-MuiInputLabel-root"
                     data-shrink="false"
-                    for=":r0:"
-                    id=":r0:-label"
+                    for=":r1:"
+                    id=":r1:-label"
                   >
                     Enter a UQ staff or student username (eg. uqjsmith1 or s123456)
                   </label>
@@ -68,7 +68,7 @@ exports[`Component Masquerade Should render form as expected 1`] = `
                     <input
                       aria-invalid="false"
                       class="MuiInputBase-input MuiInput-input css-1x51dt5-MuiInputBase-input-MuiInput-input"
-                      id=":r0:"
+                      id=":r1:"
                       type="text"
                       value=""
                     />
@@ -158,8 +158,8 @@ exports[`Component Masquerade Should render readonly description 1`] = `
                   <label
                     class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard css-4g43m5-MuiFormLabel-root-MuiInputLabel-root"
                     data-shrink="false"
-                    for=":r1:"
-                    id=":r1:-label"
+                    for=":r3:"
+                    id=":r3:-label"
                   >
                     Enter a UQ staff or student username (eg. uqjsmith1 or s123456)
                   </label>
@@ -169,7 +169,7 @@ exports[`Component Masquerade Should render readonly description 1`] = `
                     <input
                       aria-invalid="false"
                       class="MuiInputBase-input MuiInput-input css-1x51dt5-MuiInputBase-input-MuiInput-input"
-                      id=":r1:"
+                      id=":r3:"
                       type="text"
                       value=""
                     />

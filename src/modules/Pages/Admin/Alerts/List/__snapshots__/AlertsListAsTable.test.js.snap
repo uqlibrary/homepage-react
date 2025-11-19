@@ -3,7 +3,7 @@
 exports[`AlertsListAsTable default values render correctly 1`] = `
 <div>
   <div
-    class=" css-1wreib7"
+    class="css-1wreib7"
     data-testid="headerRow-current"
   >
     <div>
