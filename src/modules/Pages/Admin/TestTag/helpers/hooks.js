@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useMemo, useRef } from 'react';
+import { createContext, useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { getUserPermissions } from './auth';
@@ -36,31 +36,24 @@ export const useForm = (
     /* istanbul ignore next */ { defaultValues = {}, defaultDateFormat = 'YYYY-MM-DD HH:mm' } = {},
 ) => {
     const [formValues, setFormValues] = useState({ ...defaultValues });
-    const thisSig = useRef(JSON.stringify({ ...defaultValues }));
 
-    const updateSig = values => {
-        thisSig.current = JSON.stringify(values);
-    };
+    const encodedSignature = JSON.stringify(formValues);
+    const signature = useMemo(() => encodedSignature, [encodedSignature]);
 
     const handleChange = prop => event => {
         let propValue = event?.target?.value ?? event;
         if (prop?.indexOf('date') > -1) {
             propValue = moment(propValue).format(defaultDateFormat);
         }
-        setFormValues(prevState => {
-            const newVals = { ...prevState, [prop]: propValue };
-            updateSig(newVals);
-            return newVals;
-        });
+        setFormValues(prevState => ({ ...prevState, [prop]: propValue }));
     };
 
     const resetFormValues = newFormValues => {
         const newValues = { ...formValues, ...newFormValues };
-        updateSig(newValues);
         setFormValues(newValues);
     };
 
-    return { formValues, resetFormValues, handleChange, signature: thisSig.current };
+    return { formValues, resetFormValues, handleChange, signature };
 };
 
 export const useObjectList = (list = [], transform, options = {}) => {

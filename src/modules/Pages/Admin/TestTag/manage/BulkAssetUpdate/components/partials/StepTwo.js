@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Unstable_Grid2';
@@ -13,6 +13,8 @@ import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { useSelector } from 'react-redux';
+
+import isEqual from 'lodash/isEqual';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import AutoLocationPicker from '../../../../SharedComponents/LocationPicker/AutoLocationPicker';
@@ -30,7 +32,7 @@ import { PERMISSIONS } from '../../../../config/auth';
 import { AccordionWithCheckbox } from '../AccordionWithCheckbox';
 import { FormContext } from '../../../../helpers/hooks';
 import { makeAssetExcludedMessage } from '../utils';
-import { assetStatusOptionExcludes, validateFormValues, useAssetListValidation } from '../validation';
+import { assetStatusOptionExcludes, validateFormValues, validateAssetLists } from '../validation';
 
 const moment = require('moment');
 
@@ -66,14 +68,20 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
         condition: () => !isFilterDialogOpen,
     });
 
-    // modifies the provided list and excluded list according to set logic
-    const validationResult = useAssetListValidation(formValues, formValueSignature, list, excludedList);
-    if (validationResult.updated) {
-        list.clear();
-        excludedList.clear();
-        list.importTransformedData(validationResult.list);
-        excludedList.importTransformedData(validationResult.excludedList);
-    }
+    // Validate and update lists when formValueSignature changes
+    useEffect(() => {
+        const { validAssets, excludedAssets } = validateAssetLists(formValues, list.data, excludedList.data);
+        // Only update if lists actually changed
+        const listsChanged = !isEqual(validAssets, list.data) || !isEqual(excludedAssets, excludedList.data);
+
+        if (listsChanged) {
+            list.clear();
+            excludedList.clear();
+            list.importTransformedData(validAssets);
+            excludedList.importTransformedData(excludedAssets);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formValueSignature]);
 
     const handlePrevStep = () => {
         prevStep();
@@ -393,7 +401,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                         onClick={onSubmit}
                         id={`${componentIdLower}-submit-button`}
                         data-testid={`${componentIdLower}-submit-button`}
-                        disabled={!validFormValues}
+                        disabled={!validFormValues || list.data.length === 0}
                         fullWidth={isMobileView}
                     >
                         {pageLocale.form.step.button.submit}

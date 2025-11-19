@@ -1,4 +1,3 @@
-import { useRef, useEffect } from 'react';
 import { isValidRoomId, isValidAssetTypeId, isValidAssetStatus } from '../../../Inspection/utils/helpers';
 import { isEmptyObject, isEmptyStr } from '../../../helpers/helpers';
 
@@ -47,10 +46,10 @@ export const validateFormValues = formValues => {
     return isValid;
 };
 
-export const useListRuleSet = (list, listToExclude) => {
+export const listRuleSet = () => {
     return [
         {
-            condition: (formValues, asset) => {
+            condition: ({ formValues, asset }) => {
                 // hasLocation
                 if (formValues.hasLocation) {
                     // next inspection date range selected
@@ -64,11 +63,6 @@ export const useListRuleSet = (list, listToExclude) => {
                         );
                         if (nextTestDueDate.isBefore(targetDate)) {
                             // exclude this asset
-                            listToExclude.push(asset);
-                            const index = list.findIndex(item => item.asset_id === asset.asset_id);
-                            if (index > -1) {
-                                list.splice(index, 1);
-                            }
                             return true;
                         }
                     }
@@ -77,16 +71,11 @@ export const useListRuleSet = (list, listToExclude) => {
             },
         },
         {
-            condition: (formValues, asset) => {
+            condition: ({ formValues, asset }) => {
                 // hasAssetStatus
                 if (formValues.hasAssetStatus) {
                     if (assetStatusOptionExcludes.includes(asset.asset_status)) {
                         // exclude this asset
-                        listToExclude.push(asset);
-                        const index = list.findIndex(item => item.asset_id === asset.asset_id);
-                        if (index > -1) {
-                            list.splice(index, 1);
-                        }
                         return true;
                     }
                 }
@@ -96,29 +85,28 @@ export const useListRuleSet = (list, listToExclude) => {
     ];
 };
 
-export const useAssetListValidation = (formValues, formValueSignature, list, excludedList) => {
-    const currentFormValueSignature = useRef('{}');
-    let updated = false;
+// Validation function that processes lists based on form rules
+export const validateAssetLists = (formValues, listData, excludedListData) => {
+    const allAssets = [...listData, ...excludedListData];
+    const validAssets = [];
+    const excludedAssets = [];
+    const ruleSet = listRuleSet();
 
-    const listCopy = [...list.data, ...excludedList.data];
-    const listToExclude = [];
-    const listRuleSet = useListRuleSet(listCopy, listToExclude);
-
-    useEffect(() => {
-        // whenever form values change, we need to
-        // revalidate the list against the new rules
-        if (currentFormValueSignature.current !== formValueSignature) {
-            currentFormValueSignature.current = formValueSignature;
-
-            for (const asset of listCopy) {
-                for (const rule of listRuleSet) {
-                    if (rule.condition(formValues, asset)) continue;
-                }
+    for (const asset of allAssets) {
+        let shouldExclude = false;
+        for (const rule of ruleSet) {
+            if (rule.condition({ formValues, asset })) {
+                shouldExclude = true;
+                break;
             }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            updated = true;
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formValueSignature]);
-    return { list: listCopy, excludedList: listToExclude, updated };
+
+        if (shouldExclude) {
+            excludedAssets.push(asset);
+        } else {
+            validAssets.push(asset);
+        }
+    }
+
+    return { validAssets, excludedAssets };
 };
