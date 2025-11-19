@@ -17,22 +17,22 @@ import { useSelector } from 'react-redux';
 import isEqual from 'lodash/isEqual';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import AutoLocationPicker from '../../../../SharedComponents/LocationPicker/AutoLocationPicker';
-import AssetTypeSelector from '../../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
-import AssetStatusSelector from '../../../../SharedComponents/AssetStatusSelector/AssetStatusSelector';
-import MonthsSelector from '../../../../SharedComponents/MonthsSelector/MonthsSelector';
-import AuthWrapper from '../../../../SharedComponents/AuthWrapper/AuthWrapper';
-import { useLocation, useSelectLocation } from '../../../../SharedComponents/LocationPicker/LocationPickerHooks';
+import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
+import AssetTypeSelector from '../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
+import AssetStatusSelector from '../../../SharedComponents/AssetStatusSelector/AssetStatusSelector';
+import MonthsSelector from '../../../SharedComponents/MonthsSelector/MonthsSelector';
+import AuthWrapper from '../../../SharedComponents/AuthWrapper/AuthWrapper';
+import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
-import { isValidAssetTypeId } from '../../../../Inspection/utils/helpers';
-import { isEmptyStr } from '../../../../helpers/helpers';
-import { PERMISSIONS } from '../../../../config/auth';
-import { AccordionWithCheckbox } from '../AccordionWithCheckbox';
-import { FormContext } from '../../../../helpers/hooks';
-import { makeAssetExcludedMessage } from '../utils';
-import { assetStatusOptionExcludes, validateFormValues, validateAssetLists } from '../validation';
+import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
+import { isEmptyStr } from '../../../helpers/helpers';
+import { PERMISSIONS } from '../../../config/auth';
+import { AccordionWithCheckbox } from './AccordionWithCheckbox';
+import { FormContext } from '../../../helpers/hooks';
+import { makeAssetExcludedMessage } from './utils';
+import { assetStatusOptionExcludes, validateFormValues, validateAssetLists } from './validation';
 
 const moment = require('moment');
 
