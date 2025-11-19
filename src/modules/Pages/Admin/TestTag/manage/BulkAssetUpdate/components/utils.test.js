@@ -1,4 +1,4 @@
-import { transformRow, transformRequest, transformFilterRow } from './utils';
+import { transformRow, transformRequest, transformFilterRow, makeAssetExcludedMessage } from './utils';
 
 describe('utils', () => {
     describe('transformRow', () => {
@@ -50,12 +50,13 @@ describe('utils', () => {
     });
 
     describe('transformRequest', () => {
-        it('should return the expected result when asset is not discarded', () => {
+        it('should return the expected result when updating Location', () => {
             // Provide sample input values for formValues
             const formValues = {
-                hasDiscardStatus: false,
                 hasLocation: true,
-                hasAssetType: true,
+                hasDiscardStatus: false,
+                hasAssetStatus: false,
+                hasAssetType: false,
                 asset_list: [{ asset_id: 1 }, { asset_id: 2 }, { asset_id: 3 }],
                 location: {
                     room: 'Room 1',
@@ -71,7 +72,70 @@ describe('utils', () => {
             const expectedOutput = {
                 asset: [1, 2, 3],
                 asset_room_id_last_seen: 'Room 1',
-                asset_type_id: 1,
+                clear_comments: 1,
+            };
+
+            // Call the transformRequest function with the sample input values
+            const result = transformRequest(formValues);
+
+            // Assert that the result matches the expected output
+            expect(result).toEqual(expectedOutput);
+        });
+        it('should return the expected result when updating Location with monthRange supplied', () => {
+            // Provide sample input values for formValues
+            const formValues = {
+                hasLocation: true,
+                monthRange: '48',
+                hasDiscardStatus: false,
+                hasAssetStatus: false,
+                hasAssetType: false,
+                asset_list: [{ asset_id: 1 }, { asset_id: 2 }, { asset_id: 3 }],
+                location: {
+                    room: 'Room 1',
+                },
+                asset_type: {
+                    asset_type_id: 1,
+                },
+                discard_reason: 'No longer needed',
+                hasClearNotes: true,
+            };
+
+            // Define the expected output
+            const expectedOutput = {
+                asset: [1, 2, 3],
+                asset_room_id_last_seen: 'Room 1',
+                clear_comments: 1,
+                month_range: '48',
+            };
+
+            // Call the transformRequest function with the sample input values
+            const result = transformRequest(formValues);
+
+            // Assert that the result matches the expected output
+            expect(result).toEqual(expectedOutput);
+        });
+
+        it('should return the expected result when asset is not discarded', () => {
+            // Provide sample input values for formValues
+            const formValues = {
+                hasDiscardStatus: false,
+                hasLocation: true,
+                hasAssetType: false,
+                asset_list: [{ asset_id: 1 }, { asset_id: 2 }, { asset_id: 3 }],
+                location: {
+                    room: 'Room 1',
+                },
+                asset_type: {
+                    asset_type_id: 1,
+                },
+                discard_reason: 'No longer needed',
+                hasClearNotes: true,
+            };
+
+            // Define the expected output
+            const expectedOutput = {
+                asset: [1, 2, 3],
+                asset_room_id_last_seen: 'Room 1',
                 clear_comments: 1,
             };
 
@@ -109,13 +173,42 @@ describe('utils', () => {
             // Assert that the result matches the expected output
             expect(result).toEqual(expectedOutput);
         });
+        it('should return the expected result when asset type is being updated', () => {
+            // Provide sample input values for formValues
+            const formValues = {
+                hasDiscardStatus: false,
+                asset_list: [{ asset_id: 1 }, { asset_id: 2 }, { asset_id: 3 }],
+                location: {
+                    room: 'Room 1',
+                },
+                hasAssetType: true,
+                asset_type: {
+                    asset_type_id: 1,
+                },
+                discard_reason: 'No longer needed',
+                hasClearNotes: true,
+            };
+
+            // Define the expected output
+            const expectedOutput = {
+                asset: [1, 2, 3],
+                asset_type_id: 1,
+                clear_comments: 1,
+            };
+
+            // Call the transformRequest function with the sample input values
+            const result = transformRequest(formValues);
+
+            // Assert that the result matches the expected output
+            expect(result).toEqual(expectedOutput);
+        });
         it('should return the expected result when asset status is being updated', () => {
             // Provide sample input values for formValues with hasAssetStatus
             const formValues = {
                 hasDiscardStatus: false,
                 hasAssetStatus: true,
                 hasLocation: true,
-                hasAssetType: true,
+                hasAssetType: false,
                 hasClearNotes: true,
                 asset_list: [{ asset_id: 4 }, { asset_id: 5 }],
                 location: {
@@ -132,7 +225,9 @@ describe('utils', () => {
             // Define the expected output - hasAssetStatus should clear other flags
             const expectedOutput = {
                 asset: [4, 5],
+                asset_room_id_last_seen: 'Room 2',
                 asset_status: 'INSTORAGE',
+                clear_comments: 1,
             };
 
             // Call the transformRequest function with the sample input values
@@ -141,10 +236,10 @@ describe('utils', () => {
             // Assert that the result matches the expected output
             expect(result).toEqual(expectedOutput);
             // Verify that other flags were cleared
-            expect(formValues.hasLocation).toBe(false);
+            expect(formValues.hasLocation).toBe(true);
             expect(formValues.hasAssetType).toBe(false);
             expect(formValues.hasDiscardStatus).toBe(false);
-            expect(formValues.hasClearNotes).toBe(false);
+            expect(formValues.hasClearNotes).toBe(true);
         });
         it('should handle different asset status values correctly', () => {
             const statuses = ['CURRENT', 'PASSED', 'FAILED', 'OUTFORREPAIR', 'DISCARDED', 'INSTORAGE', 'NONE'];
@@ -187,26 +282,28 @@ describe('utils', () => {
             });
             expect(result.asset_status).toBeUndefined();
         });
-        it('should prioritize hasDiscardStatus over hasAssetStatus', () => {
+
+        it('should only update notes', () => {
             const formValues = {
-                hasDiscardStatus: true,
-                hasAssetStatus: true,
+                hasAssetStatus: false,
+                hasLocation: false,
                 asset_list: [{ asset_id: 1 }],
-                discard_reason: 'Broken',
+                location: {
+                    room: 'Room 1',
+                },
                 asset_status: {
                     value: 'INSTORAGE',
                 },
+                hasClearNotes: true,
             };
 
             const result = transformRequest(formValues);
 
             expect(result).toEqual({
                 asset: [1],
-                is_discarding: 1,
-                discard_reason: 'Broken',
+                clear_comments: 1,
             });
             expect(result.asset_status).toBeUndefined();
-            expect(formValues.hasAssetStatus).toBe(false);
         });
     });
     describe('transformFilterRow', () => {
@@ -268,6 +365,103 @@ describe('utils', () => {
             const result = transformFilterRow(row);
 
             expect(result).toEqual(expectedOutput);
+        });
+    });
+
+    describe('makeAssetExcludedMessage', () => {
+        it('should create the correct excluded message for 1 asset', () => {
+            const excludedList = {
+                data: [{ asset_id_displayed: 'UQ001' }],
+            };
+            const maxItems = 3;
+
+            const result = makeAssetExcludedMessage({ excludedList, maxItems });
+
+            expect(result).toBe('UQ001 will not be updated in this bulk operation.');
+        });
+        it('should create the correct excluded message for 2 assets', () => {
+            const excludedList = {
+                data: [{ asset_id_displayed: 'UQ001' }, { asset_id_displayed: 'UQ002' }],
+            };
+            const maxItems = 3;
+
+            const result = makeAssetExcludedMessage({ excludedList, maxItems });
+
+            expect(result).toBe('UQ001 and UQ002 will not be updated in this bulk operation.');
+        });
+        it('should create the correct excluded message for 3+ assets with default maxitems', () => {
+            const excludedList = {
+                data: [
+                    { asset_id_displayed: 'UQ001' },
+                    { asset_id_displayed: 'UQ002' },
+                    { asset_id_displayed: 'UQ003' },
+                    { asset_id_displayed: 'UQ004' },
+                    { asset_id_displayed: 'UQ005' },
+                    { asset_id_displayed: 'UQ006' },
+                ],
+            };
+            const result = makeAssetExcludedMessage({ excludedList });
+
+            expect(result).toBe('UQ001, UQ002, UQ003, UQ004, UQ005, UQ006 will not be updated in this bulk operation.');
+        });
+
+        it('should create the correct excluded message for 10+ assets with default maxitems', () => {
+            const excludedList = {
+                data: [
+                    { asset_id_displayed: 'UQ001' },
+                    { asset_id_displayed: 'UQ002' },
+                    { asset_id_displayed: 'UQ003' },
+                    { asset_id_displayed: 'UQ004' },
+                    { asset_id_displayed: 'UQ005' },
+                    { asset_id_displayed: 'UQ006' },
+                    { asset_id_displayed: 'UQ007' },
+                    { asset_id_displayed: 'UQ008' },
+                    { asset_id_displayed: 'UQ009' },
+                    { asset_id_displayed: 'UQ0010' },
+                    { asset_id_displayed: 'UQ0011' },
+                ],
+            };
+            const result = makeAssetExcludedMessage({ excludedList });
+
+            expect(result).toBe(
+                'UQ001, UQ002, UQ003, UQ004, UQ005, UQ006, UQ007, UQ008, UQ009, UQ0010 and 1 more will not be updated in this bulk operation.',
+            );
+        });
+
+        it('should create the correct excluded message for 3+ assets with maxItems = 2', () => {
+            const excludedList = {
+                data: [
+                    { asset_id_displayed: 'UQ001' },
+                    { asset_id_displayed: 'UQ002' },
+                    { asset_id_displayed: 'UQ003' },
+                    { asset_id_displayed: 'UQ004' },
+                    { asset_id_displayed: 'UQ005' },
+                    { asset_id_displayed: 'UQ006' },
+                ],
+            };
+            const maxItems = 2;
+
+            const result = makeAssetExcludedMessage({ excludedList, maxItems });
+
+            expect(result).toBe('UQ001, UQ002 and 4 more will not be updated in this bulk operation.');
+        });
+
+        it('should create the correct excluded message for 3+ assets with maxItems = 1', () => {
+            const excludedList = {
+                data: [
+                    { asset_id_displayed: 'UQ001' },
+                    { asset_id_displayed: 'UQ002' },
+                    { asset_id_displayed: 'UQ003' },
+                    { asset_id_displayed: 'UQ004' },
+                    { asset_id_displayed: 'UQ005' },
+                    { asset_id_displayed: 'UQ006' },
+                ],
+            };
+            const maxItems = 1;
+
+            const result = makeAssetExcludedMessage({ excludedList, maxItems });
+
+            expect(result).toBe('UQ001 and 5 more will not be updated in this bulk operation.');
         });
     });
 });

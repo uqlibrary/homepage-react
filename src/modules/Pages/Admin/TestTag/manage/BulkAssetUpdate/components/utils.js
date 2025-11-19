@@ -20,27 +20,38 @@ export const transformRow = row => {
 };
 
 export const transformRequest = formValues => {
-    if (!!formValues.hasDiscardStatus) {
-        formValues.hasLocation = false;
+    if (!!formValues.hasLocation) {
         formValues.hasAssetType = false;
-        formValues.hasAssetStatus = false;
-        formValues.hasClearNotes = false;
+        formValues.hasDiscardStatus = false;
     } else if (!!formValues.hasAssetStatus) {
-        formValues.hasLocation = false;
         formValues.hasAssetType = false;
         formValues.hasDiscardStatus = false;
-        formValues.hasClearNotes = false;
-    } else {
-        formValues.hasDiscardStatus = false;
+    } else if (!!formValues.hasAssetType) {
+        formValues.hasLocation = false;
         formValues.hasAssetStatus = false;
+        formValues.hasDiscardStatus = false;
+        formValues.monthRange = null;
+    } else if (!!formValues.hasDiscardStatus) {
+        formValues.hasLocation = false;
+        formValues.hasAssetStatus = false;
+        formValues.hasAssetType = false;
+        formValues.monthRange = null;
+    } else {
+        formValues.hasLocation = false;
+        formValues.hasAssetStatus = false;
+        formValues.hasDiscardStatus = false;
+        formValues.hasAssetType = false;
+        formValues.monthRange = null;
     }
+
     return {
         asset: formValues.asset_list.reduce((cumulative, current) => [...cumulative, current.asset_id], []),
         ...(!!formValues.hasLocation ? { asset_room_id_last_seen: formValues.location.room } : {}),
-        ...(!!formValues.hasAssetType ? { asset_type_id: formValues.asset_type.asset_type_id } : {}),
         ...(!!formValues.hasAssetStatus ? { asset_status: formValues.asset_status.value } : {}),
+        ...(!!formValues.hasAssetType ? { asset_type_id: formValues.asset_type.asset_type_id } : {}),
         ...(!!formValues.hasDiscardStatus ? { is_discarding: 1, discard_reason: formValues.discard_reason } : {}),
         ...(!!formValues.hasClearNotes ? { clear_comments: 1 } : {}),
+        ...(!!formValues.monthRange && formValues.monthRange !== '-1' ? { month_range: formValues.monthRange } : {}),
     };
 };
 
@@ -66,7 +77,7 @@ export const makeAssetExcludedMessage = ({ excludedList, maxItems = MAXEXCLUDEDM
     let excludedListString = excludedListIds.join(count === 2 ? ' and ' : ', ');
     if (maxItems > 0 && count > maxItems) {
         excludedListIds = excludedListIds.slice(0, maxItems);
-        excludedListString = `${excludedListIds.join(', ')} and ${count - excludedListIds.length} more `;
+        excludedListString = `${excludedListIds.join(', ')} and ${count - excludedListIds.length} more`;
     }
     return `${excludedListString} will not be updated in this bulk operation.`;
 };
