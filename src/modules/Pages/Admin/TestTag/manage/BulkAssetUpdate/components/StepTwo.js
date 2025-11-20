@@ -37,6 +37,8 @@ import { assetStatusOptionExcludes, validateFormValues, validateAssetLists } fro
 const moment = require('moment');
 
 const validAssetStatusOptions = locale.pages.manage.bulkassetupdate.config.validAssetStatusOptions;
+const validAssetStatusWithLocationOptions =
+    locale.pages.manage.bulkassetupdate.config.validAssetStatusWithLocationOptions;
 
 const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep, onSubmit }) => {
     const componentId = `${id}-step-two`;
@@ -94,6 +96,8 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
     const isAssetTypeDisabled = formValues.hasLocation || formValues.hasDiscardStatus || formValues.hasAssetStatus;
     const isDiscardedDisabled =
         formValues.hasAssetType || formValues.hasLocation || formValues.hasClearNotes || formValues.hasAssetStatus;
+    const isClearNotesDisabled =
+        isLocationDisabled && isAssetStatusDisabled && isAssetTypeDisabled && isDiscardedDisabled;
 
     const handleLocationUpdate = newLocation => {
         // because location relies on useSelectLocation to fire
@@ -154,6 +158,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                 expanded: formValues.hasLocation,
                             },
                             accordionActions: {
+                                'data-testid': `${componentIdLower}-location-accordion-action`,
                                 disabled: !formValues.location,
                                 onClick: () => {
                                     handleLocationUpdate({ site: -1, building: -1, floor: -1, room: -1 });
@@ -170,7 +175,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                         <Grid container spacing={3}>
                             <AutoLocationPicker
                                 id={componentId}
-                                disabled={!formValues.hasLocation}
+                                disabled={isLocationDisabled}
                                 actions={actions}
                                 location={location}
                                 setLocation={handleLocationUpdate}
@@ -215,7 +220,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                             <Grid xs={12} sm={4}>
                                 <MonthsSelector
                                     id={componentId}
-                                    disabled={!formValues.hasLocation}
+                                    disabled={isLocationDisabled}
                                     label={stepTwoLocale.filterToDateLabel}
                                     options={monthsOptions}
                                     currentValue={formValues.monthRange}
@@ -245,6 +250,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                     expanded: formValues.hasAssetStatus,
                                 },
                                 accordionActions: {
+                                    'data-testid': `${componentIdLower}-asset-status-accordion-action`,
                                     disabled: !formValues.asset_status?.value,
                                     onClick: () => {
                                         handleChange('asset_status')('');
@@ -267,7 +273,11 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                 <Grid xs={12} sm={6}>
                                     <AssetStatusSelector
                                         id={componentId}
-                                        options={validAssetStatusOptions}
+                                        options={
+                                            formValues.hasLocation
+                                                ? validAssetStatusWithLocationOptions
+                                                : validAssetStatusOptions
+                                        }
                                         label={pageLocale.form.assetStatus.label}
                                         actions={actions}
                                         onChange={handleChange('asset_status')}
@@ -289,6 +299,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                     expanded: formValues.hasAssetType,
                                 },
                                 accordionActions: {
+                                    'data-testid': `${componentIdLower}-asset-type-accordion-action`,
                                     disabled: !formValues?.asset_type,
                                     onClick: () => {
                                         handleChange('asset_type')('');
@@ -311,7 +322,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                         required={formValues.hasAssetType}
                                         value={formValues.asset_type?.asset_type_id}
                                         validateAssetTypeId={isValidAssetTypeId}
-                                        disabled={!formValues.hasAssetType}
+                                        disabled={isAssetTypeDisabled}
                                     />
                                 </Grid>
                             </Grid>
@@ -326,6 +337,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                 expanded: formValues.hasDiscardStatus,
                             },
                             accordionActions: {
+                                'data-testid': `${componentIdLower}-discard-status-accordion-action`,
                                 disabled: !formValues?.discard_reason,
                                 onClick: () => {
                                     handleChange('discard_reason')('');
@@ -357,7 +369,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                             value={formValues?.discard_reason ?? ''}
                             onChange={handleChange('discard_reason')}
                             fullWidth
-                            disabled={!formValues.hasDiscardStatus}
+                            disabled={isDiscardedDisabled}
                         />
                     </AccordionWithCheckbox>
                 </Grid>
@@ -369,7 +381,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                         control={
                             <Checkbox
                                 checked={!formValues.hasDiscardStatus && formValues.hasClearNotes}
-                                disabled={formValues.hasDiscardStatus}
+                                disabled={isClearNotesDisabled}
                                 onChange={handleCheckboxChange}
                                 name="hasClearNotes"
                                 id={`${componentIdLower}-notes-checkbox`}
