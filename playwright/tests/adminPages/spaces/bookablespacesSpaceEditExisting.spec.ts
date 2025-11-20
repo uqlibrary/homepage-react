@@ -16,21 +16,26 @@ test.describe('Spaces Admin - edit spaces', () => {
         await expect(editButton1).toBeVisible();
         editButton1.click();
 
-        await expect(page).toHaveURL('http://localhost:2020/admin/spaces/edit/987y_isjgt_9866?user=libSpaces');
+        await expect(page).toHaveURL('http://localhost:2020/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
     });
 });
-test.describe('Spaces Admin - edit space', () => {
-    test.beforeEach(async ({ page }) => {
-        await page.goto('/admin/spaces/edit/987y_isjgt_9866?user=libSpaces');
+test.describe('Spaces Admin - edit pages load with correct data', () => {
+    test('edit Library 1 loads correctly', async ({ page }) => {
+        await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
-    });
-    test('edit space preloaded values appear as expected onload', async ({ page }) => {
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-name').locator('input')).toHaveValue('01-W431');
         await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-type').locator('input')).toHaveValue('Collaborative space');
+
+        // all the facility types appear in the "space form", not just the ones currently attached to a space
+        const numberFacilityTypesInMockFacilityTypes = 52;
+        await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
+            numberFacilityTypesInMockFacilityTypes,
+        );
+
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-campus')).toContainText('St Lucia');
         await expect(page.getByTestId('add-space-select-library').locator('input')).toBeVisible();
@@ -46,22 +51,11 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('add-space-pretty-location')).toContainText('(Building 0001)');
         await expect(page.getByTestId('add-space-pretty-location')).toContainText('St Lucia Campus');
 
-        await expect(page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper')).toBeVisible();
+        await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-springshare-id')).toContainText('Walter Harrison Law');
 
-        // all the facility types appear in the "space form", not juyst the ones currently attached to a space
-        const numberFacilityTypesInMockFacilityTypes = 52;
-        await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
-            numberFacilityTypesInMockFacilityTypes,
-        );
-
-        // this is flakey on AWS.
-        // await expect(page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper')).toHaveValue('Walter Harrison Law');
-        // try different method of showing this is the current field
-        // show the current selection is correct by opening the dropdown and showing the correct entry has the mui "focused" style
-        await page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper').click();
-        await expect(page.getByRole('option', { name: 'Walter Harrison Law' })).toHaveClass(
-            'MuiAutocomplete-option Mui-focused',
-        );
+        await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-springshare-id')).toContainText('Walter Harrison Law');
 
         await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue('');
@@ -91,9 +85,152 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
         await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
     });
+    test('edit Library 2 loads correctly', async ({ page }) => {
+        await page.goto('/admin/spaces/edit/df40_2jsf_zdk5?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-name').locator('input')).toHaveValue('6078');
+        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-type').locator('input')).toHaveValue('Group Study Room');
+
+        // all the facility types appear in the "space form", not just the ones currently attached to a space
+        const numberFacilityTypesInMockFacilityTypes = 52;
+        await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
+            numberFacilityTypesInMockFacilityTypes,
+        );
+
+        await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-campus')).toContainText('PACE');
+        await expect(page.getByTestId('add-space-select-library').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-library')).toContainText(
+            'Pharmacy Australia Centre of Excellence',
+        );
+        await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-floor')).toContainText(
+            'Pharmacy Australia Centre of Excellence - 65',
+        );
+        await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeEmpty();
+        await expect(page.getByTestId('add-space-pretty-location')).toBeVisible();
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('6th Floor');
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText(
+            'Pharmacy Australia Centre of Excellence',
+        );
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText(
+            'Pharmacy Australia Centre of Excellence',
+        );
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('(Building 870)');
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('PACE Campus');
+
+        await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-springshare-id')).toContainText('Dutton Park Health Science');
+
+        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue(
+            'this space opens at 8am',
+        );
+
+        await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space_services_page').locator('input')).toHaveValue(
+            'https://web.library.uq.edu.au/visit/dutton-park-health-sciences-library',
+        );
+
+        await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-photo-url').locator('input')).toBeEmpty();
+
+        await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
+        await expect(page.getByTestId('add-space-photo-description')).toBeEmpty();
+
+        const cancelButton = page.getByTestId('admin-spaces-form-button-cancel');
+        await expect(cancelButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+        await expect(cancelButton).toHaveCSS('border-color', COLOR_UQPURPLE);
+        await expect(cancelButton).toHaveCSS('color', COLOR_UQPURPLE);
+
+        const saveButton = page.getByTestId('admin-spaces-save-button-submit');
+        await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+        await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
+        await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
+    });
+    test('edit Library 3, Andrew Liveris building, loads correctly', async ({ page }) => {
+        await page.goto('/admin/spaces/edit/97fd5_nm39_gh29?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+
+        // all the facility types appear in the "space form", not just the ones currently attached to a space
+        const numberFacilityTypesInMockFacilityTypes = 52;
+        await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
+            numberFacilityTypesInMockFacilityTypes,
+        );
+
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-name').locator('input')).toHaveValue('46-342/343');
+        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-type').locator('input')).toHaveValue('Computer room');
+        await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-campus')).toContainText('St Lucia');
+        await expect(page.getByTestId('add-space-select-library').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-library')).toContainText('imaginary Liveris Library');
+        await expect(page.getByTestId('add-space-select-floor').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-select-floor')).toContainText('imaginary Liveris Library - 72');
+        await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-precise-location').locator('input')).toHaveValue('Eastern corner');
+        await expect(page.getByTestId('add-space-pretty-location')).toBeVisible();
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Eastern corner, 1st Floor');
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('imaginary Liveris Library');
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Andrew N. Liveris');
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('(Building 0046)');
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('St Lucia Campus');
+
+        await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-springshare-id')).toContainText(
+            'No Springshare opening hours will display (click to change)',
+        );
+
+        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue(
+            'open from 7am Monday - Friday',
+        );
+
+        await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space_services_page').locator('input')).toBeEmpty();
+
+        await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-photo-url').locator('input')).toHaveValue(
+            'https://campuses.uq.edu.au/files/35424/46-342-343.JPG',
+        );
+
+        await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
+        await expect(page.getByTestId('add-space-photo-description')).toHaveValue(
+            'a large room with many tables, each wih 4 chairs',
+        );
+
+        const cancelButton = page.getByTestId('admin-spaces-form-button-cancel');
+        await expect(cancelButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+        await expect(cancelButton).toHaveCSS('border-color', COLOR_UQPURPLE);
+        await expect(cancelButton).toHaveCSS('color', COLOR_UQPURPLE);
+
+        const saveButton = page.getByTestId('admin-spaces-save-button-submit');
+        await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+        await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
+        await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
+    });
+});
+test.describe('Spaces Admin - edit space', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+    });
+
     test('edit spaces page is accessible', async ({ page }) => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
+
     const CONTAINS_ARTWORK = 57;
     const EXAM_FRIENDLY = 52;
     const WHITEBOARD = 38;
@@ -148,9 +285,13 @@ test.describe('Spaces Admin - edit space', () => {
             .locator('input')
             .fill('');
 
-        await expect(page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper')).toBeVisible();
-        await page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper').click();
-        await page.getByRole('option', { name: 'No Springshare opening hours' }).click();
+        await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-springshare-id')).toContainText('Walter Harrison Law');
+        page.getByTestId('add-space-springshare-id').click();
+        page.locator('ul[aria-labelledby="add-space-springshare-id-label"] li:first-of-type').click();
+        await expect(page.getByTestId('add-space-springshare-id')).toContainText(
+            'No Springshare opening hours will display',
+        );
 
         await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
         await page
@@ -163,13 +304,6 @@ test.describe('Spaces Admin - edit space', () => {
             .getByTestId('space_services_page')
             .locator('input')
             .fill('');
-
-        // // already blank
-        // await expect(page.getByTestId('space_opening_hours_override').locator('input')).toBeVisible();
-        // await page
-        //     .getByTestId('space_opening_hours_override')
-        //     .locator('input')
-        //     .fill('');
 
         await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
         await page
@@ -228,7 +362,7 @@ test.describe('Spaces Admin - edit space', () => {
         page.getByTestId('cancel-spaces-save-outcome').click();
 
         await expect(page.getByTestId('message-title')).not.toBeVisible();
-        await expect(page).toHaveURL('http://localhost:2020/admin/spaces/edit/987y_isjgt_9866?user=libSpaces');
+        await expect(page).toHaveURL('http://localhost:2020/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         // page has reloaded, not just closed dialog, as mock data has reverted
         await expect(page.getByTestId('space-name').locator('input')).toHaveValue('01-W431');
@@ -316,7 +450,7 @@ test.describe('Spaces Admin - edit space', () => {
             .locator('input')
             .fill('somewhere deep in the bowels of the warehouse');
 
-        await page.getByTestId('add-space-springshare-id-autocomplete-input-wrapper').click();
+        await page.getByRole('combobox', { name: 'Choose the Springshare' }).click();
         await page.getByRole('option', { name: 'Dorothy Hill Engineering and' }).click();
 
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
@@ -397,7 +531,7 @@ test.describe('Spaces Admin - edit space', () => {
             await expect(page.getByTestId('missing-record')).toContainText('There is no Space with ID "missingRecord"'); // 'missingRecord' is the id in mock when it is missing
         });
         test('edit space - weeklyHours api error', async ({ page }) => {
-            await page.goto('/admin/spaces/edit/987y_isjgt_9866?user=libSpaces&responseType=weeklyHoursError');
+            await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces&responseType=weeklyHoursError');
             await page.setViewportSize({ width: 1300, height: 1000 });
             // wait for page to load
             await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
@@ -414,7 +548,7 @@ test.describe('Spaces Admin - edit space', () => {
 
     test.describe('Spaces Admin - save errors', () => {
         test('edit space - server 500', async ({ page }) => {
-            await page.goto('/admin/spaces/edit/987y_isjgt_9866?user=libSpaces&responseType=spaceUpdate500Error');
+            await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces&responseType=spaceUpdate500Error');
             await page.setViewportSize({ width: 1300, height: 1000 });
             // wait for page to load
             await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();

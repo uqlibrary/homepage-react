@@ -3,7 +3,7 @@ export default {
     "data": {
         "locations": [{
             space_id: "123456",
-            space_uuid: "987y_isjgt_9866",
+            space_uuid: "f98g_fwas_5g33",
             space_name: "01-W431",
             space_precise: "Westernmost corner",
             space_description: "A space in the Law library. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
@@ -82,7 +82,7 @@ export default {
             ],
         }, {
             space_id: "1234544",
-            space_uuid: "9867y_isjgt_9866",
+            space_uuid: "df40_2jsf_zdk5",
             space_name: "6078",
             space_precise: "",
             space_description: "A space at Dutton Park. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. ",
@@ -169,7 +169,7 @@ export default {
             space_campus_name: "Dutton Park",
         }, {
             space_id: "43534",
-            space_uuid: "987y_isjgt_9867",
+            space_uuid: "97fd5_nm39_gh29",
             space_name: "46-342/343",
             space_precise: "Eastern corner",
             space_description: null,
@@ -229,9 +229,9 @@ export default {
             space_floor_name: "2A",
             space_is_ground_floor: 0,
             space_library_id: 46,
-            space_library_name: null,
+            space_library_name: "imaginary Liveris Library",
             space_building_name: "Andrew N. Liveris",
-            space_building_number: 46,
+            space_building_number: "0046",
             space_campus_id: 1,
             space_campus_name: "St Lucia",
         }]

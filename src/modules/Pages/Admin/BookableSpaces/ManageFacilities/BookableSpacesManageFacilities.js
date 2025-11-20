@@ -113,25 +113,11 @@ export const BookableSpacesManageFacilities = ({
     facilityTypeUpdateError,
     facilityTypeUpdated,
     bookableSpacesRoomList,
-    bookableSpacesRoomListLoading,
-    bookableSpacesRoomListError,
 }) => {
     console.log('load facilityTypeList', facilityTypeList, facilityTypeListLoading, facilityTypeListError);
-    // console.log('load facilityTypeAdded', facilityTypeAdded, facilityTypeAdding, facilityTypeAddError);
     console.log('load facilityTypeUpdated', facilityTypeUpdated, facilityTypeUpdating, facilityTypeUpdateError);
-    // console.log(
-    //     'load facilityTypeGroupAdded',
-    //     facilityTypeGroupAdded,
-    //     facilityTypeGroupAdding,
-    //     facilityTypeAddGroupError,
-    // );
-    // console.log('facilityTypeList?.data?.facility_type_groups', facilityTypeList?.data?.facility_type_groups);
 
     const [cookies, setCookie] = useCookies();
-    // const setCookie = (cookiename, value) => {
-    //     console.log('setCookie', cookiename, value);
-    //     setCookie2(cookiename, value);
-    // };
 
     // saveButtonVisibility values
     const saveButtonVisibilityHidden = 0; // Always hidden
@@ -199,7 +185,6 @@ export const BookableSpacesManageFacilities = ({
             facility_type_name: document.getElementById('facility_type_name')?.value,
             facility_type_id: document.getElementById('facility_type_id')?.value,
         };
-        console.log('saveChangeToFacilityType valuesToSend=', valuesToSend);
 
         closeDialog();
 
@@ -213,7 +198,6 @@ export const BookableSpacesManageFacilities = ({
             actions
                 .updateSpacesFacilityType(valuesToSend)
                 .then(() => {
-                    console.log(`Successfully updated facility type: ${valuesToSend.facility_type_name}`);
                     displayToastMessage('Facility type updated', false);
                     // return { success: true, id: valuesToSend.facility_type_id };
                 })
@@ -233,7 +217,6 @@ export const BookableSpacesManageFacilities = ({
                 .finally(() => {
                     // Reload facility types only once after all operations complete
                     actions.loadAllFacilityTypes();
-                    console.log('------------------');
                 });
     };
 
@@ -245,7 +228,6 @@ export const BookableSpacesManageFacilities = ({
         actions
             .deleteSpacesFacilityType(facilityTypeid)
             .then(() => {
-                console.log('deleteFacilityType then');
                 const successMessage = `${facilityTypeDetails?.facility_type_name} deleted`;
                 displayToastMessage(successMessage, false);
             })
@@ -418,7 +400,6 @@ export const BookableSpacesManageFacilities = ({
         actions
             .createSpacesFacilityTypeGroup(groupValuesToSend)
             .then(response => {
-                console.log('createSpacesFacilityTypeGroup success response=', response);
                 groupCreated = true;
                 const typeValuesToSend = {
                     facility_type__group_id: response?.data?.facility_type_group_id,
@@ -485,7 +466,6 @@ export const BookableSpacesManageFacilities = ({
         </div>`;
 
         const dialogBodyElement = document.getElementById('dialogBody');
-        console.log('dialogBodyElement=', dialogBodyElement);
         !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
         const saveButton = document.getElementById('saveButton');
@@ -503,24 +483,17 @@ export const BookableSpacesManageFacilities = ({
         const valuesToSend = {
             facility_type_group_name: document.getElementById('facility_type_group_name')?.value,
         };
-        console.log('updateFacilityTypeGroup valuesToSend=', valuesToSend);
 
         closeDialog();
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
-        console.log('cypressTestCookie=', cypressTestCookie);
-        console.log('window.location.host=', window.location.host);
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
-            console.log('setting CYPRESS_DATA_SAVED', valuesToSend);
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
-        console.log('cookies=', cookies);
 
         actions
             .updateSpacesFacilityGroup(valuesToSend, groupId)
             .then(() => {
-                console.log('updateSpacesFacilityGroup THEN');
-                console.log(`Successfully updated facility type: ${valuesToSend.facility_type_group_name}`);
                 displayToastMessage('Facility type updated', false);
                 // return { success: true, id: valuesToSend.facility_type_group_id };
             })
@@ -539,10 +512,8 @@ export const BookableSpacesManageFacilities = ({
                 // return { success: false, id: valuesToSend.facility_type_group_id, error: e };
             })
             .finally(() => {
-                console.log('updateSpacesFacilityGroup FINALLY');
                 // Reload facility types only once after all operations complete
                 actions.loadAllFacilityTypes();
-                console.log('------------------');
             });
     };
 
@@ -557,11 +528,10 @@ export const BookableSpacesManageFacilities = ({
         actions
             .deleteSpacesFacilityTypeGroup(facilityTypeid)
             .then(() => {
-                console.log('deleteSpacesFacilityTypeGroup then');
                 displayToastMessage(successMessage, false);
             })
             .catch(e => {
-                console.log('deleteSpacesFacilityTypeGroup', failureMessage, e);
+                console.log('deleteSpacesFacilityTypeGroup failed', failureMessage, e);
                 displayToastMessage(
                     '[BSMF-011] Sorry, an error occurred and the facility group was not deleted - the admins have been informed.',
                 );

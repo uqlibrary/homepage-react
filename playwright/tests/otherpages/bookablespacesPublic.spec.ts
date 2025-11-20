@@ -27,11 +27,11 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId('space-123456-openingHours-1')).toContainText('Tomorrow');
 
         // second and third panels have override opening hours
-        await expect(page.getByTestId('override_opening_hours_987y_isjgt_9866')).not.toBeVisible();
-        await expect(page.getByTestId('override_opening_hours_9867y_isjgt_9866')).toContainText(
+        await expect(page.getByTestId('override_opening_hours_f98g_fwas_5g33')).not.toBeVisible();
+        await expect(page.getByTestId('override_opening_hours_df40_2jsf_zdk5')).toContainText(
             'this space opens at 8am',
         );
-        await expect(page.getByTestId('override_opening_hours_987y_isjgt_9867')).toContainText(
+        await expect(page.getByTestId('override_opening_hours_97fd5_nm39_gh29')).toContainText(
             'open from 7am Monday - Friday',
         );
 

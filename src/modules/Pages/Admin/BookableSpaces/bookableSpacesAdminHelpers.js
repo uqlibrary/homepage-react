@@ -211,3 +211,18 @@ export function closeDialog(e = null) {
     const saveButton = document.getElementById('saveButton');
     removeAnyListeners(saveButton);
 }
+export const weeklyHoursLoaded = (weeklyHoursLoading, weeklyHoursError, weeklyHours) => {
+    return (
+        weeklyHoursLoading === false &&
+        weeklyHoursError === false &&
+        Array.isArray(weeklyHours?.locations) &&
+        weeklyHours?.locations.length > 0
+    );
+};
+export const initialisedSpringshareList = (locale, weeklyHours) => [
+    locale.unselectedSpringshareOption,
+    ...springshareLocations(weeklyHours),
+];
+
+export const validCampusList = campusList => campusList?.filter(c => c?.libraries?.length > 0) || [];
+export const validLibraryList = libraryList => libraryList?.filter(l => l?.floors.length > 0) || [];
