@@ -77,8 +77,6 @@ export const useObjectList = (list = [], transform, options = {}) => {
         }
     };
 
-    const contains = (item, key) => data.findIndex(entry => entry[key] === item[key]) > -1;
-
     const addStart = item => {
         addAt(0, item);
     };
@@ -104,7 +102,7 @@ export const useObjectList = (list = [], transform, options = {}) => {
         _setData(prev => [...prev, ...newData]);
     };
 
-    return { data, addAt, addStart, addEnd, deleteAt, deleteWith, clear, contains, importTransformedData };
+    return { data, addAt, addStart, addEnd, deleteAt, deleteWith, clear, importTransformedData };
 };
 
 export const useConfirmationAlert = ({ duration, onClose = null, errorMessage = null, errorMessageFormatter }) => {

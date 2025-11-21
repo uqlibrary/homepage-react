@@ -226,6 +226,8 @@ const assertOptions = (expected, has = true) => {
 
 const assertAssetStatus = expected => assertInputValue('asset_status_selector-test-step-two-input', expected);
 const assertAssetType = expected => assertInputValue('asset_type_selector-test-step-two-input', expected);
+const assertDiscardReason = expected => assertInputValue('test_step_two-discard-reason-input', expected);
+
 const assertFormSubmitEnabled = (expected = true) => {
     const submitButton = screen.getByTestId('test_step_two-submit-button');
     if (expected) {
@@ -487,6 +489,45 @@ describe('StepTwo', () => {
 
         // test clear button
         await assertClearButton('asset-type', 'asset_type', handleChangeFn, handleChangeInnerFn);
+    });
+
+    it('discard status', async () => {
+        const loadAssetsMineFn = jest.fn();
+        const loadSitesFn = jest.fn();
+        const handleChangeInnerFn = jest.fn();
+        const handleChangeFn = jest.fn(() => handleChangeInnerFn);
+        const list = renderHook(() => useObjectList(defaultList, transformRow)).result;
+        const excludedList = renderHook(() => useObjectList([], transformRow)).result;
+
+        const { getByText } = setup({
+            isFilterDialogOpen: true,
+            list: list.current,
+            excludedList: excludedList.current,
+            actions: {
+                loadAssetsMine: loadAssetsMineFn,
+                loadSites: loadSitesFn,
+                clearRooms: jest.fn(),
+                clearAssetsMine: jest.fn(),
+            },
+            formContextValue: {
+                formValues: {
+                    hasLocation: false,
+                    hasDiscardStatus: true,
+                    discard_reason: 'test',
+                },
+                handleChange: handleChangeFn,
+            },
+        });
+
+        expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
+        assertCheckboxCheckedStatus({ hasLocation: false, hasDiscardStatus: true });
+        assertDiscardReason('test');
+        assertCheckboxesEnabled({ hasLocation: false, hasDiscardStatus: true, hasClearNotes: true });
+        // form submit should be enabled
+        assertFormSubmitEnabled();
+
+        // test clear button
+        await assertClearButton('discard-status', 'discard_reason', handleChangeFn, handleChangeInnerFn);
     });
 
     it('clear notes', async () => {
