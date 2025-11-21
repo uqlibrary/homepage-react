@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useRef } from 'react';
+import React, { useContext, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Unstable_Grid2';
@@ -14,27 +14,32 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { useSelector } from 'react-redux';
 
+import isEqual from 'lodash/isEqual';
+
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import AutoLocationPicker from '../../../../SharedComponents/LocationPicker/AutoLocationPicker';
-import AssetTypeSelector from '../../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
-import AssetStatusSelector from '../../../../SharedComponents/AssetStatusSelector/AssetStatusSelector';
-import MonthsSelector from '../../../../SharedComponents/MonthsSelector/MonthsSelector';
-import AuthWrapper from '../../../../SharedComponents/AuthWrapper/AuthWrapper';
-import { useLocation, useSelectLocation } from '../../../../SharedComponents/LocationPicker/LocationPickerHooks';
+import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLocationPicker';
+import AssetTypeSelector from '../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
+import AssetStatusSelector from '../../../SharedComponents/AssetStatusSelector/AssetStatusSelector';
+import MonthsSelector from '../../../SharedComponents/MonthsSelector/MonthsSelector';
+import AuthWrapper from '../../../SharedComponents/AuthWrapper/AuthWrapper';
+import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
-import { isValidAssetTypeId } from '../../../../Inspection/utils/helpers';
-import { isEmptyStr } from '../../../../helpers/helpers';
-import { PERMISSIONS } from '../../../../config/auth';
-import { AccordionWithCheckbox } from '../AccordionWithCheckbox';
-import { FormContext } from '../../../../helpers/hooks';
-import { makeAssetExcludedMessage } from '../utils';
-import { validateFormValues } from '../validation';
+import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
+import { isEmptyStr } from '../../../helpers/helpers';
+import { PERMISSIONS } from '../../../config/auth';
+import { AccordionWithCheckbox } from './AccordionWithCheckbox';
+import { FormContext } from '../../../helpers/hooks';
+import { makeAssetExcludedMessage } from './utils';
+import { assetStatusOptionExcludes, validateFormValues, validateAssetLists } from './validation';
 
 const moment = require('moment');
 
 const validAssetStatusOptions = locale.pages.manage.bulkassetupdate.config.validAssetStatusOptions;
+const emptyAssetStatusOption = locale.pages.manage.bulkassetupdate.config.emptyAssetStatusOption;
+const validAssetStatusWithLocationOptions =
+    locale.pages.manage.bulkassetupdate.config.validAssetStatusWithLocationOptions;
 
 const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep, onSubmit }) => {
     const componentId = `${id}-step-two`;
@@ -48,7 +53,6 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
     const stepTwoLocale = pageLocale.form.step.two;
     const monthsOptions = pageLocale.config.monthsOptions;
 
-    const currentFormValueSignature = useRef('{}');
     const { formValues, handleChange, formValueSignature } = useContext(FormContext);
 
     const locationStore = useSelector(state => state.get('testTagLocationReducer'));
@@ -67,74 +71,34 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
         condition: () => !isFilterDialogOpen,
     });
 
+    // Validate and update lists when formValueSignature changes
+    useEffect(() => {
+        const { validAssets, excludedAssets } = validateAssetLists(formValues, list.data, excludedList.data);
+        // Only update if lists actually changed
+        const listsChanged = !isEqual(validAssets, list.data) || !isEqual(excludedAssets, excludedList.data);
+
+        if (listsChanged) {
+            list.clear();
+            excludedList.clear();
+            list.importTransformedData(validAssets);
+            excludedList.importTransformedData(excludedAssets);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formValueSignature]);
+
     const handlePrevStep = () => {
-        currentFormValueSignature.current = '{}';
         prevStep();
     };
 
     const validFormValues = useMemo(() => validateFormValues(formValues), [formValues]);
-    const assetStatusOptionExcludes = [
-        locale.config.assetStatus.failed,
-        locale.config.assetStatus.outforrepair,
-        locale.config.assetStatus.discarded,
-        locale.config.assetStatus.awaitingtest,
-    ];
-    // here, need test for new validation function
-    // and need to move this next effect in to a
-    // new hooks file or same new validation file
-    // but as a hook like useValidateSelectedOptions or something
-    React.useEffect(() => {
-        // whenever form values change, we need to
-        // revalidate the list against the new rules
-
-        if (currentFormValueSignature.current !== formValueSignature) {
-            currentFormValueSignature.current = formValueSignature;
-            let listCopy = [...list.data, ...excludedList.data];
-            const listToExclude = [];
-
-            const targetDate = moment()
-                .startOf('day')
-                .add(formValues.monthRange, 'months');
-
-            for (const asset of listCopy) {
-                // if location
-                if (formValues.hasLocation) {
-                    // next inspection date range selected
-                    if (formValues.monthRange !== '-1') {
-                        const nextTestDueDate = moment(
-                            asset.asset_next_test_due_date,
-                            locale.config.format.dateFormatNoTime,
-                        );
-                        if (nextTestDueDate.isBefore(targetDate)) {
-                            // exclude this asset
-                            listToExclude.push(asset);
-                            listCopy = listCopy.filter(item => item.asset_id !== asset.asset_id);
-                            continue; // already excluded this asset, dont need further checks
-                        }
-                    }
-                }
-                // if asset status selected, validate
-                if (formValues.hasAssetStatus) {
-                    if (assetStatusOptionExcludes.includes(asset.asset_status)) {
-                        // exclude this asset
-                        listToExclude.push(asset);
-                        listCopy = listCopy.filter(item => item.asset_id !== asset.asset_id);
-                    }
-                }
-            }
-            list.clear();
-            excludedList.clear();
-            list.importTransformedData(listCopy);
-            excludedList.importTransformedData(listToExclude);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formValueSignature]);
 
     const isLocationDisabled = formValues.hasAssetType || formValues.hasDiscardStatus;
     const isAssetStatusDisabled = formValues.hasAssetType || formValues.hasDiscardStatus;
     const isAssetTypeDisabled = formValues.hasLocation || formValues.hasDiscardStatus || formValues.hasAssetStatus;
     const isDiscardedDisabled =
         formValues.hasAssetType || formValues.hasLocation || formValues.hasClearNotes || formValues.hasAssetStatus;
+    const isClearNotesDisabled =
+        isLocationDisabled && isAssetStatusDisabled && isAssetTypeDisabled && isDiscardedDisabled;
 
     const handleLocationUpdate = newLocation => {
         // because location relies on useSelectLocation to fire
@@ -195,6 +159,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                 expanded: formValues.hasLocation,
                             },
                             accordionActions: {
+                                'data-testid': `${componentIdLower}-location-accordion-action`,
                                 disabled: !formValues.location,
                                 onClick: () => {
                                     handleLocationUpdate({ site: -1, building: -1, floor: -1, room: -1 });
@@ -211,7 +176,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                         <Grid container spacing={3}>
                             <AutoLocationPicker
                                 id={componentId}
-                                disabled={!formValues.hasLocation}
+                                disabled={isLocationDisabled}
                                 actions={actions}
                                 location={location}
                                 setLocation={handleLocationUpdate}
@@ -256,7 +221,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                             <Grid xs={12} sm={4}>
                                 <MonthsSelector
                                     id={componentId}
-                                    disabled={!formValues.hasLocation}
+                                    disabled={isLocationDisabled}
                                     label={stepTwoLocale.filterToDateLabel}
                                     options={monthsOptions}
                                     currentValue={formValues.monthRange}
@@ -286,9 +251,10 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                     expanded: formValues.hasAssetStatus,
                                 },
                                 accordionActions: {
+                                    'data-testid': `${componentIdLower}-asset-status-accordion-action`,
                                     disabled: !formValues.asset_status?.value,
                                     onClick: () => {
-                                        handleChange('asset_status')('');
+                                        handleChange('asset_status')(emptyAssetStatusOption);
                                     },
                                 },
                                 checkbox: {
@@ -308,7 +274,11 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                 <Grid xs={12} sm={6}>
                                     <AssetStatusSelector
                                         id={componentId}
-                                        options={validAssetStatusOptions}
+                                        options={
+                                            formValues.hasLocation
+                                                ? validAssetStatusWithLocationOptions
+                                                : validAssetStatusOptions
+                                        }
                                         label={pageLocale.form.assetStatus.label}
                                         actions={actions}
                                         onChange={handleChange('asset_status')}
@@ -330,6 +300,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                     expanded: formValues.hasAssetType,
                                 },
                                 accordionActions: {
+                                    'data-testid': `${componentIdLower}-asset-type-accordion-action`,
                                     disabled: !formValues?.asset_type,
                                     onClick: () => {
                                         handleChange('asset_type')('');
@@ -352,7 +323,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                         required={formValues.hasAssetType}
                                         value={formValues.asset_type?.asset_type_id}
                                         validateAssetTypeId={isValidAssetTypeId}
-                                        disabled={!formValues.hasAssetType}
+                                        disabled={isAssetTypeDisabled}
                                     />
                                 </Grid>
                             </Grid>
@@ -367,6 +338,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                 expanded: formValues.hasDiscardStatus,
                             },
                             accordionActions: {
+                                'data-testid': `${componentIdLower}-discard-status-accordion-action`,
                                 disabled: !formValues?.discard_reason,
                                 onClick: () => {
                                     handleChange('discard_reason')('');
@@ -398,7 +370,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                             value={formValues?.discard_reason ?? ''}
                             onChange={handleChange('discard_reason')}
                             fullWidth
-                            disabled={!formValues.hasDiscardStatus}
+                            disabled={isDiscardedDisabled}
                         />
                     </AccordionWithCheckbox>
                 </Grid>
@@ -410,7 +382,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                         control={
                             <Checkbox
                                 checked={!formValues.hasDiscardStatus && formValues.hasClearNotes}
-                                disabled={formValues.hasDiscardStatus}
+                                disabled={isClearNotesDisabled}
                                 onChange={handleCheckboxChange}
                                 name="hasClearNotes"
                                 id={`${componentIdLower}-notes-checkbox`}
@@ -442,7 +414,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                         onClick={onSubmit}
                         id={`${componentIdLower}-submit-button`}
                         data-testid={`${componentIdLower}-submit-button`}
-                        disabled={!validFormValues}
+                        disabled={!validFormValues || list.data.length === 0}
                         fullWidth={isMobileView}
                     >
                         {pageLocale.form.step.button.submit}

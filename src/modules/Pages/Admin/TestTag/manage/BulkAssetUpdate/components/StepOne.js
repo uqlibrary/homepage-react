@@ -9,18 +9,18 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import DataTable from '../../../../SharedComponents/DataTable/DataTable';
-import { useDataTableColumns } from '../../../../SharedComponents/DataTable/DataTableHooks';
-import AssetSelector from '../../../../SharedComponents/AssetSelector/AssetSelector';
-import FooterBar from '../../../../SharedComponents/DataTable/FooterBar';
-import FilterDialog from '../FilterDialog';
+import DataTable from '../../../SharedComponents/DataTable/DataTable';
+import { useDataTableColumns } from '../../../SharedComponents/DataTable/DataTableHooks';
+import AssetSelector from '../../../SharedComponents/AssetSelector/AssetSelector';
+import FooterBar from '../../../SharedComponents/DataTable/FooterBar';
+import FilterDialog from './FilterDialog';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
-import config from '../config';
-import { isValidAssetId } from '../../../../Inspection/utils/helpers';
-import { isEmptyObject } from '../../../../helpers/helpers';
-import { useAccountUser } from '../../../../helpers/hooks';
+import config from './config';
+import { isValidAssetId } from '../../../Inspection/utils/helpers';
+import { isEmptyObject } from '../../../helpers/helpers';
+import { useAccountUser } from '../../../helpers/hooks';
 
 const StepOne = ({ id, list, actions, isFilterDialogOpen, setIsFilterDialogOpen, resetForm, nextStep }) => {
     const componentId = `${id}-step-one`;

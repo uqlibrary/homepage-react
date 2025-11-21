@@ -398,7 +398,7 @@ describe('BulkAssetUpdate', () => {
         // asset type
         expect(getByTestId('accordionWithCheckbox-assetType-checkbox')).toHaveClass('Mui-disabled');
         // clear test notes
-        expect(getByTestId('bulk_asset_update_step_two-notes-checkbox')).toHaveClass('Mui-disabled');
+        expect(getByTestId('bulk_asset_update_step_two-notes-checkbox')).not.toHaveClass('Mui-disabled');
 
         // submit button
         expect(getByTestId('bulk_asset_update_step_two-submit-button')).not.toHaveAttribute('disabled');

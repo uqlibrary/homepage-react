@@ -15,8 +15,8 @@ import { useForm, useObjectList, useConfirmationAlert } from '../../../helpers/h
 import { transformRow, transformRequest, makeAssetExcludedMessage } from './utils';
 import { breadcrumbs } from 'config/routes';
 import { FormContext } from '../../../helpers/hooks';
-import StepOne from './partials/StepOne';
-import StepTwo from './partials/StepTwo';
+import StepOne from './StepOne';
+import StepTwo from './StepTwo';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     flexGrow: 1,
@@ -102,6 +102,7 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         setConfirmDialogueBusy(true);
         const clonedData = structuredClone(formValues);
         const request = transformRequest(clonedData);
+        console.log('Bulk Asset Update Request:', request);
         actions
             .bulkAssetUpdate(request)
             .then(() => {
