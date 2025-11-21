@@ -1,16 +1,5 @@
 import React from 'react';
-import {
-    rtlRender,
-    WithRouter,
-    WithReduxStore,
-    waitFor,
-    userEvent,
-    within,
-    waitForElementToBeRemoved,
-    renderHook,
-    screen,
-    preview,
-} from 'test-utils';
+import { rtlRender, WithRouter, WithReduxStore, userEvent, renderHook, screen, preview } from 'test-utils';
 import Immutable from 'immutable';
 
 import assetsList from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssets';
@@ -19,6 +8,8 @@ import siteList from '../../../../../../../data/mock/data/testing/testAndTag/tes
 import floorList from '../../../../../../../data/mock/data/testing/testAndTag/testTagFloors';
 import roomList from '../../../../../../../data/mock/data/testing/testAndTag/testTagRooms';
 import assetTypeData from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssetTypes';
+
+import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
 import { transformRow } from './utils';
 
@@ -166,7 +157,6 @@ function setup(testProps = {}, renderer = rtlRender) {
 
 const assertCheckboxStatus = (testId, expected) => {
     const checkbox = screen.getByTestId(testId);
-    console.log(testId);
     if (expected) {
         expect(checkbox).toHaveClass('Mui-checked');
     } else {
@@ -191,7 +181,7 @@ const assertLocation = ({ site, building, floor, room }) => {
     !!room && assertInputValue('location_picker-test-step-two-room-input', room);
 };
 const assertMonthRange = expected => assertInputValue('months_selector-test-step-two-input', expected);
-const assertCheckboxes = expected => {
+const assertCheckboxCheckedStatus = expected => {
     const mergeExpected = {
         hasLocation: DEFAULT_FORM_VALUES.hasLocation,
         hasAssetStatus: DEFAULT_FORM_VALUES.hasAssetStatus,
@@ -244,14 +234,22 @@ const assertFormSubmitEnabled = (expected = true) => {
         expect(submitButton).toHaveAttribute('disabled');
     }
 };
-const assertClearButton = async (componentIdLower, fieldName, outerFn, innerFn, clearValue = '') => {
-    await userEvent.click(screen.getByTestId(`test_step_two-${componentIdLower}-accordion-action`));
+
+const assertClearButton = async (componentId, fieldName, outerFn, innerFn, clearValue = '') => {
+    await userEvent.click(screen.getByTestId(`test_step_two-${componentId}-accordion-action`));
     expect(outerFn).toHaveBeenCalledWith(fieldName);
-    expect(innerFn).toHaveBeenCalledWith(clearValue);
+    if (Array.isArray(clearValue)) {
+        clearValue.forEach(value => expect(innerFn).toHaveBeenCalledWith(value));
+    } else {
+        expect(innerFn).toHaveBeenCalledWith(clearValue);
+    }
 };
 
 describe('StepTwo', () => {
     jest.setTimeout(30000);
+
+    const emptyAssetStatusOption = locale.pages.manage.bulkassetupdate.config.emptyAssetStatusOption;
+
     beforeEach(() => {
         jest.clearAllMocks();
     });
@@ -349,6 +347,7 @@ describe('StepTwo', () => {
                 formValues: {
                     hasLocation: true,
                     fullLocation: { site: 1, building: 1, floor: 1, room: 1 },
+                    location: { room: 1 },
                     monthRange: '12',
                 },
                 handleChange: handleChangeFn,
@@ -356,12 +355,12 @@ describe('StepTwo', () => {
         });
 
         expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
-        assertCheckboxes({ hasLocation: true });
-        assertMonthRange('12');
+        assertCheckboxCheckedStatus({ hasLocation: true });
         assertLocation({ site: 'St Lucia', building: '0001 - Forgan Smith Building', floor: '2', room: 'W212' });
-        // test clear button
 
-        await assertClearButton('location', 'location', handleChangeFn, handleChangeInnerFn);
+        // test clear button
+        const expected = [{ building: -1, floor: -1, room: -1, site: -1 }, undefined, '-1'];
+        await assertClearButton('location', 'location', handleChangeFn, handleChangeInnerFn, expected);
     });
 
     it('location options with asset status', async () => {
@@ -393,7 +392,7 @@ describe('StepTwo', () => {
 
         expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
 
-        assertCheckboxes({ hasLocation: true, hasAssetStatus: true });
+        assertCheckboxCheckedStatus({ hasLocation: true, hasAssetStatus: true });
         assertMonthRange('12');
         assertLocation({ site: 'St Lucia', building: '0001 - Forgan Smith Building', floor: '2', room: 'W212' });
         assertAssetStatus('IN STORAGE');
@@ -406,9 +405,12 @@ describe('StepTwo', () => {
     it('default asset status options', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
+        const handleChangeInnerFn = jest.fn();
+        const handleChangeFn = jest.fn(() => handleChangeInnerFn);
         const list = renderHook(() => useObjectList(defaultList, transformRow)).result;
         const excludedList = renderHook(() => useObjectList([], transformRow)).result;
 
+        const assetStatusValue = { label: 'IN STORAGE', value: 'INSTORAGE' };
         const { getByText } = setup({
             isFilterDialogOpen: true,
             list: list.current,
@@ -423,17 +425,29 @@ describe('StepTwo', () => {
                 formValues: {
                     hasLocation: false,
                     hasAssetStatus: true,
-                    asset_status: { label: 'IN STORAGE', value: 'INSTORAGE' },
+                    asset_status: assetStatusValue,
                 },
+                handleChange: handleChangeFn,
             },
         });
 
         expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
-        assertCheckboxes({ hasLocation: false, hasAssetStatus: true });
+        assertCheckboxCheckedStatus({ hasLocation: false, hasAssetStatus: true });
         assertAssetStatus('IN STORAGE');
 
         await userEvent.click(screen.getByTestId('asset_status_selector-test-step-two-input'));
         assertOptions(['IN STORAGE', 'MISSING']);
+        // close the popup
+        await userEvent.click(screen.getByRole('option', { name: 'IN STORAGE' }));
+        preview.debug();
+        // test clear button
+        await assertClearButton(
+            'asset-status',
+            'asset_status',
+            handleChangeFn,
+            handleChangeInnerFn,
+            emptyAssetStatusOption,
+        );
     });
 
     it('asset type', async () => {
@@ -465,7 +479,7 @@ describe('StepTwo', () => {
         });
 
         expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
-        assertCheckboxes({ hasLocation: false, hasAssetType: true });
+        assertCheckboxCheckedStatus({ hasLocation: false, hasAssetType: true });
         assertAssetType('PowerBoard');
         assertCheckboxesEnabled({ hasLocation: false, hasAssetType: true, hasClearNotes: true });
         // form submit should be enabled
@@ -473,6 +487,44 @@ describe('StepTwo', () => {
 
         // test clear button
         await assertClearButton('asset-type', 'asset_type', handleChangeFn, handleChangeInnerFn);
+    });
+
+    it('clear notes', async () => {
+        const loadAssetsMineFn = jest.fn();
+        const loadSitesFn = jest.fn();
+        const list = renderHook(() => useObjectList(defaultList, transformRow)).result;
+        const excludedList = renderHook(() => useObjectList([], transformRow)).result;
+
+        const { getByText } = setup({
+            isFilterDialogOpen: true,
+            list: list.current,
+            excludedList: excludedList.current,
+            actions: {
+                loadAssetsMine: loadAssetsMineFn,
+                loadSites: loadSitesFn,
+                clearRooms: jest.fn(),
+                clearAssetsMine: jest.fn(),
+            },
+            formContextValue: {
+                formValues: {
+                    hasLocation: false,
+                    hasAssetType: false,
+                    hasClearNotes: true,
+                },
+            },
+        });
+
+        expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
+
+        assertCheckboxCheckedStatus({ hasLocation: false, hasClearNotes: true });
+        assertCheckboxesEnabled({
+            hasLocation: true,
+            hasAssetStatus: true,
+            hasAssetType: true,
+            hasClearNotes: true,
+        });
+        // form submit should be enabled
+        assertFormSubmitEnabled();
     });
 
     it('invalid options 1', () => {
@@ -502,7 +554,7 @@ describe('StepTwo', () => {
         });
 
         expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
-        assertCheckboxes({ hasLocation: true, hasAssetType: true });
+        assertCheckboxCheckedStatus({ hasLocation: true, hasAssetType: true });
         assertCheckboxesEnabled(); // all should be disbaled as this is an invalid combination
         assertFormSubmitEnabled(false);
     });
@@ -535,7 +587,7 @@ describe('StepTwo', () => {
 
         expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
         // checkboxes will be checked
-        assertCheckboxes({ hasLocation: true, hasAssetStatus: true });
+        assertCheckboxCheckedStatus({ hasLocation: true, hasAssetStatus: true });
         // and enabled
         assertCheckboxesEnabled({ hasLocation: true, hasAssetStatus: true, hasClearNotes: true });
         // but form submit should be disabled

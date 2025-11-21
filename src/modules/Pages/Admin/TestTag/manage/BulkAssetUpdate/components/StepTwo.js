@@ -37,6 +37,7 @@ import { assetStatusOptionExcludes, validateFormValues, validateAssetLists } fro
 const moment = require('moment');
 
 const validAssetStatusOptions = locale.pages.manage.bulkassetupdate.config.validAssetStatusOptions;
+const emptyAssetStatusOption = locale.pages.manage.bulkassetupdate.config.emptyAssetStatusOption;
 const validAssetStatusWithLocationOptions =
     locale.pages.manage.bulkassetupdate.config.validAssetStatusWithLocationOptions;
 
@@ -253,7 +254,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                     'data-testid': `${componentIdLower}-asset-status-accordion-action`,
                                     disabled: !formValues.asset_status?.value,
                                     onClick: () => {
-                                        handleChange('asset_status')('');
+                                        handleChange('asset_status')(emptyAssetStatusOption);
                                     },
                                 },
                                 checkbox: {

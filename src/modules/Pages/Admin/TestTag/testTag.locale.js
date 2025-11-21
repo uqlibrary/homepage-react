@@ -766,6 +766,7 @@ export default {
                         { label: 'MISSING', value: 'MISSING' },
                     ],
                     validAssetStatusWithLocationOptions: [{ label: 'IN STORAGE', value: 'INSTORAGE' }],
+                    emptyAssetStatusOption: { label: '', value: '' },
                     monthsOptions: [
                         { value: '-1', label: 'Any' },
                         { value: '12', label: '1 year' },
