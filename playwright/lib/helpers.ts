@@ -104,3 +104,9 @@ export async function removeVpnNeededToast(page: Page) {
 export async function mockReusable(page: Page) {
     await mockXHRResponse(page, 'https://assets.library.uq.edu.au/reusable-webcomponents/**');
 }
+
+export const assertEnabled = async (page: Page, selector: string) => expect(page.locator(selector)).toBeEnabled();
+export const assertDisabled = async (page: Page, selector: string) => expect(page.locator(selector)).toBeDisabled();
+export const assertChecked = async (page: Page, selector: string) => expect(page.locator(selector)).toBeChecked();
+export const assertNotChecked = async (page: Page, selector: string) =>
+    expect(page.locator(selector)).not.toBeChecked();
