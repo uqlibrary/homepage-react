@@ -1,7 +1,7 @@
 import { test, expect, Page } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { assertTitles, forcePageRefresh, getFieldValue } from '@uq/pw/tests/adminPages/testandtag/helpers';
-import { assertEnabled, assertDisabled, assertChecked, assertNotChecked } from '@uq/pw/lib/helpers';
+import { assertEnabled, assertDisabled, assertChecked } from '@uq/pw/lib/helpers';
 import { default as locale } from '../../../../../src/modules/Pages/Admin/TestTag/testTag.locale';
 
 const assertAlert = async (page: Page, text: string) => {
@@ -513,6 +513,86 @@ test.describe('Test and Tag bulk asset update', () => {
             await page.getByTestId('bulk_asset_update_step_two-back-button').click();
             await page.getByTestId('footer_bar-bulk-asset-update-step-one-alt-button').click();
             await expect(page.getByTestId('confirmation_alert-success-alert')).not.toBeVisible();
+        });
+
+        test('assets not updated are added in to list at step 1', async ({ page }) => {
+            await checkBaseline(page);
+            // Select all rows
+            await selectAllRows(page);
+
+            await assertAccessibility(page, '[data-testid="StandardPage"]');
+
+            assertEnabled(page, '#accordionWithCheckbox-assetStatus-checkbox');
+            assertEnabled(page, '#bulk_asset_update_step_two-notes-checkbox');
+            assertDisabled(page, '#accordionWithCheckbox-assetType-checkbox');
+            assertDisabled(page, '#accordionWithCheckbox-discardStatus-checkbox');
+            assertDisabled(page, '#bulk_asset_update_step_two-submit-button');
+
+            // Update location
+            await expect(page.getByTestId('location_picker-bulk-asset-update-step-two-site-input')).toHaveAttribute(
+                'required',
+            );
+            await page.getByTestId('location_picker-bulk-asset-update-step-two-site-input').click();
+            await page.locator('#location_picker-bulk-asset-update-step-two-site-option-0').click();
+            await expect(page.getByTestId('location_picker-bulk-asset-update-step-two-building-input')).toHaveAttribute(
+                'required',
+            );
+            await page.getByTestId('location_picker-bulk-asset-update-step-two-building-input').click();
+            await page.locator('#location_picker-bulk-asset-update-step-two-building-option-0').click();
+            await expect(page.getByTestId('location_picker-bulk-asset-update-step-two-floor-input')).toHaveAttribute(
+                'required',
+            );
+            await page.getByTestId('location_picker-bulk-asset-update-step-two-floor-input').click();
+            await page.locator('#location_picker-bulk-asset-update-step-two-floor-option-0').click();
+            await expect(page.getByTestId('location_picker-bulk-asset-update-step-two-room-input')).toHaveAttribute(
+                'required',
+            );
+            await page.getByTestId('location_picker-bulk-asset-update-step-two-room-input').click();
+            await page.locator('#location_picker-bulk-asset-update-step-two-room-option-0').click();
+
+            // check updated alert message
+            await assertAlert(page, 'You have selected 5 assets to bulk update');
+
+            // select month range
+            await page.getByTestId('months_selector-bulk-asset-update-step-two-select').click();
+            await page.getByTestId('months_selector-bulk-asset-update-step-two-option-1').click();
+            await expect(page.getByTestId('months_selector-bulk-asset-update-step-two-input')).toHaveValue('12');
+            await expect(
+                page
+                    .getByTestId('months_selector-bulk-asset-update-step-two-next-date-label')
+                    .getByText('(Includes assets up to 01 January 2026)'),
+            ).toBeVisible();
+
+            // check updated alert message
+            await assertAlert(page, 'You have selected 1 asset to bulk update');
+            // check updated alert message
+            await assertAlert(page, 'Excluded 4 assets');
+
+            assertEnabled(page, '#bulk_asset_update_step_two-submit-button');
+
+            // Commit the change
+            await page.getByTestId('bulk_asset_update_step_two-submit-button').click();
+            // Confirmation showing?
+            await expect(page.getByTestId('dialogbox-bulk-asset-update')).toBeVisible();
+            await expect(
+                page
+                    .getByTestId('dialogbox-bulk-asset-update')
+                    .getByText('Are you sure you wish to proceed with this bulk update of 1 selected assets?'),
+            ).toBeVisible();
+
+            // Commit
+            await page.getByTestId('confirm-bulk-asset-update').click();
+            await expect(page.getByTestId('confirmation_alert-success-alert')).toBeVisible();
+
+            await expect(page.getByTestId('standard_card-bulk-asset-update-step-one-step-1-header')).toBeVisible();
+
+            // assert the excluded assets in step 2 are back in to the list in step 1
+            await expect((await getFieldValue(page, 'asset_id_displayed', 0)).getByText('UQL000001')).toBeVisible();
+            await expect((await getFieldValue(page, 'asset_id_displayed', 1)).getByText('UQL000002')).toBeVisible();
+            await expect((await getFieldValue(page, 'asset_id_displayed', 2)).getByText('UQL001992')).toBeVisible();
+            await expect((await getFieldValue(page, 'asset_id_displayed', 3)).getByText('UQL001993')).toBeVisible();
+            // and the one asset that _was_ updated is not present
+            await expect(page.locator('div[data-field=asset_id_displayed]').getByText('UQL001991')).not.toBeVisible();
         });
     });
 });
