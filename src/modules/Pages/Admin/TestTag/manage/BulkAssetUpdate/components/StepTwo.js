@@ -386,8 +386,10 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                 onChange={handleCheckboxChange}
                                 name="hasClearNotes"
                                 id={`${componentIdLower}-notes-checkbox`}
-                                data-testid={`${componentIdLower}-notes-checkbox`}
                                 color="primary"
+                                inputProps={{
+                                    'data-testid': `${componentIdLower}-notes-checkbox`,
+                                }}
                             />
                         }
                         label={stepTwoLocale.checkbox.notes}

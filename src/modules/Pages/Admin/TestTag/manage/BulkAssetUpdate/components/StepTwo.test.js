@@ -1,5 +1,5 @@
 import React from 'react';
-import { rtlRender, WithRouter, WithReduxStore, userEvent, renderHook, screen, preview } from 'test-utils';
+import { rtlRender, WithRouter, WithReduxStore, userEvent, renderHook, screen } from 'test-utils';
 import Immutable from 'immutable';
 
 import assetsList from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssets';
@@ -441,7 +441,7 @@ describe('StepTwo', () => {
         assertOptions(['IN STORAGE', 'MISSING']);
         // close the popup
         await userEvent.click(screen.getByRole('option', { name: 'IN STORAGE' }));
-        preview.debug();
+
         // test clear button
         await assertClearButton(
             'asset-status',
