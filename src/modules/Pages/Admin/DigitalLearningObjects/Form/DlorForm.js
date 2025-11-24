@@ -765,6 +765,9 @@ export const DlorForm = ({
                                     textField: {
                                         'data-testid': 'object-review-date',
                                     },
+                                    actionBar: {
+                                        actions: ['today', 'clear'], // Add 'today' to the actions array
+                                    },
                                 }}
                                 label="Last Review Date"
                                 value={moment(formValues?.object_review_date_next)}
