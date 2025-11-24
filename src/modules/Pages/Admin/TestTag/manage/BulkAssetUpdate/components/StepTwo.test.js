@@ -156,11 +156,11 @@ function setup(testProps = {}, renderer = rtlRender) {
 }
 
 const assertCheckboxStatus = (testId, expected) => {
-    const checkbox = screen.getByTestId(testId);
+    const checkbox = document.querySelector(`#${testId}`);
     if (expected) {
-        expect(checkbox).toHaveClass('Mui-checked');
+        expect(checkbox).toBeChecked();
     } else {
-        expect(checkbox).not.toHaveClass('Mui-checked');
+        expect(checkbox).not.toBeChecked();
     }
 };
 
