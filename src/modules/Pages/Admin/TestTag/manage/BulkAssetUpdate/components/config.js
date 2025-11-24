@@ -1,7 +1,11 @@
 /* istanbul ignore file */
 
+export const MAXEXCLUDEDMOREITEMS = 10;
+
 export default {
-    defaults: {},
+    defaults: {
+        monthsPeriod: 0,
+    },
     form: {
         sort: {
             defaultSortColumn: 'asset_id_displayed',

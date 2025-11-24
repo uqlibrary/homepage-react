@@ -19,10 +19,11 @@ const AssetStatusSelector = ({
     onChange,
     classNames,
     disabled = false,
+    value = '',
     ...rest
 }) => {
     const componentId = `${rootId}-${id}`;
-    const [currentValue, setCurrentValue] = useState(initialOptionIndex > -1 ? options[initialOptionIndex] : null);
+    const [currentValue, setCurrentValue] = useState(initialOptionIndex > -1 ? options[initialOptionIndex] : '');
     const handleOnChange = (event, newValue) => {
         setCurrentValue(newValue);
         onChange?.(newValue);
@@ -31,6 +32,12 @@ const AssetStatusSelector = ({
     const customPopper = props => (
         <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
     );
+
+    React.useEffect(() => {
+        if (value) {
+            setCurrentValue(value);
+        }
+    }, [value]);
 
     return (
         <FormControl variant="standard" className={classNames?.formControl} fullWidth>
@@ -81,6 +88,7 @@ AssetStatusSelector.propTypes = {
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     onChange: PropTypes.func,
+    value: PropTypes.object,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),
 };
 
