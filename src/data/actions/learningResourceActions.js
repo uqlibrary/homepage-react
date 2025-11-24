@@ -2,9 +2,9 @@ import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
 import {
     GUIDES_API,
+    LEARNING_RESOURCES_COURSE_SUGGESTIONS_API,
     LEARNING_RESOURCES_EXAMS_API,
     READING_LIST_API,
-    LEARNING_RESOURCES_COURSE_SUGGESTIONS_API,
 } from 'repositories/routes';
 import { throwFetchErrors } from 'helpers/general';
 
@@ -123,33 +123,31 @@ export function loadCourseReadingListsSuggestions(keyword) {
                     datafiltered = data.filter(option => foundCourseCodeMatchesSearchTerm(option));
                 }
 
-                const sorter = datafiltered
-                    // sort to put the matching course codes at the top of the list
-                    .sort(a => {
-                        const foundcode = a.name.toUpperCase().substr(0, keyword.length);
-                        const searchedcode = keyword.toUpperCase();
-                        const searchedcode4 = keyword.toUpperCase().substr(0, 4);
-                        // eslint-disable-next-line no-nested-ternary
-                        return foundcode === searchedcode
-                            ? 1
-                            : /* istanbul ignore next */ a.name.startsWith(searchedcode4)
-                            ? 0
-                            : -1;
+                const matchingCourseCodeFirst = a => {
+                    if (!!keyword && a?.name?.toUpperCase().substring(0, keyword.length) === keyword.toUpperCase()) {
+                        return 1;
+                    }
+                    const firstFourCharacters = keyword?.toUpperCase().substring(0, 4);
+                    return !!firstFourCharacters && a?.name?.startsWith(firstFourCharacters) ? 0 : -1;
+                };
+
+                const payload = datafiltered
+                    .sort(a => matchingCourseCodeFirst(a))
+                    .reverse()
+                    .map((item, index) => {
+                        const specifier =
+                            (item.course_title ? `${item.course_title}` : '') +
+                            (item.campus ? `, ${item.campus}` : '') +
+                            (item.period ? `, ${item.period}` : '');
+                        const append = !!specifier ? ` (${specifier})` : '';
+                        return {
+                            courseCode: item.name,
+                            displayname: `${item.name}${append}`,
+                            index,
+                            campus: item.campus,
+                            semester: item.period,
+                        };
                     });
-                const payload = sorter.reverse().map((item, index) => {
-                    const specifier =
-                        (item.course_title ? `${item.course_title}` : '') +
-                        (item.campus ? `, ${item.campus}` : '') +
-                        (item.period ? `, ${item.period}` : '');
-                    const append = !!specifier ? ` (${specifier})` : '';
-                    return {
-                        courseCode: item.name,
-                        displayname: `${item.name}${append}`,
-                        index,
-                        campus: item.campus,
-                        semester: item.period,
-                    };
-                });
                 dispatch({
                     type: actions.LEARNING_RESOURCE_SUGGESTIONS_LOADED,
                     payload: payload,
