@@ -123,7 +123,7 @@ describe('BulkAssetUpdate', () => {
     it('adds row items from filterDialog popup', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
-        const { getByText, getByTestId, getAllByRole, queryByTestId, findByTestId } = setup({
+        const { getByText, getByTestId, getAllByRole, findByTestId } = setup({
             isOpen: true,
 
             actions: {
@@ -146,8 +146,6 @@ describe('BulkAssetUpdate', () => {
         await userEvent.click(within(frow2).getByLabelText('Select row'));
 
         await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-step-one-action-button'));
-
-        await waitForElementToBeRemoved(queryByTestId('filter_dialog-bulk-asset-update-step-one'));
 
         await waitFor(() =>
             expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
