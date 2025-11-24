@@ -765,6 +765,9 @@ export const DlorForm = ({
                                     textField: {
                                         'data-testid': 'object-review-date',
                                     },
+                                    actionBar: {
+                                        actions: ['today', 'clear'], // Add 'today' to the actions array
+                                    },
                                 }}
                                 label="Last Review Date"
                                 value={moment(formValues?.object_review_date_next)}
@@ -882,29 +885,34 @@ export const DlorForm = ({
     }, [formDefaults.object_publishing_user]);
 
     const suggestSummary = (enteredDescription, requiredLength = 150) => {
-        const plainSummary = html2text.fromString(enteredDescription);
-        // if they enter a complete sentence, use just that sentences up to the requiredlength point
-        const fullStopLocation = plainSummary.indexOf('.');
-        if (fullStopLocation !== -1) {
+        const rawSummary = html2text.fromString(enteredDescription);
+        const urlCleanupRegex = /\s?\[.*?\]/g;
+        const plainSummary = rawSummary.replace(urlCleanupRegex, '').trim();
+
+        const sentenceEndRegex = /\.(?=\s|[A-Z]|$)/;
+        const match = plainSummary.match(sentenceEndRegex);
+
+        if (match) {
+            const fullStopLocation = match.index;
             return plainSummary.substring(0, fullStopLocation + 1);
         }
 
         const lastCarriageReturnIndex = plainSummary.indexOf('\n');
         if (lastCarriageReturnIndex !== -1) {
-            return plainSummary.substring(0, lastCarriageReturnIndex + 1).trim(); // remove carriage return from end
+            return plainSummary.substring(0, lastCarriageReturnIndex).trim();
         }
 
-        // while its short, return the shortness
         /* istanbul ignore else */
         if (plainSummary?.length <= requiredLength) {
             return plainSummary;
         }
 
-        // return the first n characters, breaking at a word break
         /* istanbul ignore next */
         const trimmedString = plainSummary?.slice(0, requiredLength + 1);
+
         /* istanbul ignore next */
         const slice = trimmedString.slice(0, Math.min(trimmedString?.length, trimmedString?.lastIndexOf(' ')));
+
         /* istanbul ignore next */
         return slice;
     };
