@@ -12,7 +12,8 @@ import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
 import { PERMISSIONS } from '../../../config/auth';
 import { useForm, useObjectList, useConfirmationAlert } from '../../../helpers/hooks';
-import { transformRow, transformRequest, makeAssetExcludedMessage } from './utils';
+import { transformRow, transformRequest } from './transformers';
+import { makeAssetExcludedMessage } from './utils';
 import { breadcrumbs } from 'config/routes';
 import { FormContext } from '../../../helpers/hooks';
 import StepOne from './StepOne';
