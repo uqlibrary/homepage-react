@@ -387,9 +387,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                 name="hasClearNotes"
                                 id={`${componentIdLower}-notes-checkbox`}
                                 color="primary"
-                                inputProps={{
-                                    'data-testid': `${componentIdLower}-notes-checkbox`,
-                                }}
+                                data-testid={`${componentIdLower}-notes-checkbox`}
                             />
                         }
                         label={stepTwoLocale.checkbox.notes}

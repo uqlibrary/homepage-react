@@ -1,5 +1,5 @@
 import React from 'react';
-import { rtlRender, WithRouter, WithReduxStore, userEvent, renderHook, screen, preview } from 'test-utils';
+import { rtlRender, WithRouter, WithReduxStore, userEvent, renderHook, screen } from 'test-utils';
 import Immutable from 'immutable';
 
 import assetsList from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssets';
@@ -156,11 +156,11 @@ function setup(testProps = {}, renderer = rtlRender) {
 }
 
 const assertCheckboxStatus = (testId, expected) => {
-    const checkbox = screen.getByTestId(testId);
+    const checkbox = document.querySelector(`#${testId}`);
     if (expected) {
-        expect(checkbox).toHaveClass('Mui-checked');
+        expect(checkbox).toBeChecked();
     } else {
-        expect(checkbox).not.toHaveClass('Mui-checked');
+        expect(checkbox).not.toBeChecked();
     }
 };
 
@@ -441,7 +441,7 @@ describe('StepTwo', () => {
         assertOptions(['IN STORAGE', 'MISSING']);
         // close the popup
         await userEvent.click(screen.getByRole('option', { name: 'IN STORAGE' }));
-        preview.debug();
+
         // test clear button
         await assertClearButton(
             'asset-status',
