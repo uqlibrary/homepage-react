@@ -206,9 +206,6 @@ describe('BulkAssetUpdate', () => {
         await userEvent.click(within(frow2).getByLabelText('Select row'));
 
         await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-step-one-action-button'));
-
-        await waitForElementToBeRemoved(queryByTestId('filter_dialog-bulk-asset-update-step-one'));
-
         await waitFor(() =>
             expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
                 'You have selected 2 assets to bulk update.',
@@ -275,8 +272,6 @@ describe('BulkAssetUpdate', () => {
         await userEvent.click(within(frow2).getByLabelText('Select row'));
 
         await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-step-one-action-button'));
-
-        await waitForElementToBeRemoved(queryByTestId('filter_dialog-bulk-asset-update-step-one'));
 
         await waitFor(() =>
             expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
@@ -369,8 +364,6 @@ describe('BulkAssetUpdate', () => {
         await userEvent.click(within(frow2).getByLabelText('Select row'));
 
         await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-step-one-action-button'));
-
-        await waitForElementToBeRemoved(queryByTestId('filter_dialog-bulk-asset-update-step-one'));
 
         await waitFor(() =>
             expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
