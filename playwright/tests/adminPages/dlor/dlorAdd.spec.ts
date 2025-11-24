@@ -162,14 +162,45 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 ).toBeVisible();
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeDisabled();
 
-                // select a keyword so we can save
+                // request a keyword to check form - cancel to make sure it's dismissed properly
+                await page.locator('[data-testid="dlor-request-keyword-button"]').click();
+                await page.locator('[data-testid="admin-dlor-form-keyword-cancel"]').click();
+                await expect(page.locator('[data-testid="admin-dlor-form-keyword-confirm"]')).not.toBeVisible();
+
+                const KEYWORD_REQUEST_ENDPOINT = '**/dlor/auth/keywords/request';
+
+                await page.route(KEYWORD_REQUEST_ENDPOINT, async route => {
+                    await route.fulfill({
+                        status: 500, // Forces the API request to fail
+                        contentType: 'application/json',
+                        body: JSON.stringify({ error: 'Forced Playwright Error' }),
+                    });
+                });
+
+                await page.locator('[data-testid="dlor-request-keyword-button"]').click();
+                await page.locator('[data-testid="requested_keyword"] input').fill('testkeyword_fail');
+                await page
+                    .locator('[data-testid="request_reason"] textarea#request_reason')
+                    .fill('testkeyword reason_fail');
+
+                await page.locator('[data-testid="admin-dlor-form-keyword-confirm"]').click();
+
+                await page.waitForTimeout(500);
+
+                await expect(page.locator('[data-testid="admin-dlor-form-keyword-confirm"]')).toBeVisible();
+
+                await page.unroute(KEYWORD_REQUEST_ENDPOINT);
+
+                await page.locator('[data-testid="admin-dlor-form-keyword-confirm"]').click();
+
+                await expect(page.locator('[data-testid="admin-dlor-form-keyword-confirm"]')).not.toBeVisible();
+
                 await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
                 await page.locator('#fuzzy-search-option-3').click();
 
                 await expect(page.getByTestId('dlor-panel-validity-indicator-3')).not.toBeVisible();
                 await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeEnabled();
 
-                // now go back and invalidate each field one at a time and show the button disables on each field
                 await page
                     .locator('[data-testid="filter-topic-aboriginal-and-torres-strait-islander"] input')
                     .uncheck();
