@@ -1,6 +1,6 @@
 import React from 'react';
 import EventPanel from './EventPanel';
-import { render, act, fireEvent, WithReduxStore, preview } from 'test-utils';
+import { render, act, fireEvent, WithReduxStore } from 'test-utils';
 import Immutable from 'immutable';
 
 import configData from '../../../../../../data/mock/data/testing/testAndTag/testTagOnLoadInspection';

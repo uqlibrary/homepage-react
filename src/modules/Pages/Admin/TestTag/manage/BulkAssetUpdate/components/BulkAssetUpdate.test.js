@@ -7,6 +7,7 @@ import {
     userEvent,
     within,
     waitForElementToBeRemoved,
+    screen,
 } from 'test-utils';
 import { DEFAULT_FORM_VALUES } from '../containers/BulkAssetUpdate';
 import Immutable from 'immutable';
@@ -37,22 +38,11 @@ const defaultLocationState = {
 };
 
 import BulkAssetUpdate from './BulkAssetUpdate';
-import pageLocale from '../../../testTag.locale';
-import pageConfig from './config';
 
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 
 function setup(testProps = {}, renderer = rtlRender) {
-    const {
-        state = {},
-        actions = {},
-        config = pageConfig.filterDialog,
-        locale = pageLocale.pages.manage.bulkassetupdate.form.filterDialog,
-        locationLocale = pageLocale.pages.general.locationPicker,
-        assetTypeLocale = pageLocale.pages.manage.bulkassetupdate.form.filterDialog.form.assetType,
-        errorMessageFormatter = jest.fn(message => `Formatted ${message}`),
-        ...props
-    } = testProps;
+    const { state = {}, actions = {}, ...props } = testProps;
 
     const _state = {
         testTagLocationReducer: {
@@ -81,20 +71,23 @@ function setup(testProps = {}, renderer = rtlRender) {
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
             <WithRouter>
-                <BulkAssetUpdate
-                    id="test"
-                    locale={locale}
-                    actions={actions}
-                    config={config}
-                    locationLocale={locationLocale}
-                    assetTypeLocale={assetTypeLocale}
-                    errorMessageFormatter={errorMessageFormatter}
-                    defaultFormValues={DEFAULT_FORM_VALUES}
-                    {...props}
-                />
+                <BulkAssetUpdate actions={actions} defaultFormValues={DEFAULT_FORM_VALUES} {...props} />
             </WithRouter>
         </WithReduxStore>,
     );
+}
+
+async function waitForFilterDialogToBeRemoved(timeout = 2000) {
+    try {
+        await waitForElementToBeRemoved(() => screen.queryByTestId('filter_dialog-bulk-asset-update-step-one'), {
+            timeout,
+        });
+    } catch (error) {
+        // If the element is already removed, we can safely ignore the error
+        if (screen.queryByTestId('filter_dialog-bulk-asset-update-step-one') !== null) {
+            throw error;
+        }
+    }
 }
 
 describe('BulkAssetUpdate', () => {
@@ -103,7 +96,6 @@ describe('BulkAssetUpdate', () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
         const { getByText, getByTestId, getAllByRole } = setup({
-            isOpen: true,
             actions: {
                 loadAssetsMine: loadAssetsMineFn,
                 loadSites: loadSitesFn,
@@ -124,8 +116,6 @@ describe('BulkAssetUpdate', () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
         const { getByText, getByTestId, getAllByRole, findByTestId } = setup({
-            isOpen: true,
-
             actions: {
                 loadAssetsMine: loadAssetsMineFn,
                 loadSites: loadSitesFn,
@@ -147,10 +137,10 @@ describe('BulkAssetUpdate', () => {
 
         await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-step-one-action-button'));
 
-        await waitFor(() =>
-            expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
-                'You have selected 2 assets to bulk update.',
-            ),
+        await waitForFilterDialogToBeRemoved();
+
+        expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
+            'You have selected 2 assets to bulk update.',
         );
 
         // check first row is as expected
@@ -183,9 +173,7 @@ describe('BulkAssetUpdate', () => {
     it('shows step 2', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
-        const { getByText, getByTestId, queryByTestId, findByTestId, getAllByRole } = setup({
-            isOpen: true,
-
+        const { getByText, getByTestId, findByTestId, getAllByRole } = setup({
             actions: {
                 loadAssetsMine: loadAssetsMineFn,
                 loadSites: loadSitesFn,
@@ -206,13 +194,14 @@ describe('BulkAssetUpdate', () => {
         await userEvent.click(within(frow2).getByLabelText('Select row'));
 
         await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-step-one-action-button'));
-        await waitFor(() =>
-            expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
-                'You have selected 2 assets to bulk update.',
-            ),
+
+        await waitForFilterDialogToBeRemoved();
+
+        expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
+            'You have selected 2 assets to bulk update.',
         );
 
-        expect(getAllByRole('row').length).toBe(3); // header + 2 rows
+        await waitFor(() => expect(getAllByRole('row').length).toBe(3)); // header + 2 rows
 
         expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).not.toHaveAttribute('disabled');
         await userEvent.click(getByTestId('footer_bar-bulk-asset-update-step-one-action-button'));
@@ -248,9 +237,7 @@ describe('BulkAssetUpdate', () => {
         const loadSitesFn = jest.fn();
         const bulkAssetUpdateFn = jest.fn(() => Promise.resolve());
 
-        const { getByText, getByTestId, queryByTestId, getByRole, findByTestId, getAllByRole } = setup({
-            isOpen: true,
-
+        const { getByText, getByTestId, getByRole, findByTestId, getAllByRole } = setup({
             actions: {
                 loadAssetsMine: loadAssetsMineFn,
                 loadSites: loadSitesFn,
@@ -273,10 +260,10 @@ describe('BulkAssetUpdate', () => {
 
         await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-step-one-action-button'));
 
-        await waitFor(() =>
-            expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
-                'You have selected 2 assets to bulk update.',
-            ),
+        await waitForFilterDialogToBeRemoved();
+
+        expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
+            'You have selected 2 assets to bulk update.',
         );
 
         await waitFor(() => expect(getAllByRole('row').length).toBe(3)); // header + 2 rows
@@ -340,9 +327,7 @@ describe('BulkAssetUpdate', () => {
         const loadSitesFn = jest.fn();
         const bulkAssetUpdateFn = jest.fn(() => Promise.resolve());
 
-        const { getByText, getByTestId, queryByTestId, findByTestId } = setup({
-            isOpen: true,
-
+        const { getByText, getByTestId, findByTestId } = setup({
             actions: {
                 loadAssetsMine: loadAssetsMineFn,
                 loadSites: loadSitesFn,
@@ -365,10 +350,10 @@ describe('BulkAssetUpdate', () => {
 
         await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-step-one-action-button'));
 
-        await waitFor(() =>
-            expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
-                'You have selected 2 assets to bulk update.',
-            ),
+        await waitForFilterDialogToBeRemoved();
+
+        expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
+            'You have selected 2 assets to bulk update.',
         );
 
         expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).not.toHaveAttribute('disabled');
@@ -434,7 +419,6 @@ describe('BulkAssetUpdate', () => {
         });
         it('fires expected actions when entering text in to the asset selector field', async () => {
             const { getByText, getByTestId } = setup({
-                isOpen: true,
                 actions: tntActions,
             });
 
@@ -454,8 +438,6 @@ describe('BulkAssetUpdate', () => {
             const loadSitesFn = jest.fn();
             const bulkAssetUpdateFn = jest.fn(() => Promise.reject());
             const { getByText, getByTitle, getByTestId, queryByTestId, findByTestId } = setup({
-                isOpen: true,
-
                 actions: {
                     loadAssetsMine: loadAssetsMineFn,
                     loadSites: loadSitesFn,
