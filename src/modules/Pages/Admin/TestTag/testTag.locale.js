@@ -880,7 +880,7 @@ export default {
 
                             filterToDateLabel: 'where next inspection date is within',
                             filterToDateFormatted: value =>
-                                value !== '' ? `(Includes assets up to ${value})` : '(Includes all assets)',
+                                value !== '' ? `(Excludes assets up to ${value})` : '(Includes all assets)',
                         },
                     },
                     alert: {
@@ -902,8 +902,8 @@ export default {
                                     <Typography variant="body1" component="span" style={{ fontWeight: 'bold' }}>
                                         {count}
                                     </Typography>{' '}
-                                    {pluraliser('asset', count)} because their next inspection date falls outside of the
-                                    chosen range, or their current status is incompatible with the selected options:
+                                    {pluraliser('asset', count)} because their next inspection date falls within the
+                                    chosen range, or their current status is incompatible with the chosen options:
                                     {excludedListString && (
                                         <>
                                             <br />
