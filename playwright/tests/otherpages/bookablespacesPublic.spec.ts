@@ -1,4 +1,4 @@
-import { expect, test } from '@uq/pw/test';
+import { expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
 test.describe('Spaces', () => {
@@ -108,7 +108,7 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId('no-spaces')).toBeVisible();
         await expect(page.getByTestId('no-spaces')).toContainText('No locations found - please try again soon.');
     });
-    test('can show-hide block contents', async ({ page }) => {
+    test('can open-collapse sidebar filter type groups', async ({ page }) => {
         await page.goto('spaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
@@ -348,13 +348,11 @@ test.describe('Spaces', () => {
         const bookableId = 19;
         const bookableCheckbox = page.getByTestId(`facility-type-listitem-${bookableId}`);
         const bookableExcludeCheckboxlabel = page.getByTestId(`reject-filtertype-label-${bookableId}`);
-        const bookableUnsetCartouche = page.getByTestId(`button-deselect-unselected-${bookableId}`);
         const avEquipmentId = 8;
         const avEquipmentCheckbox = page.getByTestId(`facility-type-listitem-${avEquipmentId}`);
 
         // select some filters
         await avEquipmentCheckbox.locator('span input').check();
-        console.log('bookableUnsetCartouche=', bookableUnsetCartouche);
 
         await bookableCheckbox.locator('span.fortestfocus').click(); // a hack of the page so playwright can tap on the exclude filter
         await expect(bookableExcludeCheckboxlabel).toBeVisible();
@@ -377,6 +375,260 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId('sidebarCheckboxes').locator(':scope > *[type="checkbox"]:checked')).toHaveCount(
             0,
         );
+    });
+    test.describe('sidebar filter type group can open-collapse', () => {
+        const FILTER_GROUP_EDIA = 8;
+        const FILTER_GROUP_SPACE_ROOM_TYPE = 1;
+        const FILTER_GROUP_ON_THIS_FLOOR = 2;
+        const FILTER_GROUP_LIGHTING = 4;
+        const FILTER_GROUP_NOISE_LEVEL = 5;
+        const FILTER_GROUP_ROOM_FEATURES = 6;
+        const FILTER_GROUP_SPACE_FEATURES = 3;
+
+        const filterGroup = (groupId: string | number, page: Page) => page.getByTestId('filter-group-block-' + groupId);
+
+        test('sidebar filter type group open-collapse loads correctly', async ({ page }) => {
+            await page.goto('spaces');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+
+            await expect(filterGroup(FILTER_GROUP_EDIA, page)).toBeVisible();
+            await expect(
+                filterGroup(FILTER_GROUP_EDIA, page)
+                    .locator('h3')
+                    .getByText(/EDIA filters/),
+            ).toBeVisible();
+            await expect(page.getByTestId('facility-type-group-8-open')).toBeVisible();
+            await expect(page.getByTestId('facility-type-group-8-collapsed')).not.toBeVisible();
+
+            await expect(filterGroup(FILTER_GROUP_SPACE_ROOM_TYPE, page)).toBeVisible();
+            await expect(
+                filterGroup(FILTER_GROUP_SPACE_ROOM_TYPE, page)
+                    .locator('h3')
+                    .getByText(/Space\/Room Type/),
+            ).toBeVisible();
+            await expect(page.getByTestId('facility-type-group-1-open')).toBeVisible();
+            await expect(page.getByTestId('facility-type-group-1-collapsed')).not.toBeVisible();
+
+            // ON THIS FLOOR LOADS CLOSED
+            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)).toBeVisible();
+            await expect(
+                filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)
+                    .locator('h3')
+                    .getByText(/On this floor/),
+            ).toBeVisible();
+            await expect(page.getByTestId('facility-type-group-2-open')).not.toBeVisible();
+            await expect(page.getByTestId('facility-type-group-2-collapsed')).toBeVisible();
+
+            await expect(filterGroup(FILTER_GROUP_LIGHTING, page)).toBeVisible();
+            await expect(
+                filterGroup(FILTER_GROUP_LIGHTING, page)
+                    .locator('h3')
+                    .getByText(/Lighting/),
+            ).toBeVisible();
+            await expect(page.getByTestId('facility-type-group-4-open')).toBeVisible();
+            await expect(page.getByTestId('facility-type-group-4-collapsed')).not.toBeVisible();
+
+            await expect(filterGroup(FILTER_GROUP_NOISE_LEVEL, page)).toBeVisible();
+            await expect(
+                filterGroup(FILTER_GROUP_NOISE_LEVEL, page)
+                    .locator('h3')
+                    .getByText(/Acceptable noise/),
+            ).toBeVisible();
+            await expect(page.getByTestId('facility-type-group-5-open')).toBeVisible();
+            await expect(page.getByTestId('facility-type-group-5-collapsed')).not.toBeVisible();
+
+            // ROOM FEATURES LOADS CLOSED
+            await expect(filterGroup(FILTER_GROUP_ROOM_FEATURES, page)).toBeVisible();
+            await expect(
+                filterGroup(FILTER_GROUP_ROOM_FEATURES, page)
+                    .locator('h3')
+                    .getByText(/Room features/),
+            ).toBeVisible();
+            await expect(page.getByTestId('facility-type-group-6-open')).not.toBeVisible();
+            await expect(page.getByTestId('facility-type-group-6-collapsed')).toBeVisible();
+
+            await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page)).toBeVisible();
+            await expect(
+                filterGroup(FILTER_GROUP_SPACE_FEATURES, page)
+                    .locator('h3')
+                    .getByText(/Space features/),
+            ).toBeVisible();
+            await expect(page.getByTestId('facility-type-group-3-open')).toBeVisible();
+            await expect(page.getByTestId('facility-type-group-3-collapsed')).not.toBeVisible();
+        });
+        test('collapsing an open sidebar filter type group shows correctly', async ({ page }) => {
+            await page.goto('spaces');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+
+            await expect(filterGroup(FILTER_GROUP_EDIA, page)).toBeVisible();
+            await expect(
+                filterGroup(FILTER_GROUP_EDIA, page)
+                    .locator('h3')
+                    .getByText(/EDIA filters/),
+            ).toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_EDIA}-open`)).toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_EDIA}-collapsed`)).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_EDIA, page).locator('ul')).toBeVisible();
+            await expect(
+                filterGroup(FILTER_GROUP_EDIA, page)
+                    .locator('ul')
+                    .locator(':scope > *'),
+            ).toHaveCount(1);
+
+            await expect(filterGroup(FILTER_GROUP_EDIA, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_EDIA, page).locator('ul li')).toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_EDIA}-open`)).toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_EDIA}-collapsed`)).not.toBeVisible();
+
+            // the state of the other groups is known (and won't change after click)
+            await expect(filterGroup(FILTER_GROUP_SPACE_ROOM_TYPE, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_NOISE_LEVEL, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ROOM_FEATURES, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page).locator('ul')).toBeVisible();
+
+            // open "edia"
+            await page.getByTestId(`facility-type-group-${FILTER_GROUP_EDIA}-open`).click();
+
+            // visibility flips
+            await expect(filterGroup(FILTER_GROUP_EDIA, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_EDIA, page).locator('ul li')).not.toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_EDIA}-open`)).not.toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_EDIA}-collapsed`)).toBeVisible();
+
+            // the state of the other groups is unchanged
+            await expect(filterGroup(FILTER_GROUP_SPACE_ROOM_TYPE, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_NOISE_LEVEL, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ROOM_FEATURES, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page).locator('ul')).toBeVisible();
+        });
+        test('opening a collapsed sidebar filter type group shows correctly', async ({ page }) => {
+            await page.goto('spaces');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+
+            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)).toBeVisible();
+            await expect(
+                filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)
+                    .locator('h3')
+                    .getByText(/On this floor/),
+            ).toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-open`)).not.toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-collapsed`)).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).not.toBeVisible();
+            await expect(
+                filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)
+                    .locator('ul')
+                    .locator(':scope > *'),
+            ).toHaveCount(4);
+
+            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).not.toBeVisible();
+            await expect(
+                filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul li:first-of-type'),
+            ).not.toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-open`)).not.toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-collapsed`)).toBeVisible();
+
+            // the state of the other groups is known (and won't change after click)
+            await expect(filterGroup(FILTER_GROUP_EDIA, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_ROOM_TYPE, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_NOISE_LEVEL, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ROOM_FEATURES, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page).locator('ul')).toBeVisible();
+
+            // open "on this floor"
+            await page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-collapsed`).click();
+
+            // visibility flips
+            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul li:first-of-type')).toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-open`)).toBeVisible();
+            await expect(
+                page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-collapsed`),
+            ).not.toBeVisible();
+
+            // the state of the other groups is unchanged
+            await expect(filterGroup(FILTER_GROUP_EDIA, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_ROOM_TYPE, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_NOISE_LEVEL, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ROOM_FEATURES, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page).locator('ul')).toBeVisible();
+        });
+        test('multiple open-collapse sidebar filter type group shows correctly', async ({ page }) => {
+            await page.goto('spaces');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+
+            // sidebar filter types group load open-collapsedness as expected
+            await expect(filterGroup(FILTER_GROUP_EDIA, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_ROOM_TYPE, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_NOISE_LEVEL, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ROOM_FEATURES, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page).locator('ul')).toBeVisible();
+
+            // open "on this floor" sidebar filter type roup
+            await page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-collapsed`).click();
+
+            await expect(filterGroup(FILTER_GROUP_EDIA, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_ROOM_TYPE, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_NOISE_LEVEL, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ROOM_FEATURES, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page).locator('ul')).toBeVisible();
+
+            // collapse "edia" sidebar filter type group
+            await page.getByTestId(`facility-type-group-${FILTER_GROUP_EDIA}-open`).click();
+
+            await expect(filterGroup(FILTER_GROUP_EDIA, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_ROOM_TYPE, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_NOISE_LEVEL, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ROOM_FEATURES, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page).locator('ul')).toBeVisible();
+
+            // collapse "noise level" sidebar filter type roup
+            await page.getByTestId(`facility-type-group-${FILTER_GROUP_NOISE_LEVEL}-open`).click();
+
+            await expect(filterGroup(FILTER_GROUP_EDIA, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_ROOM_TYPE, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_NOISE_LEVEL, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ROOM_FEATURES, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page).locator('ul')).toBeVisible();
+
+            // re-open "edia" sidebar filter type roup
+            await page.getByTestId(`facility-type-group-${FILTER_GROUP_EDIA}-collapsed`).click();
+
+            await expect(filterGroup(FILTER_GROUP_EDIA, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_ROOM_TYPE, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_NOISE_LEVEL, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ROOM_FEATURES, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page).locator('ul')).toBeVisible();
+
+            // re-collapse "on this floor" sidebar filter type roup
+            await page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-open`).click();
+
+            await expect(filterGroup(FILTER_GROUP_EDIA, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_ROOM_TYPE, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_LIGHTING, page).locator('ul')).toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_NOISE_LEVEL, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_ROOM_FEATURES, page).locator('ul')).not.toBeVisible();
+            await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page).locator('ul')).toBeVisible();
+        });
     });
 });
 test.describe('Spaces errors', () => {
