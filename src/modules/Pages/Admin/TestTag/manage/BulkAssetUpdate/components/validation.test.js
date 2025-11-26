@@ -1,4 +1,4 @@
-import { validateFormValues, listRuleSet, validateAssetLists, assetStatusOptionExcludes } from './validation';
+import { validateFormValues, validateAssetLists } from './validation';
 
 describe('validation', () => {
     describe('validateFormValues', () => {
@@ -190,83 +190,6 @@ describe('validation', () => {
             };
 
             expect(validateFormValues(formValues)).toBe(true);
-        });
-    });
-
-    describe('listRuleSet', () => {
-        it('should return an array of rule objects', () => {
-            const rules = listRuleSet();
-            expect(rules).toHaveLength(2);
-            expect(rules[0]).toHaveProperty('condition');
-            expect(rules[1]).toHaveProperty('condition');
-            expect(typeof rules[0].condition).toBe('function');
-            expect(typeof rules[1].condition).toBe('function');
-        });
-
-        describe('location rule', () => {
-            it('should return false when hasLocation is false', () => {
-                const rules = listRuleSet();
-                const formValues = { hasLocation: false };
-                const asset = { asset_next_test_due_date: '2025-12-01' };
-
-                expect(rules[0].condition({ formValues, asset })).toBe(false);
-            });
-
-            it('should return false when hasLocation is true but monthRange is -1', () => {
-                const rules = listRuleSet();
-                const formValues = { hasLocation: true, monthRange: '-1' };
-                const asset = { asset_next_test_due_date: '2025-12-01' };
-
-                expect(rules[0].condition({ formValues, asset })).toBe(false);
-            });
-
-            it('should return true when asset next test date is before target date', () => {
-                const rules = listRuleSet();
-                const formValues = { hasLocation: true, monthRange: '6' };
-                // Global MockDate is set to 6/30/2017, so 6 months from then is 12/30/2017
-                // Asset due on 2017-10-01 is before that, so should be excluded (return true)
-                const asset = { asset_next_test_due_date: '2017-10-01' };
-
-                expect(rules[0].condition({ formValues, asset })).toBe(true);
-            });
-
-            it('should return false when asset next test date is after target date', () => {
-                const rules = listRuleSet();
-                const formValues = { hasLocation: true, monthRange: '1' };
-                // Global MockDate is set to 6/30/2017, so 1 month from then is 7/30/2017
-                // Asset due on 2018-01-01 is after that, so should not be excluded (return false)
-                const asset = { asset_next_test_due_date: '2018-01-01' };
-
-                expect(rules[0].condition({ formValues, asset })).toBe(false);
-            });
-        });
-
-        describe('asset status rule', () => {
-            it('should return false when hasAssetStatus is false', () => {
-                const rules = listRuleSet();
-                const formValues = { hasAssetStatus: false };
-                const asset = { asset_status: 'FAILED' };
-
-                expect(rules[1].condition({ formValues, asset })).toBe(false);
-            });
-
-            it('should return true when asset status is in excluded list', () => {
-                const rules = listRuleSet();
-                const formValues = { hasAssetStatus: true };
-
-                assetStatusOptionExcludes.forEach(status => {
-                    const asset = { asset_status: status };
-                    expect(rules[1].condition({ formValues, asset })).toBe(true);
-                });
-            });
-
-            it('should return false when asset status is not in excluded list', () => {
-                const rules = listRuleSet();
-                const formValues = { hasAssetStatus: true };
-                const asset = { asset_status: 'CURRENT' };
-
-                expect(rules[1].condition({ formValues, asset })).toBe(false);
-            });
         });
     });
 

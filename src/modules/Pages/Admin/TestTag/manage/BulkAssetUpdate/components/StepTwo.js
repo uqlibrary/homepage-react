@@ -32,7 +32,8 @@ import { PERMISSIONS } from '../../../config/auth';
 import { AccordionWithCheckbox } from './AccordionWithCheckbox';
 import { FormContext } from '../../../helpers/hooks';
 import { makeAssetExcludedMessage } from './utils';
-import { assetStatusOptionExcludes, validateFormValues, validateAssetLists } from './validation';
+import { validateFormValues, validateAssetLists } from './validation';
+import { assetStatusOptionExcludes } from './rules';
 
 const moment = require('moment');
 

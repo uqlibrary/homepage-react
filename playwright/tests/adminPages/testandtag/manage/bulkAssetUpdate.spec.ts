@@ -256,7 +256,7 @@ test.describe('Test and Tag bulk asset update', () => {
             await expect(
                 page
                     .getByTestId('months_selector-bulk-asset-update-step-two-next-date-label')
-                    .getByText('(Includes assets up to 01 January 2026)'),
+                    .getByText('(Excludes assets up to 01 January 2026)'),
             ).toBeVisible();
 
             // check updated alert message
@@ -560,7 +560,7 @@ test.describe('Test and Tag bulk asset update', () => {
             await expect(
                 page
                     .getByTestId('months_selector-bulk-asset-update-step-two-next-date-label')
-                    .getByText('(Includes assets up to 01 January 2026)'),
+                    .getByText('(Excludes assets up to 01 January 2026)'),
             ).toBeVisible();
 
             // check updated alert message
