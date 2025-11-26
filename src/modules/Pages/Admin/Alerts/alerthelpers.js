@@ -18,7 +18,7 @@ export function makePreviewActionButtonJustNotifyUser(values) {
         // its a moment before it is available
         const preview = document.getElementById('alert-preview');
         const previewShadowRoot = !!preview && preview.shadowRoot;
-        const link = !!previewShadowRoot && previewShadowRoot.getElementById('alert-action-desktop');
+        const link = !!previewShadowRoot && previewShadowRoot.getElementById('alert-link');
         if (!!link) {
             link.setAttribute('href', '#');
             link.setAttribute('title', popuptext);
