@@ -202,6 +202,11 @@ export const EditSpaceForm = ({
     };
 
     const handleFieldCompletion = e => {
+        // clear what they entered in the new space type field - its already in the dropdown and selected there
+        if (e.target.id === 'add-space-type-new') {
+            e.target.value = '';
+        }
+
         const validationResult = formValid(formValues);
         if (validationResult !== true) {
             setErrorMessages(validationResult);
@@ -237,6 +242,9 @@ export const EditSpaceForm = ({
                 // it must exist and we are removing it
                 theNewValue = formValues?.facility_types?.filter(f => f?.facility_type_id !== clickedFacilityTypeId);
             }
+        } else if (prop === 'space_type_new') {
+            // update the form value for the Select, not the text field (which is cleared in the form completion
+            prop = 'space_type';
         } else if (prop === 'space_opening_hours_id') {
             const springshareElement = document.querySelector('.asLoaded');
             !!springshareElement &&
@@ -358,18 +366,18 @@ export const EditSpaceForm = ({
             Array.isArray(bookableSpacesRoomList?.data?.locations) &&
             bookableSpacesRoomList?.data?.locations?.length > 0
         ) {
-            return bookableSpacesRoomList?.data?.locations
-                .map(location => location?.space_type)
-                .filter(
-                    (spaceType, index, array) =>
-                        spaceType && // Remove null/undefined values
-                        spaceType?.trim() !== '' && // Remove empty strings
-                        array?.indexOf(spaceType) === index, // Remove duplicates
-                )
-                .sort(); // Sort alphabetically for better UX
+            const list = bookableSpacesRoomList?.data?.locations.map(location => location?.space_type);
+            !!formValues?.space_type && list.push(formValues?.space_type);
+            const filteredList = list?.filter(
+                (spaceType, index, array) =>
+                    spaceType && // Remove null/undefined values
+                    spaceType?.trim() !== '' && // Remove empty strings
+                    array?.indexOf(spaceType) === index, // Remove duplicates
+            );
+            return filteredList?.sort(); // Sort alphabetically for better UX
         }
         return [];
-    }, [bookableSpacesRoomListLoading, bookableSpacesRoomListError, bookableSpacesRoomList]);
+    }, [bookableSpacesRoomListLoading, bookableSpacesRoomListError, bookableSpacesRoomList, formValues?.space_type]);
 
     const reportCurrentLibraryAboutPage = location => (
         <>
@@ -588,31 +596,55 @@ export const EditSpaceForm = ({
                                     </StyledErrorMessageTypography>
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    id="space_type"
-                                    data-testid="space-type"
-                                    label="Space type"
-                                    variant="standard"
-                                    fullWidth
-                                    required
-                                    value={formValues?.space_type || ''}
-                                    onChange={handleChange('space_type')}
-                                    inputProps={{
-                                        list: 'space-type-list',
-                                    }}
-                                    onBlur={handleFieldCompletion}
-                                />
-                                <StyledErrorMessageTypography component={'div'}>
-                                    {reportErrorMessage('space_type')}
-                                </StyledErrorMessageTypography>
-                                {spaceTypeList && spaceTypeList?.length > 0 && (
-                                    <datalist id="space-type-list">
-                                        {spaceTypeList?.map((spaceType, index) => (
-                                            <option key={`spacetype-datalist-${index}`} value={spaceType} />
-                                        ))}
-                                    </datalist>
-                                )}
+                            <Grid item md={5} xs={12}>
+                                <FormControl variant="standard" fullWidth>
+                                    <InputLabel id="add-space-type-label" htmlFor="add-space-type-input">
+                                        Choose an existing Space type *
+                                    </InputLabel>
+                                    <Select
+                                        id="add-space-type"
+                                        labelId="add-space-type-label"
+                                        data-testid="space-type"
+                                        value={formValues?.space_type || ''}
+                                        onChange={handleChange('space_type')}
+                                        onBlur={handleFieldCompletion}
+                                        inputProps={{
+                                            id: 'add-space-type-input',
+                                            title: 'Choose an existing Space type',
+                                        }}
+                                    >
+                                        {!!spaceTypeList &&
+                                            spaceTypeList?.length > 0 &&
+                                            spaceTypeList?.map((spaceType, index) => {
+                                                return (
+                                                    <MenuItem value={spaceType} key={`spacetype-${index}`}>
+                                                        {spaceType}
+                                                    </MenuItem>
+                                                );
+                                            })}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item md={1} xs={12} style={{ marginBlock: 'auto', marginInline: 'auto' }}>
+                                ...or...
+                            </Grid>
+                            <Grid item md={6} xs={12}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="add-space-type-new-label">Enter new Space type</InputLabel>
+                                    <Input
+                                        id="add-space-type-new"
+                                        labelId="add-space-type-new-label"
+                                        data-testid="add-space-type-new"
+                                        onChange={handleChange('space_type_new')}
+                                        onBlur={handleFieldCompletion}
+                                        inputProps={{
+                                            'aria-labelledby': 'add-space-type-new-label',
+                                        }}
+                                    />
+                                    <StyledErrorMessageTypography component={'div'}>
+                                        {reportErrorMessage('space_type')}
+                                    </StyledErrorMessageTypography>
+                                </FormControl>
                             </Grid>
                             <Grid item xs={12}>
                                 {/* will upgrade this to ckeditor (or replacement) eventually*/}
@@ -675,14 +707,23 @@ export const EditSpaceForm = ({
                             </Grid>
                             <Grid item xs={4}>
                                 <FormControl variant="standard" fullWidth>
-                                    <InputLabel id="add-space-select-campus-label">Campus *</InputLabel>
+                                    <InputLabel
+                                        id="add-space-select-campus-label"
+                                        htmlFor="add-space-select-campus-input"
+                                    >
+                                        Campus *
+                                    </InputLabel>
                                     <Select
-                                        labelId="add-space-select-campus-label"
                                         id="add-space-select-campus"
+                                        labelId="add-space-select-campus-label"
                                         data-testid="add-space-select-campus"
                                         value={formValues?.campus_id}
                                         onChange={handleChange('campus_id')}
                                         required
+                                        inputProps={{
+                                            id: 'add-space-select-campus-input',
+                                            'aria-labelledby': 'add-space-select-campus-label',
+                                        }}
                                     >
                                         {!!currentCampusList &&
                                             currentCampusList?.length > 0 &&
@@ -692,19 +733,30 @@ export const EditSpaceForm = ({
                                                 </MenuItem>
                                             ))}
                                     </Select>
-                                    {/* <StyledErrorMessageTypography component={'div'}>{reportErrorMessage('??')}</StyledErrorMessageTypography>*/}
+                                    <StyledErrorMessageTypography component={'div'}>
+                                        {reportErrorMessage('??')}
+                                    </StyledErrorMessageTypography>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={4}>
                                 <FormControl variant="standard" fullWidth>
-                                    <InputLabel id="add-space-select-library-label">Library *</InputLabel>
+                                    <InputLabel
+                                        id="add-space-select-library-label"
+                                        htmlFor="add-space-select-library-input"
+                                    >
+                                        Library *
+                                    </InputLabel>
                                     <Select
-                                        labelId="add-space-select-library-label"
                                         id="add-space-select-library"
+                                        labelId="add-space-select-library-label"
                                         data-testid="add-space-select-library"
                                         value={formValues?.library_id}
                                         onChange={handleChange('library_id')}
                                         required
+                                        inputProps={{
+                                            id: 'add-space-select-library-input',
+                                            'aria-labelledby': 'add-space-select-library-label',
+                                        }}
                                     >
                                         {!!currentCampusLibraries &&
                                             currentCampusLibraries?.length > 0 &&
@@ -714,19 +766,30 @@ export const EditSpaceForm = ({
                                                 </MenuItem>
                                             ))}
                                     </Select>
-                                    {/* <StyledErrorMessageTypography component={'div'}>{reportErrorMessage('??')}</StyledErrorMessageTypography>*/}
+                                    <StyledErrorMessageTypography component={'div'}>
+                                        {reportErrorMessage('??')}
+                                    </StyledErrorMessageTypography>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={4}>
                                 <FormControl variant="standard" fullWidth>
-                                    <InputLabel id="add-space-select-floor-label">Floor *</InputLabel>
+                                    <InputLabel
+                                        id="add-space-select-floor-label"
+                                        htmlFor="add-space-select-floor-input"
+                                    >
+                                        Floor *
+                                    </InputLabel>
                                     <Select
-                                        labelId="add-space-select-floor-label"
                                         id="add-space-select-floor"
+                                        labelId="add-space-select-floor-label"
                                         data-testid="add-space-select-floor"
                                         value={formValues?.floor_id}
                                         onChange={handleChange('floor_id')}
                                         required
+                                        inputProps={{
+                                            id: 'add-space-select-floor-input',
+                                            'aria-labelledby': 'add-space-select-floor-label',
+                                        }}
                                     >
                                         {!!currentLibraryFloors &&
                                             currentLibraryFloors?.length > 0 &&
@@ -748,7 +811,9 @@ export const EditSpaceForm = ({
                                                 );
                                             })}
                                     </Select>
-                                    {/* <StyledErrorMessageTypography component={'div'}>{reportErrorMessage('??')}</StyledErrorMessageTypography>*/}
+                                    <StyledErrorMessageTypography component={'div'}>
+                                        {reportErrorMessage('??')}
+                                    </StyledErrorMessageTypography>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
@@ -791,16 +856,23 @@ export const EditSpaceForm = ({
                             </Grid>
                             <Grid item xs={12}>
                                 <StyledSpringshareHouseFormControl variant="standard" fullWidth className="asLoaded">
-                                    <InputLabel id="add-space-springshare-id-label">
+                                    <InputLabel
+                                        id="add-space-springshare-id-label"
+                                        htmlFor="add-space-springshare-input"
+                                    >
                                         Choose the Springshare Library to use for Opening hours *
                                     </InputLabel>
                                     <Select
-                                        labelId="add-space-springshare-id-label"
                                         id="add-space-springshare-id"
+                                        labelId="add-space-springshare-id-label"
                                         data-testid="add-space-springshare-id"
                                         value={formValues?.space_opening_hours_id} // selectedSpringshareOption
                                         onChange={handleChange('space_opening_hours_id')}
                                         required
+                                        inputProps={{
+                                            id: 'add-space-springshare-input',
+                                            'aria-labelledby': 'add-space-springshare-id-label',
+                                        }}
                                     >
                                         {!!springshareList &&
                                             springshareList?.length > 0 &&

@@ -390,10 +390,15 @@ test.describe('Spaces Admin - edit space', () => {
         page.getByTestId('space-name')
             .locator('input')
             .fill('New space name');
-        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        page.getByTestId('space-type')
+
+        await expect(page.getByTestId('add-space-type-new').locator('input')).toBeVisible();
+        page.getByTestId('add-space-type-new')
             .locator('input')
             .fill('New space type');
+        await page.keyboard.press('Tab');
+        // the "new space type" field auto clears on blur, and the select preloads
+        await expect(page.getByTestId('add-space-type-new').locator('input')).toBeEmpty();
+        await expect(page.getByTestId('space-type').locator('input')).toHaveValue('New space type');
 
         await expect(page.getByTestId('add-space-description')).toBeVisible();
         await page.getByTestId('add-space-description').fill('a long description that has a number of words');
