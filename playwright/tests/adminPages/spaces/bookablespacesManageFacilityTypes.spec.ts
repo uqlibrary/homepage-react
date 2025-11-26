@@ -393,13 +393,16 @@ test.describe('Spaces Admin - edit group dialog', () => {
         await noiseLevelGroupEditButton.click();
         await expect(page.getByTestId(`dialogMessage`)).toBeVisible();
         await expect(page.getByTestId(`dialogMessage`)).toContainText(
-            "This facility group's child types will be removed from 2 Spaces if you delete it. The Spaces will not be deleted.",
+            "This facility group's child types will be removed from 2 Spaces if you delete it. Those Spaces will not be deleted.",
         );
         await cancelButton.click();
 
         const ediaGroupEditButton = page.getByTestId('edit-group-8-button');
         await ediaGroupEditButton.click();
         await expect(page.getByTestId(`dialogMessage`)).toBeVisible();
+        await expect(page.getByTestId(`dialogMessage`)).not.toContainText(
+            "This facility group's child types will be removed from 2 Spaces if you delete it. Those Spaces will not be deleted.",
+        );
         await expect(page.getByTestId(`dialogMessage`)).toContainText(
             "This facility group's child types will be removed from 1 Space if you delete it. The Space will not be deleted.",
         );
@@ -408,6 +411,9 @@ test.describe('Spaces Admin - edit group dialog', () => {
         const unusedGroupEditButton = page.getByTestId('edit-group-9-button');
         await unusedGroupEditButton.click();
         await expect(page.getByTestId(`dialogMessage`)).toBeVisible();
+        await expect(page.getByTestId(`dialogMessage`)).not.toContainText(
+            "This facility group's child types will be removed from 1 Space if you delete it. The Space will not be deleted.",
+        );
         await expect(page.getByTestId(`dialogMessage`)).toContainText(
             'This facility group can be deleted - none of its child types are currently showing for any Spaces.',
         );
@@ -428,10 +434,49 @@ test.describe('Spaces Admin - edit group dialog', () => {
 
         const expectedValues = {
             facility_type_group_name: 'Noise level appended',
+            facility_type_group_loads_open: '1',
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
-    test('save group name change is accessible', async ({ page, context }) => {
+    test('can change a group to open UNcollapsed', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        const noiseLevelGroupEditButton = page.getByTestId('edit-group-5-button');
+        const saveButton = page.getByTestId('dialog-save-button');
+        const radioCollapsedField = page.getByTestId('facility_type_group_loads_open-collapsed');
+
+        await noiseLevelGroupEditButton.click();
+
+        await radioCollapsedField.click();
+
+        await saveButton.click();
+
+        const expectedValues = {
+            facility_type_group_name: 'Acceptable noise',
+            facility_type_group_loads_open: '0',
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
+    test('can change a group to open collapsed', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        const noiseLevelGroupEditButton = page.getByTestId('edit-group-2-button');
+        const saveButton = page.getByTestId('dialog-save-button');
+        const radioUnCollapsedField = page.getByTestId('facility_type_group_loads_open-open');
+
+        await noiseLevelGroupEditButton.click();
+
+        await radioUnCollapsedField.click();
+
+        await saveButton.click();
+
+        const expectedValues = {
+            facility_type_group_name: 'On this floor',
+            facility_type_group_loads_open: '1',
+        };
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
+    test('save group name change is accessible', async ({ page }) => {
         const noiseLevelGroupEditButton = page.getByTestId('edit-group-4-button');
 
         await noiseLevelGroupEditButton.click();
@@ -551,7 +596,7 @@ test.describe('Spaces Admin - edit facility type dialog', () => {
         const hasONEspaceWarningMessage =
             'This facility type will be removed from 1 Space if you delete it. The Space will not be deleted.';
         const hasTWOspacesWarningMessage =
-            'This facility type will be removed from 2 Spaces if you delete it. The Spaces will not be deleted.';
+            'This facility type will be removed from 2 Spaces if you delete it. Those Spaces will not be deleted.';
         const hasNoSpacesWarninhMessage =
             'This facility type can be deleted - it is not currently showing for any Spaces.';
 
