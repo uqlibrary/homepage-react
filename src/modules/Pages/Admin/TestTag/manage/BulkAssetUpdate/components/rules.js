@@ -16,6 +16,9 @@ export const excludeAssetRules = [
             if (formValues.hasLocation) {
                 // next inspection date range selected
                 if (formValues.monthRange !== '-1') {
+                    // auto exclude any asset without a next test due date
+                    if (!!!asset.asset_next_test_due_date) return true;
+
                     const targetDate = moment()
                         .startOf('day')
                         .add(formValues.monthRange, 'months');
