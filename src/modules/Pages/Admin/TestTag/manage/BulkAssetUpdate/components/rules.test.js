@@ -40,6 +40,15 @@ describe('excludeAssetRules', () => {
 
             expect(excludeAssetRules[0].condition({ formValues, asset })).toBe(false);
         });
+
+        it('should return true when asset next test date is null', () => {
+            const formValues = { hasLocation: true, monthRange: '1' };
+            // Global MockDate is set to 6/30/2017, so 1 month from then is 7/30/2017
+            // Asset due on 2018-01-01 is after that, so should not be excluded (return false)
+            const asset = { asset_next_test_due_date: null };
+
+            expect(excludeAssetRules[0].condition({ formValues, asset })).toBe(true);
+        });
     });
 
     describe('asset status rule', () => {
