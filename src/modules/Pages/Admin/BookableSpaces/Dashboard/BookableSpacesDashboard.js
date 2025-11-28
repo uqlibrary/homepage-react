@@ -177,13 +177,18 @@ export const BookableSpacesDashboard = ({
                             {facilityTypeList?.data?.facility_type_groups?.length > 0 && (
                                 // top row of the two-row table head, to label the facilities block
                                 <StyledHeaderTableRow data-testid="spaces-dashboard-header-row">
-                                    {[...Array(2).keys()].map((unused, index) => (
-                                        <TableCell
-                                            component="th"
-                                            sx={{ borderBottomWidth: 0, paddingBlock: 0 }}
-                                            key={`header-cell-${index}`}
-                                        />
-                                    ))}
+                                    <TableCell
+                                        component="th"
+                                        sx={{ borderBottomWidth: 0, paddingBlock: 0 }}
+                                        key={'header-cell-0'}
+                                    />
+                                    <TableCell
+                                        component="th"
+                                        sx={{ borderBottomWidth: 0, paddingBlock: 0, textAlign: 'right' }}
+                                        key={'header-cell-1'}
+                                    >
+                                        Filters:
+                                    </TableCell>
                                     {sortedFacilityTypeGroups?.map((group, index) => {
                                         return (
                                             <TableCell
