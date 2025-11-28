@@ -14,6 +14,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
 
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -85,6 +86,8 @@ const StyledStickyTableCell = styled(TableCell)(() => ({
     left: 0,
 }));
 
+const CAMPUS_ID_UNSELECTED = '';
+
 export const BookableSpacesDashboard = ({
     actions,
     bookableSpacesRoomList,
@@ -112,15 +115,19 @@ export const BookableSpacesDashboard = ({
 
     const { account } = useAccountContext();
 
-    const [availableFilters, setAvailableFilters2] = React.useState([]);
+    // the filters we will show on the page
+    const [availableFilters, setAvailableFilters2] = React.useState([
+        { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
+    ]);
     const setAvailableFilters = availableFilters => {
         console.log('setAvailableFilters', availableFilters);
         setAvailableFilters2(availableFilters);
     };
     const resetAvailableFilters = (filterTypeName, filterTypeValue) => {
-        const newFilterTypes = availableFilters.filter(g => {
-            return g.filterType !== filterTypeName;
-        });
+        const newFilterTypes =
+            availableFilters?.filter(g => {
+                return g.filterType !== filterTypeName;
+            }) || [];
         newFilterTypes.push({
             filterType: filterTypeName,
             filterValue: filterTypeValue,
@@ -134,11 +141,11 @@ export const BookableSpacesDashboard = ({
                 ...new Set(bookableSpacesRoomList?.data?.locations?.map(space => space.space_campus_id)),
             ];
 
-            const availableCampusList = campusList.filter(c => campusIdList.includes(c.campus_id));
+            const availableCampusList = campusList?.filter(c => campusIdList.includes(c.campus_id));
             availableCampusList.unshift({
-                campus_id: 0,
+                campus_id: CAMPUS_ID_UNSELECTED,
                 campus_number: 'none',
-                campus_name: 'Filter by a campus',
+                campus_name: 'Show all campuses',
                 libraries: [],
             });
 
@@ -177,22 +184,34 @@ export const BookableSpacesDashboard = ({
                 actions.loadBookableSpaceCampusChildren();
             }
         }
-    }, [bookableSpacesRoomListError, bookableSpacesRoomListLoading, bookableSpacesRoomList]);
+    }, [
+        bookableSpacesRoomListError,
+        bookableSpacesRoomListLoading,
+        bookableSpacesRoomList,
+        campusListError,
+        campusListLoading,
+        campusList,
+    ]);
 
-    const [selectedFilters, setSelectedFilters] = React.useState([]);
+    const [selectedFilters, setSelectedFilters] = React.useState([
+        { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
+    ]);
     const resetSelectedFilters = (filterTypeName, filterTypeValue) => {
-        const newFilterTypes = availableFilters.filter(g => {
+        const newFilterTypes = selectedFilters?.filter(g => {
             return g.filterType !== filterTypeName;
         });
         newFilterTypes.push({
             filterType: filterTypeName,
             filterValue: filterTypeValue,
         });
+        setSelectedFilters(newFilterTypes);
+
+        // show-hide Spaces according to selected filters
         bookableSpacesRoomList?.data?.locations?.forEach(s => {
             let showSpace = true;
             newFilterTypes.forEach(f => {
                 if (f.filterType === 'campus') {
-                    if (f.filterValue !== 0 && s.space_campus_id !== f.filterValue) {
+                    if (f.filterValue !== CAMPUS_ID_UNSELECTED && s.space_campus_id !== f.filterValue) {
                         showSpace = false;
                     }
                 }
@@ -205,9 +224,9 @@ export const BookableSpacesDashboard = ({
                 !spaceRow.classList.contains('hidden') && spaceRow.classList.add('hidden');
             }
         });
-
-        setSelectedFilters(newFilterTypes);
     };
+    // const isCampusSelected =
+    //     selectedFilters?.find(f => f.filterType === 'campus')?.filterValue === CAMPUS_ID_UNSELECTED;
 
     function hasFacility(facilityType, bookableSpace) {
         return bookableSpace?.facility_types.some(spaceFacility => {
@@ -219,7 +238,7 @@ export const BookableSpacesDashboard = ({
 
     function prefilterFacilityData(data) {
         // first ensure sorted in sort order
-        const sortedGroups = [...data?.facility_type_groups].sort(
+        const sortedGroups = [...data?.facility_type_groups]?.sort(
             (a, b) => a.facility_type_group_order - b.facility_type_group_order,
         );
 
@@ -227,7 +246,7 @@ export const BookableSpacesDashboard = ({
         let overallCounter = 1;
         return sortedGroups?.map(group => {
             // sort the facility types alphabetically (they should already be, but...)
-            const sortedChildren = [...group.facility_type_children].sort((a, b) =>
+            const sortedChildren = [...group.facility_type_children]?.sort((a, b) =>
                 a.facility_type_name.localeCompare(b.facility_type_name),
             );
 
@@ -260,11 +279,13 @@ export const BookableSpacesDashboard = ({
 
         const sortedFacilityTypeGroups = prefilterFacilityData(facilityTypeList?.data);
 
-        const campusFilterTypes = availableFilters.find(ft => ft.filterType === 'campus')?.filterValue;
+        const campusFilterTypes = availableFilters?.find(ft => ft.filterType === 'campus')?.filterValue;
         return (
             <>
                 <div data-testid="tablefilter">
-                    Filter the list:
+                    <Typography component={'h3'} variant={'h6'}>
+                        Filter the list:
+                    </Typography>
                     <FormControl variant="standard" fullWidth>
                         <InputLabel id="filter-by-campus-label" htmlFor="filter-by-campus-input">
                             By campus
@@ -273,7 +294,10 @@ export const BookableSpacesDashboard = ({
                             id="filter-by-campus"
                             labelId="filter-by-campus-label"
                             data-testid="filter-by-campus"
-                            value={selectedFilters.find(f => f.filterType === 'campus')?.filterValue}
+                            value={
+                                selectedFilters?.find(f => f.filterType === 'campus')?.filterValue ||
+                                CAMPUS_ID_UNSELECTED
+                            }
                             onChange={selectFilter('campus')}
                             inputProps={{
                                 id: 'filter-by-campus-input',
@@ -283,7 +307,7 @@ export const BookableSpacesDashboard = ({
                             {!!campusFilterTypes &&
                                 !!campusFilterTypes &&
                                 campusFilterTypes?.length > 0 &&
-                                campusFilterTypes.map((campus, index) => (
+                                campusFilterTypes?.map((campus, index) => (
                                     <MenuItem
                                         value={campus.campus_id}
                                         key={`filter-by-campus-menuitem-${index}`}
@@ -294,6 +318,7 @@ export const BookableSpacesDashboard = ({
                                 ))}
                         </Select>
                     </FormControl>
+                    {/* {!!isCampusSelected && <span>choose library</span>}*/}
                 </div>
                 <StyledTableContainer>
                     <Table

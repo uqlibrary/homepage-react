@@ -135,10 +135,10 @@ export const springshareLocations = weeklyHours => {
         !!weeklyHours?.locations &&
         weeklyHours.locations.length > 0 &&
         weeklyHours.locations
-            .filter(l => l.lid !== ASKUS_SPRINGSHARE_ID)
-            .sort((a, b) => a.display_name.localeCompare(b.display_name))
+            ?.filter(l => l.lid !== ASKUS_SPRINGSHARE_ID)
+            ?.sort((a, b) => a.display_name.localeCompare(b.display_name))
             // eslint-disable-next-line camelcase
-            .map(({ lid, display_name }) => ({
+            ?.map(({ lid, display_name }) => ({
                 id: lid,
                 // eslint-disable-next-line camelcase
                 display_name,

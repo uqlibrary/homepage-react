@@ -261,7 +261,7 @@ export const BookableSpacesManageFacilities = ({
 
         // show the form
         const flatFacilityTypeList = getFlatFacilityTypeList(facilityTypeList);
-        const facilityTypeDetails = flatFacilityTypeList.find(item => item.facility_type_id === facilityTypeId);
+        const facilityTypeDetails = flatFacilityTypeList?.find(item => item.facility_type_id === facilityTypeId);
         const formBody = `<div>
                 <h2 data-testid="add-facility-type-heading">Edit a Facility Type</h2>
                 <input type="hidden" name="facility_type_id" id="facility_type_id" value="${facilityTypeId}" />
@@ -582,7 +582,7 @@ export const BookableSpacesManageFacilities = ({
         const buttonClicked = e.target.closest('button');
         const groupId = buttonClicked.getAttribute('data-groupid');
         const thisGroup =
-            facilityTypeList?.data?.facility_type_groups.find(
+            facilityTypeList?.data?.facility_type_groups?.find(
                 g => g.facility_type_group_id === parseInt(groupId, 10),
             ) || {};
         console.log('buttonClicked=', buttonClicked);
@@ -706,7 +706,7 @@ export const BookableSpacesManageFacilities = ({
                                                         b.facility_type_group_name,
                                                     ),
                                                 ) || []
-                                            ).map(group => {
+                                            )?.map(group => {
                                                 const groupName = group.facility_type_group_name;
                                                 const groupId = group.facility_type_group_id;
                                                 return (
@@ -743,12 +743,12 @@ export const BookableSpacesManageFacilities = ({
                                                             </IconButton>
                                                         </div>
                                                         <Typography component={'div'} variant={'p'}>
-                                                            {group.facility_type_group_loads_open
+                                                            {group?.facility_type_group_loads_open
                                                                 ? 'Loads open'
                                                                 : 'Loads collapsed'}
                                                         </Typography>
 
-                                                        {group.facility_type_children.map(facilityType => {
+                                                        {group?.facility_type_children?.map(facilityType => {
                                                             const facilityTypeId = facilityType.facility_type_id;
                                                             return (
                                                                 <div key={`facilitytype-list-${facilityTypeId}`}>

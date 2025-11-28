@@ -541,11 +541,10 @@ test.describe('Spaces Admin - manage locations', () => {
             // deselect campuses
             page.getByTestId('filter-by-campus').click();
             await expect(page.locator('ul[aria-labelledby="filter-by-campus-label"] li:first-of-type')).toContainText(
-                'Filter by a campus',
+                'Show all campuses',
             );
             page.locator('ul[aria-labelledby="filter-by-campus-label"] li:first-of-type').click(); // unset
-            await expect(page.getByTestId('filter-by-campus').locator('input')).toHaveValue('0');
-            await expect(page.getByTestId('filter-by-campus').locator('div')).toContainText('Filter by a campus');
+            await expect(page.getByTestId('filter-by-campus').locator('input')).toHaveValue('');
 
             // all campus spaces display
             await expect(

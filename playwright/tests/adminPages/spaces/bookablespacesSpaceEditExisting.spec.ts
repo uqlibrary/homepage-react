@@ -20,7 +20,7 @@ test.describe('Spaces Admin - edit spaces', () => {
     });
 });
 test.describe('Spaces Admin - edit pages load with correct data', () => {
-    test('edit Library 1 loads correctly', async ({ page }) => {
+    test('Library Space 1 edit page loads correctly', async ({ page }) => {
         await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
         // wait for page to load
@@ -82,7 +82,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
         await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
     });
-    test('edit Library 2 loads correctly', async ({ page }) => {
+    test('Library Space 2 edit page loads correctly', async ({ page }) => {
         await page.goto('/admin/spaces/edit/df40_2jsf_zdk5?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
         // wait for page to load
@@ -151,7 +151,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
         await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
     });
-    test('edit Library 3, Andrew Liveris building, loads correctly', async ({ page }) => {
+    test('Library Space 3, Andrew Liveris building, edit page loads correctly', async ({ page }) => {
         await page.goto('/admin/spaces/edit/97fd5_nm39_gh29?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
         // wait for page to load
@@ -245,6 +245,9 @@ test.describe('Spaces Admin - edit space', () => {
 
     test('can save with only required fields', async ({ page, context }) => {
         await setTestDataCookie(context, page);
+
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-name').locator('input')).toHaveValue('01-W431');
 
         // clear as many of the non-required fields as is possible and confirm will submit
 
@@ -393,6 +396,9 @@ test.describe('Spaces Admin - edit space', () => {
             .locator('input')
             .fill('New space type');
         await page.keyboard.press('Tab');
+        page.getByTestId('add-space-description').click(); // the Tab doesn't always seem to work - but clicking away is another valid way to blue the previous field
+        await expect(page.getByTestId('add-space-description')).toBeFocused();
+
         // the "new space type" field auto clears on blur, and the select preloads
         await expect(page.getByTestId('add-space-type-new').locator('input')).toBeEmpty();
         await expect(page.getByTestId('space-type').locator('input')).toHaveValue('New space type');
