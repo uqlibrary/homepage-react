@@ -130,6 +130,12 @@ const StyledFilterSpaceListTypographyHeading = styled('h3')(() => ({
     justifyContent: 'flex-start',
     alignItems: 'center',
     marginBottom: 0,
+    '& .countSelectedCheckboxes': {
+        paddingLeft: '0.5rem',
+        fontSize: '0.75rem',
+        fontWeight: 400,
+        fontStyle: 'italic',
+    },
 }));
 const StyledSidebarDiv = styled('div')(() => ({
     '& .hidden': {
@@ -244,10 +250,14 @@ export const BookableSpacesList = ({
         setFacilityTypeFilters2(data);
     };
     const setFilters = (facilityTypeId, isSelected, isUnselected) => {
+        const removedFilter = facilityTypeFilters?.find(ftf => {
+            return ftf.facility_type_id === facilityTypeId;
+        });
         const newFilters = facilityTypeFilters?.filter(ftf => {
             return ftf.facility_type_id !== facilityTypeId;
         });
         newFilters.push({
+            facility_type_group_id: removedFilter.facility_type_group_id,
             facility_type_id: facilityTypeId,
             selected: isSelected,
             unselected: isUnselected,
@@ -296,6 +306,7 @@ export const BookableSpacesList = ({
 
             const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
             const newFilters = flatFacilityTypeList.map(facilityType => ({
+                facility_type_group_id: facilityType.facility_type_group_id,
                 facility_type_id: facilityType.facility_type_id,
                 selected: false,
                 unselected: false,
@@ -704,11 +715,9 @@ export const BookableSpacesList = ({
                 : [];
 
         const hasActiveFilters = facilityTypeFilters?.some(f => !!f.selected || !!f.unselected);
-        console.log('hasActiveFilters=', hasActiveFilters);
 
         const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
         const checkFiltersList = facilityTypeFilters?.filter(f => !!f.selected || !!f.unselected);
-        console.log('checkFiltersList', checkFiltersList?.length, checkFiltersList);
         return (
             <>
                 {!!hasActiveFilters && (
@@ -775,17 +784,20 @@ export const BookableSpacesList = ({
                         Filter Spaces
                     </Typography>
                     {sortedUsedGroups.map(group => {
-                        const isGroupOpen = !!facilityTypeFilterGroupOpenNess.find(
-                            o => o.groupId === group.facility_type_group_id,
-                        )?.isGroupOpen;
-                        !isGroupOpen && collapseFilterGroup(group.facility_type_group_id, true);
-
                         const filterGroupId = group.facility_type_group_id;
+                        const isGroupOpen = !!facilityTypeFilterGroupOpenNess.find(o => o.groupId === filterGroupId)
+                            ?.isGroupOpen;
+                        !isGroupOpen && collapseFilterGroup(filterGroupId, true);
+                        const groupLength = facilityTypeFilters.filter(
+                            ftf => ftf.facility_type_group_id === filterGroupId,
+                        ).length;
+                        const numberChecked = facilityTypeFilters.filter(
+                            ftf => ftf.facility_type_group_id === filterGroupId && (ftf.selected || ftf.unselected),
+                        ).length;
                         return (
                             <StyleFacilityGroup
-                                key={group.facility_type_group_id}
-                                className="facility-group"
-                                data-testid={`filter-group-block-${group.facility_type_group_id}`}
+                                key={`facility-group-${filterGroupId}`}
+                                data-testid={`filter-group-block-${filterGroupId}`}
                             >
                                 <StyledFilterSpaceListTypographyHeading
                                     component={'h3'}
@@ -802,6 +814,14 @@ export const BookableSpacesList = ({
                                     >
                                         <KeyboardArrowDownIcon />
                                     </IconButton>
+                                    {!isGroupOpen && numberChecked > 0 && (
+                                        <span
+                                            className="countSelectedCheckboxes"
+                                            data-testid={`facility-type-group-${filterGroupId}-open-count`}
+                                        >
+                                            ({numberChecked} of {groupLength})
+                                        </span>
+                                    )}
                                     <IconButton
                                         id={`facility-type-group-${filterGroupId}-collapsed`}
                                         data-testid={`facility-type-group-${filterGroupId}-collapsed`}

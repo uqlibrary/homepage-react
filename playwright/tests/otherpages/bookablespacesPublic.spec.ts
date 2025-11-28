@@ -108,7 +108,7 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId('no-spaces')).toBeVisible();
         await expect(page.getByTestId('no-spaces')).toContainText('No locations found - please try again soon.');
     });
-    test('can open-collapse sidebar filter type groups', async ({ page }) => {
+    test('can open collapse block contents', async ({ page }) => {
         await page.goto('spaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
@@ -512,21 +512,22 @@ test.describe('Spaces', () => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
 
+            // the group we will open appears as expected
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)).toBeVisible();
             await expect(
                 filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)
                     .locator('h3')
                     .getByText(/On this floor/),
             ).toBeVisible();
-            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-open`)).not.toBeVisible();
-            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-collapsed`)).toBeVisible();
-            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).not.toBeVisible();
             await expect(
                 filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)
                     .locator('ul')
                     .locator(':scope > *'),
             ).toHaveCount(4);
 
+            // certain groups are showing or hiding
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-open`)).not.toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-collapsed`)).toBeVisible();
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).not.toBeVisible();
             await expect(
                 filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul li:first-of-type'),
@@ -542,10 +543,11 @@ test.describe('Spaces', () => {
             await expect(filterGroup(FILTER_GROUP_ROOM_FEATURES, page).locator('ul')).not.toBeVisible();
             await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page).locator('ul')).toBeVisible();
 
-            // open "on this floor"
+            // open "on this floor" sidebar filter type group
             await page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-collapsed`).click();
 
-            // visibility flips
+            // the group we opened has completely changed - visibility flips
+            await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul')).toBeVisible();
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page).locator('ul li:first-of-type')).toBeVisible();
             await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-open`)).toBeVisible();
             await expect(
@@ -574,7 +576,7 @@ test.describe('Spaces', () => {
             await expect(filterGroup(FILTER_GROUP_ROOM_FEATURES, page).locator('ul')).not.toBeVisible();
             await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page).locator('ul')).toBeVisible();
 
-            // open "on this floor" sidebar filter type roup
+            // open "on this floor" sidebar filter type group
             await page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-collapsed`).click();
 
             await expect(filterGroup(FILTER_GROUP_EDIA, page).locator('ul')).toBeVisible();
@@ -628,6 +630,112 @@ test.describe('Spaces', () => {
             await expect(filterGroup(FILTER_GROUP_NOISE_LEVEL, page).locator('ul')).not.toBeVisible();
             await expect(filterGroup(FILTER_GROUP_ROOM_FEATURES, page).locator('ul')).not.toBeVisible();
             await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page).locator('ul')).toBeVisible();
+        });
+        test('sidebar filter type groups show count when selected and collapsed', async ({ page }) => {
+            await page.goto('spaces');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+
+            const openCountTestId = (groupId: number) => `facility-type-group-${groupId}-open-count`;
+
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_EDIA))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_ROOM_TYPE))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_LIGHTING))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_NOISE_LEVEL))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ROOM_FEATURES))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_FEATURES))).not.toBeVisible();
+
+            // open "on this floor" sidebar filter type group
+            await page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-collapsed`).click();
+
+            // filter to show "Recharge Station" only
+            const rechargeStationId = 29;
+            const rechargeStationCheckbox = page.getByTestId(`facility-type-listitem-${rechargeStationId}`);
+            await expect(rechargeStationCheckbox.locator('label:first-of-type')).toBeVisible();
+            await expect(rechargeStationCheckbox.locator('label:first-of-type')).toContainText('Recharge Station');
+            await rechargeStationCheckbox.locator('span input').check();
+
+            // still no counts show
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_EDIA))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_ROOM_TYPE))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_LIGHTING))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_NOISE_LEVEL))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ROOM_FEATURES))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_FEATURES))).not.toBeVisible();
+
+            // re-collapse "on this floor" sidebar filter type group
+            await page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-open`).click();
+
+            // NOW a count shows on that single collapsed group
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).toHaveText('(1 of 4)');
+
+            // collapse a few more, to be sure
+            await page.getByTestId(`facility-type-group-${FILTER_GROUP_EDIA}-open`).click();
+            await page.getByTestId(`facility-type-group-${FILTER_GROUP_NOISE_LEVEL}-open`).click();
+            await page.getByTestId(`facility-type-group-${FILTER_GROUP_SPACE_FEATURES}-open`).click();
+
+            // other counts still don't show
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_EDIA))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_ROOM_TYPE))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_LIGHTING))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_NOISE_LEVEL))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ROOM_FEATURES))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_FEATURES))).not.toBeVisible();
+        });
+        test('sidebar filter type groups show count when selected and collapsed with single entry', async ({
+            page,
+        }) => {
+            await page.goto('spaces');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.getByTestId('sidebarCheckboxes').getByText(/Filter Spaces/)).toBeVisible();
+
+            const openCountTestId = (groupId: number) => `facility-type-group-${groupId}-open-count`;
+
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_EDIA))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_ROOM_TYPE))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_LIGHTING))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_NOISE_LEVEL))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ROOM_FEATURES))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_FEATURES))).not.toBeVisible();
+
+            // filter to show "Contains Artwork" only
+            const containsArtworkId = 57;
+            const containsArtworkCheckbox = page.getByTestId(`facility-type-listitem-${containsArtworkId}`);
+            await expect(containsArtworkCheckbox.locator('label:first-of-type')).toBeVisible();
+            await expect(containsArtworkCheckbox.locator('label:first-of-type')).toContainText('Contains Artwork');
+            await containsArtworkCheckbox.locator('span input').check();
+
+            // still no counts show
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_EDIA))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_ROOM_TYPE))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_LIGHTING))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_NOISE_LEVEL))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ROOM_FEATURES))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_FEATURES))).not.toBeVisible();
+
+            // collapse "on this floor" sidebar filter type group
+            await page.getByTestId(`facility-type-group-${FILTER_GROUP_EDIA}-open`).click();
+
+            // NOW a count shows on that single collapsed group
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_EDIA))).toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_EDIA))).toHaveText('(1 of 1)');
+
+            // collapse a few more, to be sure
+            await page.getByTestId(`facility-type-group-${FILTER_GROUP_NOISE_LEVEL}-open`).click();
+            await page.getByTestId(`facility-type-group-${FILTER_GROUP_SPACE_FEATURES}-open`).click();
+
+            // other counts still don't show
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_ROOM_TYPE))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ON_THIS_FLOOR))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_LIGHTING))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_NOISE_LEVEL))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_ROOM_FEATURES))).not.toBeVisible();
+            await expect(page.getByTestId(openCountTestId(FILTER_GROUP_SPACE_FEATURES))).not.toBeVisible();
         });
     });
 });

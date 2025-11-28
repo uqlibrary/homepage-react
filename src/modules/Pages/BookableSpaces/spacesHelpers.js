@@ -47,12 +47,14 @@ export function getFriendlyLocationDescription(bookableSpace) {
 }
 export const getFlatFacilityTypeList = facilityTypes => {
     return (
-        facilityTypes?.data?.facility_type_groups?.flatMap(group =>
-            group?.facility_type_children?.map(child => ({
+        facilityTypes?.data?.facility_type_groups?.flatMap(group => {
+            const groupId = group.facility_type_group_id;
+            return group?.facility_type_children?.map(child => ({
+                facility_type_group_id: groupId,
                 facility_type_id: child.facility_type_id,
                 facility_type_name: child.facility_type_name,
-            })),
-        ) || []
+            }));
+        }) || []
     );
 };
 export const getFilteredFacilityTypeList = (bookableSpacesRoomList, facilityTypeList) => {
