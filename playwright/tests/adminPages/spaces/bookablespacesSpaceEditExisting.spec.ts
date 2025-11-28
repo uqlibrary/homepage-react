@@ -54,9 +54,6 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-springshare-id')).toContainText('Walter Harrison Law');
 
-        await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
-        await expect(page.getByTestId('add-space-springshare-id')).toContainText('Walter Harrison Law');
-
         await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue('');
 

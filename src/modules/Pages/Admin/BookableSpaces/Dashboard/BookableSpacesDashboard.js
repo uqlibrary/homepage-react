@@ -2,8 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 
+import FormControl from '@mui/material/FormControl';
 import { Grid } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableCell from '@mui/material/TableCell';
@@ -71,6 +75,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
             backgroundColor: 'rgb(189 186 186)',
         },
     },
+    '&.hidden': {
+        display: 'none',
+    },
 }));
 const StyledStickyTableCell = styled(TableCell)(() => ({
     position: 'sticky',
@@ -89,6 +96,9 @@ export const BookableSpacesDashboard = ({
     facilityTypeList,
     facilityTypeListLoading,
     facilityTypeListError,
+    campusList,
+    campusListLoading,
+    campusListError,
 }) => {
     console.log('BookableSpacesDashboard top');
     console.log(
@@ -101,6 +111,40 @@ export const BookableSpacesDashboard = ({
     console.log('facilityTypeList', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
 
     const { account } = useAccountContext();
+
+    const [availableFilters, setAvailableFilters2] = React.useState([]);
+    const setAvailableFilters = availableFilters => {
+        console.log('setAvailableFilters', availableFilters);
+        setAvailableFilters2(availableFilters);
+    };
+    const resetAvailableFilters = (filterTypeName, filterTypeValue) => {
+        const newFilterTypes = availableFilters.filter(g => {
+            return g.filterType !== filterTypeName;
+        });
+        newFilterTypes.push({
+            filterType: filterTypeName,
+            filterValue: filterTypeValue,
+        });
+        setAvailableFilters(newFilterTypes);
+    };
+
+    React.useEffect(() => {
+        if (campusListError === false && campusListLoading === false && !!campusList) {
+            const campusIdList = [
+                ...new Set(bookableSpacesRoomList?.data?.locations?.map(space => space.space_campus_id)),
+            ];
+
+            const availableCampusList = campusList.filter(c => campusIdList.includes(c.campus_id));
+            availableCampusList.unshift({
+                campus_id: 0,
+                campus_number: 'none',
+                campus_name: 'Filter by a campus',
+                libraries: [],
+            });
+
+            resetAvailableFilters('campus', availableCampusList);
+        }
+    }, [campusListError, campusListLoading, campusList, bookableSpacesRoomList?.data?.locations]);
 
     React.useEffect(() => {
         addBreadcrumbsToSiteHeader([
@@ -121,6 +165,49 @@ export const BookableSpacesDashboard = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    React.useEffect(() => {
+        if (
+            bookableSpacesRoomListError === false &&
+            bookableSpacesRoomListLoading === false &&
+            !!bookableSpacesRoomList
+        ) {
+            // becuse we dont want campusList available before bookableSpacesRoomList
+            if (campusListError === null && campusListLoading === null && campusList === null) {
+                actions.loadBookableSpaceCampusChildren();
+            }
+        }
+    }, [bookableSpacesRoomListError, bookableSpacesRoomListLoading, bookableSpacesRoomList]);
+
+    const [selectedFilters, setSelectedFilters] = React.useState([]);
+    const resetSelectedFilters = (filterTypeName, filterTypeValue) => {
+        const newFilterTypes = availableFilters.filter(g => {
+            return g.filterType !== filterTypeName;
+        });
+        newFilterTypes.push({
+            filterType: filterTypeName,
+            filterValue: filterTypeValue,
+        });
+        bookableSpacesRoomList?.data?.locations?.forEach(s => {
+            let showSpace = true;
+            newFilterTypes.forEach(f => {
+                if (f.filterType === 'campus') {
+                    if (f.filterValue !== 0 && s.space_campus_id !== f.filterValue) {
+                        showSpace = false;
+                    }
+                }
+            });
+
+            const spaceRow = document.getElementById(`space-${s.space_id}`);
+            if (!!showSpace) {
+                spaceRow.classList.contains('hidden') && spaceRow.classList.remove('hidden');
+            } else {
+                !spaceRow.classList.contains('hidden') && spaceRow.classList.add('hidden');
+            }
+        });
+
+        setSelectedFilters(newFilterTypes);
+    };
 
     function hasFacility(facilityType, bookableSpace) {
         return bookableSpace?.facility_types.some(spaceFacility => {
@@ -164,15 +251,56 @@ export const BookableSpacesDashboard = ({
         !spaceuuid && console.log('no valid button clicked');
     };
 
+    const selectFilter = prop => e => {
+        resetSelectedFilters(prop, e.target.value);
+    };
+
     function displayListOfBookableSpaces() {
         const tableDescription = 'Manage Spaces';
 
         const sortedFacilityTypeGroups = prefilterFacilityData(facilityTypeList?.data);
 
+        const campusFilterTypes = availableFilters.find(ft => ft.filterType === 'campus')?.filterValue;
         return (
             <>
+                <div data-testid="tablefilter">
+                    Filter the list:
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel id="filter-by-campus-label" htmlFor="filter-by-campus-input">
+                            By campus
+                        </InputLabel>
+                        <Select
+                            id="filter-by-campus"
+                            labelId="filter-by-campus-label"
+                            data-testid="filter-by-campus"
+                            value={selectedFilters.find(f => f.filterType === 'campus')?.filterValue}
+                            onChange={selectFilter('campus')}
+                            inputProps={{
+                                id: 'filter-by-campus-input',
+                                title: 'Filter the displayed Spaces by camps',
+                            }}
+                        >
+                            {!!campusFilterTypes &&
+                                !!campusFilterTypes &&
+                                campusFilterTypes?.length > 0 &&
+                                campusFilterTypes.map((campus, index) => (
+                                    <MenuItem
+                                        value={campus.campus_id}
+                                        key={`filter-by-campus-menuitem-${index}`}
+                                        selected={campus.campus_id === 99999}
+                                    >
+                                        {campus.campus_name}
+                                    </MenuItem>
+                                ))}
+                        </Select>
+                    </FormControl>
+                </div>
                 <StyledTableContainer>
-                    <Table aria-label={tableDescription} aria-describedby="tableDescriptionElement">
+                    <Table
+                        aria-label={tableDescription}
+                        aria-describedby="tableDescriptionElement"
+                        data-testid="space-table"
+                    >
                         <StyledTableHead>
                             {facilityTypeList?.data?.facility_type_groups?.length > 0 && (
                                 // top row of the two-row table head, to label the facilities block
@@ -238,7 +366,7 @@ export const BookableSpacesDashboard = ({
                                 return (
                                     <StyledTableRow
                                         key={`space-${bookableSpace?.space_id}`}
-                                        data-testid="exampaper-desktop-originals-table-header"
+                                        id={`space-${bookableSpace?.space_id}`}
                                     >
                                         <StyledStickyTableCell component="th" scope="col">
                                             <div>
@@ -350,6 +478,9 @@ BookableSpacesDashboard.propTypes = {
     facilityTypeList: PropTypes.any,
     facilityTypeListLoading: PropTypes.any,
     facilityTypeListError: PropTypes.any,
+    campusList: PropTypes.any,
+    campusListLoading: PropTypes.any,
+    campusListError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesDashboard);

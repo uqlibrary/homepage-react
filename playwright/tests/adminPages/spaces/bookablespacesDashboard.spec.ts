@@ -487,4 +487,73 @@ test.describe('Spaces Admin - manage locations', () => {
             disabledRules: ['empty-table-header', 'scrollable-region-focusable'], // as this is an admin page we don't care that much
         });
     });
+    test.describe('can filter', () => {
+        test('by campus', async ({ page }) => {
+            await page.goto('/admin/spaces?user=libSpaces');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible(); // page had loaded
+
+            // initally all space rows are visible
+            await expect(
+                page
+                    .getByTestId('space-table')
+                    .locator('tbody')
+                    .locator(':scope > tr'),
+            ).toHaveCount(3);
+
+            await expect(page.getByTestId('filter-by-campus')).toBeVisible();
+
+            await expect(page.getByTestId('filter-by-campus').locator('input')).toBeVisible();
+            await expect(page.getByTestId('filter-by-campus').locator('input')).toBeEmpty();
+            page.getByTestId('filter-by-campus').click();
+            await expect(page.locator('ul[aria-labelledby="filter-by-campus-label"] li:nth-of-type(2)')).toContainText(
+                'St Lucia',
+            );
+            page.locator('ul[aria-labelledby="filter-by-campus-label"] li:nth-of-type(2)').click(); // choose St Lucia
+            await expect(page.getByTestId('filter-by-campus').locator('input')).toHaveValue('1');
+            await expect(page.getByTestId('filter-by-campus').locator('div')).toContainText('St Lucia');
+
+            // only St Lucia spaces display
+            await expect(
+                page
+                    .getByTestId('space-table')
+                    .locator('tbody')
+                    .locator(':scope > tr:not(.hidden)'),
+            ).toHaveCount(2);
+
+            // choose PACE
+            page.getByTestId('filter-by-campus').click();
+            await expect(page.locator('ul[aria-labelledby="filter-by-campus-label"] li:nth-of-type(3)')).toContainText(
+                'PACE',
+            );
+            page.locator('ul[aria-labelledby="filter-by-campus-label"] li:nth-of-type(3)').click(); // choose PCE
+            await expect(page.getByTestId('filter-by-campus').locator('input')).toHaveValue('3');
+            await expect(page.getByTestId('filter-by-campus').locator('div')).toContainText('PACE');
+
+            // only PACE spaces display
+            await expect(
+                page
+                    .getByTestId('space-table')
+                    .locator('tbody')
+                    .locator(':scope > tr:not(.hidden)'),
+            ).toHaveCount(1);
+
+            // deselect campuses
+            page.getByTestId('filter-by-campus').click();
+            await expect(page.locator('ul[aria-labelledby="filter-by-campus-label"] li:first-of-type')).toContainText(
+                'Filter by a campus',
+            );
+            page.locator('ul[aria-labelledby="filter-by-campus-label"] li:first-of-type').click(); // unset
+            await expect(page.getByTestId('filter-by-campus').locator('input')).toHaveValue('0');
+            await expect(page.getByTestId('filter-by-campus').locator('div')).toContainText('Filter by a campus');
+
+            // all campus spaces display
+            await expect(
+                page
+                    .getByTestId('space-table')
+                    .locator('tbody')
+                    .locator(':scope > tr:not(.hidden)'),
+            ).toHaveCount(3);
+        });
+    });
 });
