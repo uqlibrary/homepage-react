@@ -25,6 +25,21 @@ export default {
                     ]
                 },
                 {
+                    "library_id": 46,
+                    "library_name": "imaginary Liveris Library",
+                    "building_name": "Andrew N. Liveris",
+                    "building_number": "0046",
+                    "ground_floor_id": 4,
+                    "library_about_page_default": null,
+                    "library_springshare_id": null,
+                    "floors": [
+                        {
+                            "floor_id": 72,
+                            "floor_name": "1",
+                        },
+                    ]
+                },
+                {
                     "library_id": 2,
                     "library_name": "Central Library",
                     "building_name": "Duhig Tower",
@@ -88,7 +103,7 @@ export default {
                         },
                     ]
                 }, {
-                    "library_id": 10,
+                    "library_id": 98,
                     "library_name": "Incompletely entered library",
                     "building_name": null,
                     "building_number": "371",
@@ -101,6 +116,28 @@ export default {
         },
         {
             "campus_id": 3,
+            "campus_number": "45",
+            "campus_name": "PACE",
+            "libraries": [
+                {
+                    "library_id": 10,
+                    "library_name": "Pharmacy Australia Centre of Excellence",
+                    "building_name": "Pharmacy Australia Centre of Excellence",
+                    "building_number": "870",
+                    "ground_floor_id": 29,
+                    "library_about_page_default": 'https://web.library.uq.edu.au/visit/jk-murray-library-uq-gatton',
+                    "library_springshare_id": 3833,
+                    "floors": [
+                        {
+                            "floor_id": 65,
+                            "floor_name": "6",
+                        }
+                    ]
+                },
+            ]
+        },
+        {
+            "campus_id": 999,
             "campus_number": "99",
             "campus_name": "Newsite",
             "libraries": []

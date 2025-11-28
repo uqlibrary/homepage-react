@@ -193,21 +193,18 @@ export const BookableSpacesManageLocations = ({
     }, []);
 
     const springshareList = React.useMemo(() => {
-        console.log('springshareList:', weeklyHoursLoading, weeklyHoursError, weeklyHours);
         if (
             weeklyHoursLoading === false &&
             weeklyHoursError === false &&
             weeklyHours?.locations &&
             Array.isArray(weeklyHours.locations)
         ) {
-            console.log('springshareLocations(weeklyHours)=', springshareLocations(weeklyHours));
             return springshareLocations(weeklyHours);
         }
         return [];
     }, [weeklyHoursLoading, weeklyHoursError, weeklyHours]);
 
     function deleteGenericLocation(locationType, locationId, successMessage, failureMessage) {
-        console.log('deleteGenericLocation', locationType, locationId);
         showSavingProgress(true);
 
         closeDeletionConfirmation(); // close delete conf dialog
@@ -218,12 +215,11 @@ export const BookableSpacesManageLocations = ({
             actions
                 .deleteBookableSpaceLocation({ locationType, locationId })
                 .then(() => {
-                    console.log('deleteGenericLocation then');
                     displayToastMessage(successMessage, false);
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
-                    console.log(failureMessage, e);
+                    console.log('deleteBookableSpaceLocation', failureMessage, e);
                     displayToastMessage(
                         '[BSML-004] Sorry, an error occurred and the location was not deleted - the admins have been informed',
                     );
@@ -238,7 +234,6 @@ export const BookableSpacesManageLocations = ({
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
-        console.log('saveChangeToLibrary data=', data);
         const locationType = data?.locationType;
         const locationId = data[`${locationType}Id`];
 
@@ -263,7 +258,6 @@ export const BookableSpacesManageLocations = ({
             library_about_page_default: data.library_about_page_default,
             library_springshare_id: data.library_springshare_id,
         };
-        console.log('saveChangeToLibrary valuesToSend', valuesToSend);
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
@@ -295,7 +289,6 @@ export const BookableSpacesManageLocations = ({
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
-        console.log('saveChangeToCampus data=', data);
         const locationType = data?.locationType;
         const locationId = data[`${locationType}Id`];
 
@@ -310,7 +303,6 @@ export const BookableSpacesManageLocations = ({
             campus_name: data.campus_name,
             campus_number: data.campus_number,
         };
-        console.log('saveChangeToCampus valuesToSend', valuesToSend);
 
         showSavingProgress(true);
         closeDialog(e);
@@ -359,11 +351,9 @@ export const BookableSpacesManageLocations = ({
 
     const saveNewFloor = e => {
         const form = e.target.closest('form');
-        console.log('saveNewFloor form=', form);
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
-        console.log('saveNewFloor data', data);
 
         // validate form
         if (!data.floor_name) {
@@ -379,7 +369,6 @@ export const BookableSpacesManageLocations = ({
             floor_name: data.floor_name,
             floor_library_id: data.libraryId,
         };
-        console.log('saveNewFloor valuesToSend=', valuesToSend);
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
@@ -459,7 +448,6 @@ export const BookableSpacesManageLocations = ({
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
-        console.log('saveChangeToFloor data=', data);
 
         // validate form
         const failureMessage = !data.floor_name && 'Please enter floor name';
@@ -478,7 +466,6 @@ export const BookableSpacesManageLocations = ({
             floor_name: data.floor_name,
             floor_library_id: data.floor_library_id,
         };
-        console.log('saveChangeToLibrary valuesToSend', valuesToSend);
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
@@ -506,7 +493,6 @@ export const BookableSpacesManageLocations = ({
     };
 
     function deleteFloor(e, floorDetails) {
-        console.log('floorDetails=', floorDetails);
         const locationType = 'floor';
         const locationId = floorDetails?.floor_id;
         const successMessage = `Floor ${floorDetails?.floor_name} in ${displayedLibraryName(floorDetails)} deleted`;
@@ -598,8 +584,6 @@ export const BookableSpacesManageLocations = ({
                             springshareList.length > 0 &&
                             springshareList
                                 .map(springshareItem => {
-                                    console.log('libraryDetails=', libraryDetails.library_springshare_id);
-                                    console.log('springshareList s=', springshareItem);
                                     const checked =
                                         libraryDetails.library_springshare_id === springshareItem.id ? ' checked' : '';
                                     return `<li style="padding-block: 0.25rem">
@@ -621,11 +605,9 @@ export const BookableSpacesManageLocations = ({
 
     const saveNewLibrary = e => {
         const form = e.target.closest('form');
-        console.log('saveNewLibrary form=', form);
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
-        console.log('saveNewLibrary data', data);
 
         // validate form
         const errorMessages = [];

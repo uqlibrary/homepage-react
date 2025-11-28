@@ -103,7 +103,6 @@ export const BookableSpacesDashboard = ({
     const { account } = useAccountContext();
 
     React.useEffect(() => {
-        console.log('BookableSpacesDashboard PAGE LOADED');
         addBreadcrumbsToSiteHeader([
             '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Manage Spaces</span></li>',
         ]);
