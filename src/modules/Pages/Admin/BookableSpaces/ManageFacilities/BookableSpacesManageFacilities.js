@@ -828,7 +828,17 @@ export const BookableSpacesManageFacilities = ({
                         <form>
                             <div id="dialogBody" />
                             <div id="dialogFooter" className={'dialogFooter'}>
-                                <p id="dialogMessage" data-testid="dialogMessage">
+                                <p
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'flex-start',
+                                        columnGap: '0.5rem',
+                                        marginLeft: '1rem',
+                                    }}
+                                    id="dialogMessage"
+                                    data-testid="dialogMessage"
+                                >
                                     <WarningOutlined className="hidden" id="warning-icon" data-testid="warning-icon" />
                                     <span id="dialogMessageContent" />
                                 </p>
