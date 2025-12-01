@@ -87,6 +87,8 @@ const StyledStickyTableCell = styled(TableCell)(() => ({
 }));
 
 const CAMPUS_ID_UNSELECTED = '';
+const LIBRARY_ID_UNSELECTED = '';
+const FLOOR_ID_UNSELECTED = '';
 
 export const BookableSpacesDashboard = ({
     actions,
@@ -193,17 +195,41 @@ export const BookableSpacesDashboard = ({
         campusList,
     ]);
 
-    const [selectedFilters, setSelectedFilters] = React.useState([
+    const [selectedFilters, setSelectedFilters2] = React.useState([
         { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
+        { filterType: 'library', filterValue: LIBRARY_ID_UNSELECTED },
+        { filterType: 'floor', filterValue: FLOOR_ID_UNSELECTED },
     ]);
+    const setSelectedFilters = newFilter => {
+        console.log('setSelectedFilters', newFilter);
+        setSelectedFilters2(newFilter);
+    };
     const resetSelectedFilters = (filterTypeName, filterTypeValue) => {
-        const newFilterTypes = selectedFilters?.filter(g => {
+        let newFilterTypes = selectedFilters?.filter(g => {
             return g.filterType !== filterTypeName;
         });
         newFilterTypes.push({
             filterType: filterTypeName,
             filterValue: filterTypeValue,
         });
+        if (filterTypeName === 'campus') {
+            newFilterTypes = newFilterTypes?.filter(g => {
+                return g.filterType !== 'library';
+            });
+            newFilterTypes.push({
+                filterType: 'library',
+                filterValue: LIBRARY_ID_UNSELECTED,
+            });
+        }
+        if (filterTypeName === 'campus' || filterTypeName === 'library') {
+            newFilterTypes = newFilterTypes?.filter(g => {
+                return g.filterType !== 'floor';
+            });
+            newFilterTypes.push({
+                filterType: 'floor',
+                filterValue: FLOOR_ID_UNSELECTED,
+            });
+        }
         setSelectedFilters(newFilterTypes);
 
         // show-hide Spaces according to selected filters
@@ -214,19 +240,33 @@ export const BookableSpacesDashboard = ({
                     if (f.filterValue !== CAMPUS_ID_UNSELECTED && s.space_campus_id !== f.filterValue) {
                         showSpace = false;
                     }
+                } else if (f.filterType === 'library') {
+                    if (f.filterValue !== LIBRARY_ID_UNSELECTED && s.space_library_id !== f.filterValue) {
+                        showSpace = false;
+                    }
+                } else if (f.filterType === 'floor') {
+                    if (f.filterValue !== FLOOR_ID_UNSELECTED && s.space_floor_id !== f.filterValue) {
+                        showSpace = false;
+                    }
                 }
             });
 
             const spaceRow = document.getElementById(`space-${s.space_id}`);
             if (!!showSpace) {
-                spaceRow.classList.contains('hidden') && spaceRow.classList.remove('hidden');
+                !!spaceRow && spaceRow.classList.contains('hidden') && spaceRow.classList.remove('hidden');
             } else {
-                !spaceRow.classList.contains('hidden') && spaceRow.classList.add('hidden');
+                !!spaceRow && !spaceRow.classList.contains('hidden') && spaceRow.classList.add('hidden');
             }
         });
     };
-    // const isCampusSelected =
-    //     selectedFilters?.find(f => f.filterType === 'campus')?.filterValue === CAMPUS_ID_UNSELECTED;
+    const isCampusSelected =
+        selectedFilters?.find(f => f.filterType === 'campus')?.filterValue !== CAMPUS_ID_UNSELECTED;
+    console.log('selectedFilters=', selectedFilters);
+    console.log('isCampusSelected=', isCampusSelected);
+    const isLibrarySelected =
+        !!isCampusSelected &&
+        selectedFilters?.find(f => f.filterType === 'library')?.filterValue !== LIBRARY_ID_UNSELECTED;
+    console.log('isLibrarySelected=', isLibrarySelected);
 
     function hasFacility(facilityType, bookableSpace) {
         return bookableSpace?.facility_types.some(spaceFacility => {
@@ -280,45 +320,124 @@ export const BookableSpacesDashboard = ({
         const sortedFacilityTypeGroups = prefilterFacilityData(facilityTypeList?.data);
 
         const campusFilterTypes = availableFilters?.find(ft => ft.filterType === 'campus')?.filterValue;
+        const selectedCampusId = selectedFilters?.find(f => f.filterType === 'campus')?.filterValue;
+        const selectedCampus =
+            !!campusFilterTypes &&
+            !!campusFilterTypes &&
+            campusFilterTypes?.length > 0 &&
+            campusFilterTypes?.find(campus => campus.campus_id === selectedCampusId);
+        const selectedLibraryId = selectedFilters?.find(f => f.filterType === 'library')?.filterValue;
+        const selectedLibrary =
+            !!selectedCampus && selectedCampus?.libraries?.find(library => library.library_id === selectedLibraryId);
         return (
             <>
                 <div data-testid="tablefilter">
                     <Typography component={'h3'} variant={'h6'}>
                         Filter the list:
                     </Typography>
-                    <FormControl variant="standard" fullWidth>
-                        <InputLabel id="filter-by-campus-label" htmlFor="filter-by-campus-input">
-                            By campus
-                        </InputLabel>
-                        <Select
-                            id="filter-by-campus"
-                            labelId="filter-by-campus-label"
-                            data-testid="filter-by-campus"
-                            value={
-                                selectedFilters?.find(f => f.filterType === 'campus')?.filterValue ||
-                                CAMPUS_ID_UNSELECTED
-                            }
-                            onChange={selectFilter('campus')}
-                            inputProps={{
-                                id: 'filter-by-campus-input',
-                                title: 'Filter the displayed Spaces by camps',
-                            }}
-                        >
-                            {!!campusFilterTypes &&
-                                !!campusFilterTypes &&
-                                campusFilterTypes?.length > 0 &&
-                                campusFilterTypes?.map((campus, index) => (
+                    <div style={{ display: 'flex', columnGap: '1rem', marginBottom: '1rem' }}>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel id="filter-by-campus-label" htmlFor="filter-by-campus-input">
+                                By campus
+                            </InputLabel>
+                            <Select
+                                id="filter-by-campus"
+                                labelId="filter-by-campus-label"
+                                data-testid="filter-by-campus"
+                                value={
+                                    selectedFilters?.find(f => f.filterType === 'campus')?.filterValue ||
+                                    CAMPUS_ID_UNSELECTED
+                                }
+                                onChange={selectFilter('campus')}
+                                inputProps={{
+                                    id: 'filter-by-campus-input',
+                                    title: 'Filter the displayed Spaces by campus',
+                                }}
+                            >
+                                {!!campusFilterTypes &&
+                                    !!campusFilterTypes &&
+                                    campusFilterTypes?.length > 0 &&
+                                    campusFilterTypes?.map((campus, index) => (
+                                        <MenuItem
+                                            value={campus.campus_id}
+                                            key={`filter-by-campus-menuitem-${index}`}
+                                            selected={campus.campus_id === 99999}
+                                        >
+                                            {campus.campus_name}
+                                        </MenuItem>
+                                    ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel
+                                id="filter-by-library-label"
+                                htmlFor="filter-by-library-input"
+                                disabled={!isCampusSelected}
+                            >
+                                By library
+                            </InputLabel>
+                            <Select
+                                id="filter-by-library"
+                                labelId="filter-by-library-label"
+                                data-testid="filter-by-library"
+                                value={
+                                    selectedFilters?.find(f => f.filterType === 'library')?.filterValue ||
+                                    LIBRARY_ID_UNSELECTED
+                                }
+                                onChange={selectFilter('library')}
+                                inputProps={{
+                                    id: 'filter-by-library-input',
+                                    title: 'Filter the displayed Spaces by library',
+                                }}
+                                disabled={!isCampusSelected}
+                            >
+                                {selectedCampus?.libraries?.map((library, index) => (
                                     <MenuItem
-                                        value={campus.campus_id}
-                                        key={`filter-by-campus-menuitem-${index}`}
-                                        selected={campus.campus_id === 99999}
+                                        value={library.library_id}
+                                        key={`filter-by-library-menuitem-${index}`}
+                                        selected={library.library_id === 99999}
                                     >
-                                        {campus.campus_name}
+                                        {library.library_name}
                                     </MenuItem>
                                 ))}
-                        </Select>
-                    </FormControl>
-                    {/* {!!isCampusSelected && <span>choose library</span>}*/}
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel
+                                id="filter-by-floor-label"
+                                htmlFor="filter-by-floor-input"
+                                disabled={!isLibrarySelected}
+                            >
+                                By floor
+                            </InputLabel>
+                            <Select
+                                id="filter-by-floor"
+                                labelId="filter-by-floor-label"
+                                data-testid="filter-by-floor"
+                                value={
+                                    selectedFilters?.find(f => f.filterType === 'floor')?.filterValue ||
+                                    FLOOR_ID_UNSELECTED
+                                }
+                                onChange={selectFilter('floor')}
+                                inputProps={{
+                                    id: 'filter-by-floor-input',
+                                    title: 'Filter the displayed Spaces by floor',
+                                }}
+                                disabled={!isLibrarySelected}
+                            >
+                                {!!selectedLibrary &&
+                                    selectedLibrary?.floors.map((floor, index) => (
+                                        <MenuItem
+                                            value={floor.floor_id}
+                                            key={`filter-by-floor-menuitem-${index}`}
+                                            selected={floor.floor_id === 99999}
+                                        >
+                                            {floor.floor_name}
+                                        </MenuItem>
+                                    ))}
+                            </Select>
+                        </FormControl>
+                    </div>
                 </div>
                 <StyledTableContainer>
                     <Table
@@ -454,7 +573,7 @@ export const BookableSpacesDashboard = ({
 
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} className="aaaaaaaaa">
                         {(() => {
                             if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
                                 return (
@@ -482,7 +601,11 @@ export const BookableSpacesDashboard = ({
                                     </StyledBookableSpaceGridItem>
                                 );
                             } else {
-                                return displayListOfBookableSpaces();
+                                return (
+                                    <StyledBookableSpaceGridItem item xs={12}>
+                                        {displayListOfBookableSpaces()}
+                                    </StyledBookableSpaceGridItem>
+                                );
                             }
                         })()}
                     </Grid>
