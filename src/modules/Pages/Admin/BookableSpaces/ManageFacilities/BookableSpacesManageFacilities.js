@@ -33,6 +33,7 @@ import {
     showGenericConfirmAndDeleteDialog,
 } from '../bookableSpacesAdminHelpers';
 import { getFlatFacilityTypeList } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { SortableFacilityGroups } from 'modules/Pages/Admin/BookableSpaces/ManageFacilities/SortableFacilityGroups';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
@@ -97,36 +98,6 @@ const StyledEditIconButton = styled(IconButton)(() => ({
     paddingInline: 0,
     marginRight: '0.25rem',
 }));
-
-const SortableFacilityGroups = ({ facilityTypeGroupList }) => {
-    if (!facilityTypeGroupList || facilityTypeGroupList?.length === 0) {
-        return null;
-    }
-
-    return (
-        <>
-            <Typography component={'h3'} variant={'h6'}>
-                Sort Filter type Groups
-            </Typography>
-            <Grid container style={{ marginBottom: '1rem' }}>
-                {(
-                    facilityTypeGroupList?.sort((a, b) =>
-                        a.facility_type_group_name.localeCompare(b.facility_type_group_name),
-                    ) || []
-                )?.map(group => {
-                    return (
-                        <Grid item xs={12}>
-                            {group.facility_type_group_name}
-                        </Grid>
-                    );
-                })}
-            </Grid>
-        </>
-    );
-};
-SortableFacilityGroups.propTypes = {
-    facilityTypeGroupList: PropTypes.array,
-};
 
 export const BookableSpacesManageFacilities = ({
     actions,
