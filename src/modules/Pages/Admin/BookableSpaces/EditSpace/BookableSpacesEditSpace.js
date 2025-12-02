@@ -219,6 +219,10 @@ export const BookableSpacesEditSpace = ({
             bookableSpacesRoomListError === false &&
             (!bookableSpacesRoomList?.data?.locations || bookableSpacesRoomList?.data?.locations.length === 0))
     ) {
+        console.log('No Libraries currentCampusList=', currentCampusList);
+        console.log('No Libraries bookableSpacesRoomListLoading=', bookableSpacesRoomListLoading);
+        console.log('No Libraries bookableSpacesRoomListError=', bookableSpacesRoomListError);
+        console.log('No Libraries bookableSpacesRoomList=', bookableSpacesRoomList);
         return (
             <PageWrapper>
                 <Grid container spacing={3}>
