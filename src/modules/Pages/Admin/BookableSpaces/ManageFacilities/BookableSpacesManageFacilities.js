@@ -646,7 +646,7 @@ export const BookableSpacesManageFacilities = ({
         return (
             <>
                 <div style={{ display: 'flex' }}>
-                    <Typography component={'h3'} variant={'h6'} style={{ whiteSpace: 'nowrap' }}>
+                    <Typography component={'h4'} variant={'h6'} style={{ whiteSpace: 'nowrap' }}>
                         {groupName}
                     </Typography>
                     <IconButton
@@ -771,50 +771,60 @@ export const BookableSpacesManageFacilities = ({
                                             </Grid>
                                         )}
 
-                                        {/* {!!facilityTypeList?.data?.facility_type_groups &&*/}
-                                        {/*    facilityTypeList?.data?.facility_type_groups.length > 0 && (*/}
-                                        {/*        <Grid container>*/}
-                                        {/*            {(*/}
-                                        {/*                facilityTypeList?.data?.facility_type_groups?.sort((a, b) =>*/}
-                                        {/*                    a.facility_type_group_name.localeCompare(*/}
-                                        {/*                        b.facility_type_group_name,*/}
-                                        {/*                    ),*/}
-                                        {/*                ) || []*/}
-                                        {/*            )?.map(group => {*/}
-                                        {/*                return (*/}
-                                        {/*                    <Grid item xs={12}>*/}
-                                        {/*                        {group.facility_type_group_name}*/}
-                                        {/*                    </Grid>*/}
-                                        {/*                );*/}
-                                        {/*            })}*/}
-                                        {/*        </Grid>*/}
-                                        {/*    )}*/}
                                         {!!facilityTypeList?.data?.facility_type_groups &&
                                             facilityTypeList?.data?.facility_type_groups.length > 0 && (
-                                                <Grid container>
-                                                    {(
-                                                        facilityTypeList?.data?.facility_type_groups?.sort((a, b) =>
-                                                            a.facility_type_group_name.localeCompare(
-                                                                b.facility_type_group_name,
-                                                            ),
-                                                        ) || []
-                                                    )?.map(group => {
-                                                        return (
-                                                            <Grid
-                                                                item
-                                                                xs={12}
-                                                                sm={3}
-                                                                data-testid={`facilitygroup-${slugifyName(
-                                                                    group.facility_type_group_name,
-                                                                )}`}
-                                                                key={group.facility_type_group_name}
-                                                                style={{ maxWidth: '200px' }}
-                                                            >
-                                                                {writeFilterTypeController(group)}
-                                                            </Grid>
-                                                        );
-                                                    })}
-                                                </Grid>
+                                                <>
+                                                    <Typography component={'h3'} variant={'h6'}>
+                                                        Sort Filter type Groups
+                                                    </Typography>
+                                                    <Grid container style={{ marginBottom: '1rem' }}>
+                                                        {(
+                                                            facilityTypeList?.data?.facility_type_groups?.sort((a, b) =>
+                                                                a.facility_type_group_name.localeCompare(
+                                                                    b.facility_type_group_name,
+                                                                ),
+                                                            ) || []
+                                                        )?.map(group => {
+                                                            return (
+                                                                <Grid item xs={12}>
+                                                                    {group.facility_type_group_name}
+                                                                </Grid>
+                                                            );
+                                                        })}
+                                                    </Grid>
+                                                </>
+                                            )}
+                                        {!!facilityTypeList?.data?.facility_type_groups &&
+                                            facilityTypeList?.data?.facility_type_groups.length > 0 && (
+                                                <>
+                                                    <Typography component={'h3'} variant={'h6'}>
+                                                        Add and Edit Filter types
+                                                    </Typography>
+                                                    <Grid container>
+                                                        {(
+                                                            facilityTypeList?.data?.facility_type_groups?.sort((a, b) =>
+                                                                a.facility_type_group_name.localeCompare(
+                                                                    b.facility_type_group_name,
+                                                                ),
+                                                            ) || []
+                                                        )?.map(group => {
+                                                            return (
+                                                                <Grid
+                                                                    item
+                                                                    xs={12}
+                                                                    sm={3}
+                                                                    data-testid={`facilitygroup-${slugifyName(
+                                                                        group.facility_type_group_name,
+                                                                    )}`}
+                                                                    key={group.facility_type_group_name}
+                                                                    style={{ maxWidth: '200px' }}
+                                                                >
+                                                                    {writeFilterTypeController(group)}
+                                                                </Grid>
+                                                            );
+                                                        })}
+                                                    </Grid>
+                                                </>
                                             )}
                                     </>
                                 );
