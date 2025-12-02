@@ -78,13 +78,17 @@ const StyledInputListItem = styled('li')(({ theme }) => ({
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
 }));
-const StyledSidebarContainer = styled(Grid)(() => ({
+const StyledSidebarGridItem = styled(Grid)(() => ({
     position: 'sticky',
     top: 0,
     maxHeight: '100vh',
     overflowY: 'auto',
     paddingInline: '1em',
     marginBlock: '1em',
+    direction: 'rtl', // put the scroll bar on the left
+    '& > div': {
+        direction: 'ltr',
+    },
     '&::-webkit-scrollbar': {
         width: '8px',
     },
@@ -946,6 +950,9 @@ export const BookableSpacesList = ({
 
                                 return (
                                     <>
+                                        <StyledSidebarGridItem id="StyledSidebarGridItem" item xs={3}>
+                                            {showFilterSidebar()}
+                                        </StyledSidebarGridItem>
                                         <Grid item xs={8} md={9}>
                                             <Grid container data-testid={'space-wrapper'}>
                                                 {filteredSpaceLocations.length === 0 && (
@@ -979,9 +986,6 @@ export const BookableSpacesList = ({
                                                     })}
                                             </Grid>
                                         </Grid>
-                                        <StyledSidebarContainer item xs={3}>
-                                            {showFilterSidebar()}
-                                        </StyledSidebarContainer>
                                     </>
                                 );
                             }
