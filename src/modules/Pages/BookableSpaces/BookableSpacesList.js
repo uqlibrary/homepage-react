@@ -514,48 +514,79 @@ export const BookableSpacesList = ({
         return openingDetails?.department?.next7days || [];
     };
 
-    function openingHoursComponent(bookableSpace, locationKey, libraryName) {
+    function openingHoursComponent(weeklyHoursLoading, weeklyHoursError, weeklyHours, bookableSpace, locationKey) {
+        const overrideMessage = !!bookableSpace?.space_opening_hours_override ? (
+            <p data-testid={`override_opening_hours_${bookableSpace?.space_uuid}`}>
+                Note: {bookableSpace?.space_opening_hours_override}
+            </p>
+        ) : (
+            ''
+        );
+        console.log('overrideMessage', overrideMessage);
         if (weeklyHoursLoading === false && !!weeklyHoursError) {
             const spaceId = bookableSpace?.space_id || /* istanbul ignore next */ 'unknown';
             return (
-                <p data-testid={`weekly-hours-error-${spaceId}`}>
-                    General opening hours currently unavailable - please try again later.
-                </p>
+                <>
+                    <p data-testid={`weekly-hours-error-${spaceId}`}>
+                        General opening hours currently unavailable - please try again later.
+                    </p>
+                    {overrideMessage}
+                </>
+            );
+        }
+        if (weeklyHoursError === false && weeklyHoursLoading === false && weeklyHours?.locations?.length === 0) {
+            return overrideMessage; // we don't get the building opening hours for this location
+        }
+        if (!!weeklyHoursError) {
+            return (
+                <>
+                    <p>Opening hours currently unavailable - please try again later</p>
+                    {overrideMessage}
+                </>
             );
         }
         const openingHoursList = spaceOpeningHours(bookableSpace);
-        if (openingHoursList?.length === 0) {
-            return <p>Opening hours currently unavailable - please try again later</p>;
+        console.log('openingHoursList=', openingHoursList);
+        if (!!openingHoursList && openingHoursList.length > 0) {
+            return (
+                <>
+                    <h3>{bookableSpace?.space_library_name} opening hours</h3>
+                    <table style={{ width: '100%' }}>
+                        <thead>
+                            <tr>
+                                {openingHoursList?.map((d, index) => (
+                                    <th
+                                        style={{
+                                            textAlign: 'center',
+                                        }}
+                                        key={`${locationKey}-openingHours-${index}`}
+                                        data-testid={`${locationKey}-openingHours-${index}`}
+                                    >
+                                        {d.dayName}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                {openingHoursList?.map((d, index) => (
+                                    <td
+                                        style={{
+                                            textAlign: 'center',
+                                        }}
+                                        key={`${locationKey}-openingtd-${index}`}
+                                    >
+                                        {d.rendered}
+                                    </td>
+                                ))}
+                            </tr>
+                        </tbody>
+                    </table>
+                    {overrideMessage}
+                </>
+            );
         }
-        return (
-            <>
-                <h3>{libraryName} opening hours</h3>
-                <table style={{ width: '100%' }}>
-                    <thead>
-                        <tr>
-                            {openingHoursList?.map((d, index) => (
-                                <th
-                                    style={{ textAlign: 'center' }}
-                                    key={`${locationKey}-openingHours-${index}`}
-                                    data-testid={`${locationKey}-openingHours-${index}`}
-                                >
-                                    {d.dayName}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            {openingHoursList?.map((d, index) => (
-                                <td style={{ textAlign: 'center' }} key={`${locationKey}-openingtd-${index}`}>
-                                    {d.rendered}
-                                </td>
-                            ))}
-                        </tr>
-                    </tbody>
-                </table>
-            </>
-        );
+        return overrideMessage;
     }
 
     const collapseFilterGroup = (filterGroupId, onLoad = false) => {
@@ -652,13 +683,12 @@ export const BookableSpacesList = ({
                             </ul>
                         </>
                     )}
-                    {openingHoursComponent(bookableSpace, locationKey, bookableSpace?.space_library_name)}
-                    {!!bookableSpace?.space_opening_hours_override ? (
-                        <p data-testid={`override_opening_hours_${bookableSpace?.space_uuid}`}>
-                            Note: {bookableSpace?.space_opening_hours_override}
-                        </p>
-                    ) : (
-                        ''
+                    {openingHoursComponent(
+                        weeklyHoursLoading,
+                        weeklyHoursError,
+                        weeklyHours,
+                        bookableSpace,
+                        locationKey,
                     )}
                 </StyledHideableBlock>
                 <div style={{ float: 'right' }}>
