@@ -134,7 +134,7 @@ const StyledEditButton = styled(Button)(({ theme }) => ({
     alignItems: 'center',
     marginLeft: '-0.5rem',
     paddingLeft: 0,
-    textTransform: 'capitalize',
+    textTransform: 'none', // undo the ALL CAPS that is the default for a MUI button
     lineHeight: 'normal',
     justifyContent: 'flex-start',
     '&:hover, &:focus': {
