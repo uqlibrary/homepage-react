@@ -366,7 +366,7 @@ export const EditSpaceForm = ({
             Array.isArray(bookableSpacesRoomList?.data?.locations) &&
             bookableSpacesRoomList?.data?.locations?.length > 0
         ) {
-            const list = bookableSpacesRoomList?.data?.locations.map(location => location?.space_type);
+            const list = bookableSpacesRoomList?.data?.locations?.map(location => location?.space_type);
             !!formValues?.space_type && list.push(formValues?.space_type);
             const filteredList = list?.filter(
                 (spaceType, index, array) =>
@@ -540,7 +540,7 @@ export const EditSpaceForm = ({
             updatedLocation.library_id = currentLibrary?.library_id;
 
             updatedLocation.currentLibraryFloors = currentLibrary?.floors;
-            updatedLocation.currentFloor = currentLibrary?.floors.find(f => f.floor_id === formValues?.floor_id);
+            updatedLocation.currentFloor = currentLibrary?.floors?.find(f => f.floor_id === formValues?.floor_id);
             updatedLocation.floor_id = formValues?.floor_id;
             setLocation({
                 // ...location,

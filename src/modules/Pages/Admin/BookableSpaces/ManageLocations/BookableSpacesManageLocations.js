@@ -514,7 +514,7 @@ export const BookableSpacesManageLocations = ({
             (() => {
                 for (const campus of campusList) {
                     for (const library of campus.libraries) {
-                        const floor = library.floors.find(floor => floor.floor_id === floorId);
+                        const floor = library?.floors?.find(floor => floor.floor_id === floorId);
                         if (floor) {
                             return {
                                 ...floor,
@@ -583,7 +583,7 @@ export const BookableSpacesManageLocations = ({
                         ${(!!springshareList &&
                             springshareList.length > 0 &&
                             springshareList
-                                .map(springshareItem => {
+                                ?.map(springshareItem => {
                                     const checked =
                                         libraryDetails.library_springshare_id === springshareItem.id ? ' checked' : '';
                                     return `<li style="padding-block: 0.25rem">
@@ -703,7 +703,7 @@ export const BookableSpacesManageLocations = ({
     function showEditLibraryForm(libraryId, libraryCampusId) {
         const libraryDetails =
             libraryId > 0 &&
-            campusList.flatMap(campus => campus.libraries).find(library => library.library_id === libraryId);
+            campusList?.flatMap(campus => campus.libraries)?.find(library => library.library_id === libraryId);
 
         if (!libraryDetails) {
             console.log(`Can't find library with library_id = "${libraryId}" in campus list from api`);
@@ -720,7 +720,7 @@ export const BookableSpacesManageLocations = ({
                     libraryDetails?.floors?.length > 0
                         ? '<ul class="radioList">' +
                           libraryDetails?.floors
-                              .map(floor => {
+                              ?.map(floor => {
                                   const checked = floor.floor_id === libraryDetails.ground_floor_id ? ' checked' : '';
                                   return `<li>
                                             <input type="radio" id="groundFloor-${floor.floor_id}" name="ground_floor_id" ${checked} value="${floor.floor_id}" />
@@ -745,7 +745,7 @@ export const BookableSpacesManageLocations = ({
                     <h3>Change Campus</h3>
                     <ul class="radioList" data-testid="change-campus">
                     ${campusList
-                        .map(campus => {
+                        ?.map(campus => {
                             const checked = campus.campus_id === libraryCampusId ? ' checked' : '';
                             return `<li>
                                     <input type="radio" id="chooseSite-${campus.campus_id}" name="campus_id" ${checked} value="${campus.campus_id}" />
@@ -761,7 +761,7 @@ export const BookableSpacesManageLocations = ({
 
         const addNewButton = document.getElementById('addNewButton');
         !!addNewButton && (addNewButton.innerText = 'Add floor');
-        const currentGroundFloorDetails = libraryDetails.floors.find(
+        const currentGroundFloorDetails = libraryDetails?.floors?.find(
             f => libraryDetails.ground_floor_id === f.floor_id,
         );
         !!addNewButton &&
@@ -887,7 +887,7 @@ export const BookableSpacesManageLocations = ({
     }
 
     function showEditCampusForm(campusId) {
-        const campusDetails = campusId > 0 && campusList.find(s => s.campus_id === campusId);
+        const campusDetails = campusId > 0 && campusList?.find(s => s.campus_id === campusId);
 
         if (!campusDetails) {
             console.log(`Can't find campus with campus_id = "${campusId}" in campuslist from api`);
@@ -902,8 +902,8 @@ export const BookableSpacesManageLocations = ({
                 <h3 data-testid="campus-library-label">Libraries</h3>
                 ${
                     campusDetails?.libraries?.length > 0
-                        ? `<ul data-testid="campus-library-list">${campusDetails.libraries
-                              .map(library => `<li>${displayedLibraryName(library)}</li>`)
+                        ? `<ul data-testid="campus-library-list">${campusDetails?.libraries
+                              ?.map(library => `<li>${displayedLibraryName(library)}</li>`)
                               .join('')}</ul>`
                         : ''
                 }
@@ -933,7 +933,7 @@ export const BookableSpacesManageLocations = ({
     function getPageLayout(campusList) {
         return (
             <>
-                {campusList.map(campus => [
+                {campusList?.map(campus => [
                     <StyledRow
                         key={`campus-${campus.campus_id}`}
                         data-testid={'spaces-campus-entry'}
@@ -964,7 +964,7 @@ export const BookableSpacesManageLocations = ({
                                 <EditIcon />
                             </StyledEditButton>
                         </StyledRow>,
-                        ...library.floors.map(floor => (
+                        ...library.floors?.map(floor => (
                             <StyledRow key={`location-floor-${floor.floor_id}`} style={{ paddingLeft: '12rem' }}>
                                 <StyledEditButton
                                     color="primary"

@@ -296,7 +296,7 @@ export const BookableSpacesList = ({
 
             // initialise openness storage
             const openNessList = [];
-            filteredFacilityTypeList?.data?.facility_type_groups.map(g => {
+            filteredFacilityTypeList?.data?.facility_type_groups?.map(g => {
                 openNessList.push({
                     groupId: g.facility_type_group_id,
                     isGroupOpen: g.facility_type_group_loads_open,
@@ -439,9 +439,9 @@ export const BookableSpacesList = ({
         });
 
         // Sort by date to ensure chronological order
-        filteredDays.sort((a, b) => new Date(a.date) - new Date(b.date));
+        filteredDays?.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        filteredDays.map((d, index) => {
+        filteredDays?.map((d, index) => {
             if (index <= 1) {
                 d.dayName = index === 0 ? 'Today' : 'Tomorrow';
             }
@@ -491,7 +491,7 @@ export const BookableSpacesList = ({
             });
 
             delete filteredData.department.weeks;
-            allDays.sort((a, b) => new Date(a.date) - new Date(b.date));
+            allDays?.sort((a, b) => new Date(a.date) - new Date(b.date));
             filteredData.department.days = allDays;
         }
 
@@ -691,7 +691,7 @@ export const BookableSpacesList = ({
     };
     const deSelectAll = () => {
         // reset the facility types to all false - the render will clear the buttons and checkboxes for us!
-        const newFacilityTypes = facilityTypeFilters.map(ft => {
+        const newFacilityTypes = facilityTypeFilters?.map(ft => {
             return {
                 facility_type_id: ft.facility_type_id,
                 selected: false,
@@ -783,7 +783,7 @@ export const BookableSpacesList = ({
                     <Typography component={'h2'} variant={'h6'}>
                         Filter Spaces
                     </Typography>
-                    {sortedUsedGroups.map(group => {
+                    {sortedUsedGroups?.map(group => {
                         const filterGroupId = group.facility_type_group_id;
                         const isGroupOpen = !!facilityTypeFilterGroupOpenNess.find(o => o.groupId === filterGroupId)
                             ?.isGroupOpen;
@@ -834,7 +834,7 @@ export const BookableSpacesList = ({
                                 </StyledFilterSpaceListTypographyHeading>
                                 <StyledFilterSpaceList id={`filter-group-list-${group.facility_type_group_id}`}>
                                     {group.facility_type_children && group.facility_type_children.length > 0 ? (
-                                        group.facility_type_children.map(facilityType => (
+                                        group.facility_type_children?.map(facilityType => (
                                             <StyledInputListItem
                                                 key={`facility-type-listitem-${facilityType.facility_type_id}`}
                                                 id={`facility-type-listitem-${facilityType.facility_type_id}`}
@@ -940,7 +940,7 @@ export const BookableSpacesList = ({
                                     });
                                 });
                                 const filteredSpaceLocations = bookableSpacesRoomList?.data?.locations?.filter(s => {
-                                    const spaceFacilityTypes = s.facility_types.map(item => item.facility_type_id);
+                                    const spaceFacilityTypes = s?.facility_types?.map(item => item.facility_type_id);
                                     return showSpace(spaceFacilityTypes, facilityTypeToGroup, facilityTypeFilters);
                                 });
 
