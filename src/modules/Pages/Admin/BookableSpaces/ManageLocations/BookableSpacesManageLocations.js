@@ -243,7 +243,7 @@ export const BookableSpacesManageLocations = ({
         (!data.building_name || !data.building_number) && errorMessages.push('Please enter building name and number');
         if (errorMessages.length > 0) {
             displayToastMessage(errorMessages.join('; '), true);
-            return false;
+            return;
         }
 
         showSavingProgress(true);
@@ -267,7 +267,7 @@ export const BookableSpacesManageLocations = ({
         !!locationType &&
             !!locationId &&
             actions
-                .updateBookableSpaceLocation(valuesToSend, locationType)
+                .updateBookableSpaceLocation(valuesToSend, locationType, locationId)
                 .then(() => {
                     displayToastMessage('Change to library saved', false);
                     actions.loadBookableSpaceCampusChildren();
@@ -281,7 +281,6 @@ export const BookableSpacesManageLocations = ({
                 .finally(() => {
                     showSavingProgress(false);
                 });
-        return true;
     };
 
     const saveChangeToCampus = e => {
@@ -296,7 +295,7 @@ export const BookableSpacesManageLocations = ({
         const failureMessage = (!data.campus_name || !data.campus_number) && 'Please enter campus name and number';
         if (!!failureMessage) {
             displayToastMessage(failureMessage, true);
-            return false;
+            return;
         }
 
         const valuesToSend = {
@@ -315,7 +314,7 @@ export const BookableSpacesManageLocations = ({
         !!locationType &&
             !!locationId &&
             actions
-                .updateBookableSpaceLocation(valuesToSend, locationType)
+                .updateBookableSpaceLocation(valuesToSend, locationType, locationId)
                 .then(() => {
                     displayToastMessage('Change to campus saved', false);
                     actions.loadBookableSpaceCampusChildren();
@@ -329,7 +328,6 @@ export const BookableSpacesManageLocations = ({
                 .finally(() => {
                     showSavingProgress(false);
                 });
-        return true;
     };
 
     // allow for having spaces in a building where we don't have a Library
@@ -475,7 +473,7 @@ export const BookableSpacesManageLocations = ({
         !!locationType &&
             !!locationId &&
             actions
-                .updateBookableSpaceLocation(valuesToSend, locationType)
+                .updateBookableSpaceLocation(valuesToSend, locationType, locationId)
                 .then(() => {
                     displayToastMessage('Changes to floor saved', false);
                     actions.loadBookableSpaceCampusChildren();
@@ -616,7 +614,7 @@ export const BookableSpacesManageLocations = ({
         const errorFound = errorMessages.length > 0;
         if (errorFound) {
             displayToastMessage(errorMessages.join('; '), true);
-            return false;
+            return;
         }
 
         closeDialog(e);
@@ -654,7 +652,6 @@ export const BookableSpacesManageLocations = ({
                 .finally(() => {
                     showSavingProgress(false);
                 });
-        return true;
     };
 
     function showAddLibraryForm(e, campusDetails) {

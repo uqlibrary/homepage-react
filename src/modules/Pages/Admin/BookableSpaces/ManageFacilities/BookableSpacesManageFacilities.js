@@ -98,6 +98,36 @@ const StyledEditIconButton = styled(IconButton)(() => ({
     marginRight: '0.25rem',
 }));
 
+const SortableFacilityGroups = ({ facilityTypeGroupList }) => {
+    if (!facilityTypeGroupList || facilityTypeGroupList?.length === 0) {
+        return null;
+    }
+
+    return (
+        <>
+            <Typography component={'h3'} variant={'h6'}>
+                Sort Filter type Groups
+            </Typography>
+            <Grid container style={{ marginBottom: '1rem' }}>
+                {(
+                    facilityTypeGroupList?.sort((a, b) =>
+                        a.facility_type_group_name.localeCompare(b.facility_type_group_name),
+                    ) || []
+                )?.map(group => {
+                    return (
+                        <Grid item xs={12}>
+                            {group.facility_type_group_name}
+                        </Grid>
+                    );
+                })}
+            </Grid>
+        </>
+    );
+};
+SortableFacilityGroups.propTypes = {
+    facilityTypeGroupList: PropTypes.array,
+};
+
 export const BookableSpacesManageFacilities = ({
     actions,
     facilityTypeList,
@@ -640,13 +670,91 @@ export const BookableSpacesManageFacilities = ({
         !!dialog && dialog.showModal();
     };
 
+    const writeFilterTypeController = group => {
+        const groupName = group.facility_type_group_name;
+        const groupId = group.facility_type_group_id;
+        return (
+            <>
+                <div style={{ display: 'flex' }}>
+                    <Typography component={'h4'} variant={'h6'} style={{ whiteSpace: 'nowrap' }}>
+                        {groupName}
+                    </Typography>
+                    <IconButton
+                        color="primary"
+                        data-testid={`edit-group-${groupId}-button`}
+                        id={`edit-group-${groupId}-button`}
+                        onClick={openDialogForEditGroup}
+                        aria-label={`Edit facility type ${groupName}`}
+                        data-groupid={groupId}
+                    >
+                        <EditIcon
+                            style={{
+                                width: '1rem',
+                                height: '1rem',
+                            }}
+                        />
+                    </IconButton>
+                </div>
+                <Typography component={'div'} variant={'p'}>
+                    {group?.facility_type_group_loads_open ? 'Loads open' : 'Loads collapsed'}
+                </Typography>
+
+                {group?.facility_type_children?.map(facilityType => {
+                    const facilityTypeId = facilityType.facility_type_id;
+                    return (
+                        <div key={`facilitytype-list-${facilityTypeId}`}>
+                            <StyledEditIconButton
+                                color="primary"
+                                data-testid={`edit-facility-type-${facilityTypeId}-button`}
+                                id={`edit-facility-type-${facilityTypeId}-button`}
+                                onClick={openDialogForEditFacilityType}
+                                data-facilitytypeid={facilityTypeId}
+                                aria-label={`Edit facility type ${facilityType.facility_type_name}`}
+                            >
+                                <EditIcon
+                                    style={{
+                                        width: '1rem',
+                                        height: '1rem',
+                                    }}
+                                />
+                            </StyledEditIconButton>
+                            <Typography
+                                component={'span'}
+                                variant={'p'}
+                                data-testid={`facilitytype-name-${facilityTypeId}`}
+                            >
+                                {formValues.facility_types?.find(
+                                    f => f?.facility_type_id === facilityType?.facility_type_id,
+                                )?.facility_type_name || facilityType.facility_type_name}
+                            </Typography>
+                        </div>
+                    );
+                })}
+
+                <IconButton
+                    color="primary"
+                    data-testid={`add-group-${groupId}-button`}
+                    id={`add-group-${groupId}-button`}
+                    onClick={openDialogAddTypeToGroupForm}
+                    data-groupid={groupId}
+                    style={{
+                        paddingInline: 0,
+                        display: 'block',
+                    }}
+                    aria-label={`Add another facility type for ${group.facility_type_group_name}`}
+                >
+                    <AddIcon data-testid={`add-type-${slugifyName(group.facility_type_group_name)}`} />
+                </IconButton>
+            </>
+        );
+    };
     return (
         <StandardPage title="Spaces">
             <HeaderBar pageTitle="Manage Facility types" currentPage="manage-facilities" />
 
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
-                    <Grid container>
+                    <>
                         {(() => {
                             if (
                                 !!facilityTypeUpdating ||
@@ -655,160 +763,85 @@ export const BookableSpacesManageFacilities = ({
                                 !!facilityTypeListLoading
                             ) {
                                 return (
-                                    <Grid item xs={12}>
-                                        <InlineLoader message="Loading" />
+                                    <Grid container>
+                                        <Grid item xs={12}>
+                                            <InlineLoader message="Loading" />
+                                        </Grid>
                                     </Grid>
                                 );
                             } else if (!!facilityTypeListError) {
                                 return (
-                                    <Grid item xs={12}>
-                                        <p data-testid="apiError">Something went wrong - please try again later.</p>
+                                    <Grid container>
+                                        <Grid item xs={12}>
+                                            <p data-testid="apiError">Something went wrong - please try again later.</p>
+                                        </Grid>
                                     </Grid>
                                 );
                             } else {
                                 return (
                                     <>
-                                        <Grid item xs={12}>
-                                            <StyledPrimaryButton
-                                                style={{ marginBottom: '2rem' }}
-                                                onClick={openDialogAddGroup}
-                                                data-testid="add-new-group-button"
-                                            >
-                                                Add new Facility type group
-                                            </StyledPrimaryButton>
+                                        <Grid container>
+                                            <Grid item xs={12}>
+                                                <StyledPrimaryButton
+                                                    style={{ marginBottom: '2rem' }}
+                                                    onClick={openDialogAddGroup}
+                                                    data-testid="add-new-group-button"
+                                                >
+                                                    Add new Facility type group
+                                                </StyledPrimaryButton>
+                                            </Grid>
                                         </Grid>
                                         {facilityTypeList?.data?.facility_type_groups?.length === 0 && (
-                                            <Grid item xs={12}>
-                                                <p data-testid="space-facility-types-empty-message">
-                                                    No facility types currently in system.
-                                                </p>
+                                            <Grid container>
+                                                <Grid item xs={12}>
+                                                    <p data-testid="space-facility-types-empty-message">
+                                                        No facility types currently in system.
+                                                    </p>
+                                                </Grid>
                                             </Grid>
                                         )}
-                                        {/* {!!facilityTypeList?.data?.facility_type_groups &&*/}
-                                        {/*    facilityTypeList?.data?.facility_type_groups?.length > 0 &&*/}
-                                        {/*    (*/}
-                                        {/*        facilityTypeList?.data?.facility_type_groups?.sort(*/}
-                                        {/*            (a, b) => a.facility_type_group_order - b.facility_type_group_order,*/}
-                                        {/*        ) || []*/}
-                                        {/*    ).map(group => {*/}
-                                        {/*        return (*/}
-                                        {/*            <Grid item xs={12}>*/}
-                                        {/*                {group.facility_type_group_name}*/}
-                                        {/*            </Grid>*/}
-                                        {/*        );*/}
-                                        {/*    })}*/}
-                                        {/* <hr />*/}
-                                        {!!facilityTypeList?.data?.facility_type_groups &&
-                                            facilityTypeList?.data?.facility_type_groups.length > 0 &&
-                                            (
-                                                facilityTypeList?.data?.facility_type_groups?.sort((a, b) =>
-                                                    a.facility_type_group_name.localeCompare(
-                                                        b.facility_type_group_name,
-                                                    ),
-                                                ) || []
-                                            )?.map(group => {
-                                                const groupName = group.facility_type_group_name;
-                                                const groupId = group.facility_type_group_id;
-                                                return (
-                                                    <Grid
-                                                        item
-                                                        xs={12}
-                                                        sm={3}
-                                                        data-testid={`facilitygroup-${slugifyName(groupName)}`}
-                                                        key={groupName}
-                                                        style={{ maxWidth: '200px' }}
-                                                    >
-                                                        <div style={{ display: 'flex' }}>
-                                                            <Typography
-                                                                component={'h3'}
-                                                                variant={'h6'}
-                                                                style={{ whiteSpace: 'nowrap' }}
-                                                            >
-                                                                {groupName}
-                                                            </Typography>
-                                                            <IconButton
-                                                                color="primary"
-                                                                data-testid={`edit-group-${groupId}-button`}
-                                                                id={`edit-group-${groupId}-button`}
-                                                                onClick={openDialogForEditGroup}
-                                                                aria-label={`Edit facility type ${groupName}`}
-                                                                data-groupid={groupId}
-                                                            >
-                                                                <EditIcon
-                                                                    style={{
-                                                                        width: '1rem',
-                                                                        height: '1rem',
-                                                                    }}
-                                                                />
-                                                            </IconButton>
-                                                        </div>
-                                                        <Typography component={'div'} variant={'p'}>
-                                                            {group?.facility_type_group_loads_open
-                                                                ? 'Loads open'
-                                                                : 'Loads collapsed'}
-                                                        </Typography>
 
-                                                        {group?.facility_type_children?.map(facilityType => {
-                                                            const facilityTypeId = facilityType.facility_type_id;
+                                        <SortableFacilityGroups
+                                            facilityTypeGroupList={facilityTypeList?.data?.facility_type_groups}
+                                        />
+
+                                        {!!facilityTypeList?.data?.facility_type_groups &&
+                                            facilityTypeList?.data?.facility_type_groups.length > 0 && (
+                                                <>
+                                                    <Typography component={'h3'} variant={'h6'}>
+                                                        Add and Edit Filter types
+                                                    </Typography>
+                                                    <Grid container>
+                                                        {(
+                                                            facilityTypeList?.data?.facility_type_groups?.sort((a, b) =>
+                                                                a.facility_type_group_name.localeCompare(
+                                                                    b.facility_type_group_name,
+                                                                ),
+                                                            ) || []
+                                                        )?.map(group => {
                                                             return (
-                                                                <div key={`facilitytype-list-${facilityTypeId}`}>
-                                                                    <StyledEditIconButton
-                                                                        color="primary"
-                                                                        data-testid={`edit-facility-type-${facilityTypeId}-button`}
-                                                                        id={`edit-facility-type-${facilityTypeId}-button`}
-                                                                        onClick={openDialogForEditFacilityType}
-                                                                        data-facilitytypeid={facilityTypeId}
-                                                                        aria-label={`Edit facility type ${facilityType.facility_type_name}`}
-                                                                    >
-                                                                        <EditIcon
-                                                                            style={{
-                                                                                width: '1rem',
-                                                                                height: '1rem',
-                                                                            }}
-                                                                        />
-                                                                    </StyledEditIconButton>
-                                                                    <Typography
-                                                                        component={'span'}
-                                                                        variant={'p'}
-                                                                        data-testid={`facilitytype-name-${facilityTypeId}`}
-                                                                    >
-                                                                        {formValues.facility_types?.find(
-                                                                            f =>
-                                                                                f?.facility_type_id ===
-                                                                                facilityType?.facility_type_id,
-                                                                        )?.facility_type_name ||
-                                                                            facilityType.facility_type_name}
-                                                                    </Typography>
-                                                                </div>
+                                                                <Grid
+                                                                    item
+                                                                    xs={12}
+                                                                    sm={3}
+                                                                    data-testid={`facilitygroup-${slugifyName(
+                                                                        group.facility_type_group_name,
+                                                                    )}`}
+                                                                    key={group.facility_type_group_name}
+                                                                    style={{ maxWidth: '200px' }}
+                                                                >
+                                                                    {writeFilterTypeController(group)}
+                                                                </Grid>
                                                             );
                                                         })}
-
-                                                        <IconButton
-                                                            color="primary"
-                                                            data-testid={`add-group-${groupId}-button`}
-                                                            id={`add-group-${groupId}-button`}
-                                                            onClick={openDialogAddTypeToGroupForm}
-                                                            data-groupid={groupId}
-                                                            style={{
-                                                                paddingInline: 0,
-                                                                display: 'block',
-                                                            }}
-                                                            aria-label={`Add another facility type for ${group.facility_type_group_name}`}
-                                                        >
-                                                            <AddIcon
-                                                                data-testid={`add-type-${slugifyName(
-                                                                    group.facility_type_group_name,
-                                                                )}`}
-                                                            />
-                                                        </IconButton>
                                                     </Grid>
-                                                );
-                                            })}
+                                                </>
+                                            )}
                                     </>
                                 );
                             }
                         })()}
-                    </Grid>
+                    </>
                     <dialog id="confirmationDialog" className="confirmationDialog" data-testid="confirmation-dialog">
                         <p id="confDialogMessage" data-testid="confirmation-dialog-message" />
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>

@@ -26,9 +26,9 @@ const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledFilterWrapper = styled('div')(() => ({
-    width: '100%',
     display: 'flex',
-    overflowX: 'auto',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
 }));
 
 const StyledFacilityGroupCheckboxBlock = styled('div')(() => ({
@@ -40,6 +40,7 @@ const StyledFacilityGroupCheckboxBlock = styled('div')(() => ({
     '& ul': {
         paddingLeft: 0,
         marginRight: '0.5rem',
+        marginTop: 0,
     },
     '& li': {
         listStyle: 'none',
