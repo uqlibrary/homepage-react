@@ -122,12 +122,11 @@ export const setTestDataCookie = async (context: BrowserContext, page: Page) => 
 };
 
 export const assertExpectedDataSentToServer = async (page: Page, expectedValues: object) => {
-    // make input fields focus
-    const cookie = await page.context().cookies();
-    expect(cookie.some(c => c.name === 'CYPRESS_DATA_SAVED')).toBeTruthy();
+    const cookies = await page.context().cookies();
+    expect(cookies.some(c => c.name === 'CYPRESS_DATA_SAVED')).toBeTruthy();
 
-    // check the data we pretended to send to the server matches what we expect
-    // acts as check of what we sent to api
+    // Check the data we pretended to send to the server matches what we expect.
+    // Acts as check of what we send to api
     const cookieValue = await page.evaluate(() => {
         return document.cookie
             .split('; ')
