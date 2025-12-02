@@ -98,6 +98,36 @@ const StyledEditIconButton = styled(IconButton)(() => ({
     marginRight: '0.25rem',
 }));
 
+const SortableFacilityGroups = ({ facilityTypeGroupList }) => {
+    if (!facilityTypeGroupList || facilityTypeGroupList?.length === 0) {
+        return null;
+    }
+
+    return (
+        <>
+            <Typography component={'h3'} variant={'h6'}>
+                Sort Filter type Groups
+            </Typography>
+            <Grid container style={{ marginBottom: '1rem' }}>
+                {(
+                    facilityTypeGroupList?.sort((a, b) =>
+                        a.facility_type_group_name.localeCompare(b.facility_type_group_name),
+                    ) || []
+                )?.map(group => {
+                    return (
+                        <Grid item xs={12}>
+                            {group.facility_type_group_name}
+                        </Grid>
+                    );
+                })}
+            </Grid>
+        </>
+    );
+};
+SortableFacilityGroups.propTypes = {
+    facilityTypeGroupList: PropTypes.array,
+};
+
 export const BookableSpacesManageFacilities = ({
     actions,
     facilityTypeList,
@@ -771,29 +801,10 @@ export const BookableSpacesManageFacilities = ({
                                             </Grid>
                                         )}
 
-                                        {!!facilityTypeList?.data?.facility_type_groups &&
-                                            facilityTypeList?.data?.facility_type_groups.length > 0 && (
-                                                <>
-                                                    <Typography component={'h3'} variant={'h6'}>
-                                                        Sort Filter type Groups
-                                                    </Typography>
-                                                    <Grid container style={{ marginBottom: '1rem' }}>
-                                                        {(
-                                                            facilityTypeList?.data?.facility_type_groups?.sort((a, b) =>
-                                                                a.facility_type_group_name.localeCompare(
-                                                                    b.facility_type_group_name,
-                                                                ),
-                                                            ) || []
-                                                        )?.map(group => {
-                                                            return (
-                                                                <Grid item xs={12}>
-                                                                    {group.facility_type_group_name}
-                                                                </Grid>
-                                                            );
-                                                        })}
-                                                    </Grid>
-                                                </>
-                                            )}
+                                        <SortableFacilityGroups
+                                            facilityTypeGroupList={facilityTypeList?.data?.facility_type_groups}
+                                        />
+
                                         {!!facilityTypeList?.data?.facility_type_groups &&
                                             facilityTypeList?.data?.facility_type_groups.length > 0 && (
                                                 <>
