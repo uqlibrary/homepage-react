@@ -684,7 +684,7 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(liverisSpace).toBeVisible();
         });
     });
-    test.only('can navigate from dashboard to homepage', async ({ page }) => {
+    test('can navigate from dashboard to homepage', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
 
