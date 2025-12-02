@@ -63,7 +63,7 @@ export const AdminButton = ({ currentPage }) => {
         !!open ? closeMenu() : openMenu(e);
     };
 
-    function navigateToPage(spacesPath, pageSlug) {
+    function navigateToPage(spacesPath, pageSlug = null) {
         if (currentPage === pageSlug) {
             return;
         }
@@ -145,6 +145,16 @@ export const AdminButton = ({ currentPage }) => {
                     <span className={`${currentPage !== 'manage-facilities' ? 'clickable' : ''}`}>
                         Manage Facility Types
                     </span>
+                </MenuItem>
+                <hr />
+                <MenuItem
+                    onClick={() => {
+                        navigateToPage('/spaces');
+                    }}
+                    data-testid="admin-spaces-visit-homepage-button"
+                >
+                    {icon(false)}
+                    <span className="clickable">View public homepage</span>
                 </MenuItem>
             </StyledMenu>
         </>

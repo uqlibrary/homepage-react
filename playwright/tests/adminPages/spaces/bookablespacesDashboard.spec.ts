@@ -684,4 +684,25 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(liverisSpace).toBeVisible();
         });
     });
+    test.only('can navigate from dashboard to homepage', async ({ page }) => {
+        await page.goto('/admin/spaces?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
+
+        const optionsButton = page.getByTestId('admin-spaces-menu-button');
+        const visitHomepageButton = page.getByTestId('admin-spaces-visit-homepage-button');
+
+        await expect(visitHomepageButton).not.toBeVisible();
+        await expect(page.getByTestId('admin-spaces-menu')).not.toBeVisible();
+        await expect(optionsButton).toBeVisible();
+        optionsButton.click();
+
+        await expect(page.getByTestId('admin-spaces-menu')).toBeVisible();
+        await expect(visitHomepageButton).toBeVisible();
+        visitHomepageButton.click();
+
+        await expect(page).toHaveURL('http://localhost:2020/spaces?user=libSpaces');
+    });
 });
