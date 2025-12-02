@@ -644,14 +644,7 @@ export const BookableSpacesManageFacilities = ({
         const groupName = group.facility_type_group_name;
         const groupId = group.facility_type_group_id;
         return (
-            <Grid
-                item
-                xs={12}
-                sm={3}
-                data-testid={`facilitygroup-${slugifyName(groupName)}`}
-                key={groupName}
-                style={{ maxWidth: '200px' }}
-            >
+            <>
                 <div style={{ display: 'flex' }}>
                     <Typography component={'h3'} variant={'h6'} style={{ whiteSpace: 'nowrap' }}>
                         {groupName}
@@ -722,7 +715,7 @@ export const BookableSpacesManageFacilities = ({
                 >
                     <AddIcon data-testid={`add-type-${slugifyName(group.facility_type_group_name)}`} />
                 </IconButton>
-            </Grid>
+            </>
         );
     };
     return (
@@ -731,7 +724,7 @@ export const BookableSpacesManageFacilities = ({
 
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
-                    <Grid container>
+                    <>
                         {(() => {
                             if (
                                 !!facilityTypeUpdating ||
@@ -740,63 +733,94 @@ export const BookableSpacesManageFacilities = ({
                                 !!facilityTypeListLoading
                             ) {
                                 return (
-                                    <Grid item xs={12}>
-                                        <InlineLoader message="Loading" />
+                                    <Grid container>
+                                        <Grid item xs={12}>
+                                            <InlineLoader message="Loading" />
+                                        </Grid>
                                     </Grid>
                                 );
                             } else if (!!facilityTypeListError) {
                                 return (
-                                    <Grid item xs={12}>
-                                        <p data-testid="apiError">Something went wrong - please try again later.</p>
+                                    <Grid container>
+                                        <Grid item xs={12}>
+                                            <p data-testid="apiError">Something went wrong - please try again later.</p>
+                                        </Grid>
                                     </Grid>
                                 );
                             } else {
                                 return (
                                     <>
-                                        <Grid item xs={12}>
-                                            <StyledPrimaryButton
-                                                style={{ marginBottom: '2rem' }}
-                                                onClick={openDialogAddGroup}
-                                                data-testid="add-new-group-button"
-                                            >
-                                                Add new Facility type group
-                                            </StyledPrimaryButton>
+                                        <Grid container>
+                                            <Grid item xs={12}>
+                                                <StyledPrimaryButton
+                                                    style={{ marginBottom: '2rem' }}
+                                                    onClick={openDialogAddGroup}
+                                                    data-testid="add-new-group-button"
+                                                >
+                                                    Add new Facility type group
+                                                </StyledPrimaryButton>
+                                            </Grid>
                                         </Grid>
                                         {facilityTypeList?.data?.facility_type_groups?.length === 0 && (
-                                            <Grid item xs={12}>
-                                                <p data-testid="space-facility-types-empty-message">
-                                                    No facility types currently in system.
-                                                </p>
+                                            <Grid container>
+                                                <Grid item xs={12}>
+                                                    <p data-testid="space-facility-types-empty-message">
+                                                        No facility types currently in system.
+                                                    </p>
+                                                </Grid>
                                             </Grid>
                                         )}
+
                                         {/* {!!facilityTypeList?.data?.facility_type_groups &&*/}
-                                        {/*    facilityTypeList?.data?.facility_type_groups?.length > 0 &&*/}
-                                        {/*    (*/}
-                                        {/*        facilityTypeList?.data?.facility_type_groups?.sort(*/}
-                                        {/*            (a, b) => a.facility_type_group_order - b.facility_type_group_order,*/}
-                                        {/*        ) || []*/}
-                                        {/*    ).map(group => {*/}
-                                        {/*        return (*/}
-                                        {/*            <Grid item xs={12}>*/}
-                                        {/*                {group.facility_type_group_name}*/}
-                                        {/*            </Grid>*/}
-                                        {/*        );*/}
-                                        {/*    })}*/}
-                                        {/* <hr />*/}
+                                        {/*    facilityTypeList?.data?.facility_type_groups.length > 0 && (*/}
+                                        {/*        <Grid container>*/}
+                                        {/*            {(*/}
+                                        {/*                facilityTypeList?.data?.facility_type_groups?.sort((a, b) =>*/}
+                                        {/*                    a.facility_type_group_name.localeCompare(*/}
+                                        {/*                        b.facility_type_group_name,*/}
+                                        {/*                    ),*/}
+                                        {/*                ) || []*/}
+                                        {/*            )?.map(group => {*/}
+                                        {/*                return (*/}
+                                        {/*                    <Grid item xs={12}>*/}
+                                        {/*                        {group.facility_type_group_name}*/}
+                                        {/*                    </Grid>*/}
+                                        {/*                );*/}
+                                        {/*            })}*/}
+                                        {/*        </Grid>*/}
+                                        {/*    )}*/}
                                         {!!facilityTypeList?.data?.facility_type_groups &&
-                                            facilityTypeList?.data?.facility_type_groups.length > 0 &&
-                                            (
-                                                facilityTypeList?.data?.facility_type_groups?.sort((a, b) =>
-                                                    a.facility_type_group_name.localeCompare(
-                                                        b.facility_type_group_name,
-                                                    ),
-                                                ) || []
-                                            )?.map(group => writeFilterTypeController(group))}
+                                            facilityTypeList?.data?.facility_type_groups.length > 0 && (
+                                                <Grid container>
+                                                    {(
+                                                        facilityTypeList?.data?.facility_type_groups?.sort((a, b) =>
+                                                            a.facility_type_group_name.localeCompare(
+                                                                b.facility_type_group_name,
+                                                            ),
+                                                        ) || []
+                                                    )?.map(group => {
+                                                        return (
+                                                            <Grid
+                                                                item
+                                                                xs={12}
+                                                                sm={3}
+                                                                data-testid={`facilitygroup-${slugifyName(
+                                                                    group.facility_type_group_name,
+                                                                )}`}
+                                                                key={group.facility_type_group_name}
+                                                                style={{ maxWidth: '200px' }}
+                                                            >
+                                                                {writeFilterTypeController(group)}
+                                                            </Grid>
+                                                        );
+                                                    })}
+                                                </Grid>
+                                            )}
                                     </>
                                 );
                             }
                         })()}
-                    </Grid>
+                    </>
                     <dialog id="confirmationDialog" className="confirmationDialog" data-testid="confirmation-dialog">
                         <p id="confDialogMessage" data-testid="confirmation-dialog-message" />
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
