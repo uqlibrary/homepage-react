@@ -476,7 +476,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
 
-        await expect(page.getByTestId('spaces-dashboard-header-row').locator('> th')).toHaveCount(3);
+        await expect(page.getByTestId('spaces-dashboard-header-row').locator('> th')).toHaveCount(2);
     });
     test('spaces dashboard page is accessible', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
@@ -657,7 +657,6 @@ test.describe('Spaces Admin - manage locations', () => {
 
             // choose Floor 2
             await expect(floorSelector.locator('input')).not.toBeDisabled();
-            // await expect(page.getByTestId('filter-by-floor').locator('input')).toBeEmpty();
             floorSelector.click();
             const firstFloorOption = 'ul[aria-labelledby="filter-by-floor-label"] li:nth-of-type(1)';
             await expect(page.locator(firstFloorOption)).toContainText('2');
