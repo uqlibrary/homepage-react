@@ -96,13 +96,15 @@ const TableWrapper = styled('div')(() => ({
         left: 0,
         width: '95vw',
         height: '95vh',
-        zIndex: 1000,
+        zIndex: 2,
         padding: '20px',
         display: 'flex',
         flexDirection: 'column',
-        // justifyContent: 'center',
         alignItems: 'center',
         marginInline: '20px',
+        border: 'thick solid black',
+        marginTop: '4px',
+        borderRadius: '10px',
     },
 }));
 const StyledFilterWrapperDiv = styled('div')(() => ({
