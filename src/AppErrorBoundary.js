@@ -14,6 +14,8 @@ class AppErrorBoundary extends React.Component {
                 dsn: 'https://88702b1b71434522871473c7e2490ed8@o136426.ingest.sentry.io/5379235',
                 environment: process.env.BRANCH,
                 release: process.env.GIT_SHA,
+                sendDefaultPii: false,
+                enableMetrics: false,
                 allowUrls: [/library\.uq\.edu\.au/],
                 ignoreErrors: [
                     'Object Not Found Matching Id',
