@@ -1,39 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { BookableSpacesList } from './BookableSpacesList';
+
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+
+const StyledTable = styled('table')(() => ({
+    width: '100%',
+    '& th, & th': {
+        textAlign: 'center',
+    },
+}));
 
 export const SpaceOpeningHours = ({ weeklyHoursLoading, weeklyHoursError, weeklyHours, bookableSpace }) => {
-    const locationKey = `space-${bookableSpace?.space_id}`;
-    const overrideMessage = !!bookableSpace?.space_opening_hours_override ? (
-        <p data-testid={`override_opening_hours_${bookableSpace?.space_uuid}`}>
-            Note: {bookableSpace?.space_opening_hours_override}
-        </p>
-    ) : (
-        ''
-    );
-    console.log('overrideMessage', overrideMessage);
-    if (weeklyHoursLoading === false && !!weeklyHoursError) {
-        const spaceId = bookableSpace?.space_id || /* istanbul ignore next */ 'unknown';
-        return (
-            <>
-                <p data-testid={`weekly-hours-error-${spaceId}`}>
-                    General opening hours currently unavailable - please try again later.
-                </p>
-                {overrideMessage}
-            </>
-        );
-    }
-    if (weeklyHoursError === false && weeklyHoursLoading === false && weeklyHours?.locations?.length === 0) {
-        return overrideMessage; // we don't get the building opening hours for this location
-    }
-    if (!!weeklyHoursError) {
-        return (
-            <>
-                <p>Opening hours currently unavailable - please try again later</p>
-                {overrideMessage}
-            </>
-        );
-    }
+    console.log('TOP SpaceOpeningHours weeklyHours=', weeklyHoursLoading, weeklyHoursError, weeklyHours);
+    console.log('TOP SpaceOpeningHours bookableSpace=', bookableSpace);
+
+    const spaceId = bookableSpace?.space_id;
 
     function filterNext7Days(departmentData) {
         // Get today's date (start of day)
@@ -115,56 +97,80 @@ export const SpaceOpeningHours = ({ weeklyHoursLoading, weeklyHoursError, weekly
     }
 
     const spaceOpeningHours = bookableSpace => {
-        console.log('spaceOpeningHours 1 bookableSpace=', bookableSpace);
-        console.log('spaceOpeningHours 2 weeklyHours=', weeklyHours);
-        let openingDetails = weeklyHours?.locations?.find(openingHours => {
-            return openingHours.lid === bookableSpace?.space_opening_hours_id;
+        console.log('spaceOpeningHours', bookableSpace.space_library_name, '1 bookableSpace=', bookableSpace);
+        console.log('spaceOpeningHours', bookableSpace.space_library_name, '2 weeklyHours=', weeklyHours);
+        const details = weeklyHours?.locations?.find(spaceOpeningHours => {
+            return spaceOpeningHours.lid === bookableSpace?.space_opening_hours_id;
         });
-        !!openingDetails && (openingDetails = convertWeeksToDays(openingDetails));
-        return openingDetails?.department?.next7days || [];
+        if (!!details) {
+            const openingDetails = convertWeeksToDays(details);
+            console.log('spaceOpeningHours', bookableSpace.space_library_name, '3 openingDetails=', openingDetails);
+            return openingDetails?.department?.next7days;
+        }
+        return [];
     };
-    const openingHoursList = spaceOpeningHours(bookableSpace);
-    console.log('openingHoursList=', openingHoursList);
-    if (!!openingHoursList && openingHoursList.length > 0) {
+
+    const overrideMessage = !!bookableSpace?.space_opening_hours_override ? (
+        <p data-testid={`space-${spaceId}-override_opening_hours`}>
+            Note: {bookableSpace?.space_opening_hours_override}
+        </p>
+    ) : (
+        ''
+    );
+
+    if (weeklyHoursLoading === true) {
+        return null;
+    }
+    if (!!weeklyHoursError) {
         return (
             <>
-                <h3>{bookableSpace?.space_library_name} opening hours</h3>
-                <table style={{ width: '100%' }}>
-                    <thead>
-                        <tr>
-                            {openingHoursList?.map((d, index) => (
-                                <th
-                                    style={{
-                                        textAlign: 'center',
-                                    }}
-                                    key={`${locationKey}-openingHours-${index}`}
-                                    data-testid={`${locationKey}-openingHours-${index}`}
-                                >
-                                    {d.dayName}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            {openingHoursList?.map((d, index) => (
-                                <td
-                                    style={{
-                                        textAlign: 'center',
-                                    }}
-                                    key={`${locationKey}-openingtd-${index}`}
-                                >
-                                    {d.rendered}
-                                </td>
-                            ))}
-                        </tr>
-                    </tbody>
-                </table>
+                <p data-testid={`space-${spaceId}-weekly-hours-error`}>
+                    General opening hours currently unavailable - please try again later.
+                </p>
                 {overrideMessage}
             </>
         );
     }
-    return overrideMessage;
+
+    if (weeklyHoursLoading === false && weeklyHoursError === false && weeklyHours?.locations?.length === 0) {
+        return overrideMessage; // we don't get the building opening hours for this location
+    }
+
+    const openingHoursList = spaceOpeningHours(bookableSpace);
+
+    if (!openingHoursList || openingHoursList.length === 0) {
+        return overrideMessage; // no opening hours
+    }
+
+    return (
+        <>
+            <Typography component={'h3'} variant={'h6'}>
+                {bookableSpace?.space_library_name} opening hours
+            </Typography>
+            <StyledTable>
+                <thead>
+                    <tr>
+                        {openingHoursList?.map((d, index) => (
+                            <th
+                                key={`space-${spaceId}-opening-th-${index}`}
+                                data-testid={`space-${spaceId}-openingHours-${index}`}
+                            >
+                                {d.dayName}
+                            </th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {openingHoursList?.map((d, index) => (
+                            <td key={`space-${spaceId}-opening-td-${index}`}>{d.rendered}</td>
+                        ))}
+                    </tr>
+                </tbody>
+            </StyledTable>
+            {overrideMessage}
+        </>
+    );
 };
 SpaceOpeningHours.propTypes = {
     weeklyHoursLoading: PropTypes.any,

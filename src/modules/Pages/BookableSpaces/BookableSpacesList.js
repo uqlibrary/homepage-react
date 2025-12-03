@@ -200,7 +200,7 @@ const StyledDescription = styled('div')(() => ({
         textOverflow: 'ellipsis',
     },
 }));
-const StyledHideableBlock = styled('div')(() => ({
+const StyledCollapsableSection = styled('div')(() => ({
     '&.visible': {
         visibility: 'visible',
         height: 'auto',
@@ -479,22 +479,30 @@ export const BookableSpacesList = ({
         !!collapseButton && (collapseButton.style.display = 'none');
     };
     const spaceGrid = bookableSpace => {
-        const locationKey = `space-${bookableSpace?.space_id}`;
         return (
             <>
-                <div data-testid={locationKey}>{getFriendlyLocationDescription(bookableSpace)}</div>
+                <div data-testid={`space-${bookableSpace?.space_id}-friendly-location`}>
+                    {getFriendlyLocationDescription(bookableSpace)}
+                </div>
                 {bookableSpace?.space_description?.length > 0 && (
                     <StyledDescription
                         id={spaceDescriptionElementsId(bookableSpace?.space_id)}
-                        data-testid={spaceDescriptionElementsId(bookableSpace?.space_id)}
+                        data-testid={`space-${bookableSpace?.space_id}-description`}
                         className={'truncated'}
                     >
                         <p>{bookableSpace?.space_description}</p>
                     </StyledDescription>
                 )}
-                <StyledHideableBlock
+                <SpaceOpeningHours
+                    weeklyHoursLoading={weeklyHoursLoading}
+                    weeklyHoursError={weeklyHoursError}
+                    weeklyHours={weeklyHours}
+                    bookableSpace={bookableSpace}
+                />
+
+                <StyledCollapsableSection
                     id={spaceExtraElementsId(bookableSpace?.space_id)}
-                    data-testid={spaceExtraElementsId(bookableSpace?.space_id)}
+                    data-testid={`space-${bookableSpace?.space_id}-collapsible`}
                     className={'hidden'}
                     style={{ transition: 'opacity 0.3s ease-in-out, height 0.3s ease-in-out' }}
                 >
@@ -507,12 +515,12 @@ export const BookableSpacesList = ({
                     {bookableSpace?.facility_types?.length > 0 && (
                         <>
                             <h3>Facilities</h3>
-                            <ul data-testid={`facility-${bookableSpace?.space_id}`}>
+                            <ul data-testid={`space-${bookableSpace?.space_id}-facility`}>
                                 {bookableSpace?.facility_types?.map(facility => {
                                     return (
                                         <li
-                                            key={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}
-                                            data-testid={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}
+                                            key={`space-${bookableSpace?.space_id}-facility-${facility.facility_type_id}`}
+                                            data-testid={`space-${bookableSpace?.space_id}-facility-${facility.facility_type_id}`}
                                         >
                                             {facility.facility_type_name}
                                         </li>
@@ -521,17 +529,11 @@ export const BookableSpacesList = ({
                             </ul>
                         </>
                     )}
-                    <SpaceOpeningHours
-                        weeklyHoursLoading={weeklyHoursLoading}
-                        weeklyHoursError={weeklyHoursError}
-                        weeklyHours={weeklyHours}
-                        bookableSpace={bookableSpace}
-                    />
-                </StyledHideableBlock>
+                </StyledCollapsableSection>
                 <div style={{ float: 'right' }}>
                     <IconButton
                         id={expandButtonElementId(bookableSpace?.space_id)}
-                        data-testid={expandButtonElementId(bookableSpace?.space_id)}
+                        data-testid={`space-${bookableSpace?.space_id}-expand-button`}
                         onClick={() => expandSpace(bookableSpace?.space_id)}
                         aria-label="Expand Space details"
                         style={{ display: 'block' }}
@@ -540,7 +542,7 @@ export const BookableSpacesList = ({
                     </IconButton>
                     <IconButton
                         id={collapseButtonElementId(bookableSpace?.space_id)}
-                        data-testid={collapseButtonElementId(bookableSpace?.space_id)}
+                        data-testid={`space-${bookableSpace?.space_id}-collapse-button`}
                         onClick={() => collapseSpace(bookableSpace?.space_id)}
                         aria-label="Collapse Space details"
                         style={{ display: 'none' }}
