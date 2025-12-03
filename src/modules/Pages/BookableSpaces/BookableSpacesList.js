@@ -468,6 +468,13 @@ export const BookableSpacesList = ({
         !!spaceBlock && !spaceBlock.classList.contains('hidden') && spaceBlock.classList.add('hidden');
         !!spaceBlock && !!spaceBlock.classList.contains('visible') && spaceBlock.classList.remove('visible');
 
+        const topOfPanel = document.getElementById(`space-${spaceId}`);
+        !!topOfPanel &&
+            typeof topOfPanel.scrollIntoView === 'function' &&
+            topOfPanel.scrollIntoView({
+                behavior: 'smooth',
+            });
+
         const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
         !!spaceDescription &&
             !spaceDescription.classList.contains('truncated') &&
@@ -478,7 +485,7 @@ export const BookableSpacesList = ({
         const collapseButton = document.getElementById(collapseButtonElementId(spaceId));
         !!collapseButton && (collapseButton.style.display = 'none');
     };
-    const spaceGrid = bookableSpace => {
+    const spacePanel = bookableSpace => {
         return (
             <>
                 <div data-testid={`space-${bookableSpace?.space_id}-friendly-location`}>
@@ -848,7 +855,7 @@ export const BookableSpacesList = ({
                                                                     fullHeight
                                                                     title={`${bookableSpace?.space_name} - ${bookableSpace?.space_type}`}
                                                                 >
-                                                                    {spaceGrid(bookableSpace)}
+                                                                    {spacePanel(bookableSpace)}
                                                                 </StyledStandardCard>
                                                             </StyledBookableSpaceGridItem>
                                                         );
