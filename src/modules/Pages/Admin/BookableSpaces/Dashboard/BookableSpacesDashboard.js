@@ -105,18 +105,22 @@ const TableWrapper = styled('div')(() => ({
         marginInline: '20px',
     },
 }));
-const StyledOutButtonWrapperDiv = styled('div')(({ theme }) => ({
-    display: 'inline',
-    float: 'right',
-    '& button': {
-        backgroundColor: theme.palette.primary.main,
-        border: `1px solid ${theme.palette.primary.main}`,
-        color: 'white',
-        '&:hover, &:focus': {
-            backgroundColor: 'white',
-            color: theme.palette.primary.main,
-        },
+const StyledFilterWrapperDiv = styled('div')(() => ({
+    display: 'flex',
+    columnGap: '1rem',
+    marginBottom: '1rem',
+}));
+const StyledExpandCollapseTableIconButton = styled(IconButton)(({ theme }) => ({
+    transform: 'scale(-1, 1)',
+    transformOrigin: 'center',
+    backgroundColor: theme.palette.primary.main,
+    border: `1px solid ${theme.palette.primary.main}`,
+    color: 'white',
+    '&:hover, &:focus': {
+        backgroundColor: 'white',
+        color: theme.palette.primary.main,
     },
+    marginRight: '1rem',
 }));
 
 const CAMPUS_ID_UNSELECTED = '';
@@ -410,9 +414,9 @@ export const BookableSpacesDashboard = ({
         return (
             <>
                 <TableWrapper id="wrappedTableList" style={{ backgroundColor: '#fff' }} data-testid="table-wrapper">
-                    <div style={{ width: '100%' }}>
-                        <StyledOutButtonWrapperDiv>
-                            <IconButton
+                    <div data-testid="tablefilter" style={{ width: '100%' }}>
+                        <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+                            <StyledExpandCollapseTableIconButton
                                 color="primary"
                                 id="table-pushout-button"
                                 data-testid="table-pushout-button"
@@ -421,8 +425,8 @@ export const BookableSpacesDashboard = ({
                                 style={{ display: 'inline-flex' }}
                             >
                                 <OpenInFullIcon />
-                            </IconButton>
-                            <IconButton
+                            </StyledExpandCollapseTableIconButton>
+                            <StyledExpandCollapseTableIconButton
                                 color="primary"
                                 id="table-pushin-button"
                                 data-testid="table-pushin-button"
@@ -431,14 +435,12 @@ export const BookableSpacesDashboard = ({
                                 style={{ display: 'none' }}
                             >
                                 <CloseFullscreenIcon />
-                            </IconButton>
-                        </StyledOutButtonWrapperDiv>
-                    </div>
-                    <div data-testid="tablefilter" style={{ width: '100%' }}>
-                        <Typography component={'h3'} variant={'h6'}>
-                            Filter the list:
-                        </Typography>
-                        <div style={{ display: 'flex', columnGap: '1rem', marginBottom: '1rem' }}>
+                            </StyledExpandCollapseTableIconButton>
+                            <Typography component={'h3'} variant={'h6'}>
+                                Filter the list:
+                            </Typography>
+                        </div>
+                        <StyledFilterWrapperDiv>
                             <FormControl variant="standard" fullWidth>
                                 <InputLabel id="filter-by-campus-label" htmlFor="filter-by-campus-input">
                                     By campus
@@ -540,7 +542,7 @@ export const BookableSpacesDashboard = ({
                                         ))}
                                 </Select>
                             </FormControl>
-                        </div>
+                        </StyledFilterWrapperDiv>
                     </div>
                     <StyledTableContainer>
                         <Table
@@ -750,7 +752,7 @@ export const BookableSpacesDashboard = ({
                                 );
                             } else {
                                 return (
-                                    <StyledBookableSpaceGridItem item xs={12}>
+                                    <StyledBookableSpaceGridItem item xs={12} style={{ marginTop: 0, paddingTop: 0 }}>
                                         {displayListOfBookableSpaces()}
                                     </StyledBookableSpaceGridItem>
                                 );
