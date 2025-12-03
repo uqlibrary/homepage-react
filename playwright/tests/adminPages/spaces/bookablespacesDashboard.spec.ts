@@ -476,7 +476,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
 
-        await expect(page.getByTestId('spaces-dashboard-header-row').locator('> th')).toHaveCount(3);
+        await expect(page.getByTestId('spaces-dashboard-header-row').locator('> th')).toHaveCount(2);
     });
     test('spaces dashboard page is accessible', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
@@ -657,7 +657,6 @@ test.describe('Spaces Admin - manage locations', () => {
 
             // choose Floor 2
             await expect(floorSelector.locator('input')).not.toBeDisabled();
-            // await expect(page.getByTestId('filter-by-floor').locator('input')).toBeEmpty();
             floorSelector.click();
             const firstFloorOption = 'ul[aria-labelledby="filter-by-floor-label"] li:nth-of-type(1)';
             await expect(page.locator(firstFloorOption)).toContainText('2');
@@ -704,5 +703,68 @@ test.describe('Spaces Admin - manage locations', () => {
         visitHomepageButton.click();
 
         await expect(page).toHaveURL('http://localhost:2020/spaces?user=libSpaces');
+    });
+    test('can expand and shrink page', async ({ page }) => {
+        await page.goto('/admin/spaces?user=libSpaces');
+        const pageWidth = 1300;
+        await page.setViewportSize({ width: pageWidth, height: 1000 });
+
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
+
+        const tableWrapper = page.getByTestId('table-wrapper');
+        await expect(tableWrapper).toBeVisible();
+        const tableWrapperBoundingBox = await tableWrapper.boundingBox();
+        await expect(tableWrapperBoundingBox?.width).toBeGreaterThan(1130);
+        await expect(tableWrapperBoundingBox?.width).toBeLessThan(1150);
+
+        const pushOutbutton = page.getByTestId('table-pushout-button');
+        await expect(pushOutbutton).toBeVisible();
+        pushOutbutton.click();
+
+        const tableWrapperBoundingBox2 = await tableWrapper.boundingBox();
+        await expect(tableWrapperBoundingBox2?.width).toBeGreaterThan(pageWidth - 200);
+        await expect(tableWrapperBoundingBox2?.width).toBeLessThan(pageWidth);
+
+        const pushInbutton = page.getByTestId('table-pushin-button');
+        await expect(pushInbutton).toBeVisible();
+        pushInbutton.click();
+
+        await page.waitForTimeout(500); // cant think of any way to wait for the redraw!
+        const tableWrapperBoundingBox3 = await tableWrapper.boundingBox();
+        await expect(tableWrapperBoundingBox3?.width).toBeGreaterThan(1130);
+        await expect(tableWrapperBoundingBox3?.width).toBeLessThan(1150);
+    });
+    test('can open and close friendly locations', async ({ page }) => {
+        await page.goto('/admin/spaces?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
+
+        const descriptionPanel = page.getByTestId('space-description-43534');
+        const expandButton = page.getByTestId('space-43534-expand-button');
+        const collapseButton = page.getByTestId('space-43534-collapse-button');
+
+        // "friendly" location description starts off hidden
+        await expect(descriptionPanel).not.toBeVisible();
+        await expect(collapseButton).not.toBeVisible();
+        await expect(expandButton).toBeVisible();
+
+        // click the expand button
+        expandButton.click();
+
+        // description shows and buttons have swapped
+        await expect(descriptionPanel).toBeVisible();
+        await expect(collapseButton).toBeVisible();
+        await expect(expandButton).not.toBeVisible();
+
+        // click the collapse button
+        collapseButton.click();
+
+        // description disappears again and buttons have swapped
+        await expect(descriptionPanel).not.toBeVisible();
+        await expect(collapseButton).not.toBeVisible();
+        await expect(expandButton).toBeVisible();
     });
 });
