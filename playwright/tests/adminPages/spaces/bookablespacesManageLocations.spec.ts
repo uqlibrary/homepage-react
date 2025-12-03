@@ -39,7 +39,7 @@ test.describe('Spaces Location admin', () => {
 
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage locations/)).toBeVisible();
-        await expect(page.getByTestId('spaces-location-wrapper').locator('> *')).toHaveCount(16); // 3 locations with 4 libraries 9 floors
+        await expect(page.getByTestId('spaces-location-wrapper').locator('> *')).toHaveCount(21); // 3 locations with 4 libraries 9 floors
         await expect(page.getByTestId('add-new-campus-button')).toBeVisible();
 
         // ground floors correctly marked
@@ -178,7 +178,7 @@ test.describe('Spaces Location admin', () => {
             const libraryDropdown = dialog.getByTestId('campus-library-list');
             await expect(dialog.locator('h3')).toContainText('Libraries');
             await expect(libraryDropdown).toBeVisible();
-            await expect(libraryDropdown.locator('> *')).toHaveCount(2);
+            await expect(libraryDropdown.locator('> *')).toHaveCount(3);
             await expect(libraryDropdown.locator('li:first-of-type')).toContainText('Walter Harrison Law');
             await expect(libraryDropdown.locator('li:last-of-type')).toContainText('Central');
 
@@ -511,7 +511,7 @@ test.describe('Spaces Location admin', () => {
             const campusList = dialog.getByTestId('library-campus-list');
             await expect(campusList.locator('h3')).toContainText('Change Campus');
             await expect(campusList).toBeVisible();
-            await expect(campusList.locator('ul > *')).toHaveCount(3);
+            await expect(campusList.locator('ul > *')).toHaveCount(4);
             await expect(campusList.locator('ul li:first-of-type label')).toContainText('St Lucia');
             await expect(campusList.locator('ul li:nth-of-type(2) label')).toContainText('Gatton');
             await expect(campusList.locator('ul li:last-of-type label')).toContainText('Newsite');

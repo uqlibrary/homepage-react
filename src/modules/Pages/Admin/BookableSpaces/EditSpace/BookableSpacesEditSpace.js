@@ -1,16 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router';
 
 import { Grid } from '@mui/material';
 
+import { useAccountContext } from 'context';
+import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
+import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';
 import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
-import { EditSpaceForm } from '../EditSpaceForm';
-import { addBreadcrumbsToSiteHeader, displayToastMessage } from '../bookableSpacesAdminHelpers';
+import { EditSpaceForm } from 'modules/Pages/Admin/BookableSpaces/EditSpaceForm';
+import {
+    addBreadcrumbsToSiteHeader,
+    initialisedSpringshareList,
+    spacesAdminLink,
+    validCampusList,
+    weeklyHoursLoaded,
+} from '../bookableSpacesAdminHelpers';
 
 const PageWrapper = ({ children }) => {
     return (
@@ -48,8 +57,8 @@ export const BookableSpacesEditSpace = ({
 }) => {
     console.log('Edit bookableSpaceGet:', bookableSpaceGetting, bookableSpaceGetError, bookableSpaceGetResult);
     console.log('Edit campusList:', campusListLoading, campusListError, campusList);
-    console.log('Edit weeklyHours:', weeklyHoursLoading, weeklyHoursError, weeklyHours);
-    console.log('Edit weeklyHours:', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
+    console.log('Edit weeklyHours:', weeklyHoursLoading, weeklyHoursError, weeklyHours, weeklyHours?.locations);
+    console.log('Edit facilityTypeList:', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
     console.log(
         'Edit bookableSpacesRoomList:',
         bookableSpacesRoomListLoading,
@@ -57,12 +66,15 @@ export const BookableSpacesEditSpace = ({
         bookableSpacesRoomList,
     );
 
+    const { account } = useAccountContext();
+
     // "spaceUuid" matching the param passed in pathConfig.js and config/routes.js
     const { spaceUuid } = useParams();
 
     const [cookies, setCookie] = useCookies();
     const [formValues, setFormValues2] = useState([]);
     const setFormValues = newValues => {
+        console.log('BookableSpacesEditSpace setFormValues', newValues);
         setFormValues2(newValues);
     };
 
@@ -83,6 +95,31 @@ export const BookableSpacesEditSpace = ({
     }, []);
 
     useEffect(() => {
+        if (campusListLoading === null && campusListError === null && campusList === null) {
+            actions.loadBookableSpaceCampusChildren(); // get list of campuses, buildings and floors
+            actions.loadAllBookableSpacesRooms(); // get list of Spaces
+            actions.loadWeeklyHours(); // get weeklyHours for each library from springshare
+            actions.loadAllFacilityTypes(); // get list of facility types
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const [currentCampusList, setCurrentCampusList] = useState({});
+    useEffect(() => {
+        if (campusListLoading === false && campusListError === false && campusList?.length > 0) {
+            const _currentCampusList = validCampusList(campusList);
+            setCurrentCampusList(_currentCampusList);
+        }
+    }, [campusList, campusListError, campusListLoading]);
+
+    const [springshareList, setSpringshareList] = useState({});
+    useEffect(() => {
+        if (weeklyHoursLoaded(weeklyHoursLoading, weeklyHoursError, weeklyHours)) {
+            setSpringshareList(initialisedSpringshareList(locale, weeklyHours));
+        }
+    }, [weeklyHoursLoading, weeklyHoursError, weeklyHours]);
+
+    useEffect(() => {
         if (bookableSpaceGetting === false && bookableSpaceGetError === false && !!bookableSpaceGetResult?.data) {
             setFormValues({
                 facility_types: bookableSpaceGetResult?.data?.facility_types,
@@ -100,7 +137,7 @@ export const BookableSpacesEditSpace = ({
                 space_latitude: bookableSpaceGetResult?.data?.space_latitude,
                 space_longitude: bookableSpaceGetResult?.data?.space_longitude,
                 space_name: bookableSpaceGetResult?.data?.space_name,
-                space_opening_hours_id: bookableSpaceGetResult?.data?.space_opening_hours_id,
+                space_opening_hours_id: bookableSpaceGetResult?.data?.space_opening_hours_id || -1,
                 space_opening_hours_override: bookableSpaceGetResult?.data?.space_opening_hours_override,
                 space_photo_description: bookableSpaceGetResult?.data?.space_photo_description,
                 space_photo_url: bookableSpaceGetResult?.data?.space_photo_url,
@@ -142,32 +179,92 @@ export const BookableSpacesEditSpace = ({
             </PageWrapper>
         );
     }
-    return (
-        <EditSpaceForm
-            actions={actions}
-            bookableSpacesRoomUpdating={bookableSpacesRoomUpdating}
-            bookableSpacesRoomUpdateError={bookableSpacesRoomUpdateError}
-            bookableSpacesRoomUpdateResult={bookableSpacesRoomUpdateResult}
-            campusList={campusList}
-            campusListLoading={campusListLoading}
-            campusListError={campusListError}
-            bookableSpacesRoomList={bookableSpacesRoomList}
-            bookableSpacesRoomListLoading={bookableSpacesRoomListLoading}
-            bookableSpacesRoomListError={bookableSpacesRoomListError}
-            weeklyHours={weeklyHours}
-            weeklyHoursLoading={weeklyHoursLoading}
-            weeklyHoursError={weeklyHoursError}
-            facilityTypeList={facilityTypeList}
-            facilityTypeListLoading={facilityTypeListLoading}
-            facilityTypeListError={facilityTypeListError}
-            formValues={formValues}
-            setFormValues={setFormValues}
-            saveToDb={updateSpace}
-            PageWrapper={PageWrapper}
-            bookableSpaceGetError={bookableSpaceGetError}
-            mode="edit"
-        />
-    );
+    if (!!bookableSpaceGetting || !!bookableSpacesRoomListLoading || !!campusListLoading) {
+        return (
+            <Grid container>
+                <Grid item xs={12}>
+                    <InlineLoader message="Loading" />
+                </Grid>
+            </Grid>
+        );
+    } else if (
+        !!campusListError ||
+        !!bookableSpacesRoomListError ||
+        !!bookableSpaceGetError ||
+        !bookableSpaceGetResult?.data ||
+        !!facilityTypeListError ||
+        !!weeklyHoursError ||
+        !formValues?.campus_id
+    ) {
+        return (
+            <PageWrapper>
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                        <div data-testid="load-space-form-error">
+                            <p>Something went wrong - please try again later.</p>
+                            {!!campusListError && <p>Campus-building data had a problem.</p>}
+                            {!!bookableSpacesRoomListError && <p>Space types list had a problem.</p>}
+                            {!!bookableSpaceGetError && <p>Space details had a problem.</p>}
+                            {!!facilityTypeListError && <p>Facility type details had a problem.</p>}
+                            {!!weeklyHoursError && <p>Opening hours details had a problem.</p>}
+                        </div>
+                    </Grid>
+                </Grid>
+            </PageWrapper>
+        );
+    } else if (
+        !currentCampusList ||
+        currentCampusList?.length === 0 ||
+        (bookableSpacesRoomListLoading === false &&
+            bookableSpacesRoomListError === false &&
+            (!bookableSpacesRoomList?.data?.locations || bookableSpacesRoomList?.data?.locations.length === 0))
+    ) {
+        console.log('No Libraries currentCampusList=', currentCampusList);
+        console.log('No Libraries bookableSpacesRoomListLoading=', bookableSpacesRoomListLoading);
+        console.log('No Libraries bookableSpacesRoomListError=', bookableSpacesRoomListError);
+        console.log('No Libraries bookableSpacesRoomList=', bookableSpacesRoomList);
+        return (
+            <PageWrapper>
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                        <p data-testid="add-space-no-locations">
+                            No Libraries currently in system - please{' '}
+                            <a href={spacesAdminLink('/admin/spaces/manage/locations', account)}>
+                                create campus locations
+                            </a>{' '}
+                            and then try again.
+                        </p>
+                    </Grid>
+                </Grid>
+            </PageWrapper>
+        );
+    } else {
+        return (
+            <EditSpaceForm
+                actions={actions}
+                bookableSpacesRoomUpdating={bookableSpacesRoomUpdating}
+                bookableSpacesRoomUpdateError={bookableSpacesRoomUpdateError}
+                bookableSpacesRoomUpdateResult={bookableSpacesRoomUpdateResult}
+                bookableSpacesRoomList={bookableSpacesRoomList}
+                bookableSpacesRoomListLoading={bookableSpacesRoomListLoading}
+                bookableSpacesRoomListError={bookableSpacesRoomListError}
+                weeklyHours={weeklyHours}
+                weeklyHoursLoading={weeklyHoursLoading}
+                weeklyHoursError={weeklyHoursError}
+                facilityTypeList={facilityTypeList}
+                facilityTypeListLoading={facilityTypeListLoading}
+                facilityTypeListError={facilityTypeListError}
+                formValues={formValues}
+                setFormValues={setFormValues}
+                saveToDb={updateSpace}
+                PageWrapper={PageWrapper}
+                bookableSpaceGetError={bookableSpaceGetError}
+                springshareList={springshareList}
+                currentCampusList={currentCampusList}
+                mode="edit"
+            />
+        );
+    }
 };
 
 BookableSpacesEditSpace.propTypes = {

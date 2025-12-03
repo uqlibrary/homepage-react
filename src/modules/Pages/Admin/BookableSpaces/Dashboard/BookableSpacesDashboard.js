@@ -2,14 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 
+import FormControl from '@mui/material/FormControl';
 import { Grid } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
 
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -71,12 +76,19 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
             backgroundColor: 'rgb(189 186 186)',
         },
     },
+    '&.hidden': {
+        display: 'none',
+    },
 }));
 const StyledStickyTableCell = styled(TableCell)(() => ({
     position: 'sticky',
     backgroundColor: backgroundColorColumn,
     left: 0,
 }));
+
+const CAMPUS_ID_UNSELECTED = '';
+const LIBRARY_ID_UNSELECTED = '';
+const FLOOR_ID_UNSELECTED = '';
 
 export const BookableSpacesDashboard = ({
     actions,
@@ -89,6 +101,9 @@ export const BookableSpacesDashboard = ({
     facilityTypeList,
     facilityTypeListLoading,
     facilityTypeListError,
+    campusList,
+    campusListLoading,
+    campusListError,
 }) => {
     console.log('BookableSpacesDashboard top');
     console.log(
@@ -102,8 +117,45 @@ export const BookableSpacesDashboard = ({
 
     const { account } = useAccountContext();
 
+    // the filters we will show on the page
+    const [availableFilters, setAvailableFilters2] = React.useState([
+        { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
+    ]);
+    const setAvailableFilters = availableFilters => {
+        console.log('setAvailableFilters', availableFilters);
+        setAvailableFilters2(availableFilters);
+    };
+    const resetAvailableFilters = (filterTypeName, filterTypeValue) => {
+        const newFilterTypes =
+            availableFilters?.filter(g => {
+                return g.filterType !== filterTypeName;
+            }) || [];
+        newFilterTypes.push({
+            filterType: filterTypeName,
+            filterValue: filterTypeValue,
+        });
+        setAvailableFilters(newFilterTypes);
+    };
+
     React.useEffect(() => {
-        console.log('BookableSpacesDashboard PAGE LOADED');
+        if (campusListError === false && campusListLoading === false && !!campusList) {
+            const campusIdList = [
+                ...new Set(bookableSpacesRoomList?.data?.locations?.map(space => space.space_campus_id)),
+            ];
+
+            const availableCampusList = campusList?.filter(c => campusIdList.includes(c.campus_id));
+            availableCampusList.unshift({
+                campus_id: CAMPUS_ID_UNSELECTED,
+                campus_number: 'none',
+                campus_name: 'Show all campuses',
+                libraries: [],
+            });
+
+            resetAvailableFilters('campus', availableCampusList);
+        }
+    }, [campusListError, campusListLoading, campusList, bookableSpacesRoomList?.data?.locations]);
+
+    React.useEffect(() => {
         addBreadcrumbsToSiteHeader([
             '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Manage Spaces</span></li>',
         ]);
@@ -123,6 +175,99 @@ export const BookableSpacesDashboard = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    React.useEffect(() => {
+        if (
+            bookableSpacesRoomListError === false &&
+            bookableSpacesRoomListLoading === false &&
+            !!bookableSpacesRoomList
+        ) {
+            // becuse we dont want campusList available before bookableSpacesRoomList
+            if (campusListError === null && campusListLoading === null && campusList === null) {
+                actions.loadBookableSpaceCampusChildren();
+            }
+        }
+    }, [
+        bookableSpacesRoomListError,
+        bookableSpacesRoomListLoading,
+        bookableSpacesRoomList,
+        campusListError,
+        campusListLoading,
+        campusList,
+    ]);
+
+    const [selectedFilters, setSelectedFilters2] = React.useState([
+        { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
+        { filterType: 'library', filterValue: LIBRARY_ID_UNSELECTED },
+        { filterType: 'floor', filterValue: FLOOR_ID_UNSELECTED },
+    ]);
+    const setSelectedFilters = newFilter => {
+        console.log('setSelectedFilters', newFilter);
+        setSelectedFilters2(newFilter);
+    };
+    const resetSelectedFilters = (filterTypeName, filterTypeValue) => {
+        let newFilterTypes = selectedFilters?.filter(g => {
+            return g.filterType !== filterTypeName;
+        });
+        newFilterTypes.push({
+            filterType: filterTypeName,
+            filterValue: filterTypeValue,
+        });
+        if (filterTypeName === 'campus') {
+            newFilterTypes = newFilterTypes?.filter(g => {
+                return g.filterType !== 'library';
+            });
+            newFilterTypes.push({
+                filterType: 'library',
+                filterValue: LIBRARY_ID_UNSELECTED,
+            });
+        }
+        if (filterTypeName === 'campus' || filterTypeName === 'library') {
+            newFilterTypes = newFilterTypes?.filter(g => {
+                return g.filterType !== 'floor';
+            });
+            newFilterTypes.push({
+                filterType: 'floor',
+                filterValue: FLOOR_ID_UNSELECTED,
+            });
+        }
+        setSelectedFilters(newFilterTypes);
+
+        // show-hide Spaces according to selected filters
+        bookableSpacesRoomList?.data?.locations?.forEach(s => {
+            let showSpace = true;
+            newFilterTypes.forEach(f => {
+                if (f.filterType === 'campus') {
+                    if (f.filterValue !== CAMPUS_ID_UNSELECTED && s.space_campus_id !== f.filterValue) {
+                        showSpace = false;
+                    }
+                } else if (f.filterType === 'library') {
+                    if (f.filterValue !== LIBRARY_ID_UNSELECTED && s.space_library_id !== f.filterValue) {
+                        showSpace = false;
+                    }
+                } else if (f.filterType === 'floor') {
+                    if (f.filterValue !== FLOOR_ID_UNSELECTED && s.space_floor_id !== f.filterValue) {
+                        showSpace = false;
+                    }
+                }
+            });
+
+            const spaceRow = document.getElementById(`space-${s.space_id}`);
+            if (!!showSpace) {
+                !!spaceRow && spaceRow.classList.contains('hidden') && spaceRow.classList.remove('hidden');
+            } else {
+                !!spaceRow && !spaceRow.classList.contains('hidden') && spaceRow.classList.add('hidden');
+            }
+        });
+    };
+    const isCampusSelected =
+        selectedFilters?.find(f => f.filterType === 'campus')?.filterValue !== CAMPUS_ID_UNSELECTED;
+    console.log('selectedFilters=', selectedFilters);
+    console.log('isCampusSelected=', isCampusSelected);
+    const isLibrarySelected =
+        !!isCampusSelected &&
+        selectedFilters?.find(f => f.filterType === 'library')?.filterValue !== LIBRARY_ID_UNSELECTED;
+    console.log('isLibrarySelected=', isLibrarySelected);
+
     function hasFacility(facilityType, bookableSpace) {
         return bookableSpace?.facility_types.some(spaceFacility => {
             return spaceFacility.facility_type_id === facilityType.facility_type_id;
@@ -133,7 +278,7 @@ export const BookableSpacesDashboard = ({
 
     function prefilterFacilityData(data) {
         // first ensure sorted in sort order
-        const sortedGroups = [...data?.facility_type_groups].sort(
+        const sortedGroups = [...data?.facility_type_groups]?.sort(
             (a, b) => a.facility_type_group_order - b.facility_type_group_order,
         );
 
@@ -141,7 +286,7 @@ export const BookableSpacesDashboard = ({
         let overallCounter = 1;
         return sortedGroups?.map(group => {
             // sort the facility types alphabetically (they should already be, but...)
-            const sortedChildren = [...group.facility_type_children].sort((a, b) =>
+            const sortedChildren = [...group.facility_type_children]?.sort((a, b) =>
                 a.facility_type_name.localeCompare(b.facility_type_name),
             );
 
@@ -165,26 +310,157 @@ export const BookableSpacesDashboard = ({
         !spaceuuid && console.log('no valid button clicked');
     };
 
+    const selectFilter = prop => e => {
+        resetSelectedFilters(prop, e.target.value);
+    };
+
     function displayListOfBookableSpaces() {
         const tableDescription = 'Manage Spaces';
 
         const sortedFacilityTypeGroups = prefilterFacilityData(facilityTypeList?.data);
 
+        const campusFilterTypes = availableFilters?.find(ft => ft.filterType === 'campus')?.filterValue;
+        const selectedCampusId = selectedFilters?.find(f => f.filterType === 'campus')?.filterValue;
+        const selectedCampus =
+            !!campusFilterTypes &&
+            !!campusFilterTypes &&
+            campusFilterTypes?.length > 0 &&
+            campusFilterTypes?.find(campus => campus.campus_id === selectedCampusId);
+        const selectedLibraryId = selectedFilters?.find(f => f.filterType === 'library')?.filterValue;
+        const selectedLibrary =
+            !!selectedCampus && selectedCampus?.libraries?.find(library => library.library_id === selectedLibraryId);
         return (
             <>
+                <div data-testid="tablefilter">
+                    <Typography component={'h3'} variant={'h6'}>
+                        Filter the list:
+                    </Typography>
+                    <div style={{ display: 'flex', columnGap: '1rem', marginBottom: '1rem' }}>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel id="filter-by-campus-label" htmlFor="filter-by-campus-input">
+                                By campus
+                            </InputLabel>
+                            <Select
+                                id="filter-by-campus"
+                                labelId="filter-by-campus-label"
+                                data-testid="filter-by-campus"
+                                value={
+                                    selectedFilters?.find(f => f.filterType === 'campus')?.filterValue ||
+                                    CAMPUS_ID_UNSELECTED
+                                }
+                                onChange={selectFilter('campus')}
+                                inputProps={{
+                                    id: 'filter-by-campus-input',
+                                    title: 'Filter the displayed Spaces by campus',
+                                }}
+                            >
+                                {!!campusFilterTypes &&
+                                    !!campusFilterTypes &&
+                                    campusFilterTypes?.length > 0 &&
+                                    campusFilterTypes?.map((campus, index) => (
+                                        <MenuItem
+                                            value={campus.campus_id}
+                                            key={`filter-by-campus-menuitem-${index}`}
+                                            selected={campus.campus_id === 99999}
+                                        >
+                                            {campus.campus_name}
+                                        </MenuItem>
+                                    ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel
+                                id="filter-by-library-label"
+                                htmlFor="filter-by-library-input"
+                                disabled={!isCampusSelected}
+                            >
+                                By library
+                            </InputLabel>
+                            <Select
+                                id="filter-by-library"
+                                labelId="filter-by-library-label"
+                                data-testid="filter-by-library"
+                                value={
+                                    selectedFilters?.find(f => f.filterType === 'library')?.filterValue ||
+                                    LIBRARY_ID_UNSELECTED
+                                }
+                                onChange={selectFilter('library')}
+                                inputProps={{
+                                    id: 'filter-by-library-input',
+                                    title: 'Filter the displayed Spaces by library',
+                                }}
+                                disabled={!isCampusSelected}
+                            >
+                                {selectedCampus?.libraries?.map((library, index) => (
+                                    <MenuItem
+                                        value={library.library_id}
+                                        key={`filter-by-library-menuitem-${index}`}
+                                        selected={library.library_id === 99999}
+                                    >
+                                        {library.library_name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel
+                                id="filter-by-floor-label"
+                                htmlFor="filter-by-floor-input"
+                                disabled={!isLibrarySelected}
+                            >
+                                By floor
+                            </InputLabel>
+                            <Select
+                                id="filter-by-floor"
+                                labelId="filter-by-floor-label"
+                                data-testid="filter-by-floor"
+                                value={
+                                    selectedFilters?.find(f => f.filterType === 'floor')?.filterValue ||
+                                    FLOOR_ID_UNSELECTED
+                                }
+                                onChange={selectFilter('floor')}
+                                inputProps={{
+                                    id: 'filter-by-floor-input',
+                                    title: 'Filter the displayed Spaces by floor',
+                                }}
+                                disabled={!isLibrarySelected}
+                            >
+                                {!!selectedLibrary &&
+                                    selectedLibrary?.floors.map((floor, index) => (
+                                        <MenuItem
+                                            value={floor.floor_id}
+                                            key={`filter-by-floor-menuitem-${index}`}
+                                            selected={floor.floor_id === 99999}
+                                        >
+                                            {floor.floor_name}
+                                        </MenuItem>
+                                    ))}
+                            </Select>
+                        </FormControl>
+                    </div>
+                </div>
                 <StyledTableContainer>
-                    <Table aria-label={tableDescription} aria-describedby="tableDescriptionElement">
+                    <Table
+                        aria-label={tableDescription}
+                        aria-describedby="tableDescriptionElement"
+                        data-testid="space-table"
+                    >
                         <StyledTableHead>
                             {facilityTypeList?.data?.facility_type_groups?.length > 0 && (
                                 // top row of the two-row table head, to label the facilities block
                                 <StyledHeaderTableRow data-testid="spaces-dashboard-header-row">
-                                    {[...Array(2).keys()].map((unused, index) => (
-                                        <TableCell
-                                            component="th"
-                                            sx={{ borderBottomWidth: 0, paddingBlock: 0 }}
-                                            key={`header-cell-${index}`}
-                                        />
-                                    ))}
+                                    <TableCell
+                                        component="th"
+                                        sx={{ borderBottomWidth: 0, paddingBlock: 0 }}
+                                        key={'header-cell-0'}
+                                    />
+                                    <TableCell
+                                        component="th"
+                                        sx={{ borderBottomWidth: 0, paddingBlock: 0, textAlign: 'right' }}
+                                        key={'header-cell-1'}
+                                    >
+                                        Filters:
+                                    </TableCell>
                                     {sortedFacilityTypeGroups?.map((group, index) => {
                                         return (
                                             <TableCell
@@ -234,7 +510,7 @@ export const BookableSpacesDashboard = ({
                                 return (
                                     <StyledTableRow
                                         key={`space-${bookableSpace?.space_id}`}
-                                        data-testid="exampaper-desktop-originals-table-header"
+                                        id={`space-${bookableSpace?.space_id}`}
                                     >
                                         <StyledStickyTableCell component="th" scope="col">
                                             <div>
@@ -297,7 +573,7 @@ export const BookableSpacesDashboard = ({
 
             <section aria-live="assertive">
                 <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} className="aaaaaaaaa">
                         {(() => {
                             if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
                                 return (
@@ -325,7 +601,11 @@ export const BookableSpacesDashboard = ({
                                     </StyledBookableSpaceGridItem>
                                 );
                             } else {
-                                return displayListOfBookableSpaces();
+                                return (
+                                    <StyledBookableSpaceGridItem item xs={12}>
+                                        {displayListOfBookableSpaces()}
+                                    </StyledBookableSpaceGridItem>
+                                );
                             }
                         })()}
                     </Grid>
@@ -346,6 +626,9 @@ BookableSpacesDashboard.propTypes = {
     facilityTypeList: PropTypes.any,
     facilityTypeListLoading: PropTypes.any,
     facilityTypeListError: PropTypes.any,
+    campusList: PropTypes.any,
+    campusListLoading: PropTypes.any,
+    campusListError: PropTypes.any,
 };
 
 export default React.memo(BookableSpacesDashboard);
