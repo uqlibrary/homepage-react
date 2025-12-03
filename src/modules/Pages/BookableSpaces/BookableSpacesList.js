@@ -16,13 +16,15 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import { breadcrumbs } from 'config/routes';
+import { standardText } from 'helpers/general';
+
+import { SpaceOpeningHours } from 'modules/Pages/BookableSpaces/SpaceOpeningHours';
 import {
     getFilteredFacilityTypeList,
     getFlatFacilityTypeList,
     getFriendlyLocationDescription,
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import { breadcrumbs } from 'config/routes';
-import { standardText } from 'helpers/general';
 
 const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     ...standardText(theme),
@@ -198,7 +200,7 @@ const StyledDescription = styled('div')(() => ({
         textOverflow: 'ellipsis',
     },
 }));
-const StyledHideableBlock = styled('div')(() => ({
+const StyledCollapsableSection = styled('div')(() => ({
     '&.visible': {
         visibility: 'visible',
         height: 'auto',
@@ -425,139 +427,6 @@ export const BookableSpacesList = ({
         scrollToTopOfContent();
     };
 
-    function filterNext7Days(departmentData) {
-        // Get today's date (start of day)
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        // Calculate the end date (6 days from today)
-        const endDate = new Date(today);
-        endDate.setDate(today.getDate() + 6);
-
-        // Filter days to include only the next 7 days starting from today
-        const filteredDays = departmentData.days.filter(day => {
-            const dayDate = new Date(day.date);
-            dayDate.setHours(0, 0, 0, 0);
-
-            return dayDate >= today && dayDate <= endDate;
-        });
-
-        // Sort by date to ensure chronological order
-        filteredDays?.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        filteredDays?.map((d, index) => {
-            if (index <= 1) {
-                d.dayName = index === 0 ? 'Today' : 'Tomorrow';
-            }
-            return d;
-        });
-
-        // Return the department with filtered days
-        const result = {
-            ...departmentData,
-            next7days: filteredDays,
-        };
-        delete result.days;
-
-        return result;
-    }
-
-    // rewrite the hours-by-week into one long list of days
-    function convertWeeksToDays(data) {
-        // Create a deep copy to avoid mutating the original data
-        const location = JSON.parse(JSON.stringify(data));
-
-        // Define the order of days for consistent sorting
-        const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-        // only one of these should appear in the data - should match api HoursResource list
-        const displayedDepartments = ['Collections and space', 'Study space', 'Service and collections'];
-        const filteredData = {
-            ...location,
-            department: location.departments.find(dept => displayedDepartments.includes(dept.name)),
-        };
-        delete filteredData.departments;
-
-        if (filteredData.department.weeks && Array.isArray(filteredData.department.weeks)) {
-            const allDays = [];
-
-            filteredData.department.weeks.forEach(week => {
-                dayOrder.forEach(dayName => {
-                    if (week[dayName]) {
-                        // Add day name as a property for easier identification
-                        const dayData = {
-                            dayName: dayName,
-                            ...week[dayName],
-                        };
-                        allDays.push(dayData);
-                    }
-                });
-            });
-
-            delete filteredData.department.weeks;
-            allDays?.sort((a, b) => new Date(a.date) - new Date(b.date));
-            filteredData.department.days = allDays;
-        }
-
-        !!filteredData.department.days && (filteredData.department = filterNext7Days(filteredData.department));
-
-        return filteredData;
-    }
-
-    const spaceOpeningHours = bookableSpace => {
-        console.log('spaceOpeningHours 1 bookableSpace=', bookableSpace);
-        console.log('spaceOpeningHours 2 weeklyHours=', weeklyHours);
-        let openingDetails = weeklyHours?.locations?.find(openingHours => {
-            return openingHours.lid === bookableSpace?.space_opening_hours_id;
-        });
-        !!openingDetails && (openingDetails = convertWeeksToDays(openingDetails));
-        return openingDetails?.department?.next7days || [];
-    };
-
-    function openingHoursComponent(bookableSpace, locationKey, libraryName) {
-        if (weeklyHoursLoading === false && !!weeklyHoursError) {
-            const spaceId = bookableSpace?.space_id || /* istanbul ignore next */ 'unknown';
-            return (
-                <p data-testid={`weekly-hours-error-${spaceId}`}>
-                    General opening hours currently unavailable - please try again later.
-                </p>
-            );
-        }
-        const openingHoursList = spaceOpeningHours(bookableSpace);
-        if (openingHoursList?.length === 0) {
-            return <p>Opening hours currently unavailable - please try again later</p>;
-        }
-        return (
-            <>
-                <h3>{libraryName} opening hours</h3>
-                <table style={{ width: '100%' }}>
-                    <thead>
-                        <tr>
-                            {openingHoursList?.map((d, index) => (
-                                <th
-                                    style={{ textAlign: 'center' }}
-                                    key={`${locationKey}-openingHours-${index}`}
-                                    data-testid={`${locationKey}-openingHours-${index}`}
-                                >
-                                    {d.dayName}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            {openingHoursList?.map((d, index) => (
-                                <td style={{ textAlign: 'center' }} key={`${locationKey}-openingtd-${index}`}>
-                                    {d.rendered}
-                                </td>
-                            ))}
-                        </tr>
-                    </tbody>
-                </table>
-            </>
-        );
-    }
-
     const collapseFilterGroup = (filterGroupId, onLoad = false) => {
         const filterGroupBlock = document.getElementById(`filter-group-list-${filterGroupId}`);
         !!filterGroupBlock &&
@@ -610,22 +479,30 @@ export const BookableSpacesList = ({
         !!collapseButton && (collapseButton.style.display = 'none');
     };
     const spaceGrid = bookableSpace => {
-        const locationKey = `space-${bookableSpace?.space_id}`;
         return (
             <>
-                <div data-testid={locationKey}>{getFriendlyLocationDescription(bookableSpace)}</div>
+                <div data-testid={`space-${bookableSpace?.space_id}-friendly-location`}>
+                    {getFriendlyLocationDescription(bookableSpace)}
+                </div>
                 {bookableSpace?.space_description?.length > 0 && (
                     <StyledDescription
                         id={spaceDescriptionElementsId(bookableSpace?.space_id)}
-                        data-testid={spaceDescriptionElementsId(bookableSpace?.space_id)}
+                        data-testid={`space-${bookableSpace?.space_id}-description`}
                         className={'truncated'}
                     >
                         <p>{bookableSpace?.space_description}</p>
                     </StyledDescription>
                 )}
-                <StyledHideableBlock
+                <SpaceOpeningHours
+                    weeklyHoursLoading={weeklyHoursLoading}
+                    weeklyHoursError={weeklyHoursError}
+                    weeklyHours={weeklyHours}
+                    bookableSpace={bookableSpace}
+                />
+
+                <StyledCollapsableSection
                     id={spaceExtraElementsId(bookableSpace?.space_id)}
-                    data-testid={spaceExtraElementsId(bookableSpace?.space_id)}
+                    data-testid={`space-${bookableSpace?.space_id}-collapsible`}
                     className={'hidden'}
                     style={{ transition: 'opacity 0.3s ease-in-out, height 0.3s ease-in-out' }}
                 >
@@ -638,12 +515,12 @@ export const BookableSpacesList = ({
                     {bookableSpace?.facility_types?.length > 0 && (
                         <>
                             <h3>Facilities</h3>
-                            <ul data-testid={`facility-${bookableSpace?.space_id}`}>
+                            <ul data-testid={`space-${bookableSpace?.space_id}-facility`}>
                                 {bookableSpace?.facility_types?.map(facility => {
                                     return (
                                         <li
-                                            key={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}
-                                            data-testid={`facility-${bookableSpace?.space_id}-${facility.facility_type_id}`}
+                                            key={`space-${bookableSpace?.space_id}-facility-${facility.facility_type_id}`}
+                                            data-testid={`space-${bookableSpace?.space_id}-facility-${facility.facility_type_id}`}
                                         >
                                             {facility.facility_type_name}
                                         </li>
@@ -652,19 +529,11 @@ export const BookableSpacesList = ({
                             </ul>
                         </>
                     )}
-                    {openingHoursComponent(bookableSpace, locationKey, bookableSpace?.space_library_name)}
-                    {!!bookableSpace?.space_opening_hours_override ? (
-                        <p data-testid={`override_opening_hours_${bookableSpace?.space_uuid}`}>
-                            Note: {bookableSpace?.space_opening_hours_override}
-                        </p>
-                    ) : (
-                        ''
-                    )}
-                </StyledHideableBlock>
+                </StyledCollapsableSection>
                 <div style={{ float: 'right' }}>
                     <IconButton
                         id={expandButtonElementId(bookableSpace?.space_id)}
-                        data-testid={expandButtonElementId(bookableSpace?.space_id)}
+                        data-testid={`space-${bookableSpace?.space_id}-expand-button`}
                         onClick={() => expandSpace(bookableSpace?.space_id)}
                         aria-label="Expand Space details"
                         style={{ display: 'block' }}
@@ -673,7 +542,7 @@ export const BookableSpacesList = ({
                     </IconButton>
                     <IconButton
                         id={collapseButtonElementId(bookableSpace?.space_id)}
-                        data-testid={collapseButtonElementId(bookableSpace?.space_id)}
+                        data-testid={`space-${bookableSpace?.space_id}-collapse-button`}
                         onClick={() => collapseSpace(bookableSpace?.space_id)}
                         aria-label="Collapse Space details"
                         style={{ display: 'none' }}
