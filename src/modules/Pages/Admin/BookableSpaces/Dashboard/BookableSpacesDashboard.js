@@ -556,18 +556,13 @@ export const BookableSpacesDashboard = ({
                                     <StyledHeaderTableRow data-testid="spaces-dashboard-header-row">
                                         <TableCell
                                             component="th"
-                                            sx={{ borderBottomWidth: 0, paddingBlock: 0, backgroundColor: '#fff' }}
-                                            key={'header-cell-0'}
-                                        />
-                                        <TableCell
-                                            component="th"
                                             sx={{
                                                 borderBottomWidth: 0,
                                                 paddingBlock: 0,
-                                                textAlign: 'right',
                                                 backgroundColor: '#fff',
+                                                textAlign: 'right',
                                             }}
-                                            key={'header-cell-1'}
+                                            key={'header-cell-0'}
                                         >
                                             Filters:
                                         </TableCell>
@@ -594,9 +589,9 @@ export const BookableSpacesDashboard = ({
                                 <StyledHeaderTableRow>
                                     <StyledStickyTableCell
                                         component="th"
-                                        sx={{ backgroundColor: { backgroundColorColumn } }}
+                                        sx={{ backgroundColor: { backgroundColorColumn }, verticalAlign: 'bottom' }}
                                     >
-                                        Name
+                                        Space
                                     </StyledStickyTableCell>
                                     {sortedFacilityTypeGroups?.map(group =>
                                         group?.facility_type_children?.map(facilityType => (
