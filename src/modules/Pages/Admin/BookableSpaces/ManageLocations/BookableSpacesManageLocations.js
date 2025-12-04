@@ -896,10 +896,11 @@ export const BookableSpacesManageLocations = ({
             <input  name="campusId" type="hidden" value="${campusDetails.campus_id}" />${campusCoreForm(
             campusDetails,
         )}<div class="dialogRow">
-                <h3 data-testid="campus-library-label">Libraries</h3>
+                <h3>Libraries on this Campus</h3>
                 ${
                     campusDetails?.libraries?.length > 0
                         ? `<ul data-testid="campus-library-list">${campusDetails?.libraries
+                              ?.sort((a, b) => a.library_name.localeCompare(b.library_name))
                               ?.map(library => `<li>${displayedLibraryName(library)}</li>`)
                               .join('')}</ul>`
                         : ''
