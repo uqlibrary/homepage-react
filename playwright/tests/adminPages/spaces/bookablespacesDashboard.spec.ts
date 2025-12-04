@@ -1,6 +1,13 @@
 import { expect, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
+const CAMPUS_ALL_OPTION = '1';
+const CAMPUS_ST_LUCIA_OPTION = '2';
+const CAMPUS_PACE_OPTION = '3';
+const ST_LUCIA_RECORD_ID = '1'; // '2' is gatton, which has no Spaces in our mock data
+const PACE_RECORD_ID = '3';
+const PAGINATE_TO_SHOW_5 = 5;
+
 test.describe('Spaces Admin - manage locations', () => {
     test('page has correct data', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
@@ -488,16 +495,11 @@ test.describe('Spaces Admin - manage locations', () => {
         });
     });
     test.describe('can filter', () => {
-        const CAMPUS_ALL_OPTION = '1';
-        const CAMPUS_ST_LUCIA_OPTION = '2';
-        const CAMPUS_PACE_OPTION = '3';
-        const ST_LUCIA_RECORD_ID = '1'; // '2' is gatton, which has no Spaces in our mock data
-        const PACE_RECORD_ID = '3';
         test('by campus', async ({ page }) => {
             const visibleSpaces = page
                 .getByTestId('space-table')
                 .locator('tbody')
-                .locator(':scope > tr:not(.hidden)');
+                .locator(':scope > tr:not(.hiddenRow)');
             const lawSpace = page.getByTestId('edit-space-123456-button');
             const paceSpace = page.getByTestId('edit-space-1234544-button');
             const liverisSpace = page.getByTestId('edit-space-43534-button');
@@ -513,8 +515,13 @@ test.describe('Spaces Admin - manage locations', () => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible(); // page had loaded
 
-            // initially all space rows are visible
-            await expect(visibleSpaces).toHaveCount(3);
+            // initially paginator limit of 5 is visible
+            await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
+            await expect(page.getByTestId('space-123456')).toBeVisible();
+            await expect(page.getByTestId('space-1234544')).toBeVisible();
+            await expect(page.getByTestId('space-43534')).toBeVisible();
+            await expect(page.getByTestId('space-1')).toBeVisible();
+            await expect(page.getByTestId('space-2')).toBeVisible();
 
             await expect(campusSelector.locator('input')).not.toBeDisabled();
             await expect(librarySelector.locator('input')).toBeDisabled();
@@ -523,6 +530,7 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(campusSelector.locator('input')).toBeEmpty();
             campusSelector.click();
 
+            // limit to St Lucia only
             await expect(campusOptionLabel(CAMPUS_ST_LUCIA_OPTION)).toContainText('St Lucia');
             campusOptionLabel(CAMPUS_ST_LUCIA_OPTION).click(); // choose St Lucia
             await expect(campusSelector.locator('input')).toHaveValue(ST_LUCIA_RECORD_ID);
@@ -531,7 +539,12 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(floorSelector.locator('input')).toBeDisabled();
 
             // only St Lucia spaces display
-            await expect(visibleSpaces).toHaveCount(2);
+            await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
+            await expect(page.getByTestId('space-123456')).toBeVisible();
+            await expect(page.getByTestId('space-43534')).toBeVisible();
+            await expect(page.getByTestId('space-1')).toBeVisible();
+            await expect(page.getByTestId('space-2')).toBeVisible();
+            await expect(page.getByTestId('space-3')).toBeVisible();
             await expect(lawSpace).toBeVisible();
             await expect(paceSpace).not.toBeVisible();
             await expect(liverisSpace).toBeVisible();
@@ -550,6 +563,7 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(lawSpace).not.toBeVisible();
             await expect(paceSpace).toBeVisible();
             await expect(liverisSpace).not.toBeVisible();
+            await expect(page.getByTestId('space-1234544')).toBeVisible();
 
             // deselect campuses
             campusSelector.click();
@@ -559,8 +573,8 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(librarySelector.locator('input')).toBeDisabled();
             await expect(floorSelector.locator('input')).toBeDisabled();
 
-            // all campus spaces display
-            await expect(visibleSpaces).toHaveCount(3);
+            // first page of all campus spaces display
+            await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
         });
         test('by locations', async ({ page }) => {
             const visibleSpaces = page
@@ -582,13 +596,13 @@ test.describe('Spaces Admin - manage locations', () => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible(); // page had loaded
 
-            // initially all space rows are visible
+            // initially all first page space rows are visible
             await expect(
                 page
                     .getByTestId('space-table')
                     .locator('tbody')
                     .locator(':scope > tr'),
-            ).toHaveCount(3);
+            ).toHaveCount(PAGINATE_TO_SHOW_5);
             await expect(lawSpace).toBeVisible();
             await expect(paceSpace).toBeVisible();
             await expect(liverisSpace).toBeVisible();
@@ -618,7 +632,7 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(campusSelector.locator('div')).toContainText('St Lucia');
             await expect(librarySelector.locator('input')).not.toBeDisabled();
             await expect(floorSelector.locator('input')).toBeDisabled();
-            await expect(visibleSpaces).toHaveCount(2); // only St Lucia spaces display
+            await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5); // only one page of St Lucia spaces display
             await expect(lawSpace).toBeVisible();
             await expect(paceSpace).not.toBeVisible();
             await expect(liverisSpace).toBeVisible();
@@ -631,9 +645,9 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(librarySelector.locator('input')).not.toBeDisabled();
             await expect(librarySelector.locator('input')).toBeEmpty();
             librarySelector.click();
-            const firstLibraryOption = page.locator('ul[aria-labelledby="filter-by-library-label"] li:nth-of-type(1)');
-            await expect(firstLibraryOption).toContainText('Walter Harrison Law Library');
-            firstLibraryOption.click(); // choose Walter Harrison
+            const lawLibraryOption = page.locator('ul[aria-labelledby="filter-by-library-label"] li:last-of-type');
+            await expect(lawLibraryOption).toContainText('Walter Harrison Law Library');
+            lawLibraryOption.click(); // choose Walter Harrison
             await expect(visibleSpaces).toHaveCount(1); // only the Walter Harrison space displays
             await expect(lawSpace).toBeVisible();
             await expect(paceSpace).not.toBeVisible();
@@ -673,7 +687,7 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(campusSelector.locator('input')).toHaveValue('');
             await expect(librarySelector.locator('input')).toBeDisabled();
             await expect(floorSelector.locator('input')).toBeDisabled();
-            await expect(visibleSpaces).toHaveCount(3); // all campus spaces display
+            await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5); // first page of all campus spaces display
 
             await expect(campusSelector.locator('input')).not.toBeDisabled();
             await expect(librarySelector.locator('input')).toBeDisabled();
@@ -766,5 +780,68 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(descriptionPanel).not.toBeVisible();
         await expect(collapseButton).not.toBeVisible();
         await expect(expandButton).toBeVisible();
+    });
+    test('pagination works', async ({ page }) => {
+        const visibleSpaces = page
+            .getByTestId('space-table')
+            .locator('tbody')
+            .locator(':scope > tr:not(.hidden)');
+
+        const campusSelector = page.getByTestId('filter-by-campus');
+        const librarySelector = page.getByTestId('filter-by-library');
+        const floorSelector = page.getByTestId('filter-by-floor');
+
+        const campusOptionLabel = (optionIndex: string) =>
+            page.locator(`ul[aria-labelledby="filter-by-campus-label"] li:nth-of-type(${optionIndex})`);
+
+        await page.goto('/admin/spaces?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
+
+        await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
+        await expect(page.getByTestId('space-123456')).toBeVisible();
+        await expect(page.getByTestId('space-1234544')).toBeVisible();
+        await expect(page.getByTestId('space-43534')).toBeVisible();
+        await expect(page.getByTestId('space-1')).toBeVisible();
+        await expect(page.getByTestId('space-2')).toBeVisible();
+
+        await expect(campusSelector.locator('input')).not.toBeDisabled();
+        campusSelector.click();
+
+        // limit to St Lucia only
+        await expect(campusOptionLabel(CAMPUS_ST_LUCIA_OPTION)).toContainText('St Lucia');
+        campusOptionLabel(CAMPUS_ST_LUCIA_OPTION).click(); // choose St Lucia
+        await expect(campusSelector.locator('input')).toHaveValue(ST_LUCIA_RECORD_ID);
+        await expect(campusSelector.locator('div')).toContainText('St Lucia');
+        await expect(librarySelector.locator('input')).not.toBeDisabled();
+        await expect(floorSelector.locator('input')).toBeDisabled();
+
+        // only St Lucia spaces display
+        await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
+        await expect(page.getByTestId('space-123456')).toBeVisible();
+        await expect(page.getByTestId('space-43534')).toBeVisible();
+        await expect(page.getByTestId('space-1')).toBeVisible();
+        await expect(page.getByTestId('space-2')).toBeVisible();
+        await expect(page.getByTestId('space-3')).toBeVisible();
+
+        // paginate
+        const nextPageButton = page.locator('[aria-label="Go to next page"]');
+        await expect(nextPageButton).toBeVisible();
+        nextPageButton.click();
+
+        // next page of St Lucia spaces display
+        await expect(visibleSpaces).toHaveCount(4); // the second page of a set of 9
+        await expect(page.getByTestId('space-4')).toBeVisible();
+        await expect(page.getByTestId('space-5')).toBeVisible();
+        await expect(page.getByTestId('space-6')).toBeVisible();
+        await expect(page.getByTestId('space-7')).toBeVisible();
+
+        // change number of rows displayed
+        const rowsperpageSelector = page.getByTestId('admin-spaces-list-paginator-select');
+        await expect(rowsperpageSelector).toBeVisible();
+        await rowsperpageSelector.selectOption('10'); // choose '10 per page'
+        await expect(visibleSpaces).toHaveCount(9); // all st lucia records
     });
 });
