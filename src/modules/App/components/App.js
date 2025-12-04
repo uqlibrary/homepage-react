@@ -26,7 +26,7 @@ browserUpdate({
 });
 
 const isAdminPage = () => {
-    return window.location.pathname.startsWith('/admin/');
+    return window.location.pathname.startsWith('/admin/') || window.location.hash.startsWith('#/admin/');
 };
 
 export const App = ({ account, actions }) => {
