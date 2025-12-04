@@ -2,7 +2,7 @@ export default {
     "status": "OK",
     "data": {
         "locations": [{
-            space_id: "123456",
+            space_id: 123456,
             space_uuid: "f98g_fwas_5g33",
             space_name: "01-W431",
             space_precise: "Westernmost corner",
@@ -81,7 +81,7 @@ export default {
                 }
             ],
         }, {
-            space_id: "1234544",
+            space_id: 1234544,
             space_uuid: "df40_2jsf_zdk5",
             space_name: "6078",
             space_precise: "",
@@ -168,7 +168,7 @@ export default {
             space_campus_id: 3,
             space_campus_name: "Dutton Park",
         }, {
-            space_id: "43534",
+            space_id: 43534,
             space_uuid: "97fd5_nm39_gh29",
             space_name: "46-342/343",
             space_precise: "Eastern corner",
