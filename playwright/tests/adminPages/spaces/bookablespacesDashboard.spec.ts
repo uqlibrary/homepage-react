@@ -794,6 +794,8 @@ test.describe('Spaces Admin - manage locations', () => {
         const campusOptionLabel = (optionIndex: string) =>
             page.locator(`ul[aria-labelledby="filter-by-campus-label"] li:nth-of-type(${optionIndex})`);
 
+        const pageCountDisplay = page.locator('.MuiTablePagination-displayedRows');
+
         await page.goto('/admin/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
 
@@ -806,6 +808,10 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('space-43534')).toBeVisible();
         await expect(page.getByTestId('space-1')).toBeVisible();
         await expect(page.getByTestId('space-2')).toBeVisible();
+
+        // paginator shows correct number
+        await expect(pageCountDisplay).toBeVisible();
+        await expect(pageCountDisplay).toContainText('1–5 of 10');
 
         await expect(campusSelector.locator('input')).not.toBeDisabled();
         campusSelector.click();
@@ -826,6 +832,10 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('space-2')).toBeVisible();
         await expect(page.getByTestId('space-3')).toBeVisible();
 
+        // paginator shows correct number
+        await expect(pageCountDisplay).toBeVisible();
+        await expect(pageCountDisplay).toContainText('1–5 of 9');
+
         // paginate
         const nextPageButton = page.locator('[aria-label="Go to next page"]');
         await expect(nextPageButton).toBeVisible();
@@ -838,10 +848,18 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('space-6')).toBeVisible();
         await expect(page.getByTestId('space-7')).toBeVisible();
 
+        // paginator shows correct number
+        await expect(pageCountDisplay).toBeVisible();
+        await expect(pageCountDisplay).toContainText('6–9 of 9');
+
         // change number of rows displayed
         const rowsperpageSelector = page.getByTestId('admin-spaces-list-paginator-select');
         await expect(rowsperpageSelector).toBeVisible();
         await rowsperpageSelector.selectOption('10'); // choose '10 per page'
         await expect(visibleSpaces).toHaveCount(9); // all st lucia records
+
+        // paginator shows correct number
+        await expect(pageCountDisplay).toBeVisible();
+        await expect(pageCountDisplay).toContainText('1–9 of 9');
     });
 });

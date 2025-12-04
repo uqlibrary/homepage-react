@@ -311,10 +311,29 @@ export const BookableSpacesDashboard = ({
         setSelectedFilters2(newFilter);
     };
 
-    // resetUserows({ type: 'numberOfRows', values: numberOfRows });
+    const doesSpaceShow = (space, currentLocationFilters) => {
+        let showSpaceByFilter = true;
+        currentLocationFilters.forEach(f => {
+            if (f.filterType === 'campus') {
+                if (f.filterValue !== CAMPUS_ID_UNSELECTED && space.space_campus_id !== f.filterValue) {
+                    showSpaceByFilter = false;
+                }
+            } else if (f.filterType === 'library') {
+                if (f.filterValue !== LIBRARY_ID_UNSELECTED && space.space_library_id !== f.filterValue) {
+                    showSpaceByFilter = false;
+                }
+            } else if (f.filterType === 'floor') {
+                if (f.filterValue !== FLOOR_ID_UNSELECTED && space.space_floor_id !== f.filterValue) {
+                    showSpaceByFilter = false;
+                }
+            }
+        });
+        return showSpaceByFilter;
+    };
+
     const resetUserows = latestUpdate => {
         console.log('resetUserows latestUpdate=', latestUpdate);
-        // if we have just set data to UseSate, they aren't available yet - weird! :(
+        // if we have just set data to UseState, they aren't available yet - weird! :(
         const usedFilters = latestUpdate?.location ? latestUpdate.location : selectedFilters;
         let suppliedPageNum = latestUpdate?.pagination ? latestUpdate.pagination : pageNum;
         let suppliedRowsPerPage = rowsPerPage;
@@ -325,38 +344,23 @@ export const BookableSpacesDashboard = ({
 
         let numRow = 0;
         let useRowsLocal = [...useRows];
-        bookableSpacesRoomList?.data?.locations?.forEach(s => {
-            let showSpaceByFilter = true;
-            usedFilters.forEach(f => {
-                if (f.filterType === 'campus') {
-                    if (f.filterValue !== CAMPUS_ID_UNSELECTED && s.space_campus_id !== f.filterValue) {
-                        showSpaceByFilter = false;
-                    }
-                } else if (f.filterType === 'library') {
-                    if (f.filterValue !== LIBRARY_ID_UNSELECTED && s.space_library_id !== f.filterValue) {
-                        showSpaceByFilter = false;
-                    }
-                } else if (f.filterType === 'floor') {
-                    if (f.filterValue !== FLOOR_ID_UNSELECTED && s.space_floor_id !== f.filterValue) {
-                        showSpaceByFilter = false;
-                    }
-                }
-            });
+        bookableSpacesRoomList?.data?.locations?.forEach(space => {
+            const showSpaceByFilter = doesSpaceShow(space, usedFilters);
 
             useRowsLocal = useRowsLocal.filter(r => {
-                return r.spaceId !== s.space_id;
+                return r.spaceId !== space.space_id;
             });
-            const spaceRow = document.getElementById(`space-${s.space_id}`);
+            const spaceRow = document.getElementById(`space-${space.space_id}`);
             if (!!showSpaceByFilter && showSpaceByPagination(numRow, suppliedPageNum, suppliedRowsPerPage)) {
                 !!spaceRow && spaceRow.classList.contains('hiddenRow') && spaceRow.classList.remove('hiddenRow');
                 useRowsLocal.push({
-                    spaceId: s.space_id,
+                    spaceId: space.space_id,
                     showSpace: true,
                 });
             } else {
                 !!spaceRow && !spaceRow.classList.contains('hiddenRow') && spaceRow.classList.add('hiddenRow');
                 useRowsLocal.push({
-                    spaceId: s.space_id,
+                    spaceId: space.space_id,
                     showSpace: false,
                 });
             }
@@ -845,7 +849,10 @@ export const BookableSpacesDashboard = ({
                         // in the list. Nor do we want them loading vast numbers of records - they
                         // can jump to the next page
                         rowsPerPageOptions={[5, 10, 25, 100]}
-                        count={useRows?.length}
+                        count={
+                            bookableSpacesRoomList?.data?.locations?.filter(s => doesSpaceShow(s, selectedFilters))
+                                ?.length
+                        }
                         rowsPerPage={rowsPerPage}
                         page={pageNum}
                         SelectProps={{
