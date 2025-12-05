@@ -28,6 +28,18 @@ import {
     getFriendlyLocationDescription,
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
+const StyledFullPageStandardCard = styled(StandardCard)(() => ({
+    '& .showsOnlyOnFocus': {
+        position: 'absolute',
+        left: '-999px',
+        top: '-999px',
+        '&:focus': {
+            position: 'relative',
+            top: 'inherit',
+            left: 'inherit',
+        },
+    },
+}));
 const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     ...standardText(theme),
     fontWeight: '400 !important',
@@ -406,6 +418,7 @@ export const BookableSpacesList = ({
             topOfSidebar.scrollIntoView({
                 behavior: 'smooth',
             });
+        !!topOfSidebar && topOfSidebar.focus();
     };
 
     const handleFilterRejection = (e, facilityTypeId) => {
@@ -442,6 +455,12 @@ export const BookableSpacesList = ({
         showPanel(`filter-group-list-${filterGroupId}`, 'hiddenFilters');
 
         resetFacilityTypeFilterGroupOpenNess(filterGroupId, true);
+
+        // put focus on first checkbox child
+        const groupId = `${filterGroupId}`;
+        const selector = `#filter-group-list-${groupId} input:first-of-type`;
+        const firstCheckbox = document.querySelector(selector);
+        !!firstCheckbox && firstCheckbox.focus();
     };
 
     const spaceExtraElementsId = spaceId => `space-more-${spaceId}`;
@@ -482,6 +501,8 @@ export const BookableSpacesList = ({
         !!expandButton && (expandButton.style.display = 'block');
         const collapseButton = document.getElementById(collapseButtonElementId(spaceId));
         !!collapseButton && (collapseButton.style.display = 'none');
+
+        !!expandButton && expandButton.focus();
     };
     const spacePanel = bookableSpace => {
         return (
@@ -611,7 +632,6 @@ export const BookableSpacesList = ({
             <>
                 {!!hasActiveFilters && (
                     <>
-                        <span id="topOfSidebar" />
                         <Typography component={'h3'} variant={'h6'}>
                             Active filters
                         </Typography>
@@ -669,14 +689,17 @@ export const BookableSpacesList = ({
                     </>
                 )}
                 <StyledSidebarDiv data-testid="sidebarCheckboxes">
-                    <Typography component={'h2'} variant={'h6'}>
+                    <a href="#space-wrapper" className="showsOnlyOnFocus" data-testid="skip-to-spaces-list">
+                        Skip to list of Spaces
+                    </a>
+                    <Typography component={'h2'} variant={'h6'} id="topOfSidebar">
                         Filter Spaces
                     </Typography>
                     {sortedUsedGroups?.map(group => {
                         const filterGroupId = group.facility_type_group_id;
                         const isGroupOpen = !!facilityTypeFilterGroupOpenNess.find(o => o.groupId === filterGroupId)
                             ?.isGroupOpen;
-                        !isGroupOpen && collapseFilterGroup(filterGroupId, true);
+                        !isGroupOpen && collapseFilterGroup(filterGroupId, true); // pre collapse any groups on load
                         const groupLength = facilityTypeFilters.filter(
                             ftf => ftf.facility_type_group_id === filterGroupId,
                         ).length;
@@ -788,7 +811,12 @@ export const BookableSpacesList = ({
     return (
         <StandardPage title="Library spaces" standardPageId="topofcontent">
             <section aria-live="assertive">
-                <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
+                <StyledFullPageStandardCard
+                    standardCardId="location-list-card"
+                    noPadding
+                    noHeader
+                    style={{ border: 'none' }}
+                >
                     <Grid container spacing={3} data-testid="library-spaces">
                         {(() => {
                             if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading) {
@@ -839,7 +867,10 @@ export const BookableSpacesList = ({
                                             {showFilterSidebar()}
                                         </StyledSidebarGridItem>
                                         <Grid item xs={8} md={9}>
-                                            <Grid container data-testid={'space-wrapper'}>
+                                            <Grid container id="space-wrapper" data-testid="space-wrapper">
+                                                <a className="showsOnlyOnFocus" href="#topOfSidebar">
+                                                    Skip back to list of filters
+                                                </a>
                                                 {filteredSpaceLocations.length === 0 && (
                                                     <Grid item xs={9} data-testid={'no-spaces-visible'}>
                                                         <p>
@@ -876,7 +907,7 @@ export const BookableSpacesList = ({
                             }
                         })()}
                     </Grid>
-                </StandardCard>
+                </StyledFullPageStandardCard>
             </section>
         </StandardPage>
     );

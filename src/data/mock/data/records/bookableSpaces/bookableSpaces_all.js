@@ -239,7 +239,7 @@ export default {
             "space_uuid": "a00de3d4-7e11-47eb-8079-532bdef80def",
             "space_name": "354",
             "space_precise": null,
-            "space_description": 'has no linked springshare hours',
+            "space_description": 'Space desciption field being used to report the mock data has has no linked springshare hours',
             "space_photo_url": null,
             "space_photo_description": null,
             "space_opening_hours_id": 3823,
