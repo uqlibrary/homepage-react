@@ -236,6 +236,7 @@ const StyledDescription = styled('div')(() => ({
     },
 }));
 const StyledCollapsableSection = styled('div')(() => ({
+    transition: 'opacity 0.3s ease-in-out, height 0.3s ease-in-out',
     '&.hiddenSection': {
         visibility: 'hidden',
         height: 0,
@@ -554,6 +555,7 @@ export const BookableSpacesList = ({
                     </StyledDescription>
                 )}
                 <StyledCollapsableSection
+                    // loads open
                     id={`summary-info-${bookableSpace?.space_id}`}
                     data-testid={`space-${bookableSpace?.space_id}-summary-info`}
                 >
@@ -566,10 +568,10 @@ export const BookableSpacesList = ({
                 </StyledCollapsableSection>
 
                 <StyledCollapsableSection
+                    // loads closed
                     id={spaceExtraElementsId(bookableSpace?.space_id)}
                     data-testid={`space-${bookableSpace?.space_id}-collapsible`}
                     className={'hiddenSection'}
-                    style={{ transition: 'opacity 0.3s ease-in-out, height 0.3s ease-in-out' }}
                 >
                     <LongSpaceOpeningHours
                         weeklyHoursLoading={weeklyHoursLoading}
