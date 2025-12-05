@@ -32,17 +32,31 @@ test.describe('Spaces', () => {
         );
         await expect(page.getByTestId('standard-card-01-w431---collaborative-space')).toContainText('St Lucia Campus');
 
-        // the first and second opening hours are labelled 'today' and 'tomorrow'
-        await expect(page.getByTestId(`${FORGEN}-openingHours-0`)).toBeVisible();
+        // summary hours show correctly
+        await expect(page.getByTestId(`${FORGEN}-summary-info`)).toBeVisible();
+        await expect(page.getByTestId(`${FORGEN}-summary-info`)).toContainText(
+            'Walter Harrison Law Library opening hours - Today: 24 Hours',
+        );
+        await expect(page.getByTestId(`${PACE}-summary-info`)).toBeVisible();
+        await expect(page.getByTestId(`${PACE}-summary-info`)).toContainText(
+            'Dutton Park Health Sciences opening hours - Today: 7am - 10:30pm (this space opens at 8am)',
+        );
+        await expect(page.getByTestId(`${LIVERIS}-summary-info`)).toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS}-summary-info`)).toContainText('Open from 7am Monday - Friday');
+
+        // the first and second opening hours are labelled 'today' and 'tomorrow' (but are initially hidden under the fold)
+        // (fold opening tested elsewhere)
+        await expect(page.getByTestId(`${FORGEN}-openingHours-0`)).not.toBeVisible();
         await expect(page.getByTestId(`${FORGEN}-openingHours-0`)).toContainText('Today');
         await expect(page.getByTestId(`${FORGEN}-openingHours-1`)).toContainText('Tomorrow');
 
         // only the second and third panels have override opening hours
         await expect(page.getByTestId(`${FORGEN}-override_opening_hours`)).not.toBeVisible();
+        await expect(page.getByTestId(`${PACE}-override_opening_hours`)).not.toBeVisible();
         await expect(page.getByTestId(`${PACE}-override_opening_hours`)).toContainText('this space opens at 8am');
-        await expect(page.getByTestId(`${LIVERIS}-override_opening_hours`)).toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS}-override_opening_hours`)).not.toBeVisible();
         await expect(page.getByTestId(`${LIVERIS}-override_opening_hours`)).toContainText(
-            'open from 7am Monday - Friday',
+            'Open from 7am Monday - Friday',
         );
 
         // description only displayed where provided
@@ -138,6 +152,11 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId(`${PACE}-facility`)).not.toBeVisible();
         await expect(page.getByTestId(`${LIVERIS}-facility`)).not.toBeVisible();
 
+        // and the summary shows
+        await expect(page.getByTestId(`${FORGEN}-summary-info`)).toBeVisible();
+        await expect(page.getByTestId(`${PACE}-summary-info`)).toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS}-summary-info`)).toBeVisible();
+
         // and description is truncated
         await expect(page.getByTestId(`${FORGEN}-description`)).toBeVisible();
         await expect(page.getByTestId(`${FORGEN}-description`)).toHaveClass(/truncated/);
@@ -156,6 +175,11 @@ test.describe('Spaces', () => {
         // and the controls have swapped
         await expect(page.getByTestId(`${FORGEN}-expand-button`)).not.toBeVisible();
         await expect(page.getByTestId(`${FORGEN}-collapse-button`)).toBeVisible();
+
+        // the summary block is hidden for the single panel
+        await expect(page.getByTestId(`${FORGEN}-summary-info`)).not.toBeVisible();
+        await expect(page.getByTestId(`${PACE}-summary-info`)).toBeVisible();
+        await expect(page.getByTestId(`${LIVERIS}-summary-info`)).toBeVisible();
 
         // collapse the bottom space
         page.getByTestId(`${FORGEN}-collapse-button`).click();
@@ -396,10 +420,10 @@ test.describe('Spaces', () => {
         const FILTER_GROUP_EDIA = 8;
         const FILTER_GROUP_SPACE_ROOM_TYPE = 1;
         const FILTER_GROUP_ON_THIS_FLOOR = 2;
+        const FILTER_GROUP_SPACE_FEATURES = 3;
         const FILTER_GROUP_LIGHTING = 4;
         const FILTER_GROUP_NOISE_LEVEL = 5;
         const FILTER_GROUP_ROOM_FEATURES = 6;
-        const FILTER_GROUP_SPACE_FEATURES = 3;
 
         const filterGroup = (groupId: string | number, page: Page) => page.getByTestId('filter-group-block-' + groupId);
 
@@ -414,8 +438,8 @@ test.describe('Spaces', () => {
                     .locator('h3')
                     .getByText(/EDIA filters/),
             ).toBeVisible();
-            await expect(page.getByTestId('facility-type-group-8-open')).toBeVisible();
-            await expect(page.getByTestId('facility-type-group-8-collapsed')).not.toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_EDIA}-open`)).toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_EDIA}-collapsed`)).not.toBeVisible();
 
             await expect(filterGroup(FILTER_GROUP_SPACE_ROOM_TYPE, page)).toBeVisible();
             await expect(
@@ -423,8 +447,10 @@ test.describe('Spaces', () => {
                     .locator('h3')
                     .getByText(/Space\/Room Type/),
             ).toBeVisible();
-            await expect(page.getByTestId('facility-type-group-1-open')).toBeVisible();
-            await expect(page.getByTestId('facility-type-group-1-collapsed')).not.toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_SPACE_ROOM_TYPE}-open`)).toBeVisible();
+            await expect(
+                page.getByTestId(`facility-type-group-${FILTER_GROUP_SPACE_ROOM_TYPE}-collapsed`),
+            ).not.toBeVisible();
 
             // ON THIS FLOOR LOADS CLOSED
             await expect(filterGroup(FILTER_GROUP_ON_THIS_FLOOR, page)).toBeVisible();
@@ -433,8 +459,8 @@ test.describe('Spaces', () => {
                     .locator('h3')
                     .getByText(/On this floor/),
             ).toBeVisible();
-            await expect(page.getByTestId('facility-type-group-2-open')).not.toBeVisible();
-            await expect(page.getByTestId('facility-type-group-2-collapsed')).toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-open`)).not.toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_ON_THIS_FLOOR}-collapsed`)).toBeVisible();
 
             await expect(filterGroup(FILTER_GROUP_LIGHTING, page)).toBeVisible();
             await expect(
@@ -442,8 +468,8 @@ test.describe('Spaces', () => {
                     .locator('h3')
                     .getByText(/Lighting/),
             ).toBeVisible();
-            await expect(page.getByTestId('facility-type-group-4-open')).toBeVisible();
-            await expect(page.getByTestId('facility-type-group-4-collapsed')).not.toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_LIGHTING}-open`)).toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_LIGHTING}-collapsed`)).not.toBeVisible();
 
             await expect(filterGroup(FILTER_GROUP_NOISE_LEVEL, page)).toBeVisible();
             await expect(
@@ -451,8 +477,10 @@ test.describe('Spaces', () => {
                     .locator('h3')
                     .getByText(/Acceptable noise/),
             ).toBeVisible();
-            await expect(page.getByTestId('facility-type-group-5-open')).toBeVisible();
-            await expect(page.getByTestId('facility-type-group-5-collapsed')).not.toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_NOISE_LEVEL}-open`)).toBeVisible();
+            await expect(
+                page.getByTestId(`facility-type-group-${FILTER_GROUP_NOISE_LEVEL}-collapsed`),
+            ).not.toBeVisible();
 
             // ROOM FEATURES LOADS CLOSED
             await expect(filterGroup(FILTER_GROUP_ROOM_FEATURES, page)).toBeVisible();
@@ -461,8 +489,8 @@ test.describe('Spaces', () => {
                     .locator('h3')
                     .getByText(/Room features/),
             ).toBeVisible();
-            await expect(page.getByTestId('facility-type-group-6-open')).not.toBeVisible();
-            await expect(page.getByTestId('facility-type-group-6-collapsed')).toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_ROOM_FEATURES}-open`)).not.toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_ROOM_FEATURES}-collapsed`)).toBeVisible();
 
             await expect(filterGroup(FILTER_GROUP_SPACE_FEATURES, page)).toBeVisible();
             await expect(
@@ -470,8 +498,10 @@ test.describe('Spaces', () => {
                     .locator('h3')
                     .getByText(/Space features/),
             ).toBeVisible();
-            await expect(page.getByTestId('facility-type-group-3-open')).toBeVisible();
-            await expect(page.getByTestId('facility-type-group-3-collapsed')).not.toBeVisible();
+            await expect(page.getByTestId(`facility-type-group-${FILTER_GROUP_SPACE_FEATURES}-open`)).toBeVisible();
+            await expect(
+                page.getByTestId(`facility-type-group-${FILTER_GROUP_SPACE_FEATURES}-collapsed`),
+            ).not.toBeVisible();
         });
         test('collapsing an open sidebar filter type group shows correctly', async ({ page }) => {
             await page.goto('spaces');
@@ -777,7 +807,7 @@ test.describe('Spaces errors', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
 
-        // page.getByTestId(`expand-button-${FORGEN}`).click();
+        page.getByTestId(`${FORGEN}-expand-button`).click();
         await expect(page.getByTestId(`${FORGEN}-weekly-hours-error`)).toBeVisible();
         await expect(page.getByTestId(`${FORGEN}-weekly-hours-error`)).toContainText(
             'General opening hours currently unavailable - please try again later.',

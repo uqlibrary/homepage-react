@@ -189,7 +189,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
 
         await expect(page.getByTestId('space-opening-hours-override').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-opening-hours-override').locator('input')).toHaveValue(
-            'open from 7am Monday - Friday',
+            'Open from 7am Monday - Friday',
         );
 
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();

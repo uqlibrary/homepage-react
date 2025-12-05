@@ -13,13 +13,15 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CloseIcon from '@mui/icons-material/Close';
 import ReplayIcon from '@mui/icons-material/Replay';
 
+import { breadcrumbs } from 'config/routes';
+
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { breadcrumbs } from 'config/routes';
 import { standardText } from 'helpers/general';
 
-import { SpaceOpeningHours } from 'modules/Pages/BookableSpaces/SpaceOpeningHours';
+import { LongSpaceOpeningHours } from './LongSpaceOpeningHours';
+import { ShortSpaceOpeningHours } from './ShortSpaceOpeningHours';
 import {
     getFilteredFacilityTypeList,
     getFlatFacilityTypeList,
@@ -144,7 +146,7 @@ const StyledFilterSpaceListTypographyHeading = styled('h3')(() => ({
     },
 }));
 const StyledSidebarDiv = styled('div')(() => ({
-    '& .hidden': {
+    '& .hiddenFilters': {
         display: 'none',
     },
 }));
@@ -201,12 +203,7 @@ const StyledDescription = styled('div')(() => ({
     },
 }));
 const StyledCollapsableSection = styled('div')(() => ({
-    '&.visible': {
-        visibility: 'visible',
-        height: 'auto',
-        opacity: 1,
-    },
-    '&.hidden': {
+    '&.hiddenSection': {
         visibility: 'hidden',
         height: 0,
         opacity: 0,
@@ -427,19 +424,22 @@ export const BookableSpacesList = ({
         scrollToTopOfContent();
     };
 
+    const hidePanel = (panelId, classname) => {
+        const panel = document.getElementById(panelId);
+        !!panel && !panel.classList.contains(classname) && panel.classList.add(classname);
+    };
+    const showPanel = (panelId, classname) => {
+        const panel = document.getElementById(panelId);
+        !!panel && panel.classList.contains(classname) && panel.classList.remove(classname);
+    };
+
     const collapseFilterGroup = (filterGroupId, onLoad = false) => {
-        const filterGroupBlock = document.getElementById(`filter-group-list-${filterGroupId}`);
-        !!filterGroupBlock &&
-            !filterGroupBlock.classList.contains('hidden') &&
-            filterGroupBlock.classList.add('hidden');
+        hidePanel(`filter-group-list-${filterGroupId}`, 'hiddenFilters');
 
         !onLoad && resetFacilityTypeFilterGroupOpenNess(filterGroupId, false);
     };
     const openFilterGroup = filterGroupId => {
-        const filterGroupBlock = document.getElementById(`filter-group-list-${filterGroupId}`);
-        !!filterGroupBlock &&
-            filterGroupBlock.classList.contains('hidden') &&
-            filterGroupBlock.classList.remove('hidden');
+        showPanel(`filter-group-list-${filterGroupId}`, 'hiddenFilters');
 
         resetFacilityTypeFilterGroupOpenNess(filterGroupId, true);
     };
@@ -449,9 +449,8 @@ export const BookableSpacesList = ({
     const expandButtonElementId = spaceId => `expand-button-space-${spaceId}`;
     const collapseButtonElementId = spaceId => `collapse-button-space-${spaceId}`;
     const expandSpace = spaceId => {
-        const spaceBlock = document.getElementById(spaceExtraElementsId(spaceId));
-        !!spaceBlock && spaceBlock.classList.contains('hidden') && spaceBlock.classList.remove('hidden');
-        !!spaceBlock && !spaceBlock.classList.contains('visible') && spaceBlock.classList.add('visible');
+        hidePanel(`summary-info-${spaceId}`, 'hiddenSection');
+        showPanel(spaceExtraElementsId(spaceId), 'hiddenSection');
 
         const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
         !!spaceDescription &&
@@ -464,9 +463,8 @@ export const BookableSpacesList = ({
         !!collapseButton && (collapseButton.style.display = 'block');
     };
     const collapseSpace = spaceId => {
-        const spaceBlock = document.getElementById(spaceExtraElementsId(spaceId));
-        !!spaceBlock && !spaceBlock.classList.contains('hidden') && spaceBlock.classList.add('hidden');
-        !!spaceBlock && !!spaceBlock.classList.contains('visible') && spaceBlock.classList.remove('visible');
+        showPanel(`summary-info-${spaceId}`, 'hiddenSection');
+        hidePanel(spaceExtraElementsId(spaceId), 'hiddenSection');
 
         const topOfPanel = document.getElementById(`space-${spaceId}`);
         !!topOfPanel &&
@@ -500,19 +498,30 @@ export const BookableSpacesList = ({
                         <p>{bookableSpace?.space_description}</p>
                     </StyledDescription>
                 )}
-                <SpaceOpeningHours
-                    weeklyHoursLoading={weeklyHoursLoading}
-                    weeklyHoursError={weeklyHoursError}
-                    weeklyHours={weeklyHours}
-                    bookableSpace={bookableSpace}
-                />
+                <StyledCollapsableSection
+                    id={`summary-info-${bookableSpace?.space_id}`}
+                    data-testid={`space-${bookableSpace?.space_id}-summary-info`}
+                >
+                    <ShortSpaceOpeningHours
+                        weeklyHoursLoading={weeklyHoursLoading}
+                        weeklyHoursError={weeklyHoursError}
+                        weeklyHours={weeklyHours}
+                        bookableSpace={bookableSpace}
+                    />
+                </StyledCollapsableSection>
 
                 <StyledCollapsableSection
                     id={spaceExtraElementsId(bookableSpace?.space_id)}
                     data-testid={`space-${bookableSpace?.space_id}-collapsible`}
-                    className={'hidden'}
+                    className={'hiddenSection'}
                     style={{ transition: 'opacity 0.3s ease-in-out, height 0.3s ease-in-out' }}
                 >
+                    <LongSpaceOpeningHours
+                        weeklyHoursLoading={weeklyHoursLoading}
+                        weeklyHoursError={weeklyHoursError}
+                        weeklyHours={weeklyHours}
+                        bookableSpace={bookableSpace}
+                    />
                     {bookableSpace?.space_photo_url && (
                         <StyledLocationPhoto
                             src={bookableSpace?.space_photo_url}
@@ -690,7 +699,7 @@ export const BookableSpacesList = ({
                                         data-testid={`facility-type-group-${filterGroupId}-open`}
                                         onClick={() => collapseFilterGroup(filterGroupId)}
                                         aria-label={`Collapse Filter Group ${group.facility_type_group_name}`}
-                                        className={!isGroupOpen && 'hidden'}
+                                        className={!isGroupOpen && 'hiddenFilters'}
                                     >
                                         <KeyboardArrowDownIcon />
                                     </IconButton>
@@ -707,7 +716,7 @@ export const BookableSpacesList = ({
                                         data-testid={`facility-type-group-${filterGroupId}-collapsed`}
                                         onClick={() => openFilterGroup(filterGroupId)}
                                         aria-label={`Open Filter Group ${group.facility_type_group_name}`}
-                                        className={!!isGroupOpen && 'hidden'}
+                                        className={!!isGroupOpen && 'hiddenFilters'}
                                     >
                                         <KeyboardArrowUpIcon />
                                     </IconButton>

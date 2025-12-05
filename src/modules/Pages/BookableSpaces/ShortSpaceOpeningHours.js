@@ -4,14 +4,13 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
-const StyledTable = styled('table')(() => ({
-    width: '100%',
-    '& th, & th': {
-        textAlign: 'center',
-    },
+import { standardText } from 'helpers/general';
+
+const StyledParagraphTypography = styled(Typography)(({ theme }) => ({
+    ...standardText(theme),
 }));
 
-export const SpaceOpeningHours = ({ weeklyHoursLoading, weeklyHoursError, weeklyHours, bookableSpace }) => {
+export const ShortSpaceOpeningHours = ({ weeklyHoursLoading, weeklyHoursError, weeklyHours, bookableSpace }) => {
     console.log('TOP SpaceOpeningHours weeklyHours=', weeklyHoursLoading, weeklyHoursError, weeklyHours);
     console.log('TOP SpaceOpeningHours bookableSpace=', bookableSpace);
 
@@ -110,73 +109,50 @@ export const SpaceOpeningHours = ({ weeklyHoursLoading, weeklyHoursError, weekly
         return [];
     };
 
-    const overrideMessage = !!bookableSpace?.space_opening_hours_override ? (
-        <p data-testid={`space-${spaceId}-override_opening_hours`}>
-            Note: {bookableSpace?.space_opening_hours_override}
-        </p>
-    ) : (
-        ''
-    );
+    const overrideMessage = (prefix = 'Note: ') =>
+        !!bookableSpace?.space_opening_hours_override ? (
+            <p data-testid={`space-${spaceId}-override_opening_hours-short`}>
+                {prefix} {bookableSpace?.space_opening_hours_override}
+            </p>
+        ) : (
+            ''
+        );
 
     if (weeklyHoursLoading === true) {
         return null;
     }
     if (!!weeklyHoursError) {
-        return (
-            <>
-                <p data-testid={`space-${spaceId}-weekly-hours-error`}>
-                    General opening hours currently unavailable - please try again later.
-                </p>
-                {overrideMessage}
-            </>
-        );
+        return <>{overrideMessage()}</>;
     }
 
     if (weeklyHoursLoading === false && weeklyHoursError === false && weeklyHours?.locations?.length === 0) {
-        return overrideMessage; // we don't get the building opening hours for this location
+        return overrideMessage(''); // we don't get the building opening hours for this location
     }
 
     const openingHoursList = spaceOpeningHours(bookableSpace);
 
     if (!openingHoursList || openingHoursList.length === 0) {
-        return overrideMessage; // no opening hours
+        return overrideMessage(''); // no springshare opening hours
     }
+
+    openingHoursList.forEach(h => console.log(h));
+    const todayshours = [...openingHoursList].pop();
+    console.log('todayshours', todayshours);
 
     return (
         <>
-            <Typography component={'h3'} variant={'h6'}>
-                {bookableSpace?.space_library_name} opening hours
-            </Typography>
-            <StyledTable>
-                <thead>
-                    <tr>
-                        {openingHoursList?.map((d, index) => (
-                            <th
-                                key={`space-${spaceId}-opening-th-${index}`}
-                                data-testid={`space-${spaceId}-openingHours-${index}`}
-                            >
-                                {d.dayName}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        {openingHoursList?.map((d, index) => (
-                            <td key={`space-${spaceId}-opening-td-${index}`}>{d.rendered}</td>
-                        ))}
-                    </tr>
-                </tbody>
-            </StyledTable>
-            {overrideMessage}
+            <StyledParagraphTypography component={'p'}>
+                <b>{bookableSpace?.space_library_name} opening hours</b> - Today: {todayshours.rendered}{' '}
+                {bookableSpace?.space_opening_hours_override && `(${bookableSpace?.space_opening_hours_override})`}
+            </StyledParagraphTypography>
         </>
     );
 };
-SpaceOpeningHours.propTypes = {
+ShortSpaceOpeningHours.propTypes = {
     weeklyHoursLoading: PropTypes.any,
     weeklyHoursError: PropTypes.any,
     weeklyHours: PropTypes.any,
     bookableSpace: PropTypes.any,
 };
 
-export default React.memo(SpaceOpeningHours);
+export default React.memo(ShortSpaceOpeningHours);
