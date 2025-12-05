@@ -13,33 +13,26 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CloseIcon from '@mui/icons-material/Close';
 import ReplayIcon from '@mui/icons-material/Replay';
 
+import { breadcrumbs } from 'config/routes';
+
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { breadcrumbs } from 'config/routes';
 import { standardText } from 'helpers/general';
 
-import { SpaceOpeningHours } from 'modules/Pages/BookableSpaces/SpaceOpeningHours';
+import { LongSpaceOpeningHours } from './LongSpaceOpeningHours';
+import { ShortSpaceOpeningHours } from './ShortSpaceOpeningHours';
 import {
     getFilteredFacilityTypeList,
     getFlatFacilityTypeList,
     getFriendlyLocationDescription,
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
-const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
-    ...standardText(theme),
-    fontWeight: '400 !important',
-    '& .MuiCardHeader-root': {
-        paddingBottom: 0,
-    },
-    '& .MuiCardContent-root': {
-        paddingBlock: 0,
-    },
-}));
+const standardDivider = '1px solid #dcdcdd';
+
 const svgOrangeCheckbox =
     "data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMidYMid meet' focusable='false'%3E%3Cpath fill='%23c13e2a' d='M22.2,20.9l-1.3-1.3C21,19.4,21,19.2,21,19v-8h-2v6.7l-4.6-4.6l6-6l-1.4-1.4l-6,6L6.3,5H15V3H5C4.8,3,4.6,3,4.4,3.1L3,1.7L1.8,2.9l1.3,1.3C3.1,4.4,3,4.7,3,5v14c0,1.1,0.9,2,2,2h14c0.3,0,0.6-0.1,0.8-0.2l1.2,1.2L22.2,20.9z M5,19V6l6.9,6.9l-1.4,1.4l-3.1-3.1L6,12.6l4.5,4.5l2.8-2.8L18,19H5z'%3E%3C/path%3E%3C/svg%3E";
-
-const rejectedCheckboxStyle = {
+const visibleRejectedCheckbox = {
     backgroundImage: `url("${svgOrangeCheckbox}")`,
     backgroundRepeat: 'no-repeat',
     display: 'inline-block',
@@ -53,6 +46,30 @@ const rejectedCheckboxStyle = {
     marginLeft: '5px',
     cursor: 'pointer',
 };
+
+const StyledFullPageStandardCard = styled(StandardCard)(() => ({
+    '& .showsOnlyOnFocus': {
+        position: 'absolute',
+        left: '-999px',
+        top: '-999px',
+        '&:focus': {
+            position: 'relative',
+            top: 'inherit',
+            left: 'inherit',
+        },
+    },
+}));
+const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
+    ...standardText(theme),
+    fontWeight: '400 !important',
+    '& .MuiCardHeader-root': {
+        paddingBottom: 0,
+    },
+    '& .MuiCardContent-root': {
+        paddingBlock: 0,
+    },
+}));
+
 const StyledInputListItem = styled('li')(({ theme }) => ({
     listStyle: 'none',
     paddingLeft: 0,
@@ -62,19 +79,26 @@ const StyledInputListItem = styled('li')(({ theme }) => ({
         display: 'inline',
     },
     // when we hover or focus on the reject-checkbox, style the label to be orange
-    '&:hover label.rejectedFacilityTypeLabel': rejectedCheckboxStyle,
-    '&:focus label.rejectedFacilityTypeLabel': rejectedCheckboxStyle,
-    '&:has(> input:checked) label.rejectedFacilityTypeLabel': rejectedCheckboxStyle,
-    '&:has(> input:inline-focus) label.rejectedFacilityTypeLabel': rejectedCheckboxStyle,
+    '&:hover label.rejectedFacilityTypeLabel': visibleRejectedCheckbox,
+    '&:focus label.rejectedFacilityTypeLabel': visibleRejectedCheckbox,
+    '&:has(> input:checked) label.rejectedFacilityTypeLabel': visibleRejectedCheckbox,
+    '&:has(> input:inline-focus) label.rejectedFacilityTypeLabel': visibleRejectedCheckbox,
     '@media (pointer:coarse)': {
         // show the reject checkbox on mobile, as they can't hover
-        'label.rejectedFacilityTypeLabel': rejectedCheckboxStyle,
+        'label.rejectedFacilityTypeLabel': visibleRejectedCheckbox,
     },
     '& input.rejectedFilterType': {
         display: 'none',
     },
     '& span:not(.fortestfocus)': {
         cursor: 'pointer',
+    },
+    '& .selectedFilterType': {
+        paddingBlock: '0.5rem',
+    },
+    '& .selectedFilterTypeLabel': {
+        display: 'inline-flex',
+        alignItems: 'center',
     },
 }));
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
@@ -83,7 +107,7 @@ const StyledBookableSpaceGridItem = styled(Grid)(() => ({
 const StyledSidebarGridItem = styled(Grid)(() => ({
     position: 'sticky',
     top: 0,
-    maxHeight: '100vh',
+    maxHeight: 'calc(100%-340px)', // 340 is height of headers above page content
     overflowY: 'auto',
     paddingInline: '1em',
     marginBlock: '1em',
@@ -128,8 +152,15 @@ const StyledSidebarGridItem = styled(Grid)(() => ({
         },
     },
 }));
-const StyleFacilityGroup = styled('div')(() => ({
-    // styling here
+const StyledFacilityGroup = styled('div')(() => ({
+    borderBottom: standardDivider,
+    paddingBlock: '16px',
+    '& h3': {
+        marginTop: 0,
+    },
+    '& ul': {
+        marginBottom: 0,
+    },
 }));
 const StyledFilterSpaceListTypographyHeading = styled('h3')(() => ({
     display: 'flex',
@@ -144,7 +175,11 @@ const StyledFilterSpaceListTypographyHeading = styled('h3')(() => ({
     },
 }));
 const StyledSidebarDiv = styled('div')(() => ({
-    '& .hidden': {
+    '& > div:first-of-type': {
+        borderTop: standardDivider,
+        marginTop: '16px',
+    },
+    '& .hiddenFilters': {
         display: 'none',
     },
 }));
@@ -201,12 +236,8 @@ const StyledDescription = styled('div')(() => ({
     },
 }));
 const StyledCollapsableSection = styled('div')(() => ({
-    '&.visible': {
-        visibility: 'visible',
-        height: 'auto',
-        opacity: 1,
-    },
-    '&.hidden': {
+    transition: 'opacity 0.3s ease-in-out, height 0.3s ease-in-out',
+    '&.hiddenSection': {
         visibility: 'hidden',
         height: 0,
         opacity: 0,
@@ -409,6 +440,7 @@ export const BookableSpacesList = ({
             topOfSidebar.scrollIntoView({
                 behavior: 'smooth',
             });
+        !!topOfSidebar && topOfSidebar.focus();
     };
 
     const handleFilterRejection = (e, facilityTypeId) => {
@@ -427,21 +459,30 @@ export const BookableSpacesList = ({
         scrollToTopOfContent();
     };
 
+    const hidePanel = (panelId, classname) => {
+        const panel = document.getElementById(panelId);
+        !!panel && !panel.classList.contains(classname) && panel.classList.add(classname);
+    };
+    const showPanel = (panelId, classname) => {
+        const panel = document.getElementById(panelId);
+        !!panel && panel.classList.contains(classname) && panel.classList.remove(classname);
+    };
+
     const collapseFilterGroup = (filterGroupId, onLoad = false) => {
-        const filterGroupBlock = document.getElementById(`filter-group-list-${filterGroupId}`);
-        !!filterGroupBlock &&
-            !filterGroupBlock.classList.contains('hidden') &&
-            filterGroupBlock.classList.add('hidden');
+        hidePanel(`filter-group-list-${filterGroupId}`, 'hiddenFilters');
 
         !onLoad && resetFacilityTypeFilterGroupOpenNess(filterGroupId, false);
     };
     const openFilterGroup = filterGroupId => {
-        const filterGroupBlock = document.getElementById(`filter-group-list-${filterGroupId}`);
-        !!filterGroupBlock &&
-            filterGroupBlock.classList.contains('hidden') &&
-            filterGroupBlock.classList.remove('hidden');
+        showPanel(`filter-group-list-${filterGroupId}`, 'hiddenFilters');
 
         resetFacilityTypeFilterGroupOpenNess(filterGroupId, true);
+
+        // put focus on first checkbox child
+        const groupId = `${filterGroupId}`;
+        const selector = `#filter-group-list-${groupId} input:first-of-type`;
+        const firstCheckbox = document.querySelector(selector);
+        !!firstCheckbox && firstCheckbox.focus();
     };
 
     const spaceExtraElementsId = spaceId => `space-more-${spaceId}`;
@@ -449,9 +490,8 @@ export const BookableSpacesList = ({
     const expandButtonElementId = spaceId => `expand-button-space-${spaceId}`;
     const collapseButtonElementId = spaceId => `collapse-button-space-${spaceId}`;
     const expandSpace = spaceId => {
-        const spaceBlock = document.getElementById(spaceExtraElementsId(spaceId));
-        !!spaceBlock && spaceBlock.classList.contains('hidden') && spaceBlock.classList.remove('hidden');
-        !!spaceBlock && !spaceBlock.classList.contains('visible') && spaceBlock.classList.add('visible');
+        hidePanel(`summary-info-${spaceId}`, 'hiddenSection');
+        showPanel(spaceExtraElementsId(spaceId), 'hiddenSection');
 
         const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
         !!spaceDescription &&
@@ -464,16 +504,8 @@ export const BookableSpacesList = ({
         !!collapseButton && (collapseButton.style.display = 'block');
     };
     const collapseSpace = spaceId => {
-        const spaceBlock = document.getElementById(spaceExtraElementsId(spaceId));
-        !!spaceBlock && !spaceBlock.classList.contains('hidden') && spaceBlock.classList.add('hidden');
-        !!spaceBlock && !!spaceBlock.classList.contains('visible') && spaceBlock.classList.remove('visible');
-
-        const topOfPanel = document.getElementById(`space-${spaceId}`);
-        !!topOfPanel &&
-            typeof topOfPanel.scrollIntoView === 'function' &&
-            topOfPanel.scrollIntoView({
-                behavior: 'smooth',
-            });
+        showPanel(`summary-info-${spaceId}`, 'hiddenSection');
+        hidePanel(spaceExtraElementsId(spaceId), 'hiddenSection');
 
         const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
         !!spaceDescription &&
@@ -484,10 +516,32 @@ export const BookableSpacesList = ({
         !!expandButton && (expandButton.style.display = 'block');
         const collapseButton = document.getElementById(collapseButtonElementId(spaceId));
         !!collapseButton && (collapseButton.style.display = 'none');
+
+        !!expandButton && expandButton.focus();
     };
     const spacePanel = bookableSpace => {
         return (
             <>
+                <div style={{ float: 'right', marginTop: '-40px' }}>
+                    <IconButton
+                        id={expandButtonElementId(bookableSpace?.space_id)}
+                        data-testid={`space-${bookableSpace?.space_id}-expand-button`}
+                        onClick={() => expandSpace(bookableSpace?.space_id)}
+                        aria-label="Expand Space details"
+                        style={{ display: 'block' }}
+                    >
+                        <KeyboardArrowDownIcon />
+                    </IconButton>
+                    <IconButton
+                        id={collapseButtonElementId(bookableSpace?.space_id)}
+                        data-testid={`space-${bookableSpace?.space_id}-collapse-button`}
+                        onClick={() => collapseSpace(bookableSpace?.space_id)}
+                        aria-label="Collapse Space details"
+                        style={{ display: 'none' }}
+                    >
+                        <KeyboardArrowUpIcon />
+                    </IconButton>
+                </div>
                 <div data-testid={`space-${bookableSpace?.space_id}-friendly-location`}>
                     {getFriendlyLocationDescription(bookableSpace)}
                 </div>
@@ -500,19 +554,31 @@ export const BookableSpacesList = ({
                         <p>{bookableSpace?.space_description}</p>
                     </StyledDescription>
                 )}
-                <SpaceOpeningHours
-                    weeklyHoursLoading={weeklyHoursLoading}
-                    weeklyHoursError={weeklyHoursError}
-                    weeklyHours={weeklyHours}
-                    bookableSpace={bookableSpace}
-                />
+                <StyledCollapsableSection
+                    // loads open
+                    id={`summary-info-${bookableSpace?.space_id}`}
+                    data-testid={`space-${bookableSpace?.space_id}-summary-info`}
+                >
+                    <ShortSpaceOpeningHours
+                        weeklyHoursLoading={weeklyHoursLoading}
+                        weeklyHoursError={weeklyHoursError}
+                        weeklyHours={weeklyHours}
+                        bookableSpace={bookableSpace}
+                    />
+                </StyledCollapsableSection>
 
                 <StyledCollapsableSection
+                    // loads closed
                     id={spaceExtraElementsId(bookableSpace?.space_id)}
                     data-testid={`space-${bookableSpace?.space_id}-collapsible`}
-                    className={'hidden'}
-                    style={{ transition: 'opacity 0.3s ease-in-out, height 0.3s ease-in-out' }}
+                    className={'hiddenSection'}
                 >
+                    <LongSpaceOpeningHours
+                        weeklyHoursLoading={weeklyHoursLoading}
+                        weeklyHoursError={weeklyHoursError}
+                        weeklyHours={weeklyHours}
+                        bookableSpace={bookableSpace}
+                    />
                     {bookableSpace?.space_photo_url && (
                         <StyledLocationPhoto
                             src={bookableSpace?.space_photo_url}
@@ -537,26 +603,6 @@ export const BookableSpacesList = ({
                         </>
                     )}
                 </StyledCollapsableSection>
-                <div style={{ float: 'right' }}>
-                    <IconButton
-                        id={expandButtonElementId(bookableSpace?.space_id)}
-                        data-testid={`space-${bookableSpace?.space_id}-expand-button`}
-                        onClick={() => expandSpace(bookableSpace?.space_id)}
-                        aria-label="Expand Space details"
-                        style={{ display: 'block' }}
-                    >
-                        <KeyboardArrowDownIcon />
-                    </IconButton>
-                    <IconButton
-                        id={collapseButtonElementId(bookableSpace?.space_id)}
-                        data-testid={`space-${bookableSpace?.space_id}-collapse-button`}
-                        onClick={() => collapseSpace(bookableSpace?.space_id)}
-                        aria-label="Collapse Space details"
-                        style={{ display: 'none' }}
-                    >
-                        <KeyboardArrowUpIcon />
-                    </IconButton>
-                </div>
             </>
         );
     };
@@ -602,7 +648,6 @@ export const BookableSpacesList = ({
             <>
                 {!!hasActiveFilters && (
                     <>
-                        <span id="topOfSidebar" />
                         <Typography component={'h3'} variant={'h6'}>
                             Active filters
                         </Typography>
@@ -660,14 +705,17 @@ export const BookableSpacesList = ({
                     </>
                 )}
                 <StyledSidebarDiv data-testid="sidebarCheckboxes">
-                    <Typography component={'h2'} variant={'h6'}>
+                    <a href="#space-wrapper" className="showsOnlyOnFocus" data-testid="skip-to-spaces-list">
+                        Skip to list of Spaces
+                    </a>
+                    <Typography component={'h2'} variant={'h6'} id="topOfSidebar">
                         Filter Spaces
                     </Typography>
                     {sortedUsedGroups?.map(group => {
                         const filterGroupId = group.facility_type_group_id;
                         const isGroupOpen = !!facilityTypeFilterGroupOpenNess.find(o => o.groupId === filterGroupId)
                             ?.isGroupOpen;
-                        !isGroupOpen && collapseFilterGroup(filterGroupId, true);
+                        !isGroupOpen && collapseFilterGroup(filterGroupId, true); // pre collapse any groups on load
                         const groupLength = facilityTypeFilters.filter(
                             ftf => ftf.facility_type_group_id === filterGroupId,
                         ).length;
@@ -675,7 +723,7 @@ export const BookableSpacesList = ({
                             ftf => ftf.facility_type_group_id === filterGroupId && (ftf.selected || ftf.unselected),
                         ).length;
                         return (
-                            <StyleFacilityGroup
+                            <StyledFacilityGroup
                                 key={`facility-group-${filterGroupId}`}
                                 data-testid={`filter-group-block-${filterGroupId}`}
                             >
@@ -690,7 +738,7 @@ export const BookableSpacesList = ({
                                         data-testid={`facility-type-group-${filterGroupId}-open`}
                                         onClick={() => collapseFilterGroup(filterGroupId)}
                                         aria-label={`Collapse Filter Group ${group.facility_type_group_name}`}
-                                        className={!isGroupOpen && 'hidden'}
+                                        className={!isGroupOpen && 'hiddenFilters'}
                                     >
                                         <KeyboardArrowDownIcon />
                                     </IconButton>
@@ -707,7 +755,7 @@ export const BookableSpacesList = ({
                                         data-testid={`facility-type-group-${filterGroupId}-collapsed`}
                                         onClick={() => openFilterGroup(filterGroupId)}
                                         aria-label={`Open Filter Group ${group.facility_type_group_name}`}
-                                        className={!!isGroupOpen && 'hidden'}
+                                        className={!!isGroupOpen && 'hiddenFilters'}
                                     >
                                         <KeyboardArrowUpIcon />
                                     </IconButton>
@@ -723,6 +771,7 @@ export const BookableSpacesList = ({
                                                 <InputLabel
                                                     title={`Only show Spaces with ${facilityType.facility_type_name}`}
                                                     htmlFor={`filtertype-${facilityType.facility_type_id}`}
+                                                    className="selectedFilterTypeLabel"
                                                 >
                                                     <Checkbox
                                                         onChange={e =>
@@ -769,7 +818,7 @@ export const BookableSpacesList = ({
                                         <li className="no-items">No facility types available</li>
                                     )}
                                 </StyledFilterSpaceList>
-                            </StyleFacilityGroup>
+                            </StyledFacilityGroup>
                         );
                     })}
                 </StyledSidebarDiv>
@@ -779,7 +828,12 @@ export const BookableSpacesList = ({
     return (
         <StandardPage title="Library spaces" standardPageId="topofcontent">
             <section aria-live="assertive">
-                <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
+                <StyledFullPageStandardCard
+                    standardCardId="location-list-card"
+                    noPadding
+                    noHeader
+                    style={{ border: 'none' }}
+                >
                     <Grid container spacing={3} data-testid="library-spaces">
                         {(() => {
                             if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading) {
@@ -830,7 +884,10 @@ export const BookableSpacesList = ({
                                             {showFilterSidebar()}
                                         </StyledSidebarGridItem>
                                         <Grid item xs={8} md={9}>
-                                            <Grid container data-testid={'space-wrapper'}>
+                                            <Grid container id="space-wrapper" data-testid="space-wrapper">
+                                                <a className="showsOnlyOnFocus" href="#topOfSidebar">
+                                                    Skip back to list of filters
+                                                </a>
                                                 {filteredSpaceLocations.length === 0 && (
                                                     <Grid item xs={9} data-testid={'no-spaces-visible'}>
                                                         <p>
@@ -867,7 +924,7 @@ export const BookableSpacesList = ({
                             }
                         })()}
                     </Grid>
-                </StandardCard>
+                </StyledFullPageStandardCard>
             </section>
         </StandardPage>
     );

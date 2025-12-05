@@ -1,6 +1,7 @@
 import global from 'locale/global';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
+import { fullPath } from '../config/routes';
 
 /* istanbul ignore next */
 const tryCatch = (callback, _default = undefined) => {
@@ -295,4 +296,16 @@ export const isValidUrl = testUrl => {
         !!url?.hostname.includes('.') && // tld only domain names really don't happen, must be a dot!
         url?.hostname.length >= '12.co'.length
     );
+};
+
+// generate a link to a page inside this app
+// assumes calling app has set: import { useLocation } from 'react-router-dom'; const pageLocation = useLocation();
+export const hrefToInternalPage = (path, pageLocation, includeFullPath = false) => {
+    const prefix = `${includeFullPath ? fullPath : ''}`;
+    const url =
+        !!pageLocation.search && pageLocation.search.indexOf('?') === 0
+            ? `${prefix}${path}${pageLocation.search}` // eg include ?user=s1111111
+            : `${prefix}${path}`;
+    console.log('url = ', url);
+    return url;
 };
