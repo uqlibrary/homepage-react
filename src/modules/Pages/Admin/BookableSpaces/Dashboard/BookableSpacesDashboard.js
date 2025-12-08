@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useCookies } from 'react-cookie';
 import { useAccountContext } from 'context';
 
 import FormControl from '@mui/material/FormControl';
@@ -208,7 +209,13 @@ export const BookableSpacesDashboard = ({
         console.log('setUseRows', rows);
         setUseRows2(rows);
     };
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+    const [cookies, setCookie] = useCookies();
+
+    const paginatorCookieName = 'spaces-list-paginator';
+    const [rowsPerPage, setRowsPerPage] = React.useState(
+        !!cookies[paginatorCookieName] ? parseInt(cookies[paginatorCookieName], 10) : 5,
+    );
     const [pageNum, setPageNum] = React.useState(0);
 
     // the filters we will show on the page
@@ -426,10 +433,10 @@ export const BookableSpacesDashboard = ({
     const handleChangeRowsPerPage = event => {
         const newRowsPerPage = parseInt(event.target.value, 10);
 
-        // const current = new Date();
-        // const nextYear = new Date();
-        // nextYear.setFullYear(current.getFullYear() + 1);
-        // setCookie(paginatorCookieName, numberOfRows, { expires: nextYear });
+        const current = new Date();
+        const nextYear = new Date();
+        nextYear.setFullYear(current.getFullYear() + 1);
+        setCookie(paginatorCookieName, newRowsPerPage, { expires: nextYear });
 
         setRowsPerPage(newRowsPerPage);
         setPageNum(0);
@@ -842,7 +849,7 @@ export const BookableSpacesDashboard = ({
                     </StyledTableContainer>
 
                     <StyledTablePagination
-                        id={'pagination1'}
+                        data-testid="pagination-block"
                         // dont use
                         // { label: 'All', value: rows.length }
                         // as it gives a dupe key error when the length happens to match a value
