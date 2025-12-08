@@ -244,6 +244,80 @@ const StyledCollapsableSection = styled('div')(() => ({
     },
 }));
 
+const showHideSpacePanel = bookableSpace => {
+    const hidePanel = (panelId, classname = 'hiddenSection') => {
+        const openPanel = document.getElementById(panelId);
+        !!openPanel && !openPanel.classList.contains(classname) && openPanel.classList.add(classname);
+    };
+    const showPanel = (panelId, classname = 'hiddenSection') => {
+        const closedPanel = document.getElementById(panelId);
+        !!closedPanel && closedPanel.classList.contains(classname) && closedPanel.classList.remove(classname);
+    };
+
+    const spaceExtraElementsId = spaceId => `space-more-${spaceId}`;
+    const summaryPanelElementId = spaceId => `summary-info-${spaceId}`;
+    const spaceDescriptionElementsId = spaceId => `space-description-${spaceId}`;
+    const togglePanelButtonElementId = spaceId => `toggle-panel-button-space-${spaceId}`;
+    const expandSpace = (spaceId, spaceName) => {
+        hidePanel(summaryPanelElementId(spaceId));
+        showPanel(spaceExtraElementsId(spaceId));
+
+        const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
+        !!spaceDescription &&
+            spaceDescription.classList.contains('truncated') &&
+            spaceDescription.classList.remove('truncated');
+
+        const toggleButton = document.getElementById(togglePanelButtonElementId(spaceId));
+        toggleButton?.setAttribute('aria-expanded', true);
+        toggleButton?.setAttribute('aria-label', `Show fewer details for ${spaceName}`);
+        const toggleButtonExpandIcon = toggleButton.querySelector('svg.closePanel');
+        !!toggleButtonExpandIcon && (toggleButtonExpandIcon.style.display = 'none');
+        const toggleButtonCollapseIcon = toggleButton.querySelector('svg.openPanel');
+        !!toggleButtonCollapseIcon && (toggleButtonCollapseIcon.style.display = 'block');
+    };
+    const collapseSpace = (spaceId, spaceName) => {
+        showPanel(summaryPanelElementId(spaceId));
+        hidePanel(spaceExtraElementsId(spaceId));
+
+        const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
+        !!spaceDescription &&
+            !spaceDescription.classList.contains('truncated') &&
+            spaceDescription.classList.add('truncated');
+
+        const toggleButton = document.querySelector(`#${togglePanelButtonElementId(spaceId)}`);
+        toggleButton?.setAttribute('aria-expanded', false);
+        toggleButton?.setAttribute('aria-label', `Show more information about ${spaceName}`);
+        const toggleButtonExpandIcon = document.querySelector(`#${togglePanelButtonElementId(spaceId)} svg.closePanel`);
+        !!toggleButtonExpandIcon && (toggleButtonExpandIcon.style.display = 'block');
+        const toggleButtonCollapseIcon = document.querySelector(
+            `#${togglePanelButtonElementId(spaceId)} svg.openPanel`,
+        );
+        !!toggleButtonCollapseIcon && (toggleButtonCollapseIcon.style.display = 'none');
+    };
+    const toggleSpace = (spaceId, spaceName) => {
+        const moreInfoPanel = document.getElementById(spaceExtraElementsId(spaceId));
+        if (moreInfoPanel?.classList?.contains('hiddenSection')) {
+            expandSpace(spaceId, spaceName);
+        } else {
+            collapseSpace(spaceId, spaceName);
+        }
+    };
+    return (
+        <IconButton
+            id={togglePanelButtonElementId(bookableSpace?.space_id)}
+            data-testid={`space-${bookableSpace?.space_id}-toggle-panel-button`}
+            onClick={() => toggleSpace(bookableSpace?.space_id, bookableSpace?.space_name)}
+            aria-label={`Show more information about ${bookableSpace?.space_name}`}
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls={spaceExtraElementsId(bookableSpace?.space_id)}
+        >
+            <KeyboardArrowDownIcon style={{ display: 'block' }} className="closePanel" />
+            <KeyboardArrowUpIcon style={{ display: 'none' }} className="openPanel" />
+        </IconButton>
+    );
+};
+
 export const BookableSpacesList = ({
     actions,
     bookableSpacesRoomList,
@@ -459,95 +533,24 @@ export const BookableSpacesList = ({
         scrollToTopOfContent();
     };
 
-    const hidePanel = (panelId, classname) => {
-        const panel = document.getElementById(panelId);
-        !!panel && !panel.classList.contains(classname) && panel.classList.add(classname);
-    };
-    const showPanel = (panelId, classname) => {
-        const panel = document.getElementById(panelId);
-        !!panel && panel.classList.contains(classname) && panel.classList.remove(classname);
+    const toggleFilterGroup = filterGroupId => {
+        const filterGroupPanelVisible = document.getElementById(`filter-group-list-${filterGroupId}`);
+        // reverse the panel show/ hide
+        resetFacilityTypeFilterGroupOpenNess(filterGroupId, !filterGroupPanelVisible);
     };
 
-    const collapseFilterGroup = (filterGroupId, onLoad = false) => {
-        hidePanel(`filter-group-list-${filterGroupId}`, 'hiddenFilters');
-
-        !onLoad && resetFacilityTypeFilterGroupOpenNess(filterGroupId, false);
-    };
-    const openFilterGroup = filterGroupId => {
-        showPanel(`filter-group-list-${filterGroupId}`, 'hiddenFilters');
-
-        resetFacilityTypeFilterGroupOpenNess(filterGroupId, true);
-
-        // put focus on first checkbox child
-        const groupId = `${filterGroupId}`;
-        const selector = `#filter-group-list-${groupId} input:first-of-type`;
-        const firstCheckbox = document.querySelector(selector);
-        !!firstCheckbox && firstCheckbox.focus();
-    };
-
-    const spaceExtraElementsId = spaceId => `space-more-${spaceId}`;
-    const spaceDescriptionElementsId = spaceId => `space-description-${spaceId}`;
-    const expandButtonElementId = spaceId => `expand-button-space-${spaceId}`;
-    const collapseButtonElementId = spaceId => `collapse-button-space-${spaceId}`;
-    const expandSpace = spaceId => {
-        hidePanel(`summary-info-${spaceId}`, 'hiddenSection');
-        showPanel(spaceExtraElementsId(spaceId), 'hiddenSection');
-
-        const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
-        !!spaceDescription &&
-            spaceDescription.classList.contains('truncated') &&
-            spaceDescription.classList.remove('truncated');
-
-        const expandButton = document.getElementById(expandButtonElementId(spaceId));
-        !!expandButton && (expandButton.style.display = 'none');
-        const collapseButton = document.getElementById(collapseButtonElementId(spaceId));
-        !!collapseButton && (collapseButton.style.display = 'block');
-    };
-    const collapseSpace = spaceId => {
-        showPanel(`summary-info-${spaceId}`, 'hiddenSection');
-        hidePanel(spaceExtraElementsId(spaceId), 'hiddenSection');
-
-        const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
-        !!spaceDescription &&
-            !spaceDescription.classList.contains('truncated') &&
-            spaceDescription.classList.add('truncated');
-
-        const expandButton = document.getElementById(expandButtonElementId(spaceId));
-        !!expandButton && (expandButton.style.display = 'block');
-        const collapseButton = document.getElementById(collapseButtonElementId(spaceId));
-        !!collapseButton && (collapseButton.style.display = 'none');
-
-        !!expandButton && expandButton.focus();
-    };
     const spacePanel = bookableSpace => {
         return (
             <>
-                <div style={{ float: 'right', marginTop: '-40px' }}>
-                    <IconButton
-                        id={expandButtonElementId(bookableSpace?.space_id)}
-                        data-testid={`space-${bookableSpace?.space_id}-expand-button`}
-                        onClick={() => expandSpace(bookableSpace?.space_id)}
-                        aria-label="Expand Space details"
-                        style={{ display: 'block' }}
-                    >
-                        <KeyboardArrowDownIcon />
-                    </IconButton>
-                    <IconButton
-                        id={collapseButtonElementId(bookableSpace?.space_id)}
-                        data-testid={`space-${bookableSpace?.space_id}-collapse-button`}
-                        onClick={() => collapseSpace(bookableSpace?.space_id)}
-                        aria-label="Collapse Space details"
-                        style={{ display: 'none' }}
-                    >
-                        <KeyboardArrowUpIcon />
-                    </IconButton>
+                <div style={{ float: 'right', marginTop: '-40px', marginRight: '-10px' }}>
+                    {showHideSpacePanel(bookableSpace)}
                 </div>
                 <div data-testid={`space-${bookableSpace?.space_id}-friendly-location`}>
                     {getFriendlyLocationDescription(bookableSpace)}
                 </div>
                 {bookableSpace?.space_description?.length > 0 && (
                     <StyledDescription
-                        id={spaceDescriptionElementsId(bookableSpace?.space_id)}
+                        id={`space-description-${bookableSpace?.space_id}`}
                         data-testid={`space-${bookableSpace?.space_id}-description`}
                         className={'truncated'}
                     >
@@ -569,7 +572,7 @@ export const BookableSpacesList = ({
 
                 <StyledCollapsableSection
                     // loads closed
-                    id={spaceExtraElementsId(bookableSpace?.space_id)}
+                    id={`space-more-${bookableSpace?.space_id}`}
                     data-testid={`space-${bookableSpace?.space_id}-collapsible`}
                     className={'hiddenSection'}
                 >
@@ -715,7 +718,6 @@ export const BookableSpacesList = ({
                         const filterGroupId = group.facility_type_group_id;
                         const isGroupOpen = !!facilityTypeFilterGroupOpenNess.find(o => o.groupId === filterGroupId)
                             ?.isGroupOpen;
-                        !isGroupOpen && collapseFilterGroup(filterGroupId, true); // pre collapse any groups on load
                         const groupLength = facilityTypeFilters.filter(
                             ftf => ftf.facility_type_group_id === filterGroupId,
                         ).length;
@@ -733,15 +735,6 @@ export const BookableSpacesList = ({
                                     className="group-heading"
                                 >
                                     {group.facility_type_group_name}{' '}
-                                    <IconButton
-                                        id={`facility-type-group-${filterGroupId}-open`}
-                                        data-testid={`facility-type-group-${filterGroupId}-open`}
-                                        onClick={() => collapseFilterGroup(filterGroupId)}
-                                        aria-label={`Collapse Filter Group ${group.facility_type_group_name}`}
-                                        className={!isGroupOpen && 'hiddenFilters'}
-                                    >
-                                        <KeyboardArrowDownIcon />
-                                    </IconButton>
                                     {!isGroupOpen && numberChecked > 0 && (
                                         <span
                                             className="countSelectedCheckboxes"
@@ -751,73 +744,92 @@ export const BookableSpacesList = ({
                                         </span>
                                     )}
                                     <IconButton
-                                        id={`facility-type-group-${filterGroupId}-collapsed`}
-                                        data-testid={`facility-type-group-${filterGroupId}-collapsed`}
-                                        onClick={() => openFilterGroup(filterGroupId)}
-                                        aria-label={`Open Filter Group ${group.facility_type_group_name}`}
-                                        className={!!isGroupOpen && 'hiddenFilters'}
+                                        id={`facility-type-group-${filterGroupId}`}
+                                        data-testid={`facility-type-group-${filterGroupId}`}
+                                        onClick={() => toggleFilterGroup(filterGroupId)}
+                                        aria-label={
+                                            !!isGroupOpen
+                                                ? `Hide ${group.facility_type_group_name} filter options`
+                                                : `Show ${group.facility_type_group_name} filter options`
+                                        }
+                                        aria-haspopup="true"
+                                        aria-expanded={!!isGroupOpen ? 'true' : 'false'}
+                                        aria-controls={`filter-group-list-${filterGroupId}`}
                                     >
-                                        <KeyboardArrowUpIcon />
+                                        <KeyboardArrowDownIcon
+                                            style={{ display: !!isGroupOpen ? 'block' : 'none' }}
+                                            className="openGroup"
+                                            data-testid={`facility-type-group-${filterGroupId}-open`}
+                                        />
+                                        <KeyboardArrowUpIcon
+                                            style={{ display: !!isGroupOpen ? 'none' : 'block' }}
+                                            className="closeGroup"
+                                            data-testid={`facility-type-group-${filterGroupId}-collapsed`}
+                                        />
                                     </IconButton>
                                 </StyledFilterSpaceListTypographyHeading>
-                                <StyledFilterSpaceList id={`filter-group-list-${group.facility_type_group_id}`}>
-                                    {group.facility_type_children && group.facility_type_children.length > 0 ? (
-                                        group.facility_type_children?.map(facilityType => (
-                                            <StyledInputListItem
-                                                key={`facility-type-listitem-${facilityType.facility_type_id}`}
-                                                id={`facility-type-listitem-${facilityType.facility_type_id}`}
-                                                data-testid={`facility-type-listitem-${facilityType.facility_type_id}`}
-                                            >
-                                                <InputLabel
-                                                    title={`Only show Spaces with ${facilityType.facility_type_name}`}
-                                                    htmlFor={`filtertype-${facilityType.facility_type_id}`}
-                                                    className="selectedFilterTypeLabel"
+                                {!!isGroupOpen && (
+                                    <StyledFilterSpaceList id={`filter-group-list-${filterGroupId}`}>
+                                        {group.facility_type_children && group.facility_type_children.length > 0 ? (
+                                            group.facility_type_children?.map(facilityType => (
+                                                <StyledInputListItem
+                                                    key={`facility-type-listitem-${facilityType.facility_type_id}`}
+                                                    id={`facility-type-listitem-${facilityType.facility_type_id}`}
+                                                    data-testid={`facility-type-listitem-${facilityType.facility_type_id}`}
                                                 >
-                                                    <Checkbox
+                                                    <InputLabel
+                                                        title={`Only show Spaces with ${facilityType.facility_type_name}`}
+                                                        htmlFor={`filtertype-${facilityType.facility_type_id}`}
+                                                        className="selectedFilterTypeLabel"
+                                                    >
+                                                        <Checkbox
+                                                            onChange={e =>
+                                                                handleFilterSelection(e, facilityType.facility_type_id)
+                                                            }
+                                                            data-testid={`filtertype-${facilityType.facility_type_id}`}
+                                                            id={`filtertype-${facilityType.facility_type_id}`}
+                                                            className="selectedFilterType"
+                                                            checked={
+                                                                facilityTypeFilters?.find(
+                                                                    f1 =>
+                                                                        f1.facility_type_id ===
+                                                                        facilityType.facility_type_id,
+                                                                )?.selected || false
+                                                            }
+                                                        />
+                                                        <span>{facilityType.facility_type_name}</span>
+                                                    </InputLabel>
+                                                    <input
+                                                        type="checkbox"
+                                                        id={`reject-filtertype-${facilityType.facility_type_id}`}
+                                                        data-testid={`reject-filtertype-${facilityType.facility_type_id}`}
+                                                        className="rejectedFilterType"
                                                         onChange={e =>
-                                                            handleFilterSelection(e, facilityType.facility_type_id)
+                                                            handleFilterRejection(e, facilityType.facility_type_id)
                                                         }
-                                                        data-testid={`filtertype-${facilityType.facility_type_id}`}
-                                                        id={`filtertype-${facilityType.facility_type_id}`}
-                                                        className="selectedFilterType"
+                                                        aria-label={`Exclude Spaces with ${facilityType.facility_type_name}`}
                                                         checked={
                                                             facilityTypeFilters?.find(
                                                                 f1 =>
                                                                     f1.facility_type_id ===
                                                                     facilityType.facility_type_id,
-                                                            )?.selected || false
+                                                            )?.unselected || false
                                                         }
                                                     />
-                                                    <span>{facilityType.facility_type_name}</span>
-                                                </InputLabel>
-                                                <input
-                                                    type="checkbox"
-                                                    id={`reject-filtertype-${facilityType.facility_type_id}`}
-                                                    data-testid={`reject-filtertype-${facilityType.facility_type_id}`}
-                                                    className="rejectedFilterType"
-                                                    onChange={e =>
-                                                        handleFilterRejection(e, facilityType.facility_type_id)
-                                                    }
-                                                    aria-label={`Exclude Spaces with ${facilityType.facility_type_name}`}
-                                                    checked={
-                                                        facilityTypeFilters?.find(
-                                                            f1 => f1.facility_type_id === facilityType.facility_type_id,
-                                                        )?.unselected || false
-                                                    }
-                                                />
-                                                <label
-                                                    htmlFor={`reject-filtertype-${facilityType.facility_type_id}`}
-                                                    className="rejectedFacilityTypeLabel"
-                                                    data-testid={`reject-filtertype-label-${facilityType.facility_type_id}`}
-                                                    title={`Exclude Spaces with ${facilityType.facility_type_name}`}
-                                                />
-                                                <span className="fortestfocus" style={{ width: '10px' }} />
-                                            </StyledInputListItem>
-                                        ))
-                                    ) : (
-                                        <li className="no-items">No facility types available</li>
-                                    )}
-                                </StyledFilterSpaceList>
+                                                    <label
+                                                        htmlFor={`reject-filtertype-${facilityType.facility_type_id}`}
+                                                        className="rejectedFacilityTypeLabel"
+                                                        data-testid={`reject-filtertype-label-${facilityType.facility_type_id}`}
+                                                        title={`Exclude Spaces with ${facilityType.facility_type_name}`}
+                                                    />
+                                                    <span className="fortestfocus" style={{ width: '10px' }} />
+                                                </StyledInputListItem>
+                                            ))
+                                        ) : (
+                                            <li className="no-items">No facility types available</li>
+                                        )}
+                                    </StyledFilterSpaceList>
+                                )}
                             </StyledFacilityGroup>
                         );
                     })}

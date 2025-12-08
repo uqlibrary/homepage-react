@@ -63,15 +63,6 @@ export const AdminButton = ({ currentPage }) => {
         !!open ? closeMenu() : openMenu(e);
     };
 
-    function navigateToPage(spacesPath, pageSlug = null) {
-        if (currentPage === pageSlug) {
-            return;
-        }
-        window.location.href = spacesAdminLink(spacesPath, account);
-        /* istanbul ignore next */
-        closeMenu();
-    }
-
     const icon = isCurrent =>
         isCurrent ? (
             <GradeIcon fontSize={'small'} style={{ paddingRight: '0.3rem', marginBottom: '2px' }} />
@@ -106,9 +97,8 @@ export const AdminButton = ({ currentPage }) => {
                 }}
             >
                 <MenuItem
-                    onClick={() => {
-                        navigateToPage('/admin/spaces', 'dashboard');
-                    }}
+                    component="a"
+                    href={spacesAdminLink('/admin/spaces', account)}
                     data-testid="admin-spaces-visit-dashboard-button"
                 >
                     {icon(currentPage === 'dashboard')}
@@ -116,9 +106,8 @@ export const AdminButton = ({ currentPage }) => {
                 </MenuItem>
 
                 <MenuItem
-                    onClick={() => {
-                        navigateToPage('/admin/spaces/manage/locations', 'manage-locations');
-                    }}
+                    component="a"
+                    href={spacesAdminLink('/admin/spaces/manage/locations', account)}
                     data-testid="admin-spaces-visit-manage-locations-button"
                 >
                     {icon(currentPage === 'manage-locations')}
@@ -126,9 +115,8 @@ export const AdminButton = ({ currentPage }) => {
                 </MenuItem>
 
                 <MenuItem
-                    onClick={() => {
-                        navigateToPage('/admin/spaces/add', 'add-space');
-                    }}
+                    component="a"
+                    href={spacesAdminLink('/admin/spaces/add', account)}
                     data-testid="admin-spaces-visit-add-space-button"
                 >
                     {icon(currentPage === 'add-space')}
@@ -136,25 +124,23 @@ export const AdminButton = ({ currentPage }) => {
                 </MenuItem>
 
                 <MenuItem
-                    onClick={() => {
-                        navigateToPage('/admin/spaces/manage/facilitytypes', 'manage-facilities');
-                    }}
+                    component="a"
+                    href={spacesAdminLink('/admin/spaces/manage/facilitytypes', account)}
                     data-testid="admin-spaces-visit-manage-facilities-button"
                 >
                     {icon(currentPage === 'manage-facilities')}
                     <span className={`${currentPage !== 'manage-facilities' ? 'clickable' : ''}`}>
-                        Manage Facility Types
+                        Manage Facility types
                     </span>
                 </MenuItem>
                 <hr />
                 <MenuItem
-                    onClick={() => {
-                        navigateToPage('/spaces');
-                    }}
+                    component="a"
+                    href={spacesAdminLink('/spaces', account)}
                     data-testid="admin-spaces-visit-homepage-button"
                 >
                     {icon(false)}
-                    <span className="clickable">View public homepage</span>
+                    <span className="clickable">Visit public Spaces page</span>
                 </MenuItem>
             </StyledMenu>
         </>

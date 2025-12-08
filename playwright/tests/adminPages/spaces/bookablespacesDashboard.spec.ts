@@ -8,6 +8,13 @@ const ST_LUCIA_RECORD_ID = '1'; // '2' is gatton, which has no Spaces in our moc
 const PACE_RECORD_ID = '3';
 const PAGINATE_TO_SHOW_5 = 5;
 
+const FORGEN = '123456';
+const PACE = '1234544';
+const LIVERIS = '43534';
+const ARMUS1 = '1';
+const ARMUS2 = '2';
+const ARMUS3 = '3';
+
 test.describe('Spaces Admin - manage locations', () => {
     test('page has correct data', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
@@ -485,13 +492,26 @@ test.describe('Spaces Admin - manage locations', () => {
 
         await expect(page.getByTestId('spaces-dashboard-header-row').locator('> th')).toHaveCount(2);
     });
-    test('spaces dashboard page is accessible', async ({ page }) => {
-        await page.goto('/admin/spaces?user=libSpaces');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible(); // page had loaded
+    test.describe('is accessible', () => {
+        test('spaces dashboard page is accessible', async ({ page }) => {
+            await page.goto('/admin/spaces?user=libSpaces');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible(); // page had loaded
 
-        await assertAccessibility(page, '[data-testid="StandardPage"]', {
-            disabledRules: ['empty-table-header', 'scrollable-region-focusable'], // as this is an admin page we don't care that much
+            await assertAccessibility(page, '[data-testid="StandardPage"]');
+        });
+        test('navigation menu is accessible', async ({ page }) => {
+            await page.goto('/admin/spaces?user=libSpaces');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible(); // page had loaded
+
+            // open navigation menu
+            page.getByTestId('admin-spaces-menu-button').click();
+            await expect(
+                page.getByTestId('admin-spaces-visit-dashboard-button').getByText(/Manage Spaces/),
+            ).toBeVisible(); // menu has loaded
+
+            await assertAccessibility(page, '[data-testid="admin-spaces-menu"]');
         });
     });
     test.describe('can filter', () => {
@@ -500,9 +520,9 @@ test.describe('Spaces Admin - manage locations', () => {
                 .getByTestId('space-table')
                 .locator('tbody')
                 .locator(':scope > tr:not(.hiddenRow)');
-            const lawSpace = page.getByTestId('edit-space-123456-button');
-            const paceSpace = page.getByTestId('edit-space-1234544-button');
-            const liverisSpace = page.getByTestId('edit-space-43534-button');
+            const lawSpace = page.getByTestId(`edit-space-${FORGEN}-button`);
+            const paceSpace = page.getByTestId(`edit-space-${PACE}-button`);
+            const liverisSpace = page.getByTestId(`edit-space-${LIVERIS}-button`);
 
             const campusSelector = page.getByTestId('filter-by-campus');
             const librarySelector = page.getByTestId('filter-by-library');
@@ -517,18 +537,18 @@ test.describe('Spaces Admin - manage locations', () => {
 
             // initially paginator limit of 5 is visible
             await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
-            await expect(page.getByTestId('space-123456')).toBeVisible();
-            await expect(page.getByTestId('space-1234544')).toBeVisible();
-            await expect(page.getByTestId('space-43534')).toBeVisible();
-            await expect(page.getByTestId('space-1')).toBeVisible();
-            await expect(page.getByTestId('space-2')).toBeVisible();
+            await expect(page.getByTestId(`space-${FORGEN}`)).toBeVisible();
+            await expect(page.getByTestId(`space-${PACE}`)).toBeVisible();
+            await expect(page.getByTestId(`space-${LIVERIS}`)).toBeVisible();
+            await expect(page.getByTestId(`space-${ARMUS1}`)).toBeVisible();
+            await expect(page.getByTestId(`space-${ARMUS2}`)).toBeVisible();
 
             await expect(campusSelector.locator('input')).not.toBeDisabled();
             await expect(librarySelector.locator('input')).toBeDisabled();
             await expect(floorSelector.locator('input')).toBeDisabled();
 
             await expect(campusSelector.locator('input')).toBeEmpty();
-            campusSelector.click();
+            campusSelector.click(); // open campus selector
 
             // limit to St Lucia only
             await expect(campusOptionLabel(CAMPUS_ST_LUCIA_OPTION)).toContainText('St Lucia');
@@ -540,19 +560,21 @@ test.describe('Spaces Admin - manage locations', () => {
 
             // only St Lucia spaces display
             await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
-            await expect(page.getByTestId('space-123456')).toBeVisible();
-            await expect(page.getByTestId('space-43534')).toBeVisible();
-            await expect(page.getByTestId('space-1')).toBeVisible();
-            await expect(page.getByTestId('space-2')).toBeVisible();
-            await expect(page.getByTestId('space-3')).toBeVisible();
+            await expect(page.getByTestId(`space-${FORGEN}`)).toBeVisible();
+            await expect(page.getByTestId(`space-${LIVERIS}`)).toBeVisible();
+            await expect(page.getByTestId(`space-${ARMUS1}`)).toBeVisible();
+            await expect(page.getByTestId(`space-${ARMUS2}`)).toBeVisible();
+            await expect(page.getByTestId(`space-${ARMUS3}`)).toBeVisible();
             await expect(lawSpace).toBeVisible();
             await expect(paceSpace).not.toBeVisible();
             await expect(liverisSpace).toBeVisible();
 
-            // choose PACE
+            // open campus selector
             campusSelector.click();
             await expect(campusOptionLabel(CAMPUS_PACE_OPTION)).toContainText('PACE');
-            campusOptionLabel(CAMPUS_PACE_OPTION).click(); // choose PACE
+
+            // choose PACE
+            campusOptionLabel(CAMPUS_PACE_OPTION).click(); // select PACE campus option
             await expect(campusSelector.locator('input')).toHaveValue(PACE_RECORD_ID);
             await expect(campusSelector.locator('div')).toContainText('PACE');
             await expect(librarySelector.locator('input')).not.toBeDisabled();
@@ -563,12 +585,18 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(lawSpace).not.toBeVisible();
             await expect(paceSpace).toBeVisible();
             await expect(liverisSpace).not.toBeVisible();
-            await expect(page.getByTestId('space-1234544')).toBeVisible();
+            await expect(page.getByTestId(`space-${PACE}`)).toBeVisible();
 
-            // deselect campuses
+            // click away to ensure that the drop down is closed (the next line has been flakey)
+            page.getByTestId('admin-spaces-page-title').click(); // reopen campus selector
+
+            // reopen campus selector
             campusSelector.click();
+            await expect(campusOptionLabel(CAMPUS_ALL_OPTION)).toBeVisible();
             await expect(campusOptionLabel(CAMPUS_ALL_OPTION)).toContainText('Show all campuses');
-            campusOptionLabel(CAMPUS_ALL_OPTION).click(); // unset
+
+            // show all campuses
+            campusOptionLabel(CAMPUS_ALL_OPTION).click();
             await expect(campusSelector.locator('input')).toHaveValue('');
             await expect(librarySelector.locator('input')).toBeDisabled();
             await expect(floorSelector.locator('input')).toBeDisabled();
@@ -581,9 +609,9 @@ test.describe('Spaces Admin - manage locations', () => {
                 .getByTestId('space-table')
                 .locator('tbody')
                 .locator(':scope > tr:not(.hidden)');
-            const lawSpace = page.getByTestId('edit-space-123456-button');
-            const paceSpace = page.getByTestId('edit-space-1234544-button');
-            const liverisSpace = page.getByTestId('edit-space-43534-button');
+            const lawSpace = page.getByTestId(`edit-space-${FORGEN}-button`);
+            const paceSpace = page.getByTestId(`edit-space-${PACE}-button`);
+            const liverisSpace = page.getByTestId(`edit-space-${LIVERIS}-button`);
 
             const campusSelector = page.getByTestId('filter-by-campus');
             const librarySelector = page.getByTestId('filter-by-library');
@@ -611,10 +639,12 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(librarySelector.locator('input')).toBeDisabled();
             await expect(floorSelector.locator('input')).toBeDisabled();
 
-            // choose PACE
+            // open campus selector
             campusSelector.click();
             await expect(campusOptionLabel(CAMPUS_PACE_OPTION)).toContainText('PACE');
-            campusOptionLabel(CAMPUS_PACE_OPTION).click(); // choose PACE
+
+            // choose PACE
+            campusOptionLabel(CAMPUS_PACE_OPTION).click();
             await expect(campusSelector.locator('input')).toHaveValue(PACE_RECORD_ID);
             await expect(campusSelector.locator('div')).toContainText('PACE');
             await expect(librarySelector.locator('input')).not.toBeDisabled();
@@ -624,9 +654,14 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(paceSpace).toBeVisible();
             await expect(liverisSpace).not.toBeVisible();
 
-            // Change to St Lucia
+            // click away to ensure that the drop down is closed (the next line has been flakey)
+            page.getByTestId('admin-spaces-page-title').click(); // reopen campus selector
+
+            // reopen campus selector
             campusSelector.click();
             await expect(campusOptionLabel(CAMPUS_ST_LUCIA_OPTION)).toContainText('St Lucia');
+
+            // Change to St Lucia
             campusOptionLabel(CAMPUS_ST_LUCIA_OPTION).click();
             await expect(campusSelector.locator('input')).toHaveValue(ST_LUCIA_RECORD_ID);
             await expect(campusSelector.locator('div')).toContainText('St Lucia');
@@ -641,12 +676,14 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(librarySelector.locator('input')).not.toBeDisabled();
             await expect(floorSelector.locator('input')).toBeDisabled();
 
-            // choose Walter Harrison library
+            // open the library selector
             await expect(librarySelector.locator('input')).not.toBeDisabled();
             await expect(librarySelector.locator('input')).toBeEmpty();
             librarySelector.click();
             const lawLibraryOption = page.locator('ul[aria-labelledby="filter-by-library-label"] li:last-of-type');
             await expect(lawLibraryOption).toContainText('Walter Harrison Law Library');
+
+            // choose Walter Harrison library
             lawLibraryOption.click(); // choose Walter Harrison
             await expect(visibleSpaces).toHaveCount(1); // only the Walter Harrison space displays
             await expect(lawSpace).toBeVisible();
@@ -656,34 +693,39 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(campusSelector.locator('input')).not.toBeDisabled();
             await expect(librarySelector.locator('input')).not.toBeDisabled();
             await expect(floorSelector.locator('input')).not.toBeDisabled();
-
-            // choose Floor 3a
-            await expect(floorSelector.locator('input')).not.toBeDisabled();
             await expect(floorSelector.locator('input')).toBeEmpty();
+
+            // open Floor selector
             floorSelector.click();
             const secondFloorOption = 'ul[aria-labelledby="filter-by-floor-label"] li:nth-of-type(2)';
             await expect(page.locator(secondFloorOption)).toContainText('3A');
+
+            // choose Floor 3a
             page.locator(secondFloorOption).click(); // choose 3A
             await expect(visibleSpaces).toHaveCount(0); // No spaces display
             await expect(lawSpace).not.toBeVisible();
             await expect(paceSpace).not.toBeVisible();
             await expect(liverisSpace).not.toBeVisible();
-
-            // choose Floor 2
             await expect(floorSelector.locator('input')).not.toBeDisabled();
+
+            // reopen floor selector
             floorSelector.click();
             const firstFloorOption = 'ul[aria-labelledby="filter-by-floor-label"] li:nth-of-type(1)';
             await expect(page.locator(firstFloorOption)).toContainText('2');
+
+            // choose Floor 2
             page.locator(firstFloorOption).click(); // choose floor "2"
             await expect(visibleSpaces).toHaveCount(1); // 1 space displays
             await expect(lawSpace).toBeVisible();
             await expect(paceSpace).not.toBeVisible();
             await expect(liverisSpace).not.toBeVisible();
 
-            // deselect campuses
+            // reopen campus selector
             campusSelector.click();
             await expect(campusOptionLabel(CAMPUS_ALL_OPTION)).toContainText('Show all campuses');
-            campusOptionLabel(CAMPUS_ALL_OPTION).click(); // unset
+
+            // choose no campus (resets and shows any Space)
+            campusOptionLabel(CAMPUS_ALL_OPTION).click();
             await expect(campusSelector.locator('input')).toHaveValue('');
             await expect(librarySelector.locator('input')).toBeDisabled();
             await expect(floorSelector.locator('input')).toBeDisabled();
@@ -756,9 +798,9 @@ test.describe('Spaces Admin - manage locations', () => {
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
 
-        const descriptionPanel = page.getByTestId('space-description-43534');
-        const expandButton = page.getByTestId('space-43534-expand-button');
-        const collapseButton = page.getByTestId('space-43534-collapse-button');
+        const descriptionPanel = page.getByTestId(`space-description-${LIVERIS}`);
+        const expandButton = page.getByTestId(`space-${LIVERIS}-expand-button`);
+        const collapseButton = page.getByTestId(`space-${LIVERIS}-collapse-button`);
 
         // "friendly" location description starts off hidden
         await expect(descriptionPanel).not.toBeVisible();
@@ -803,11 +845,11 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
 
         await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
-        await expect(page.getByTestId('space-123456')).toBeVisible();
-        await expect(page.getByTestId('space-1234544')).toBeVisible();
-        await expect(page.getByTestId('space-43534')).toBeVisible();
-        await expect(page.getByTestId('space-1')).toBeVisible();
-        await expect(page.getByTestId('space-2')).toBeVisible();
+        await expect(page.getByTestId(`space-${FORGEN}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${PACE}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${LIVERIS}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS1}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS2}`)).toBeVisible();
 
         // paginator shows correct number
         await expect(pageCountDisplay).toBeVisible();
@@ -826,11 +868,12 @@ test.describe('Spaces Admin - manage locations', () => {
 
         // only St Lucia spaces display
         await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
-        await expect(page.getByTestId('space-123456')).toBeVisible();
-        await expect(page.getByTestId('space-43534')).toBeVisible();
-        await expect(page.getByTestId('space-1')).toBeVisible();
-        await expect(page.getByTestId('space-2')).toBeVisible();
-        await expect(page.getByTestId('space-3')).toBeVisible();
+        await expect(page.getByTestId(`space-${FORGEN}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${PACE}`)).not.toBeVisible();
+        await expect(page.getByTestId(`space-${LIVERIS}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS1}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS2}`)).toBeVisible();
+        await expect(page.getByTestId(`space-${ARMUS3}`)).toBeVisible();
 
         // paginator shows correct number
         await expect(pageCountDisplay).toBeVisible();
@@ -861,5 +904,59 @@ test.describe('Spaces Admin - manage locations', () => {
         // paginator shows correct number
         await expect(pageCountDisplay).toBeVisible();
         await expect(pageCountDisplay).toContainText('1–9 of 9');
+    });
+    test('remembers pagination', async ({ page, context }) => {
+        await page.goto('/admin/spaces?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
+
+        // initally 5 rows showing
+        const pageCountDisplay2 = page.locator('.MuiTablePagination-displayedRows');
+        await expect(pageCountDisplay2).toBeVisible();
+        await expect(pageCountDisplay2).toContainText('1–5 of 10');
+
+        await expect(
+            page
+                .getByTestId('space-table')
+                .locator('tbody')
+                .locator(':scope > tr:not(.hidden)'),
+        ).toHaveCount(5);
+
+        // cookie not present
+        const cookies = await context.cookies();
+        const savedCookie = cookies.find(c => c.name === 'spaces-list-paginator');
+        expect(savedCookie).not.toBeDefined();
+
+        // open rows-per-page selector in paginator
+        await expect(page.getByTestId('admin-spaces-list-paginator-select')).toBeVisible();
+        await page.getByTestId('admin-spaces-list-paginator-select').selectOption('10');
+
+        await expect(
+            page
+                .getByTestId('space-table')
+                .locator('tbody')
+                .locator(':scope > tr:not(.hidden)'),
+        ).toHaveCount(10);
+
+        // reload page to show number of rows has increased
+        await page.goto('/admin/spaces?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
+
+        // now 10 rows showing
+        const pageCountDisplay = page.locator('.MuiTablePagination-displayedRows');
+        await expect(pageCountDisplay).toBeVisible();
+        await expect(pageCountDisplay).toContainText('1–10 of 10');
+
+        await expect(
+            page
+                .getByTestId('space-table')
+                .locator('tbody')
+                .locator(':scope > tr:not(.hidden)'),
+        ).toHaveCount(10);
     });
 });
