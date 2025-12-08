@@ -50,6 +50,8 @@ export const DLOBulkSchedule = ({
     const [isEditBoxOpened, setIsEditBoxOpened] = React.useState(false);
     // selected items for this schedule (store actual DLO items from dlorList)
     const [scheduleItems, setScheduleItems] = React.useState([]);
+    // when editing an existing schedule, store its id
+    const [editingScheduleId, setEditingScheduleId] = React.useState(null);
 
     const defaultDate = moment.tz('Australia/Brisbane').startOf('day');
 
@@ -104,6 +106,67 @@ export const DLOBulkSchedule = ({
         }
 
         handleChange(prop)({ target: { value: val } });
+    };
+
+    // map stored schedule object uuids to full dlorList items (best-effort)
+    const getItemsFromSchedule = schedule => {
+        if (!schedule) return [];
+
+        const uuids =
+            Array.isArray(schedule.schedule_objects) && schedule.schedule_objects.length
+                ? schedule.schedule_objects
+                : Array.isArray(schedule.schedule_items) && schedule.schedule_items.length
+                ? schedule.schedule_items
+                : null;
+
+        // if schedule already stores full objects return them
+        if (
+            Array.isArray(schedule.schedule_objects) &&
+            schedule.schedule_objects.length &&
+            typeof schedule.schedule_objects[0] === 'object'
+        ) {
+            return schedule.schedule_objects;
+        }
+
+        if (!uuids) {
+            // no object list available on schedule
+            return [];
+        }
+
+        // match uuids to loaded dlorList entries; if not found create placeholder
+        const items = uuids.map(u => {
+            const uuid = typeof u === 'string' ? u : u.object_public_uuid || String(u);
+            const found = Array.isArray(dlorList) ? dlorList.find(it => it.object_public_uuid === uuid) : null;
+            return (
+                found || {
+                    object_public_uuid: uuid,
+                    object_title: 'Unknown title',
+                }
+            );
+        });
+
+        return items;
+    };
+
+    // open the modal to edit an existing schedule's items
+    const editExistingSchedule = schedule => {
+        if (!schedule) return;
+
+        // populate form values from schedule (preserve defaultFormValues)
+        const fv = {
+            ...defaultFormValues,
+            schedule_name: schedule.schedule_name || defaultFormValues.schedule_name,
+            schedule_start_date: schedule.schedule_start_date || null,
+            schedule_end_date: schedule.schedule_end_date || null,
+            schedule_status: schedule.hasOwnProperty('schedule_status')
+                ? schedule.schedule_status
+                : defaultFormValues.schedule_status,
+        };
+
+        setFormValues(fv);
+        setScheduleItems(getItemsFromSchedule(schedule));
+        setEditingScheduleId(schedule.schedule_id || null);
+        setIsEditBoxOpened(true);
     };
 
     const handleScheduleEdit = (id = null) => {
@@ -196,6 +259,7 @@ export const DLOBulkSchedule = ({
         setIsEditBoxOpened(false);
         setFormValues(defaultFormValues);
         setScheduleItems([]);
+        setEditingScheduleId(null);
     };
     return (
         <>
@@ -304,7 +368,7 @@ export const DLOBulkSchedule = ({
                                 color="primary"
                                 data-testid="schedule-confirm-items"
                                 disabled={!(formValues?.schedule_name && scheduleItems.length > 0)}
-                                onClick={() => handleScheduleEdit()}
+                                onClick={() => handleScheduleEdit(editingScheduleId)}
                             >
                                 Save
                             </Button>
@@ -379,9 +443,7 @@ export const DLOBulkSchedule = ({
                                                         <IconButton
                                                             data-testid="existing-schedule-edit-button"
                                                             data-analyticsid="existing-schedule-edit-button"
-                                                            onClick={() => {
-                                                                console.log('Schedule', schedule);
-                                                            }}
+                                                            onClick={() => editExistingSchedule(schedule)}
                                                             aria-label="Click to edit schedule"
                                                             size="large"
                                                         >
