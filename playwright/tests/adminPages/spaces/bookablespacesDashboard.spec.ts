@@ -905,4 +905,58 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(pageCountDisplay).toBeVisible();
         await expect(pageCountDisplay).toContainText('1–9 of 9');
     });
+    test('remembers pagination', async ({ page, context }) => {
+        await page.goto('/admin/spaces?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
+
+        // initally 5 rows showing
+        const pageCountDisplay2 = page.locator('.MuiTablePagination-displayedRows');
+        await expect(pageCountDisplay2).toBeVisible();
+        await expect(pageCountDisplay2).toContainText('1–5 of 10');
+
+        await expect(
+            page
+                .getByTestId('space-table')
+                .locator('tbody')
+                .locator(':scope > tr:not(.hidden)'),
+        ).toHaveCount(5);
+
+        // cookie not present
+        const cookies = await context.cookies();
+        const savedCookie = cookies.find(c => c.name === 'spaces-list-paginator');
+        expect(savedCookie).not.toBeDefined();
+
+        // open rows-per-page selector in paginator
+        await expect(page.getByTestId('admin-spaces-list-paginator-select')).toBeVisible();
+        await page.getByTestId('admin-spaces-list-paginator-select').selectOption('10');
+
+        await expect(
+            page
+                .getByTestId('space-table')
+                .locator('tbody')
+                .locator(':scope > tr:not(.hidden)'),
+        ).toHaveCount(10);
+
+        // reload page to show number of rows has increased
+        await page.goto('/admin/spaces?user=libSpaces');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible();
+
+        // now 10 rows showing
+        const pageCountDisplay = page.locator('.MuiTablePagination-displayedRows');
+        await expect(pageCountDisplay).toBeVisible();
+        await expect(pageCountDisplay).toContainText('1–10 of 10');
+
+        await expect(
+            page
+                .getByTestId('space-table')
+                .locator('tbody')
+                .locator(':scope > tr:not(.hidden)'),
+        ).toHaveCount(10);
+    });
 });
