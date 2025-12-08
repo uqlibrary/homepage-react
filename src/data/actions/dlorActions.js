@@ -39,6 +39,7 @@ import {
     DLOR_KEYWORDS_UPDATE_API,
     DLOR_KEYWORDS_DESTROY_API,
     DLOR_STATISTICS_API,
+    DLOR_SCHEDULE_API,
 } from 'repositories/routes';
 import { checkExpireSession } from './actionhelpers';
 
@@ -854,6 +855,49 @@ export function loadDlorStatistics() {
             .catch(error => {
                 dispatch({
                     type: actions.DLOR_STATISTICS_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function loadDLORSchedules() {
+    console.log('loadDLORSchedules action creator called');
+    return dispatch => {
+        dispatch({ type: actions.DLOR_SCHEDULE_LOADING });
+        return get(DLOR_SCHEDULE_API())
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_SCHEDULE_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_SCHEDULE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+export function addDLORSchedule(request) {
+    console.log('addDLORSchedule action creator called', request);
+    return dispatch => {
+        dispatch({ type: actions.DLOR_SCHEDULE_LOADING });
+        return post(DLOR_SCHEDULE_API(), request)
+            .then(response => {
+                console.log('addDLORSchedule response', response);
+                dispatch({
+                    type: actions.DLOR_SCHEDULE_LOADED,
+                    payload: response.data,
+                });
+                // dispatch(loadDLORSchedules());
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_SCHEDULE_FAILED,
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);

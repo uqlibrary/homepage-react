@@ -61,6 +61,7 @@ import dlor_file_type_list from './data/records/dlor/dlor_file_type_list';
 import dlor_series_all from './data/records/dlor/dlor_series_all';
 import dlor_series_view from './data/records/dlor/dlor_series_view';
 import dlor_series_view_nodescription from './data/records/dlor/dlor_series_view_nodescription';
+import { dlorSchedules } from './data/dlorSchedules';
 import { dlor_demographics_report } from './data/dlorDemographics';
 import { dlor_favourites_report } from './data/dlorFavourites';
 import  dlor_statistics  from './data/records/dlor/dlor_statistics';
@@ -841,6 +842,14 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .onGet(/dlor\/public\/keywords\/list/)
     .reply(() => {
         return [200, dlor_keywords];
+    })
+    .onPost(/dlor\/admin\/schedule/)
+    .reply(() => {
+        return [200, dlorSchedules];
+    })
+    .onGet(/dlor\/admin\/schedule/)
+    .reply(() => {
+        return [200, dlorSchedules];
     })
     .onGet(routes.DLOR_STATISTICS_API().apiUrl)
     .reply(() => {
