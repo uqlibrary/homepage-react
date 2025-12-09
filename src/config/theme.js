@@ -50,6 +50,13 @@ const palette = {
         main: '#951126',
         dark: '#790000',
     },
+    // https://design-system.uq.edu.au/storybook-html/index.html?path=/docs/core-colour--docs
+    designSystem: {
+        borderColor: '#dcdcdd', // $grey-200
+        deemphasisedText: '#757377', // $grey-700
+        panelBackgroundColor: '#f3f3f4', // $grey-50
+        brandColor: '#51247a',
+    },
 };
 
 export const mui1theme = createTheme({

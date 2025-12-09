@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+
 import Button from '@mui/material/Button';
 import { Grid } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
@@ -11,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import WarningOutlined from '@mui/icons-material/WarningOutlined';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
 import {
     baseButtonStyles,
@@ -33,7 +37,6 @@ import {
     showGenericConfirmAndDeleteDialog,
 } from '../bookableSpacesAdminHelpers';
 import { getFlatFacilityTypeList } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import { SortableFacilityGroups } from 'modules/Pages/Admin/BookableSpaces/ManageFacilities/SortableFacilityGroups';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
@@ -98,6 +101,61 @@ const StyledEditIconButton = styled(IconButton)(() => ({
     paddingInline: 0,
     marginRight: '0.25rem',
 }));
+const StyledDraggableListItem = styled('li')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-start',
+    columnGap: '1rem',
+    backgroundColor: theme.palette.designSystem.panelBackgroundColor,
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: theme.palette.designSystem.borderColor,
+    borderRadius: '4px',
+    marginBottom: '5px',
+    padding: '1rem',
+    alignItems: 'center',
+    width: '50%',
+    maxWidth: '500px',
+    '& svg': {
+        color: theme.palette.designSystem.deemphasisedText,
+    },
+}));
+
+const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, handleDelete }) => {
+    const ref = React.useRef(null);
+    const [, drop] = useDrop({
+        accept: 'LIST_ITEM',
+        drop(draggedItem) {
+            /* istanbul ignore else */
+            if (draggedItem.index !== index) {
+                moveItem(draggedItem.index, index);
+                draggedItem.index = index;
+            }
+        },
+    });
+
+    const [{ isDragging }, drag] = useDrag({
+        type: 'LIST_ITEM',
+        item: { index },
+        collect: monitor => ({
+            isDragging: monitor.isDragging(),
+        }),
+    });
+
+    drag(drop(ref));
+
+    return (
+        <StyledDraggableListItem
+            style={{ opacity: isDragging ? 0.5 : 1 }}
+            ref={ref}
+            data-testid={`spaces-facility-group-edit-draggable-title-${item?.facility_type_group_id}`}
+        >
+            {/* <div style={{ display: 'flex', alignItems: 'center' }}>*/}
+            <DragIndicatorIcon />
+            <span>{item?.facility_type_group_name}</span>
+            {/* </div>*/}
+        </StyledDraggableListItem>
+    );
+});
 
 export const BookableSpacesManageFacilities = ({
     actions,
@@ -115,8 +173,32 @@ export const BookableSpacesManageFacilities = ({
     facilityTypeUpdated,
     bookableSpacesRoomList,
 }) => {
-    console.log('load facilityTypeList', facilityTypeList, facilityTypeListLoading, facilityTypeListError);
-    console.log('load facilityTypeUpdated', facilityTypeUpdated, facilityTypeUpdating, facilityTypeUpdateError);
+    console.log('TOP ===');
+    console.log('TOP load facilityTypeList', facilityTypeList, facilityTypeListLoading, facilityTypeListError);
+    console.log(
+        'TOP load facilityTypeAdding loading=',
+        facilityTypeAdding,
+        '; error=',
+        facilityTypeAddError,
+        '; result=',
+        facilityTypeAdded,
+    );
+    console.log(
+        'TOP load facilityTypeGroupAdding loading=',
+        facilityTypeGroupAdding,
+        '; error=',
+        facilityTypeAddGroupError,
+        '; result=',
+        facilityTypeGroupAdded,
+    );
+    console.log(
+        'TOP load facilityTypeUpdated loading=',
+        facilityTypeUpdating,
+        '; error=',
+        facilityTypeUpdateError,
+        '; result=',
+        facilityTypeUpdated,
+    );
 
     const [cookies, setCookie] = useCookies();
 
@@ -133,6 +215,42 @@ export const BookableSpacesManageFacilities = ({
     const setFormValues = v => {
         console.log('setFormValues', v);
         setFormValues2(v);
+    };
+
+    const updateGroupOrder = valuesToSend => {
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
+        console.log('updateGroupOrder', valuesToSend);
+        actions
+            .updateSpacesFacilityGroupList(valuesToSend)
+            .then(() => {
+                console.log('updateGroupOrder then');
+                displayToastMessage('Facility group order updated', false);
+                // return { success: true, id: valuesToSend.facility_type_id };
+            })
+            .catch(e => {
+                console.log('catch: [updateGroupOrder] updating facility group order failed ', valuesToSend, e);
+                displayToastMessage(
+                    '[BSMF-008A] Sorry, an error occurred - Updating the Facility type failed. The admins have been informed.',
+                );
+                // return { success: false, id: valuesToSend.facility_type_id, error: e };
+            })
+            .finally(() => {
+                console.log('updateGroupOrder finally');
+                // Reload facility types only once after all operations complete
+                actions.loadAllFacilityTypes();
+            });
+    };
+
+    const [sortList, setSortList2] = React.useState({});
+    const setSortList = request => {
+        console.log('setSortList', request?.data);
+        setSortList2(request?.data);
+
+        !!request?.update && updateGroupOrder(request?.data);
     };
 
     React.useEffect(() => {
@@ -159,8 +277,18 @@ export const BookableSpacesManageFacilities = ({
             facilityTypeListLoading === false &&
             facilityTypeList?.data?.facility_type_groups?.length > 0;
         if (facilityTypeListHasLoaded) {
+            console.log('### facilityTypeListHasLoaded');
             setFormValues({
                 ['facility_types']: getFlatFacilityTypeList(facilityTypeList),
+            });
+            setSortList({
+                data: facilityTypeList?.data?.facility_type_groups.map(g => {
+                    return {
+                        facility_type_group_id: g.facility_type_group_id,
+                        facility_type_group_order: g.facility_type_group_order,
+                    };
+                }),
+                update: false,
             });
             setSaveButtonVisibility(saveButtonVisibilityAlwaysVisible);
         }
@@ -211,7 +339,7 @@ export const BookableSpacesManageFacilities = ({
                         e,
                     );
                     displayToastMessage(
-                        '[BSMF-008] Sorry, an error occurred - Updating the Facility type failed. The admins have been informed.',
+                        '[BSMF-008B] Sorry, an error occurred - Updating the Facility type failed. The admins have been informed.',
                     );
                     // return { success: false, id: valuesToSend.facility_type_id, error: e };
                 })
@@ -505,13 +633,13 @@ export const BookableSpacesManageFacilities = ({
         }
 
         actions
-            .updateSpacesFacilityGroup(valuesToSend, data.facility_type_group_id)
+            .updateSpacesFacilityGroupSingle(valuesToSend, data.facility_type_group_id)
             .then(() => {
                 displayToastMessage('Facility type updated', false);
                 // return { success: true, id: valuesToSend.facility_type_group_id };
             })
             .catch(e => {
-                console.log('updateSpacesFacilityGroup ERROR');
+                console.log('updateSpacesFacilityGroupSingle ERROR');
                 console.log(
                     'catch: updating facility type (',
                     valuesToSend?.facility_type_group_id,
@@ -719,6 +847,30 @@ export const BookableSpacesManageFacilities = ({
             </>
         );
     };
+
+    // const handleChange = prop => e => {
+    //     console.log('handleChange', prop, e);
+    //     const theNewValue = e.target.value;
+    //     const newValues = { ...formValues, [prop]: theNewValue };
+    //     setSortList({ data: newValues, update: true });
+    // };
+
+    const moveItem = (fromIndex, toIndex) => {
+        console.log('moveItem', fromIndex, toIndex);
+        const newSortList = [...sortList];
+        const [movedItem] = newSortList.splice(fromIndex, 1);
+        newSortList.splice(toIndex, 0, movedItem);
+
+        newSortList.forEach((item, index) => {
+            return {
+                facility_type_group_id: item.facility_type_group_id,
+                facility_type_group_order: (item.facility_type_group_order = index + 1),
+            };
+        });
+
+        setSortList({ data: newSortList, update: true });
+    };
+
     return (
         <StandardPage title="Spaces">
             <HeaderBar pageTitle="Manage Facility types" currentPage="manage-facilities" />
@@ -740,7 +892,10 @@ export const BookableSpacesManageFacilities = ({
                                         </Grid>
                                     </Grid>
                                 );
-                            } else if (!!facilityTypeListError) {
+                            } else if (
+                                !!facilityTypeListError
+                                // facilityTypeAddError  & facilityTypeAddGroupError & facilityTypeUpdateError arent handled here because they have their own error message
+                            ) {
                                 return (
                                     <Grid container>
                                         <Grid item xs={12}>
@@ -772,14 +927,46 @@ export const BookableSpacesManageFacilities = ({
                                             </Grid>
                                         )}
 
-                                        <SortableFacilityGroups
-                                            facilityTypeGroupList={facilityTypeList?.data?.facility_type_groups}
-                                        />
+                                        <Typography component={'h3'} variant={'h6'}>
+                                            Sort Filter group types
+                                        </Typography>
+                                        <Grid container style={{ marginBottom: '2rem' }}>
+                                            <Grid item xs={12}>
+                                                <DndProvider backend={HTML5Backend}>
+                                                    <div data-testid="spaces-dragLandingAarea">
+                                                        {facilityTypeList?.data?.facility_type_groups?.length === 0 && (
+                                                            <p>(None yet)</p>
+                                                        )}
+                                                        <ul>
+                                                            {facilityTypeList?.data?.facility_type_groups
+                                                                ?.sort(
+                                                                    (a, b) =>
+                                                                        a.facility_type_group_order -
+                                                                        b.facility_type_group_order,
+                                                                )
+                                                                .map((item, index) => (
+                                                                    <DraggableListItem
+                                                                        key={`draggable-facility-group-type-${index}`}
+                                                                        item={item}
+                                                                        index={index}
+                                                                        moveItem={moveItem}
+                                                                        // handleChange={handleChange}
+                                                                    />
+                                                                ))}
+                                                        </ul>
+                                                    </div>
+                                                </DndProvider>
+                                            </Grid>
+                                        </Grid>
 
                                         {!!facilityTypeList?.data?.facility_type_groups &&
                                             facilityTypeList?.data?.facility_type_groups.length > 0 && (
                                                 <>
-                                                    <Typography component={'h3'} variant={'h6'}>
+                                                    <Typography
+                                                        component={'h3'}
+                                                        variant={'h6'}
+                                                        style={{ marginBottom: '0.5rem' }}
+                                                    >
                                                         Add and Edit Filter types
                                                     </Typography>
                                                     <Grid container>

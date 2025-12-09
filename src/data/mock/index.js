@@ -63,7 +63,7 @@ import dlor_series_view from './data/records/dlor/dlor_series_view';
 import dlor_series_view_nodescription from './data/records/dlor/dlor_series_view_nodescription';
 import { dlor_demographics_report } from './data/dlorDemographics';
 import { dlor_favourites_report } from './data/dlorFavourites';
-import  dlor_statistics  from './data/records/dlor/dlor_statistics';
+import dlor_statistics from './data/records/dlor/dlor_statistics';
 import { drupalArticles } from './data/drupalArticles';
 import {
     journalSearchFavourites,
@@ -1600,7 +1600,7 @@ mock.onGet('exams/course/FREN1010/summary')
             return [200, { status: 'OK', data: result }];
         }
     })
-    .onPut(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_GROUP_UPDATE_API({ id: '.*' }).apiUrl)))
+    .onPut(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_GROUP_UPDATE_SINGLE_API({ id: '.*' }).apiUrl)))
     .reply(() => {
         if (responseType === 'error') {
             return [500, {}];
@@ -1621,7 +1621,17 @@ mock.onGet('exams/course/FREN1010/summary')
             return [200, { status: 'OK', data: result }];
         }
     })
-    .onDelete(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_GROUP_UPDATE_API({ id: '.*' }).apiUrl)))
+    .onPut(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_GROUP_UPDATE_LIST_API().apiUrl)))
+    .reply(() => {
+        if (responseType === 'reorderError') {
+            return [500, {}];
+        } else {
+            // some random data
+            const result = [{ facility_type_group_id: 1, facility_type_group_order: 99 }];
+            return [200, { status: 'OK', data: result }];
+        }
+    })
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_GROUP_UPDATE_SINGLE_API({ id: '.*' }).apiUrl)))
     .reply(withDelay([200, { status: 'OK' }]))
     .onGet(routes.SPACES_SITE_API().apiUrl)
     .reply(() => {
