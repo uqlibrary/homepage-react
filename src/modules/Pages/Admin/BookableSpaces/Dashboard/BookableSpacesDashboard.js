@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useCookies } from 'react-cookie';
 import { useAccountContext } from 'context';
 
 import FormControl from '@mui/material/FormControl';
@@ -10,9 +11,11 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 
@@ -22,7 +25,11 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
+import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import DoneIcon from '@mui/icons-material/Done';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
@@ -42,6 +49,32 @@ const StyledStandardCard = styled(StandardCard)(() => ({
 }));
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
+}));
+const StyledTablePagination = styled(TablePagination)(() => ({
+    overflow: 'hidden',
+    '& .MuiTablePagination-toolbar': {
+        display: 'flex !important',
+        alignItems: 'center !important',
+        justifyContent: 'center !important',
+        gap: 0,
+        flexWrap: 'wrap',
+        paddingInline: 0,
+    },
+    '& .MuiTablePagination-spacer': {
+        display: 'none',
+    },
+    '& .MuiTablePagination-selectLabel, .MuiTablePagination-input, .MuiTablePagination-displayedRows, .MuiTablePagination-actions ': {
+        flexShrink: 0,
+    },
+    '& .MuiTablePagination-input': {
+        marginLeft: 0,
+        '& select': {
+            paddingLeft: 0,
+        },
+    },
+    '& .MuiTablePagination-actions': {
+        marginLeft: '0 !important',
+    },
 }));
 const StyledTableContainer = styled(TableContainer)(() => ({
     position: 'relative',
@@ -76,14 +109,69 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
             backgroundColor: 'rgb(189 186 186)',
         },
     },
-    '&.hidden': {
+    '&.hiddenRow': {
         display: 'none',
+    },
+    '& button': {
+        paddingBlock: 0,
+        '&:hover, &:focus': {
+            backgroundColor: 'inherit',
+            color: '#fff',
+        },
     },
 }));
 const StyledStickyTableCell = styled(TableCell)(() => ({
     position: 'sticky',
     backgroundColor: backgroundColorColumn,
     left: 0,
+    '< div:first-of-type': {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        marginInline: '-1px',
+    },
+    '& .spaceDescription': {
+        display: 'flex',
+        justifyContent: 'space-between',
+    },
+}));
+const TableWrapper = styled('div')(() => ({
+    '&.expanded': {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '95vw',
+        height: '92vh',
+        zIndex: 100,
+        padding: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginInline: '20px',
+        border: 'thick solid black',
+        marginTop: '4px',
+        borderRadius: '10px',
+        '& .tableContainer': {
+            height: '90%',
+        },
+    },
+}));
+const StyledFilterWrapperDiv = styled('div')(() => ({
+    display: 'flex',
+    columnGap: '1rem',
+    marginBottom: '1rem',
+}));
+const StyledExpandCollapseTableIconButton = styled(IconButton)(({ theme }) => ({
+    transform: 'scale(-1, 1)',
+    transformOrigin: 'center',
+    backgroundColor: theme.palette.primary.main,
+    border: `1px solid ${theme.palette.primary.main}`,
+    color: 'white',
+    '&:hover, &:focus': {
+        backgroundColor: 'white',
+        color: theme.palette.primary.main,
+    },
+    marginRight: '1rem',
 }));
 
 const CAMPUS_ID_UNSELECTED = '';
@@ -105,20 +193,33 @@ export const BookableSpacesDashboard = ({
     campusListLoading,
     campusListError,
 }) => {
-    console.log('BookableSpacesDashboard top');
     console.log(
-        'bookableSpacesRoomList',
+        'TOP bookableSpacesRoomList',
         bookableSpacesRoomListLoading,
         bookableSpacesRoomListError,
         bookableSpacesRoomList,
     );
-    console.log('weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
-    console.log('facilityTypeList', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
+    console.log('TOP weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
+    console.log('TOP facilityTypeList', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
 
     const { account } = useAccountContext();
 
+    const [useRows, setUseRows2] = useState([]);
+    const setUseRows = rows => {
+        console.log('setUseRows', rows);
+        setUseRows2(rows);
+    };
+
+    const [cookies, setCookie] = useCookies();
+
+    const paginatorCookieName = 'spaces-list-paginator';
+    const [rowsPerPage, setRowsPerPage] = React.useState(
+        !!cookies[paginatorCookieName] ? parseInt(cookies[paginatorCookieName], 10) : 5,
+    );
+    const [pageNum, setPageNum] = React.useState(0);
+
     // the filters we will show on the page
-    const [availableFilters, setAvailableFilters2] = React.useState([
+    const [availableFilters, setAvailableFilters2] = useState([
         { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
     ]);
     const setAvailableFilters = availableFilters => {
@@ -175,16 +276,28 @@ export const BookableSpacesDashboard = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const showSpaceByPagination = (index, pageNumLocal, rowsPerPageLocal) => {
+        return index >= pageNumLocal * rowsPerPage && index < (pageNumLocal + 1) * rowsPerPageLocal;
+    };
     React.useEffect(() => {
         if (
             bookableSpacesRoomListError === false &&
             bookableSpacesRoomListLoading === false &&
             !!bookableSpacesRoomList
         ) {
-            // becuse we dont want campusList available before bookableSpacesRoomList
+            // because we don't want campusList available before bookableSpacesRoomList (race condition)
             if (campusListError === null && campusListLoading === null && campusList === null) {
                 actions.loadBookableSpaceCampusChildren();
             }
+            // initialise the shown rows to the first N according to the paginator widget
+            const usableRows = [];
+            bookableSpacesRoomList?.data?.locations?.map((space, index) => {
+                usableRows.push({
+                    spaceId: space.space_id,
+                    showSpace: showSpaceByPagination(index, pageNum, rowsPerPage),
+                });
+            });
+            setUseRows(usableRows);
         }
     }, [
         bookableSpacesRoomListError,
@@ -195,7 +308,7 @@ export const BookableSpacesDashboard = ({
         campusList,
     ]);
 
-    const [selectedFilters, setSelectedFilters2] = React.useState([
+    const [selectedFilters, setSelectedFilters2] = useState([
         { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
         { filterType: 'library', filterValue: LIBRARY_ID_UNSELECTED },
         { filterType: 'floor', filterValue: FLOOR_ID_UNSELECTED },
@@ -204,7 +317,69 @@ export const BookableSpacesDashboard = ({
         console.log('setSelectedFilters', newFilter);
         setSelectedFilters2(newFilter);
     };
+
+    const doesSpaceShow = (space, currentLocationFilters) => {
+        let showSpaceByFilter = true;
+        currentLocationFilters.forEach(f => {
+            if (f.filterType === 'campus') {
+                if (f.filterValue !== CAMPUS_ID_UNSELECTED && space.space_campus_id !== f.filterValue) {
+                    showSpaceByFilter = false;
+                }
+            } else if (f.filterType === 'library') {
+                if (f.filterValue !== LIBRARY_ID_UNSELECTED && space.space_library_id !== f.filterValue) {
+                    showSpaceByFilter = false;
+                }
+            } else if (f.filterType === 'floor') {
+                if (f.filterValue !== FLOOR_ID_UNSELECTED && space.space_floor_id !== f.filterValue) {
+                    showSpaceByFilter = false;
+                }
+            }
+        });
+        return showSpaceByFilter;
+    };
+
+    const resetUserows = latestUpdate => {
+        console.log('resetUserows latestUpdate=', latestUpdate);
+        // if we have just set data to UseState, they aren't available yet - weird! :(
+        const usedFilters = latestUpdate?.location ? latestUpdate.location : selectedFilters;
+        let suppliedPageNum = latestUpdate?.pagination ? latestUpdate.pagination : pageNum;
+        let suppliedRowsPerPage = rowsPerPage;
+        if (latestUpdate?.rowsPerPage) {
+            suppliedRowsPerPage = latestUpdate.rowsPerPage;
+            suppliedPageNum = 0;
+        }
+
+        let numRow = 0;
+        let useRowsLocal = [...useRows];
+        bookableSpacesRoomList?.data?.locations?.forEach(space => {
+            const showSpaceByFilter = doesSpaceShow(space, usedFilters);
+
+            useRowsLocal = useRowsLocal.filter(r => {
+                return r.spaceId !== space.space_id;
+            });
+            const spaceRow = document.getElementById(`space-${space.space_id}`);
+            if (!!showSpaceByFilter && showSpaceByPagination(numRow, suppliedPageNum, suppliedRowsPerPage)) {
+                !!spaceRow && spaceRow.classList.contains('hiddenRow') && spaceRow.classList.remove('hiddenRow');
+                useRowsLocal.push({
+                    spaceId: space.space_id,
+                    showSpace: true,
+                });
+            } else {
+                !!spaceRow && !spaceRow.classList.contains('hiddenRow') && spaceRow.classList.add('hiddenRow');
+                useRowsLocal.push({
+                    spaceId: space.space_id,
+                    showSpace: false,
+                });
+            }
+            if (!!showSpaceByFilter) {
+                numRow++;
+            }
+        });
+
+        setUseRows(useRowsLocal);
+    };
     const resetSelectedFilters = (filterTypeName, filterTypeValue) => {
+        console.log('resetSelectedFilters', filterTypeName, filterTypeValue);
         let newFilterTypes = selectedFilters?.filter(g => {
             return g.filterType !== filterTypeName;
         });
@@ -231,50 +406,65 @@ export const BookableSpacesDashboard = ({
             });
         }
         setSelectedFilters(newFilterTypes);
+        console.log('resetSelectedFilters newFilterTypes=', newFilterTypes);
 
         // show-hide Spaces according to selected filters
-        bookableSpacesRoomList?.data?.locations?.forEach(s => {
-            let showSpace = true;
-            newFilterTypes.forEach(f => {
-                if (f.filterType === 'campus') {
-                    if (f.filterValue !== CAMPUS_ID_UNSELECTED && s.space_campus_id !== f.filterValue) {
-                        showSpace = false;
-                    }
-                } else if (f.filterType === 'library') {
-                    if (f.filterValue !== LIBRARY_ID_UNSELECTED && s.space_library_id !== f.filterValue) {
-                        showSpace = false;
-                    }
-                } else if (f.filterType === 'floor') {
-                    if (f.filterValue !== FLOOR_ID_UNSELECTED && s.space_floor_id !== f.filterValue) {
-                        showSpace = false;
-                    }
-                }
-            });
 
-            const spaceRow = document.getElementById(`space-${s.space_id}`);
-            if (!!showSpace) {
-                !!spaceRow && spaceRow.classList.contains('hidden') && spaceRow.classList.remove('hidden');
-            } else {
-                !!spaceRow && !spaceRow.classList.contains('hidden') && spaceRow.classList.add('hidden');
-            }
-        });
+        resetUserows({ location: newFilterTypes });
     };
     const isCampusSelected =
         selectedFilters?.find(f => f.filterType === 'campus')?.filterValue !== CAMPUS_ID_UNSELECTED;
-    console.log('selectedFilters=', selectedFilters);
-    console.log('isCampusSelected=', isCampusSelected);
     const isLibrarySelected =
         !!isCampusSelected &&
         selectedFilters?.find(f => f.filterType === 'library')?.filterValue !== LIBRARY_ID_UNSELECTED;
-    console.log('isLibrarySelected=', isLibrarySelected);
 
     function hasFacility(facilityType, bookableSpace) {
-        return bookableSpace?.facility_types.some(spaceFacility => {
+        return bookableSpace?.facility_types?.some(spaceFacility => {
             return spaceFacility.facility_type_id === facilityType.facility_type_id;
         });
     }
 
-    const getColumnBackgroundColor = ii => (ii % 2 === 0 ? backgroundColorColumn : 'inherit');
+    const getColumnBackgroundColor = ii => (ii % 2 === 0 ? backgroundColorColumn : '#fff');
+
+    const handleChangePage = (event, newPageNum) => {
+        setPageNum(newPageNum);
+        resetUserows({ pagination: newPageNum });
+    };
+    const handleChangeRowsPerPage = event => {
+        const newRowsPerPage = parseInt(event.target.value, 10);
+
+        const current = new Date();
+        const nextYear = new Date();
+        nextYear.setFullYear(current.getFullYear() + 1);
+        setCookie(paginatorCookieName, newRowsPerPage, { expires: nextYear });
+
+        setRowsPerPage(newRowsPerPage);
+        setPageNum(0);
+        resetUserows({ rowsPerPage: newRowsPerPage });
+    };
+
+    const expandButtonElementId = spaceId => `expand-button-space-${spaceId}`;
+    const collapseButtonElementId = spaceId => `collapse-button-space-${spaceId}`;
+    // const spaceExtraElementsId = spaceId => `space-more-${spaceId}`;
+    const spaceDescriptionElementsId = spaceId => `space-description-${spaceId}`;
+    const expandSpace = spaceId => {
+        const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
+        !!spaceDescription && (spaceDescription.style.display = 'block');
+
+        const expandButton = document.getElementById(expandButtonElementId(spaceId));
+        !!expandButton && (expandButton.style.display = 'none');
+        const collapseButton = document.getElementById(collapseButtonElementId(spaceId));
+        !!collapseButton && (collapseButton.style.display = 'inline-flex');
+    };
+    const collapseSpace = spaceId => {
+        const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
+        !!spaceDescription && (spaceDescription.style.display = 'none');
+
+        const expandButton = document.getElementById(expandButtonElementId(spaceId));
+        !!expandButton && (expandButton.style.display = 'inline-flex');
+        const collapseButton = document.getElementById(collapseButtonElementId(spaceId));
+        !!collapseButton && (collapseButton.style.display = 'none');
+    };
 
     function prefilterFacilityData(data) {
         // first ensure sorted in sort order
@@ -302,6 +492,28 @@ export const BookableSpacesDashboard = ({
         });
     }
 
+    const expandTable = e => {
+        const thisButton = document.getElementById('table-pushout-button');
+        !!thisButton && (thisButton.style.display = 'none');
+
+        const otherButton = document.getElementById('table-pushin-button');
+        !!otherButton && (otherButton.style.display = 'inline-flex');
+
+        const tableEtc = document.getElementById('wrappedTableList');
+        !!tableEtc && !tableEtc.classList.contains('expanded') && tableEtc.classList.add('expanded');
+    };
+
+    const collapseTable = e => {
+        const thisButton = document.getElementById('table-pushin-button');
+        !!thisButton && (thisButton.style.display = 'none');
+
+        const otherButton = document.getElementById('table-pushout-button');
+        !!otherButton && (otherButton.style.display = 'inline-flex');
+
+        const tableEtc = document.getElementById('wrappedTableList');
+        !!tableEtc && !!tableEtc.classList.contains('expanded') && tableEtc.classList.remove('expanded');
+    };
+
     const openEditSpacePage = e => {
         const buttonClicked = e.target.closest('button');
         const spaceuuid = !!buttonClicked && buttonClicked.getAttribute('data-spaceuuid');
@@ -311,6 +523,7 @@ export const BookableSpacesDashboard = ({
     };
 
     const selectFilter = prop => e => {
+        console.log('selectFilter', prop, e);
         resetSelectedFilters(prop, e.target.value);
     };
 
@@ -331,238 +544,336 @@ export const BookableSpacesDashboard = ({
             !!selectedCampus && selectedCampus?.libraries?.find(library => library.library_id === selectedLibraryId);
         return (
             <>
-                <div data-testid="tablefilter">
-                    <Typography component={'h3'} variant={'h6'}>
-                        Filter the list:
-                    </Typography>
-                    <div style={{ display: 'flex', columnGap: '1rem', marginBottom: '1rem' }}>
-                        <FormControl variant="standard" fullWidth>
-                            <InputLabel id="filter-by-campus-label" htmlFor="filter-by-campus-input">
-                                By campus
-                            </InputLabel>
-                            <Select
-                                id="filter-by-campus"
-                                labelId="filter-by-campus-label"
-                                data-testid="filter-by-campus"
-                                value={
-                                    selectedFilters?.find(f => f.filterType === 'campus')?.filterValue ||
-                                    CAMPUS_ID_UNSELECTED
-                                }
-                                onChange={selectFilter('campus')}
-                                inputProps={{
-                                    id: 'filter-by-campus-input',
-                                    title: 'Filter the displayed Spaces by campus',
-                                }}
+                <TableWrapper id="wrappedTableList" style={{ backgroundColor: '#fff' }} data-testid="table-wrapper">
+                    <div data-testid="tablefilter" style={{ width: '100%' }}>
+                        <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+                            <StyledExpandCollapseTableIconButton
+                                color="primary"
+                                id="table-pushout-button"
+                                data-testid="table-pushout-button"
+                                onClick={expandTable}
+                                aria-label="Expand the table to full window"
+                                style={{ display: 'inline-flex' }}
                             >
-                                {!!campusFilterTypes &&
-                                    !!campusFilterTypes &&
-                                    campusFilterTypes?.length > 0 &&
-                                    campusFilterTypes?.map((campus, index) => (
-                                        <MenuItem
-                                            value={campus.campus_id}
-                                            key={`filter-by-campus-menuitem-${index}`}
-                                            selected={campus.campus_id === 99999}
-                                        >
-                                            {campus.campus_name}
-                                        </MenuItem>
-                                    ))}
-                            </Select>
-                        </FormControl>
-                        <FormControl variant="standard" fullWidth>
-                            <InputLabel
-                                id="filter-by-library-label"
-                                htmlFor="filter-by-library-input"
-                                disabled={!isCampusSelected}
+                                <OpenInFullIcon />
+                            </StyledExpandCollapseTableIconButton>
+                            <StyledExpandCollapseTableIconButton
+                                color="primary"
+                                id="table-pushin-button"
+                                data-testid="table-pushin-button"
+                                onClick={collapseTable}
+                                aria-label="Expand the table to full window"
+                                style={{ display: 'none' }}
                             >
-                                By library
-                            </InputLabel>
-                            <Select
-                                id="filter-by-library"
-                                labelId="filter-by-library-label"
-                                data-testid="filter-by-library"
-                                value={
-                                    selectedFilters?.find(f => f.filterType === 'library')?.filterValue ||
-                                    LIBRARY_ID_UNSELECTED
-                                }
-                                onChange={selectFilter('library')}
-                                inputProps={{
-                                    id: 'filter-by-library-input',
-                                    title: 'Filter the displayed Spaces by library',
-                                }}
-                                disabled={!isCampusSelected}
-                            >
-                                {selectedCampus?.libraries?.map((library, index) => (
-                                    <MenuItem
-                                        value={library.library_id}
-                                        key={`filter-by-library-menuitem-${index}`}
-                                        selected={library.library_id === 99999}
-                                    >
-                                        {library.library_name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <FormControl variant="standard" fullWidth>
-                            <InputLabel
-                                id="filter-by-floor-label"
-                                htmlFor="filter-by-floor-input"
-                                disabled={!isLibrarySelected}
-                            >
-                                By floor
-                            </InputLabel>
-                            <Select
-                                id="filter-by-floor"
-                                labelId="filter-by-floor-label"
-                                data-testid="filter-by-floor"
-                                value={
-                                    selectedFilters?.find(f => f.filterType === 'floor')?.filterValue ||
-                                    FLOOR_ID_UNSELECTED
-                                }
-                                onChange={selectFilter('floor')}
-                                inputProps={{
-                                    id: 'filter-by-floor-input',
-                                    title: 'Filter the displayed Spaces by floor',
-                                }}
-                                disabled={!isLibrarySelected}
-                            >
-                                {!!selectedLibrary &&
-                                    selectedLibrary?.floors.map((floor, index) => (
-                                        <MenuItem
-                                            value={floor.floor_id}
-                                            key={`filter-by-floor-menuitem-${index}`}
-                                            selected={floor.floor_id === 99999}
-                                        >
-                                            {floor.floor_name}
-                                        </MenuItem>
-                                    ))}
-                            </Select>
-                        </FormControl>
+                                <CloseFullscreenIcon />
+                            </StyledExpandCollapseTableIconButton>
+                            <Typography component={'h3'} variant={'h6'}>
+                                Filter the list:
+                            </Typography>
+                        </div>
+                        <StyledFilterWrapperDiv>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel id="filter-by-campus-label" htmlFor="filter-by-campus-input">
+                                    By campus
+                                </InputLabel>
+                                <Select
+                                    id="filter-by-campus"
+                                    labelId="filter-by-campus-label"
+                                    data-testid="filter-by-campus"
+                                    value={
+                                        selectedFilters?.find(f => f.filterType === 'campus')?.filterValue ||
+                                        CAMPUS_ID_UNSELECTED
+                                    }
+                                    onChange={selectFilter('campus')}
+                                    inputProps={{
+                                        id: 'filter-by-campus-input',
+                                        title: 'Filter the displayed Spaces by campus',
+                                    }}
+                                >
+                                    {!!campusFilterTypes &&
+                                        !!campusFilterTypes &&
+                                        campusFilterTypes?.length > 0 &&
+                                        campusFilterTypes?.map((campus, index) => (
+                                            <MenuItem
+                                                value={campus.campus_id}
+                                                key={`filter-by-campus-menuitem-${index}`}
+                                                selected={campus.campus_id === 99999}
+                                            >
+                                                {campus.campus_name}
+                                            </MenuItem>
+                                        ))}
+                                </Select>
+                            </FormControl>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel
+                                    id="filter-by-library-label"
+                                    htmlFor="filter-by-library-input"
+                                    disabled={!isCampusSelected}
+                                >
+                                    By library
+                                </InputLabel>
+                                <Select
+                                    id="filter-by-library"
+                                    labelId="filter-by-library-label"
+                                    data-testid="filter-by-library"
+                                    value={
+                                        selectedFilters?.find(f => f.filterType === 'library')?.filterValue ||
+                                        LIBRARY_ID_UNSELECTED
+                                    }
+                                    onChange={selectFilter('library')}
+                                    inputProps={{
+                                        id: 'filter-by-library-input',
+                                        title: 'Filter the displayed Spaces by library',
+                                    }}
+                                    disabled={!isCampusSelected}
+                                >
+                                    {selectedCampus?.libraries
+                                        ?.sort((a, b) => a.library_name.localeCompare(b.library_name))
+                                        ?.map((library, index) => (
+                                            <MenuItem
+                                                value={library.library_id}
+                                                key={`filter-by-library-menuitem-${index}`}
+                                                selected={library.library_id === 99999}
+                                            >
+                                                {library.library_name}
+                                            </MenuItem>
+                                        ))}
+                                </Select>
+                            </FormControl>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel
+                                    id="filter-by-floor-label"
+                                    htmlFor="filter-by-floor-input"
+                                    disabled={!isLibrarySelected}
+                                >
+                                    By floor
+                                </InputLabel>
+                                <Select
+                                    id="filter-by-floor"
+                                    labelId="filter-by-floor-label"
+                                    data-testid="filter-by-floor"
+                                    value={
+                                        selectedFilters?.find(f => f.filterType === 'floor')?.filterValue ||
+                                        FLOOR_ID_UNSELECTED
+                                    }
+                                    onChange={selectFilter('floor')}
+                                    inputProps={{
+                                        id: 'filter-by-floor-input',
+                                        title: 'Filter the displayed Spaces by floor',
+                                    }}
+                                    disabled={!isLibrarySelected}
+                                >
+                                    {!!selectedLibrary &&
+                                        selectedLibrary?.floors.map((floor, index) => (
+                                            <MenuItem
+                                                value={floor.floor_id}
+                                                key={`filter-by-floor-menuitem-${index}`}
+                                                selected={floor.floor_id === 99999}
+                                            >
+                                                {floor.floor_name}
+                                            </MenuItem>
+                                        ))}
+                                </Select>
+                            </FormControl>
+                        </StyledFilterWrapperDiv>
                     </div>
-                </div>
-                <StyledTableContainer>
-                    <Table
-                        aria-label={tableDescription}
-                        aria-describedby="tableDescriptionElement"
-                        data-testid="space-table"
-                    >
-                        <StyledTableHead>
-                            {facilityTypeList?.data?.facility_type_groups?.length > 0 && (
-                                // top row of the two-row table head, to label the facilities block
-                                <StyledHeaderTableRow data-testid="spaces-dashboard-header-row">
-                                    <TableCell
+                    <StyledTableContainer className="tableContainer">
+                        <Table
+                            aria-label={tableDescription}
+                            aria-describedby="tableDescriptionElement"
+                            data-testid="space-table"
+                        >
+                            <StyledTableHead>
+                                {facilityTypeList?.data?.facility_type_groups?.length > 0 && (
+                                    // top row of the two-row table head, to label the facilities block
+                                    <StyledHeaderTableRow data-testid="spaces-dashboard-header-row">
+                                        <TableCell
+                                            component="th"
+                                            sx={{
+                                                borderBottomWidth: 0,
+                                                paddingBlock: 0,
+                                                backgroundColor: '#fff',
+                                                textAlign: 'right',
+                                            }}
+                                            key={'header-cell-0'}
+                                        >
+                                            Filters:
+                                        </TableCell>
+                                        {sortedFacilityTypeGroups?.map((group, index) => {
+                                            return (
+                                                <TableCell
+                                                    key={`header-cell-${index}`}
+                                                    component="th"
+                                                    colSpan={group.facility_type_children?.length}
+                                                    sx={{
+                                                        borderBottomWidth: 0,
+                                                        borderTop: borderColour,
+                                                        textAlign: 'center',
+                                                        backgroundColor: `${index % 2 === 0 ? '#fff' : '#f0f0f0'}`,
+                                                        borderLeft: borderColour,
+                                                    }}
+                                                >
+                                                    {group.facility_type_group_name}
+                                                </TableCell>
+                                            );
+                                        })}
+                                    </StyledHeaderTableRow>
+                                )}
+                                <StyledHeaderTableRow>
+                                    <StyledStickyTableCell
                                         component="th"
-                                        sx={{ borderBottomWidth: 0, paddingBlock: 0 }}
-                                        key={'header-cell-0'}
-                                    />
-                                    <TableCell
-                                        component="th"
-                                        sx={{ borderBottomWidth: 0, paddingBlock: 0, textAlign: 'right' }}
-                                        key={'header-cell-1'}
+                                        sx={{ backgroundColor: { backgroundColorColumn }, verticalAlign: 'bottom' }}
                                     >
-                                        Filters:
-                                    </TableCell>
-                                    {sortedFacilityTypeGroups?.map((group, index) => {
-                                        return (
-                                            <TableCell
-                                                key={`header-cell-${index}`}
+                                        Spaces:
+                                    </StyledStickyTableCell>
+                                    {sortedFacilityTypeGroups?.map(group =>
+                                        group?.facility_type_children?.map(facilityType => (
+                                            <StyledHeadingFacilityTableCell
                                                 component="th"
-                                                colSpan={group.facility_type_children?.length}
+                                                key={`facilitytype-${facilityType.facility_type_id}`}
                                                 sx={{
-                                                    borderBottomWidth: 0,
-                                                    borderTop: borderColour,
-                                                    textAlign: 'center',
-                                                    backgroundColor: `${index % 2 === 0 ? 'white' : '#f0f0f0'}`,
+                                                    backgroundColor: getColumnBackgroundColor(
+                                                        facilityType.overall_order,
+                                                    ),
                                                     borderLeft: borderColour,
                                                 }}
                                             >
-                                                {group.facility_type_group_name}
-                                            </TableCell>
-                                        );
-                                    })}
+                                                {facilityType.facility_type_name}
+                                            </StyledHeadingFacilityTableCell>
+                                        )),
+                                    )}
                                 </StyledHeaderTableRow>
-                            )}
-                            <StyledHeaderTableRow>
-                                <StyledStickyTableCell
-                                    component="th"
-                                    sx={{ backgroundColor: { backgroundColorColumn } }}
-                                >
-                                    Name
-                                </StyledStickyTableCell>
-                                <TableCell component="th">Space location</TableCell>
-                                {sortedFacilityTypeGroups?.map(group =>
-                                    group?.facility_type_children?.map(facilityType => (
-                                        <StyledHeadingFacilityTableCell
-                                            component="th"
-                                            key={`facilitytype-${facilityType.facility_type_id}`}
-                                            sx={{
-                                                backgroundColor: getColumnBackgroundColor(facilityType.overall_order),
-                                                borderLeft: borderColour,
-                                            }}
-                                        >
-                                            {facilityType.facility_type_name}
-                                        </StyledHeadingFacilityTableCell>
-                                    )),
-                                )}
-                            </StyledHeaderTableRow>
-                        </StyledTableHead>
-                        <tbody>
-                            {bookableSpacesRoomList?.data?.locations?.map(bookableSpace => {
-                                return (
-                                    <StyledTableRow
-                                        key={`space-${bookableSpace?.space_id}`}
-                                        id={`space-${bookableSpace?.space_id}`}
-                                    >
-                                        <StyledStickyTableCell component="th" scope="col">
-                                            <div>
-                                                <IconButton
-                                                    color="primary"
-                                                    data-testid={`edit-space-${bookableSpace?.space_id}-button`}
-                                                    data-spaceuuid={bookableSpace?.space_uuid}
-                                                    onClick={openEditSpacePage}
-                                                    aria-label={`Edit ${bookableSpace?.space_name}`}
+                            </StyledTableHead>
+                            <TableBody>
+                                {useRows?.length > 0 &&
+                                    bookableSpacesRoomList?.data?.locations
+                                        ?.filter(space =>
+                                            useRows.find(u => u.spaceId === space.space_id && !!u.showSpace),
+                                        )
+                                        ?.map(bookableSpace => {
+                                            return (
+                                                <StyledTableRow
+                                                    key={`space-${bookableSpace?.space_id}`}
+                                                    id={`space-${bookableSpace?.space_id}`}
+                                                    data-testid={`space-${bookableSpace?.space_id}`}
                                                 >
-                                                    <EditIcon style={{ width: '1rem' }} />
-                                                </IconButton>
-                                                {bookableSpace?.space_name}
-                                            </div>
-                                            <div>{bookableSpace?.space_type}</div>
-                                        </StyledStickyTableCell>
+                                                    <StyledStickyTableCell
+                                                        component="th"
+                                                        scope="col"
+                                                        style={{ paddingBlock: '0.5rem' }}
+                                                    >
+                                                        <div>
+                                                            <IconButton
+                                                                color="primary"
+                                                                data-testid={`edit-space-${bookableSpace?.space_id}-button`}
+                                                                data-spaceuuid={bookableSpace?.space_uuid}
+                                                                onClick={openEditSpacePage}
+                                                                aria-label={`Edit ${bookableSpace?.space_name}`}
+                                                            >
+                                                                <EditIcon style={{ width: '1rem' }} />
+                                                            </IconButton>
+                                                            {bookableSpace?.space_name}
+                                                        </div>
+                                                        <div className="spaceDescription">
+                                                            {bookableSpace?.space_type}
+                                                            <IconButton
+                                                                id={expandButtonElementId(bookableSpace?.space_id)}
+                                                                data-testid={`space-${bookableSpace?.space_id}-expand-button`}
+                                                                onClick={() => expandSpace(bookableSpace?.space_id)}
+                                                                aria-label="Expand Space details"
+                                                                style={{ display: 'inline-flex' }}
+                                                            >
+                                                                <KeyboardArrowDownIcon />
+                                                            </IconButton>
+                                                            <IconButton
+                                                                id={collapseButtonElementId(bookableSpace?.space_id)}
+                                                                data-testid={`space-${bookableSpace?.space_id}-collapse-button`}
+                                                                onClick={() => collapseSpace(bookableSpace?.space_id)}
+                                                                aria-label="Collapse Space details"
+                                                                style={{ display: 'none' }}
+                                                            >
+                                                                <KeyboardArrowUpIcon />
+                                                            </IconButton>
+                                                        </div>
 
-                                        <TableCell>{getFriendlyLocationDescription(bookableSpace)}</TableCell>
-
-                                        {sortedFacilityTypeGroups?.length > 0 &&
-                                            sortedFacilityTypeGroups?.map(group => {
-                                                return group?.facility_type_children?.map(facilityType => {
-                                                    const facilitySlug = slugifyName(facilityType.facility_type_name);
-                                                    return (
-                                                        <TableCell
-                                                            key={`space-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
-                                                            data-testid={`space-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
-                                                            sx={{
-                                                                backgroundColor: getColumnBackgroundColor(
-                                                                    facilityType.overall_order,
-                                                                ),
-                                                                textAlign: 'center',
-                                                                borderInline: borderColour,
-                                                            }}
+                                                        <div
+                                                            id={spaceDescriptionElementsId(bookableSpace?.space_id)}
+                                                            data-testid={spaceDescriptionElementsId(
+                                                                bookableSpace?.space_id,
+                                                            )}
+                                                            style={{ display: 'none' }}
                                                         >
-                                                            {hasFacility(facilityType, bookableSpace) ? (
-                                                                <DoneIcon
-                                                                    titleAccess={`Space has ${facilityType.facility_type_name}`}
-                                                                    style={{ stroke: 'green' }}
-                                                                    data-testid={`tick-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
-                                                                />
-                                                            ) : null}
-                                                        </TableCell>
-                                                    );
-                                                });
-                                            })}
-                                    </StyledTableRow>
-                                );
-                            })}
-                        </tbody>
-                    </Table>
-                </StyledTableContainer>
+                                                            {getFriendlyLocationDescription(bookableSpace)}
+                                                        </div>
+                                                    </StyledStickyTableCell>
+
+                                                    {sortedFacilityTypeGroups?.length > 0 &&
+                                                        sortedFacilityTypeGroups?.map(group => {
+                                                            return group?.facility_type_children?.map(facilityType => {
+                                                                const facilitySlug = slugifyName(
+                                                                    facilityType.facility_type_name,
+                                                                );
+                                                                return (
+                                                                    <TableCell
+                                                                        key={`space-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
+                                                                        data-testid={`space-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
+                                                                        sx={{
+                                                                            backgroundColor: getColumnBackgroundColor(
+                                                                                facilityType.overall_order,
+                                                                            ),
+                                                                            textAlign: 'center',
+                                                                            borderInline: borderColour,
+                                                                        }}
+                                                                        title={
+                                                                            hasFacility(facilityType, bookableSpace)
+                                                                                ? `Space has ${facilityType.facility_type_name}`
+                                                                                : `Space DOES NOT have ${facilityType.facility_type_name}`
+                                                                        }
+                                                                    >
+                                                                        {hasFacility(facilityType, bookableSpace) && (
+                                                                            <DoneIcon
+                                                                                titleAccess={`Space has ${facilityType.facility_type_name}`}
+                                                                                style={{ stroke: 'green' }}
+                                                                                data-testid={`tick-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
+                                                                            />
+                                                                        )}
+                                                                    </TableCell>
+                                                                );
+                                                            });
+                                                        })}
+                                                </StyledTableRow>
+                                            );
+                                        })}
+                            </TableBody>
+                        </Table>
+                    </StyledTableContainer>
+
+                    <StyledTablePagination
+                        data-testid="pagination-block"
+                        // dont use
+                        // { label: 'All', value: rows.length }
+                        // as it gives a dupe key error when the length happens to match a value
+                        // in the list. Nor do we want them loading vast numbers of records - they
+                        // can jump to the next page
+                        rowsPerPageOptions={[5, 10, 25, 100]}
+                        count={
+                            bookableSpacesRoomList?.data?.locations?.filter(s => doesSpaceShow(s, selectedFilters))
+                                ?.length
+                        }
+                        rowsPerPage={rowsPerPage}
+                        page={pageNum}
+                        SelectProps={{
+                            inputProps: {
+                                'aria-label': 'spaces per page',
+                                'data-testid': 'admin-spaces-list-paginator-select',
+                            },
+                            native: true,
+                        }}
+                        component="div"
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </TableWrapper>
             </>
         );
     }
@@ -602,7 +913,7 @@ export const BookableSpacesDashboard = ({
                                 );
                             } else {
                                 return (
-                                    <StyledBookableSpaceGridItem item xs={12}>
+                                    <StyledBookableSpaceGridItem item xs={12} style={{ marginTop: 0, paddingTop: 0 }}>
                                         {displayListOfBookableSpaces()}
                                     </StyledBookableSpaceGridItem>
                                 );

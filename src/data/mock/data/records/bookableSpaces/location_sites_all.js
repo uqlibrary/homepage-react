@@ -57,7 +57,21 @@ export default {
                             "floor_name": "2",
                         },
                     ]
-                },
+                }, {
+                    "library_id": 3,
+                    "library_name": "Architecture and Music Library",
+                    "building_number": "51",
+                    "building_name": "Zelman Cowen Building",
+                    "building_ground_floor_id": null,
+                    "library_about_page_default": "https:\/\/web.library.uq.edu.au\/visit\/architecture-and-music-library",
+                    "library_springshare_id": 3823,
+                    "floors": [
+                        {
+                            "floor_id": 3,
+                            "floor_name": "Level 3"
+                        }
+                    ]
+                }
             ]
         },
         {

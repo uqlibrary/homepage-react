@@ -450,14 +450,15 @@ test.describe('Spaces Admin - add new space', () => {
 
         // the popup has the correct valid buildings
         await expect(page.locator('[aria-labelledby="add-space-select-library-label"]')).toBeVisible();
-        await expect(page.locator('[aria-labelledby="add-space-select-library-label"]').locator(' > *')).toHaveCount(3);
+        await expect(page.locator('[aria-labelledby="add-space-select-library-label"]').locator(' > *')).toHaveCount(4);
 
         // click on 'Central' Library to change the building and floor
-        await expect(page.locator('[aria-labelledby="add-space-select-library-label"] li:last-of-type')).toBeVisible();
-        await expect(page.locator('[aria-labelledby="add-space-select-library-label"] li:last-of-type')).toContainText(
-            'Central Library',
+        const centralLibraryOption = page.locator(
+            '[aria-labelledby="add-space-select-library-label"] li:nth-of-type(3)',
         );
-        page.locator('ul[aria-labelledby="add-space-select-library-label"] li:last-of-type').click();
+        await expect(centralLibraryOption).toBeVisible();
+        await expect(centralLibraryOption).toContainText('Central Library');
+        centralLibraryOption.click();
 
         // the displayed building and floors have changed; campus is unchanged
         await expect(campusSelector.locator('input')).toBeVisible();
