@@ -760,6 +760,44 @@ test.describe('Spaces Admin - adding new facility types', () => {
         await page.getByTestId('dialog-cancel-button').click();
         await expect(page.getByTestId('main-dialog')).not.toBeVisible();
     });
+    test('can drag and drop to update facility type group order', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        // we are going to drag entry #2
+        const draggableRoomType = page.getByTestId('spaces-dragLandingAarea').locator('li:nth-of-type(2)');
+        await expect(draggableRoomType).toBeVisible();
+
+        // set up to compare old position to post-dragged position
+        const draggableElementBox = (await draggableRoomType.boundingBox())!;
+
+        const draggableDestination = page.getByTestId('spaces-dragLandingAarea');
+        await expect(draggableDestination).toBeVisible();
+
+        await draggableRoomType.hover();
+        await page.mouse.down();
+        const box = (await draggableDestination.boundingBox())!;
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2); // drag it to a spot on the screen that definitely isn't the same spot
+        await draggableDestination.hover();
+        await page.mouse.up();
+
+        await assertToastHasMessage(page, 'Facility group order updated');
+
+        const movedDraggableElementBox = (await draggableRoomType.boundingBox())!;
+        expect(draggableElementBox.y).toBeGreaterThan(movedDraggableElementBox.y); // the row has moved
+
+        const expectedValues = [
+            { facility_type_group_id: 5, facility_type_group_order: 1 },
+            { facility_type_group_id: 4, facility_type_group_order: 2 }, // we got the second child, but it is no longer at this position, #4 is
+            { facility_type_group_id: 2, facility_type_group_order: 3 },
+            { facility_type_group_id: 6, facility_type_group_order: 4 },
+            { facility_type_group_id: 8, facility_type_group_order: 5 },
+            { facility_type_group_id: 7, facility_type_group_order: 6 },
+            { facility_type_group_id: 3, facility_type_group_order: 7 },
+            { facility_type_group_id: 1, facility_type_group_order: 8 }, // it is no longer #2
+            { facility_type_group_id: 9, facility_type_group_order: 9 },
+        ];
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
 });
 test.describe('Spaces Admin - other pages', () => {
     test('can save new group when none current', async ({ page }) => {
@@ -793,6 +831,8 @@ test.describe('Spaces Admin - other pages', () => {
         await expect(page.getByTestId('new-group-first')).toBeVisible();
         // the add process is no different to when there are children, so don't bother testing it here
     });
+});
+test.describe('Spaces Admin - api error handling', () => {
     test('api error 404', async ({ page }) => {
         await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces&responseType=facilityTypesAll404');
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -806,5 +846,26 @@ test.describe('Spaces Admin - other pages', () => {
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
 
         await expect(page.getByTestId('apiError').getByText(/Something went wrong/)).toBeVisible();
+    });
+    test('drag and drop api  500', async ({ page }) => {
+        await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces&responseType=reorderError');
+
+        // we are going to drag entry #2
+        const draggableRoomType = page.getByTestId('spaces-dragLandingAarea').locator('li:nth-of-type(2)');
+        await expect(draggableRoomType).toBeVisible();
+        const draggableDestination = page.getByTestId('spaces-dragLandingAarea');
+        await expect(draggableDestination).toBeVisible();
+
+        await draggableRoomType.hover();
+        await page.mouse.down();
+        const box = (await draggableDestination.boundingBox())!;
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2); // drag it to a spot on the screen that definitely isn't the same spot
+        await draggableDestination.hover();
+        await page.mouse.up();
+
+        await assertToastHasMessage(
+            page,
+            '[BSMF-008A] Sorry, an error occurred - Updating the Facility type failed. The admins have been informed.',
+        );
     });
 });

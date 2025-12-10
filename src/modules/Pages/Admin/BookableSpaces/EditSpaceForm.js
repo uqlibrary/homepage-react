@@ -16,7 +16,7 @@ import { useAccountContext } from 'context';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { isValidUrl, standardText, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 
-import { displayToastMessage, spacesAdminLink, validLibraryList } from './bookableSpacesAdminHelpers';
+import { displayToastErrorMessage, spacesAdminLink, validLibraryList } from './bookableSpacesAdminHelpers';
 import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
@@ -483,7 +483,7 @@ export const EditSpaceForm = ({
             const message = `<p data-count="${
                 validationResult?.length
             }">These errors occurred:</p><ul>${validationResult?.map(m => `<li>${m?.message}</li>`)?.join('')}</ul>`;
-            displayToastMessage(message, true);
+            displayToastErrorMessage(message);
         } else {
             saveToDb(valuesToSend);
         }
