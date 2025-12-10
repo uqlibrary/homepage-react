@@ -268,6 +268,7 @@ export const DLOR_KEYWORDS_DESTROY_API = () => ({ apiUrl: 'dlor/admin/keywords/d
 export const DLOR_STATISTICS_API = () => ({ apiUrl: 'dlor/auth/stats' });
 export const DLOR_SCHEDULE_API = () => ({ apiUrl: 'dlor/admin/schedule' });
 export const DLOR_SCHEDULE_UPDATE_API = id => ({ apiUrl: `dlor/admin/schedule/${id}` });
+export const DLOR_REQUEST_KEYWORD_API = () => ({ apiUrl: 'dlor/auth/keywords/request' });
 
 const productionRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage';
 const stagingRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage';
