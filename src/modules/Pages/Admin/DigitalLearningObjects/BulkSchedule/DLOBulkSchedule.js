@@ -237,6 +237,7 @@ export const DLOBulkSchedule = ({
             ...formValues,
             schedule_start_date: newStart.tz('Australia/Brisbane').format('YYYY-MM-DD'),
             schedule_end_date: newEnd.tz('Australia/Brisbane').format('YYYY-MM-DD'),
+            items: scheduleItems.map(item => item.object_public_uuid),
         };
         const actionPromise = !id
             ? actions.addDLORSchedule(payload) // Call the function directly
