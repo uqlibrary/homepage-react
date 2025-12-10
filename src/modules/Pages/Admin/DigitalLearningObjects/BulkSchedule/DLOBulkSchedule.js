@@ -165,6 +165,7 @@ export const DLOBulkSchedule = ({
     };
 
     const editExistingSchedule = schedule => {
+        setIsAlertOpen(false);
         const fv = {
             ...defaultFormValues,
             schedule_name: schedule.schedule_name,
