@@ -847,6 +847,22 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .reply(() => {
         return [200, dlorSchedules];
     })
+    .onPut(/dlor\/admin\/schedule\/9/)
+    .reply(() => {
+        return [500, {'message': 'Simulated server error on schedule ID 9'}];
+    })
+    .onPut(/dlor\/admin\/schedule\/\d+/)
+    .reply(() => {
+        return [200, dlorSchedules];
+    })
+    .onDelete(/dlor\/admin\/schedule\/9/)
+    .reply(() => {
+        return [500, {'message': 'Simulated server error on schedule ID 9'}];
+    })
+    .onDelete(/dlor\/admin\/schedule\/\d+/)
+    .reply(() => {
+        return [200, dlorSchedules];
+    })
     .onGet(/dlor\/admin\/schedule/)
     .reply(() => {
         return [200, dlorSchedules];
