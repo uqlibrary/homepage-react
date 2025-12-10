@@ -53,6 +53,7 @@ export const DLOVocabularyManage = lazy(() => lazyRetry(() => import('modules/Pa
 // seperate route for team managers
 export const DLOOwnTeamList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamListContainer')));
 export const DLOOwnTeamEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamEditContainer')));
+export const DLOBulkSchedule = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/BulkSchedule/DLOBulkScheduleContainer')));
 // always load components
 export { HomePageContainer as Index } from 'modules/HomePage';
 export { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
