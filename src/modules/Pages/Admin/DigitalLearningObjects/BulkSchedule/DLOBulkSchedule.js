@@ -70,6 +70,10 @@ export const DLOBulkSchedule = ({
     const handleRemoveFromSchedule = idx => {
         setScheduleItems(prev => prev.filter((_, i) => i !== idx));
     };
+    /* istanbul ignore next */
+    const closeAlert = () => {
+        setIsAlertOpen(false);
+    };
 
     React.useEffect(() => {
         if (!dlorListError && !dlorListLoading && !dlorList) {
@@ -474,7 +478,7 @@ export const DLOBulkSchedule = ({
                 id={'dlor-schedule-alert'}
                 autoHideDuration={5000}
                 /* istanbul ignore next */
-                onClose={() => setIsAlertOpen(false)}
+                onClose={closeAlert}
                 data-testid={'dlor-schedule-alert'}
                 anchorOrigin={{
                     vertical: 'top',
