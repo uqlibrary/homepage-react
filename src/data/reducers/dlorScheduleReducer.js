@@ -1,7 +1,7 @@
 import * as actions from 'data/actions/actionTypes';
 
 export const initialState = {
-    dlorSchedule: [],
+    dlorSchedule: null,
     dlorScheduleLoading: false,
     dlorScheduleError: false,
 };
