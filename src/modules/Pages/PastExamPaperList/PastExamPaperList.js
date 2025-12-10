@@ -27,19 +27,21 @@ import {
 import { styled } from '@mui/material/styles';
 import { breadcrumbs } from 'config/routes';
 
-const colourBlack = '#19151c';
-const colourPaneBackground = '#f3f3f4';
-
 const StyledStandardCard = styled(StandardCard)(() => ({
     border: 'none',
 }));
-const StyledH3Typography = styled(Typography)(() => ({
+const StyledH3Typography = styled(Typography)(({ theme }) => ({
     fontSize: '1rem',
     fontWeight: 500,
-    color: colourBlack,
+    color: theme.palette.designSystem.headingColor,
 }));
-const StyledTableLeftCell = styled(TableCell)(() => ({
-    backgroundColor: colourPaneBackground,
+const StyledH2Typography = styled(Typography)(({ theme }) => ({
+    fontSize: '2rem',
+    fontWeight: 500,
+    color: theme.palette.designSystem.headingColor,
+}));
+const StyledTableLeftCell = styled(TableCell)(({ theme }) => ({
+    backgroundColor: theme.palette.designSystem.panelBackgroundColor,
     left: 0,
     position: 'sticky',
     verticalAlign: 'top',
@@ -53,14 +55,14 @@ const StyledTableCell = styled(TableCell)(() => ({
     },
 }));
 
-const StyledSimpleViewWrapper = styled('div')(() => ({
+const StyledSimpleViewWrapper = styled('div')(({ theme }) => ({
     marginTop: '1rem',
     '& .bodyCell': {
         verticalAlign: 'top',
     },
     '& .zebra': {
         /* stripe alternate rows on simple view */
-        backgroundColor: colourPaneBackground,
+        backgroundColor: theme.palette.designSystem.panelBackgroundColor,
         paddingTop: '0.5rem',
         paddingBottom: '1rem',
         marginBottom: '1rem',
@@ -241,7 +243,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     component="th"
                     scope="col"
                     sx={{ position: 'sticky', left: 0, zIndex: 10 }}
-                    style={{ backgroundColor: colourPaneBackground }}
+                    style={{ backgroundColor: theme.palette.designSystem.panelBackgroundColor }}
                 >
                     {' '}
                 </TableCell>
@@ -252,7 +254,11 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                             component="th"
                             sx={{ textAlign: 'center' }}
                             key={`exampaper-desktop-originals-headercell-${ss}`}
-                            style={{ fontSize: 16, fontWeight: 500, backgroundColor: colourPaneBackground }}
+                            style={{
+                                fontSize: 16,
+                                fontWeight: 500,
+                                backgroundColor: theme.palette.designSystem.panelBackgroundColor,
+                            }}
                             scope="col"
                         >
                             {parts.map((part, ii) => (
@@ -469,13 +475,9 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                     noHeader
                                     style={{ margin: '-16px -16px 4.5rem -16px' }}
                                 >
-                                    <Typography
-                                        variant="h2"
-                                        style={{ fontSize: 32, fontWeight: 500, color: colourBlack }}
-                                        data-testid="sample-papers-heading"
-                                    >
+                                    <StyledH2Typography variant="h2" data-testid="sample-papers-heading">
                                         Sample past exam papers
-                                    </Typography>
+                                    </StyledH2Typography>
                                     <StyledBodyText style={{ marginBottom: 0 }}>
                                         Note: Multiple sample papers may contain the same content.
                                     </StyledBodyText>
@@ -491,13 +493,9 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                 noHeader
                                 style={{ margin: '-32px -16px 80px -16px' }}
                             >
-                                <Typography
-                                    variant="h2"
-                                    style={{ fontSize: 32, fontWeight: 500, color: colourBlack }}
-                                    data-testid="exampapers-original-heading"
-                                >
+                                <StyledH2Typography variant="h2" data-testid="exampapers-original-heading">
                                     Original past exam papers
-                                </Typography>
+                                </StyledH2Typography>
                                 {originalExamPaperList?.papers?.length === 0 && (
                                     <StyledBodyText data-testid="no-original-papers-provided">
                                         No original papers provided.

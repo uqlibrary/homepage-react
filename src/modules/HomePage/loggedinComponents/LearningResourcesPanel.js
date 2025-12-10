@@ -29,7 +29,7 @@ const StyledGridListItem = styled(Grid)(({ theme }) => ({
     listStyleType: 'disc',
     '& a': {
         marginLeft: '-5px',
-        color: theme.palette.primary.light,
+        color: theme.palette.primary.main,
         fontWeight: 500,
         paddingBlock: '2px',
         textDecoration: 'none',
@@ -40,7 +40,7 @@ const StyledGridListItem = styled(Grid)(({ theme }) => ({
         },
         '&:hover': {
             color: '#fff',
-            backgroundColor: theme.palette.primary.light,
+            backgroundColor: theme.palette.primary.main,
             textDecoration: 'none',
         },
     },

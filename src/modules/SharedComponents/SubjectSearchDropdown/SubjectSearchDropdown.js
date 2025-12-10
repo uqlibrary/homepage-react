@@ -15,6 +15,33 @@ import { extractSubjectCodeFromName } from 'modules/Pages/LearningResources/shar
 import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
 import { styled } from '@mui/material/styles';
 
+const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
+    [`& .${autocompleteClasses.popupIndicator}`]: {
+        transform: 'none',
+    },
+    '& .Mui-focused': {
+        border: theme.palette.designSystem.border,
+    },
+}));
+const StyledH2Typography = styled(Typography)(({ theme }) => ({
+    color: theme.palette.designSystem.headingColor,
+    marginLeft: '16px',
+}));
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    '& .MuiAutocomplete-inputRoot': {
+        border: theme.palette.designSystem.border,
+    },
+    '& .MuiInputBase-root': {
+        '&:focus-within': {
+            borderColor: '#2377CB',
+        },
+    },
+    '& .MuiInput-underline:before': { borderBottomWidth: 0 },
+    '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+        borderBottomWidth: 0,
+    },
+    '& .MuiInput-underline:after': { borderBottomWidth: 0 },
+}));
 const StyledSearchPanel = styled(Grid)(() => ({
     marginTop: '24px',
     padding: '0 24px 24px 24px',
@@ -44,10 +71,10 @@ const StyledSearchPanel = styled(Grid)(() => ({
         borderColor: 'black !important',
     },
 }));
-const SearchLabelGridItem = styled(Grid)(() => ({
+const SearchLabelGridItem = styled(Grid)(({ theme }) => ({
     paddingTop: '0 !important',
     '& label': {
-        color: '#3b383e', // grey 900
+        color: theme.palette.designSystem.bodyCopy,
         fontSize: '16px',
         fontStyle: 'normal',
         fontWeight: 400,
@@ -123,9 +150,9 @@ export const SubjectSearchDropdown = ({
 
     // we group them all together to place a header at the top of the search results
     const renderGroup = params => [
-        <Typography component={'h2'} variant={'h6'} key={params.key} style={{ color: '#19151c', marginLeft: '16px' }}>
+        <StyledH2Typography component={'h2'} variant={'h6'} key={params.key}>
             {locale.search.autocompleteResultsTitle}
-        </Typography>,
+        </StyledH2Typography>,
         params.children,
     ];
 
@@ -170,7 +197,7 @@ export const SubjectSearchDropdown = ({
                     </label>
                 </SearchLabelGridItem>
                 <Grid item xs={12} sm>
-                    <Autocomplete
+                    <StyledAutocomplete
                         filterOptions={options => {
                             return options;
                         }}
@@ -188,18 +215,10 @@ export const SubjectSearchDropdown = ({
                         noOptionsText={noOptionsText}
                         popupIcon={dsSearchIcon()}
                         renderGroup={renderGroup}
-                        sx={{
-                            [`& .${autocompleteClasses.popupIndicator}`]: {
-                                transform: 'none',
-                            },
-                            '& .Mui-focused': {
-                                border: '1px solid #dcdcdd',
-                            },
-                        }}
                         groupBy={() => false}
                         renderInput={params => {
                             return (
-                                <TextField
+                                <StyledTextField
                                     variant="standard"
                                     {...params}
                                     error={!!CRsuggestionsError}
@@ -228,24 +247,6 @@ export const SubjectSearchDropdown = ({
                                             display: !!searchKeyword ? 'none' : 'block',
                                             marginTop: '2px',
                                         },
-                                    }}
-                                    sx={{
-                                        // full grey border on input field, like drupal
-                                        '& .MuiAutocomplete-inputRoot': {
-                                            border: '1px solid #dcdcdd',
-                                        },
-                                        // blue border on focus on input field, like drupal
-                                        '& .MuiInputBase-root': {
-                                            '&:focus-within': {
-                                                borderColor: '#2377CB',
-                                            },
-                                        },
-                                        // stop the bottom border from being double thickness, like drupal
-                                        '& .MuiInput-underline:before': { borderBottomWidth: 0 },
-                                        '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
-                                            borderBottomWidth: 0,
-                                        },
-                                        '& .MuiInput-underline:after': { borderBottomWidth: 0 },
                                     }}
                                 />
                             );

@@ -75,7 +75,7 @@ export const isValidInput = params => {
 };
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.primary.main,
     '& .TabSelected': {
         color: 'white !important',
         opacity: 1,

@@ -24,7 +24,7 @@ const StyledGridContainer = styled(Grid)(() => ({
     },
 }));
 const StyledHeader = styled(Typography)(({ theme }) => ({
-    color: theme.palette.primary.light,
+    color: theme.palette.primary.main,
     textAlign: 'center',
     marginTop: '12px',
 }));

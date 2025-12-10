@@ -28,7 +28,7 @@ const StyledGridItem = styled(Grid)(({ theme }) => ({
         minWidth: '100%',
     },
     '& p': {
-        color: theme.palette.secondary.main,
+        color: theme.palette.designSystem.bodyCopy,
         fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
         fontSize: '16px',
         fontWeight: 400,
@@ -42,13 +42,13 @@ const StyledLink = styled(Link)(({ theme }) => ({
     background: '#FFFFFF',
     display: 'block',
     cursor: 'pointer',
-    color: theme.palette.primary.light,
+    color: theme.palette.primary.main,
     fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
     fontSize: '20px',
     fontWeight: 500,
     position: 'relative',
     '& .cardHeading': {
-        color: '#19151c',
+        color: theme.palette.designSystem.headingColor,
         fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
         fontSize: '24px',
         fontWeight: 500,
@@ -129,7 +129,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
                 textDecoration: 'underline',
             },
             '@media (prefers-reduced-motion: no-preference)': {
-                backgroundColor: '#f3f3f4',
+                backgroundColor: theme.palette.designSystem.panelBackgroundColor,
             },
             textDecoration: 'none',
             '& svg.arrowForwardIcon': {

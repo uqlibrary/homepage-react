@@ -22,7 +22,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
     },
     '& .cardHeaderPrimary': {
         backgroundColor: theme.palette.white.main,
-        color: theme.palette.primary.light,
+        color: theme.palette.primary.main,
         overflow: 'hidden',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
@@ -39,14 +39,14 @@ const StyledCard = styled(Card)(({ theme }) => ({
         padding: '12px 24px',
     },
     '& a': {
-        color: theme.palette.primary.light,
+        color: theme.palette.primary.main,
         fontWeight: 500,
         paddingBlock: '2px',
         textDecoration: 'underline',
         transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
         '&:hover': {
             color: '#fff',
-            backgroundColor: theme.palette.primary.light,
+            backgroundColor: theme.palette.primary.main,
         },
     },
 }));

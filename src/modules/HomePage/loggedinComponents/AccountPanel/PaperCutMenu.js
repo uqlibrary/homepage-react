@@ -12,7 +12,7 @@ import { addClass, linkToDrupal, removeClass } from 'helpers/general';
 const StyledPrintBalanceButton = styled(Button)(({ theme }) => ({
     '&[aria-expanded="true"] span': {
         // when the menu is open, the button looks hovered
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
         color: '#fff',
     },
     '&:focus-visible': {
@@ -38,26 +38,26 @@ const StyledPrintBalanceButton = styled(Button)(({ theme }) => ({
         height: '24px',
     },
     '&:hover span': {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
         color: 'white',
     },
     '&.panel-open span': {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
         color: 'white',
     },
     '&:focus-within span': {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
     },
     '&.panel-open:focus-within span': {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
         color: 'white',
     },
     '&.panel-closed:focus-within span': {
         backgroundColor: 'white',
-        color: theme.palette.primary.light,
+        color: theme.palette.primary.main,
     },
     '&.panel-closed:focus-within:hover span': {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
         color: 'white',
     },
 }));
@@ -65,14 +65,14 @@ const StyledPrintBalanceButton = styled(Button)(({ theme }) => ({
 const StyledMenuList = styled(List)(({ theme }) => ({
     backgroundColor: '#fff',
     zIndex: 2,
-    border: '1px solid #dcdcdd',
+    border: theme.palette.designSystem.border,
     paddingBlock: '20px',
     '& li': {
         fontWeight: 400,
         padding: '8px 24px',
         lineHeight: 'normal',
         '& a': {
-            color: theme.palette.primary.light,
+            color: theme.palette.primary.main,
             textDecoration: 'underline',
             fontWeight: 500,
             outlineOffset: '1px',
@@ -90,7 +90,7 @@ const StyledMenuList = styled(List)(({ theme }) => ({
             backgroundColor: 'inherit',
             color: 'inherit',
             '& a': {
-                backgroundColor: theme.palette.primary.light,
+                backgroundColor: theme.palette.primary.main,
                 color: '#fff',
             },
         },
