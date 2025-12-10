@@ -113,7 +113,7 @@ const StyledViewDurationBox = styled(Box)(() => ({
     },
 }));
 const StyledLightboxHeaderBox = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.primary.main,
     color: 'white',
     padding: '80px 0 20px 20px',
     '& h2': {

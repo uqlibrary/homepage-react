@@ -21,7 +21,7 @@ const StyledHeaderGridItem = styled(Grid)(({ theme }) => ({
         marginRight: '16px',
     },
     '& a': {
-        color: theme.palette.primary.light,
+        color: theme.palette.primary.main,
         fontWeight: 500,
         display: 'inline-block',
         paddingBlock: '2px',
@@ -29,7 +29,7 @@ const StyledHeaderGridItem = styled(Grid)(({ theme }) => ({
         transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
         '&:hover': {
             color: '#fff',
-            backgroundColor: theme.palette.primary.light,
+            backgroundColor: theme.palette.primary.main,
         },
     },
 }));
