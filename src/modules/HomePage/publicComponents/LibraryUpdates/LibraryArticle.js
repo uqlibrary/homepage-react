@@ -31,15 +31,15 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
         /* items and utility styles */
         '.article-card': {
             [theme.breakpoints.up('xs')]: {
-                border: articleindex === 0 ? '1px solid #dcdcdd' : 'none',
+                border: articleindex === 0 ? theme.palette.designSystem.border : 'none',
                 '&:hover': {
-                    backgroundColor: articleindex === 0 ? '#f3f3f4' : 'none',
+                    backgroundColor: articleindex === 0 ? theme.palette.designSystem.panelBackgroundColor : 'none',
                 },
             },
             [theme.breakpoints.up('sm')]: {
-                border: '1px solid #dcdcdd',
+                border: theme.palette.designSystem.border,
                 '&:hover': {
-                    backgroundColor: '#f3f3f4',
+                    backgroundColor: theme.palette.designSystem.panelBackgroundColor,
                 },
             },
         },
@@ -100,11 +100,11 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
         },
 
         'a .ArticleDescription': {
-            color: '#3b383e',
+            color: theme.palette.designSystem.bodyCopy,
             lineHeight: '1.6',
         },
         h3: {
-            color: '#19151c',
+            color: theme.palette.designSystem.headingColor,
             textDecoration: 'none',
             '&:hover': {
                 textDecoration: 'none',
