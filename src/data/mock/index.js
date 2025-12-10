@@ -1648,7 +1648,17 @@ mock.onGet('exams/course/FREN1010/summary')
 
     // Bookable Spaces (site, library, floor)
     .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'campus' }).apiUrl)
-    .reply(() => [200, { status: 'OK' }])
+    .reply(() => {
+        if (responseType === 'space-create-error') {
+            return [500, {}];
+        } else if (responseType === 'empty') {
+            return [200, []];
+        } else if (responseType === '404') {
+            return [404, {}];
+        } else {
+            return [200, { status: 'OK' }];
+        }
+    })
     .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'library' }).apiUrl)
     .reply(() => [200, { status: 'OK' }])
     .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'floor' }).apiUrl)
@@ -1660,6 +1670,9 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'space' }).apiUrl)
     .reply(() => {
+        if (responseType === 'space-create-error') {
+            return [500, {}];
+        }
         if (responseType === 'spaceAddError') {
             return [400, { status: 'error', message: 'space-name is not valid' }];
         }

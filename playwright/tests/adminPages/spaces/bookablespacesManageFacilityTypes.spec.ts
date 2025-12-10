@@ -2,7 +2,7 @@ import { expect, test } from '@uq/pw/test';
 import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
-import { assertToastHasMessage } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
+import { assertErrorPopupAppears, assertToastHasMessage } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
 
 test.describe('Spaces Admin - manage facility types', () => {
     test('can navigate from dashboard to manage facility types', async ({ page }) => {
@@ -296,9 +296,9 @@ test.describe('Spaces Admin - create new group dialog', () => {
         await expect(page.getByTestId('new-group-name')).toBeVisible();
         await expect(page.getByTestId('new-group-first')).toBeVisible();
 
-        // no fields gives error
+        // no fields give an error
         await page.getByTestId('dialog-save-button').click();
-        await assertToastHasMessage(page, 'Please enter both fields.');
+        await assertErrorPopupAppears(page, 'Please enter both fields.');
     });
     test('save new group has required fields, group only', async ({ page }) => {
         await expect(page.getByTestId('new-group-name')).not.toBeVisible();
@@ -314,7 +314,7 @@ test.describe('Spaces Admin - create new group dialog', () => {
         await page.getByTestId('new-group-name').click();
         await page.getByTestId('new-group-name').fill('New group');
         await page.getByTestId('dialog-save-button').click();
-        await assertToastHasMessage(page, 'Please enter both fields.');
+        await assertErrorPopupAppears(page, 'Please enter both fields.');
     });
     test('save new group has required fields, type only', async ({ page }) => {
         await expect(page.getByTestId('new-group-name')).not.toBeVisible();
@@ -330,7 +330,7 @@ test.describe('Spaces Admin - create new group dialog', () => {
         await page.getByTestId('new-group-first').click();
         await page.getByTestId('new-group-first').fill('First type in group');
         await page.getByTestId('dialog-save-button').click();
-        await assertToastHasMessage(page, 'Please enter both fields.');
+        await assertErrorPopupAppears(page, 'Please enter both fields.');
     });
 });
 test.describe('Spaces Admin - edit group dialog', () => {
@@ -847,7 +847,7 @@ test.describe('Spaces Admin - api error handling', () => {
 
         await expect(page.getByTestId('apiError').getByText(/Something went wrong/)).toBeVisible();
     });
-    test('drag and drop api  500', async ({ page }) => {
+    test('drag and drop api 500', async ({ page }) => {
         await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces&responseType=reorderError');
 
         // we are going to drag entry #2
@@ -863,9 +863,9 @@ test.describe('Spaces Admin - api error handling', () => {
         await draggableDestination.hover();
         await page.mouse.up();
 
-        await assertToastHasMessage(
+        await assertErrorPopupAppears(
             page,
-            '[BSMF-008A] Sorry, an error occurred - Updating the Facility type failed. The admins have been informed.',
+            '[BSMF-012] Sorry, an error occurred - Updating the Facility group order failed. The admins have been informed.',
         );
     });
 });

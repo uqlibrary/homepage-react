@@ -3,6 +3,7 @@ import { assertAccessibility } from '@uq/pw/lib/axe';
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
 
 import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
+import { assertErrorPopupAppears } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
 
 const inputField = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('input');
 
@@ -140,7 +141,7 @@ test.describe('Spaces Admin - add new space', () => {
         inputField('add-space-precise-location', page).fill('Northwest corner');
 
         await expect(page.getByTestId('add-space-pretty-location')).toBeVisible();
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Northwest corner, 1st Floor');
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Northwest corner, 2nd Floor');
         await expect(page.getByTestId('add-space-pretty-location')).toContainText('Library Warehouse');
         await expect(page.getByTestId('add-space-pretty-location')).toContainText('Gatton Campus');
 
@@ -529,5 +530,28 @@ test.describe('Spaces Admin - errors', () => {
         await expect(page.getByTestId('load-space-form-error')).toContainText(
             'Something went wrong - please try again later.',
         );
+    });
+    test('add new space - save fails', async ({ page }) => {
+        await page.goto('/admin/spaces/add?user=libSpaces&responseType=space-create-error');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Add a new Space/)).toBeVisible();
+
+        const spaceNameField = page.getByTestId('space-name').locator('input');
+        const spaceTypeField = page.getByTestId('add-space-type-new').locator('input');
+
+        await expect(spaceNameField).toBeVisible();
+        spaceNameField.fill('W12343');
+        await expect(spaceTypeField).toBeVisible();
+        spaceTypeField.fill('Computer room');
+
+        // click save button
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        page.getByTestId('admin-spaces-save-button-submit').click();
+
+        // const msg = '[BSAS-001] Sorry, an error occurred - Saving the new Space failed. The admins have been informed.';
+        const msg =
+            'An error has occurred during the request and this request cannot be processed. Please contact webmaster@library.uq.edu.au or try again later.';
+        await assertErrorPopupAppears(page, msg);
     });
 });

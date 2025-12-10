@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 
@@ -24,16 +24,17 @@ import {
     StyledPrimaryButton,
     StyledSecondaryButton,
 } from 'helpers/general';
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import { useConfirmationState } from 'hooks';
 
 import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import {
     addBreadcrumbsToSiteHeader,
     closeDeletionConfirmation,
     closeDialog,
-    displayToastErrorMessage,
     displayToastMessage,
     showGenericConfirmAndDeleteDialog,
 } from '../bookableSpacesAdminHelpers';
@@ -72,6 +73,13 @@ const StyledMainDialog = styled('dialog')(({ theme }) => ({
             '& button': {
                 marginLeft: '0.5rem',
             },
+        },
+        '& p': {
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            columnGap: '0.5rem',
+            marginLeft: '1rem',
         },
         '& svg': {
             width: '1rem',
@@ -203,16 +211,20 @@ export const BookableSpacesManageFacilities = ({
 
     const [cookies, setCookie] = useCookies();
 
-    // saveButtonVisibility values
-    const saveButtonVisibilityHidden = 0; // Always hidden
-    const saveButtonVisibilityCurrentlyVisible = 1; // Visible when New form open
-    const saveButtonVisibilityAlwaysVisible = 2; // Always visible because there are facility type entries
-    const [saveButtonVisibility, setSaveButtonVisibility2] = React.useState(saveButtonVisibilityHidden);
-    const setSaveButtonVisibility = v => {
-        console.log('setSaveButtonVisibility', v);
-        setSaveButtonVisibility2(v);
+    const [isConfirmationBoxOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+    const [confirmationLocale, setConfirmationLocale] = useState({
+        confirmationTitle: 'An error occurred while saving',
+        confirmButtonLabel: 'OK',
+    });
+    const showErrorMessageinPopup = message => {
+        setConfirmationLocale({
+            ...confirmationLocale,
+            confirmationTitle: message,
+        });
+        showConfirmation();
     };
-    const [formValues, setFormValues2] = React.useState([]);
+
+    const [formValues, setFormValues2] = useState([]);
     const setFormValues = v => {
         console.log('setFormValues', v);
         setFormValues2(v);
@@ -228,16 +240,14 @@ export const BookableSpacesManageFacilities = ({
         actions
             .updateSpacesFacilityGroupList(valuesToSend)
             .then(() => {
-                console.log('updateGroupOrder then');
                 displayToastMessage('Facility group order updated');
-                // return { success: true, id: valuesToSend.facility_type_id };
             })
             .catch(e => {
                 console.log('catch: [updateGroupOrder] updating facility group order failed ', valuesToSend, e);
-                displayToastErrorMessage(
-                    '[BSMF-008A] Sorry, an error occurred - Updating the Facility type failed. The admins have been informed.',
+
+                showErrorMessageinPopup(
+                    '[BSMF-012] Sorry, an error occurred - Updating the Facility group order failed. The admins have been informed.',
                 );
-                // return { success: false, id: valuesToSend.facility_type_id, error: e };
             })
             .finally(() => {
                 console.log('updateGroupOrder finally');
@@ -246,7 +256,7 @@ export const BookableSpacesManageFacilities = ({
             });
     };
 
-    const [sortList, setSortList2] = React.useState({});
+    const [sortList, setSortList2] = useState({});
     const setSortList = request => {
         console.log('setSortList', request?.data);
         setSortList2(request?.data);
@@ -272,12 +282,12 @@ export const BookableSpacesManageFacilities = ({
     }, []);
 
     React.useEffect(() => {
-        // initial the form on load
-        const facilityTypeListHasLoaded =
+        // once we have the facility type data list, set up some local variables
+        if (
             facilityTypeListError === false &&
             facilityTypeListLoading === false &&
-            facilityTypeList?.data?.facility_type_groups?.length > 0;
-        if (facilityTypeListHasLoaded) {
+            facilityTypeList?.data?.facility_type_groups?.length > 0
+        ) {
             console.log('### facilityTypeListHasLoaded');
             setFormValues({
                 ['facility_types']: getFlatFacilityTypeList(facilityTypeList),
@@ -291,7 +301,6 @@ export const BookableSpacesManageFacilities = ({
                 }),
                 update: false,
             });
-            setSaveButtonVisibility(saveButtonVisibilityAlwaysVisible);
         }
     }, [facilityTypeListLoading, facilityTypeListError, facilityTypeList]);
 
@@ -329,7 +338,6 @@ export const BookableSpacesManageFacilities = ({
                 .updateSpacesFacilityType(valuesToSend)
                 .then(() => {
                     displayToastMessage('Facility type updated');
-                    // return { success: true, id: valuesToSend.facility_type_id };
                 })
                 .catch(e => {
                     console.log(
@@ -339,10 +347,9 @@ export const BookableSpacesManageFacilities = ({
                         ') failed:',
                         e,
                     );
-                    displayToastErrorMessage(
-                        '[BSMF-008B] Sorry, an error occurred - Updating the Facility type failed. The admins have been informed.',
+                    showErrorMessageinPopup(
+                        '[BSMF-013] Sorry, an error occurred - Updating the Facility type failed. The admins have been informed.',
                     );
-                    // return { success: false, id: valuesToSend.facility_type_id, error: e };
                 })
                 .finally(() => {
                     // Reload facility types only once after all operations complete
@@ -364,7 +371,7 @@ export const BookableSpacesManageFacilities = ({
             .catch(e => {
                 const failureMessage = `catch: deleting facility type ${facilityTypeDetails?.facility_type_name} failed:`;
                 console.log(failureMessage, e);
-                displayToastErrorMessage(
+                showErrorMessageinPopup(
                     '[BSMF-009] Sorry, an error occurred and the facility type was not deleted - the admins have been informed.',
                 );
             })
@@ -436,7 +443,7 @@ export const BookableSpacesManageFacilities = ({
         // validate form
         const failureMessage = !data.facility_type_name && 'Please enter a facility type name';
         if (!!failureMessage) {
-            displayToastErrorMessage(failureMessage);
+            showErrorMessageinPopup(failureMessage);
             return false;
         }
 
@@ -467,7 +474,7 @@ export const BookableSpacesManageFacilities = ({
                     ') failed:',
                     e,
                 );
-                displayToastErrorMessage(
+                showErrorMessageinPopup(
                     '[BSMF-001] Sorry, an error occurred and the facility type was not created - the admins have been informed',
                 );
             });
@@ -515,7 +522,7 @@ export const BookableSpacesManageFacilities = ({
         const failureMessage =
             (!data.facility_type_name || !data.facility_type_group_name) && 'Please enter both fields.';
         if (!!failureMessage) {
-            displayToastErrorMessage(failureMessage);
+            showErrorMessageinPopup(failureMessage);
             return false;
         }
 
@@ -560,7 +567,7 @@ export const BookableSpacesManageFacilities = ({
                         ') failed:',
                         e,
                     );
-                    displayToastErrorMessage(
+                    showErrorMessageinPopup(
                         '[BSMF-002] Sorry, an error occurred and the facility type was not created - the admins have been informed',
                     );
                 } else {
@@ -572,7 +579,7 @@ export const BookableSpacesManageFacilities = ({
                         ') failed:',
                         e,
                     );
-                    displayToastErrorMessage(
+                    showErrorMessageinPopup(
                         '[BSMF-010] Sorry, an error occurred and the facility group and type was not created - the admins have been informed',
                     );
                 }
@@ -617,7 +624,8 @@ export const BookableSpacesManageFacilities = ({
 
         const failureMessage = !data.facility_type_group_name && 'Please enter a facility group type name';
         if (!!failureMessage) {
-            displayToastErrorMessage(failureMessage);
+            showErrorMessageinPopup(failureMessage);
+
             return false;
         }
 
@@ -637,7 +645,6 @@ export const BookableSpacesManageFacilities = ({
             .updateSpacesFacilityGroupSingle(valuesToSend, data.facility_type_group_id)
             .then(() => {
                 displayToastMessage('Facility type updated');
-                // return { success: true, id: valuesToSend.facility_type_group_id };
             })
             .catch(e => {
                 console.log('updateSpacesFacilityGroupSingle ERROR');
@@ -648,10 +655,9 @@ export const BookableSpacesManageFacilities = ({
                     ') failed:',
                     e,
                 );
-                displayToastErrorMessage(
+                showErrorMessageinPopup(
                     '[BSMF-008] Sorry, an error occurred - Updating the Facility type failed. The admins have been informed.',
                 );
-                // return { success: false, id: valuesToSend.facility_type_group_id, error: e };
             })
             .finally(() => {
                 // Reload facility types only once after all operations complete
@@ -674,7 +680,7 @@ export const BookableSpacesManageFacilities = ({
             })
             .catch(e => {
                 console.log('deleteSpacesFacilityTypeGroup failed', failureMessage, e);
-                displayToastErrorMessage(
+                showErrorMessageinPopup(
                     '[BSMF-011] Sorry, an error occurred and the facility group was not deleted - the admins have been informed.',
                 );
             })
@@ -907,6 +913,14 @@ export const BookableSpacesManageFacilities = ({
                             } else {
                                 return (
                                     <>
+                                        <ConfirmationBox
+                                            confirmationBoxId="spaces-manage-facilities-error"
+                                            onAction={() => hideConfirmation}
+                                            onClose={hideConfirmation}
+                                            hideCancelButton
+                                            isOpen={isConfirmationBoxOpen}
+                                            locale={confirmationLocale}
+                                        />
                                         <Grid container>
                                             <Grid item xs={12}>
                                                 <StyledPrimaryButton
@@ -927,7 +941,6 @@ export const BookableSpacesManageFacilities = ({
                                                 </Grid>
                                             </Grid>
                                         )}
-
                                         <Typography component={'h3'} variant={'h6'}>
                                             Sort Filter group types
                                         </Typography>
@@ -959,7 +972,6 @@ export const BookableSpacesManageFacilities = ({
                                                 </DndProvider>
                                             </Grid>
                                         </Grid>
-
                                         {!!facilityTypeList?.data?.facility_type_groups &&
                                             facilityTypeList?.data?.facility_type_groups.length > 0 && (
                                                 <>
@@ -1020,17 +1032,7 @@ export const BookableSpacesManageFacilities = ({
                         <form>
                             <div id="dialogBody" />
                             <div id="dialogFooter" className={'dialogFooter'}>
-                                <p
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'flex-start',
-                                        alignItems: 'flex-start',
-                                        columnGap: '0.5rem',
-                                        marginLeft: '1rem',
-                                    }}
-                                    id="dialogMessage"
-                                    data-testid="dialogMessage"
-                                >
+                                <p id="dialogMessage" data-testid="dialogMessage">
                                     <WarningOutlined className="hidden" id="warning-icon" data-testid="warning-icon" />
                                     <span id="dialogMessageContent" />
                                 </p>
