@@ -8,7 +8,7 @@ export const dlorSchedules = {
             "created_at": null,
             "updated_at": null,
             "schedule_status": true,
-            "schedule_objects_count": 1,
+            "object_count": 1,
             "schedule_objects": [   
                 "987y_isjgt_9866"
             ]
@@ -21,7 +21,7 @@ export const dlorSchedules = {
             "created_at": null,
             "updated_at": null,
             "schedule_status": true,
-            "schedule_objects_count": 2,
+            "object_count": 2,
             "schedule_objects": [
                 "987y_isjgt_9866",
                 "98s0_dy5k3_98h4"
