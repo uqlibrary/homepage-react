@@ -18,6 +18,7 @@ import {
     addBreadcrumbsToSiteHeader,
     closeDeletionConfirmation,
     closeDialog,
+    displayToastErrorMessage,
     displayToastMessage,
     showGenericConfirmAndDeleteDialog,
     springshareLocations,
@@ -215,12 +216,12 @@ export const BookableSpacesManageLocations = ({
             actions
                 .deleteBookableSpaceLocation({ locationType, locationId })
                 .then(() => {
-                    displayToastMessage(successMessage, false);
+                    displayToastMessage(successMessage);
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('deleteBookableSpaceLocation', failureMessage, e);
-                    displayToastMessage(
+                    displayToastErrorMessage(
                         '[BSML-004] Sorry, an error occurred and the location was not deleted - the admins have been informed',
                     );
                 })
@@ -242,7 +243,7 @@ export const BookableSpacesManageLocations = ({
         !data.library_name && errorMessages.push('Please enter the Library name');
         (!data.building_name || !data.building_number) && errorMessages.push('Please enter building name and number');
         if (errorMessages.length > 0) {
-            displayToastMessage(errorMessages.join('; '), true);
+            displayToastErrorMessage(errorMessages.join('; '));
             return;
         }
 
@@ -269,12 +270,12 @@ export const BookableSpacesManageLocations = ({
             actions
                 .updateBookableSpaceLocation(valuesToSend, locationType, locationId)
                 .then(() => {
-                    displayToastMessage('Change to library saved', false);
+                    displayToastMessage('Change to library saved');
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: saving library ', locationId, 'failed:', e);
-                    displayToastMessage(
+                    displayToastErrorMessage(
                         '[BSML-005] Sorry, an error occurred and the Location change did not save - the admins have been informed',
                     );
                 })
@@ -294,7 +295,7 @@ export const BookableSpacesManageLocations = ({
         // validate form
         const failureMessage = (!data.campus_name || !data.campus_number) && 'Please enter campus name and number';
         if (!!failureMessage) {
-            displayToastMessage(failureMessage, true);
+            displayToastErrorMessage(failureMessage);
             return;
         }
 
@@ -316,12 +317,12 @@ export const BookableSpacesManageLocations = ({
             actions
                 .updateBookableSpaceLocation(valuesToSend, locationType, locationId)
                 .then(() => {
-                    displayToastMessage('Change to campus saved', false);
+                    displayToastMessage('Change to campus saved');
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: saving campus ', locationId, 'failed:', e);
-                    displayToastMessage(
+                    displayToastErrorMessage(
                         '[BSML-003] Sorry, an error occurred and the Location change did not save - the admins have been informed',
                     );
                 })
@@ -355,7 +356,7 @@ export const BookableSpacesManageLocations = ({
 
         // validate form
         if (!data.floor_name) {
-            displayToastMessage('Please enter floor name', true);
+            displayToastErrorMessage('Please enter floor name');
             return false;
         }
 
@@ -389,13 +390,13 @@ export const BookableSpacesManageLocations = ({
                     }
                 })
                 .then(() => {
-                    displayToastMessage('Floor added', false);
+                    displayToastMessage('Floor added');
 
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: adding new floor failed:', e);
-                    displayToastMessage(
+                    displayToastErrorMessage(
                         '[BSML-006] Sorry, an error occurred and the Location change did not save - the admins have been informed',
                     );
                 })
@@ -450,7 +451,7 @@ export const BookableSpacesManageLocations = ({
         // validate form
         const failureMessage = !data.floor_name && 'Please enter floor name';
         if (!!failureMessage) {
-            displayToastMessage(failureMessage, true);
+            displayToastErrorMessage(failureMessage);
             return false;
         }
 
@@ -475,12 +476,12 @@ export const BookableSpacesManageLocations = ({
             actions
                 .updateBookableSpaceLocation(valuesToSend, locationType, locationId)
                 .then(() => {
-                    displayToastMessage('Changes to floor saved', false);
+                    displayToastMessage('Changes to floor saved');
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: saving floor ', locationId, 'failed:', e);
-                    displayToastMessage(
+                    displayToastErrorMessage(
                         '[BSML-007] Sorry, an error occurred and the Location change did not save - the admins have been informed',
                     );
                 })
@@ -526,7 +527,7 @@ export const BookableSpacesManageLocations = ({
 
         if (!floorDetails) {
             console.log(`Can't find floor with floor_id = "${floorId}" in campus list from api`);
-            displayToastMessage('Sorry, something went wrong');
+            displayToastErrorMessage('Sorry, something went wrong');
             return;
         }
 
@@ -613,7 +614,7 @@ export const BookableSpacesManageLocations = ({
         (!data.building_name || !data.building_number) && errorMessages.push('Please enter building name and number');
         const errorFound = errorMessages.length > 0;
         if (errorFound) {
-            displayToastMessage(errorMessages.join('; '), true);
+            displayToastErrorMessage(errorMessages.join('; '));
             return;
         }
 
@@ -639,13 +640,13 @@ export const BookableSpacesManageLocations = ({
             actions
                 .addBookableSpaceLocation(valuesToSend, locationType)
                 .then(() => {
-                    displayToastMessage('Library added', false);
+                    displayToastMessage('Library added');
 
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: adding new library failed:', e);
-                    displayToastMessage(
+                    displayToastErrorMessage(
                         '[BSML-002] Sorry, an error occurred and the Location change did not save - the admins have been informed',
                     );
                 })
@@ -704,7 +705,7 @@ export const BookableSpacesManageLocations = ({
 
         if (!libraryDetails) {
             console.log(`Can't find library with library_id = "${libraryId}" in campus list from api`);
-            displayToastMessage('Sorry, something went wrong');
+            displayToastErrorMessage('Sorry, something went wrong');
             return;
         }
 
@@ -805,7 +806,7 @@ export const BookableSpacesManageLocations = ({
 
         // validate form
         if (!data.campus_name || !data.campus_number) {
-            displayToastMessage('Please enter campus name and number', true);
+            displayToastErrorMessage('Please enter campus name and number');
             return false;
         }
 
@@ -828,12 +829,12 @@ export const BookableSpacesManageLocations = ({
             actions
                 .addBookableSpaceLocation(valuesToSend, locationType)
                 .then(() => {
-                    displayToastMessage('Campus added', false);
+                    displayToastMessage('Campus added');
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: adding new campus failed:', e);
-                    displayToastMessage(
+                    displayToastErrorMessage(
                         '[BSML-001] Sorry, an error occurred and the Location change did not save - the admins have been informed.',
                     );
                 })
@@ -888,7 +889,7 @@ export const BookableSpacesManageLocations = ({
 
         if (!campusDetails) {
             console.log(`Can't find campus with campus_id = "${campusId}" in campuslist from api`);
-            displayToastMessage('Sorry, something went wrong');
+            displayToastErrorMessage('Sorry, something went wrong');
             return;
         }
 

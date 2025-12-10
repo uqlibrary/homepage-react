@@ -33,6 +33,7 @@ import {
     addBreadcrumbsToSiteHeader,
     closeDeletionConfirmation,
     closeDialog,
+    displayToastErrorMessage,
     displayToastMessage,
     showGenericConfirmAndDeleteDialog,
 } from '../bookableSpacesAdminHelpers';
@@ -228,12 +229,12 @@ export const BookableSpacesManageFacilities = ({
             .updateSpacesFacilityGroupList(valuesToSend)
             .then(() => {
                 console.log('updateGroupOrder then');
-                displayToastMessage('Facility group order updated', false);
+                displayToastMessage('Facility group order updated');
                 // return { success: true, id: valuesToSend.facility_type_id };
             })
             .catch(e => {
                 console.log('catch: [updateGroupOrder] updating facility group order failed ', valuesToSend, e);
-                displayToastMessage(
+                displayToastErrorMessage(
                     '[BSMF-008A] Sorry, an error occurred - Updating the Facility type failed. The admins have been informed.',
                 );
                 // return { success: false, id: valuesToSend.facility_type_id, error: e };
@@ -327,7 +328,7 @@ export const BookableSpacesManageFacilities = ({
             actions
                 .updateSpacesFacilityType(valuesToSend)
                 .then(() => {
-                    displayToastMessage('Facility type updated', false);
+                    displayToastMessage('Facility type updated');
                     // return { success: true, id: valuesToSend.facility_type_id };
                 })
                 .catch(e => {
@@ -338,7 +339,7 @@ export const BookableSpacesManageFacilities = ({
                         ') failed:',
                         e,
                     );
-                    displayToastMessage(
+                    displayToastErrorMessage(
                         '[BSMF-008B] Sorry, an error occurred - Updating the Facility type failed. The admins have been informed.',
                     );
                     // return { success: false, id: valuesToSend.facility_type_id, error: e };
@@ -358,12 +359,12 @@ export const BookableSpacesManageFacilities = ({
             .deleteSpacesFacilityType(facilityTypeid)
             .then(() => {
                 const successMessage = `${facilityTypeDetails?.facility_type_name} deleted`;
-                displayToastMessage(successMessage, false);
+                displayToastMessage(successMessage);
             })
             .catch(e => {
                 const failureMessage = `catch: deleting facility type ${facilityTypeDetails?.facility_type_name} failed:`;
                 console.log(failureMessage, e);
-                displayToastMessage(
+                displayToastErrorMessage(
                     '[BSMF-009] Sorry, an error occurred and the facility type was not deleted - the admins have been informed.',
                 );
             })
@@ -435,7 +436,7 @@ export const BookableSpacesManageFacilities = ({
         // validate form
         const failureMessage = !data.facility_type_name && 'Please enter a facility type name';
         if (!!failureMessage) {
-            displayToastMessage(failureMessage, true);
+            displayToastErrorMessage(failureMessage);
             return false;
         }
 
@@ -455,7 +456,7 @@ export const BookableSpacesManageFacilities = ({
         actions
             .createSpacesFacilityType(valuesToSend)
             .then(() => {
-                displayToastMessage('Facility type created', false);
+                displayToastMessage('Facility type created');
                 actions.loadAllFacilityTypes(); // reload facility types
             })
             .catch(e => {
@@ -466,7 +467,7 @@ export const BookableSpacesManageFacilities = ({
                     ') failed:',
                     e,
                 );
-                displayToastMessage(
+                displayToastErrorMessage(
                     '[BSMF-001] Sorry, an error occurred and the facility type was not created - the admins have been informed',
                 );
             });
@@ -514,7 +515,7 @@ export const BookableSpacesManageFacilities = ({
         const failureMessage =
             (!data.facility_type_name || !data.facility_type_group_name) && 'Please enter both fields.';
         if (!!failureMessage) {
-            displayToastMessage(failureMessage, true);
+            displayToastErrorMessage(failureMessage);
             return false;
         }
 
@@ -546,7 +547,7 @@ export const BookableSpacesManageFacilities = ({
                 actions.createSpacesFacilityType(typeValuesToSend);
             })
             .then(() => {
-                displayToastMessage('Facility type created', false);
+                displayToastMessage('Facility type created');
                 actions.loadAllFacilityTypes(); // reload facility types
             })
             .catch(e => {
@@ -559,7 +560,7 @@ export const BookableSpacesManageFacilities = ({
                         ') failed:',
                         e,
                     );
-                    displayToastMessage(
+                    displayToastErrorMessage(
                         '[BSMF-002] Sorry, an error occurred and the facility type was not created - the admins have been informed',
                     );
                 } else {
@@ -571,7 +572,7 @@ export const BookableSpacesManageFacilities = ({
                         ') failed:',
                         e,
                     );
-                    displayToastMessage(
+                    displayToastErrorMessage(
                         '[BSMF-010] Sorry, an error occurred and the facility group and type was not created - the admins have been informed',
                     );
                 }
@@ -616,7 +617,7 @@ export const BookableSpacesManageFacilities = ({
 
         const failureMessage = !data.facility_type_group_name && 'Please enter a facility group type name';
         if (!!failureMessage) {
-            displayToastMessage(failureMessage, true);
+            displayToastErrorMessage(failureMessage);
             return false;
         }
 
@@ -635,7 +636,7 @@ export const BookableSpacesManageFacilities = ({
         actions
             .updateSpacesFacilityGroupSingle(valuesToSend, data.facility_type_group_id)
             .then(() => {
-                displayToastMessage('Facility type updated', false);
+                displayToastMessage('Facility type updated');
                 // return { success: true, id: valuesToSend.facility_type_group_id };
             })
             .catch(e => {
@@ -647,7 +648,7 @@ export const BookableSpacesManageFacilities = ({
                     ') failed:',
                     e,
                 );
-                displayToastMessage(
+                displayToastErrorMessage(
                     '[BSMF-008] Sorry, an error occurred - Updating the Facility type failed. The admins have been informed.',
                 );
                 // return { success: false, id: valuesToSend.facility_type_group_id, error: e };
@@ -669,11 +670,11 @@ export const BookableSpacesManageFacilities = ({
         actions
             .deleteSpacesFacilityTypeGroup(facilityTypeid)
             .then(() => {
-                displayToastMessage(successMessage, false);
+                displayToastMessage(successMessage);
             })
             .catch(e => {
                 console.log('deleteSpacesFacilityTypeGroup failed', failureMessage, e);
-                displayToastMessage(
+                displayToastErrorMessage(
                     '[BSMF-011] Sorry, an error occurred and the facility group was not deleted - the admins have been informed.',
                 );
             })

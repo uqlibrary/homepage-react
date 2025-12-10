@@ -13,7 +13,7 @@ import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import { EditSpaceForm } from '../EditSpaceForm';
 import {
     addBreadcrumbsToSiteHeader,
-    displayToastMessage,
+    displayToastErrorMessage,
     initialisedSpringshareList,
     spacesAdminLink,
     validCampusList,
@@ -145,10 +145,12 @@ export const BookableSpacesAddSpace = ({
 
         actions
             .addBookableSpaceLocation(valuesToSend, 'space')
-            .then(() => {})
+            .then(() => {
+                // a pop up confirmation is displayed, because this is a big change!
+            })
             .catch(e => {
                 console.log('catch: adding new space failed:', e);
-                displayToastMessage(
+                displayToastErrorMessage(
                     '[BSAS-001] Sorry, an error occurred - Saving the new Space failed. The admins have been informed.',
                 );
             });
