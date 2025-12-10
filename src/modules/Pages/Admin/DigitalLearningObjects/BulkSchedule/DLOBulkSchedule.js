@@ -357,7 +357,11 @@ export const DLOBulkSchedule = ({
                                 variant="contained"
                                 color="primary"
                                 data-testid="schedule-add-items"
-                                onClick={() => setIsEditBoxOpened(true)}
+                                onClick={() => {
+                                    setFormMessage(null);
+                                    setIsAlertOpen(false);
+                                    setIsEditBoxOpened(true);
+                                }}
                                 disabled={!formValues?.schedule_name}
                             >
                                 Add / Edit items
