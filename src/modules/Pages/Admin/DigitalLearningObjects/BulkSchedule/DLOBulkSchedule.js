@@ -473,7 +473,7 @@ export const DLOBulkSchedule = ({
             <Snackbar
                 id={'dlor-schedule-alert'}
                 autoHideDuration={5000}
-                // istanbul ignore next
+                /* istanbul ignore next */
                 onClose={() => setIsAlertOpen(false)}
                 data-testid={'dlor-schedule-alert'}
                 anchorOrigin={{
