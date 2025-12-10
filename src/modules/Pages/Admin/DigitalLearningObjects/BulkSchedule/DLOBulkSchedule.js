@@ -418,7 +418,7 @@ export const DLOBulkSchedule = ({
                                                     <TableCell sx={{ wordBreak: 'break-word' }}>
                                                         {schedule.schedule_name}{' '}
                                                     </TableCell>
-                                                    <TableCell>{schedule.objects_count}</TableCell>
+                                                    <TableCell>{schedule.object_count}</TableCell>
                                                     <TableCell>Featured</TableCell>
                                                     <TableCell>
                                                         {moment
