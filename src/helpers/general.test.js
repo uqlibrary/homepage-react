@@ -97,7 +97,7 @@ describe('general helpers', () => {
 
     it('standard text is as expected', () => {
         // coverage test
-        expect(standardText({ palette: { secondary: { main: '#ff0' } } })).toEqual({
+        expect(standardText({ palette: { designSystem: { bodyCopy: '#ff0' } } })).toEqual({
             color: '#ff0',
             fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
             fontSize: '16px',

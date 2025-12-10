@@ -39,6 +39,7 @@ export default {
             discarded: 'DISCARDED',
             instorage: 'INSTORAGE',
             missing: 'MISSING',
+            awaitingtest: 'AWAITINGTEST',
         },
         inspectStatus: {
             passed: 'PASSED',
@@ -764,6 +765,15 @@ export default {
                         { label: 'IN STORAGE', value: 'INSTORAGE' },
                         { label: 'MISSING', value: 'MISSING' },
                     ],
+                    validAssetStatusWithLocationOptions: [{ label: 'IN STORAGE', value: 'INSTORAGE' }],
+                    emptyAssetStatusOption: { label: '', value: '' },
+                    monthsOptions: [
+                        { value: '-1', label: 'Any' },
+                        { value: '12', label: '1 year' },
+                        { value: '24', label: '2 years' },
+                        { value: '36', label: '3 years' },
+                        { value: '48', label: '4 years' },
+                    ],
                 },
                 breadcrumbs: [
                     {
@@ -828,6 +838,10 @@ export default {
                         },
                     },
                     step: {
+                        button: {
+                            previous: 'Back',
+                            submit: 'Bulk Update',
+                        },
                         one: {
                             title: 'Step 1: Choose assets to update in bulk',
                             addText: 'ADD NEW ASSET',
@@ -849,40 +863,85 @@ export default {
                         },
                         two: {
                             title: 'Step 2: Choose bulk update actions',
-                            subtext: (count, pluraliser) => (
-                                <>
-                                    You have selected{' '}
-                                    <Typography variant="body1" component="span" style={{ fontWeight: 'bold' }}>
-                                        {count}
-                                    </Typography>{' '}
-                                    {pluraliser('asset', count)} to bulk update.
-                                </>
-                            ),
-                            button: {
-                                previous: 'Back',
-                                submit: 'Bulk Update',
-                            },
+
                             checkbox: {
                                 location: 'Update Location',
-                                status: 'Discard Asset',
+                                discardAsset: 'Discard Asset',
                                 assetType: 'Update Asset Type',
                                 notes: 'Clear test notes',
                                 assetStatus: 'Update Asset Status',
                             },
+                            locationType: {
+                                title: 'Location',
+                            },
                             discardReason: {
                                 label: 'Discarding Reason',
                             },
-                            dialogBulkUpdateConfirm: {
+
+                            filterToDateLabel: 'where next inspection date is within',
+                            filterToDateFormatted: value =>
+                                value !== '' ? `(Excludes assets up to ${value})` : '(Includes all assets)',
+                        },
+                    },
+                    alert: {
+                        alertMessageAssetsChosen: (count, pluraliser) => (
+                            <>
+                                You have selected{' '}
+                                <Typography variant="body1" component="span" style={{ fontWeight: 'bold' }}>
+                                    {count}
+                                </Typography>{' '}
+                                {pluraliser('asset', count)} to bulk update.
+                            </>
+                        ),
+                        alertMessageAssetsExcluded: (list, pluraliser, excludedListString) => {
+                            const count = list.length;
+
+                            return count > 0 ? (
+                                <p>
+                                    Excluded{' '}
+                                    <Typography variant="body1" component="span" style={{ fontWeight: 'bold' }}>
+                                        {count}
+                                    </Typography>{' '}
+                                    {pluraliser('asset', count)} because their next inspection date falls within the
+                                    chosen range, or their current status is incompatible with the chosen options:
+                                    {excludedListString && (
+                                        <>
+                                            <br />
+                                            <strong>{excludedListString}</strong>
+                                        </>
+                                    )}
+                                </p>
+                            ) : (
+                                <></>
+                            );
+                        },
+                        dialogBulkUpdateConfirm: (count, excludedListString) => {
+                            return {
                                 confirmButtonLabel: 'Proceed',
                                 cancelButtonLabel: 'Cancel',
-                                confirmationMessage:
-                                    'Are you sure you wish to proceed with this bulk update of selected assets?',
+                                confirmationMessage: (
+                                    <div>
+                                        Are you sure you wish to proceed with this bulk update of {count} selected
+                                        assets?
+                                        {excludedListString ? (
+                                            <>
+                                                <p>
+                                                    <strong>{excludedListString}</strong>
+                                                </p>
+                                                Excluded assets will be re-added to your selected list in Step 1 after
+                                                this bulk update operation is complete.
+                                            </>
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </div>
+                                ),
                                 confirmationTitle: 'Bulk Update Selected Assets',
-                            },
-                            snackbars: {
-                                success: 'Bulk Asset update successful',
-                                failed: 'Unable to bulk update Assets',
-                            },
+                            };
+                        },
+                        snackbars: {
+                            success: 'Bulk Asset update successful',
+                            failed: 'Unable to bulk update Assets',
                         },
                     },
                 },

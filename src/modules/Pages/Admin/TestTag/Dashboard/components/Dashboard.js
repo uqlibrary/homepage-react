@@ -128,7 +128,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                     headerProps={{
                                         avatar: (
                                             <Avatar aria-hidden="true" style={{ backgroundColor: 'white' }}>
-                                                <InspectionIcon style={{ color: theme.palette.primary.light }} />
+                                                <InspectionIcon style={{ color: theme.palette.primary.main }} />
                                             </Avatar>
                                         ),
                                     }}
@@ -167,7 +167,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                 headerProps={{
                                     avatar: (
                                         <Avatar aria-hidden="true" style={{ backgroundColor: 'white' }}>
-                                            <AssetIcon style={{ color: theme.palette.primary.light }} />
+                                            <AssetIcon style={{ color: theme.palette.primary.main }} />
                                         </Avatar>
                                     ),
                                 }}
@@ -265,7 +265,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                                 headerProps={{
                                     avatar: (
                                         <Avatar aria-hidden="true" style={{ backgroundColor: 'white' }}>
-                                            <InspectionDeviceIcon style={{ color: theme.palette.primary.light }} />
+                                            <InspectionDeviceIcon style={{ color: theme.palette.primary.main }} />
                                         </Avatar>
                                     ),
                                 }}

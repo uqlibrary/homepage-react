@@ -75,9 +75,9 @@ const StyledUQActionButton = styled('div')(({ theme, noMargin }) => ({
         },
     },
     '& button.cancel, & a': {
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.designSystem.bodyCopy,
         color: theme.palette.white.main,
-        borderColor: theme.palette.secondary.main,
+        borderColor: theme.palette.designSystem.bodyCopy,
         borderWidth: 1,
         borderStyle: 'solid',
         borderRadius: '6px',
@@ -117,7 +117,7 @@ const StyledUQActionButton = styled('div')(({ theme, noMargin }) => ({
     },
 }));
 const StyledTitleTypography = styled(Typography)(({ theme }) => ({
-    color: theme.palette.primary.light,
+    color: theme.palette.primary.main,
 }));
 const StyledContentGrid = styled(Grid)(() => ({
     marginTop: '6px',
@@ -174,14 +174,14 @@ const StyledTagLabelSpan = styled('span')(() => ({
     color: '#333',
     marginRight: '10px',
 }));
-const StyledSeriesList = styled('ol')(() => ({
+const StyledSeriesList = styled('ol')(({ theme }) => ({
     paddingInlineStart: 0,
     marginInlineStart: 0,
     '& li': {
         display: 'flex',
         marginBottom: '0.5em',
         '& a': {
-            backgroundColor: '#d1d0d2', // $grey-300
+            backgroundColor: theme.palette.designSystem.disabledText,
             color: '#000',
         },
         '& a, & > span': {
@@ -517,8 +517,7 @@ export const DLOView = ({
     };
 
     const navigateToEditPage = uuid => {
-        window.location.href = 
-             dlorAdminLink(`/edit/${uuid}`, account);
+        window.location.href = dlorAdminLink(`/edit/${uuid}`, account);
     };
 
     // const saveAndNavigate = dlorItem => {
