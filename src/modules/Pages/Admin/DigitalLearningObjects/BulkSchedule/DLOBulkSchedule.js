@@ -78,7 +78,7 @@ export const DLOBulkSchedule = ({
     }, [dlorList, dlorListError, dlorListLoading, actions]);
 
     React.useEffect(() => {
-        if (!dlorScheduleError && !dlorScheduleLoading && (!dlorSchedule || dlorSchedule.length === 0)) {
+        if (!dlorScheduleError && !dlorScheduleLoading && !dlorSchedule) {
             actions.loadDLORSchedules();
         }
     }, [dlorScheduleError, dlorScheduleLoading, dlorSchedule, actions]);
