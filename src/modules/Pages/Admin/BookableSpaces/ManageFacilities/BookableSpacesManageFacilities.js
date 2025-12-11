@@ -6,6 +6,7 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import { Grid } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
@@ -109,6 +110,18 @@ const StyledDeleteButton = styled(Button)(({ theme }) => ({
 const StyledEditIconButton = styled(IconButton)(() => ({
     paddingInline: 0,
     marginRight: '0.25rem',
+}));
+const StyledOverlayParentDiv = styled('div')(() => ({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    opacity: '0.5',
+    height: '100vh',
+    width: '100vw',
+    display: 'grid',
+    justifyContent: 'center',
+    alignContent: 'center',
 }));
 const StyledDraggableListItem = styled('li')(({ theme }) => ({
     display: 'flex',
@@ -228,6 +241,12 @@ export const BookableSpacesManageFacilities = ({
         setFormValues2(v);
     };
 
+    const [overlayLoaderVisible, setOverlayLoader2] = useState(false);
+    const setOverlayLoader = v => {
+        console.log('setOverlayLoader', v);
+        setOverlayLoader2(v);
+    };
+
     const updateGroupOrder = valuesToSend => {
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
@@ -235,23 +254,27 @@ export const BookableSpacesManageFacilities = ({
         }
 
         console.log('updateGroupOrder', valuesToSend);
-        actions
-            .updateSpacesFacilityGroupList(valuesToSend)
-            .then(() => {
-                displayToastMessage('Facility group order updated');
-            })
-            .catch(e => {
-                console.log('catch: [updateGroupOrder] updating facility group order failed ', valuesToSend, e);
+        setOverlayLoader(true);
+        setTimeout(() => {
+            actions
+                .updateSpacesFacilityGroupList(valuesToSend)
+                .then(() => {
+                    displayToastMessage('Facility group order updated');
+                })
+                .catch(e => {
+                    console.log('catch: [updateGroupOrder] updating facility group order failed ', valuesToSend, e);
 
-                showErrorMessageinPopup(
-                    '[BSMF-012] Sorry, an error occurred - Updating the Facility group order failed. The admins have been informed.',
-                );
-            })
-            .finally(() => {
-                console.log('updateGroupOrder finally');
-                // Reload facility types only once after all operations complete
-                actions.loadAllFacilityTypes();
-            });
+                    showErrorMessageinPopup(
+                        '[BSMF-012] Sorry, an error occurred - Updating the Facility group order failed. The admins have been informed.',
+                    );
+                })
+                .finally(() => {
+                    console.log('updateGroupOrder finally');
+                    // Reload facility types only once after all operations complete
+                    actions.loadAllFacilityTypes();
+                });
+            setOverlayLoader(false);
+        }, 1000); // make the reload less abrupt
     };
 
     const [sortList, setSortList2] = useState({});
@@ -878,6 +901,12 @@ export const BookableSpacesManageFacilities = ({
 
     return (
         <StandardPage title="Spaces">
+            {!!overlayLoaderVisible && (
+                <StyledOverlayParentDiv>
+                    <CircularProgress color="primary" size={50} aria-label="Updating groups" />
+                </StyledOverlayParentDiv>
+            )}
+
             <HeaderBar pageTitle="Manage Facility types" currentPage="manage-facilities" />
 
             <section aria-live="assertive">
