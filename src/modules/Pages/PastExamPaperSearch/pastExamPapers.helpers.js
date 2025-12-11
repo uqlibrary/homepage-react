@@ -14,12 +14,12 @@ export const StyledBodyText = styled('p')(() => ({
 const StyledInstructions = styled('p')(({ theme }) => ({
     marginBottom: 32,
     '& a': {
-        color: theme.palette.primary.light,
+        color: theme.palette.primary.main,
         textDecoration: 'underline',
         fontWeight: 500,
         '&:hover': {
             color: '#fff',
-            backgroundColor: theme.palette.primary.light,
+            backgroundColor: theme.palette.primary.main,
         },
     },
 }));

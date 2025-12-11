@@ -29,7 +29,7 @@ const StyledUl = styled('ul')(({ theme }) => ({
         marginLeft: '-20px',
         listStyleType: 'none',
         '& button': {
-            color: theme.palette.primary.light,
+            color: theme.palette.primary.main,
             fontWeight: 500,
             fontSize: '16px',
             textAlign: 'left',
@@ -45,12 +45,12 @@ const StyledUl = styled('ul')(({ theme }) => ({
             '& span': {
                 textDecoration: 'underline',
                 '&:hover': {
-                    backgroundColor: theme.palette.primary.light,
+                    backgroundColor: theme.palette.primary.main,
                     color: '#fff',
                 },
             },
             '& svg:first-of-type': {
-                stroke: theme.palette.primary.light,
+                stroke: theme.palette.primary.main,
                 paddingRight: '12px',
             },
             '& .MuiTouchRipple-root': {
@@ -67,12 +67,12 @@ const StyledUl = styled('ul')(({ theme }) => ({
                 textDecorationColor: 'white',
             },
             '& svg': {
-                stroke: theme.palette.primary.light,
+                stroke: theme.palette.primary.main,
                 paddingRight: '12px',
             },
             '&:hover span': {
                 color: '#fff',
-                backgroundColor: theme.palette.primary.light,
+                backgroundColor: theme.palette.primary.main,
             },
             '&:hover svg': {
                 color: 'inherit',
