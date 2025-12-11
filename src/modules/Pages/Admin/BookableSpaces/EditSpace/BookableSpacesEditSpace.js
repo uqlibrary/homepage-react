@@ -91,10 +91,6 @@ export const BookableSpacesEditSpace = ({
         ) {
             actions.loadABookableSpacesRoom(spaceUuid);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
         if (campusListLoading === null && campusListError === null && campusList === null) {
             actions.loadBookableSpaceCampusChildren(); // get list of campuses, buildings and floors
             actions.loadAllBookableSpacesRooms(); // get list of Spaces

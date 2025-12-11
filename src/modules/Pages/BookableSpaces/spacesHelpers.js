@@ -31,9 +31,8 @@ export function getFriendlyFloorName(bookableSpace) {
             bookableSpace?.space_floor_name + getOrdinalSuffixFor(bookableSpace?.space_floor_name);
         floorName = `${floorNumberAsOrdinal} Floor`;
     }
-    const result = !!bookableSpace?.space_precise ? `${bookableSpace?.space_precise}, ${floorName}` : floorName;
-    console.log('getFriendlyFloorName result=', result);
-    return result;
+
+    return !!bookableSpace?.space_precise ? `${bookableSpace?.space_precise}, ${floorName}` : floorName;
 }
 
 export function getFriendlyLocationDescription(bookableSpace) {

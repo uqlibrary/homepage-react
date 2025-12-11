@@ -158,10 +158,8 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
             ref={ref}
             data-testid={`spaces-facility-group-edit-draggable-title-${item?.facility_type_group_id}`}
         >
-            {/* <div style={{ display: 'flex', alignItems: 'center' }}>*/}
             <DragIndicatorIcon />
             <span>{item?.facility_type_group_name}</span>
-            {/* </div>*/}
         </StyledDraggableListItem>
     );
 });
