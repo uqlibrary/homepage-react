@@ -80,7 +80,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
     ['& .linkButton']: {
         backgroundColor: '#fff',
-        border: theme.palette.designSystem.border,
+        borderBottom: theme.palette.designSystem.border,
         borderRadius: 0,
         color: theme.palette.secondary.dark,
         display: 'block',
