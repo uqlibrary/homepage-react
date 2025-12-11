@@ -112,7 +112,7 @@ const StyledEditIconButton = styled(IconButton)(() => ({
     marginRight: '0.25rem',
 }));
 const StyledOverlayParentDiv = styled('div')(() => ({
-    position: 'absolute',
+    position: 'fixed',
     top: 0,
     left: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.2)',
