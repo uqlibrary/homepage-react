@@ -3,6 +3,7 @@ import { assertAccessibility } from '@uq/pw/lib/axe';
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
 
 import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
+import { assertErrorPopupAppears } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
 
 const inputField = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('input');
 
@@ -23,12 +24,12 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(addNewSpaceOption).not.toBeVisible();
         await expect(navigationDropdownMenu).not.toBeVisible();
         await expect(navigationMenuButton).toBeVisible();
-        navigationMenuButton.click();
+        await navigationMenuButton.click();
 
         await expect(navigationDropdownMenu).toBeVisible();
         await expect(addNewSpaceOption).toBeVisible();
 
-        addNewSpaceOption.click();
+        await addNewSpaceOption.click();
         await expect(page).toHaveURL('http://localhost:2020/admin/spaces/add?user=libSpaces');
     });
 });
@@ -74,17 +75,19 @@ test.describe('Spaces Admin - add new space', () => {
         await setTestDataCookie(context, page);
 
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
-        page.getByTestId('space-name')
+        await page
+            .getByTestId('space-name')
             .locator('input')
             .fill('W12343');
         await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        page.getByTestId('space-type')
+        await page
+            .getByTestId('space-type')
             .locator('input')
             .fill('Computer room');
 
         // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        page.getByTestId('admin-spaces-save-button-submit').click();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
 
         await expect(page.getByTestId('message-title')).toBeVisible();
         await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
@@ -107,27 +110,27 @@ test.describe('Spaces Admin - add new space', () => {
         const MICROWAVE_FILTER_TYPE = 4;
 
         await expect(inputField('space-name', page)).toBeVisible();
-        inputField('space-name', page).fill('W12343');
+        await inputField('space-name', page).fill('W12343');
         await expect(inputField('space-type', page)).toBeVisible();
-        inputField('space-type', page).fill('Computer room');
+        await inputField('space-type', page).fill('Computer room');
 
         // choose a different location
         // change campus
-        page.getByTestId('add-space-select-campus').click();
+        await page.getByTestId('add-space-select-campus').click();
         await expect(page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:last-of-type')).toBeVisible();
-        page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:nth-of-type(2)').click();
+        await page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:nth-of-type(2)').click();
 
         // change building
-        page.getByTestId('add-space-select-library').click();
+        await page.getByTestId('add-space-select-library').click();
         await expect(
             page.locator('ul[aria-labelledby="add-space-select-library-label"] li:last-of-type'),
         ).toBeVisible();
-        page.locator('ul[aria-labelledby="add-space-select-library-label"] li:last-of-type').click();
+        await page.locator('ul[aria-labelledby="add-space-select-library-label"] li:last-of-type').click();
 
         // change floor
-        page.getByTestId('add-space-select-floor').click();
+        await page.getByTestId('add-space-select-floor').click();
         await expect(page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type')).toBeVisible();
-        page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type').click();
+        await page.locator('[aria-labelledby="add-space-select-floor-label"] li:last-of-type').click();
 
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-campus')).toContainText('Gatton');
@@ -137,10 +140,10 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('add-space-select-floor')).toContainText('Library Warehouse - 32');
         await expect(page.getByTestId('add-space-select-floor')).not.toContainText('Ground floor');
         await expect(inputField('add-space-precise-location', page)).toBeVisible();
-        inputField('add-space-precise-location', page).fill('Northwest corner');
+        await inputField('add-space-precise-location', page).fill('Northwest corner');
 
         await expect(page.getByTestId('add-space-pretty-location')).toBeVisible();
-        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Northwest corner, 1st Floor');
+        await expect(page.getByTestId('add-space-pretty-location')).toContainText('Northwest corner, 2nd Floor');
         await expect(page.getByTestId('add-space-pretty-location')).toContainText('Library Warehouse');
         await expect(page.getByTestId('add-space-pretty-location')).toContainText('Gatton Campus');
 
@@ -149,22 +152,24 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('add-space-springshare-id')).toContainText(
             'No Springshare opening hours will display',
         );
-        await page.getByRole('combobox', { name: 'Choose the Springshare' }).click();
+        await await page.getByRole('combobox', { name: 'Choose the Springshare' }).click();
         await page.getByRole('option', { name: 'Dorothy Hill Engineering' }).click();
 
         await expect(page.getByTestId('add-space-description')).toBeVisible();
-        page.getByTestId('add-space-description').fill(
-            'This is a sunny corner in the Law library where you blah blah blah',
-        );
+        await page
+            .getByTestId('add-space-description')
+            .fill('This is a sunny corner in the Law library where you blah blah blah');
 
         await expect(inputField('space-photo-url', page)).toBeVisible();
-        inputField('space-photo-url', page).fill('https://example.com/image.jpg');
+        await inputField('space-photo-url', page).fill('https://example.com/image.jpg');
 
         await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
-        page.getByTestId('add-space-photo-description').fill('a table and chairs in a stark white room');
+        await page.getByTestId('add-space-photo-description').fill('a table and chairs in a stark white room');
 
         await expect(inputField('space_services_page', page)).toBeVisible();
-        inputField('space_services_page', page).fill('https://web.library.uq.edu.au/visit/walter-harrison-law-library');
+        await inputField('space_services_page', page).fill(
+            'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
+        );
 
         await expect(page.getByTestId(`filtertype-${ASKUS_FILTER_TYPE}`).locator('input')).toBeVisible();
         await expect(page.getByTestId(`facility-type-listitem-${ASKUS_FILTER_TYPE}`)).toContainText('AskUs service');
@@ -182,7 +187,7 @@ test.describe('Spaces Admin - add new space', () => {
 
         // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        page.getByTestId('admin-spaces-save-button-submit').click();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
 
         await expect(page.getByTestId('toast-message')).not.toBeVisible();
 
@@ -209,15 +214,17 @@ test.describe('Spaces Admin - add new space', () => {
 
     test('add spaces page save dialog is accessible', async ({ page }) => {
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
-        page.getByTestId('space-name')
+        await page
+            .getByTestId('space-name')
             .locator('input')
             .fill('W12343');
         await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        page.getByTestId('space-type')
+        await page
+            .getByTestId('space-type')
             .locator('input')
             .fill('Computer room');
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        page.getByTestId('admin-spaces-save-button-submit').click();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
 
         await expect(page.getByTestId('message-title')).toBeVisible();
         await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
@@ -229,7 +236,7 @@ test.describe('Spaces Admin - add new space', () => {
 
         //  blank form gives an error
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        page.getByTestId('admin-spaces-save-button-submit').click();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
         await expect(page.getByTestId('toast-message')).toBeVisible();
         await expect(page.getByTestId('toast-message p[data-count="2"]')).toBeDefined();
         await expect(page.getByTestId('toast-message')).toContainText('These errors occurred');
@@ -240,9 +247,9 @@ test.describe('Spaces Admin - add new space', () => {
         // user enters the name, but its still an error
         const spaceNameInputField = page.getByTestId('space-name').locator('input');
         await expect(spaceNameInputField).toBeVisible();
-        spaceNameInputField.fill('W12343');
+        await spaceNameInputField.fill('W12343');
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        page.getByTestId('admin-spaces-save-button-submit').click();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
         await expect(page.getByTestId('toast-message')).toBeVisible();
         await expect(page.getByTestId('toast-message p[data-count="1"]')).toBeDefined();
         await expect(page.getByTestId('toast-message')).toContainText('These errors occurred');
@@ -251,10 +258,11 @@ test.describe('Spaces Admin - add new space', () => {
 
         // they enter the type
         await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        page.getByTestId('space-type')
+        await page
+            .getByTestId('space-type')
             .locator('input')
             .fill('Computer room');
-        page.getByTestId('admin-spaces-save-button-submit').click();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
 
         // now the form is valid!
         await expect(page.getByTestId('message-title')).toBeVisible();
@@ -265,22 +273,25 @@ test.describe('Spaces Admin - add new space', () => {
 
         // user enters the name
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
-        page.getByTestId('space-name')
+        await page
+            .getByTestId('space-name')
             .locator('input')
             .fill('W12343');
         // they enter the type
         await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        page.getByTestId('space-type')
+        await page
+            .getByTestId('space-type')
             .locator('input')
             .fill('Computer room');
 
         // they enter the url, but neglect the description
         await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
-        page.getByTestId('space-photo-url')
+        await page
+            .getByTestId('space-photo-url')
             .locator('input')
             .fill('https://example.com/image.jpg');
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        page.getByTestId('admin-spaces-save-button-submit').click();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
         await expect(page.getByTestId('toast-message')).toBeVisible();
         await expect(page.getByTestId('toast-message p[data-count="1"]')).toBeDefined();
         await expect(page.getByTestId('toast-message')).toContainText('These errors occurred');
@@ -289,12 +300,12 @@ test.describe('Spaces Admin - add new space', () => {
         );
 
         await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
-        // page.getByTestId('add-space-photo-description').fill('a description of a room');
-        page.getByTestId('add-space-photo-description').fill(
-            'This is a sunny corner in the Law library where you blah blah blah',
-        );
+        // await page.getByTestId('add-space-photo-description').fill('a description of a room');
+        await page
+            .getByTestId('add-space-photo-description')
+            .fill('This is a sunny corner in the Law library where you blah blah blah');
 
-        page.getByTestId('admin-spaces-save-button-submit').click();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
 
         // finally the form is valid!
         await expect(page.getByTestId('message-title')).toBeVisible();
@@ -370,7 +381,7 @@ test.describe('Spaces Admin - add new space', () => {
         );
 
         // choose 'Warehouse' in the library dropdown to change the library and floor
-        page.locator('ul[aria-labelledby="add-space-select-library-label"] li:last-of-type').click();
+        await page.locator('ul[aria-labelledby="add-space-select-library-label"] li:last-of-type').click();
 
         // the displayed building and floors have changed; campus is unchanged
         await expect(campusSelector.locator('input')).toBeVisible();
@@ -420,7 +431,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.locator('[aria-labelledby="add-space-select-library-label"]')).toBeVisible();
         await expect(page.locator('[aria-labelledby="add-space-select-library-label"]').locator(' > *')).toHaveCount(2);
         await expect(page.locator('ul[aria-labelledby="add-space-select-library-label"] li:first-child')).toBeVisible();
-        page.locator('ul[aria-labelledby="add-space-select-library-label"] li:first-of-type').click();
+        await page.locator('ul[aria-labelledby="add-space-select-library-label"] li:first-of-type').click();
 
         // open the campus dropdown
         campusSelector.click();
@@ -430,7 +441,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.locator('[aria-labelledby="add-space-select-campus-label"]').locator(' > *')).toHaveCount(3);
 
         // click on "St Lucia" to change campus
-        page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:first-of-type').click();
+        await page.locator('ul[aria-labelledby="add-space-select-campus-label"] li:first-of-type').click();
 
         // the displayed campus, building and floor shown have changed
         await expect(campusSelector.locator('input')).toBeVisible();
@@ -529,5 +540,28 @@ test.describe('Spaces Admin - errors', () => {
         await expect(page.getByTestId('load-space-form-error')).toContainText(
             'Something went wrong - please try again later.',
         );
+    });
+    test('add new space - save fails', async ({ page }) => {
+        await page.goto('/admin/spaces/add?user=libSpaces&responseType=space-create-error');
+        await page.setViewportSize({ width: 1300, height: 1000 });
+        // wait for page to load
+        await expect(page.getByTestId('admin-spaces-page-title').getByText(/Add a new Space/)).toBeVisible();
+
+        const spaceNameField = page.getByTestId('space-name').locator('input');
+        const spaceTypeField = page.getByTestId('add-space-type-new').locator('input');
+
+        await expect(spaceNameField).toBeVisible();
+        await spaceNameField.fill('W12343');
+        await expect(spaceTypeField).toBeVisible();
+        await spaceTypeField.fill('Computer room');
+
+        // click save button
+        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
+
+        // const msg = '[BSAS-001] Sorry, an error occurred - Saving the new Space failed. The admins have been informed.';
+        const msg =
+            'An error has occurred during the request and this request cannot be processed. Please contact webmaster@library.uq.edu.au or try again later.';
+        await assertErrorPopupAppears(page, msg);
     });
 });

@@ -2,7 +2,7 @@ import { expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { ARMUS_SPRINGSHARE_ID, CENTRAL_SPRINGSHARE_ID } from '../../../../src/config/locale';
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
-import { assertToastHasMessage } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
+import { assertDialogToastHasMessage, assertToastHasMessage } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
 
 async function clickDeleteButton(page: Page) {
     const mainDialog = page.getByTestId('main-dialog');
@@ -23,11 +23,11 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(visitManageLocationsButton).not.toBeVisible();
         await expect(page.getByTestId('admin-spaces-menu')).not.toBeVisible();
         await expect(page.getByTestId('admin-spaces-menu-button')).toBeVisible();
-        page.getByTestId('admin-spaces-menu-button').click();
+        await page.getByTestId('admin-spaces-menu-button').click();
         await expect(page.getByTestId('admin-spaces-menu')).toBeVisible();
         await expect(visitManageLocationsButton).toBeVisible();
 
-        visitManageLocationsButton.click();
+        await visitManageLocationsButton.click();
         await expect(page).toHaveURL('http://localhost:2020/admin/spaces/manage/locations?user=libSpaces');
     });
 });
@@ -98,7 +98,7 @@ test.describe('Spaces Location admin', () => {
 
             // save without entering anything in the form
             await page.getByTestId('dialog-save-button').click();
-            await assertToastHasMessage(page, 'Please enter campus name and number');
+            await assertDialogToastHasMessage(page, 'Please enter campus name and number');
         });
         test('validates properly - campus number field empty gives an error', async ({ page }) => {
             await assertCanOpenAddNewCampusDialog(page);
@@ -111,7 +111,7 @@ test.describe('Spaces Location admin', () => {
                 .fill('name of new campus');
             await page.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Please enter campus name and number');
+            await assertDialogToastHasMessage(page, 'Please enter campus name and number');
         });
         test('validates properly - campus name field empty gives an error', async ({ page }) => {
             await assertCanOpenAddNewCampusDialog(page);
@@ -123,7 +123,7 @@ test.describe('Spaces Location admin', () => {
                 .locator('input')
                 .fill('number of new campus');
             await page.getByTestId('dialog-save-button').click();
-            await assertToastHasMessage(page, 'Please enter campus name and number');
+            await assertDialogToastHasMessage(page, 'Please enter campus name and number');
         });
         test('can save with valid campus data', async ({ page, context }) => {
             await setTestDataCookie(context, page);
@@ -212,7 +212,7 @@ test.describe('Spaces Location admin', () => {
                 .clear();
             await dialog.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Please enter campus name and number');
+            await assertDialogToastHasMessage(page, 'Please enter campus name and number');
         });
         test('validates properly - number field empty gives an error', async ({ page }) => {
             await assertCanOpenEditCampusDialog(page, 1);
@@ -224,7 +224,7 @@ test.describe('Spaces Location admin', () => {
                 .clear();
             await dialog.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Please enter campus name and number');
+            await assertDialogToastHasMessage(page, 'Please enter campus name and number');
         });
         test('validates properly - both fields empty gives an error', async ({ page }) => {
             await assertCanOpenEditCampusDialog(page, 1);
@@ -240,7 +240,7 @@ test.describe('Spaces Location admin', () => {
                 .clear();
             await dialog.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Please enter campus name and number');
+            await assertDialogToastHasMessage(page, 'Please enter campus name and number');
         });
         test('can save changes to a campus', async ({ page, context }) => {
             await setTestDataCookie(context, page);
@@ -373,7 +373,7 @@ test.describe('Spaces Location admin', () => {
 
             // save without entering anything in the form
             await dialog.getByTestId('dialog-save-button').click();
-            await assertToastHasMessage(page, 'Please enter building name and number');
+            await assertDialogToastHasMessage(page, 'Please enter building name and number');
         });
         test('validates properly for invalid library fields', async ({ page }) => {
             await assertCanOpenAddLibraryDialog(page);
@@ -381,7 +381,7 @@ test.describe('Spaces Location admin', () => {
 
             // save without entering anything in the form
             await dialog.getByTestId('dialog-save-button').click();
-            await assertToastHasMessage(page, 'Please enter building name and number');
+            await assertDialogToastHasMessage(page, 'Please enter building name and number');
         });
         test('validates properly for two empty building fields', async ({ page }) => {
             await assertCanOpenAddLibraryDialog(page);
@@ -389,7 +389,7 @@ test.describe('Spaces Location admin', () => {
 
             // save without entering anything in the form
             await dialog.getByTestId('dialog-save-button').click();
-            await assertToastHasMessage(page, 'Please enter building name and number');
+            await assertDialogToastHasMessage(page, 'Please enter building name and number');
         });
         test('validates properly - building number field empty gives an error', async ({ page }) => {
             await assertCanOpenAddLibraryDialog(page);
@@ -403,7 +403,7 @@ test.describe('Spaces Location admin', () => {
                 .fill('name of new building');
             await dialog.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Please enter building name and number');
+            await assertDialogToastHasMessage(page, 'Please enter building name and number');
         });
         test('validates properly - building name field empty gives an error', async ({ page }) => {
             await assertCanOpenAddLibraryDialog(page);
@@ -416,7 +416,7 @@ test.describe('Spaces Location admin', () => {
                 .locator('input')
                 .fill('number of new building');
             await dialog.getByTestId('dialog-save-button').click();
-            await assertToastHasMessage(page, 'Please enter building name and number');
+            await assertDialogToastHasMessage(page, 'Please enter building name and number');
         });
         test('can save with valid building data', async ({ page, context }) => {
             await setTestDataCookie(context, page);
@@ -588,7 +588,7 @@ test.describe('Spaces Location admin', () => {
                 .clear();
             await dialog.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Please enter the Library name');
+            await assertDialogToastHasMessage(page, 'Please enter the Library name');
         });
         test('validates properly - building name field empty gives an error', async ({ page }) => {
             await assertCanOpenEditLibraryDialog(page, 1);
@@ -600,7 +600,7 @@ test.describe('Spaces Location admin', () => {
                 .clear();
             await dialog.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Please enter building name and number');
+            await assertDialogToastHasMessage(page, 'Please enter building name and number');
         });
         test('validates properly - building number field empty gives an error', async ({ page }) => {
             await assertCanOpenEditLibraryDialog(page, 1);
@@ -612,7 +612,7 @@ test.describe('Spaces Location admin', () => {
                 .clear();
             await dialog.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Please enter building name and number');
+            await assertDialogToastHasMessage(page, 'Please enter building name and number');
         });
         test('validates properly - all required fields empty gives an error', async ({ page }) => {
             await assertCanOpenEditLibraryDialog(page, 1);
@@ -632,7 +632,10 @@ test.describe('Spaces Location admin', () => {
                 .clear();
             await dialog.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Please enter the Library name; Please enter building name and number');
+            await assertDialogToastHasMessage(
+                page,
+                'Please enter the Library name; Please enter building name and number',
+            );
         });
         test('can save changes to a library', async ({ page, context }) => {
             await setTestDataCookie(context, page);
@@ -732,7 +735,7 @@ test.describe('Spaces Location admin', () => {
 
             // save without entering anything in the form
             await dialog.getByTestId('dialog-save-button').click();
-            await assertToastHasMessage(page, 'Please enter floor name');
+            await assertDialogToastHasMessage(page, 'Please enter floor name');
         });
         test('can save with valid floor data, ground floor not requested', async ({ page, context }) => {
             await setTestDataCookie(context, page);
@@ -926,7 +929,7 @@ test.describe('Spaces Location admin', () => {
                 .clear();
             await dialog.getByTestId('dialog-save-button').click();
 
-            await assertToastHasMessage(page, 'Please enter floor name');
+            await assertDialogToastHasMessage(page, 'Please enter floor name');
         });
         test('can save changes to a floor', async ({ page, context }) => {
             await setTestDataCookie(context, page);
@@ -1058,7 +1061,7 @@ test.describe('Spaces Location admin', () => {
         await expect(visitDashBoardButton).not.toBeVisible();
         await expect(page.getByTestId('admin-spaces-menu')).not.toBeVisible();
         await expect(page.getByTestId('admin-spaces-menu-button')).toBeVisible();
-        page.getByTestId('admin-spaces-menu-button').click();
+        await page.getByTestId('admin-spaces-menu-button').click();
         await expect(page.getByTestId('admin-spaces-menu')).toBeVisible();
         await expect(visitDashBoardButton).toBeVisible();
 

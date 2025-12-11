@@ -13,7 +13,6 @@ import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import { EditSpaceForm } from '../EditSpaceForm';
 import {
     addBreadcrumbsToSiteHeader,
-    displayToastErrorMessage,
     initialisedSpringshareList,
     spacesAdminLink,
     validCampusList,
@@ -138,22 +137,13 @@ export const BookableSpacesAddSpace = ({
     }, [weeklyHoursLoading, weeklyHoursError, weeklyHours]);
 
     const createNewSpace = valuesToSend => {
+        console.log('createNewSpace valuesToSend=', valuesToSend);
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
-        actions
-            .addBookableSpaceLocation(valuesToSend, 'space')
-            .then(() => {
-                // a pop up confirmation is displayed, because this is a big change!
-            })
-            .catch(e => {
-                console.log('catch: adding new space failed:', e);
-                displayToastErrorMessage(
-                    '[BSAS-001] Sorry, an error occurred - Saving the new Space failed. The admins have been informed.',
-                );
-            });
+        actions.addBookableSpaceLocation(valuesToSend, 'space');
     };
 
     if (!!bookableSpacesRoomListLoading || !!campusListLoading || !formValues?.campus_id) {
@@ -204,29 +194,31 @@ export const BookableSpacesAddSpace = ({
         );
     } else {
         return (
-            <EditSpaceForm
-                actions={actions}
-                bookableSpacesRoomAdding={bookableSpacesRoomAdding}
-                bookableSpacesRoomAddError={bookableSpacesRoomAddError}
-                bookableSpacesRoomAddResult={bookableSpacesRoomAddResult}
-                campusList={campusList}
-                bookableSpacesRoomList={bookableSpacesRoomList}
-                bookableSpacesRoomListLoading={bookableSpacesRoomListLoading}
-                bookableSpacesRoomListError={bookableSpacesRoomListError}
-                weeklyHours={weeklyHours}
-                weeklyHoursLoading={weeklyHoursLoading}
-                weeklyHoursError={weeklyHoursError}
-                facilityTypeList={facilityTypeList}
-                facilityTypeListLoading={facilityTypeListLoading}
-                facilityTypeListError={facilityTypeListError}
-                formValues={formValues}
-                setFormValues={setFormValues}
-                saveToDb={createNewSpace}
-                PageWrapper={PageWrapper}
-                springshareList={springshareList}
-                currentCampusList={currentCampusList}
-                mode="add"
-            />
+            <>
+                <EditSpaceForm
+                    actions={actions}
+                    bookableSpacesRoomAdding={bookableSpacesRoomAdding}
+                    bookableSpacesRoomAddError={bookableSpacesRoomAddError}
+                    bookableSpacesRoomAddResult={bookableSpacesRoomAddResult}
+                    campusList={campusList}
+                    bookableSpacesRoomList={bookableSpacesRoomList}
+                    bookableSpacesRoomListLoading={bookableSpacesRoomListLoading}
+                    bookableSpacesRoomListError={bookableSpacesRoomListError}
+                    weeklyHours={weeklyHours}
+                    weeklyHoursLoading={weeklyHoursLoading}
+                    weeklyHoursError={weeklyHoursError}
+                    facilityTypeList={facilityTypeList}
+                    facilityTypeListLoading={facilityTypeListLoading}
+                    facilityTypeListError={facilityTypeListError}
+                    formValues={formValues}
+                    setFormValues={setFormValues}
+                    saveToDb={createNewSpace}
+                    PageWrapper={PageWrapper}
+                    springshareList={springshareList}
+                    currentCampusList={currentCampusList}
+                    mode="add"
+                />
+            </>
         );
     }
 };
