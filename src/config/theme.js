@@ -4,7 +4,7 @@ import { renderTimeViewClock } from '@mui/x-date-pickers';
 
 const palette = {
     primary: {
-        light: '#51247A', // uqpurple
+        light: '#51247A', // avoid, use .main instead
         main: '#51247A', // uqpurple
         dark: '#195794',
         gradient: {
@@ -24,8 +24,8 @@ const palette = {
     },
     secondary: {
         light: '#595959',
-        main: '#3B383E', // design system grey-900
-        dark: '#19151c', // design system $black
+        main: '#3B383E', // avoid. use designSystem.bodyCopy instead
+        dark: '#19151c', // avoid. use designSystem.headingColor instead
     },
     accent: {
         light: '#962A8B',
@@ -53,9 +53,13 @@ const palette = {
     // https://design-system.uq.edu.au/storybook-html/index.html?path=/docs/core-colour--docs
     designSystem: {
         borderColor: '#dcdcdd', // $grey-200
+        border: '1px solid #dcdcdd',
         deemphasisedText: '#757377', // $grey-700
         panelBackgroundColor: '#f3f3f4', // $grey-50
-        brandColor: '#51247a',
+        headingColor: '#19151c', // $black
+        bodyCopy: '#3b383e', // $grey-900
+        disabledText: '#d1d0d2', // $grey-300
+        warningYellow: '#fef8e8', // $warning-50 Background for warning alerts
     },
 };
 
