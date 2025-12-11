@@ -16,11 +16,11 @@ test.describe('Spaces Admin - manage facility types', () => {
         await expect(visitManageLocationsButton).not.toBeVisible();
         await expect(page.getByTestId('admin-spaces-menu')).not.toBeVisible();
         await expect(page.getByTestId('admin-spaces-menu-button')).toBeVisible();
-        page.getByTestId('admin-spaces-menu-button').click();
+        await page.getByTestId('admin-spaces-menu-button').click();
         await expect(page.getByTestId('admin-spaces-menu')).toBeVisible();
         await expect(visitManageLocationsButton).toBeVisible();
 
-        visitManageLocationsButton.click();
+        await visitManageLocationsButton.click();
         await expect(page).toHaveURL('http://localhost:2020/admin/spaces/manage/facilitytypes?user=libSpaces');
     });
 });

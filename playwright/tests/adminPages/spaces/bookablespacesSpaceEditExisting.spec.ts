@@ -14,7 +14,7 @@ test.describe('Spaces Admin - edit spaces', () => {
         const editButton1 = page.getByTestId('edit-space-123456-button');
 
         await expect(editButton1).toBeVisible();
-        editButton1.click();
+        await editButton1.click();
 
         await expect(page).toHaveURL('http://localhost:2020/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
     });
@@ -287,8 +287,8 @@ test.describe('Spaces Admin - edit space', () => {
 
         await expect(page.getByTestId('add-space-springshare-id').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-springshare-id')).toContainText('Walter Harrison Law');
-        page.getByTestId('add-space-springshare-id').click();
-        page.locator('ul[aria-labelledby="add-space-springshare-id-label"] li:first-of-type').click();
+        await page.getByTestId('add-space-springshare-id').click();
+        await page.locator('ul[aria-labelledby="add-space-springshare-id-label"] li:first-of-type').click();
         await expect(page.getByTestId('add-space-springshare-id')).toContainText(
             'No Springshare opening hours will display',
         );
@@ -316,7 +316,7 @@ test.describe('Spaces Admin - edit space', () => {
 
         // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        page.getByTestId('admin-spaces-save-button-submit').click();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
 
         await expect(page.getByTestId('message-title')).toBeVisible();
         await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
@@ -343,13 +343,14 @@ test.describe('Spaces Admin - edit space', () => {
     test('can re-edit after save', async ({ page }) => {
         // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        page.getByTestId('admin-spaces-save-button-submit').click();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
 
         // change the title so when we reload the page from "edit again" we can check the page has actually reloaded
         // by showing the immmutable mock data has reverted
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-name').locator('input')).toHaveValue('01-W431');
-        page.getByTestId('space-name')
+        await page
+            .getByTestId('space-name')
             .locator('input')
             .fill('New space name');
 
@@ -359,7 +360,7 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('confirm-spaces-save-outcome')).toContainText('Return to dashboard');
         await expect(page.getByTestId('cancel-spaces-save-outcome')).toBeVisible();
         await expect(page.getByTestId('cancel-spaces-save-outcome')).toContainText('Edit record again');
-        page.getByTestId('cancel-spaces-save-outcome').click();
+        await page.getByTestId('cancel-spaces-save-outcome').click();
 
         await expect(page.getByTestId('message-title')).not.toBeVisible();
         await expect(page).toHaveURL('http://localhost:2020/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
@@ -370,7 +371,7 @@ test.describe('Spaces Admin - edit space', () => {
     test('can return to dashboard after save', async ({ page }) => {
         // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        page.getByTestId('admin-spaces-save-button-submit').click();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
 
         await expect(page.getByTestId('message-title')).toBeVisible();
         await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
@@ -378,7 +379,7 @@ test.describe('Spaces Admin - edit space', () => {
         await expect(page.getByTestId('confirm-spaces-save-outcome')).toContainText('Return to dashboard');
         await expect(page.getByTestId('cancel-spaces-save-outcome')).toBeVisible();
         await expect(page.getByTestId('cancel-spaces-save-outcome')).toContainText('Edit record again');
-        page.getByTestId('confirm-spaces-save-outcome').click();
+        await page.getByTestId('confirm-spaces-save-outcome').click();
 
         await expect(page.getByTestId('message-title')).not.toBeVisible();
         await expect(page).toHaveURL('http://localhost:2020/admin/spaces?user=libSpaces');
@@ -387,16 +388,18 @@ test.describe('Spaces Admin - edit space', () => {
         await setTestDataCookie(context, page);
 
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
-        page.getByTestId('space-name')
+        await page
+            .getByTestId('space-name')
             .locator('input')
             .fill('New space name');
 
         await expect(page.getByTestId('add-space-type-new').locator('input')).toBeVisible();
-        page.getByTestId('add-space-type-new')
+        await page
+            .getByTestId('add-space-type-new')
             .locator('input')
             .fill('New space type');
         await page.keyboard.press('Tab');
-        page.getByTestId('add-space-description').click(); // the Tab doesn't always seem to work - but clicking away is another valid way to blue the previous field
+        await page.getByTestId('add-space-description').click(); // the Tab doesn't always seem to work - but clicking away is another valid way to blue the previous field
         await expect(page.getByTestId('add-space-description')).toBeFocused();
 
         // the "new space type" field auto clears on blur, and the select preloads
@@ -481,7 +484,7 @@ test.describe('Spaces Admin - edit space', () => {
 
         // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        page.getByTestId('admin-spaces-save-button-submit').click();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
 
         await expect(page.getByTestId('message-title')).toBeVisible();
         await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
@@ -508,7 +511,7 @@ test.describe('Spaces Admin - edit space', () => {
 
     test('edit spaces page save dialog is accessible', async ({ page }) => {
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        page.getByTestId('admin-spaces-save-button-submit').click();
+        await page.getByTestId('admin-spaces-save-button-submit').click();
 
         await expect(page.getByTestId('message-title')).toBeVisible();
         await expect(page.getByTestId('message-title')).toContainText('The Space has been updated');
