@@ -140,3 +140,9 @@ export const assertExpectedDataSentToServer = async (page: Page, expectedValues:
     // console.log('expectedValues=', expectedValues);
     expect(sentValues).toEqual(expectedValues);
 };
+
+export const assertEnabled = async (page: Page, selector: string) => expect(page.locator(selector)).toBeEnabled();
+export const assertDisabled = async (page: Page, selector: string) => expect(page.locator(selector)).toBeDisabled();
+export const assertChecked = async (page: Page, selector: string) => expect(page.locator(selector)).toBeChecked();
+export const assertNotChecked = async (page: Page, selector: string) =>
+    expect(page.locator(selector)).not.toBeChecked();

@@ -77,6 +77,11 @@ const StyledInputListItem = styled('li')(({ theme }) => ({
     '& label': {
         ...standardText(theme),
         display: 'inline',
+        '& span:last-of-type': {
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+        },
     },
     // when we hover or focus on the reject-checkbox, style the label to be orange
     '&:hover label.rejectedFacilityTypeLabel': visibleRejectedCheckbox,
@@ -112,6 +117,7 @@ const StyledSidebarGridItem = styled(Grid)(() => ({
     paddingInline: '1em',
     marginBlock: '1em',
     direction: 'rtl', // put the scroll bar on the left
+    paddingRight: 0,
     '& > div': {
         direction: 'ltr',
     },

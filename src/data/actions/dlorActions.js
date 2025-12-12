@@ -39,6 +39,7 @@ import {
     DLOR_KEYWORDS_UPDATE_API,
     DLOR_KEYWORDS_DESTROY_API,
     DLOR_STATISTICS_API,
+    DLOR_REQUEST_KEYWORD_API,
 } from 'repositories/routes';
 import { checkExpireSession } from './actionhelpers';
 
@@ -857,6 +858,30 @@ export function loadDlorStatistics() {
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
+            });
+    };
+}
+// request for new keyword email action
+export function requestNewKeyword(request) {
+    console.log('request new keyword called', request);
+    return dispatch => {
+        dispatch({ type: actions.DLOR_KEYWORDS_UPDATING });
+        return post(DLOR_REQUEST_KEYWORD_API(), request)
+            .then(response => {
+                console.log('KEYWORD RESPONSE', response);
+                dispatch({
+                    type: actions.DLOR_KEYWORDS_UPDATED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                console.log('TESTING');
+                dispatch({
+                    type: actions.DLOR_KEYWORDS_UPDATE_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+                throw error;
             });
     };
 }

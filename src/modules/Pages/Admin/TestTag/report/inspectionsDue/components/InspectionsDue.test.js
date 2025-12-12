@@ -161,7 +161,9 @@ describe('InspectionsDue', () => {
         const getInspectionsDueFn = jest.fn();
         const clearFloorsFn = jest.fn();
         const { getByText, getByTestId, getByRole } = setup({
-            state: { testTagLocationReducer: { ...defaultLocationState, siteListLoaded: true, floorListLoaded: true } },
+            state: {
+                testTagLocationReducer: { ...defaultLocationState, siteListLoaded: false, floorListLoaded: true },
+            },
             actions: { loadSites: loadSitesFn, getInspectionsDue: getInspectionsDueFn, clearFloors: clearFloorsFn },
         });
         expect(loadSitesFn).toHaveBeenCalled();
