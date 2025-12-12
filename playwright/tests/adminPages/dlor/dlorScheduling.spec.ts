@@ -92,10 +92,10 @@ test.describe('Digital Learning Hub', () => {
             );
         });
         test('can edit existing schedule', async ({ page }) => {
-            await page.getByTestId('ExpandMoreIcon').click();
-            await page.getByTestId('existing-schedule-edit-button-0').click();
+            await page.locator('[data-testid="pending-schedule-expand"] > svg').click();
+            await page.getByTestId('pending-schedule-edit-button-0').click();
             await page.getByTestId('schedule-close-button').click();
-            await page.getByTestId('existing-schedule-edit-button-0').click();
+            await page.getByTestId('pending-schedule-edit-button-0').click();
             await page.getByTestId('add-schedule-item-0').click();
             await page.getByTestId('modal-save-button').click();
             await expect(page.locator('[data-testid="dlor-schedule-alert-info"] .MuiAlert-message')).toHaveText(
@@ -103,8 +103,8 @@ test.describe('Digital Learning Hub', () => {
             );
         });
         test('can remove existing item from a schedule', async ({ page }) => {
-            await page.getByTestId('ExpandMoreIcon').click();
-            await page.getByTestId('existing-schedule-edit-button-0').click();
+            await page.locator('[data-testid="pending-schedule-expand"] > svg').click();
+            await page.getByTestId('pending-schedule-edit-button-0').click();
             await page.getByTestId('remove-selected-item-0').click();
             await page.getByTestId('add-schedule-item-0').click();
             await page.getByTestId('modal-save-button').click();
@@ -143,8 +143,8 @@ test.describe('Digital Learning Hub', () => {
         });
 
         test('displays Data store error', async ({ page }) => {
-            await page.getByTestId('ExpandMoreIcon').click();
-            await page.getByTestId('existing-schedule-edit-button-1').click();
+            await page.locator('[data-testid="pending-schedule-expand"] > svg').click();
+            await page.getByTestId('pending-schedule-edit-button-1').click();
             await page.getByTestId('modal-save-button').click();
             await expect(page.locator('[data-testid="dlor-schedule-alert-info"] .MuiAlert-message')).toHaveText(
                 'An error has occurred during the request and this request cannot be processed. Please contact webmaster@library.uq.edu.au or try again later.',
@@ -155,8 +155,8 @@ test.describe('Digital Learning Hub', () => {
             page.on('dialog', dialog => {
                 dialog.accept();
             });
-            await page.getByTestId('ExpandMoreIcon').click();
-            await page.getByTestId('existing-schedule-delete-button-0').click();
+            await page.locator('[data-testid="pending-schedule-expand"] > svg').click();
+            await page.getByTestId('pending-schedule-delete-button-0').click();
             await expect(page.locator('[data-testid="dlor-schedule-alert-info"] .MuiAlert-message')).toHaveText(
                 'Schedule deleted successfully',
             );
@@ -167,8 +167,8 @@ test.describe('Digital Learning Hub', () => {
             page.on('dialog', dialog => {
                 dialog.accept();
             });
-            await page.getByTestId('ExpandMoreIcon').click();
-            await page.getByTestId('existing-schedule-delete-button-1').click();
+            await page.locator('[data-testid="pending-schedule-expand"] > svg').click();
+            await page.getByTestId('pending-schedule-delete-button-1').click();
             await expect(page.locator('[data-testid="dlor-schedule-alert-info"] .MuiAlert-message')).toHaveText(
                 'An error has occurred during the request and this request cannot be processed. Please contact webmaster@library.uq.edu.au or try again later.',
             );
@@ -182,11 +182,11 @@ test.describe('Digital Learning Hub', () => {
                 dialog.dismiss();
             });
 
-            await page.getByTestId('ExpandMoreIcon').click();
+            await page.locator('[data-testid="pending-schedule-expand"] > svg').click();
 
-            await page.getByTestId('existing-schedule-delete-button-0').click();
+            await page.getByTestId('pending-schedule-delete-button-0').click();
 
-            await expect(page.locator('[data-testid="existing-schedule-delete-button-0"]')).toBeVisible();
+            await expect(page.locator('[data-testid="pending-schedule-delete-button-0"]')).toBeVisible();
 
             await expect(page.locator('[data-testid="dlor-schedule-alert-info"]')).not.toBeVisible();
         });

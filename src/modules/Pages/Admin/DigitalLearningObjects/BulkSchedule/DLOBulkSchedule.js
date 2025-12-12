@@ -26,6 +26,98 @@ import Snackbar from '@mui/material/Snackbar';
 
 const moment = require('moment-timezone');
 
+// eslint-disable-next-line react/prop-types
+const ScheduleTableSection = ({ title, schedules, onEdit, onDelete, buttonTestIdPrefix }) => (
+    <Accordion sx={{ marginTop: 2 }}>
+        <AccordionSummary
+            expandIcon={
+                <span data-testid={`${buttonTestIdPrefix}-expand`}>
+                    <ExpandMoreIcon />
+                </span>
+            }
+        >
+            <Typography variant="h6" component="h2">
+                {title}
+            </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+            <TableContainer component={Paper}>
+                <Table size="small">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>
+                                <strong>Schedule Name</strong>
+                            </TableCell>
+                            <TableCell>
+                                <strong>Object Count</strong>
+                            </TableCell>
+                            <TableCell>
+                                <strong>Object Status</strong>
+                            </TableCell>
+                            <TableCell>
+                                <strong>Running?</strong>
+                            </TableCell>
+                            <TableCell>
+                                <strong>Start Date</strong>
+                            </TableCell>
+                            <TableCell>
+                                <strong>End Date</strong>
+                            </TableCell>
+                            <TableCell>
+                                <strong>Actions</strong>
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {!!schedules &&
+                            schedules.length > 0 &&
+                            schedules.map((schedule, index) => (
+                                <TableRow key={schedule.schedule_id}>
+                                    <TableCell sx={{ wordBreak: 'break-word' }}>{schedule.schedule_name}</TableCell>
+                                    <TableCell>{schedule.object_count}</TableCell>
+                                    <TableCell>Featured</TableCell>
+                                    <TableCell>{schedule.schedule_running ? 'Running' : 'Not Running'}</TableCell>
+                                    <TableCell>
+                                        {moment
+                                            .tz(schedule.schedule_start_date, 'YYYY-MM-DD', 'Australia/Brisbane')
+                                            .format('DD-MM-YYYY')}
+                                    </TableCell>
+                                    <TableCell>
+                                        {moment
+                                            .tz(schedule.schedule_end_date, 'YYYY-MM-DD', 'Australia/Brisbane')
+                                            .format('DD-MM-YYYY')}
+                                    </TableCell>
+                                    <TableCell>
+                                        <IconButton
+                                            data-testid={`${buttonTestIdPrefix}-edit-button-${index}`}
+                                            data-analyticsid={`${buttonTestIdPrefix}-edit-button-${index}`}
+                                            onClick={() => onEdit(schedule)}
+                                            aria-label={`Click to edit schedule: ${schedule.schedule_name}`}
+                                            size="large"
+                                            disabled={schedule.schedule_running}
+                                        >
+                                            <EditIcon fontSize="small" />
+                                        </IconButton>
+                                        <IconButton
+                                            data-testid={`${buttonTestIdPrefix}-delete-button-${index}`}
+                                            data-analyticsid={`${buttonTestIdPrefix}-delete-button-${index}`}
+                                            onClick={() => onDelete(schedule.schedule_id)}
+                                            aria-label={`Click to delete schedule: ${schedule.schedule_name}`}
+                                            size="large"
+                                            disabled={schedule.schedule_running}
+                                        >
+                                            <DeleteIcon fontSize="small" />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </AccordionDetails>
+    </Accordion>
+);
+
 export const DLOBulkSchedule = ({
     actions,
     dlorList,
@@ -53,6 +145,10 @@ export const DLOBulkSchedule = ({
     const [scheduleItems, setScheduleItems] = React.useState([]);
     const [editingScheduleId, setEditingScheduleId] = React.useState(null);
     const [formMessage, setFormMessage] = React.useState(null);
+
+    const [runningSchedules, setRunningSchedules] = React.useState([]);
+    const [pendingSchedules, setPendingSchedules] = React.useState([]);
+    const [completedSchedules, setCompletedSchedules] = React.useState([]);
 
     const [isAlertOpen, setIsAlertOpen] = React.useState(false);
 
@@ -85,6 +181,27 @@ export const DLOBulkSchedule = ({
         if (!dlorScheduleError && !dlorScheduleLoading && !dlorSchedule) {
             actions.loadDLORSchedules();
         }
+        setRunningSchedules(
+            dlorSchedule
+                ? dlorSchedule.filter(s => {
+                      return s.schedule_running;
+                  })
+                : [],
+        );
+        setPendingSchedules(
+            dlorSchedule
+                ? dlorSchedule.filter(s => {
+                      return !s.schedule_running && !s.schedule_processed;
+                  })
+                : [],
+        );
+        setCompletedSchedules(
+            dlorSchedule
+                ? dlorSchedule.filter(s => {
+                      return !s.schedule_running && s.schedule_processed;
+                  })
+                : [],
+        );
     }, [dlorScheduleError, dlorScheduleLoading, dlorSchedule, actions]);
 
     const handleChange = prop => e => {
@@ -384,94 +501,35 @@ export const DLOBulkSchedule = ({
                     </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                    <Accordion sx={{ marginTop: 2 }}>
-                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            <Typography variant="h6" component="h2">
-                                Existing Schedules
-                            </Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <TableContainer component={Paper}>
-                                <Table size="small">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>
-                                                <strong>Schedule Name</strong>
-                                            </TableCell>
-                                            <TableCell>
-                                                <strong>Object Count</strong>
-                                            </TableCell>
-                                            <TableCell>
-                                                <strong>Schedule Status</strong>
-                                            </TableCell>
-                                            <TableCell>
-                                                <strong>Start Date</strong>
-                                            </TableCell>
-                                            <TableCell>
-                                                <strong>End Date</strong>
-                                            </TableCell>
-                                            <TableCell>
-                                                <strong>Actions</strong>
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {!!dlorSchedule &&
-                                            dlorSchedule.length > 0 &&
-                                            dlorSchedule.map((schedule, index) => (
-                                                <TableRow key={schedule.schedule_id}>
-                                                    <TableCell sx={{ wordBreak: 'break-word' }}>
-                                                        {schedule.schedule_name}{' '}
-                                                    </TableCell>
-                                                    <TableCell>{schedule.object_count}</TableCell>
-                                                    <TableCell>Featured</TableCell>
-                                                    <TableCell>
-                                                        {moment
-                                                            .tz(
-                                                                schedule.schedule_start_date,
-                                                                'YYYY-MM-DD',
-                                                                'Australia/Brisbane',
-                                                            )
-                                                            .format('DD-MM-YYYY')}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {moment
-                                                            .tz(
-                                                                schedule.schedule_end_date,
-                                                                'YYYY-MM-DD',
-                                                                'Australia/Brisbane',
-                                                            )
-                                                            .format('DD-MM-YYYY')}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <IconButton
-                                                            data-testid={`existing-schedule-edit-button-${index}`}
-                                                            data-analyticsid={`existing-schedule-edit-button-${index}`}
-                                                            onClick={() => editExistingSchedule(schedule)}
-                                                            aria-label={`Click to edit schedule: ${schedule.schedule_name}`}
-                                                            size="large"
-                                                        >
-                                                            <EditIcon fontSize="small" />
-                                                        </IconButton>
-                                                        <IconButton
-                                                            data-testid={`existing-schedule-delete-button-${index}`}
-                                                            data-analyticsid={`existing-schedule-delete-button-${index}`}
-                                                            onClick={() => {
-                                                                handleDeleteSchedule(schedule.schedule_id);
-                                                            }}
-                                                            aria-label={`Click to delete schedule: ${schedule.schedule_name}`}
-                                                            size="large"
-                                                        >
-                                                            <DeleteIcon fontSize="small" />
-                                                        </IconButton>
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </AccordionDetails>
-                    </Accordion>
+                    {runningSchedules.length > 0 && (
+                        <ScheduleTableSection
+                            title="Running Schedules"
+                            schedules={runningSchedules}
+                            onEdit={editExistingSchedule}
+                            onDelete={handleDeleteSchedule}
+                            buttonTestIdPrefix="running-schedule"
+                        />
+                    )}
+
+                    {pendingSchedules.length > 0 && (
+                        <ScheduleTableSection
+                            title="Pending Schedules"
+                            schedules={pendingSchedules}
+                            onEdit={editExistingSchedule}
+                            onDelete={handleDeleteSchedule}
+                            buttonTestIdPrefix="pending-schedule"
+                        />
+                    )}
+
+                    {completedSchedules.length > 0 && (
+                        <ScheduleTableSection
+                            title="Completed Schedules"
+                            schedules={completedSchedules}
+                            onEdit={editExistingSchedule}
+                            onDelete={handleDeleteSchedule}
+                            buttonTestIdPrefix="completed-schedule"
+                        />
+                    )}
                 </Grid>
             </StandardPage>
             <Snackbar
