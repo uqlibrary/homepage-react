@@ -55,6 +55,22 @@ test.describe('Spaces', () => {
         );
         await expect(page.getByTestId(`${LIVERIS}-summary-info`)).toBeVisible();
         await expect(page.getByTestId(`${LIVERIS}-summary-info`)).toContainText('Open from 7am Monday - Friday');
+        await expect(page.getByTestId(`space-1-summary-info`)).toBeVisible();
+        await expect(page.getByTestId(`space-1-summary-info`)).toContainText(
+            'Architecture and Music Library opening hours - Today: 7:30am - 7:30pm',
+        );
+        await expect(page.getByTestId(`space-2-summary-info`)).toBeVisible();
+        await expect(page.getByTestId(`space-2-summary-info`)).toContainText(
+            'Architecture and Music Library opening hours - Today: 7:30am - 7:30pm',
+        );
+        await expect(page.getByTestId(`space-3-summary-info`)).not.toBeVisible();
+        await expect(page.getByTestId(`space-4-summary-info`)).toBeVisible();
+        await expect(page.getByTestId(`space-4-summary-info`)).toContainText(
+            'Architecture and Music Library opening hours - Today: 7:30am - 7:30pm',
+        );
+        await expect(page.getByTestId(`space-5-summary-info`)).not.toBeVisible();
+        await expect(page.getByTestId(`space-6-summary-info`)).not.toBeVisible();
+        await expect(page.getByTestId(`space-7-summary-info`)).not.toBeVisible();
 
         // the first and second opening hours are labelled 'today' and 'tomorrow' (but are initially hidden under the fold)
         // (fold opening tested elsewhere)

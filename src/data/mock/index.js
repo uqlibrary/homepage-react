@@ -1757,9 +1757,10 @@ function filterExamPaperListByPattern(data, pattern) {
 
 function resetWeeklyHourDatesToBeCurrent(jsonData) {
     // reset the mock data so it is data for this week, so we can label them "today" and "tomorrow"
-    const today = new Date();
-    const currentMonday = new Date(today);
-    currentMonday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+    const today = new Date(new Date().toUTCString());
+    const currentMonday = new Date(new Date().toUTCString());
+    const currentDayIndex = today.getDate();
+    currentMonday.setDate(currentDayIndex - ((currentDayIndex + 6) % 7));
 
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
