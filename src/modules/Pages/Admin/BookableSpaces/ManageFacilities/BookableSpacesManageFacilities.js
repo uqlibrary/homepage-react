@@ -142,7 +142,7 @@ const StyledDraggableListItem = styled('li')(({ theme }) => ({
     },
 }));
 
-const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, handleDelete }) => {
+const DraggableListItem = React.memo(({ item, index, moveItem }) => {
     const ref = React.useRef(null);
     const [, drop] = useDrop({
         accept: 'LIST_ITEM',
@@ -166,16 +166,17 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
     drag(drop(ref));
 
     return (
-        <StyledDraggableListItem
-            style={{ opacity: isDragging ? 0.5 : 1 }}
-            ref={ref}
-            data-testid={`spaces-facility-group-edit-draggable-title-${item?.facility_type_group_id}`}
-        >
+        <StyledDraggableListItem style={{ opacity: isDragging ? 0.5 : 1 }} ref={ref}>
             <DragIndicatorIcon />
             <span>{item?.facility_type_group_name}</span>
         </StyledDraggableListItem>
     );
 });
+DraggableListItem.propTypes = {
+    item: PropTypes.object,
+    index: PropTypes.integer,
+    moveItem: PropTypes.func,
+};
 
 export const BookableSpacesManageFacilities = ({
     actions,
@@ -195,6 +196,7 @@ export const BookableSpacesManageFacilities = ({
 }) => {
     console.log('TOP ===');
     console.log('TOP load facilityTypeList', facilityTypeList, facilityTypeListLoading, facilityTypeListError);
+    console.log('TOP updateGroupOrder initial=', facilityTypeList?.data?.facility_type_groups);
     console.log(
         'TOP load facilityTypeAdding loading=',
         facilityTypeAdding,
@@ -250,10 +252,11 @@ export const BookableSpacesManageFacilities = ({
     const updateGroupOrder = valuesToSend => {
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            console.log('SET COOKIE', valuesToSend);
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
-        console.log('updateGroupOrder', valuesToSend);
+        console.log('updateGroupOrder', [...valuesToSend]);
         setOverlayLoader(true);
         setTimeout(() => {
             actions
@@ -269,7 +272,7 @@ export const BookableSpacesManageFacilities = ({
                     );
                 })
                 .finally(() => {
-                    console.log('updateGroupOrder finally');
+                    console.log('updateGroupOrder finally', [...valuesToSend]);
                     // Reload facility types only once after all operations complete
                     actions.loadAllFacilityTypes();
                 });
@@ -876,27 +879,31 @@ export const BookableSpacesManageFacilities = ({
         );
     };
 
-    // const handleChange = prop => e => {
-    //     console.log('handleChange', prop, e);
-    //     const theNewValue = e.target.value;
-    //     const newValues = { ...formValues, [prop]: theNewValue };
-    //     setSortList({ data: newValues, update: true });
-    // };
-
     const moveItem = (fromIndex, toIndex) => {
-        console.log('moveItem', fromIndex, toIndex);
         const newSortList = [...sortList];
-        const [movedItem] = newSortList.splice(fromIndex, 1);
-        newSortList.splice(toIndex, 0, movedItem);
 
-        newSortList.forEach((item, index) => {
-            return {
-                facility_type_group_id: item.facility_type_group_id,
-                facility_type_group_order: (item.facility_type_group_order = index + 1),
-            };
+        const sourceItemIndex = newSortList.findIndex(item => item.facility_type_group_order === fromIndex);
+        if (sourceItemIndex === -1) {
+            console.warn(`Item with facility_type_group_order ${fromIndex} not found`);
+            return;
+        }
+
+        const [sourceItem] = newSortList.splice(sourceItemIndex, 1);
+
+        newSortList.push({
+            facility_type_group_id: sourceItem.facility_type_group_id,
+            facility_type_group_order: toIndex === 1 ? 0 : toIndex,
         });
 
-        setSortList({ data: newSortList, update: true });
+        newSortList.sort((a, b) => a.facility_type_group_order - b.facility_type_group_order);
+
+        newSortList.forEach((item, index) => {
+            item.facility_type_group_order = index;
+        });
+
+        const result = [...newSortList].sort((a, b) => a.facility_type_group_order - b.facility_type_group_order);
+
+        setSortList({ data: result, update: true });
     };
 
     return (
@@ -971,13 +978,14 @@ export const BookableSpacesManageFacilities = ({
                                         <Typography component={'h3'} variant={'h6'}>
                                             Sort Filter group types
                                         </Typography>
+                                        <Typography component={'p'}>
+                                            Tip: drag the Group name <i>onto</i> the group you want it to appear just
+                                            above
+                                        </Typography>
                                         <Grid container style={{ marginBottom: '2rem' }}>
                                             <Grid item xs={12}>
                                                 <DndProvider backend={HTML5Backend}>
                                                     <div data-testid="spaces-dragLandingAarea">
-                                                        {facilityTypeList?.data?.facility_type_groups?.length === 0 && (
-                                                            <p>(None yet)</p>
-                                                        )}
                                                         <ul>
                                                             {facilityTypeList?.data?.facility_type_groups
                                                                 ?.sort(
