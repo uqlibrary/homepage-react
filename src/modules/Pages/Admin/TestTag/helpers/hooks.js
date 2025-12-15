@@ -1,6 +1,21 @@
-import { useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux';
+
+import { getUserPermissions } from './auth';
 
 const moment = require('moment');
+
+export const useAccountUser = () => {
+    const { account = {}, accountLoading = false } = useSelector(state => state.get('accountReducer')) || {};
+    const privilege = useMemo(() => getUserPermissions(account?.tnt?.privileges || {}), [account?.tnt?.privileges]);
+    return {
+        user: account?.tnt || null,
+        userLoading: accountLoading,
+        userLoaded: !accountLoading && !!account?.tnt,
+        userError: !accountLoading && account?.tnt === null,
+        privilege,
+    };
+};
 
 export const useLocation = (defaultSiteId = -1, defaultBuildingId = -1, defaultFloorId = -1, defaultRoomId = -1) => {
     const [location, _setLocation] = useState({
@@ -15,19 +30,22 @@ export const useLocation = (defaultSiteId = -1, defaultBuildingId = -1, defaultF
     };
     return { location, setLocation };
 };
+
+export const FormContext = createContext(null);
 export const useForm = (
     /* istanbul ignore next */ { defaultValues = {}, defaultDateFormat = 'YYYY-MM-DD HH:mm' } = {},
 ) => {
     const [formValues, setFormValues] = useState({ ...defaultValues });
 
+    const encodedSignature = JSON.stringify(formValues);
+    const signature = useMemo(() => encodedSignature, [encodedSignature]);
+
     const handleChange = prop => event => {
         let propValue = event?.target?.value ?? event;
-        if (prop.indexOf('date') > -1) {
+        if (prop?.indexOf('date') > -1) {
             propValue = moment(propValue).format(defaultDateFormat);
         }
-        setFormValues(prevState => {
-            return { ...prevState, [prop]: propValue };
-        });
+        setFormValues(prevState => ({ ...prevState, [prop]: propValue }));
     };
 
     const resetFormValues = newFormValues => {
@@ -35,7 +53,7 @@ export const useForm = (
         setFormValues(newValues);
     };
 
-    return { formValues, resetFormValues, handleChange };
+    return { formValues, resetFormValues, handleChange, signature };
 };
 
 export const useObjectList = (list = [], transform, options = {}) => {
@@ -80,7 +98,11 @@ export const useObjectList = (list = [], transform, options = {}) => {
         _setData([]);
     };
 
-    return { data, addAt, addStart, addEnd, deleteAt, deleteWith, clear };
+    const importTransformedData = newData => {
+        _setData(prev => [...prev, ...newData]);
+    };
+
+    return { data, addAt, addStart, addEnd, deleteAt, deleteWith, clear, importTransformedData };
 };
 
 export const useConfirmationAlert = ({ duration, onClose = null, errorMessage = null, errorMessageFormatter }) => {

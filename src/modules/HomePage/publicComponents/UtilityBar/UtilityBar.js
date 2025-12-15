@@ -36,7 +36,7 @@ const StyledButtonAreaDiv = styled('div')(({ theme }) => ({
 }));
 
 const StyledBookingLink = styled(Link)(({ theme }) => ({
-    textDecorationColor: theme.palette.primary.light,
+    textDecorationColor: theme.palette.primary.main,
     fontSize: '16px',
     height: '30px',
     '&:hover': {
@@ -45,19 +45,19 @@ const StyledBookingLink = styled(Link)(({ theme }) => ({
     '& span': {
         fontSize: '18px',
         fontWeight: 500,
-        color: theme.palette.primary.light,
+        color: theme.palette.primary.main,
         display: 'block',
         marginTop: '4px',
         whiteSpace: 'nowrap',
     },
     '&:hover span': {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
         color: 'white',
     },
 }));
 const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
     backgroundColor: 'transparent !important',
-    color: theme.palette.primary.light,
+    color: theme.palette.primary.main,
     [theme.breakpoints.up('uqDsTablet')]: {
         backgroundImage:
             // location/map icon
@@ -105,26 +105,26 @@ const StyledLocationOpenerButton = styled(Button)(({ theme }) => ({
         outlineColor: 'transparent',
     },
     '&:hover span': {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
         color: 'white',
     },
     '&.panel-open span': {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
         color: 'white',
     },
     '&:focus-within span': {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
     },
     '&.panel-open:focus-within span': {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
         color: 'white',
     },
     '&.panel-closed:focus-within span': {
         backgroundColor: 'white',
-        color: theme.palette.primary.light,
+        color: theme.palette.primary.main,
     },
     '&.panel-closed:focus-within:hover span': {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
         color: 'white',
     },
     '&.panel-closed:focus-visible span': {

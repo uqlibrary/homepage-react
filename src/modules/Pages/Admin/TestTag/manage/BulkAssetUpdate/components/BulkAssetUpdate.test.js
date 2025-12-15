@@ -7,7 +7,9 @@ import {
     userEvent,
     within,
     waitForElementToBeRemoved,
+    screen,
 } from 'test-utils';
+import { DEFAULT_FORM_VALUES } from '../containers/BulkAssetUpdate';
 import Immutable from 'immutable';
 
 import assetsList from '../../../../../../../data/mock/data/testing/testAndTag/testTagAssets';
@@ -20,8 +22,6 @@ import assetTypeData from '../../../../../../../data/mock/data/testing/testAndTa
 import * as actions from '../../../../../../../data/actions/actionTypes';
 import * as tntActions from '../../../../../../../data/actions/testTagActions';
 import * as repositories from 'repositories';
-
-import { getUserPermissions } from '../../../helpers/auth';
 
 const defaultLocationState = {
     siteList,
@@ -38,33 +38,19 @@ const defaultLocationState = {
 };
 
 import BulkAssetUpdate from './BulkAssetUpdate';
-import pageLocale from '../../../testTag.locale';
-import pageConfig from './config';
 
 import userData from '../../../../../../../data/mock/data/testing/testAndTag/testTagUser';
 
 function setup(testProps = {}, renderer = rtlRender) {
-    const {
-        state = {},
-        actions = {},
-        config = pageConfig.filterDialog,
-        locale = pageLocale.pages.manage.bulkassetupdate.form.filterDialog,
-        locationLocale = pageLocale.pages.general.locationPicker,
-        assetTypeLocale = pageLocale.pages.manage.bulkassetupdate.form.filterDialog.form.assetType,
-        errorMessageFormatter = jest.fn(message => `Formatted ${message}`),
-        ...props
-    } = testProps;
+    const { state = {}, actions = {}, ...props } = testProps;
 
     const _state = {
         testTagLocationReducer: {
             ...defaultLocationState,
         },
-        testTagUserReducer: {
-            userLoading: false,
-            userLoaded: true,
-            userError: false,
-            user: userData,
-            privilege: getUserPermissions(userData.privileges ?? {}),
+        accountReducer: {
+            accountLoading: false,
+            account: { tnt: userData },
         },
         testTagAssetTypesReducer: {
             assetTypesList: assetTypeData,
@@ -85,19 +71,23 @@ function setup(testProps = {}, renderer = rtlRender) {
     return renderer(
         <WithReduxStore initialState={Immutable.Map(_state)}>
             <WithRouter>
-                <BulkAssetUpdate
-                    id="test"
-                    locale={locale}
-                    actions={actions}
-                    config={config}
-                    locationLocale={locationLocale}
-                    assetTypeLocale={assetTypeLocale}
-                    errorMessageFormatter={errorMessageFormatter}
-                    {...props}
-                />
+                <BulkAssetUpdate actions={actions} defaultFormValues={DEFAULT_FORM_VALUES} {...props} />
             </WithRouter>
         </WithReduxStore>,
     );
+}
+
+async function waitForFilterDialogToBeRemoved(timeout = 2000) {
+    try {
+        await waitForElementToBeRemoved(() => screen.queryByTestId('filter_dialog-bulk-asset-update-step-one'), {
+            timeout,
+        });
+    } catch (error) {
+        // If the element is already removed, we can safely ignore the error
+        if (screen.queryByTestId('filter_dialog-bulk-asset-update-step-one') !== null) {
+            throw error;
+        }
+    }
 }
 
 describe('BulkAssetUpdate', () => {
@@ -106,7 +96,6 @@ describe('BulkAssetUpdate', () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
         const { getByText, getByTestId, getAllByRole } = setup({
-            isOpen: true,
             actions: {
                 loadAssetsMine: loadAssetsMineFn,
                 loadSites: loadSitesFn,
@@ -116,19 +105,17 @@ describe('BulkAssetUpdate', () => {
         });
 
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-        expect(getByTestId('asset_selector-bulk-asset-update-input')).toBeInTheDocument();
-        expect(getByTestId('bulk_asset_update-feature-button')).toBeInTheDocument();
-        expect(getByTestId('data_table-bulk-asset-update')).toBeInTheDocument();
+        expect(getByTestId('asset_selector-bulk-asset-update-step-one-input')).toBeInTheDocument();
+        expect(getByTestId('bulk_asset_update-step-one-feature-button')).toBeInTheDocument();
+        expect(getByTestId('data_table-bulk-asset-update-step-one')).toBeInTheDocument();
         expect(getAllByRole('row').length).toBe(1); // just the header initially in the table
-        expect(getByTestId('footer_bar-bulk-asset-update-action-button')).toHaveAttribute('disabled');
+        expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).toHaveAttribute('disabled');
     });
 
-    it.skip('adds row items from filterDialog popup', async () => {
+    it('adds row items from filterDialog popup', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
-        const { getByText, getByTestId, getAllByRole, queryByTestId, findByTestId } = setup({
-            isOpen: true,
-
+        const { getByText, getByTestId, getAllByRole, findByTestId } = setup({
             actions: {
                 loadAssetsMine: loadAssetsMineFn,
                 loadSites: loadSitesFn,
@@ -138,24 +125,22 @@ describe('BulkAssetUpdate', () => {
         });
 
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-        await userEvent.click(getByTestId('bulk_asset_update-feature-button'));
-        expect(getByTestId('footer_bar-bulk-asset-update-action-button')).toHaveAttribute('disabled');
+        await userEvent.click(getByTestId('bulk_asset_update-step-one-feature-button'));
+        expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).toHaveAttribute('disabled');
 
-        await findByTestId('filter_dialog-bulk-asset-update');
+        await findByTestId('filter_dialog-bulk-asset-update-step-one');
 
-        const frow1 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[1];
+        const frow1 = within(getByTestId('filter_dialog-bulk-asset-update-step-one')).getAllByRole('row')[1];
         await userEvent.click(within(frow1).getByLabelText('Select row'));
-        const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
+        const frow2 = within(getByTestId('filter_dialog-bulk-asset-update-step-one')).getAllByRole('row')[2];
         await userEvent.click(within(frow2).getByLabelText('Select row'));
 
-        await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
+        await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-step-one-action-button'));
 
-        await waitForElementToBeRemoved(queryByTestId('filter_dialog-bulk-asset-update'));
+        await waitForFilterDialogToBeRemoved();
 
-        await waitFor(() =>
-            expect(getByTestId('bulk_asset_update-count-alert')).toHaveTextContent(
-                'You have selected 2 assets to bulk update.',
-            ),
+        expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
+            'You have selected 2 assets to bulk update.',
         );
 
         // check first row is as expected
@@ -177,20 +162,18 @@ describe('BulkAssetUpdate', () => {
         await waitFor(() => expect(getAllByRole('row').length).toBe(2), { timeout: 2000 }); // header and 1 row
 
         await waitFor(() =>
-            expect(getByTestId('bulk_asset_update-count-alert')).toHaveTextContent(
+            expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
                 'You have selected 1 asset to bulk update.',
             ),
         );
 
-        expect(getByTestId('footer_bar-bulk-asset-update-action-button')).not.toHaveAttribute('disabled');
+        expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).not.toHaveAttribute('disabled');
     });
 
-    it.skip('shows step 2', async () => {
+    it('shows step 2', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
-        const { getByText, getByTestId, queryByTestId, findByTestId } = setup({
-            isOpen: true,
-
+        const { getByText, getByTestId, findByTestId, getAllByRole } = setup({
             actions: {
                 loadAssetsMine: loadAssetsMineFn,
                 loadSites: loadSitesFn,
@@ -200,63 +183,61 @@ describe('BulkAssetUpdate', () => {
         });
 
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-        await userEvent.click(getByTestId('bulk_asset_update-feature-button'));
-        expect(getByTestId('footer_bar-bulk-asset-update-action-button')).toHaveAttribute('disabled');
+        await userEvent.click(getByTestId('bulk_asset_update-step-one-feature-button'));
+        expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).toHaveAttribute('disabled');
 
-        await findByTestId('filter_dialog-bulk-asset-update');
+        await findByTestId('filter_dialog-bulk-asset-update-step-one');
 
-        const frow1 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[1];
+        const frow1 = within(getByTestId('filter_dialog-bulk-asset-update-step-one')).getAllByRole('row')[1];
         await userEvent.click(within(frow1).getByLabelText('Select row'));
-        const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
+        const frow2 = within(getByTestId('filter_dialog-bulk-asset-update-step-one')).getAllByRole('row')[2];
         await userEvent.click(within(frow2).getByLabelText('Select row'));
 
-        await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
+        await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-step-one-action-button'));
 
-        await waitForElementToBeRemoved(queryByTestId('filter_dialog-bulk-asset-update'));
+        await waitForFilterDialogToBeRemoved();
 
-        await waitFor(() =>
-            expect(getByTestId('bulk_asset_update-count-alert')).toHaveTextContent(
-                'You have selected 2 assets to bulk update.',
-            ),
+        expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
+            'You have selected 2 assets to bulk update.',
         );
 
-        expect(getByTestId('footer_bar-bulk-asset-update-action-button')).not.toHaveAttribute('disabled');
-        await userEvent.click(getByTestId('footer_bar-bulk-asset-update-action-button'));
+        await waitFor(() => expect(getAllByRole('row').length).toBe(3)); // header + 2 rows
+
+        expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).not.toHaveAttribute('disabled');
+        await userEvent.click(getByTestId('footer_bar-bulk-asset-update-step-one-action-button'));
 
         expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
 
         // check state of UI elements
-        // location
-        expect(getByTestId('bulk_asset_update-location-checkbox')).not.toHaveClass('Mui-checked');
-        expect(getByTestId('location_picker-bulk-asset-update-site-input')).toHaveAttribute('disabled');
-        expect(getByTestId('location_picker-bulk-asset-update-building-input')).toHaveAttribute('disabled');
-        expect(getByTestId('location_picker-bulk-asset-update-floor-input')).toHaveAttribute('disabled');
-        expect(getByTestId('location_picker-bulk-asset-update-room-input')).toHaveAttribute('disabled');
+        // location, automatically selected
+        expect(getByTestId('accordionWithCheckbox-location-checkbox')).toHaveClass('Mui-checked');
+        expect(getByTestId('location_picker-bulk-asset-update-step-two-site-input')).not.toHaveAttribute('disabled');
+        expect(getByTestId('location_picker-bulk-asset-update-step-two-building-input')).toHaveAttribute('disabled');
+        expect(getByTestId('location_picker-bulk-asset-update-step-two-floor-input')).toHaveAttribute('disabled');
+        expect(getByTestId('location_picker-bulk-asset-update-step-two-room-input')).toHaveAttribute('disabled');
         // asset type
-        expect(getByTestId('bulk_asset_update-asset-type-checkbox')).not.toHaveClass('Mui-checked');
-        expect(getByTestId('asset_type_selector-bulk-asset-update-input')).toHaveAttribute('disabled');
+        expect(getByTestId('accordionWithCheckbox-assetType-checkbox')).not.toHaveClass('Mui-checked');
+        expect(getByTestId('asset_type_selector-bulk-asset-update-step-two-input')).toHaveAttribute('disabled');
         // discard reason
-        expect(getByTestId('bulk_asset_update-notes-checkbox')).not.toHaveClass('Mui-checked');
-        expect(getByTestId('bulk-asset-update-discard-reason-input')).toHaveAttribute('disabled');
+        expect(getByTestId('bulk_asset_update_step_two-notes-checkbox')).not.toHaveClass('Mui-checked');
+        expect(getByTestId('bulk_asset_update_step_two-discard-reason-input')).toHaveAttribute('disabled');
         // clear test notes
-        expect(getByTestId('bulk_asset_update-status-checkbox')).not.toHaveClass('Mui-checked');
+        expect(getByTestId('bulk_asset_update_step_two-notes-checkbox')).not.toHaveClass('Mui-checked');
         // submit button
-        expect(getByTestId('bulk_asset_update-submit-button')).toHaveAttribute('disabled');
+        expect(getByTestId('bulk_asset_update_step_two-submit-button')).toHaveAttribute('disabled');
 
         // Nav back to step 1
-        await userEvent.click(getByTestId('bulk_asset_update-back-button'));
+        await userEvent.click(getByTestId('bulk_asset_update_step_two-back-button'));
 
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
     });
 
-    it.skip('handles update request not including discard asset', async () => {
+    it('handles update request not including discard asset', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
         const bulkAssetUpdateFn = jest.fn(() => Promise.resolve());
 
-        const { getByText, getByTestId, queryByTestId, getByRole, findByTestId } = setup({
-            isOpen: true,
-
+        const { getByText, getByTestId, getByRole, findByTestId, getAllByRole } = setup({
             actions: {
                 loadAssetsMine: loadAssetsMineFn,
                 loadSites: loadSitesFn,
@@ -267,94 +248,86 @@ describe('BulkAssetUpdate', () => {
         });
 
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-        await userEvent.click(getByTestId('bulk_asset_update-feature-button'));
-        expect(getByTestId('footer_bar-bulk-asset-update-action-button')).toHaveAttribute('disabled');
+        await userEvent.click(getByTestId('bulk_asset_update-step-one-feature-button'));
+        expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).toHaveAttribute('disabled');
 
-        await findByTestId('filter_dialog-bulk-asset-update');
+        await findByTestId('filter_dialog-bulk-asset-update-step-one');
 
-        const frow1 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[1];
+        const frow1 = within(getByTestId('filter_dialog-bulk-asset-update-step-one')).getAllByRole('row')[1];
         await userEvent.click(within(frow1).getByLabelText('Select row'));
-        const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
+        const frow2 = within(getByTestId('filter_dialog-bulk-asset-update-step-one')).getAllByRole('row')[2];
         await userEvent.click(within(frow2).getByLabelText('Select row'));
 
-        await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
+        await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-step-one-action-button'));
 
-        await waitForElementToBeRemoved(queryByTestId('filter_dialog-bulk-asset-update'));
+        await waitForFilterDialogToBeRemoved();
 
-        await waitFor(() =>
-            expect(getByTestId('bulk_asset_update-count-alert')).toHaveTextContent(
-                'You have selected 2 assets to bulk update.',
-            ),
+        expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
+            'You have selected 2 assets to bulk update.',
         );
 
-        expect(getByTestId('footer_bar-bulk-asset-update-action-button')).not.toHaveAttribute('disabled');
-        await userEvent.click(getByTestId('footer_bar-bulk-asset-update-action-button'));
+        await waitFor(() => expect(getAllByRole('row').length).toBe(3)); // header + 2 rows
+
+        expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).not.toHaveAttribute('disabled');
+        await userEvent.click(getByTestId('footer_bar-bulk-asset-update-step-one-action-button'));
 
         expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
 
         // check state of UI elements
         // location
-        await userEvent.click(getByTestId('bulk_asset_update-location-checkbox'));
+        expect(within(getByTestId('accordionWithCheckbox-location-checkbox')).getByRole('checkbox')).toBeChecked();
 
-        await userEvent.click(getByTestId('location_picker-bulk-asset-update-site-input'));
+        await userEvent.click(getByTestId('location_picker-bulk-asset-update-step-two-site-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'St Lucia');
-        await userEvent.click(getByTestId('location_picker-bulk-asset-update-building-input'));
+        await userEvent.click(getByTestId('location_picker-bulk-asset-update-step-two-building-input'));
         await userEvent.selectOptions(getByRole('listbox'), '0001 - Forgan Smith Building');
-        await userEvent.click(getByTestId('location_picker-bulk-asset-update-floor-input'));
+        await userEvent.click(getByTestId('location_picker-bulk-asset-update-step-two-floor-input'));
         await userEvent.selectOptions(getByRole('listbox'), '2');
-        await userEvent.click(getByTestId('location_picker-bulk-asset-update-room-input'));
+        await userEvent.click(getByTestId('location_picker-bulk-asset-update-step-two-room-input'));
         await userEvent.selectOptions(getByRole('listbox'), 'W212');
 
-        expect(getByTestId('bulk_asset_update-status-checkbox')).toHaveClass('Mui-disabled');
-
-        // asset type
-        await userEvent.click(getByTestId('bulk_asset_update-asset-type-checkbox'));
-        await userEvent.click(getByTestId('asset_type_selector-bulk-asset-update-input'));
-        await userEvent.selectOptions(getByRole('listbox'), 'PowerBoard');
+        await waitFor(() => expect(getByTestId('months_selector-bulk-asset-update-step-two-input')).toHaveValue('-1'), {
+            timeout: 2000,
+        });
+        expect(getByTestId('months_selector-bulk-asset-update-step-two-next-date-label')).toHaveTextContent(
+            '(Includes all assets)',
+        );
+        expect(getByTestId('bulk_asset_update_step_two-notes-checkbox')).not.toHaveClass('Mui-disabled');
+        expect(getByTestId('accordionWithCheckbox-assetType-checkbox')).toHaveClass('Mui-disabled');
 
         // clear test notes
-        await userEvent.click(getByTestId('bulk_asset_update-notes-checkbox'));
+        await userEvent.click(getByTestId('bulk_asset_update_step_two-notes-checkbox'));
 
         // submit button
-        expect(getByTestId('bulk_asset_update-submit-button')).not.toHaveAttribute('disabled');
+        expect(getByTestId('bulk_asset_update_step_two-submit-button')).not.toHaveAttribute('disabled');
 
-        await userEvent.click(getByTestId('bulk_asset_update-submit-button'));
+        await userEvent.click(getByTestId('bulk_asset_update_step_two-submit-button'));
 
         // confirmation panel
         await findByTestId('dialogbox-bulk-asset-update');
 
         expect(getByText('Bulk Update Selected Assets')).toBeInTheDocument();
         expect(
-            getByText('Are you sure you wish to proceed with this bulk update of selected assets?'),
+            getByText('Are you sure you wish to proceed with this bulk update of 2 selected assets?'),
         ).toBeInTheDocument();
 
         await userEvent.click(getByTestId('confirm-bulk-asset-update'));
-
-        /*
-        expect(getByTestId('confirm-bulk-asset-update')).toHaveAttribute('disabled');
-        expect(getByTestId('cancel-bulk-asset-update')).toHaveAttribute('disabled');
-        expect(
-            within(getByTestId('confirm-bulk-asset-update')).getByTestId('bulk_asset_update-confirmation-progress'),
-        ).toBeInTheDocument(); */
 
         expect(getByTestId('confirmation_alert-success')).toBeInTheDocument();
 
         expect(bulkAssetUpdateFn).toHaveBeenCalledWith({
             asset: [1, 2],
             asset_room_id_last_seen: 1,
-            asset_type_id: 3,
             clear_comments: 1,
         });
     });
 
-    it.skip('handles update request including discard asset', async () => {
+    it('handles update request including discard asset', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
         const bulkAssetUpdateFn = jest.fn(() => Promise.resolve());
 
-        const { getByText, getByTestId, queryByTestId, findByTestId } = setup({
-            isOpen: true,
-
+        const { getByText, getByTestId, findByTestId } = setup({
             actions: {
                 loadAssetsMine: loadAssetsMineFn,
                 loadSites: loadSitesFn,
@@ -365,47 +338,48 @@ describe('BulkAssetUpdate', () => {
         });
 
         expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-        await userEvent.click(getByTestId('bulk_asset_update-feature-button'));
-        expect(getByTestId('footer_bar-bulk-asset-update-action-button')).toHaveAttribute('disabled');
+        await userEvent.click(getByTestId('bulk_asset_update-step-one-feature-button'));
+        expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).toHaveAttribute('disabled');
 
-        await findByTestId('filter_dialog-bulk-asset-update');
+        await findByTestId('filter_dialog-bulk-asset-update-step-one');
 
-        const frow1 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[1];
+        const frow1 = within(getByTestId('filter_dialog-bulk-asset-update-step-one')).getAllByRole('row')[1];
         await userEvent.click(within(frow1).getByLabelText('Select row'));
-        const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
+        const frow2 = within(getByTestId('filter_dialog-bulk-asset-update-step-one')).getAllByRole('row')[2];
         await userEvent.click(within(frow2).getByLabelText('Select row'));
 
-        await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
+        await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-step-one-action-button'));
 
-        await waitForElementToBeRemoved(queryByTestId('filter_dialog-bulk-asset-update'));
+        await waitForFilterDialogToBeRemoved();
 
-        await waitFor(() =>
-            expect(getByTestId('bulk_asset_update-count-alert')).toHaveTextContent(
-                'You have selected 2 assets to bulk update.',
-            ),
+        expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
+            'You have selected 2 assets to bulk update.',
         );
 
-        expect(getByTestId('footer_bar-bulk-asset-update-action-button')).not.toHaveAttribute('disabled');
-        await userEvent.click(getByTestId('footer_bar-bulk-asset-update-action-button'));
+        expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).not.toHaveAttribute('disabled');
+        await userEvent.click(getByTestId('footer_bar-bulk-asset-update-step-one-action-button'));
 
         expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
 
+        // Location is selected by default, so need to uncheck it to be able to use discard option
+        await userEvent.click(getByTestId('accordionWithCheckbox-location-checkbox'));
+
         // discard reason - checking this option disables the others
-        await userEvent.click(getByTestId('bulk_asset_update-status-checkbox'));
-        expect(getByTestId('bulk-asset-update-discard-reason-input')).not.toHaveAttribute('disabled');
-        await userEvent.type(getByTestId('bulk-asset-update-discard-reason-input'), 'Test discard notes');
+        await userEvent.click(getByTestId('accordionWithCheckbox-discardStatus-checkbox'));
+        expect(getByTestId('bulk_asset_update_step_two-discard-reason-input')).not.toHaveAttribute('disabled');
+        await userEvent.type(getByTestId('bulk_asset_update_step_two-discard-reason-input'), 'Test discard notes');
 
         // location
-        expect(getByTestId('bulk_asset_update-location-checkbox')).toHaveClass('Mui-disabled');
+        expect(getByTestId('accordionWithCheckbox-location-checkbox')).toHaveClass('Mui-disabled');
         // asset type
-        expect(getByTestId('bulk_asset_update-asset-type-checkbox')).toHaveClass('Mui-disabled');
+        expect(getByTestId('accordionWithCheckbox-assetType-checkbox')).toHaveClass('Mui-disabled');
         // clear test notes
-        expect(getByTestId('bulk_asset_update-notes-checkbox')).toHaveClass('Mui-disabled');
+        expect(getByTestId('bulk_asset_update_step_two-notes-checkbox')).not.toHaveClass('Mui-disabled');
 
         // submit button
-        expect(getByTestId('bulk_asset_update-submit-button')).not.toHaveAttribute('disabled');
+        expect(getByTestId('bulk_asset_update_step_two-submit-button')).not.toHaveAttribute('disabled');
 
-        await userEvent.click(getByTestId('bulk_asset_update-submit-button'));
+        await userEvent.click(getByTestId('bulk_asset_update_step_two-submit-button'));
 
         // confirmation panel
         await findByTestId('dialogbox-bulk-asset-update');
@@ -415,17 +389,10 @@ describe('BulkAssetUpdate', () => {
         ).toBeInTheDocument();
         expect(
             within(getByTestId('dialogbox-bulk-asset-update')).getByText(
-                'Are you sure you wish to proceed with this bulk update of selected assets?',
+                'Are you sure you wish to proceed with this bulk update of 2 selected assets?',
             ),
         ).toBeInTheDocument();
         await userEvent.click(getByTestId('confirm-bulk-asset-update'));
-        // await waitFor(() => expect(getByTestId('bulk_asset_update-confirmation-progress')).toBeInTheDocument());
-        // debug(undefined, 100000);
-        /* expect(getByTestId('confirm-bulk-asset-update')).toHaveAttribute('disabled');
-        expect(getByTestId('cancel-bulk-asset-update')).toHaveAttribute('disabled');
-        expect(
-            within(getByTestId('confirm-bulk-asset-update')).getByTestId('bulk_asset_update-confirmation-progress'),
-        ).toBeInTheDocument(); */
 
         expect(getByTestId('confirmation_alert-success')).toBeInTheDocument();
 
@@ -452,12 +419,11 @@ describe('BulkAssetUpdate', () => {
         });
         it('fires expected actions when entering text in to the asset selector field', async () => {
             const { getByText, getByTestId } = setup({
-                isOpen: true,
                 actions: tntActions,
             });
 
             expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-            await userEvent.type(getByTestId('asset_selector-bulk-asset-update-input'), 'UQL310000');
+            await userEvent.type(getByTestId('asset_selector-bulk-asset-update-step-one-input'), 'UQL310000');
 
             const expectedActions = [actions.TESTTAG_ASSETS_LOADING, actions.TESTTAG_ASSETS_LOADED];
 
@@ -472,8 +438,6 @@ describe('BulkAssetUpdate', () => {
             const loadSitesFn = jest.fn();
             const bulkAssetUpdateFn = jest.fn(() => Promise.reject());
             const { getByText, getByTitle, getByTestId, queryByTestId, findByTestId } = setup({
-                isOpen: true,
-
                 actions: {
                     loadAssetsMine: loadAssetsMineFn,
                     loadSites: loadSitesFn,
@@ -484,53 +448,56 @@ describe('BulkAssetUpdate', () => {
             });
 
             expect(getByText('Step 1: Choose assets to update in bulk')).toBeInTheDocument();
-            await userEvent.click(getByTestId('bulk_asset_update-feature-button'));
+            await userEvent.click(getByTestId('bulk_asset_update-step-one-feature-button'));
 
-            await findByTestId('filter_dialog-bulk-asset-update');
+            await findByTestId('filter_dialog-bulk-asset-update-step-one');
 
             // click cancel button
-            await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-cancel-button'));
+            await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-step-one-cancel-button'));
 
-            await waitForElementToBeRemoved(() => queryByTestId('filter_dialog-bulk-asset-update'));
+            await waitForElementToBeRemoved(() => queryByTestId('filter_dialog-bulk-asset-update-step-one'));
 
             // reopen filter so we can test things in step 2
-            await userEvent.click(getByTestId('bulk_asset_update-feature-button'));
+            await userEvent.click(getByTestId('bulk_asset_update-step-one-feature-button'));
 
-            await findByTestId('filter_dialog-bulk-asset-update');
-            const frow1 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[1];
+            await findByTestId('filter_dialog-bulk-asset-update-step-one');
+            const frow1 = within(getByTestId('filter_dialog-bulk-asset-update-step-one')).getAllByRole('row')[1];
             await userEvent.click(within(frow1).getByLabelText('Select row'));
-            const frow2 = within(getByTestId('filter_dialog-bulk-asset-update')).getAllByRole('row')[2];
+            const frow2 = within(getByTestId('filter_dialog-bulk-asset-update-step-one')).getAllByRole('row')[2];
             await userEvent.click(within(frow2).getByLabelText('Select row'));
 
-            await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-action-button'));
+            await userEvent.click(getByTestId('filter_dialog-bulk-asset-update-step-one-action-button'));
 
             try {
-                await waitForElementToBeRemoved(() => queryByTestId('filter_dialog-bulk-asset-update'));
+                await waitForElementToBeRemoved(() => queryByTestId('filter_dialog-bulk-asset-update-step-one'));
             } catch (error) {
                 // If the element is already removed, we can safely ignore the error
-                if (queryByTestId('filter_dialog-bulk-asset-update') !== null) {
+                if (queryByTestId('filter_dialog-bulk-asset-update-step-one') !== null) {
                     throw error;
                 }
             }
 
             await waitFor(() =>
-                expect(getByTestId('bulk_asset_update-count-alert')).toHaveTextContent(
+                expect(getByTestId('bulk_asset_update-step-one-count-alert')).toHaveTextContent(
                     'You have selected 2 assets to bulk update.',
                 ),
             );
 
-            expect(getByTestId('footer_bar-bulk-asset-update-action-button')).not.toHaveAttribute('disabled');
-            await userEvent.click(getByTestId('footer_bar-bulk-asset-update-action-button'));
+            expect(getByTestId('footer_bar-bulk-asset-update-step-one-action-button')).not.toHaveAttribute('disabled');
+            await userEvent.click(getByTestId('footer_bar-bulk-asset-update-step-one-action-button'));
 
             expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
 
+            // Location is selected by default, so need to uncheck it to be able to use discard option
+            await userEvent.click(getByTestId('accordionWithCheckbox-location-checkbox'));
+
             // clear test notes
-            await userEvent.click(getByTestId('bulk_asset_update-notes-checkbox'));
+            await userEvent.click(getByTestId('bulk_asset_update_step_two-notes-checkbox'));
 
             // submit button
-            expect(getByTestId('bulk_asset_update-submit-button')).not.toHaveAttribute('disabled');
+            expect(getByTestId('bulk_asset_update_step_two-submit-button')).not.toHaveAttribute('disabled');
 
-            await userEvent.click(getByTestId('bulk_asset_update-submit-button'));
+            await userEvent.click(getByTestId('bulk_asset_update_step_two-submit-button'));
 
             // confirmation panel
             await findByTestId('dialogbox-bulk-asset-update');
@@ -539,7 +506,7 @@ describe('BulkAssetUpdate', () => {
             ).toBeInTheDocument();
             expect(
                 within(getByTestId('dialogbox-bulk-asset-update')).getByText(
-                    'Are you sure you wish to proceed with this bulk update of selected assets?',
+                    'Are you sure you wish to proceed with this bulk update of 2 selected assets?',
                 ),
             ).toBeInTheDocument();
 

@@ -80,7 +80,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
     ['& .linkButton']: {
         backgroundColor: '#fff',
-        borderBottom: '1px solid #dcdcdd',
+        borderBottom: theme.palette.designSystem.border,
         borderRadius: 0,
         color: theme.palette.secondary.dark,
         display: 'block',
@@ -93,7 +93,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         textAlign: 'left',
         textTransform: 'none',
         '& .listEventDate': {
-            color: theme.palette.primary.light,
+            color: theme.palette.primary.main,
             lineHeight: '100%', // 16px
         },
         '& .listEventItem': {
@@ -118,15 +118,15 @@ const StyledWrapper = styled('div')(({ theme }) => ({
             marginTop: '4px',
         },
         '&:hover': {
-            backgroundColor: '#F3F3F4', // Brand-grey-grey-50
+            backgroundColor: theme.palette.designSystem.panelBackgroundColor,
             transition: 'background-color 200ms ease-out',
         },
     },
     ['& .bookActionButton']: {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
         borderWidth: '2px',
         borderStyle: 'solid',
-        borderColor: theme.palette.primary.light,
+        borderColor: theme.palette.primary.main,
         borderRadius: '.25rem',
         color: '#fff',
         display: 'block',
@@ -137,13 +137,13 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         textTransform: 'uppercase',
         '&:hover': {
             backgroundColor: '#fff',
-            borderColor: theme.palette.primary.light,
-            color: theme.palette.primary.light,
+            borderColor: theme.palette.primary.main,
+            color: theme.palette.primary.main,
             textDecoration: 'underline',
         },
     },
     ['& .detailHeader']: {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
         color: theme.palette.white.main,
     },
     ['& .detailIcon']: {
@@ -332,7 +332,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                 <div className={'flexContent'} role="region" aria-label="UQ training Events list">
                                     {filteredTrainingEvents &&
                                         filteredTrainingEvents.length > 0 &&
-                                        filteredTrainingEvents.map((event, index) => {
+                                        filteredTrainingEvents?.map?.((event, index) => {
                                             return (
                                                 <Grid
                                                     container

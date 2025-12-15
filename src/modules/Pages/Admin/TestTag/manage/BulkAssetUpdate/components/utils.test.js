@@ -1,174 +1,100 @@
-import { transformRow, transformRequest, transformFilterRow } from './utils';
+import { makeAssetExcludedMessage } from './utils';
 
 describe('utils', () => {
-    describe('transformRow', () => {
-        it('should add asset_type_name and asset_location if they are missing', () => {
-            const row = [
-                { asset_type: { asset_type_name: 'type1' }, last_location: { site_name: 'site1' } },
-                { asset_type: { asset_type_name: 'type2' }, last_location: { site_name: 'site2' } },
-                { other_key: 'other_value' },
-            ];
+    describe('makeAssetExcludedMessage', () => {
+        it('should create the correct excluded message for 1 asset', () => {
+            const excludedList = {
+                data: [{ asset_id_displayed: 'UQ001' }],
+            };
+            const maxItems = 3;
 
-            const transformedRow = transformRow(row);
+            const result = makeAssetExcludedMessage({ excludedList, maxItems });
 
-            expect(transformedRow).toEqual([
-                {
-                    asset_type: { asset_type_name: 'type1' },
-                    last_location: { site_name: 'site1' },
-                    asset_type_name: 'type1',
-                    asset_location: 'site1',
-                },
-                {
-                    asset_type: { asset_type_name: 'type2' },
-                    last_location: { site_name: 'site2' },
-                    asset_type_name: 'type2',
-                    asset_location: 'site2',
-                },
-                {
-                    other_key: 'other_value',
-                    asset_type_name: '',
-                    asset_location: '',
-                },
-            ]);
+            expect(result).toBe('UQ001 will not be updated in this bulk operation.');
+        });
+        it('should create the correct excluded message for 2 assets', () => {
+            const excludedList = {
+                data: [{ asset_id_displayed: 'UQ001' }, { asset_id_displayed: 'UQ002' }],
+            };
+            const maxItems = 3;
+
+            const result = makeAssetExcludedMessage({ excludedList, maxItems });
+
+            expect(result).toBe('UQ001 and UQ002 will not be updated in this bulk operation.');
+        });
+        it('should create the correct excluded message for 3+ assets with default maxitems', () => {
+            const excludedList = {
+                data: [
+                    { asset_id_displayed: 'UQ001' },
+                    { asset_id_displayed: 'UQ002' },
+                    { asset_id_displayed: 'UQ003' },
+                    { asset_id_displayed: 'UQ004' },
+                    { asset_id_displayed: 'UQ005' },
+                    { asset_id_displayed: 'UQ006' },
+                ],
+            };
+            const result = makeAssetExcludedMessage({ excludedList });
+
+            expect(result).toBe('UQ001, UQ002, UQ003, UQ004, UQ005, UQ006 will not be updated in this bulk operation.');
         });
 
-        it('should return the transformed row if it already exists', () => {
-            const row = [
-                { asset_location: 'location1' },
-                { asset_location: 'location2' },
-                { asset_location: 'location3' },
-            ];
+        it('should create the correct excluded message for 10+ assets with default maxitems', () => {
+            const excludedList = {
+                data: [
+                    { asset_id_displayed: 'UQ001' },
+                    { asset_id_displayed: 'UQ002' },
+                    { asset_id_displayed: 'UQ003' },
+                    { asset_id_displayed: 'UQ004' },
+                    { asset_id_displayed: 'UQ005' },
+                    { asset_id_displayed: 'UQ006' },
+                    { asset_id_displayed: 'UQ007' },
+                    { asset_id_displayed: 'UQ008' },
+                    { asset_id_displayed: 'UQ009' },
+                    { asset_id_displayed: 'UQ0010' },
+                    { asset_id_displayed: 'UQ0011' },
+                ],
+            };
+            const result = makeAssetExcludedMessage({ excludedList });
 
-            const transformedRow = transformRow(row);
-
-            expect(transformedRow).toEqual([
-                { asset_location: 'location1' },
-                { asset_location: 'location2' },
-                { asset_location: 'location3' },
-            ]);
+            expect(result).toBe(
+                'UQ001, UQ002, UQ003, UQ004, UQ005, UQ006, UQ007, UQ008, UQ009, UQ0010 and 1 more will not be updated in this bulk operation.',
+            );
         });
-    });
 
-    describe('transformRequest', () => {
-        it('should return the expected result when asset is not discarded', () => {
-            // Provide sample input values for formValues
-            const formValues = {
-                hasDiscardStatus: false,
-                hasLocation: true,
-                hasAssetType: true,
-                asset_list: [{ asset_id: 1 }, { asset_id: 2 }, { asset_id: 3 }],
-                location: {
-                    room: 'Room 1',
-                },
-                asset_type: {
-                    asset_type_id: 1,
-                },
-                discard_reason: 'No longer needed',
-                hasClearNotes: true,
+        it('should create the correct excluded message for 3+ assets with maxItems = 2', () => {
+            const excludedList = {
+                data: [
+                    { asset_id_displayed: 'UQ001' },
+                    { asset_id_displayed: 'UQ002' },
+                    { asset_id_displayed: 'UQ003' },
+                    { asset_id_displayed: 'UQ004' },
+                    { asset_id_displayed: 'UQ005' },
+                    { asset_id_displayed: 'UQ006' },
+                ],
             };
+            const maxItems = 2;
 
-            // Define the expected output
-            const expectedOutput = {
-                asset: [1, 2, 3],
-                asset_room_id_last_seen: 'Room 1',
-                asset_type_id: 1,
-                clear_comments: 1,
-            };
+            const result = makeAssetExcludedMessage({ excludedList, maxItems });
 
-            // Call the transformRequest function with the sample input values
-            const result = transformRequest(formValues);
-
-            // Assert that the result matches the expected output
-            expect(result).toEqual(expectedOutput);
+            expect(result).toBe('UQ001, UQ002 and 4 more will not be updated in this bulk operation.');
         });
-        it('should return the expected result when asset is discarded', () => {
-            // Provide sample input values for formValues
-            const formValues = {
-                hasDiscardStatus: true,
-                asset_list: [{ asset_id: 1 }, { asset_id: 2 }, { asset_id: 3 }],
-                location: {
-                    room: 'Room 1',
-                },
-                asset_type: {
-                    asset_type_id: 1,
-                },
-                discard_reason: 'No longer needed',
-                hasClearNotes: false,
+
+        it('should create the correct excluded message for 3+ assets with maxItems = 1', () => {
+            const excludedList = {
+                data: [
+                    { asset_id_displayed: 'UQ001' },
+                    { asset_id_displayed: 'UQ002' },
+                    { asset_id_displayed: 'UQ003' },
+                    { asset_id_displayed: 'UQ004' },
+                    { asset_id_displayed: 'UQ005' },
+                    { asset_id_displayed: 'UQ006' },
+                ],
             };
+            const maxItems = 1;
 
-            // Define the expected output
-            const expectedOutput = {
-                asset: [1, 2, 3],
-                is_discarding: 1,
-                discard_reason: 'No longer needed',
-            };
+            const result = makeAssetExcludedMessage({ excludedList, maxItems });
 
-            // Call the transformRequest function with the sample input values
-            const result = transformRequest(formValues);
-
-            // Assert that the result matches the expected output
-            expect(result).toEqual(expectedOutput);
-        });
-    });
-    describe('transformFilterRow', () => {
-        it('should transform the row correctly', () => {
-            const row = [
-                {
-                    asset_barcode: '123',
-                    site_name: 'Site 1',
-                    building_name: 'Building 1',
-                    floor_id_displayed: '1',
-                    room_id_displayed: '101',
-                },
-                {
-                    site_name: 'Site 2',
-                    building_name: 'Building 2',
-                    floor_id_displayed: '2',
-                    room_id_displayed: '202',
-                },
-                {
-                    asset_barcode: '456',
-                    asset_id_displayed: '456',
-                    asset_location: '3-303 Building 3, Site 3',
-                    site_name: 'Site 3',
-                    building_name: 'Building 3',
-                    floor_id_displayed: '3',
-                    room_id_displayed: '303',
-                },
-            ];
-
-            const expectedOutput = [
-                {
-                    asset_barcode: '123',
-                    asset_id_displayed: '123',
-                    asset_location: '1-101 Building 1, Site 1',
-                    site_name: 'Site 1',
-                    building_name: 'Building 1',
-                    floor_id_displayed: '1',
-                    room_id_displayed: '101',
-                },
-                {
-                    asset_id_displayed: '',
-                    asset_location: '2-202 Building 2, Site 2',
-                    site_name: 'Site 2',
-                    building_name: 'Building 2',
-                    floor_id_displayed: '2',
-                    room_id_displayed: '202',
-                },
-                {
-                    asset_barcode: '456',
-                    asset_id_displayed: '456',
-                    asset_location: '3-303 Building 3, Site 3',
-                    site_name: 'Site 3',
-                    building_name: 'Building 3',
-                    floor_id_displayed: '3',
-                    room_id_displayed: '303',
-                },
-            ];
-
-            const result = transformFilterRow(row);
-
-            expect(result).toEqual(expectedOutput);
+            expect(result).toBe('UQ001 and 5 more will not be updated in this bulk operation.');
         });
     });
 });
