@@ -16,8 +16,13 @@ import { useAccountContext } from 'context';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { isValidUrl, standardText, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 
-import { displayToastErrorMessage, spacesAdminLink, validLibraryList } from './bookableSpacesAdminHelpers';
+import {
+    displayToastErrorMessage,
+    spacesAdminLink,
+    validLibraryList,
+} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { ImageUploadDropzone } from './ImageUploadDropzone';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),
@@ -474,6 +479,7 @@ export const EditSpaceForm = ({
         valuesToSend.space_latitude = formValues?.space_latitude;
         valuesToSend.space_longitude = formValues?.space_longitude;
         valuesToSend.facility_types = formValues?.facility_types?.map(ft => ft?.facility_type_id);
+        valuesToSend.space_id = formValues?.space_id;
         console.log('handleSaveClick valuesToSend=', valuesToSend);
 
         const validationResult = formValid(valuesToSend);
@@ -552,6 +558,16 @@ export const EditSpaceForm = ({
         });
     }, [currentCampusList, formValues]);
 
+    const handleSuppliedFiles = files => {
+        console.log('handleSuppliedFiles', files);
+        setFormValues({ ...formValues, ['space_photo_url']: files, hasImage: true });
+    };
+
+    const clearSuppliedFile = () => {
+        setFormValues(prevState => {
+            return { ...prevState, ['space_photo_url']: [], hasImage: false };
+        });
+    };
     // console.log('RENDER selectedSpringshareOption=', selectedSpringshareOption);
     return (
         <>
@@ -926,15 +942,10 @@ export const EditSpaceForm = ({
                         </Grid>
                         <Grid item xs={12}>
                             <FormControl variant="standard" fullWidth>
-                                <InputLabel htmlFor="space_photo_url">
-                                    Image url (this will eventually be drag and drop)
-                                </InputLabel>
-                                <Input
-                                    id="space_photo_url"
-                                    data-testid="space-photo-url"
-                                    value={formValues?.space_photo_url || ''}
-                                    onChange={handleChange('space_photo_url')}
-                                    onBlur={handleFieldCompletion}
+                                <ImageUploadDropzone
+                                    onAddFile={handleSuppliedFiles}
+                                    onClearFile={clearSuppliedFile}
+                                    currentImage={formValues.space_photo_url}
                                 />
                                 <StyledErrorMessageTypography component={'div'}>
                                     {reportErrorMessage('space_photo_url')}

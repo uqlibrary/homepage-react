@@ -18,8 +18,8 @@ import {
     validCampusList,
     validLibraryList,
     weeklyHoursLoaded,
-} from '../bookableSpacesAdminHelpers';
-import { locale } from '../bookablespaces.locale';
+} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
+import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';
 
 const PageWrapper = ({ children }) => {
     return (
@@ -143,7 +143,7 @@ export const BookableSpacesAddSpace = ({
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
-        actions.addBookableSpaceLocation(valuesToSend, 'space');
+        actions.createBookableSpaceWithNewImage(valuesToSend);
     };
 
     if (!!bookableSpacesRoomListLoading || !!campusListLoading || !formValues?.campus_id) {

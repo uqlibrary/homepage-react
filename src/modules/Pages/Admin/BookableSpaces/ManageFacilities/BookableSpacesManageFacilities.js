@@ -38,7 +38,7 @@ import {
     closeDialog,
     displayToastMessage,
     showGenericConfirmAndDeleteDialog,
-} from '../bookableSpacesAdminHelpers';
+} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { getFlatFacilityTypeList } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({

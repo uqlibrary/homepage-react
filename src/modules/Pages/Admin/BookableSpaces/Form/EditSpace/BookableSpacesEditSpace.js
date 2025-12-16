@@ -12,14 +12,14 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';
 import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
-import { EditSpaceForm } from 'modules/Pages/Admin/BookableSpaces/EditSpaceForm';
+import { EditSpaceForm } from 'modules/Pages/Admin/BookableSpaces/Form/EditSpaceForm';
 import {
     addBreadcrumbsToSiteHeader,
     initialisedSpringshareList,
     spacesAdminLink,
     validCampusList,
     weeklyHoursLoaded,
-} from '../bookableSpacesAdminHelpers';
+} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 
 const PageWrapper = ({ children }) => {
     return (
@@ -150,13 +150,9 @@ export const BookableSpacesEditSpace = ({
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
+        console.log('updateSpace valuesToSend=', valuesToSend);
 
-        actions
-            .updateBookableSpaceLocation(valuesToSend, 'space', formValues.space_id)
-            .then(() => {})
-            .catch(e => {
-                console.log('catch: adding new space failed:', e);
-            });
+        actions.updateBookableSpaceWithNewImage(valuesToSend);
     };
 
     if (
