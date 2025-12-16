@@ -5,7 +5,7 @@ export default {
         {
             "facility_type_group_id": 7,
             "facility_type_group_name": "Services",
-            "facility_type_group_order": 8,
+            "facility_type_group_order": 9,
             "facility_type_group_loads_open": 0,
             "facility_type_group_type": "choose-many",
             "facility_type_children": [
@@ -30,7 +30,7 @@ export default {
         {
             "facility_type_group_id": 8,
             "facility_type_group_name": "EDIA filters",
-            "facility_type_group_order": 0,
+            "facility_type_group_order": 1,
             "facility_type_group_loads_open": 1,
             "facility_type_group_type": "choose-many",
             "facility_type_children": [
@@ -43,7 +43,7 @@ export default {
         {
             "facility_type_group_id": 1,
             "facility_type_group_name": "Space\/Room Type",
-            "facility_type_group_order": 1,
+            "facility_type_group_order": 2,
             "facility_type_group_loads_open": 1,
             "facility_type_group_type": "choose-many",
             "facility_type_children": [
@@ -56,7 +56,7 @@ export default {
         {
             "facility_type_group_id": 2,
             "facility_type_group_name": "On this floor",
-            "facility_type_group_order": 2,
+            "facility_type_group_order": 3,
             "facility_type_group_loads_open": 0,
             "facility_type_group_type": "choose-many",
             "facility_type_children": [
@@ -121,7 +121,7 @@ export default {
         {
             "facility_type_group_id": 3,
             "facility_type_group_name": "Space features",
-            "facility_type_group_order": 7,
+            "facility_type_group_order": 8,
             "facility_type_group_loads_open": 1,
             "facility_type_group_type": "choose-many",
             "facility_type_children": [
@@ -206,7 +206,7 @@ export default {
         {
             "facility_type_group_id": 4,
             "facility_type_group_name": "Lighting",
-            "facility_type_group_order": 4,
+            "facility_type_group_order": 5,
             "facility_type_group_loads_open": 1,
             "facility_type_group_type": "choose-many",
             "facility_type_children": [
@@ -231,7 +231,7 @@ export default {
         {
             "facility_type_group_id": 5,
             "facility_type_group_name": "Acceptable noise",
-            "facility_type_group_order": 5,
+            "facility_type_group_order": 6,
             "facility_type_group_loads_open": 1,
             "facility_type_group_type": "choose-many",
             "facility_type_children": [
@@ -248,7 +248,7 @@ export default {
         {
             "facility_type_group_id": 6,
             "facility_type_group_name": "Room features",
-            "facility_type_group_order": 6,
+            "facility_type_group_order": 7,
             "facility_type_group_loads_open": 0,
             "facility_type_group_type": "choose-many",
             "facility_type_children": [
@@ -276,7 +276,7 @@ export default {
         }, {
             "facility_type_group_id": 9,
             "facility_type_group_name": "Unused",
-            "facility_type_group_order": 5,
+            "facility_type_group_order": 6,
             "facility_type_group_loads_open": 0,
             "facility_type_group_type": 'choose-many',
             "facility_type_children": [{
