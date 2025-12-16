@@ -24,7 +24,7 @@ import {
     displayToastMessage,
     showGenericConfirmAndDeleteDialog,
     springshareLocations,
-} from '../bookableSpacesAdminHelpers';
+} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',

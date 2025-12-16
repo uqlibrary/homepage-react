@@ -13,7 +13,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 import { standardText } from 'helpers/general';
 
-import { spacesAdminLink } from './bookableSpacesAdminHelpers';
+import { spacesAdminLink } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
     '& div:not([aria-hidden="true"])': {

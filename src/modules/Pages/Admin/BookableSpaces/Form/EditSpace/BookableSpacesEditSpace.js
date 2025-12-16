@@ -12,14 +12,14 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';
 import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
-import { EditSpaceForm } from 'modules/Pages/Admin/BookableSpaces/EditSpaceForm';
+import { EditSpaceForm } from 'modules/Pages/Admin/BookableSpaces/Form/EditSpaceForm';
 import {
     addBreadcrumbsToSiteHeader,
     initialisedSpringshareList,
     spacesAdminLink,
     validCampusList,
     weeklyHoursLoaded,
-} from '../bookableSpacesAdminHelpers';
+} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 
 const PageWrapper = ({ children }) => {
     return (

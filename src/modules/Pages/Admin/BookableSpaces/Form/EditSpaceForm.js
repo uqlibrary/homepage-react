@@ -16,7 +16,11 @@ import { useAccountContext } from 'context';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { isValidUrl, standardText, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 
-import { displayToastErrorMessage, spacesAdminLink, validLibraryList } from './bookableSpacesAdminHelpers';
+import {
+    displayToastErrorMessage,
+    spacesAdminLink,
+    validLibraryList,
+} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { ImageUploadDropzone } from './ImageUploadDropzone';
 
