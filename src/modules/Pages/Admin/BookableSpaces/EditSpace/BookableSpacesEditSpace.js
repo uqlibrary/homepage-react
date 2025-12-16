@@ -150,13 +150,9 @@ export const BookableSpacesEditSpace = ({
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
+        console.log('updateSpace valuesToSend=', valuesToSend);
 
-        actions
-            .updateBookableSpaceLocation(valuesToSend, 'space', formValues.space_id)
-            .then(() => {})
-            .catch(e => {
-                console.log('catch: adding new space failed:', e);
-            });
+        actions.updateBookableSpaceWithNewImage(valuesToSend);
     };
 
     if (

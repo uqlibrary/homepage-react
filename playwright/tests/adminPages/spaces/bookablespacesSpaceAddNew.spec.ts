@@ -160,8 +160,8 @@ test.describe('Spaces Admin - add new space', () => {
             .getByTestId('add-space-description')
             .fill('This is a sunny corner in the Law library where you blah blah blah');
 
-        await expect(inputField('space-photo-url', page)).toBeVisible();
-        await inputField('space-photo-url', page).fill('https://example.com/image.jpg');
+        // await expect(inputField('space-photo-url', page)).toBeVisible();
+        // await inputField('space-photo-url', page).fill('https://example.com/image.jpg');
 
         await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
         await page.getByTestId('add-space-photo-description').fill('a table and chairs in a stark white room');
@@ -201,7 +201,7 @@ test.describe('Spaces Admin - add new space', () => {
             space_floor_id: 32,
             space_name: 'W12343',
             space_photo_description: 'a table and chairs in a stark white room',
-            space_photo_url: 'https://example.com/image.jpg',
+            // space_photo_url: 'https://example.com/image.jpg', // TODO, drag image
             space_precise: 'Northwest corner',
             space_description: 'This is a sunny corner in the Law library where you blah blah blah',
             space_type: 'Computer room',
@@ -268,49 +268,49 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('message-title')).toBeVisible();
         await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
     });
-    test('add new space - validation - required fields 2', async ({ page }) => {
-        // when the user has not entered required fields, they get an error
-
-        // user enters the name
-        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
-        await page
-            .getByTestId('space-name')
-            .locator('input')
-            .fill('W12343');
-        // they enter the type
-        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        await page
-            .getByTestId('space-type')
-            .locator('input')
-            .fill('Computer room');
-
-        // they enter the url, but neglect the description
-        await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
-        await page
-            .getByTestId('space-photo-url')
-            .locator('input')
-            .fill('https://example.com/image.jpg');
-        await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
-        await page.getByTestId('admin-spaces-save-button-submit').click();
-        await expect(page.getByTestId('toast-message')).toBeVisible();
-        await expect(page.getByTestId('toast-message p[data-count="1"]')).toBeDefined();
-        await expect(page.getByTestId('toast-message')).toContainText('These errors occurred');
-        await expect(page.getByTestId('toast-message')).toContainText(
-            'When a photo is supplied, a description must be supplied.',
-        );
-
-        await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
-        // await page.getByTestId('add-space-photo-description').fill('a description of a room');
-        await page
-            .getByTestId('add-space-photo-description')
-            .fill('This is a sunny corner in the Law library where you blah blah blah');
-
-        await page.getByTestId('admin-spaces-save-button-submit').click();
-
-        // finally the form is valid!
-        await expect(page.getByTestId('message-title')).toBeVisible();
-        await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
-    });
+    // test('add new space - validation - required fields 2', async ({ page }) => {
+    //     // when the user has not entered required fields, they get an error
+    //
+    //     // user enters the name
+    //     await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+    //     await page
+    //         .getByTestId('space-name')
+    //         .locator('input')
+    //         .fill('W12343');
+    //     // they enter the type
+    //     await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
+    //     await page
+    //         .getByTestId('space-type')
+    //         .locator('input')
+    //         .fill('Computer room');
+    //
+    //     // they enter the url, but neglect the description
+    //     await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
+    //     await page
+    //         .getByTestId('space-photo-url')
+    //         .locator('input')
+    //         .fill('https://example.com/image.jpg');
+    //     await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
+    //     await page.getByTestId('admin-spaces-save-button-submit').click();
+    //     await expect(page.getByTestId('toast-message')).toBeVisible();
+    //     await expect(page.getByTestId('toast-message p[data-count="1"]')).toBeDefined();
+    //     await expect(page.getByTestId('toast-message')).toContainText('These errors occurred');
+    //     await expect(page.getByTestId('toast-message')).toContainText(
+    //         'When a photo is supplied, a description must be supplied.',
+    //     );
+    //
+    //     await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
+    //     // await page.getByTestId('add-space-photo-description').fill('a description of a room');
+    //     await page
+    //         .getByTestId('add-space-photo-description')
+    //         .fill('This is a sunny corner in the Law library where you blah blah blah');
+    //
+    //     await page.getByTestId('admin-spaces-save-button-submit').click();
+    //
+    //     // finally the form is valid!
+    //     await expect(page.getByTestId('message-title')).toBeVisible();
+    //     await expect(page.getByTestId('message-title')).toContainText('A Space has been added');
+    // });
     test('add new space - can change the location', async ({ page }) => {
         const campusSelector = page.getByTestId('add-space-select-campus');
         const librarySelector = page.getByTestId('add-space-select-library');

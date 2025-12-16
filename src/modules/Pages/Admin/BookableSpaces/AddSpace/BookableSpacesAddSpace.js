@@ -143,7 +143,7 @@ export const BookableSpacesAddSpace = ({
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
-        actions.addBookableSpaceLocation(valuesToSend, 'space');
+        actions.createBookableSpaceWithNewImage(valuesToSend);
     };
 
     if (!!bookableSpacesRoomListLoading || !!campusListLoading || !formValues?.campus_id) {

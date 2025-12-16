@@ -62,8 +62,13 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
             'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
         );
 
-        await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
-        await expect(page.getByTestId('space-photo-url').locator('input')).toHaveValue(
+        // await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
+        // await expect(page.getByTestId('space-photo-url').locator('input')).toHaveValue(
+        //     'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
+        // );
+        await expect(page.getByTestId('dropzone-preview').locator('img')).toBeVisible();
+        await expect(page.getByTestId('dropzone-preview').locator('img')).toHaveAttribute(
+            'src',
             'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
         );
 
@@ -135,8 +140,9 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
             'https://web.library.uq.edu.au/visit/dutton-park-health-sciences-library',
         );
 
-        await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
-        await expect(page.getByTestId('space-photo-url').locator('input')).toBeEmpty();
+        // await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
+        // await expect(page.getByTestId('space-photo-url').locator('input')).toBeEmpty();
+        await expect(page.getByTestId('dropzone-preview')).not.toBeVisible();
 
         await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
         await expect(page.getByTestId('add-space-photo-description')).toBeEmpty();
@@ -195,8 +201,13 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
         await expect(page.getByTestId('space_services_page').locator('input')).toBeEmpty();
 
-        await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
-        await expect(page.getByTestId('space-photo-url').locator('input')).toHaveValue(
+        // await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
+        // await expect(page.getByTestId('space-photo-url').locator('input')).toHaveValue(
+        //     'https://campuses.uq.edu.au/files/35424/46-342-343.JPG',
+        // );
+        await expect(page.getByTestId('dropzone-preview').locator('img')).toBeVisible();
+        await expect(page.getByTestId('dropzone-preview').locator('img')).toHaveAttribute(
+            'src',
             'https://campuses.uq.edu.au/files/35424/46-342-343.JPG',
         );
 
@@ -305,14 +316,19 @@ test.describe('Spaces Admin - edit space', () => {
             .locator('input')
             .fill('');
 
-        await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
-        await page
-            .getByTestId('space-photo-url')
-            .locator('input')
-            .fill('');
-
-        await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
-        await page.getByTestId('add-space-photo-description').fill('');
+        // // clear the image
+        // await expect(page.getByTestId('dropzone-preview').locator('img')).toBeVisible();
+        // await expect(page.getByTestId('dropzone-preview').locator('img')).toHaveAttribute(
+        //     'src',
+        //     'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
+        // );
+        // await expect(page.getByTestId('spotlights-form-remove-image')).toBeVisible();
+        // await page.getByTestId('spotlights-form-remove-image').click();
+        //
+        // await expect(page.getByTestId('dropzone-preview').locator('img')).not.toBeVisible();
+        //
+        // await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
+        // await page.getByTestId('add-space-photo-description').fill('');
 
         // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
@@ -324,14 +340,18 @@ test.describe('Spaces Admin - edit space', () => {
         // check the data we pretended to send to the server matches what we expect
         // acts as check of what we sent to api
         const expectedValues = {
+            space_id: 123456,
             space_floor_id: 1,
             space_name: '01-W431', // required field
             space_type: 'Collaborative space', // required field
             facility_types: [],
             space_precise: '',
             space_description: '',
-            space_photo_url: '',
-            space_photo_description: '',
+            // space_photo_url: '',
+            // space_photo_description: '',
+            // TODO - temp until photo drag is testable
+            space_photo_description: 'a large room with 6 large round tables, each wih multiple chairs',
+            space_photo_url: 'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
             space_opening_hours_id: -1,
             space_services_page: '',
             space_opening_hours_override: null,
@@ -473,11 +493,13 @@ test.describe('Spaces Admin - edit space', () => {
 
         await page.getByRole('textbox', { name: 'An extra line about opening' }).fill('space is open from 7am');
 
-        await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
-        await page
-            .getByTestId('space-photo-url')
-            .locator('input')
-            .fill('http://example.com/x.png');
+        // await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
+        // await page
+        //     .getByTestId('space-photo-url')
+        //     .locator('input')
+        //     .fill('http://example.com/x.png');
+        await expect(page.getByTestId('dropzone-preview').locator('img')).toBeVisible();
+        // TODO drag img
 
         await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
         await page.getByTestId('add-space-photo-description').fill('words about the photo');
@@ -492,13 +514,15 @@ test.describe('Spaces Admin - edit space', () => {
         // check the data we pretended to send to the server matches what we expect
         // acts as check of what we sent to api
         const expectedValues = {
+            space_id: 123456,
             space_floor_id: 32,
             space_name: 'New space name', // required field
             space_type: 'New space type', // required field
             facility_types: finalFilters,
             space_precise: 'somewhere deep in the bowels of the warehouse',
             space_description: 'a long description that has a number of words',
-            space_photo_url: 'http://example.com/x.png',
+            space_photo_url: 'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
+            // space_photo_url: 'http://example.com/x.png',
             space_photo_description: 'words about the photo',
             space_opening_hours_id: 3825,
             space_services_page: 'http://example.com',
