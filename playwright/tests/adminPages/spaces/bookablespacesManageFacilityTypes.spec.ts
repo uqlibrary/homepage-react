@@ -764,33 +764,19 @@ test.describe('Spaces Admin - adding new facility types', () => {
         await setTestDataCookie(context, page);
 
         // we are going to drag entry #2
-        const draggableRoomType = page.getByTestId('spaces-dragLandingAarea').locator('li:nth-of-type(2)');
-        await expect(draggableRoomType).toBeVisible();
+        const originElement = await page.getByTestId('spaces-dragLandingAarea').locator('li:nth-of-type(2)');
+        // onto entry #5
+        const destinationElement = await page.getByTestId('spaces-dragLandingAarea').locator('li:nth-of-type(5)');
 
-        // set up to compare old position to post-dragged position
-        const draggableElementBox = (await draggableRoomType.boundingBox())!;
-
-        const draggableDestination = page.getByTestId('spaces-dragLandingAarea');
-        await expect(draggableDestination).toBeVisible();
-        console.log('draggableDestination=', draggableDestination.boundingBox());
-
-        await draggableRoomType.hover();
+        await originElement.hover();
         await page.mouse.down();
-        const box = (await draggableDestination.boundingBox())!;
-        console.log('box=', box);
-        // await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2); // drag it to a spot on the screen that definitely isn't the same spot
-        await page.mouse.move(500, 1000); // drag it to a spot on the screen that definitely isn't the same spot
-        await draggableDestination.hover();
+        const box = (await destinationElement.boundingBox())!;
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await destinationElement.hover();
         await page.mouse.up();
 
         await assertToastHasMessage(page, 'Facility group order updated');
 
-        const movedDraggableElementBox = (await draggableRoomType.boundingBox())!;
-        expect(draggableElementBox.y).toBeGreaterThan(movedDraggableElementBox.y); // the row has moved
-
-        /*
-        [{"facility_type_group_id":8,"facility_type_group_order":0},{"facility_type_group_id":2,"facility_type_group_order":1},{"facility_type_group_id":4,"facility_type_group_order":2},{"facility_type_group_id":1,"facility_type_group_order":3},{"facility_type_group_id":5,"facility_type_group_order":4},{"facility_type_group_id":9,"facility_type_group_order":5},{"facility_type_group_id":6,"facility_type_group_order":6},{"facility_type_group_id":3,"facility_type_group_order":7},{"facility_type_group_id":7,"facility_type_group_order":8}]
-         */
         const expectedValues = [
             { facility_type_group_id: 1, facility_type_group_order: 1 }, // space/room type
             { facility_type_group_id: 2, facility_type_group_order: 2 }, // on this floor

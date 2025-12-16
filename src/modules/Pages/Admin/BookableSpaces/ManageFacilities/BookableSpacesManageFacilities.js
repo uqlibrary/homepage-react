@@ -174,7 +174,7 @@ const DraggableListItem = React.memo(({ item, index, moveItem }) => {
 });
 DraggableListItem.propTypes = {
     item: PropTypes.object,
-    index: PropTypes.integer,
+    index: PropTypes.number,
     moveItem: PropTypes.func,
 };
 
@@ -265,7 +265,11 @@ export const BookableSpacesManageFacilities = ({
                     displayToastMessage('Facility group order updated');
                 })
                 .catch(e => {
-                    console.log('catch: [updateGroupOrder] updating facility group order failed ', valuesToSend, e);
+                    console.log(
+                        'catch: [updateGroupOrder] updating facility group order failed ',
+                        [...valuesToSend],
+                        e,
+                    );
 
                     showErrorMessageinPopup(
                         '[BSMF-012] Sorry, an error occurred - Updating the Facility group order failed. The admins have been informed.',
@@ -282,7 +286,7 @@ export const BookableSpacesManageFacilities = ({
 
     const [sortList, setSortList2] = useState({});
     const setSortList = request => {
-        console.log('setSortList', request?.data);
+        console.log('setSortList', [...request?.data]);
         setSortList2(request?.data);
 
         !!request?.update && updateGroupOrder(request?.data);
@@ -312,7 +316,6 @@ export const BookableSpacesManageFacilities = ({
             facilityTypeListLoading === false &&
             facilityTypeList?.data?.facility_type_groups?.length > 0
         ) {
-            console.log('### facilityTypeListHasLoaded');
             setFormValues({
                 ['facility_types']: getFlatFacilityTypeList(facilityTypeList),
             });
@@ -882,7 +885,7 @@ export const BookableSpacesManageFacilities = ({
     const moveItem = (fromIndex, toIndex) => {
         const newSortList = [...sortList];
 
-        const sourceItemIndex = newSortList.findIndex(item => item.facility_type_group_order === fromIndex);
+        const sourceItemIndex = newSortList.findIndex(item => item.facility_type_group_order === fromIndex + 1);
         if (sourceItemIndex === -1) {
             console.warn(`Item with facility_type_group_order ${fromIndex} not found`);
             return;
@@ -898,7 +901,7 @@ export const BookableSpacesManageFacilities = ({
         newSortList.sort((a, b) => a.facility_type_group_order - b.facility_type_group_order);
 
         newSortList.forEach((item, index) => {
-            item.facility_type_group_order = index;
+            item.facility_type_group_order = index + 1;
         });
 
         const result = [...newSortList].sort((a, b) => a.facility_type_group_order - b.facility_type_group_order);
