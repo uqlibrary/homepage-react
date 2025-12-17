@@ -204,10 +204,10 @@ export const updateBookableSpaceWithExistingImage = request => {
     };
 };
 
-export const updateBookableSpaceWithNewImage = (request, spaceSaveType = 'update') => {
+export const updateBookableSpaceWithNewImage = (request, saveType = 'update') => {
     if (!request.uploadedFile || request.uploadedFile.length === 0) {
         /* istanbul ignore else */
-        if (spaceSaveType === 'create') {
+        if (saveType === 'create') {
             return createBookableSpaceWithExistingImage(request);
         } else {
             return updateBookableSpaceWithExistingImage(request);
@@ -242,7 +242,7 @@ export const updateBookableSpaceWithNewImage = (request, spaceSaveType = 'update
                     /* istanbul ignore next */ `https://${domain}/file/public/${firstresponse.key}`;
 
                 delete request.uploadedFile;
-                if (spaceSaveType === 'create') {
+                if (saveType === 'create') {
                     dispatch({ type: actions.SPACES_LOCATION_ADDING });
                     return addBookableSpace(request, dispatch);
                 } else {

@@ -145,14 +145,17 @@ export const BookableSpacesEditSpace = ({
         }
     }, [bookableSpaceGetting, bookableSpaceGetError, bookableSpaceGetResult]);
 
-    const updateSpace = valuesToSend => {
+    const updateSpace = (valuesToSend, hasNewImage = false) => {
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
         console.log('updateSpace valuesToSend=', valuesToSend);
+        console.log('updateSpace hasNewImage=', hasNewImage);
 
-        actions.updateBookableSpaceWithNewImage(valuesToSend);
+        !!hasNewImage
+            ? actions.updateBookableSpaceWithNewImage(valuesToSend)
+            : actions.updateBookableSpaceWithExistingImage(valuesToSend, 'update');
     };
 
     if (

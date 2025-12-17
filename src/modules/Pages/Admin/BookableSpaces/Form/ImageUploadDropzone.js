@@ -197,7 +197,7 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
                 {!!files && files.length > 0 && !!files[0].preview ? (
                     <Grid container data-testid="dropzone-preview" style={thumbsContainer}>
                         <Grid item xs={12}>
-                            <h3>Preview:</h3>
+                            <h4>Preview:</h4>
                         </Grid>
                         <Grid item xs={10}>
                             {files.map(file => (
