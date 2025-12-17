@@ -599,7 +599,9 @@ export const EditSpaceForm = ({
         valuesToSend.space_longitude = formValues?.space_longitude;
         valuesToSend.facility_types = formValues?.facility_types?.map(ft => ft?.facility_type_id);
         valuesToSend.space_id = formValues?.space_id;
+        valuesToSend.uploadedFile = formValues.uploadedFile;
         console.log('handleSaveClick valuesToSend=', valuesToSend);
+        console.log('handleSaveClick valuesToSend.uploadedFile=', valuesToSend.uploadedFile);
 
         const validationResult = formValid(valuesToSend);
         if (validationResult !== true) {
@@ -613,7 +615,7 @@ export const EditSpaceForm = ({
             displayToastErrorMessage(message);
         } else {
             console.log('handleSaveClick validation passed');
-            saveToDb(valuesToSend, formValues.hasImage);
+            saveToDb(valuesToSend);
         }
     };
 
@@ -684,7 +686,7 @@ export const EditSpaceForm = ({
 
     const clearSuppliedFile = () => {
         setFormValues(prevState => {
-            return { ...prevState, ['uploadedFile']: [], hasImage: false };
+            return { ...prevState, ['uploadedFile']: [], hasImage: false, space_photo_url: '' };
         });
     };
 

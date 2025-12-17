@@ -365,22 +365,23 @@ test.describe('Spaces Admin - edit space', () => {
             .locator('input')
             .fill('');
 
-        // // change to Imagery tab
-        // await page.getByTestId('tab-imagery').click();
-        //
-        // // clear the image
-        // await expect(page.getByTestId('dropzone-preview').locator('img')).toBeVisible();
-        // await expect(page.getByTestId('dropzone-preview').locator('img')).toHaveAttribute(
-        //     'src',
-        //     'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
-        // );
-        // await expect(page.getByTestId('spotlights-form-remove-image')).toBeVisible();
-        // await page.getByTestId('spotlights-form-remove-image').click();
-        //
-        // await expect(page.getByTestId('dropzone-preview').locator('img')).not.toBeVisible();
-        //
-        // await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
-        // await page.getByTestId('add-space-photo-description').fill('');
+        // change to Imagery tab
+        await page.getByTestId('tab-imagery').click();
+
+        // clear the image
+        await expect(page.getByTestId('dropzone-preview').locator('img')).toBeVisible();
+        await expect(page.getByTestId('dropzone-preview').locator('img')).toHaveAttribute(
+            'src',
+            'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
+        );
+        await expect(page.getByTestId('spaces-form-remove-image')).toBeVisible();
+        await page.getByTestId('spaces-form-remove-image').click();
+
+        await expect(page.getByTestId('dropzone-preview').locator('img')).not.toBeVisible();
+
+        // clear the img alt text
+        await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
+        await page.getByTestId('add-space-photo-description').fill('');
 
         // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
@@ -399,16 +400,14 @@ test.describe('Spaces Admin - edit space', () => {
             facility_types: [],
             space_precise: '',
             space_description: '',
-            // space_photo_url: '',
-            // space_photo_description: '',
-            // TODO - temp until photo drag is testable
-            space_photo_description: 'a large room with 6 large round tables, each wih multiple chairs',
-            space_photo_url: 'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
+            space_photo_url: '',
+            space_photo_description: '',
             space_opening_hours_id: -1,
             space_services_page: '',
             space_opening_hours_override: null,
             space_latitude: '-27.496955206561836', // when we have fields for these, they should be cleared
             space_longitude: '153.01308753792662',
+            uploadedFile: [],
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });
