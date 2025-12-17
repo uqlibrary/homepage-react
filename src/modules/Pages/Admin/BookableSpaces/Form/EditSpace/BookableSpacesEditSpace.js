@@ -151,8 +151,11 @@ export const BookableSpacesEditSpace = ({
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
         console.log('updateSpace valuesToSend=', valuesToSend);
+        console.log('updateSpace valuesToSend.uploadedFile=', valuesToSend.uploadedFile);
 
-        actions.updateBookableSpaceWithNewImage(valuesToSend);
+        !!valuesToSend?.uploadedFile
+            ? actions.updateBookableSpaceWithNewImage(valuesToSend)
+            : actions.updateBookableSpaceWithExistingImage(valuesToSend, 'update');
     };
 
     if (

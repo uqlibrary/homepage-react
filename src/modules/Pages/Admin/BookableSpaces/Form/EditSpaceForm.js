@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
+import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import { Grid } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
@@ -8,13 +11,18 @@ import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import { useAccountContext } from 'context';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-import { isValidUrl, standardText, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
+import { isValidUrl, slugifyName, standardText, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 
 import {
     displayToastErrorMessage,
@@ -28,6 +36,21 @@ const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),
     color: theme.palette.error.light,
     marginTop: 4,
+}));
+
+const StyledTabs = styled(Tabs)(({ theme }) => ({
+    '& > div > div': {
+        columnGap: '0.25rem',
+    },
+    '& button': {
+        border: theme.palette.designSystem.border,
+        borderRadiusTopLeft: '0.5rem',
+        borderRadiusTopRight: '0.5rem',
+        width: '15%',
+        textTransform: 'none',
+        fontWeight: 400,
+        fontSize: '16px',
+    },
 }));
 
 const StyledFilterWrapper = styled('div')(() => ({
@@ -88,6 +111,31 @@ const StyledSpringshareHouseFormControl = styled(FormControl)(() => ({
         borderWidth: '2px',
     },
 }));
+const StyledErrorCountBadge = styled(Badge)(() => ({
+    '& span': {
+        right: -12,
+    },
+}));
+function CustomTabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`spacesform-tabpanel-${index}`}
+            aria-labelledby={`spacesform-tab-${index}`}
+            {...other}
+        >
+            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+        </div>
+    );
+}
+CustomTabPanel.propTypes = {
+    children: PropTypes.any,
+    value: PropTypes.number,
+    index: PropTypes.number,
+};
 
 export const EditSpaceForm = ({
     actions,
@@ -147,8 +195,13 @@ export const EditSpaceForm = ({
     const [confirmationOpen, setConfirmationOpen] = useState(false);
     const [errorMessages, setErrorMessages2] = useState([]);
     const setErrorMessages = m => {
+        console.log('setErrorMessages', m);
         setErrorMessages2(m);
     };
+
+    const firstStepId = 0;
+    const lastStepId = 3; // the total number of steps / panels
+    const [activeStep, setActiveStep] = useState(0);
 
     const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
 
@@ -175,36 +228,100 @@ export const EditSpaceForm = ({
         );
     }, [bookableSpacesRoomUpdating, bookableSpacesRoomUpdateError, bookableSpacesRoomUpdateResult]);
 
-    // validate fields value
-    const formValid = valuesToSend => {
-        const errorMessages = [];
-        if (!valuesToSend?.space_name) {
+    const validatePanelAbout = (currentValues, errorMessages = []) => {
+        if (!currentValues?.space_name) {
             errorMessages.push({ field: 'space_name', message: 'A Name is required.' });
         }
-        if (!valuesToSend?.space_type) {
+        if (!currentValues?.space_type) {
             errorMessages.push({ field: 'space_type', message: 'A Type is required.' });
         }
-        if (!valuesToSend?.space_floor_id) {
+        return errorMessages;
+    };
+
+    function validatePanelFacilityTypes(currentValues, errorMessages = []) {
+        return errorMessages;
+    }
+
+    function validatePanelLocation(currentValues, errorMessages = []) {
+        console.log('validatePanelLocation currentValues=', currentValues);
+        if (!currentValues?.space_floor_id && !currentValues?.floor_id) {
             errorMessages.push({ field: 'space_floor_id', message: 'A location is required.' });
         }
-        if (!!valuesToSend?.space_photo_url && !valuesToSend?.space_photo_description) {
+        if (!!currentValues?.space_services_page && !isValidUrl(currentValues?.space_services_page)) {
+            errorMessages.push({
+                field: 'space_services_page',
+                message: 'Please supply a valid "About" page, or clear the field.',
+            });
+        }
+        return errorMessages;
+    }
+
+    function validatePanelImagery(currentValues, errorMessages = []) {
+        if (!!currentValues?.space_photo_url && !currentValues?.space_photo_description) {
             // if a photo is supplied then it must have an accessible description; the photo itself is not required
             errorMessages.push({
                 field: 'space_photo_description',
                 message: 'When a photo is supplied, a description must be supplied.',
             });
         }
-        if (!!valuesToSend?.space_photo_url && !isValidUrl(valuesToSend?.space_photo_url)) {
+        if (!!currentValues?.space_photo_url && !isValidUrl(currentValues?.space_photo_url)) {
             errorMessages.push({ field: 'space_photo_url', message: 'The photo is not valid.' });
         }
-        if (!!valuesToSend?.space_services_page && !isValidUrl(valuesToSend?.space_services_page)) {
-            errorMessages.push({
-                field: 'space_services_page',
-                message: 'Please supply a valid "About" page, or clear the field.',
-            });
-        }
+        return errorMessages;
+    }
 
-        return errorMessages?.length > 0 ? errorMessages : true;
+    // validate fields value
+    const formValid = valuesToSend => {
+        const messages = [];
+
+        validatePanelAbout(valuesToSend, messages)?.forEach(m => {
+            const findIndex = messages.findIndex(e => e.field === m.field);
+            if (findIndex !== -1) {
+                messages.splice(findIndex, 1);
+            }
+            messages.push(m);
+        });
+
+        validatePanelFacilityTypes(valuesToSend, messages)?.forEach(m => {
+            const findIndex = messages.findIndex(e => e.field === m.field);
+            if (findIndex !== -1) {
+                messages.splice(findIndex, 1);
+            }
+            messages.push(m);
+        });
+
+        validatePanelLocation(valuesToSend, messages)?.forEach(m => {
+            const findIndex = messages.findIndex(e => e.field === m.field);
+            if (findIndex !== -1) {
+                messages.splice(findIndex, 1);
+            }
+            messages.push(m);
+        });
+
+        validatePanelImagery(valuesToSend, messages)?.forEach(m => {
+            const findIndex = messages.findIndex(e => e.field === m.field);
+            if (findIndex !== -1) {
+                messages.splice(findIndex, 1);
+            }
+            messages.push(m);
+        });
+
+        console.log('formValid errorMessages=', messages);
+
+        setErrorMessages(messages);
+
+        return messages?.length > 0 ? messages : true;
+    };
+    const handleNext = () => {
+        // setEditorReady(false);
+        formValid(formValues);
+        setActiveStep(prevActiveStep => prevActiveStep + 1);
+    };
+
+    const handleBack = () => {
+        // setEditorReady(false);
+        formValid(formValues);
+        setActiveStep(prevActiveStep => prevActiveStep - 1);
     };
 
     const handleFieldCompletion = e => {
@@ -425,41 +542,43 @@ export const EditSpaceForm = ({
 
         return (
             <>
-                {sortedUsedGroups?.map(group => (
-                    <StyledFacilityGroupCheckboxBlock key={group?.facility_type_group_id}>
-                        <Typography component={'h5'} variant={'h6'}>
-                            {group?.facility_type_group_name}
-                        </Typography>
-                        <ul data-testid="facility-type-checkbox-list">
-                            {group?.facility_type_children && group?.facility_type_children?.length > 0 ? (
-                                group?.facility_type_children?.map(facilityType => {
-                                    const isChecked = () =>
-                                        formValues?.facility_types?.find(
-                                            ft => ft?.facility_type_id === facilityType?.facility_type_id,
+                {sortedUsedGroups
+                    ?.sort((a, b) => a?.facility_type_children.length - b?.facility_type_children.length)
+                    .map(group => (
+                        <StyledFacilityGroupCheckboxBlock key={group?.facility_type_group_id}>
+                            <Typography component={'h5'} variant={'h6'} style={{ fontWeight: '400' }}>
+                                {group?.facility_type_group_name}
+                            </Typography>
+                            <ul data-testid="facility-type-checkbox-list">
+                                {group?.facility_type_children && group?.facility_type_children?.length > 0 ? (
+                                    group?.facility_type_children?.map(facilityType => {
+                                        const isChecked = () =>
+                                            formValues?.facility_types?.find(
+                                                ft => ft?.facility_type_id === facilityType?.facility_type_id,
+                                            );
+                                        return (
+                                            <li
+                                                key={`facility-type-listitem-${facilityType?.facility_type_id}`}
+                                                data-testid={`facility-type-listitem-${facilityType?.facility_type_id}`}
+                                            >
+                                                <InputLabel title={facilityType?.facility_type_name}>
+                                                    <Checkbox
+                                                        checked={!!isChecked()}
+                                                        data-testid={`filtertype-${facilityType?.facility_type_id}`}
+                                                        id={`filtertype-${facilityType?.facility_type_id}`}
+                                                        onChange={handleChange('facility_type_id')}
+                                                    />
+                                                    {facilityType?.facility_type_name}
+                                                </InputLabel>
+                                            </li>
                                         );
-                                    return (
-                                        <li
-                                            key={`facility-type-listitem-${facilityType?.facility_type_id}`}
-                                            data-testid={`facility-type-listitem-${facilityType?.facility_type_id}`}
-                                        >
-                                            <InputLabel title={facilityType?.facility_type_name}>
-                                                <Checkbox
-                                                    checked={!!isChecked()}
-                                                    data-testid={`filtertype-${facilityType?.facility_type_id}`}
-                                                    id={`filtertype-${facilityType?.facility_type_id}`}
-                                                    onChange={handleChange('facility_type_id')}
-                                                />
-                                                {facilityType?.facility_type_name}
-                                            </InputLabel>
-                                        </li>
-                                    );
-                                })
-                            ) : (
-                                <li className="no-items">No facility types available</li>
-                            )}
-                        </ul>
-                    </StyledFacilityGroupCheckboxBlock>
-                ))}
+                                    })
+                                ) : (
+                                    <li className="no-items">No facility types available</li>
+                                )}
+                            </ul>
+                        </StyledFacilityGroupCheckboxBlock>
+                    ))}
             </>
         );
     };
@@ -480,7 +599,9 @@ export const EditSpaceForm = ({
         valuesToSend.space_longitude = formValues?.space_longitude;
         valuesToSend.facility_types = formValues?.facility_types?.map(ft => ft?.facility_type_id);
         valuesToSend.space_id = formValues?.space_id;
+        valuesToSend.uploadedFile = formValues.uploadedFile;
         console.log('handleSaveClick valuesToSend=', valuesToSend);
+        console.log('handleSaveClick valuesToSend.uploadedFile=', valuesToSend.uploadedFile);
 
         const validationResult = formValid(valuesToSend);
         if (validationResult !== true) {
@@ -489,7 +610,7 @@ export const EditSpaceForm = ({
 
             document.activeElement.blur();
             const message =
-                `<p data-count="${validationResult?.length}">These errors occurred:</p>` +
+                `<p data-error-count="${validationResult?.length}">These errors occurred:</p>` +
                 `<ul>${validationResult?.map(m => `<li>${m?.message}</li>`)?.join('')}</ul>`;
             displayToastErrorMessage(message);
         } else {
@@ -560,14 +681,482 @@ export const EditSpaceForm = ({
 
     const handleSuppliedFiles = files => {
         console.log('handleSuppliedFiles', files);
-        setFormValues({ ...formValues, ['space_photo_url']: files, hasImage: true });
+        setFormValues({ ...formValues, ['uploadedFile']: files, hasImage: true });
     };
 
     const clearSuppliedFile = () => {
         setFormValues(prevState => {
-            return { ...prevState, ['space_photo_url']: [], hasImage: false };
+            return { ...prevState, ['uploadedFile']: [], hasImage: false, space_photo_url: '' };
         });
     };
+
+    function a11yProps(index) {
+        return {
+            id: `spacesform-tab-${index}`,
+            'aria-controls': `spacesform-tabpanel-${index}`,
+        };
+    }
+
+    const [panelId, setPanel] = useState(0);
+
+    const handleTabChange = (event, newPanelId) => {
+        setPanel(newPanelId);
+    };
+
+    const aboutPanel = () => {
+        return (
+            <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <Typography component={'h3'} variant={'h6'}>
+                        About
+                    </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel htmlFor="space_name">Space name *</InputLabel>
+                        <Input
+                            id="space_name"
+                            data-testid="space-name"
+                            required
+                            value={formValues?.space_name || ''}
+                            onChange={handleChange('space_name')}
+                            onBlur={handleFieldCompletion}
+                        />
+                        <StyledErrorMessageTypography component={'div'}>
+                            {reportErrorMessage('space_name')}
+                        </StyledErrorMessageTypography>
+                    </FormControl>
+                </Grid>
+                <Grid item md={5} xs={12}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel id="add-space-type-label" htmlFor="add-space-type-input">
+                            Choose an existing Space type *
+                        </InputLabel>
+                        <Select
+                            id="add-space-type"
+                            labelId="add-space-type-label"
+                            data-testid="space-type"
+                            value={formValues?.space_type || ''}
+                            onChange={handleChange('space_type')}
+                            onBlur={handleFieldCompletion}
+                            inputProps={{
+                                id: 'add-space-type-input',
+                                title: 'Choose an existing Space type',
+                            }}
+                        >
+                            {!!spaceTypeList &&
+                                spaceTypeList?.length > 0 &&
+                                spaceTypeList?.map((spaceType, index) => {
+                                    return (
+                                        <MenuItem value={spaceType} key={`spacetype-${index}`}>
+                                            {spaceType}
+                                        </MenuItem>
+                                    );
+                                })}
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item md={1} xs={12} style={{ marginBlock: 'auto', marginInline: 'auto' }}>
+                    ...or...
+                </Grid>
+                <Grid item md={6} xs={12}>
+                    <FormControl fullWidth>
+                        <InputLabel id="add-space-type-new-label">Enter new Space type</InputLabel>
+                        <Input
+                            id="add-space-type-new"
+                            labelId="add-space-type-new-label"
+                            data-testid="add-space-type-new"
+                            onChange={handleChange('space_type_new')}
+                            onBlur={handleFieldCompletion}
+                            inputProps={{
+                                'aria-labelledby': 'add-space-type-new-label',
+                            }}
+                        />
+                        <StyledErrorMessageTypography component={'div'}>
+                            {reportErrorMessage('space_type')}
+                        </StyledErrorMessageTypography>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                    {/* will upgrade this to ckeditor (or replacement) eventually*/}
+                    <TextField
+                        id="space_description"
+                        label="Space description"
+                        variant="standard"
+                        fullWidth
+                        multiline
+                        rows={4}
+                        value={formValues?.space_description || ''}
+                        onChange={handleChange('space_description')}
+                        inputProps={{
+                            'data-testid': 'add-space-description',
+                        }}
+                        onBlur={handleFieldCompletion}
+                    />
+                    <StyledErrorMessageTypography component={'div'}>
+                        {reportErrorMessage('space_description')}
+                    </StyledErrorMessageTypography>
+                </Grid>
+            </Grid>
+        );
+    };
+    const facilityTypePanel = () => {
+        return (
+            <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <Typography component={'h3'} variant={'h6'} style={{ marginBottom: '1rem' }}>
+                        Facility types
+                    </Typography>
+                    <StyledFilterWrapper>{showFilterCheckboxes()}</StyledFilterWrapper>
+                </Grid>
+            </Grid>
+        );
+    };
+    const locationPanel = () => {
+        return (
+            <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <Typography component={'h3'} variant={'h6'}>
+                        Location
+                    </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel id="add-space-select-campus-label" htmlFor="add-space-select-campus-input">
+                            Campus *
+                        </InputLabel>
+                        <Select
+                            id="add-space-select-campus"
+                            labelId="add-space-select-campus-label"
+                            data-testid="add-space-select-campus"
+                            value={formValues?.campus_id}
+                            onChange={handleChange('campus_id')}
+                            required
+                            inputProps={{
+                                id: 'add-space-select-campus-input',
+                                'aria-labelledby': 'add-space-select-campus-label',
+                            }}
+                        >
+                            {!!currentCampusList &&
+                                currentCampusList?.length > 0 &&
+                                currentCampusList?.map((campus, index) => (
+                                    <MenuItem value={campus?.campus_id} key={`select-campus-${index}`}>
+                                        {campus?.campus_name}
+                                    </MenuItem>
+                                ))}
+                        </Select>
+                        <StyledErrorMessageTypography component={'div'}>
+                            {reportErrorMessage('??')}
+                        </StyledErrorMessageTypography>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel id="add-space-select-library-label" htmlFor="add-space-select-library-input">
+                            Library *
+                        </InputLabel>
+                        <Select
+                            id="add-space-select-library"
+                            labelId="add-space-select-library-label"
+                            data-testid="add-space-select-library"
+                            value={formValues?.library_id}
+                            onChange={handleChange('library_id')}
+                            required
+                            inputProps={{
+                                id: 'add-space-select-library-input',
+                                'aria-labelledby': 'add-space-select-library-label',
+                            }}
+                        >
+                            {!!location.currentCampusLibraries &&
+                                location.currentCampusLibraries?.length > 0 &&
+                                location.currentCampusLibraries?.map((library, index) => (
+                                    <MenuItem value={library?.library_id} key={`select-library-${index}`}>
+                                        {library?.library_name || library?.building_name}
+                                    </MenuItem>
+                                ))}
+                        </Select>
+                        <StyledErrorMessageTypography component={'div'}>
+                            {reportErrorMessage('??')}
+                        </StyledErrorMessageTypography>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel id="add-space-select-floor-label" htmlFor="add-space-select-floor-input">
+                            Floor *
+                        </InputLabel>
+                        <Select
+                            id="add-space-select-floor"
+                            labelId="add-space-select-floor-label"
+                            data-testid="add-space-select-floor"
+                            value={formValues?.floor_id}
+                            onChange={handleChange('floor_id')}
+                            required
+                            inputProps={{
+                                id: 'add-space-select-floor-input',
+                                'aria-labelledby': 'add-space-select-floor-label',
+                            }}
+                        >
+                            {!!location?.currentLibrary &&
+                                !!location?.currentLibraryFloors &&
+                                location?.currentLibraryFloors?.length > 0 &&
+                                location?.currentLibraryFloors?.map((floor, index) => {
+                                    const libraryName =
+                                        location?.currentLibrary?.library_name ||
+                                        location?.currentLibrary?.building_name;
+                                    return (
+                                        <MenuItem value={floor?.floor_id} key={`select-floor-${index}`}>
+                                            {floor?.floor_name}{' '}
+                                            {location?.currentLibrary?.ground_floor_id === floor?.floor_id
+                                                ? ' (Ground floor)'
+                                                : ''}
+                                            {`${
+                                                window.location.host === 'localhost:2020' // to make the Select more readable to we poor devs, also makes more accurate test
+                                                    ? ' [' + libraryName + ' - ' + floor?.floor_id + ']'
+                                                    : ''
+                                            }`}
+                                        </MenuItem>
+                                    );
+                                })}
+                        </Select>
+                        <StyledErrorMessageTypography component={'div'}>
+                            {reportErrorMessage('??')}
+                        </StyledErrorMessageTypography>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel htmlFor="space_precise">
+                            Description of Space placement within the Library
+                        </InputLabel>
+                        <Input
+                            id="space_precise"
+                            data-testid="add-space-precise-location"
+                            value={formValues?.space_precise || ''}
+                            onChange={handleChange('space_precise')}
+                            onBlur={handleFieldCompletion}
+                        />
+                        <StyledErrorMessageTypography component={'div'}>
+                            {reportErrorMessage('space_precise')}
+                        </StyledErrorMessageTypography>
+                    </FormControl>
+                    <div data-testid="add-space-pretty-location">
+                        <Typography component={'h4'} variant={'h6'}>
+                            "Pretty" location
+                        </Typography>
+                        {getFriendlyLocationDescription({
+                            space_is_ground_floor:
+                                location?.currentFloor?.floor_id === location?.currentLibrary?.ground_floor_id,
+                            space_floor_name: location?.currentFloor?.floor_name,
+                            space_precise: formValues?.space_precise,
+                            space_library_name: location?.currentLibrary?.library_name,
+                            space_building_name: location?.currentLibrary?.building_name,
+                            space_building_number: location?.currentLibrary?.building_number,
+                            space_campus_name: location?.currentCampus?.campus_name,
+                        })}
+                    </div>
+                </Grid>
+                <Grid item xs={12}>
+                    <Typography component={'p'}>
+                        The "About" page for this Library: <span>{reportCurrentLibraryAboutPage(location)}</span>
+                    </Typography>
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel htmlFor="space_services_page">Enter a different page for this Space:</InputLabel>
+                        <Input
+                            id="space_services_page"
+                            data-testid="space_services_page"
+                            value={formValues?.space_services_page || ''}
+                            onChange={handleChange('space_services_page')}
+                            onBlur={handleFieldCompletion}
+                        />
+                        <StyledErrorMessageTypography component={'div'}>
+                            {reportErrorMessage('space_services_page')}
+                        </StyledErrorMessageTypography>
+                    </FormControl>
+                </Grid>
+                {/* <Grid item xs={6}>*/}
+                {/*    <FormControl variant="standard" fullWidth>*/}
+                {/*        <InputLabel htmlFor="space_latitude">*/}
+                {/*            Latitude (to be replaced with map picker)*/}
+                {/*        </InputLabel>*/}
+                {/*        <Input*/}
+                {/*            id="space_latitude"*/}
+                {/*            data-testid="space_latitude"*/}
+                {/*            value={formValues?.space_latitude || ''}*/}
+                {/*            onChange={handleChange('space_latitude')}*/}
+                {/*            onBlur={handleFieldCompletion}*/}
+                {/*        />*/}
+                {/*        <StyledErrorMessageTypography component={'div'}>*/}
+                {/*            {reportErrorMessage('space_latitude')}*/}
+                {/*        </StyledErrorMessageTypography>*/}
+                {/*    </FormControl>*/}
+                {/* </Grid>*/}
+                {/* <Grid item xs={6}>*/}
+                {/*    <FormControl variant="standard" fullWidth>*/}
+                {/*        <InputLabel htmlFor="space_longitude">Longitude</InputLabel>*/}
+                {/*        <Input*/}
+                {/*            id="space_longitude"*/}
+                {/*            data-testid="space_longitude"*/}
+                {/*            value={formValues?.space_longitude || ''}*/}
+                {/*            onChange={handleChange('space_longitude')}*/}
+                {/*            onBlur={handleFieldCompletion}*/}
+                {/*        />*/}
+                {/*        <StyledErrorMessageTypography component={'div'}>*/}
+                {/*            {reportErrorMessage('space_longitude')}*/}
+                {/*        </StyledErrorMessageTypography>*/}
+                {/*    </FormControl>*/}
+                {/* </Grid>*/}
+                <Grid item xs={12}>
+                    <Typography component={'h3'} variant={'h6'}>
+                        Opening hours
+                    </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                    <StyledSpringshareHouseFormControl variant="standard" fullWidth className="asLoaded">
+                        <InputLabel id="add-space-springshare-id-label" htmlFor="add-space-springshare-input">
+                            Choose the Springshare Library to use for Opening hours *
+                        </InputLabel>
+                        <Select
+                            id="add-space-springshare-id"
+                            labelId="add-space-springshare-id-label"
+                            data-testid="add-space-springshare-id"
+                            value={formValues?.space_opening_hours_id} // selectedSpringshareOption
+                            onChange={handleChange('space_opening_hours_id')}
+                            required
+                            inputProps={{
+                                id: 'add-space-springshare-input',
+                                'aria-labelledby': 'add-space-springshare-id-label',
+                            }}
+                        >
+                            {!!springshareList &&
+                                springshareList?.length > 0 &&
+                                springshareList?.map((s, index) => {
+                                    return (
+                                        <MenuItem value={s?.id} key={`select-floor-${index}`}>
+                                            {s.display_name}
+                                        </MenuItem>
+                                    );
+                                })}
+                        </Select>
+                        <StyledErrorMessageTypography component={'div'}>
+                            {reportErrorMessage('space_opening_hours_id')}
+                        </StyledErrorMessageTypography>
+                    </StyledSpringshareHouseFormControl>{' '}
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel htmlFor="space_opening_hours_override">
+                            An extra line about opening hours, specific to this Space
+                        </InputLabel>
+                        <Input
+                            id="space_opening_hours_override"
+                            data-testid="space-opening-hours-override"
+                            value={formValues?.space_opening_hours_override || ''}
+                            onChange={handleChange('space_opening_hours_override')}
+                            onBlur={handleFieldCompletion}
+                        />
+                        <StyledErrorMessageTypography component={'div'}>
+                            {reportErrorMessage('space_opening_hours_override')}
+                        </StyledErrorMessageTypography>
+                    </FormControl>
+                </Grid>
+            </Grid>
+        );
+    };
+    const imageryPanel = () => {
+        return (
+            <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <Typography component={'h3'} variant={'h6'}>
+                        Imagery
+                    </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                    <FormControl variant="standard" fullWidth>
+                        <ImageUploadDropzone
+                            onAddFile={handleSuppliedFiles}
+                            onClearFile={clearSuppliedFile}
+                            currentImage={formValues.space_photo_url}
+                        />
+                        <StyledErrorMessageTypography component={'div'}>
+                            {reportErrorMessage('space_photo_url')}
+                        </StyledErrorMessageTypography>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                    {/* this WONT be upgraded to CK, because it should just be plain text! */}
+                    <TextField
+                        id="space_photo_description"
+                        data-testid="space_photo_description"
+                        label={basePhotoDescriptionFieldLabel}
+                        variant="standard"
+                        fullWidth
+                        multiline
+                        rows={4}
+                        value={formValues?.space_photo_description || ''}
+                        onChange={handleChange('space_photo_description')}
+                        inputProps={{
+                            'data-testid': 'add-space-photo-description',
+                        }}
+                        onBlur={handleFieldCompletion}
+                    />
+                    <StyledErrorMessageTypography component={'div'}>
+                        {reportErrorMessage('space_photo_description')}
+                    </StyledErrorMessageTypography>
+                </Grid>
+                <Grid item xs={12}>
+                    <Typography component={'p'} variant={'p'} sx={{ textAlign: 'right' }}>
+                        Required fields are marked with a *
+                    </Typography>
+                </Grid>
+            </Grid>
+        );
+    };
+    const cancelButton = () => {
+        return (
+            <StyledSecondaryButton
+                children="Cancel"
+                data-testid="admin-spaces-form-button-cancel"
+                onClick={() => navigateToPage('/admin/spaces')}
+                variant="contained"
+            />
+        );
+    };
+    const saveButton = (disabled = false) => {
+        console.log('saveButton disabled=', disabled);
+        return (
+            <div>
+                <StyledPrimaryButton
+                    data-testid="admin-spaces-save-button-submit"
+                    variant="contained"
+                    children="Save"
+                    disabled={disabled}
+                    onClick={() => handleSaveClick()}
+                />
+                {errorMessages?.length > 0 && (
+                    <div data-testid="spaces-button-error-list">
+                        <h2 data-error-count="${errorMessages?.length}">Errors</h2>
+                        <p>These errors occurred:</p>
+                        {errorMessages?.map(m => {
+                            return <p>{m?.message}</p>;
+                        })}
+                    </div>
+                )}
+            </div>
+        );
+    };
+
+    function panelErrorCount(index) {
+        if (index === firstStepId) {
+            return validatePanelAbout(formValues)?.length;
+        } else if (index === 1) {
+            return validatePanelFacilityTypes(formValues)?.length;
+        } else if (index === 2) {
+            return validatePanelLocation(formValues)?.length;
+        } else {
+            // index must = 3
+            return validatePanelImagery(formValues)?.length;
+        }
+    }
+
     // console.log('RENDER selectedSpringshareOption=', selectedSpringshareOption);
     return (
         <>
@@ -591,410 +1180,121 @@ export const EditSpaceForm = ({
             />
 
             <PageWrapper>
-                <form id="spaces-addedit-form">
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <Typography component={'h3'} variant={'h6'}>
-                                About
-                            </Typography>
+                {mode === 'add' && (
+                    <>
+                        <form id="spaces-addedit-form">
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <Stepper activeStep={activeStep}>
+                                        {['About', 'Facility types', 'Location & Hours', 'Imagery'].map(
+                                            (stepName, index) => {
+                                                const stepProps = { completed: null };
+                                                const labelProps = {
+                                                    optional: null,
+                                                };
+                                                return (
+                                                    <Step key={stepName} {...stepProps} sx={{ paddingRight: '25px' }}>
+                                                        <StepLabel {...labelProps}>
+                                                            {panelErrorCount(index) === 0 ? (
+                                                                <span data-testid={`tab-${slugifyName(stepName)}`}>
+                                                                    {stepName}
+                                                                </span>
+                                                            ) : (
+                                                                <StyledErrorCountBadge
+                                                                    color="error"
+                                                                    badgeContent={panelErrorCount(index)}
+                                                                    data-testid={`tab-${slugifyName(stepName)}`}
+                                                                >
+                                                                    {stepName}
+                                                                </StyledErrorCountBadge>
+                                                            )}
+                                                        </StepLabel>
+                                                    </Step>
+                                                );
+                                            },
+                                        )}
+                                    </Stepper>
+                                </Grid>
+                                {activeStep === firstStepId && aboutPanel()}
+                                {activeStep === 1 && facilityTypePanel()}
+                                {activeStep === 2 && locationPanel()}
+                                {activeStep === lastStepId && imageryPanel()}
+                                <Grid item xs={12}>
+                                    <Box
+                                        id={'button-wrapper'}
+                                        sx={{ display: 'flex', flexDirection: 'row', pt: 2, alignItems: 'start' }}
+                                    >
+                                        <Button
+                                            color="inherit"
+                                            disabled={activeStep === firstStepId}
+                                            onClick={handleBack}
+                                            sx={{ mr: 1 }}
+                                            data-testid="spaces-form-back-button"
+                                        >
+                                            Back
+                                        </Button>
+                                        <Box sx={{ flex: '1 1 auto' }} />
+                                        {activeStep === lastStepId ? (
+                                            saveButton(errorMessages.length > 0)
+                                        ) : (
+                                            <Button onClick={handleNext} data-testid="spaces-form-next-button">
+                                                Next
+                                            </Button>
+                                        )}
+                                    </Box>
+                                </Grid>
+                            </Grid>
+                        </form>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} style={{ marginTop: '2rem', textAlign: 'center' }}>
+                                {cancelButton()}
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                            <FormControl variant="standard" fullWidth>
-                                <InputLabel htmlFor="space_name">Space name *</InputLabel>
-                                <Input
-                                    id="space_name"
-                                    data-testid="space-name"
-                                    required
-                                    value={formValues?.space_name || ''}
-                                    onChange={handleChange('space_name')}
-                                    onBlur={handleFieldCompletion}
-                                />
-                                <StyledErrorMessageTypography component={'div'}>
-                                    {reportErrorMessage('space_name')}
-                                </StyledErrorMessageTypography>
-                            </FormControl>
+                    </>
+                )}
+                {mode === 'edit' && (
+                    <>
+                        <form id="spaces-addedit-form">
+                            <Box sx={{ width: '100%' }}>
+                                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                    <StyledTabs value={panelId} onChange={handleTabChange} aria-label="Space fields">
+                                        {['About', 'Facility types', 'Location & Hours', 'Imagery'].map(
+                                            (tabName, index) => {
+                                                return (
+                                                    <Tab
+                                                        label={`${tabName}`}
+                                                        {...a11yProps(index)}
+                                                        data-testid={`tab-${slugifyName(tabName)}`}
+                                                    />
+                                                );
+                                            },
+                                        )}
+                                    </StyledTabs>
+                                </Box>
+                                <CustomTabPanel value={panelId} index={0}>
+                                    {aboutPanel()}
+                                </CustomTabPanel>
+                                <CustomTabPanel value={panelId} index={1}>
+                                    {facilityTypePanel()}
+                                </CustomTabPanel>
+                                <CustomTabPanel value={panelId} index={2}>
+                                    {locationPanel()}
+                                </CustomTabPanel>
+                                <CustomTabPanel value={panelId} index={3}>
+                                    {imageryPanel()}
+                                </CustomTabPanel>
+                            </Box>
+                        </form>
+                        <Grid container spacing={3}>
+                            <Grid item xs={6}>
+                                {cancelButton()}
+                            </Grid>
+                            <Grid item xs={6} align="right">
+                                {saveButton()}
+                            </Grid>
                         </Grid>
-                        <Grid item md={5} xs={12}>
-                            <FormControl variant="standard" fullWidth>
-                                <InputLabel id="add-space-type-label" htmlFor="add-space-type-input">
-                                    Choose an existing Space type *
-                                </InputLabel>
-                                <Select
-                                    id="add-space-type"
-                                    labelId="add-space-type-label"
-                                    data-testid="space-type"
-                                    value={formValues?.space_type || ''}
-                                    onChange={handleChange('space_type')}
-                                    onBlur={handleFieldCompletion}
-                                    inputProps={{
-                                        id: 'add-space-type-input',
-                                        title: 'Choose an existing Space type',
-                                    }}
-                                >
-                                    {!!spaceTypeList &&
-                                        spaceTypeList?.length > 0 &&
-                                        spaceTypeList?.map((spaceType, index) => {
-                                            return (
-                                                <MenuItem value={spaceType} key={`spacetype-${index}`}>
-                                                    {spaceType}
-                                                </MenuItem>
-                                            );
-                                        })}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item md={1} xs={12} style={{ marginBlock: 'auto', marginInline: 'auto' }}>
-                            ...or...
-                        </Grid>
-                        <Grid item md={6} xs={12}>
-                            <FormControl fullWidth>
-                                <InputLabel id="add-space-type-new-label">Enter new Space type</InputLabel>
-                                <Input
-                                    id="add-space-type-new"
-                                    labelId="add-space-type-new-label"
-                                    data-testid="add-space-type-new"
-                                    onChange={handleChange('space_type_new')}
-                                    onBlur={handleFieldCompletion}
-                                    inputProps={{
-                                        'aria-labelledby': 'add-space-type-new-label',
-                                    }}
-                                />
-                                <StyledErrorMessageTypography component={'div'}>
-                                    {reportErrorMessage('space_type')}
-                                </StyledErrorMessageTypography>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            {/* will upgrade this to ckeditor (or replacement) eventually*/}
-                            <TextField
-                                id="space_description"
-                                label="Space description"
-                                variant="standard"
-                                fullWidth
-                                multiline
-                                rows={4}
-                                value={formValues?.space_description || ''}
-                                onChange={handleChange('space_description')}
-                                inputProps={{
-                                    'data-testid': 'add-space-description',
-                                }}
-                                onBlur={handleFieldCompletion}
-                            />
-                            <StyledErrorMessageTypography component={'div'}>
-                                {reportErrorMessage('space_description')}
-                            </StyledErrorMessageTypography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography component={'h4'} variant={'h6'}>
-                                Facility types
-                            </Typography>
-                            <StyledFilterWrapper>{showFilterCheckboxes()}</StyledFilterWrapper>
-                        </Grid>
-                        {/* <Grid item xs={6}>*/}
-                        {/*    <FormControl variant="standard" fullWidth>*/}
-                        {/*        <InputLabel htmlFor="space_latitude">*/}
-                        {/*            Latitude (to be replaced with map picker)*/}
-                        {/*        </InputLabel>*/}
-                        {/*        <Input*/}
-                        {/*            id="space_latitude"*/}
-                        {/*            data-testid="space_latitude"*/}
-                        {/*            value={formValues?.space_latitude || ''}*/}
-                        {/*            onChange={handleChange('space_latitude')}*/}
-                        {/*            onBlur={handleFieldCompletion}*/}
-                        {/*        />*/}
-                        {/*        <StyledErrorMessageTypography component={'div'}>{reportErrorMessage('space_latitude')}</StyledErrorMessageTypography>*/}
-                        {/*    </FormControl>*/}
-                        {/* </Grid>*/}
-                        {/* <Grid item xs={6}>*/}
-                        {/*    <FormControl variant="standard" fullWidth>*/}
-                        {/*        <InputLabel htmlFor="space_longitude">Longitude</InputLabel>*/}
-                        {/*        <Input*/}
-                        {/*            id="space_longitude"*/}
-                        {/*            data-testid="space_longitude"*/}
-                        {/*            value={formValues?.space_longitude || ''}*/}
-                        {/*            onChange={handleChange('space_longitude')}*/}
-                        {/*            onBlur={handleFieldCompletion}*/}
-                        {/*        />*/}
-                        {/*        <StyledErrorMessageTypography component={'div'}>{reportErrorMessage('space_longitude')}</StyledErrorMessageTypography>*/}
-                        {/*    </FormControl>*/}
-                        {/* </Grid>*/}
-                        <Grid item xs={12}>
-                            <Typography component={'h3'} variant={'h6'}>
-                                Location
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <FormControl variant="standard" fullWidth>
-                                <InputLabel id="add-space-select-campus-label" htmlFor="add-space-select-campus-input">
-                                    Campus *
-                                </InputLabel>
-                                <Select
-                                    id="add-space-select-campus"
-                                    labelId="add-space-select-campus-label"
-                                    data-testid="add-space-select-campus"
-                                    value={formValues?.campus_id}
-                                    onChange={handleChange('campus_id')}
-                                    required
-                                    inputProps={{
-                                        id: 'add-space-select-campus-input',
-                                        'aria-labelledby': 'add-space-select-campus-label',
-                                    }}
-                                >
-                                    {!!currentCampusList &&
-                                        currentCampusList?.length > 0 &&
-                                        currentCampusList?.map((campus, index) => (
-                                            <MenuItem value={campus?.campus_id} key={`select-campus-${index}`}>
-                                                {campus?.campus_name}
-                                            </MenuItem>
-                                        ))}
-                                </Select>
-                                <StyledErrorMessageTypography component={'div'}>
-                                    {reportErrorMessage('??')}
-                                </StyledErrorMessageTypography>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <FormControl variant="standard" fullWidth>
-                                <InputLabel
-                                    id="add-space-select-library-label"
-                                    htmlFor="add-space-select-library-input"
-                                >
-                                    Library *
-                                </InputLabel>
-                                <Select
-                                    id="add-space-select-library"
-                                    labelId="add-space-select-library-label"
-                                    data-testid="add-space-select-library"
-                                    value={formValues?.library_id}
-                                    onChange={handleChange('library_id')}
-                                    required
-                                    inputProps={{
-                                        id: 'add-space-select-library-input',
-                                        'aria-labelledby': 'add-space-select-library-label',
-                                    }}
-                                >
-                                    {!!location.currentCampusLibraries &&
-                                        location.currentCampusLibraries?.length > 0 &&
-                                        location.currentCampusLibraries?.map((library, index) => (
-                                            <MenuItem value={library?.library_id} key={`select-library-${index}`}>
-                                                {library?.library_name || library?.building_name}
-                                            </MenuItem>
-                                        ))}
-                                </Select>
-                                <StyledErrorMessageTypography component={'div'}>
-                                    {reportErrorMessage('??')}
-                                </StyledErrorMessageTypography>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <FormControl variant="standard" fullWidth>
-                                <InputLabel id="add-space-select-floor-label" htmlFor="add-space-select-floor-input">
-                                    Floor *
-                                </InputLabel>
-                                <Select
-                                    id="add-space-select-floor"
-                                    labelId="add-space-select-floor-label"
-                                    data-testid="add-space-select-floor"
-                                    value={formValues?.floor_id}
-                                    onChange={handleChange('floor_id')}
-                                    required
-                                    inputProps={{
-                                        id: 'add-space-select-floor-input',
-                                        'aria-labelledby': 'add-space-select-floor-label',
-                                    }}
-                                >
-                                    {!!location?.currentLibrary &&
-                                        !!location?.currentLibraryFloors &&
-                                        location?.currentLibraryFloors?.length > 0 &&
-                                        location?.currentLibraryFloors?.map((floor, index) => {
-                                            const libraryName =
-                                                location?.currentLibrary?.library_name ||
-                                                location?.currentLibrary?.building_name;
-                                            return (
-                                                <MenuItem value={floor?.floor_id} key={`select-floor-${index}`}>
-                                                    {floor?.floor_name}{' '}
-                                                    {location?.currentLibrary?.ground_floor_id === floor?.floor_id
-                                                        ? ' (Ground floor)'
-                                                        : ''}
-                                                    {`${
-                                                        window.location.host === 'localhost:2020' // to make the Select more readable to we poor devs, also makes more accurate test
-                                                            ? ' [' + libraryName + ' - ' + floor?.floor_id + ']'
-                                                            : ''
-                                                    }`}
-                                                </MenuItem>
-                                            );
-                                        })}
-                                </Select>
-                                <StyledErrorMessageTypography component={'div'}>
-                                    {reportErrorMessage('??')}
-                                </StyledErrorMessageTypography>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControl variant="standard" fullWidth>
-                                <InputLabel htmlFor="space_precise">
-                                    Description of Space placement within the Library
-                                </InputLabel>
-                                <Input
-                                    id="space_precise"
-                                    data-testid="add-space-precise-location"
-                                    value={formValues?.space_precise || ''}
-                                    onChange={handleChange('space_precise')}
-                                    onBlur={handleFieldCompletion}
-                                />
-                                <StyledErrorMessageTypography component={'div'}>
-                                    {reportErrorMessage('space_precise')}
-                                </StyledErrorMessageTypography>
-                            </FormControl>
-                            <div data-testid="add-space-pretty-location">
-                                <Typography component={'h4'} variant={'h6'}>
-                                    "Pretty" location
-                                </Typography>
-                                {getFriendlyLocationDescription({
-                                    space_is_ground_floor:
-                                        location?.currentFloor?.floor_id === location?.currentLibrary?.ground_floor_id,
-                                    space_floor_name: location?.currentFloor?.floor_name,
-                                    space_precise: formValues?.space_precise,
-                                    space_library_name: location?.currentLibrary?.library_name,
-                                    space_building_name: location?.currentLibrary?.building_name,
-                                    space_building_number: location?.currentLibrary?.building_number,
-                                    space_campus_name: location?.currentCampus?.campus_name,
-                                })}
-                            </div>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography component={'h4'} variant={'h6'}>
-                                Opening hours
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <StyledSpringshareHouseFormControl variant="standard" fullWidth className="asLoaded">
-                                <InputLabel id="add-space-springshare-id-label" htmlFor="add-space-springshare-input">
-                                    Choose the Springshare Library to use for Opening hours *
-                                </InputLabel>
-                                <Select
-                                    id="add-space-springshare-id"
-                                    labelId="add-space-springshare-id-label"
-                                    data-testid="add-space-springshare-id"
-                                    value={formValues?.space_opening_hours_id} // selectedSpringshareOption
-                                    onChange={handleChange('space_opening_hours_id')}
-                                    required
-                                    inputProps={{
-                                        id: 'add-space-springshare-input',
-                                        'aria-labelledby': 'add-space-springshare-id-label',
-                                    }}
-                                >
-                                    {!!springshareList &&
-                                        springshareList?.length > 0 &&
-                                        springshareList?.map((s, index) => {
-                                            return (
-                                                <MenuItem value={s?.id} key={`select-floor-${index}`}>
-                                                    {s.display_name}
-                                                </MenuItem>
-                                            );
-                                        })}
-                                </Select>
-                                <StyledErrorMessageTypography component={'div'}>
-                                    {reportErrorMessage('space_opening_hours_id')}
-                                </StyledErrorMessageTypography>
-                            </StyledSpringshareHouseFormControl>{' '}
-                            <FormControl variant="standard" fullWidth>
-                                <InputLabel htmlFor="space_opening_hours_override">
-                                    An extra line about opening hours, specific to this Space
-                                </InputLabel>
-                                <Input
-                                    id="space_opening_hours_override"
-                                    data-testid="space-opening-hours-override"
-                                    value={formValues?.space_opening_hours_override || ''}
-                                    onChange={handleChange('space_opening_hours_override')}
-                                    onBlur={handleFieldCompletion}
-                                />
-                                <StyledErrorMessageTypography component={'div'}>
-                                    {reportErrorMessage('space_opening_hours_override')}
-                                </StyledErrorMessageTypography>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography component={'p'}>
-                                The "About" page for this Library:{' '}
-                                <span>{reportCurrentLibraryAboutPage(location)}</span>
-                            </Typography>
-                            <FormControl variant="standard" fullWidth>
-                                <InputLabel htmlFor="space_services_page">
-                                    Enter a different page for this Space:
-                                </InputLabel>
-                                <Input
-                                    id="space_services_page"
-                                    data-testid="space_services_page"
-                                    value={formValues?.space_services_page || ''}
-                                    onChange={handleChange('space_services_page')}
-                                    onBlur={handleFieldCompletion}
-                                />
-                                <StyledErrorMessageTypography component={'div'}>
-                                    {reportErrorMessage('space_services_page')}
-                                </StyledErrorMessageTypography>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography component={'h3'} variant={'h6'}>
-                                Imagery
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControl variant="standard" fullWidth>
-                                <ImageUploadDropzone
-                                    onAddFile={handleSuppliedFiles}
-                                    onClearFile={clearSuppliedFile}
-                                    currentImage={formValues.space_photo_url}
-                                />
-                                <StyledErrorMessageTypography component={'div'}>
-                                    {reportErrorMessage('space_photo_url')}
-                                </StyledErrorMessageTypography>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            {/* this WONT be upgraded to CK, because it should just be plain text! */}
-                            <TextField
-                                id="space_photo_description"
-                                label={basePhotoDescriptionFieldLabel}
-                                variant="standard"
-                                fullWidth
-                                multiline
-                                rows={4}
-                                value={formValues?.space_photo_description || ''}
-                                onChange={handleChange('space_photo_description')}
-                                inputProps={{
-                                    'data-testid': 'add-space-photo-description',
-                                }}
-                                onBlur={handleFieldCompletion}
-                            />
-                            <StyledErrorMessageTypography component={'div'}>
-                                {reportErrorMessage('space_photo_description')}
-                            </StyledErrorMessageTypography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography component={'p'} variant={'p'} sx={{ textAlign: 'right' }}>
-                                Required fields are marked with a *
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <StyledSecondaryButton
-                                children="Cancel"
-                                data-testid="admin-spaces-form-button-cancel"
-                                onClick={() => navigateToPage('/admin/spaces')}
-                                variant="contained"
-                            />
-                        </Grid>
-                        <Grid item xs={6} align="right">
-                            <StyledPrimaryButton
-                                data-testid="admin-spaces-save-button-submit"
-                                variant="contained"
-                                children="Save"
-                                onClick={() => handleSaveClick()}
-                            />
-                        </Grid>
-                    </Grid>
-                </form>
+                    </>
+                )}
             </PageWrapper>
         </>
     );

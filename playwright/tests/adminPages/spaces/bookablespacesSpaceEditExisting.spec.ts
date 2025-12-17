@@ -22,7 +22,10 @@ test.describe('Spaces Admin - edit spaces', () => {
 test.describe('Spaces Admin - edit pages load with correct data', () => {
     test('Library Space 1 edit page loads correctly', async ({ page }) => {
         await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces');
-        await page.setViewportSize({ width: 1300, height: 1000 });
+        await page.setViewportSize({
+            width: 1300,
+            height: 1000,
+        });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
@@ -30,11 +33,17 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-type').locator('input')).toHaveValue('Collaborative space');
 
+        // change to facility type tab
+        await page.getByTestId('tab-facility-types').click();
+
         // all the facility types appear in the "space form", not just the ones currently attached to a space
         const numberFacilityTypesInMockFacilityTypes = 52;
         await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
             numberFacilityTypesInMockFacilityTypes,
         );
+
+        // change to Location tab
+        await page.getByTestId('tab-location-hours').click();
 
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-campus')).toContainText('St Lucia');
@@ -66,6 +75,10 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         // await expect(page.getByTestId('space-photo-url').locator('input')).toHaveValue(
         //     'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
         // );
+
+        // change to imagery tab
+        await page.getByTestId('tab-imagery').click();
+
         await expect(page.getByTestId('dropzone-preview').locator('img')).toBeVisible();
         await expect(page.getByTestId('dropzone-preview').locator('img')).toHaveAttribute(
             'src',
@@ -89,7 +102,10 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
     });
     test('Library Space 2 edit page loads correctly', async ({ page }) => {
         await page.goto('/admin/spaces/edit/df40_2jsf_zdk5?user=libSpaces');
-        await page.setViewportSize({ width: 1300, height: 1000 });
+        await page.setViewportSize({
+            width: 1300,
+            height: 1000,
+        });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
 
@@ -98,11 +114,17 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-type').locator('input')).toHaveValue('Group Study Room');
 
+        // change to Facility-type tab
+        await page.getByTestId('tab-facility-types').click();
+
         // all the facility types appear in the "space form", not just the ones currently attached to a space
         const numberFacilityTypesInMockFacilityTypes = 52;
         await expect(page.getByTestId('facility-type-checkbox-list').locator('input[type="checkbox"]')).toHaveCount(
             numberFacilityTypesInMockFacilityTypes,
         );
+
+        // change to Location tab
+        await page.getByTestId('tab-location-hours').click();
 
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-campus')).toContainText('PACE');
@@ -116,6 +138,7 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
         );
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeEmpty();
+
         await expect(page.getByTestId('add-space-pretty-location')).toBeVisible();
         await expect(page.getByTestId('add-space-pretty-location')).toContainText('6th Floor');
         await expect(page.getByTestId('add-space-pretty-location')).toContainText(
@@ -140,6 +163,9 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
             'https://web.library.uq.edu.au/visit/dutton-park-health-sciences-library',
         );
 
+        // change to imagery tab
+        await page.getByTestId('tab-imagery').click();
+
         // await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
         // await expect(page.getByTestId('space-photo-url').locator('input')).toBeEmpty();
         await expect(page.getByTestId('dropzone-preview')).not.toBeVisible();
@@ -159,9 +185,20 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
     });
     test('Library Space 3, Andrew Liveris building, edit page loads correctly', async ({ page }) => {
         await page.goto('/admin/spaces/edit/97fd5_nm39_gh29?user=libSpaces');
-        await page.setViewportSize({ width: 1300, height: 1000 });
+        await page.setViewportSize({
+            width: 1300,
+            height: 1000,
+        });
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
+
+        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-name').locator('input')).toHaveValue('46-342/343');
+        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space-type').locator('input')).toHaveValue('Computer room');
+
+        // change to Facility type tab
+        await page.getByTestId('tab-facility-types').click();
 
         // all the facility types appear in the "space form", not just the ones currently attached to a space
         const numberFacilityTypesInMockFacilityTypes = 52;
@@ -169,10 +206,9 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
             numberFacilityTypesInMockFacilityTypes,
         );
 
-        await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
-        await expect(page.getByTestId('space-name').locator('input')).toHaveValue('46-342/343');
-        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
-        await expect(page.getByTestId('space-type').locator('input')).toHaveValue('Computer room');
+        // change to Location tab
+        await page.getByTestId('tab-location-hours').click();
+
         await expect(page.getByTestId('add-space-select-campus').locator('input')).toBeVisible();
         await expect(page.getByTestId('add-space-select-campus')).toContainText('St Lucia');
         await expect(page.getByTestId('add-space-select-library').locator('input')).toBeVisible();
@@ -200,6 +236,9 @@ test.describe('Spaces Admin - edit pages load with correct data', () => {
 
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
         await expect(page.getByTestId('space_services_page').locator('input')).toBeEmpty();
+
+        // change to imagery tab
+        await page.getByTestId('tab-imagery').click();
 
         // await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
         // await expect(page.getByTestId('space-photo-url').locator('input')).toHaveValue(
@@ -254,6 +293,7 @@ test.describe('Spaces Admin - edit space', () => {
     const POSTGRAD = 13;
     const UNDERGRAD = 14;
 
+    // to test the required fields are the only required fields, we have to clear all the other fields!!! Not a realistic thing a user would do, but it meets the mentioned need
     test('can save with only required fields', async ({ page, context }) => {
         await setTestDataCookie(context, page);
 
@@ -264,6 +304,9 @@ test.describe('Spaces Admin - edit space', () => {
 
         await expect(page.getByTestId('add-space-description')).toBeVisible();
         await page.getByTestId('add-space-description').fill('');
+
+        // change to facility type tab
+        await page.getByTestId('tab-facility-types').click();
 
         // clear facility types
         for (const facilityTypeId of [
@@ -288,6 +331,9 @@ test.describe('Spaces Admin - edit space', () => {
                 .click();
         }
 
+        // change to Location tab
+        await page.getByTestId('tab-location-hours').click();
+
         // locations are inherently unclearable
 
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
@@ -311,24 +357,31 @@ test.describe('Spaces Admin - edit space', () => {
             .fill('');
 
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
+        await expect(page.getByTestId('space_services_page').locator('input')).toHaveValue(
+            'https://web.library.uq.edu.au/visit/walter-harrison-law-library',
+        );
         await page
             .getByTestId('space_services_page')
             .locator('input')
             .fill('');
 
-        // // clear the image
-        // await expect(page.getByTestId('dropzone-preview').locator('img')).toBeVisible();
-        // await expect(page.getByTestId('dropzone-preview').locator('img')).toHaveAttribute(
-        //     'src',
-        //     'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
-        // );
-        // await expect(page.getByTestId('spotlights-form-remove-image')).toBeVisible();
-        // await page.getByTestId('spotlights-form-remove-image').click();
-        //
-        // await expect(page.getByTestId('dropzone-preview').locator('img')).not.toBeVisible();
-        //
-        // await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
-        // await page.getByTestId('add-space-photo-description').fill('');
+        // change to Imagery tab
+        await page.getByTestId('tab-imagery').click();
+
+        // clear the image
+        await expect(page.getByTestId('dropzone-preview').locator('img')).toBeVisible();
+        await expect(page.getByTestId('dropzone-preview').locator('img')).toHaveAttribute(
+            'src',
+            'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
+        );
+        await expect(page.getByTestId('spaces-form-remove-image')).toBeVisible();
+        await page.getByTestId('spaces-form-remove-image').click();
+
+        await expect(page.getByTestId('dropzone-preview').locator('img')).not.toBeVisible();
+
+        // clear the img alt text
+        await expect(page.getByTestId('add-space-photo-description')).toBeVisible();
+        await page.getByTestId('add-space-photo-description').fill('');
 
         // click save button
         await expect(page.getByTestId('admin-spaces-save-button-submit')).toBeVisible();
@@ -347,18 +400,143 @@ test.describe('Spaces Admin - edit space', () => {
             facility_types: [],
             space_precise: '',
             space_description: '',
-            // space_photo_url: '',
-            // space_photo_description: '',
-            // TODO - temp until photo drag is testable
-            space_photo_description: 'a large room with 6 large round tables, each wih multiple chairs',
-            space_photo_url: 'https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg',
+            space_photo_url: '',
+            space_photo_description: '',
             space_opening_hours_id: -1,
             space_services_page: '',
             space_opening_hours_override: null,
             space_latitude: '-27.496955206561836', // when we have fields for these, they should be cleared
             space_longitude: '153.01308753792662',
+            uploadedFile: [],
         };
         await assertExpectedDataSentToServer(page, expectedValues);
+    });
+    test('tabs work as expected', async ({ page }) => {
+        const cancelButton = page.getByTestId('admin-spaces-form-button-cancel');
+        const saveButton = page.getByTestId('admin-spaces-save-button-submit');
+        const photoDescriptionField = page
+            .getByTestId(`space_photo_description`)
+            .locator('textarea')
+            .first();
+        const spaceNameField = page.getByTestId('space-name').locator('input');
+        const ASKUS_FILTER_TYPE = 54;
+        const firstFacilityTypeCheckbox = page.getByTestId(`filtertype-${ASKUS_FILTER_TYPE}`).locator('input');
+        const LocationCampusSelector = page.getByTestId(`add-space-select-campus`).locator('input');
+
+        await expect(page.getByTestId('tab-about')).toBeVisible();
+        await expect(page.getByTestId('tab-about')).toHaveAttribute('aria-selected', 'true');
+        await expect(page.getByTestId('tab-facility-types')).toBeVisible();
+        await expect(page.getByTestId('tab-facility-types')).toHaveAttribute('aria-selected', 'false');
+        await expect(page.getByTestId('tab-location-hours')).toBeVisible();
+        await expect(page.getByTestId('tab-location-hours')).toHaveAttribute('aria-selected', 'false');
+        await expect(page.getByTestId('tab-imagery')).toBeVisible();
+        await expect(page.getByTestId('tab-imagery')).toHaveAttribute('aria-selected', 'false');
+
+        // panel 1 fields visible
+        await expect(spaceNameField).toBeVisible();
+        await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
+        await expect(page.getByTestId('add-space-type-new').locator('input')).toBeVisible();
+
+        // other panel fields NOT visible
+        await expect(firstFacilityTypeCheckbox).toBeDefined();
+        await expect(firstFacilityTypeCheckbox).not.toBeVisible();
+        await expect(LocationCampusSelector).toBeDefined();
+        await expect(LocationCampusSelector).not.toBeVisible();
+        await expect(photoDescriptionField).toBeDefined();
+        await expect(photoDescriptionField).not.toBeVisible();
+
+        // form control buttons always visible
+        await expect(cancelButton).toBeVisible();
+        await expect(cancelButton).toContainText('Cancel');
+        await expect(saveButton).toBeVisible();
+        await expect(saveButton).toContainText('Save');
+
+        // change to facility type tab
+        await page.getByTestId('tab-facility-types').click();
+
+        await expect(page.getByTestId('tab-about')).toBeVisible();
+        await expect(page.getByTestId('tab-about')).toHaveAttribute('aria-selected', 'false');
+        await expect(page.getByTestId('tab-facility-types')).toBeVisible();
+        await expect(page.getByTestId('tab-facility-types')).toHaveAttribute('aria-selected', 'true');
+        await expect(page.getByTestId('tab-location-hours')).toBeVisible();
+        await expect(page.getByTestId('tab-location-hours')).toHaveAttribute('aria-selected', 'false');
+        await expect(page.getByTestId('tab-imagery')).toBeVisible();
+        await expect(page.getByTestId('tab-imagery')).toHaveAttribute('aria-selected', 'false');
+
+        // panel 2 fields visible
+        await expect(firstFacilityTypeCheckbox).toBeVisible();
+
+        // other panel fields NOT visible
+        await expect(spaceNameField).toBeDefined();
+        await expect(spaceNameField).not.toBeVisible();
+        await expect(LocationCampusSelector).toBeDefined();
+        await expect(LocationCampusSelector).not.toBeVisible();
+        await expect(photoDescriptionField).toBeDefined();
+        await expect(photoDescriptionField).not.toBeVisible();
+
+        // form control buttons always visible
+        await expect(cancelButton).toBeVisible();
+        await expect(cancelButton).toContainText('Cancel');
+        await expect(saveButton).toBeVisible();
+        await expect(saveButton).toContainText('Save');
+
+        // change to location tab
+        await page.getByTestId('tab-location-hours').click();
+
+        await expect(page.getByTestId('tab-about')).toBeVisible();
+        await expect(page.getByTestId('tab-about')).toHaveAttribute('aria-selected', 'false');
+        await expect(page.getByTestId('tab-facility-types')).toBeVisible();
+        await expect(page.getByTestId('tab-facility-types')).toHaveAttribute('aria-selected', 'false');
+        await expect(page.getByTestId('tab-location-hours')).toBeVisible();
+        await expect(page.getByTestId('tab-location-hours')).toHaveAttribute('aria-selected', 'true');
+        await expect(page.getByTestId('tab-imagery')).toBeVisible();
+        await expect(page.getByTestId('tab-imagery')).toHaveAttribute('aria-selected', 'false');
+
+        // panel 3 fields visible
+        await expect(LocationCampusSelector).toBeVisible();
+
+        // other panel fields NOT visible
+        await expect(spaceNameField).toBeDefined();
+        await expect(spaceNameField).not.toBeVisible();
+        await expect(firstFacilityTypeCheckbox).toBeDefined();
+        await expect(firstFacilityTypeCheckbox).not.toBeVisible();
+        await expect(photoDescriptionField).toBeDefined();
+        await expect(photoDescriptionField).not.toBeVisible();
+
+        // form control buttons always visible
+        await expect(cancelButton).toBeVisible();
+        await expect(cancelButton).toContainText('Cancel');
+        await expect(saveButton).toBeVisible();
+        await expect(saveButton).toContainText('Save');
+
+        // change to imagery tab
+        await page.getByTestId('tab-imagery').click();
+
+        await expect(page.getByTestId('tab-about')).toBeVisible();
+        await expect(page.getByTestId('tab-about')).toHaveAttribute('aria-selected', 'false');
+        await expect(page.getByTestId('tab-facility-types')).toBeVisible();
+        await expect(page.getByTestId('tab-facility-types')).toHaveAttribute('aria-selected', 'false');
+        await expect(page.getByTestId('tab-location-hours')).toBeVisible();
+        await expect(page.getByTestId('tab-location-hours')).toHaveAttribute('aria-selected', 'false');
+        await expect(page.getByTestId('tab-imagery')).toBeVisible();
+        await expect(page.getByTestId('tab-imagery')).toHaveAttribute('aria-selected', 'true');
+
+        // panel 4 fields visible
+        await expect(photoDescriptionField).toBeVisible();
+
+        // other panel fields NOT visible
+        await expect(spaceNameField).toBeDefined();
+        await expect(spaceNameField).not.toBeVisible();
+        await expect(firstFacilityTypeCheckbox).toBeDefined();
+        await expect(firstFacilityTypeCheckbox).not.toBeVisible();
+        await expect(LocationCampusSelector).toBeDefined();
+        await expect(LocationCampusSelector).not.toBeVisible();
+
+        // form control buttons always visible
+        await expect(cancelButton).toBeVisible();
+        await expect(cancelButton).toContainText('Cancel');
+        await expect(saveButton).toBeVisible();
+        await expect(saveButton).toContainText('Save');
     });
     test('can re-edit after save', async ({ page }) => {
         // click save button
@@ -413,6 +591,7 @@ test.describe('Spaces Admin - edit space', () => {
             .locator('input')
             .fill('New space name');
 
+        // mucking around wiuth controls to show the typed in "Enter new space type" transfers to the dropdown onn blur
         await expect(page.getByTestId('add-space-type-new').locator('input')).toBeVisible();
         await page
             .getByTestId('add-space-type-new')
@@ -428,6 +607,9 @@ test.describe('Spaces Admin - edit space', () => {
 
         await expect(page.getByTestId('add-space-description')).toBeVisible();
         await page.getByTestId('add-space-description').fill('a long description that has a number of words');
+
+        // change to Facility types tab
+        await page.getByTestId('tab-facility-types').click();
 
         // confirm current filter types
         const originalFilters = [
@@ -468,12 +650,35 @@ test.describe('Spaces Admin - edit space', () => {
             .click();
         finalFilters = originalFilters.filter(f => f !== ADJUSTABLE_DESKS);
 
-        await page.getByRole('combobox', { name: 'Campus * St Lucia' }).click();
+        // change to Location tab
+        await page.getByTestId('tab-location-hours').click();
+
+        await page
+            .getByRole('combobox', {
+                name: 'Campus * St Lucia',
+            })
+            .click();
         await page.getByRole('option', { name: 'Gatton' }).click();
-        await page.getByRole('combobox', { name: 'Library * J.K. Murray Library' }).click();
-        await page.getByRole('option', { name: 'Library Warehouse' }).click();
-        await page.getByRole('combobox', { name: 'Floor * 1 [Library Warehouse' }).click();
-        await page.getByRole('option', { name: '[Library Warehouse - 32]' }).click();
+        await page
+            .getByRole('combobox', {
+                name: 'Library * J.K. Murray Library',
+            })
+            .click();
+        await page
+            .getByRole('option', {
+                name: 'Library Warehouse',
+            })
+            .click();
+        await page
+            .getByRole('combobox', {
+                name: 'Floor * 1 [Library Warehouse',
+            })
+            .click();
+        await page
+            .getByRole('option', {
+                name: '[Library Warehouse - 32]',
+            })
+            .click();
 
         await expect(page.getByTestId('add-space-precise-location').locator('input')).toBeVisible();
         await page
@@ -481,8 +686,16 @@ test.describe('Spaces Admin - edit space', () => {
             .locator('input')
             .fill('somewhere deep in the bowels of the warehouse');
 
-        await page.getByRole('combobox', { name: 'Choose the Springshare' }).click();
-        await page.getByRole('option', { name: 'Dorothy Hill Engineering and' }).click();
+        await page
+            .getByRole('combobox', {
+                name: 'Choose the Springshare',
+            })
+            .click();
+        await page
+            .getByRole('option', {
+                name: 'Dorothy Hill Engineering and',
+            })
+            .click();
 
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
         await expect(page.getByTestId('space_services_page').locator('input')).toBeVisible();
@@ -491,7 +704,14 @@ test.describe('Spaces Admin - edit space', () => {
             .locator('input')
             .fill('http://example.com');
 
-        await page.getByRole('textbox', { name: 'An extra line about opening' }).fill('space is open from 7am');
+        await page
+            .getByRole('textbox', {
+                name: 'An extra line about opening',
+            })
+            .fill('space is open from 7am');
+
+        // change to imagery tab
+        await page.getByTestId('tab-imagery').click();
 
         // await expect(page.getByTestId('space-photo-url').locator('input')).toBeVisible();
         // await page
@@ -584,12 +804,18 @@ test.describe('Spaces Admin - edit space', () => {
     test.describe('Spaces Admin - save errors', () => {
         test('edit space - server 500', async ({ page }) => {
             await page.goto('/admin/spaces/edit/f98g_fwas_5g33?user=libSpaces&responseType=spaceUpdate500Error');
-            await page.setViewportSize({ width: 1300, height: 1000 });
+            await page.setViewportSize({
+                width: 1300,
+                height: 1000,
+            });
             // wait for page to load
             await expect(page.getByTestId('admin-spaces-page-title').getByText(/Edit Space/)).toBeVisible();
 
             const facilityTypeId = '7';
             const label = 'On-desk power point';
+
+            // change to Facility type tab
+            await page.getByTestId('tab-facility-types').click();
 
             // change a checkbox
             const examFriendlyCheckbox = page.getByTestId(`facility-type-listitem-${facilityTypeId}`);

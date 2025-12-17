@@ -204,27 +204,35 @@ export const updateBookableSpaceWithExistingImage = request => {
     };
 };
 
-export const updateBookableSpaceWithNewImage = (request, spaceSaveType = 'update') => {
+export const updateBookableSpaceWithNewImage = (request, saveType = 'update') => {
+    console.log('updateBookableSpaceWithNewImage', saveType, request);
     if (!request.uploadedFile || request.uploadedFile.length === 0) {
         /* istanbul ignore else */
-        if (spaceSaveType === 'create') {
+        if (saveType === 'create') {
+            console.log('updateBookableSpaceWithNewImage create, no image');
             return createBookableSpaceWithExistingImage(request);
         } else {
+            console.log('updateBookableSpaceWithNewImage update, no image');
             return updateBookableSpaceWithExistingImage(request);
         }
     }
 
     return async dispatch => {
+        console.log('updateBookableSpaceWithNewImage uploading');
         dispatch({ type: actions.PUBLIC_FILE_UPLOADING });
 
         const formData = new FormData();
         request.uploadedFile.map((file, index) => {
             formData.append(`file${index}`, file);
         });
+        console.log('updateBookableSpaceWithNewImage formData=', formData);
+        const url = UPLOAD_PUBLIC_FILES_API();
+        console.log('updateBookableSpaceWithNewImage upload to', url);
         // do not inspect formData with get, eg not: formData.get('space_url')),
         // it causes webpack not to build, with cryptic errors
-        return post(UPLOAD_PUBLIC_FILES_API(), formData)
+        return post(url, formData)
             .then(response => {
+                console.log('updateBookableSpaceWithNewImage success', response);
                 dispatch({
                     type: actions.PUBLIC_FILE_UPLOADED,
                     payload: response,
@@ -236,21 +244,24 @@ export const updateBookableSpaceWithNewImage = (request, spaceSaveType = 'update
                     API_URL === apiProd
                         ? /* istanbul ignore next */ 'app.library.uq.edu.au'
                         : 'app-testing.library.uq.edu.au';
-                request.img_url =
+                request.space_photo_url =
                     !!firstresponse &&
                     /* istanbul ignore next */ !!firstresponse.key &&
                     /* istanbul ignore next */ `https://${domain}/file/public/${firstresponse.key}`;
 
                 delete request.uploadedFile;
-                if (spaceSaveType === 'create') {
+                if (saveType === 'create') {
+                    console.log('updateBookableSpaceWithNewImage add new Space', request);
                     dispatch({ type: actions.SPACES_LOCATION_ADDING });
                     return addBookableSpace(request, dispatch);
                 } else {
+                    console.log('updateBookableSpaceWithNewImage update Space', request);
                     dispatch({ type: actions.SPACES_LOCATION_UPDATING });
                     return updateBookableSpace(request, dispatch);
                 }
             })
             .catch(error => {
+                console.log('updateBookableSpaceWithNewImage error', error);
                 dispatch({
                     type: actions.PUBLIC_FILE_UPLOAD_FAILED,
                     payload: error,

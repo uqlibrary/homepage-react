@@ -193,11 +193,11 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
                 isOpen={isFileProblemConfirmOpen}
                 locale={uploadErrorLocale}
             />
-            <section className="container" data-testid="spotlights-form-upload-dropzone">
+            <section className="container" data-testid="spaces-form-upload-dropzone">
                 {!!files && files.length > 0 && !!files[0].preview ? (
                     <Grid container data-testid="dropzone-preview" style={thumbsContainer}>
                         <Grid item xs={12}>
-                            <h3>Preview:</h3>
+                            <h4>Preview:</h4>
                         </Grid>
                         <Grid item xs={10}>
                             {files.map(file => (
@@ -208,7 +208,7 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
                         </Grid>
                         <Grid item xs={2} align="center">
                             <IconButton
-                                data-testid="spotlights-form-remove-image"
+                                data-testid="spaces-form-remove-image"
                                 style={deleteButton}
                                 onClick={removeUpload}
                                 title={'Remove image'}
