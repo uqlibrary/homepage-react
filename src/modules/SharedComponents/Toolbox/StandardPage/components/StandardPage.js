@@ -30,6 +30,7 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
     },
 }));
 
+// changing this? Consider updating SpacesAdminPage as well
 export const StandardPage = ({ title, children, standardPageId }) => {
     return (
         <div className="layout-card" id={standardPageId} data-testid={standardPageId}>

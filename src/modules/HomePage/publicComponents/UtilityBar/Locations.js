@@ -26,7 +26,7 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
         paddingBlock: '12px',
     },
     backgroundColor: 'white',
-    border: '1px solid #DCDCDD',
+    border: theme.palette.designSystem.border,
     borderRadius: '0 0 4px 4px',
     boxShadow: '0px 12px 24px 0px rgba(25, 21, 28, 0.05)',
     marginTop: '-3px',
@@ -53,14 +53,14 @@ const StyledOutlinkDiv = styled('div')(({ theme }) => ({
         alignItems: 'center',
     },
     '& a': {
-        color: theme.palette.primary.light,
+        color: theme.palette.primary.main,
         textDecoration: 'underline',
         fontSize: '16px',
         fontWeight: 500,
         letterSpacing: '0.16px',
         '&:hover': {
             color: '#fff',
-            backgroundColor: theme.palette.primary.light,
+            backgroundColor: theme.palette.primary.main,
         },
     },
     '& svg': {
@@ -126,7 +126,7 @@ const StyledTableWrapper = styled('div')(({ theme }) => ({
             paddingBlock: 0, // override mui
             '&:focus': {
                 color: '#fff',
-                backgroundColor: theme.palette.primary.light,
+                backgroundColor: theme.palette.primary.main,
             },
         },
 
@@ -143,7 +143,7 @@ const StyledTableWrapper = styled('div')(({ theme }) => ({
         },
     },
     '& .table-cell-hastext span': {
-        color: '#3B383E',
+        color: theme.palette.designSystem.bodyCopy,
         fontWeight: 400,
         whiteSpace: 'nowrap',
         letterSpacing: '0.16px',

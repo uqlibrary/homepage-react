@@ -63,7 +63,7 @@ import dlor_series_view from './data/records/dlor/dlor_series_view';
 import dlor_series_view_nodescription from './data/records/dlor/dlor_series_view_nodescription';
 import { dlor_demographics_report } from './data/dlorDemographics';
 import { dlor_favourites_report } from './data/dlorFavourites';
-import  dlor_statistics  from './data/records/dlor/dlor_statistics';
+import dlor_statistics from './data/records/dlor/dlor_statistics';
 import { drupalArticles } from './data/drupalArticles';
 import {
     journalSearchFavourites,
@@ -843,6 +843,10 @@ mock.onGet(/dlor\/public\/find\/.*/)
     .reply(() => {
         return [200, { data: { success: true } }];
     })
+    .onPost(/dlor\/auth\/keywords\/request/)
+    .reply(() => {
+        return [200, { data: { success: true } }];
+    })
     .onGet(/dlor\/public\/keywords\/list/)
     .reply(() => {
         return [200, dlor_keywords];
@@ -1600,7 +1604,7 @@ mock.onGet('exams/course/FREN1010/summary')
             return [200, { status: 'OK', data: result }];
         }
     })
-    .onPut(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_GROUP_UPDATE_API({ id: '.*' }).apiUrl)))
+    .onPut(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_GROUP_UPDATE_SINGLE_API({ id: '.*' }).apiUrl)))
     .reply(() => {
         if (responseType === 'error') {
             return [500, {}];
@@ -1621,7 +1625,17 @@ mock.onGet('exams/course/FREN1010/summary')
             return [200, { status: 'OK', data: result }];
         }
     })
-    .onDelete(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_GROUP_UPDATE_API({ id: '.*' }).apiUrl)))
+    .onPut(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_GROUP_UPDATE_LIST_API().apiUrl)))
+    .reply(() => {
+        if (responseType === 'reorderError') {
+            return [500, {}];
+        } else {
+            // some random data
+            const result = [{ facility_type_group_id: 1, facility_type_group_order: 99 }];
+            return [200, { status: 'OK', data: result }];
+        }
+    })
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_GROUP_UPDATE_SINGLE_API({ id: '.*' }).apiUrl)))
     .reply(withDelay([200, { status: 'OK' }]))
     .onGet(routes.SPACES_SITE_API().apiUrl)
     .reply(() => {
@@ -1638,7 +1652,17 @@ mock.onGet('exams/course/FREN1010/summary')
 
     // Bookable Spaces (site, library, floor)
     .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'campus' }).apiUrl)
-    .reply(() => [200, { status: 'OK' }])
+    .reply(() => {
+        if (responseType === 'space-create-error') {
+            return [500, {}];
+        } else if (responseType === 'empty') {
+            return [200, []];
+        } else if (responseType === '404') {
+            return [404, {}];
+        } else {
+            return [200, { status: 'OK' }];
+        }
+    })
     .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'library' }).apiUrl)
     .reply(() => [200, { status: 'OK' }])
     .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'floor' }).apiUrl)
@@ -1650,6 +1674,9 @@ mock.onGet('exams/course/FREN1010/summary')
     })
     .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'space' }).apiUrl)
     .reply(() => {
+        if (responseType === 'space-create-error') {
+            return [500, {}];
+        }
         if (responseType === 'spaceAddError') {
             return [400, { status: 'error', message: 'space-name is not valid' }];
         }
@@ -1730,9 +1757,10 @@ function filterExamPaperListByPattern(data, pattern) {
 
 function resetWeeklyHourDatesToBeCurrent(jsonData) {
     // reset the mock data so it is data for this week, so we can label them "today" and "tomorrow"
-    const today = new Date();
-    const currentMonday = new Date(today);
-    currentMonday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+    const today = new Date(new Date().toUTCString());
+    const currentMonday = new Date(new Date().toUTCString());
+    const currentDayIndex = today.getDate();
+    currentMonday.setDate(currentDayIndex - ((currentDayIndex + 6) % 7));
 
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 

@@ -6,31 +6,31 @@ import Typography from '@mui/material/Typography';
 
 import UqDsExclamationCircle from '../Icons/UqDsExclamationCircle';
 
-const StyledSubtitleTypography = styled(Typography)(() => ({
-    fontStyle: 'normal',
-    fontWeight: 500,
-    letterSpacing: '0.16px',
-    lineHeight: '160%', // 25.6px
-    display: 'flex',
-    alignItems: 'flex-start',
-    '& span': {
-        marginLeft: '8px',
+const StyledAttentionDiv = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.designSystem.warningYellow,
+    padding: '16px',
+    '& h4': {
+        fontStyle: 'normal',
+        fontWeight: 500,
+        letterSpacing: '0.16px',
+        lineHeight: '160%', // 25.6px
+        display: 'flex',
+        alignItems: 'flex-start',
+        columnGap: '0.5rem',
+        '& svg': {
+            height: '22px',
+        },
     },
 }));
-const uqDsWarningYellow = '#fef8e8';
 const UserAttention = ({ titleText, children }) => {
     return (
-        <div
-            style={{
-                backgroundColor: uqDsWarningYellow,
-                padding: '16px',
-            }}
-        >
-            <StyledSubtitleTypography component={'h4'}>
-                <UqDsExclamationCircle style={{ height: '22px' }} /> <span>{titleText}</span>
-            </StyledSubtitleTypography>
+        <StyledAttentionDiv>
+            <Typography component={'h4'}>
+                <UqDsExclamationCircle />
+                <span>{titleText}</span>
+            </Typography>
             {children}
-        </div>
+        </StyledAttentionDiv>
     );
 };
 

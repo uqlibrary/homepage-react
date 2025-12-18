@@ -266,6 +266,7 @@ export const DLOR_KEYWORDS_API = () => ({ apiUrl: 'dlor/public/keywords/list' })
 export const DLOR_KEYWORDS_UPDATE_API = () => ({ apiUrl: 'dlor/admin/keywords' });
 export const DLOR_KEYWORDS_DESTROY_API = () => ({ apiUrl: 'dlor/admin/keywords/delete' });
 export const DLOR_STATISTICS_API = () => ({ apiUrl: 'dlor/auth/stats' });
+export const DLOR_REQUEST_KEYWORD_API = () => ({ apiUrl: 'dlor/auth/keywords/request' });
 
 const productionRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage';
 const stagingRoot = 'https://assets.library.uq.edu.au/reusable-webcomponents-staging/api/homepage';
@@ -310,7 +311,12 @@ export const WEEKLYHOURS_API = () => {
 export const SPACES_FACILITY_TYPE_ALL_API = () => ({ apiUrl: 'bookable_spaces/facility_types/all' });
 
 export const SPACES_FACILITY_TYPE_GROUP_CREATE_API = () => ({ apiUrl: 'bookable_spaces/facility_groups' });
-export const SPACES_FACILITY_TYPE_GROUP_UPDATE_API = ({ id }) => ({ apiUrl: `bookable_spaces/facility_groups/${id}` });
+export const SPACES_FACILITY_TYPE_GROUP_UPDATE_SINGLE_API = ({ id }) => ({
+    apiUrl: `bookable_spaces/facility_groups/${id}`,
+});
+export const SPACES_FACILITY_TYPE_GROUP_UPDATE_LIST_API = () => ({
+    apiUrl: 'bookable_spaces/facility_groups',
+});
 
 export const SPACES_FACILITY_TYPE_CREATE_API = () => ({ apiUrl: 'bookable_spaces/facility_types' });
 export const SPACES_FACILITY_TYPE_UPDATE_API = ({ id }) => ({ apiUrl: `bookable_spaces/facility_types/${id}` });

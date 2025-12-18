@@ -2,7 +2,7 @@ import { expect, test } from '@uq/pw/test';
 import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
-import { assertToastHasMessage } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
+import { assertErrorPopupAppears, assertToastHasMessage } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
 
 test.describe('Spaces Admin - manage facility types', () => {
     test('can navigate from dashboard to manage facility types', async ({ page }) => {
@@ -16,11 +16,11 @@ test.describe('Spaces Admin - manage facility types', () => {
         await expect(visitManageLocationsButton).not.toBeVisible();
         await expect(page.getByTestId('admin-spaces-menu')).not.toBeVisible();
         await expect(page.getByTestId('admin-spaces-menu-button')).toBeVisible();
-        page.getByTestId('admin-spaces-menu-button').click();
+        await page.getByTestId('admin-spaces-menu-button').click();
         await expect(page.getByTestId('admin-spaces-menu')).toBeVisible();
         await expect(visitManageLocationsButton).toBeVisible();
 
-        visitManageLocationsButton.click();
+        await visitManageLocationsButton.click();
         await expect(page).toHaveURL('http://localhost:2020/admin/spaces/manage/facilitytypes?user=libSpaces');
     });
 });
@@ -206,7 +206,7 @@ test.describe('Spaces Admin - manage facility types page', () => {
         await expect(roomFeatureGroup.getByTestId('facilitytype-name-14')).toContainText('Undergrad spaces');
     });
     test('is accessible on initial load', async ({ page }) => {
-        await assertAccessibility(page, '[data-testid="StandardPage"]');
+        await assertAccessibility(page, '[data-testid="SpacesAdminPage"]');
     });
 });
 test.describe('Spaces Admin - create new group dialog', () => {
@@ -296,9 +296,9 @@ test.describe('Spaces Admin - create new group dialog', () => {
         await expect(page.getByTestId('new-group-name')).toBeVisible();
         await expect(page.getByTestId('new-group-first')).toBeVisible();
 
-        // no fields gives error
+        // no fields give an error
         await page.getByTestId('dialog-save-button').click();
-        await assertToastHasMessage(page, 'Please enter both fields.');
+        await assertErrorPopupAppears(page, 'Please enter both fields.');
     });
     test('save new group has required fields, group only', async ({ page }) => {
         await expect(page.getByTestId('new-group-name')).not.toBeVisible();
@@ -314,7 +314,7 @@ test.describe('Spaces Admin - create new group dialog', () => {
         await page.getByTestId('new-group-name').click();
         await page.getByTestId('new-group-name').fill('New group');
         await page.getByTestId('dialog-save-button').click();
-        await assertToastHasMessage(page, 'Please enter both fields.');
+        await assertErrorPopupAppears(page, 'Please enter both fields.');
     });
     test('save new group has required fields, type only', async ({ page }) => {
         await expect(page.getByTestId('new-group-name')).not.toBeVisible();
@@ -330,7 +330,7 @@ test.describe('Spaces Admin - create new group dialog', () => {
         await page.getByTestId('new-group-first').click();
         await page.getByTestId('new-group-first').fill('First type in group');
         await page.getByTestId('dialog-save-button').click();
-        await assertToastHasMessage(page, 'Please enter both fields.');
+        await assertErrorPopupAppears(page, 'Please enter both fields.');
     });
 });
 test.describe('Spaces Admin - edit group dialog', () => {
@@ -760,6 +760,38 @@ test.describe('Spaces Admin - adding new facility types', () => {
         await page.getByTestId('dialog-cancel-button').click();
         await expect(page.getByTestId('main-dialog')).not.toBeVisible();
     });
+    test.skip('can drag and drop to update facility type group order', async ({ page, context }) => {
+        await setTestDataCookie(context, page);
+
+        // we are going to drag entry #2
+        const originElement = await page.getByTestId('spaces-dragLandingAarea').locator('li:nth-of-type(2)');
+        // onto entry #5
+        const destinationElement = await page.getByTestId('spaces-dragLandingAarea').locator('li:nth-of-type(5)');
+
+        await originElement.hover();
+        await page.mouse.down();
+        const box = (await destinationElement.boundingBox())!;
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await destinationElement.hover();
+        await page.mouse.up();
+
+        await assertToastHasMessage(page, 'Facility group order updated');
+
+        const expectedValues = [
+            { facility_type_group_id: 1, facility_type_group_order: 1 }, // space/room type
+            { facility_type_group_id: 2, facility_type_group_order: 2 }, // on this floor
+            { facility_type_group_id: 4, facility_type_group_order: 3 }, // lighting
+            { facility_type_group_id: 5, facility_type_group_order: 4 }, // noise
+            { facility_type_group_id: 8, facility_type_group_order: 5 }, // edia - has moved
+            { facility_type_group_id: 9, facility_type_group_order: 6 }, // unused
+            { facility_type_group_id: 6, facility_type_group_order: 7 }, // room features
+            { facility_type_group_id: 3, facility_type_group_order: 8 }, // space features
+            { facility_type_group_id: 7, facility_type_group_order: 9 }, // unused
+        ];
+        // await page.waitForTimeout(1000000);
+
+        await assertExpectedDataSentToServer(page, expectedValues);
+    });
 });
 test.describe('Spaces Admin - other pages', () => {
     test('can save new group when none current', async ({ page }) => {
@@ -793,6 +825,8 @@ test.describe('Spaces Admin - other pages', () => {
         await expect(page.getByTestId('new-group-first')).toBeVisible();
         // the add process is no different to when there are children, so don't bother testing it here
     });
+});
+test.describe('Spaces Admin - api error handling', () => {
     test('api error 404', async ({ page }) => {
         await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces&responseType=facilityTypesAll404');
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -806,5 +840,26 @@ test.describe('Spaces Admin - other pages', () => {
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Facility types/)).toBeVisible();
 
         await expect(page.getByTestId('apiError').getByText(/Something went wrong/)).toBeVisible();
+    });
+    test('drag and drop api 500', async ({ page }) => {
+        await page.goto('/admin/spaces/manage/facilitytypes?user=libSpaces&responseType=reorderError');
+
+        // we are going to drag entry #2
+        const draggableRoomType = page.getByTestId('spaces-dragLandingAarea').locator('li:nth-of-type(2)');
+        await expect(draggableRoomType).toBeVisible();
+        const draggableDestination = page.getByTestId('spaces-dragLandingAarea');
+        await expect(draggableDestination).toBeVisible();
+
+        await draggableRoomType.hover();
+        await page.mouse.down();
+        const box = (await draggableDestination.boundingBox())!;
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2); // drag it to a spot on the screen that definitely isn't the same spot
+        await draggableDestination.hover();
+        await page.mouse.up();
+
+        await assertErrorPopupAppears(
+            page,
+            '[BSMF-012] Sorry, an error occurred - Updating the Facility group order failed. The admins have been informed.',
+        );
     });
 });

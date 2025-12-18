@@ -7,13 +7,13 @@ import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import EditIcon from '@mui/icons-material/Edit';
+import WarningOutlined from '@mui/icons-material/WarningOutlined';
 
-import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { baseButtonStyles, pluralise, removeClass } from 'helpers/general';
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { baseButtonStyles, pluralise } from 'helpers/general';
+import { useConfirmationState } from 'hooks';
 
-import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import {
     addBreadcrumbsToSiteHeader,
     closeDeletionConfirmation,
@@ -21,12 +21,24 @@ import {
     displayToastMessage,
     showGenericConfirmAndDeleteDialog,
     springshareLocations,
-} from '../bookableSpacesAdminHelpers';
+} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
+
+import { SpacesAdminPage } from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
     border: '1px solid rgba(38, 85, 115, 0.15)',
     maxWidth: '1136px',
+    // '&.hidden': {
+    //     position: 'absolute',
+    //     left: '-10000px',
+    //     top: 'auto',
+    //     overflow: 'hidden',
+    //     clip: 'rect(1px, 1px, 1px, 1px)',
+    //     width: '1px',
+    //     height: '1px',
+    //     whiteSpace: 'nowrap',
+    // },
     '& h2': {
         paddingInline: '1rem',
     },
@@ -76,11 +88,28 @@ const StyledMainDialog = styled('dialog')(({ theme }) => ({
         },
     },
     '& .dialogFooter': {
-        display: 'flex',
-        justifyContent: 'space-between',
         marginTop: '1rem',
+        '& > div': {
+            display: 'flex',
+            justifyContent: 'space-between',
+        },
         '& button': {
             marginLeft: '0.5rem',
+        },
+        '& p': {
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            columnGap: '0.5rem',
+            marginLeft: '1rem',
+        },
+        '& svg': {
+            width: '1rem',
+            height: '1rem',
+            color: theme.palette.error.light,
+            '&.hidden': {
+                display: 'none',
+            },
         },
     },
 }));
@@ -134,7 +163,7 @@ const StyledEditButton = styled(Button)(({ theme }) => ({
     alignItems: 'center',
     marginLeft: '-0.5rem',
     paddingLeft: 0,
-    textTransform: 'capitalize',
+    textTransform: 'none', // undo the ALL CAPS that is the default for a MUI button
     lineHeight: 'normal',
     justifyContent: 'flex-start',
     '&:hover, &:focus': {
@@ -178,6 +207,43 @@ export const BookableSpacesManageLocations = ({
 
     const [cookies, setCookie] = useCookies();
 
+    const [isConfirmationBoxOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+    const [confirmationLocale, setConfirmationLocale] = React.useState({
+        confirmationTitle: 'An error occurred while saving',
+        confirmButtonLabel: 'OK',
+    });
+    const hideConfirmationLocal = () => {
+        hideConfirmation(0);
+        // const dialog = document.getElementById('popupDialog');
+        // !!dialog && !!dialog.classList.contains('hidden') && dialog.classList.remove('hidden');
+    };
+    // const hideDialog = () => {
+    //     const dialog = document.getElementById('popupDialog');
+    //     !!dialog && !dialog.classList.contains('hidden') && dialog.classList.add('hidden');
+    // };
+    const showErrorMessageinPopup = confirmationTitle => {
+        // hideDialog();
+        setConfirmationLocale({
+            ...confirmationLocale,
+            confirmationTitle: confirmationTitle,
+        });
+        showConfirmation();
+    };
+    const warningTextId = 'warningtext';
+    const displayUserWarningMessage = (warningMessage, showWarningIcon) => {
+        const warningMessageNode = document.createTextNode(warningMessage);
+
+        const primaryTextElement = document.createElement('span');
+        !!primaryTextElement && (primaryTextElement.id = warningTextId);
+        !!primaryTextElement && !!warningMessageNode && primaryTextElement.appendChild(warningMessageNode);
+
+        const dialogMessageElement = document.getElementById('dialogMessageContent');
+        !!dialogMessageElement && !!primaryTextElement && dialogMessageElement.appendChild(primaryTextElement);
+
+        const warningIcon = document.getElementById('warning-icon');
+        !!showWarningIcon && removeClass(warningIcon, 'hidden');
+    };
+
     const [savingProgressShown, showSavingProgress] = React.useState(false);
 
     React.useEffect(() => {
@@ -215,12 +281,12 @@ export const BookableSpacesManageLocations = ({
             actions
                 .deleteBookableSpaceLocation({ locationType, locationId })
                 .then(() => {
-                    displayToastMessage(successMessage, false);
+                    displayToastMessage(successMessage);
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('deleteBookableSpaceLocation', failureMessage, e);
-                    displayToastMessage(
+                    showErrorMessageinPopup(
                         '[BSML-004] Sorry, an error occurred and the location was not deleted - the admins have been informed',
                     );
                 })
@@ -242,7 +308,8 @@ export const BookableSpacesManageLocations = ({
         !data.library_name && errorMessages.push('Please enter the Library name');
         (!data.building_name || !data.building_number) && errorMessages.push('Please enter building name and number');
         if (errorMessages.length > 0) {
-            displayToastMessage(errorMessages.join('; '), true);
+            // showErrorMessageinPopup(errorMessages.join('; '));
+            displayUserWarningMessage(errorMessages.join('; '), errorMessages.length > 0);
             return;
         }
 
@@ -269,12 +336,12 @@ export const BookableSpacesManageLocations = ({
             actions
                 .updateBookableSpaceLocation(valuesToSend, locationType, locationId)
                 .then(() => {
-                    displayToastMessage('Change to library saved', false);
+                    displayToastMessage('Change to library saved');
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: saving library ', locationId, 'failed:', e);
-                    displayToastMessage(
+                    showErrorMessageinPopup(
                         '[BSML-005] Sorry, an error occurred and the Location change did not save - the admins have been informed',
                     );
                 })
@@ -293,8 +360,10 @@ export const BookableSpacesManageLocations = ({
 
         // validate form
         const failureMessage = (!data.campus_name || !data.campus_number) && 'Please enter campus name and number';
+        console.log(failureMessage);
         if (!!failureMessage) {
-            displayToastMessage(failureMessage, true);
+            // showErrorMessageinPopup(failureMessage);
+            displayUserWarningMessage(failureMessage, true);
             return;
         }
 
@@ -316,12 +385,12 @@ export const BookableSpacesManageLocations = ({
             actions
                 .updateBookableSpaceLocation(valuesToSend, locationType, locationId)
                 .then(() => {
-                    displayToastMessage('Change to campus saved', false);
+                    displayToastMessage('Change to campus saved');
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: saving campus ', locationId, 'failed:', e);
-                    displayToastMessage(
+                    showErrorMessageinPopup(
                         '[BSML-003] Sorry, an error occurred and the Location change did not save - the admins have been informed',
                     );
                 })
@@ -355,7 +424,8 @@ export const BookableSpacesManageLocations = ({
 
         // validate form
         if (!data.floor_name) {
-            displayToastMessage('Please enter floor name', true);
+            // showErrorMessageinPopup('Please enter floor name');
+            displayUserWarningMessage('Please enter floor name', true);
             return false;
         }
 
@@ -389,13 +459,13 @@ export const BookableSpacesManageLocations = ({
                     }
                 })
                 .then(() => {
-                    displayToastMessage('Floor added', false);
+                    displayToastMessage('Floor added');
 
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: adding new floor failed:', e);
-                    displayToastMessage(
+                    showErrorMessageinPopup(
                         '[BSML-006] Sorry, an error occurred and the Location change did not save - the admins have been informed',
                     );
                 })
@@ -450,7 +520,8 @@ export const BookableSpacesManageLocations = ({
         // validate form
         const failureMessage = !data.floor_name && 'Please enter floor name';
         if (!!failureMessage) {
-            displayToastMessage(failureMessage, true);
+            // showErrorMessageinPopup(failureMessage);
+            displayUserWarningMessage(failureMessage, true);
             return false;
         }
 
@@ -475,12 +546,12 @@ export const BookableSpacesManageLocations = ({
             actions
                 .updateBookableSpaceLocation(valuesToSend, locationType, locationId)
                 .then(() => {
-                    displayToastMessage('Changes to floor saved', false);
+                    displayToastMessage('Changes to floor saved');
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: saving floor ', locationId, 'failed:', e);
-                    displayToastMessage(
+                    showErrorMessageinPopup(
                         '[BSML-007] Sorry, an error occurred and the Location change did not save - the admins have been informed',
                     );
                 })
@@ -526,7 +597,7 @@ export const BookableSpacesManageLocations = ({
 
         if (!floorDetails) {
             console.log(`Can't find floor with floor_id = "${floorId}" in campus list from api`);
-            displayToastMessage('Sorry, something went wrong');
+            showErrorMessageinPopup('Sorry, something went wrong');
             return;
         }
 
@@ -613,7 +684,8 @@ export const BookableSpacesManageLocations = ({
         (!data.building_name || !data.building_number) && errorMessages.push('Please enter building name and number');
         const errorFound = errorMessages.length > 0;
         if (errorFound) {
-            displayToastMessage(errorMessages.join('; '), true);
+            // showErrorMessageinPopup(errorMessages.join('; '));
+            displayUserWarningMessage(errorMessages.join('; '), errorMessages.length > 0);
             return;
         }
 
@@ -639,13 +711,13 @@ export const BookableSpacesManageLocations = ({
             actions
                 .addBookableSpaceLocation(valuesToSend, locationType)
                 .then(() => {
-                    displayToastMessage('Library added', false);
+                    displayToastMessage('Library added');
 
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: adding new library failed:', e);
-                    displayToastMessage(
+                    showErrorMessageinPopup(
                         '[BSML-002] Sorry, an error occurred and the Location change did not save - the admins have been informed',
                     );
                 })
@@ -704,7 +776,7 @@ export const BookableSpacesManageLocations = ({
 
         if (!libraryDetails) {
             console.log(`Can't find library with library_id = "${libraryId}" in campus list from api`);
-            displayToastMessage('Sorry, something went wrong');
+            showErrorMessageinPopup('Sorry, something went wrong');
             return;
         }
 
@@ -797,17 +869,21 @@ export const BookableSpacesManageLocations = ({
     };
 
     const saveNewCampus = e => {
+        console.log('saveNewCampus');
         const form = e.target.closest('form');
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
-        console.log('data=', data);
+        console.log('saveNewCampus data=', data);
 
         // validate form
         if (!data.campus_name || !data.campus_number) {
-            displayToastMessage('Please enter campus name and number', true);
+            console.log('saveNewCampus err');
+            displayUserWarningMessage('Please enter campus name and number', true);
+
             return false;
         }
+        console.log('saveNewCampus ok');
 
         closeDialog(e);
         showSavingProgress(true);
@@ -828,12 +904,12 @@ export const BookableSpacesManageLocations = ({
             actions
                 .addBookableSpaceLocation(valuesToSend, locationType)
                 .then(() => {
-                    displayToastMessage('Campus added', false);
+                    displayToastMessage('Campus added');
                     actions.loadBookableSpaceCampusChildren();
                 })
                 .catch(e => {
                     console.log('catch: adding new campus failed:', e);
-                    displayToastMessage(
+                    showErrorMessageinPopup(
                         '[BSML-001] Sorry, an error occurred and the Location change did not save - the admins have been informed.',
                     );
                 })
@@ -888,7 +964,7 @@ export const BookableSpacesManageLocations = ({
 
         if (!campusDetails) {
             console.log(`Can't find campus with campus_id = "${campusId}" in campuslist from api`);
-            displayToastMessage('Sorry, something went wrong');
+            showErrorMessageinPopup('Sorry, something went wrong');
             return;
         }
 
@@ -900,7 +976,7 @@ export const BookableSpacesManageLocations = ({
                 ${
                     campusDetails?.libraries?.length > 0
                         ? `<ul data-testid="campus-library-list">${campusDetails?.libraries
-                              ?.sort((a, b) => a.library_name.localeCompare(b.library_name))
+                              ?.sort((a, b) => a?.library_name?.localeCompare(b.library_name))
                               ?.map(library => `<li>${displayedLibraryName(library)}</li>`)
                               .join('')}</ul>`
                         : ''
@@ -991,61 +1067,69 @@ export const BookableSpacesManageLocations = ({
     }
 
     return (
-        <StandardPage title="Spaces">
-            <HeaderBar pageTitle="Manage locations" currentPage="manage-locations" />
-
-            <section aria-live="assertive">
-                <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
-                    <Grid container spacing={3} style={{ position: 'relative' }}>
-                        <Grid item xs={12} md={8} style={{ marginTop: '12px' }}>
-                            {(() => {
-                                if (!!savingProgressShown) {
-                                    return <InlineLoader message="Saving" />;
-                                } else if (!!campusListLoading) {
-                                    return <InlineLoader message="Loading" />;
-                                } else if (!!campusListError) {
-                                    return <p>Something went wrong - please try again later.</p>;
-                                } else if (!campusList || campusList.length === 0) {
-                                    return <p>No spaces currently in system.</p>;
-                                } else {
-                                    return <div data-testid="spaces-location-wrapper">{getPageLayout(campusList)}</div>;
-                                }
-                            })()}
-                        </Grid>
-                        <Grid item xs={12} md={4} style={{ paddingTop: 0 }}>
-                            <div style={{ padding: '1rem' }}>
-                                <StyledButton
-                                    className={'primary'}
-                                    style={{ marginLeft: '2rem', marginTop: '2rem', textTransform: 'initial' }}
-                                    children={'Add new Campus'}
-                                    onClick={showAddCampusForm}
-                                    data-testid="add-new-campus-button"
-                                />
-                            </div>
-                        </Grid>
-                    </Grid>
-                </StandardCard>
-                <dialog id="confirmationDialog" className="confirmationDialog" data-testid="confirmation-dialog">
-                    <p id="confDialogMessage" data-testid="confirmation-dialog-message" />
-                    <StyledConfirmationButtons>
+        <SpacesAdminPage systemTitle="Spaces" pageTitle="Manage locations" currentPageSlug="manage-locations">
+            <Grid container spacing={3} style={{ position: 'relative' }}>
+                <Grid item xs={12} md={8} style={{ marginTop: '12px' }}>
+                    {(() => {
+                        if (!!savingProgressShown || !!campusListLoading) {
+                            return <InlineLoader message="Loading" />;
+                        } else if (!!campusListError) {
+                            return <p>Something went wrong - please try again later.</p>;
+                        } else if (!campusList || campusList.length === 0) {
+                            return <p>No spaces currently in system.</p>;
+                        } else {
+                            return <div data-testid="spaces-location-wrapper">{getPageLayout(campusList)}</div>;
+                        }
+                    })()}
+                </Grid>
+                <Grid item xs={12} md={4} style={{ paddingTop: 0 }}>
+                    <div style={{ padding: '1rem' }}>
                         <StyledButton
-                            id="confDialogCancelButton"
-                            className={'secondary'}
-                            children={'No'}
-                            data-testid="confirmation-dialog-reject-button"
-                        />
-                        <StyledButton
-                            id="confDialogOkButton"
                             className={'primary'}
-                            children={'Yes'}
-                            data-testid="confirmation-dialog-accept-button"
+                            style={{ marginLeft: '2rem', marginTop: '2rem', textTransform: 'initial' }}
+                            children={'Add new Campus'}
+                            onClick={showAddCampusForm}
+                            data-testid="add-new-campus-button"
                         />
-                    </StyledConfirmationButtons>
-                </dialog>
-                <StyledMainDialog id={'popupDialog'} closedby="any" data-testid="main-dialog">
-                    <form>
-                        <div id="dialogBody" />
-                        <div id="dialogFooter" className={'dialogFooter'}>
+                    </div>
+                </Grid>
+            </Grid>
+
+            <dialog id="confirmationDialog" className="confirmationDialog" data-testid="confirmation-dialog">
+                <p id="confDialogMessage" data-testid="confirmation-dialog-message" />
+                <StyledConfirmationButtons>
+                    <StyledButton
+                        id="confDialogCancelButton"
+                        className={'secondary'}
+                        children={'No'}
+                        data-testid="confirmation-dialog-reject-button"
+                    />
+                    <StyledButton
+                        id="confDialogOkButton"
+                        className={'primary'}
+                        children={'Yes'}
+                        data-testid="confirmation-dialog-accept-button"
+                    />
+                </StyledConfirmationButtons>
+            </dialog>
+            <ConfirmationBox
+                confirmationBoxId="spaces-manage-locations-error"
+                onAction={() => hideConfirmationLocal}
+                onClose={hideConfirmationLocal}
+                hideCancelButton
+                isOpen={isConfirmationBoxOpen}
+                locale={confirmationLocale}
+            />
+            <StyledMainDialog id={'popupDialog'} closedby="any" data-testid="main-dialog">
+                <form>
+                    <div id="dialogMessage" />
+                    <div id="dialogBody" />
+                    <div id="dialogFooter" className={'dialogFooter'}>
+                        <p id="dialogMessage" data-testid="dialogMessage">
+                            <WarningOutlined className="hidden" id="warning-icon" data-testid="warning-icon" />
+                            <span id="dialogMessageContent" />
+                        </p>
+                        <div>
                             <div>
                                 <StyledButton
                                     id={'deleteButton'}
@@ -1076,10 +1160,10 @@ export const BookableSpacesManageLocations = ({
                                 />
                             </div>
                         </div>
-                    </form>
-                </StyledMainDialog>
-            </section>
-        </StandardPage>
+                    </div>
+                </form>
+            </StyledMainDialog>
+        </SpacesAdminPage>
     );
 };
 

@@ -59,8 +59,8 @@ export const BookableSpacesList = lazy(() => lazyRetry(() => import('modules/Pag
 export const BookableSpacesDashboard = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Dashboard/BookableSpacesDashboardContainer')));
 export const BookableSpacesManageLocations = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/ManageLocations/BookableSpacesManageLocationsContainer')));
 export const BookableSpacesManageFacilities = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/ManageFacilities/BookableSpacesManageFacilitiesContainer')));
-export const BookableSpacesAddSpace = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/AddSpace/BookableSpacesAddSpaceContainer')));
-export const BookableSpacesEditSpace = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/EditSpace/BookableSpacesEditSpaceContainer')));
+export const BookableSpacesAddSpace = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Form/AddSpace/BookableSpacesAddSpaceContainer')));
+export const BookableSpacesEditSpace = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Form/EditSpace/BookableSpacesEditSpaceContainer')));
 
 // always load components
 export { HomePageContainer as Index } from 'modules/HomePage';

@@ -178,7 +178,7 @@ export function addClass(element, className) {
 }
 export const standardText = theme => {
     return {
-        color: theme.palette.secondary.main,
+        color: theme.palette.designSystem.bodyCopy,
         fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
         fontSize: '16px',
         fontWeight: 400,

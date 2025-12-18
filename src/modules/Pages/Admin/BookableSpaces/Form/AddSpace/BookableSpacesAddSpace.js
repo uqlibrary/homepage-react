@@ -6,34 +6,18 @@ import { Grid } from '@mui/material';
 
 import { useAccountContext } from 'context';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
-import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
+import { SpacesAdminPage } from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 import { EditSpaceForm } from '../EditSpaceForm';
 import {
     addBreadcrumbsToSiteHeader,
-    displayToastMessage,
     initialisedSpringshareList,
     spacesAdminLink,
     validCampusList,
     validLibraryList,
     weeklyHoursLoaded,
-} from '../bookableSpacesAdminHelpers';
-import { locale } from '../bookablespaces.locale';
-
-const PageWrapper = ({ children }) => {
-    return (
-        <StandardPage title="Spaces">
-            <HeaderBar pageTitle="Add a new Space" currentPage="add-space" />
-            <section aria-live="assertive">
-                <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
-                    {children}
-                </StandardCard>
-            </section>
-        </StandardPage>
-    );
-};
+} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
+import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';
 
 export const BookableSpacesAddSpace = ({
     actions,
@@ -82,6 +66,9 @@ export const BookableSpacesAddSpace = ({
         console.log('BookableSpacesAddSpace setFormValues', newValues);
         setFormValues2(newValues);
     };
+
+    const pageTitle = 'Add a new Space';
+    const currentPageSlug = 'add-space';
 
     useEffect(() => {
         addBreadcrumbsToSiteHeader([
@@ -138,20 +125,13 @@ export const BookableSpacesAddSpace = ({
     }, [weeklyHoursLoading, weeklyHoursError, weeklyHours]);
 
     const createNewSpace = valuesToSend => {
+        console.log('createNewSpace valuesToSend=', valuesToSend);
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
 
-        actions
-            .addBookableSpaceLocation(valuesToSend, 'space')
-            .then(() => {})
-            .catch(e => {
-                console.log('catch: adding new space failed:', e);
-                displayToastMessage(
-                    '[BSAS-001] Sorry, an error occurred - Saving the new Space failed. The admins have been informed.',
-                );
-            });
+        actions.createBookableSpaceWithNewImage(valuesToSend);
     };
 
     if (!!bookableSpacesRoomListLoading || !!campusListLoading || !formValues?.campus_id) {
@@ -164,7 +144,7 @@ export const BookableSpacesAddSpace = ({
         );
     } else if (!!campusListError || !!bookableSpacesRoomListError || !!facilityTypeListError || !!weeklyHoursError) {
         return (
-            <PageWrapper>
+            <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <div data-testid="load-space-form-error">
@@ -176,7 +156,7 @@ export const BookableSpacesAddSpace = ({
                         </div>
                     </Grid>
                 </Grid>
-            </PageWrapper>
+            </SpacesAdminPage>
         );
     } else if (
         !currentCampusList ||
@@ -186,7 +166,7 @@ export const BookableSpacesAddSpace = ({
             (!bookableSpacesRoomList?.data?.locations || bookableSpacesRoomList?.data?.locations.length === 0))
     ) {
         return (
-            <PageWrapper>
+            <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <p data-testid="add-space-no-locations">
@@ -198,39 +178,38 @@ export const BookableSpacesAddSpace = ({
                         </p>
                     </Grid>
                 </Grid>
-            </PageWrapper>
+            </SpacesAdminPage>
         );
     } else {
         return (
-            <EditSpaceForm
-                actions={actions}
-                bookableSpacesRoomAdding={bookableSpacesRoomAdding}
-                bookableSpacesRoomAddError={bookableSpacesRoomAddError}
-                bookableSpacesRoomAddResult={bookableSpacesRoomAddResult}
-                campusList={campusList}
-                bookableSpacesRoomList={bookableSpacesRoomList}
-                bookableSpacesRoomListLoading={bookableSpacesRoomListLoading}
-                bookableSpacesRoomListError={bookableSpacesRoomListError}
-                weeklyHours={weeklyHours}
-                weeklyHoursLoading={weeklyHoursLoading}
-                weeklyHoursError={weeklyHoursError}
-                facilityTypeList={facilityTypeList}
-                facilityTypeListLoading={facilityTypeListLoading}
-                facilityTypeListError={facilityTypeListError}
-                formValues={formValues}
-                setFormValues={setFormValues}
-                saveToDb={createNewSpace}
-                PageWrapper={PageWrapper}
-                springshareList={springshareList}
-                currentCampusList={currentCampusList}
-                mode="add"
-            />
+            <>
+                <EditSpaceForm
+                    actions={actions}
+                    bookableSpacesRoomAdding={bookableSpacesRoomAdding}
+                    bookableSpacesRoomAddError={bookableSpacesRoomAddError}
+                    bookableSpacesRoomAddResult={bookableSpacesRoomAddResult}
+                    campusList={campusList}
+                    bookableSpacesRoomList={bookableSpacesRoomList}
+                    bookableSpacesRoomListLoading={bookableSpacesRoomListLoading}
+                    bookableSpacesRoomListError={bookableSpacesRoomListError}
+                    weeklyHours={weeklyHours}
+                    weeklyHoursLoading={weeklyHoursLoading}
+                    weeklyHoursError={weeklyHoursError}
+                    facilityTypeList={facilityTypeList}
+                    facilityTypeListLoading={facilityTypeListLoading}
+                    facilityTypeListError={facilityTypeListError}
+                    formValues={formValues}
+                    setFormValues={setFormValues}
+                    saveToDb={createNewSpace}
+                    pageTitle={pageTitle}
+                    currentPageSlug={currentPageSlug}
+                    springshareList={springshareList}
+                    currentCampusList={currentCampusList}
+                    mode="add"
+                />
+            </>
         );
     }
-};
-
-PageWrapper.propTypes = {
-    children: PropTypes.node,
 };
 
 BookableSpacesAddSpace.propTypes = {

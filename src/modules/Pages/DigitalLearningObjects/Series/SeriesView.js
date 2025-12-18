@@ -32,7 +32,7 @@ import {
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const StyledTitleTypography = styled(Typography)(({ theme }) => ({
-    color: theme.palette.primary.light,
+    color: theme.palette.primary.main,
 }));
 const StyledContentGrid = styled(Grid)(() => ({
     marginTop: '6px',
@@ -133,7 +133,7 @@ const StyledArticleCard = styled('button')(({ theme, isAccessible }) => ({
             marginTop: 0,
         },
         '& footer': {
-            color: theme.palette.primary.light,
+            color: theme.palette.primary.main,
             fontWeight: 400,
             marginTop: 6,
             display: 'flex',
@@ -144,7 +144,7 @@ const StyledArticleCard = styled('button')(({ theme, isAccessible }) => ({
             '& svg': {
                 width: 20,
                 '& > path': {
-                    fill: theme.palette.primary.light,
+                    fill: theme.palette.primary.main,
                 },
             },
             '& span': {

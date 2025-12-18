@@ -7,32 +7,17 @@ import { Grid } from '@mui/material';
 
 import { useAccountContext } from 'context';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';
-import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
-import { EditSpaceForm } from 'modules/Pages/Admin/BookableSpaces/EditSpaceForm';
+import { SpacesAdminPage } from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
+import { EditSpaceForm } from 'modules/Pages/Admin/BookableSpaces/Form/EditSpaceForm';
 import {
     addBreadcrumbsToSiteHeader,
     initialisedSpringshareList,
     spacesAdminLink,
     validCampusList,
     weeklyHoursLoaded,
-} from '../bookableSpacesAdminHelpers';
-
-const PageWrapper = ({ children }) => {
-    return (
-        <StandardPage title="Spaces">
-            <HeaderBar pageTitle="Edit Space" currentPage="edit-space" />
-            <section aria-live="assertive">
-                <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
-                    {children}
-                </StandardCard>
-            </section>
-        </StandardPage>
-    );
-};
+} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 
 export const BookableSpacesEditSpace = ({
     actions,
@@ -78,6 +63,9 @@ export const BookableSpacesEditSpace = ({
         setFormValues2(newValues);
     };
 
+    const pageTitle = 'Edit Space';
+    const currentPageSlug = 'edit-space';
+
     useEffect(() => {
         addBreadcrumbsToSiteHeader([
             '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Add a Space</span></li>',
@@ -91,10 +79,6 @@ export const BookableSpacesEditSpace = ({
         ) {
             actions.loadABookableSpacesRoom(spaceUuid);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
         if (campusListLoading === null && campusListError === null && campusList === null) {
             actions.loadBookableSpaceCampusChildren(); // get list of campuses, buildings and floors
             actions.loadAllBookableSpacesRooms(); // get list of Spaces
@@ -154,13 +138,12 @@ export const BookableSpacesEditSpace = ({
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
+        console.log('updateSpace valuesToSend=', valuesToSend);
+        console.log('updateSpace valuesToSend.uploadedFile=', valuesToSend.uploadedFile);
 
-        actions
-            .updateBookableSpaceLocation(valuesToSend, 'space', formValues.space_id)
-            .then(() => {})
-            .catch(e => {
-                console.log('catch: adding new space failed:', e);
-            });
+        !!valuesToSend?.uploadedFile
+            ? actions.updateBookableSpaceWithNewImage(valuesToSend)
+            : actions.updateBookableSpaceWithExistingImage(valuesToSend, 'update');
     };
 
     if (
@@ -170,13 +153,13 @@ export const BookableSpacesEditSpace = ({
         Object.keys(bookableSpaceGetResult?.data).length === 0
     ) {
         return (
-            <PageWrapper>
+            <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <p data-testid="missing-record">There is no Space with ID "{spaceUuid}".</p>
                     </Grid>
                 </Grid>
-            </PageWrapper>
+            </SpacesAdminPage>
         );
     }
     if (!!bookableSpaceGetting || !!bookableSpacesRoomListLoading || !!campusListLoading) {
@@ -197,7 +180,7 @@ export const BookableSpacesEditSpace = ({
         !formValues?.campus_id
     ) {
         return (
-            <PageWrapper>
+            <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <div data-testid="load-space-form-error">
@@ -210,7 +193,7 @@ export const BookableSpacesEditSpace = ({
                         </div>
                     </Grid>
                 </Grid>
-            </PageWrapper>
+            </SpacesAdminPage>
         );
     } else if (
         !currentCampusList ||
@@ -224,7 +207,7 @@ export const BookableSpacesEditSpace = ({
         console.log('No Libraries bookableSpacesRoomListError=', bookableSpacesRoomListError);
         console.log('No Libraries bookableSpacesRoomList=', bookableSpacesRoomList);
         return (
-            <PageWrapper>
+            <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <p data-testid="add-space-no-locations">
@@ -236,7 +219,7 @@ export const BookableSpacesEditSpace = ({
                         </p>
                     </Grid>
                 </Grid>
-            </PageWrapper>
+            </SpacesAdminPage>
         );
     } else {
         return (
@@ -257,7 +240,8 @@ export const BookableSpacesEditSpace = ({
                 formValues={formValues}
                 setFormValues={setFormValues}
                 saveToDb={updateSpace}
-                PageWrapper={PageWrapper}
+                pageTitle={pageTitle}
+                currentPageSlug={currentPageSlug}
                 bookableSpaceGetError={bookableSpaceGetError}
                 springshareList={springshareList}
                 currentCampusList={currentCampusList}
@@ -290,9 +274,6 @@ BookableSpacesEditSpace.propTypes = {
     bookableSpacesRoomUpdating: PropTypes.any,
     bookableSpacesRoomUpdateError: PropTypes.any,
     bookableSpacesRoomUpdateResult: PropTypes.any,
-};
-PageWrapper.propTypes = {
-    children: PropTypes.node,
 };
 
 export default React.memo(BookableSpacesEditSpace);

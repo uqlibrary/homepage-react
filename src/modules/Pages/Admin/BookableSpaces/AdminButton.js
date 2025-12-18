@@ -13,7 +13,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 import { standardText } from 'helpers/general';
 
-import { spacesAdminLink } from './bookableSpacesAdminHelpers';
+import { spacesAdminLink } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
     '& div:not([aria-hidden="true"])': {
@@ -43,7 +43,7 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
     },
 }));
 
-export const AdminButton = ({ currentPage }) => {
+export const AdminButton = ({ currentPageSlug }) => {
     const { account } = useAccountContext();
     const [anchorEl, setAnchorEl1] = React.useState(null);
     const setAnchorEl = var1 => {
@@ -101,8 +101,8 @@ export const AdminButton = ({ currentPage }) => {
                     href={spacesAdminLink('/admin/spaces', account)}
                     data-testid="admin-spaces-visit-dashboard-button"
                 >
-                    {icon(currentPage === 'dashboard')}
-                    <span className={`${currentPage !== 'dashboard' ? 'clickable' : ''}`}>Manage Spaces</span>
+                    {icon(currentPageSlug === 'dashboard')}
+                    <span className={`${currentPageSlug !== 'dashboard' ? 'clickable' : ''}`}>Manage Spaces</span>
                 </MenuItem>
 
                 <MenuItem
@@ -110,8 +110,10 @@ export const AdminButton = ({ currentPage }) => {
                     href={spacesAdminLink('/admin/spaces/manage/locations', account)}
                     data-testid="admin-spaces-visit-manage-locations-button"
                 >
-                    {icon(currentPage === 'manage-locations')}
-                    <span className={`${currentPage !== 'manage-locations' ? 'clickable' : ''}`}>Manage Locations</span>
+                    {icon(currentPageSlug === 'manage-locations')}
+                    <span className={`${currentPageSlug !== 'manage-locations' ? 'clickable' : ''}`}>
+                        Manage Locations
+                    </span>
                 </MenuItem>
 
                 <MenuItem
@@ -119,8 +121,8 @@ export const AdminButton = ({ currentPage }) => {
                     href={spacesAdminLink('/admin/spaces/add', account)}
                     data-testid="admin-spaces-visit-add-space-button"
                 >
-                    {icon(currentPage === 'add-space')}
-                    <span className={`${currentPage !== 'add-space' ? 'clickable' : ''}`}>Add new Space</span>
+                    {icon(currentPageSlug === 'add-space')}
+                    <span className={`${currentPageSlug !== 'add-space' ? 'clickable' : ''}`}>Add new Space</span>
                 </MenuItem>
 
                 <MenuItem
@@ -128,8 +130,8 @@ export const AdminButton = ({ currentPage }) => {
                     href={spacesAdminLink('/admin/spaces/manage/facilitytypes', account)}
                     data-testid="admin-spaces-visit-manage-facilities-button"
                 >
-                    {icon(currentPage === 'manage-facilities')}
-                    <span className={`${currentPage !== 'manage-facilities' ? 'clickable' : ''}`}>
+                    {icon(currentPageSlug === 'manage-facilities')}
+                    <span className={`${currentPageSlug !== 'manage-facilities' ? 'clickable' : ''}`}>
                         Manage Facility types
                     </span>
                 </MenuItem>
@@ -149,7 +151,7 @@ export const AdminButton = ({ currentPage }) => {
 
 AdminButton.propTypes = {
     pageTitle: PropTypes.string,
-    currentPage: PropTypes.string,
+    currentPageSlug: PropTypes.string,
 };
 
 export default React.memo(AdminButton);

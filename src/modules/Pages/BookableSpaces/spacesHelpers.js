@@ -30,6 +30,7 @@ export function getFriendlyFloorName(bookableSpace) {
             bookableSpace?.space_floor_name + getOrdinalSuffixFor(bookableSpace?.space_floor_name);
         floorName = `${floorNumberAsOrdinal} Floor`;
     }
+
     return !!bookableSpace?.space_precise ? `${bookableSpace?.space_precise}, ${floorName}` : floorName;
 }
 
