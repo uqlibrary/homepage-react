@@ -201,9 +201,13 @@ export const EditSpaceForm = ({
         setErrorMessages2(m);
     };
 
-    const firstStepId = 0;
-    const lastStepId = 3; // the total number of steps / panels
+    const firstTabId = 0;
+    const secondTabId = 1;
+    const thirdTabId = 2;
+    const lastTabId = 3; // the total number of steps / panels
     const [activeStep, setActiveStep] = useState(0);
+
+    const tabLabels = ['About', 'Facility types', 'Location & Hours', 'Imagery'];
 
     const basePhotoDescriptionFieldLabel = 'Description of photo to assist people using screen readers';
 
@@ -1147,11 +1151,11 @@ export const EditSpaceForm = ({
     };
 
     function panelErrorCount(index) {
-        if (index === firstStepId) {
+        if (index === firstTabId) {
             return validatePanelAbout(formValues)?.length;
-        } else if (index === 1) {
+        } else if (index === secondTabId) {
             return validatePanelFacilityTypes(formValues)?.length;
-        } else if (index === 2) {
+        } else if (index === thirdTabId) {
             return validatePanelLocation(formValues)?.length;
         } else {
             // index must = 3
@@ -1188,39 +1192,37 @@ export const EditSpaceForm = ({
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <Stepper activeStep={activeStep}>
-                                        {['About', 'Facility types', 'Location & Hours', 'Imagery'].map(
-                                            (stepName, index) => {
-                                                const stepProps = { completed: null };
-                                                const labelProps = {
-                                                    optional: null,
-                                                };
-                                                return (
-                                                    <Step key={stepName} {...stepProps} sx={{ paddingRight: '25px' }}>
-                                                        <StepLabel {...labelProps}>
-                                                            {panelErrorCount(index) === 0 ? (
-                                                                <span data-testid={`tab-${slugifyName(stepName)}`}>
-                                                                    {stepName}
-                                                                </span>
-                                                            ) : (
-                                                                <StyledErrorCountBadge
-                                                                    color="error"
-                                                                    badgeContent={panelErrorCount(index)}
-                                                                    data-testid={`tab-${slugifyName(stepName)}`}
-                                                                >
-                                                                    {stepName}
-                                                                </StyledErrorCountBadge>
-                                                            )}
-                                                        </StepLabel>
-                                                    </Step>
-                                                );
-                                            },
-                                        )}
+                                        {tabLabels.map((tabName, index) => {
+                                            const stepProps = { completed: null };
+                                            const labelProps = {
+                                                optional: null,
+                                            };
+                                            return (
+                                                <Step key={tabName} {...stepProps} sx={{ paddingRight: '25px' }}>
+                                                    <StepLabel {...labelProps}>
+                                                        {panelErrorCount(index) === 0 ? (
+                                                            <span data-testid={`tab-${slugifyName(tabName)}`}>
+                                                                {tabName}
+                                                            </span>
+                                                        ) : (
+                                                            <StyledErrorCountBadge
+                                                                color="error"
+                                                                badgeContent={panelErrorCount(index)}
+                                                                data-testid={`tab-${slugifyName(tabName)}`}
+                                                            >
+                                                                {tabName}
+                                                            </StyledErrorCountBadge>
+                                                        )}
+                                                    </StepLabel>
+                                                </Step>
+                                            );
+                                        })}
                                     </Stepper>
                                 </Grid>
-                                {activeStep === firstStepId && aboutPanel()}
-                                {activeStep === 1 && facilityTypePanel()}
-                                {activeStep === 2 && locationPanel()}
-                                {activeStep === lastStepId && imageryPanel()}
+                                {activeStep === firstTabId && aboutPanel()}
+                                {activeStep === secondTabId && facilityTypePanel()}
+                                {activeStep === thirdTabId && locationPanel()}
+                                {activeStep === lastTabId && imageryPanel()}
                                 <Grid item xs={12}>
                                     <Box
                                         id={'button-wrapper'}
@@ -1228,7 +1230,7 @@ export const EditSpaceForm = ({
                                     >
                                         <Button
                                             color="inherit"
-                                            disabled={activeStep === firstStepId}
+                                            disabled={activeStep === firstTabId}
                                             onClick={handleBack}
                                             sx={{ mr: 1 }}
                                             data-testid="spaces-form-back-button"
@@ -1236,7 +1238,7 @@ export const EditSpaceForm = ({
                                             Back
                                         </Button>
                                         <Box sx={{ flex: '1 1 auto' }} />
-                                        {activeStep === lastStepId ? (
+                                        {activeStep === lastTabId ? (
                                             saveButton(errorMessages.length > 0)
                                         ) : (
                                             <Button onClick={handleNext} data-testid="spaces-form-next-button">
@@ -1260,29 +1262,27 @@ export const EditSpaceForm = ({
                             <Box sx={{ width: '100%' }}>
                                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                     <StyledTabs value={panelId} onChange={handleTabChange} aria-label="Space fields">
-                                        {['About', 'Facility types', 'Location & Hours', 'Imagery'].map(
-                                            (tabName, index) => {
-                                                return (
-                                                    <Tab
-                                                        label={`${tabName}`}
-                                                        {...a11yProps(index)}
-                                                        data-testid={`tab-${slugifyName(tabName)}`}
-                                                    />
-                                                );
-                                            },
-                                        )}
+                                        {tabLabels.map((tabName, index) => {
+                                            return (
+                                                <Tab
+                                                    label={`${tabName}`}
+                                                    {...a11yProps(index)}
+                                                    data-testid={`tab-${slugifyName(tabName)}`}
+                                                />
+                                            );
+                                        })}
                                     </StyledTabs>
                                 </Box>
-                                <CustomTabPanel value={panelId} index={0}>
+                                <CustomTabPanel value={panelId} index={firstTabId}>
                                     {aboutPanel()}
                                 </CustomTabPanel>
-                                <CustomTabPanel value={panelId} index={1}>
+                                <CustomTabPanel value={panelId} index={secondTabId}>
                                     {facilityTypePanel()}
                                 </CustomTabPanel>
-                                <CustomTabPanel value={panelId} index={2}>
+                                <CustomTabPanel value={panelId} index={thirdTabId}>
                                     {locationPanel()}
                                 </CustomTabPanel>
-                                <CustomTabPanel value={panelId} index={3}>
+                                <CustomTabPanel value={panelId} index={lastTabId}>
                                     {imageryPanel()}
                                 </CustomTabPanel>
                             </Box>

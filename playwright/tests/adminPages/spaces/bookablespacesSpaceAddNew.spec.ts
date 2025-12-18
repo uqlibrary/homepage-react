@@ -7,6 +7,11 @@ import { assertErrorPopupAppears } from '@uq/pw/tests/adminPages/spaces/spacesTe
 
 const inputField = (fieldName: string, page: Page) => page.getByTestId(fieldName).locator('input');
 
+const STEP_ABOUT = 'tab-about';
+const STEP_FACILITY_TYPES = 'tab-facility-types';
+const TABS_LOCATION_HOURS = 'tab-location-hours';
+const STEP_IMAGERY = 'tab-imagery';
+
 test.describe('Spaces Admin - add new space', () => {
     test('can navigate from dashboard to add new', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
@@ -38,15 +43,15 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Add a new Space/)).toBeVisible();
     });
     test('add new space appears as expected onload', async ({ page }) => {
-        await expect(page.getByTestId('tab-about')).toBeVisible();
-        await expect(page.getByTestId('tab-about')).toContainText('About');
+        await expect(page.getByTestId(STEP_ABOUT)).toBeVisible();
+        await expect(page.getByTestId(STEP_ABOUT)).toContainText('About');
 
-        await expect(page.getByTestId('tab-facility-types')).toBeVisible();
-        await expect(page.getByTestId('tab-facility-types')).toContainText('Facility types');
-        await expect(page.getByTestId('tab-location-hours')).toBeVisible();
-        await expect(page.getByTestId('tab-location-hours')).toContainText('Location & Hours');
-        await expect(page.getByTestId('tab-imagery')).toBeVisible();
-        await expect(page.getByTestId('tab-imagery')).toContainText('Imagery');
+        await expect(page.getByTestId(STEP_FACILITY_TYPES)).toBeVisible();
+        await expect(page.getByTestId(STEP_FACILITY_TYPES)).toContainText('Facility types');
+        await expect(page.getByTestId(TABS_LOCATION_HOURS)).toBeVisible();
+        await expect(page.getByTestId(TABS_LOCATION_HOURS)).toContainText('Location & Hours');
+        await expect(page.getByTestId(STEP_IMAGERY)).toBeVisible();
+        await expect(page.getByTestId(STEP_IMAGERY)).toContainText('Imagery');
 
         await expect(page.getByTestId('space-name').locator('input')).toBeVisible();
         await expect(page.getByTestId('space-type').locator('input')).toBeVisible();
