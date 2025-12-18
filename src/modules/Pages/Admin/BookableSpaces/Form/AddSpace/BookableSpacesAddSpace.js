@@ -6,10 +6,8 @@ import { Grid } from '@mui/material';
 
 import { useAccountContext } from 'context';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
-import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
+import { SpacesAdminPage } from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 import { EditSpaceForm } from '../EditSpaceForm';
 import {
     addBreadcrumbsToSiteHeader,
@@ -20,19 +18,6 @@ import {
     weeklyHoursLoaded,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';
-
-const PageWrapper = ({ children }) => {
-    return (
-        <StandardPage title="Spaces">
-            <HeaderBar pageTitle="Add a new Space" currentPage="add-space" />
-            <section aria-live="assertive">
-                <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
-                    {children}
-                </StandardCard>
-            </section>
-        </StandardPage>
-    );
-};
 
 export const BookableSpacesAddSpace = ({
     actions,
@@ -81,6 +66,9 @@ export const BookableSpacesAddSpace = ({
         console.log('BookableSpacesAddSpace setFormValues', newValues);
         setFormValues2(newValues);
     };
+
+    const pageTitle = 'Add a new Space';
+    const currentPageSlug = 'add-space';
 
     useEffect(() => {
         addBreadcrumbsToSiteHeader([
@@ -156,7 +144,7 @@ export const BookableSpacesAddSpace = ({
         );
     } else if (!!campusListError || !!bookableSpacesRoomListError || !!facilityTypeListError || !!weeklyHoursError) {
         return (
-            <PageWrapper>
+            <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <div data-testid="load-space-form-error">
@@ -168,7 +156,7 @@ export const BookableSpacesAddSpace = ({
                         </div>
                     </Grid>
                 </Grid>
-            </PageWrapper>
+            </SpacesAdminPage>
         );
     } else if (
         !currentCampusList ||
@@ -178,7 +166,7 @@ export const BookableSpacesAddSpace = ({
             (!bookableSpacesRoomList?.data?.locations || bookableSpacesRoomList?.data?.locations.length === 0))
     ) {
         return (
-            <PageWrapper>
+            <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <p data-testid="add-space-no-locations">
@@ -190,7 +178,7 @@ export const BookableSpacesAddSpace = ({
                         </p>
                     </Grid>
                 </Grid>
-            </PageWrapper>
+            </SpacesAdminPage>
         );
     } else {
         return (
@@ -213,7 +201,8 @@ export const BookableSpacesAddSpace = ({
                     formValues={formValues}
                     setFormValues={setFormValues}
                     saveToDb={createNewSpace}
-                    PageWrapper={PageWrapper}
+                    pageTitle={pageTitle}
+                    currentPageSlug={currentPageSlug}
                     springshareList={springshareList}
                     currentCampusList={currentCampusList}
                     mode="add"
@@ -221,10 +210,6 @@ export const BookableSpacesAddSpace = ({
             </>
         );
     }
-};
-
-PageWrapper.propTypes = {
-    children: PropTypes.node,
 };
 
 BookableSpacesAddSpace.propTypes = {

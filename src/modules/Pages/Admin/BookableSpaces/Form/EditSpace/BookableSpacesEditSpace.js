@@ -7,11 +7,9 @@ import { Grid } from '@mui/material';
 
 import { useAccountContext } from 'context';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';
-import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
+import { SpacesAdminPage } from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 import { EditSpaceForm } from 'modules/Pages/Admin/BookableSpaces/Form/EditSpaceForm';
 import {
     addBreadcrumbsToSiteHeader,
@@ -20,19 +18,6 @@ import {
     validCampusList,
     weeklyHoursLoaded,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
-
-const PageWrapper = ({ children }) => {
-    return (
-        <StandardPage title="Spaces">
-            <HeaderBar pageTitle="Edit Space" currentPage="edit-space" />
-            <section aria-live="assertive">
-                <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
-                    {children}
-                </StandardCard>
-            </section>
-        </StandardPage>
-    );
-};
 
 export const BookableSpacesEditSpace = ({
     actions,
@@ -77,6 +62,9 @@ export const BookableSpacesEditSpace = ({
         console.log('BookableSpacesEditSpace setFormValues', newValues);
         setFormValues2(newValues);
     };
+
+    const pageTitle = 'Edit Space';
+    const currentPageSlug = 'edit-space';
 
     useEffect(() => {
         addBreadcrumbsToSiteHeader([
@@ -165,13 +153,13 @@ export const BookableSpacesEditSpace = ({
         Object.keys(bookableSpaceGetResult?.data).length === 0
     ) {
         return (
-            <PageWrapper>
+            <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <p data-testid="missing-record">There is no Space with ID "{spaceUuid}".</p>
                     </Grid>
                 </Grid>
-            </PageWrapper>
+            </SpacesAdminPage>
         );
     }
     if (!!bookableSpaceGetting || !!bookableSpacesRoomListLoading || !!campusListLoading) {
@@ -192,7 +180,7 @@ export const BookableSpacesEditSpace = ({
         !formValues?.campus_id
     ) {
         return (
-            <PageWrapper>
+            <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <div data-testid="load-space-form-error">
@@ -205,7 +193,7 @@ export const BookableSpacesEditSpace = ({
                         </div>
                     </Grid>
                 </Grid>
-            </PageWrapper>
+            </SpacesAdminPage>
         );
     } else if (
         !currentCampusList ||
@@ -219,7 +207,7 @@ export const BookableSpacesEditSpace = ({
         console.log('No Libraries bookableSpacesRoomListError=', bookableSpacesRoomListError);
         console.log('No Libraries bookableSpacesRoomList=', bookableSpacesRoomList);
         return (
-            <PageWrapper>
+            <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <p data-testid="add-space-no-locations">
@@ -231,7 +219,7 @@ export const BookableSpacesEditSpace = ({
                         </p>
                     </Grid>
                 </Grid>
-            </PageWrapper>
+            </SpacesAdminPage>
         );
     } else {
         return (
@@ -252,7 +240,8 @@ export const BookableSpacesEditSpace = ({
                 formValues={formValues}
                 setFormValues={setFormValues}
                 saveToDb={updateSpace}
-                PageWrapper={PageWrapper}
+                pageTitle={pageTitle}
+                currentPageSlug={currentPageSlug}
                 bookableSpaceGetError={bookableSpaceGetError}
                 springshareList={springshareList}
                 currentCampusList={currentCampusList}
@@ -285,9 +274,6 @@ BookableSpacesEditSpace.propTypes = {
     bookableSpacesRoomUpdating: PropTypes.any,
     bookableSpacesRoomUpdateError: PropTypes.any,
     bookableSpacesRoomUpdateResult: PropTypes.any,
-};
-PageWrapper.propTypes = {
-    children: PropTypes.node,
 };
 
 export default React.memo(BookableSpacesEditSpace);

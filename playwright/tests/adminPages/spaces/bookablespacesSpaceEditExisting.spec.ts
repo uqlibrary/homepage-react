@@ -275,7 +275,7 @@ test.describe('Spaces Admin - edit space', () => {
     });
 
     test('edit spaces page is accessible', async ({ page }) => {
-        await assertAccessibility(page, '[data-testid="StandardPage"]');
+        await assertAccessibility(page, '[data-testid="SpacesAdminPage"]');
     });
 
     const CONTAINS_ARTWORK = 57;

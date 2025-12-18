@@ -31,6 +31,7 @@ import {
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { ImageUploadDropzone } from './ImageUploadDropzone';
+import SpacesAdminPage from '../SpacesAdminPage';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),
@@ -152,7 +153,8 @@ export const EditSpaceForm = ({
     formValues,
     setFormValues,
     saveToDb,
-    PageWrapper,
+    pageTitle,
+    currentPageSlug,
     springshareList,
     bookableSpacesRoomUpdating,
     bookableSpacesRoomUpdateError,
@@ -1179,7 +1181,7 @@ export const EditSpaceForm = ({
                 cancelButtonColor="accent"
             />
 
-            <PageWrapper>
+            <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
                 {mode === 'add' && (
                     <>
                         <form id="spaces-addedit-form">
@@ -1295,7 +1297,7 @@ export const EditSpaceForm = ({
                         </Grid>
                     </>
                 )}
-            </PageWrapper>
+            </SpacesAdminPage>
         </>
     );
 };
@@ -1318,7 +1320,8 @@ EditSpaceForm.propTypes = {
     formValues: PropTypes.any,
     setFormValues: PropTypes.any,
     saveToDb: PropTypes.func,
-    PageWrapper: PropTypes.any,
+    pageTitle: PropTypes.string,
+    currentPageSlug: PropTypes.string,
     mode: PropTypes.string,
     bookableSpaceGetError: PropTypes.any,
     springshareList: PropTypes.any,

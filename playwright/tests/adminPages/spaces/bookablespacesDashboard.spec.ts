@@ -498,7 +498,7 @@ test.describe('Spaces Admin - manage locations', () => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage Spaces/)).toBeVisible(); // page had loaded
 
-            await assertAccessibility(page, '[data-testid="StandardPage"]');
+            await assertAccessibility(page, '[data-testid="SpacesAdminPage"]');
         });
         test('navigation menu is accessible', async ({ page }) => {
             await page.goto('/admin/spaces?user=libSpaces');
@@ -783,7 +783,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(pushInbutton).toBeVisible();
         await pushInbutton.click();
 
-        await page.waitForTimeout(500); // cant think of any way to wait for the redraw!
+        await page.waitForTimeout(500); // cant think of anything to watch for the redraw to be done
         const tableWrapperBoundingBox3 = await tableWrapper.boundingBox();
         await expect(tableWrapperBoundingBox3?.width).toBeGreaterThan(1130);
         await expect(tableWrapperBoundingBox3?.width).toBeLessThan(1150);

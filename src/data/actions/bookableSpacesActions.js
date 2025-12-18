@@ -133,7 +133,7 @@ export function updateBookableSpaceLocation(request, locationType, _locationId =
 
 function updateBookableSpace(request, dispatch) {
     console.log('updateBookable_Space', request);
-    const url = SPACES_MODIFY_LOCATION_API({ type: 'space', id: request.spaceId });
+    const url = SPACES_MODIFY_LOCATION_API({ type: 'space', id: request.space_id });
     console.log('updateBookable_Space calling', url);
     return put(url, request)
         .then(response => {

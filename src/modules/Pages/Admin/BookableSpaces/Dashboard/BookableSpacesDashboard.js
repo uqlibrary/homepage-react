@@ -21,7 +21,6 @@ import Typography from '@mui/material/Typography';
 
 import EditIcon from '@mui/icons-material/Edit';
 
-import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
@@ -31,13 +30,14 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 
+import { slugifyName, standardText } from 'helpers/general';
+
 import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
-import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import {
     addBreadcrumbsToSiteHeader,
     spacesAdminLink,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
-import { slugifyName, standardText } from 'helpers/general';
+import SpacesAdminPage from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 
 const backgroundColorColumn = '#f0f0f0';
 const borderColour = '1px solid rgb(224 224 224 / 1)';
@@ -882,50 +882,44 @@ export const BookableSpacesDashboard = ({
     }
 
     return (
-        <StandardPage title="Spaces">
-            <HeaderBar pageTitle="Manage Spaces" currentPage="dashboard" />
-
-            <section aria-live="assertive">
-                <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
-                    <Grid container spacing={3} className="aaaaaaaaa">
-                        {(() => {
-                            if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
-                                return (
-                                    <StyledBookableSpaceGridItem item xs={12} md={9}>
-                                        <InlineLoader message="Loading" />
-                                    </StyledBookableSpaceGridItem>
-                                );
-                            } else if (!!bookableSpacesRoomListError || !!facilityTypeListError) {
-                                return (
-                                    <StyledBookableSpaceGridItem item xs={12} md={9}>
-                                        <StyledStandardCard fullHeight>
-                                            <p>Something went wrong - please try again later.</p>
-                                        </StyledStandardCard>
-                                    </StyledBookableSpaceGridItem>
-                                );
-                            } else if (
-                                !bookableSpacesRoomList?.data?.locations ||
-                                bookableSpacesRoomList?.data?.locations.length === 0
-                            ) {
-                                return (
-                                    <StyledBookableSpaceGridItem item xs={12} md={9}>
-                                        <StyledStandardCard fullHeight>
-                                            <p>No spaces currently in system - please try again soon.</p>
-                                        </StyledStandardCard>
-                                    </StyledBookableSpaceGridItem>
-                                );
-                            } else {
-                                return (
-                                    <StyledBookableSpaceGridItem item xs={12} style={{ marginTop: 0, paddingTop: 0 }}>
-                                        {displayListOfBookableSpaces()}
-                                    </StyledBookableSpaceGridItem>
-                                );
-                            }
-                        })()}
-                    </Grid>
-                </StandardCard>
-            </section>
-        </StandardPage>
+        <SpacesAdminPage systemTitle="Spaces" pageTitle="Manage Spaces" currentPageSlug="dashboard">
+            <Grid container spacing={3} className="aaaaaaaaa">
+                {(() => {
+                    if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
+                        return (
+                            <StyledBookableSpaceGridItem item xs={12} md={9}>
+                                <InlineLoader message="Loading" />
+                            </StyledBookableSpaceGridItem>
+                        );
+                    } else if (!!bookableSpacesRoomListError || !!facilityTypeListError) {
+                        return (
+                            <StyledBookableSpaceGridItem item xs={12} md={9}>
+                                <StyledStandardCard fullHeight>
+                                    <p>Something went wrong - please try again later.</p>
+                                </StyledStandardCard>
+                            </StyledBookableSpaceGridItem>
+                        );
+                    } else if (
+                        !bookableSpacesRoomList?.data?.locations ||
+                        bookableSpacesRoomList?.data?.locations.length === 0
+                    ) {
+                        return (
+                            <StyledBookableSpaceGridItem item xs={12} md={9}>
+                                <StyledStandardCard fullHeight>
+                                    <p>No spaces currently in system - please try again soon.</p>
+                                </StyledStandardCard>
+                            </StyledBookableSpaceGridItem>
+                        );
+                    } else {
+                        return (
+                            <StyledBookableSpaceGridItem item xs={12} style={{ marginTop: 0, paddingTop: 0 }}>
+                                {displayListOfBookableSpaces()}
+                            </StyledBookableSpaceGridItem>
+                        );
+                    }
+                })()}
+            </Grid>
+        </SpacesAdminPage>
     );
 };
 

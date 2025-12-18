@@ -84,7 +84,7 @@ test.describe('Spaces Admin - add new space', () => {
         await expect(saveButton).toBeDisabled();
     });
     test('add spaces page is accessible', async ({ page }) => {
-        await assertAccessibility(page, '[data-testid="StandardPage"]');
+        await assertAccessibility(page, '[data-testid="SpacesAdminPage"]');
     });
     test('can add new space, with only required fields', async ({ page, context }) => {
         await setTestDataCookie(context, page);
@@ -105,7 +105,7 @@ test.describe('Spaces Admin - add new space', () => {
         await page.getByTestId('spaces-form-next-button').click(); // to final step, imagery
 
         // blur the form
-        await page.getByTestId('StandardPage-title').click();
+        await page.getByTestId('SpacesAdminPage-systemTitle').click();
 
         // click save button
         const saveButton = page.getByTestId('admin-spaces-save-button-submit');
@@ -146,7 +146,7 @@ test.describe('Spaces Admin - add new space', () => {
             .fill('This is a sunny corner in the Law library where you blah blah blah');
 
         // blur the form
-        await page.getByTestId('StandardPage-title').click();
+        await page.getByTestId('SpacesAdminPage-systemTitle').click();
 
         // change to facility type tab
         await page.getByTestId('spaces-form-next-button').click();
@@ -309,7 +309,7 @@ test.describe('Spaces Admin - add new space', () => {
         await spaceNameInputField.fill('W12343');
 
         // blur the form
-        await page.getByTestId('StandardPage-title').click();
+        await page.getByTestId('SpacesAdminPage-systemTitle').click();
 
         await page.getByTestId('spaces-form-next-button').click(); // to facility types
         await page.getByTestId('spaces-form-next-button').click(); // to locations
@@ -647,7 +647,7 @@ test.describe('Spaces Admin - errors', () => {
         await spaceTypeField.fill('Computer room');
 
         // blur the form
-        await page.getByTestId('StandardPage-title').click();
+        await page.getByTestId('SpacesAdminPage-systemTitle').click();
 
         await page.getByTestId('spaces-form-next-button').click(); // to facility types
         await page.getByTestId('spaces-form-next-button').click(); // to locations
