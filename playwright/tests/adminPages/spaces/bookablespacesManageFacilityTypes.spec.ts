@@ -206,7 +206,7 @@ test.describe('Spaces Admin - manage facility types page', () => {
         await expect(roomFeatureGroup.getByTestId('facilitytype-name-14')).toContainText('Undergrad spaces');
     });
     test('is accessible on initial load', async ({ page }) => {
-        await assertAccessibility(page, '[data-testid="StandardPage"]');
+        await assertAccessibility(page, '[data-testid="SpacesAdminPage"]');
     });
 });
 test.describe('Spaces Admin - create new group dialog', () => {

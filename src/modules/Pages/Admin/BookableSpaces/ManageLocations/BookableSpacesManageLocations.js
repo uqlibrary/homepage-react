@@ -12,11 +12,8 @@ import WarningOutlined from '@mui/icons-material/WarningOutlined';
 import { baseButtonStyles, pluralise, removeClass } from 'helpers/general';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { useConfirmationState } from 'hooks';
 
-import { HeaderBar } from 'modules/Pages/Admin/BookableSpaces/HeaderBar';
 import {
     addBreadcrumbsToSiteHeader,
     closeDeletionConfirmation,
@@ -25,6 +22,8 @@ import {
     showGenericConfirmAndDeleteDialog,
     springshareLocations,
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
+
+import { SpacesAdminPage } from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
@@ -89,9 +88,11 @@ const StyledMainDialog = styled('dialog')(({ theme }) => ({
         },
     },
     '& .dialogFooter': {
-        display: 'flex',
-        justifyContent: 'space-between',
         marginTop: '1rem',
+        '& > div': {
+            display: 'flex',
+            justifyContent: 'space-between',
+        },
         '& button': {
             marginLeft: '0.5rem',
         },
@@ -975,7 +976,7 @@ export const BookableSpacesManageLocations = ({
                 ${
                     campusDetails?.libraries?.length > 0
                         ? `<ul data-testid="campus-library-list">${campusDetails?.libraries
-                              ?.sort((a, b) => a.library_name.localeCompare(b.library_name))
+                              ?.sort((a, b) => a?.library_name?.localeCompare(b.library_name))
                               ?.map(library => `<li>${displayedLibraryName(library)}</li>`)
                               .join('')}</ul>`
                         : ''
@@ -1066,72 +1067,69 @@ export const BookableSpacesManageLocations = ({
     }
 
     return (
-        <StandardPage title="Spaces">
-            <HeaderBar pageTitle="Manage locations" currentPage="manage-locations" />
-
-            <section aria-live="assertive">
-                <StandardCard standardCardId="location-list-card" noPadding noHeader style={{ border: 'none' }}>
-                    <Grid container spacing={3} style={{ position: 'relative' }}>
-                        <Grid item xs={12} md={8} style={{ marginTop: '12px' }}>
-                            {(() => {
-                                if (!!savingProgressShown || !!campusListLoading) {
-                                    return <InlineLoader message="Loading" />;
-                                } else if (!!campusListError) {
-                                    return <p>Something went wrong - please try again later.</p>;
-                                } else if (!campusList || campusList.length === 0) {
-                                    return <p>No spaces currently in system.</p>;
-                                } else {
-                                    return <div data-testid="spaces-location-wrapper">{getPageLayout(campusList)}</div>;
-                                }
-                            })()}
-                        </Grid>
-                        <Grid item xs={12} md={4} style={{ paddingTop: 0 }}>
-                            <div style={{ padding: '1rem' }}>
-                                <StyledButton
-                                    className={'primary'}
-                                    style={{ marginLeft: '2rem', marginTop: '2rem', textTransform: 'initial' }}
-                                    children={'Add new Campus'}
-                                    onClick={showAddCampusForm}
-                                    data-testid="add-new-campus-button"
-                                />
-                            </div>
-                        </Grid>
-                    </Grid>
-                </StandardCard>
-                <dialog id="confirmationDialog" className="confirmationDialog" data-testid="confirmation-dialog">
-                    <p id="confDialogMessage" data-testid="confirmation-dialog-message" />
-                    <StyledConfirmationButtons>
+        <SpacesAdminPage systemTitle="Spaces" pageTitle="Manage locations" currentPageSlug="manage-locations">
+            <Grid container spacing={3} style={{ position: 'relative' }}>
+                <Grid item xs={12} md={8} style={{ marginTop: '12px' }}>
+                    {(() => {
+                        if (!!savingProgressShown || !!campusListLoading) {
+                            return <InlineLoader message="Loading" />;
+                        } else if (!!campusListError) {
+                            return <p>Something went wrong - please try again later.</p>;
+                        } else if (!campusList || campusList.length === 0) {
+                            return <p>No spaces currently in system.</p>;
+                        } else {
+                            return <div data-testid="spaces-location-wrapper">{getPageLayout(campusList)}</div>;
+                        }
+                    })()}
+                </Grid>
+                <Grid item xs={12} md={4} style={{ paddingTop: 0 }}>
+                    <div style={{ padding: '1rem' }}>
                         <StyledButton
-                            id="confDialogCancelButton"
-                            className={'secondary'}
-                            children={'No'}
-                            data-testid="confirmation-dialog-reject-button"
-                        />
-                        <StyledButton
-                            id="confDialogOkButton"
                             className={'primary'}
-                            children={'Yes'}
-                            data-testid="confirmation-dialog-accept-button"
+                            style={{ marginLeft: '2rem', marginTop: '2rem', textTransform: 'initial' }}
+                            children={'Add new Campus'}
+                            onClick={showAddCampusForm}
+                            data-testid="add-new-campus-button"
                         />
-                    </StyledConfirmationButtons>
-                </dialog>
-                <ConfirmationBox
-                    confirmationBoxId="spaces-manage-locations-error"
-                    onAction={() => hideConfirmationLocal}
-                    onClose={hideConfirmationLocal}
-                    hideCancelButton
-                    isOpen={isConfirmationBoxOpen}
-                    locale={confirmationLocale}
-                />
-                <StyledMainDialog id={'popupDialog'} closedby="any" data-testid="main-dialog">
-                    <form>
-                        <div id="dialogMessage" />
-                        <div id="dialogBody" />
-                        <div id="dialogFooter" className={'dialogFooter'}>
-                            <p id="dialogMessage" data-testid="dialogMessage">
-                                <WarningOutlined className="hidden" id="warning-icon" data-testid="warning-icon" />
-                                <span id="dialogMessageContent" />
-                            </p>
+                    </div>
+                </Grid>
+            </Grid>
+
+            <dialog id="confirmationDialog" className="confirmationDialog" data-testid="confirmation-dialog">
+                <p id="confDialogMessage" data-testid="confirmation-dialog-message" />
+                <StyledConfirmationButtons>
+                    <StyledButton
+                        id="confDialogCancelButton"
+                        className={'secondary'}
+                        children={'No'}
+                        data-testid="confirmation-dialog-reject-button"
+                    />
+                    <StyledButton
+                        id="confDialogOkButton"
+                        className={'primary'}
+                        children={'Yes'}
+                        data-testid="confirmation-dialog-accept-button"
+                    />
+                </StyledConfirmationButtons>
+            </dialog>
+            <ConfirmationBox
+                confirmationBoxId="spaces-manage-locations-error"
+                onAction={() => hideConfirmationLocal}
+                onClose={hideConfirmationLocal}
+                hideCancelButton
+                isOpen={isConfirmationBoxOpen}
+                locale={confirmationLocale}
+            />
+            <StyledMainDialog id={'popupDialog'} closedby="any" data-testid="main-dialog">
+                <form>
+                    <div id="dialogMessage" />
+                    <div id="dialogBody" />
+                    <div id="dialogFooter" className={'dialogFooter'}>
+                        <p id="dialogMessage" data-testid="dialogMessage">
+                            <WarningOutlined className="hidden" id="warning-icon" data-testid="warning-icon" />
+                            <span id="dialogMessageContent" />
+                        </p>
+                        <div>
                             <div>
                                 <StyledButton
                                     id={'deleteButton'}
@@ -1162,10 +1160,10 @@ export const BookableSpacesManageLocations = ({
                                 />
                             </div>
                         </div>
-                    </form>
-                </StyledMainDialog>
-            </section>
-        </StandardPage>
+                    </div>
+                </form>
+            </StyledMainDialog>
+        </SpacesAdminPage>
     );
 };
 

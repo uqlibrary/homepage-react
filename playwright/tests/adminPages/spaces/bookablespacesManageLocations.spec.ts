@@ -59,7 +59,7 @@ test.describe('Spaces Location admin', () => {
         // wait for page to load
         await expect(page.getByTestId('admin-spaces-page-title').getByText(/Manage locations/)).toBeVisible();
 
-        await assertAccessibility(page, '[data-testid="StandardPage"]');
+        await assertAccessibility(page, '[data-testid="SpacesAdminPage"]');
     });
 
     test.describe('Add a campus', () => {
