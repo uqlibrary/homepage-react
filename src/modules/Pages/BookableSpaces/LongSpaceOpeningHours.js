@@ -8,8 +8,18 @@ import { spaceOpeningHours } from './spacesHelpers';
 
 const StyledTable = styled('table')(() => ({
     width: '100%',
+    '& caption': {
+        position: 'absolute',
+        top: 'auto',
+        overflow: 'hidden',
+        clip: 'rect(1px, 1px, 1px, 1px)',
+        width: '1px',
+        height: '1px',
+        whiteSpace: 'nowrap',
+    },
     '& th, & th': {
         textAlign: 'center',
+        minWidth: '5em',
     },
 }));
 
@@ -53,27 +63,35 @@ export const LongSpaceOpeningHours = ({ weeklyHoursLoading, weeklyHoursError, we
             <Typography component={'h3'} variant={'h6'}>
                 {bookableSpace?.space_library_name} opening hours
             </Typography>
-            <StyledTable>
-                <thead>
-                    <tr>
-                        {openingHoursList?.map((d, index) => (
-                            <th
-                                key={`space-${spaceId}-opening-th-${index}`}
-                                data-testid={`space-${spaceId}-openingHours-${index}`}
-                            >
-                                {d.dayName}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        {openingHoursList?.map((d, index) => (
-                            <td key={`space-${spaceId}-opening-td-${index}`}>{d.rendered}</td>
-                        ))}
-                    </tr>
-                </tbody>
-            </StyledTable>
+            <div style={{ overflowX: 'scroll' }} tabIndex="0">
+                <StyledTable>
+                    <caption>Opening hours in the coming week for {bookableSpace?.space_library_name}</caption>
+                    <thead>
+                        <tr>
+                            {openingHoursList?.map((d, index) => (
+                                <th
+                                    key={`space-${spaceId}-opening-th-${index}`}
+                                    data-testid={`space-${spaceId}-openingHours-${index}`}
+                                    tabIndex="0"
+                                    scope="col"
+                                    id={`day-${index}`}
+                                >
+                                    {d.dayName}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            {openingHoursList?.map((d, index) => (
+                                <td key={`space-${spaceId}-opening-td-${index}`} tabIndex="0" headers={`day-${index}`}>
+                                    {d.rendered}
+                                </td>
+                            ))}
+                        </tr>
+                    </tbody>
+                </StyledTable>
+            </div>
             {overrideMessage}
         </>
     );

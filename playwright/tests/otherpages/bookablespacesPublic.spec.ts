@@ -47,26 +47,26 @@ test.describe('Spaces', () => {
         // summary hours show correctly
         await expect(page.getByTestId(`${FORGEN}-summary-info`)).toBeVisible();
         await expect(page.getByTestId(`${FORGEN}-summary-info`)).toContainText(
-            'Walter Harrison Law Library opening hours - Today: 24 Hours',
+            'Walter Harrison Law Library opening hours Today: 24 Hours',
         );
         await expect(page.getByTestId(`${PACE}-summary-info`)).toBeVisible();
         await expect(page.getByTestId(`${PACE}-summary-info`)).toContainText(
-            'Dutton Park Health Sciences opening hours - Today: 7am - 10:30pm (this space opens at 8am)',
+            'Dutton Park Health Sciences opening hours Today: 7am - 10:30pm (this space opens at 8am)',
         );
         await expect(page.getByTestId(`${LIVERIS}-summary-info`)).toBeVisible();
         await expect(page.getByTestId(`${LIVERIS}-summary-info`)).toContainText('Open from 7am Monday - Friday');
         await expect(page.getByTestId(`space-1-summary-info`)).toBeVisible();
         await expect(page.getByTestId(`space-1-summary-info`)).toContainText(
-            'Architecture and Music Library opening hours - Today: 7:30am - 7:30pm',
+            'Architecture and Music Library opening hours Today: 7:30am - 7:30pm',
         );
         await expect(page.getByTestId(`space-2-summary-info`)).toBeVisible();
         await expect(page.getByTestId(`space-2-summary-info`)).toContainText(
-            'Architecture and Music Library opening hours - Today: 7:30am - 7:30pm',
+            'Architecture and Music Library opening hours Today: 7:30am - 7:30pm',
         );
         await expect(page.getByTestId(`space-3-summary-info`)).not.toBeVisible();
         await expect(page.getByTestId(`space-4-summary-info`)).toBeVisible();
         await expect(page.getByTestId(`space-4-summary-info`)).toContainText(
-            'Architecture and Music Library opening hours - Today: 7:30am - 7:30pm',
+            'Architecture and Music Library opening hours Today: 7:30am - 7:30pm',
         );
         await expect(page.getByTestId(`space-5-summary-info`)).not.toBeVisible();
         await expect(page.getByTestId(`space-6-summary-info`)).not.toBeVisible();

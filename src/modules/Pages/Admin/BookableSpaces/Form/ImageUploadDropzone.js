@@ -176,7 +176,7 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
     };
 
     const dragareaInstructions = [
-        'Drag and drop a spotlight image, or click to select an image. *',
+        'Drag and drop a photo of a Space, or click to select an image. *',
         'Max image size: [MAXFILESIZE] KB. Recommended dimensions: [WIDTH]px by [HEIGHT]px (aspect ratio: [RATIO]).',
         'Click the Help button for image requirements.',
     ];
@@ -186,7 +186,7 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
             <ConfirmationBox
                 actionButtonColor="primary"
                 actionButtonVariant="contained"
-                confirmationBoxId="spotlight-form-file-upload-error-dialog"
+                confirmationBoxId="spaces-form-file-upload-error-dialog"
                 onAction={/* istanbul ignore next */ () => /* istanbul ignore next */ closeFileProblemConfirmation()}
                 onClose={/* istanbul ignore next */ () => /* istanbul ignore next */ closeFileProblemConfirmation()}
                 hideCancelButton
@@ -202,7 +202,7 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
                         <Grid item xs={10}>
                             {files.map(file => (
                                 <div style={thumbInner} key={file.name}>
-                                    <img alt="preview of uploaded spotlight file" src={file.preview} style={thumbImg} />
+                                    <img alt="preview of uploaded Spaces photo" src={file.preview} style={thumbImg} />
                                 </div>
                             ))}
                         </Grid>

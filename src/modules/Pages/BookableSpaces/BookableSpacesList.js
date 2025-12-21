@@ -28,8 +28,6 @@ import {
     getFriendlyLocationDescription,
 } from 'modules/Pages/BookableSpaces/spacesHelpers';
 
-const standardDivider = '1px solid #dcdcdd';
-
 const svgOrangeCheckbox =
     "data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMidYMid meet' focusable='false'%3E%3Cpath fill='%23c13e2a' d='M22.2,20.9l-1.3-1.3C21,19.4,21,19.2,21,19v-8h-2v6.7l-4.6-4.6l6-6l-1.4-1.4l-6,6L6.3,5H15V3H5C4.8,3,4.6,3,4.4,3.1L3,1.7L1.8,2.9l1.3,1.3C3.1,4.4,3,4.7,3,5v14c0,1.1,0.9,2,2,2h14c0.3,0,0.6-0.1,0.8-0.2l1.2,1.2L22.2,20.9z M5,19V6l6.9,6.9l-1.4,1.4l-3.1-3.1L6,12.6l4.5,4.5l2.8-2.8L18,19H5z'%3E%3C/path%3E%3C/svg%3E";
 const visibleRejectedCheckbox = {
@@ -158,8 +156,8 @@ const StyledSidebarGridItem = styled(Grid)(() => ({
         },
     },
 }));
-const StyledFacilityGroup = styled('div')(() => ({
-    borderBottom: standardDivider,
+const StyledFacilityGroup = styled('div')(({ theme }) => ({
+    borderBottom: theme.palette.designSystem.border,
     paddingBlock: '16px',
     '& h3': {
         marginTop: 0,
@@ -180,9 +178,9 @@ const StyledFilterSpaceListTypographyHeading = styled('h3')(() => ({
         fontStyle: 'italic',
     },
 }));
-const StyledSidebarDiv = styled('div')(() => ({
+const StyledSidebarDiv = styled('div')(({ theme }) => ({
     '& > div:first-of-type': {
-        borderTop: standardDivider,
+        borderTop: theme.palette.designSystem.border,
         marginTop: '16px',
     },
     '& .hiddenFilters': {
@@ -247,6 +245,12 @@ const StyledCollapsableSection = styled('div')(() => ({
         visibility: 'hidden',
         height: 0,
         opacity: 0,
+    },
+}));
+const StyledFriendlyLocationDiv = styled('div')(() => ({
+    marginTop: '5px',
+    '& > div': {
+        marginTop: '-5px',
     },
 }));
 
@@ -432,11 +436,7 @@ export const BookableSpacesList = ({
         }
     }, [facilityTypeListError, facilityTypeListLoading, facilityTypeList, facilityTypeFilters, bookableSpacesRoomList]);
 
-    const getSpaceId = spaceId => {
-        return `space-${spaceId}`;
-    };
-
-    function showSpace(spaceFacilityTypes, facilityTypeToGroup, facilityTypeFilters) {
+    function spaceAppears(spaceFacilityTypes, facilityTypeToGroup, facilityTypeFilters) {
         // Create a map of facility_type_id to group_id for quick lookup
         // Group selected filters by their facility type group
         const selectedFiltersByGroup = {};
@@ -551,9 +551,9 @@ export const BookableSpacesList = ({
                 <div style={{ float: 'right', marginTop: '-40px', marginRight: '-10px' }}>
                     {showHideSpacePanel(bookableSpace)}
                 </div>
-                <div data-testid={`space-${bookableSpace?.space_id}-friendly-location`}>
+                <StyledFriendlyLocationDiv data-testid={`space-${bookableSpace?.space_id}-friendly-location`}>
                     {getFriendlyLocationDescription(bookableSpace)}
-                </div>
+                </StyledFriendlyLocationDiv>
                 {bookableSpace?.space_description?.length > 0 && (
                     <StyledDescription
                         id={`space-description-${bookableSpace?.space_id}`}
@@ -579,7 +579,7 @@ export const BookableSpacesList = ({
                 <StyledCollapsableSection
                     // loads closed
                     id={`space-more-${bookableSpace?.space_id}`}
-                    data-testid={`space-${bookableSpace?.space_id}-collapsible`}
+                    data-testid={`space-${bookableSpace?.space_id}-full-info`}
                     className={'hiddenSection'}
                 >
                     <LongSpaceOpeningHours
@@ -717,7 +717,7 @@ export const BookableSpacesList = ({
                     <a href="#space-wrapper" className="showsOnlyOnFocus" data-testid="skip-to-spaces-list">
                         Skip to list of Spaces
                     </a>
-                    <Typography component={'h2'} variant={'h6'} id="topOfSidebar">
+                    <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
                         Filter Spaces
                     </Typography>
                     {sortedUsedGroups?.map(group => {
@@ -784,7 +784,7 @@ export const BookableSpacesList = ({
                                                     data-testid={`facility-type-listitem-${facilityType.facility_type_id}`}
                                                 >
                                                     <InputLabel
-                                                        title={`Only show Spaces with ${facilityType.facility_type_name}`}
+                                                        title={`Filter in Spaces with ${facilityType.facility_type_name}`}
                                                         htmlFor={`filtertype-${facilityType.facility_type_id}`}
                                                         className="selectedFilterTypeLabel"
                                                     >
@@ -893,7 +893,7 @@ export const BookableSpacesList = ({
                                 });
                                 const filteredSpaceLocations = bookableSpacesRoomList?.data?.locations?.filter(s => {
                                     const spaceFacilityTypes = s?.facility_types?.map(item => item.facility_type_id);
-                                    return showSpace(spaceFacilityTypes, facilityTypeToGroup, facilityTypeFilters);
+                                    return spaceAppears(spaceFacilityTypes, facilityTypeToGroup, facilityTypeFilters);
                                 });
 
                                 return (
@@ -916,14 +916,13 @@ export const BookableSpacesList = ({
                                                 )}
                                                 {filteredSpaceLocations.length > 0 &&
                                                     filteredSpaceLocations?.map(bookableSpace => {
-                                                        const locationKey = getSpaceId(bookableSpace?.space_id);
                                                         return (
                                                             <StyledBookableSpaceGridItem
                                                                 item
                                                                 xs={12}
-                                                                key={locationKey}
-                                                                id={locationKey}
-                                                                data-testid={locationKey}
+                                                                key={`space-${bookableSpace?.space_id}`}
+                                                                id={`space-${bookableSpace?.space_id}`}
+                                                                data-testid={`space-${bookableSpace?.space_id}`}
                                                                 style={{ display: 'block' }}
                                                             >
                                                                 <StyledStandardCard

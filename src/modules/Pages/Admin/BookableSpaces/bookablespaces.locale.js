@@ -28,7 +28,7 @@ export const locale = {
             },
             fileTooLarge: {
                 confirmationTitle:
-                    'The file is too large. Please reduce the spotlight file size to [MAXFILESIZE] KB or less and try again.',
+                    'The file is too large. Please reduce the file size to [MAXFILESIZE] KB or less and try again.',
                 confirmButtonLabel: 'OK',
             },
         },
