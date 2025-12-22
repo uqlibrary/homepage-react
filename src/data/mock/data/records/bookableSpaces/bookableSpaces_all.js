@@ -586,8 +586,8 @@ export default {
                 "space_opening_hours_override": null,
                 "created_at": "2025-11-07T01:46:32.000000Z",
                 "updated_at": "2025-11-07T01:46:32.000000Z",
-                "space_latitude": null,
-                "space_longitude": null,
+                "space_latitude": -27.49905,
+                "space_longitude": 153.01453,
                 "space_type": "Individual Study",
                 "space_floor_id": 3,
                 "space_floor_name": "Level 3",
@@ -646,8 +646,8 @@ export default {
                 "space_opening_hours_override": null,
                 "created_at": "2025-12-02T04:33:04.000000Z",
                 "updated_at": "2025-12-02T04:33:04.000000Z",
-                "space_latitude": null,
-                "space_longitude": null,
+                "space_latitude": -27.49905,
+                "space_longitude": 153.01453,
                 "space_type": "Communal space",
                 "space_floor_id": 3,
                 "space_floor_name": "Level 3",
@@ -688,6 +688,85 @@ export default {
                         "facility_type_name": "Low noise level"
                     }
                 ]
-            }]
+            }, {
+                space_id: 99999,
+                space_uuid: "f98g_fwas_5g33as",
+                space_name: "01-W431",
+                space_precise: "Westernmost corner",
+                space_description: "A space in the Law library. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                space_photo_url: "https://campuses.uq.edu.au/files/35116/01-E107%20%28Resize%29.jpg", // https://campuses.uq.edu.au/list-rooms
+                space_photo_description: 'a large room with 6 large round tables, each wih multiple chairs',
+                space_opening_hours_id: 3841,
+                space_services_page: "https://web.library.uq.edu.au/visit/walter-harrison-law-library",
+                space_opening_hours_override: null,
+                created_at: "2025-08-01 10:00:00",
+                updated_at: "2025-08-01 11:00:00",
+                space_latitude: "-27.49718",
+                space_longitude: "153.01214",
+                space_type: 'Collaborative space',
+                space_floor_id: 1,
+                space_floor_name: "2",
+                space_is_ground_floor: 0,
+                space_library_id: 1,
+                space_library_name: 'Walter Harrison Law Library',
+                space_building_name: "Forgan Smith Building",
+                space_building_number: "01",
+                space_campus_id: 1,
+                space_campus_name: "St Lucia",
+                facility_types: [
+                    {
+                        "facility_type_id": 23,
+                        "facility_type_name": "Toilets, female"
+                    },
+                    {
+                        "facility_type_id": 22,
+                        "facility_type_name": "Toilets, male"
+                    },
+                    {
+                        "facility_type_id": 29,
+                        "facility_type_name": "Recharge Station"
+                    },
+                    {
+                        "facility_type_id": 31,
+                        "facility_type_name": "Self-printing & scanning"
+                    },
+                    {
+                        "facility_type_id": 17,
+                        "facility_type_name": "Low noise level"
+                    },
+                    {
+                        "facility_type_id": 5,
+                        "facility_type_name": "Computer"
+                    },
+                    {
+                        "facility_type_id": 33,
+                        "facility_type_name": "Client accessible power point"
+                    },
+                    {
+                        "facility_type_id": 38,
+                        "facility_type_name": "Whiteboard"
+                    },
+                    {
+                        "facility_type_id": 39,
+                        "facility_type_name": "Adjustable desks"
+                    },
+                    {
+                        "facility_type_id": 8,
+                        "facility_type_name": "AV equipment"
+                    },
+                    {
+                        "facility_type_id": 13,
+                        "facility_type_name": "Postgraduate spaces"
+                    },
+                    {
+                        "facility_type_id": 14,
+                        "facility_type_name": "Undergrad spaces"
+                    },
+                    {
+                        "facility_type_id": 57,
+                        "facility_type_name": "Contains Artwork"
+                    }
+                ],
+            }, ]
     }
 }

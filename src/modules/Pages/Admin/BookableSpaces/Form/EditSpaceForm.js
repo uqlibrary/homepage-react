@@ -31,7 +31,8 @@ import {
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 import { getFlatFacilityTypeList, getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/spacesHelpers';
 import { ImageUploadDropzone } from './ImageUploadDropzone';
-import SpacesAdminPage from '../SpacesAdminPage';
+import SpacesAdminPage from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
+import SpaceLocationMap from 'modules/Pages/Admin/BookableSpaces/Form/SpaceLocationMap';
 
 const StyledErrorMessageTypography = styled(Typography)(({ theme }) => ({
     ...standardText(theme),
@@ -186,7 +187,6 @@ export const EditSpaceForm = ({
     console.log('TOP EditSpaceForm springshareList', springshareList);
 
     const { account } = useAccountContext();
-    // const [cookies, setCookie] = useCookies();
 
     const [location, setLocation1] = useState({});
     const setLocation = newValues => {
@@ -980,38 +980,9 @@ export const EditSpaceForm = ({
                         </StyledErrorMessageTypography>
                     </FormControl>
                 </Grid>
-                {/* <Grid item xs={6}>*/}
-                {/*    <FormControl variant="standard" fullWidth>*/}
-                {/*        <InputLabel htmlFor="space_latitude">*/}
-                {/*            Latitude (to be replaced with map picker)*/}
-                {/*        </InputLabel>*/}
-                {/*        <Input*/}
-                {/*            id="space_latitude"*/}
-                {/*            data-testid="space_latitude"*/}
-                {/*            value={formValues?.space_latitude || ''}*/}
-                {/*            onChange={handleChange('space_latitude')}*/}
-                {/*            onBlur={handleFieldCompletion}*/}
-                {/*        />*/}
-                {/*        <StyledErrorMessageTypography component={'div'}>*/}
-                {/*            {reportErrorMessage('space_latitude')}*/}
-                {/*        </StyledErrorMessageTypography>*/}
-                {/*    </FormControl>*/}
-                {/* </Grid>*/}
-                {/* <Grid item xs={6}>*/}
-                {/*    <FormControl variant="standard" fullWidth>*/}
-                {/*        <InputLabel htmlFor="space_longitude">Longitude</InputLabel>*/}
-                {/*        <Input*/}
-                {/*            id="space_longitude"*/}
-                {/*            data-testid="space_longitude"*/}
-                {/*            value={formValues?.space_longitude || ''}*/}
-                {/*            onChange={handleChange('space_longitude')}*/}
-                {/*            onBlur={handleFieldCompletion}*/}
-                {/*        />*/}
-                {/*        <StyledErrorMessageTypography component={'div'}>*/}
-                {/*            {reportErrorMessage('space_longitude')}*/}
-                {/*        </StyledErrorMessageTypography>*/}
-                {/*    </FormControl>*/}
-                {/* </Grid>*/}
+                <Grid item xs={6} style={{ width: '100%' }}>
+                    <SpaceLocationMap formValues={formValues} setFormValues={setFormValues} />
+                </Grid>
                 <Grid item xs={12}>
                     <Typography component={'h3'} variant={'h6'}>
                         Opening hours
@@ -1141,8 +1112,8 @@ export const EditSpaceForm = ({
                     <div data-testid="spaces-button-error-list">
                         <h2 data-error-count="${errorMessages?.length}">Errors</h2>
                         <p>These errors occurred:</p>
-                        {errorMessages?.map(m => {
-                            return <p>{m?.message}</p>;
+                        {errorMessages?.map((m, index) => {
+                            return <p key={`error-${index}`}>{m?.message}</p>;
                         })}
                     </div>
                 )}
@@ -1265,6 +1236,7 @@ export const EditSpaceForm = ({
                                         {tabLabels.map((tabName, index) => {
                                             return (
                                                 <Tab
+                                                    key={`${tabName}-edit`}
                                                     label={`${tabName}`}
                                                     {...a11yProps(index)}
                                                     data-testid={`tab-${slugifyName(tabName)}`}

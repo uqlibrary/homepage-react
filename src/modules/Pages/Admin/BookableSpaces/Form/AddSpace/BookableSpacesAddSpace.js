@@ -92,30 +92,43 @@ export const BookableSpacesAddSpace = ({
         if (campusListLoading === false && campusListError === false && campusList?.length > 0) {
             const _currentCampusList = validCampusList(campusList);
             setCurrentCampusList(_currentCampusList);
-
-            const currentCampus = _currentCampusList?.at(0) || {};
-            const campusId = currentCampus?.campus_id;
-
-            const currentCampusLibraries = validLibraryList(currentCampus?.libraries || []);
-            const currentLibrary = currentCampusLibraries?.at(0) || {};
-            const libraryId = currentLibrary?.library_id;
-
-            const currentLibraryFloors = currentLibrary?.floors || [];
-            const currentFloor = currentLibraryFloors?.at(0) || {};
-            const floorId = currentFloor?.floor_id;
-
-            const newValues = {
-                ['campus_id']: campusId,
-                ['library_id']: libraryId,
-                ['floor_id']: floorId,
-                ['space_opening_hours_id']: currentLibrary?.library_springshare_id,
-                // ['currentCampusList']: currentCampusList,
-                // ['currentCampusLibraries']: currentCampusLibraries,
-                // ['currentLibraryFloors']: currentLibraryFloors,
-            };
-            setFormValues(newValues);
         }
     }, [campusList, campusListError, campusListLoading]);
+
+    useEffect(() => {
+        console.log(
+            'mostRecentSpace bookableSpacesRoomList',
+            bookableSpacesRoomListLoading,
+            bookableSpacesRoomListError,
+            bookableSpacesRoomList,
+        );
+        if (
+            bookableSpacesRoomListLoading === false &&
+            bookableSpacesRoomListError === false &&
+            bookableSpacesRoomList?.data?.locations?.length > 0
+        ) {
+            const mostRecentSpace = bookableSpacesRoomList?.data?.locations
+                .filter(s => !!s.space_latitude && !!s.space_longitude)
+                .reduce((prev, current) => {
+                    if (+current.space_id > +prev.space_id) {
+                        return current;
+                    } else {
+                        return prev;
+                    }
+                });
+            console.log('mostRecentSpace', mostRecentSpace);
+            const newValues = {
+                ['campus_id']: mostRecentSpace?.space_campus_id,
+                ['library_id']: mostRecentSpace?.space_library_id,
+                ['floor_id']: mostRecentSpace?.space_floor_id,
+                ['space_opening_hours_id']: mostRecentSpace?.space_library_springshare_id,
+                ['space_latitude']: mostRecentSpace?.space_latitude,
+                ['space_longitude']: mostRecentSpace?.space_longitude,
+            };
+            console.log('setting from mostRecentSpace', newValues);
+            setFormValues(newValues);
+        }
+    }, [bookableSpacesRoomListLoading, bookableSpacesRoomListError, bookableSpacesRoomList]);
 
     const [springshareList, setSpringshareList] = useState({});
     useEffect(() => {

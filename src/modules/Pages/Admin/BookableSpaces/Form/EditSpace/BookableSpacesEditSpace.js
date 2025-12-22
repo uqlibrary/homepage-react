@@ -165,7 +165,7 @@ export const BookableSpacesEditSpace = ({
     if (!!bookableSpaceGetting || !!bookableSpacesRoomListLoading || !!campusListLoading) {
         return (
             <Grid container>
-                <Grid item xs={12}>
+                <Grid item xs={12} style={{ paddingTop: '5rem' }}>
                     <InlineLoader message="Loading" />
                 </Grid>
             </Grid>
@@ -222,6 +222,7 @@ export const BookableSpacesEditSpace = ({
             </SpacesAdminPage>
         );
     } else {
+        console.log('BookableSpacesEditSpace formValues=', formValues);
         return (
             <EditSpaceForm
                 actions={actions}
