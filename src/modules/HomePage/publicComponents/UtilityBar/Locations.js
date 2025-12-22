@@ -287,10 +287,11 @@ export const ariaLabelForLocation = location => {
         locationType = 'operating hours today';
     }
 
+    const libraryNameTemp = String(libraryName);
+    const firstChar = libraryNameTemp?.charAt(0);
+    const otherChar = libraryNameTemp?.slice(1);
     const capitaliseLibraryName =
-        String(libraryName)
-            .charAt(0)
-            .toUpperCase() + String(libraryName).slice(1);
+        libraryNameTemp.length > 0 ? firstChar.toUpperCase() + otherChar : /* istanbul ignore next */ '';
     let response = `${capitaliseLibraryName} ${locationType} is open ${openingHours}.`;
 
     const busynessLabels = {
