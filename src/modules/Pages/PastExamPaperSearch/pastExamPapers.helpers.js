@@ -14,12 +14,12 @@ export const StyledBodyText = styled('p')(() => ({
 const StyledInstructions = styled('p')(({ theme }) => ({
     marginBottom: 32,
     '& a': {
-        color: theme.palette.primary.light,
+        color: theme.palette.primary.main,
         textDecoration: 'underline',
         fontWeight: 500,
         '&:hover': {
             color: '#fff',
-            backgroundColor: theme.palette.primary.light,
+            backgroundColor: theme.palette.primary.main,
         },
     },
 }));
@@ -37,6 +37,7 @@ export const UserInstructions = () => {
 export const noResultsFoundBlock = searchTerm => {
     const capitalisedSearchTerm =
         !!searchTerm && searchTerm.trim().length > 0 ? ` "${searchTerm.trim().toUpperCase()}"` : '';
+    // if a search term is supplied, display it, but if there isn't one make the message reasonable
     return (
         <div>
             <StyledBodyText>We have not found any past exams for this course{capitalisedSearchTerm}.</StyledBodyText>

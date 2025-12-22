@@ -87,6 +87,12 @@ describe('FilterDialog', () => {
         const { getByText, getByTestId, getAllByRole } = setup({
             isOpen: true,
             actions: { loadAssetsMine: loadAssetsMineFn, loadSites: loadSitesFn, clearRooms: jest.fn() },
+            state: {
+                testTagLocationReducer: {
+                    ...defaultLocationState,
+                    siteListLoaded: false,
+                },
+            },
         });
 
         expect(getByText('Select assets by feature')).toBeInTheDocument();

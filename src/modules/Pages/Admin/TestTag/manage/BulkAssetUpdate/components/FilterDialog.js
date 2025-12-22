@@ -20,7 +20,7 @@ import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/Confi
 import DebouncedTextField from '../../../SharedComponents/DebouncedTextField/DebouncedTextField';
 
 import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
-import { transformFilterRow } from './utils';
+import { transformFilterRow } from './transformers';
 import { useConfirmationAlert } from '../../../helpers/hooks';
 
 const rootId = 'filter-dialog';

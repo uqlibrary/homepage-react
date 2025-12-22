@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 import { locationType } from './utils';
 
@@ -38,6 +38,8 @@ export const useSelectLocation = ({
     const [selectedLocation, setSelectedLocation] = useState(initial);
     const [lastSelectedLocation, setLastSelectedLocation] = useState(initial);
 
+    const conditional = useMemo(() => condition?.() ?? true, [condition]);
+
     const {
         siteList,
         siteListLoading,
@@ -51,7 +53,7 @@ export const useSelectLocation = ({
     } = store;
 
     useEffect(() => {
-        if (condition?.() ?? true) {
+        if (conditional) {
             if (siteListLoading || floorListLoading || roomListLoading) return;
 
             if (roomListLoaded) {
@@ -107,11 +109,10 @@ export const useSelectLocation = ({
     ]);
 
     useEffect(() => {
-        if (condition?.() ?? true) {
+        if (conditional && !siteListLoaded) {
             actions?.loadSites();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [actions, conditional, siteListLoaded]);
 
     return { selectedLocation, lastSelectedLocation, setSelectedLocation, setLastSelectedLocation };
 };

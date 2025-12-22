@@ -63,7 +63,7 @@ import dlor_series_view from './data/records/dlor/dlor_series_view';
 import dlor_series_view_nodescription from './data/records/dlor/dlor_series_view_nodescription';
 import { dlor_demographics_report } from './data/dlorDemographics';
 import { dlor_favourites_report } from './data/dlorFavourites';
-import  dlor_statistics  from './data/records/dlor/dlor_statistics';
+import dlor_statistics from './data/records/dlor/dlor_statistics';
 import { drupalArticles } from './data/drupalArticles';
 import {
     journalSearchFavourites,
@@ -1031,7 +1031,7 @@ mock.onGet('exams/course/FREN1010/summary')
                 ...examSearch_DENT80,
                 papers: [
                     ...examSearch_DENT80.papers.filter(course =>
-                        course.some(s => s.some(p => p.courseCode.toLowerCase() === 'dent1050')),
+                        course.some(s => s.some(p => p?.courseCode?.toUpperCase() === 'DENT1050')),
                     ),
                 ],
             },
