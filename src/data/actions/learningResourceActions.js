@@ -124,7 +124,7 @@ export function loadCourseReadingListsSuggestions(keyword) {
                 }
 
                 const matchingCourseCodeFirst = a => {
-                    if (!!keyword && a?.name?.toUpperCase().substring(0, keyword.length) === keyword.toUpperCase()) {
+                    if (!!keyword && a?.name?.toUpperCase().substring(0, keyword.length) === keyword?.toUpperCase()) {
                         return 1;
                     }
                     const firstFourCharacters = keyword?.toUpperCase().substring(0, 4);

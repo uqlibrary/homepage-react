@@ -37,6 +37,7 @@ export const UserInstructions = () => {
 export const noResultsFoundBlock = searchTerm => {
     const capitalisedSearchTerm =
         !!searchTerm && searchTerm.trim().length > 0 ? ` "${searchTerm.trim().toUpperCase()}"` : '';
+    // if a search term is supplied, display it, but if there isn't one make the message reasonable
     return (
         <div>
             <StyledBodyText>We have not found any past exams for this course{capitalisedSearchTerm}.</StyledBodyText>

@@ -44,9 +44,8 @@ const StyledBodyText = styled(Typography)(() => ({
     lineHeight: 1.6,
 }));
 const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoading, readingListError }) => {
-    const talisSubjectUrl = courseCode => {
-        return 'https://uq.rl.talis.com/courses/[coursecode].html'.replace('[coursecode]', courseCode.toLowerCase());
-    };
+    const talisUrlPattern = 'https://uq.rl.talis.com/courses/[coursecode].html';
+    const talisSubjectUrl = courseCode => talisUrlPattern.replace('[coursecode]', courseCode?.toLowerCase());
 
     const listOfReadingLists =
         !!readingList && !!readingList.reading_lists && readingList.reading_lists.length > 0

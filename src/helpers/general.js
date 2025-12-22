@@ -264,3 +264,12 @@ export const StyledTertiaryButton = styled(Button)(({ theme }) => ({
         display: 'none',
     },
 }));
+
+// gets the File Type of a url eg PDF, as uppercase
+export const standardisedExtension = url => {
+    if (!url || !(typeof url === 'string' || url instanceof String)) {
+        return '';
+    }
+    const dotPosition = url?.lastIndexOf('.');
+    return dotPosition > -1 ? url.substring(dotPosition + 1).toUpperCase() : '';
+};

@@ -7,6 +7,7 @@ import {
     stripHtml,
     unescapeString,
     standardText,
+    standardisedExtension,
 } from './general';
 
 describe('general helpers', () => {
@@ -105,5 +106,15 @@ describe('general helpers', () => {
             letterSpacing: '0.16px',
             lineHeight: '1.6',
         });
+    });
+
+    it('extracts extension', () => {
+        expect(standardisedExtension('http://example.com/something.jpg')).toEqual('JPG');
+        expect(standardisedExtension('.jpg')).toEqual('JPG'); // first char
+        expect(standardisedExtension('http://example.com/something.')).toEqual(''); // last char
+        expect(standardisedExtension('no_dot_at_all')).toEqual(''); // not a url
+        expect(standardisedExtension(null)).toEqual(''); // invalid url
+        expect(standardisedExtension(1)).toEqual(''); // invalid url
+        expect(standardisedExtension(false)).toEqual(''); // invalid url
     });
 });
