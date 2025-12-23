@@ -15,6 +15,7 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import { slugifyName } from 'helpers/general';
+import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -73,8 +74,6 @@ const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList }) =
         return { id: index, label: c.campus_name, coords: [c.campus_latitude, c.campus_longitude] };
     });
 
-    const centreGreatCourt = [-27.49745, 153.01337];
-
     // a list of locations to help the admin user find the building they want
     const libraryBuildingsLocationGuides1 = [
         // needs better display names? (only shows in popups)
@@ -93,10 +92,9 @@ const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList }) =
         !!formValues.space_latitude && !!formValues.space_longitude
             ? [formValues.space_latitude, formValues.space_longitude]
             : tabList.at(0).coords;
-    const [position, setPosition2] = useState(preposition);
+    const [position, setPositionLocal] = useState(preposition);
     const setPosition = p => {
-        console.log('setPosition p=', p);
-        setPosition2(p);
+        setPositionLocal(p);
 
         setFormValues({
             ...formValues,
@@ -175,7 +173,7 @@ const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList }) =
                     maxNativeZoom={19}
                     maxZoom={25}
                 />
-                <DraggableMarker position={[-27.497975, 153.012385]}>
+                <DraggableMarker position={locale.locations.greatCourtCoordinates}>
                     <Popup>Space position</Popup>
                 </DraggableMarker>
                 {libraryBuildingsLocationGuides1.length > 0 &&

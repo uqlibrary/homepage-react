@@ -145,8 +145,8 @@ export default {
                     "building_name": "Pharmacy Australia Centre of Excellence",
                     "building_number": "870",
                     "ground_floor_id": 29,
-                    "library_about_page_default": 'https://web.library.uq.edu.au/visit/jk-murray-library-uq-gatton',
-                    "library_springshare_id": 3833,
+                    "library_about_page_default": 'https://web.library.uq.edu.au/visit/dutton-park-health-sciences-library',
+                    "library_springshare_id": 3967,
                     "floors": [
                         {
                             "floor_id": 65,

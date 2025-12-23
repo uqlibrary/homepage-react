@@ -8,6 +8,7 @@ import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/leaflet.css';
 
 import Typography from '@mui/material/Typography';
+import { locale } from 'modules/Pages/Admin/BookableSpaces/bookablespaces.locale';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -17,14 +18,12 @@ L.Icon.Default.mergeOptions({
 });
 
 const CampusLocationMap = (campusCentre = null) => {
-    const greatCourtCoordinates = [-27.49745, 153.01337];
-
     const initialCentre =
         campusCentre?.space_latitude && campusCentre?.space_longitude
             ? [campusCentre.space_latitude, campusCentre.space_longitude]
-            : greatCourtCoordinates;
+            : locale.locations.greatCourtCoordinates;
 
-    const [position, setPosition2] = useState(greatCourtCoordinates);
+    const [position, setPosition2] = useState(locale.locations.greatCourtCoordinates);
     const setPosition = p => {
         const campusLatitudeField = document.getElementById('campus_latitude');
         !!campusLatitudeField && (campusLatitudeField.value = p.lat);
@@ -71,7 +70,7 @@ const CampusLocationMap = (campusCentre = null) => {
                     maxNativeZoom={19}
                     maxZoom={25}
                 />
-                <DraggableMarker position={greatCourtCoordinates} />
+                <DraggableMarker position={locale.locations.greatCourtCoordinates} />
             </MapContainer>
             <Typography component={'p'}>
                 Drill out on the map to find the campus, then drag the blue icon to roughly the centre of the campus.

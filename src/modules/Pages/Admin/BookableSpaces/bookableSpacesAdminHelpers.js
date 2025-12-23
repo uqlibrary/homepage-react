@@ -187,21 +187,18 @@ export function displayToastErrorMessage(message) {
         !!styles && styles.remove();
     }, hideDelay + 1000);
 }
-export const springshareLocations = weeklyHours => {
-    return (
-        !!weeklyHours?.locations &&
-        weeklyHours.locations.length > 0 &&
-        weeklyHours.locations
-            ?.filter(l => l.lid !== ASKUS_SPRINGSHARE_ID)
-            ?.sort((a, b) => a.display_name.localeCompare(b.display_name))
+export const springshareLocations = weeklyHours =>
+    !!weeklyHours?.locations &&
+    weeklyHours.locations.length > 0 &&
+    weeklyHours.locations
+        ?.filter(l => l.lid !== ASKUS_SPRINGSHARE_ID)
+        ?.sort((a, b) => a.display_name.localeCompare(b.display_name))
+        // eslint-disable-next-line camelcase
+        ?.map(({ lid, display_name }) => ({
+            id: lid,
             // eslint-disable-next-line camelcase
-            ?.map(({ lid, display_name }) => ({
-                id: lid,
-                // eslint-disable-next-line camelcase
-                display_name,
-            }))
-    );
-};
+            display_name,
+        }));
 
 export function removeAnyListeners(element) {
     if (!element) {

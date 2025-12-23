@@ -855,14 +855,14 @@ export const BookableSpacesManageLocations = ({
      */
     const campusCoreForm = (campusDetails = {}) => {
         const campusNameFieldLabel = Object.keys(campusDetails).length === 0 ? 'New campus name' : 'Campus name';
-        const formType = Object.keys(campusDetails).length === 0 ? 'add' : 'edit';
+        const formType = !campusDetails?.campus_name ? 'add' : 'edit';
         const campusName = campusDetails?.campus_name ?? '';
         const campusNumber = campusDetails?.campus_number ?? '';
         const campusLatitude = campusDetails?.campus_latitude ?? '';
         const campusLongitude = campusDetails?.campus_longitude ?? '';
         return `<div>
             <input  name="locationType" type="hidden" value="campus" />
-            <input name="campus_latitude" type="hidden" id="campus_latitude" value="${campusLatitude}" required maxlength="255" />
+            <input name="campus_latitude" type="hidden" id="campus_latitude" data-testid="campus_latitude" value="${campusLatitude}" required maxlength="255" />
             <input name="campus_longitude" type="hidden" id="campus_longitude" value="${campusLongitude}"  required maxlength="255"/>
             <div class="dialogRow" data-testid="${formType}-campus-name">
                 <label for="campusName">${campusNameFieldLabel} *</label>
@@ -929,7 +929,11 @@ export const BookableSpacesManageLocations = ({
     };
 
     function showAddCampusForm() {
-        const formBody = `<h2 data-testid="add-campus-heading">Add campus</h2>${campusCoreForm()}`;
+        const campusValues = {
+            campus_latitude: campusList?.at(0)?.campus_latitude,
+            campus_longitude: campusList?.at(0)?.campus_longitude,
+        };
+        const formBody = `<h2 data-testid="add-campus-heading">Add campus</h2>${campusCoreForm(campusValues)}`;
 
         if (!!formBody) {
             const dialogBodyElement = document.getElementById('dialogBody');
@@ -1090,32 +1094,36 @@ export const BookableSpacesManageLocations = ({
 
     return (
         <SpacesAdminPage systemTitle="Spaces" pageTitle="Manage locations" currentPageSlug="manage-locations">
-            <Grid container spacing={3} style={{ position: 'relative' }}>
-                <Grid item xs={12} md={8} style={{ marginTop: '12px' }}>
-                    {(() => {
-                        if (!!savingProgressShown || !!campusListLoading) {
-                            return <InlineLoader message="Loading" />;
-                        } else if (!!campusListError) {
-                            return <p>Something went wrong - please try again later.</p>;
-                        } else if (!campusList || campusList.length === 0) {
-                            return <p>No spaces currently in system.</p>;
-                        } else {
-                            return <div data-testid="spaces-location-wrapper">{getPageLayout(campusList)}</div>;
-                        }
-                    })()}
-                </Grid>
-                <Grid item xs={12} md={4} style={{ paddingTop: 0 }}>
-                    <div style={{ padding: '1rem' }}>
-                        <StyledButton
-                            className={'primary'}
-                            style={{ marginLeft: '2rem', marginTop: '2rem', textTransform: 'initial' }}
-                            children={'Add new Campus'}
-                            onClick={showAddCampusForm}
-                            data-testid="add-new-campus-button"
-                        />
-                    </div>
-                </Grid>
-            </Grid>
+            {(() => {
+                if (!!savingProgressShown || !!campusListLoading) {
+                    return <InlineLoader message="Loading" />;
+                } else if (!!campusListError) {
+                    return <p>Something went wrong - please try again later.</p>;
+                } else if (!campusList || campusList.length === 0) {
+                    return <p>No spaces currently in system.</p>;
+                } else {
+                    return (
+                        <Grid container spacing={3} style={{ position: 'relative' }}>
+                            <Grid item xs={12} md={8} style={{ marginTop: '12px' }}>
+                                <div data-testid="spaces-location-wrapper">{getPageLayout(campusList)}</div>
+                            </Grid>
+                            <Grid item xs={12} md={4} style={{ paddingTop: 0 }}>
+                                <div style={{ marginLeft: '2rem', marginTop: '2rem', padding: '1rem' }}>
+                                    <StyledButton
+                                        id="add-new-campus-button"
+                                        className={'primary'}
+                                        style={{ textTransform: 'initial' }}
+                                        onClick={showAddCampusForm}
+                                        data-testid="add-new-campus-button"
+                                    >
+                                        Add new Campus
+                                    </StyledButton>
+                                </div>
+                            </Grid>
+                        </Grid>
+                    );
+                }
+            })()}
 
             <dialog id="confirmationDialog" className="confirmationDialog" data-testid="confirmation-dialog">
                 <p id="confDialogMessage" data-testid="confirmation-dialog-message" />

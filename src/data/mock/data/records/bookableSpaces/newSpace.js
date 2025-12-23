@@ -7,7 +7,7 @@ export default {
         space_description: "A space at Dutton Park. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. ",
         space_photo_url: "",
         space_photo_description: "",
-        space_opening_hours_id: 3967,
+        space_opening_hours_id: 3970,
         space_services_page: "https://web.library.uq.edu.au/visit/dutton-park-health-sciences-library",
         space_opening_hours_override: 'this space opens at 8am',
         created_at: "2025-08-01 10:00:00",

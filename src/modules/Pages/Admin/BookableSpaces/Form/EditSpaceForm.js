@@ -534,18 +534,6 @@ export const EditSpaceForm = ({
         </>
     );
 
-    // const getFacilityTypes = data => {
-    //     const facilityTypes = [];
-    //     data?.facility_type_groups?.forEach(group => {
-    //         group?.facility_type_children?.forEach(facilityType => {
-    //             facilityTypes.push({
-    //                 facility_type_id: facilityType?.facility_type_id,
-    //                 facility_type_name: `${group?.facility_type_group_name}: ${facilityType?.facility_type_name}`,
-    //             });
-    //         });
-    //     });
-    //     return facilityTypes;
-    // };
     const showFilterCheckboxes = () => {
         if (facilityTypeList?.data?.facility_type_groups?.length === 0) {
             return <p>No filter types in system.</p>;

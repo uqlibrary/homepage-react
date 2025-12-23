@@ -9,6 +9,9 @@ const TAB_FACILITY_TYPES = 'tab-facility-types';
 const TABS_LOCATION_HOURS = 'tab-location-hours';
 const TAB_IMAGERY = 'tab-imagery';
 
+const LAW_DEFAULT_LATITUDE = '-27.49718';
+const LAW_DEFAULT_LONGITUDE = '153.01214';
+
 test.describe('Spaces Admin - edit spaces', () => {
     test('can navigate from dashboard to edit page', async ({ page }) => {
         await page.goto('/admin/spaces?user=libSpaces');
@@ -410,8 +413,8 @@ test.describe('Spaces Admin - edit space', () => {
             space_opening_hours_id: -1,
             space_services_page: '',
             space_opening_hours_override: null,
-            space_latitude: '-27.496955206561836', // when we have fields for these, they should be cleared
-            space_longitude: '153.01308753792662',
+            space_latitude: LAW_DEFAULT_LATITUDE, // can't clear map fields
+            space_longitude: LAW_DEFAULT_LONGITUDE,
             uploadedFile: [],
         };
         await assertExpectedDataSentToServer(page, expectedValues);
@@ -752,8 +755,8 @@ test.describe('Spaces Admin - edit space', () => {
             space_opening_hours_id: 3825,
             space_services_page: 'http://example.com',
             space_opening_hours_override: 'space is open from 7am',
-            space_latitude: '-27.496955206561836', // when we have fields for these, they should be changed
-            space_longitude: '153.01308753792662',
+            space_latitude: LAW_DEFAULT_LATITUDE, // TODO: drag an drop to change these
+            space_longitude: LAW_DEFAULT_LONGITUDE,
         };
         await assertExpectedDataSentToServer(page, expectedValues);
     });

@@ -5,6 +5,9 @@ export const locale = {
         id: -1,
         display_name: noSpringshareHoursLabel,
     },
+    locations: {
+        greatCourtCoordinates: [-27.49745, 153.01337],
+    },
     form: {
         upload: {
             // the square bracket strings are swapped out for actual values - don't remove them!!
