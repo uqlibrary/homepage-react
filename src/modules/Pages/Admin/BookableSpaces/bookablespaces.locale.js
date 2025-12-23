@@ -5,6 +5,9 @@ export const locale = {
         id: -1,
         display_name: noSpringshareHoursLabel,
     },
+    locations: {
+        greatCourtCoordinates: [-27.49745, 153.01337],
+    },
     form: {
         upload: {
             // the square bracket strings are swapped out for actual values - don't remove them!!
@@ -28,7 +31,7 @@ export const locale = {
             },
             fileTooLarge: {
                 confirmationTitle:
-                    'The file is too large. Please reduce the spotlight file size to [MAXFILESIZE] KB or less and try again.',
+                    'The file is too large. Please reduce the file size to [MAXFILESIZE] KB or less and try again.',
                 confirmButtonLabel: 'OK',
             },
         },

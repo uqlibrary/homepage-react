@@ -12,12 +12,12 @@ test.describe('Spaces', () => {
         await expect(page.getByTestId('homepage-hours-bookit-link')).toHaveText(/Book a room/);
         await page.getByTestId('homepage-hours-bookit-link').click();
         await expect(page).toHaveURL('http://localhost:2020/spaces?user=s1111111');
-        await expect(page.getByTestId('StandardPage-title')).toHaveText('Library spaces');
+        await expect(page.getByTestId('topOfSidebar')).toHaveText('Filter Spaces');
     });
     test('Shows a basic page for Spaces', async ({ page }) => {
         await page.goto('spaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
+        await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
         // initially all spaces are visible
         await expect(page.getByTestId('space-wrapper').locator(':scope > *')).toHaveCount(10 + 1); // 1 for skip button
@@ -47,26 +47,26 @@ test.describe('Spaces', () => {
         // summary hours show correctly
         await expect(page.getByTestId(`${FORGEN}-summary-info`)).toBeVisible();
         await expect(page.getByTestId(`${FORGEN}-summary-info`)).toContainText(
-            'Walter Harrison Law Library opening hours - Today: 24 Hours',
+            'Walter Harrison Law Library opening hours Today: 24 Hours',
         );
         await expect(page.getByTestId(`${PACE}-summary-info`)).toBeVisible();
         await expect(page.getByTestId(`${PACE}-summary-info`)).toContainText(
-            'Dutton Park Health Sciences opening hours - Today: 7am - 10:30pm (this space opens at 8am)',
+            'Dutton Park Health Sciences opening hours Today: 7am - 10:30pm (this space opens at 8am)',
         );
         await expect(page.getByTestId(`${LIVERIS}-summary-info`)).toBeVisible();
         await expect(page.getByTestId(`${LIVERIS}-summary-info`)).toContainText('Open from 7am Monday - Friday');
         await expect(page.getByTestId(`space-1-summary-info`)).toBeVisible();
         await expect(page.getByTestId(`space-1-summary-info`)).toContainText(
-            'Architecture and Music Library opening hours - Today: 7:30am - 7:30pm',
+            'Architecture and Music Library opening hours Today: 7:30am - 7:30pm',
         );
         await expect(page.getByTestId(`space-2-summary-info`)).toBeVisible();
         await expect(page.getByTestId(`space-2-summary-info`)).toContainText(
-            'Architecture and Music Library opening hours - Today: 7:30am - 7:30pm',
+            'Architecture and Music Library opening hours Today: 7:30am - 7:30pm',
         );
         await expect(page.getByTestId(`space-3-summary-info`)).not.toBeVisible();
         await expect(page.getByTestId(`space-4-summary-info`)).toBeVisible();
         await expect(page.getByTestId(`space-4-summary-info`)).toContainText(
-            'Architecture and Music Library opening hours - Today: 7:30am - 7:30pm',
+            'Architecture and Music Library opening hours Today: 7:30am - 7:30pm',
         );
         await expect(page.getByTestId(`space-5-summary-info`)).not.toBeVisible();
         await expect(page.getByTestId(`space-6-summary-info`)).not.toBeVisible();
@@ -155,19 +155,19 @@ test.describe('Spaces', () => {
         test('homepage is accessible', async ({ page }) => {
             await page.goto('spaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
+            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
-            await assertAccessibility(page, '[data-testid="StandardPage"]');
+            await assertAccessibility(page, '[data-testid="library-spaces"]');
         });
         test('homepage with content panel open is accessible', async ({ page }) => {
             await page.goto('spaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
+            await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
             await expect(page.getByTestId(`${FORGEN}-toggle-panel-button`)).toBeVisible();
             page.getByTestId(`${FORGEN}-toggle-panel-button`).click();
 
-            await assertAccessibility(page, '[data-testid="StandardPage"]');
+            await assertAccessibility(page, '[data-testid="library-spaces"]');
         });
     });
     test('no spaces yet', async ({ page }) => {
@@ -181,7 +181,7 @@ test.describe('Spaces', () => {
     test('can expand-collapse sub-panels', async ({ page }) => {
         await page.goto('spaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
+        await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
         await expect(page.getByTestId(`${FORGEN}`).locator('h2')).toBeVisible();
         await expect(page.getByTestId(`${FORGEN}-toggle-panel-button`).locator('svg.closePanel')).toBeVisible();
@@ -249,7 +249,7 @@ test.describe('Spaces', () => {
     test('can filter with sidebar checkboxes', async ({ page }) => {
         await page.goto('spaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
+        await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
         const bookableId = 19;
         const bookableCheckbox = page.getByTestId(`facility-type-listitem-${bookableId}`);
@@ -348,7 +348,7 @@ test.describe('Spaces', () => {
     test('can unfilter by cartouche', async ({ page }) => {
         await page.goto('spaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
+        await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
         const bookableId = 19;
         const bookableCheckbox = page.getByTestId(`facility-type-listitem-${bookableId}`);
@@ -429,11 +429,11 @@ test.describe('Spaces', () => {
     test('can clear all filters with one click', async ({ page }) => {
         await page.goto('spaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
+        await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
         await page.goto('spaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
+        await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
         const bookableId = 19;
         const bookableCheckbox = page.getByTestId(`facility-type-listitem-${bookableId}`);
@@ -874,7 +874,7 @@ test.describe('Spaces errors', () => {
     test('weekly hours list load error', async ({ page }) => {
         await page.goto('spaces?responseType=weeklyHoursError');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
+        await expect(page.locator('body').getByText(/Filter Spaces/)).toBeVisible();
 
         page.getByTestId(`${FORGEN}-toggle-panel-button`).click();
         await expect(page.getByTestId(`${FORGEN}-weekly-hours-error`)).toBeVisible();
