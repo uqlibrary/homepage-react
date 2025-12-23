@@ -21,7 +21,14 @@ import Typography from '@mui/material/Typography';
 
 import { useAccountContext } from 'context';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-import { isValidUrl, slugifyName, standardText, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
+import {
+    isValidUrl,
+    scrollToTopOfPage,
+    slugifyName,
+    standardText,
+    StyledPrimaryButton,
+    StyledSecondaryButton,
+} from 'helpers/general';
 
 import {
     displayToastErrorMessage,
@@ -322,6 +329,7 @@ export const EditSpaceForm = ({
         document.activeElement.blur(); // defocus the button
         formValid(formValues);
         setActiveStep(prevActiveStep => prevActiveStep + 1);
+        scrollToTopOfPage();
     };
 
     const handleBack = () => {
@@ -329,6 +337,7 @@ export const EditSpaceForm = ({
         document.activeElement.blur(); // defocus the button
         formValid(formValues);
         setActiveStep(prevActiveStep => prevActiveStep - 1);
+        scrollToTopOfPage();
     };
 
     const handleFieldCompletion = e => {
@@ -1161,7 +1170,12 @@ export const EditSpaceForm = ({
                 cancelButtonColor="accent"
             />
 
-            <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
+            <SpacesAdminPage
+                systemTitle="Spaces"
+                pageTitle={pageTitle}
+                currentPageSlug={currentPageSlug}
+                standardPageId="StandardPage"
+            >
                 {mode === 'add' && (
                     <>
                         <form id="spaces-addedit-form">
