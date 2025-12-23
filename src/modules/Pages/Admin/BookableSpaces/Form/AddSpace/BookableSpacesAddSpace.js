@@ -121,11 +121,11 @@ export const BookableSpacesAddSpace = ({
                 ['campus_id']: mostRecentSpace?.space_campus_id,
                 ['library_id']: mostRecentSpace?.space_library_id,
                 ['floor_id']: mostRecentSpace?.space_floor_id,
-                ['space_opening_hours_id']: mostRecentSpace?.space_library_springshare_id,
+                ['space_opening_hours_id']: mostRecentSpace?.space_opening_hours_id,
                 ['space_latitude']: mostRecentSpace?.space_latitude,
                 ['space_longitude']: mostRecentSpace?.space_longitude,
             };
-            console.log('setting from mostRecentSpace', newValues);
+            console.log('set form values 0', newValues);
             setFormValues(newValues);
         }
     }, [bookableSpacesRoomListLoading, bookableSpacesRoomListError, bookableSpacesRoomList]);
@@ -147,7 +147,7 @@ export const BookableSpacesAddSpace = ({
         actions.createBookableSpaceWithNewImage(valuesToSend);
     };
 
-    if (!!bookableSpacesRoomListLoading || !!campusListLoading || !formValues?.campus_id) {
+    if (!!campusListLoading || !!bookableSpacesRoomListLoading || !!facilityTypeListLoading || !!weeklyHoursLoading) {
         return (
             <Grid container>
                 <Grid item xs={12}>
