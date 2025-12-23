@@ -65,54 +65,44 @@ CustomTabPanel.propTypes = {
     index: PropTypes.number,
 };
 
-const SpaceLocationMap = ({ formValues, setFormValues }) => {
-    // const STLUCIA_CAMPUS_ID = 1;
+const SpaceLocationMap = ({ formValues, setFormValues, campusCoordinateList }) => {
+    console.log('SpaceLocationMap campusCoordinateList=', campusCoordinateList);
+    console.log('SpaceLocationMap formValues=', formValues);
 
-    const STLUCIA_TAB_ID = 0;
-    const PACE_TAB_ID = 1;
-    const GATTON_TAB_ID = 2;
-    const HERSTON_TAB_ID = 3;
-
-    const tabList = [
-        // a central location, for centering on the initial panel load
-        { id: STLUCIA_TAB_ID, label: 'St Lucia', coords: [-27.497975, 153.012385] },
-        { id: PACE_TAB_ID, label: 'Pace', coords: [-27.49979, 153.03066] },
-        { id: GATTON_TAB_ID, label: 'Gatton', coords: [-27.55383, 152.33584] },
-        { id: HERSTON_TAB_ID, label: 'Herston', coords: [-27.44874, 153.02774] },
-    ];
+    const tabList = campusCoordinateList.map((c, index) => {
+        return { id: index, label: c.campus_name, coords: [c.campus_latitude, c.campus_longitude] };
+    });
 
     const centreGreatCourt = [-27.49745, 153.01337];
 
     // a list of locations to help the admin user find the building they want
     const libraryBuildingsLocationGuides1 = [
-        // needs better display names?
+        // needs better display names? (only shows in popups)
         { name: 'Armus', position: [-27.49904, 153.01453] },
         { name: 'Law', position: [-27.49718, 153.01214] },
-        { name: 'Pace', position: tabList.find(c => c.id === PACE_TAB_ID).coords },
+        { name: 'Pace', position: [-27.49979, 153.03066] },
         { name: 'BSL', position: [-27.49695, 153.01136] },
         { name: 'Central', position: [-27.49607, 153.01355] },
         { name: 'DHESL', position: [-27.5, 153.01322] },
         { name: 'Duhig Tower', position: [-27.49645, 153.01431] },
-        { name: 'Gatton', position: tabList.find(c => c.id === GATTON_TAB_ID).coords },
+        { name: 'JK Murray', position: [-27.55383, 152.33584] },
         // can add more here
     ];
-
-    const initialCentre = tabList.find(c => c.id === STLUCIA_TAB_ID).coords;
 
     const preposition =
         !!formValues.space_latitude && !!formValues.space_longitude
             ? [formValues.space_latitude, formValues.space_longitude]
-            : centreGreatCourt;
+            : tabList.at(0).coords;
     const [position, setPosition2] = useState(preposition);
     const setPosition = p => {
+        console.log('setPosition p=', p);
         setPosition2(p);
 
-        const newValues = {
+        setFormValues({
             ...formValues,
             ['space_latitude']: p.lat,
             ['space_longitude']: p.lng,
-        };
-        setFormValues(newValues);
+        });
     };
 
     const markerRef = React.useRef(null);
@@ -146,37 +136,31 @@ const SpaceLocationMap = ({ formValues, setFormValues }) => {
 
         map.setView(tabList[newMapCampusId].coords, 17);
 
-        const newMarketCoords = tabList.find(c => c.id === newMapCampusId).coords;
+        const newMarkerCoords = tabList.at(newMapCampusId).coords;
         const marker = markerRef.current;
         if (marker !== null) {
-            setPosition(newMarketCoords);
+            setPosition(newMarkerCoords);
             const newValues = {
                 ...formValues,
-                ['space_latitude']: newMarketCoords[0],
-                ['space_longitude']: newMarketCoords[1],
+                ['space_latitude']: newMarkerCoords[0],
+                ['space_longitude']: newMarkerCoords[1],
             };
             setFormValues(newValues);
         }
     };
-    function a11yProps(index) {
-        return {
-            id: `campus-tab-${index}`,
-            'aria-controls': `campus-tabpanel-${index}`,
-        };
-    }
-
     return (
         <>
             <Box sx={{ width: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <StyledTabs value={mapCampusId} onChange={handleMapCampusChange} aria-label="Campus maps">
-                        {tabList.map((tab, index) => {
+                        {campusCoordinateList.map((tab, index) => {
                             return (
                                 <Tab
-                                    key={`${tab.label}-map`}
-                                    label={`${tab.label}`}
-                                    {...a11yProps(index)}
-                                    data-testid={`tab-${slugifyName(tab.label)}`}
+                                    key={`${tab.campus_id}-map`}
+                                    label={`${tab.campus_name}`}
+                                    id={`campus-tab-${index}`}
+                                    aria-controls={`campus-tabpanel-${index}`}
+                                    data-testid={`tab-${slugifyName(tab.campus_name)}`}
                                     style={{ width: '20%' }}
                                 />
                             );
@@ -184,22 +168,15 @@ const SpaceLocationMap = ({ formValues, setFormValues }) => {
                     </StyledTabs>
                 </Box>
             </Box>
-            <MapContainer
-                ref={setMap}
-                center={initialCentre}
-                zoom={17}
-                // scrollWheelZoom={false}
-                style={{ width: '200%', height: '500px' }}
-            >
+            <MapContainer ref={setMap} center={position} zoom={17} style={{ width: '200%', height: '500px' }}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     maxNativeZoom={19}
                     maxZoom={25}
                 />
-                <DraggableMarker position={centreGreatCourt}>
-                    {/* setNewCentreIn={setNewCentre}>*/}
-                    <Popup>St Lucia campus</Popup> {/* move this point */}
+                <DraggableMarker position={[-27.497975, 153.012385]}>
+                    <Popup>Space position</Popup>
                 </DraggableMarker>
                 {libraryBuildingsLocationGuides1.length > 0 &&
                     libraryBuildingsLocationGuides1?.map((m, index) => {
@@ -213,7 +190,7 @@ const SpaceLocationMap = ({ formValues, setFormValues }) => {
                     })}
             </MapContainer>
             <Typography component={'p'}>
-                Drag the icon to the location for this Space as precisely as you can!
+                Drag the blue icon to the location for this Space as precisely as you can!
             </Typography>
         </>
     );
@@ -221,6 +198,7 @@ const SpaceLocationMap = ({ formValues, setFormValues }) => {
 SpaceLocationMap.propTypes = {
     formValues: PropTypes.any,
     setFormValues: PropTypes.func,
+    campusCoordinateList: PropTypes.any,
 };
 
 export default React.memo(SpaceLocationMap);

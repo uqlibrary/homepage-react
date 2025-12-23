@@ -74,7 +74,7 @@ const CampusLocationMap = (campusCentre = null) => {
                 <DraggableMarker position={greatCourtCoordinates} />
             </MapContainer>
             <Typography component={'p'}>
-                Drill out on the map to find the campus, then drag the marker to roughly the centre of the campus.
+                Drill out on the map to find the campus, then drag the blue icon to roughly the centre of the campus.
                 <br />
                 This will be used to help you find locations of Spaces on creation and edit.
             </Typography>

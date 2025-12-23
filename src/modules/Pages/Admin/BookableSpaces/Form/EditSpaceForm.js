@@ -981,7 +981,11 @@ export const EditSpaceForm = ({
                     </FormControl>
                 </Grid>
                 <Grid item xs={6} style={{ width: '100%' }}>
-                    <SpaceLocationMap formValues={formValues} setFormValues={setFormValues} />
+                    <SpaceLocationMap
+                        formValues={formValues}
+                        setFormValues={setFormValues}
+                        campusCoordinateList={currentCampusList}
+                    />
                 </Grid>
                 <Grid item xs={12}>
                     <Typography component={'h3'} variant={'h6'}>
