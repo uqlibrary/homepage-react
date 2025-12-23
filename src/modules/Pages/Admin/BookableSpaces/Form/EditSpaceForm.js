@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import { Grid } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
@@ -320,12 +319,14 @@ export const EditSpaceForm = ({
     };
     const handleNext = () => {
         // setEditorReady(false);
+        document.activeElement.blur(); // defocus the button
         formValid(formValues);
         setActiveStep(prevActiveStep => prevActiveStep + 1);
     };
 
     const handleBack = () => {
         // setEditorReady(false);
+        document.activeElement.blur(); // defocus the button
         formValid(formValues);
         setActiveStep(prevActiveStep => prevActiveStep - 1);
     };
@@ -1203,7 +1204,7 @@ export const EditSpaceForm = ({
                                         id={'button-wrapper'}
                                         sx={{ display: 'flex', flexDirection: 'row', pt: 2, alignItems: 'start' }}
                                     >
-                                        <Button
+                                        <StyledSecondaryButton
                                             color="inherit"
                                             disabled={activeStep === firstTabId}
                                             onClick={handleBack}
@@ -1211,14 +1212,17 @@ export const EditSpaceForm = ({
                                             data-testid="spaces-form-back-button"
                                         >
                                             Back
-                                        </Button>
+                                        </StyledSecondaryButton>
                                         <Box sx={{ flex: '1 1 auto' }} />
                                         {activeStep === lastTabId ? (
                                             saveButton(errorMessages.length > 0)
                                         ) : (
-                                            <Button onClick={handleNext} data-testid="spaces-form-next-button">
+                                            <StyledPrimaryButton
+                                                onClick={handleNext}
+                                                data-testid="spaces-form-next-button"
+                                            >
                                                 Next
-                                            </Button>
+                                            </StyledPrimaryButton>
                                         )}
                                     </Box>
                                 </Grid>
