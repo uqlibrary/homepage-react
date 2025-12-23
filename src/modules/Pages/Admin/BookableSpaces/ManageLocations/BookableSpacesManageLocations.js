@@ -24,6 +24,7 @@ import {
 } from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
 
 import { SpacesAdminPage } from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
+import CampusLocationMap from 'modules/Pages/Admin/BookableSpaces/ManageLocations/CampusLocationMap';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
@@ -355,6 +356,7 @@ export const BookableSpacesManageLocations = ({
 
         const formData = new FormData(form);
         const data = !!formData && Object.fromEntries(formData);
+        console.log('saveChangeToCampus data=', data);
         const locationType = data?.locationType;
         const locationId = data[`${locationType}Id`];
 
@@ -362,7 +364,6 @@ export const BookableSpacesManageLocations = ({
         const failureMessage = (!data.campus_name || !data.campus_number) && 'Please enter campus name and number';
         console.log(failureMessage);
         if (!!failureMessage) {
-            // showErrorMessageinPopup(failureMessage);
             displayUserWarningMessage(failureMessage, true);
             return;
         }
@@ -370,6 +371,8 @@ export const BookableSpacesManageLocations = ({
         const valuesToSend = {
             campus_name: data.campus_name,
             campus_number: data.campus_number,
+            campus_latitude: data.campus_latitude,
+            campus_longitude: data.campus_longitude,
         };
 
         showSavingProgress(true);
@@ -855,8 +858,12 @@ export const BookableSpacesManageLocations = ({
         const formType = Object.keys(campusDetails).length === 0 ? 'add' : 'edit';
         const campusName = campusDetails?.campus_name ?? '';
         const campusNumber = campusDetails?.campus_number ?? '';
+        const campusLatitude = campusDetails?.campus_latitude ?? '';
+        const campusLongitude = campusDetails?.campus_longitude ?? '';
         return `<div>
             <input  name="locationType" type="hidden" value="campus" />
+            <input name="campus_latitude" type="hidden" id="campus_latitude" value="${campusLatitude}" required maxlength="255" />
+            <input name="campus_longitude" type="hidden" id="campus_longitude" value="${campusLongitude}"  required maxlength="255"/>
             <div class="dialogRow" data-testid="${formType}-campus-name">
                 <label for="campusName">${campusNameFieldLabel} *</label>
                 <input id="campusName" name="campus_name" type="text" value="${campusName}" required maxlength="255" />
@@ -892,6 +899,8 @@ export const BookableSpacesManageLocations = ({
         const valuesToSend = {
             campus_name: data.campus_name,
             campus_number: data.campus_number,
+            campus_latitude: data.campus_latitude,
+            campus_longitude: data.campus_longitude,
         };
         console.log('saveNewCampus valuesToSend', valuesToSend);
 
@@ -933,11 +942,17 @@ export const BookableSpacesManageLocations = ({
             const deleteButton = document.getElementById('deleteButton');
             !!deleteButton && (deleteButton.style.display = 'none');
 
+            const saveButton = document.getElementById('saveButton');
+            !!saveButton && saveButton.addEventListener('click', saveNewCampus);
+
+            const mapWrapper = document.getElementById('mapWrapper');
+            !!mapWrapper && (mapWrapper.style.display = 'block');
+
             const dialog = document.getElementById('popupDialog');
             !!dialog && dialog.showModal();
 
-            const saveButton = document.getElementById('saveButton');
-            !!saveButton && saveButton.addEventListener('click', saveNewCampus);
+            // because the map is inside a dialog we have to prompt it to reload after dialog open, or tiles are missing
+            window.dispatchEvent(new Event('resize'));
         }
     }
 
@@ -999,8 +1014,15 @@ export const BookableSpacesManageLocations = ({
             !!deleteButton &&
                 deleteButton.addEventListener('click', e => showConfirmAndDeleteCampusDialog(e, campusDetails));
 
+            const mapid = 'mapWrapper';
+            const mapWrapper = document.getElementById(mapid);
+            !!mapWrapper && (mapWrapper.style.display = 'block');
+
             const dialog = document.getElementById('popupDialog');
             !!dialog && dialog.showModal();
+
+            // because the map is inside a dialog we have to prompt it to reload after dialog open, or tiles are missing
+            window.dispatchEvent(new Event('resize'));
         }
     }
 
@@ -1124,6 +1146,9 @@ export const BookableSpacesManageLocations = ({
                 <form>
                     <div id="dialogMessage" />
                     <div id="dialogBody" />
+                    <div id="mapWrapper" style={{ display: 'none' }}>
+                        <CampusLocationMap />
+                    </div>
                     <div id="dialogFooter" className={'dialogFooter'}>
                         <p id="dialogMessage" data-testid="dialogMessage">
                             <WarningOutlined className="hidden" id="warning-icon" data-testid="warning-icon" />

@@ -267,6 +267,9 @@ export function closeDialog(e = null) {
 
     const saveButton = document.getElementById('saveButton');
     removeAnyListeners(saveButton);
+
+    const mapWrapper = document.getElementById('mapWrapper');
+    !!mapWrapper && (mapWrapper.style.display = 'none');
 }
 export const weeklyHoursLoaded = (weeklyHoursLoading, weeklyHoursError, weeklyHours) => {
     return (

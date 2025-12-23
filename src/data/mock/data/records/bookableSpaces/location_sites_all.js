@@ -4,6 +4,8 @@ export default {
             "campus_id": 1,
             "campus_number": "01",
             "campus_name": "St Lucia",
+            "campus_latitude": "-27.49718",
+            "campus_longitude": "153.01214",
             "libraries": [
                 {
                     "library_id": 1,
@@ -78,6 +80,8 @@ export default {
             "campus_id": 2,
             "campus_number": "29",
             "campus_name": "Gatton",
+            "campus_latitude": "-27.55383",
+            "campus_longitude": "152.33584",
             "libraries": [
                 {
                     "library_id": 8,
@@ -132,6 +136,8 @@ export default {
             "campus_id": 3,
             "campus_number": "45",
             "campus_name": "PACE",
+            "campus_latitude": "-27.49979",
+            "campus_longitude": "153.03066",
             "libraries": [
                 {
                     "library_id": 10,
