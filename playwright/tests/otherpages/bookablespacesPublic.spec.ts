@@ -176,7 +176,7 @@ test.describe('Spaces', () => {
         await expect(page.locator('body').getByText(/Library spaces/)).toBeVisible();
 
         await expect(page.getByTestId('no-spaces')).toBeVisible();
-        await expect(page.getByTestId('no-spaces')).toContainText('No locations found - please try again soon.');
+        await expect(page.getByTestId('no-spaces')).toContainText('No locations found yet - please try again soon.');
     });
     test('can expand-collapse sub-panels', async ({ page }) => {
         await page.goto('spaces');
