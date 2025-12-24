@@ -40,6 +40,10 @@ L.Icon.Default.mergeOptions({
     iconUrl: markerIcon,
     shadowUrl: markerShadow,
 });
+const uqStLuciaDefaultLocation = {
+    latitude: -27.497975,
+    longitude: 153.012385,
+};
 
 const svgOrangeCheckbox =
     "data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMidYMid meet' focusable='false'%3E%3Cpath fill='%23c13e2a' d='M22.2,20.9l-1.3-1.3C21,19.4,21,19.2,21,19v-8h-2v6.7l-4.6-4.6l6-6l-1.4-1.4l-6,6L6.3,5H15V3H5C4.8,3,4.6,3,4.4,3.1L3,1.7L1.8,2.9l1.3,1.3C3.1,4.4,3,4.7,3,5v14c0,1.1,0.9,2,2,2h14c0.3,0,0.6-0.1,0.8-0.2l1.2,1.2L22.2,20.9z M5,19V6l6.9,6.9l-1.4,1.4l-3.1-3.1L6,12.6l4.5,4.5l2.8-2.8L18,19H5z'%3E%3C/path%3E%3C/svg%3E";
@@ -59,6 +63,7 @@ const visibleRejectedCheckbox = {
 };
 
 const StyledFullPageStandardCard = styled(StandardCard)(() => ({
+    border: 'none',
     '& .showsOnlyOnFocus': {
         position: 'absolute',
         left: '-999px',
@@ -121,6 +126,18 @@ const StyledInputListItem = styled('li')(({ theme }) => ({
 const StyledBookableSpaceGridItem = styled(Grid)(() => ({
     marginTop: '12px',
 }));
+const StyledSpaceGridWrapperDiv = styled('div')(() => ({
+    maxHeight: '800px',
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    flexGrow: 0,
+    marginLeft: '1rem',
+
+    maxWidth: '16.6667%',
+    overflowY: 'scroll',
+    marginTop: '2px',
+    flexBasis: '16.6667%',
+}));
 const StyledBodyGrid = styled(Grid)(() => ({
     '& .showsOnlyOnFocus': {
         position: 'absolute',
@@ -138,7 +155,7 @@ const StyledBodyGrid = styled(Grid)(() => ({
 const StyledSidebarDiv = styled('div')(() => ({
     position: 'sticky',
     top: 0,
-    maxHeight: 'calc(100%-340px)', // 340 is height of headers above page content
+    // maxHeight: 'calc(100%-340px)', // 340 is height of headers above page content
     overflowY: 'auto',
     paddingLeft: '1em',
     paddingRight: 0,
@@ -198,6 +215,12 @@ const StyledSidebarDiv = styled('div')(() => ({
             },
         },
     },
+    maxHeight: '800px',
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    flexGrow: 0,
+    // padding: '1rem',
+    marginTop: '0.25rem',
 }));
 const StyledFacilityGroup = styled('div')(({ theme }) => ({
     borderBottom: theme.palette.designSystem.border,
@@ -296,6 +319,24 @@ const StyledFriendlyLocationDiv = styled('div')(() => ({
     '& > div': {
         marginTop: '-5px',
     },
+}));
+const StyledPageWrapperDiv = styled('div')(() => ({
+    position: 'relative',
+    marginTop: '1px',
+    display: 'flex',
+    marginBottom: '-50px', // bring footer up
+}));
+const StyledMapWrapperDiv = styled('div')(() => ({
+    position: 'absolute',
+    left: '28%',
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden',
+    maxWidth: '71.6665%',
+
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    flexGrow: 0,
 }));
 
 const showHideSpacePanel = bookableSpace => {
@@ -923,6 +964,46 @@ export const BookableSpacesList = ({
             </StyledBodyGrid>
         );
     };
+    const showMap = filteredSpaceLocations => {
+        return (
+            <MapContainer
+                center={[uqStLuciaDefaultLocation.latitude, uqStLuciaDefaultLocation.longitude]}
+                zoom={18}
+                style={{ width: '100%', height: '100%' }}
+            >
+                <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                {filteredSpaceLocations.length > 0 &&
+                    filteredSpaceLocations
+                        ?.filter(m => !!m.space_latitude && !!m.space_longitude)
+                        ?.map(m => {
+                            // show the filtered Spaces on the map
+                            console.log(
+                                'map point:',
+                                m.space_name,
+                                m.space_library_name,
+                                m.space_latitude,
+                                m.space_longitude,
+                            );
+                            const locationKey = `mappoint-space-${m?.space_id}`;
+                            return (
+                                <Marker
+                                    key={locationKey}
+                                    id={locationKey}
+                                    position={[m.space_latitude, m.space_longitude]}
+                                >
+                                    <Popup>
+                                        {m.space_name}
+                                        <p>{m.space_description}</p>
+                                    </Popup>
+                                </Marker>
+                            );
+                        })}
+            </MapContainer>
+        );
+    };
     return (
         <>
             {(() => {
@@ -944,12 +1025,7 @@ export const BookableSpacesList = ({
                     return (
                         <StandardPage title="Library spaces" standardPageId="topofcontent">
                             <section aria-live="assertive">
-                                <StyledFullPageStandardCard
-                                    standardCardId="location-list-card"
-                                    noPadding
-                                    noHeader
-                                    style={{ border: 'none' }}
-                                >
+                                <StyledFullPageStandardCard standardCardId="location-list-card" noPadding noHeader>
                                     <Grid container spacing={3} data-testid="library-spaces">
                                         <Grid container spacing={3} data-testid="library-spaces">
                                             <StyledBookableSpaceGridItem item xs={12} md={9}>
@@ -961,10 +1037,10 @@ export const BookableSpacesList = ({
                                                         </p>
                                                     }
                                                     !bookableSpacesRoomList?.data?.locations ||
-                                                    bookableSpacesRoomList?.data?.locations?.length === 0 &&{' '}
+                                                    bookableSpacesRoomList?.data?.locations?.length === 0 &&
                                                     {
                                                         <p data-testid="no-spaces">
-                                                            No locations found - please try again soon.
+                                                            No locations found yet - please try again soon.
                                                         </p>
                                                     }
                                                 </StyledStandardCard>
@@ -990,120 +1066,14 @@ export const BookableSpacesList = ({
                         return spaceAppears(spaceFacilityTypes, facilityTypeToGroup, facilityTypeFilters);
                     });
 
-                    const uqStLuciaDefaultLocation = {
-                        latitude: -27.497975,
-                        longitude: 153.012385,
-                        // latitude: '-27.501',
-                        // longitude: '153.01344',
-                    };
-                    // const centreGreatCourt = [-27.49745, 153.01337];
-
                     return (
-                        <>
-                            <div
-                                // spacing={3}
-                                data-testid="library-spaces"
-                                style={{
-                                    position: 'relative',
-                                    marginTop: '1px',
-                                    display: 'flex',
-                                    marginBottom: '-50px', // bring footer up
-                                }}
-                                // width should change with window size?
-                            >
-                                <StyledSidebarDiv
-                                    id="StyledSidebarDiv"
-                                    item
-                                    xs={2}
-                                    style={{
-                                        maxHeight: '800px',
-                                        backgroundColor: 'white',
-                                        flexDirection: 'row',
-                                        flexGrow: 0,
-                                        // padding: '1rem',
-                                        marginTop: '0.25rem',
-                                    }}
-                                >
-                                    {showFilterSidebar()}
-                                </StyledSidebarDiv>
-                                <div
-                                    id="panelList"
-                                    style={{
-                                        maxHeight: '800px',
-                                        backgroundColor: 'white',
-                                        flexDirection: 'row',
-                                        flexGrow: 0,
-                                        // padding: '1rem',
-                                        marginLeft: '1rem',
-
-                                        maxWidth: '16.6667%',
-                                        overflowY: 'scroll',
-                                        marginTop: '2px',
-                                        // marginRight: '0.5rem',
-                                        flexBasis: '16.6667%',
-                                    }}
-                                >
-                                    {showListSpaces(filteredSpaceLocations)}
-                                </div>
-                                <div
-                                    style={{
-                                        position: 'absolute',
-                                        // top: '230px', // size dependant
-                                        // left: '33.3335%',
-                                        left: '28%',
-                                        width: '100%',
-                                        height: '100%',
-                                        // zIndex: -1,
-                                        overflow: 'hidden',
-                                        maxWidth: '71.6665%',
-
-                                        // maxHeight: '800px',
-                                        backgroundColor: 'white',
-                                        flexDirection: 'row',
-                                        flexGrow: 0,
-                                        // padding: '1rem',
-                                    }}
-                                >
-                                    <MapContainer
-                                        center={[uqStLuciaDefaultLocation.latitude, uqStLuciaDefaultLocation.longitude]}
-                                        zoom={18}
-                                        // scrollWheelZoom={false}
-                                        style={{ width: '100%', height: '100%' }}
-                                    >
-                                        <TileLayer
-                                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                        />
-                                        {/* <Marker position={centreGreatCourt}>*/}
-                                        {/*    <Popup>St Lucia campus</Popup>*/}
-                                        {/* </Marker>*/}
-                                        {filteredSpaceLocations.length > 0 &&
-                                            filteredSpaceLocations
-                                                ?.filter(m => !!m.space_latitude && !!m.space_longitude)
-                                                ?.map(m => {
-                                                    // show the filtered Spaces on the map
-                                                    console.log(
-                                                        'map point:',
-                                                        m.space_name,
-                                                        m.space_library_name,
-                                                        m.space_latitude,
-                                                        m.space_longitude,
-                                                    );
-                                                    const locationKey = `mappoint-space-${m?.space_id}`;
-                                                    return (
-                                                        <Marker
-                                                            key={locationKey}
-                                                            id={locationKey}
-                                                            position={[m.space_latitude, m.space_longitude]}
-                                                        >
-                                                            <Popup>{m.space_name}</Popup>
-                                                        </Marker>
-                                                    );
-                                                })}
-                                    </MapContainer>
-                                </div>
-                            </div>
-                        </>
+                        <StyledPageWrapperDiv data-testid="library-spaces">
+                            <StyledSidebarDiv>{showFilterSidebar()}</StyledSidebarDiv>
+                            <StyledSpaceGridWrapperDiv id="panelList">
+                                {showListSpaces(filteredSpaceLocations)}
+                            </StyledSpaceGridWrapperDiv>
+                            <StyledMapWrapperDiv>{showMap(filteredSpaceLocations)}</StyledMapWrapperDiv>
+                        </StyledPageWrapperDiv>
                     );
                 }
             })()}
