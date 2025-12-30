@@ -165,7 +165,7 @@
         "@types/lodash": "^4.17.20",
         "@webcomponents/webcomponentsjs": "^2.8.0",
         "axios": "^1.13.1",
-        "axios-cache-interceptor": "^1.8.2",
+        "axios-cache-interceptor": "^1.11.1",
         "babel-plugin-add-module-exports": "^1.0.4",
         "copy-webpack-plugin": "^12.0.2",
         "core-js": "^3.36.0",
