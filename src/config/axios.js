@@ -16,6 +16,10 @@ let apiClient = axios.create({
     baseURL: API_URL,
     crossdomain: true,
 });
+const printClient = axios.create({
+    baseURL: 'http://127.0.0.1:9101',
+    crossdomain: true,
+});
 if (!isDevEnv() && !isTest()) {
     apiClient = setupCache(apiClient, {
         // unfortunately the below doesn't work for tests
@@ -45,6 +49,7 @@ if (!isDevEnv() && !isTest()) {
 }
 
 export const api = apiClient;
+export const printApi = printClient;
 
 export const sessionApi = axios.create({
     baseURL: API_URL,

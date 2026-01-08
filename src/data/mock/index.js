@@ -1,5 +1,6 @@
 /* eslint-disable */
-import { api, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, sessionApi } from 'config';
+import { api, printApi, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, sessionApi } from 'config';
+import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import Cookies from 'js-cookie';
 import * as routes from 'repositories/routes';
@@ -63,7 +64,7 @@ import dlor_series_view from './data/records/dlor/dlor_series_view';
 import dlor_series_view_nodescription from './data/records/dlor/dlor_series_view_nodescription';
 import { dlor_demographics_report } from './data/dlorDemographics';
 import { dlor_favourites_report } from './data/dlorFavourites';
-import  dlor_statistics  from './data/records/dlor/dlor_statistics';
+import dlor_statistics from './data/records/dlor/dlor_statistics';
 import { drupalArticles } from './data/drupalArticles';
 import {
     journalSearchFavourites,
@@ -75,6 +76,19 @@ import dlor_admin_notes from './data/records/dlor/dlor_admin_notes';
 import dlor_keywords from './data/records/dlor/dlor_keywords';
 
 const moment = require('moment');
+
+const mockPrint = new MockAdapter(printApi);
+mockPrint.onAny().passThrough();
+// const PRINTER_GET_DEFAULT = () => ({
+//     apiUrl: 'default',
+// });
+// mockPrint.onGet(PRINTER_GET_DEFAULT().apiUrl).reply((config) => {console.log(config); return [200, `Device:
+// 	Name: Emulator
+// 	Type: printer
+// 	Connection: network
+// 	ID: :9100
+// 	Provider: com.zebra.ds.webdriver.desktop.provider.DefaultDeviceProvider
+// 	Manufacturer: Zebra Technologies`];});
 
 const mock = new MockAdapter(api, { delayResponse: 1000 });
 const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 1000 });

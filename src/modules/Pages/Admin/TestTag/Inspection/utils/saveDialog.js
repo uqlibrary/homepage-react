@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 
 import { statusEnum } from '../utils/helpers';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
+
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
 const savedDialogMessages = {
@@ -43,6 +44,11 @@ const savedDialogMessages = {
             </Grid>
             <Grid item xs={12} sm={6} className={'dialogSuccessLineItems'} variant="subtitle1">
                 <Typography gutterBottom id="saved-asset-id" data-testid="saved-asset-id">
+                    {data.asset_next_test_due_date ?? locale.notApplicable}
+                </Typography>
+            </Grid>
+            <Grid item xs={12} className={'dialogSuccessLineItems'} variant="subtitle1">
+                <Typography gutterBottom id="print" data-testid="saved-asset-id">
                     {data.asset_next_test_due_date ?? locale.notApplicable}
                 </Typography>
             </Grid>
@@ -145,9 +151,35 @@ const StyledBox = styled(Box)(({ theme }) => ({
     },
 }));
 
+export const getPrintOptions = (printer, data, printTagAction) => {
+    if (printer) {
+        return {
+            showAlternateActionButton: true,
+            onAlternateAction: () => printTagAction(printer, data),
+            alternateActionButtonLabel: 'Print tag',
+        };
+    }
+    return {};
+};
+
 export const getSuccessDialog = (response, locale) => {
     if (!!!response) return {};
     const key = response.asset_status !== testStatusEnum.CURRENT.value ? 'other' : response.asset_status;
     const messageFragment = <StyledBox>{savedDialogMessages[key](response, locale.form.dialogLabels)}</StyledBox>;
-    return locale.form.saveSuccessConfirmation(locale.form.defaultSaveSuccessTitle, messageFragment);
+    const configLocale = locale.form.saveSuccessConfirmation(locale.form.defaultSaveSuccessTitle, messageFragment);
+
+    return { configLocale };
+};
+
+export const getLabelPrintingSuccessDialog = (printer, response, locale, printTagAction) => {
+    if (!!!response) return {};
+    const key = response.asset_status !== testStatusEnum.CURRENT.value ? 'other' : response.asset_status;
+    const messageFragment = <StyledBox>{savedDialogMessages[key](response, locale.form.dialogLabels)}</StyledBox>;
+    let configLocale = locale.form.saveSuccessConfirmation(locale.form.defaultSaveSuccessTitle, messageFragment);
+
+    const { alternateActionButtonLabel, ...rest } = getPrintOptions(printer, response, locale, printTagAction);
+    configLocale = { ...configLocale, alternateActionButtonLabel };
+    const additionalConfirmBoxProps = { ...rest };
+
+    return { configLocale, additionalConfirmBoxProps };
 };

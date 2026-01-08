@@ -25,10 +25,17 @@ import { useLocation, useForm, useConfirmationAlert, useAccountUser } from '../.
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { transformer } from '../utils/transformers';
 import { saveInspectionTransformer } from '../transformers/saveInspectionTransformer';
-import { getSuccessDialog } from '../utils/saveDialog';
+import { getSuccessDialog, getLabelPrintingSuccessDialog } from '../utils/saveDialog';
 import { PERMISSIONS } from '../../config/auth';
 import { useConfirmationState } from 'hooks';
 import { breadcrumbs } from 'config/routes';
+
+import { isDevEnv, isTest } from 'helpers/general';
+
+import LabelPrinterTemplate from '../../SharedComponents/LabelPrinter/LabelPrinterTemplate';
+import LabelLogo from '../../SharedComponents/LabelPrinter/LabelLogo';
+import { getDeptLabelPrintingEnabled, getDefaultDeptPrinter } from '../../helpers/labelPrinting';
+import useLabelPrinter from '../../SharedComponents/LabelPrinter/useLabelPrinter';
 
 const componentId = 'inspection';
 
@@ -157,10 +164,16 @@ const Inspection = ({
     saveAssetTypeSaving,
     saveAssetTypeError,
 }) => {
+    const isDevEnvironment = isDevEnv();
+    const isTestEnvironment = isTest();
+    const shouldUsePrinterEmulator = isDevEnvironment || isTestEnvironment;
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
 
     const { user } = useAccountUser();
+    const deptPrinterDefault = getDefaultDeptPrinter(user?.user_department);
+    const deptPrintingEnabled = getDeptLabelPrintingEnabled(user?.user_department);
+    const { printer } = useLabelPrinter({ printerCode: shouldUsePrinterEmulator ? 'emulator' : deptPrinterDefault });
 
     const inspectionLocale = locale.pages.inspect;
 
@@ -267,10 +280,48 @@ const Inspection = ({
         }
     };
 
-    const successDialog = React.useMemo(() => getSuccessDialog(saveInspectionSuccess, inspectionLocale), [
-        inspectionLocale,
-        saveInspectionSuccess,
-    ]);
+    const printTagAction = async (printer, data) => {
+        try {
+            printer
+                ?.selectDefaultPrinter()
+                .then(defaultPrinter => {
+                    console.log('Using default printer:', defaultPrinter);
+                    console.log(printer.debug());
+                    printer.getConnectionStatus().then(status => {
+                        console.log('Printer connection status:', status);
+                        if (status.ready) {
+                            const template = LabelPrinterTemplate['GK888t (EPL) (19J153101586)'].template({
+                                logo: LabelLogo,
+                                userId: data.user_licence_number,
+                                assetId: data.asset_id_displayed,
+                                testDate: data.action_date,
+                                dueDate: data.asset_next_test_due_date,
+                            });
+                            printer
+                                .print(template)
+                                .then(() => console.log('Print job sent'))
+                                .catch(error => console.error('Print job error:', error));
+                        } else {
+                            throw new Error('Printer is not ready: ' + JSON.stringify(status.errors));
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Printer connection error:', error);
+                });
+        } catch (error) {
+            console.error('Printing error:', error);
+        }
+    };
+
+    // this stuff above and bleow needs changing once the printer dialog is ready
+    const [successDialogLocale, additionalConfirmBoxProps] = React.useMemo(() => {
+        const { configLocale, additionalConfirmBoxProps = {} } =
+            deptPrintingEnabled && printer
+                ? getLabelPrintingSuccessDialog(printer, saveInspectionSuccess, inspectionLocale, printTagAction)
+                : getSuccessDialog(saveInspectionSuccess, inspectionLocale);
+        return [configLocale, additionalConfirmBoxProps];
+    }, [inspectionLocale, printer, saveInspectionSuccess, deptPrintingEnabled]);
 
     return (
         <StandardAuthPage
@@ -285,10 +336,11 @@ const Inspection = ({
                     confirmationBoxId={`${componentId}-save-success`}
                     hideCancelButton
                     onAction={hideSuccessMessage}
-                    onClose={hideSuccessMessage}
+                    onClose={!additionalConfirmBoxProps ? hideSuccessMessage : undefined}
                     isOpen={isSaveSuccessOpen}
-                    locale={successDialog}
+                    locale={successDialogLocale}
                     noMinContentWidth
+                    {...additionalConfirmBoxProps}
                 />
                 <EventPanel
                     id={componentId}
