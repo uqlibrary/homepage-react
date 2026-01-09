@@ -25,13 +25,14 @@ import { useLocation, useForm, useConfirmationAlert, useAccountUser } from '../.
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { transformer } from '../utils/transformers';
 import { saveInspectionTransformer } from '../transformers/saveInspectionTransformer';
-import { getSuccessDialog, getLabelPrintingSuccessDialog } from '../utils/saveDialog';
+import { getSuccessDialog } from '../utils/saveDialog';
 import { PERMISSIONS } from '../../config/auth';
 import { useConfirmationState } from 'hooks';
 import { breadcrumbs } from 'config/routes';
 
 import { isDevEnv, isTest } from 'helpers/general';
 
+import InspectionSuccessPrintDialog from './InspectionSuccessPrintDialog';
 import LabelPrinterTemplate from '../../SharedComponents/LabelPrinter/LabelPrinterTemplate';
 import LabelLogo from '../../SharedComponents/LabelPrinter/LabelLogo';
 import { getDeptLabelPrintingEnabled, getDefaultDeptPrinter } from '../../helpers/labelPrinting';
@@ -159,7 +160,6 @@ const Inspection = ({
     floorListError,
     roomListError,
     saveInspectionSaving,
-    saveInspectionSuccess,
     saveInspectionError,
     saveAssetTypeSaving,
     saveAssetTypeError,
@@ -179,6 +179,12 @@ const Inspection = ({
 
     const [selectedAsset, setSelectedAsset] = useState({});
     const [isSaveSuccessOpen, showSaveSuccessConfirmation, hideSaveSuccessConfirmation] = useConfirmationState();
+    const [
+        isPrinterSaveSuccessDialogOpen,
+        showPrinterSaveSuccessDialog,
+        hidePrinterSaveSuccessDialog,
+    ] = useConfirmationState();
+    const [successDialogLocale, setSuccessDialogLocale] = useState({});
 
     const onCloseConfirmationAlert = () => {
         !!inspectionConfigError && actions.clearInspectionConfigError();
@@ -222,11 +228,11 @@ const Inspection = ({
 
     const { location, setLocation } = useLocation();
 
-    useEffect(() => {
-        if (!!saveInspectionSuccess) {
-            showSaveSuccessConfirmation();
-        }
-    }, [saveInspectionSuccess, showSaveSuccessConfirmation]);
+    // useEffect(() => {
+    //     if (!!saveInspectionSuccess) {
+    //         showSaveSuccessConfirmation();
+    //     }
+    // }, [saveInspectionSuccess, showSaveSuccessConfirmation]);
 
     const [inView, setInView] = React.useState(false);
 
@@ -245,7 +251,8 @@ const Inspection = ({
     };
 
     const hideSuccessMessage = () => {
-        hideSaveSuccessConfirmation();
+        setSuccessDialogLocale({});
+        printer && deptPrintingEnabled ? hidePrinterSaveSuccessDialog() : hideSaveSuccessConfirmation();
         resetForm();
     };
 
@@ -276,7 +283,11 @@ const Inspection = ({
                 { lastInspection: selectedAsset?.last_inspection, dateFormat: inspectionLocale.config.dateFormat } ??
                     /* istanbul ignore next */ {},
             );
-            actions.saveInspection(transformedData);
+            // save and then show success dialog
+            actions.saveInspection(transformedData).then(response => {
+                setSuccessDialogLocale(getSuccessDialog(response, inspectionLocale));
+                printer && deptPrintingEnabled ? showPrinterSaveSuccessDialog() : showSaveSuccessConfirmation();
+            });
         }
     };
 
@@ -315,13 +326,13 @@ const Inspection = ({
     };
 
     // this stuff above and bleow needs changing once the printer dialog is ready
-    const [successDialogLocale, additionalConfirmBoxProps] = React.useMemo(() => {
-        const { configLocale, additionalConfirmBoxProps = {} } =
-            deptPrintingEnabled && printer
-                ? getLabelPrintingSuccessDialog(printer, saveInspectionSuccess, inspectionLocale, printTagAction)
-                : getSuccessDialog(saveInspectionSuccess, inspectionLocale);
-        return [configLocale, additionalConfirmBoxProps];
-    }, [inspectionLocale, printer, saveInspectionSuccess, deptPrintingEnabled]);
+    // const [successDialogLocale, additionalConfirmBoxProps] = React.useMemo(() => {
+    //     const { configLocale, additionalConfirmBoxProps = {} } = getSuccessDialog(
+    //         saveInspectionSuccess,
+    //         inspectionLocale,
+    //     );
+    //     return [configLocale, additionalConfirmBoxProps];
+    // }, [inspectionLocale, saveInspectionSuccess]);
 
     return (
         <StandardAuthPage
@@ -336,11 +347,21 @@ const Inspection = ({
                     confirmationBoxId={`${componentId}-save-success`}
                     hideCancelButton
                     onAction={hideSuccessMessage}
-                    onClose={!additionalConfirmBoxProps ? hideSuccessMessage : undefined}
+                    onClose={hideSuccessMessage}
                     isOpen={isSaveSuccessOpen}
                     locale={successDialogLocale}
                     noMinContentWidth
-                    {...additionalConfirmBoxProps}
+                />
+                <InspectionSuccessPrintDialog
+                    actionButtonColor="secondary"
+                    actionButtonVariant="contained"
+                    inspectionSuccessPrintDialogId={`${componentId}-printer-save-success`}
+                    printer={printer}
+                    onPrint={printTagAction}
+                    onClose={hideSuccessMessage}
+                    isOpen={isPrinterSaveSuccessDialogOpen}
+                    locale={successDialogLocale}
+                    noMinContentWidth
                 />
                 <EventPanel
                     id={componentId}

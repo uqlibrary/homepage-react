@@ -9,7 +9,7 @@ import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
 const testStatusEnum = statusEnum(locale.pages.inspect.config);
 
-const savedDialogMessages = {
+export const savedDialogMessages = {
     [testStatusEnum.CURRENT.value]: (data, locale) => (
         <Grid container item xs={12} sm={6} alignItems="center" className={'dialogContainer dialogPassedContainer'}>
             <Grid item xs={12} className={'dialogTitle dialogSuccessTitle'} variant="subtitle1">
@@ -168,18 +168,5 @@ export const getSuccessDialog = (response, locale) => {
     const messageFragment = <StyledBox>{savedDialogMessages[key](response, locale.form.dialogLabels)}</StyledBox>;
     const configLocale = locale.form.saveSuccessConfirmation(locale.form.defaultSaveSuccessTitle, messageFragment);
 
-    return { configLocale };
-};
-
-export const getLabelPrintingSuccessDialog = (printer, response, locale, printTagAction) => {
-    if (!!!response) return {};
-    const key = response.asset_status !== testStatusEnum.CURRENT.value ? 'other' : response.asset_status;
-    const messageFragment = <StyledBox>{savedDialogMessages[key](response, locale.form.dialogLabels)}</StyledBox>;
-    let configLocale = locale.form.saveSuccessConfirmation(locale.form.defaultSaveSuccessTitle, messageFragment);
-
-    const { alternateActionButtonLabel, ...rest } = getPrintOptions(printer, response, locale, printTagAction);
-    configLocale = { ...configLocale, alternateActionButtonLabel };
-    const additionalConfirmBoxProps = { ...rest };
-
-    return { configLocale, additionalConfirmBoxProps };
+    return configLocale;
 };

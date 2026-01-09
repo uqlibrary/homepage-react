@@ -40,7 +40,7 @@ export const createPrinter = () => {
     const code = 'emulator';
 
     const getAvailablePrinters = async () => {
-        return await printerDescriptor;
+        return await [printerDescriptor];
     };
 
     const getDefaultPrinter = async () => {

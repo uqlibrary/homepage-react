@@ -385,6 +385,7 @@ export function saveInspection(request) {
                     type: actions.TESTTAG_SAVE_INSPECTION_SUCCESS,
                     payload: response?.data,
                 });
+                return Promise.resolve(response?.data);
             })
             .catch(error => {
                 dispatch({
@@ -392,6 +393,7 @@ export function saveInspection(request) {
                     payload: error.message,
                 });
                 checkExpireSession(dispatch, error);
+                return Promise.reject(error.message);
             });
     };
 }

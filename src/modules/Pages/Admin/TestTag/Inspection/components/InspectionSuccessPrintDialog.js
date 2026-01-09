@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -7,9 +7,16 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogContent from '@mui/material/DialogContent';
 import Grid from '@mui/material/Grid';
 import Hidden from '@mui/material/Hidden';
-import { StyledPrimaryButton, StyledSecondaryButton, StyledTertiaryButton } from 'helpers/general';
+import Typography from '@mui/material/Typography';
 
-// HERE, UPDATE THIS TO BE PRINTER SPECIFIC. ADD IN LOGIC, USE LABELPRINTERSELECTOR ETC
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+
+import { StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
+import LabelPrinterSelector from '../../SharedComponents/LabelPrinter/LabelPrinterSelector';
+
 export const InspectionSuccessPrintDialog = ({
     inspectionSuccessPrintDialogId,
     isOpen = false,
@@ -21,31 +28,35 @@ export const InspectionSuccessPrintDialog = ({
         alternateActionButtonLabel: 'Cancel',
     },
     noMinContentWidth = true,
-    disableButtonsWhenBusy = false,
+    disableButtonsWhenBusy = true,
     isBusy = false,
-    actionProps = {},
-    altActionProps = {},
-    cancelProps = {},
-    autoFocusPrimaryButton = false,
+    printer = null,
     onPrint = null,
     onClose = null,
-    printer = null,
     onPrinterSelectionChange = null,
 }) => {
-    const _onAction = () => {
-        onClose?.();
-        onAction?.(actionProps);
+    const [availablePrinters, setAvailablePrinters] = useState([]);
+    const _onPrint = () => {
+        onPrint?.();
     };
 
-    const _onCancelAction = () => {
+    const _onCloseAction = () => {
         onClose?.();
-        onCancelAction?.(cancelProps);
     };
 
-    const _onAlternateAction = () => {
-        onClose?.();
-        onAlternateAction?.(altActionProps);
+    const _onPrinterSelectionChange = event => {
+        onPrinterSelectionChange?.(event);
     };
+
+    useEffect(() => {
+        const enumerateAvailablePrinters = async () => {
+            const printers = await printer.getAvailablePrinters();
+            setAvailablePrinters(printers);
+            console.log('Available Printers:', printers);
+        };
+
+        enumerateAvailablePrinters();
+    }, [printer]);
     return (
         <Dialog style={{ padding: 6 }} open={isOpen} data-testid={`dialogbox-${inspectionSuccessPrintDialogId}`}>
             <DialogTitle data-testid="message-title">{locale.confirmationTitle}</DialogTitle>
@@ -53,77 +64,67 @@ export const InspectionSuccessPrintDialog = ({
                 <DialogContentText data-testid="message-content" component="div">
                     {locale.confirmationMessage}
                 </DialogContentText>
-                {!!showAdditionalInformation && !!additionalInformation && (
-                    <DialogContentText data-testid="message-content-additional">
-                        <strong>Info: </strong>
-                        {additionalInformation}
-                    </DialogContentText>
-                )}
-
-                {!!showInputForm && /* istanbul ignore next */ <InputForm />}
             </DialogContent>
             <DialogActions>
                 <Grid container spacing={1} justifyContent="space-between">
                     <Hidden smDown>
                         <Grid item xs />
                     </Hidden>
-                    {!hideActionButton && (
-                        <Grid item xs={12} sm={'auto'}>
-                            <StyledPrimaryButton
-                                children={locale.confirmButtonLabel}
-                                autoFocus={!!autoFocusPrimaryButton}
-                                fullWidth
-                                onClick={_onAction}
-                                id="confirm-action"
-                                data-testid={`confirm-${inspectionSuccessPrintDialogId}`}
-                                disabled={disableButtonsWhenBusy && isBusy}
-                            />
-                        </Grid>
-                    )}
-                    {showAlternateActionButton && (
-                        // an optional middle button that will display in a warning colour
-                        <Grid item xs={12} sm={'auto'}>
-                            <StyledTertiaryButton
-                                variant={'contained'}
-                                children={locale.alternateActionButtonLabel}
-                                fullWidth
-                                onClick={_onAlternateAction}
-                                id="confirm-alternate-action"
-                                data-testid={`confirm-alternate-${inspectionSuccessPrintDialogId}`}
-                                disabled={disableButtonsWhenBusy && isBusy}
-                            />
-                        </Grid>
-                    )}
-                    {!hideCancelButton && (
-                        <Grid item xs={12} sm={'auto'}>
-                            <StyledSecondaryButton
-                                variant={'contained'}
-                                children={locale.cancelButtonLabel}
-                                fullWidth
-                                onClick={_onCancelAction}
-                                id="confirm-cancel-action"
-                                data-testid={`cancel-${inspectionSuccessPrintDialogId}`}
-                                disabled={disableButtonsWhenBusy && isBusy}
-                            />
-                        </Grid>
-                    )}
+
+                    <Grid item xs={12} sm={'auto'}>
+                        <StyledPrimaryButton
+                            children={locale.confirmButtonLabel}
+                            fullWidth
+                            onClick={_onCloseAction}
+                            id="confirm-action"
+                            data-testid={`confirm-${inspectionSuccessPrintDialogId}`}
+                            disabled={disableButtonsWhenBusy && isBusy}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} sm={'auto'}>
+                        <StyledSecondaryButton
+                            variant={'contained'}
+                            fullWidth
+                            onClick={_onPrint}
+                            id="confirm-alternate-action"
+                            data-testid={`confirm-alternate-${inspectionSuccessPrintDialogId}`}
+                            disabled={disableButtonsWhenBusy && isBusy}
+                        >
+                            Print Tag
+                        </StyledSecondaryButton>
+                    </Grid>
                 </Grid>
             </DialogActions>
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ArrowDownwardIcon />}
+                    aria-controls="printer-selector-content"
+                    id="printerSelectorContainer"
+                >
+                    <Typography>Label Printer Settings</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <LabelPrinterSelector
+                        id={inspectionSuccessPrintDialogId}
+                        list={availablePrinters}
+                        value={availablePrinters?.[0] ?? null}
+                        onChange={_onPrinterSelectionChange}
+                    />
+                </AccordionDetails>
+            </Accordion>
         </Dialog>
     );
 };
 
 InspectionSuccessPrintDialog.propTypes = {
-    InspectionSuccessPrintDialogId: PropTypes.string.isRequired,
+    inspectionSuccessPrintDialogId: PropTypes.string.isRequired,
     hideActionButton: PropTypes.bool,
     hideCancelButton: PropTypes.bool,
     InputForm: PropTypes.func,
     isOpen: PropTypes.bool,
     locale: PropTypes.object,
-    onAction: PropTypes.func,
-    onCancelAction: PropTypes.func,
-    onAlternateAction: PropTypes.func,
-    onClose: PropTypes.func,
+    inspectionLocale: PropTypes.object,
     showAlternateActionButton: PropTypes.bool,
     showInputForm: PropTypes.bool,
     additionalInformation: PropTypes.string,
@@ -135,6 +136,10 @@ InspectionSuccessPrintDialog.propTypes = {
     disableButtonsWhenBusy: PropTypes.bool,
     isBusy: PropTypes.bool,
     autoFocusPrimaryButton: PropTypes.bool,
+    printer: PropTypes.object,
+    onPrint: PropTypes.func,
+    onClose: PropTypes.func,
+    onPrinterSelectionChange: PropTypes.func,
 };
 
 export default React.memo(InspectionSuccessPrintDialog);
