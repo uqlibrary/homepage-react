@@ -193,7 +193,7 @@ const StyledArticleCard = styled('div')(({ theme, isAccessible }) => ({
             marginTop: 0,
         },
         '& footer': {
-            color: theme.palette.primary.light,
+            color: theme.palette.primary.main,
             fontWeight: 400,
             marginTop: 6,
             display: 'flex',
@@ -204,7 +204,7 @@ const StyledArticleCard = styled('div')(({ theme, isAccessible }) => ({
             '& svg': {
                 width: 20,
                 '& > path': {
-                    fill: theme.palette.primary.light,
+                    fill: theme.palette.primary.main,
                 },
             },
             '& span': {
