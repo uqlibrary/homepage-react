@@ -49,6 +49,8 @@ export const DLOBulkSchedule = ({
 }) => {
     const defaultFormValues = {
         schedule_status: true,
+        schedule_start_date: moment.tz('Australia/Brisbane').format('YYYY-MM-DD'),
+        schedule_end_date: moment.tz('Australia/Brisbane').format('YYYY-MM-DD'),
     };
     const [viewOnly, setViewOnly] = React.useState(false);
 
@@ -777,8 +779,8 @@ export const DLOBulkSchedule = ({
                                     setIsEditBoxOpened(false);
                                     setViewOnly(false);
                                     setFormValues(defaultFormValues);
-                                    // setScheduleItems([]);
-                                    // setEditingScheduleId(null);
+                                    setScheduleItems([]);
+                                    setEditingScheduleId(null);
                                 }}
                                 data-testid="schedule-close-button"
                             >
