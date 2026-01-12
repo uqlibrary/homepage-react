@@ -23,100 +23,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import { Visibility } from '@mui/icons-material';
+import { set } from 'js-cookie';
 
 const moment = require('moment-timezone');
-
-// eslint-disable-next-line react/prop-types
-const ScheduleTableSection = ({ title, schedules, onEdit, onDelete, buttonTestIdPrefix }) => (
-    <Accordion sx={{ marginTop: 2 }}>
-        <AccordionSummary
-            expandIcon={
-                <span data-testid={`${buttonTestIdPrefix}-expand`}>
-                    <ExpandMoreIcon />
-                </span>
-            }
-        >
-            <Typography variant="h6" component="h2">
-                {title}
-            </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-            <TableContainer component={Paper}>
-                <Table size="small">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>
-                                <strong>Schedule Name</strong>
-                            </TableCell>
-                            <TableCell>
-                                <strong>Object Count</strong>
-                            </TableCell>
-                            <TableCell>
-                                <strong>Object Status</strong>
-                            </TableCell>
-                            <TableCell>
-                                <strong>Running?</strong>
-                            </TableCell>
-                            <TableCell>
-                                <strong>Start Date</strong>
-                            </TableCell>
-                            <TableCell>
-                                <strong>End Date</strong>
-                            </TableCell>
-                            <TableCell>
-                                <strong>Actions</strong>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {!!schedules &&
-                            schedules.length > 0 &&
-                            schedules.map((schedule, index) => (
-                                <TableRow key={schedule.schedule_id}>
-                                    <TableCell sx={{ wordBreak: 'break-word' }}>{schedule.schedule_name}</TableCell>
-                                    <TableCell>{schedule.object_count}</TableCell>
-                                    <TableCell>Featured</TableCell>
-                                    <TableCell>{schedule.schedule_running ? 'Running' : 'Not Running'}</TableCell>
-                                    <TableCell>
-                                        {moment
-                                            .tz(schedule.schedule_start_date, 'YYYY-MM-DD', 'Australia/Brisbane')
-                                            .format('DD-MM-YYYY')}
-                                    </TableCell>
-                                    <TableCell>
-                                        {moment
-                                            .tz(schedule.schedule_end_date, 'YYYY-MM-DD', 'Australia/Brisbane')
-                                            .format('DD-MM-YYYY')}
-                                    </TableCell>
-                                    <TableCell>
-                                        <IconButton
-                                            data-testid={`${buttonTestIdPrefix}-edit-button-${index}`}
-                                            data-analyticsid={`${buttonTestIdPrefix}-edit-button-${index}`}
-                                            onClick={() => onEdit(schedule)}
-                                            aria-label={`Click to edit schedule: ${schedule.schedule_name}`}
-                                            size="large"
-                                            disabled={schedule.schedule_running}
-                                        >
-                                            <EditIcon fontSize="small" />
-                                        </IconButton>
-                                        <IconButton
-                                            data-testid={`${buttonTestIdPrefix}-delete-button-${index}`}
-                                            data-analyticsid={`${buttonTestIdPrefix}-delete-button-${index}`}
-                                            onClick={() => onDelete(schedule.schedule_id)}
-                                            aria-label={`Click to delete schedule: ${schedule.schedule_name}`}
-                                            size="large"
-                                            disabled={schedule.schedule_running}
-                                        >
-                                            <DeleteIcon fontSize="small" />
-                                        </IconButton>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </AccordionDetails>
-    </Accordion>
-);
 
 export const DLOBulkSchedule = ({
     actions,
@@ -140,6 +50,105 @@ export const DLOBulkSchedule = ({
     const defaultFormValues = {
         schedule_status: true,
     };
+    const [viewOnly, setViewOnly] = React.useState(false);
+
+    // eslint-disable-next-line react/prop-types
+    const ScheduleTableSection = ({ title, schedules, onEdit, onView, onDelete, buttonTestIdPrefix }) => (
+        <Accordion sx={{ marginTop: 2 }}>
+            <AccordionSummary
+                expandIcon={
+                    <span data-testid={`${buttonTestIdPrefix}-expand`}>
+                        <ExpandMoreIcon />
+                    </span>
+                }
+            >
+                <Typography variant="h6" component="h2">
+                    {title}
+                </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <TableContainer component={Paper}>
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>
+                                    <strong>Schedule Name</strong>
+                                </TableCell>
+                                <TableCell>
+                                    <strong>Object Count</strong>
+                                </TableCell>
+                                <TableCell>
+                                    <strong>Object Status</strong>
+                                </TableCell>
+                                <TableCell>
+                                    <strong>Running?</strong>
+                                </TableCell>
+                                <TableCell>
+                                    <strong>Start Date</strong>
+                                </TableCell>
+                                <TableCell>
+                                    <strong>End Date</strong>
+                                </TableCell>
+                                <TableCell>
+                                    <strong>Actions</strong>
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {!!schedules &&
+                                schedules.length > 0 &&
+                                schedules.map((schedule, index) => (
+                                    <TableRow key={schedule.schedule_id}>
+                                        <TableCell sx={{ wordBreak: 'break-word' }}>{schedule.schedule_name}</TableCell>
+                                        <TableCell>{schedule.object_count}</TableCell>
+                                        <TableCell>Featured</TableCell>
+                                        <TableCell>{schedule.schedule_running ? 'Running' : 'Not Running'}</TableCell>
+                                        <TableCell>
+                                            {moment
+                                                .tz(schedule.schedule_start_date, 'YYYY-MM-DD', 'Australia/Brisbane')
+                                                .format('DD-MM-YYYY')}
+                                        </TableCell>
+                                        <TableCell>
+                                            {moment
+                                                .tz(schedule.schedule_end_date, 'YYYY-MM-DD', 'Australia/Brisbane')
+                                                .format('DD-MM-YYYY')}
+                                        </TableCell>
+                                        <TableCell>
+                                            <IconButton
+                                                data-testid={`${buttonTestIdPrefix}-edit-button-${index}`}
+                                                data-analyticsid={`${buttonTestIdPrefix}-edit-button-${index}`}
+                                                onClick={() =>
+                                                    schedule.schedule_running ? onView(schedule) : onEdit(schedule)
+                                                }
+                                                aria-label={`Click to edit schedule: ${schedule.schedule_name}`}
+                                                size="large"
+                                                // disabled={schedule.schedule_running}
+                                            >
+                                                {schedule.schedule_running ? (
+                                                    <Visibility fontSize="small" />
+                                                ) : (
+                                                    <EditIcon fontSize="small" />
+                                                )}
+                                            </IconButton>
+                                            <IconButton
+                                                data-testid={`${buttonTestIdPrefix}-delete-button-${index}`}
+                                                data-analyticsid={`${buttonTestIdPrefix}-delete-button-${index}`}
+                                                onClick={() => onDelete(schedule.schedule_id)}
+                                                aria-label={`Click to delete schedule: ${schedule.schedule_name}`}
+                                                size="large"
+                                                disabled={schedule.schedule_running}
+                                            >
+                                                <DeleteIcon fontSize="small" />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </AccordionDetails>
+        </Accordion>
+    );
     const [formValues, setFormValues] = React.useState(defaultFormValues);
     const [isEditBoxOpened, setIsEditBoxOpened] = React.useState(false);
     const [scheduleItems, setScheduleItems] = React.useState([]);
@@ -286,6 +295,28 @@ export const DLOBulkSchedule = ({
     };
 
     const editExistingSchedule = schedule => {
+        setIsAlertOpen(false);
+        const fv = {
+            ...defaultFormValues,
+            schedule_name: schedule.schedule_name,
+            schedule_start_date: moment
+                .tz(schedule.schedule_start_date, 'YYYY-MM-DD', 'Australia/Brisbane')
+                .format('YYYY-MM-DD'),
+            schedule_end_date: moment
+                .tz(schedule.schedule_end_date, 'YYYY-MM-DD', 'Australia/Brisbane')
+                .format('YYYY-MM-DD'),
+            schedule_status: schedule.schedule_status,
+        };
+
+        setFormValues(fv);
+        setScheduleItems(getItemsFromSchedule(schedule));
+        setEditingScheduleId(schedule.schedule_id);
+        setFormMessage(null);
+        setIsEditBoxOpened(true);
+    };
+
+    const handleViewSchedule = schedule => {
+        setViewOnly(true);
         setIsAlertOpen(false);
         const fv = {
             ...defaultFormValues,
@@ -506,6 +537,7 @@ export const DLOBulkSchedule = ({
                             title="Running Schedules"
                             schedules={runningSchedules}
                             onEdit={editExistingSchedule}
+                            onView={handleViewSchedule}
                             onDelete={handleDeleteSchedule}
                             buttonTestIdPrefix="running-schedule"
                         />
@@ -516,6 +548,7 @@ export const DLOBulkSchedule = ({
                             title="Pending Schedules"
                             schedules={pendingSchedules}
                             onEdit={editExistingSchedule}
+                            onView={handleViewSchedule}
                             onDelete={handleDeleteSchedule}
                             buttonTestIdPrefix="pending-schedule"
                         />
@@ -526,6 +559,7 @@ export const DLOBulkSchedule = ({
                             title="Completed Schedules"
                             schedules={completedSchedules}
                             onEdit={editExistingSchedule}
+                            onView={handleViewSchedule}
                             onDelete={handleDeleteSchedule}
                             buttonTestIdPrefix="completed-schedule"
                         />
@@ -580,7 +614,7 @@ export const DLOBulkSchedule = ({
                     <Typography variant="h6" component="h3" data-testid="Schedule-title" id="modal-main-heading">
                         {formValues?.schedule_name || 'Schedule'}
                     </Typography>
-                    {editingScheduleId !== null && (
+                    {editingScheduleId !== null && !viewOnly && (
                         <>
                             <FormControl variant="standard" fullWidth sx={{ mt: 1, mb: 1 }}>
                                 <InputLabel htmlFor="modal_schedule_name">Schedule name *</InputLabel>
@@ -689,9 +723,11 @@ export const DLOBulkSchedule = ({
                                             <TableCell sx={{ width: '55%' }}>
                                                 <strong>Title</strong>
                                             </TableCell>
-                                            <TableCell sx={{ width: '15%' }}>
-                                                <strong>Actions</strong>
-                                            </TableCell>
+                                            {!viewOnly && (
+                                                <TableCell sx={{ width: '15%' }}>
+                                                    <strong>Actions</strong>
+                                                </TableCell>
+                                            )}
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -711,18 +747,20 @@ export const DLOBulkSchedule = ({
                                                 <TableCell sx={{ wordBreak: 'break-word' }}>
                                                     {si.object_title}
                                                 </TableCell>
-                                                <TableCell>
-                                                    <Button
-                                                        size="small"
-                                                        variant="outlined"
-                                                        color="primary"
-                                                        onClick={() => handleRemoveFromSchedule(idx)}
-                                                        data-testid={`remove-selected-item-${idx}`}
-                                                        aria-label={`Remove ${si.object_title} from schedule`}
-                                                    >
-                                                        Remove
-                                                    </Button>
-                                                </TableCell>
+                                                {!viewOnly && (
+                                                    <TableCell>
+                                                        <Button
+                                                            size="small"
+                                                            variant="outlined"
+                                                            color="primary"
+                                                            onClick={() => handleRemoveFromSchedule(idx)}
+                                                            data-testid={`remove-selected-item-${idx}`}
+                                                            aria-label={`Remove ${si.object_title} from schedule`}
+                                                        >
+                                                            Remove
+                                                        </Button>
+                                                    </TableCell>
+                                                )}
                                             </TableRow>
                                         ))}
                                     </TableBody>
@@ -730,97 +768,124 @@ export const DLOBulkSchedule = ({
                             </TableContainer>
                         </>
                     )}
-                    <Typography variant="h6" component="h3" data-testid="Schedule-add-edit-title">
-                        {'Add / Edit items to schedule'}
-                    </Typography>
-                    <TableContainer
-                        component={Paper}
-                        sx={{
-                            maxHeight: '40vh',
-                            overflow: 'auto',
-                            mt: 1,
-                            '& .MuiTableCell-root': { py: 0.5, px: 1, fontSize: '0.85rem' },
-                            '& .MuiTableCell-head': { fontSize: '0.9rem', fontWeight: 600, lineHeight: 1.2 },
-                        }}
-                    >
-                        <Table size="small" stickyHeader sx={{ tableLayout: 'fixed', width: '100%' }}>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell sx={{ width: '30%' }}>Object UUID</TableCell>
-                                    <TableCell sx={{ width: '55%' }}>Object Title</TableCell>
-                                    <TableCell sx={{ width: '15%' }}>Actions</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {!!dlorList &&
-                                    dlorList
-                                        .filter(
-                                            item =>
-                                                !scheduleItems.some(
-                                                    si => si.object_public_uuid === item.object_public_uuid,
-                                                ),
-                                        )
-                                        .map((item, index) => {
-                                            return (
-                                                <TableRow key={item.object_public_uuid}>
-                                                    <TableCell sx={{ wordBreak: 'break-word' }}>
-                                                        {item.object_public_uuid}
-                                                    </TableCell>
-                                                    <TableCell sx={{ wordBreak: 'break-word' }}>
-                                                        {item.object_title}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <Button
-                                                            size="small"
-                                                            variant="contained"
-                                                            color="secondary"
-                                                            data-testid={`add-schedule-item-${index}`}
-                                                            onClick={() => handleAddToSchedule(item)}
-                                                            // ACCESSIBILITY FIX 7: Descriptive aria-label
-                                                            aria-label={`Add ${item.object_title} to schedule`}
-                                                        >
-                                                            Add
-                                                        </Button>
-                                                    </TableCell>
-                                                </TableRow>
-                                            );
-                                        })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 1 }}>
-                        {editingScheduleId !== null && (
-                            <>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    data-testid="modal-save-button"
-                                    disabled={!(formValues?.schedule_name && scheduleItems.length > 0)}
-                                    onClick={() => handleScheduleEditAdd(editingScheduleId)}
-                                >
-                                    Save
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    onClick={() => setIsEditBoxOpened(false)}
-                                    data-testid="schedule-close-button"
-                                >
-                                    Cancel
-                                </Button>
-                            </>
-                        )}
-                        {!!!editingScheduleId && (
+                    {viewOnly && (
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 1 }}>
                             <Button
                                 variant="contained"
                                 color="primary"
-                                onClick={() => setIsEditBoxOpened(false)}
+                                onClick={() => {
+                                    setIsEditBoxOpened(false);
+                                    setViewOnly(false);
+                                    setFormValues(defaultFormValues);
+                                    // setScheduleItems([]);
+                                    // setEditingScheduleId(null);
+                                }}
                                 data-testid="schedule-close-button"
                             >
-                                {scheduleItems.length > 0 ? 'Assign and close' : 'Close'}
+                                {'Close'}
                             </Button>
-                        )}
-                    </Box>
+                        </Box>
+                    )}
+                    {!viewOnly && (
+                        <>
+                            <Typography variant="h6" component="h3" data-testid="Schedule-add-edit-title">
+                                {'Add / Edit items to schedule'}
+                            </Typography>
+                            <TableContainer
+                                component={Paper}
+                                sx={{
+                                    maxHeight: '40vh',
+                                    overflow: 'auto',
+                                    mt: 1,
+                                    '& .MuiTableCell-root': { py: 0.5, px: 1, fontSize: '0.85rem' },
+                                    '& .MuiTableCell-head': { fontSize: '0.9rem', fontWeight: 600, lineHeight: 1.2 },
+                                }}
+                            >
+                                <Table size="small" stickyHeader sx={{ tableLayout: 'fixed', width: '100%' }}>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell sx={{ width: '30%' }}>Object UUID</TableCell>
+                                            <TableCell sx={{ width: '55%' }}>Object Title</TableCell>
+                                            <TableCell sx={{ width: '15%' }}>Actions</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {!!dlorList &&
+                                            dlorList
+                                                .filter(
+                                                    item =>
+                                                        !scheduleItems.some(
+                                                            si => si.object_public_uuid === item.object_public_uuid,
+                                                        ),
+                                                )
+                                                .map((item, index) => {
+                                                    return (
+                                                        <TableRow key={item.object_public_uuid}>
+                                                            <TableCell sx={{ wordBreak: 'break-word' }}>
+                                                                {item.object_public_uuid}
+                                                            </TableCell>
+                                                            <TableCell sx={{ wordBreak: 'break-word' }}>
+                                                                {item.object_title}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                <Button
+                                                                    size="small"
+                                                                    variant="contained"
+                                                                    color="secondary"
+                                                                    data-testid={`add-schedule-item-${index}`}
+                                                                    onClick={() => handleAddToSchedule(item)}
+                                                                    // ACCESSIBILITY FIX 7: Descriptive aria-label
+                                                                    aria-label={`Add ${item.object_title} to schedule`}
+                                                                >
+                                                                    Add
+                                                                </Button>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    );
+                                                })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 1 }}>
+                                {editingScheduleId !== null && (
+                                    <>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            data-testid="modal-save-button"
+                                            disabled={!(formValues?.schedule_name && scheduleItems.length > 0)}
+                                            onClick={() => handleScheduleEditAdd(editingScheduleId)}
+                                        >
+                                            Save
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            onClick={() => {
+                                                setFormValues(defaultFormValues);
+                                                setScheduleItems([]);
+                                                setEditingScheduleId(null);
+                                                setIsEditBoxOpened(false);
+                                            }}
+                                            data-testid="schedule-close-button"
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </>
+                                )}
+                                {!!!editingScheduleId && (
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={() => setIsEditBoxOpened(false)}
+                                        data-testid="schedule-close-button"
+                                    >
+                                        {scheduleItems.length > 0 ? 'Assign and close' : 'Close'}
+                                    </Button>
+                                )}
+                            </Box>
+                        </>
+                    )}
                 </Box>
             </Modal>
         </>

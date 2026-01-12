@@ -91,10 +91,17 @@ test.describe('Digital Learning Hub', () => {
                 'Schedule saved successfully',
             );
         });
+        test('can view a running schedule', async ({ page }) => {
+            await page.locator('[data-testid="running-schedule-expand"] > svg').click();
+            await page.getByTestId('running-schedule-edit-button-0').click();
+            await expect(page.getByTestId('Schedule-title')).toHaveText('Test Number 0');
+            await page.getByTestId('schedule-close-button').click();
+        });
         test('can edit existing schedule', async ({ page }) => {
             await page.locator('[data-testid="pending-schedule-expand"] > svg').click();
             await page.getByTestId('pending-schedule-edit-button-0').click();
             await page.getByTestId('schedule-close-button').click();
+            await page.locator('[data-testid="pending-schedule-expand"] > svg').click();
             await page.getByTestId('pending-schedule-edit-button-0').click();
             await page.getByTestId('add-schedule-item-0').click();
             await page.getByTestId('modal-save-button').click();
